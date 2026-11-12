@@ -80,7 +80,7 @@ The Clock's buttons:
 - **Long tasks** (days or weeks of work) never move the clock. They roll by themselves as it passes.
 - **A character's own time.** Travel and solo play move only that character's time. So does anything done apart from the main group (the scene with more than half of tonight's characters): a long roll, an interaction, a fight or a journey. With the party split two and two, both halves keep their own time. The Clock's **Time** row shows who is ahead or behind; **Convene** brings them together, moving the clock up to whoever is furthest ahead. Dawn pulls everyone who is behind up to the clock. Turn this off with the world setting "Work done apart goes on the character's own time".
 - **Fights.** When you end a fight, the time moves by its turns times 3 seconds (world setting "Seconds a turn takes"; 0 turns it off). The after-action card says how long it lasted.
-- **Otherworld journeys.** The journey card says how much time passes outside (a Moon Bridge takes a thousandth, a trod can run fast or slow or lose days). Press **Let the journey's time pass** on your copy when they arrive. The Far Dreaming and Deep Umbra realms are your call for now.
+- **Otherworld journeys.** The journey card says how much time passes outside (a Moon Bridge takes a thousandth, a trod can run fast or slow or lose days). Press **Let the journey's time pass** on your copy when they arrive. The Labyrinth, the Far Dreaming with Arcadia, and the Deep Umbra are your call: the books say time runs differently there but give no rate, so the card keeps the plain clock and reminds you. A fight's turn is 3 seconds, the books' figure; raise it in the settings for a slow, tense scene.
 - **The sun on this scene.** For a scene far from home, set its latitude and its hours from home from the Clock. Sun, sky and the hour shown for that scene follow it; the clock itself keeps home time.
 - **The clock that runs with the table.** Off by default. Set "Clock runs with the table" to a number of game minutes and it moves that much every so many real minutes, the same on every scene. It waits while the game is paused, during a fight, while the world is held and when no player is connected.
 - NPCs keep no time of their own. They follow their routines on the world clock; on scenes nobody is viewing they are placed when the scene opens.
@@ -451,3 +451,13 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 | WoDX Masquerade | Breaches |
 
 Folders: "WoDX · Before the Embrace", "WoDX · Before the years", "WoDX · The Dead", "WoDX people".
+
+## The Legends book, progress clocks and the spirits (2026-11-12)
+
+**Legends of the Chronicle.** A journal everyone can read, one page per century, of what has really happened: dated events, the dead, Embraces and ghoulings, seats won and lost, havens that changed hands, boons kept and broken. It brings itself up to date when you end a session, around each time skip, and when you press Bring it up to date in the Legends window (the book button). Untick a line there to keep it from the players; Embraces, oaths and debts start hidden.
+
+**Progress clocks.** The clock button opens them for everyone; the dashboard has them too. Long tasks, heat, ties and Ledger objectives show as clocks by themselves. Make your own for a faction's plan or a hunter closing in, and let it fill each faction turn, each session or each week if you like. Nobody but you sees a clock until you press the eye and choose who does.
+
+**Pacing.** The night's draw window now opens with a line for you alone: three quiet nights in a row, or a hard night just past. It never changes what the draw picks.
+
+**The spirits.** The feather button opens a character's standing with the spirit courts. Record chiminage, Banes, Bans and slights there; Summon a spirit, Perform a rite and Chiminage in WoDX Actions take the court and use its standing.

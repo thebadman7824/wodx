@@ -5,6 +5,8 @@ import * as Led from "./ledger.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as RR from "./rumour-rules.mjs";
+import * as Clocks from "./clocks.mjs";
+import {clockSVG} from "./clock-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -55,7 +57,9 @@ export function gather() {
   const threads = DR.threads({beats, rumours: Rumours.rumours().filter(RR.live).map(r => ({text: r.text, known: r.knownBy?.length ?? 0})),
     queue: q?.pending?.()?.length ?? 0, held: q?.held?.()?.length ?? 0});
   const consequences = DR.consequences(Led.ledger().entries, t);
-  return {now: t, party, clocks, threads, consequences};
+  let progress = [];
+  try { progress = Clocks.clocks(); } catch (e) { console.error(`${MOD} |`, e); }
+  return {now: t, party, clocks, threads, consequences, progress};
 }
 
 const {ApplicationV2} = foundry.applications?.api ?? {ApplicationV2: class {}};
@@ -68,7 +72,7 @@ export class DashboardApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {tracker: () => game.modules.get(MOD)?.api?.openTracker?.(), ledger: () => Led.LedgerApp.open(),
       beats: () => game.modules.get(MOD)?.api?.beatsDialog?.(), rumours: () => Rumours.RumoursApp.open(), dreams: () => Dreams.DreamsApp.open(),
-      queue: () => C.chron()?.approvals?.ApprovalsApp?.open?.(), sheet: DashboardApp.#onSheet, refresh: () => DashboardApp.refresh()}
+      queue: () => C.chron()?.approvals?.ApprovalsApp?.open?.(), progress: () => Clocks.ClocksApp.open(), sheet: DashboardApp.#onSheet, refresh: () => DashboardApp.refresh()}
   };
   static #instance;
   static #timer = null;
@@ -90,6 +94,7 @@ export class DashboardApp extends ApplicationV2 {
     const who = s => esc(s?.name || "someone");
     const lRow = e => `<div class="wstory-dash-row${e.overdue ? " wstory-dash-overdue" : ""}" data-search-item data-search-text="${esc(`${e.what} ${e.from?.name ?? ""} ${e.to?.name ?? ""}`)}">
       <strong>${e.due === null ? "No date" : `Due ${span(e.due - g.now)}`}</strong> ${esc(e.kind)}: ${who(e.from)} to ${who(e.to)}${e.what ? `, ${esc(e.what)}` : ""}</div>`;
+    const pgRow = c => `<div class="wstory-dash-row wst-clock-row" data-search-item data-search-text="${esc(c.name)}">${clockSVG(c, 28)} <span>${esc(c.name)} <span class="wodx-quiet">${c.filled} of ${c.segments}</span></span></div>`;
     const section = (title, cls, rows, empty, buttons) => `<section><h3>${title} (${rows.length})</h3>${searchBox(`.${cls}`, "Search…", `Search ${title.toLowerCase()}`)}
       <div class="${cls} wstory-dash-list">${rows.join("") || `<p class="wodx-quiet">${empty}</p>`}</div><div class="wodx-buttons">${buttons}</div></section>`;
     const btn = (action, label) => `<button type="button" data-action="${action}">${label}</button>`;
@@ -98,6 +103,7 @@ export class DashboardApp extends ApplicationV2 {
     div.innerHTML = `<p class="wodx-quiet">Read only. ${esc(C.timeLabel(g.now))}. Change things in the windows the buttons open.</p>
       ${section("The party", "wstory-dash-party", g.party.map(pRow), "No players' characters yet.", btn("tracker", "The tracker"))}
       ${section("Clocks", "wstory-dash-clocks", g.clocks.map(cRow), "Nothing timed ahead.", btn("beats", "Beats") + btn("dreams", "Dreams"))}
+      ${section("Progress clocks", "wstory-dash-progress", g.progress.map(pgRow), "No clocks.", btn("progress", "Progress clocks"))}
       ${section("Open threads", "wstory-dash-threads", g.threads.map(tRow), "Nothing open.", btn("rumours", "The rumour mill") + btn("queue", "The approval queue"))}
       ${section("Consequences", "wstory-dash-due", g.consequences.map(lRow), "No open debts, oaths or grudges.", btn("ledger", "The Ledger"))}
       <div class="wodx-buttons">${btn("refresh", "Refresh")}</div>`;

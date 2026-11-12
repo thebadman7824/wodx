@@ -17,6 +17,8 @@ import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
+import * as spirits from "./spirits.mjs";
+import * as spiritRules from "./spirit-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
@@ -61,6 +63,8 @@ Hooks.once("ready", () => {
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
       dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules},
+    spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
+      courtOptions: spirits.courtOptions, rules: spiritRules},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;
@@ -121,6 +125,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxSoul = {
     name: "wodxSoul", title: "Read the Soul (select the reader, target the one read)", icon: "fa-solid fa-hand-sparkles", order: 115,
     button: true, visible: true, onChange: () => senses.readTheSoul()
+  };
+  tokens.tools.wodxSpirits = {
+    name: "wodxSpirits", title: "Standing with the spirit courts (the selected token's character)", icon: "fa-solid fa-feather-pointed", order: 117,
+    button: true, visible: true, onChange: () => spirits.spiritsDialog()
   };
   tokens.tools.wodxAura = {
     name: "wodxAura", title: "Set the aura of the selected token's character", icon: "fa-solid fa-palette", order: 116,
