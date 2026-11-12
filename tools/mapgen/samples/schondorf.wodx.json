@@ -1,13 +1,16 @@
 {
  "format": "wodx-map",
  "version": 1,
- "name": "Sch\u00f6ndorf",
+ "name": "Schöndorf",
  "map": "schondorf.dungeondraft_map",
  "cells": [
   122,
   106
  ],
  "seed": 2,
+ "place": {
+  "kind": "yard"
+ },
  "kind": "village",
  "layout": "organic",
  "walled": false,
@@ -5987,7 +5990,7 @@
     {
      "type": "trigger",
      "system": {
-      "label": "the road into Sch\u00f6ndorf from the west",
+      "label": "the road into Schöndorf from the west",
       "does": "note",
       "who": "pcs"
      }
@@ -6007,7 +6010,7 @@
     {
      "type": "trigger",
      "system": {
-      "label": "the road into Sch\u00f6ndorf from the north",
+      "label": "the road into Schöndorf from the north",
       "does": "note",
       "who": "pcs"
      }

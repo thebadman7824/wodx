@@ -190,7 +190,7 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     }
   }
   function onTokenMoved(doc, changes) {
-    if ( !isActiveGM() || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return;
+    if ( !isActiveGM() || !("x" in (changes ?? {}) || "y" in (changes ?? {})) || doc?.flags?.[MOD]?.passerby ) return;
     clearTimeout(waits.get(doc.id));
     waits.set(doc.id, setTimeout(() => { waits.delete(doc.id); watchRivals(doc).catch(e => console.error(`${MOD} | rivalry`, e)); }, 1100));
   }

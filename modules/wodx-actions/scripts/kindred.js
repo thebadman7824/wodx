@@ -463,7 +463,8 @@ export function build(ctx) {
         const px = (grid?.size ?? 100) / (grid?.distance ?? 5);
         const out = [];
         for (const t of canvas.tokens.placeables) {
-            if (t === tok || t.document?.hidden || !t.actor || exclude.includes(t.actor.id)) continue;
+            if (t === tok || t.document?.hidden || !t.actor || exclude.includes(t.actor.isToken ? t.document.id : t.actor.id)) continue;
+            if (t.document?.flags?.["wodx-npc"]?.passerby?.animal) continue; // an animal in the street is no witness (WoDX NPC 0.27.0)
             if (!profiles.includes(P.detectProfile(t.actor))) continue;
             if (Math.hypot(t.center.x - tok.center.x, t.center.y - tok.center.y) > maxFt * px) continue;
             let blocked = false;
@@ -762,9 +763,9 @@ export function build(ctx) {
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
         // Creatures of another kind who see the Crinos are startled (3.42.0); the Delirium below is for the mortals
         await revealed(a, { secret: "lupine", event: "in Crinos", startledOnly: true });
-        const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.id) && !P.worldFlag(t.actor, "kinfolk") && P.worldFlag(t.actor, "knows") !== "*" && !(P.worldFlag(t.actor, "knows") ?? []).includes?.("lupine"));
+        const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.isToken ? t.document.id : t.actor.id) && !P.worldFlag(t.actor, "kinfolk") && P.worldFlag(t.actor, "knows") !== "*" && !(P.worldFlag(t.actor, "knows") ?? []).includes?.("lupine"));
         if (!w.length) return null;
-        await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => t.actor.id)]);
+        await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => (t.actor.isToken ? t.document.id : t.actor.id))]);
         const ids = w.map(t => t.document.uuid).join(",");
         return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><p>${w.map(t => esc(t.name)).join(", ")} can see ${esc(a.name)} in Crinos.</p>${kbtn("delirium", a, "Run the Delirium for them", ids)}</div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });

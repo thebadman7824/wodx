@@ -8,6 +8,9 @@
   48
  ],
  "seed": 1197,
+ "place": {
+  "kind": "yard"
+ },
  "kind": "village",
  "era": "dark-ages",
  "population": 82,
@@ -3782,7 +3785,7 @@
     23.5
    ],
    "place": {
-    "kind": "street"
+    "kind": "alley"
    }
   },
   {
@@ -3795,7 +3798,7 @@
     23.5
    ],
    "place": {
-    "kind": "street"
+    "kind": "alley"
    }
   },
   {
@@ -3808,7 +3811,7 @@
     24.5
    ],
    "place": {
-    "kind": "street"
+    "kind": "alley"
    }
   },
   {
