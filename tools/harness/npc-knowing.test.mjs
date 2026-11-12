@@ -76,7 +76,7 @@ test("wiring: fights, talk and faces use what the NPC can tell", () => {
   assert.match(faces, /renderChatMessageHTML/);
   assert.match(faces, /renderCombatTracker/);
   const rv = readFileSync(new URL("../../modules/wodx-npc/scripts/rivalry.mjs", import.meta.url), "utf8");
-  assert.match(rv, /knownTo, tells, regardOf/);
+  assert.match(rv, /knownTo, tells, knowledgeOf, regardOf/);
 });
 
 test("noteSeen and hasSeen: the witness keeps who it saw for what", () => {
@@ -94,4 +94,37 @@ test("noteSeen and hasSeen: the witness keeps who it saw for what", () => {
   assert.equal(RV.hasSeen(big, "id0"), false);
   const rv = readFileSync(new URL("../../modules/wodx-npc/scripts/rivalry.mjs", import.meta.url), "utf8");
   assert.match(rv, /Hooks\.on\("wodxSecretSeen"/);
+});
+
+test("fedMemory and noteFed: what a fed-on vessel keeps (B1384)", () => {
+  assert.equal(RV.fedMemory({willing: true}), "nothing");
+  assert.equal(RV.fedMemory({vessel: {kind: "mortal"}}), "lost time");
+  assert.equal(RV.fedMemory({fought: true, vessel: {kind: "mortal"}}), "saw");
+  assert.equal(RV.fedMemory({vessel: {kind: "ghoul"}}), "saw");
+  assert.equal(RV.fedMemory({vessel: {kind: "Kindred"}}), "saw");
+  assert.equal(RV.fedMemory({vessel: {kind: "mortal", knows: ["kindred"]}}), "saw");
+  assert.equal(RV.fedMemory({vessel: {kind: "mortal", knows: "*"}}), "saw");
+  assert.equal(RV.fedMemory({vessel: {kind: "mortal", knows: ["lupine"]}}), "lost time");
+  let f = RV.noteFed({}, "v1", {at: 10});
+  f = RV.noteFed(f, "v1", {at: 20, saw: true});
+  f = RV.noteFed(f, "v1", {at: 30});
+  assert.deepEqual(f.v1, {at: 30, times: 3, saw: true});
+  assert.deepEqual(RV.noteFed(f, "no good!", {at: 1}), f);
+  let big = {};
+  for ( let i = 0; i < 60; i++ ) big = RV.noteFed(big, `k${i}`, {at: i});
+  assert.equal(Object.keys(big).length, 50);
+});
+
+test("wiring: Actions sends wodxFed with the vessel; NPC hears it; nameFor in the API and the windows", () => {
+  const am = readFileSync(new URL("../../modules/wodx-actions/scripts/main.js", import.meta.url), "utf8");
+  assert.match(am, /Hooks\.callAll\("wodxFed", \{ by: \{ uuid: actor\.uuid/);
+  const rv = readFileSync(new URL("../../modules/wodx-npc/scripts/rivalry.mjs", import.meta.url), "utf8");
+  assert.match(rv, /Hooks\.on\("wodxFed"/);
+  const main = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
+  assert.match(main, /nameFor: Faces\.nameFor, knowledgeOf:/);
+  const so = readFileSync(new URL("../../modules/wodx-actions/scripts/social.js", import.meta.url), "utf8");
+  assert.match(so, /npcApi\(\)\?\.nameFor\?\.\(tok\)/);
+  assert.match(so, /dialog\(`With \$\{viewName\(npcTok\)\}`/);
+  const tr = readFileSync(new URL("../../modules/wodx-actions/scripts/trade.js", import.meta.url), "utf8");
+  assert.match(tr, /Trade with \$\{viewName\(npcTok\)\}/);
 });

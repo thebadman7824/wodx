@@ -657,3 +657,5 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
 | 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
 | 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
+| 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
+| 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |

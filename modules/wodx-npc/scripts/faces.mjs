@@ -20,6 +20,20 @@ export function registerFaceSettings() {
     scope: "world", config: true, type: Boolean, default: false, onChange: () => refreshAll()});
 }
 
+/**
+ * 0.35.0 (B1385): the one lookup for "what does this viewer call this NPC?" (api.nameFor). The Storyteller, and
+ * everyone when "Faces you have met" is off, gets the name; a player whose characters have not met the NPC gets the
+ * stranger's words. x: an actor, token or token document; user: the viewer (default this one).
+ */
+export function nameFor(x, user = game.user) {
+  const doc = x?.document ?? x;
+  const actor = doc?.actor ?? doc;
+  const name = doc?.name ?? actor?.name ?? "";
+  if ( !actor ) return name;
+  const theirs = (game.actors?.contents ?? []).filter(a => isPC(a) && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
+  return F.nameFor({name, flags: (actor.isToken ? (actor.baseActor ?? actor) : actor)?.flags?.[MOD] ?? actor.flags?.[MOD] ?? {}, mine: theirs, gm: !!user?.isGM, on: on(), playerOwned: actor.hasPlayerOwner});
+}
+
 /** The nameplate for this player. */
 export function applyName(token) {
   const a = token?.actor, plate = token?.nameplate;

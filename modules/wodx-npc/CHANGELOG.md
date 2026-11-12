@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.35.0 (a fed-on NPC remembers a swoon and a lost hour, or who fed if it fought, is Kindred or a ghoul, or already knows the Kindred; api.nameFor(actor, viewer) is the one lookup for what a viewer calls an NPC; api.knowledgeOf(actor) lists who an NPC has seen for what and who fed on it)
 - 0.33.0 (NPCs know what a character is only when it shows, a sense shows it, or they saw it: hunters go for the monster first only once they can tell, and mortals' remarks on a character's oddness need a Perception + Alertness roll; with "Faces you have met" on, chat and the combat tracker show players the stranger's words for NPCs they have not met)
 - 0.32.0 (first meetings read the look: dress against the NPC's station by era, dress out of its time, blood, Appearance, Status, fine work; blood sours a later meeting for the scene; guards mind blood and let a worn livery pass; worn habits and uniforms show their side; stock lines on dress and a disguise seen through)
 - 0.29.0 (players see the politics of their own factions: who holds each seat, the next gathering, the law, and their own characters' standing, seats, favour, claims and charges)
