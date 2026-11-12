@@ -1,0 +1,304 @@
+# The Great War, 1914 to 1918. year[-month]|kind|lines|region|place|tags|title|text
+1914-6|H|mor|EU|Sarajevo|terror,death|Sarajevo|A Bosnian Serb student shoots Archduke Franz Ferdinand and his wife Sophie in Sarajevo after their driver takes a wrong turn.
+1914-6|H|mor|MO|Konopiste|death,crown|Konopiste falls silent|The archduke's estate at Konopiste in Bohemia, with its rose garden and hunting trophies, is left without a master.
+1914-7|H|mor|EU|Vienna|war,law|The ultimatum to Serbia|Austria-Hungary sends Serbia demands written to be refused, and declares war when they are not all met.
+1914-7|H|mor|EU|Belgrade|war,siege|Belgrade shelled|Austrian monitors on the Danube shell Belgrade the night after war is declared.
+1914-8|H|mor|EU|Berlin|war|Germany declares war|Germany declares war on Russia and then France, and the great powers mobilise millions by rail.
+1914-8|H|mor|EU|Liege|siege,war|The forts of Liege|Belgium's forts at Liege hold the German advance for days until giant siege howitzers crush them.
+1914-8|H|mor|EU|London|war|Britain enters the war|Britain declares war when Germany invades Belgium, over a treaty the German chancellor calls a scrap of paper.
+1914-8|H|mor,all|MO|Brno|war|Moravia mobilises|The regiments of Brno, Olomouc, Kromeriz and Jihlava entrain for Galicia and Serbia amid flags and quiet dread.
+1914-8|H|mor|EU|Leuven|massacre,fire|The burning of Leuven|German troops burn the university library of Leuven and shoot civilians; the rape of Belgium becomes a byword.
+1914-8|H|mor|EU|Tannenberg|battle|Tannenberg|Hindenburg and Ludendorff encircle a Russian army in East Prussia; its general shoots himself.
+1914-8|H|mor|EU|Lorraine|battle|The Battle of the Frontiers|French infantry in red trousers attack into Lorraine and the Ardennes and lose over a quarter of a million men in weeks.
+1914-8|H|mor|EU|Mons|battle|Mons|The British Expeditionary Force meets the Germans at Mons and falls back; tales of the Angels of Mons follow.
+1914-8|W|wra,mag|EU|Mons|occult,battle|The Angels of Mons|The house reading lets soldiers' tale of the Angels of Mons be a real working, though no Tradition will say whose.
+1914-8|H|mor|EU|Cer|battle|Cer Mountain|Serbia beats the first Austrian invasion on Cer Mountain, the first Allied victory of the war.
+1914-8|H|mor|AS|Tokyo|war,empire|Japan enters the war|Japan declares war on Germany and turns on its Pacific islands and its port of Tsingtao.
+1914-8|H|mor|EU|Galicia|battle|The Galician battles|Russia routs the Austro-Hungarian armies in Galicia and takes Lemberg; Austria loses four hundred thousand men in a month.
+1914-8|H|mor|EU|Heligoland|sea,battle|Heligoland Bight|British battlecruisers sink three German cruisers in the first sea fight of the war, near Heligoland.
+1914-9|H|mor|EU|Marne|battle|The Marne|The French and British stop the Germans on the Marne, some reserves rushed out from Paris in taxis.
+1914-9|H|mor|EU|Aisne|battle,war|The first trenches|Both sides dig in on the Aisne, and the race to the sea begins.
+1914-9|H|mor|EU|Przemysl|siege|The siege of Przemysl|The Russians besiege the great Austrian fortress of Przemysl in Galicia.
+1914-9|H|mor|EU|Masurian Lakes|battle|The Masurian Lakes|Germany drives a second Russian army out of East Prussia.
+1914-9|H|mor|EU|North Sea|sea,war|Three cruisers sunk|One German submarine sinks three British cruisers in an hour.
+1914-10|H|mor|EU|Antwerp|siege|Antwerp falls|The Belgian army slips out of Antwerp, and the city surrenders.
+1914-10|H|mor|EU|Ypres|battle|First Ypres|German volunteer regiments of students attack at Ypres and are shot down in thousands.
+1914-10|H|mor|ME|Black Sea|war,sea|The Ottomans join|Ottoman warships, two of them German, shell Russian Black Sea ports, and the empire enters the war.
+1914-10|H|mor|EU|Yser|flood,battle|The Yser flooded|Belgium opens the sluices at Nieuwpoort and floods the Yser plain to stop the Germans.
+1914-10|H|mor|AS|Penang|sea,war|The Emden at Penang|The German raider Emden slips into Penang harbour and sinks a Russian cruiser before being hunted down.
+1914-11|H|mor|AS|Tsingtao|siege,war|Tsingtao falls|Japanese and British troops take Germany's Chinese port after a siege.
+1914-11|W|kue|AS|Tsingtao|war,occult|Tsingtao's foreign dead|The house reading has the Kuei-jin of Shandong drive out the German Kindred who came with the colony.
+1914-11|H|mor|ME|Istanbul|faith,war|The holy war proclaimed|The Ottoman sheikh ul-Islam calls Muslims everywhere to holy war against the Allies.
+1914-11|H|mor|ME|Basra|war,empire|Britain in Mesopotamia|An Indian army lands at the head of the Gulf to guard the oil and takes Basra.
+1914-11|H|mor|EU|Belgrade|war|Belgrade taken|Austria takes Belgrade.
+1914-11|H|mor|ME|Fao|war|The landing at Fao|Indian troops land at Fao on the Shatt al-Arab to protect the Abadan refinery.
+1914-12|H|mor|EU|Kolubara|battle|Kolubara|Serbia counterattacks at the Kolubara and drives the Austrians out of the country.
+1914-12|H|mor|ME|Sarikamish|battle,weather|Sarikamish|Enver Pasha marches an Ottoman army through the Caucasus snows; most of the army freezes or dies.
+1914-12|H|mor|EU|Flanders|faith|The Christmas truce|Soldiers along parts of the Western Front stop fighting for Christmas, sing carols and meet in no man's land.
+1914-12|W|cha|EU|Flanders|faith,occult|Glamour in no man's land|The house reading has the Christmas truce blaze with Glamour, and changelings in uniform remember it all their lives.
+1914-12|H|mor|EU|Scarborough|war,sea|Scarborough shelled|German battlecruisers shell Scarborough, Hartlepool and Whitby.
+1914-12|H|mor|EU|Limanowa|battle|Limanowa|Austria wins its last unaided victory against Russia south of Krakow.
+1914-12|H|mor|EU|Geneva|war,revolution|Masaryk goes abroad|Professor Masaryk leaves Austria for exile to work for Czech independence.
+1914-12|H|mor|ME|Cairo|crown|The sultan of Egypt|Britain makes Hussein Kamel sultan of Egypt in place of the deposed khedive.
+1914|H|mor|MO|Olomouc|war,plague|The wounded come home|Hospital trains fill Olomouc and Brno; schools become wards and cholera comes from the Galician front.
+1914|W|vam|MO|Brno|war,occult|The prince's ghouls in uniform|The house reading has Brno's Kindred lose half their ghouls to the call-up and quarrel over who may take the wounded.
+1914|W|wra|EU|Ypres|war,death|The Shadowlands fill|The house reading follows canon: the war dead swamp the Shadowlands of Flanders, and the Hierarchy cannot reap them fast enough.
+1914|H|mor|EU|Kragujevac|plague|Typhus in Serbia|Typhus spreads from prisoner camps across Serbia and kills hundreds of thousands, doctors among them.
+1914|W|wer|EU|Ardennes|war,occult|The forest at war|The house reading has the Garou of the Ardennes torn between fighting the Wyrm in the trenches and guarding caerns being shelled to splinters.
+1914|H|mor|AS|Delhi|war,empire|India at war|India sends over a million men to fight; Indian corps hold the line at Ypres in their first winter.
+1914|W|mag|EU|Berlin|war,science|The Technocracy goes to war|The house reading has the Iteration X and the New World Order working both sides, testing new guns on whichever army will take them.
+1914|H|mor|EU|Prague|law,war|Czech papers silenced|Censorship closes Czech papers, and suspected Russophiles are arrested.
+1914|H|mor|EU|Berlin|art,war|The manifesto of the ninety-three|German professors sign a manifesto defending the army in Belgium.
+1914|H|mor|EU|London|law,war|The Defence of the Realm Act|Britain gives its government wide powers over press, pubs and land.
+1914|H|mor|ME|Cairo|empire,war|Egypt a protectorate|Britain declares a protectorate over Egypt and deposes the khedive.
+1914|W|mum|ME|Cairo|war,occult|The Reborn at war|The house reading has Egypt's Reborn see the war as the outsiders' quarrel, while Set's followers grow bold in Cairo.
+1914|H|mor|ME|Mecca|faith,war|The hajj cut off|War closes the pilgrim roads, and few pilgrims reach Mecca.
+1914|H|mor|EU|Lviv|war,persecution|Galicia's Jews flee|Russian troops in Galicia attack Jewish towns; hundreds of thousands flee to Vienna and Budapest.
+1914|H|mor|EU|Thalerhof|persecution|The Thalerhof camp|Austria interns thousands of suspect Ruthenians in a camp near Graz, where many die.
+1914|H|mor|AS|Kabul|war,empire|Afghanistan neutral|The Afghan emir keeps out of the war despite Ottoman and German pleading.
+1915-1|H|mor|EU|Carpathians|battle,weather|The Carpathian winter|Austria attacks through the Carpathian passes in winter to relieve Przemysl and loses six hundred thousand men to battle and frost.
+1915-1|H|mor|ME|Suez|war|The attack on Suez|An Ottoman force crosses Sinai and tries to cross the canal; it is beaten off.
+1915-1|H|mor|EU|Dogger Bank|battle,sea|Dogger Bank|British and German battlecruisers fight off the Dogger Bank; the Blucher sinks.
+1915-1|H|mor|EU|Bolimow|war,science|Gas at Bolimow|Germany fires gas shells at the Russians at Bolimow; the cold stops the gas from working.
+1915-1|H|mor|ME|Tabriz|war|Tabriz changes hands|Ottoman and Russian forces fight over Tabriz in neutral Persia.
+1915-2|H|mor|EU|North Sea|war,sea|Unrestricted submarine war|Germany declares the waters round Britain a war zone where any ship may be sunk.
+1915-2|H|mor|ME|Dardanelles|war,sea|The Dardanelles shelled|British and French battleships begin shelling the forts at the mouth of the Dardanelles.
+1915-3|H|mor|ME|Dardanelles|sea,battle|The naval attack fails|Mines sink three Allied battleships in the narrows in an afternoon, and the fleet withdraws.
+1915-3|H|mor|EU|Przemysl|siege,famine|Przemysl surrenders|The starving garrison of Przemysl blows up its forts and surrenders: over a hundred thousand prisoners.
+1915-3|H|mor|EU|Neuve Chapelle|battle|Neuve Chapelle|The British break into the German line at Neuve Chapelle and cannot go further.
+1915-3|H|mor|EU|Prague|law,war|The Czech Mafia|Czech politicians at home form a secret network, called the Maffie, to send news to Masaryk abroad.
+1915-4|H|mor|EU|Ypres|science,battle|Chlorine at Ypres|Germany releases chlorine gas from cylinders at Ypres; French colonial troops break and the Canadians hold.
+1915-4|H|mor|ME|Gallipoli|battle|The Gallipoli landings|British, Australian, New Zealand and French troops land on Gallipoli; Mustafa Kemal holds the heights.
+1915-4|H|mor|ME|Istanbul|persecution,massacre|The Armenian deportations|Armenian leaders in Istanbul are arrested and killed, and the deportations of the Armenian people begin; about a million die.
+1915-4|W|wra|ME|Anatolia|massacre,occult|The marches of the dead|The house reading has the Armenian dead rise in the Shadowlands in such numbers that the Dark Kingdom of Jade sends envoys to see.
+1915-4|H|mor|ME|Van|siege,uprising|The defence of Van|The Armenians of Van hold their quarter against Ottoman troops for a month until the Russians come.
+1915-4|H|mor,all|MO|Prague|war,crime|The 28th regiment|The Prague 28th infantry regiment goes over to the Russians nearly whole in the Carpathians, and the army disbands it in disgrace.
+1915-5|H|mor|EU|Gorlice|battle|Gorlice-Tarnow|German and Austrian armies break the Russian front at Gorlice, and the great retreat begins.
+1915-5|H|mor|EU|Irish Sea|sea,war|The Lusitania sunk|A German submarine sinks the liner Lusitania off Ireland; nearly twelve hundred die.
+1915-5|H|mor|EU|Rome|war|Italy declares war|Italy joins the Allies on promises of Austrian land.
+1915-5|H|mor|EU|Ypres|science,battle|Second Ypres ends|Second Ypres ends with the salient smaller and poisoned.
+1915-6|H|mor|EU|Isonzo|battle|The first Isonzo|Italy attacks across the Isonzo river, the first of twelve battles there.
+1915-6|H|mor|EU|Lemberg|war|Lemberg retaken|Austria takes back Lemberg.
+1915-6|H|mor|EU|Prague|law,crime|Kramar arrested|The Czech politician Karel Kramar is arrested for treason and later sentenced to death; the sentence is commuted.
+1915-7|H|mor|EU|Prague|faith,law|Hus remembered|Masaryk in Geneva declares war on Austria on the five hundredth anniversary of Jan Hus's burning.
+1915-7|H|mor|EU|Isonzo|battle|The second Isonzo|Italy attacks again on the Carso and loses forty thousand men.
+1915-8|H|mor|EU|Warsaw|war|Warsaw falls|The Germans take Warsaw as the Russians retreat, burning crops and driving civilians east.
+1915-8|H|mor|ME|Suvla Bay|battle|Suvla Bay|A new British landing at Suvla Bay stalls on the beach.
+1915-8|H|mor|EU|Brest-Litovsk|war,migration|The great retreat|Millions of refugees flee eastward ahead of the Russian armies through the summer.
+1915-9|H|mor|EU|Loos|battle,science|Loos|Britain uses gas for the first time at Loos; the wind blows some of it back.
+1915-9|H|mor|EU|Champagne|battle|The Champagne offensive|France attacks in Champagne with huge losses for a few miles.
+1915-9|H|mor|EU|Lutsk|battle|The Rovno offensive|Austria's autumn attack in Volhynia fails and costs it a quarter of a million men.
+1915-10|H|mor|EU|Serbia|war|Serbia overrun|Germany, Austria and Bulgaria invade Serbia from three sides.
+1915-10|H|mor|EU|Brussels|crime,death|Edith Cavell shot|The Germans shoot the British nurse Edith Cavell for helping Allied soldiers escape.
+1915-10|H|mor|EU|Salonika|war|The landing at Salonika|British and French troops land at Salonika in neutral Greece too late to save Serbia.
+1915-11|H|mor|ME|Ctesiphon|battle|Ctesiphon|The British march on Baghdad is stopped at Ctesiphon, and the army falls back on Kut.
+1915-11|H|mor|EU|Kosovo|migration|The retreat through Kosovo|Serbian civilians and soldiers stream across the Kosovo plain toward the mountains.
+1915-12|H|mor|EU|Albania|migration,weather|The Serbian retreat|The Serbian army and King Peter retreat through the Albanian mountains in winter; tens of thousands die.
+1915-12|H|mor|ME|Kut|siege|The siege of Kut|The Ottomans surround the British at Kut.
+1915-12|H|mor|ME|Gallipoli|war|Gallipoli evacuated|The Allies slip away from Gallipoli at night without losing a man, after eight months and half a million casualties.
+1915|W|vam|ME|Istanbul|war,occult|The Assamites watch|The house reading has the Assamites of Anatolia refuse the sultan's holy war, while Ventrue in Istanbul profit from the deportations.
+1915|W|mum|ME|Gallipoli|war,occult|Old dead of Troy|The house reading has a Reborn in Cairo dream of Troy's old dead stirring under the guns at Gallipoli.
+1915|W|hun|EU|London|war,occult|The Arcanum's war|The house reading has the Arcanum in London lend scholars to naval intelligence and lose track of half its own members.
+1915|H|mor|AS|Tokyo|empire,treaty|The Twenty-One Demands|Japan demands control over much of China, and Chinese students boycott Japanese goods.
+1915|H|mor|AS|Singapore|uprising|The Singapore mutiny|Indian troops in Singapore mutiny and kill Europeans before they are put down.
+1915|H|mor|ME|Mecca|war,uprising|Letters from Mecca|Sharif Hussein of Mecca and the British high commissioner in Cairo begin letters on an Arab rising.
+1915|H|mor|ME|Lebanon|famine|The Lebanon famine|An Allied blockade, locusts and Ottoman requisitions starve Mount Lebanon; perhaps half the people die.
+1915|W|wer|EU|Carpathians|war,occult|The Carpathian Garou|The house reading has the Shadow Lords of the Carpathians wage their own war, using the armies to drive rival septs from caerns.
+1915|H|mor|EU|Vienna|money,famine|Bread cards in Vienna|Bread is rationed in Vienna, and queues begin outside every bakery.
+1915|H|mor|ME|Hama|war,faith|Arab nationalists hanged|Jamal Pasha hangs Arab nationalists in Beirut and Damascus.
+1915|H|mor|EU|London|war,terror|Zeppelin raids|German airships bomb London and English towns by night.
+1915|W|vam|EU|London|war,occult|Lights out in London|The house reading has London's Kindred find the blackout a gift for hunting, and the prince orders discretion.
+1915|H|mor|EU|Prague|art,crime|The Good Soldier Svejk is born|In Prague cells and barracks Jaroslav Hasek gathers the material for the soldier who survives by seeming a fool.
+1915|H|mor|AS|Kabul|war,travel|The Niedermayer mission|A German and Ottoman mission reaches Kabul to raise Afghanistan against India and fails.
+1915|H|mor|ME|Isfahan|war,travel|Wassmuss in Persia|A German agent called Wassmuss raises the southern Persian tribes against Britain.
+1915|H|mor|EU|Bulgaria|war|Bulgaria joins|Bulgaria joins the Central Powers.
+1915|H|mor|ME|Gallipoli|war,weather|The great storm at Gallipoli|A blizzard and floods kill soldiers in the trenches at Suvla.
+1916-1|H|mor|EU|Montenegro|war|Montenegro falls|Austria takes Mount Lovcen and Montenegro surrenders.
+1916-1|H|mor|ME|Erzurum|battle,weather|Erzurum|Yudenich's Russians storm the fortress of Erzurum in the winter snows.
+1916-1|H|mor|EU|Corfu|migration,plague|The Serbs on Corfu|The survivors of the Serbian army are shipped to Corfu, where thousands die of disease on Vido island.
+1916-2|H|mor|EU|Verdun|battle|Verdun|Germany attacks Verdun to bleed France white; the battle lasts ten months and costs some seven hundred thousand casualties.
+1916-2|W|wra|EU|Verdun|battle,occult|The Verdun Shadowlands|The house reading has the Shadowlands of Verdun turn to a sea of mud and ghosts where Spectres hunt the newly dead.
+1916-2|W|vam|EU|Verdun|battle,occult|Feeding at the front|The house reading has Kindred haunt the dressing stations behind Verdun, and the Camarilla struggles to stop Masquerade breaches among the dying.
+1916-3|H|mor|EU|Isonzo|battle|The fifth Isonzo|Italy attacks again on the Isonzo with little gain.
+1916-3|H|mor|EU|Verdun|battle|Le Mort Homme|French and German troops fight for months over a hill called Dead Man.
+1916-4|H|mor|EU|Dublin|uprising|The Easter Rising|Irish republicans seize the Dublin General Post Office and proclaim a republic; the leaders are shot after the surrender.
+1916-4|W|cha|EU|Dublin|uprising,occult|The Rising and the Dreaming|The house reading has the Irish Kithain see the Rising as a poem made real, and the Unseelie mourn its poets.
+1916-4|H|mor|ME|Kut|siege,famine|Kut surrenders|The starving British at Kut surrender; many of the prisoners die on the march into Anatolia.
+1916-5|H|mor|EU|Asiago|battle|The Strafexpedition|Austria attacks Italy from the Trentino and is held on the Asiago plateau.
+1916-5|H|mor|EU|Jutland|battle,sea|Jutland|The British and German fleets meet off Jutland; Britain loses more ships but keeps command of the sea.
+1916-5|H|mor|ME|London|treaty,empire|Sykes-Picot|Britain and France secretly agree how to divide the Ottoman Arab lands.
+1916-6|H|mor|EU|Volhynia|battle|The Brusilov offensive|Brusilov breaks the Austrian line on a wide front, taking hundreds of thousands of prisoners.
+1916-6|H|mor|ME|Mecca|uprising,war|The Arab Revolt|Sharif Hussein proclaims the Arab revolt against the Ottomans at Mecca.
+1916-6|H|mor|EU|Orkney|sea,death|Kitchener drowns|The war minister Lord Kitchener drowns when HMS Hampshire hits a mine off Orkney.
+1916-6|H|mor|EU|Verdun|battle,science|Phosgene at Verdun|Germany fires diphosgene shells at Verdun in its last push for Fort Souville.
+1916-7|H|mor|EU|Somme|battle|The Somme|Britain attacks on the Somme and loses nearly sixty thousand men on the first day.
+1916-7|W|wer|EU|Somme|battle,occult|The Wyrm feeds|The house reading has Black Spiral Dancers move freely in the Somme mud, and the Garou find the Wyrm grown fat on the battle.
+1916-8|H|mor|EU|Gorizia|battle|Gorizia taken|Italy takes Gorizia in the sixth Isonzo battle.
+1916-8|H|mor|EU|Bucharest|war|Romania enters|Romania declares war on Austria-Hungary and invades Transylvania.
+1916-8|H|mor|ME|Romani|battle|Romani|The British beat an Ottoman attack on the canal at Romani in the Sinai.
+1916-9|H|mor|EU|Flers|battle,science|Tanks at Flers|Britain sends tanks into battle for the first time on the Somme.
+1916-9|H|mor|EU|Transylvania|war|Romania driven back|German and Austrian armies drive the Romanians out of Transylvania.
+1916-10|H|mor|EU|Vienna|terror,death|The prime minister shot|Friedrich Adler shoots Austria's prime minister Sturgkh at dinner in a Vienna hotel.
+1916-10|H|mor|EU|Verdun|battle|Douaumont retaken|French troops take back Fort Douaumont.
+1916-11|H|mor|EU|Vienna|crown,death|Franz Joseph dies|The old emperor dies at Schonbrunn after sixty-eight years on the throne; young Karl succeeds.
+1916-11|W|vam|EU|Vienna|crown,occult|The Tremere mourn an age|The house reading has Vienna's Tremere hold a vigil for the old emperor and begin preparing for an empire that may not last.
+1916-11|H|mor|EU|Somme|battle,weather|The Somme ends|The Somme ends in mud and snow; over a million men are dead or wounded for six miles.
+1916-12|H|mor|EU|Bucharest|war|Bucharest taken|German troops enter Bucharest.
+1916-12|H|mor|EU|St Petersburg|crime,death|Rasputin killed|Russian aristocrats poison, shoot and drown the healer Rasputin.
+1916-12|H|mor|EU|London|crown|Lloyd George|Lloyd George becomes Britain's prime minister.
+1916|H|mor|EU|Germany|famine,weather|The turnip winter|A failed potato crop and the blockade leave Germans eating turnips; hundreds of thousands die of hunger and cold.
+1916|H|mor|MO|Brno|money,famine|The Brno hunger|Brno's workers queue for bread; the mills switch to army cloth, and women replace men in the factories.
+1916|H|mor|AS|Turkestan|uprising,massacre|The Central Asian revolt|Kazakhs and Kyrgyz rise against conscription for labour; Russian reprisals drive hundreds of thousands into China.
+1916|W|wer|AS|Issyk-Kul|uprising,occult|The steppe Garou|The house reading has the steppe Garou ride with the rebels against the tsar's labour draft.
+1916|H|mor|AS|Beijing|crown,death|Yuan Shikai's empire|Yuan Shikai declares himself emperor of China, the provinces revolt, and Yuan dies within months.
+1916|H|mor|EU|Zurich|art|Dada|Refugee artists open the Cabaret Voltaire in Zurich and start Dada.
+1916|W|mag|EU|Zurich|art,occult|Marauders in Zurich|The house reading has a Marauder loose among the Dadaists, and the Cult of Ecstasy work to keep the cabaret from going mad entirely.
+1916|H|mor|EU|Geneva|founding,law|The Czechoslovak National Council|Masaryk, Benes and Stefanik form the Czechoslovak National Council in Paris.
+1916|H|mor|EU|Verdun|science,war|The Sacred Way|A single road from Bar-le-Duc carries a lorry every few seconds to keep Verdun supplied.
+1916|H|mor|EU|Ostrava|industry,war|The coal of Ostrava|Ostrava's pits and Vitkovice work round the clock for the army, with prisoners of war in the mines.
+1916|W|all,mag|MO|Vitkovice|industry,occult|The Iteration X works|The house reading has Iteration X take a quiet interest in the Vitkovice works, and a Brno Hermetic sees the Weaver tighten.
+1916|H|mor|ME|Medina|siege|The siege of Medina|Arab forces besiege Medina, whose Ottoman commander holds it beyond the end of the war.
+1916|H|mor|EU|Paris|science|Plastic surgery|Surgeons at Aldershot and Paris rebuild soldiers' faces; Harold Gillies's work founds modern plastic surgery.
+1916|H|mor|AS|Beijing|war,migration|The Chinese Labour Corps|Some hundred and forty thousand Chinese labourers sail to France to dig trenches and unload ships.
+1916|H|mor|ME|Hejaz|war,travel|Lawrence in Arabia|A British officer named T. E. Lawrence joins Faisal's army in the Hejaz.
+1916|W|mum|ME|Hejaz|war,occult|Old sand, new war|The house reading has the Reborn of Egypt wary of Lawrence's band crossing old roads that hide old tombs.
+1916|W|hun|MO|Olomouc|war,occult|A soldier's confession|The house reading has a Moravian soldier home from Galicia tell an Olomouc priest of something that drank from the dead.
+1917-1|H|mor|EU|Berlin|war,sea|The Zimmermann telegram|Germany offers Mexico an alliance against America; British codebreakers read the telegram and publish it.
+1917-2|H|mor|EU|North Sea|war,sea|Unrestricted submarine war again|Germany sinks any ship near Britain without warning, wagering on starving Britain before America arrives.
+1917-3|H|mor|EU|Petrograd|revolution,crown|The February Revolution|Bread riots in Petrograd become revolution; the soldiers join the crowds and the tsar abdicates.
+1917-3|H|mor|ME|Baghdad|war,empire|Baghdad taken|The British take Baghdad.
+1917-3|H|mor|ME|Gaza|battle|First Gaza|The British attack Gaza and fall back.
+1917-4|H|mor|EU|Atlantic|war|America enters|The United States declares war on Germany, and American troops begin to cross the Atlantic to France.
+1917-4|H|mor|EU|Vimy|battle|Vimy Ridge|Canadian troops take Vimy Ridge.
+1917-4|H|mor|EU|Chemin des Dames|battle,uprising|The Nivelle offensive|France's offensive on the Chemin des Dames fails, and French divisions refuse to attack.
+1917-4|H|mor|EU|Zurich|revolution,travel|The sealed train|Germany sends Lenin home from Zurich in a sealed train.
+1917-5|H|mor|EU|Fatima|faith,occult|Fatima|Three shepherd children see a lady at Fatima in Portugal; in October a crowd sees the sun dance.
+1917-5|W|mag,hun|EU|Fatima|faith,occult|The Celestial Chorus at Fatima|The house reading has the Celestial Chorus claim Fatima, the Technocracy dismiss it, and Inquisitors arrive to see for themselves.
+1917-5|H|mor|EU|Vienna|law|The Reichsrat reopens|The Austrian parliament meets again, and the Czech deputies demand a state of their own.
+1917-6|H|mor|EU|Messines|battle|Messines|British miners blow up nineteen great mines under Messines Ridge; the sound is heard in London.
+1917-6|H|mor|EU|Athens|crown|Greece joins the Allies|King Constantine is forced out and Greece joins the war under Venizelos.
+1917-6|H|mor|EU|London|terror,war|The Gotha raid|German bombers raid London by day and kill over a hundred and sixty people, many of them schoolchildren.
+1917-7|H|mor|EU|Zborov|battle|Zborov|The Czechoslovak brigade in Russia fights at Zborov against Austrian troops, many of them fellow Czechs.
+1917-7|H|mor|EU|Ypres|battle,weather|Passchendaele|Britain attacks at Ypres again; the rains turn the field into a swamp where men drown in shell holes.
+1917-7|H|mor|ME|Aqaba|battle|Aqaba|Arab irregulars with T. E. Lawrence take Aqaba from the land side.
+1917-7|H|mor|EU|Petrograd|uprising|The July Days|Soldiers and workers rise in Petrograd and are put down; Lenin flees to Finland.
+1917-7|H|mor|EU|Corfu|treaty,founding|The Corfu Declaration|Serbian and Yugoslav leaders agree to a kingdom of the South Slavs.
+1917-8|H|mor|EU|Thessaloniki|fire|The Thessaloniki fire|A great fire destroys the old centre of Thessaloniki and its Jewish quarter.
+1917-8|H|mor|AS|Beijing|war|China declares war|China declares war on Germany and sends labourers to France.
+1917-8|H|mor|EU|Isonzo|battle|The eleventh Isonzo|Italy takes the Bainsizza plateau at terrible cost; Austria's army is near breaking.
+1917-9|H|mor|EU|Riga|battle|Riga|Germany takes Riga with new infiltration tactics.
+1917-9|H|mor|AS|Guangzhou|founding,revolution|Sun Yat-sen in Canton|Sun Yat-sen sets up a rival government in Canton.
+1917-10|H|mor|EU|Caporetto|battle|Caporetto|German and Austrian troops break the Italian front at Caporetto; Italy loses three hundred thousand men, most as prisoners.
+1917-10|H|mor|ME|Beersheba|battle|Beersheba|Australian light horsemen charge and take the wells of Beersheba.
+1917-10|H|mor|ME|Gaza|battle|Third Gaza|The British break the Gaza line after taking Beersheba.
+1917-11|H|mor|EU|Petrograd|revolution|The October Revolution|The Bolsheviks take the Winter Palace and seize power in Russia.
+1917-11|W|vam|EU|Petrograd|revolution,occult|The Brujah's revolution|The house reading has Brujah in Petrograd see their dream at last, until the Ventrue and the Tremere of Moscow begin their own plans.
+1917-11|W|mag|EU|Petrograd|revolution,occult|The Technocracy in Russia|The house reading has the New World Order send agents to shape the new state, and Russian Mages scatter.
+1917-11|H|mor|ME|London|treaty,faith|The Balfour Declaration|Britain promises a national home for the Jewish people in Palestine.
+1917-11|H|mor|EU|Cambrai|battle|Cambrai|Hundreds of British tanks break the line at Cambrai, but the gains are lost in a German counterattack.
+1917-11|H|mor|EU|Piave|battle|The Piave holds|The Italians hold a new line on the Piave and Monte Grappa after the rout at Caporetto.
+1917-12|H|mor|ME|Jerusalem|war,faith|Jerusalem taken|Allenby enters Jerusalem on foot by the Jaffa Gate.
+1917-12|H|mor|EU|Brest-Litovsk|treaty|The Russian armistice|Bolshevik Russia makes an armistice with Germany.
+1917-12|H|mor|EU|Ukraine|war,founding|Kharkiv Soviet Ukraine|The Bolsheviks set up a Soviet Ukraine at Kharkiv and march on Kiev.
+1917|H|mor|EU|Kiev|founding|Ukraine's Central Rada|Ukraine's Central Rada declares autonomy, then independence.
+1917|H|mor|EU|Finland|founding|Finland independent|Finland declares independence from Russia.
+1917|H|mor|MO|Brno|money,uprising|Hunger riots in Moravia|Women riot over bread in Brno, Prostejov and Ostrava; troops fire on crowds.
+1917|H|mor|AS|Delhi|law,empire|Self-government promised|Britain promises India the gradual growth of self-government.
+1917|W|mum|ME|Jerusalem|faith,occult|A Reborn with Allenby|The house reading has an Egyptian Reborn serve as a labour officer with Allenby's army, looking for an old tomb in Palestine.
+1917|W|hun|EU|Paris|crime,occult|Mata Hari shot|A dancer called Mata Hari is shot as a spy at Vincennes; the house reading has the Arcanum note a Toreador's interest in the case.
+1917|H|mor|EU|Russia|war,uprising|The army melts away|Russian soldiers desert in millions to go home and share the land.
+1917|H|mor|AS|Siam|war|Siam joins the Allies|Siam declares war on Germany and sends a force to France.
+1917|W|cha|EU|Flanders|war,occult|The Banality of the trenches|The house reading has changelings at the front lose themselves to Banality, and Kithain houses in Britain forbid their young to enlist.
+1917|H|mor|EU|Petrograd|crime,revolution|Order Number One|The Petrograd Soviet orders the army to obey its soldiers' committees, and discipline collapses.
+1917|H|mor|EU|Vienna|crime,war|The Sixtus affair|Emperor Karl's secret peace letters to France are made public, and Karl is forced to grovel to Berlin.
+1917|H|mor|MO|Olomouc|war,plague|Olomouc's camps|Olomouc's barracks hold prisoners of war and the sick; typhus breaks out among them.
+1917|H|mor|EU|Russia|faith|The patriarch restored|The Russian Church elects a patriarch for the first time in two centuries.
+1917|H|mor|AS|Delhi|law,uprising|Gandhi at Champaran|Gandhi leads indigo farmers in Bihar in a peaceful campaign against their planters.
+1917|W|wer|EU|Ypres|war,occult|The mud of Passchendaele|The house reading has Glass Walkers find a Pentex forerunner selling the army gas masks that do not work.
+1917|W|vam|MO|Brno|money,occult|Hunger and blood|The house reading has the Kindred of Brno find the starving thin and their blood weak; the prince allows hunting among soldiers on leave.
+1918-1|H|mor|EU|Vienna|uprising,famine|The January strikes|Hundreds of thousands strike in Vienna and Budapest over bread cuts and the slow peace talks.
+1918-1|H|mor|EU|Prague|founding,law|The Epiphany Declaration|Czech deputies meet in Prague and demand a state of the Czechs and Slovaks.
+1918-1|H|mor|EU|Vienna|treaty,law|The Fourteen Points|President Wilson's peace terms reach Vienna; they set out peace terms, among them self-determination for the peoples of Austria-Hungary.
+1918-2|H|mor|EU|Kotor|uprising,sea|The Kotor mutiny|Sailors of the Austrian fleet in the Bay of Kotor raise red flags; the mutiny is crushed and four are shot.
+1918-2|H|mor|EU|Kiev|war|Kiev taken and lost|The Red Army takes Kiev and kills thousands; within weeks German troops drive them out.
+1918-3|H|mor|EU|Brest-Litovsk|treaty|The Treaty of Brest-Litovsk|Russia gives up Poland, the Baltic lands, Finland and Ukraine to make peace.
+1918-3|H|mor|EU|Picardy|battle|The Spring Offensive|Germany throws its armies from the east at the British in Picardy and gains forty miles in days.
+1918-3|H|mor|EU|Paris|war,science|The Paris gun|A German gun seventy-five miles away shells Paris; one shell kills eighty worshippers in a church on Good Friday.
+1918-3|H|mor|EU|Etaples|plague|The first flu wave|A mild influenza spreads through the crowded army camps in France, among them the great base at Etaples.
+1918-4|H|mor|EU|Lys|battle|The Lys|Germany attacks again on the Lys; Haig orders his men to fight with their backs to the wall.
+1918-4|H|mor|EU|Zeebrugge|sea,war|The Zeebrugge raid|The Royal Navy tries to block the submarine port at Zeebrugge with sunken ships.
+1918-4|H|mor|EU|Somme|death,war|The Red Baron shot down|Manfred von Richthofen is shot down and killed over the Somme.
+1918-4|H|mor|MO|Prague|founding,law|The oath of the nation|Czech writers and deputies swear an oath in Prague to stand together until independence.
+1918-4|H|mor|EU|Rome|founding|The Congress of Oppressed Nationalities|Czechs, Poles, Romanians and South Slavs meet in Rome to plan the breakup of Austria-Hungary.
+1918-5|H|mor|EU|Chelyabinsk|war,uprising|The Czech Legion rises|The Czechoslovak Legion, crossing Russia to sail home from Vladivostok, fights the Bolsheviks at Chelyabinsk and seizes the railway.
+1918-5|H|mor|EU|Aisne|battle|The Aisne offensive|Germany breaks through on the Chemin des Dames and reaches the Marne again.
+1918-5|H|mor|EU|Rumburk|uprising|The Rumburk mutiny|Czech soldiers back from Russian captivity mutiny at Rumburk in Bohemia; the leaders are shot.
+1918-5|H|mor|ME|Baku|war,founding|Azerbaijan, Armenia and Georgia|The Transcaucasian republic breaks into Georgia, Armenia and Azerbaijan.
+1918-5|H|mor|ME|Sardarapat|battle|Sardarapat|Armenians beat the Ottoman army at Sardarapat and save Yerevan.
+1918-6|H|mor|EU|Belleau Wood|battle|Belleau Wood|American marines fight for weeks in a hunting wood near Chateau-Thierry.
+1918-6|H|mor|EU|Piave|battle|The Piave|Austria's last offensive fails on the flooded Piave.
+1918-6|H|mor|MO|Brno|money,famine|The flour runs out|Brno and Ostrava get almost no flour in the summer of 1918; workers strike and the army is sent in.
+1918-6|H|mor|EU|Paris|founding,law|France recognises the Czechs|France recognises the Czechoslovak National Council as the basis of a future government.
+1918-7|H|mor|EU|Ekaterinburg|massacre,crown|The Romanovs shot|The Bolsheviks shoot the former tsar, his family and servants in a cellar at Ekaterinburg.
+1918-7|W|vam|EU|Ekaterinburg|crown,occult|The Ventrue and the Romanovs|The house reading has the old Ventrue of St Petersburg lose their ruling line in a night and blame the Brujah for it.
+1918-7|H|mor|EU|Marne|battle|The second Marne|The last German attack fails on the Marne, and the Allies strike back.
+1918-7|H|mor|EU|Kazan|war|The Czechs take Kazan|The Czech Legion takes Kazan and the Russian gold reserve.
+1918-8|H|mor|EU|Amiens|battle|Amiens|British, Canadian and Australian troops break the German line at Amiens: the black day of the German army.
+1918-8|H|mor|EU|Brest|plague|The second flu wave|A deadly strain of influenza breaks out in Brest, Freetown and Boston within weeks of each other.
+1918-8|H|mor|AS|Vladivostok|war|The Siberian intervention|Japan, America and the Allies land troops at Vladivostok, partly to help the Czech Legion.
+1918-8|H|mor|EU|Moscow|terror|The Red Terror|Fanny Kaplan shoots Lenin, and the Bolsheviks answer with mass executions.
+1918-8|H|mor|EU|London|founding,law|Britain recognises the Czechs|Britain recognises the Czechoslovaks as an Allied nation.
+1918-9|H|mor|ME|Megiddo|battle|Megiddo|Allenby's cavalry break the Ottoman front at Megiddo and ride for Damascus.
+1918-9|H|mor|EU|Dobro Pole|battle|The Macedonian breakthrough|Serbian and French troops break the Bulgarian line, and Bulgaria asks for peace.
+1918-9|H|mor|EU|Saint-Mihiel|battle|Saint-Mihiel|The American army fights its first big battle on its own.
+1918-9|H|mor|ME|Baku|massacre|The Baku massacres|Ottoman and Azerbaijani troops take Baku and kill thousands of Armenians.
+1918-9|H|mor|EU|Meuse-Argonne|battle|The Meuse-Argonne|Over a million American soldiers attack in the Argonne forest in the war's last great battle.
+1918-10|H|mor|ME|Damascus|war,founding|Damascus taken|Arab and Australian troops enter Damascus.
+1918-10|H|mor|EU|Vienna|law,founding|Karl's manifesto|Emperor Karl offers to make Austria a federation of peoples; the peoples have already decided.
+1918-10|H|mor|MO|Prague|founding,revolution|Czechoslovakia proclaimed|The National Committee in Prague declares an independent Czechoslovakia on 28 October without a shot.
+1918-10|H|mor|MO|Brno|founding,revolution|Brno joins the republic|Czech officials take over Brno; German parties try to join the Moravian lands to German Austria and fail.
+1918-10|W|all,vam|MO|Brno|founding,occult|A new prince for a new state|The house reading has the Kindred of Brno use the new republic to settle old scores; the prince recognises Prague's claims for the first time.
+1918-10|H|mor|EU|Vittorio Veneto|battle|Vittorio Veneto|Italy breaks the Austro-Hungarian army as its regiments go home by nation.
+1918-10|H|mor|ME|Mudros|treaty|The Armistice of Mudros|The Ottoman empire makes peace on a British warship.
+1918-10|H|mor|EU|Budapest|revolution|The Aster Revolution|Budapest rises, Count Karolyi takes power, and Hungary breaks from Austria.
+1918-10|H|mor|EU|Zagreb|founding|The South Slav state|The Croatian diet breaks with Austria-Hungary and declares a South Slav state.
+1918-10|H|mor|EU|Prague|death,plague|The flu in Prague|Influenza kills thousands in Prague and Brno as the republic is born; the painter Schiele dies in Vienna.
+1918-10|H|mor|EU|Wilhelmshaven|uprising,sea|The fleet refuses|German admirals plan a last battle; the sailors put out the boilers.
+1918-11|H|mor|EU|Kiel|uprising,sea|The Kiel mutiny|German sailors refuse a last sortie, raise the red flag at Kiel, and revolution spreads through Germany.
+1918-11|H|mor|EU|Berlin|revolution,crown|The Kaiser goes|A republic is proclaimed in Berlin, and Wilhelm II goes into exile in the Netherlands.
+1918-11|H|mor|EU|Compiegne|treaty|The Armistice|Germany signs the armistice in a railway carriage at Compiegne; the guns stop at eleven on 11 November.
+1918-11|H|mor|EU|Vienna|crown,founding|Karl steps aside|Emperor Karl gives up his share of power in Austria; German Austria is proclaimed a republic.
+1918-11|H|mor|EU|Warsaw|founding|Poland reborn|Pilsudski takes command in Warsaw, and Poland returns after a hundred and twenty-three years.
+1918-11|H|mor|EU|Prague|law,founding|Masaryk president|The new National Assembly elects Masaryk president of Czechoslovakia.
+1918-11|W|wra|EU|Flanders|death,occult|The armistice of the dead|The house reading has the Shadowlands of the Western Front left crowded with ghosts who do not believe it is over.
+1918-11|W|wer|EU|Ardennes|war,occult|Counting the cost|The house reading has the European septs count their losses after four years, and find that some caerns have gone silent.
+1918-11|H|mor|EU|Munich|revolution|Revolution in Munich|Kurt Eisner proclaims a Bavarian republic, and the Wittelsbach king flees.
+1918-11|H|mor|ME|Istanbul|war,empire|Allied fleets at Istanbul|Allied warships anchor off Istanbul, and the occupation of the Ottoman capital begins.
+1918-11|H|mor|EU|Mons|war,death|The last shots|Soldiers die in the last minutes before eleven o'clock; the Canadians end the war where the British began it, at Mons.
+1918-11|H|mor|EU|Budapest|founding|The Hungarian Republic|Hungary is proclaimed a republic.
+1918-12|H|mor|EU|Belgrade|founding,crown|The Kingdom of Serbs, Croats and Slovenes|Prince Alexander proclaims the united South Slav kingdom.
+1918-12|H|mor|MO|Opava|war,founding|The Sudeten provinces|Czechoslovak troops occupy Opava and the German districts of Silesia and northern Moravia.
+1918-12|H|mor|EU|Bratislava|war|Slovakia secured|Czechoslovak and Italian-led troops push Hungarian forces out of Slovakia.
+1918-12|H|mor|EU|Bratislava|war,founding|Slovakia joined|Czechoslovak troops close on Bratislava, then called Pressburg, and march in on the first day of the new year.
+1918-12|H|mor|EU|Lviv|war|The Polish-Ukrainian war|Poles and Ukrainians fight for Lviv after the empire falls.
+1918-12|H|mor|EU|Berlin|uprising|The Spartacists|The Spartacist League founds the German Communist Party; the January rising comes weeks later.
+1918|W|wra,mor|EU|Europe|plague,occult|The influenza dead|The house reading has the influenza fill the Shadowlands with the young; the Hierarchy blames Spectres, and Heretic cults grow.
+1918|W|vam|EU|London|plague,occult|Tainted vessels|The house reading has the Kindred of London fall ill after feeding on the sick; the house rule calls it a taint of the blood, not a true plague.
+1918|H|mor|AS|Bombay|plague|The flu in India|Influenza kills perhaps twelve million in India, more than anywhere else.
+1918|H|mor|AS|Tokyo|uprising,money|The rice riots|Rice prices double and riots spread across Japan; the government falls.
+1918|H|mor|ME|Persia|famine,plague|The Persian famine|Armies, drought and influenza kill a large part of Persia's people.
+1918|H|mor|EU|Russia|war|The Russian Civil War|Red and White armies fight across Russia; the Czech Legion holds the Trans-Siberian Railway.
+1918|H|mor|EU|Finland|war|The Finnish Civil War|Reds and Whites fight in Finland, and the Whites win with German help.
+1918|W|mag|AS|Siberia|war,occult|The Legion's long road|The house reading has a Czech Hermetic in the Legion carry a talisman across Siberia, and Russian Traditions hunt for it.
+1918|W|kue|AS|Vladivostok|war,occult|Strangers in Vladivostok|The house reading has the Kuei-jin of the coast watch Allied armies pour into Vladivostok and decide to wait them out.
+1918|W|mum|ME|Damascus|war,occult|A Reborn rides north|The house reading has an Egyptian Reborn with the Arab armies search for a scroll hidden in Damascus.
+1918|W|hun|EU|Paris|war,occult|Hunters at the peace|The house reading has the Arcanum send scholars to Paris, fearing that new borders will move old guarded sites.
+1918|H|mor|EU|Germany|famine|The blockade continues|The Allied blockade of Germany continues after the armistice, and hunger kills many more.
+1918|H|mor|ME|Jerusalem|founding,learning|The Hebrew University stone|Foundation stones for the Hebrew University are laid on Mount Scopus.
+1918|H|mor|EU|Prague|art|Kafka's sanatorium|Franz Kafka, ill with tuberculosis, writes in Prague and the countryside while the empire falls.
+1918|H|mor|EU|Berlin|money|The mark slides|The German mark begins the fall that will turn into the great inflation.
+1918|H|mor|ME|Baghdad|plague|Cholera in Baghdad|Cholera and influenza strike Baghdad in the first months of British rule.
+1918|H|mor|AS|Shanghai|war,trade|Shanghai's war boom|Chinese mills in Shanghai grow rich as European goods vanish from Asian markets.
+1918|H|mor|EU|Vienna|art,death|Klimt and Schiele die|Klimt dies of a stroke in February and Schiele of influenza in October.
+1918|W|cha|MO|Brno|founding,occult|The Kithain choose a duke|The house reading has the Kithain of Moravia meet in a Brno cafe to choose a duke for the new republic's lands.
+1918|W|wra|MO|Olomouc|plague,occult|The Moravian Shadowlands|The house reading has the influenza and the war fill the Moravian Shadowlands; the local Hierarchy cannot ferry them all.

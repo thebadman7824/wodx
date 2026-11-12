@@ -34231,5 +34231,6071 @@
 "text": "The house reading has Glass Walkers watching a German chemical firm whose board answers to something in the Wyrm's service.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
+},
+{
+"id": "r3-great-war-001",
+"era": "great-war",
+"year": 1914,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"terror",
+"death"
+],
+"title": "Sarajevo",
+"text": "A Bosnian Serb student shoots Archduke Franz Ferdinand and his wife Sophie in Sarajevo after their driver takes a wrong turn.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-002",
+"era": "great-war",
+"year": 1914,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Konopiste",
+"tags": [
+"death",
+"crown"
+],
+"title": "Konopiste falls silent",
+"text": "The archduke's estate at Konopiste in Bohemia, with its rose garden and hunting trophies, is left without a master.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-003",
+"era": "great-war",
+"year": 1914,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"war",
+"law"
+],
+"title": "The ultimatum to Serbia",
+"text": "Austria-Hungary sends Serbia demands written to be refused, and declares war when they are not all met.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-004",
+"era": "great-war",
+"year": 1914,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"war",
+"siege"
+],
+"title": "Belgrade shelled",
+"text": "Austrian monitors on the Danube shell Belgrade the night after war is declared.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-005",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"war"
+],
+"title": "Germany declares war",
+"text": "Germany declares war on Russia and then France, and the great powers mobilise millions by rail.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-006",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Liege",
+"tags": [
+"siege",
+"war"
+],
+"title": "The forts of Liege",
+"text": "Belgium's forts at Liege hold the German advance for days until giant siege howitzers crush them.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-007",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war"
+],
+"title": "Britain enters the war",
+"text": "Britain declares war when Germany invades Belgium, over a treaty the German chancellor calls a scrap of paper.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-008",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals",
+"All lines"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war"
+],
+"title": "Moravia mobilises",
+"text": "The regiments of Brno, Olomouc, Kromeriz and Jihlava entrain for Galicia and Serbia amid flags and quiet dread.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-009",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leuven",
+"tags": [
+"massacre",
+"fire"
+],
+"title": "The burning of Leuven",
+"text": "German troops burn the university library of Leuven and shoot civilians; the rape of Belgium becomes a byword.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-010",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tannenberg",
+"tags": [
+"battle"
+],
+"title": "Tannenberg",
+"text": "Hindenburg and Ludendorff encircle a Russian army in East Prussia; its general shoots himself.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-011",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lorraine",
+"tags": [
+"battle"
+],
+"title": "The Battle of the Frontiers",
+"text": "French infantry in red trousers attack into Lorraine and the Ardennes and lose over a quarter of a million men in weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-012",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mons",
+"tags": [
+"battle"
+],
+"title": "Mons",
+"text": "The British Expeditionary Force meets the Germans at Mons and falls back; tales of the Angels of Mons follow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-013",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Wraith",
+"Mage"
+],
+"region": "Europe",
+"place": "Mons",
+"tags": [
+"occult",
+"battle"
+],
+"title": "The Angels of Mons",
+"text": "The house reading lets soldiers' tale of the Angels of Mons be a real working, though no Tradition will say whose.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-014",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cer",
+"tags": [
+"battle"
+],
+"title": "Cer Mountain",
+"text": "Serbia beats the first Austrian invasion on Cer Mountain, the first Allied victory of the war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-015",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"war",
+"empire"
+],
+"title": "Japan enters the war",
+"text": "Japan declares war on Germany and turns on its Pacific islands and its port of Tsingtao.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-016",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Galicia",
+"tags": [
+"battle"
+],
+"title": "The Galician battles",
+"text": "Russia routs the Austro-Hungarian armies in Galicia and takes Lemberg; Austria loses four hundred thousand men in a month.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-017",
+"era": "great-war",
+"year": 1914,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Heligoland",
+"tags": [
+"sea",
+"battle"
+],
+"title": "Heligoland Bight",
+"text": "British battlecruisers sink three German cruisers in the first sea fight of the war, near Heligoland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-018",
+"era": "great-war",
+"year": 1914,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marne",
+"tags": [
+"battle"
+],
+"title": "The Marne",
+"text": "The French and British stop the Germans on the Marne, some reserves rushed out from Paris in taxis.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-019",
+"era": "great-war",
+"year": 1914,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Aisne",
+"tags": [
+"battle",
+"war"
+],
+"title": "The first trenches",
+"text": "Both sides dig in on the Aisne, and the race to the sea begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-020",
+"era": "great-war",
+"year": 1914,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Przemysl",
+"tags": [
+"siege"
+],
+"title": "The siege of Przemysl",
+"text": "The Russians besiege the great Austrian fortress of Przemysl in Galicia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-021",
+"era": "great-war",
+"year": 1914,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Masurian Lakes",
+"tags": [
+"battle"
+],
+"title": "The Masurian Lakes",
+"text": "Germany drives a second Russian army out of East Prussia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-022",
+"era": "great-war",
+"year": 1914,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "North Sea",
+"tags": [
+"sea",
+"war"
+],
+"title": "Three cruisers sunk",
+"text": "One German submarine sinks three British cruisers in an hour.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-023",
+"era": "great-war",
+"year": 1914,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Antwerp",
+"tags": [
+"siege"
+],
+"title": "Antwerp falls",
+"text": "The Belgian army slips out of Antwerp, and the city surrenders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-024",
+"era": "great-war",
+"year": 1914,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"battle"
+],
+"title": "First Ypres",
+"text": "German volunteer regiments of students attack at Ypres and are shot down in thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-025",
+"era": "great-war",
+"year": 1914,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Black Sea",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Ottomans join",
+"text": "Ottoman warships, two of them German, shell Russian Black Sea ports, and the empire enters the war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-026",
+"era": "great-war",
+"year": 1914,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Yser",
+"tags": [
+"flood",
+"battle"
+],
+"title": "The Yser flooded",
+"text": "Belgium opens the sluices at Nieuwpoort and floods the Yser plain to stop the Germans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-027",
+"era": "great-war",
+"year": 1914,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Penang",
+"tags": [
+"sea",
+"war"
+],
+"title": "The Emden at Penang",
+"text": "The German raider Emden slips into Penang harbour and sinks a Russian cruiser before being hunted down.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-028",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tsingtao",
+"tags": [
+"siege",
+"war"
+],
+"title": "Tsingtao falls",
+"text": "Japanese and British troops take Germany's Chinese port after a siege.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-029",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Tsingtao",
+"tags": [
+"war",
+"occult"
+],
+"title": "Tsingtao's foreign dead",
+"text": "The house reading has the Kuei-jin of Shandong drive out the German Kindred who came with the colony.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-030",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"faith",
+"war"
+],
+"title": "The holy war proclaimed",
+"text": "The Ottoman sheikh ul-Islam calls Muslims everywhere to holy war against the Allies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-031",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Basra",
+"tags": [
+"war",
+"empire"
+],
+"title": "Britain in Mesopotamia",
+"text": "An Indian army lands at the head of the Gulf to guard the oil and takes Basra.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-032",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"war"
+],
+"title": "Belgrade taken",
+"text": "Austria takes Belgrade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-033",
+"era": "great-war",
+"year": 1914,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Fao",
+"tags": [
+"war"
+],
+"title": "The landing at Fao",
+"text": "Indian troops land at Fao on the Shatt al-Arab to protect the Abadan refinery.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-034",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kolubara",
+"tags": [
+"battle"
+],
+"title": "Kolubara",
+"text": "Serbia counterattacks at the Kolubara and drives the Austrians out of the country.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-035",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Sarikamish",
+"tags": [
+"battle",
+"weather"
+],
+"title": "Sarikamish",
+"text": "Enver Pasha marches an Ottoman army through the Caucasus snows; most of the army freezes or dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-036",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Flanders",
+"tags": [
+"faith"
+],
+"title": "The Christmas truce",
+"text": "Soldiers along parts of the Western Front stop fighting for Christmas, sing carols and meet in no man's land.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-037",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Flanders",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Glamour in no man's land",
+"text": "The house reading has the Christmas truce blaze with Glamour, and changelings in uniform remember it all their lives.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-038",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Scarborough",
+"tags": [
+"war",
+"sea"
+],
+"title": "Scarborough shelled",
+"text": "German battlecruisers shell Scarborough, Hartlepool and Whitby.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-039",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Limanowa",
+"tags": [
+"battle"
+],
+"title": "Limanowa",
+"text": "Austria wins its last unaided victory against Russia south of Krakow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-040",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"war",
+"revolution"
+],
+"title": "Masaryk goes abroad",
+"text": "Professor Masaryk leaves Austria for exile to work for Czech independence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-041",
+"era": "great-war",
+"year": 1914,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"crown"
+],
+"title": "The sultan of Egypt",
+"text": "Britain makes Hussein Kamel sultan of Egypt in place of the deposed khedive.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-042",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"war",
+"plague"
+],
+"title": "The wounded come home",
+"text": "Hospital trains fill Olomouc and Brno; schools become wards and cholera comes from the Galician front.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-043",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war",
+"occult"
+],
+"title": "The prince's ghouls in uniform",
+"text": "The house reading has Brno's Kindred lose half their ghouls to the call-up and quarrel over who may take the wounded.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-044",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"war",
+"death"
+],
+"title": "The Shadowlands fill",
+"text": "The house reading follows canon: the war dead swamp the Shadowlands of Flanders, and the Hierarchy cannot reap them fast enough.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-045",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kragujevac",
+"tags": [
+"plague"
+],
+"title": "Typhus in Serbia",
+"text": "Typhus spreads from prisoner camps across Serbia and kills hundreds of thousands, doctors among them.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-046",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Ardennes",
+"tags": [
+"war",
+"occult"
+],
+"title": "The forest at war",
+"text": "The house reading has the Garou of the Ardennes torn between fighting the Wyrm in the trenches and guarding caerns being shelled to splinters.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-047",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"war",
+"empire"
+],
+"title": "India at war",
+"text": "India sends over a million men to fight; Indian corps hold the line at Ypres in their first winter.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-048",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"war",
+"science"
+],
+"title": "The Technocracy goes to war",
+"text": "The house reading has the Iteration X and the New World Order working both sides, testing new guns on whichever army will take them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-049",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"war"
+],
+"title": "Czech papers silenced",
+"text": "Censorship closes Czech papers, and suspected Russophiles are arrested.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-050",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"art",
+"war"
+],
+"title": "The manifesto of the ninety-three",
+"text": "German professors sign a manifesto defending the army in Belgium.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-051",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law",
+"war"
+],
+"title": "The Defence of the Realm Act",
+"text": "Britain gives its government wide powers over press, pubs and land.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-052",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"empire",
+"war"
+],
+"title": "Egypt a protectorate",
+"text": "Britain declares a protectorate over Egypt and deposes the khedive.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-053",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Reborn at war",
+"text": "The house reading has Egypt's Reborn see the war as the outsiders' quarrel, while Set's followers grow bold in Cairo.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-054",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mecca",
+"tags": [
+"faith",
+"war"
+],
+"title": "The hajj cut off",
+"text": "War closes the pilgrim roads, and few pilgrims reach Mecca.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-055",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lviv",
+"tags": [
+"war",
+"persecution"
+],
+"title": "Galicia's Jews flee",
+"text": "Russian troops in Galicia attack Jewish towns; hundreds of thousands flee to Vienna and Budapest.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-056",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Thalerhof",
+"tags": [
+"persecution"
+],
+"title": "The Thalerhof camp",
+"text": "Austria interns thousands of suspect Ruthenians in a camp near Graz, where many die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-057",
+"era": "great-war",
+"year": 1914,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war",
+"empire"
+],
+"title": "Afghanistan neutral",
+"text": "The Afghan emir keeps out of the war despite Ottoman and German pleading.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-058",
+"era": "great-war",
+"year": 1915,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Carpathians",
+"tags": [
+"battle",
+"weather"
+],
+"title": "The Carpathian winter",
+"text": "Austria attacks through the Carpathian passes in winter to relieve Przemysl and loses six hundred thousand men to battle and frost.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-059",
+"era": "great-war",
+"year": 1915,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Suez",
+"tags": [
+"war"
+],
+"title": "The attack on Suez",
+"text": "An Ottoman force crosses Sinai and tries to cross the canal; it is beaten off.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-060",
+"era": "great-war",
+"year": 1915,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dogger Bank",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Dogger Bank",
+"text": "British and German battlecruisers fight off the Dogger Bank; the Blucher sinks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-061",
+"era": "great-war",
+"year": 1915,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bolimow",
+"tags": [
+"war",
+"science"
+],
+"title": "Gas at Bolimow",
+"text": "Germany fires gas shells at the Russians at Bolimow; the cold stops the gas from working.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-062",
+"era": "great-war",
+"year": 1915,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tabriz",
+"tags": [
+"war"
+],
+"title": "Tabriz changes hands",
+"text": "Ottoman and Russian forces fight over Tabriz in neutral Persia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-063",
+"era": "great-war",
+"year": 1915,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "North Sea",
+"tags": [
+"war",
+"sea"
+],
+"title": "Unrestricted submarine war",
+"text": "Germany declares the waters round Britain a war zone where any ship may be sunk.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-064",
+"era": "great-war",
+"year": 1915,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dardanelles",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Dardanelles shelled",
+"text": "British and French battleships begin shelling the forts at the mouth of the Dardanelles.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-065",
+"era": "great-war",
+"year": 1915,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dardanelles",
+"tags": [
+"sea",
+"battle"
+],
+"title": "The naval attack fails",
+"text": "Mines sink three Allied battleships in the narrows in an afternoon, and the fleet withdraws.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-066",
+"era": "great-war",
+"year": 1915,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Przemysl",
+"tags": [
+"siege",
+"famine"
+],
+"title": "Przemysl surrenders",
+"text": "The starving garrison of Przemysl blows up its forts and surrenders: over a hundred thousand prisoners.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-067",
+"era": "great-war",
+"year": 1915,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Neuve Chapelle",
+"tags": [
+"battle"
+],
+"title": "Neuve Chapelle",
+"text": "The British break into the German line at Neuve Chapelle and cannot go further.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-068",
+"era": "great-war",
+"year": 1915,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"war"
+],
+"title": "The Czech Mafia",
+"text": "Czech politicians at home form a secret network, called the Maffie, to send news to Masaryk abroad.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-069",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"science",
+"battle"
+],
+"title": "Chlorine at Ypres",
+"text": "Germany releases chlorine gas from cylinders at Ypres; French colonial troops break and the Canadians hold.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-070",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gallipoli",
+"tags": [
+"battle"
+],
+"title": "The Gallipoli landings",
+"text": "British, Australian, New Zealand and French troops land on Gallipoli; Mustafa Kemal holds the heights.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-071",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"persecution",
+"massacre"
+],
+"title": "The Armenian deportations",
+"text": "Armenian leaders in Istanbul are arrested and killed, and the deportations of the Armenian people begin; about a million die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-072",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Middle East",
+"place": "Anatolia",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The marches of the dead",
+"text": "The house reading has the Armenian dead rise in the Shadowlands in such numbers that the Dark Kingdom of Jade sends envoys to see.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-073",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Van",
+"tags": [
+"siege",
+"uprising"
+],
+"title": "The defence of Van",
+"text": "The Armenians of Van hold their quarter against Ottoman troops for a month until the Russians come.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-074",
+"era": "great-war",
+"year": 1915,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals",
+"All lines"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"war",
+"crime"
+],
+"title": "The 28th regiment",
+"text": "The Prague 28th infantry regiment goes over to the Russians nearly whole in the Carpathians, and the army disbands it in disgrace.",
+"ref": "Real history",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-great-war-075",
+"era": "great-war",
+"year": 1915,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Gorlice",
+"tags": [
+"battle"
+],
+"title": "Gorlice-Tarnow",
+"text": "German and Austrian armies break the Russian front at Gorlice, and the great retreat begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-076",
+"era": "great-war",
+"year": 1915,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Irish Sea",
+"tags": [
+"sea",
+"war"
+],
+"title": "The Lusitania sunk",
+"text": "A German submarine sinks the liner Lusitania off Ireland; nearly twelve hundred die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-077",
+"era": "great-war",
+"year": 1915,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"war"
+],
+"title": "Italy declares war",
+"text": "Italy joins the Allies on promises of Austrian land.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-078",
+"era": "great-war",
+"year": 1915,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"science",
+"battle"
+],
+"title": "Second Ypres ends",
+"text": "Second Ypres ends with the salient smaller and poisoned.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-079",
+"era": "great-war",
+"year": 1915,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Isonzo",
+"tags": [
+"battle"
+],
+"title": "The first Isonzo",
+"text": "Italy attacks across the Isonzo river, the first of twelve battles there.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-080",
+"era": "great-war",
+"year": 1915,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lemberg",
+"tags": [
+"war"
+],
+"title": "Lemberg retaken",
+"text": "Austria takes back Lemberg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-081",
+"era": "great-war",
+"year": 1915,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"crime"
+],
+"title": "Kramar arrested",
+"text": "The Czech politician Karel Kramar is arrested for treason and later sentenced to death; the sentence is commuted.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-082",
+"era": "great-war",
+"year": 1915,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"faith",
+"law"
+],
+"title": "Hus remembered",
+"text": "Masaryk in Geneva declares war on Austria on the five hundredth anniversary of Jan Hus's burning.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-083",
+"era": "great-war",
+"year": 1915,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Isonzo",
+"tags": [
+"battle"
+],
+"title": "The second Isonzo",
+"text": "Italy attacks again on the Carso and loses forty thousand men.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-084",
+"era": "great-war",
+"year": 1915,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"war"
+],
+"title": "Warsaw falls",
+"text": "The Germans take Warsaw as the Russians retreat, burning crops and driving civilians east.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-085",
+"era": "great-war",
+"year": 1915,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Suvla Bay",
+"tags": [
+"battle"
+],
+"title": "Suvla Bay",
+"text": "A new British landing at Suvla Bay stalls on the beach.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-086",
+"era": "great-war",
+"year": 1915,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brest-Litovsk",
+"tags": [
+"war",
+"migration"
+],
+"title": "The great retreat",
+"text": "Millions of refugees flee eastward ahead of the Russian armies through the summer.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-087",
+"era": "great-war",
+"year": 1915,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Loos",
+"tags": [
+"battle",
+"science"
+],
+"title": "Loos",
+"text": "Britain uses gas for the first time at Loos; the wind blows some of it back.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-088",
+"era": "great-war",
+"year": 1915,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Champagne",
+"tags": [
+"battle"
+],
+"title": "The Champagne offensive",
+"text": "France attacks in Champagne with huge losses for a few miles.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-089",
+"era": "great-war",
+"year": 1915,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lutsk",
+"tags": [
+"battle"
+],
+"title": "The Rovno offensive",
+"text": "Austria's autumn attack in Volhynia fails and costs it a quarter of a million men.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-090",
+"era": "great-war",
+"year": 1915,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Serbia",
+"tags": [
+"war"
+],
+"title": "Serbia overrun",
+"text": "Germany, Austria and Bulgaria invade Serbia from three sides.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-091",
+"era": "great-war",
+"year": 1915,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"crime",
+"death"
+],
+"title": "Edith Cavell shot",
+"text": "The Germans shoot the British nurse Edith Cavell for helping Allied soldiers escape.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-092",
+"era": "great-war",
+"year": 1915,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Salonika",
+"tags": [
+"war"
+],
+"title": "The landing at Salonika",
+"text": "British and French troops land at Salonika in neutral Greece too late to save Serbia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-093",
+"era": "great-war",
+"year": 1915,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ctesiphon",
+"tags": [
+"battle"
+],
+"title": "Ctesiphon",
+"text": "The British march on Baghdad is stopped at Ctesiphon, and the army falls back on Kut.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-094",
+"era": "great-war",
+"year": 1915,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kosovo",
+"tags": [
+"migration"
+],
+"title": "The retreat through Kosovo",
+"text": "Serbian civilians and soldiers stream across the Kosovo plain toward the mountains.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-095",
+"era": "great-war",
+"year": 1915,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Albania",
+"tags": [
+"migration",
+"weather"
+],
+"title": "The Serbian retreat",
+"text": "The Serbian army and King Peter retreat through the Albanian mountains in winter; tens of thousands die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-096",
+"era": "great-war",
+"year": 1915,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kut",
+"tags": [
+"siege"
+],
+"title": "The siege of Kut",
+"text": "The Ottomans surround the British at Kut.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-097",
+"era": "great-war",
+"year": 1915,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gallipoli",
+"tags": [
+"war"
+],
+"title": "Gallipoli evacuated",
+"text": "The Allies slip away from Gallipoli at night without losing a man, after eight months and half a million casualties.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-098",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Assamites watch",
+"text": "The house reading has the Assamites of Anatolia refuse the sultan's holy war, while Ventrue in Istanbul profit from the deportations.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-099",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Gallipoli",
+"tags": [
+"war",
+"occult"
+],
+"title": "Old dead of Troy",
+"text": "The house reading has a Reborn in Cairo dream of Troy's old dead stirring under the guns at Gallipoli.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-100",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Arcanum's war",
+"text": "The house reading has the Arcanum in London lend scholars to naval intelligence and lose track of half its own members.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-101",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"empire",
+"treaty"
+],
+"title": "The Twenty-One Demands",
+"text": "Japan demands control over much of China, and Chinese students boycott Japanese goods.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-102",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"uprising"
+],
+"title": "The Singapore mutiny",
+"text": "Indian troops in Singapore mutiny and kill Europeans before they are put down.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-103",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mecca",
+"tags": [
+"war",
+"uprising"
+],
+"title": "Letters from Mecca",
+"text": "Sharif Hussein of Mecca and the British high commissioner in Cairo begin letters on an Arab rising.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-104",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Lebanon",
+"tags": [
+"famine"
+],
+"title": "The Lebanon famine",
+"text": "An Allied blockade, locusts and Ottoman requisitions starve Mount Lebanon; perhaps half the people die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-105",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Carpathians",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Carpathian Garou",
+"text": "The house reading has the Shadow Lords of the Carpathians wage their own war, using the armies to drive rival septs from caerns.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-106",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"money",
+"famine"
+],
+"title": "Bread cards in Vienna",
+"text": "Bread is rationed in Vienna, and queues begin outside every bakery.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-107",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Hama",
+"tags": [
+"war",
+"faith"
+],
+"title": "Arab nationalists hanged",
+"text": "Jamal Pasha hangs Arab nationalists in Beirut and Damascus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-108",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"terror"
+],
+"title": "Zeppelin raids",
+"text": "German airships bomb London and English towns by night.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-109",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"occult"
+],
+"title": "Lights out in London",
+"text": "The house reading has London's Kindred find the blackout a gift for hunting, and the prince orders discretion.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+}
+]
+},
+{
+"id": "r3-great-war-110",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art",
+"crime"
+],
+"title": "The Good Soldier Svejk is born",
+"text": "In Prague cells and barracks Jaroslav Hasek gathers the material for the soldier who survives by seeming a fool.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-111",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war",
+"travel"
+],
+"title": "The Niedermayer mission",
+"text": "A German and Ottoman mission reaches Kabul to raise Afghanistan against India and fails.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-112",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Isfahan",
+"tags": [
+"war",
+"travel"
+],
+"title": "Wassmuss in Persia",
+"text": "A German agent called Wassmuss raises the southern Persian tribes against Britain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-113",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bulgaria",
+"tags": [
+"war"
+],
+"title": "Bulgaria joins",
+"text": "Bulgaria joins the Central Powers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-114",
+"era": "great-war",
+"year": 1915,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gallipoli",
+"tags": [
+"war",
+"weather"
+],
+"title": "The great storm at Gallipoli",
+"text": "A blizzard and floods kill soldiers in the trenches at Suvla.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-115",
+"era": "great-war",
+"year": 1916,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Montenegro",
+"tags": [
+"war"
+],
+"title": "Montenegro falls",
+"text": "Austria takes Mount Lovcen and Montenegro surrenders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-116",
+"era": "great-war",
+"year": 1916,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Erzurum",
+"tags": [
+"battle",
+"weather"
+],
+"title": "Erzurum",
+"text": "Yudenich's Russians storm the fortress of Erzurum in the winter snows.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-117",
+"era": "great-war",
+"year": 1916,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Corfu",
+"tags": [
+"migration",
+"plague"
+],
+"title": "The Serbs on Corfu",
+"text": "The survivors of the Serbian army are shipped to Corfu, where thousands die of disease on Vido island.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-118",
+"era": "great-war",
+"year": 1916,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle"
+],
+"title": "Verdun",
+"text": "Germany attacks Verdun to bleed France white; the battle lasts ten months and costs some seven hundred thousand casualties.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-119",
+"era": "great-war",
+"year": 1916,
+"month": 2,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle",
+"occult"
+],
+"title": "The Verdun Shadowlands",
+"text": "The house reading has the Shadowlands of Verdun turn to a sea of mud and ghosts where Spectres hunt the newly dead.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-120",
+"era": "great-war",
+"year": 1916,
+"month": 2,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle",
+"occult"
+],
+"title": "Feeding at the front",
+"text": "The house reading has Kindred haunt the dressing stations behind Verdun, and the Camarilla struggles to stop Masquerade breaches among the dying.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-121",
+"era": "great-war",
+"year": 1916,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Isonzo",
+"tags": [
+"battle"
+],
+"title": "The fifth Isonzo",
+"text": "Italy attacks again on the Isonzo with little gain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-122",
+"era": "great-war",
+"year": 1916,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle"
+],
+"title": "Le Mort Homme",
+"text": "French and German troops fight for months over a hill called Dead Man.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-123",
+"era": "great-war",
+"year": 1916,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dublin",
+"tags": [
+"uprising"
+],
+"title": "The Easter Rising",
+"text": "Irish republicans seize the Dublin General Post Office and proclaim a republic; the leaders are shot after the surrender.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-124",
+"era": "great-war",
+"year": 1916,
+"month": 4,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Dublin",
+"tags": [
+"uprising",
+"occult"
+],
+"title": "The Rising and the Dreaming",
+"text": "The house reading has the Irish Kithain see the Rising as a poem made real, and the Unseelie mourn its poets.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-125",
+"era": "great-war",
+"year": 1916,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kut",
+"tags": [
+"siege",
+"famine"
+],
+"title": "Kut surrenders",
+"text": "The starving British at Kut surrender; many of the prisoners die on the march into Anatolia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-126",
+"era": "great-war",
+"year": 1916,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Asiago",
+"tags": [
+"battle"
+],
+"title": "The Strafexpedition",
+"text": "Austria attacks Italy from the Trentino and is held on the Asiago plateau.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-127",
+"era": "great-war",
+"year": 1916,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Jutland",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Jutland",
+"text": "The British and German fleets meet off Jutland; Britain loses more ships but keeps command of the sea.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-128",
+"era": "great-war",
+"year": 1916,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "London",
+"tags": [
+"treaty",
+"empire"
+],
+"title": "Sykes-Picot",
+"text": "Britain and France secretly agree how to divide the Ottoman Arab lands.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-129",
+"era": "great-war",
+"year": 1916,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Volhynia",
+"tags": [
+"battle"
+],
+"title": "The Brusilov offensive",
+"text": "Brusilov breaks the Austrian line on a wide front, taking hundreds of thousands of prisoners.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-130",
+"era": "great-war",
+"year": 1916,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mecca",
+"tags": [
+"uprising",
+"war"
+],
+"title": "The Arab Revolt",
+"text": "Sharif Hussein proclaims the Arab revolt against the Ottomans at Mecca.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-131",
+"era": "great-war",
+"year": 1916,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Orkney",
+"tags": [
+"sea",
+"death"
+],
+"title": "Kitchener drowns",
+"text": "The war minister Lord Kitchener drowns when HMS Hampshire hits a mine off Orkney.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-132",
+"era": "great-war",
+"year": 1916,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle",
+"science"
+],
+"title": "Phosgene at Verdun",
+"text": "Germany fires diphosgene shells at Verdun in its last push for Fort Souville.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-133",
+"era": "great-war",
+"year": 1916,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Somme",
+"tags": [
+"battle"
+],
+"title": "The Somme",
+"text": "Britain attacks on the Somme and loses nearly sixty thousand men on the first day.",
+"ref": "Real history",
+"links": [
+{
+"id": "gw-fourth-maelstrom",
+"title": "The Fourth Great Maelstrom"
+}
+]
+},
+{
+"id": "r3-great-war-134",
+"era": "great-war",
+"year": 1916,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Somme",
+"tags": [
+"battle",
+"occult"
+],
+"title": "The Wyrm feeds",
+"text": "The house reading has Black Spiral Dancers move freely in the Somme mud, and the Garou find the Wyrm grown fat on the battle.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "gw-fourth-maelstrom",
+"title": "The Fourth Great Maelstrom"
+}
+]
+},
+{
+"id": "r3-great-war-135",
+"era": "great-war",
+"year": 1916,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Gorizia",
+"tags": [
+"battle"
+],
+"title": "Gorizia taken",
+"text": "Italy takes Gorizia in the sixth Isonzo battle.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-136",
+"era": "great-war",
+"year": 1916,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bucharest",
+"tags": [
+"war"
+],
+"title": "Romania enters",
+"text": "Romania declares war on Austria-Hungary and invades Transylvania.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-137",
+"era": "great-war",
+"year": 1916,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Romani",
+"tags": [
+"battle"
+],
+"title": "Romani",
+"text": "The British beat an Ottoman attack on the canal at Romani in the Sinai.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-138",
+"era": "great-war",
+"year": 1916,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Flers",
+"tags": [
+"battle",
+"science"
+],
+"title": "Tanks at Flers",
+"text": "Britain sends tanks into battle for the first time on the Somme.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-139",
+"era": "great-war",
+"year": 1916,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Transylvania",
+"tags": [
+"war"
+],
+"title": "Romania driven back",
+"text": "German and Austrian armies drive the Romanians out of Transylvania.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-140",
+"era": "great-war",
+"year": 1916,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"terror",
+"death"
+],
+"title": "The prime minister shot",
+"text": "Friedrich Adler shoots Austria's prime minister Sturgkh at dinner in a Vienna hotel.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-141",
+"era": "great-war",
+"year": 1916,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"battle"
+],
+"title": "Douaumont retaken",
+"text": "French troops take back Fort Douaumont.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-142",
+"era": "great-war",
+"year": 1916,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"death"
+],
+"title": "Franz Joseph dies",
+"text": "The old emperor dies at Schonbrunn after sixty-eight years on the throne; young Karl succeeds.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-143",
+"era": "great-war",
+"year": 1916,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"occult"
+],
+"title": "The Tremere mourn an age",
+"text": "The house reading has Vienna's Tremere hold a vigil for the old emperor and begin preparing for an empire that may not last.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-great-war-144",
+"era": "great-war",
+"year": 1916,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Somme",
+"tags": [
+"battle",
+"weather"
+],
+"title": "The Somme ends",
+"text": "The Somme ends in mud and snow; over a million men are dead or wounded for six miles.",
+"ref": "Real history",
+"links": [
+{
+"id": "gw-fourth-maelstrom",
+"title": "The Fourth Great Maelstrom"
+}
+]
+},
+{
+"id": "r3-great-war-145",
+"era": "great-war",
+"year": 1916,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bucharest",
+"tags": [
+"war"
+],
+"title": "Bucharest taken",
+"text": "German troops enter Bucharest.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-146",
+"era": "great-war",
+"year": 1916,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"crime",
+"death"
+],
+"title": "Rasputin killed",
+"text": "Russian aristocrats poison, shoot and drown the healer Rasputin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-147",
+"era": "great-war",
+"year": 1916,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Lloyd George",
+"text": "Lloyd George becomes Britain's prime minister.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-148",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Germany",
+"tags": [
+"famine",
+"weather"
+],
+"title": "The turnip winter",
+"text": "A failed potato crop and the blockade leave Germans eating turnips; hundreds of thousands die of hunger and cold.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-149",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"famine"
+],
+"title": "The Brno hunger",
+"text": "Brno's workers queue for bread; the mills switch to army cloth, and women replace men in the factories.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-150",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Turkestan",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "The Central Asian revolt",
+"text": "Kazakhs and Kyrgyz rise against conscription for labour; Russian reprisals drive hundreds of thousands into China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-151",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Asia",
+"place": "Issyk-Kul",
+"tags": [
+"uprising",
+"occult"
+],
+"title": "The steppe Garou",
+"text": "The house reading has the steppe Garou ride with the rebels against the tsar's labour draft.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-152",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"crown",
+"death"
+],
+"title": "Yuan Shikai's empire",
+"text": "Yuan Shikai declares himself emperor of China, the provinces revolt, and Yuan dies within months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-153",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zurich",
+"tags": [
+"art"
+],
+"title": "Dada",
+"text": "Refugee artists open the Cabaret Voltaire in Zurich and start Dada.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-154",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Zurich",
+"tags": [
+"art",
+"occult"
+],
+"title": "Marauders in Zurich",
+"text": "The house reading has a Marauder loose among the Dadaists, and the Cult of Ecstasy work to keep the cabaret from going mad entirely.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-155",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"founding",
+"law"
+],
+"title": "The Czechoslovak National Council",
+"text": "Masaryk, Benes and Stefanik form the Czechoslovak National Council in Paris.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-156",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Verdun",
+"tags": [
+"science",
+"war"
+],
+"title": "The Sacred Way",
+"text": "A single road from Bar-le-Duc carries a lorry every few seconds to keep Verdun supplied.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-157",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ostrava",
+"tags": [
+"industry",
+"war"
+],
+"title": "The coal of Ostrava",
+"text": "Ostrava's pits and Vitkovice work round the clock for the army, with prisoners of war in the mines.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-158",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "tied",
+"lines": [
+"All lines",
+"Mage"
+],
+"region": "Moravia",
+"place": "Vitkovice",
+"tags": [
+"industry",
+"occult"
+],
+"title": "The Iteration X works",
+"text": "The house reading has Iteration X take a quiet interest in the Vitkovice works, and a Brno Hermetic sees the Weaver tighten.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-159",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Medina",
+"tags": [
+"siege"
+],
+"title": "The siege of Medina",
+"text": "Arab forces besiege Medina, whose Ottoman commander holds it beyond the end of the war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-160",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"science"
+],
+"title": "Plastic surgery",
+"text": "Surgeons at Aldershot and Paris rebuild soldiers' faces; Harold Gillies's work founds modern plastic surgery.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-161",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"war",
+"migration"
+],
+"title": "The Chinese Labour Corps",
+"text": "Some hundred and forty thousand Chinese labourers sail to France to dig trenches and unload ships.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-162",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Hejaz",
+"tags": [
+"war",
+"travel"
+],
+"title": "Lawrence in Arabia",
+"text": "A British officer named T. E. Lawrence joins Faisal's army in the Hejaz.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-163",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Hejaz",
+"tags": [
+"war",
+"occult"
+],
+"title": "Old sand, new war",
+"text": "The house reading has the Reborn of Egypt wary of Lawrence's band crossing old roads that hide old tombs.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-164",
+"era": "great-war",
+"year": 1916,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"war",
+"occult"
+],
+"title": "A soldier's confession",
+"text": "The house reading has a Moravian soldier home from Galicia tell an Olomouc priest of something that drank from the dead.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-165",
+"era": "great-war",
+"year": 1917,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Zimmermann telegram",
+"text": "Germany offers Mexico an alliance against America; British codebreakers read the telegram and publish it.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-166",
+"era": "great-war",
+"year": 1917,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "North Sea",
+"tags": [
+"war",
+"sea"
+],
+"title": "Unrestricted submarine war again",
+"text": "Germany sinks any ship near Britain without warning, wagering on starving Britain before America arrives.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-167",
+"era": "great-war",
+"year": 1917,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"revolution",
+"crown"
+],
+"title": "The February Revolution",
+"text": "Bread riots in Petrograd become revolution; the soldiers join the crowds and the tsar abdicates.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-168",
+"era": "great-war",
+"year": 1917,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war",
+"empire"
+],
+"title": "Baghdad taken",
+"text": "The British take Baghdad.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-169",
+"era": "great-war",
+"year": 1917,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"battle"
+],
+"title": "First Gaza",
+"text": "The British attack Gaza and fall back.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-170",
+"era": "great-war",
+"year": 1917,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Atlantic",
+"tags": [
+"war"
+],
+"title": "America enters",
+"text": "The United States declares war on Germany, and American troops begin to cross the Atlantic to France.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-171",
+"era": "great-war",
+"year": 1917,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vimy",
+"tags": [
+"battle"
+],
+"title": "Vimy Ridge",
+"text": "Canadian troops take Vimy Ridge.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-172",
+"era": "great-war",
+"year": 1917,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Chemin des Dames",
+"tags": [
+"battle",
+"uprising"
+],
+"title": "The Nivelle offensive",
+"text": "France's offensive on the Chemin des Dames fails, and French divisions refuse to attack.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-173",
+"era": "great-war",
+"year": 1917,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zurich",
+"tags": [
+"revolution",
+"travel"
+],
+"title": "The sealed train",
+"text": "Germany sends Lenin home from Zurich in a sealed train.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-174",
+"era": "great-war",
+"year": 1917,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Fatima",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Fatima",
+"text": "Three shepherd children see a lady at Fatima in Portugal; in October a crowd sees the sun dance.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-175",
+"era": "great-war",
+"year": 1917,
+"month": 5,
+"kind": "tied",
+"lines": [
+"Mage",
+"Hunter"
+],
+"region": "Europe",
+"place": "Fatima",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Celestial Chorus at Fatima",
+"text": "The house reading has the Celestial Chorus claim Fatima, the Technocracy dismiss it, and Inquisitors arrive to see for themselves.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-176",
+"era": "great-war",
+"year": 1917,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law"
+],
+"title": "The Reichsrat reopens",
+"text": "The Austrian parliament meets again, and the Czech deputies demand a state of their own.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-177",
+"era": "great-war",
+"year": 1917,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Messines",
+"tags": [
+"battle"
+],
+"title": "Messines",
+"text": "British miners blow up nineteen great mines under Messines Ridge; the sound is heard in London.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-178",
+"era": "great-war",
+"year": 1917,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Athens",
+"tags": [
+"crown"
+],
+"title": "Greece joins the Allies",
+"text": "King Constantine is forced out and Greece joins the war under Venizelos.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-179",
+"era": "great-war",
+"year": 1917,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror",
+"war"
+],
+"title": "The Gotha raid",
+"text": "German bombers raid London by day and kill over a hundred and sixty people, many of them schoolchildren.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-180",
+"era": "great-war",
+"year": 1917,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zborov",
+"tags": [
+"battle"
+],
+"title": "Zborov",
+"text": "The Czechoslovak brigade in Russia fights at Zborov against Austrian troops, many of them fellow Czechs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-181",
+"era": "great-war",
+"year": 1917,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"battle",
+"weather"
+],
+"title": "Passchendaele",
+"text": "Britain attacks at Ypres again; the rains turn the field into a swamp where men drown in shell holes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-182",
+"era": "great-war",
+"year": 1917,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Aqaba",
+"tags": [
+"battle"
+],
+"title": "Aqaba",
+"text": "Arab irregulars with T. E. Lawrence take Aqaba from the land side.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-183",
+"era": "great-war",
+"year": 1917,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"uprising"
+],
+"title": "The July Days",
+"text": "Soldiers and workers rise in Petrograd and are put down; Lenin flees to Finland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-184",
+"era": "great-war",
+"year": 1917,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Corfu",
+"tags": [
+"treaty",
+"founding"
+],
+"title": "The Corfu Declaration",
+"text": "Serbian and Yugoslav leaders agree to a kingdom of the South Slavs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-185",
+"era": "great-war",
+"year": 1917,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Thessaloniki",
+"tags": [
+"fire"
+],
+"title": "The Thessaloniki fire",
+"text": "A great fire destroys the old centre of Thessaloniki and its Jewish quarter.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-186",
+"era": "great-war",
+"year": 1917,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"war"
+],
+"title": "China declares war",
+"text": "China declares war on Germany and sends labourers to France.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-187",
+"era": "great-war",
+"year": 1917,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Isonzo",
+"tags": [
+"battle"
+],
+"title": "The eleventh Isonzo",
+"text": "Italy takes the Bainsizza plateau at terrible cost; Austria's army is near breaking.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-188",
+"era": "great-war",
+"year": 1917,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Riga",
+"tags": [
+"battle"
+],
+"title": "Riga",
+"text": "Germany takes Riga with new infiltration tactics.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-189",
+"era": "great-war",
+"year": 1917,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Guangzhou",
+"tags": [
+"founding",
+"revolution"
+],
+"title": "Sun Yat-sen in Canton",
+"text": "Sun Yat-sen sets up a rival government in Canton.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-190",
+"era": "great-war",
+"year": 1917,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Caporetto",
+"tags": [
+"battle"
+],
+"title": "Caporetto",
+"text": "German and Austrian troops break the Italian front at Caporetto; Italy loses three hundred thousand men, most as prisoners.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-191",
+"era": "great-war",
+"year": 1917,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beersheba",
+"tags": [
+"battle"
+],
+"title": "Beersheba",
+"text": "Australian light horsemen charge and take the wells of Beersheba.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-192",
+"era": "great-war",
+"year": 1917,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"battle"
+],
+"title": "Third Gaza",
+"text": "The British break the Gaza line after taking Beersheba.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-193",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"revolution"
+],
+"title": "The October Revolution",
+"text": "The Bolsheviks take the Winter Palace and seize power in Russia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-194",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Brujah's revolution",
+"text": "The house reading has Brujah in Petrograd see their dream at last, until the Ventrue and the Tremere of Moscow begin their own plans.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-195",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Technocracy in Russia",
+"text": "The house reading has the New World Order send agents to shape the new state, and Russian Mages scatter.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-196",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "London",
+"tags": [
+"treaty",
+"faith"
+],
+"title": "The Balfour Declaration",
+"text": "Britain promises a national home for the Jewish people in Palestine.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-197",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cambrai",
+"tags": [
+"battle"
+],
+"title": "Cambrai",
+"text": "Hundreds of British tanks break the line at Cambrai, but the gains are lost in a German counterattack.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-198",
+"era": "great-war",
+"year": 1917,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Piave",
+"tags": [
+"battle"
+],
+"title": "The Piave holds",
+"text": "The Italians hold a new line on the Piave and Monte Grappa after the rout at Caporetto.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-199",
+"era": "great-war",
+"year": 1917,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"war",
+"faith"
+],
+"title": "Jerusalem taken",
+"text": "Allenby enters Jerusalem on foot by the Jaffa Gate.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-200",
+"era": "great-war",
+"year": 1917,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brest-Litovsk",
+"tags": [
+"treaty"
+],
+"title": "The Russian armistice",
+"text": "Bolshevik Russia makes an armistice with Germany.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-201",
+"era": "great-war",
+"year": 1917,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ukraine",
+"tags": [
+"war",
+"founding"
+],
+"title": "Kharkiv Soviet Ukraine",
+"text": "The Bolsheviks set up a Soviet Ukraine at Kharkiv and march on Kiev.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-202",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"founding"
+],
+"title": "Ukraine's Central Rada",
+"text": "Ukraine's Central Rada declares autonomy, then independence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-203",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Finland",
+"tags": [
+"founding"
+],
+"title": "Finland independent",
+"text": "Finland declares independence from Russia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-204",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"uprising"
+],
+"title": "Hunger riots in Moravia",
+"text": "Women riot over bread in Brno, Prostejov and Ostrava; troops fire on crowds.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-205",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"law",
+"empire"
+],
+"title": "Self-government promised",
+"text": "Britain promises India the gradual growth of self-government.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-206",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"faith",
+"occult"
+],
+"title": "A Reborn with Allenby",
+"text": "The house reading has an Egyptian Reborn serve as a labour officer with Allenby's army, looking for an old tomb in Palestine.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-207",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crime",
+"occult"
+],
+"title": "Mata Hari shot",
+"text": "A dancer called Mata Hari is shot as a spy at Vincennes; the house reading has the Arcanum note a Toreador's interest in the case.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-208",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"war",
+"uprising"
+],
+"title": "The army melts away",
+"text": "Russian soldiers desert in millions to go home and share the land.",
+"ref": "Real history",
+"links": [
+{
+"id": "cbn-baba-yaga",
+"title": "Baba Yaga"
+}
+]
+},
+{
+"id": "r3-great-war-209",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Siam",
+"tags": [
+"war"
+],
+"title": "Siam joins the Allies",
+"text": "Siam declares war on Germany and sends a force to France.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-210",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Flanders",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Banality of the trenches",
+"text": "The house reading has changelings at the front lose themselves to Banality, and Kithain houses in Britain forbid their young to enlist.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-211",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Petrograd",
+"tags": [
+"crime",
+"revolution"
+],
+"title": "Order Number One",
+"text": "The Petrograd Soviet orders the army to obey its soldiers' committees, and discipline collapses.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-212",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crime",
+"war"
+],
+"title": "The Sixtus affair",
+"text": "Emperor Karl's secret peace letters to France are made public, and Karl is forced to grovel to Berlin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-213",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"war",
+"plague"
+],
+"title": "Olomouc's camps",
+"text": "Olomouc's barracks hold prisoners of war and the sick; typhus breaks out among them.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-214",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"faith"
+],
+"title": "The patriarch restored",
+"text": "The Russian Church elects a patriarch for the first time in two centuries.",
+"ref": "Real history",
+"links": [
+{
+"id": "cbn-baba-yaga",
+"title": "Baba Yaga"
+}
+]
+},
+{
+"id": "r3-great-war-215",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"law",
+"uprising"
+],
+"title": "Gandhi at Champaran",
+"text": "Gandhi leads indigo farmers in Bihar in a peaceful campaign against their planters.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-216",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"war",
+"occult"
+],
+"title": "The mud of Passchendaele",
+"text": "The house reading has Glass Walkers find a Pentex forerunner selling the army gas masks that do not work.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-217",
+"era": "great-war",
+"year": 1917,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"occult"
+],
+"title": "Hunger and blood",
+"text": "The house reading has the Kindred of Brno find the starving thin and their blood weak; the prince allows hunting among soldiers on leave.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-218",
+"era": "great-war",
+"year": 1918,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"uprising",
+"famine"
+],
+"title": "The January strikes",
+"text": "Hundreds of thousands strike in Vienna and Budapest over bread cuts and the slow peace talks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-219",
+"era": "great-war",
+"year": 1918,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"founding",
+"law"
+],
+"title": "The Epiphany Declaration",
+"text": "Czech deputies meet in Prague and demand a state of the Czechs and Slovaks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-220",
+"era": "great-war",
+"year": 1918,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty",
+"law"
+],
+"title": "The Fourteen Points",
+"text": "President Wilson's peace terms reach Vienna; they set out peace terms, among them self-determination for the peoples of Austria-Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-221",
+"era": "great-war",
+"year": 1918,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kotor",
+"tags": [
+"uprising",
+"sea"
+],
+"title": "The Kotor mutiny",
+"text": "Sailors of the Austrian fleet in the Bay of Kotor raise red flags; the mutiny is crushed and four are shot.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-222",
+"era": "great-war",
+"year": 1918,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"war"
+],
+"title": "Kiev taken and lost",
+"text": "The Red Army takes Kiev and kills thousands; within weeks German troops drive them out.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-223",
+"era": "great-war",
+"year": 1918,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brest-Litovsk",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Brest-Litovsk",
+"text": "Russia gives up Poland, the Baltic lands, Finland and Ukraine to make peace.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-224",
+"era": "great-war",
+"year": 1918,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Picardy",
+"tags": [
+"battle"
+],
+"title": "The Spring Offensive",
+"text": "Germany throws its armies from the east at the British in Picardy and gains forty miles in days.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-225",
+"era": "great-war",
+"year": 1918,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"war",
+"science"
+],
+"title": "The Paris gun",
+"text": "A German gun seventy-five miles away shells Paris; one shell kills eighty worshippers in a church on Good Friday.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-226",
+"era": "great-war",
+"year": 1918,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Etaples",
+"tags": [
+"plague"
+],
+"title": "The first flu wave",
+"text": "A mild influenza spreads through the crowded army camps in France, among them the great base at Etaples.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-227",
+"era": "great-war",
+"year": 1918,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lys",
+"tags": [
+"battle"
+],
+"title": "The Lys",
+"text": "Germany attacks again on the Lys; Haig orders his men to fight with their backs to the wall.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-228",
+"era": "great-war",
+"year": 1918,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zeebrugge",
+"tags": [
+"sea",
+"war"
+],
+"title": "The Zeebrugge raid",
+"text": "The Royal Navy tries to block the submarine port at Zeebrugge with sunken ships.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-229",
+"era": "great-war",
+"year": 1918,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Somme",
+"tags": [
+"death",
+"war"
+],
+"title": "The Red Baron shot down",
+"text": "Manfred von Richthofen is shot down and killed over the Somme.",
+"ref": "Real history",
+"links": [
+{
+"id": "gw-fourth-maelstrom",
+"title": "The Fourth Great Maelstrom"
+}
+]
+},
+{
+"id": "r3-great-war-230",
+"era": "great-war",
+"year": 1918,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"founding",
+"law"
+],
+"title": "The oath of the nation",
+"text": "Czech writers and deputies swear an oath in Prague to stand together until independence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-231",
+"era": "great-war",
+"year": 1918,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"founding"
+],
+"title": "The Congress of Oppressed Nationalities",
+"text": "Czechs, Poles, Romanians and South Slavs meet in Rome to plan the breakup of Austria-Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-232",
+"era": "great-war",
+"year": 1918,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Chelyabinsk",
+"tags": [
+"war",
+"uprising"
+],
+"title": "The Czech Legion rises",
+"text": "The Czechoslovak Legion, crossing Russia to sail home from Vladivostok, fights the Bolsheviks at Chelyabinsk and seizes the railway.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-233",
+"era": "great-war",
+"year": 1918,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Aisne",
+"tags": [
+"battle"
+],
+"title": "The Aisne offensive",
+"text": "Germany breaks through on the Chemin des Dames and reaches the Marne again.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-234",
+"era": "great-war",
+"year": 1918,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rumburk",
+"tags": [
+"uprising"
+],
+"title": "The Rumburk mutiny",
+"text": "Czech soldiers back from Russian captivity mutiny at Rumburk in Bohemia; the leaders are shot.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-235",
+"era": "great-war",
+"year": 1918,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baku",
+"tags": [
+"war",
+"founding"
+],
+"title": "Azerbaijan, Armenia and Georgia",
+"text": "The Transcaucasian republic breaks into Georgia, Armenia and Azerbaijan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-236",
+"era": "great-war",
+"year": 1918,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Sardarapat",
+"tags": [
+"battle"
+],
+"title": "Sardarapat",
+"text": "Armenians beat the Ottoman army at Sardarapat and save Yerevan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-237",
+"era": "great-war",
+"year": 1918,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belleau Wood",
+"tags": [
+"battle"
+],
+"title": "Belleau Wood",
+"text": "American marines fight for weeks in a hunting wood near Chateau-Thierry.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-238",
+"era": "great-war",
+"year": 1918,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Piave",
+"tags": [
+"battle"
+],
+"title": "The Piave",
+"text": "Austria's last offensive fails on the flooded Piave.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-239",
+"era": "great-war",
+"year": 1918,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"famine"
+],
+"title": "The flour runs out",
+"text": "Brno and Ostrava get almost no flour in the summer of 1918; workers strike and the army is sent in.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-240",
+"era": "great-war",
+"year": 1918,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"founding",
+"law"
+],
+"title": "France recognises the Czechs",
+"text": "France recognises the Czechoslovak National Council as the basis of a future government.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-241",
+"era": "great-war",
+"year": 1918,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ekaterinburg",
+"tags": [
+"massacre",
+"crown"
+],
+"title": "The Romanovs shot",
+"text": "The Bolsheviks shoot the former tsar, his family and servants in a cellar at Ekaterinburg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-242",
+"era": "great-war",
+"year": 1918,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Ekaterinburg",
+"tags": [
+"crown",
+"occult"
+],
+"title": "The Ventrue and the Romanovs",
+"text": "The house reading has the old Ventrue of St Petersburg lose their ruling line in a night and blame the Brujah for it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-243",
+"era": "great-war",
+"year": 1918,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marne",
+"tags": [
+"battle"
+],
+"title": "The second Marne",
+"text": "The last German attack fails on the Marne, and the Allies strike back.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-244",
+"era": "great-war",
+"year": 1918,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kazan",
+"tags": [
+"war"
+],
+"title": "The Czechs take Kazan",
+"text": "The Czech Legion takes Kazan and the Russian gold reserve.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-245",
+"era": "great-war",
+"year": 1918,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amiens",
+"tags": [
+"battle"
+],
+"title": "Amiens",
+"text": "British, Canadian and Australian troops break the German line at Amiens: the black day of the German army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-246",
+"era": "great-war",
+"year": 1918,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brest",
+"tags": [
+"plague"
+],
+"title": "The second flu wave",
+"text": "A deadly strain of influenza breaks out in Brest, Freetown and Boston within weeks of each other.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-247",
+"era": "great-war",
+"year": 1918,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Vladivostok",
+"tags": [
+"war"
+],
+"title": "The Siberian intervention",
+"text": "Japan, America and the Allies land troops at Vladivostok, partly to help the Czech Legion.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-248",
+"era": "great-war",
+"year": 1918,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"terror"
+],
+"title": "The Red Terror",
+"text": "Fanny Kaplan shoots Lenin, and the Bolsheviks answer with mass executions.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-249",
+"era": "great-war",
+"year": 1918,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"founding",
+"law"
+],
+"title": "Britain recognises the Czechs",
+"text": "Britain recognises the Czechoslovaks as an Allied nation.",
+"ref": "Real history",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-great-war-250",
+"era": "great-war",
+"year": 1918,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Megiddo",
+"tags": [
+"battle"
+],
+"title": "Megiddo",
+"text": "Allenby's cavalry break the Ottoman front at Megiddo and ride for Damascus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-251",
+"era": "great-war",
+"year": 1918,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dobro Pole",
+"tags": [
+"battle"
+],
+"title": "The Macedonian breakthrough",
+"text": "Serbian and French troops break the Bulgarian line, and Bulgaria asks for peace.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-252",
+"era": "great-war",
+"year": 1918,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Saint-Mihiel",
+"tags": [
+"battle"
+],
+"title": "Saint-Mihiel",
+"text": "The American army fights its first big battle on its own.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-253",
+"era": "great-war",
+"year": 1918,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baku",
+"tags": [
+"massacre"
+],
+"title": "The Baku massacres",
+"text": "Ottoman and Azerbaijani troops take Baku and kill thousands of Armenians.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-254",
+"era": "great-war",
+"year": 1918,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Meuse-Argonne",
+"tags": [
+"battle"
+],
+"title": "The Meuse-Argonne",
+"text": "Over a million American soldiers attack in the Argonne forest in the war's last great battle.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-255",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"war",
+"founding"
+],
+"title": "Damascus taken",
+"text": "Arab and Australian troops enter Damascus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-256",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law",
+"founding"
+],
+"title": "Karl's manifesto",
+"text": "Emperor Karl offers to make Austria a federation of peoples; the peoples have already decided.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-257",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"founding",
+"revolution"
+],
+"title": "Czechoslovakia proclaimed",
+"text": "The National Committee in Prague declares an independent Czechoslovakia on 28 October without a shot.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-258",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"revolution"
+],
+"title": "Brno joins the republic",
+"text": "Czech officials take over Brno; German parties try to join the Moravian lands to German Austria and fail.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-259",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"occult"
+],
+"title": "A new prince for a new state",
+"text": "The house reading has the Kindred of Brno use the new republic to settle old scores; the prince recognises Prague's claims for the first time.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-260",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vittorio Veneto",
+"tags": [
+"battle"
+],
+"title": "Vittorio Veneto",
+"text": "Italy breaks the Austro-Hungarian army as its regiments go home by nation.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-261",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mudros",
+"tags": [
+"treaty"
+],
+"title": "The Armistice of Mudros",
+"text": "The Ottoman empire makes peace on a British warship.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-262",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"revolution"
+],
+"title": "The Aster Revolution",
+"text": "Budapest rises, Count Karolyi takes power, and Hungary breaks from Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-263",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zagreb",
+"tags": [
+"founding"
+],
+"title": "The South Slav state",
+"text": "The Croatian diet breaks with Austria-Hungary and declares a South Slav state.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-264",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"death",
+"plague"
+],
+"title": "The flu in Prague",
+"text": "Influenza kills thousands in Prague and Brno as the republic is born; the painter Schiele dies in Vienna.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-265",
+"era": "great-war",
+"year": 1918,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wilhelmshaven",
+"tags": [
+"uprising",
+"sea"
+],
+"title": "The fleet refuses",
+"text": "German admirals plan a last battle; the sailors put out the boilers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-266",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiel",
+"tags": [
+"uprising",
+"sea"
+],
+"title": "The Kiel mutiny",
+"text": "German sailors refuse a last sortie, raise the red flag at Kiel, and revolution spreads through Germany.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-267",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"revolution",
+"crown"
+],
+"title": "The Kaiser goes",
+"text": "A republic is proclaimed in Berlin, and Wilhelm II goes into exile in the Netherlands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-268",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Compiegne",
+"tags": [
+"treaty"
+],
+"title": "The Armistice",
+"text": "Germany signs the armistice in a railway carriage at Compiegne; the guns stop at eleven on 11 November.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-269",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"founding"
+],
+"title": "Karl steps aside",
+"text": "Emperor Karl gives up his share of power in Austria; German Austria is proclaimed a republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-270",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"founding"
+],
+"title": "Poland reborn",
+"text": "Pilsudski takes command in Warsaw, and Poland returns after a hundred and twenty-three years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-271",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"founding"
+],
+"title": "Masaryk president",
+"text": "The new National Assembly elects Masaryk president of Czechoslovakia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-272",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Flanders",
+"tags": [
+"death",
+"occult"
+],
+"title": "The armistice of the dead",
+"text": "The house reading has the Shadowlands of the Western Front left crowded with ghosts who do not believe it is over.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-273",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Ardennes",
+"tags": [
+"war",
+"occult"
+],
+"title": "Counting the cost",
+"text": "The house reading has the European septs count their losses after four years, and find that some caerns have gone silent.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-274",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"revolution"
+],
+"title": "Revolution in Munich",
+"text": "Kurt Eisner proclaims a Bavarian republic, and the Wittelsbach king flees.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-275",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"war",
+"empire"
+],
+"title": "Allied fleets at Istanbul",
+"text": "Allied warships anchor off Istanbul, and the occupation of the Ottoman capital begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-276",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mons",
+"tags": [
+"war",
+"death"
+],
+"title": "The last shots",
+"text": "Soldiers die in the last minutes before eleven o'clock; the Canadians end the war where the British began it, at Mons.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-277",
+"era": "great-war",
+"year": 1918,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"founding"
+],
+"title": "The Hungarian Republic",
+"text": "Hungary is proclaimed a republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-278",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"founding",
+"crown"
+],
+"title": "The Kingdom of Serbs, Croats and Slovenes",
+"text": "Prince Alexander proclaims the united South Slav kingdom.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-279",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Opava",
+"tags": [
+"war",
+"founding"
+],
+"title": "The Sudeten provinces",
+"text": "Czechoslovak troops occupy Opava and the German districts of Silesia and northern Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-280",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"war"
+],
+"title": "Slovakia secured",
+"text": "Czechoslovak and Italian-led troops push Hungarian forces out of Slovakia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-281",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"war",
+"founding"
+],
+"title": "Slovakia joined",
+"text": "Czechoslovak troops close on Bratislava, then called Pressburg, and march in on the first day of the new year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-282",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lviv",
+"tags": [
+"war"
+],
+"title": "The Polish-Ukrainian war",
+"text": "Poles and Ukrainians fight for Lviv after the empire falls.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-283",
+"era": "great-war",
+"year": 1918,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"uprising"
+],
+"title": "The Spartacists",
+"text": "The Spartacist League founds the German Communist Party; the January rising comes weeks later.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-284",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith",
+"Mortals"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"plague",
+"occult"
+],
+"title": "The influenza dead",
+"text": "The house reading has the influenza fill the Shadowlands with the young; the Hierarchy blames Spectres, and Heretic cults grow.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-285",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague",
+"occult"
+],
+"title": "Tainted vessels",
+"text": "The house reading has the Kindred of London fall ill after feeding on the sick; the house rule calls it a taint of the blood, not a true plague.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+}
+]
+},
+{
+"id": "r3-great-war-286",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bombay",
+"tags": [
+"plague"
+],
+"title": "The flu in India",
+"text": "Influenza kills perhaps twelve million in India, more than anywhere else.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-287",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"uprising",
+"money"
+],
+"title": "The rice riots",
+"text": "Rice prices double and riots spread across Japan; the government falls.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-288",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Persia",
+"tags": [
+"famine",
+"plague"
+],
+"title": "The Persian famine",
+"text": "Armies, drought and influenza kill a large part of Persia's people.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-289",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"war"
+],
+"title": "The Russian Civil War",
+"text": "Red and White armies fight across Russia; the Czech Legion holds the Trans-Siberian Railway.",
+"ref": "Real history",
+"links": [
+{
+"id": "cbn-baba-yaga",
+"title": "Baba Yaga"
+}
+]
+},
+{
+"id": "r3-great-war-290",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Finland",
+"tags": [
+"war"
+],
+"title": "The Finnish Civil War",
+"text": "Reds and Whites fight in Finland, and the Whites win with German help.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-291",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Siberia",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Legion's long road",
+"text": "The house reading has a Czech Hermetic in the Legion carry a talisman across Siberia, and Russian Traditions hunt for it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-292",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Vladivostok",
+"tags": [
+"war",
+"occult"
+],
+"title": "Strangers in Vladivostok",
+"text": "The house reading has the Kuei-jin of the coast watch Allied armies pour into Vladivostok and decide to wait them out.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-293",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"war",
+"occult"
+],
+"title": "A Reborn rides north",
+"text": "The house reading has an Egyptian Reborn with the Arab armies search for a scroll hidden in Damascus.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-294",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"war",
+"occult"
+],
+"title": "Hunters at the peace",
+"text": "The house reading has the Arcanum send scholars to Paris, fearing that new borders will move old guarded sites.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-295",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Germany",
+"tags": [
+"famine"
+],
+"title": "The blockade continues",
+"text": "The Allied blockade of Germany continues after the armistice, and hunger kills many more.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-296",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"founding",
+"learning"
+],
+"title": "The Hebrew University stone",
+"text": "Foundation stones for the Hebrew University are laid on Mount Scopus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-297",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art"
+],
+"title": "Kafka's sanatorium",
+"text": "Franz Kafka, ill with tuberculosis, writes in Prague and the countryside while the empire falls.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-298",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"money"
+],
+"title": "The mark slides",
+"text": "The German mark begins the fall that will turn into the great inflation.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-299",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"plague"
+],
+"title": "Cholera in Baghdad",
+"text": "Cholera and influenza strike Baghdad in the first months of British rule.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-300",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"war",
+"trade"
+],
+"title": "Shanghai's war boom",
+"text": "Chinese mills in Shanghai grow rich as European goods vanish from Asian markets.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-301",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"art",
+"death"
+],
+"title": "Klimt and Schiele die",
+"text": "Klimt dies of a stroke in February and Schiele of influenza in October.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-great-war-302",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"occult"
+],
+"title": "The Kithain choose a duke",
+"text": "The house reading has the Kithain of Moravia meet in a Brno cafe to choose a duke for the new republic's lands.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-great-war-303",
+"era": "great-war",
+"year": 1918,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"plague",
+"occult"
+],
+"title": "The Moravian Shadowlands",
+"text": "The house reading has the influenza and the war fill the Moravian Shadowlands; the local Hierarchy cannot ferry them all.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
 }
 ]
