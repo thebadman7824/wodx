@@ -1,12 +1,12 @@
 const RUN="2026-11-12h3";let showBook=false,coll=null,cur=null,busy=false;
 const V={};const F={st:'all',rg:'',k:'',tg:'',ln:'',q:''};const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const LBL={ok:'OK',fix:'Fix',cut:'Cut'};const KIND={history:'History',tied:'Tied',named:'Named character',branch:'Branch history'};
+const LBL={ok:'OK',fix:'Fix',cut:'Cut'};const KIND={history:'History',tied:'Tied',named:'Named character',branch:'Branch history',myth:'Myth'};const YR=y=>y<0?(-y)+' BCE':String(y);
 function pick(){const h=location.hash.slice(1);cur=ERAS.find(e=>e.id===h)?.id||ERAS[0].id;}
 function chips(host,key,opts){const el=$(host);for(const [v,l] of opts){const b=document.createElement('button');b.textContent=l;b.dataset.v=v;b.setAttribute('aria-pressed',F[key]===v);b.onclick=()=>{F[key]=v;el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v));render();};el.append(b);}}
 chips('#f-st','st',[['all','All'],['todo','Not reviewed'],['ok','OK'],['fix','Fix'],['cut','Cut']]);
-chips('#f-rg','rg',[['','All'],['Moravia','Moravia'],['Europe','Europe'],['Middle East','Middle East'],['Asia','Asia']]);
-chips('#f-k','k',[['','All'],['history','History'],['branch','Branch history'],['tied','Tied'],['named','Named']]);
+chips('#f-rg','rg',[['','All'],['Moravia','Moravia'],['Europe','Europe'],['Middle East','Middle East'],['Asia','Asia'],['Africa','Africa'],['Americas','Americas']]);
+chips('#f-k','k',[['','All'],['history','History'],['branch','Branch history'],['tied','Tied'],['named','Named'],['myth','Myth']]);
 const TAGS=[...new Set(ERAS.flatMap(e=>e.items.flatMap(i=>i.tg)))].sort();for(const t of TAGS){const o=document.createElement('option');o.value=o.textContent=t;$('#f-tg').append(o);}
 const LINES=['Mortals','Vampire','Werewolf','Mage','Wraith','Changeling','Hunter','Mummy','Kindred of the East','Demon','All lines'];for(const t of LINES){const o=document.createElement('option');o.value=o.textContent=t;$('#f-ln').append(o);}
 $('#f-tg').onchange=e=>{F.tg=e.target.value;render();};$('#f-ln').onchange=e=>{F.ln=e.target.value;render();};
@@ -28,7 +28,7 @@ function render(){
  $('#tally').innerHTML=`<span><b>${e.items.length}</b> events</span><span><b>${n.ok}</b> OK</span><span><b>${n.fix}</b> Fix</span><span><b>${n.cut}</b> Cut</span><span><b>${e.items.length-n.ok-n.fix-n.cut}</b> not reviewed</span>`;
  const host=$('#era');host.textContent='';
  const cnt=r=>e.items.filter(i=>i.rg===r).length;
- const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.length} events: ${cnt('Moravia')} in Moravia, ${cnt('Europe')} elsewhere in Europe, ${cnt('Middle East')} in the Middle East, ${cnt('Asia')} in Asia. ${e.items.filter(i=>i.k!=='history').length} carry a World of Darkness reading.</p>`;host.append(h);
+ const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.length} events: ${cnt('Moravia')} in Moravia, ${cnt('Europe')} elsewhere in Europe, ${cnt('Middle East')} in the Middle East, ${cnt('Asia')} in Asia${cnt('Africa')?', '+cnt('Africa')+' in Africa':''}${cnt('Americas')?', '+cnt('Americas')+' in the Americas':''}. ${e.items.filter(i=>i.k!=='history').length} carry a World of Darkness reading.</p>`;host.append(h);
  const gid='era3-'+e.id;const g=document.createElement('div');g.className='eranote';const k=controls(gid);g.innerHTML=`<p class="txt"><b>This era as a whole.</b> What is missing or wrong before these events feed the Encyclopaedia and other systems.</p>`+k.html;host.append(g);wire(g,gid);
  const list=e.items.filter(passes);shownIds=list.map(i=>i.id);
  const todo=list.filter(i=>!V[i.id]?.verdict).length;$('#shown').textContent=`${list.length} shown, ${todo} not reviewed`;$('#bulk').disabled=busy||!todo;
@@ -36,12 +36,12 @@ function render(){
  if(showBook)for(const b of e.appr){if(!years.has(b.y))years.set(b.y,[]);years.get(b.y).push({...b,book:true});}
  const sorted=[...years.entries()].sort((a,b)=>a[0]-b[0]);
  if(!sorted.length){const p=document.createElement('p');p.className='empty';p.textContent='Nothing to show with these filters.';host.append(p);}
- for(const [y,items] of sorted){const row=document.createElement('div');row.className='yearrow';row.innerHTML=`<div class="yr">${y}</div>`;const cards=document.createElement('div');cards.className='cards';
+ for(const [y,items] of sorted){const row=document.createElement('div');row.className='yearrow';row.innerHTML=`<div class="yr">${YR(y)}</div>`;const cards=document.createElement('div');cards.className='cards';
   for(const i of items){if(i.book){const p=document.createElement('p');p.className='bookline';p.innerHTML=`<b>${esc(i.s)}:</b> ${esc(i.t)}. ${esc(i.x)}`;cards.append(p);continue;}
    const {st,html}=controls(i.id);const c=document.createElement('article');c.className='card '+st;
    const tags=[`<span class="tag chron">${KIND[i.k]||i.k}</span>`,`<span class="tag">${esc(i.rg)}${i.pl?': '+esc(i.pl):''}</span>`,`<span class="tag">${esc(i.ln)}</span>`,...i.tg.map(t=>`<span class="tag soft">${esc(t)}</span>`),i.src==='r2'?'<span class="tag">Round two</span>':''].join('');
    const mo=i.m?['','January','February','March','April','May','June','July','August','September','October','November','December'][i.m]+' ':'';
-   c.innerHTML=`<div class="head"><h3>${esc(i.t)}</h3><span class="state">${LBL[st]||'Not reviewed'}</span></div><div class="tags">${tags}</div><p class="txt">${mo?'<b>'+mo+y+'.</b> ':''}${esc(i.x)}</p>${i.lk.length?`<p class="links">Encyclopaedia: ${i.lk.map(esc).join('; ')}</p>`:''}${i.ref?`<p class="refs">${esc(i.ref)}</p>`:''}`+html;cards.append(c);wire(c,i.id);}
+   c.innerHTML=`<div class="head"><h3>${esc(i.t)}</h3><span class="state">${LBL[st]||'Not reviewed'}</span></div><div class="tags">${tags}</div><p class="txt">${mo?'<b>'+mo+YR(y)+'.</b> ':''}${esc(i.x)}</p>${i.lk.length?`<p class="links">Encyclopaedia: ${i.lk.map(esc).join('; ')}</p>`:''}${i.ref?`<p class="refs">${esc(i.ref)}</p>`:''}`+html;cards.append(c);wire(c,i.id);}
   row.append(cards);host.append(row);}
 }
 async function save(id,verdict,note){

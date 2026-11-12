@@ -898,3 +898,6 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Prologue timeline: where Living Gods starts | 10,000 BCE; older sites such as Dolni Vestonice appear as old finds and stories | Name an earlier start year |
 | 2026-11-12 | Prologue timeline: hunters before 1197 | No hunter line events; Church inquirers appear as mortals from the 1100s | Name hunter events to add |
 | 2026-11-12 | Prologue timeline: size | About 300 events each, the floor the other eras use | Name another number |
+| 2026-11-12 | Prologue timeline: the books give Akhenaten's reign three years apart (Mummy 2nd pdf 24: 1367 BCE; Rage Across Egypt pdf 32: 1364 to 1347 BCE) | History cards keep the historians' 1353 BCE; the Reborn's tied card uses 1364 to 1347 | Change r3/living-gods.txt card "The Aten heresy" |
+| 2026-11-12 | Prologue timeline: the Himalayan War's start (Encyclopaedia 950 BCE, M20 pdf 123 about 900 BCE) | The timeline uses 900 BCE, after M20; the Encyclopaedia entry's year is to be brought in line in stage 3 | Set the card back to -950 |
+| 2026-11-12 | Prologue timeline: dating the Impergium and the Concord | Impergium from 10,000 BCE for about 3,000 years, Concord about 7000 BCE ("nearly 9,000 years ago", W20 pdf 40-41, 71); War of Rage from about 6800 BCE | Move the three Myth cards |

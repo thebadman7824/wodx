@@ -1,0 +1,350 @@
+# Classical Age, 800 BCE to 1196 CE (prologue). year[-month]|kind|lines|region|place|tags|title|text
+# Four parts on the desk: Greece and early Rome to 27 BCE, the Empire to 476, migrations and Great Moravia to 907, the Premyslid centuries to 1196.
+# Book refs (pdf pages) from prologue-timeline/book-check.md, 2026-11-12.
+-776|H|mor|EU|Olympia|sport,faith|The first Olympic Games|By Greek reckoning the first games are held at Olympia in honour of Zeus.
+-753|H|mor|EU|Rome|founding|Rome founded|By Roman tradition Romulus founds Rome on the Palatine on 21 April.
+-750|H|mor|EU|Greece|learning,art|Homer|The Iliad and the Odyssey take shape in the Greek world about now.
+-750|H|mor|EU|Pithekoussai|trade,founding|Greeks settle in Italy|Greek traders found Pithekoussai on Ischia, the first Greek settlement in the west.
+-740|H|mor|ME|Assyria|empire|Tiglath-Pileser III|Assyria becomes a standing empire that moves whole peoples to break revolts.
+-722|H|mor|ME|Samaria|war,migration|Israel falls to Assyria|Assyria takes Samaria and carries off the northern tribes of Israel.
+-700|H|mor|EU|Hallstatt|death,money|Hallstatt princes|Chiefs of the Hallstatt culture are buried in wagon graves with gold and Greek bronzes.
+-700|W|wer|EU|Germania|migration,war|The Germanic tribes move south|The Get of Fenris tell of their kin tribes moving south into Europe about now (Tribebook Fenris pdf 21).
+-701|H|mor|ME|Jerusalem|siege|Sennacherib at Jerusalem|Sennacherib besieges Jerusalem; Hezekiah pays tribute and the city stands.
+-689|H|mor|ME|Babylon|war,massacre|Sennacherib destroys Babylon|Sennacherib floods and razes Babylon.
+-671|H|mor|AF|Memphis|war,empire|Assyria takes Egypt|Esarhaddon takes Memphis and drives the Kushite pharaoh south.
+-668|H|mor|ME|Nineveh|learning|Ashurbanipal's library|Ashurbanipal gathers tens of thousands of tablets at Nineveh, the Gilgamesh epic among them.
+-660|H|mor|AS|Yamato|crown,founding|Jimmu's court|Japanese tradition dates the first emperor, Jimmu, to 660 BCE.
+-660|W|kue|AS|Yamato|crown,faith|The first Yamato court|Kindred of the East keeps the traditional date for the first imperial court (KotE pdf 145).
+-650|H|mor|ME|Lydia|money,trade|The first coins|The kings of Lydia strike coins of electrum, the first true coinage.
+-631|H|mor|AF|Cyrene|founding|Cyrene founded|Greeks from Thera found Cyrene on the Libyan coast.
+-621|H|mor|EU|Athens|law|Draco's laws|Draco writes down the laws of Athens, harsh enough to give their name to harshness.
+-612|H|mor|ME|Nineveh|war,siege|Nineveh falls|Babylonians and Medes sack Nineveh; Assyria is finished within a few years.
+-605|H|mor|ME|Carchemish|battle|Carchemish|Nebuchadnezzar of Babylon defeats Egypt at Carchemish.
+-600|H|mor|EU|Massalia|founding,trade|Massalia founded|Greeks from Phocaea found Massalia, later Marseille.
+-600|W|vam|AF|Carthage|crown,trade|Carthage, capital of the Phoenician world|By now Carthage leads the Phoenician cities of the west, and its Brujah court is the pride of the clan (Clanbook Brujah pdf 18).
+-600|W|kue|AS|Japan|migration|Azure Dragons cross to Japan|Kuei-jin of the Azure Dragon follow Korean migrants to Japan (KotE pdf 145).
+-594|H|mor|EU|Athens|law|Solon's reforms|Solon cancels debts and ends debt slavery in Athens.
+-587|H|mor|ME|Jerusalem|siege,migration|Jerusalem destroyed|Nebuchadnezzar destroys Jerusalem and the first temple; the people of Judah go into exile in Babylon.
+-585|H|mor|ME|Halys|battle,science|The eclipse battle|An eclipse halts a battle between Lydia and the Medes; Thales of Miletus is said to have predicted it.
+-563|H|mor|AS|Lumbini|faith|The Buddha born|Tradition places the birth of Siddhartha Gautama about now, though many date it later.
+-560|H|mor|ME|Lydia|crown,money|Croesus|Croesus of Lydia becomes a byword for wealth.
+-551|H|mor|AS|Lu|learning|Confucius born|Kong Qiu, later called Confucius, is born in the state of Lu.
+-550|H|mor|ME|Persia|empire,crown|Cyrus the Great|Cyrus of Persia overthrows the Medes and founds the Persian empire.
+-550|H|mor|MO|Byci skala|death,faith|The Byci skala burial|In a cave of the Moravian Karst a Hallstatt chief is buried with a wagon, bronzes and dozens of others, some of them killed for the rite.
+-550|W|wra|MO|Byci skala|death,occult|The dead of the bull cave|The cave of Byci skala holds a crowd of Hallstatt wraiths bound to their lord and to the bronzes left with them.
+-539|H|mor|ME|Babylon|war,empire|Cyrus takes Babylon|Babylon opens its gates to Cyrus; the exiles of Judah may go home.
+-525|H|mor|AF|Pelusium|battle,empire|Persia takes Egypt|Cambyses defeats Egypt at Pelusium.
+-525|W|mum|AF|Egypt|war,faith|Persian Egypt|The Reborn see Egypt pass to foreign kings for the first of many times.
+-522|H|mor|ME|Persia|crown|Darius I|Darius I takes the Persian throne and orders the empire into satrapies with a royal road.
+-509|H|mor|EU|Rome|uprising,law|The Roman Republic|Rome drives out its last king and becomes a republic under two consuls.
+-509|W|wra|EU|Rome|law,founding|A republic of the dead|Wraith histories say the dead of Rome set up a republic of their own, the pattern for Stygia (Wraith: Renegades pdf 26-28).
+-508|H|mor|EU|Athens|law|Athenian democracy|Cleisthenes reforms Athens into a democracy of citizens.
+-500|W|mag|ME|Persia|faith,occult|The Night of Fana|The Ahl-i-Batin date their beginning to the Night of Fana (Sorcerers Crusade pdf 69).
+-499|H|mor|ME|Ionia|uprising|The Ionian revolt|The Greek cities of Ionia revolt against Persia.
+-496|W|mag|AS|China|war,occult|The Dragon River War|Mages fight the Dragon River War from 496 to 480 BCE (Sorcerers Crusade pdf 69).
+-490|H|mor|EU|Marathon|battle|Marathon|Athenians beat the Persian landing at Marathon.
+-480|H|mor|EU|Thermopylae|battle|Thermopylae|Leonidas and his Spartans hold the pass at Thermopylae before they are overwhelmed.
+-480|H|mor|EU|Salamis|battle,sea|Salamis|The Greek fleet destroys the Persian fleet in the strait of Salamis.
+-480|H|mor|EU|Himera|battle|Himera|The Greeks of Sicily defeat a Carthaginian army at Himera.
+-479|H|mor|EU|Plataea|battle|Plataea|The Greeks end the Persian invasion at Plataea.
+-475|H|mor|AS|China|war|The Warring States|Chinese states begin two and a half centuries of war.
+-450|H|mor|EU|Rome|law|The Twelve Tables|Rome's laws are written on twelve bronze tablets in the Forum.
+-450|H|mor|EU|Europe|art,migration|La Tene|The La Tene style of Celtic art spreads from the upper Rhine and Danube.
+-447|H|mor|EU|Athens|building,faith|The Parthenon|Athens begins the Parthenon under Pericles.
+-431|H|mor|EU|Greece|war|The Peloponnesian War|Athens and Sparta begin a war that lasts until 404.
+-430|H|mor|EU|Athens|plague|The plague of Athens|Plague kills perhaps a third of Athens, Pericles with them.
+-430|W|vam|EU|Athens|plague,learning|The Brujah mourn Athens|The Brujah, lovers of the Greek city, watch the plague and the war break Athens.
+-404|H|mor|EU|Athens|war|Athens surrenders|Athens yields to Sparta.
+-399|H|mor|EU|Athens|death,law|Socrates dies|Athens condemns Socrates, who drinks hemlock.
+-390|H|mor|EU|Rome|war,siege|The Gauls sack Rome|Gauls under Brennus defeat Rome at the Allia and sack the city.
+-390|W|wer|EU|Rome|war|Wolves and the Gauls|The Fianna sing that their Kinfolk rode with the Gauls who sacked Rome.
+-387|H|mor|EU|Athens|learning|Plato's Academy|Plato opens his school at the Academy.
+-371|H|mor|EU|Leuctra|battle|Leuctra|Thebes breaks Spartan power at Leuctra.
+-359|H|mor|EU|Macedon|crown|Philip II of Macedon|Philip II takes the throne of Macedon and builds a new army.
+-338|H|mor|EU|Chaeronea|battle|Chaeronea|Philip beats Athens and Thebes; Greece falls under Macedon.
+-336|H|mor|EU|Macedon|crown,death|Alexander's accession|Philip is murdered and Alexander takes the throne at twenty.
+-334|H|mor|ME|Granicus|battle|Granicus|Alexander crosses into Asia and defeats the Persian satraps.
+-333|H|mor|ME|Issus|battle|Issus|Alexander routs Darius III at Issus.
+-332|H|mor|ME|Tyre|siege|The siege of Tyre|Alexander builds a mole to the island city of Tyre and takes it after seven months.
+-332|H|mor|AF|Alexandria|founding,empire|Alexandria founded|Alexander takes Egypt and founds Alexandria.
+-332|W|mum|AF|Alexandria|empire,faith|The Macedonian in Egypt|The Reborn's own histories mark Alexander's taking of Egypt and the founding of Alexandria (Mummy 2nd pdf 24).
+-331|H|mor|ME|Gaugamela|battle|Gaugamela|Alexander destroys the Persian army at Gaugamela.
+-330|H|mor|ME|Persepolis|fire|Persepolis burns|Alexander's army burns the palace at Persepolis.
+-326|H|mor|AS|Hydaspes|battle|Hydaspes|Alexander beats King Porus at the Hydaspes; his army refuses to go further.
+-323|H|mor|ME|Babylon|death,crown|Alexander dies|Alexander dies at Babylon at thirty-two; his generals divide the empire.
+-321|H|mor|AS|Pataliputra|crown,empire|The Maurya empire|Chandragupta Maurya founds an empire across north India.
+-305|H|mor|AF|Alexandria|crown|The Ptolemies|Ptolemy I takes the title of king of Egypt.
+-305|W|mum|AF|Alexandria|crown,occult|Set and the Ptolemies|The Reborn hold that Set corrupts the Ptolemaic kings and that Horus passes into the Underworld (Mummy 2nd pdf 24, 27).
+-300|H|mor|AF|Alexandria|learning|The Library of Alexandria|The Ptolemies found the Museum and the Library of Alexandria.
+-300|W|mag|AF|Alexandria|learning,occult|Masters at the Library|Hermetic tradition counts the scholars of Alexandria among its founders in spirit.
+-300|H|mor|AF|Alexandria|science|Euclid|Euclid writes the Elements of geometry at Alexandria.
+-264|H|mor|EU|Sicily|war|The First Punic War|Rome and Carthage go to war over Sicily.
+-264|W|vam|EU|Syracuse|war,crown|The Ventrue light the fuse|Clanbook Ventrue says the clan stirred the First Punic War by way of Syracuse (pdf 19-20).
+-260|H|mor|EU|Mylae|battle,sea|Mylae|Rome's new fleet wins its first sea battle with boarding bridges.
+-260|H|mor|AS|Kalinga|war,faith|Ashoka turns to the Buddha|After the slaughter at Kalinga the Maurya emperor Ashoka turns to Buddhism.
+-241|H|mor|EU|Aegates Islands|battle,sea|Carthage loses Sicily|Rome wins at the Aegates Islands and takes Sicily.
+-221|H|mor|AS|Xianyang|crown,empire|The First Emperor|Qin Shi Huang unites China and calls himself the First Emperor.
+-221|N|mag|AS|Xianyang|crown,occult|Fu Xia and the First Emperor|The Encyclopaedia places Fu Xia at the First Emperor's court.
+-218|H|mor|EU|Alps|war,travel|Hannibal crosses the Alps|Hannibal leads an army with elephants over the Alps into Italy.
+-216|H|mor|EU|Cannae|battle,massacre|Cannae|Hannibal surrounds and destroys a Roman army at Cannae.
+-214|H|mor|AS|Great Wall|building|The Great Wall joined|The First Emperor links the northern walls into one line.
+-210|H|mor|AS|Mount Li|death,art|The terracotta army|Qin Shi Huang is buried with thousands of clay soldiers.
+-210|W|kue|AS|Mount Li|death,occult|A Lord of the Dead|Kindred of the East tells that Qin Shi Huang became a Lord of the Dead (KotE pdf 142-145; Dark Kingdom of Jade pdf 34-35).
+-206|H|mor|AS|China|crown|The Han|The Han dynasty takes power fifteen years after the Qin unification.
+-202|H|mor|AF|Zama|battle|Zama|Scipio defeats Hannibal at Zama; Carthage sues for peace.
+-197|H|mor|EU|Cynoscephalae|battle|Cynoscephalae|The Roman legion beats the Macedonian phalanx.
+-196|H|mor|AF|Memphis|learning|The Memphis decree|Priests at Memphis write a decree in hieroglyphs, demotic and Greek.
+-168|H|mor|EU|Pydna|battle|Pydna|Rome ends the kingdom of Macedon.
+-167|H|mor|ME|Judea|uprising,faith|The Maccabees|The Maccabees revolt against the Seleucid king.
+-150|W|vam|EU|Rome|war,crown|War is declared again|Rome declares war on Carthage fifty years after the last; Clanbook Ventrue puts the clan behind it (pdf 19-20).
+-146|H|mor|AF|Carthage|siege,massacre|Carthage destroyed|Rome takes Carthage after a three-year siege, sells its people and razes the city.
+-146|W|vam|AF|Carthage|siege,massacre|The fall of Brujah Carthage|Ventrue treachery ends Brujah Carthage; Malkavians help ruin it, and the Brujah never forgive Rome (V20 pdf 58; V20 Dark Ages pdf 54).
+-146|W|vam|AF|Carthage|occult,heresy|The Baali at Carthage|Clanbook Baali says the Brujah of Carthage dealt with the Baali, the charge Rome used against them (pdf 23-24).
+-146|H|mor|EU|Corinth|war|Corinth sacked|Rome sacks Corinth the same year.
+-133|H|mor|EU|Rome|uprising,law|Tiberius Gracchus|The tribune Tiberius Gracchus is killed by senators for his land law.
+-130|H|mor|AS|Silk Road|trade,travel|The Silk Road opens|Han envoys reach Central Asia; silk begins to travel west.
+-113|H|mor|EU|Noricum|migration,war|The Cimbri and Teutones|Germanic peoples beat a Roman army at Noreia.
+-110|H|mor|MO|Stare Hradisko|founding,trade|The oppidum of Stare Hradisko|The Celtic Boii hold a great walled town at Stare Hradisko in Moravia, with mints and workshops.
+-110|W|wer|MO|Stare Hradisko|occult,trade|Kinfolk of the Boii|The Fianna count Kinfolk among the Boii of Moravia, and their caerns lie in the hills above the oppida.
+-105|H|mor|EU|Arausio|battle|Arausio|The Cimbri destroy two Roman armies at Arausio.
+-100|H|mor|MO|Moravia|money|Boian coins|The Boii strike gold and silver coins, the first money made in the Czech lands.
+-73|H|mor|EU|Capua|uprising|Spartacus|Gladiators break out at Capua; Spartacus leads a slave army for two years.
+-63|H|mor|ME|Jerusalem|war,empire|Pompey takes Jerusalem|Pompey takes Jerusalem and makes Judea a client of Rome.
+-60|H|mor|MO|Moravia|migration,war|The Dacians and the Boii|Burebista of Dacia defeats the Boii on the middle Danube.
+-58|H|mor|EU|Gaul|war|Caesar in Gaul|Julius Caesar begins the conquest of Gaul.
+-55|H|mor|EU|Britain|war,travel|Caesar in Britain|Caesar crosses to Britain for the first time.
+-52|H|mor|EU|Alesia|siege|Alesia|Caesar besieges Vercingetorix at Alesia and ends the Gallic revolt.
+-49|H|mor|EU|Rubicon|war|Caesar crosses the Rubicon|Caesar takes his army into Italy and starts a civil war.
+-48|H|mor|AF|Alexandria|fire,learning|Fire at Alexandria|Part of Alexandria burns in Caesar's war; tradition says some of the Library's books are lost.
+-44-3|H|mor|EU|Rome|death,crime|Caesar murdered|Senators stab Caesar on the Ides of March.
+-31|H|mor|EU|Actium|battle,sea|Actium|Octavian defeats Antony and Cleopatra at sea.
+-30|H|mor|AF|Alexandria|death,empire|Egypt becomes Roman|Antony and Cleopatra die; Egypt becomes Rome's province and its Hellenistic age ends.
+-30|W|mum|AF|Alexandria|empire,war|Roman Egypt|Egypt is a vassal of Rome, and the Reborn count the Roman Ventrue among their enemies (Mummy 2nd pdf 30).
+-27|H|mor|EU|Rome|crown,empire|Augustus|Octavian takes the name Augustus; the Roman Empire begins.
+-6|H|mor|MO|Moravia|war,migration|Maroboduus and the Marcomanni|Maroboduus leads the Marcomanni into Bohemia and builds a kingdom that worries Rome.
+6|H|mor|EU|Carnuntum|war|Tiberius marches on Maroboduus|Rome gathers twelve legions at Carnuntum to attack the Marcomanni; a revolt in Pannonia calls them back.
+6|W|vam|EU|Carnuntum|war,crown|A plan for the Marcomanni|Dark Ages Europe tells of a Roman plan to move the Marcomanni deeper into Bohemia (pdf 69).
+9|H|mor|EU|Teutoburg Forest|battle,massacre|Teutoburg|Arminius of the Cherusci destroys three Roman legions under Varus in the Teutoburg Forest.
+9|W|wer|EU|Teutoburg Forest|battle|A Fenrir with the Cherusci|Tribebook Fenris tells of a Fenrir who fought beside the Cherusci against Varus (pdf 24).
+14|H|mor|EU|Rome|death,crown|Augustus dies|Augustus dies; Tiberius takes the empire.
+19|H|mor|MO|Moravia|crown|Maroboduus falls|Maroboduus is overthrown and flees to Roman protection; Vannius rules the Quadi on the Moravian side.
+20|H|mor|MO|Moravia|founding,crown|The kingdom of Vannius|Rome sets up Vannius as client king of the Quadi north of the Danube, in what is now Moravia and Slovakia.
+30|H|mor|ME|Jerusalem|faith,death|Jesus crucified|Jesus of Nazareth is crucified in Jerusalem under Pontius Pilate, about 30 or 33.
+30|W|mag|ME|Jerusalem|faith,occult|The Messianic Voices|After Jesus, the Messianic Voices gather, an ancestor of the Celestial Chorus (M20 pdf 124).
+33|W|vam|ME|Jerusalem|faith,heresy|Seeds of the Heresy|Some Lasombra priests later teach that Caine was the dark mirror of Christ, the root of the Cainite Heresy (V20 Dark Ages pdf 51).
+37|H|mor|EU|Rome|crown|Caligula|Caligula becomes emperor.
+43|H|mor|EU|Britain|war,empire|Rome invades Britain|Claudius sends four legions to Britain.
+50|H|mor|MO|Moravia|uprising,crown|Vannius driven out|The Quadi and their neighbours drive out Vannius.
+50|H|mor|EU|Londinium|founding|Londinium founded|The Romans found Londinium on the Thames.
+50|W|vam|EU|Londinium|founding,faith|Mithras comes to Britain|Some Ventrue say their elder Mithras took Londinium as his domain soon after the Romans founded it.
+60|H|mor|EU|Britain|uprising|Boudica's revolt|Boudica of the Iceni burns Camulodunum, Londinium and Verulamium.
+64|H|mor|EU|Rome|fire,persecution|The great fire of Rome|Fire burns much of Rome; Nero blames the Christians.
+64|W|vam|EU|Rome|fire,faith|Cainites in the flames|The Ventrue of Rome weather the fire; the Christians it blames will one day shape the Cainite world.
+66|H|mor|ME|Judea|uprising|The Jewish revolt|Judea revolts against Rome.
+70|H|mor|ME|Jerusalem|siege,massacre|The temple destroyed|Titus takes Jerusalem and destroys the second temple.
+73|H|mor|ME|Masada|siege|Masada|The last rebels at Masada die rather than surrender.
+79|H|mor|EU|Pompeii|disaster|Pompeii buried|Vesuvius buries Pompeii and Herculaneum.
+79|W|wra|EU|Pompeii|disaster,death|The ash dead|The dead of Pompeii linger in a city frozen as it fell.
+80|H|mor|EU|Rome|sport,building|The Colosseum opens|The Flavian amphitheatre opens with a hundred days of games.
+84|H|mor|EU|Caledonia|battle|Mons Graupius|Agricola defeats the Caledonians.
+84|W|wer|EU|Caledonia|war|The White Howlers against Rome|The White Howlers fight the Roman advance in Caledonia (Tribebook White Howlers pdf 49-50).
+98|H|mor|EU|Rome|crown|Trajan|Trajan becomes emperor; the empire reaches its widest under him.
+100|H|mor|AS|Kushan|empire,faith|The Kushan empire|The Kushan kings rule from Bactria to the Ganges and carry Buddhism along the Silk Road.
+100|H|mor|AS|Luoyang|science|Paper|Cai Lun is credited with making paper from bark and rags at the Han court in 105.
+101|H|mor|EU|Dacia|war|Trajan's Dacian wars|Trajan fights two wars against Dacia and makes it a province in 106.
+106|H|mor|EU|Dacia|empire,money|The gold of Dacia|Trajan takes the Dacian king's gold and opens the Carpathian mines.
+106|W|vam|EU|Dacia|empire,crown|Romans beyond the Danube|The Tzimisce of the Carpathians first meet Roman Cainites when the legions cross into Dacia.
+110|H|mor|EU|Germania|faith|Tacitus' Germania|Tacitus describes the Germanic peoples, the Quadi and Marcomanni among them.
+122|H|mor|EU|Britain|building|Hadrian's Wall|Hadrian begins his wall across northern Britain, finished by 128.
+122|W|wer|EU|Caledonia|war,occult|The White Howlers fall|Over the years from 200 BCE to 200 CE the White Howlers fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42).
+132|H|mor|ME|Judea|uprising|Bar Kokhba|Bar Kokhba leads the last great Jewish revolt.
+150|H|mor|AF|Alexandria|science|Ptolemy's Almagest|Claudius Ptolemy sets out the earth-centred heavens that Europe will follow for 1,400 years.
+161|H|mor|EU|Rome|crown|Marcus Aurelius|Marcus Aurelius becomes emperor.
+165|H|mor|EU|Rome|plague|The Antonine plague|Plague, perhaps smallpox, comes back with the army from the east and kills millions.
+166|H|mor|MO|Danube|war|The Marcomannic Wars|The Marcomanni, Quadi and others cross the Danube; Rome fights them until 180.
+170|H|mor|EU|Aquileia|siege|Aquileia besieged|The Marcomanni and Quadi reach Italy and besiege Aquileia.
+172|H|mor|MO|Musov|war,building|The Roman camp at Musov|Roman legions camp at Musov in southern Moravia, the furthest Roman base north of the Danube.
+172|W|vam|MO|Musov|war,occult|Marcomanni stirred|Dark Ages Europe tells that the Marcomanni were stirred against a Roman camp (pdf 69); WoDX places that camp at Musov.
+173|H|mor|MO|Quadi lands|weather,war|The rain miracle|A sudden storm saves a Roman army trapped by the Quadi; pagans and Christians both claim it.
+175|H|mor|MO|Granua|learning|Meditations on the frontier|Marcus Aurelius writes part of his Meditations among the Quadi by the river Granua.
+179|H|mor|MO|Trencin|war|The Laugaricio inscription|Soldiers of the Second Legion carve their winter quarters on a rock at Trencin, the furthest Roman inscription north.
+180|H|mor|EU|Vindobona|death,crown|Marcus Aurelius dies|Marcus Aurelius dies on the Danube, perhaps at Vindobona; Commodus makes peace.
+180|W|wra|MO|Musov|death|The legion's dead|Roman dead of the Marcomannic Wars gather by the Musov camp, far from Rome's own necropolis.
+193|H|mor|EU|Rome|crown,crime|The empire auctioned|The Praetorian Guard kills Pertinax and sells the throne.
+212|H|mor|EU|Rome|law|Caracalla's edict|All free people of the empire become Roman citizens.
+220|H|mor|AS|China|crown,war|The fall of the Han|The Han dynasty ends; China splits into the Three Kingdoms.
+224|H|mor|ME|Persia|empire,crown|The Sasanians|Ardashir I founds the Sasanian empire.
+235|H|mor|EU|Rome|crown,war|The crisis of the third century|Fifty years of usurpers, plague and invasions begin.
+251|H|mor|EU|Abritus|battle|Abritus|The Goths kill Emperor Decius in battle.
+260|H|mor|ME|Edessa|war,crown|Valerian captured|Shapur I captures Emperor Valerian.
+270|H|mor|EU|Rome|building|The Aurelian walls|Aurelian rings Rome with new walls.
+272|H|mor|ME|Palmyra|war,crown|Zenobia defeated|Aurelian ends the Palmyrene empire of Queen Zenobia.
+284|H|mor|EU|Rome|crown|Diocletian|Diocletian takes power and splits the empire's rule among four.
+300|H|mor|AF|Axum|crown,trade|Axum|The kingdom of Axum trades from the Red Sea to India.
+303|H|mor|EU|Rome|persecution,faith|The Great Persecution|Diocletian orders the last great persecution of Christians.
+312|H|mor|EU|Milvian Bridge|battle,faith|The Milvian Bridge|Constantine wins at the Milvian Bridge under a Christian sign.
+313|H|mor|EU|Milan|law,faith|The Edict of Milan|Constantine and Licinius allow Christian worship.
+313|W|mag|EU|Rome|faith,occult|Voices against Singers|From 313 to 320 the Messianic Voices clash with the Mithraic Singers in Rome (Sorcerers Crusade pdf 69).
+325|H|mor|ME|Nicaea|faith|The Council of Nicaea|The first general council of the Church sets the creed.
+329|N|vam|ME|Byzantium|crown|Caius Embraced|Antonius Embraces Caius, a future member of Constantinople's Triumvirate (Constantinople by Night pdf 20).
+330|H|mor|ME|Constantinople|founding,crown|Constantinople|Constantine makes Byzantium his New Rome.
+330|W|vam|ME|Constantinople|founding,faith|Michael's Dream|The Toreador Methuselah Michael begins the Dream of Constantinople with the Dracon and Antonius (Constantinople by Night pdf 17-19).
+337|H|mor|ME|Nicomedia|death,crown|Constantine dies|Constantine is baptised and dies.
+337|N|vam|ME|Constantinople|crown,law|The Triumvirate's first council|Michael, Antonius and the Dracon hold the Triumvirate's first council (Constantinople by Night pdf 20).
+350|M|cha|EU|Europe|war,occult|The Battle of Stone|The Battle of Stone, in Constantine's century, closes the Mythic Age as the Sundering parts dream from flesh (Dark Ages: Fae pdf 25, 29, 49; C20 pdf 34-36).
+360|H|mor|EU|Europe|migration|The Huns move west|The Huns cross the Volga and break the Gothic kingdoms.
+378|H|mor|EU|Adrianople|battle|Adrianople|The Goths destroy a Roman army and kill Emperor Valens.
+378|W|wer|EU|Adrianople|battle|The Fenrir and Valens|Tribebook Fenris counts the Garou among the Goths' allies against Valens (pdf 24-26).
+380|H|mor|EU|Thessalonica|law,faith|Christianity the state faith|Theodosius makes Nicene Christianity the empire's religion.
+391|H|mor|AF|Alexandria|faith,fire|The Serapeum destroyed|Christians destroy the Serapeum of Alexandria.
+395|H|mor|EU|Rome|crown,empire|The empire divided|At Theodosius' death the empire splits for good into east and west.
+400|H|mor|MO|Moravia|migration|The Quadi leave|Many Quadi move west with the great migrations; Germanic peoples hold Moravia loosely.
+406|H|mor|EU|Rhine|migration|The Rhine crossing|Vandals, Alans and Suebi cross the frozen Rhine into Gaul.
+410|H|mor|EU|Rome|siege,massacre|Alaric sacks Rome|Alaric's Visigoths sack Rome for three days.
+410|W|wer|EU|Rome|siege|The sack and the Fenrir|Tribebook Fenris counts the sack of Rome among the tribe's old victories (pdf 24-26).
+415|H|mor|AF|Alexandria|death,learning|Hypatia killed|A Christian mob kills the philosopher Hypatia.
+430|H|mor|AF|Hippo|siege,death|Augustine dies|Augustine of Hippo dies as the Vandals besiege the city.
+439|H|mor|AF|Carthage|war,empire|The Vandals take Carthage|Geiseric takes Carthage and makes it his capital.
+445|H|mor|EU|Pannonia|crown|Attila|Attila rules the Huns alone, from the plains of Pannonia beside Moravia.
+451|H|mor|EU|Catalaunian Plains|battle|The Catalaunian Plains|Romans and Visigoths turn back Attila in Gaul.
+452|H|mor|EU|Aquileia|siege|Attila in Italy|Attila razes Aquileia; refugees settle in the lagoons where Venice will rise.
+453|H|mor|EU|Pannonia|death,crown|Attila dies|Attila dies on his wedding night; his empire breaks apart.
+455|H|mor|EU|Rome|siege|The Vandals sack Rome|The Vandals plunder Rome for two weeks.
+476|H|mor|EU|Ravenna|crown,empire|The western empire ends|Odoacer deposes the boy emperor Romulus Augustulus.
+476|W|vam|EU|Rome|crown,empire|Rome does not fall|Clanbook Ventrue holds that Rome did not truly fall in 476: its Cainite rulers simply changed their masks (pdf 19-23).
+476|W|wra|EU|Rome|disaster,death|The First Great Maelstrom|The First Great Maelstrom of the dead comes with the fall of Rome (Wraith: Renegades pdf 28; Wraith 20th pdf 97).
+50|M|cha|EU|Europe|war,occult|The Battle of Ice|About three centuries before the Battle of Stone the fae fight the Battle of Ice (Dark Ages: Fae pdf 49).
+489|H|mor|MO|Moravia|migration|The Lombards in Moravia|The Lombards move into the lands north of the Danube, Moravia among them.
+493|H|mor|EU|Ravenna|crown|Theodoric in Italy|Theodoric the Ostrogoth kills Odoacer and rules Italy from Ravenna.
+496|H|mor|EU|Gaul|faith,crown|Clovis baptised|Clovis, king of the Franks, is baptised.
+527|H|mor|ME|Constantinople|crown|Justinian|Justinian becomes emperor in the east.
+529|H|mor|EU|Monte Cassino|faith,founding|Benedict's monastery|Benedict founds Monte Cassino and writes his Rule.
+532|H|mor|ME|Constantinople|uprising,massacre|The Nika riots|Circus factions riot and nearly topple Justinian; thousands die in the Hippodrome.
+537|H|mor|ME|Constantinople|building,faith|Hagia Sophia|Justinian dedicates the great church of Hagia Sophia.
+541|H|mor|ME|Constantinople|plague|Justinian's plague|Bubonic plague reaches Constantinople and spreads across the Mediterranean.
+541|W|vam|AF|Egypt|plague,occult|The Baali in the plague|Clanbook Baali places the clan in Egypt during the sixth-century plague (pdf 25).
+550|H|mor|MO|Moravia|migration|The Slavs arrive|Slavic peoples settle Moravia and Bohemia, coming in through the Moravian Gate (Transylvania by Night pdf 11).
+550|W|vam|MO|Moravian Gate|migration,occult|Tzimisce and the Slavs|The Tzimisce of the east watch the Slavs come through the Moravian Gate and take the new villages as their herds.
+568|H|mor|EU|Italy|migration,war|The Lombards go to Italy|The Lombards leave Pannonia and Moravia for Italy; the Avars take the plain.
+568|H|mor|EU|Pannonia|empire|The Avar khaganate|The Avars rule the Carpathian basin and the Slavs around it.
+570|H|mor|ME|Mecca|faith|Muhammad born|Muhammad is born at Mecca.
+585|N|vam|EU|Iberia|war|Wars under the Visigoths|The Encyclopaedia places Cainite wars under the Visigothic kings.
+590|H|mor|EU|Rome|faith,crown|Gregory the Great|Gregory I becomes pope and sends missions to the English.
+610|N|mag|ME|Arabia|war,occult|The Last Devil King|The Encyclopaedia places the last of the Devil Kings here.
+618|H|mor|AS|Chang'an|crown,empire|The Tang|The Tang dynasty rules China from Chang'an, the largest city on earth.
+622|H|mor|ME|Medina|faith,migration|The Hijra|Muhammad leaves Mecca for Medina; the Muslim calendar begins.
+623|H|mor|MO|Moravia|uprising,crown|Samo's realm|The Frankish merchant Samo leads the Slavs in revolt against the Avars and becomes their king.
+631|H|mor|MO|Wogastisburg|battle|Wogastisburg|Samo's Slavs defeat the Frankish king Dagobert at Wogastisburg.
+632|H|mor|ME|Medina|death,faith|Muhammad dies|Muhammad dies; Abu Bakr becomes the first caliph.
+636|H|mor|ME|Yarmouk|battle|Yarmouk|The Arab armies beat the eastern Romans at Yarmouk and take Syria.
+637|H|mor|ME|Jerusalem|war,faith|Umar takes Jerusalem|The caliph Umar takes Jerusalem.
+640|H|mor|AF|Egypt|war,empire|The Arabs take Egypt|Arab armies conquer Egypt by 642.
+640|W|mum|AF|Egypt|war,building|The old stones reused|The Reborn watch the conquest and later see temple stones carried off for mosques (Mummy: The Resurrection pdf 9, 151).
+650|W|mag|ME|Persia|occult|The Taftani|The Taftani weathermages emerge, by M20's reckoning (pdf 126).
+651|H|mor|ME|Persia|empire|The Sasanians fall|The last Sasanian shah dies; Persia joins the caliphate.
+658|H|mor|MO|Moravia|death,crown|Samo dies|Samo dies after 35 years; his realm breaks up.
+661|H|mor|ME|Damascus|crown|The Umayyads|The Umayyad caliphs rule from Damascus.
+674|H|mor|ME|Constantinople|siege,sea|Greek fire|Constantinople burns an Arab fleet with Greek fire.
+680|H|mor|ME|Karbala|battle,faith|Karbala|Husayn, grandson of Muhammad, is killed at Karbala.
+700|H|mor|MO|Mikulcice|founding|The first fort at Mikulcice|Slavs build a fortified settlement on an island of the Morava at Mikulcice.
+711|H|mor|EU|Iberia|war,empire|The Muslims enter Spain|Tariq crosses to Spain and the Visigothic kingdom falls.
+717|H|mor|ME|Constantinople|siege|The great siege|Constantinople holds through a year-long Arab siege.
+724|W|mag|ME|Arabia|occult,faith|The Web of Faith|The Batini weave the Web of Faith (Sorcerers Crusade pdf 70).
+726|H|mor|ME|Constantinople|faith,heresy|Iconoclasm|Emperor Leo III begins the war on holy images.
+726|W|vam|ME|Constantinople|faith,heresy|The Dream divided|Iconoclasm tears at the Dream; Michael's Toreador love the images the emperor smashes.
+732|H|mor|EU|Tours|battle|Tours|Charles Martel stops a Muslim army between Tours and Poitiers.
+750|H|mor|ME|Baghdad|crown|The Abbasids|The Abbasids overthrow the Umayyads; Baghdad is founded in 762.
+751|H|mor|AS|Talas|battle,science|Talas|Arab armies defeat the Tang at Talas; papermaking spreads west.
+754|W|vam|EU|Ostia|heresy,faith|The Heresy revealed at Ostia|The Cainite Heresy shows itself openly at Ostia (The Cainite Heresy pdf 31).
+756|W|mag|ME|Baghdad|occult|The end of the Devil-King Age|M20 marks 756 as the end of the Devil-King Age (pdf 126).
+767-12|W|mag|EU|Durenmar|founding,occult|The Order of Hermes founded|On Midwinter Night twelve founders gathered by Trianoma found the Order of Hermes at Durenmar (M20 pdf 126; Sorcerers Crusade pdf 70).
+768|H|mor|EU|Francia|crown|Charlemagne|Charlemagne becomes king of the Franks.
+786|H|mor|ME|Baghdad|crown,learning|Harun al-Rashid|Harun al-Rashid's Baghdad becomes a centre of learning and trade.
+791|H|mor|EU|Pannonia|war|Charlemagne against the Avars|The Franks attack the Avars along the Danube.
+793|H|mor|EU|Lindisfarne|massacre,faith|Vikings at Lindisfarne|Norse raiders sack the monastery of Lindisfarne.
+796|H|mor|EU|Pannonia|war,money|The Avar Ring taken|The Franks take the Avars' great Ring and its treasure; the khaganate falls.
+800|H|mor|EU|Rome|crown,empire|Charlemagne crowned|Pope Leo III crowns Charlemagne emperor on Christmas Day.
+800|N|mag|EU|Francia|war|The great schism and the Paladins|The Encyclopaedia places a mages' schism and the Paladins here.
+805|H|mor|MO|Moravia|war|Franks on the Moravian border|Frankish armies campaign against the Slavs of Bohemia.
+822|H|mor|MO|Moravia|treaty|The Moravians named|Envoys of the Moravians appear at the Frankish court for the first time.
+830|H|mor|MO|Moravia|crown,founding|Mojmir I|Mojmir I unites the Moravian Slavs and drives Pribina out of Nitra; Great Moravia begins.
+830|W|vam|MO|Moravia|crown,occult|Great Moravia in the night|Transylvania by Night says Great Moravia grew strong across Moravia, Bohemia and western Slovakia (pdf 11); the Tzimisce count its princes among their herds.
+846|H|mor|MO|Moravia|crown|Rastislav|Louis the German replaces Mojmir with his nephew Rastislav.
+855|H|mor|MO|Moravia|war,siege|Rastislav holds the Franks|Rastislav beats back a Frankish army from his fortress.
+862|H|mor|MO|Moravia|faith|Rastislav asks Constantinople|Rastislav asks the emperor for teachers who can preach in the Slavs' own tongue.
+863|H|mor|MO|Velehrad|faith,learning|Cyril and Methodius|The brothers Constantine, later Cyril, and Methodius arrive in Moravia with the Glagolitic letters.
+863|W|vam|MO|Velehrad|faith,crown|Envoys of the Dream|Some Cainites of Constantinople see the mission to Moravia as a way to carry the Dream north.
+867|H|mor|EU|Rome|faith|The brothers in Rome|Pope Adrian II approves the Slavonic liturgy.
+869|H|mor|EU|Rome|death,faith|Cyril dies|Cyril dies in Rome; Methodius returns as archbishop of Pannonia and Moravia.
+870|H|mor|MO|Moravia|crime,crown|Svatopluk takes the throne|Svatopluk hands his uncle Rastislav to the Franks, who blind him.
+871|H|mor|MO|Moravia|uprising,war|Svatopluk turns on the Franks|Svatopluk drives the Franks out and rules Great Moravia alone.
+874|H|mor|MO|Forchheim|treaty|The peace of Forchheim|Svatopluk makes peace with the Franks and pays a token tribute.
+876|N|mag|EU|Europe|war,occult|Taking of the Necromancer's Hold|The Encyclopaedia places the taking of the Necromancer's Hold here.
+880|H|mor|MO|Moravia|faith|Industriae tuae|Pope John VIII allows the Slavonic liturgy in Moravia.
+883|H|mor|MO|Moravia|empire|Great Moravia at its height|Svatopluk rules Bohemia, Nitra, the Vistula lands and part of Pannonia.
+885|H|mor|MO|Moravia|death,faith|Methodius dies|Methodius dies; his pupils are driven out and flee to Bulgaria.
+885|W|vam|MO|Mikulcice|faith,occult|The churches of Mikulcice|Mikulcice has a dozen stone churches; its graves and relics draw Cainite and wraith alike.
+894|H|mor|MO|Moravia|death,crown|Svatopluk dies|Svatopluk dies; his sons quarrel and Great Moravia weakens.
+895|H|mor|MO|Bohemia|crown|Bohemia breaks away|The Bohemian dukes swear to the East Franks and leave Great Moravia.
+896|H|mor|EU|Pannonia|migration|The Magyars arrive|The Magyars cross the Carpathians into the Danube basin.
+900|H|mor|MO|Moravia|money|Axe-shaped iron bars|Great Moravians trade in iron bars shaped like axe heads as well as silver.
+906|H|mor|MO|Moravia|war,massacre|Great Moravia falls|The Magyars destroy Great Moravia; Mikulcice is burned and abandoned within years.
+906|W|wra|MO|Mikulcice|death,war|The burned island|The dead of Mikulcice linger in the Shadowlands of the island churches long after the living leave.
+907|H|mor|EU|Pressburg|battle|Pressburg|The Magyars destroy a Bavarian army at Pressburg.
+910|H|mor|EU|Cluny|faith,founding|Cluny founded|The abbey of Cluny is founded in Burgundy.
+921|H|mor|MO|Bohemia|crown|Wenceslas|Wenceslas becomes duke of Bohemia.
+929|H|mor|MO|Bohemia|treaty,crown|Wenceslas swears to Henry|Wenceslas submits to the German king Henry I (Transylvania by Night pdf 11).
+935|H|mor|MO|Stara Boleslav|death,crown|Wenceslas murdered|Wenceslas is killed by his brother Boleslaus at Stara Boleslav, about 935.
+935|W|vam|MO|Bohemia|crown,crime|Boleslav rules|Transylvania by Night says Boleslav took Bohemia and Moravia after the murder (pdf 11).
+950|W|vam|EU|Balkans|heresy,faith|The Bogomils|The Cainite Heresy works among the Bogomils of the Balkans from about 950 (The Cainite Heresy pdf 20).
+955|H|mor|EU|Lechfeld|battle|Lechfeld|Otto I crushes the Magyars at the Lechfeld; their raids end.
+962|H|mor|EU|Rome|crown,empire|Otto crowned emperor|Otto I is crowned emperor; the Holy Roman Empire begins.
+965|H|mor|EU|Poland|faith,crown|Mieszko and Dubravka|Mieszko of Poland marries the Bohemian princess Dubravka and takes baptism in 966.
+973|H|mor|MO|Prague|faith,founding|The bishopric of Prague|A bishopric is founded at Prague (Transylvania by Night pdf 11).
+973|W|vam|MO|Prague|crown|A Ventrue prince of Prague|Transylvania by Night tells that a Ventrue takes the princedom of Prague (pdf 11).
+976|H|mor|EU|Austria|founding|The Babenbergs in Austria|The Babenbergs take the march that becomes Austria.
+988|H|mor|EU|Kiev|faith|Kiev baptised|Vladimir of Kiev takes Christianity from Constantinople.
+995|H|mor|MO|Libice|massacre|The Slavnik massacre|Boleslaus II kills the rival Slavnik family at Libice.
+1000|H|mor|EU|Gniezno|faith|The congress of Gniezno|Emperor Otto III visits Gniezno at the tomb of Adalbert.
+1000|H|mor|EU|Hungary|crown,faith|Stephen of Hungary|Stephen is crowned the first king of Hungary.
+1000|W|vam|EU|Transylvania|war|The Tremere-Tzimisce war|The Encyclopaedia places the start of the war between the Tremere and the Tzimisce here.
+1000|W|mag|EU|Ceoris|occult|The Questing Years|House Tremere's Questing Years run from 1000 to 1021 (House of Tremere pdf 21).
+1003|N|mag|EU|Europe|heresy|The first medieval schisms|The Encyclopaedia's schisms among the mages begin about now.
+1019|H|mor|MO|Moravia|war,crown|Bohemia takes Moravia|Oldrich of Bohemia, through his son Bretislav, takes Moravia from Poland, between 1019 and 1029.
+1022|W|vam|EU|Ceoris|occult,crown|The Becoming|Tremere and his inner circle become Cainites in 1022 (House of Tremere pdf 23; V20 Dark Ages pdf 63).
+1029|H|mor|MO|Moravia|crown|Bretislav in Moravia|Bretislav rules Moravia for his father.
+1034|H|mor|MO|Bohemia|crown|Bretislav duke|Bretislav I becomes duke of Bohemia and Moravia.
+1037|W|vam|EU|Ceoris|crown|Goratrix rules|Goratrix rules the Tremere seat from 1037 to 1133 (House of Tremere pdf 26-28).
+1038|H|mor|EU|Gniezno|war,faith|Bretislav raids Gniezno|Bretislav sacks Gniezno and carries off the relics of Adalbert.
+1054|H|mor|EU|Rome|faith,heresy|The schism of East and West|The legates of Rome and the patriarch of Constantinople excommunicate each other.
+1055|H|mor|MO|Moravia|law,crown|Seniority|Bretislav's rule of succession gives Bohemia to the eldest, Moravia's parts to younger sons.
+1061|H|mor|MO|Moravia|crown|The Moravian appanages|Moravia is shared among Premyslid princes at Olomouc, Brno and Znojmo.
+1063|H|mor|MO|Olomouc|faith,founding|The bishopric of Olomouc|The bishopric of Olomouc is restored.
+1066|H|mor|EU|Hastings|battle,crown|Hastings|William of Normandy wins England at Hastings.
+1071|H|mor|ME|Manzikert|battle|Manzikert|The Seljuks defeat the eastern Romans at Manzikert.
+1077|H|mor|EU|Canossa|faith,crown|Canossa|Henry IV kneels in the snow at Canossa before Pope Gregory VII.
+1085|H|mor|MO|Prague|crown|Vratislaus king|Vratislaus II is crowned king of Bohemia for his lifetime.
+1090|N|vam|EU|Iberia|crown|Cainites among the taifas|The Encyclopaedia places Cainites among the taifa kingdoms of Spain.
+1095|H|mor|EU|Clermont|faith,crusade|The crusade preached|Pope Urban II calls the First Crusade.
+1096|H|mor|MO|Prague|massacre,crusade|Crusaders in Prague|Crusaders passing through Prague attack its Jews.
+1130|M|cha|EU|Europe|treaty|The fae swear a truce|About a century before the 1230 setting of Dark Ages: Fae, the fae swear the Oath-Truce, which is near its end by that year (Dark Ages: Fae pdf 8, 25, 40).
+1099|H|mor|ME|Jerusalem|siege,massacre|The First Crusade takes Jerusalem|The crusaders take Jerusalem and kill much of its people.
+1099|N|vam|ME|Jerusalem|massacre|The Weeks of Blood|The Encyclopaedia's Weeks of Blood follow the fall of Jerusalem.
+1099|N|vam|ME|Jerusalem|crown|Cainites under the Kingdom of Jerusalem|The Encyclopaedia places Cainites in the new crusader kingdom.
+1121|W|vam|EU|Ceoris|war,occult|The first gargoyles|The Tremere make the first gargoyles for their war with the Tzimisce (V20 Dark Ages pdf 83).
+1126|H|mor|MO|Chlumec|battle|Chlumec|Sobeslav I of Bohemia defeats the German king Lothar at Chlumec.
+1133|W|vam|ME|Erciyes|death,crime|Saulot's end|Tremere drinks the soul of Saulot in 1133 (V20 Dark Ages pdf 41).
+1140|N|vam|MO|Prague|occult|Ardan of the Golden Lane|Ardan, of the Tremere chantry in Prague, is Embraced (House of Tremere pdf 82).
+1142|H|mor|MO|Prague|siege,war|The Moravian princes besiege Prague|The Moravian princes rise against Duke Vladislaus II and besiege Prague.
+1144|H|mor|ME|Edessa|war,crusade|Edessa falls|Zengi takes Edessa; the Second Crusade follows.
+1158|H|mor|MO|Prague|crown|Vladislaus king|Frederick Barbarossa makes Vladislaus II king of Bohemia.
+1169|H|mor|ME|Cairo|crown|Saladin|Saladin takes power in Egypt.
+1176|H|mor|EU|Legnano|battle|Legnano|The Lombard cities beat Barbarossa at Legnano.
+1182|H|mor|MO|Moravia|crown,law|The Margraviate of Moravia|Barbarossa makes Moravia a margraviate under the emperor, held by Conrad Otto.
+1185|H|mor|MO|Loditz|battle|Loditz|Bohemians and Moravians fight at Loditz; Moravia returns to Bohemia's rule.
+1187|H|mor|ME|Hattin|battle,crusade|Hattin|Saladin destroys the crusader army at Hattin and takes Jerusalem.
+1189|H|mor|EU|Europe|crusade|The Third Crusade|Barbarossa, Richard I and Philip II set out for the Holy Land.
+1190|H|mor|ME|Saleph|death|Barbarossa drowns|Barbarossa drowns crossing the Saleph in Anatolia.
+1192|H|mor|MO|Prague|crown|Premysl Ottokar returns|Premysl Ottokar takes the Bohemian throne, losing it again in 1193.
+1194|N|vam|EU|Orvieto|massacre|The massacre at Orvieto|The Encyclopaedia's massacre at Orvieto falls here.
+1196|H|mor|EU|Germany|crown|Henry VI's last year|Henry VI plans to make the empire hereditary; he dies at Messina the next year.
