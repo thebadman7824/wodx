@@ -1644,5 +1644,10 @@ Chronicle 0.28.0 adds five clan features:
 
 Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A Ravnos vice and a Nosferatu face now fire on the player's own client, where social and trade acts happen. Decisions B1150 to B1154. Harness signatures.test.mjs: 17 tests. The gatesigs gate has 18 steps.
 
+## 2026-11-12: bloodlines and Laibon legacies
+Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of their own. Each one uses roll effects, a Masquerade sign card, or a clan engine borrowed through the row's "also" list. Decisions B1155 to B1157. Harness signatures.test.mjs: 19 tests. gatesigs: 19 steps.
+
+## 2026-11-12: ghouls and revenant families
+Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
 ## 2026-11-12: Lifepaths for every line and splat (Creation 0.11.0, Storyteller 0.34.1)
 Improvement Desk cr1. A Lifepath button on every owned character sheet and in the Creation window opens a step-by-step wizard: birth, youth and adult life in one of fourteen era bands (1197 to the World of Future Darkness, with the plague years, the Hussite wars, the White Mountain, Austerlitz, 1848, both world wars, 1948, 1968, 1989 and the arcologies), then the turn into the line, a scene for the splat (281 of them, across all twelve lines and mortals) and the first years after. Choices set flags that weight, rule out or name the next scene, as Princes of Darkness chains its education events. The end screen keeps or drops each suggestion and makes ticked people into NPCs. The lifepath rides through a change of state and appears in the Storyteller's prelude journal. Decisions B1310 to B1313. Harness lifepaths.test.mjs (12 tests) and lifepath-app.test.mjs (2).

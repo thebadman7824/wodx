@@ -1456,6 +1456,33 @@ A ledger of bound wraiths, each held by a fetter. Calling one sends a card to th
 
 Reverse: giovanniName in signature-rules.mjs.
 
+## B1155. Bloodlines come before clans in the table (2026-11-12)
+The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
+- roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
+- a Masquerade sign card when a mortal deals with them (Gargoyles, Samedi, Harbingers, Salubri, Lhiannan, Xi Dundu)
+- engines borrowed from a clan: a vizier's Muse; contracts for Assamite sorcerers, a Baali pact and an Ahrimane spirit pact; bound dead for Harbingers and Nagaraja; the Ishtarri vice; soil for the Old Clan and the Naglopers
+
+Reverse: BLOODLINES in data/signatures.mjs; rowHas in signatures.mjs.
+
+## B1156. The Old Clan holds out a night longer without soil (2026-11-12)
+House reading from the desk: an Old Clan Tzimisce's pools halve only after a second night without native soil.
+
+Reverse: grace on the koldun row.
+
+## B1157. Laibon legacies (2026-11-12)
+Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
+
+Reverse: the Laibon rows in BLOODLINES.
+
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
