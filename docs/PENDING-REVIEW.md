@@ -839,4 +839,4 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | How often a supernatural character gets a deed of their own kind (B2352) | About one phase in three; the rest are the deeds anyone could do | pickDeed in wodx-storyteller battle-deeds.mjs (h % 3) |
 | 2026-11-12 | The counts in a battle's aftermath (B2355) | One in a hundred of the dead rise as wraiths, prisoners a tenth of a routed side, wounded twice the dead, feeding 3 or 7 nights 2 easier | aftermathFor in battle-aftermath.mjs |
 | 2026-11-12 | Seen deeds and the Veil (B2352) | Sending the feeding line to the Ledger lets the Veil slip a point per seen deed, at most 3, with Undo; nothing moves by itself | send in battle-extras.mjs |
-
+| 2026-11-12 | Factions at war: the leaders' powers from the battle deeds table (B2214) | leaderDeed for the leader's kind and the age, Status + 3 dice, seen passed on; a faction with no leader sheet is read as its kind (Kindred, Garou as lupine, mages, fae, the dead as wraiths, hunters) | powerDeed in wodx-npc factions.mjs, COMBAT_KIND in war-rules.mjs |
