@@ -41,8 +41,11 @@ export async function run() {
   let actors = [], factionsBefore = null, legendsBefore = null;
   try {
     actors = await createActors([{name: "WoDX gate: Captain", type: "Mortal"}, {name: "WoDX gate: Knight", type: "Vampire"}]);
-    await actors[0].update({"system.attributes.perception.value": 3, "system.attributes.charisma.value": 2, "system.attributes.intelligence.value": 2,
-      "system.attributes.wits.value": 2, "system.abilities.leadership.value": 3, "system.abilities.medicine.value": 1});
+    // a real sheet sets isupdated false and the system recomputes each total; an API update does neither, so set both here
+    const attrs = {perception: 3, charisma: 2, intelligence: 2, wits: 2};
+    const upd = {"system.abilities.leadership.value": 3, "system.abilities.medicine.value": 1};
+    for ( const [k, v] of Object.entries(attrs) ) { upd[`system.attributes.${k}.value`] = v; upd[`system.attributes.${k}.total`] = v; }
+    await actors[0].update(upd);
     try { factionsBefore = foundry.utils.deepClone(game.settings.get(NPC, "factions")); } catch (e) { factionsBefore = null; }
     try { legendsBefore = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "legends")); } catch (e) { legendsBefore = null; }
     if ( factionsBefore ) {
