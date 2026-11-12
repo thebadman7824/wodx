@@ -17,5 +17,10 @@ export async function allPowers() {
   for ( const e of R.EDGES ) out.push({lib: "edge", id: e.id, name: e.name ?? e.id, group: `${e.virtue ?? e.path} ${e.level}`, text: e.e ?? e.text ?? "", diff: e.diff});
   const O = await import(pathToFileURL(join(A, "scripts/orpheus-rules.js")));
   for ( const [k, h] of Object.entries(O.HORRORS) ) out.push({lib: "horror", id: k, name: h.label, group: h.shade, text: ""});
+  // Hunter numina and mummy Hekau paths, tagged by path (Targeting 0.2.0, the untagged-powers sweep)
+  const H = await import(pathToFileURL(join(A, "scripts/hunter-rules.js")));
+  for ( const [k, v] of Object.entries(H.NUMINA) ) out.push({lib: "numina", id: k, name: v.label, group: v.kind, text: v.note ?? "", diff: v.diff});
+  const M = await import(pathToFileURL(join(A, "scripts/mummy-rules.js")));
+  for ( const [k, v] of Object.entries(M.HEKAU) ) out.push({lib: "hekau", id: k, name: v.label, group: "Hekau", text: ""});
   return out;
 }

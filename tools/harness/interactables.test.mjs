@@ -390,7 +390,7 @@ test("light sources: light or put out with no roll; a lantern can be broken; one
   const br = R.resolve(dark, R.optionsFor(dark, ch())[1], []);
   assert.equal(br.lights, false); assert.equal(br.patch.flags.broken, true); assert.equal(br.noise, "loud");
   const torch = R.describeLight({lightKind: "torch"}, {on: true, count: 2});
-  assert.deepEqual(ids(R.optionsFor(torch, ch())), ["lightOff"]);
+  assert.deepEqual(ids(R.optionsFor(torch, ch())), ["lightOff", "spillLight"]);
   assert.equal(R.optionsFor(R.describeLight({lightKind: "switch"}, {on: true, count: 1}), ch())[0].label, "Switch it off");
   assert.equal(R.optionsFor(R.describeLight({}, {count: 0}), ch())[0].disabled, true);
   assert.deepEqual(R.optionsFor(R.describeLight({broken: true}, {on: true, count: 1}), ch()), []);

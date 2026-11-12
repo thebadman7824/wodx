@@ -15,7 +15,17 @@ export function registerSight() {
     name: "Supernatural sight on my map", hint: "While my character uses Heightened Senses, Aura Perception or Lifesight, my own map shows it. Turn this off on a slow machine; chat answers are the same either way.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
   });
+  game.settings.register(MOD, "colourSafe", {
+    name: "Colour-blind safe colours", hint: "Aura and Lifesight rings, and the other WoDX tints that carry meaning, use colours that stay apart for colour-blind eyes. Every ring also shows its words on the map either way.",
+    scope: "client", config: true, type: Boolean, default: false, onChange: () => { drawSight(); Hooks.callAll("wodxColourSafe", !!setting("colourSafe")); }
+  });
+  game.settings.register(MOD, "ringWords", {
+    name: "Words under the sight rings", hint: "Each Aura Perception or Lifesight ring on my map says what it shows (pale, bright and wild, sparkling ...), so the colour is never the only sign.",
+    scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
+  });
 }
+/** Is this player's colour-blind palette on? Other WoDX modules read it through the Senses api. */
+export const colourSafe = () => !!setting("colourSafe");
 
 function myCharacter() {
   const tok = (canvas?.tokens?.controlled ?? []).find(t => t.actor?.isOwner);
@@ -53,13 +63,23 @@ export function drawSight() {
       const parent = canvas.interface ?? canvas.stage;
       if ( !layer || layer.destroyed || layer.parent !== parent ) { layer = new PIXI.Graphics(); layer.eventMode = "none"; layer.zIndex = 49; parent.addChild(layer); }
       layer.clear();
+      for ( const c of [...layer.children] ) c.destroy();
       if ( !sight || !S.SIGHTS[sight].rings ) return;
+      const safe = !!setting("colourSafe"), words = setting("ringWords") !== false;
       for ( const t of canvas.tokens?.placeables ?? [] ) {
         if ( !t.actor || !t.isVisible || t.actor === a ) continue;
-        const ring = S.ringFor(sight, profileOf(t.actor));
+        const ring = S.ringFor(sight, profileOf(t.actor), {safe});
         if ( !ring ) continue;
-        layer.lineStyle(Math.max(3, t.w / 14), ring.colour, ring.alpha);
-        layer.drawCircle(t.center.x, t.center.y, Math.max(t.w, t.h) * 0.58);
+        const rad = Math.max(t.w, t.h) * 0.58;
+        layer.lineStyle(Math.max(safe ? 4 : 3, t.w / (safe ? 10 : 14)), ring.colour, ring.alpha);
+        layer.drawCircle(t.center.x, t.center.y, rad);
+        if ( words && ring.words ) {
+          const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(t.h / 6)), fill: S.css(ring.colour), stroke: {color: "#000000", width: 3}, strokeThickness: 3};
+          const label = typeof layer.circle === "function" ? new PIXI.Text({text: ring.words, style}) : new PIXI.Text(ring.words, style);
+          label.anchor?.set?.(0.5, 0);
+          label.x = t.center.x; label.y = t.center.y + rad + 2;
+          layer.addChild(label);
+        }
       }
       layer.lineStyle(0);
     } catch (e) { console.warn(`${MOD} | sight`, e); }

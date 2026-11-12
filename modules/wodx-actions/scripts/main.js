@@ -66,6 +66,7 @@ import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
 import * as KF from "./feeding-rules.js";
+import * as OD from "./odds-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -111,6 +112,9 @@ function registerSettings() {
     VX.registerSettings(s);
     // 6e: each player's last few menu buttons, per actor type
     game.settings.register(MOD, "menuRecent", { scope: "client", config: false, type: Object, default: {} });
+    // 3.43.0: the odds before a roll, on this computer
+    game.settings.register(MOD, "showOdds", { name: "Show the odds before a roll", scope: "client", config: true, type: Boolean, default: true,
+        hint: "Roll windows show the chance of one success, of three or more and of a botch for the pool as set, with every modifier and where it comes from." });
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -639,8 +643,59 @@ export async function action({ actor: a, preset = "" } = {}) {
         });
         if (preset) f.preset.dispatchEvent(new Event("change"));
         sync();
+        oddsPanel(root, actor, target, fd => fd);
     };
     return dialog("WoDX Action", content, "Roll", fd => resolveAction(actor, target, fd), { render, width: 500 });
+}
+
+/* ================================================================== */
+/*  The odds before a roll (3.43.0)                                    */
+/* ================================================================== */
+
+/**
+ * A line in a roll window with the chance of one success, three or more and a botch, and the modifiers in the pool.
+ * toFd(read form) gives the choices resolveAction() would get, or null to hide the line. A resisted roll against
+ * someone shows the other side's odds to the Storyteller only (an NPC's resisting roll stays the Storyteller's).
+ */
+function oddsPanel(root, actor, target, toFd) {
+    let on = true;
+    try { on = setting("showOdds") !== false; } catch (e) { on = true; }
+    const form = root?.querySelector?.("form");
+    if (!on || !form || !actor) return null;
+    const box = document.createElement("div");
+    box.className = "vta-odds";
+    box.setAttribute("aria-live", "polite");
+    const anchor = form.querySelector("[name=desc]")?.closest(".form-group");
+    if (anchor) form.insertBefore(box, anchor); else form.append(box);
+    const draw = () => {
+        try {
+            const fd = toFd(P.readForm(root));
+            if (!fd) { box.hidden = true; return; }
+            box.hidden = false;
+            let team = { dice: 0, overflow: 0 };
+            if (fd.mode === "teamwork") team = R.teamwork(String(fd.helpers || "").split(/[ ,;]+/).filter(Boolean).map(num), fd.helperLimit || Infinity);
+            const built = buildPool(actor, target, fd, undefined, { teamDice: team.dice, overflow: team.overflow });
+            if (built.blocked) { box.innerHTML = `<div class="vta-odds-line"><b>Odds</b> ${esc(built.blocked)}</div>`; return; }
+            if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") { box.innerHTML = `<div class="vta-odds-line"><b>Odds</b> an automatic success: the pool is at least the difficulty.</div>`; return; }
+            const o = OD.odds(built.dice, built.difficulty, { specialty: !!fd.specialty, willpower: !!fd.wp });
+            const extra = [fd.specialty ? "specialty: 10s count twice" : "", fd.wp ? "Willpower: one success, no botch" : ""].filter(Boolean);
+            let html = `<div class="vta-odds-line"><b>Odds</b> ${esc(OD.oddsLine(o, { need: fd.mode === "extended" ? num(fd.goal) : 0 }))}</div>`;
+            const parts = [...built.parts, ...extra];
+            if (parts.length) html += `<div class="vta-odds-parts">${parts.map(esc).join(" · ")}</div>`;
+            if (fd.mode === "resisted" && game.user.isGM) {
+                const op = opponentPool(target, PRESETS[fd.preset]?.opp, fd, actor);
+                const oo = OD.odds(num(op.dice), num(op.diff) || 6);
+                html += `<div class="vta-odds-parts vta-odds-gm">Storyteller only: ${esc(target?.name ?? "the other side")} resists with ${esc(OD.oddsLine(oo))}</div>`;
+            }
+            box.innerHTML = html;
+        } catch (e) { box.hidden = true; console.warn("WoDX | odds", e); }
+    };
+    form.addEventListener("input", draw);
+    form.addEventListener("change", draw);
+    // Buttons that set the pool (Suggest) change values without an event
+    form.addEventListener("click", ev => { if (ev.target.closest("button")) setTimeout(draw, 0); });
+    draw();
+    return draw;
 }
 
 /* ================================================================== */
@@ -689,6 +744,12 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
         };
         sel.addEventListener("change", () => show(true));
         show(false);
+        oddsPanel(root, actor, target, fd => {
+            const c = CK.byKey(fd.check);
+            const pick = c ? checkPoolText(actor, c).pick : null;
+            if (!pick) return null;
+            return { ...fd, preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple", multi: 0, retries: 0, ignoreWounds: false, aura: false, auto: false };
+        });
     };
     return dialog("Common checks", content, "Roll", fd => {
         const c = CK.byKey(fd.check);
@@ -729,6 +790,32 @@ function opponentPool(target, spec, fd, actor = null) {
     return { dice: attr(target, spec.attr) + (ab?.value ?? 0), diff: spec.diff, label: `${cap(spec.attr)} + ${ab?.name ?? cap(spec.ability)}`, specialty: false };
 }
 
+/** The pool and difficulty a roll window's choices give, with every modifier and where it came from (3.43.0: also the odds
+ *  shown before the roll). pool: readPool()'s answer. */
+function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability), { teamDice = 0, overflow = 0 } = {}) {
+    const rd = road(actor);
+    // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
+    const ticked = TH.TICKS.filter(t => fd[`tag-${t.key}`]).map(t => t.key);
+    let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
+    // How the character moves (WoDX Combat 3.12.0): prone helps Stealth, flying helps sight, water spoils footing
+    try {
+        const kinds = [pool.abilityKey === "stealth" ? "stealth" : null, fd.attr === "perception" ? "perception" : null,
+            fd.attr === "dexterity" && pool.abilityKey !== "stealth" ? "dexterity" : null, pool.abilityKey === "dodge" ? "dodge" : null].filter(Boolean);
+        const mv = kinds.length ? game.wodxCombat?.movement?.rollMods?.(actor, kinds) : null;
+        if (mv?.diff) tm = { ...tm, diff: (tm.diff ?? 0) + mv.diff, parts: [...(tm.parts ?? []), ...mv.parts.map(x => `${x}, house rule`)] };
+    } catch (e) { /* WoDX Combat is off */ }
+    return R.actionPool({
+        traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
+        attribute: pool.attribute, attributeLabel: pool.attributeLabel,
+        ability: pool.ability, abilityLabel: pool.abilityLabel,
+        abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
+        bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
+        woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
+        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
+        daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
+    });
+}
+
 async function resolveAction(actor, target, fd) {
     const preset = PRESETS[fd.preset] ?? {};
     const pool = readPool(actor, fd.attr, fd.ability);
@@ -750,26 +837,7 @@ async function resolveAction(actor, target, fd) {
         const t = R.teamwork(typed, fd.helperLimit || Infinity);
         teamDice = t.dice; overflow = t.overflow;
     }
-    // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
-    const ticked = TH.TICKS.filter(t => fd[`tag-${t.key}`]).map(t => t.key);
-    let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
-    // How the character moves (WoDX Combat 3.12.0): prone helps Stealth, flying helps sight, water spoils footing
-    try {
-        const kinds = [pool.abilityKey === "stealth" ? "stealth" : null, fd.attr === "perception" ? "perception" : null,
-            fd.attr === "dexterity" && pool.abilityKey !== "stealth" ? "dexterity" : null, pool.abilityKey === "dodge" ? "dodge" : null].filter(Boolean);
-        const mv = kinds.length ? game.wodxCombat?.movement?.rollMods?.(actor, kinds) : null;
-        if (mv?.diff) tm = { ...tm, diff: (tm.diff ?? 0) + mv.diff, parts: [...(tm.parts ?? []), ...mv.parts.map(x => `${x}, house rule`)] };
-    } catch (e) { /* WoDX Combat is off */ }
-    const built = R.actionPool({
-        traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
-        attribute: pool.attribute, attributeLabel: pool.attributeLabel,
-        ability: pool.ability, abilityLabel: pool.abilityLabel,
-        abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
-        bonusDice: fd.bonus, extraDiff: fd.extraDiff, baseDifficulty: fd.diff,
-        woundPenalty: pool.special ? 0 : woundPenalty(actor), ignoreWounds: fd.ignoreWounds,
-        multiIndex: num(fd.multi), retries: fd.retries, aura: fd.aura ? R.auraModifier(rd.value) : 0,
-        daytimeCap: fd.daytime ? rd.value : null, teamworkDice: teamDice, teamworkOverflow: overflow
-    });
+    const built = buildPool(actor, target, fd, pool, { teamDice, overflow });
     if (built.blocked) { ui.notifications.warn(built.blocked); return post(actor, `${actor.name}: ${esc(fd.desc || preset.label || "Action")}`, `<div class="vta-warn">${built.blocked}</div>`); }
     const wpCost = (fd.wp ? 1 : 0) + (fd.ignoreWounds ? 1 : 0);
     if (wpCost && !(await spendWillpower(actor, wpCost))) return null;
@@ -2343,9 +2411,13 @@ export async function menu({ actor: a } = {}) {
     const kind = P.detectProfile(actor);
     let recentAll = {};
     try { recentAll = foundry.utils.deepClone(setting("menuRecent") ?? {}); } catch (e) { recentAll = {}; }
+    // 3.43.0: the character's own row, pinned and lately used, kept on the character for whoever owns it
+    const own = !!actor.isOwner;
+    const quick = TR.quickOf(actor.getFlag?.(MOD, "quick"));
+    const recent = own && quick.recent.length ? quick.recent : (recentAll[kind] ?? []);
     let html;
     if (legacy) html = `<div class="vta-menu">${MENU.map(([k, i, l]) => `<button type="button" data-k="api:${k}"><i class="fas ${i}"></i> ${l}</button>`).join("")}</div>`;
-    else html = (await pm().menuFor(actor, { recent: recentAll[kind] ?? [], isGM: game.user.isGM })).html;
+    else html = (await pm().menuFor(actor, { recent, pinned: quick.pinned, isGM: game.user.isGM })).html;
     const prev = P.setLine(kind);
     let r;
     try {
@@ -2358,11 +2430,26 @@ export async function menu({ actor: a } = {}) {
                     close();
                     recentAll[kind] = TR.pushRecent(recentAll[kind], spec);
                     game.settings.set(MOD, "menuRecent", recentAll).catch(() => {});
+                    if (own) actor.setFlag(MOD, "quick", { ...quick, recent: TR.pushRecent(quick.recent, spec, TR.QUICK_RECENT) }).catch(e => console.warn("WoDX | quick row", e));
                     const was = P.setLine(kind);
                     LEDGER.delete(actor.id);
                     try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); } finally { P.setLine(was); }
                 };
                 root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("click", () => use(b)));
+                // Right-click (or Alt+P on the focused button) pins an action to the character's row, or unpins it
+                const pin = async b => {
+                    if (!own) return ui.notifications.info("Only the character's owner can pin actions.");
+                    const t = TR.togglePin(quick.pinned, b.dataset.k);
+                    if (t.full) return ui.notifications.info(`${actor.name} already has ${TR.QUICK_PINS} pinned actions: unpin one first.`);
+                    await actor.setFlag(MOD, "quick", { ...quick, pinned: t.pinned });
+                    close();
+                    menu({ actor });
+                };
+                root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("contextmenu", ev => { ev.preventDefault(); pin(b); }));
+                root.addEventListener("keydown", ev => {
+                    const b = ev.target?.closest?.("button[data-k]");
+                    if (b && ev.altKey && (ev.key === "p" || ev.key === "P")) { ev.preventDefault(); pin(b); }
+                });
                 root.querySelector("button.vta-kind")?.addEventListener("click", async () => {
                     close();
                     if (await P.pickProfile(actor)) menu({ actor });
@@ -2528,7 +2615,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.42.2", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.43.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2585,7 +2672,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,
     // The sunlight system (3.3.0)
-    sunNow: t => sx().sunNow(t), sunExposure: (tok, sun) => sx().exposureOf(tok, sun), applySun: (a, o) => sx().applySun(resolveActor(a), o),
+    sunNow: t => sx().sunNow(t), sunExposure: (tok, sun) => sx().exposureOf(tok, sun), sunCheck: doc => sx().onMove(doc?.document ?? doc), applySun: (a, o) => sx().applySun(resolveActor(a), o),
     sunAndHaven: withActor(a => sx().sunAndHaven(a)), skyAndSun: () => sx().skyAndSun(), havenStatus: a => sx().havenStatus(a), sunlightRules: SR,
     // The wraith line (3.4.0)
     useArcanos: withActor(a => wx().useArcanos(a)), passion: withActor(a => wx().passion(a)), fetter: withActor(a => wx().fetter(a)),

@@ -349,6 +349,24 @@ export function pushRecent(list, spec, n = 4) {
     return [spec, ...(list ?? []).filter(s => s !== spec)].slice(0, n);
 }
 
+/** 3.43.0: a character's own quick row: the last five actions used and up to eight pinned (stored on the character). */
+export const QUICK_RECENT = 5;
+export const QUICK_PINS = 8;
+/** The quick row as stored on the character, cleaned: {recent: [spec], pinned: [spec]}. */
+export function quickOf(flag) {
+    const list = (a, n) => [...new Set((Array.isArray(a) ? a : []).filter(x => typeof x === "string" && x))].slice(0, n);
+    return { recent: list(flag?.recent, QUICK_RECENT), pinned: list(flag?.pinned, QUICK_PINS) };
+}
+/** Pin or unpin an action. Returns {pinned, added, full}; full: there are already eight and nothing changed. */
+export function togglePin(pinned, spec, max = QUICK_PINS) {
+    const cur = (pinned ?? []).filter(Boolean);
+    if (cur.includes(spec)) return { pinned: cur.filter(s => s !== spec), added: false, full: false };
+    if (cur.length >= max) return { pinned: cur, added: false, full: true };
+    return { pinned: [...cur, spec], added: true, full: false };
+}
+/** The recent row without what is pinned (a pinned action shows once). */
+export const recentShown = (recent, pinned) => (recent ?? []).filter(s => !(pinned ?? []).includes(s));
+
 /* ------------------------------------------------------------------ */
 /*  The one card layout                                                */
 /* ------------------------------------------------------------------ */

@@ -1430,3 +1430,43 @@ Reverse: HOLY_HARM and DAMNED_CLANS in use-rules.mjs; the inject case in use.mjs
 Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.
 It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.
 Reverse: empty SALVAGE in data/recipes.mjs.
+
+## B1300. Area shapes and their sizes (2026-11-12)
+Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
+Reverse: areaShape() in wodx-targeting target-rules.mjs; the area branch of attach() in main.mjs.
+
+## B1301. The odds before a roll (2026-11-12)
+Ben approved "Show the odds before a roll". The chances are worked out exactly from the same rules countSuccesses() rolls by (a specialty counts a 10 twice, Willpower adds a success and stops a botch). The resisting side's odds show to the Storyteller only. A client setting turns the line off.
+Reverse: oddsPanel() in wodx-actions main.js; setting showOdds.
+
+## B1302. Pinned and lately used actions (2026-11-12)
+Ben approved "Pinned and recent actions": the last five actions and up to eight pinned ones are kept on the character (flags.wodx-actions.quick); right-click or Alt+P pins or unpins. A player who does not own the character sees their own recent list as before.
+Reverse: quick rows in profile-menus.js menuFor and main.js menu().
+
+## B1310. The after-action card and how far a fight's tale travels (2026-11-12)
+Ben approved "An after-action card". When a started fight is ended, the Storyteller gets a whispered card: levels taken and dealt, blood, Willpower and other pools spent, Actions cards seen, and who outside the fight saw it (WoDX Actions' onlooker rules). House rule: a witness carries only their word before 1888, a snapshot camera is possible from 1888, a camcorder from 1985, a phone camera in most pockets from 2005, and in the Future Darkness everything is recorded. A breach is severity 2 when pictures are likely or five or more saw it. The button records the breach (the place may keep it) and starts a rumour, big at severity 2.
+Reverse: setting afterAction off; aftermath.js and aftermath-rules.js in wodx-combat.
+
+## B1320. Using the room in a fight: sizes (2026-11-12)
+Ben approved "Use the room in a fight". Fire, falling and sunlight follow the books (fire V20 Dark Ages pp. 355-360; falling V20 core printed p. 296; sunlight VtDA20 p. 359). House readings: knocked-over candles or a torch start a torch-sized fire; an oil lamp or lantern breaks and its oil burns as a bonfire (lamp) or torch-sized (lantern), at a torch's heat.
+Reverse: SPILL in wodx-interactables interact-rules.mjs.
+
+## B1321. A falling chandelier (2026-11-12)
+House rule: the falling dice for its drop (15 feet unless set) plus 4 for its weight, lethal; each success on Dexterity + Dodge at 7 takes a die away, as stepping carefully does on broken glass. Lit candles start a torch-sized fire.
+Reverse: CHANDELIER_MASS, DROP_DODGE, dropDice in interact-rules.mjs.
+
+## B1322. Sunlight let in through a window or curtain (2026-11-12)
+By day only. A window or shutter thrown open, or a pane smashed, makes a WoDX: Sunlight region of direct sun 4 yards deep on the character's side; a curtain torn from a closed window gives indirect sun (through glass, soak 7) 4 yards round it. Closing the window removes the region. WoDX Actions' sun then burns any Cainite inside.
+Reverse: SUN_YARDS and the letSun and tearCurtain cases in interact-rules.mjs; roomEffects() in main.mjs.
+
+## B1323. Sprinklers (2026-11-12)
+Fire sprinklers from 1874 (the first automatic sprinkler). Setting them off puts out every torch-sized fire and bonfire on the scene; an inferno burns on. Saving the tile's settings resets them.
+Reverse: WATCHES.sprinkler and douses() in interact-rules.mjs.
+
+## B1324. Electric light by era (2026-11-12)
+A light switch offers nothing before 1880. Oil lamps, candles, torches and chandeliers are offered in every era.
+Reverse: ELECTRIC_FROM in interact-rules.mjs.
+
+## B1330. Colour-blind safe colours (2026-11-12)
+Ben approved "Colours readable by everyone". A player setting in WoDX Senses swaps the sight rings to the Okabe and Ito palette with a thicker line, and every ring shows its words on the map (a second setting can hide them). The aura overlay of Read the Soul names its colour. V20's aura colours keep their names; only the drawing changes.
+Reverse: settings colourSafe and ringWords; SAFE in sight-rules.mjs.
