@@ -504,3 +504,13 @@ Folders: "WoDX · Before the Embrace", "WoDX · Before the years", "WoDX · The 
 
 - **Followers window.** The people icon in the token tools, or Followers on a sheet's Relationships tab. Every NPC that serves the character, with where it is, its order, loyalty and why it last moved, the blood bond and any trouble. Followers on the scene you are viewing have buttons for the everyday orders; Give an order opens the full window with them picked. Players see their own characters' followers, once they may see the follower's sheet.
 - **Descriptions abroad.** When a breach, a theft, a break-in, a fire, a desecration or a fight has witnesses, you get a card with what they saw of the culprit. Word is heard there at once, goes on with the place's Alert zones, and reaches the rest of town by the means of the year (hue and cry, a printed notice, the wire, the news, cameras, face matching). When the culprit walks where word has reached, NPCs who see them may know them: you get a card with the match, the roll and Raise the alarm. Change clothes or hold a disguise to break the match; from 2000 the face shows through new clothes. The question-mark figure in the token tools lists every description going round, to drop one or let the whole town hear it now. Turn it off with the world setting Descriptions that spread.
+
+## The Lone Chronicle: playing alone (2026-11-12, first step, testbed only)
+
+For one person who wants to play and not run the game. WoDX does its work on the Storyteller's browser, so a hidden browser takes that seat and you log in as a player. Foundry then keeps the Storyteller's whispers, sheets and rolls from you by itself.
+
+- **Start the seat.** With the world running: `node tools/solo/seat.mjs --user "Gamemaster Test"`. It signs in, says so, and stays until you press Ctrl+C or close the world. Then log in as your player.
+- **The switch.** World setting **The Lone Chronicle** (WoDX Solo). On: NPCs, routines, factions, fights, turns, dawn and dusk and the night's draw act by themselves, and every kind of approval but a player's request is given on sight. Off: every value it changed goes back; one you changed by hand since is left alone.
+- **What still waits.** After a few seconds the seat presses the button that goes ahead on a card or window meant for the Storyteller, never a way back, and writes it down. What it cannot judge it leaves and writes down too. `game.wodx.solo.log.stalls()` on the seat lists it all.
+- **Not yet.** Your own panel (passing time, travel, leads, the oracle), fights that end by themselves and the rest come in later steps. Until then this is for tests on the testbed.
+- It does nothing in the Live world, and should never be on at a shared table.
