@@ -752,7 +752,9 @@ export function setup() {
 
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
-  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", approve: async entry => {
+  // Small (Chronicle 0.46.0, B2453): never. Only what is already past the effect rules' own Auto reaches the queue
+  // (witnessed vulgar magic, a mind effect, another player's character, more than three targets)
+  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", small: () => false, approve: async entry => {
     const item = entry.data?.item, caster = entry.data?.caster ?? "the caster";
     const rec = await applyItem(item, caster);
     // 3.38.0: the approved result gets its own card, with Undo for what changed

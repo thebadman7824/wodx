@@ -26,7 +26,8 @@ export function registerJourneySettings() {
 export function registerJourneys() {
   const go = () => {
     chron()?.gen?.registerTables?.(MODULE_ID, JOURNEY_TABLES);
-    chron()?.registerApprovalHandler?.(TYPE, {label: "Otherworld journey", approve: e => approveJourney(e.data)});
+    // Small (Chronicle 0.46.0, B2453): no storm, no great journey, no hazard or Maelstrom on any leg
+    chron()?.registerApprovalHandler?.(TYPE, {label: "Otherworld journey", small: e => J.smallJourney(e.data), approve: e => approveJourney(e.data)});
   };
   if ( chron()?.gen ) go(); else Hooks.once("wodxChronicleReady", go);
 }

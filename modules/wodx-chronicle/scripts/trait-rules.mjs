@@ -56,6 +56,16 @@ export function buildIndex(merits = MERITS_FLAWS, backgrounds = BACKGROUNDS) {
 let INDEX = null;
 const index = () => (INDEX ??= buildIndex());
 
+/**
+ * A trait whose effect is only a set dice or difficulty change (Chronicle 0.46.0, B2453): its prompt is small enough
+ * to pass the approval queue on its own under a "small" rule. A story flaw (an enemy, a hunt) is not.
+ */
+export function isMechanical(key, idx = index()) {
+  const e = idx.byKey.get(key);
+  const fx = e?.effects ?? [];
+  return fx.length > 0 && fx.every(x => (Number(x.dice) || 0) !== 0 || (Number(x.diff) || 0) !== 0 || x.moon);
+}
+
 /** The entry for one feature: {name, kind, flagKey}. The flag wins; then the name within its kind; then any kind. */
 export function matchFeature({name, kind = null, flagKey = null} = {}, idx = index()) {
   if ( flagKey === "none" ) return null;

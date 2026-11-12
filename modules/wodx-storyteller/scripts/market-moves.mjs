@@ -236,7 +236,8 @@ export async function endMove(market, moveId) {
 }
 
 export function registerApproval() {
-  chron()?.registerApprovalHandler?.(TYPE, {label: "Markets", approve: async entry => {
+  // Small (B2453): a move the Auto mode would have made itself; a shop shutting or a move near a character waits
+  chron()?.registerApprovalHandler?.(TYPE, {label: "Markets", small: entry => !!entry.data?.move && !entry.data.move.queue && !entry.data?.shut, approve: async entry => {
     const sh = entry.data?.shut;
     if ( sh ) {
       const cur = Markets.state(), t = MK.marketById(cur, sh.market)?.traders.find(x => x.actor === sh.actor);

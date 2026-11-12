@@ -74,6 +74,21 @@ export const KINDS = {
 };
 
 /**
+ * A spend by the book (WoDX Chronicle 0.46.0 levels, B2454): it passes the approval queue on its own under a "small"
+ * rule. An Attribute, an Ability (new or raised), Willpower, or a Discipline of the character's own clan (any, for a
+ * Caitiff), at the book's cost and within what is there to spend. A new Discipline (it needs a teacher), Virtues and
+ * the Road or Humanity (they need a reason in the story) wait for the Storyteller. XP awards are not touched.
+ * now: the re-checked option ({kind, cost, ok, discipline}); asked: the cost the player saw.
+ */
+export const BOOK_KINDS = ["attribute", "ability", "newAbility", "willpower"];
+export function byTheBook(now, asked = null) {
+  if ( !now?.ok ) return false;
+  if ( asked !== null && Number(asked) !== now.cost ) return false;
+  if ( BOOK_KINDS.includes(now.kind) ) return true;
+  return now.kind === "discipline" && (now.discipline === "clan" || now.discipline === "caitiff");
+}
+
+/**
  * Experience cost to raise a trait by one dot, or null if this line cannot buy it.
  * @param {object} p
  * @param {"vampire"|"ghoul"|"mortal"} p.line

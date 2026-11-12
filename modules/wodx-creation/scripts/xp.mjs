@@ -1,4 +1,5 @@
 import {MODULE_ID, esc, lineOf, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
+import {byTheBook} from "./rules.mjs";
 import {dateLabel} from "./lineage.mjs";
 
 /**
@@ -96,6 +97,8 @@ export async function onRequest(payload) {
 export function registerXPHandler() {
   chronicle()?.registerApprovalHandler?.(XP_TYPE, {
     label: "Experience",
+    // Small (B2454): a spend by the book, checked again against the sheet as it is now
+    small: entry => { const a = game.actors.get(entry.data?.actorId); return !!a && byTheBook(recheck(a, entry.data?.purchase ?? {}), entry.data?.purchase?.cost ?? null); },
     approve: async entry => {
       const actor = game.actors.get(entry.data?.actorId);
       if ( !actor ) throw new Error("The character is gone");

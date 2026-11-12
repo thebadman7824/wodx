@@ -124,5 +124,11 @@ export function normDowntime(d = {}) {
     nights: int(d.nights || 1, 1, 60), userId: str(d.userId, 40)};
 }
 
+/** A downtime request small enough to pass on its own (Chronicle 0.46.0, B2453): a listed kind, a week or less. */
+export function smallDowntime(d = {}) {
+  const n = normDowntime(d);
+  return n.kind !== "other" && n.nights <= 7 && !!n.what;
+}
+
 /** The queue's title for a request. */
 export const downtimeTitle = (d, name) => `Downtime: ${name || "a character"}, ${DOWNTIME_KINDS[d.kind].toLowerCase()} (${d.nights} night${d.nights === 1 ? "" : "s"})`;

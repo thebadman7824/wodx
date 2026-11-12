@@ -7,7 +7,7 @@
  * the folder and the test Cainite at the end. It does not switch the Storyteller's view or change the clock.
  *   1. the modules: NPC 0.46.0 or later with api.residents; WoDX Creation's People generator on
  *   2. the plan: 3 households, 9 people, every one named, kin of one sex sharing one family name, routines that exist,
- *      the chapel's priest a Christian man (NPC 0.46.1)
+ *      the chapel's priest a Christian man (NPC 0.47.1)
  *   3. seeded: 9 sheets in the residents folder, each with its routine on, its building as home or work, its household
  *   4. the records: each region lists its residents; the smithy's owner is the smith
  *   5. the routines read the places: a resident's home block resolves to its building

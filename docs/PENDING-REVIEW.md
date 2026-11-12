@@ -779,6 +779,10 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 |---|---|---|---|
 | 2026-11-12 | Daggerfall Unity study: what to take for travel, warrens, sewers and realm maps (desk https://claude.ai/artifact/LuPA8dftGnzVByRnQfuNXc, 8 items) | Approved, built in this order: a country grid of Moravia with roads by era feeding the trip plan; pace and lodging choices on a trip; generated maps take their land from the grid; warrens from our own kit of pieces; sewers laid from the street plan; realm layouts left alone apart from Reflect on underground maps and a Labyrinth dress for the kit; travel built first. Ideas only, written fresh; no Daggerfall code or data | Pick other options on the desk; no code to undo |
 
+## Approved by Ben, 12 November 2026, 21:11 UTC (Storyteller automation desk)
+
+All 46 recommendations on https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P ("Reviewed all. Proceed as outlined."). Built as B2450-B2458.
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -877,7 +881,6 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | A swimmer's load with no weights on items (B2443) | Steps from armor's Dexterity penalty and a burden of 0 to 3 set on the token HUD; a quarter of the speed and +1 difficulty a step; under at four | Say to count something else, or give other steps |
 | 2026-11-12 | What each way of moving does to the senses (B2444), and 28 new lines | As listed in B2444; the lines are in STANCE_SENSES and lowFigure in senses-rules.mjs | Edit any line or number |
 | 2026-11-12 | After the riding book check (B2445): what else to take from the books | Built: Abilities held to Ride in the saddle (V20 Dark Ages p. 399). Not built: the mount dodging for its rider, the mount's Attributes for the rider, Stamina + Ride to keep the saddle when hit, lance rules, mounted archery at +2 and +4 | Name any to build |
-| 2026-11-12 | Storyteller automation desk (B2450-B2469): 46 choices on which Storyteller steps run by themselves (https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P) | Study only, nothing built. Recommendations stand until picked: three automation levels starting at today's values, small-proposal rules per queue kind, a Waiting tray, fights end by themselves (Suggest), player time requests, 60 s talk wait, XP spends by the book; Priority 3 with the Lone Chronicle | Pick other options on the desk |
 | 2026-11-12 | The campaign around a siege: a week's foraging as 14 rolls by one leader, supply lines by the year feeding part of an army (B2471) | Wagons half, boats three quarters, rail from 1840, lorries from 1915, airlift from 1940, drone convoys on the Future Darkness branch all; a hungry camp loses a point of resolve a week | Change SUPPLY_LINES in siege-works-rules.mjs, or roll foraging per team |
 | 2026-11-12 | Mines (B2473): the dig roll at 6, a botch losing a quarter of the tunnel, the mine firing by itself at the walls, powder +2 dice from the Hussite age and high explosive +4 from 1860 | As listed | Say if the mine should wait for the Storyteller's word to fire, or other figures |
 | 2026-11-12 | Siege engines (B2474): one telling attack a day per engine, and the guns after the book's engines (bombard to railgun) with WoDX figures | As listed in B2474 | Change ENGINES in siege-works-rules.mjs |
@@ -905,3 +908,7 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Prologue timeline: the Himalayan War's start (Encyclopaedia 950 BCE, M20 pdf 123 about 900 BCE) | The timeline uses 900 BCE, after M20; the Encyclopaedia entry's year is to be brought in line in stage 3 | Set the card back to -950 |
 | 2026-11-12 | Prologue timeline: dating the Impergium and the Concord | Impergium from 10,000 BCE for about 3,000 years, Concord about 7000 BCE ("nearly 9,000 years ago", W20 pdf 40-41, 71); War of Rage from about 6800 BCE | Move the three Myth cards |
 | 2026-11-12 | Residents (B2505): which clergy are men or women by year, and kin keeping the household's faith until 1946 | As listed in B2505 | Change wantsFor or sameFaith in resident-rules.mjs |
+| 2026-11-12 | Magic and travel cannot be "small" (B2453): what reaches the queue is already past their own Auto rules | Their small rule passes none, so at Balanced they wait as before | Give a rule for either and it is one function |
+| 2026-11-12 | A foe that slips out of sight while hidden (B2455) | Not counted as gone, because an ambusher also waits hidden; only down or off the scene ends a fight | Say to count a hidden token as gone after a full turn |
+| 2026-11-12 | "Sleep the day through" is a fixed twelve hours (B2457), not until dusk | Same span in every era and for every line; dusk and dawn still fire on the way | Say to run it to the next dusk instead |
+| 2026-11-12 | Approved on its own cards (B2451) | Posted only for a small-rule pass or a kind with an Undo; a kind let through wholesale stays quiet, as before, and is listed in Recently decided | Say to card every one |

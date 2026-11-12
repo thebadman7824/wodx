@@ -34,6 +34,10 @@ import * as placeRules from "./place-rules.mjs";
 import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
 import * as legends from "./legends.mjs";
+import * as automation from "./automation.mjs";
+import * as automationRules from "./automation-rules.mjs";
+import * as waiting from "./waiting.mjs";
+import * as waitingRules from "./waiting-rules.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -60,9 +64,12 @@ Hooks.once("init", () => {
       ClockApp.refresh();
       if ( isActiveGM() && !skip.isHeld() ) { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); }
     },
-    onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); },
+    onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); waiting.WaitingApp.soon(); },
     onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
   });
+  // 0.46.0: how much runs by itself, and the Waiting tray (B2450-B2452)
+  automation.registerAutomationSettings();
+  waiting.registerWaitingSettings();
   // 0.35.0: the clock that runs with the table (off by default)
   pace.registerPaceSettings(() => ClockApp.refresh());
   // The WoDX look (6e): each player's own look, text size and motion
@@ -145,6 +152,8 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  automation.initAutomation();
+  waiting.initWaiting();
   await gen.ensureSeed();
 
   game.socket.on(SOCKET, onSocket);
@@ -159,6 +168,8 @@ Hooks.once("ready", async () => {
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
+    automation: {level: automation.level, setLevel: automation.setLevel, preview: automation.preview, rules: automationRules},
+    waiting: {open: () => waiting.WaitingApp.open(), rows: waiting.rows, count: waiting.count, take: waiting.take, wrapLine: waiting.wrapLine, rules: waitingRules},
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,
     registerApprovalHandler: approvals.registerHandler,
@@ -270,6 +281,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxApprovals = {
     name: "wodxApprovals", title: "Approval queue", icon: "fa-solid fa-inbox", order: base + 2,
     button: true, visible: game.user.isGM, onChange: () => approvals.ApprovalsApp.open()
+  };
+  tokens.tools.wodxWaiting = {
+    name: "wodxWaiting", title: "Waiting for you (cards and queue entries)", icon: "fa-solid fa-hourglass-half", order: base + 6,
+    button: true, visible: game.user.isGM, onChange: () => waiting.WaitingApp.open()
   };
   tokens.tools.wodxPlayerTools = {
     name: "wodxPlayerTools", title: "Player toolbar buttons", icon: "fa-solid fa-user-gear", order: base + 3,

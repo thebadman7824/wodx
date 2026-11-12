@@ -85,7 +85,9 @@ export async function onAsk(payload) {
 }
 
 export function registerTimeApproval() {
+  // Small (B2453): one night or one day at most, and none of the characters is in a fight
   chron()?.registerApprovalHandler?.(T_TIME, {label: "Time for a long action",
+    small: e => SR.smallSpan(e.data?.seconds, {inFight: (e.data?.actorIds ?? []).some(id => game.combats?.some?.(c => c.started && c.combatants.some(x => x.actorId === id)))}),
     approve: async e => {
       const d = e.data ?? {};
       const r = await spend({actorIds: d.actorIds ?? [], seconds: d.seconds, label: d.label});

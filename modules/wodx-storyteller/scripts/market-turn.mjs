@@ -168,7 +168,8 @@ async function talk() {
 /** Chronicle's approval queue. Called from main.mjs on wodxChronicleReady (Chronicle sets its api in its own ready,
  * which may come after ours) and again at setup in case that hook has already passed. */
 export function registerApproval() {
-  chron()?.registerApprovalHandler?.(TYPE, {label: "Markets", approve: async entry => applyChanges(entry.data?.changes ?? [])});
+  // Small (Chronicle 0.46.0, B2453): no change in it is one the Auto mode would hold back (a shortage where a character is)
+  chron()?.registerApprovalHandler?.(TYPE, {label: "Markets", small: entry => { const ch = entry.data?.changes ?? []; return ch.length > 0 && ch.every(c => !c.queue); }, approve: async entry => applyChanges(entry.data?.changes ?? [])});
 }
 
 export async function setupMarketTurn() {

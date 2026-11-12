@@ -10,12 +10,15 @@ export const isNpcType = type => /^wodx-npc[.:-]/.test(String(type ?? ""));
 
 /**
  * Where a new proposal goes. auto: {type: true} standing rules; cap: NPC proposals allowed this session (0: no cap);
- * used: NPC proposals already queued this session; lightTouch: the house rule Light-touch mode is on, so everything but a
+ * used: NPC proposals already queued this session; small: the kind's own rule calls this one small (only a "small"
+ * standing rule reads it); lightTouch: the house rule Light-touch mode is on, so everything but a
  * player's own request is held back quietly until the Storyteller puts it in the queue. Returns "auto", "hold" or "queue".
  */
-export function routeProposal(type, {auto = {}, cap = 0, used = 0, lightTouch = false} = {}) {
+export function routeProposal(type, {auto = {}, cap = 0, used = 0, lightTouch = false, small = false} = {}) {
   if ( lightTouch && !NEVER_AUTO.includes(type) ) return "hold";
   if ( auto?.[type] === true && !NEVER_AUTO.includes(type) ) return "auto";
+  // A "small" standing rule (Chronicle 0.46.0, B2451): approved on sight when the kind's own rule calls it small
+  if ( auto?.[type] === "small" && small === true && !NEVER_AUTO.includes(type) ) return "auto";
   const c = Math.max(0, Math.trunc(Number(cap) || 0));
   if ( c && isNpcType(type) && Number(used) >= c ) return "hold";
   return "queue";
@@ -27,13 +30,13 @@ export function bulkIds(pending = [], except = []) {
   return (pending ?? []).map(p => p?.id).filter(id => id && !skip.has(id));
 }
 
-/** The standing rules kept clean: known types only, never a player request, true values only. */
+/** The standing rules kept clean: known types only, never a player request, true or "small" values only. */
 export function cleanAuto(auto = {}, known = null) {
   const out = {};
   for ( const [k, v] of Object.entries(auto ?? {}) ) {
-    if ( v !== true || NEVER_AUTO.includes(k) ) continue;
+    if ( (v !== true && v !== "small") || NEVER_AUTO.includes(k) ) continue;
     if ( known && !known.includes(k) ) continue;
-    out[k] = true;
+    out[k] = v;
   }
   return out;
 }

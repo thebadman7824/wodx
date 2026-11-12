@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.4.0 (Automatic for everyone: players get automatic targets too, for the Hands off level)
 - 0.3.0 (missed connections, 12 November 2026: range bands and area shapes count height (token elevation), so a flyer high above is out of reach)
 - 0.2.1 (no area preview where the canvas has no drawing library)
 - 0.2.0 (area shapes: burst, circle, cone and line sized by tag, text or range, drawn on the map, with whoever stands inside suggested; tags for numina and Hekau paths)
