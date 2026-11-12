@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2450
+Next free block: B2470
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -98,6 +98,7 @@ Next free block: B2450
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
 | B2430-B2439 | Music from free sources: the sorter, where audio files live, the open credits journal | Atmosphere, tools |
 | B2440-B2449 | The last of the ways of moving: riding in a fight, the mounted charge, a swimmer's load, senses by stance | Combat, Interactables, Senses, NPC |
+| B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
