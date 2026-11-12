@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.1 (the Relationships and Body tab buttons have the same tile and glyph colours as the line's own tab buttons)
+- 0.15.0 (the layout pass: the title bar always shows the name, with its buttons as icons that say what they are on hover; the Possessions, Relationships, Body and Storyteller's notes sections sit in the same panels as the rest of the sheet; WoDX fields and buttons have one shade and can be read in light and dark mode; item sheets use the width of the window and their text editor follows dark mode; list headings and long section titles no longer run into each other)
 - 0.14.0 (the anachronism check reads the maps: with WoDX Interactables on, vehicles, telephones, radios, sprinklers, electric lights, live wires, keypads and the goods inside containers on every scene are named on the card by scene, each with Keep it and Show me; "Out of their time" in the Storyteller's hand lists everything out of its time now)
 - 0.13.0 (under the in-play strip: "Changed since last session", each line with its cause (a card, the Storyteller, a player by hand, the time skip, Undo), cleared with Mark as read and started again at each session's end; a Features card listing every line feature in force, when it fires and when it last fired, with a switch for the Storyteller to set one aside for a story)
 - 0.12.0 (a Followers button on the Relationships tab opens WoDX NPC's Followers window)

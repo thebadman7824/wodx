@@ -1,0 +1,69 @@
+/* WoDX Sheets: how things are arranged on every character and item sheet (the look stays the line skin's).
+   One place for it, so each module's parts sit on a sheet the same way. */
+
+/* ---- 1. The title bar: the name always shows; the buttons are icons, with their names on hover ---- */
+.wod20.window-app .window-header { flex-wrap: nowrap; }
+.wod20.window-app .window-header .window-title { flex: 1 1 9em; min-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) { flex: 0 0 auto; font-size: 0; line-height: 30px; margin: 0 0 0 9px; white-space: nowrap; overflow: visible; }
+.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) > i { font-size: 14px; margin: 0; min-width: 18px; text-align: center; overflow: visible; }
+.wod20.window-app .window-header a.alter-ego-config > span { display: none; }
+/* A button whose class is also a window's own class (Paperdoll) keeps the title bar's shape, not that window's */
+.wod20.window-app .window-header a.header-button.wodx-paperdoll { display: revert-layer; flex-direction: revert-layer; gap: revert-layer; min-height: revert-layer; }
+.wod20.window-app.minimized .window-header :is(a.header-button, a.alter-ego-config):not(.close, .minimize, .maximize) { display: none; }
+
+/* ---- 2. WoDX's own tabs and sections sit in the same panels as the system's ---- */
+.wod20 :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes) { max-width: 880px; padding: 4px 8px 8px; margin: 2px 0 3px; }
+.wod-theme-dark.wod20 :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes) { background: var(--darkmode-area10-background); border-radius: 10px; }
+
+/* ---- 3. WoDX fields and buttons on a sheet: one shade, one size, readable in both modes ---- */
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
+  color: inherit; height: 28px; min-height: 28px; line-height: 1.3; padding: 2px 6px; border: 1px solid rgba(127,127,127,.6); border-radius: 3px; background: rgba(255,255,255,.55); box-sizing: border-box;
+}
+.wod20.wod-sheet .wodx-st-notes textarea { height: auto; min-height: 110px; }
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
+  color: var(--darkmode-textcolor-dark); background: var(--darkmode-background-dark);
+}
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search) ::placeholder { color: inherit; opacity: .6; }
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn) {
+  flex: 0 0 auto; width: auto; min-height: 28px; line-height: 1.3; padding: 2px 10px; white-space: nowrap; cursor: pointer;
+  color: inherit; opacity: 1; border: 1px solid rgba(127,127,127,.7); border-radius: 3px; background: rgba(127,127,127,.18); display: inline-flex; align-items: center; gap: 5px;
+}
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn):hover { background: rgba(127,127,127,.35); }
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn) { color: var(--darkmode-textcolor-dark); }
+/* A bar of search, filter and buttons wraps instead of squeezing */
+.wod20 .wodx-poss-bar { flex-wrap: wrap; gap: 6px; }
+.wod20 .wodx-poss-bar .wodx-search { flex: 1 1 220px; }
+.wod20 .wodx-poss-bar select { flex: 0 1 190px; width: auto; }
+.wod20 .wodx-money-sums { flex-wrap: wrap; gap: 6px 18px; }
+.wod20 .wodx-money-sums label { display: inline-flex; align-items: center; gap: 6px; }
+.wod20 .wodx-money-sums input { width: 110px; }
+.wod20 .wodx-list-search { max-width: 864px; }
+.wod20 .wodx-list-search .wodx-search { width: 100%; }
+/* The Body tab: the shape pick beside its label, the button under the list it adds to */
+.wod20 .wodx-body .form-group { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+.wod20 .wodx-body .form-group > label { flex: 0 0 auto; font-weight: bold; }
+.wod20 .wodx-body .form-group > select { flex: 0 1 320px; width: auto; }
+.wod20 .wodx-body .wodx-body-add { display: inline-flex; margin: 4px 0 2px; }
+
+/* ---- 4. Item sheets: the fields use the width of the window, and long names fit ---- */
+.wod20.wod-item .item-body > .dialog-area:not(:has(> :not(.bioInformationArea))) { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2px 10px; padding: 6px 8px 2px; }
+.wod20.wod-item .item-body > .dialog-area:not(:has(> :not(.bioInformationArea))) :is(select, input).sheet-infoValues:not(.smallbox) { width: 100%; }
+.wod20.wod-item .sheet-header .top-side > .pullLeft:nth-child(2) { width: auto !important; flex: 1 1 300px; min-width: 0; }
+.wod20.wod-item .sheet-header .top-side { display: flex; align-items: flex-start; gap: 6px; }
+.wod20.wod-item .sheet-header .top-side .area-box :is(select, input).sheet-infoValues { width: 100%; max-width: 420px; }
+.wod20.wod-item input.sheet-infoValues.smallbox { width: 130px; }
+.wod20.wod-item select.sheet-infoValues.smallbox { width: 190px; max-width: 100%; }
+/* The text editor follows dark mode like the fields around it */
+.wod-theme-dark.wod20 .editor.prosemirror, .wod-theme-dark.wod20 .editor.prosemirror .editor-container, .wod-theme-dark.wod20 .editor.prosemirror .editor-content { background: var(--darkmode-background-dark); color: var(--darkmode-textcolor-dark); }
+.wod-theme-dark.wod20 .editor.prosemirror menu.editor-menu { background: rgb(70, 70, 70); color: var(--darkmode-textcolor-dark); }
+.wod-theme-dark.wod20 .editor.prosemirror menu.editor-menu :is(button, .pm-dropdown) { color: var(--darkmode-textcolor-dark); background: transparent; border-color: rgba(255,255,255,.25); }
+.wod-theme-dark.wod20 .editor.prosemirror menu.editor-menu button.active { background: rgba(255,255,255,.18); }
+
+/* ---- 5. List headings in narrow columns: the words stay inside their own column in every line's font ---- */
+.wod20.wod-sheet .headlineRow > div:not(.width-namebox), .wod20.wod-sheet .headlineList:is(.width-valuebox, .width-smallbox) { font-size: 14px; line-height: 1.2; letter-spacing: 0; white-space: nowrap; align-self: center; }
+/* A long section title widens its own plate instead of wrapping over the first row under it */
+.wod-theme-dark.wod-sheet .sheet-banner .sheet-banner-text { width: auto; min-width: 25%; max-width: 100%; padding: 0 14px; white-space: nowrap; box-sizing: border-box; }
+
+/* ---- 6. WoDX tab buttons (Relationships, Body): the same tile as the line's own tab buttons ---- */
+.wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon { display: flex; flex: 0 0 30px; align-items: center; justify-content: center; width: 30px; height: 30px; min-height: 30px; box-sizing: border-box; border-radius: 3px; opacity: 1; background: var(--wodx-tab-tile, rgb(121, 8, 19)); color: var(--wodx-tab-glyph, #fff); }
+.wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon > i { font-size: 18px; line-height: 1; opacity: 1; color: inherit; }
