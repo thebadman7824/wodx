@@ -1,5 +1,7 @@
 # Pending review
 
+Each Monday, approved sections more than a week old move to docs/archive/pending-review-<year>-<month>.md (stale design review, item m11, 12 November 2026). The Waiting for review table stays last in this file.
+
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
