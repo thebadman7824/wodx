@@ -144,3 +144,9 @@ test("0.40.1: a lost street tick is given up, so passers-by never stall", async 
   assert.match(pb, /finally \{ if \( busySince === mine \) busy = false; \}/);
   assert.match(pb, /state, rules: CR/);
 });
+
+test("0.40.2: a fight on the scene does not stop a passer-by's state being saved", () => {
+  const pb = read("../../modules/wodx-npc/scripts/passersby.mjs");
+  assert.match(pb, /if \( fight && !f\.fleeing \) \{ if \( !foundry\.utils\.objectsEqual\(f, flagOf\(doc\)\) \) updates\.push/);
+  assert.ok(pb.indexOf("PR.keepIf(f") < pb.indexOf("if ( fight && !f.fleeing )"), "keepIf runs before the fight check");
+});

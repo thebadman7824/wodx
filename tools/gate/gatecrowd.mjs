@@ -4,11 +4,11 @@
  *   await (await import(`/wodx-gate/gatecrowd.mjs?${Date.now()}`)).run()
  * Turns passers-by on for the viewed scene, adds a "Passers-by" door region, steps the street, and makes a test wraith
  * and a test mage. Everything it made is deleted and the scene's crowd setting and the pause are put back. The clock is not moved.
- *   1. versions: NPC 0.40.1 or later, Actions 3.52.0 or later, the crowd rules on both apis
+ *   1. versions: NPC 0.40.2 or later, Actions 3.52.0 or later, the crowd rules on both apis
  *   2. passers-by made on the scene (api.passersby.spawnOne, any hour); people carry a feeling and a spark (0 to 3), animals carry neither
  *   3. with a region named "Passers-by" on the scene, new passers-by walk in from inside it
  *   4. the crowd near a wraith lists a passer-by in sight with its feeling
- *   5. a Ravaged mark (flags.wodx-actions.crowdUse) keeps the passer-by on the map, why "ravaged"
+ *   5. a Ravaged mark (flags.wodx-actions.crowdUse) keeps the passer-by on the map, why "ravaged", even with a fight started on the scene
  *   6. a Mage's Sleepers in sight include a passer-by person (the Cast's "with witnesses")
  *   7. every other WoDX module still answers
  * Result: Data/wodx-gate/gatecrowd-result.json.
@@ -44,9 +44,12 @@ export async function run() {
   const spawnSome = async (people, animals) => { for ( let i = 0; i < people; i++ ) await pb.spawnOne(scene); for ( let i = 0; i < animals; i++ ) await pb.spawnOne(scene, {animal: true}); };
   try {
     await step("versions", async () => {
-      ok("versions", ver(npc?.version, "0.40.1") && ver(act?.version, "3.52.0") && !!pb?.rules?.feelingFor && typeof act?.crowdNear === "function",
+      ok("versions", ver(npc?.version, "0.40.2") && ver(act?.version, "3.52.0") && !!pb?.rules?.feelingFor && typeof act?.crowdNear === "function",
         {npc: npc?.version, actions: act?.version});
     });
+    // Started combats left on this scene by other runs make the street stand still; the gate works with them and says so
+    const stale = game.combats.filter(c => c.started && c.scene?.id === scene.id).map(c => ({id: c.id, round: c.round}));
+    if ( stale.length ) R.notes.push({startedCombatsOnScene: stale});
     if ( paused ) game.togglePause(false, {broadcast: true});
     await scene.setFlag("wodx-npc", "crowd", {on: true, density: "busy", animals: true, doors: []});
     await clearPB();
