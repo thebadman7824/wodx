@@ -134,7 +134,7 @@ test("the inner voice: the Mists and the Weave (Dark Ages), Banality (later)", (
 
 test("wiring: Actions 3.8.0, the Dark Ages fae menu, the cantrip button routed by era, gender-neutral text (B48)", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8"));
-  assert.match(m.version, /^3\.(8|9|[123]\d)\./);
+  assert.match(m.version, /^3\.(8|9|[1-4]\d)\./);
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
   assert.match(pm, /faeDA:/); assert.match(pm, /ctx\.isDAFae\?\.\(actor\)/);
   const main = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");

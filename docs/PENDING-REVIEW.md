@@ -251,6 +251,18 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 |---|---|---|---|
 | 2026-11-11 | Add the 1,136 items on the New Items Desk to the goods? | Yes, all approved by Ben. 1,134 added (two were already goods), each with an original description; "Chinese checkers" renamed "a star checkers set" (B906). | Delete the rows after "ADDED FROM THE NEW ITEMS DESK" in goods.mjs and their lines in goods-text.mjs. |
 
+## Approved by Ben, 12 November 2026, 00:15 UTC (feeding)
+
+Ben accepted every recommendation for feeding: the harm to the vessel and the clan and bloodline rules.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Does a vessel lose health as it loses blood? | Yes: one lethal level a point, two for the Giovanni; a living vessel's blood is the lower of its blood and (full less damage), back one a day; pass out, dying and dead are marked, with Undo (B940). | B940 |
+| 2026-11-12 | Which clan feeding rules, in which era? | One table with V20 Dark Ages versions before 1450 and V20's after; Dark Ages Giovanni use V20's two levels a point; modern Salubri warriors follow the antitribu; Lamia resist 7 when the vessel's sex isn't known (B941). | B941 |
+| 2026-11-12 | How hard is hunting with a Ventrue palate? | +1 for a broad palate, +2 for a narrow one; Herd is taken to fit (B942). | B942 |
+| 2026-11-12 | How many flesh points in a body? | 10 for a human, 5 for a child, an animal's blood points; the debt shows as one less on each Physical Attribute (B943). | B943 |
+| 2026-11-12 | Feeding habits? | V20's argot as saved usual hunts with house pools and grounds; Banker from 1937 (B944). | B944 |
+
 ## Approved by Ben, 11 November 2026, 20:38 UTC (goods without containers)
 
 | Date | Question | Choice made | How to reverse it |

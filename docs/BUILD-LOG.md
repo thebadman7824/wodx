@@ -1598,3 +1598,10 @@ Ben found the burgher palace too bare. ddcore.dress() now dresses every furnishe
 
 ## 2026-11-11: which way things face
 Ben saw chairs facing random ways and the hearth facing its wall. ddcore.orient() turns every piece after dressing. Seats face their nearest table, or else the middle of the room, in quarter turns. Pieces against a wall (beds, ovens, shelves, cupboards, mirrors) put their backs to it, keeping their footprint. Ovens, whose picture is half their 2 by 2 square deep, are moved flush to their wall. Only the pictures move: the WoDX files mark the same spots, and town features keep their footprint turn.
+
+## 2026-11-12: feeding harms the vessel; clan and bloodline feeding rules (Actions 3.40.0, Creation 0.10.2, B940-B945)
+- New feeding-rules.js: bloodNow, available, kissDamage, vesselOutcome, parseTags, matchTags, preyExclusionTags, CLAN_FEEDING, clanKey, ruleFor, isDarkAgesFeeding, nourishment, lamiaDifficulty, addictionDifficulty, fleshPoints, nightPassed, fleshEaten, PALATE_BREADTH, HUNT_STYLES, styleAllowed, styleClash.
+- main.js: feed and feedResolve rewritten around the vessel's own blood (flag vesselBlood), damage, states and Undo (feedUndo, on the api); feedingRule, vesselTagsOf, feedingFields, savePalate, nagarajaPenalty; Hunt's usual hunt and palate difficulty; New Night flesh debt; a vampire's blow marks the target as fought; oathStep firstDouble.
+- social.js: Seduction's Feed passes the vessel as willing. Creation: recordDrink step, giveVitae firstDouble.
+- Fixed: mortal vessels read the sheet's blood pool, which starts at 0 on mortal sheets and nothing fills in, so a targeted mortal gave no blood unless it was set by hand; effects.test pinned the api version to 3.38.0.
+- Tests: feeding.test.mjs (20).
