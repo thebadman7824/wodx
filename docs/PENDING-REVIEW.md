@@ -747,3 +747,4 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | Battles: the book's army from Spoils of War (B2210) | When both sides list units, battles use the book's troop table and Right of Command turn (pools, Close and fight, Shoot, Withdraw, units lost, wavering); one line only, so no flanks or reserve; mortal units fall first; without units the house frame (B2200) stays | Leave the units empty, or drop the isBook branch in battles.mjs |

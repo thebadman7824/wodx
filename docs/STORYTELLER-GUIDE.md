@@ -385,7 +385,9 @@ Open the Storyteller's hand and pick Battles and sieges, then A new battle or A 
 
 Fight a phase rolls both commanders (Perception + Leadership at 6, the heavier side with extra dice). Put the successes of the characters' deeds in each side's Deeds box first: they count for the side and take that many foes out of the fight. A side that loses badly rolls to hold (wavering); a side whose resolve runs out breaks. The battle turns on a character throws the battle's counterattack at them through WoDX Combat's soak; tick drew attention when they opened a hole in the line. A siege goes a week at a time: the works fill the breach clock (it shows in Progress clocks), the stores run down, disease is rolled for both camps. Storm the walls when you are ready. Undo takes back any step. When it is over, Let the time pass moves the clock once by the time it took, and factions named on the sides get a proposal in the approval queue. The Legends book records it on its next build.
 
-The rolls come from Spoils of War and the Dark Ages Companion; how big a force weighs, resolve, the breach and every age after 1500 are house rules (docs/DECISIONS.md B2200 to B2209).
+For the book's army, open The book's army, by units on both sides and give each side its units (peasants, spearmen, archers, cavalry, Cainite cavalry, a Garou pack and the rest). The men then come from the units, and each turn you pick what each army does: Close and fight, Shoot or Withdraw. The commanders' roll moves both armies' pools, the actions take units off, and an army with no units left is beaten.
+
+The rolls and the book's army come from Spoils of War and the Dark Ages Companion; without units, how big a force weighs, resolve, the breach and every age after 1500 are house rules (docs/DECISIONS.md B2200 to B2210).
 
 ## Approvals and Undo: the two safety nets
 
