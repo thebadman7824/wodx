@@ -14,3 +14,8 @@ Needs WoDX Chronicle 0.1.7 or later. Werewolf, Mage and the other lines get thei
 - **Allies.** Any NPC can be made the ally of a player character; the patron's owners may then spend experience on it, from its own pool or the patron's.
 - **Pass the Years** (Clock or droplet button). Pick a number of years and press "Show what happens". Each character's changes are listed: ageing and death checks, an heir, ghoul feeding or lapse (V20 Dark Ages p. 399), bonds fading (p. 342), voluntary torpor (p. 350), the new era's ability list, and Backgrounds to review. Tick what to accept, then "Pass the years". A plan can be written to the "WoDX Time Skips" journal without changing anything. Nothing is deleted: the dead go to "WoDX · The Dead".
 - **Time-skip test.** The Phase 4 gate: it makes test characters and passes the years from 1200 to 2025. It moves the clock, so use it in wodx-template.
+
+## 0.11.0: Lifepaths
+
+- **Lifepath** (character sheet header, or the Creation window). An optional chain of scenes before points are spent: where and when the character was born, a youth, an adult life, the turn into the line (the Embrace, the First Change, the Awakening, a death, the Chrysalis, the calling, the Fall...), a scene for the clan, tribe, Tradition, kith, guild or creed, and the first years after. Every scene fits its year, 1197 to the World of Future Darkness. Choices suggest Backgrounds, Abilities, Merits and Flaws and name people from the past; the player keeps what fits and ticks who becomes an NPC. Nothing is spent. Back, Another scene and Start over are always there.
+- The lifepath stays with the character through a change of state, and the Storyteller's prelude journal shows it.

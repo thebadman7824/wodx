@@ -4,7 +4,7 @@
  * starting Rage, Gnosis, Willpower, Renown and three Gifts (DA:W pp. 79–85, 107). The mortal sheet stays, linked.
  * Rules data comes from WoDX Actions (data/garou.json and the Gift library).
  */
-import {MODULE_ID, esc, lineOf, lineage} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, keepLifepath} from "./actor-data.mjs";
 import {setLineage, setChronology, writeLineageJournal, dateLabel} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -66,6 +66,7 @@ export function firstChangeData(mortal, {breed, auspice, tribe, rage, gnosis, wi
   const items = (src.items ?? []).map(i => { const c = {...i}; delete c._id; return c; });
   const flags = foundry.utils.deepClone(src.flags ?? {});
   delete flags[MODULE_ID];
+  keepLifepath(flags, src);
   return {
     // Created bare so the system builds the Werewolf's settings, shapes and form bonuses; the rest is applied after
     create: {name: mortal.name, type: CONFIG.worldofdarkness?.sheettype?.werewolf ?? "Werewolf", img: src.img, folder: src.folder ?? null,

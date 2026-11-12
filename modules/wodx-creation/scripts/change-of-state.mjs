@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, lineOf, lineage, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile, keepLifepath} from "./actor-data.mjs";
 import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage} from "./rules.mjs";
 import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -64,8 +64,10 @@ export function embraceData(mortal, {sire = null, clanName, generation, startBlo
   const clan = findClan(clanName);
   const newDisciplines = clanDisciplines(clan, eraKey).filter(d => !known.has(d.toLowerCase()));
   src.items = [...(src.items ?? []).map(i => { const c = {...i}; delete c._id; return c; }), ...newDisciplines.map(d => disciplineItem(d, 0))];
+  const before = {flags: src.flags};
   src.flags = foundry.utils.deepClone(src.flags ?? {});
   delete src.flags[MODULE_ID];
+  keepLifepath(src.flags, before);
   return {data: src, row, clan, newDisciplines};
 }
 
