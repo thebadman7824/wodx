@@ -31,11 +31,8 @@ function onPreCreateItem(item, data) {
   const good = X.goodOf(data?.name ?? item.name, G.GOODS);
   if ( !good ) return;
   const patch = {[`flags.${MOD}.good`]: good.id};
-  // "claret (in a bottle)" from a container's list becomes the item "claret", kept in its bottle.
-  if ( good.container && /\(in (an?|\d+) [^)]+\)\s*$/.test(String(data?.name ?? item.name)) ) {
-    patch.name = good.name;
-    patch[`flags.${MOD}.container`] = good.container;
-  }
+  // An older list line "claret (in a bottle)" becomes the item "claret": nothing starts in a container (2026-11-12).
+  if ( good.container && /\(in (an?|\d+) [^)]+\)\s*$/.test(String(data?.name ?? item.name)) ) patch.name = good.name;
   const has = String(data?.system?.description ?? item.system?.description ?? "").trim();
   const text = T.describe(good.former ?? good.name, yearNow());
   if ( !has && text ) patch["system.description"] = `<p>${esc(text)}</p>`;

@@ -196,10 +196,12 @@ test("goods are single things that stack, never piles", async () => {
   assert.equal(grain.container, "a sack");
   assert.equal(grain.former, "a sack of grain");
   assert.equal(grain.id, "a-sack-of-grain", "the id stays the same, so old marks and items still match");
-  assert.equal(G.stackLine(grain, 1), "grain (in a sack)");
-  assert.equal(G.stackLine(grain, 3), "grain (in 3 sacks)");
-  assert.equal(F.goodsLine(grain, () => 0.999), `grain (in ${grain.stack.max} sacks)`);
-  assert.deepEqual(G.readLine("grain (in 3 sacks)"), {name: "grain", count: 3});
+  // Nothing starts in a container (Ben, 2026-11-12): "grain (3)", never "grain (in 3 sacks)".
+  assert.equal(G.stackLine(grain, 1), "grain");
+  assert.equal(G.stackLine(grain, 3), "grain (3)");
+  assert.equal(F.goodsLine(grain, () => 0.999), `grain (${grain.stack.max})`);
+  assert.deepEqual(G.readLine("grain (3)"), {name: "grain", count: 3});
+  assert.deepEqual(G.readLine("grain (in 3 sacks)"), {name: "grain", count: 3}, "older lines still read");
   assert.equal(G.stackLine(coin, 7), "7 bronze coins");
   assert.equal(G.stackLine(coin, 1), "a bronze coin");
   assert.equal(F.goodsLine(coin, () => 0), "2 bronze coins");
@@ -221,3 +223,22 @@ test("goods name the thing, not its container (Ben, 2026-11-11)", () => {
   assert.equal(claret.tags.container, "a bottle");
 });
 
+test("nothing starts in a container (Ben, 2026-11-12)", async () => {
+  const T = await import(pathToFileURL(join(root, "modules/wodx-library/data/goods-text.mjs")));
+  const inside = / in (a|an) (box|case|bag|velvet box|cloth roll|plastic case|canvas bag|wooden case|paper|cloth|plastic dome|branded tray)$| wrapped in cloth$/;
+  const kits = /^an? (quiver|belt|pyx|spindle|pizza box) of /;
+  for ( const g of G.GOODS ) {
+    assert.ok(!inside.test(g.name) && !kits.test(g.name), `${g.name} starts in a container`);
+    for ( let n = 1; n <= 3; n++ ) assert.doesNotMatch(G.stackLine(g, n), /\(in /, g.name);
+    assert.doesNotMatch(F.goodsLine(g, () => 0.999), /\(in /, g.name);
+    if ( g.container ) {
+      const unit = g.container.replace(/^an? /, "");
+      for ( const y of [1200, 1700, 1900, 1990, 2030] ) {
+        const d = T.describe(g.former, y) ?? "";
+        assert.doesNotMatch(d, new RegExp(`\\b${unit}\\b`, "i"), `${g.name} (${y}) describes its ${unit}`);
+      }
+    }
+  }
+  assert.ok(G.GOODS.find(g => g.name === "an arrow")?.stacks);
+  assert.equal(G.GOODS.find(g => g.name === "an arrow")?.id, "a-quiver-of-arrows", "old ids kept");
+});
