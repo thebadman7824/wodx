@@ -1,13 +1,11 @@
 /**
- * WoDX shared actor profiles (a copy ships in WoDX Combat and in WoDX Actions). Ported from vtda20 2.2.1.
+ * WoDX shared actor profiles (a copy ships in WoDX Combat and in WoDX Actions). First ported from vtda20 2.2.1.
  * The two copies hold the same profiles, resources and shared functions; a harness test keeps them equal. The
  * Actions copy alone adds the line look to its dialogs (setLine, currentLine), which only Actions calls.
  *
  * A "profile" decides which combat menu, soak model and action menu an actor gets.
  * Detection order:
  *   1. override flag  flags.world.wodx.profile   (set from the Profile button in either menu)
- *      -- falls back to the old VtDA20 flags, read only: flags.world.vtda20.profile, then the
- *         v1.x flags flags["vtda20-combat"].profile / flags["vtda20-actions"].profile
  *   2. actor.type     (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Hunter, Demon, Mummy, Exalted,
  *                      Creature, Mortal) and, for the new "PC" type, system.settings.splat
  *   3. variant / Disciplines (ghouls and revenants)
@@ -19,16 +17,13 @@
 export const SHARED_VERSION = "3.0.0";
 const FLAG_SCOPE = "world";
 const FLAG_KEY = "wodx";
-const OLD_KEY = "vtda20";
-const LEGACY_FLAGS = ["vtda20-combat", "vtda20-actions"];
 
 /**
- * A per-actor value kept under flags.world.wodx (profile, form, elder), and read from the old flags.world.vtda20 when
- * there is no WoDX value.
+ * A per-actor value kept under flags.world.wodx (profile, form, elder).
  */
 export function worldFlag(actor, key) {
     const w = actor?.flags?.[FLAG_SCOPE];
-    return w?.[FLAG_KEY]?.[key] ?? w?.[OLD_KEY]?.[key];
+    return w?.[FLAG_KEY]?.[key];
 }
 export async function setWorldFlag(actor, key, value) {
     return actor.setFlag(FLAG_SCOPE, `${FLAG_KEY}.${key}`, value);
@@ -58,8 +53,6 @@ export const PROFILES = {
     exalted:  { label: "Exalted",                  soak: "lupine",  res: ["essence", "willpower"], bane: "" }
 };
 
-/** Legacy v1 soak-profile names map onto the new keys so old flags keep working. */
-const LEGACY_VALUES = { vampire: "kindred", supernatural: "lupine", ghoul: "ghoul", mortal: "mortal" };
 
 export const RES = {
     willpower:   { label: "Willpower",   path: "advantages.willpower" },
@@ -88,13 +81,7 @@ export const RES = {
 /* ------------------------------------------------------------------ */
 
 function flagOf(actor) {
-    let f = worldFlag(actor, "profile");
-    if (f) return f;
-    for (const mod of LEGACY_FLAGS) {
-        f = actor?.flags?.[mod]?.profile;
-        if (f && f !== "auto") return LEGACY_VALUES[f] ?? f;
-    }
-    return null;
+    return worldFlag(actor, "profile") || null;
 }
 
 function hasDiscipline(actor, names) {
@@ -243,7 +230,7 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
             const dlg = new V2({
                 window: { title },
                 position: { width },
-                classes: ["wodx", "wodx-dialog", "vtda20-dialog", ...classes],
+                classes: ["wodx", "wodx-dialog", "wodx-form-dialog", ...classes],
                 content,
                 buttons: buttons.map(b => ({
                     action: b.id, label: b.label, icon: b.icon, default: !!b.default,
@@ -261,7 +248,7 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
         const def = buttons.find(b => b.default)?.id ?? buttons[0].id;
         const d = new Dialog({ title, content, buttons: bs, default: def, close: () => resolve(null),
             render: html => { try { onRender?.(html[0] ?? html, () => d.close()); setTimeout(() => fit(d), 0); } catch (e) { console.warn("WoDX | dialog onRender", e); } } },
-            { width, classes: ["dialog", "vtda20-dialog", ...classes] }).render(true);
+            { width, classes: ["dialog", "wodx-form-dialog", ...classes] }).render(true);
     });
 }
 
@@ -273,7 +260,7 @@ export async function pickProfile(actor) {
         .concat(Object.entries(PROFILES).map(([k, p]) => `<option value="${k}" ${cur === k ? "selected" : ""}>${p.label}</option>`));
     const r = await ask({
         title: `Actor type: ${actor.name}`,
-        content: `<form class="vtda20-profile wodx-profile"><p>Choose which combat and action menus ${actor.name} uses. Automatic reads the actor type, then the variant and Disciplines.</p>
+        content: `<form class="wodx-profile"><p>Choose which combat and action menus ${actor.name} uses. Automatic reads the actor type, then the variant and Disciplines.</p>
           <div class="form-group"><label>Menu profile</label><select name="profile" data-fixed>${opts.join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Set", icon: "fas fa-check", default: true }, { id: "no", label: "Cancel", icon: "fas fa-times" }],
         width: 420

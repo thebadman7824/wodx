@@ -10,7 +10,7 @@
 /** The WoDX modules a full table expects; the window reports which of them are off. */
 export const WODX = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-creation", "wodx-npc", "wodx-otherworlds", "wodx-sheets", "wodx-storyteller",
   "wodx-interactables", "wodx-targeting", "wodx-library", "wodx-senses", "wodx-atmosphere", "wodx-paperdoll"];
-/** Modules WoDX replaces: with these on, WoDX Actions and WoDX Combat stay off. */
+/** Old modules WoDX replaced: with these on as well, both would answer every button. */
 export const CLASH = ["vtda20-actions", "vtda20-combat"];
 /** Names that mark a test character or a gate's leftovers. */
 export const TEST_NAME = /\(gate|\bgate[ -]?test\b|^test\b|\btest character\b|\(test\)/i;
@@ -24,7 +24,7 @@ export function checks(s = {}) {
 
   const clash = CLASH.filter(m => on[m]);
   add("clash", "Old modules that WoDX replaces", clash.length ? "fail" : "ok",
-    clash.length ? `${list(clash)} ${clash.length === 1 ? "is" : "are"} on: WoDX Actions and WoDX Combat stay off while ${clash.length === 1 ? "it is" : "they are"}.` : "vtda20-actions and vtda20-combat are off.",
+    clash.length ? `${list(clash)} ${clash.length === 1 ? "is" : "are"} on: WoDX Actions and WoDX Combat replace ${clash.length === 1 ? "it" : "them"}, and both would answer every button. Disable ${clash.length === 1 ? "it" : "them"}.` : "vtda20-actions and vtda20-combat are off.",
     clash.length ? "modules" : null);
 
   const off = WODX.filter(m => m in on && !on[m]);
