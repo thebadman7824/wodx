@@ -1486,6 +1486,7 @@ class OrganicTown(T.Town):
             rs = region_shape(g["outline"])
             if rs: gone.append({"id": f"gone-{g['key']}", "label": g["label"], "type": g["type"], "year": g["year"], "why": g["why"], "rect": rs[0], "points": rs[1]})
         out = {"format": "wodx-map", "version": 1, "name": f"{self.name} {pt['id']}".strip(), "map": map_name, "cells": [int(win[2]), int(win[3])], "seed": self.seed,
+               "place": {"kind": "yard" if getattr(self, "size", "") == "village" else "street"},
                "kind": self.size, "layout": "organic", "walled": bool(self.wall), "era": self.era_id(), "population": self.population(keys),
                "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys],
                "umbral": {"year": self.year, "places": places, "gone": gone}}

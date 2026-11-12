@@ -111,7 +111,10 @@ export function parseSidecar(input) {
     reg.household = hh;
     households.push(hh);
   }
-  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households}};
+  // 0.26.2: the kind of place the whole map is (WoDX NPC's place tag on the scene: what passers-by, sounds and the Masquerade read)
+  const place = plain(d.place) && PLACE_KINDS.has(d.place.kind) ? {kind: d.place.kind} : null;
+  if ( d.place !== undefined && !place ) errors.push("The map's kind of place is not one WoDX knows, so it was left out.");
+  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place}};
 }
 
 /**
@@ -231,7 +234,10 @@ export function plan(sc, scene, fr, types = new Set()) {
   }
   const already = sc.openings.length - todo.length + sc.features.length - feats.length;
   if ( already ) notes.push(`${already} ${already === 1 ? "thing was" : "things were"} adopted before and ${already === 1 ? "is" : "are"} left as ${already === 1 ? "it is" : "they are"}.`);
-  return {wallUpdates, wallCreates, tiles, lights, regions, notes};
+  // The scene's own kind of place stays if the Storyteller already set one, or cleared it after an earlier adoption
+  const scenePlace = sc.place && !scene.placeKind && !have.size ? sc.place : null;
+  if ( sc.place && scene.placeKind && scene.placeKind !== sc.place.kind ) notes.push(`The scene is already tagged as ${scene.placeKind}; the map's ${sc.place.kind} was left out.`);
+  return {wallUpdates, wallCreates, tiles, lights, regions, notes, scenePlace};
 }
 
 /** One plain line for each part of a plan, for the Storyteller to read before saying yes. */
@@ -248,6 +254,7 @@ export function summary(p) {
   }
   const hh = p.regions.map(r => r.flags?.[MOD]?.household).filter(Boolean);
   if ( hh.length ) out.push(`${n(hh.length, "household", "households")} of ${hh.reduce((s, h) => s + h.people.length, 0)} people noted on their buildings, for WoDX NPC to seed later`);
+  if ( p.scenePlace ) out.push(`the scene tagged as a kind of place: ${p.scenePlace.kind}`);
   return out;
 }
 const KIND_WORDS = {container: "containers", trap: "traps", clue: "clues", light: "lights", hide: "hiding places", hazard: "hazards", sacred: "sacred things",

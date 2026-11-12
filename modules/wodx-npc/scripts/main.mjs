@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs); passers-by and animals of the year who walk through a scene (0.25.0, passersby.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -26,13 +26,14 @@ import {build as buildTalk} from "./talk.mjs";
 import {VOICES} from "../data/stock-talk-more.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
+import {build as buildPassersby} from "./passersby.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.25.0";
+const VERSION = "0.27.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -799,6 +800,9 @@ talk.hooks();
 /* 0.18.0: natural rivalries between kinds of NPC */
 const rivalry = buildRivalry({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile, factions, routines, yardsBetween, obvious, hiddenByObfuscate});
 rivalry.hooks();
+/* 0.27.0: passers-by and animals */
+const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
+passersby.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 
@@ -810,11 +814,12 @@ Hooks.once("init", () => {
   Faces.registerFaceSettings();
   talk.registerSettings();
   rivalry.registerSettings();
+  passersby.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows,
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor}};
   game.modules.get(MOD).api = api;
 });
@@ -909,6 +914,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
+    button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;
@@ -923,6 +930,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   b.addEventListener("click", () => editBehavior(actor));
   b.addEventListener("contextmenu", ev => { ev.preventDefault(); const t = hud.object; postPlan(t, game.combat, planTurn(t, game.combat), "suggest").catch(e => console.error(`${MOD} |`, e)); });
   col.appendChild(b);
+  passersby.hudButtons(hud, col);
   if ( String(savedProfile(actor).talk ?? "").trim() ) {
     const t = document.createElement("div");
     t.className = "control-icon wnpc-hud";

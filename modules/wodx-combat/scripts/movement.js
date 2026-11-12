@@ -25,7 +25,16 @@ export function effectsOf(actor) {
   return [...(actor?.effects ?? [])].filter(e => !e.disabled).map(e => ({name: e.name ?? "", description: strip(e.description), key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null}));
 }
 /** What this actor may do: flight, walls, water. */
-export const abilitiesOf = actor => MV.abilities(effectsOf(actor), actor?.flags?.[D?.MOD ?? "wodx-combat"]?.moves ?? {});
+export const abilitiesOf = actor => {
+  const ab = MV.abilities(effectsOf(actor), actor?.flags?.[D?.MOD ?? "wodx-combat"]?.moves ?? {});
+  // The body plan (3.13.0): wings fly, gills breathe water, mist floats, whatever the power is called
+  let body = null;
+  try { body = globalThis.game?.wodxCombat?.body?.of?.(actor) ?? null; } catch (e) { body = null; }
+  if ( body ) {
+    for ( const [k, v] of Object.entries(body.moves ?? {}) ) if ( v && !ab[k] ) { ab[k] = true; ab.why[k] ??= body.label; }
+  }
+  return ab;
+};
 
 /** The regions holding a point on a scene. */
 function regionsAt(scene, p, elevation = 0) {

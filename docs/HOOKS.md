@@ -11,7 +11,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBreach | actions | npc, storyteller |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxDamageApplied | combat | actions, npc |
+| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse), npc |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | interactables |
@@ -27,7 +27,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSensesGather | senses | senses |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
-| wodxSocial | actions | chronicle (flaws that bite on a social act) |
+| wodxSocial | actions | chronicle (flaws that bite on a social act; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
+| wodxTrade | actions | chronicle (a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
 
@@ -46,5 +47,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
-| wodxTrade | actions | a trade with one NPC: mode, what changed hands, and the money |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

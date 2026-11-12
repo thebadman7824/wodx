@@ -554,7 +554,7 @@ export async function placeArea(item, at, {caster = "the caster", scene = canvas
 
 /** A token moved: any area it now stands in works on it, once. */
 async function onMove(tok, change) {
-  if ( !isActiveGM() || !("x" in change || "y" in change) ) return;
+  if ( !isActiveGM() || !("x" in change || "y" in change) || tok?.flags?.["wodx-npc"]?.passerby ) return;
   for ( const region of tok.parent?.regions ?? [] ) {
     const area = areaOf(region);
     if ( area && touches(area, tok) ) await areaOn(region, tok);

@@ -30,7 +30,8 @@ export function build(ctx) {
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
   const opt = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${esc(k)}"${String(k) === String(cur ?? "") ? " selected" : ""}>${esc(v)}</option>`).join("");
-  const allActors = () => game.actors?.contents ?? [...(game.actors?.values?.() ?? [])];
+  // The hidden passer-by actors (0.27.0) join no faction or household
+  const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
 
   /* ------------------------------------------------------------------ */
   /*  Settings and the state                                             */
@@ -153,6 +154,8 @@ export function build(ctx) {
       const a = game.actors?.get(id);
       if ( !a ) { info[id] = {name: "someone gone", alive: false}; continue; }
       info[id] = {name: a.name, alive: !routines.downState?.(a), pc: !!a.hasPlayerOwner, clan: sheetText(a, "clan"), sect: sheetText(a, "sect"), status: bgValue(a, "status"),
+        tribe: sheetText(a, "tribe"), house: sheetText(a, "house"), court: sheetText(a, "court"), legion: sheetText(a, "legion"),
+        rank: num(a.system?.renown?.rank), title: bgValue(a, "title"),
         attrs: Object.fromEntries(["charisma", "manipulation", "wits", "perception", "strength", "dexterity"].map(k => [k, attrOf(a, k)]))};
     }
     return info;
@@ -187,7 +190,27 @@ export function build(ctx) {
       return {state: r.state, result: {inverse: r.inverse, applied: r.applied}};
     });
     for ( const c of res?.applied ?? [] ) if ( c.op === "found" ) await foundCard(c);
+    for ( const c of changes ) if ( c.op === "pol-fight" ) await stageFight(c);
     return res ?? {inverse: [], applied: []};
+  }
+  /**
+   * NPC 0.26.0: a challenge with a player's character is staged as a fight through WoDX Combat when both are on the
+   * scene; otherwise a card tells the Storyteller who challenges whom. The winner is the Storyteller's to record in the
+   * Factions window (B1111).
+   */
+  async function stageFight(c) {
+    const s = state(), n = names(s), sc = globalThis.canvas?.scene ?? null;
+    const tok = id => sc?.tokens?.find(t => t.actorId === id) ?? null;
+    const a = tok(c.challenger), b = tok(c.holder);
+    const what = `${n.actor(c.challenger)} challenges ${n.actor(c.holder)} ${c.office ? `for ${c.title ?? "a seat"}` : "for Rank"} by ${c.how ?? "a challenge"}`;
+    const end = c.noKill ? " It ends when one yields; no killing blow." : "";
+    const fight = game.modules.get("wodx-combat")?.active ? game.modules.get("wodx-combat")?.api?.fight?.start : null;
+    if ( a && b && typeof fight === "function" && /strength|monomacy|challenge/.test(String(c.how)) ) {
+      const r = await fight({scene: sc, tokens: [a, b], source: "rivalry", why: `${what}.${end}`, sides: {[a.id]: "a", [b.id]: "b"}});
+      if ( r?.done && r.done !== "nothing" && r.done !== "off" ) return r;
+    }
+    return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>A challenge</h3>
+      <p>${esc(what)}.${esc(end)} Play it out, then set the seat or the Rank in the Factions window.</p></div>`});
   }
   async function foundCard(c) {
     const s = state(), n = names(s);
@@ -354,9 +377,21 @@ export function build(ctx) {
         content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(ev.name ?? "A dated event")}</h3><ul class="wnpc-lines">${done.applied.map(c => `<li>${esc(F.describeChange(c, n))}</li>`).join("")}</ul>
           <div class="wnpc-done"><button type="button" class="wnpc-f-undo" data-key="factionYears">Undo</button></div></div>`});
     }
+    if ( PO.isMaelstrom(ev.id) ) await onMaelstrom(ev, year);
     if ( offer && mode() !== "off" ) await proposeChanges(`A new power: ${offer.name}`, `${ev.name ?? "A dated event"} (${year}). ${offer.notes} Approve to add it as a faction with no dots; set its leader, members and Backgrounds in the Factions window.`,
       [{op: "faction-add", faction: offer}], {key: `event:${ev.id}`, kind: "event"});
     return {card, offer};
+  }
+  /** NPC 0.26.0: a Great Maelstrom empties seats in each necropolis (B1112), with an Undo card. */
+  async function onMaelstrom(ev, year) {
+    const changes = PO.maelstromChanges(state(), {year, rand: streamFor(`maelstrom:${ev.id}`)});
+    if ( !changes.length ) return null;
+    const done = await applyNow(changes);
+    if ( !done.applied.length ) return null;
+    const n = names(state());
+    return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, flags: {[MOD]: {factionYears: {inverse: done.inverse, undone: false}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(ev.name ?? "A Great Maelstrom")}: the Tempest takes its officers</h3><ul class="wnpc-lines">${done.applied.map(c => `<li>${esc(F.describeChange(c, n))}</li>`).join("")}</ul>
+        <div class="wnpc-done"><button type="button" class="wnpc-f-undo" data-key="factionYears">Undo</button></div></div>`});
   }
   /** B83 for factions: one whose leader and members are all gone loses a dot of each Background per untended decade. */
   async function untended(from, to) {
@@ -632,21 +667,22 @@ export function build(ctx) {
     const evs = (() => { try { return chron()?.events?.list?.() ?? []; } catch (e) { return []; } })();
     // NPC 0.25.0: the faction's politics
     const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();
+    const polInfo = P ? politicsInfo({factions: [f]}) : {};
     const mActors = f.members.map(id => game.actors?.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
-    const polityOpts = {"": "By its kind and age (a Kindred faction of three or more keeps a court)", none: "No politics",
+    const polityOpts = {"": "By its kind and age (a Kindred, Garou or Fae faction of three or more keeps the polity of its age)", none: "No politics",
       ...Object.fromEntries(Object.entries(PO.POLITIES).map(([k, v]) => [k, `${v.label}${v.from ? `, from ${v.from}` : ""}`]))};
     const seatOpts = cur => `<option value="">Empty</option>${mActors.map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
     const politicsHtml = `<fieldset><legend>Politics inside the faction</legend>
       <div class="wodx-field"><label>Polity</label><select name="polity" data-fixed>${opt(polityOpts, f.polity ?? "")}</select></div>
-      ${P ? `<p class="wodx-quiet">In ${era.year}: ${esc(P.label)}. ${esc(P.notes)}${f.polity && f.polity !== polKey ? " Its chosen polity does not exist yet in this year, so the court of its age stands in." : ""}</p>
-        ${P.titles?.prince ? `<div class="wodx-field"><label>The top seat is called</label><input type="text" name="poltitle" value="${esc(pol.title ?? "")}" maxlength="40" placeholder="${esc(PO.topOffice(polKey)?.title ?? "")}" list="wnpc-pol-titles"><datalist id="wnpc-pol-titles">${P.titles.prince.map(t => `<option value="${esc(t)}">`).join("")}</datalist></div>` : ""}
+      ${P ? `<p class="wodx-quiet">In ${era.year}: ${esc(P.label)}. ${esc(P.notes)}${f.polity && f.polity !== polKey ? " Its chosen polity does not exist yet in this year, so the polity of its age stands in." : ""}</p>
+        ${P.titles?.[PO.topOffice(polKey)?.key] ? `<div class="wodx-field"><label>The top seat is called</label><input type="text" name="poltitle" value="${esc(pol.title ?? "")}" maxlength="40" placeholder="${esc(PO.topOffice(polKey)?.title ?? "")}" list="wnpc-pol-titles"><datalist id="wnpc-pol-titles">${P.titles[PO.topOffice(polKey).key].map(t => `<option value="${esc(t)}">`).join("")}</datalist></div>` : ""}
         ${mActors.length ? `<table class="wodx-table" data-fixed><thead><tr><th>Seat</th><th>Held by</th></tr></thead><tbody>
           ${P.offices.map(o => Array.from({length: o.seats}, (_, i) => `<tr><td>${esc(PO.officeTitle(polKey, o.key, f))}${o.seats > 1 ? ` ${i + 1}` : ""}</td><td><select name="of.${o.key}.${i}">${seatOpts(PO.holdersOf(f, o.key)[i])}</select></td></tr>`).join("")).join("")}</tbody></table>
         <fieldset><legend>${esc(P.rank)} inside the faction (0 to 5; empty follows the sheet)</legend><div class="wnpc-dots">
-          ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${bgValue(a, "status")}"></label>`).join("")}</div></fieldset>`
+          ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${PO.baseRank(polInfo, a.id, polKey)}"></label>`).join("")}</div></fieldset>`
         : `<p class="wodx-quiet">Add members and save, then open the faction again to seat them.</p>`}
         ${pol.docket.length ? `<p><b>Charges to be heard:</b> ${pol.docket.map(d => esc(`${game.actors?.get(d.by)?.name ?? "someone"} against ${game.actors?.get(d.against)?.name ?? "someone"}: ${d.law}`)).join("; ")}.</p>` : ""}`
-      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred faction of three or more members keeps a court of its age unless set to No politics.</p>`}
+      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou or Fae faction of three or more members keeps the polity of its age unless set to No politics; a Wraith necropolis is picked by hand.</p>`}
       <p class="wodx-quiet">Turn on Politics inside factions in the module settings for courts to move each faction turn.</p></fieldset>`;
     const eventOpts = evs.length ? cur => evs.map(e => `<option value="${esc(e.id)}"${e.id === cur ? " selected" : ""}>${esc(`${e.year} ${e.name}`)}</option>`).join("") : null;
     const content = `<div class="wnpc-faction-form">
@@ -1029,5 +1065,5 @@ export function build(ctx) {
   return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
-    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled};
+    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};
 }
