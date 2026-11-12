@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.33.0 (living maps: a tile can wait for "a caravan in town", so wagons in the square or lorries at the depot show only while a caravan of WoDX Storyteller's markets stands in that scene)
 - 0.32.1 (case board cards keep one size, so a card with a long note no longer covers the buttons of the card below it)
 - 0.32.0 (the case board: a shared board of clues, people, places, Encyclopaedia entries and notes joined by lines, in the era's look; found clues go on the open case by themselves; the Storyteller can hide a card until it is earned)
 - 0.31.0 (a token can join a running chase as a pursuer, level with the slowest: followers with their master)

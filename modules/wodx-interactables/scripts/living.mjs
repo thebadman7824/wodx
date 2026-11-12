@@ -29,7 +29,10 @@ export async function context(time = game.time.worldTime) {
   try { church = chron()?.church?.on?.(d) ?? null; } catch (e) { church = null; }
   try { weather = game.modules.get("wodx-atmosphere")?.active ? (game.modules.get("wodx-atmosphere").api?.weather?.now?.()?.tags ?? []) : []; } catch (e) { weather = []; }
   try { fired = chron()?.events?.fired?.() ?? []; } catch (e) { fired = []; }
-  return {year: d.year, month: d.month, day: d.day, isNight: d.isNight, church, weather, fired};
+  // 0.33.0: the scenes where a caravan stands (WoDX Storyteller's markets)
+  let caravans = [];
+  try { caravans = game.modules.get("wodx-storyteller")?.active ? (game.modules.get("wodx-storyteller").api?.upkeep?.caravans?.inTownScenes?.() ?? []) : []; } catch (e) { caravans = []; }
+  return {year: d.year, month: d.month, day: d.day, isNight: d.isNight, church, weather, fired, caravans};
 }
 
 /** Every tile with a living rule that is switched on, on every scene. */
@@ -46,7 +49,7 @@ export function livingTiles() {
 export async function syncOne(tile, ctx) {
   const rule = flagsOf(tile).living;
   if ( !rule ) return null;
-  const on = L.holds(rule, ctx);
+  const on = L.holds(rule, {...ctx, caravan: (ctx.caravans ?? []).includes(tile.parent?.id)});
   const ch = L.changeFor(rule, on, {hidden: tile.hidden, src: tile.texture?.src ?? null, base: flagsOf(tile).livingBase ?? null});
   if ( !Object.keys(ch).length ) return null;
   const update = {};

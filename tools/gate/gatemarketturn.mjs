@@ -32,6 +32,9 @@ export async function run() {
   const M = game.modules.get(MOD), U = M?.api?.upkeep, T = U?.marketTurn, K = U?.markets, RU = M?.api?.rumours, C = game.modules.get("wodx-chronicle")?.api;
   const keep = {markets: game.settings.get(MOD, "markets"), turn: game.settings.get(MOD, "marketTurnState"), mode: game.settings.get(MOD, "marketTurn"),
     rumours: game.settings.get(MOD, "rumours"), net: game.settings.get(MOD, "rumourNetwork")};
+  // 0.49.0: this gate checks the turn alone, so caravans, faction moves and traders' weeks are off while it runs
+  const later = ["caravans", "marketMoves", "tradersBroke"].filter(k => game.settings.settings.has(`${MOD}.${k}`));
+  const keepLater = Object.fromEntries(later.map(k => [k, game.settings.get(MOD, k)]));
   const msgsBefore = new Set(game.messages.map(m => m.id));
   const pendingBefore = new Set((C?.approvals?.pending?.() ?? []).map(p => p.id));
   const scenes = [], actors = [];
@@ -40,6 +43,7 @@ export async function run() {
   try {
     ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.48.0", M.version) && typeof T?.run === "function" && game.settings.settings.has(`${MOD}.marketTurn`), {version: M?.version});
     await game.settings.set(MOD, "marketTurn", "auto");
+    for ( const k of later ) await game.settings.set(MOD, k, k === "marketMoves" ? "off" : false);
     await game.settings.set(MOD, "rumourNetwork", true);
     for ( const n of ["Brno", "Town"] ) scenes.push(await Scene.create({name: `WoDX gate: market ${n}`, width: 800, height: 600, padding: 0}));
     const base = () => [
@@ -111,6 +115,7 @@ export async function run() {
       await game.settings.set(MOD, "marketTurn", keep.mode);
       await game.settings.set(MOD, "rumours", keep.rumours);
       await game.settings.set(MOD, "rumourNetwork", keep.net);
+      for ( const k of later ) await game.settings.set(MOD, k, keepLater[k]);
       for ( const p of C?.approvals?.pending?.() ?? [] ) if ( !pendingBefore.has(p.id) && p.type === `${MOD}.market` ) await C.approvals.decide(p.id, "reject");
       const mine = game.messages.contents.filter(m => !msgsBefore.has(m.id)).map(m => m.id);
       if ( mine.length ) await ChatMessage.deleteDocuments(mine);

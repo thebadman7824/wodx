@@ -7,12 +7,17 @@
  * character is wait in the approval queue) or Suggest (everything waits in the queue). Linked markets whose prices
  * part far enough start talk of dear and cheap goods in the rumour network, from their traders.
  * Hidden state wodx-storyteller.marketTurnState = {last, told}.
+ *
+ * 0.49.0: the same run ages what factions have laid on the markets and lets them move again (market-moves.mjs),
+ * reckons every trader's week, and sends the goods that linked markets trade out as caravans (caravans.mjs).
  */
 import * as R from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Own from "./owners.mjs";
 import * as Rumours from "./rumours.mjs";
+import * as Moves from "./market-moves.mjs";
+import * as Caravans from "./caravans.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 
@@ -72,22 +77,31 @@ export async function run({force = false, reason = ""} = {}) {
   if ( !isActiveGM() || (mode() === "off" && !force) ) return null;
   const now = game.time.worldTime;
   const ts = turnState();
-  const st = Markets.state();
-  if ( !st.markets.length ) return null;
+  // Caravans whose time has come arrive before the week is reckoned
+  try { await Caravans.tick(); } catch (e) { console.error(`${MOD} | caravans`, e); }
+  const st0 = Markets.state();
+  if ( !st0.markets.length ) return null;
   let due = R.turnsDue(ts.last, now);
   if ( due.start && !force ) { await saveTurn({last: now}); return null; }
   if ( force ) due = {due: 1, skipped: 0};
   if ( !due.due ) return null;
   const base = Number.isFinite(Number(ts.last)) && !force ? Number(ts.last) : now - R.WEEK;
   const dates = Array.from({length: due.due}, (_, i) => dateAt(base + (i + 1) * R.WEEK));
+  // 0.49.0: what already stands on the markets ages a week first (taxes, monopolies, closed roads)
+  const weeks = due.due + due.skipped;
+  let pre = null;
+  try { pre = Moves.before(st0, {weeks}); } catch (e) { console.error(`${MOD} | market moves`, e); }
+  const st = pre?.state ? MK.normState(pre.state, kindIds()) : st0;
   let works = {};
   try { works = Own.workshopCounts(st); } catch (e) { console.error(`${MOD} | market turn works`, e); }
   const pcs = pcMarkets(st);
-  const r = R.runTurns(st, {dates, skipped: due.skipped, settleAt: due.skipped ? dateAt(now) : null, kinds: kindIds(), works, pcMarkets: pcs});
+  const suggest = mode() === "suggest";
+  const out = Caravans.state().list.filter(c => c.state === "road");
+  const r = R.runTurns(st, {dates, skipped: due.skipped, settleAt: due.skipped ? dateAt(now) : null, kinds: kindIds(), works, pcMarkets: pcs,
+    shift: Moves.shift, blocked: Moves.blocked, defer: !suggest && Caravans.on(), onWay: (to, k) => out.some(c => c.to === to && c.ship.includes(k))});
   const stamp = force ? (ts.last ?? now) : due.skipped ? now : base + due.due * R.WEEK;
   await saveTurn({last: stamp});
   const when = reason || (due.due > 1 || due.skipped ? `${due.due + due.skipped} weeks` : "a week");
-  const suggest = mode() === "suggest";
   const queued = suggest ? [...r.changes, ...r.queued] : r.queued;
   if ( suggest ) {
     // Nothing lands until approved, but the weeks at each level still count
@@ -95,7 +109,13 @@ export async function run({force = false, reason = ""} = {}) {
   } else {
     const snap = R.snapshot(st, st.markets.map(m => m.id));
     await Markets.saveState(r.state);
-    if ( r.changes.length ) await card({changes: r.changes, snap, pcs, when, skipped: due.skipped});
+    let left = [];
+    try {
+      const vs = Moves.views(r.state), force = {};
+      for ( const v of vs ) for ( const id of v.home ) force[id] = Math.max(force[id] ?? 0, v.force);
+      left = await Caravans.depart(r.shipments, r.trades, {at: now, force});
+    } catch (e) { console.error(`${MOD} | caravans`, e); }
+    if ( r.changes.length || left.length ) await card({changes: r.changes, snap, pcs, when, skipped: due.skipped, left});
   }
   for ( const id of [...new Set(queued.map(c => c.id))] ) {
     const mine = queued.filter(c => c.id === id);
@@ -103,20 +123,22 @@ export async function run({force = false, reason = ""} = {}) {
       detail: mine.map(line).join(". "), data: {changes: mine}});
   }
   if ( !suggest ) await talk();
+  try { await Moves.after({pre, weeks, live: due.due === 1 && !due.skipped, pcMarkets: pcs, stamp}); } catch (e) { console.error(`${MOD} | market moves`, e); }
   return {changes: suggest ? [] : r.changes, queued, skipped: due.skipped};
 }
 
-async function card({changes, snap, pcs, when, skipped}) {
+async function card({changes, snap, pcs, when, skipped, left = []}) {
   const near = changes.filter(c => pcs.includes(c.id));
   const quiet = new Set(changes.filter(c => !pcs.includes(c.id)).map(c => c.id));
   const byMarket = new Map();
   for ( const c of near ) byMarket.set(c.name, [...(byMarket.get(c.name) ?? []), c]);
   const list = [...byMarket].map(([name, cs]) => `<li><b>${esc(name)}</b><ul>${cs.map(c => `<li>${esc(line(c))}</li>`).join("")}</ul></li>`).join("");
-  return ChatMessage.create({speaker: {alias: "Markets"}, whisper: gmIds(), flags: {[MOD]: {marketTurn: {snap, applied: true}}},
+  return ChatMessage.create({speaker: {alias: "Markets"}, whisper: gmIds(), flags: {[MOD]: {marketTurn: {snap, applied: true, caravans: left.map(c => c.id)}}},
     content: `<div class="wodx-card wst-markets wst-market-turn"><h3>The markets after ${esc(when)}</h3>
       ${list ? `<ul>${list}</ul>` : ""}${quiet.size ? `<p>${quiet.size} market${quiet.size === 1 ? "" : "s"} with no player character there changed quietly; the Markets window shows them.</p>` : ""}
+      ${left.length ? `<p>On the road: ${left.map(c => esc(`${Caravans.rules.describe(c, {kindLabel: label}).replace(/^A/, "a")} (${Caravans.rules.daysOf(c)} ${Caravans.rules.daysOf(c) === 1 ? "day" : "days"})`)).join("; ")}.</p>` : ""}
       ${skipped ? `<p class="wodx-quiet">${skipped} more week${skipped === 1 ? "" : "s"} passed unplayed; their markets settled back to normal and the season's prices.</p>` : ""}
-      <p class="wodx-quiet">House rules. Undo puts every market here back as it was before this turn.</p>
+      <p class="wodx-quiet">House rules. Undo puts every market here back as it was before this turn${left.length ? " and calls its caravans back" : ""}.</p>
       <div class="wodx-buttons"><button type="button" data-action="wst-turn-undo">Undo</button></div></div>`});
 }
 
@@ -124,6 +146,7 @@ async function undo(msg) {
   const f = msg?.flags?.[MOD]?.marketTurn;
   if ( !f?.applied || !game.user.isGM ) return;
   await Markets.saveState(R.restore(Markets.state(), f.snap));
+  if ( f.caravans?.length ) await Caravans.remove(f.caravans);
   await msg.update({[`flags.${MOD}.marketTurn.applied`]: false});
 }
 
