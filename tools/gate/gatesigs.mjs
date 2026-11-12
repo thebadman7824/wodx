@@ -1,5 +1,5 @@
 /**
- * Clan features gate (WoDX Chronicle 0.29.0 or later), in rothenstein-wodx, as Gamemaster Test:
+ * Clan features gate (WoDX Chronicle 0.30.0 or later), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesigs.mjs?${Date.now()}`)).run()
  * Makes its own vampires and a mortal, turns "Clan features (Vampire)" on, and puts the setting, actors and chat cards
  * back afterwards. The clock is not moved: weeks are made by setting a Muse's last visit back.
@@ -22,6 +22,7 @@
  *  16. a Ventrue's influence: a boon card once a month (the second is refused)
  *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
  *  18. a Giovanni binds and calls a wraith
+ *  20. a ghoul unfed for two months gets a card; a Grimaldi revenant finds its family row; a family founded by the Storyteller is kept (the list is put back)
  *  19. bloodlines: a True Brujah finds its own row and roll effects; a Gargoyle talking to a mortal gets a breach card
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
@@ -55,10 +56,11 @@ export async function run() {
       {name: "WoDX gate: Mark", type: "Mortal"}, vamp("WoDX gate: Tzimisce", "tzimisce"), vamp("WoDX gate: Lasombra", "lasombra"),
       vamp("WoDX gate: Ravnos", "ravnos"), vamp("WoDX gate: Caitiff", "caitiff"), vamp("WoDX gate: Nosferatu", "nosferatu"),
       vamp("WoDX gate: Tremere", "tremere"), vamp("WoDX gate: Tremere Regent", "tremere"), vamp("WoDX gate: Assamite", "assamite"), vamp("WoDX gate: Giovanni", "giovanni"),
-      vamp("WoDX gate: True Brujah", "custom", "True Brujah"), vamp("WoDX gate: Gargoyle", "custom", "Gargoyle")]);
+      vamp("WoDX gate: True Brujah", "custom", "True Brujah"), vamp("WoDX gate: Gargoyle", "custom", "Gargoyle"),
+      {name: "WoDX gate: Ghoul", type: "Mortal", flags: {world: {wodx: {profile: "ghoul"}}}}, {name: "WoDX gate: Grimaldi", type: "Mortal", flags: {world: {wodx: {profile: "ghoul"}}, [C]: {family: "Grimaldi"}}}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     await step("1 api", async () => {
-      ok("1 api", atLeast(game.modules.get(C).version, "0.29.0") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
+      ok("1 api", atLeast(game.modules.get(C).version, "0.30.0") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
         {version: game.modules.get(C).version});
     });
     await step("2 rows", async () => {
@@ -209,6 +211,18 @@ export async function run() {
       Hooks.callAll("wodxSocial", {actor: gg, npc: m, act: "persuade", result: "win"});
       await until(() => lastCard()?.flags?.[C]?.sigAct?.key === "breach" && lastCard()?.content?.includes("Gargoyle"));
       ok("19 bloodlines", key === "truebrujah" && fx.some(e => e.tags.includes("empathy")) && lastCard()?.content?.includes("Gargoyle"), {key, fx: fx.length});
+    });
+    await step("20 ghouls", async () => {
+      const gh = by("Ghoul"), gr = by("Grimaldi"), fams = game.settings.get(C, "sigFamilies");
+      const kind = api().rowOf(gh)?.feature;
+      await gh.update({[`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 61 * 86400, warned: 0}}});
+      await api().tick({force: true});
+      await until(() => sig(gh).ghoul?.warned === 2);
+      const fam = api().rowOf(gr)?.key;
+      const made = await api().foundFamily({name: "Gatewardens", trait: "war", disciplines: "Potence, Fortitude", year: 1197});
+      const kept = game.settings.get(C, "sigFamilies").some(f => f.key === "gatewardens");
+      await game.settings.set(C, "sigFamilies", fams);
+      ok("20 ghouls", kind === "ghoul" && sig(gh).ghoul?.warned === 2 && fam === "family-grimaldi" && made?.approved && kept, {kind, fam, warned: sig(gh).ghoul?.warned});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
