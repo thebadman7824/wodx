@@ -873,4 +873,4 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | The mounted charge with no chase (B2442) | +1 damage die for each 10 yards ridden this turn, 5 at most, hooves and reins only | Say another distance, or leave the charge to chases |
 | 2026-11-12 | A swimmer's load with no weights on items (B2443) | Steps from armor's Dexterity penalty and a burden of 0 to 3 set on the token HUD; a quarter of the speed and +1 difficulty a step; under at four | Say to count something else, or give other steps |
 | 2026-11-12 | What each way of moving does to the senses (B2444), and 28 new lines | As listed in B2444; the lines are in STANCE_SENSES and lowFigure in senses-rules.mjs | Edit any line or number |
-
+| 2026-11-12 | After the riding book check (B2445): what else to take from the books | Built: Abilities held to Ride in the saddle (V20 Dark Ages p. 399). Not built: the mount dodging for its rider, the mount's Attributes for the rider, Stamina + Ride to keep the saddle when hit, lance rules, mounted archery at +2 and +4 | Name any to build |
