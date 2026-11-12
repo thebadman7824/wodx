@@ -1558,6 +1558,66 @@ Reverse: setWraith and luck in signatures.mjs.
 Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
 
 Reverse: WRAITH_FACTIONS in data/signatures.mjs.
+
+## B1507. Signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus (2026-11-12)
+Splat Features Desk, approved by Ben. Each line has its own table and its own world setting, all off by default. The rows come from the sheet's own field where it has one: the Hunter's creed, the Mummy's Amenti, and the Demon's House and faction, which stack. Kuei-jin and Orpheus sheets have no field, so the group is picked in the feature window and kept in the actor flag wodx-chronicle.splat. A Kuei-jin is a Vampire whose variant or profile names kuei-jin; an Orpheus character is one whose profile names Orpheus, a projector or a Shade.
+
+Reverse: SMALL_LINES and its tables in data/signatures.mjs; smallRows in signature-rules.mjs; smallLineOf and setSplat in signatures.mjs.
+
+## B1508. The hunters by era (2026-11-12)
+Standing rule 12 sets the eras. Inquisitors and the Society of Leopold play in every era. Mortal hunters (Hunters Hunted II) run from 1500 to 1998, and the imbued creeds from 1999. Government agencies run from 1900, a house reading. The Avengers' and Waywards' fight die counts only against a target that is not mortal, when the roll knows its target; with no target it gives nothing. The Inquisition and the agencies hear of breaches as the New World Order does, and the Watchers card now names whichever groups heard.
+
+Reverse: HUNTER in data/signatures.mjs; the "monster" condition in sigRollEffects.
+
+## B1509. Borrowed engines across the small lines (2026-11-12)
+Defenders and the Kher-minu guard a place, with the Black Fury engine. Judges give a hidden verdict, and the Crane posts a ruling. Hermits, Fiends and the Banshee read the riddle of the next event, and the Mesektet read the stars. The Sefekhi bind the dead. Ishmaelites trade pages of secrets. Defilers use the Corruption ledger. Faustian pacts are leverage.
+
+Reverse: the also and feature fields on each row.
+
+## B1510. Lines with NPCs only (2026-11-12)
+Bane mummies, the Earthbound, the Wan Xian and the Cabiri have rows for the Storyteller's NPCs, with a lore page or a card where the desk asked for one.
+
+Reverse: those rows in data/signatures.mjs.
+## B1511. City Masquerade exposure (2026-11-12)
+Each city keeps one exposure track. A breach recorded by the witness rules adds 1, plus 1 for each witness past the first (2 more at most), plus 1 from 1605 when printed news carries it, plus 2 when the scene is marked watched by a camera. A breach kept in a closed place (spread off) gets no print point. Each 7 quiet days take 1 off. The bands are Quiet 0, Whispers 3, Talk 6, Watched 10 and Hunted 15. A Storyteller card comes when a band is crossed upward. Hunted starts a big rumour through the Storyteller module. Idea from the Princes of Darkness mod; numbers are a house rule.
+
+Reverse: setting podExposure off; EXPOSURE_BANDS and breachPoints in pod-rules.mjs.
+
+## B1512. Each sect's law and bringing a culprit to heel (2026-11-12)
+A Camarilla court (and the Church of Caine before 1435) acts at Watched; Sabbat, Anarch and sectless cities act only at Hunted. The court card names the culprit and the V20 means of enforcement (Dominate or Presence against Willpower, or an accusation before the court). Its button lowers the city's exposure by 3. The Storyteller sets each city's law in the window.
+
+Reverse: SECT_LAW and HEEL_DROP in data/pod.mjs.
+
+## B1513. The city of a scene (2026-11-12)
+A scene's flag wodx-chronicle.city names its city; otherwise the world setting podCity (Rothenstein by default).
+
+Reverse: cityOf in pod.mjs.
+
+## B1514. Great cities that change with history (2026-11-12)
+Constantinople, Rome, Paris, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc have dated states taken from history (sackings, occupations, rebuildings, changes of ruler). Each state has tags, a smell and a sound. Senses adds the smell and sound to every answer in that city through wodxSensesGather. Map generation reads api.pod.cityState(scene or name, year).
+
+Reverse: setting podCities off; CITIES in data/pod.mjs.
+
+## B1515. Raising or restoring a building (2026-11-12)
+The window's Raise or restore posts a card. Its button logs a minor boon in the Storyteller's Ledger, owed by the faction that gains to the patron. Money and holdings stay with the Storyteller's holdings window.
+
+Reverse: raiseBuilding in pod.mjs.
+
+## B1516. Golconda as a long road (2026-11-12)
+A Kindred seeker has a road of 10 steps, kept on the actor. Taking a life (lethal and aggravated damage reaching seven levels from the seeker's attack) costs 2 steps. Frenzy, a won pickpocket lift, and feeding of 3 or more blood points or by force each cost 1 step. A mentor teaches one step for each 30 days on the clock, through the approval queue. The Storyteller adds a step for a test passed. At 10 a card offers Grant Golconda, which sets WoDX Actions' own golconda flag. V20 p. 30 (pdf 38); the road's steps and costs are a house rule.
+
+Reverse: setting podGolconda off; GOLCONDA_SETBACKS and MENTOR_DAYS in data/pod.mjs.
+
+## B1517. Story chains (2026-11-12)
+Six dated chains: a Setite corrupting a faith, the Anarch Revolt (1381 to 1493), the Black Death (1347 to 1353), the Inquisition coming to town (1231 to 1834), a hunt for an Antediluvian (1493 to 1999) and the Week of Nightmares (1999). The Storyteller starts one in the window, at a place. The clock deals each step as a Storyteller card after its gap in days. These are different from the lifepath chains of B1311: they run in play, not in creation.
+
+Reverse: setting podChains off; CHAINS in data/pod.mjs.
+
+## B1518. Opening goals (2026-11-12)
+Each line has three opening goals for before 1800 and three from 1800, and mortals and other kinds use the mortal list. A character with a player owner and no goal gets the goals as buttons in the feature window. Signing off before the first night posts the list to the owner.
+
+Reverse: GOALS in data/pod.mjs; section in pod.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1741,6 +1801,31 @@ Reverse: first-night-seed.mjs.
 A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
 
 Reverse: suggestStanding in first-night-rules.mjs.
+
+## B1610. The guided builder (2026-11-12)
+Creation 0.13.0's Build window sets Attributes (1 to 5), Abilities (0 to 5) and the Virtues in use (1 to 5) on the sheet and shows the creation check's count live, for every line with creation totals. Backgrounds, powers, Merits and Flaws are added on the sheet and counted. Chronicle Start Desk b1.
+
+Reverse: first-night-build.mjs, first-night-build-rules.mjs.
+
+## B1611. The prelude runner (2026-11-12)
+Scenes: the lifepath's life-before scenes, then the line's Before, The turn and After from WoDX Storyteller's templates; a short prelude keeps the turn and after. A roll with stakes is the Storyteller's pool against a difficulty (6 by default), ones cancel (V20); on no successes the stake is paid. House rule.
+
+Reverse: buildScenes, STAKES in first-night-prelude-rules.mjs.
+
+## B1612. What a prelude may change (2026-11-12)
+Flaws earned in play are added at 0 points, so they give no freebies and do not count against the cap: Enemy (with a Hostile NPC), Dark Secret, Nightmares, Hunted. Gains: up to 3 freebie points, priced by the book's costs (an Ability, a Background or Willpower dot). Each change has Undo in the runner's log. House rule until the book check finds V20's own advice. Desk p3.
+
+Reverse: PRELUDE_BUDGET, REWARDS in first-night-prelude-rules.mjs.
+
+## B1613. Troupe ties (2026-11-12)
+Six questions in any era's words; each character asks about the next in a ring of the player characters by name. Answers go on the Group actor (flags.wodx-creation.ties) and tick the ties step; a player's answer reaches the Storyteller by socket. How they met makes an observer journal of the answers. Desk t1.
+
+Reverse: TIE_QUESTIONS, ring; sendTies, saveTie in first-night-prelude.mjs.
+
+## B1614. Late joiners (2026-11-12)
+Once any character in the world is signed off, a new character's hub says the chronicle is under way, and the prelude runner starts in short mode. The forecast reads the current year as for everyone. Desk t2.
+
+Reverse: underWay in first-night-prelude-rules.mjs.
 
 ## B1640. A talk generator with no AI model (2026-11-12)
 When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots are always they, them and their. House writing, not from any book. Ben approved the desk 2026-11-12.

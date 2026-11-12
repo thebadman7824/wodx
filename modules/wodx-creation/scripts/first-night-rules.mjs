@@ -55,7 +55,10 @@ export function normRecord(r = {}) {
   }
   const hook = r?.hook && r.hook.text ? {text: String(r.hook.text).slice(0, 200), agreed: !!r.hook.agreed, since: Number(r.hook.since) || 0,
     sessions: Math.max(0, Math.trunc(Number(r.hook.sessions) || 0)), used: !!r.hook.used} : null;
-  return {version: VERSION, steps, dial: DIAL[r?.dial] ? r.dial : "normal", hook, signed: !!r?.signed, at: Number(r?.at) || 0};
+  const out = {version: VERSION, steps, dial: DIAL[r?.dial] ? r.dial : "normal", hook, signed: !!r?.signed, at: Number(r?.at) || 0};
+  // The prelude runner keeps its own record here (first-night-prelude-rules.mjs normPrelude)
+  if ( r?.prelude && typeof r.prelude === "object" ) out.prelude = r.prelude;
+  return out;
 }
 
 /** Story hook reminder (desk b3): agreed, not yet brought in, four sessions or more. */

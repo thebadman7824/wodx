@@ -791,3 +791,78 @@ export const WRAITH_FACTIONS = [
 ];
 /** Days between uses of the Emerald luck (a house reading of "once a story"). */
 export const LUCK_DAYS = 7;
+
+/* ================= Hunter, Mummy, Demon, Kuei-jin and Orpheus (Chronicle 0.36.0) ================= */
+
+/**
+ * The smaller lines, one table each. match: words of the sheet's own field (a Hunter's creed, a Mummy's Amenti, a Demon's
+ * house and faction) or of the pick kept in the actor flag wodx-chronicle.splat (Kuei-jin and Orpheus, whose sheets have
+ * no field for it). The years follow standing rule 12: inquisitors in the Dark Ages, mortal hunters to 1998, the imbued
+ * from 1999 (from 2023 in the World of Future Darkness).
+ */
+const row = (key, label, match, title, page, text, more = {}) => ({key, label, match, feature: "line", title, page, text, ...more});
+export const HUNTER = [
+  row("avenger", "Avengers", ["avenger", "avengers"], "The righteous blow", "Hunter: the Reckoning, the creeds", "Against a monster that hurt an innocent, fight rolls gain a die (the Storyteller says when). Walking away from one costs Conviction.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
+  row("defender", "Defenders", ["defender", "defenders"], "The shield", "Hunter: the Reckoning, the creeds", "A Defender guards a place: harm or theft there reaches them wherever they are. Standing between a monster and its prey gives soak dice, which the Storyteller adds.", {from: 1999, feature: "guard"}),
+  row("judge", "Judges", ["judge", "judges"], "The verdict", "Hunter: the Reckoning, the creeds", "A Judge may give a verdict on a monster, which goes to the Storyteller alone, who answers whether it is guilty.", {from: 1999, feature: "ruling", secret: true}),
+  row("innocent", "Innocents", ["innocent", "innocents"], "Open eyes", "Hunter: the Reckoning, the creeds", "A monster spoken to kindly by an Innocent thinks better of them. Empathy gains a die.", {from: 1999, effects: [{tags: ["empathy"], dice: 1}]}),
+  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them, as the Storyteller moves it.", {from: 1999}),
+  row("redeemer", "Redeemers", ["redeemer", "redeemers"], "The second chance", "Hunter: the Reckoning, the creeds", "A Redeemer's long work with a monster can help its Humanity or Path, a task over weeks on the clock.", {from: 1999}),
+  row("visionary", "Visionaries", ["visionary", "visionaries"], "The bigger picture", "Hunter: the Reckoning, the creeds", "Lore pages open for them sooner. Occult and Investigation gain a die.", {from: 1999, effects: [{tags: ["occult", "investigation"], dice: 1}]}),
+  row("hermit", "Hermits", ["hermit", "hermits"], "The messages", "Hunter: the Reckoning, the creeds", "Once a night a Hermit can hear the Messengers: a riddle about the next dated event.", {from: 1999, also: ["glimpse"]}),
+  row("wayward", "Waywards", ["wayward", "waywards"], "Single minded", "Hunter: the Reckoning, the creeds", "Fight rolls to destroy monsters gain a die; a Wayward never takes a monster's side, even when it is right.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
+  row("hh2", "Mortal hunters", ["hunters hunted", "mortal hunter", "mortal hunters", "hunter"], "Faith and preparation", "Hunters Hunted II", "A hunter's kit (stakes, holy water, a crucifix carried with True Faith) is used from the pack, and preparing a hunt is a recipe. Investigation gains a die.", {from: 1500, until: 1998, effects: [{tags: ["investigation"], dice: 1}]}),
+  row("inquisition", "Inquisitors", ["inquisitor", "inquisitors", "inquisition", "society of leopold", "leopold"], "Faith and the files", "V20 Dark Ages, the Inquisition; Hunters Hunted II", "True Faith wards make monsters recoil and burn the wicked, and the faithful help them. Every breach of the Masquerade reaches the Inquisition: the Storyteller gets a card.", {feature: "watchers"}),
+  row("arcanum", "Arcanum", ["arcanum"], "The library", "Hunters Hunted II, the Arcanum", "Research on any monster with the Library's files gains a die, and a breach of the Masquerade becomes a file they can read.", {effects: [{tags: ["academics", "occult"], dice: 1}]}),
+  row("agencies", "Government hunters", ["project twilight", "twilight", "agency", "agencies", "fbi", "nsa"], "Case files", "Hunters Hunted II; Project Twilight", "They read police files and camera records as the New World Order does: a breach reaches them, and they send a team.", {from: 1900, house: true, feature: "watchers"}),
+  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground their Faith counts one higher (the Storyteller marks the place)."),
+];
+export const MUMMY = [
+  row("kherminu", "Kher-minu", ["kher minu", "tomb watchers"], "The guarded place", "Mummy: the Resurrection, the Amenti", "Amulets made as charms are used from the pack. A place a Kher-minu takes as a charge (a tomb, a museum wing, a temple) is guarded: harm or theft there reaches them.", {feature: "guard"}),
+  row("khrihabi", "Khri-habi", ["khri habi", "scroll bearers"], "Alchemy", "Mummy: the Resurrection, the Amenti", "Elixirs that heal, poison or change are recipes at a laboratory kit, a quality step stronger. Old texts in the Library read easier for them. Science gains a die.", {effects: [{tags: ["science"], dice: 1}]}),
+  row("mesektet", "Mesektet", ["mesektet", "night suns"], "Celestial", "Mummy: the Resurrection, the Amenti", "Once a lunar month, under a clear sky, the stars give a riddle about the next dated event.", {also: ["sky"]}),
+  row("sakhmu", "Sakhmu", ["sakhmu", "spirit scepters"], "Effigy", "Mummy: the Resurrection, the Amenti", "Effigies are crafted items that hold a spirit, a curse or a likeness, used from the pack. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
+  row("sefekhi", "Sefekhi", ["sefekhi", "unbandaged"], "Necromancy", "Mummy: the Resurrection, the Amenti", "Their hekau reach the Shadowlands; the dead of Egypt answer them, kept in a ledger of the bound.", {also: ["family"], servant: "one of the dead"}),
+  row("udjasen", "Udja-sen", ["udja sen", "judged ones"], "The judged", "Mummy: the Resurrection, the Amenti", "One feature of another Amenti, picked by the Storyteller, and a mark of the judgement on the body."),
+  row("ishmaelites", "Ishmaelites", ["ishmaelite", "ishmaelites"], "Outcasts of the Amenti", "Mummy: the Resurrection", "The Amenti hunt them; an Ishmaelite trades secrets for safety, written as pages of secrets.", {also: ["secrets"]}),
+  row("cabiri", "Cabiri", ["cabiri"], "The last ones", "Mummy: the Resurrection pdf 13, 29", "Few remain: one is met once in a chronicle, and a lore page opens with them."),
+  row("banemummy", "Bane mummies", ["bane mummy", "bane mummies"], "The cursed spell", "Mummy: the Resurrection", "NPCs. They curse as they die, and rise again."),
+];
+export const DEMON = [
+  row("devils", "Devils", ["devil", "devils", "namaru"], "A following", "Demon: the Fallen, the Houses", "The demon draws passers-by into a following that grows with each scene of worship. Leadership gains a die.", {effects: [{tags: ["leadership"], dice: 1}]}),
+  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds can change the scene's weather (the Storyteller sets it); the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
+  row("malefactors", "Malefactors", ["malefactor", "malefactors", "annunaki"], "The Forge", "Demon: the Fallen, the Houses", "The Lore of the Forge enchants things they craft; the Lore of Paths finds the way through any place. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
+  row("fiends", "Fiends", ["fiend", "fiends", "neberu"], "Patterns and portals", "Demon: the Fallen, the Houses", "The Lore of Patterns gives a riddle about the next dated event once a night; the Lore of Portals opens a door between two places.", {also: ["glimpse"]}),
+  row("defilers", "Defilers", ["defiler", "defilers", "lammasu"], "Longing", "Demon: the Fallen, the Houses", "The Lore of Longing works on desire with the hidden Corruption ledger the Followers of Set use; the Lore of Storms works sea and rain.", {also: ["corruption"]}),
+  row("devourers", "Devourers", ["devourer", "devourers", "rabisu"], "Flesh and beast", "Demon: the Fallen, the Houses", "The Lore of Flesh changes the body; the Lore of the Beast commands animals. Animal Ken gains a die.", {effects: [{tags: ["animalken"], dice: 1}]}),
+  row("slayers", "Slayers", ["slayer", "slayers", "halaku"], "Death and realms", "Demon: the Fallen, the Houses", "They see who is dying and how long is left, and cross into the Shadowlands."),
+  row("luciferans", "Luciferans", ["luciferan", "luciferans"], "The army of Lucifer", "Demon: the Fallen, the factions", "A faction that builds a following for the war to come."),
+  row("faustians", "Faustians", ["faustian", "faustians"], "The pact", "Demon: the Fallen, the factions", "They trade in pacts: what a mortal owes is leverage, spent as a favour in the Ledger.", {also: ["leverage"]}),
+  row("cryptics", "Cryptics", ["cryptic", "cryptics"], "The question", "Demon: the Fallen, the factions", "They search old records for why the Fall happened. Investigation gains a die.", {effects: [{tags: ["investigation"], dice: 1}]}),
+  row("reconcilers", "Reconcilers", ["reconciler", "reconcilers"], "The way home", "Demon: the Fallen, the factions", "They seek to mend the world and find a way home; they deal gently with mortals."),
+  row("raveners", "Raveners", ["ravener", "raveners"], "Ruin", "Demon: the Fallen, the factions", "They want an end to everything; other factions treat them as foes on sight."),
+  row("earthbound", "Earthbound", ["earthbound"], "The idol", "Demon: the Fallen, the Earthbound", "NPCs. An Earthbound's reliquary is a thing or a building, and its cult is a faction with an income of faith."),
+];
+export const KUEIJIN = [
+  row("devilTiger", "Howl of the Devil-Tiger", ["devil tiger", "devil-tiger"], "Hunting the servants of the Yama Kings", "Kindred of the East, the Dharmas", "They track demons and corrupt spirits, and a fight against one restores Chi (the Storyteller's call). Their P'o is stronger: rolls to resist it are one harder.", {effects: [{tags: ["frenzy"], difficulty: 1}]}),
+  row("crane", "Way of the Resplendent Crane", ["crane", "resplendent crane"], "Duty", "Kindred of the East, the Dharmas", "A Crane may rule on a matter of law, posted for all; upholding the law earns face, breaking it costs face. Etiquette gains a die.", {feature: "ruling", effects: [{tags: ["etiquette"], dice: 1}]}),
+  row("shadow", "Song of the Shadow", ["song of the shadow", "shadow"], "Shadow and death", "Kindred of the East, the Dharmas", "Yin Chi from graves and the Yin realms; ghosts come to them."),
+  row("whispers", "Path of a Thousand Whispers", ["thousand whispers", "whispers"], "Many lives", "Kindred of the East, the Dharmas", "They hold several lives at once, each known to NPCs by its own name. Subterfuge gains a die.", {effects: [{tags: ["subterfuge"], dice: 1}]}),
+  row("dragon", "Dance of the Thrashing Dragon", ["thrashing dragon", "dragon"], "Joy and life", "Kindred of the East, the Dharmas", "They feed on the yang Chi of life and passion (revels, crowds), and plants grow where they linger. Performance gains a die.", {effects: [{tags: ["performance"], dice: 1}]}),
+  row("wanxian", "Wan Xian", ["wan xian", "fallen"], "The fallen line", "Land of Eight Million Dreams pdf 6", "NPCs in stories of the East: meeting one opens a lore page and sends the Storyteller a card."),
+];
+export const ORPHEUS = [
+  row("skimmer", "Skimmers", ["skimmer", "skimmers"], "The breath held", "Orpheus core", "A Skimmer goes out by holding the breath: the body left behind is defenceless while they are out.", {from: 2023}),
+  row("sleeper", "Sleepers", ["sleeper", "sleepers"], "The long sleep", "Orpheus core", "A Sleeper goes out in drugged sleep: a dose is an item used from the pack, and too many is an overdose.", {from: 2023}),
+  row("spirit", "Spirits", ["spirit", "spirits"], "Bound to the work", "Orpheus pdf 20, 36", "A ghost in Orpheus' service: the tie to the living world is a Fetter-like item.", {from: 2023}),
+  row("hue", "Hues", ["hue", "hues"], "The stain of the pigment", "Orpheus pdf 20, 36", "Ghosts made by the spectral drug, free of any body: near the pigment a hue loses a die.", {from: 2023}),
+  row("banshee", "Banshee", ["banshee"], "The wail", "Orpheus, the Shades", "The wail is a scream the living hear with no source, and the Banshee hears riddles about deaths to come, once a night.", {from: 2023, also: ["glimpse"]}),
+  row("haunter", "Haunter", ["haunter"], "Inhabit", "Orpheus, the Shades", "They live inside things (doors, lamps, machines) and work them from inside, as the Artificers do.", {from: 2023}),
+  row("poltergeist", "Poltergeist", ["poltergeist"], "Helter-skelter", "Orpheus, the Shades", "They throw and break things; thrown things hit as attacks.", {from: 2023}),
+  row("skinrider", "Skinrider", ["skinrider"], "Puppetry", "Orpheus, the Shades", "They ride living bodies for the scene, as the Puppeteers do.", {from: 2023}),
+  row("wisp", "Wisp", ["wisp"], "Unearthly repose", "Orpheus, the Shades", "Calm and charm: social rolls gain a die.", {from: 2023, effects: [{tags: ["social"], dice: 1}]}),
+  row("phantasm", "Phantasm", ["phantasm"], "Seeming real", "Shadows of the Grave pdf 16, 26", "Their illusions answer as real until touched.", {from: 2023}),
+];
+/** Which table a line uses, and the world setting that turns it on. */
+export const SMALL_LINES = {hunter: {table: HUNTER, setting: "sigHunter", label: "Hunter"}, mummy: {table: MUMMY, setting: "sigMummy", label: "Mummy"},
+  demon: {table: DEMON, setting: "sigDemon", label: "Demon"}, kueijin: {table: KUEIJIN, setting: "sigKueijin", label: "Kuei-jin"}, orpheus: {table: ORPHEUS, setting: "sigOrpheus", label: "Orpheus"}};

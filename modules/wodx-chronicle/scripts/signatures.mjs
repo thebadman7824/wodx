@@ -4,6 +4,7 @@ import {currentYear} from "./eras.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
+import * as POD from "./pod.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -24,7 +25,7 @@ const T_FAMILY = `${MODULE_ID}.sigFamily`;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 /** Any line's features on. Which rows an actor gets is decided per line in rowsOf. */
-const on = () => lineOn("sigVampire") || lineOn("sigWerewolf") || lineOn("sigMage") || lineOn("sigChangeling") || lineOn("sigWraith");
+const on = () => lineOn("sigVampire") || lineOn("sigWerewolf") || lineOn("sigMage") || lineOn("sigChangeling") || lineOn("sigWraith") || Object.values(S.SMALL_LINES).some(l => lineOn(l.setting));
 const now = () => game.time?.worldTime ?? 0;
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const actorsApi = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
@@ -53,6 +54,13 @@ export function registerSignatureSettings() {
     name: "Guild and legion features (Wraith)", hint: "Each Guild's, legion's and faction's own feature, picked in the feature window, with the legion suggested by the manner of death: the Oracles' riddles, the Pardoners' confessions, the Emerald luck, the Penitent ear, the Grim Legion's fighting and the rest. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
+  const SMALL_HINTS = {hunter: "Each creed's own feature (the imbued from 1999), mortal hunters to 1998, the Inquisition, the Arcanum and the agencies.",
+    mummy: "Each Amenti's own feature: guarded charges, alchemy, the stars, effigies, the bound dead; Ishmaelites and Cabiri.",
+    demon: "Each House's and faction's own feature, stacked: a following, Longing on the Corruption ledger, Faustian pacts, the Fiends' patterns, the Earthbound.",
+    kueijin: "Each Dharma's own feature, picked in the feature window: the Devil-Tiger's hunt, the Crane's rulings, the Thousand Whispers, the Thrashing Dragon.",
+    orpheus: "Each projector, spirit and Shade's own feature, picked in the feature window (World of Future Darkness)."};
+  for ( const [k, l] of Object.entries(S.SMALL_LINES) ) game.settings.register(MODULE_ID, l.setting, {
+    name: `Signature features (${l.label})`, hint: `${SMALL_HINTS[k]} Off by default.`, scope: "world", config: true, type: Boolean, default: false});
   game.settings.register(MODULE_ID, "sigFamilies", {scope: "world", config: false, type: Array, default: []});
 }
 const foundedFamilies = () => { try { return (game.settings.get(MODULE_ID, "sigFamilies") ?? []).filter(f => !f.founded || f.founded <= currentYear()); } catch (e) { return []; } };
@@ -61,6 +69,18 @@ const DEAD_LIKE = new Set([...S.GUILDS, ...S.LEGIONS, ...S.WRAITH_FACTIONS]);
 const FAE_LIKE = new Set([...S.KITHS, ...S.SEEMINGS, ...S.COURTS, ...S.FAE_HOUSES]);
 const TRIBE_LIKE = new Set([...S.MAGE, ...S.HOUSES, ...S.TRIBES, ...S.AUSPICES, ...S.BREEDS, ...S.FERA, S.KINFOLK]);
 const kindName = actor => String(actorsApi("wodx-combat")?.getKind?.(actor) ?? actor?.type ?? "").toLowerCase();
+/** Which small line an actor belongs to: hunter, mummy, demon, kueijin, orpheus, or null. */
+function smallLineOf(actor) {
+  const t = actor?.type, k = kindName(actor), v = `${actor?.system?.settings?.variantsheet ?? ""} ${actor?.flags?.world?.wodx?.profile ?? ""} ${actor?.system?.custom?.clan ?? ""}`.toLowerCase();
+  if ( t === "Hunter" || /\bhunter|imbued/.test(k) ) return "hunter";
+  if ( t === "Mummy" || /mummy|amenti/.test(k) ) return "mummy";
+  if ( t === "Demon" || /demon|fallen/.test(k) ) return "demon";
+  if ( /kuei|hsien.?gui/.test(`${k} ${v}`) ) return "kueijin";
+  if ( /orpheus|projector|skimmer|sleeper|lament|shade/.test(`${k} ${v}`) ) return "orpheus";
+  return null;
+}
+const smallNames = (actor, line) => { const s = actor?.system ?? {}, pick = actor?.flags?.[MODULE_ID]?.splat;
+  return {hunter: [s.creed, pick], mummy: [s.amenti, pick], demon: [s.house, s.faction, pick], kueijin: [pick], orpheus: [pick]}[line]?.filter(Boolean) ?? []; };
 const isWraith = actor => actor?.type === "Wraith" || /\bwraith\b/.test(kindName(actor));
 const wraithOf = actor => actor?.flags?.[MODULE_ID]?.wraith ?? {};
 const isFae = actor => actor?.type === "Changeling" || /changeling|kithain|\bfae\b|hsien/.test(kindName(actor));
@@ -81,6 +101,8 @@ function garouNames(actor) {
 /** Every signature row an actor has now, with each line's setting applied: a Garou stacks tribe, auspice and breed. */
 export function rowsOf(actor) {
   if ( !actor ) return [];
+  const small = smallLineOf(actor);
+  if ( small ) return lineOn(S.SMALL_LINES[small].setting) ? S.smallRows(small, smallNames(actor, small)) : [];
   if ( isWraith(actor) ) return lineOn("sigWraith") ? S.wraithRows(wraithOf(actor)) : [];
   if ( isFae(actor) ) return lineOn("sigChangeling") ? S.faeRows(faeNames(actor)) : [];
   if ( isMage(actor) ) return lineOn("sigMage") ? S.mageRows(mageNames(actor)) : [];
@@ -621,6 +643,18 @@ async function saveFamily(f) {
 }
 
 /** A small form; returns the fields or null. */
+/* ---------------- Hunter, Mummy, Demon, Kuei-jin, Orpheus ---------------- */
+
+/** Pick the group for a line whose sheet has no field for it (Kuei-jin Dharma, Orpheus projector or Shade). */
+export async function setSplat(actorOrId, name = "") {
+  const a = toActor(actorOrId), line = smallLineOf(a);
+  if ( !a || !line ) return null;
+  const r = name ? S.rowIn(S.SMALL_LINES[line].table, name) : null;
+  if ( name && !r ) { ui.notifications?.warn?.(`No group called ${name}.`); return null; }
+  await a.update({[`flags.${MODULE_ID}.splat`]: r?.key ?? ""});
+  return r;
+}
+
 /* ---------------- Wraith: guilds, legions, factions ---------------- */
 
 /** Pick a wraith's guild, legion or faction (kept on the actor; the sheet has no field for them). */
@@ -743,11 +777,11 @@ export async function breakOath(actorOrId) {
 }
 /** New World Order: a breach of the Masquerade reaches the Watchers first, through the records of the age. */
 async function onBreach(p) {
-  if ( !lineOn("sigMage") || !isActiveGM() ) return;
+  if ( !on() || !isActiveGM() ) return;
   const watchers = game.actors.filter(x => isFeature(x, "watchers"));
   if ( !watchers.length ) return;
-  const yr = currentYear();
-  await card("The Watchers hear of it", `<p>${esc(p?.by?.name ?? "Someone")} broke the Masquerade. The New World Order reads ${esc(S.recordsAt(yr))} and hears of it first: ${watchers.slice(0, 3).map(w => esc(w.name)).join(", ")} can send agents.</p>`);
+  const yr = currentYear(), groups = [...new Set(watchers.map(w => rowWith(w, "watchers")?.label).filter(Boolean))];
+  await card("The Watchers hear of it", `<p>${esc(p?.by?.name ?? "Someone")} broke the Masquerade. ${esc(groups.join(" and "))} read ${esc(S.recordsAt(yr))} and hear of it first: ${watchers.slice(0, 3).map(w => esc(w.name)).join(", ")} can send agents.</p>`);
 }
 
 /* ---------------- Werewolf: tribes, auspices, breeds, Kinfolk, Fera ---------------- */
@@ -848,7 +882,7 @@ ACTS.renown = async ({hero, teller, wisdom, why}) => {
 export async function ruling(actorOrId, {between = "", verdict = ""} = {}) {
   const a = toActor(actorOrId), row = rowWith(a, "ruling");
   if ( !a || !row || !verdict ) return null;
-  const secret = row.key === "nagah";
+  const secret = row.key === "nagah" || !!row.secret;
   const sig = sigOf(a);
   sig.rulings = [...(sig.rulings ?? []), {between: String(between), verdict: String(verdict), at: now()}].slice(-12);
   await putSig(a, sig);
@@ -908,7 +942,7 @@ export function effects(actorOrId) {
   if ( !on() ) return [];
   const out = S.markEffects(sig.marks ?? [], now());
   const rows = rowsOf(a), when = whenNow(a);
-  for ( const row of rows ) for ( const e of row.effects ?? [] ) if ( !e.when || when.has(e.when) ) out.push({...e, why: row.label});
+  for ( const row of rows ) for ( const e of row.effects ?? [] ) if ( !e.when || e.when === "monster" || when.has(e.when) ) out.push({...e, why: row.label});
   const dfm = rowWith(a, "deformity") ? S.deformityByKey(sig.deformity) : null;
   for ( const e of dfm?.effects ?? [] ) out.push({...e, why: `Metis: ${dfm.label.toLowerCase()}`});
   const pen = S.beautyPenalty(sig.muses ?? []);
@@ -933,11 +967,11 @@ export function rollEffects(actor, ctx = {}) {
 
 /** A plain window with the character's feature and tracks. */
 export async function open(actorOrId) {
-  const a = toActor(actorOrId), rows = rowsOf(a), yr = currentYear();
+  const a = toActor(actorOrId), rows = rowsOf(a), yr = currentYear(), small = smallLineOf(a);
   if ( !a ) return;
   const has = f => rows.some(r => rowHas(r, f));
   const sig = a.flags?.[MODULE_ID]?.[FLAG] ?? {}, t = now();
-  let body = rows.length ? rows.map(r => `<p><b>${rows.length > 1 ? `${esc(r.label)}: ` : ""}${esc(r.title)}.</b> ${esc(r.text)}</p>${S.goneBy(r, yr) ? `<p class="vta-note">By ${yr} the ${esc(r.label)} are gone: met only in stories, dreams and relics.</p>` : ""}${S.notYet(r, yr) ? `<p class="vta-note">In ${yr} the ${esc(r.label)} are not founded yet.</p>` : ""}${S.nameAt(r, yr) !== r.label ? `<p class="vta-note">In ${yr} they are ${esc(S.nameAt(r, yr))}.</p>` : ""}<p class="vta-note">${esc(r.page)}</p>`).join("") : `<p>No clan feature for this character.</p>`;
+  let body = rows.length ? rows.map(r => `<p><b>${rows.length > 1 ? `${esc(r.label)}: ` : ""}${esc(r.title)}.</b> ${esc(r.text)}</p>${S.goneBy(r, yr) ? `<p class="vta-note">By ${yr} the ${esc(r.label)} are gone: met only in stories, dreams and relics.</p>` : ""}${S.notYet(r, yr) ? `<p class="vta-note">In ${yr} the ${esc(r.label)} are not founded yet.</p>` : ""}${S.nameAt(r, yr) !== r.label ? `<p class="vta-note">In ${yr} they are ${esc(S.nameAt(r, yr))}.</p>` : ""}<p class="vta-note">${esc(r.page)}</p>`).join("") : (on() ? `<p>No clan feature for this character.</p>` : "");
   if ( sig.muses?.length ) body += `<h4>Muses</h4><ul>${sig.muses.map(m => `<li>${esc(m.name)} (${esc(S.MUSE_KINDS[m.kind])}): Obsession ${m.obsession}</li>`).join("")}</ul>`;
   if ( sig.cause ) body += `<h4>Cause</h4><p>${esc(sig.cause.label)}${sig.cause.custom && !sig.cause.approved ? " (waiting for the Storyteller)" : ""}. Rant ${sig.cause.rant} of ${S.RANT_POINTS}.</p>`;
   const marks = S.activeMarks(sig.marks ?? [], t);
@@ -951,6 +985,7 @@ export async function open(actorOrId) {
   if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / 86400))} days` : ""}</li>`).join("")}</ul>`;
   if ( sig.servants?.length ) body += `<h4>${rowWith(a, "family")?.servant ? "Bound servants" : "Bound dead"}</h4><ul>${sig.servants.map(w => `<li>${esc(w.name)}${w.fetter ? ` (held by ${esc(w.fetter)})` : ""}</li>`).join("")}</ul>`;
   if ( rows.some(r => r.feature === "family") && currentYear() < 1444 ) body += `<p class="vta-note">In this age the line is the Cappadocians: their deathly look is a Masquerade sign up close.</p>`;
+  if ( small && lineOn(S.SMALL_LINES[small].setting) && !rows.length ) body += `<p class="vta-note">Pick the group to see its feature.</p>`;
   if ( isWraith(a) && lineOn("sigWraith") ) { const sug = S.legionFor(a.system?.death); if ( !wraithOf(a).legion && sug ) body += `<p class="vta-note">By the manner of death, the ${esc(sug.label)} would claim this wraith.</p>`; if ( !rows.length ) body += `<p class="vta-note">Pick the Guild and legion to see their features.</p>`; }
   if ( has("coat") ) body += `<h4>The seal coat</h4><p>${carriesCoat(a) ? "Carried." : "Not carried: no seal shape."}</p>`;
   if ( has("court") ) { let m = null; try { m = describeTime(now(), 49.5).month; } catch (e) { m = null; } if ( m ) body += `<h4>The courts</h4><p>The ${S.courtInPower(m) === "unseelie" ? "Unseelie" : "Seelie"} Court holds power now.</p>`; }
@@ -968,6 +1003,9 @@ export async function open(actorOrId) {
     if ( victims.length ) body += `<h4>Corruption ledger</h4><ul>${victims.map(v => { const r = v.flags[MODULE_ID][CFLAG][a.id]; return `<li>${esc(v.name)}: ${r.step} (${esc(r.vice || "no vice set")})</li>`; }).join("")}</ul>`;
   }
   const buttons = [{action: "close", label: "Close", default: true}];
+  const pod = POD.section(a);
+  body += pod.body;
+  buttons.unshift(...pod.buttons);
   if ( has("glimpse") && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
   if ( has("cause") && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
   if ( has("soil") && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
@@ -989,6 +1027,7 @@ export async function open(actorOrId) {
     if ( !sig.ravnos?.vice ) S.RAVNOS_VICES.forEach(v => buttons.unshift({action: `vice:${v.key}`, label: `Vice: ${v.label}`}));
     else buttons.unshift({action: "fed", label: "The vice was fed"}, {action: "moved", label: "Moved on to a new domain"});
   }
+  if ( small && lineOn(S.SMALL_LINES[small].setting) ) buttons.unshift({action: "splat", label: rows.length ? "Change the group" : "Pick the group"});
   if ( isWraith(a) && lineOn("sigWraith") ) {
     const w = wraithOf(a), sug = S.legionFor(a.system?.death);
     if ( !w.guild ) buttons.unshift({action: "guild", label: "Pick the Guild"});
@@ -1013,7 +1052,9 @@ export async function open(actorOrId) {
   if ( has("deformity") && on() && (!sig.deformity || game.user.isGM) ) S.DEFORMITIES.forEach(d => buttons.unshift({action: `dfm:${d.key}`, label: `Deformity: ${d.label}`}));
   if ( has("camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${isWraith(a) ? "Guild and legion" : rows.some(r => FAE_LIKE.has(r)) ? "kith, seeming and court" : rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
+  if ( String(pick).startsWith("pod:") ) return POD.handle(a, pick, ask);
   if ( pick === "glimpse" ) return glimpse(a);
+  if ( pick === "splat" ) { const t = S.SMALL_LINES[small].table; const f = await ask("The group", [{name: "g", label: t.map(r => r.label).join(", "), value: rows[0]?.label ?? ""}]); return f ? setSplat(a, f.g) : null; }
   if ( pick === "guild" || pick === "wraith" ) { const w = wraithOf(a); const f = await ask("Guild, legion and faction", [
     {name: "guild", label: `Guild (${S.GUILDS.map(g => g.label).join(", ")})`, value: S.GUILDS.find(g => g.key === w.guild)?.label ?? ""},
     {name: "legion", label: `Legion (${S.LEGIONS.map(l => l.label.replace(" Legion", "")).join(", ")})`, value: S.LEGIONS.find(l => l.key === w.legion)?.label ?? ""},
@@ -1087,7 +1128,7 @@ export function registerSignatureHooks() {
     if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.sigUndo ) { b.remove(); return; }
     b.addEventListener("click", () => runUndo(message));
   });
-  const can = a => !!a && on() && (!!rowOf(a) || (isWraith(a) && lineOn("sigWraith"))) && (game.user.isGM || a.isOwner);
+  const can = a => !!a && (POD.wants(a) || on()) && (POD.wants(a) || !!rowOf(a) || (isWraith(a) && lineOn("sigWraith")) || (!!smallLineOf(a) && lineOn(S.SMALL_LINES[smallLineOf(a)].setting))) && (game.user.isGM || a.isOwner);
   Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
     const a = app.document;
     if ( !can(a) || controls.some(c => c.action === "wctSig") ) return;
@@ -1104,7 +1145,7 @@ export function registerSignatureHooks() {
 export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
-  setWraith, luck,
+  setSplat, setWraith, luck,
   revel, toldTruth, giveCoat,
   meditate, death, certamen, oath, breakOath,
   guardPlace, desecrated, offerTruce, leverage, spendLeverage, readSky, tale, ruling, setDeformity, year: () => currentYear(), rules: S};
