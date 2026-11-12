@@ -234,6 +234,14 @@ test("bloodlines find their own row before their parent clan's", () => {
   }
 });
 
+test("Anda marks follow the Gangrel rules and heal in a month (Ben's desk note)", () => {
+  const r = S.vampireRow("Anda");
+  assert.ok(r.also?.includes("marks"));
+  const m = S.newMark("ears", 0);
+  assert.equal(S.activeMarks([m], S.MARK_LASTS - 1).length, 1);
+  assert.equal(S.activeMarks([m], S.MARK_LASTS + 1).length, 0);
+});
+
 test("the Old Clan holds out one night longer without soil", () => {
   const D = S.DAY, noon = 43200;
   let r = S.soilNight({}, D + noon, true, 1);
