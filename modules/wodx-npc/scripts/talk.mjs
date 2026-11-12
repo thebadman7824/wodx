@@ -41,7 +41,7 @@ export function build(ctx) {
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
-    // NPC 0.42.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
+    // NPC 0.44.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
     game.settings.register(MOD, "talkGrammar", {name: "Talk generator", hint: "With stock talk on, NPCs put their stock lines together from words of the era and of who they are, so they repeat less. Your lines always come first. Off: the hand-written stock lines alone.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "When a player's character walks within talking distance, an NPC may greet them out loud, once a day of game time. Only greet lines marked aloud on a talk sheet are used; otherwise a stock greeting.",
@@ -119,7 +119,7 @@ export function build(ctx) {
 
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
-  /* NPC 0.42.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
+  /* NPC 0.44.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
   const GRAMMAR = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE);
   const lately = new Map(); // NPC|character -> the last few generated lines, passed over while others fit
   /** A generated line for this kind of talk, or null (generator off, or nothing fits). */

@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.42.0 (the talk generator, setting off by default: stock talk put together from a grammar, the rule that fits the most facts winning, with words of the era for address, oaths, coin, who keeps order, light, drink and landmarks; the hand-written stock lines now speak through it, unchanged; Storyteller lines still first; B1640-B1642)
+- 0.44.0 (the talk generator, setting off by default: stock talk put together from a grammar, the rule that fits the most facts winning, with words of the era for address, oaths, coin, who keeps order, light, drink and landmarks; the hand-written stock lines now speak through it, unchanged; Storyteller lines still first; B1640-B1642)
+- 0.43.0 (a disguise that held lets the character past a guarded place's keepers as what it shows, livery or habit; one a keeper saw through raises the alarm: "dressed as one of us")
 - 0.41.1 (every person hears a description going round, the era templates too, not only a few; the test says why it stopped, for gates)
 - 0.41.0 (one Followers window per character: every ghoul, retainer, ally and herd member with where they are, their order or errand, loyalty and its last change, the blood bond and any trouble, with the everyday orders as buttons; a description of a culprit that witnesses saw spreads by the means of the year, from the hue and cry to face matching, and fades; NPCs who have heard it may know the culprit again, on a Storyteller card)
 - 0.40.3 (the Inquisition's politics follow the book check: a cell with a rector set over it and officers it elects, by order and Rank; a Council of Faith to pick by hand)

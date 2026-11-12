@@ -156,3 +156,19 @@ test("the look is wired in: Library api, NPC attitude, Chronicle view", () => {
   assert.match(wn, /look: \(\(\) =>/);
   assert.match(wn, /return \{id: n\.id, name: n\.name \?\? "", attitude, station, dressed, disguise\};/);
 });
+
+// NPC 0.43.0: a disguise at a guarded place
+test("a held disguise passes the keepers; one they saw through alarms", () => {
+  const look = {sides: [], disguise: {station: 2, sides: ["livery"]}};
+  assert.deepEqual(RR.disguiseAt({sides: []}, {g: {held: true}}, ["g"]), {pass: false, seenThrough: false});
+  assert.deepEqual(RR.disguiseAt(look, {}, ["g"]), {pass: false, seenThrough: false});
+  assert.deepEqual(RR.disguiseAt(look, {g: {held: true}}, ["g"]), {pass: true, seenThrough: false});
+  assert.deepEqual(RR.disguiseAt(look, {g: {held: true}, h: {held: false}}, ["g"]), {pass: true, seenThrough: false});
+  assert.deepEqual(RR.disguiseAt(look, {g: {held: false}}, ["g"]), {pass: false, seenThrough: true});
+  assert.deepEqual(RR.disguiseAt(look, {x: {held: true}}, ["g"]), {pass: true, seenThrough: false});
+  const keeper = {template: "guard", loyalty: 1, caution: 1, cowardice: 0, tactics: []};
+  const r = RR.pickReaction(keeper, {seenThrough: true});
+  assert.ok(r.find(x => x.action === "challenge").why.includes("dressed as one of us"));
+  const calm = RR.pickReaction(keeper, {}).find(x => x.action === "challenge").score;
+  assert.ok(r.find(x => x.action === "challenge").score > calm);
+});

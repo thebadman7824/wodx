@@ -3,8 +3,9 @@
  * glance. The pure parts, so the harness can test them; WoDX NPC uses the reading for first meetings, talk lines,
  * guards and the sides an NPC can tell.
  *
- * Books: Appearance and the Resources and Status Backgrounds are V20's (page refs in the book check). How dress
- * moves a first meeting, the era weights and the condition steps are house rules (docs/PENDING-REVIEW.md).
+ * Books: Appearance (V20 p. 98), Status (V20 p. 118) and Resources (V20 p. 116) are V20's; Appearance 0 failing first
+ * impressions is V20 Dark Ages p. 55. No book ties dress to station or has sumptuary law, so how dress moves a first
+ * meeting, the era weights and the condition steps are house rules (docs/PENDING-REVIEW.md).
  *
  * An item for the reading: {name, worn, kind, from, to, conceal, tier, quality, examine: {worn, ...},
  *   dressedAs: {station, sides}}. kind, from, to, conceal and tier come from the goods list (tier for the current era).

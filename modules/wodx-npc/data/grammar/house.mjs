@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.42.0: the house grammar for the talk generator (scripts/talk-grammar.mjs). House writing, not from any
+ * WoDX NPC 0.44.0: the house grammar for the talk generator (scripts/talk-grammar.mjs). House writing, not from any
  * book. One template speaks in every era because its words come from the lexicon below: forms of address, greetings,
  * oaths, coin, who keeps order, light, drink, travel and landmarks, each by era band or by exact years.
  * Rothenstein lies in Moravia, so coin and places follow Moravia. Coin years match WoDX Storyteller's money rules.
