@@ -1,4 +1,5 @@
 import "./win-paths.mjs";
+import {readFileSync} from "node:fs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";
@@ -227,7 +228,7 @@ test("boot", async () => {
   game.time.worldTime ??= 0;
   globalThis.fromUuid = async u => game.actors.find(a => a.uuid === u) ?? null;
   if ( process.env.FEED_DEBUG ) { ui.notifications.error = m => console.log("ERR", m); ui.notifications.warn = m => console.log("WARN", m); }
-  assert.equal(game.wodxActions.version, "3.41.0");
+  assert.equal(game.wodxActions.version, JSON.parse(readFileSync(new URL("../../modules/wodx-actions/module.json", import.meta.url), "utf8")).version);
 });
 
 const lastCard = () => mock.log.chat.at(-1)?.content ?? "";
