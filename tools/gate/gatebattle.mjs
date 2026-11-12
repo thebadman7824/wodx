@@ -26,6 +26,8 @@ async function save(R, name) {
   return R.summary;
 }
 
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -38,7 +40,7 @@ export async function run() {
   const made = [];
   let actors = [], factionsBefore = null, legendsBefore = null;
   try {
-    actors = await Actor.create([{name: "WoDX gate: Captain", type: "Mortal"}, {name: "WoDX gate: Knight", type: "Vampire"}]);
+    actors = await createActors([{name: "WoDX gate: Captain", type: "Mortal"}, {name: "WoDX gate: Knight", type: "Vampire"}]);
     await actors[0].update({"system.attributes.perception.value": 3, "system.attributes.charisma.value": 2, "system.attributes.intelligence.value": 2,
       "system.attributes.wits.value": 2, "system.abilities.leadership.value": 3, "system.abilities.medicine.value": 1});
     try { factionsBefore = foundry.utils.deepClone(game.settings.get(NPC, "factions")); } catch (e) { factionsBefore = null; }
@@ -153,7 +155,7 @@ export async function run() {
         await game.settings.set("wodx-chronicle", "approvals", ap);
       } catch (e) { R.notes.push(`approvals cleanup: ${e.message}`); }
       for ( const m of msgsSince() ) if ( /WoDX gate|Battles|battle/i.test(m.content) || m.speaker?.alias === "Battles" ) await m.delete();
-      for ( const a of actors ) await a.delete();
+      for ( const a of actors ) await a?.delete();
       if ( game.time.worldTime !== time0 ) await game.time.advance(time0 - game.time.worldTime);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
