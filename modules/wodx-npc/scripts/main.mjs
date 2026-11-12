@@ -29,13 +29,15 @@ import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
 import {build as buildPeople} from "./people.mjs";
+import {build as buildWanted} from "./wanted.mjs";
+import {build as buildFollowers} from "./followers.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.40.3";
+const VERSION = "0.41.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -819,6 +821,10 @@ Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
+/* 0.41.0: a description that spreads and fades; one window for all of a character's followers */
+const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc)});
+wanted.hooks();
+const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
 
 Hooks.once("init", () => {
   registerSettings();
@@ -829,13 +835,15 @@ Hooks.once("init", () => {
   talk.registerSettings();
   rivalry.registerSettings();
   passersby.registerSettings();
+  wanted.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
-    ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion};
+    ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -923,12 +931,16 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
     button: true, visible: true, onChange: () => orders.openOrders()};
+  tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
+    button: true, visible: true, onChange: () => followers.openFollowers()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
+    button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });
