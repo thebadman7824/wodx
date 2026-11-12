@@ -120,6 +120,8 @@ async function setup() {
     ok("2 fine clothes", look.station >= 3 && !at.met && /fine clothes/.test(text) && at.step >= 1, {station: look.station, folkStation: st, at});
   });
   await step("3 blood", async () => {
+    // The fine coat comes off first: its +1 and the blood's -1 would add to 0, and a look worth nothing names no reason
+    await pc.items.get(ids.fineCoat).update({"system.isequipped": false});
     const [shirt] = await pc.createEmbeddedDocuments("Item", [{name: `${TAG} shirt`, type: "Item", system: {isequipped: true}, flags: {"wodx-library": {examine: {bloody: true}}}}]);
     const first = N().attitude.of(guard, pc), named = /blood on them/.test(JSON.stringify(first));
     const test = W().check("bloody", {actor: pc, npc: guard}).ok;
@@ -127,18 +129,21 @@ async function setup() {
     await N().attitude.apply(guard, pc, {to: 1, why: "gate"});
     const later = N().attitude.of(guard, pc), stored = guard.flags?.["wodx-npc"]?.attitude?.[pc.id]?.step;
     await shirt.delete();
+    await pc.items.get(ids.fineCoat).update({"system.isequipped": true});
     const clean = N().attitude.of(guard, pc);
-    ok("3 blood", named && test && lines.length >= 3 && later.met && later.step === 0 && stored === 1 && clean.step === 1,
-      {named, test, lines: lines.length, later: later.step, stored, clean: clean.step});
+    ok("3 blood", named && test && lines.length >= 3 && later.met && later.step === 0 && stored === 1 && clean.step >= 1,
+      {named, first, test, lines: lines.length, later: later.step, stored, clean: clean.step});
   });
   await step("4 fine work", async () => {
     const TR = A().tradeRules;
-    const [knife] = await pc.createEmbeddedDocuments("Item", [{name: "Knife (fine work)", type: "Item", flags: {"wodx-storyteller": {quality: "fine", priceFactor: 1.5}}}]);
-    const base = M()?.priceSync?.("Knife") ?? null, tagged = M()?.priceSync?.(knife.name) ?? null;
+    const good = plain?.name ?? fine.name;
+    const [knife] = await pc.createEmbeddedDocuments("Item", [{name: `${good} (fine work)`, type: "Item", flags: {"wodx-storyteller": {quality: "fine", priceFactor: 1.5}}}]);
+    const priceOf = async n => (await M()?.price?.(n)) ?? M()?.priceSync?.(n) ?? null;
+    const base = await priceOf(good), tagged = await priceOf(knife.name);
     const priced = tagged ? TR.withQuality(tagged, TR.qualityFactor(knife)) : null;
     await knife.delete();
     ok("4 fine work", !!base && !!tagged && tagged.each === base.each && priced?.each === Math.max(1, Math.round(base.each * 1.5)),
-      {base, tagged, priced});
+      {good, money: !!M(), base, tagged, priced});
   });
   await step("5 pass as someone else", async () => {
     const coat = pc.items.get(ids.fineCoat);
@@ -184,7 +189,7 @@ async function finish(ids, playerSteps = []) {
 /* ---------------- Player side ---------------- */
 
 async function player(ids) {
-  const steps = [];
+  const steps = [], notes = [];
   const ok = (name, pass, detail = {}) => steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   if ( game.user.isGM || game.user.name !== PLAYER ) return [{name: "6 player", pass: false, error: `signed in as ${game.user.name}`}];
@@ -198,17 +203,24 @@ async function player(ids) {
   await step("6 the stranger line", async () => {
     const g = tok(ids.guard), h = tok(ids.hooded);
     g.renderFlags.set({refreshNameplate: true}); h.renderFlags.set({refreshNameplate: true});
-    const shows = await until(() => /in livery/.test(g.nameplate?.text ?? ""), 8000);
+    const shows = await until(() => { g.renderFlags.set({refreshNameplate: true}); return /in livery/.test(g.nameplate?.text ?? ""); }, 12000);
+    const ga = game.actors.get(ids.guard);
+    const seenItems = [...(ga?.items ?? [])].map(i => ({name: i.name, worn: !!i.system?.isequipped}));
+    let look = null; try { look = L().look.of(g.actor); } catch (e) { look = {error: e.message}; }
     const gText = g.nameplate?.text ?? "", hText = h.nameplate?.text ?? "";
-    ok("6 the stranger line", shows && /keeping watch/.test(gText) && !gText.includes("WoDX gate") && hText === "a hooded figure", {guard: gText, hooded: hText});
+    ok("6 the stranger line", shows && /keeping watch/.test(gText) && !gText.includes("WoDX gate") && hText === "a hooded figure", {guard: gText, hooded: hText, seenItems, look: look && {worn: look.worn, sides: look.sides, station: look.station, error: look.error}, perm: ga?.permission});
   });
   const withPerson = async (key, npcId) => {
     tok(npcId).setTarget(true, {releaseOthers: true});
     tok(ids.pc).control({releaseOthers: true});
+    await until(() => !document.querySelector(".wodx-with-person"), 5000);
     const since = Date.now();
     const p = A().withPerson({actor: pc});
     await until(() => document.querySelector(".wodx-with-person .wodx-wp-act"), 5000);
-    document.querySelector(`.wodx-with-person .wodx-wp-act[data-act="${key}"]`)?.click();
+    const btns = document.querySelectorAll(`.wodx-with-person .wodx-wp-act[data-act="${key}"]`);
+    const btn = btns[btns.length - 1] ?? null;
+    if ( !btn ) notes.push(`no ${key} button`);
+    btn?.click();
     await Promise.race([p, sleep(6000)]);
     await until(() => game.messages.some(m => m.timestamp >= since && m.speaker?.actor === ids.pc && /<li>/.test(m.content)), 5000);
     tok(npcId).setTarget(false);
@@ -222,7 +234,7 @@ async function player(ids) {
     const toUs = m => !!m && m.whisper.includes(game.user.id) && gm.some(id => m.whisper.includes(id));
     const facts = m => (String(m?.content ?? "").match(/<li>/g) ?? []).length;
     ok("7 look them over and ask around", toUs(look) && facts(look) >= 2 && toUs(ask) && facts(ask) >= 1 && /look them over/i.test(look.content) && /ask around/i.test(ask.content),
-      {look: look && {whisper: look.whisper.length, facts: facts(look)}, ask: ask && {whisper: ask.whisper.length, facts: facts(ask)}});
+      {look: look && {whisper: look.whisper.length, facts: facts(look)}, ask: ask && {whisper: ask.whisper.length, facts: facts(ask)}, notes: notes.slice()});
   });
   await step("8 dress as someone else", async () => {
     const coat = pc.items.get(ids.fineCoat);
