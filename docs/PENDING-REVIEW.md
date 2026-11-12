@@ -651,6 +651,25 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 
 Ben explicitly approved every row that was waiting for review ("Approve all items on pending review"). That includes deleting the four stale test combats on rothenstein-wodx, done by the PC helper with a backup first. 4 lifepath rows that were listed twice are left out here, since the 04:40 UTC lifepaths table above already holds them.
 
+## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
+
+All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
+| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
+| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
+| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
+| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
+| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
+| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
+| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
+| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
+| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
+
+## Waiting for review
+
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-12 | Which factions keep a polity by default? | A Kindred faction of three or more members keeps the court of its age; a sect picked before it exists runs as the court of its age (B1101) | polityFor returns f.polity only |
@@ -777,11 +796,21 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | 2026-11-12 | sh3: how each line names its cause | Card pressed, time skip, Undo, the Storyteller, or the player by hand, kept by kind of change, at most four (B2323) | Drop the tag hooks in installChanges |
 | 2026-11-12 | A disguise at a guarded place (B1407, NPC 0.43.0) | A disguise that held with a keeper of the place lets the wearer by as its sides (livery, habit); with no keeper's roll on record, any held roll counts; one a keeper saw through raises "dressed as one of us". The design asked for this and the first build missed it; the look hand checks found it | Use only the keeper's own roll, or leave guards to the Storyteller: disguiseAt in routine-rules.mjs |
 | 2026-11-12 | Look book check page refs (B1401-B1405) | Pinned: Appearance V20 p. 98, Status p. 118, Resources p. 116, Appearance 0 V20 Dark Ages p. 55, Mask of a Thousand Faces p. 185. No book rule for dress against station, sumptuary law or a mundane disguise roll, so those stay house rules | Change the refs in DECISIONS and look-rules.mjs |
+| 2026-11-12 | WoDX Voices 0.2.0: the desk asked for a voice cache with a size cap and a Clear button, but Foundry can't delete files from the browser. | The cache warns the Storyteller once when it passes the set size (500 MB by default). "Start a fresh cache" in the module settings moves new lines to a new folder, and the old folder is deleted by hand. | Raise or lower Voice cache size warning; a PC helper job can clear old folders on request. |
+| 2026-11-12 | WoDX Voices 0.2.0: Kokoro has no pitch control. | Kokoro voices differ by blending two voices of one accent and by speed. Pitch shifts apply only to the browser's own speech. | Set a voice in flags.wodx-voices.override.kokoro to pick one by hand. |
+| 2026-11-12 | WoDX Voices 0.2.0 (Improvement Desk vo1): which of the Storyteller's lines are read? | Chat in character (the IC style Foundry sets when the Storyteller speaks as a selected token), with no dice, from a token whose actor has no player owner. Emotes and out-of-character chat stay silent. | Turn off "Read the Storyteller's lines". |
+| 2026-11-12 | WoDX Voices 0.2.0: a voice for an NPC's tongue. | flags.wodx-voices.override.lang (cs, de, la and so on) makes the browser's speech read that NPC in a voice for the language, when the computer has one. Kokoro speaks English only, so those NPCs skip it. Latin falls back to an Italian voice, then English. A picker comes with PR 3. | Remove the lang from the override. |
+| 2026-11-12 | WoDX Voices 0.2.0: barks and cries. | Still silent. They come as chat bubbles with no chat message, so they need their own path, planned with the effects build. | n/a |
+| 2026-11-12 | WoDX Voices 0.2.0 (Ben: plot NPCs, prewritten lines): which lines count as plot lines? | Every line written on a plot NPC's talk sheet (topics, greetings, farewells, "nothing to say" lines) is voiced, with no per-line mark. The sheet is that NPC's script. | A per-line mark (for example [quiet]) can be added if some sheet lines should stay text. |
+| 2026-11-12 | WoDX Voices 0.2.0: the Storyteller's improvised lines (Improvement Desk vo1) after Ben's prewritten-only rule. | Kept, but off by default (setting "Read the Storyteller's improvised lines"). | Turn the setting on. |
 | 2026-11-12 | Daggerfall Unity study: what to take for travel, warrens, sewers and realm maps (desk https://claude.ai/artifact/LuPA8dftGnzVByRnQfuNXc, 7 items) | Recommended and waiting, nothing built: a country grid of Moravia with roads by era feeding the trip plan; pace and lodging choices on a trip; generated maps take their land from the grid; warrens from our own kit of pieces; sewers laid from the street plan; realm layouts left alone apart from Reflect on underground maps and a Labyrinth dress for the kit; travel built first. Ideas only, written fresh; no Daggerfall code or data | Pick other options on the desk; no code to undo |
 | 2026-11-12 | Factions at war (B2211-B2216): how often, how many | Hostile 1 in 6 a turn, Hunted 1 in 3; at most one new war a turn; players' own factions never start one | WAR_CHANCE and pickWar in wodx-npc/scripts/war-rules.mjs |
 | 2026-11-12 | Factions at war: mortal or supernatural | Supernatural when both sides are hidden kinds or hunters fight one; a hidden faction against a mortal one fights through mortal followers (no powers, no breach) | warKind in war-rules.mjs |
 | 2026-11-12 | Factions at war: the leaders' powers | Status + 3 dice at 6 a phase as the side's deed, until the battle deeds table lands | powerPool in war-rules.mjs |
 | 2026-11-12 | Factions at war: what the dots field | Retainers (Herd for Kindred) and Status into book units up to 1499, men and quality after; Domain 3+ means a siege | unitsFor and forcesFor in war-rules.mjs |
+| 2026-11-12 | WoDX Voices 0.3.0: how strongly a line's words, regard, wounds and temper move the voice server's delivery (B2114). | House figures: each exclamation +0.15 emotion (up to +0.4), a shouted word +0.2, trailing off slower, Hostile or worse clipped, Friendly or better warmer, 3 wounds +0.2 and 5 wounds +0.35 with a slower pace; tempers shift by up to 0.3. Rounded to 0.05 so lines are cached. Change in deliveryFor once Ben has heard the samples. |
+| 2026-11-12 | WoDX Voices 0.3.0: whose voices the server copies (B2113). | LibriTTS-R readers (CC BY 4.0, LibriVox recordings), mostly American English, as stand-ins until Czech or German voices come. Ben may drop his own clips into the voices folder (fetch_voices.py --local). No voice of a real known person is used. |
+| 2026-11-12 | Battles, the book's army: when both armies close (B2210, amended) | Each counts only the units its own blow takes; a beaten attack costs the attackers only when the foe shot or withdrew. Before, each clash counted twice and a war at the testbed ended in one hour | settleBookTurn in wodx-storyteller battle-rules.mjs |
 | 2026-11-12 | Paperdoll samples: how a changeling's horns sit on the brow | Larger horns drawn over the hair, cut off along a thin rim of brow skin, with see-through shading on the skin under them; ink comes from the same outline filter as the rest of the portrait. Scratch generator only, nothing in the repo modules | Set REJECT=run-l-horns in the scratch generator (rig.py) to get the earlier horns back |
 | 2026-11-12 | Paperdoll samples: Nosferatu tusk colours | Neutral whites and greys with a pale edge, matching the drawn teeth; no brown ink, no cream | Restore the earlier 'tooth' line in mat.py (kept in the archive folder) |
 | 2026-11-12 | Paperdoll samples: two more placement checks | A part may be at most half ink, and skin shading may not end on a level straight edge longer than 3.5 units; the earlier horns are kept as a copy that has to fail | Drop the ink_share and no_band rules from the anchors in rig.py |

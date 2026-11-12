@@ -75,6 +75,7 @@ Next free block: B2330
 | B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
 | B1600-B1606 | Before the First Night | Creation |
 | B1610-B1614 | The guided builder and the prelude runner | Creation |
+| B1640-B1659 | The talk generator (grammar NPC talk with no AI model), who is speaking, mood, the Storyteller's grammar | NPC |
 | B1700-B1702 | The Legends book | Chronicle |
 | B1710-B1714 | Progress clocks | Storyteller |
 | B1720-B1724 | Standing with the spirit courts | Otherworlds |
@@ -83,7 +84,7 @@ Next free block: B2330
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2105 | NPC voices | Voices |
+| B2100-B2116 | NPC voices: browser speech, Kokoro, the Chatterbox voice server, shared files from the token, plot NPCs and prewritten lines | Voices |
 | B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War; B2211-B2216 factions at war by themselves) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
@@ -2245,6 +2246,8 @@ Reverse: REALM_AGES in battle-rules.mjs.
 ## B2210. The book's army when both sides list units (2026-11-12, Spoils of War pp. 44-45 printed)
 The Troop Types table of Spoils of War (p. 44 printed, pdf 45) was read from the page images (/mnt/project-files/book-checks-2026-11-12b.md, item 2); its figures give the book's example army exactly (Maneuver 19, Melee 20, Ranged 5, Defense 20). When both sides list units, a battle is fought with the book's Right of Command in place of the house weight of B2200 and B2203: the commanders' opposed Perception + Leadership (difficulty 6, a botch gives the other side 2) adds the net successes to the winner's four pools and takes them from the loser's; then each army takes one action, Close and fight (Melee against the foe's Defense, the winner takes a unit a net success either way), Shoot (Ranged against half the foe's Defense, only the shooters do harm) or Withdraw (Maneuver against Maneuver; a win keeps the foe's melee off and leaves the field, a loss adds the net successes to the foe's blow). Losing 3 or more units in a turn makes an army waver at that many; losses past the commander's Charisma + Leadership cost a die a unit (demoralised); an army with no units left is beaten. WoDX readings: the army is one line, so Flank, the wings, the Reserve and the turned flank are not used; units fall from the type with the most units, mortal troops before the supernatural ones; a defender adds its position's bonus to Defense; a character's deed adds its successes to its side's action; a book army drawing off leaves a tenth of its units; in a siege a book army's hunger and disease wear its resolve, not its men. Without units on both sides, and in every age the book's troop types do not fit, the house frame of B2200 stays.
 
+Amended 2026-11-12 (Storyteller 0.45.1): when both armies close and fight, each counts only the units its own blow takes; the book's rule that a beaten attack costs the attackers applies only when the foe stood to receive it (shooting or withdrawing). Counting both ways doubled every clash, and a small army was gone in the first hour more than half the time (a run of 2,000 faction-war battles in the harness).
+
 Reverse: clear the units on both sides (the battle then uses men and quality), or drop the isBook branch in fight() in wodx-storyteller/scripts/battles.mjs.
 
 ## B2211. Factions go to war by themselves (2026-11-12, Ben's pick, house rule)
@@ -2363,6 +2366,47 @@ Reverse: LOOKS and lookFor in case-rules.mjs.
 From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
 
 Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
+
+## B1640. A talk generator with no AI model (2026-11-12)
+When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots are always they, them and their. House writing, not from any book. Ben approved the desk 2026-11-12.
+
+Reverse: turn the world setting "Talk generator" off.
+
+## B1641. Where generated lines sit (2026-11-12)
+Storyteller talk sheet lines (trait-gated ones first) always come first. The generator answers only after them. The hand-written stock pools are now grammar rules, with the same pools for the same era, regard and voice; children, beggars and drunks keep to their own lines; someone who hates the character shares no gossip. A line is steady for one NPC, character and day, and a line just said is passed over while another fits. Talk cards mark a made line with flags.wodx-npc.talk.generated, so WoDX Voices leaves it as text.
+
+Reverse: setting off, which goes back to the old stock picker.
+
+## B1642. Era words by year (2026-11-12)
+Lexicon entries carry an era band or exact years: coin follows WoDX Storyteller's Moravian money rows (denars to 1299, groschen and heller 1300-1526, kreuzer 1527-1891, heller and kronen 1892-1918, korun 1919-2019, eurobucks and credits from 2020); gendarmes from 1849; no railway station before 1839; coffee from 1700.
+
+Reverse: edit SYMBOLS in data/grammar/house.mjs.
+
+## B1643. Who is speaking: clans, tribes, Traditions, Conventions and kiths (2026-11-12)
+The talk generator reads the NPC's sides (clan, tribe, Tradition or Convention, kith, sect and the like, from the sheet and factions) and adds a few greetings and brush-offs for each group: 15 clans and bloodlines, 13 tribes, 9 Traditions, 5 Conventions, 9 kiths. They pool with the era's lines, so the group colours the talk without taking it over. Every line keeps the Masquerade and the Veil: manner only, nothing that names what the speaker is. House writing. Ben approved on the desk 2026-11-12.
+
+Reverse: remove a group's rows from data/grammar/groups.mjs.
+
+## B1644. Mood (2026-11-12)
+An NPC talks in a mood: the one the Storyteller sets in the behaviour window wins; else a place in alarm makes them afraid, wounds make them hurt, a fight with the character or a fall in regard in the last day makes them angry, a wary place makes them wary. Afraid and hurt crowd out other lines; the rest pool with them. Moods: afraid, hurt, angry, grieving, wary, weary, cheerful.
+
+Reverse: set the mood in the behaviour window, or edit moodOf in scripts/talk-grammar.mjs.
+
+## B1645. Asking about a name with no answer written (2026-11-12)
+When a character asks about a person, place or faction they have heard of and nobody wrote an answer, the generator answers by regard and mood, naming the topic ("The old mill? I know the name. Not much more."). Before, it was a plain brush-off.
+
+Reverse: setting "Talk generator" off.
+
+## B1646. The Storyteller's own grammar (2026-11-12)
+A journal, "WoDX talk grammar", holds the Storyteller's grammar, one entry a line (greet [clan: ventrue, warmth: cold] => "You are not expected."; #coin# [year: 1300-1526] => groschen | heller). It adds to the house grammar; an entry with the id of a house rule replaces it; boost lets a line win. It is read again whenever a page changes, and lines it cannot read are listed to the Storyteller by line number. The talk API opens it (api.talk.openGrammar), making it with a help page the first time.
+
+Reverse: delete the journal.
+
+## B1647. Reroll and Keep (2026-11-12)
+A talk card with a made line shows the Storyteller, and only the Storyteller, which rule made it, with Reroll (another line from the same facts, replacing the one on the card) and Keep (the line goes onto the NPC's own talk sheet under the topic, where it becomes the Storyteller's line and always comes first).
+
+Reverse: none needed; a kept line can be deleted from the talk sheet.
+
 ## B2320. The features card on the sheet (2026-11-12, Improvement Desk sg1)
 Under the in-play strip, a folded card lists every line feature the character has (clan or bloodline, tribe, auspice, breed, kith, seeming, court, Tradition, Guild, legion, House, creed and the rest), each with what it does, when it fires and when it last fired in play. The owner and the Storyteller see it; players only ever open their own sheets. "When it fires" is one line for each engine (Chronicle FEATURE_WHEN) plus the rolls it changes. "Last fired" is the in-game date of the feature's latest card (flags.wodx-chronicle.sigFired), so a feature with no card (a plain roll bonus) reads "not yet in play".
 
@@ -2382,3 +2426,57 @@ Reverse: remove changesHtml from decorate and installChanges from setup in extra
 Each line names its causes, up to four: "a card: <its title>" when a chat card button was pressed in the four seconds before, "the time skip" while Chronicle's time skip runs, "Undo", "the Storyteller" for the Storyteller's own edits, or "<player>, by hand". The client that makes a change tags it and the active Storyteller's client keeps the causes by kind of change, saving at most once for each new cause, so play costs almost no extra saves.
 
 Reverse: drop the tag hooks; lines then show without causes.
+## B2106. Kokoro runs offline from the Data folder (2026-11-12)
+WoDX Voices loads kokoro-js 1.2.1 (its web build), the ONNX runtime wasm and the Kokoro-82M model (quantized) from Data/wodx-voices-engine, which tools/voices/fetch-engine.mjs fills once on the PC. The library asks for its files at their online home; a narrow fetch shim on the Storyteller's client answers only those requests from the folder. Nothing goes in the module bundle. Licences in the folder's NOTICE.txt (Apache 2.0; the phonemizer is espeak-ng, GPL 3, fine for private use).
+
+Reverse: set Voice engine to the browser's own speech.
+
+## B2107. One render, shared by file (2026-11-12)
+Only the active Storyteller's client renders. It saves the line as a WAV in Data/wodx-voices-cache/g<n>/ (a name from the voice, speed and words, so a line said twice is rendered once) and sends the path over the module socket to the people who see the line. Players play the file. With no Storyteller online, players fall back to their own speech.
+
+Reverse: engine setting.
+
+## B2108. A Kokoro voice per NPC (2026-11-12)
+Two of Kokoro's 27 English voices of one accent (American or British, by seed), matched to a known sex, blended 50:50 to 80:20 by seed, with the speed from the profile. The Storyteller can name one voice or a blend in flags.wodx-voices.override.kokoro ("bm_george" or "bm_george*0.6+bm_lewis").
+
+Reverse: kokoroVoiceFor in voice-rules.mjs.
+
+## B2109. The Storyteller's own lines (2026-11-12)
+Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, can be read in that NPC's voice to the people who see it. Off by default since B2111: Ben asked the same day that only prewritten lines be voiced.
+
+Reverse: the "Read the Storyteller's lines" setting.
+
+## B2110. Sound from the token (2026-11-12)
+When the NPC's scene is in view, the line plays at the token through Foundry's positional sound, fading over the set range (30 grid units by default) and muffled by walls; the Storyteller always hears. Otherwise it plays plainly.
+
+Reverse: the "Sound from the token" setting.
+
+## B2111. Plot NPCs and prewritten lines only (2026-11-12)
+Ben (12 November 2026), after Fallout 1 and 2 and Baldur's Gate 1 and 2: an NPC is voiced only when the Storyteller marks it as a plot NPC (Voiced (plot NPC) on the right-click menu in the Actors list, flags.wodx-voices.plot), and only the lines written beforehand on its WoDX NPC talk sheet are read. Stock lines, generated lines, barks and every unmarked NPC stay text. The world setting "Who speaks aloud" can open it to every NPC.
+
+Reverse: the "Who speaks aloud" setting; prewritten and voiced in voice-rules.mjs.
+
+## B2112. A voice server on the Storyteller's PC (2026-11-12)
+Ben found the Kokoro samples flat and chose Chatterbox on his own PC (12 November 2026). tools/voices/chatterbox_server.py runs Chatterbox (MIT) on the PC's graphics card, listening on 127.0.0.1 only, and answers the Storyteller's browser with a WAV per line. It is the default engine: the line is cached and shared exactly as with Kokoro. When the server is not running, Kokoro reads the line, and without Kokoro the browser's own speech. A stopped server is tried once a minute, not once a line.
+
+Reverse: the "Voice engine" setting.
+
+## B2113. Human reference voices, chosen for lively reading (2026-11-12)
+Chatterbox copies the cadence of its reference clip, so the clips decide how natural an NPC sounds. tools/voices/fetch_voices.py takes readers from LibriTTS-R (CC BY 4.0, from LibriVox public-domain recordings), prefers lines read as dialogue (quotes, exclamations, questions) and lines whose pitch moves, builds 8 to 14 second clips, and keeps 48 readers spread widest over pitch, pace and liveliness so no two voices sit close. Credits stay in voices.json and NOTICE.txt. The Storyteller may add clips of their own.
+
+Reverse: --count, --splits, --local.
+
+## B2114. Delivery from the line and the mood (2026-11-12)
+Each line's emotion, pace and variety come from the line itself (exclamations, shouted words, questions, trailing off), how the NPC regards the character it speaks to (WoDX NPC's attitude step), its wounds, and a temper the Storyteller may set (calm, warm, cold, fiery, nervous, weary). Figures are house ones, rounded to steps of 0.05 so a line in the same mood is rendered once; the server lifts an exclaimed sentence a little more and pauses longer after questions and trailing lines.
+
+Reverse: deliveryFor and TEMPERS in voice-rules.mjs.
+
+## B2115. A server voice per NPC (2026-11-12)
+Each NPC keeps one server voice, picked from its seed among the voices the server lists. A known sex narrows the pick by speaking pitch (male: low or mid; female: high or mid); with no known sex every voice is open. Slow speakers (old age, a slow speaking style) lean to the slower readers. The Storyteller's choice (override.chatterbox) wins.
+
+Reverse: serverVoiceFor in voice-rules.mjs.
+
+## B2116. The server's address and key stay in the Storyteller's browser (2026-11-12)
+The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and wodx.online by default).
+
+Reverse: --origin on the server; the two client settings.

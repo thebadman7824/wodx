@@ -1707,3 +1707,15 @@ From the Improvement Desk (Ben approved fo1 and cw1 as described). One Followers
 Ben's desk note: an Anda's frenzy leaves the Gangrel's animal marks, healing after a month. Decision B1519. Harness test added. Not on Live.
 
 The look gate's second PC run passed 9/9 (main 6ba1188). It showed one more slip: a fine-work item's trade price was scaled, but the words beside it still gave the plain price. Actions 3.54.0 redoes the words.
+
+## WoDX Voices 0.2.0, 2026-11-12
+
+- Kokoro in the Storyteller's browser, offline from Data/wodx-voices-engine (tools/voices/fetch-engine.mjs), lines cached in Data and played to the people who see them, from the token. Only plot NPCs and their prewritten talk-sheet lines are voiced (Ben, B2111). The Storyteller's improvised lines as an NPC, off by default (Improvement Desk vo1). A tongue per NPC for the browser's speech (B2106-B2111). Harness voices.test.mjs (12 tests); gatevoices now 10 steps. In the cloud, kokoro.web.js loaded in Chromium and asked for its model at the engine folder; the model itself comes on the PC.
+
+## WoDX Voices 0.3.0, 2026-11-12
+
+- Chatterbox voice server on the Storyteller's PC (tools/voices/chatterbox_server.py), the default engine, with Kokoro and the browser's speech behind it (B2112). Human reference voices from LibriTTS-R picked for lively reading (tools/voices/fetch_voices.py, B2113). Delivery from the line, regard, wounds and temper (B2114); a server voice per NPC (B2115); address and key per browser (B2116). Harness voices.test.mjs (13 tests). The server's HTTP side was tested in the cloud with a stand-in engine (key, origins, preflight, render); the model and voices come on the PC.
+
+## 2026-11-12: a talk generator with no AI model
+Ben asked whether NPC talk could be made inside Foundry with no AI model, and approved all ten picks on the desk (https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3). NPC 0.45.0 adds scripts/talk-grammar.mjs (pure: fact tests, most-specific rule wins with ties pooled, #symbol# expansion with .cap and .a, {fact} slots, neutral pronoun slots, steady seeds that pass over recent lines, mergeGrammars by rule id, lint) and data/grammar/house.mjs (era lexicon and templates). The hand-written stock pools are turned into rules at load, so the same pools speak for the same era, regard and voice. talk.mjs asks the generator for stock answers and greetings when the world setting "Talk generator" is on (default off) and falls back to the old picker. Harness talk-grammar.test.mjs checks every must-speak kind in every era band, year and regard. PR 2 adds clans, mood and asking about names; PR 3 the Storyteller's grammar journal, Reroll and Keep. Decisions B1640-B1642.
+The same release finishes the picks: groups (data/grammar/groups.mjs) give clans, tribes, Traditions, Conventions and kiths their own voices; mood comes from the behaviour window or from alarm, wounds, a fight or a fall in regard; a known name with no answer written gets a made one; the Storyteller's journal "WoDX talk grammar" adds lines (parseGrammarText); made lines show Reroll and Keep to the Storyteller. B1643-B1647. Gate steps added to gatetalk. Not on Live.
