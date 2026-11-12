@@ -1,0 +1,38 @@
+name: Checks
+
+# The automatic part of the quality gate on every pull request and every push to main.
+# Testbed gates and the UI fit check still run on Ben's PC (they need Foundry).
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Parse, module.json, imports, unit tests, Encyclopedia format. The harness is skipped here
+      # (no node_modules yet) and runs once in the next step.
+      - name: Quality checks
+        run: bash tools/quality-check.sh
+      - name: Install harness
+        working-directory: tools/harness
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: npm install --omit=dev --no-audit --no-fund
+      - name: Mock-Foundry harness
+        working-directory: tools/harness
+        run: node --test --test-concurrency=1 *.test.mjs > harness.log 2>&1 || { grep -B2 -A25 "^not ok" harness.log | head -300; tail -12 harness.log; exit 1; }
+      - name: Harness summary
+        if: always()
+        working-directory: tools/harness
+        run: '[ -f harness.log ] && grep -E "^# (tests|pass|fail|duration_ms)" harness.log || true'
