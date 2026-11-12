@@ -1321,11 +1321,13 @@ A Mage faction of three or more keeps the polity of its side and age. On the Tra
 
 Reverse: drop mages from DEFAULTS and the four templates.
 
-## B1114. Hunter polities (2026-11-12)
+## B1114. Hunter polities (2026-11-12, Inquisition revised the same day after the book check)
 
-A Hunter faction of three or more keeps a tribunal of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130). The tribunal's seats are a house rule until the Dark Ages Inquisitor book is read. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+A Hunter faction of three or more keeps a cell of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130).
 
-Reverse: drop hunters from DEFAULTS and the three templates.
+The Inquisition follows Dark Ages: Inquisitor and its Companion. Cardinal Marzone and the Supreme Council of Faith stand over local Councils of Faith, and those stand over cells, bypassing the bishops (Companion pr 73-75). A cell's rector is appointed from above, and the cell elects its sub-rector, treasurer, archivist and cellarer, subject to the rector's veto (Companion pr 74-75). Its chapter meets every faction turn (the Rule's three chapters a week, Companion pr 72), its blocs are the five orders, and standing is the Rank Background (DA:I pr 157). A Council of Faith can be picked by hand: a head, a Procurator Fiscalis, and a councillor for each order present. The Sicae Dei council of ten, two from each order with unanimous verdicts (Companion pr 83), is noted but not run. Neither book has rules for these seats, so the charges, votes and Council seats beyond the Procurator are house rules. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+
+Reverse: drop hunters from DEFAULTS and the four templates; for the old tribunal, the inquisition template before NPC 0.40.3.
 
 ## B1115. Mummies, demons and the Kuei-jin, picked by hand (2026-11-12)
 
@@ -2054,6 +2056,46 @@ A follower's attitude toward its master moves one step through WoDX NPC's attitu
 
 Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs; WoDX Actions' wodxFed hook (by, vessel).
 
+## B1820. One Followers window per character (2026-11-12, improvement desk fo1)
+WoDX NPC 0.41.0 lists everyone who serves a character in one window, opened from the Relationships tab's Followers button, the token tools (the people icon) or api.openFollowers(actor). A follower is any NPC that serves the character through one of the four ties order-rules.servesFrom reads (B1800). Each row gives its kind (Ghoul from the domitor tie; Retainer, Ally, Herd, Contact or Mentor from the Background made real; Ally from a Creation ally; else Follower), where it is (here, another scene, away on an errand, not on any map), its order, its loyalty with the last change and the reason from the attitude log, the blood bond step (V20's three drinks) and open trouble. Players see their own characters' followers only, and only those they are allowed to see in Foundry.
+
+Reverse: drop followers.mjs and followers-rules.mjs from wodx-npc, the wodxFollowers token tool and openFollowers in main.mjs, and the tie-followers button in wodx-sheets extras.
+
+## B1821. Orders from the Followers window (2026-11-12)
+A follower on the scene being viewed gets buttons for the everyday orders (Follow, Wait, Guard, Keep watch, Hold back, No order) and "Give an order…", which opens the full order window with that follower and master picked. The buttons go through the same path as the order window (orders.send: carried out on the active Storyteller's client, else by socket), so a hard order still waits in the approval queue. Followers elsewhere get no buttons, since an order needs the token on the map.
+
+Reverse: quickFor in followers-rules.mjs returns [] always.
+
+## B1822. What counts as trouble on a follower's row (2026-11-12)
+Dealing with a witness, set to cut someone off or attack, under a hard order, wavering in its loyalty (at Distrusted, the floor of loyalty drift, B1816), and a description of it going round (B1823). The reason for the last loyalty change is shown to the player whose character it serves: loyalty drift writes reasons from the player's own acts (kept fed, a hard order). A Storyteller's own reason typed into the attitude log shows too.
+
+Reverse: troubles and lastText in followers-rules.mjs; hide r.last for players in followers.mjs.
+
+## B1823. A description that spreads and fades (2026-11-12, house rule, improvement desk cw1)
+When WoDX Actions records a breach with witnesses, when WoDX Interactables reports a theft, break-in, fire, desecration or fight that someone on the map sees (WoDX NPC's noticing roll), or when a fight ends with foes alive or onlookers who see a player character, WoDX NPC 0.41.0 writes a description of the culprit (a player character, or an NPC who serves one) from WoDX Library's look. A second sighting of the same culprit at the same place within ten minutes of world time freshens the same description. The Storyteller gets a card with the words, Drop it, and the Descriptions abroad list (token tools, the question-mark figure). Players never see a description. World setting "Descriptions that spread" (on by default) turns it off. V20 has no rules for this.
+
+Reverse: world setting culpritDescriptions off, or drop wanted.mjs and wanted-rules.mjs.
+
+## B1824. How word gets round, by year (2026-11-12, house figures)
+1197-1499 the hue and cry and the town crier (the rest of town in 24 hours, forgotten in 14 days); 1500-1849 a printed notice and the constable's word (48 hours, 30 days); 1850-1979 a police sketch and the telegraph wire (12 hours, 60 days); 1980-1999 a police sketch on the evening news (6 hours, 90 days); 2000-2022 camera footage and phone photos (3 hours, 180 days); from 2023, the World of Future Darkness, cameras and face matching (1 hour, 365 days). The place where it happened hears at once, and the place's Alert zones carry it on by bell, telephone, radio or runner, as they carry the alarm (NPC 0.23.0). Word stops at the Shroud and the Gauntlet: an Umbral or Underworld map (wodx-otherworlds layer other than physical) hears only what a carrier takes there.
+
+Reverse: MEANS in wanted-rules.mjs.
+
+## B1825. When a description still matches (2026-11-12, house rule)
+Strong when the clothes, uniform and station still fit; none once the culprit has changed clothes, put on a disguise, or a disguise roll held against that NPC. Size (from the token: big, huge, small) and a face people remember, an ugly face or a monstrous one still give a partial match through new clothes. From 2000 photographs keep the face, so new clothes only make it partial; from 2023 face matching keeps the face whatever the clothes, and a held disguise only makes it partial. V20 sheets have no height, so the token's size stands in.
+
+Reverse: matchOf in wanted-rules.mjs; marksOf and sizeOf in wodx-library look-rules.mjs.
+
+## B1826. Who tests a description, and the roll (2026-11-12, house rule)
+When a player character moves where word has reached, NPCs there who see them (the noticing roll) test it: the watch, soldiers, sheriffs, hunters, inquisitors, Technocrats, ghouls, ordinary townsfolk and passers-by, never animals, spirits or the culprit's own followers, at most four a move and once a minute for each pair. The Storyteller gets a card: the match, its reason, and a roll of Perception + Alertness at difficulty 6 for a strong match or 8 for a partial one, 1 harder once the description is half forgotten, with a button to raise the alarm at that place. Nothing happens by itself.
+
+Reverse: TESTERS and recogniseRoll in wanted-rules.mjs; test in wanted.mjs.
+
+## B1827. Whether witnesses know the culprit's name (2026-11-12)
+A description carries the culprit's name when any witness has already met them (WoDX NPC's attitude: met). Otherwise the card says "someone", and only the Storyteller sees who it was.
+
+Reverse: namedBy in wanted.mjs.
+
 ## B2200. Battles and sieges as two abstract forces (2026-11-12, house rule)
 The Master Plan item "Battles and sieges" (Lines and eras that meet, priority 3) is built in WoDX Storyteller 0.43.0 as a Storyteller tool, "Battles and sieges" in the Storyteller's hand (api.battles). A battle is fought between two forces, not token by token: each has a name, a faction (optional), men, a quality (1 levies to 5 the best of the age), the supernatural in its ranks (0 to 5), where it stands, and a commander (a sheet, or a name and a pool). Players see a card in words each step; the Storyteller's card has the dice. Every step has an Undo. The book search (12 November 2026, /mnt/project-files/battle-book-check.md) found war rules only in two Dark Ages: Vampire books, Spoils of War (pp. 40-45 printed, pdf = printed + 1) and the Dark Ages Companion (pp. 42-48 printed, pdf = printed - 25); no V20 book has them. Their rolls are used where they fit (B2202 to B2205); the forces' weight, resolve, the breach clock and the ages after 1500 are house rules. Spoils of War's full Right of Command army (Centre, Wings and Reserve, units by type) is not built: its troop table is garbled in the scan and needs reading from the book.
 
@@ -2143,3 +2185,43 @@ Reverse: doorsOf, exitFor, walkFor in wodx-npc passersby.mjs; planDoorWalk, near
 The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers-by in sight. That already happens: since Actions 3.42.0 the Cast window asks the Masquerade sight check who can see the caster, passers-by are ordinary mortals to it, and only animals in the street are left out. A harness test now holds this in place.
 
 Reverse: nothing to reverse.
+
+## B2300. Lifepath threads become story chains (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item cr2, approved by Ben. V20 asks for a prelude that sets up the character's past (page to be confirmed by a book check), but gives no table for when that past comes back. With WoDX Chronicle's Story chains setting on, each player character's kept lifepath is read by WoDX Creation for open threads: a person from the past whose role or note leaves something open (an enemy, a rival, a debt either way, a secret someone knows, someone lost, a promise), or a kept Flaw (Enemy, Clan Enmity, Hunted, Dark Secret) that no person already carries. At most four per character, sharpest first. Each kind has a three-step chain of its own; the person the lifepath made as an NPC is named in it.
+
+Reverse: turn off Story chains, or reject the thread in the approval queue.
+
+## B2301. When a thread falls due (2026-11-12, house rule)
+The first thread comes to the approval queue 14 days of game time after Chronicle first sees the character's lifepath, each next one 30 days after the last, one at a time per character. Approved, it runs as a story chain from the scene's city; rejected, it is left in the past and never put again. The Storyteller can also start any thread at once from Threads from the past in the story chains window.
+
+Reverse: change LP_DAYS in wodx-chronicle/data/pod-lifepath.mjs.
+
+## B2302. A thread in the year of play (2026-11-12, house rule)
+The chain is written for the year it fires, not the year of the scene. A mortal from more than 70 years back is long dead, and a descendant carries the thread. The undying (Kindred, the dead, spirits) from more than 150 years back come back far stronger, and an enemy, rival, creditor or keeper of a secret among them may now be the pawn of something older. A mortal from 40 to 70 years back is old. News and searching follow the era: a pedlar or inn talk before 1500, a sealed letter to 1799, telegrams and newspapers to 1945, a phone call or a private investigator to 2022, a filtered message or a data broker in the World of Future Darkness.
+
+Reverse: change LP_ALIVE_SPAN, LP_OLD_SPAN or MEANS in Chronicle's pod rules and data.
+
+## B2303. Who counts as undying in a lifepath (2026-11-12, house rule)
+A person's role and note are read for the Kindred and others who do not age: a sire, a vampire, a prince, a harpy, a domitor, an anarch, the dead, spirits and monsters; for a vampire's lifepath, an elder or a member of the court too. Everyone else ages and dies in a lifetime. When the Storyteller links a different NPC, its name is used, but its age is still judged from the role.
+
+Reverse: edit UNDYING in wodx-creation/scripts/lifepath-threads-rules.mjs.
+
+## B2304. Lifepath threads speak of the character, not to them (2026-11-12)
+Lifepath roles are written to the player ("your sire's rival, who would see you destroyed"). On the Storyteller's chain cards and the approval queue they are turned around to name the character ("Jana's sire's rival, who would see Jana destroyed").
+
+Reverse: drop third() in Chronicle's pod rules.
+
+## B2305. A guest in another character's prelude (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item bf1, approved by Ben. In the prelude runner, the Storyteller can ask another player's character into the current scene. It is offered only where the guest's lifepath years allow: at least 8 years old, and alive. Mortals, hunters, Garou, changelings and other lines with a mortal span live 100 years; ghouls and revenants 200; mages 150. The Kindred, the dead, mummies, Kuei-jin and the fallen do not age once turned; a guest turned 100 years or more before the scene comes only as an elder, a wraith only as a ghost. A guest with no lifepath is the Storyteller's call. Places are not checked: every lifepath is set in the chronicle's own lands of the Bohemian crown, so the Storyteller rules out a guest who was abroad.
+
+Reverse: change UNDYING_LINES, SPAN, GUEST_MIN_AGE or ELDER_YEARS in first-night-prelude-rules.mjs.
+
+## B2306. The guest's beat (2026-11-12)
+The Storyteller picks one beat question for how the guest was there (as a mortal, turned, an elder or a ghost), then asks the guest's player on a chat card, or writes what happened at the table. The answer goes to troupe ties on the Group actor as a guest tie (one per scene, beside the ring's questions, which it never replaces), into the host's prelude log with Undo, and ticks the guest's ties step. How they met lists it as "the guest in the host's prelude".
+
+Reverse: Undo in the prelude log removes the tie.
+
+## B2307. A guest beat costs and gives nothing (2026-11-12)
+The beat is story only. It spends none of the host's 3 prelude freebie points and gives the guest no points; a roll with stakes in the same scene still costs the host as before.
+
+Reverse: none needed; give a reward from the runner by hand.

@@ -1,8 +1,9 @@
 /**
  * Gate 7b.1 (the turn conductor, WoDX Combat 3.7), in Foundry (rothenstein-wodx) as a Gamemaster, after gate 7b:
  *   await (await import(`/wodx-gate/gate7b1.mjs?${Date.now()}`)).run()
- * Uses gate 7b's arena and fight. Unpauses the game for the run and pauses it again after if it was paused; puts the
- * conductor setting, its countdowns and the scene's NPC mode back as they were. Deletes nothing.
+ * Uses gate 7b's arena. Uses gate 7b's fight if one is there; otherwise it makes its own fight on the arena and deletes
+ * that fight (only the one it made) at the end. Unpauses the game for the run and pauses it again after if it was
+ * paused; puts the conductor setting, its countdowns and the scene's NPC mode back as they were.
  * Result: Data/wodx-gate/gate7b1-result.json.
  */
 const atLeast = (v, min) => { const a = String(v ?? "0").split(".").map(Number), b = min.split(".").map(Number); for ( let k = 0; k < 3; k++ ) { if ( (a[k] || 0) !== (b[k] || 0) ) return (a[k] || 0) > (b[k] || 0); } return true; };
@@ -27,7 +28,7 @@ export async function run() {
   const before = {level: game.settings.get(MOD, "turnConductor"), grace: game.settings.get(MOD, "conductorGrace"), timer: game.settings.get(MOD, "conductorTimer"),
     pause: game.settings.get(MOD, "conductorNpcPause"), paused: game.paused, scene: canvas.scene};
   const sc = game.scenes.find(s => s.getFlag(NPC, "gateArena"));
-  const combat = game.combats.find(c => c.getFlag(NPC, "gateFight"));
+  let combat = game.combats.find(c => c.getFlag(NPC, "gateFight") && c.scene?.id === sc?.id), made = null;
   let T = {};
   const curName = () => combat.combatant?.name;
   const toTurn = async tok => { await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tok.id)}); await sleep(400); };
@@ -35,6 +36,14 @@ export async function run() {
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
     for ( const role of ["hero", "fighter", "runner"] ) T[role] = canvas.tokens.placeables.find(t => t.document.getFlag(NPC, "gateRole") === role);
+    // No fight left from gate 7b: make one on the arena with the three gate tokens, marked so it is cleaned up after
+    if ( !combat && sc && T.hero && T.fighter && T.runner ) {
+      made = combat = await Combat.create({scene: sc.id, active: true, flags: {[NPC]: {gateFight: true, gate7b1Made: true}}});
+      await combat.createEmbeddedDocuments("Combatant", ["hero", "fighter", "runner"].map(r => ({tokenId: T[r].id, sceneId: sc.id, actorId: T[r].actor.id})));
+      await combat.rollAll?.();
+      await combat.startCombat(); await sleep(2500);
+      R.notes.push(`made its own fight ${combat.id}`);
+    } else if ( combat && !combat.started ) { await combat.startCombat(); await sleep(2500); }
     ok("versions, and gate 7b's arena", atLeast(C()?.version, "3.7.0") && !!CD() && atLeast(npc()?.version, "0.1.3") && !!sc && !!combat && T.hero && T.fighter && T.runner,
       {combat: C()?.version, npc: npc()?.version, arena: sc?.name, fight: combat?.id, tokens: Object.keys(T).filter(k => T[k])});
     if ( game.paused ) game.togglePause(false, {broadcast: true});
@@ -70,10 +79,17 @@ export async function run() {
     await game.settings.set(MOD, "turnConductor", "everyone");
     await toTurn(T.hero);
     const id = combat.combatant?.id;
-    await C().quickAttack({attacker: T.hero, target: T.fighter});
-    const counting = await waitFor(() => !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 5000);
-    const ended = await waitFor(() => combat.combatant?.id !== id, 12000);
-    ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+    // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
+    await game.settings.set(MOD, "conductorGrace", 4);
+    let sawCount = false;
+    const hk = Hooks.on("updateCombat", c => { if ( c.id === combat.id && c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true; });
+    try {
+      await C().quickAttack({attacker: T.hero, target: T.fighter});
+      const counting = await waitFor(() => sawCount || !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 8000);
+      const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
+      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+    } finally { Hooks.off("updateCombat", hk); }
+    await game.settings.set(MOD, "conductorGrace", 2);
     await game.settings.set(MOD, "turnConductor", "npc"); await sleep(600);
     for ( const t of Object.values(T) ) await C().setDamage(t.actor, zero);
   });
@@ -83,11 +99,18 @@ export async function run() {
     // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
     const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
     await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
-    await toTurn(T.hero);
+    // The time limit and the conductor go on first, then the turn moves to the hero, so the limit starts with the turn
+    await toTurn(T.fighter);
     await game.settings.set(MOD, "conductorTimer", 3);
-    await game.settings.set(MOD, "turnConductor", "everyone");
-    const heroC = combat.combatant;
-    const held = await waitFor(() => !!heroC.getFlag(MOD, "held") && combat.combatant?.id !== heroC.id, 9000);
+    await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(300);
+    const heroC = combat.combatants.find(c => c.tokenId === T.hero.id);
+    let sawHeld = false;
+    const hk = Hooks.on("updateCombatant", c => { if ( c.id === heroC.id && c.getFlag(MOD, "held") ) sawHeld = true; });
+    let held;
+    try {
+      await toTurn(T.hero);
+      held = await waitFor(() => (sawHeld || !!heroC.getFlag(MOD, "held")) && combat.combatant?.id !== heroC.id, 20000);
+    } finally { Hooks.off("updateCombatant", hk); }
     const why4 = {heldFlag: !!heroC.getFlag(MOD, "held"), turnNow: curName(), why: CD().state().why ?? null};
     await game.settings.set(MOD, "turnConductor", "off"); await sleep(500);
     const curC = combat.combatant;
@@ -150,6 +173,7 @@ export async function run() {
   await sc?.unsetFlag(NPC, "mode");
   for ( const t of Object.values(T) ) if ( t?.actor ) await C().setDamage(t.actor, zero);
   if ( game.paused !== before.paused ) game.togglePause(before.paused, {broadcast: true});
+  if ( made ) { try { await made.delete(); R.notes.push(`deleted the fight it made, ${made.id}`); } catch (e) { R.notes.push(`could not delete its fight ${made.id}: ${e.message}`); } }
   if ( before.scene && before.scene.id !== canvas.scene?.id ) await before.scene.view();
   return save(R);
 }
