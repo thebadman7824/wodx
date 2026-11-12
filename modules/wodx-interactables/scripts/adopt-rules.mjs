@@ -109,12 +109,15 @@ export function parseSidecar(input) {
     if ( !people.length ) { errors.push(`${h.id}: nobody lives in it, so it was left out.`); continue; }
     const hh = {id: h.id, label: String(h.label ?? h.id).slice(0, 80), trade: String(h.trade ?? "").slice(0, 40), people};
     reg.household = hh;
+    (reg.households ??= []).push(hh);                         // 0.35.1: a block of flats keeps every flat's household
     households.push(hh);
   }
   // 0.26.2: the kind of place the whole map is (WoDX NPC's place tag on the scene: what passers-by, sounds and the Masquerade read)
   const place = plain(d.place) && PLACE_KINDS.has(d.place.kind) ? {kind: d.place.kind} : null;
   if ( d.place !== undefined && !place ) errors.push("The map's kind of place is not one WoDX knows, so it was left out.");
-  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place}};
+  // 0.35.1: the settlement the map is part of (the town generator's --settle), for the plan to say where its record goes
+  const settlement = plain(d.settlement) && idOk(d.settlement.id) ? {id: d.settlement.id, name: String(d.settlement.name ?? d.name ?? "").slice(0, 120), year: Math.round(Number(d.settlement.year)) || 0} : null;
+  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place, settlement}};
 }
 
 /**
@@ -201,7 +204,8 @@ export function regionData(r, fr, types = new Set()) {
     shapes: [r.points
       ? {type: "polygon", points: r.points.flatMap((v, i, a) => (i % 2 ? [] : px(fr, v, a[i + 1]).map(Math.round))), hole: false}
       : {type: "rectangle", x: Math.round(x), y: Math.round(y), width: Math.round(r.rect[2] * fr.size), height: Math.round(r.rect[3] * fr.size), rotation: 0, hole: false}],
-    behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {})}, ...(r.place ? {[NPC]: {place: r.place}} : {})}};
+    behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {}), ...(r.households?.length > 1 ? {households: r.households.slice(0, 80)} : {})},
+      ...(r.place ? {[NPC]: {place: r.place}} : {})}};
   return {data, skipped};
 }
 
@@ -237,6 +241,8 @@ export function plan(sc, scene, fr, types = new Set()) {
   // The scene's own kind of place stays if the Storyteller already set one, or cleared it after an earlier adoption
   const scenePlace = sc.place && !scene.placeKind && !have.size ? sc.place : null;
   if ( sc.place && scene.placeKind && scene.placeKind !== sc.place.kind ) notes.push(`The scene is already tagged as ${scene.placeKind}; the map's ${sc.place.kind} was left out.`);
+  if ( sc.settlement && regions.some(r => r.flags?.[MOD]?.household) )
+    notes.push(`This map is part of ${sc.settlement.name || "a settlement"}${sc.settlement.year ? ` as it stands in ${sc.settlement.year}` : ""}. Bring in its record under Settlements in the Storyteller's hand before seeding the residents.`);
   return {wallUpdates, wallCreates, tiles, lights, regions, notes, scenePlace};
 }
 
@@ -252,7 +258,7 @@ export function summary(p) {
     const names = p.regions.map(r => r.name), shown = names.slice(0, 8).join(", ");
     out.push(`${n(p.regions.length, "region", "regions")} drawn (${names.length > 8 ? `${shown} and ${names.length - 8} more` : shown})`);
   }
-  const hh = p.regions.map(r => r.flags?.[MOD]?.household).filter(Boolean);
+  const hh = p.regions.flatMap(r => r.flags?.[MOD]?.households ?? r.flags?.[MOD]?.household ?? []).filter(Boolean);
   if ( hh.length ) out.push(`${n(hh.length, "household", "households")} of ${hh.reduce((s, h) => s + h.people.length, 0)} people noted on their buildings, for WoDX NPC to seed later`);
   if ( p.scenePlace ) out.push(`the scene tagged as a kind of place: ${p.scenePlace.kind}`);
   return out;

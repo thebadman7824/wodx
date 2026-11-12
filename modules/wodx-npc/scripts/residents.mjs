@@ -16,7 +16,7 @@ const rowId = li => li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId ?? li?.dat
 const hashOf = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) % 1000000; };
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
 
-export function build({MOD, esc, chron}) {
+export function build({MOD, esc, chron, settle = () => null}) {
   const creation = () => game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation")?.api?.people : null;
   const year = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
   const unset = path => { const Del = foundry.data?.operators?.ForcedDeletion; return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null}; };
@@ -37,7 +37,10 @@ export function build({MOD, esc, chron}) {
       let rand = Math.random;
       try { rand = chron()?.gen?.random?.(`residents:${scene.uuid}:${hi}`, nonce) ?? Math.random; } catch (e) { rand = Math.random; }
       const people = RS.nameHousehold(plans, draw, rand, {year: y}).map(p => ({...p, name: p.name || cap(p.plan.label)}));
-      return {...h, index: hi, people};
+      // 0.48.0: what an entered settlement's review says of this household (struck, hidden folk, an office)
+      let settled = null;
+      try { settled = settle()?.infoFor?.(h.household.id) ?? null; } catch (e) { settled = null; }
+      return {...h, index: hi, people, settled};
     });
   }
 
@@ -67,11 +70,14 @@ export function build({MOD, esc, chron}) {
       if ( ups.length ) await Actor.updateDocuments(ups);
       const region = fromUuidSync(h.region);
       if ( region ) {
-        const master = actors[0] && people[0]?.plan?.master ? people[0].name : "";
-        const up = {[`flags.${MOD}.residents`]: {actors: actors.map(a => a.id), ownerSet: !!(master && !h.owner), at: Date.now()}};
+        // the head of a building's one household is its owner; a block of flats has no one owner
+        const master = actors[0] && people[0]?.plan?.master && (h.shared ?? 1) === 1 ? people[0].name : "";
+        const up = {[`flags.${MOD}.residents`]: RS.residentRecord(region.flags?.[MOD]?.residents, h.household.id, actors.map(a => a.id), {ownerSet: !!(master && !h.owner), at: Date.now()})};
         if ( master && !h.owner && region.flags?.[MOD]?.place ) up[`flags.${MOD}.place.owner`] = master;
         await region.update(up);
       }
+      try { await settle()?.afterSeed?.(scene, h, actors); }
+      catch (e) { console.warn(`${MOD} | residents: the settlement's ties and hidden folk were not written`, e); }
       made.push(...actors);
     }
     return made;
@@ -85,6 +91,7 @@ export function build({MOD, esc, chron}) {
       const toks = s.tokens.filter(t => ids.has(t.actorId)).map(t => t.id);
       if ( toks.length ) await s.deleteEmbeddedDocuments("Token", toks);
     }
+    try { await settle()?.beforeRemove?.(ids); } catch (e) { console.warn(`${MOD} | residents: ties to the removed residents were not cleared`, e); }
     if ( actors.length ) await Actor.deleteDocuments([...ids]);
     for ( const r of regionsOf(scene) ) {
       const rec = r.flags?.[MOD]?.residents;
@@ -113,12 +120,16 @@ export function build({MOD, esc, chron}) {
       const rows = list.map(h => {
         const done = h.seeded.length > 0;
         const who = h.people.map(p => `${esc(p.name)} <span class="wodx-quiet">(${esc(p.plan.label)})</span>`).join(", ");
-        return `<li class="wnpc-res${done ? " done" : ""}"><label><input type="checkbox" name="h${h.index}"${done ? " disabled" : " checked"}> <b>${esc(h.household.label)}</b>${done ? " <span class=\"wodx-quiet\">(already seeded)</span>" : ""}</label>
+        const st = h.settled;
+        const marks = st ? [st.struck ? "struck in the settlement's review" : "", ...st.folk.map(f => f.label)].filter(Boolean) : [];
+        return `<li class="wnpc-res${done ? " done" : ""}"><label><input type="checkbox" name="h${h.index}"${done ? " disabled" : st?.struck ? "" : " checked"}> <b>${esc(h.household.label)}</b>${done ? " <span class=\"wodx-quiet\">(already seeded)</span>" : ""}</label>
+          ${marks.length ? `<div class="wodx-quiet">${esc(st.name)}: ${esc(marks.join("; "))}</div>` : ""}
           <div>${who}</div>${done || !vamps.length ? "" : `<select name="g${h.index}" data-fixed>${vopt}</select>`}</li>`;
       }).join("");
       const n = RS.countPeople(list);
       const content = `<p>${n} people in ${fresh.length} households on ${esc(scene.name)}, for the year ${year() || "in play"}. Each gets a sheet, a routine with their building as home, and their household.</p>
         ${n > RS.LARGE ? `<p class="wodx-warn">That is many sheets at once; untick some households to make fewer.</p>` : ""}
+        ${list.some(h => !h.settled && /^[^.]+\./.test(h.household.id)) ? `<p class="wodx-quiet">This map belongs to a settlement that is not entered. Settlements, in the Storyteller's hand, reviews it first: its ties and hidden folk are written only then.</p>` : ""}
         ${creation() ? "" : `<p class="wodx-quiet">WoDX Creation is off, so they are named by their role and have blank sheets.</p>`}
         ${list.length > 8 ? searchBox(".wnpc-res-list", "Search households…", "Search households") : ""}<ul class="wnpc-res-list" style="max-height:24rem;overflow-y:auto">${rows}</ul>`;
       const res = await foundry.applications.api.DialogV2.wait({window: {title: `Residents: ${scene.navName || scene.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"],
