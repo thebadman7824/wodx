@@ -180,7 +180,8 @@ export function build({MOD, esc, isActiveGM, chron}) {
         f = PR.keepIf(f, {bloodLost: Number.isFinite(bloodNow) && bloodNow < Math.max(1, Math.ceil(f.pool)), following: !!f.follow,
           touched: used?.ravaged !== undefined && used?.ravaged !== null ? "ravaged" : used?.reverie ? "dreamer" : null});
         if ( PR.shouldRemove(f, {now: nowMs}) ) { deletes.push(doc.id); continue; }
-        if ( fight && !f.fleeing ) continue;
+        // In a fight they stand still, but what happened to them (fed on, hurt, Ravaged) is still saved (0.40.2)
+        if ( fight && !f.fleeing ) { if ( !foundry.utils.objectsEqual(f, flagOf(doc)) ) updates.push({_id: doc.id, [`flags.${MOD}.passerby`]: f}); continue; }
         let dest = null, speed = (f.animal ? 1.2 : 1.5) * g;
         if ( f.follow ) {
           const leader = scene.tokens.get(f.follow);

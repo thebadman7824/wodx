@@ -133,12 +133,15 @@ export async function run() {
     await step("7 hunt habit and palate", async () => {
       const v = by("Ventrue");
       await v.setFlag(M, "palate", {text: "younger sisters", tags: ["younger sister"], breadth: "narrow"});
-      const seen = {};
+      const seen = {}, t7 = Date.now();
       const p = answer({style: "rake", hours: 1, take: 1}, seen);
       await A().hunt({actor: v});
-      await p; await sleep(500);
-      ok("7 hunt habit and palate", Number(seen.palateDiff) === 2 && game.actors.get(v.id).flags?.[M]?.huntStyle === "rake" && /palate \+2/.test(lastMsg()?.content ?? ""),
-        {palateDiff: seen.palateDiff, style: game.actors.get(v.id).flags?.[M]?.huntStyle});
+      await p;
+      // Any card from this step, not only the newest: other modules' cards can land after the hunt's
+      const hunted = () => game.messages.contents.some(m => m.timestamp >= t7 && /palate \+2/.test(m.content ?? ""));
+      try { await until(hunted, 8000); } catch (e) { /* reported below */ }
+      ok("7 hunt habit and palate", Number(seen.palateDiff) === 2 && game.actors.get(v.id).flags?.[M]?.huntStyle === "rake" && hunted(),
+        {palateDiff: seen.palateDiff, style: game.actors.get(v.id).flags?.[M]?.huntStyle, last: (lastMsg()?.content ?? "").replace(/<[^>]+>/g, " ").slice(0, 160)});
     });
     await step("8 other modules", async () => {
       const off = game.modules.filter(m => m.id.startsWith("wodx-") && m.active && !m.api && !["wodx-library"].includes(m.id)).map(m => m.id);

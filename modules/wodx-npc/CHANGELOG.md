@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.40.2 (passers-by standing still for a fight still remember being fed on, hurt or Ravaged)
 - 0.40.1 (the passers-by street can no longer stall: a tick that never finished is given up after 30 seconds, each tick stops after 20, errors are kept for the Storyteller's console, and api.passersby.state() tells a gate whether a tick is running)
 - 0.40.0 (the crowd as a resource: each passer-by feels something and keeps a spark of dreaming, by the kind of place, the hour, the kind of person and the age; a Ravaged or inspired passer-by stays on the map; on a large map passers-by come and go by regions the Storyteller ticks in the Passers-by window or names "Passers-by")
 - 0.39.0 (an ended battle between factions proposes Status, Retainers and standing changes (wodxBattle))
