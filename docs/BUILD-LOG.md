@@ -1630,3 +1630,6 @@ Ben approved the Splat Features Desk: a feature of its own for every clan, tribe
 
 ## 2026-11-12: four more clans
 Chronicle 0.27.0 adds the Tzimisce's native soil (a night without it halves every pool), the Lasombra's empty frame (cameras of the era, a house rule), the Ravnos vice (one Self-Control prompt a night, the pull rising with weeks unfed and a long stay) and the Caitiff's odd gifts (a thin-blooded Caitiff rolls once a year). Decisions B1126 to B1129. Harness signatures.test.mjs 12 tests; gate gatesigs adds steps 10 to 13.
+
+## 2026-11-12: taking things apart for parts
+From the item-links study (Ben approved all): Library 0.13.0 adds SALVAGE rules to data/recipes.mjs and salvageOf, apartTool and successes to recipe-rules.mjs; Use offers "Take apart for parts" on the 155 goods that have parts. Storyteller 0.34.0 cookery.takeApart rolls Dexterity + Crafts (Technology for electronics), takes one of the thing and gives its parts by era. B953. Tests in recipes.test.mjs; gatecook step 8.

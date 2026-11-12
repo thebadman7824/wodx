@@ -57,6 +57,8 @@ export async function abilitiesOfItem(item) {
     } catch (e) { /* recipes not loaded */ }
   }
   if ( U.normPages(item?.flags?.[MOD]?.pages).length && !list.includes("read") ) list.push("read");
+  // 0.13.0: things with parts in them can be taken apart (Storyteller's recipes, data/recipes.mjs SALVAGE)
+  try { if ( !list.includes("salvage") && (await st()?.cookery?.salvageOf?.(item))?.ok ) list.push("salvage"); } catch (e) { /* no Storyteller */ }
   return list;
 }
 
@@ -270,6 +272,12 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "pages": return writePage(actor, item, ability);
     case "read": { await say(actor, U.useLine(actor.name, "read", item.name)); return read(item); }
     case "letter": return letter(actor, item);
+    case "salvage": {
+      const ck = st()?.cookery;
+      const r = ck?.takeApart ? await ck.takeApart(actor, item) : {ok: false, why: "Taking apart needs WoDX Storyteller."};
+      if ( !r.ok && !r.rolled ) ui.notifications.warn(r.why);
+      return r;
+    }
     case "inject": {
       // 2026-11-12: the syringe draws up something the character holds, and that thing is taken
       const can = (actor.items ?? []).filter(i => i.id !== item.id && L.INJECTABLE.test(goodOfItem(i)?.name ?? i.name) && !/auto-?injector/i.test(i.name));

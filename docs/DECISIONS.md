@@ -1187,8 +1187,8 @@ Reverse: knows in recipe-rules.mjs returns ok.
 Successes past the goal set a made drug's or medicine's strength: none weak, 1-2 usual, 3 or more strong. A botch while making one does not ruin the work; it makes the batch impure, which only the Storyteller is told when it is taken. Food and drink keep plain, good, fine and masterwork (B852).
 Reverse: STRENGTHS in recipe-rules.mjs; tasks.mjs sets impure on a botch.
 
-## B951. Kindred cannot taste (2026-11-12)
-A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; the PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
+## B951. Kindred can taste (2026-11-12)
+Vampires can taste food; they just cannot eat it (Ben, 2026-11-12). A vampire cooks and brews at the usual difficulty. The first draft gave one more difficulty below 3 dots; Ben overruled it. The PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
 Reverse: KINDRED_TASTE in recipe-rules.mjs.
 
 ## B952. Batches and things that stand (2026-11-12)
@@ -1426,3 +1426,7 @@ Holy water harms demons and vampires of the Baali and the Followers of Set (read
 From Ben's notes on the desk: a patch is put on the skin and its drug is taken (a dermal patch of street stims is a stimulant); the syringe's Inject picks something held (heroin, morphine, ketamine, penicillin and the like) and takes it; heroin needs a spoon and a flame as well as the syringe. From the food marked Fix: milk and shakes are drunk, so they feed and quench thirst; sauces, honey and grapes can be eaten as they are; anything a recipe uses also gets Cook with it.
 
 Reverse: HOLY_HARM and DAMNED_CLANS in use-rules.mjs; the inject case in use.mjs.
+## B953. Taking things apart for parts (2026-11-12)
+Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.
+It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.
+Reverse: empty SALVAGE in data/recipes.mjs.

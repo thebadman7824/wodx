@@ -196,7 +196,7 @@
 1449|H|mor|AS|Tumu|battle,crown|The Tumu crisis|The Mongol Oirats capture the Ming emperor at Tumu.
 1449|H|mor|AS|Samarkand|science,death|Ulugh Beg murdered|The astronomer-prince of Samarkand is killed on his son's orders.
 1449|H|mor|EU|Milan|crown|The Ambrosian Republic|Milan briefly governs itself after the last Visconti dies.
-1449|W|mag|EU|Horizon|founding,occult|The making of Horizon|Mages gather to build Horizon; the Grand Convocation is coming.
+1449|W|mag|EU|Horizon|founding,occult|Horizon begun|The house reading has mages gather to raise Horizon, whose Nodes are dedicated in 1452 before the Grand Convocation.
 1347|H|mor|EU|Bohemia|crown|Charles crowned in Prague|Charles IV is crowned King of Bohemia with the new crown of St. Wenceslas.
 1347|H|mor|EU|Prague|founding,building|The New Town of Prague|Charles IV founds Prague New Town, one of the largest town plans in Europe.
 1348|W|vam|EU|Prague|founding|A capital for the Empire|Prague becomes the emperor's city; Kindred from the west come to court it.
@@ -292,7 +292,7 @@
 1447|H|mor|EU|Milan|crown,death|The last Visconti|Filippo Maria Visconti dies; Milan becomes a republic for three years.
 1448|H|mor|EU|Prague|war|George of Podebrady takes Prague|The Hussite lord George of Podebrady takes Prague by surprise.
 1448|H|mor|ME|Constantinople|crown|The last emperor|Constantine XI becomes emperor of a city and little else.
-1448|W|mag|EU|Europe|war|The founding wars|The war over the founding of the Council of Nine begins.
+1448|W|mag|EU|Europe|war|Arming for the founding wars|The house reading has Traditions and Daedaleans arm for the wars over the Council of Nine that break out in 1450.
 1449|H|mor|AS|Beijing|siege|The defence of Beijing|Minister Yu Qian holds Beijing against the Oirats after the emperor's capture.
 1449|H|mor|EU|Normandy|war|France retakes Normandy|Charles VII begins the reconquest of Normandy.
 1348|H|mor|EU|Bergen|plague,sea|The ghost ship of Bergen|A ship drifts into Bergen with its crew dead of plague; the town soon follows.

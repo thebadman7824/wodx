@@ -562,7 +562,7 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-11 | Passers-by: when do they go? (B975) | When they walk off, after fifteen minutes, when the scene is off or no longer the one the Storyteller views, and at startup. Fed on, hurt, led or held: kept until let go, cleared at startup after a day. | KEPT_FOR and shouldRemove in passerby-rules.mjs. |
 | 2026-11-12 | Goals, times and dots for 60 recipes (B947) | House figures by family: cooking 2 successes an hour, brewing 3 a day, distilling 4 a day, laboratory 6 to 10 a day; dots 1 to 5 by difficulty of the work. Book check of Crafts, Science, Medicine, Herbalism and Hearth Wisdom ranges queued for the PC. | FAMILIES and METHODS in wodx-library/data/recipes.mjs |
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
-| 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
+| 2026-11-12 | Kindred cooking by taste (B951) | Ben 2026-11-12: vampires can taste, they just cannot eat. No penalty. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
 
 ## Approved by Ben, 12 November 2026, 02:42 UTC (Splat Features Desk)
@@ -613,4 +613,5 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | The Inquisition's tribunal seats (B1114) | Inquisitor, notary, confessor and three familiars, a house rule until the Dark Ages Inquisitor book is read | POLITIES.inquisition |
 | 2026-11-12 | Imbued cells in a Future Darkness chronicle (B1114) | The polity follows the year, from 1999; set No politics until 2023 by hand | POLITIES["imbued-cell"] |
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
+| 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
 | 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |

@@ -140,7 +140,7 @@
 1999-5|H|mor|AS|Kargil|war|Kargil|India and Pakistan fight on the icy heights of Kargil.
 1999-7|W|vam,kue|AS|Bangladesh|occult,disaster|The Week of Nightmares|The house reading follows canon: the Ravnos Antediluvian wakes in India, and Kuei-jin, Garou and Kindred fight it for a week of storms and madness.
 1999-7|W|mag|AS|Bangladesh|occult,science|The Technocracy's strike|The house reading follows canon: Technocratic satellites burn the Ravnos Antediluvian with sunlight focused from orbit.
-1999-7|W|wra|EU|Stygia|occult,storm|The Fifth Great Maelstrom|The house reading follows Wraith canon: the Antediluvian's death sends a Maelstrom through the Underworld, and Stygia falls into ruin.
+1999-7|W|wra|EU|Stygia|occult,storm|The Sixth Great Maelstrom|The house reading follows Wraith canon: the Antediluvian's death sends the Sixth Great Maelstrom through the Underworld, and Stygia falls into ruin.
 1999-7|W|mag|EU|Vienna|occult,storm|The Avatar Storm|The house reading follows Mage canon: an Avatar Storm closes the Umbra to Mages, and Horizon Realms are cut off.
 1999-7|W|vam|EU|Prague|occult|The Ravnos madness|The house reading has the Ravnos of Prague go mad in a week, and the clan is nearly gone by summer's end.
 1999-8|H|mor|EU|Munich|science|The great eclipse|A total eclipse crosses Europe from Cornwall to Romania; millions watch.
