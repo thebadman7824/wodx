@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2490
+Next free block: B2510
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -101,6 +101,7 @@ Next free block: B2490
 | B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
 | B2470-B2479 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
+| B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2918,3 +2919,34 @@ Reverse: change the repair roll in quarter().
 Not built: fleets (more than two ships, moving at the slowest ship's speed, split pools), spotting range and the watch, special shot (chain shot, fire), the Shadowlands' relic ships of the Tempest, Umbral ships, and ships tied to battle maps or tokens. Logged in PENDING-REVIEW.md.
 
 Reverse: nothing to reverse.
+
+
+## B2500. The residents of a generated town (2026-11-12, Master Plan leftover of maps and a town generator)
+A map adopted from the town or village generator keeps each building's household as roles only (B620s, Interactables 0.21.0). WoDX NPC 0.46.0 turns them into people: "Seed the residents" on the scene's right-click menu or in the Storyteller's hand shows every household with the names it would give, the Storyteller ticks the ones to make, and each person gets a sheet from WoDX Creation's People generator, a routine and their household. The routines then put each resident where the hour says, by the same engine as every other NPC. Names follow the year and homeland in play, so the same town seeded in 1197 and in 1995 gives other people. Households already seeded are skipped; Draw again gives other names.
+
+Reverse: leave the menu entries unused, or take "residents" out of main.mjs.
+
+
+## B2501. The routine each role keeps (2026-11-12, house reading)
+The first person is the master and keeps the routine of the trade: a priest the canonical hours, an innkeeper the tavern, a merchant or shopkeeper the market day, a guard the watch, a nurse the hospital shift (from 1780), a physician the rounds, a pensioner stays at home, everyone else the labourer's or craftsman's day. A trade kept at home (the crafts, farming, a tavern, a shop, or any building tagged a workplace) has the building as workplace too; later trades such as factory hand, clerk, driver or teacher go out to work at a place of the fitting kind. A partner keeps the master's shop or tavern, else works in the house or goes out; children keep the child's day (school from 1500); elders stay at home; servants keep the household's hours; apprentices and farmhands work in the building; lodgers live there and work elsewhere. Every routine follows the year's hours (B704 to B706).
+
+Reverse: change presetForTrade and planRole in resident-rules.mjs.
+
+
+## B2502. Names in a household (2026-11-12, house reading)
+The household's family name is drawn as a man's, so its male form is known, and each member of the family takes the form for their sex: Czech and Slovak -ý to -á and -ová otherwise (Novák and Nováková, Černý and Černá, Jelínek and Jelínková), a German medieval byname "der Schmied" to "die Schmiedin", others unchanged. Servants, apprentices, farmhands, lodgers and clerks keep their own names. In a medieval Jewish household the master is ben or bat the household's name and the children ben or bat the master, when the master is a man. A partner is of the other sex nine times in ten. Only names follow sex; every text about a resident stays gender-neutral (B48).
+
+Reverse: change nameHousehold, kinFamily and czechFeminine in resident-rules.mjs.
+
+
+## B2503. Ghoul households and the building's owner (2026-11-12)
+Any household can be made the ghouls of one Cainite in the Actors list, through WoDX Creation's ghoul change (V20 Dark Ages ghoul rules in every era, rule 12). The master's name is written as the owner of the building's place when it had none, so trespass, ownership and Match owners read it.
+
+Reverse: pick Mortals for every household; clear the owner on the place.
+
+
+## B2504. Remove the residents (2026-11-12)
+"Remove the residents" deletes the sheets one seeding made on that scene and their tokens on every scene, clears the regions' record and an owner it filled in, after a confirmation that names how many. Only actors carrying the scene's resident record are touched.
+
+Reverse: nothing to reverse.
+

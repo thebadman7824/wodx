@@ -887,3 +887,6 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Ships at sea (B2483, B2485): the Great War's gunnery and ramming read for ships of the living world with Seamanship; ships soak at 6; a ship built to ram takes 1 die a net success | As listed | Name other figures |
 | 2026-11-12 | Ships at sea (B2482, B2486): a quarry 5,000 yards off gets away; repair at 6 with each helper a die | As listed | Change LOST_AT or the repair roll |
 | 2026-11-12 | Ships at sea leaves for later (B2487): fleets, spotting and the watch, special shot, relic ships of the Tempest, Umbral ships, tokens on a map | Not built | Name any to build |
+| 2026-11-12 | Residents of a generated town (B2501): the routine each role keeps and which trades work at home | As listed in B2501 | Change presetForTrade or planRole in resident-rules.mjs |
+| 2026-11-12 | Residents (B2502): a household's family name in the form for each member's sex (Czech -ová and -á, German medieval -in), a partner of the other sex nine times in ten, Jewish medieval kin named ben or bat the master | As listed in B2502 | Change nameHousehold or kinFamily |
+| 2026-11-12 | Residents (B2503): the master's name filled in as the building's owner when it had none | Filled in | Clear the owner; or drop the owner line in residents.mjs |
