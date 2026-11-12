@@ -153,7 +153,7 @@ export async function makeGhoul(mortal, {domitor = null, points = 1, time = game
   await setChronology(mortal, {ghouled: time});
 }
 
-export async function giveVitae(drinker, regnant, {points = 1, time = game.time.worldTime} = {}) {
+export async function giveVitae(drinker, regnant, {points = 1, time = game.time.worldTime, firstDouble = false} = {}) {
   if ( !game.user.isGM ) return null;
   if ( lineOf(regnant) !== "vampire" ) throw new Error(`${regnant?.name} is not a vampire`);
   if ( drinker.id === regnant.id ) throw new Error("A vampire cannot bond to itself");
@@ -166,7 +166,8 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
     stage = bondStage(before?.drinks ?? 0);
     await setLineage(drinker, {bonds: {...lineage(drinker).bonds, [regnant.id]: {name: regnant.name, drinks: before?.drinks ?? 0, ...(before ?? {}), last: time}}});
   } else {
-    stage = await recordDrink(drinker, regnant, time);
+    // Dark Ages Tremere (V20 Dark Ages pdf p. 64): the first drink of another's vitae counts as two
+    stage = await recordDrink(drinker, regnant, time, firstDouble && !(before?.drinks > 0) ? 2 : 1);
     // At the full oath, all lesser bonds vanish (p. 341)
     if ( stage.stage >= 3 ) {
       const bonds = {...lineage(drinker).bonds};

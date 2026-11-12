@@ -65,6 +65,7 @@ import * as SOR from "./social-rules.js";
 import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
+import * as KF from "./feeding-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -268,7 +269,7 @@ async function onSocket(p) {
     if (p.action === "update") await actor.update(p.data);
     else if (p.action === "damage") await applyDamage(actor, p.type, p.levels);
     else if (p.action === "kx") await kx().onSocket(p);
-    else if (p.action === "oath") { const r = await fromUuid(p.regnant); await oathStep(actor, r?.actor ?? r, p.points); }
+    else if (p.action === "oath") { const r = await fromUuid(p.regnant); await oathStep(actor, r?.actor ?? r, p.points, { firstDouble: !!p.firstDouble }); }
 }
 
 async function spendWillpower(actor, n = 1) {
@@ -1084,34 +1085,64 @@ export async function hunt({ actor: a } = {}) {
     const scene = actor.getActiveTokens?.()[0]?.scene ?? canvas?.scene ?? null;
     let here = null;
     try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
-    const area = here?.area && R.HUNTING_GROUNDS[here.area] ? here.area : "market";
+    // The vampire's usual hunt (B964) fills in the window; the scene's own ground still wins
+    const rule = feedingRule(actor), year = yearNow();
+    const styleKey = KF.HUNT_STYLES[flag(actor, "huntStyle")] && KF.styleAllowed(flag(actor, "huntStyle"), year) ? flag(actor, "huntStyle") : "";
+    const style = KF.HUNT_STYLES[styleKey] ?? null;
+    const area = here?.area && R.HUNTING_GROUNDS[here.area] ? here.area : style?.area ?? "market";
+    const abId = k => findAbility(actor, k)?.id ?? "";
+    const styles = Object.entries(KF.HUNT_STYLES).filter(([k]) => KF.styleAllowed(k, year));
+    const styleData = Object.fromEntries(styles.map(([k, x]) => [k, { area: x.area, prey: x.prey, attr: x.attr, ability: abId(x.ability), state: x.state ?? "clean", clash: KF.styleClash(k, rule), note: x.note ?? "" }]));
+    const palDiff = rule?.palate ? KF.palateHuntDifficulty((flag(actor, "palate") ?? {}).breadth ?? "broad") : 0;
     const content = `<form>
       <p>${esc(actor.name)}: blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
+      <div class="form-group"><label>Usual hunt</label><select name="style" data-fixed>${opts([["", "— none —"], ...styles.map(([k, x]) => [k, x.label])], styleKey)}</select></div>
+      <p class="vta-note wodx-style-note">${esc([style?.note, styleKey ? styleData[styleKey].clash : ""].filter(Boolean).join(" "))}</p>
       <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), area)}</select></div>
       ${here?.outbreak ? `<p class="vta-note"><b>${esc(here.outbreak.name)}.</b> ${esc(here.outbreak.note)} The sick are easy to find, and blood taken from them can carry the sickness to the next vessel.</p>` : ""}
       ${here?.extra ? `<div class="form-group"><label>Heat here (${esc(here.band.name)})</label><input type="number" name="heat" value="${here.extra}" min="0"/></div>` : ""}
-      ${poolSelectors(actor, "", { attr: "wits", ability: findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "" })}
+      ${poolSelectors(actor, "", { attr: style?.attr ?? "wits", ability: (style ? abId(style.ability) : "") || (findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "") })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
         <input type="number" name="fame" value="${background(actor, "Fame")}" style="width:3.5em"/> <input type="number" name="domain" value="${background(actor, "Domain")}" style="width:3.5em"/> <input type="number" name="herd" value="${background(actor, "Herd")}" style="width:3.5em"/></div>
       <div class="form-group"><label>Inhumanity / other difficulty</label><input type="number" name="inhuman" value="0"/></div>
+      ${palDiff ? `<div class="form-group"><label>Palate (+${palDiff}, house rule; Herd is taken to fit)</label><input type="number" name="palateDiff" value="${palDiff}" min="0"/></div>` : ""}
       <div class="form-group"><label>Hours available</label><input type="number" name="hours" value="3" min="1"/></div>
-      <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), "human")}</select></div>
+      <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), style?.prey ?? "human")}</select></div>
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
-      ${stateFields(here?.outbreak ? "disease" : "clean")}
+      ${stateFields(here?.outbreak ? "disease" : style?.state ?? "clean")}
+      ${feedingFields(actor, rule, { hunting: true })}
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
-    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, { ...fd, sceneId: scene?.id ?? null }), { width: 500 });
+    const render = (...args) => {
+        const root = rootOf(args.find(x => x?.querySelector || x?.[0]?.querySelector) ?? args[0]);
+        const sel = root?.querySelector?.("select[name=style]");
+        if (!sel) return;
+        sel.addEventListener("change", () => {
+            const d = styleData[sel.value];
+            const note = root.querySelector(".wodx-style-note");
+            if (note) note.textContent = d ? [d.note, d.clash].filter(Boolean).join(" ") : "";
+            if (!d) return;
+            const set = (name, val) => { const el = root.querySelector(`[name=${name}]`); if (el && val !== undefined && val !== "" && [...(el.options ?? [])].some(o => o.value === val)) el.value = val; };
+            if (!here?.area) set("area", d.area);
+            set("vessel", d.prey); set("attr", d.attr); set("ability", d.ability); if (!here?.outbreak) set("vstate", d.state);
+        });
+    };
+    return dialog("WoDX Hunt", content, "Hunt", async fd => {
+        if ((fd.style ?? "") !== (flag(actor, "huntStyle") ?? "")) await setFlag(actor, "huntStyle", fd.style || null);
+        await savePalate(actor, rule, fd);
+        return resolveHunt(actor, { ...fd, sceneId: scene?.id ?? null, rule });
+    }, { width: 500, render });
 }
 
 async function resolveHunt(actor, fd) {
     const pool = readPool(actor, fd.attr, fd.ability);
-    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) });
+    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) + (Number(fd.palateDiff) || 0) });
     const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: hp.bonusDice, baseDifficulty: hp.difficulty,
         woundPenalty: woundPenalty(actor) });
     const rolls = [];
-    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}${Number(fd.heat) ? `, heat +${Number(fd.heat)}` : ""}</div>`;
+    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}${Number(fd.heat) ? `, heat +${Number(fd.heat)}` : ""}${Number(fd.palateDiff) ? `, palate +${Number(fd.palateDiff)}` : ""}</div>`;
     let caught = false, botched = false;
     for (let h = 1; h <= Math.max(1, fd.hours); h++) {
         const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty });
@@ -1126,31 +1157,113 @@ async function resolveHunt(actor, fd) {
     body += `<div class="vta-big good">Prey caught: ${R.VESSELS[fd.vessel].label}.</div>`;
     let take = fd.take;
     if (fd.dieWorth) { const d = await rollPool(1, 11); rolls.push(d.roll); take = d.faces[0] ?? 1; body += `<div class="vta-note">One die's worth of blood: ${take}.</div>`; }
-    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks });
+    const st = KF.HUNT_STYLES[fd.style];
+    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks, cold: st?.cold ?? 0,
+        rule: fd.rule ?? null, fits: fd.fits === undefined ? true : !!fd.fits, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering });
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
-export async function feed({ actor: a, vessel: t } = {}) {
+/* Feeding rules of clans and bloodlines, and the vessel's harm (3.41.0, feeding-rules.js) */
+function yearNow() { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } }
+function feedingDarkAges() { return KF.isDarkAgesFeeding({ eraId: FXD.eraId(), year: yearNow() }); }
+/** The clan or bloodline's feeding rule for a vampire, or null. A flag wodx-actions.bloodline names a bloodline the sheet can't. */
+function feedingRule(actor) {
+    if (!actor || !isVampire(actor)) return null;
+    const s = actor.system ?? {};
+    const name = [flag(actor, "bloodline"), s.clan === "custom" ? s.custom?.clan : s.clan, s.custom?.clan].filter(Boolean);
+    for (const t of name) { const k = KF.clanKey(t); if (k) return KF.ruleFor(k, { darkAges: feedingDarkAges() }); }
+    return null;
+}
+/** The token document behind a vessel (for a passer-by's tags). */
+function vesselTokenDoc(t, vessel) {
+    if (t?.document) return t.document;
+    if (t?.documentName === "Token") return t;
+    if (vessel?.token) return vessel.token;
+    return [...(game.user.targets ?? [])].find(x => x.actor?.id === vessel?.id)?.document ?? null;
+}
+/** A vessel's tags: its own (wodx-actions.vesselTags), a passer-by's (wodx-npc.passerby.tags), and "animal" for beasts. */
+function vesselTagsOf(vessel, tokDoc) {
+    const own = KF.parseTags(flag(vessel, "vesselTags") ?? []);
+    const pb = KF.parseTags(tokDoc?.flags?.["wodx-npc"]?.passerby?.tags ?? []);
+    const kind = vessel ? P.detectProfile(vessel) : "";
+    return [...new Set([...own, ...pb, ...(kind === "beast" ? ["animal"] : []), ...(kind === "kindred" ? ["kindred", "vampire"] : [])])];
+}
+/** A living vessel's blood: its own flag (system blood pools are 0 on mortal sheets), recovering one a day. */
+function vesselBlood(vessel, vesselType) {
+    const kind = P.detectProfile(vessel);
+    const living = KF.isLiving(kind) && kind !== "ghoul";
+    if (!living) { const b = blood(vessel); return { living: KF.isLiving(kind), value: b.value, full: b.max, system: true }; }
+    const full = R.VESSELS[vesselType]?.pool ?? 10;
+    return { living: true, value: KF.bloodNow(flag(vessel, "vesselBlood"), full, game.time?.worldTime ?? 0), full, system: false };
+}
+const FOUGHT_SECONDS = 3600;
+function foughtRecently(vessel, actor) {
+    const at = flag(vessel, "fought")?.[actor.id];
+    return at !== undefined && (game.time?.worldTime ?? 0) - num(at) <= FOUGHT_SECONDS;
+}
+/** The clan's own lines in the Feed and Hunt windows. */
+function feedingFields(actor, rule, { tags = [], fits = null, willing = false, fought = false, hunting = false } = {}) {
+    if (!rule) return "";
+    let h = `<p class="vta-note"><b>${esc(rule.label)}.</b> ${esc(rule.note)} (${esc(rule.page)})</p>`;
+    if (rule.palate) {
+        const p = flag(actor, "palate") ?? {};
+        h += `<div class="form-group"><label>Palate (chosen at the Embrace)</label><input type="text" name="palateText" value="${esc(p.text ?? "")}" placeholder="e.g. merchants' daughters"/></div>
+          <div class="form-group"><label>Palate tags</label><input type="text" name="palateTags" value="${esc((p.tags ?? []).join(", "))}" placeholder="merchant, woman"/></div>
+          <div class="form-group"><label>Palate is</label><select name="palateBreadth" data-fixed>${opts(Object.entries(KF.PALATE_BREADTH).map(([k, x]) => [k, x.label]), p.breadth ?? "broad")}</select></div>`;
+        if (!hunting) h += `<div class="form-group"><label><input type="checkbox" name="fits"${fits !== false ? " checked" : ""}/> The vessel fits the palate${fits === null ? " (no tags to check: the Storyteller's call)" : fits ? " (the tags match)" : " (the tags don't match)"}</label></div>`;
+        else h += `<div class="form-group"><label><input type="checkbox" name="fits" checked/> The prey caught fits the palate (the hunt's difficulty pays for it)</label></div>`;
+    }
+    if (rule.flesh && !hunting) h += `<div class="form-group"><label>Flesh points to eat (each: +1 blood, 1 unsoakable lethal to the vessel)</label><input type="number" name="flesh" value="0" min="0" max="10"/></div>`;
+    if (rule.unwilling) h += `<div class="form-group"><label><input type="checkbox" name="willing"${willing ? " checked" : ""}/> The vessel is willing (or enthralled by Presence)</label></div>`;
+    if (rule.mustFight) h += `<div class="form-group"><label><input type="checkbox" name="fought"${fought ? " checked" : ""}/> Fought and beaten first${fought ? " (a fight is on record)" : ""}</label></div>`;
+    if (rule.offering) h += `<div class="form-group"><label><input type="checkbox" name="offering" checked/> The vessel is offered to the gods first (thirty seconds)</label></div>`;
+    return h;
+}
+/** Save a changed palate on the vampire. */
+async function savePalate(actor, rule, fd) {
+    if (!rule?.palate || fd.palateText === undefined) return;
+    const p = { text: String(fd.palateText ?? "").trim(), tags: KF.parseTags(fd.palateTags), breadth: fd.palateBreadth || "broad" };
+    const cur = flag(actor, "palate") ?? {};
+    if (cur.text !== p.text || (cur.tags ?? []).join() !== p.tags.join() || cur.breadth !== p.breadth) await setFlag(actor, "palate", p);
+}
+
+export async function feed({ actor: a, vessel: t, willing = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const vessel = targetActor(t);
-    const vb = vessel ? blood(vessel) : null;
+    const tokDoc = vessel ? vesselTokenDoc(t, vessel) : null;
+    const vType = vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : vessel && P.detectProfile(vessel) === "beast" ? "dog" : "human";
+    const vb = vessel ? vesselBlood(vessel, vType) : null;
+    const rule = feedingRule(actor);
+    const vtags = vessel ? vesselTagsOf(vessel, tokDoc) : [];
+    const pal = flag(actor, "palate") ?? {};
+    const fits = rule?.palate ? (vessel && isVampire(vessel) ? true : KF.matchTags(pal.tags, vtags)) : null;
     const content = `<form>
-      <p>${esc(actor.name)} feeds${vessel ? ` from <b>${esc(vessel.name)}</b> (blood ${vb.value})` : " (no target selected)"}</p>
-      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : "human")}</select></div>
+      <p>${esc(actor.name)} feeds${vessel ? ` from <b>${esc(vessel.name)}</b> (blood ${vb.value}${vb.living && !vb.system ? `/${vb.full}` : ""})` : " (no target selected)"}</p>
+      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vType)}</select></div>
       <div class="form-group"><label>Blood points to drink (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label>Minutes the blood has been outside a living body</label><input type="number" name="cold" value="0" min="0"/></div>
       ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
+      ${vessel ? `<div class="form-group"><label>Vessel's tags (who they are)</label><input type="text" name="vtags" value="${esc(vtags.join(", "))}" placeholder="merchant, woman, catholic"/></div>` : ""}
+      ${feedingFields(actor, rule, { tags: vtags, fits, willing, fought: vessel ? foughtRecently(vessel, actor) : false })}
     </form>`;
     return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
-        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks });
-        return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls);
+        await savePalate(actor, rule, fd);
+        if (vessel && fd.vtags !== undefined) {
+            const nt = KF.parseTags(fd.vtags), auto = vesselTagsOf(null, tokDoc);
+            const own = nt.filter(x => !auto.includes(x) && !["animal", "kindred", "vampire"].includes(x) || KF.parseTags(flag(vessel, "vesselTags") ?? []).includes(x));
+            if (own.join() !== KF.parseTags(flag(vessel, "vesselTags") ?? []).join()) await setFlag(vessel, "vesselTags", own.length ? own : null);
+        }
+        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks,
+            rule, fits: rule?.palate ? !!fd.fits : true, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering,
+            flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
+        return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls, fed.undo ? { kind: "feed", actor: actor.uuid, undo: fed.undo } : null);
     });
 }
 
-/** Shared feeding: hunger check, amount, vessel risk, blood pool, Blood Oath. */
-async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls, state = "clean", drinks = 0 }) {
+/** Shared feeding: hunger check, amount, the clan's rule, vessel harm, blood pool, Blood Oath. */
+async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls, state = "clean", drinks = 0, rule = null, fits = true, willing = true, fought = false, offering = true, flesh = 0, tags = [] }) {
     let html = "";
     // What is in the vessel's blood (V20 pp. 295, 301-302): a blood-borne disease may be spotted before drinking
     const taint = R.VESSEL_STATES[state] && state !== "clean" ? state : null;
@@ -1174,11 +1287,36 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     }
     const v = virtues(actor), b = blood(actor);
     const vessel = R.VESSELS[vesselType] ?? R.VESSELS.human;
-    let vesselPool = vesselActor ? blood(vesselActor).value : vessel.pool;
-    if (vesselActor && profile(vesselActor) === "mortal") {
-        const dmg = healthTrack(vesselActor).damage;
-        vesselPool = Math.max(0, vesselPool - (dmg.bashing + dmg.lethal + dmg.aggravated));
-        if (dmg.bashing + dmg.lethal + dmg.aggravated) html += `<div class="vta-note">Injured mortal: one fewer blood point per health level of damage.</div>`;
+    const vKind = vesselActor ? P.detectProfile(vesselActor) : null;
+    const vampireVessel = vesselType === "vampire" || (vesselActor && isVampire(vesselActor));
+    // The vessel's blood: a living vessel has the lower of its blood and (full - damage) (V20 printed p. 269, both ways)
+    const vb = vesselActor ? vesselBlood(vesselActor, vesselType) : { living: !vampireVessel, value: vessel.pool, full: vessel.pool, system: false };
+    const dmg0 = vesselActor ? healthTrack(vesselActor).damage : { bashing: 0, lethal: 0, aggravated: 0 };
+    const dmgTotal = dmg0.bashing + dmg0.lethal + dmg0.aggravated;
+    let vesselPool = vb.system ? vb.value : KF.available({ blood: vb.value, full: vb.full, damage: dmgTotal, living: vb.living && !!vesselActor });
+    if (vesselActor && vb.living && dmgTotal && vesselPool < vb.value) html += `<div class="vta-note">Wounded: ${esc(vesselActor.name)} has ${vesselPool} blood to give (one fewer per health level of damage, V20 printed p. 269).</div>`;
+    // The clan's limits that come before the first drop
+    let nightPenalty = false;
+    if (rule?.unwilling && !willing && !vampireVessel) {
+        if (rule.unwilling === "wp") {
+            const ok = await spendWillpower(actor, 1);
+            html += `<div class="vta-note">${esc(rule.label)}: feeding on the unwilling ${ok ? "costs a Willpower point" : "would cost a Willpower point (none left)"} (${esc(rule.page)}).</div>`;
+        } else {
+            const r = await rollPool(willpower(actor).perm, 6);
+            rolls.push(r.roll);
+            html += rollBlock(`${rule.label}: feeding on the unwilling, Willpower (6)`, r);
+            if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
+        }
+    }
+    if (rule?.mustFight === "wpRoll" && !fought && !vampireVessel) {
+        const r = await rollPool(willpower(actor).perm, 6);
+        rolls.push(r.roll);
+        html += rollBlock(`${rule.label}: feeding on someone not beaten in a fight, Willpower (6)`, r);
+        if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
+    }
+    if (nightPenalty && setting("applyChanges") && actor.isOwner) {
+        try { await L.chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
+            description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page }); } catch (e) { console.warn("WoDX | feed penalty", e); }
     }
     let gorge = false;
     if (isVampire(actor) && R.isHungry(b.value, v.selfcontrol.value) && !flag(actor, "golconda")) {
@@ -1194,18 +1332,33 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             html += `<div class="vta-res">${gorge ? "Hunger frenzy: the vampire gorges until sated, the vessel dies, or control returns." : "Control holds."}</div>`;
         }
     }
-    const room = b.max - b.value;
-    let want = gorge || !take ? room : Math.min(take, room);
-    let drunk = Math.min(want, Math.floor(vesselPool));
+    const room0 = b.max - b.value;
+    // Nagaraja flesh (V20 printed p. 407): from what is left of the body
+    let fleshEaten = 0;
+    if (rule?.flesh && flesh > 0) {
+        const body = KF.fleshPoints(vesselType, vessel.pool) - num(vesselActor ? flag(vesselActor, "fleshTaken") : 0);
+        fleshEaten = Math.max(0, Math.min(flesh, body, Math.max(0, room0)));
+        html += `<div class="vta-sec"><b>Eats ${fleshEaten} flesh point${fleshEaten === 1 ? "" : "s"}</b>${fleshEaten < flesh ? ` (of ${flesh}: ${body <= fleshEaten ? "the body has no more" : "no room in the pool"})` : ""}.</div>`;
+        const ns = KF.fleshEaten(flag(actor, "nagaraja") ?? {}, fleshEaten);
+        if (setting("applyChanges")) await setFlag(actor, "nagaraja", ns);
+        html += `<div class="vta-note">Flesh debt: ${ns.debt} di${ns.debt === 1 ? "e" : "ce"} off Physical pools${ns.debt ? "" : " (caught up)"}.</div>`;
+        if (ns.debt !== num(flag(actor, "nagaraja")?.debt) || fleshEaten) await nagarajaPenalty(actor, ns.debt);
+    }
+    const room = Math.max(0, room0 - fleshEaten);
+    const nour = KF.nourishment(rule, { vesselKind: vesselType, vampireVessel, fits, fought, offering });
+    // Gorging on blood that gives nothing: the Beast drinks on until the vessel is empty
+    let want = gorge ? (nour.factor ? room : vesselPool) : !take ? room : Math.min(take, nour.factor ? room : take);
+    let drunk = Math.max(0, Math.min(want, Math.floor(vesselPool)));
     const minutes = cold || 0;
-    const effective = R.bloodGained(drunk, { minutesDead: minutes });
+    const effective = KF.nourished(R.bloodGained(drunk, { minutesDead: minutes }), nour.factor);
     const turns = Math.ceil(drunk / 3);
     html += `<div class="vta-sec"><b>Drinks ${drunk} blood point${drunk === 1 ? "" : "s"}</b> (${turns} turn${turns === 1 ? "" : "s"} at up to 3 per turn)${minutes >= 10 ? `; cold blood, worth ${effective}` : ""}.</div>`;
+    if (nour.why && drunk > 0) html += `<div class="vta-warn">${esc(rule.label)}: ${esc(nour.why)} (${esc(rule.page)}).</div>`;
     if (vessel.pool < 1) html += `<div class="vta-note">A ${vessel.label.toLowerCase()} holds only ${vessel.pool} blood point.</div>`;
     // Efficient Digestion (V20 p. 480 printed): one more point for every two drunk
-    const digest = vessel.pool < 1 ? 0 : TH.digestionBonus(actor, drunk, room - effective);
+    const digest = vessel.pool < 1 || !nour.factor ? 0 : TH.digestionBonus(actor, drunk, room - effective);
     if (digest) html += `<div class="vta-note">Efficient Digestion: ${digest} more blood point${digest === 1 ? "" : "s"}.</div>`;
-    const gain = vessel.pool < 1 ? 0 : effective + digest;
+    const gain = vessel.pool < 1 ? 0 : effective + digest + fleshEaten;
     if (gain) {
         const ch = await changeBlood(actor, gain);
         html += `<div class="vta-res good">Blood pool ${ch.before} → ${ch.after}</div>`;
@@ -1214,8 +1367,11 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
         html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
     }
-    const prey = drunk > 0 ? TH.preyNote(actor) : "";
-    if (prey) html += `<div class="vta-warn">${esc(prey)}</div>`;
+    // Prey Exclusion (V20 printed p. 485): the group on the item; tags make it certain, otherwise a reminder
+    const pex = (actor.items ?? []).find(i => /prey exclusion/i.test(i.name ?? ""));
+    const pexHit = drunk > 0 && pex ? KF.matchTags(KF.preyExclusionTags(pex.name), tags) : null;
+    if (pexHit === true) html += `<div class="vta-warn">Prey Exclusion: ${esc(vesselActor?.name ?? "the vessel")} is one of the forbidden. Frenzy at once, and a roll of the Road or Humanity at difficulty 7.</div><button type="button" class="vta-btn" data-kx="frenzy" data-actor="${esc(actor.uuid)}" data-arg="physical">Frenzy</button>`;
+    else if (pexHit === null) { const prey = drunk > 0 ? TH.preyNote(actor) : ""; if (prey) html += `<div class="vta-warn">${esc(prey)}</div>`; }
     // Chronicle 0.22.0: flaws that bite on feeding go to the Storyteller's queue (Infectious Bite and the like)
     if (drunk > 0) { try { game.modules.get("wodx-chronicle")?.api?.traits?.prompt?.(actor, "feed", { at: `${vesselActor?.id ?? vesselType}:${Math.floor(game.time.worldTime)}` }); } catch (e) { /* no traits */ } }
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
@@ -1223,15 +1379,47 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
     if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
-    const vRemaining = vesselPool - drunk;
-    if (vesselActor && setting("applyChanges")) await updateActor(vesselActor, { "system.advantages.bloodpool.temporary": Math.max(0, blood(vesselActor).value - drunk) });
-    if (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal")) {
-        const risk = R.vesselRisk(vesselActor ? attr(vesselActor, "stamina") : 2, drunk);
-        if (risk) {
-            const r = await rollPool(risk.dice, risk.difficulty);
-            rolls.push(r.roll);
-            html += rollBlock(`Vessel: Stamina – ${drunk - 2}`, r);
-            html += `<div class="vta-res ${r.successes ? "" : "bad"}">${r.botch ? "Botch: the vessel will die without immediate, severe care." : r.successes ? "The vessel stays conscious." : "The vessel passes out."}</div>`;
+    const living = vb.living && !vampireVessel;
+    const undo = vesselActor ? { uuid: vesselActor.uuid, damage: dmg0, system: !!vb.system, vesselBlood: flag(vesselActor, "vesselBlood") ?? null, bloodpool: blood(vesselActor).value, fleshTaken: flag(vesselActor, "fleshTaken") ?? null, vesselState: flag(vesselActor, "vesselState") ?? null, statuses: [] } : null;
+    const vRemaining = Math.max(0, vesselPool - drunk);
+    const bloodLeft = Math.max(0, vb.value - drunk);
+    if (vesselActor && setting("applyChanges")) {
+        const upd = {};
+        if (vb.system) upd["system.advantages.bloodpool.temporary"] = Math.max(0, blood(vesselActor).value - drunk);
+        else if (drunk > 0) upd[`flags.${MOD}.vesselBlood`] = { value: bloodLeft, at: game.time?.worldTime ?? 0 };
+        if (fleshEaten) upd[`flags.${MOD}.fleshTaken`] = num(flag(vesselActor, "fleshTaken")) + fleshEaten;
+        // The taste goes with the blood (B960): a drained vessel's drink or drugs are gone
+        if (bloodLeft <= 0 && flag(vesselActor, "vesselState")) upd[`flags.${MOD}.-=vesselState`] = null;
+        if (Object.keys(upd).length) await updateActor(vesselActor, upd);
+    }
+    // One lethal level a point (two for the Giovanni), and one unsoakable lethal level a flesh point (B960)
+    const harm = KF.kissDamage(drunk, { mult: rule?.kissMult ?? 1, living }) + fleshEaten;
+    if (harm) {
+        if (vesselActor && setting("applyChanges")) {
+            const r = await applyDamage(vesselActor, "lethal", harm);
+            html += `<div class="vta-res bad">${esc(vesselActor.name)} takes ${harm} lethal level${harm === 1 ? "" : "s"} from ${fleshEaten ? "the bite and the flesh torn" : "the blood lost"}${rule?.kissMult > 1 ? ` (${esc(rule.label)}: two a point)` : ""}${r?.after ? `: ${healthText(vesselActor, r.after)}` : ""}.</div>`;
+        } else html += `<div class="vta-note">The vessel loses ${harm} health level${harm === 1 ? "" : "s"} (lethal) from the blood${fleshEaten ? " and flesh" : ""} taken.</div>`;
+    }
+    if (living && drunk > 0) {
+        const lost = vb.full - bloodLeft;
+        const out = KF.vesselOutcome(Math.max(lost, vb.full - vRemaining), vb.full);
+        let state = null;
+        if (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal")) {
+            const risk = R.vesselRisk(vesselActor ? attr(vesselActor, "stamina") : 2, drunk);
+            if (risk) {
+                const r = await rollPool(risk.dice, risk.difficulty);
+                rolls.push(r.roll);
+                html += rollBlock(`Vessel: Stamina – ${drunk - 2}`, r);
+                state = r.botch ? "dying" : r.successes ? null : "unconscious";
+                html += `<div class="vta-res ${r.successes ? "" : "bad"}">${r.botch ? "Botch: the vessel will die without immediate, severe care." : r.successes ? "The vessel stays conscious." : "The vessel passes out."}</div>`;
+            }
+        }
+        if (out.key === "hospital" && vRemaining > 0) html += `<div class="vta-warn">${esc(vesselActor?.name ?? "The vessel")} ${esc(out.text)} (V20 printed p. 269).</div>`;
+        if (vRemaining <= 0) state = "dead";
+        if (vesselActor && state && setting("applyChanges")) {
+            await statusEffect(vesselActor, state === "dead" ? "dead" : "unconscious", true);
+            undo.statuses.push(state === "dead" ? "dead" : "unconscious");
+            if (state === "dying") await updateActor(vesselActor, { [`flags.${MOD}.dying`]: { since: game.time?.worldTime ?? 0, why: "drained" } });
         }
         if (vRemaining <= 0) {
             html += `<div class="vta-warn">The vessel is drained dry and dies.</div>`;
@@ -1239,13 +1427,34 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${vesselActor?.name ?? "The vessel"} is drained to death`);
             if (sp?.html) html += sp.html;
             else if (!sp) html += `<div class="vta-note">The Road doesn't count this killing as a sin, or names no level: the Storyteller decides.</div>`;
+        } else if (!vesselActor) html += `<div class="vta-note">The vessel is left ${esc(out.text)}.</div>`;
+        html += `<div class="vta-note">The living get back one blood point a day; the wounds heal by the healing chart.</div>`;
+    }
+    // Lamia: the Seed of Lilith (V20 printed p. 423; V20 Dark Ages pdf p. 92)
+    if (rule?.lamia && living && drunk > 0) {
+        if (rule.lamia === "v20") {
+            const d = KF.lamiaDifficulty(tags);
+            const r = await rollPool(vesselActor ? attr(vesselActor, "stamina") : 2, d);
+            rolls.push(r.roll);
+            html += rollBlock(`The Seed of Lilith: the vessel's Stamina (${d})`, r);
+            if (!r.successes) {
+                html += `<div class="vta-warn">${esc(vesselActor?.name ?? "The vessel")} has the Seed of Lilith: a pox that kills within a few days.</div>`;
+                if (vesselActor && setting("applyChanges")) await updateActor(vesselActor, { [`flags.${MOD}.seedOfLilith`]: { since: game.time?.worldTime ?? 0, rule: "v20" } });
+            } else html += `<div class="vta-res">The vessel throws off the Seed of Lilith.</div>`;
+        } else {
+            html += `<div class="vta-warn">The Seed of Lilith: ${esc(vesselActor?.name ?? "the vessel")} rolls Stamina (7) each night for a fortnight, taking a lethal level each night it fails.</div>`;
+            if (vesselActor && setting("applyChanges")) await updateActor(vesselActor, { [`flags.${MOD}.seedOfLilith`]: { since: game.time?.worldTime ?? 0, rule: "da" } });
         }
-        html += `<div class="vta-note">Mortals recover one blood point per day.</div>`;
+    }
+    // Lamia vitae makes a carrier of the drinker
+    if (drunk > 0 && vesselActor && isVampire(vesselActor) && feedingRule(vesselActor)?.lamia && setting("applyChanges")) {
+        await updateActor(actor, { [`flags.${MOD}.carrier`]: { since: game.time?.worldTime ?? 0, what: "the Seed of Lilith (Lamia blood)" } });
+        html += `<div class="vta-warn">Lamia blood: ${esc(actor.name)} now carries the Seed of Lilith until it is out of their body.</div>`;
     }
     // Witnesses: living tokens that can see the feeding (walls block sight)
     const myTok = actor.getActiveTokens?.()[0];
     if (myTok && drunk > 0) {
-        // Who sees it by kind and place (3.41.0): mortals breach, other kinds are startled, Kindred and ghouls are calm
+        // Who sees it by kind and place (3.42.0): mortals breach, other kinds are startled, Kindred and ghouls are calm
         const o = kx().observersOf(myTok, { secret: "kindred", exclude: [actor.id, vesselActor?.id].filter(Boolean) });
         const ws = o.breach;
         if (ws.length) {
@@ -1256,11 +1465,65 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         } else if (o.mode === "guarded") html += `<div class="vta-note">${esc(KX.placeNoteOf(o.mode, "feeding"))}</div>`;
         if (o.startled.length) kx().revealed(actor, { secret: "kindred", event: "feeding", startledOnly: true }).catch(e => console.error("WoDX |", e));
     }
-    if (drunk > 0 && (vesselType === "vampire" || (vesselActor && isVampire(vesselActor)))) {
+    if (drunk > 0 && vampireVessel) {
         html += `<div class="vta-note">Cainite vitae: this drink is a step of the Blood Oath toward ${vesselActor ? esc(vesselActor.name) : "the donor"}. A Cainite victim may roll Self-Control/Instinct (diff 8) to resist the Kiss.</div>`;
-        if (vesselActor) html += await oathStep(actor, vesselActor, drunk);
+        // Assamite antitribu (V20 printed p. 429): Kindred blood is an addiction
+        if (rule?.addiction) {
+            if (flag(actor, "addicted")) html += `<div class="vta-warn">${esc(actor.name)} is addicted to Kindred blood: Self-Control or Instinct (6) to pass up the next chance (${esc(rule.page)}).</div>`;
+            else {
+                const d = KF.addictionDifficulty(drunk);
+                const r = await rollPool(v.selfcontrol.value, d);
+                rolls.push(r.roll);
+                html += rollBlock(`${rule.label}: ${v.selfcontrol.label} (${d}) against addiction`, r);
+                if (!r.successes) {
+                    html += `<div class="vta-warn">${esc(actor.name)} is addicted to Kindred blood.</div>`;
+                    if (setting("applyChanges")) await setFlag(actor, "addicted", { since: game.time?.worldTime ?? 0 });
+                }
+            }
+        }
+        if (vesselActor) html += await oathStep(actor, vesselActor, drunk, { firstDouble: !!rule?.bondFirstDouble });
+        if (rule?.bondFirstDouble) html += `<div class="vta-note">${esc(rule.label)}: ${esc(rule.note)} (${esc(rule.page)})</div>`;
     }
-    return { html, drunk };
+    const hasUndo = !!(undo && setting("applyChanges") && (harm || undo.statuses.length || drunk > 0));
+    if (hasUndo) html += `<button type="button" class="vta-btn" data-action="feedUndo">Undo the harm to ${esc(vesselActor.name)}</button>`;
+    return { html, drunk, undo: hasUndo ? undo : null };
+}
+
+/** Nagaraja flesh debt as a penalty on the Physical Attributes' bonus (one die off every Physical pool a point). */
+async function nagarajaPenalty(actor, debt) {
+    if (!setting("applyChanges") || !actor?.isOwner) return;
+    const had = num(flag(actor, "fleshPenalty"));
+    const want = Math.max(0, num(debt));
+    if (had === want) return;
+    const upd = {};
+    for (const k of ["strength", "dexterity", "stamina"]) {
+        const at = actor.system.attributes?.[k];
+        if (!at) continue;
+        upd[`system.attributes.${k}.bonus`] = num(at.bonus) + had - want;
+        upd[`system.attributes.${k}.total`] = num(at.total ?? at.value) + had - want;
+    }
+    upd[`flags.${MOD}.fleshPenalty`] = want;
+    await actor.update(upd);
+}
+
+/** Undo the harm a feeding card did to the vessel (its damage, blood, flesh, states). */
+async function feedUndo(msg, d) {
+    const u = d.undo;
+    const doc = u?.uuid ? await fromUuid(u.uuid) : null;
+    const v = doc?.actor ?? doc;
+    if (!v) return ui.notifications.warn("That vessel is gone.");
+    if (!game.user.isGM && !v.isOwner) return ui.notifications.warn("Only the GM can undo harm to the vessel.");
+    const upd = { ...healthUpdate(v, u.damage) };
+    if (u.vesselBlood) upd[`flags.${MOD}.vesselBlood`] = u.vesselBlood; else upd[`flags.${MOD}.-=vesselBlood`] = null;
+    if (u.fleshTaken) upd[`flags.${MOD}.fleshTaken`] = u.fleshTaken; else upd[`flags.${MOD}.-=fleshTaken`] = null;
+    if (u.vesselState) upd[`flags.${MOD}.vesselState`] = u.vesselState;
+    upd[`flags.${MOD}.-=dying`] = null;
+    upd[`flags.${MOD}.-=seedOfLilith`] = null;
+    if (u.system) upd["system.advantages.bloodpool.temporary"] = u.bloodpool;
+    await updateActor(v, upd);
+    for (const s of u.statuses ?? []) await statusEffect(v, s, false);
+    await markUsed(msg, "feedUndo");
+    return post(null, "Feeding undone", `<div class="vta-note">${esc(v.name)}: health, blood and states as before the feeding. The drinker's own blood is not changed back.</div>`);
 }
 
 /* ================================================================== */
@@ -1406,14 +1669,14 @@ function bondsOf(thrall) {
     }
     return out;
 }
-async function oathStep(thrall, regnant, points = 1) {
+async function oathStep(thrall, regnant, points = 1, { firstDouble = false } = {}) {
     const C = creationApi();
     if (C && regnant && isVampire(regnant)) {
         if (!game.user.isGM) {
-            requestGM({ action: "oath", uuid: thrall.uuid, regnant: regnant.uuid, points });
+            requestGM({ action: "oath", uuid: thrall.uuid, regnant: regnant.uuid, points, firstDouble });
             return `<div class="vta-sec"><b>Vitae:</b> sent to the GM to record ${esc(thrall.name)} drinking from ${esc(regnant.name)} (WoDX Creation keeps the bond).</div>`;
         }
-        const r = await C.giveVitae(thrall, regnant, { points });
+        const r = await C.giveVitae(thrall, regnant, { points, firstDouble });
         await kx().logEvent(thrall, `Drinks ${regnant.name}'s vitae: ${r?.oath ? `already sworn to ${r.oath}` : r?.stage?.label ?? ""}.`, "oath");
         if (r?.stage?.stage >= 3) await kx().logEvent(regnant, `${thrall.name} is blood bound to ${regnant.name}.`, "oath");
         return `<div class="vta-sec"><b>Blood Oath:</b> ${esc(thrall.name)} → ${esc(regnant.name)}: ${esc(r?.oath ? `already sworn to ${r.oath}; no new bond` : r?.sameNight ? `${r.stage.label} (a second drink the same night doesn't deepen it)` : r?.stage?.label ?? "")}${r?.becameGhoul ? "; becomes a ghoul" : ""}. ${r?.stage?.stage ? R.OATH_STAGES[r.stage.stage] ?? "" : ""}</div>`;
@@ -1427,8 +1690,10 @@ async function oathStep(thrall, regnant, points = 1) {
         await setFlag(thrall, "oaths", bonds);
         return `<div class="vta-note">${esc(thrall.name)} is already fully Oath-bound to another; no new bond forms.</div>`;
     }
-    cur.stage = Math.min(3, cur.stage + 1);
-    cur.drinks += 1;
+    // Dark Ages Tremere (V20 Dark Ages pdf p. 64): the first drink counts as two
+    const step = firstDouble && !cur.drinks ? 2 : 1;
+    cur.stage = Math.min(3, cur.stage + step);
+    cur.drinks += step;
     cur.lastDrink = game.time.worldTime;
     bonds[key] = cur;
     if (cur.stage >= 3) for (const k of Object.keys(bonds)) if (k !== key) delete bonds[k];
@@ -1662,6 +1927,13 @@ export async function newNight({ actors } = {}) {
                 if (b.value - 1 <= 0) bits.push("<b>no blood: ravenous, frenzy likely</b>");
             }
             if (gol) await actor.setFlag(MOD, "golcondaNights", (flag(actor, "golcondaNights") ?? 0) + 1);
+        }
+        // Nagaraja (V20 printed p. 407): a night without flesh costs one more die off every Physical pool
+        if (vamp && feedingRule(actor)?.flesh) {
+            const ns = KF.nightPassed(flag(actor, "nagaraja") ?? {});
+            await actor.setFlag(MOD, "nagaraja", ns);
+            await nagarajaPenalty(actor, ns.debt);
+            if (ns.debt) bits.push(`no flesh: ${ns.debt} di${ns.debt === 1 ? "e" : "ce"} off Physical pools`);
         }
         if (!inTorpor) {
             const w = willpower(actor);
@@ -2173,6 +2445,7 @@ async function onButton(msg, action) {
         case "diablerie": return diablerieStep(actor, await fromUuid(d.victim), "", msg);
         case "sin": await markUsed(msg, "sin"); return sin({ actor });
         case "rotschreck": await markUsed(msg, "rotschreck"); return rotschreck({ actor, provocation: d.rotProv });
+        case "feedUndo": return feedUndo(msg, d);
         case "damage": { await markUsed(msg, "damage"); const r = await applyDamage(actor, d.type, d.levels); return r?.after ? post(actor, `${actor.name} takes damage`, `<div class="vta-res">${d.levels} ${d.type}: ${healthText(actor, r.after)}</div>`) : null; }
     }
 }
@@ -2250,9 +2523,9 @@ async function createMacros() {
     }
 }
 
-const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.41.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.42.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2442,6 +2715,16 @@ function kindredHooks() {
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
+    // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
+    Hooks.on("wodxDamageApplied", async (actor, info) => {
+        try {
+            if (!info?.attacker || !actor?.isOwner) return;
+            const d = await fromUuid(info.attacker);
+            const by = d?.actor ?? d;
+            if (!by || !isVampire(by) || by.id === actor.id) return;
+            await actor.update({ [`flags.${MOD}.fought.${by.id}`]: game.time?.worldTime ?? 0 });
+        } catch (e) { console.warn("WoDX | fought mark", e); }
+    });
     // Wraiths (3.4.0): a Corpus change from the sheet or from Combat; a new scene; the session
     Hooks.on("updateActor", (actor, changes, options) => {
         if (!foundry.utils.hasProperty(changes, "system.health.damage.corpus") || !WX.isWraith(actor)) return;

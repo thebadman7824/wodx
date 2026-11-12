@@ -371,7 +371,7 @@ export function build(ctx) {
   /** From WoDX Actions: a breach recorded in the Masquerade ledger. */
   async function onActionsBreach({entry, by} = {}) {
     if ( !isActiveGM() || mode() === "off" || !entry ) return;
-    // A closed place or Elysium keeps it: no rumour goes out to the town (WoDX Actions 3.41.0)
+    // A closed place or Elysium keeps it: no rumour goes out to the town (WoDX Actions 3.42.0)
     if ( entry.spread === false ) return;
     const actor = by?.uuid ? (await fromUuid(by.uuid)) : null;
     const a = actor?.actor ?? actor;

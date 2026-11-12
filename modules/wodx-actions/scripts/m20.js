@@ -62,7 +62,7 @@ export function build(ctx) {
         const preset = roteItem ? EF.E.roteOfItem(roteItem) : null;
         const i = info(actor);
         const sg = suggest(actor), W = C.WORDS[sg.age.key];
-        // Sleepers who can see the caster (3.41.0): only they make vulgar magick witnessed
+        // Sleepers who can see the caster (3.42.0): only they make vulgar magick witnessed
         const seen = ctx.observersOf?.(actor) ?? null;
         if (seen?.breach.length && sg.kind === "vulgar") sg.kind = "witnessed";
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;

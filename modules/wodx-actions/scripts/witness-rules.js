@@ -1,5 +1,5 @@
 /**
- * WoDX Actions 3.41.0: who an act startles, and how far word of it goes. Pure rules, no Foundry.
+ * WoDX Actions 3.42.0: who an act startles, and how far word of it goes. Pure rules, no Foundry.
  *
  *   The secret   The kind of creature an act shows for what it is: the profile of whoever did it (a Cainite feeding,
  *                a Garou in Crinos, a demon's apocalyptic form, a mage's vulgar magick).

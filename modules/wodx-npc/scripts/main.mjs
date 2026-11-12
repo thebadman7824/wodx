@@ -15,6 +15,8 @@
 import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import * as AN from "./animal-rules.mjs";
+import * as MR from "./mortal-rules.mjs";
+import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildFounding} from "./founding.mjs";
@@ -29,7 +31,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.21.1";
+const VERSION = "0.24.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -69,7 +71,25 @@ function infoOf(actor) {
   let sides = [];
   try { sides = rivalry?.sidesOf?.(actor)?.own ?? []; } catch (e) { sides = []; }
   return {kind: C()?.getKind?.(actor) ?? "mortal", generation: num(s.generation) || 13,
-    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides, animal: animalOf(actor)};
+    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides, animal: animalOf(actor), mortal: mortalOf(actor), where: whereNow()};
+}
+/**
+ * NPC 0.24.0 (B1011): the year, era and region archetypes check. A scene's region is its flag wodx-npc.region,
+ * else WoDX Storyteller's money region; Moravia when neither says.
+ */
+function whereNow() {
+  let era = null, region = null;
+  try { era = chron()?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { era = null; }
+  try { region = canvas?.scene?.getFlag?.(MOD, "region") ?? game.settings.get("wodx-storyteller", "moneyRegion") ?? null; } catch (e) { region = null; }
+  return {year: yearNow(), era, region: region || "moravian"};
+}
+/** NPC 0.23.0 (B1008): a mortal's archetype from the actor flag wodx-npc.archetype, else a guess from the name. */
+function mortalOf(actor) {
+  try {
+    const own = actor?.getFlag?.(MOD, "archetype");
+    if ( MR.MORTALS[own] ) return own;
+    return MR.guessMortal(actor?.token?.name ?? actor?.name);
+  } catch (e) { return null; }
 }
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
 /**
@@ -80,7 +100,9 @@ function animalOf(actor) {
   try {
     const pb = actor?.token?.getFlag?.(MOD, "passerby");
     if ( pb?.archetype && AN.ANIMALS[pb.archetype] ) return pb.archetype;
-    if ( pb?.animal ) return AN.forCrowd(pb.animal, {year: yearNow(), kind: canvas?.scene?.getFlag?.(MOD, "place")?.kind ?? null});
+    // passerby.animal is true for an animal and passerby.kind names it (dog, cat, rat, bird, pig, goat, geese, horse, cattle)
+    const crowdKind = pb?.animal === true ? pb.kind : typeof pb?.animal === "string" ? pb.animal : null;
+    if ( crowdKind ) return AN.forCrowd(crowdKind, {year: yearNow(), kind: canvas?.scene?.getFlag?.(MOD, "place")?.kind ?? null});
     const own = actor?.getFlag?.(MOD, "animal");
     if ( AN.ANIMALS[own] ) return own;
     return AN.guessAnimal(actor?.token?.name ?? actor?.name);
@@ -213,6 +235,13 @@ export function readFight(tok, combat = game.combat) {
   const offstage = canvas.tokens.placeables.filter(t => t.id !== tok.id && !inFight.has(t.id) && t.actor && !t.actor.hasPlayerOwner
     && t.document.disposition === tok.document.disposition && !t.document.hidden);
   const visiblePlans = E.filter(e => e.visible).map(e => plans.get(e.id)?.best).filter(Boolean);
+  // NPC 0.23.0: morale reads who of this NPC's own side is down, and whether a leader is among them
+  const fallen = (combat?.combatants?.contents ?? []).filter(c => c.isDefeated && c.tokenId !== tok.id && c.token?.object?.actor
+    && (RV.enemiesBySide(combat?.getFlag?.("wodx-combat", "sides") ?? null, tok.id, c.tokenId) === false
+      || (RV.enemiesBySide(combat?.getFlag?.("wodx-combat", "sides") ?? null, tok.id, c.tokenId) === null && c.token.disposition === tok.document.disposition)));
+  const leaderDown = fallen.some(c => (profileFor(c.token.object.actor).tactics ?? []).includes("lead"));
+  const sideDown = fallen.length / (fallen.length + allies.length + 1);
+  const surrendered = !!combat && tok.document.getFlag(MOD, "surrendered") === combat.id;
   const kind = C()?.getKind?.(actor) ?? "mortal";
   const state = {
     self: {kind, wounds: wounds(actor), willpower: num(adv.willpower?.temporary), blood: num(adv.bloodpool?.temporary), bloodMax: num(adv.bloodpool?.max),
@@ -222,7 +251,8 @@ export function readFight(tok, combat = game.combat) {
       // A Fear keyword from WoDX Actions (Traits With Teeth step 5): the NPC keeps away and flees
       afraid: !!(actor?.effects ?? []).find?.(e => !e.disabled && e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-effect-fear" && e.name === "Afraid"),
       delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos")), onGround: onOwnGround(actor) || animalAtHome(actor),
-      hungry: AN.isHungry(profileFor(actor), monthNow())},
+      hungry: AN.isHungry(profileFor(actor), monthNow()), surrendered},
+    leaderDown, sideDown,
     enemies: E, allies: AL, offstageAllies: offstage.length, witnesses: witnessesOf(tok, combat),
     bestAttackDice: Math.max(0, ...visiblePlans.map(p => p.atkDice ?? 0)),
     canRanged: visiblePlans.some(p => p.w?.ranged)
@@ -236,6 +266,8 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
+  // NPC 0.24.0: a Marauder's Quiet picks among what it could do
+  if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
   if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
   if ( fight.state.self.rotschreck ) options.unshift({action: "flee", score: 99, why: "Rötschreck: the Red Fear drives them from fire or sunlight"});
   const topAttack = options.find(o => o.action === "attack" || o.action === "shoot");
@@ -378,7 +410,8 @@ function approach(tok, target) {
 
 function snapshot(tokens) {
   return {
-    tokens: tokens.map(t => ({uuid: t.document.uuid, x: t.document.x, y: t.document.y, moved: t.document.getFlag("wodx-combat", "moved") ?? null})),
+    tokens: tokens.map(t => ({uuid: t.document.uuid, x: t.document.x, y: t.document.y, moved: t.document.getFlag("wodx-combat", "moved") ?? null,
+      surrendered: t.document.getFlag(MOD, "surrendered") ?? null})),
     actors: tokens.map(t => {
       const a = t.actor, ct = C()?.corpusTrack?.(a), d = ct?.damage ?? a.system?.health?.damage ?? {};
       return {uuid: a.uuid, damage: {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)},
@@ -395,6 +428,7 @@ async function undo(snap) {
     const upd = {x: s.x, y: s.y};
     await doc.update(upd, {animate: false, wodxMove: false});
     if ( s.moved ) await doc.setFlag("wodx-combat", "moved", s.moved); else await doc.unsetFlag("wodx-combat", "moved");
+    if ( s.surrendered ) await doc.setFlag(MOD, "surrendered", s.surrendered); else if ( doc.getFlag(MOD, "surrendered") ) await doc.unsetFlag(MOD, "surrendered");
   }
   for ( const s of snap.actors ?? [] ) {
     const a = await fromUuid(s.uuid);
@@ -470,6 +504,10 @@ async function execute(tok, opt) {
       return {done: true, text: `${tok.name} calls for help: ${near.map(t => t.name).join(" and ")} join the fight (they roll initiative next turn).`, added: made.map(c => c.id)};
     }
     case "search": return {done: true, text: `${tok.name} searches for the unseen (Perception + Alertness, or Auspex against Obfuscate: the Storyteller rolls).`};
+    case "surrender":
+      await tok.document.setFlag(MOD, "surrendered", game.combat?.id ?? "yes");
+      return {done: true, text: `${tok.name} throws down their arms and yields. They take no more actions in this fight unless the Storyteller says so.`};
+    case "hostage": return {done: true, text: `${tok.name} tries to seize a bystander as a shield (the Storyteller decides who and rolls it).`};
     default: return {done: true, text: `${tok.name} waits.`};
   }
 }
@@ -616,7 +654,8 @@ function soon(combat) {
 const FEARS = {fire: "Fire", sunlight: "Sunlight", faith: "True Faith", silver: "Silver", supernatural: "The supernatural", violence: "Violence", crinos: "The Crinos form",
   wraith: "Wraiths"};
 const TRAITS = {aggression: "Aggression", caution: "Caution", cunning: "Cunning", loyalty: "Loyalty", cowardice: "Cowardice", berserk: "Berserk", power: "Uses powers",
-  herd: "Herd (moves and runs with its kind)", territory: "Territory (fights harder on its own patch)", hunger: "Hunger (bolder in the lean months)"};
+  herd: "Herd (moves and runs with its kind)", territory: "Territory (fights harder on its own patch)", hunger: "Hunger (bolder in the lean months)",
+  morale: "Morale (holds when the leader falls)"};
 
 export async function editBehavior(actor) {
   if ( !actor || !game.user.isGM ) return null;
@@ -629,7 +668,7 @@ export async function editBehavior(actor) {
     <div class="wodx-field"><label>In combat</label><select name="mode" data-fixed>${opt(modes, saved.mode ?? "")}</select></div>
     <div class="wodx-field"><label>Household</label><input type="text" name="household" value="${esc(saved.household ?? "")}" placeholder="The Kessler farm"/></div>
     <fieldset><legend>Temperament (0 to 2; blank keeps the template's)</legend>
-    ${Object.entries(TRAITS).map(([k, l]) => `<div class="wodx-field"><label>${l}</label><input type="number" name="${k}" min="0" max="2" step="0.1" value="${saved[k] ?? ""}" placeholder="${p[k]}"/></div>`).join("")}
+    ${Object.entries(TRAITS).map(([k, l]) => `<div class="wodx-field"><label>${l}</label><input type="number" name="${k}" min="0" max="2" step="0.1" value="${saved[k] ?? ""}" placeholder="${p[k] ?? ""}"/></div>`).join("")}
     <div class="wodx-field"><label>Flees at wound level</label><input type="number" name="fleeAt" min="1" max="7" step="1" value="${saved.fleeAt ?? ""}" placeholder="${p.fleeAt}"/></div>
     </fieldset>
     <fieldset><legend>Tactics and rivals</legend>

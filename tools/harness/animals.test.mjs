@@ -150,6 +150,7 @@ test("the runtime wires animals in", () => {
   const main = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
   const rt = readFileSync(new URL("../../modules/wodx-npc/scripts/routines.mjs", import.meta.url), "utf8");
   assert.match(main, /animal: animalOf\(actor\)/);
+  assert.match(main, /pb\?\.animal === true \? pb\.kind/, "passers-by: animal is true and kind names it");
   assert.match(main, /out\.add\("wraith"\)/);
   assert.match(main, /hungry: AN\.isHungry/);
   assert.match(rt, /wraith: ctx\.C\?\.\(\)\?\.getKind\?\.\(intruder\) === "wraith"/);

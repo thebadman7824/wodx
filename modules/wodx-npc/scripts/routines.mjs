@@ -24,6 +24,7 @@ import * as NR from "./npc-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as FR from "./fight-rules.mjs";
 import * as AN from "./animal-rules.mjs";
+import * as MR from "./mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -345,6 +346,10 @@ export function build(ctx) {
       if ( a ) await a.update(p.prev ? {[`flags.${MOD}.paused`]: p.prev} : unsetKey(`flags.${MOD}.paused`));
     }
     if ( snap?.combat ) await game.combats.get(snap.combat)?.delete();
+    if ( snap?.reports ) {
+      const sc = await fromUuid(snap.reports.scene);
+      if ( sc ) await sc.update(snap.reports.prev?.length ? {[`flags.${MOD}.reports`]: snap.reports.prev} : unsetKey(`flags.${MOD}.reports`));
+    }
     if ( snap?.alert ) {
       const sc = await fromUuid(snap.alert.scene);
       if ( sc ) { await sc.update(snap.alert.prev ? {[`flags.${MOD}.alert`]: snap.alert.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
@@ -839,6 +844,20 @@ export function build(ctx) {
     if ( !isActiveGM() ) return;
     for ( const scene of game.scenes ?? [] ) if ( (flag(scene, "marks") ?? []).length ) await repairMarks(scene);
     await deliverCarries();
+    // NPC 0.23.0: word that someone carried to the watch arrives, and the place goes on alarm
+    for ( const scene of game.scenes ?? [] ) {
+      const reps = flag(scene, "reports") ?? [];
+      if ( !reps.length ) continue;
+      const now = game.time.worldTime, due = reps.filter(r => r.at <= now), left = reps.filter(r => r.at > now);
+      if ( !due.length ) continue;
+      await scene.update(left.length ? {[`flags.${MOD}.reports`]: left} : unsetKey(`flags.${MOD}.reports`));
+      const prev = flag(scene, "alert") ?? null;
+      const full = await raiseAlarmFull(scene, `${due.map(r => r.by).join(", ")} told what they saw`);
+      await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev, carry: full?.carry ?? null}}},
+        content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Word reaches the watch</h3><span class="vta-verdict">Alarm</span></header><div class="vta-body">`
+          + `<p>${esc(due.map(r => `${r.by} told someone about ${r.about}`).join("; "))}. ${esc(scene.name)} is on alarm for an hour of world time, then wary until the next dusk.</p>`
+          + `<div class="wnpc-done"><button type="button" class="wnpc-a-undo">Undo</button></div></div></div>`});
+    }
     for ( const scene of game.scenes ?? [] ) {
       const a = alertOf(scene);
       if ( !a ) continue;
@@ -1033,6 +1052,15 @@ export function build(ctx) {
         await pause([w.actor, ...helpers]);
         return {text: `${w.name} sends for help: ${helpers.map(a => a.name).join(" and ")} come${helpers.length === 1 ? "s" : ""}.`, snap};
       }
+      case "report": {
+        // NPC 0.23.0 (B1007): the place goes on alarm when the word reaches the watch, a couple of hours from now
+        await pause([w.actor]);
+        const sc = canvas.scene, prev = flag(sc, "reports") ?? [];
+        snap.reports = {scene: sc.uuid, prev};
+        const at = t + MR.REPORT_HOURS * 3600;
+        await sc.setFlag(MOD, "reports", [...prev, {at, by: w.name, about: i?.name ?? "someone"}]);
+        return {text: `${w.name} says nothing now, and will tell someone what they saw about ${i?.name ?? "them"} within ${MR.REPORT_HOURS} hours.`, snap};
+      }
       case "flee": {
         await pause([w.actor]);
         if ( !onGrid() ) return {text: `${w.name} flees (move the token by hand).`, snap};
@@ -1092,7 +1120,7 @@ export function build(ctx) {
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${esc(k)}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
   // Built on first use: Foundry's classes exist only once the game has loaded
   let placesClass = null;
-  /** How far word of a breach goes from a place (WoDX Actions 3.41.0 reads it): blank follows the kind of place. */
+  /** How far word of a breach goes from a place (WoDX Actions 3.42.0 reads it): blank follows the kind of place. */
   const MASQ_MODES = {"": "By kind of place", open: "Open: word spreads", guarded: "Guarded, like Elysium", closed: "Closed: nothing leaves"};
   function PlacesAppClass() {
   if ( placesClass ) return placesClass;

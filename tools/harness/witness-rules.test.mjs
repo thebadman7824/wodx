@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import * as W from "../../modules/wodx-actions/scripts/witness-rules.js";
 
-/* WoDX Actions 3.41.0: who an act startles, and how far word goes by place (B980-B984) */
+/* WoDX Actions 3.42.0: who an act startles, and how far word goes by place (B980-B984) */
 
 test("Kindred and ghouls are calm at a Cainite's Discipline; mortals breach", () => {
   assert.equal(W.reaction("kindred", {profile: "kindred"}), "calm");

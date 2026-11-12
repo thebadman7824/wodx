@@ -39,7 +39,7 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
 const lab = k => LABEL[k] ?? cap(k);
 
 export const DATA = { disc: null, roads: null };
-/** The place line for a card (3.41.0), from the witness rules. */
+/** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
@@ -215,7 +215,7 @@ export function build(ctx) {
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
-            // Who could see it, if the power showed (3.41.0): the Storyteller judges whether it did
+            // Who could see it, if the power showed (3.42.0): the Storyteller judges whether it did
             if (!p.passive && setting("witnessAsk")) revealed(actor, { event: `used ${p.n}`, ask: true }).catch(e => console.error("WoDX |", e));
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
@@ -391,7 +391,7 @@ export function build(ctx) {
         await j.pages.getName("All records")?.update({ "text.content": entries.length ? `<table>${head}${entries.map(row).join("")}</table>` : "<p></p>" });
     }
     /** Record a breach: {by: actor, event: text, witnesses: [actors], secret?, place?} (GM; players' records go through the GM).
-     *  Witnesses of another kind are startled, not breach witnesses; those who already know are left out (3.41.0). */
+     *  Witnesses of another kind are startled, not breach witnesses; those who already know are left out (3.42.0). */
     async function recordBreach({ by, event, witnesses, secret = null, place = undefined }) {
         if (!witnesses?.length) return null;
         if (!game.user.isGM) { ctx.requestGM?.({ action: "kx", op: "breach", by: by?.uuid, event, witnesses: witnesses.map(w => w.uuid), secret }); return null; }
@@ -487,7 +487,7 @@ export function build(ctx) {
         for (const r of doc?.regions ?? []) { const t = tag(r); if (t) return t; }
         return tag(scene);
     }
-    /** Everyone who can see a token, sorted by what the act shows (3.41.0): {secret, breach, startled, calm} as tokens, plus the place and its mode. */
+    /** Everyone who can see a token, sorted by what the act shows (3.42.0): {secret, breach, startled, calm} as tokens, plus the place and its mode. */
     function observersOf(tokenLike, { secret = null, range = null, exclude = [] } = {}) {
         const tok = tokenLike?.object ?? tokenLike;
         const sec = secret ?? WR.secretOf(P.detectProfile(tok?.actor));
@@ -509,7 +509,7 @@ export function build(ctx) {
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
     /**
-     * An act that may show what someone is (3.41.0): finds who can see it, then tells the Storyteller who would breach
+     * An act that may show what someone is (3.42.0): finds who can see it, then tells the Storyteller who would breach
      * the Masquerade (with a button to record them) and who of another kind is startled. ask: the act may not have
      * shown at all (a Discipline), so the card asks rather than tells.
      */
@@ -760,7 +760,7 @@ export function build(ctx) {
         const form = GX.info(a).form;
         if (form !== "crinos") return null;
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
-        // Creatures of another kind who see the Crinos are startled (3.41.0); the Delirium below is for the mortals
+        // Creatures of another kind who see the Crinos are startled (3.42.0); the Delirium below is for the mortals
         await revealed(a, { secret: "lupine", event: "in Crinos", startledOnly: true });
         const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.id) && !P.worldFlag(t.actor, "kinfolk") && P.worldFlag(t.actor, "knows") !== "*" && !(P.worldFlag(t.actor, "knows") ?? []).includes?.("lupine"));
         if (!w.length) return null;
