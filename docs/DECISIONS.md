@@ -940,3 +940,26 @@ Reverse: sightDiff in chase-rules.mjs, and the Call for sight box in the Chase w
 A catch, or the last pursuer losing the quarry, ends it. A catch puts Start a fight on the Storyteller's card, which hands the quarry and whoever caught up to WoDX Combat's fight start. The book has no fixed lead that ends a chase; as a fallback when nobody calls for sight, WoDX lets the quarry get away with a lead of 10 successes over every pursuer (house rule). The Storyteller can end a chase at any time. Players' cards say who is gaining in words; the dice and totals of every racer are on the Storyteller's copy, with an Undo for the last turn, so a Storyteller character's rolls stay hidden.
 
 Reverse: AWAY_LEAD in chase-rules.mjs (a large number turns it off).
+
+## B1000. Animal archetypes (2026-11-12)
+Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of ANIMAL_TEMPLATES in npc-rules TEMPLATES and of ANIMAL_PRESETS in routine-rules PRESETS.
+
+## B1001. Herd, territory and hunger; swarm, scatter, scavenge and stalk (2026-11-12)
+Three new temperament traits, 0 to 2, read by the fight scorer and the reactions: herd (runs when outnumbered or when the others run; weaker alone), territory (fights harder and bears one more wound on its own patch, fights trespassers), hunger (bolder in the lean months, December to March). Four new tactics: swarm, scatter, scavenge and stalk. Animals bark or raise a racket only when they have the call tactic (guard dogs, poultry), never send for the watch, and take no fright at the supernatural as such: Ben ruled (2026-11-12) that animals do not shy from Kindred but do shy from wraiths, so every animal fears "wraith" and an intruder or foe who is a wraith counts as that fear.
+
+Reverse: the new lines in scoreOptions and pickReaction are marked NPC 0.21.0.
+
+## B1002. More kinds of place and roles (2026-11-12)
+PLACE_KINDS gains alley, yard, docks and park (the same four the passers-by work adds) and sewer, hospital and station. Routines gain the roles yard, alley, sewer, docks and park, and the activities grazing and roosting. A routine block can name the months it runs in.
+
+Reverse: remove the kinds; old scenes keep their tags.
+
+## B1003. Which animal a beast is (2026-11-12)
+A beast's archetype comes from its passers-by token flag (archetype, else the crowd's animal kind mapped by place and year), else the actor flag wodx-npc.animal, else a guess from its name. Nothing found keeps the plain beast template.
+
+Reverse: animalOf() in main.mjs.
+
+## B1004. The other lines wait (2026-11-12)
+Ben approved the whole brainstorm and asked for animals first. Criminals, combatants, townsfolk and the supernatural lines follow in later versions. Ben's rulings for them: Orpheus travellers only in the World of Future Darkness; Kuei-jin travellers only in Asia.

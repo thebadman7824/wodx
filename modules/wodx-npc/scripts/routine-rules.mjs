@@ -15,9 +15,12 @@
  * describeTime plus feastOn below. Tests build it from WoDX Chronicle's date engine.
  */
 
+import {ANIMAL_PRESETS, ANIMAL_DEFAULT_PRESET} from "./animal-rules.mjs";
+
 export const ACTIVITIES = {
   sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
-  hunt: "Hunting", hide: "In hiding", errand: "On errands", attend: "Attending their master", wander: "Out and about"
+  hunt: "Hunting", hide: "In hiding", errand: "On errands", attend: "Attending their master", wander: "Out and about",
+  graze: "Grazing", roost: "Roosting"
 };
 
 /** Kinds of place a scene, or a region inside one, can be tagged with. */
@@ -25,6 +28,8 @@ export const PLACE_KINDS = {
   home: "Home", workplace: "Workplace or shop", church: "Church, chapel or cloister", tavern: "Tavern or inn",
   haven: "Haven (a Cainite's resting place)", gate: "Gate, watch-house or barracks", market: "Market or square",
   street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
+  alley: "Back alley or courtyard", yard: "Farmyard, stable or village", docks: "Docks or riverside", park: "Park, garden or churchyard",
+  sewer: "Sewer, cellar or tunnels", hospital: "Hospital or asylum", station: "Station or depot",
   other: "Other"
 };
 
@@ -40,7 +45,13 @@ export const ROLES = {
   street: {label: "The streets", kinds: ["street", "market"]},
   court: {label: "Court", kinds: ["castle"]},
   wilds: {label: "The wilds", kinds: ["wilds", "caern"]},
-  domitor: {label: "With their domitor", kinds: []}
+  domitor: {label: "With their domitor", kinds: []},
+  // NPC 0.21.0 (B1002): places animals keep
+  yard: {label: "The yard", kinds: ["yard", "home"]},
+  alley: {label: "Back alleys", kinds: ["alley", "street"]},
+  sewer: {label: "Sewers and cellars", kinds: ["sewer", "alley"]},
+  docks: {label: "The riverside", kinds: ["docks", "street"]},
+  park: {label: "Parks and churchyards", kinds: ["park", "church", "wilds"]}
 };
 
 const weekdays = [0, 1, 2, 3, 4, 5];
@@ -87,7 +98,7 @@ export const PRESETS = {
     B(0, 24, "home", "rest")]},
   recluse: {label: "Recluse (stays at home)", blocks: [B(0, 24, "home", "rest")]}
 };
-/** The routine each 7b template starts from. Spirits, ghosts and beasts have none: they keep no hours a town would know. */
+/** The routine each 7b template starts from. Spirits and the plain beast have none; the animal archetypes keep their own (animal-rules). */
 export const DEFAULT_PRESET = {guard: "night-watch", civilian: "labourer", ghoul: "ghoul", neonate: "neonate", elder: "elder", garou: "garou", hunter: "hunter"};
 
 export const blocksOf = (routine, template, year = null) => {
@@ -249,6 +260,9 @@ Object.assign(PRESETS, {
     B(13, 17, "work", "work", {label: "Study and copying"}), B(17, 18, "church", "pray", {label: "Vespers"}),
     B(19, 20, "church", "pray", {label: "Compline"}), B(20, 2, "home", "sleep"), B(3, 6, "home", "sleep"), B(0, 24, "home", "rest")]}
 });
+// NPC 0.21.0 (B1000): the animals' hours
+Object.assign(PRESETS, ANIMAL_PRESETS);
+Object.assign(DEFAULT_PRESET, ANIMAL_DEFAULT_PRESET);
 Object.assign(DEFAULT_PRESET, {sabbat: "sabbat-pack", sheriff: "sheriff", mage: "mage", technocrat: "technocrat", changeling: "changeling",
   inquisitor: "inquisitor", soldier: "soldier", ghost: "wraith"});
 
@@ -278,6 +292,8 @@ export function blockAt(blocks, time, describe) {
     if ( b.feast === "not" && day.feast ) continue;
     if ( b.when === "day" && d.isNight ) continue;
     if ( b.when === "night" && !d.isNight ) continue;
+    // NPC 0.21.0: months it runs in (1 January ... 12 December), for seasons: pasture, winter sleep
+    if ( Array.isArray(b.months) && b.months.length && d.month && !b.months.includes(day.month ?? d.month) ) continue;
     return {block: b, index: i};
   }
   return null;
@@ -481,29 +497,37 @@ export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "
  */
 export function pickReaction(profile, sit) {
   const p = profile, out = [], tac = p.tactics ?? [], fears = p.fears ?? [];
-  const afraid = (sit.supernatural && fears.includes("supernatural")) || (sit.weapon && fears.includes("violence"));
-  const amiss = [sit.curfew && "abroad in the curfew", sit.trespass && "trespassing", sit.weapon && "weapon drawn", sit.supernatural && "the supernatural shown"].filter(Boolean);
+  const afraid = (sit.supernatural && fears.includes("supernatural")) || (sit.weapon && fears.includes("violence"))
+    || (sit.wraith && fears.includes("wraith"));
+  // NPC 0.21.0 (B1001): animals bark or raise a racket only when they are callers; they never send for the watch
+  const beast = !!p.animal, herd = Number(p.herd ?? 0), terr = Number(p.territory ?? 0), hung = Number(p.hunger ?? 0);
+  // Animals take no fright at the supernatural as such (Ben, 2026-11-12): only a wraith, through their fears
+  const amiss = [sit.curfew && !beast && "abroad in the curfew", sit.trespass && "trespassing", sit.weapon && "weapon drawn", sit.supernatural && !beast && "the supernatural shown"].filter(Boolean);
   const keeper = ["guard", "ghoul", "elder"].includes(p.template) || tac.includes("guard") || (tac.includes("call") && p.loyalty >= 1);
   if ( keeper ) {
     let sc = 2 + p.loyalty + (sit.curfew ? 1.5 : 0) + (sit.trespass ? 1.5 : 0) - (sit.weapon ? 0.5 : 0) - (afraid ? 3 : 0);
-    out.push({action: "challenge", score: sc, why: amiss.length ? `keeps order here: ${amiss.join(", ")}` : "keeps order here"});
+    const what = beast ? "barks and bristles" : "keeps order here";
+    out.push({action: "challenge", score: sc, why: amiss.length ? `${what}: ${amiss.join(", ")}` : what});
   }
-  {
+  if ( !beast || tac.includes("call") ) {
     const sc = 0.5 + p.caution + (sit.supernatural ? 2 : 0) + (sit.weapon ? 1 : 0) + (sit.alliesNear ? 0.5 : 0) + (afraid ? 1 : 0);
-    out.push({action: "alarm", score: sc, why: sit.alliesNear ? `${sit.alliesNear} others within call` : "shouts for anyone near"});
+    out.push({action: "alarm", score: sc, why: beast ? "raises a racket" : sit.alliesNear ? `${sit.alliesNear} others within call` : "shouts for anyone near"});
   }
-  if ( tac.includes("call") || keeper ) {
+  if ( !beast && (tac.includes("call") || keeper) ) {
     out.push({action: "send", score: 0.5 + p.loyalty + ((sit.supernatural || sit.weapon) ? 1.5 : 0) - (sit.alliesNear ? 0.5 : 0), why: "sends for the watch"});
   }
   {
-    const sc = (amiss.length ? p.cowardice * 1.5 : 0) + (afraid ? 3 + p.caution : 0);
-    const r = [afraid && "faces what it fears", amiss.length && p.cowardice >= 1 && "not one to stand"].filter(Boolean);
+    const startled = tac.includes("scatter") && amiss.length > 0;
+    const sc = (amiss.length ? p.cowardice * 1.5 : 0) + (afraid ? 3 + p.caution : 0) + (startled ? 2 + herd / 2 : 0);
+    const r = [afraid && "faces what it fears", amiss.length && p.cowardice >= 1 && "not one to stand", startled && "scatters"].filter(Boolean);
     if ( r.length ) out.push({action: "flee", score: sc, why: r.join("; ")});
   }
   {
     let sc = 2 * p.aggression - 2 + (sit.weapon ? p.aggression : 0) + (sit.homeGround && sit.trespass ? 1.5 : 0) - (afraid ? 4 : 0);
     const r = [sit.weapon && "a blade is out", sit.homeGround && sit.trespass && "on its own ground"].filter(Boolean);
     if ( tac.includes("supernatural") && sit.supernatural ) { sc += 3 + p.aggression; r.push("a hunter goes for the monster"); }
+    if ( terr && (sit.trespass || sit.homeGround) ) { sc += 1.5 * terr; r.push("defends its own patch"); }
+    if ( hung && sit.hungry && sit.alone ) { sc += 1.5 * hung; r.push("hungry, and this one is alone"); }
     out.push({action: "fight", score: sc, why: r.length ? r.join("; ") : "picks a fight"});
   }
   out.push({action: "ignore", score: amiss.length ? 0.2 : 3, why: amiss.length ? "looks away" : "nothing amiss"});

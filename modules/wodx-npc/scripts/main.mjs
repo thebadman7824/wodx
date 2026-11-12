@@ -14,6 +14,7 @@
  */
 import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
+import * as AN from "./animal-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildFounding} from "./founding.mjs";
@@ -68,7 +69,22 @@ function infoOf(actor) {
   let sides = [];
   try { sides = rivalry?.sidesOf?.(actor)?.own ?? []; } catch (e) { sides = []; }
   return {kind: C()?.getKind?.(actor) ?? "mortal", generation: num(s.generation) || 13,
-    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides};
+    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides, animal: animalOf(actor)};
+}
+const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
+/**
+ * NPC 0.21.0 (B1003): the animal archetype of a beast. A passers-by animal reads its token's flag (they share one
+ * hidden actor); else the actor's own flag; else a guess from the name ("Old Mastiff" is a guard dog).
+ */
+function animalOf(actor) {
+  try {
+    const pb = actor?.token?.getFlag?.(MOD, "passerby");
+    if ( pb?.archetype && AN.ANIMALS[pb.archetype] ) return pb.archetype;
+    if ( pb?.animal ) return AN.forCrowd(pb.animal, {year: yearNow(), kind: canvas?.scene?.getFlag?.(MOD, "place")?.kind ?? null});
+    const own = actor?.getFlag?.(MOD, "animal");
+    if ( AN.ANIMALS[own] ) return own;
+    return AN.guessAnimal(actor?.token?.name ?? actor?.name);
+  } catch (e) { return null; }
 }
 export function savedProfile(actor) { return actor?.getFlag(MOD, "behavior") ?? {}; }
 export function profileFor(actor, {phases = true} = {}) {
@@ -111,6 +127,8 @@ function fearSources(actor) {
   }
   if ( num(actor?.system?.advantages?.faith?.permanent) > 0 ) out.add("faith");
   if ( [...(actor?.effects ?? [])].some(e => /crinos|hispo/i.test(e.name ?? "")) ) out.add("crinos");
+  // NPC 0.21.0: animals shy from the restless dead (Ben, 2026-11-12), not from Kindred
+  if ( C()?.getKind?.(actor) === "wraith" ) out.add("wraith");
   return [...out];
 }
 /** Enemies of a token: the other side by disposition; a neutral NPC's enemies are only those who hurt it. */
@@ -154,6 +172,17 @@ function onOwnGround(actor) {
   } catch (e) { return false; }
 }
 
+/** NPC 0.21.0: an animal is on its own ground on the scene (or in a region of it) its routine calls home. */
+function animalAtHome(actor) {
+  try {
+    if ( !AN.ANIMALS[profileFor(actor).template] ) return false;
+    const roles = routines.routineOf(actor?.isToken ? (actor.baseActor ?? actor) : actor)?.roles ?? {};
+    const here = new Set([canvas.scene?.uuid, ...(canvas.scene?.regions?.contents ?? []).map(r => r.uuid)]);
+    return ["home", "yard", "wilds"].some(k => roles[k] && here.has(roles[k]));
+  } catch (e) { return false; }
+}
+const monthNow = () => { try { return routines.describer()(game.time.worldTime)?.month ?? null; } catch (e) { return null; } };
+
 /** state for NR.scoreOptions, and the tokens behind the ids. */
 export function readFight(tok, combat = game.combat) {
   const actor = tok.actor, s = actor.system ?? {}, adv = s.advantages ?? {};
@@ -172,7 +201,8 @@ export function readFight(tok, combat = game.combat) {
       reach: !!best && !plan.ignoredDistance && !best.w?.ranged, ranged: !!best?.w?.ranged && !plan.ignoredDistance,
       hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor), obvious: obvious(t.actor),
       fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0,
-      hurtByAllies: [...(harm.get(t.actor?.uuid)?.keys?.() ?? [])].some(u => allies.some(a => a.actor?.uuid === u))};
+      hurtByAllies: [...(harm.get(t.actor?.uuid)?.keys?.() ?? [])].some(u => allies.some(a => a.actor?.uuid === u)),
+      alone: !enemies.some(o => o.id !== t.id && (yardsBetween(t, o) ?? 99) <= 5)};
   });
   const AL = allies.map(t => {
     const hurt = harm.get(t.actor?.uuid) ?? new Map();
@@ -191,7 +221,8 @@ export function readFight(tok, combat = game.combat) {
       rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
       // A Fear keyword from WoDX Actions (Traits With Teeth step 5): the NPC keeps away and flees
       afraid: !!(actor?.effects ?? []).find?.(e => !e.disabled && e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-effect-fear" && e.name === "Afraid"),
-      delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos")), onGround: onOwnGround(actor)},
+      delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos")), onGround: onOwnGround(actor) || animalAtHome(actor),
+      hungry: AN.isHungry(profileFor(actor), monthNow())},
     enemies: E, allies: AL, offstageAllies: offstage.length, witnesses: witnessesOf(tok, combat),
     bestAttackDice: Math.max(0, ...visiblePlans.map(p => p.atkDice ?? 0)),
     canRanged: visiblePlans.some(p => p.w?.ranged)
@@ -582,8 +613,10 @@ function soon(combat) {
 /*  Behaviour editor                                                   */
 /* ------------------------------------------------------------------ */
 
-const FEARS = {fire: "Fire", sunlight: "Sunlight", faith: "True Faith", silver: "Silver", supernatural: "The supernatural", violence: "Violence", crinos: "The Crinos form"};
-const TRAITS = {aggression: "Aggression", caution: "Caution", cunning: "Cunning", loyalty: "Loyalty", cowardice: "Cowardice", berserk: "Berserk", power: "Uses powers"};
+const FEARS = {fire: "Fire", sunlight: "Sunlight", faith: "True Faith", silver: "Silver", supernatural: "The supernatural", violence: "Violence", crinos: "The Crinos form",
+  wraith: "Wraiths"};
+const TRAITS = {aggression: "Aggression", caution: "Caution", cunning: "Cunning", loyalty: "Loyalty", cowardice: "Cowardice", berserk: "Berserk", power: "Uses powers",
+  herd: "Herd (moves and runs with its kind)", territory: "Territory (fights harder on its own patch)", hunger: "Hunger (bolder in the lean months)"};
 
 export async function editBehavior(actor) {
   if ( !actor || !game.user.isGM ) return null;
