@@ -1039,18 +1039,34 @@ export function build(ctx) {
     return (scene.tokens?.contents ?? [...(scene.tokens ?? [])]).some(t => pcs.has(t.actorId));
   }
   /** Roll a hidden leader's powers into a phase: the successes at 6. */
-  async function powerDeed(f) {
+  /**
+   * A hidden leader's deed for a phase: from WoDX Storyteller's battle deeds (its table by post, age and kind of
+   * being, B2350s) when it is there, else Status + 3 dice at 6. Returns {name, successes, seen}.
+   */
+  async function powerDeed(f, battle, sideIdx, api) {
+    const leaderName = game.actors?.get(f.leader)?.name || `${f.name}'s leader`;
+    const D = game.wodx?.storyteller?.battleDeeds?.rules ?? game.modules.get("wodx-storyteller")?.api?.battleDeeds?.rules;
+    const leader = f.leader ? game.actors?.get(f.leader) : null;
+    const kind = (leader && game.wodxCombat?.getKind?.(leader)) || WR.COMBAT_KIND[f.kind] || null;
+    if ( D?.leaderDeed && D?.deedSuccessesFor ) {
+      const age = api.rules.ageFor(battle.year, {branch: battle.branch, realm: battle.realm});
+      const pick = D.leaderDeed(battle.sides[sideIdx], age.id, {kind, seed: `${battle.id}:${battle.phases.length}:${sideIdx}`, pool: WR.powerPool(f)});
+      if ( pick?.deed ) {
+        const r = D.deedSuccessesFor(pick.pool, pick.difficulty);
+        return {name: `${leaderName}: ${pick.deed.name}`, successes: r.successes, seen: !!pick.seen};
+      }
+    }
     const r = new Roll(`${WR.powerPool(f)}d10`);
     await r.evaluate();
     const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-    return Math.max(0, faces.filter(x => x >= 6).length - faces.filter(x => x === 1).length);
+    return {name: `${leaderName}'s powers`, successes: Math.max(0, faces.filter(x => x >= 6).length - faces.filter(x => x === 1).length), seen: true};
   }
   async function fightOut(api, b, s) {
     const facs = [b.war.attacker, b.war.defender].map(id => s.factions.find(f => f.id === id));
     let x = b, k = 0;
     while ( x && !x.over && x.kind === "field" && k < 30 ) {
       const deeds = [];
-      for ( const f of facs ) deeds.push(WR.usesPowers(f, b.war.kind) ? [{name: game.actors?.get(f.leader)?.name || `${f.name}'s powers`, successes: await powerDeed(f)}] : []);
+      for ( const [i, f] of facs.entries() ) deeds.push(WR.usesPowers(f, b.war.kind) ? [await powerDeed(f, x, i, api)] : []);
       const actions = x.book && api.rules?.chooseActions ? api.rules.chooseActions(x, api.rules.ageFor(x.year, {branch: x.branch, realm: x.realm})) : undefined;
       x = await api.fight(x.id, {deeds, quiet: true, ...(actions ? {actions} : {})});
       k++;
