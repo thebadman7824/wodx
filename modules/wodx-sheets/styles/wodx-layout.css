@@ -63,3 +63,7 @@
 .wod20.wod-sheet .headlineRow > div:not(.width-namebox), .wod20.wod-sheet .headlineList:is(.width-valuebox, .width-smallbox) { font-size: 14px; line-height: 1.2; letter-spacing: 0; white-space: nowrap; align-self: center; }
 /* A long section title widens its own plate instead of wrapping over the first row under it */
 .wod-theme-dark.wod-sheet .sheet-banner .sheet-banner-text { width: auto; min-width: 25%; max-width: 100%; padding: 0 14px; white-space: nowrap; box-sizing: border-box; }
+
+/* ---- 6. WoDX tab buttons (Relationships, Body): the same tile as the line's own tab buttons ---- */
+.wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon { display: flex; flex: 0 0 30px; align-items: center; justify-content: center; width: 30px; height: 30px; min-height: 30px; box-sizing: border-box; border-radius: 3px; opacity: 1; background: var(--wodx-tab-tile, rgb(121, 8, 19)); color: var(--wodx-tab-glyph, #fff); }
+.wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon > i { font-size: 18px; line-height: 1; opacity: 1; color: inherit; }
