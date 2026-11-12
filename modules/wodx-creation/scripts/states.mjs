@@ -5,7 +5,7 @@
  * the East). Each makes a new sheet of the line's type from the old one, carries the Traits
  * over by house rule, keeps the old sheet as a record and links the two, as the Embrace and the First Change do.
  */
-import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, disciplineItem, disciplinesOf, keepLifepath} from "./actor-data.mjs";
 import {setLineage, setChronology, writeLineageJournal, dateLabel} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "./totals-rules.mjs";
@@ -46,6 +46,7 @@ export function carryOver(src) {
   const items = (src.items ?? []).map(i => { const c = {...i}; delete c._id; return c; });
   const flags = foundry.utils.deepClone(src.flags ?? {});
   delete flags[MODULE_ID];
+  keepLifepath(flags, src);
   return {up, items, flags};
 }
 
