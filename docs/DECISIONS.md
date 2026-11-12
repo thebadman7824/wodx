@@ -1060,3 +1060,21 @@ Reverse: remove HUNT_STYLES entries.
 When WoDX Combat applies a vampire's blow, the target gets flags wodx-actions.fought.<vampire id> = the clock time, and Feed ticks "fought and beaten first" for an hour after. Seduction that leads to Feed passes the vessel as willing.
 
 Reverse: remove the second wodxDamageApplied hook in main.js.
+
+## B1005. Criminals, combatants and townsfolk (2026-11-12)
+The second step of the approved archetypes brainstorm. WoDX NPC 0.23.0 adds 39 mortal archetypes in mortal-rules.mjs: 13 criminals (cutpurse, footpad, burglar, bandit to 1850, highwayman 1600 to 1850, smuggler, fence, con artist, street gang from 1850, organised crime from 1900, dealer from 1960, informer, fixer from 1990), 15 combatants (militia to 1700, knight and man-at-arms to 1550, Hussite wagon crew 1419 to 1434, mercenary 1480 to 1650, musketeer 1620 to 1870, hussar 1650 to 1918, rifleman 1914 to 1945, occupation trooper 1939 to 1945, partisan from 1939, riot police from 1948, armed police from 1970, private security from 1990, duellist 1550 to 1900, bodyguard), and 11 townsfolk (child, gossip, drunk, physician, executioner to 1850, pilgrim, servant, lamplighter 1700 to 1930, journalist from 1850, prophet, orderly from 1780). Each is a template and a routine; the routine picker leaves out presets past their years. A mortal's archetype comes from the actor flag wodx-npc.archetype, else its name. House readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of MORTAL_TEMPLATES and MORTAL_PRESETS.
+
+## B1006. Morale, cover, formation, surrender, hostage and lead (2026-11-12)
+Morale (0 to 2) is carried only by the 0.23.0 archetypes. It wavers when a fallen ally of the same side had the lead tactic, or when half the side is down: fleeing rises by 2.5 for each point under 2, and attacks drop by 1. Cover adds 1.5 to shooting a foe out of reach. Formation adds 0.8 to attacks with two or more allies and not outnumbered, and takes 1.5 off fleeing while the line holds. Surrender is a new action the NPC can carry out itself (Auto, with Undo): it is offered when beaten, wavering, or outnumbered and hurt, and once yielded the NPC only waits for the rest of that fight. Hostage is offered when cornered with a bystander near, and waits for the Storyteller.
+
+Reverse: the NPC 0.23.0 lines in scoreOptions; SELF_ACTING without surrender.
+
+## B1007. Tell someone later (2026-11-12)
+A new reaction for the report tactic (informers, children, gossips, servants, journalists, prophets): the NPC lets it pass now and, two hours of world time later, the place goes on alarm as if raised, with a card and Undo. Stored on the scene flag wodx-npc.reports.
+
+Reverse: REPORT_HOURS in mortal-rules.mjs; drop report from SELF_RESPONSES.
+
+## B1008. The supernatural lines are next (2026-11-12)
+Third and last step: supernatural NPCs by line, with Ben's rulings (Orpheus travellers only in the World of Future Darkness, Kuei-jin travellers only in Asia).

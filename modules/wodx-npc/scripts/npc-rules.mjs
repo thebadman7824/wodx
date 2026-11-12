@@ -7,6 +7,7 @@
  */
 import * as TK from "./talk-rules.mjs";
 import {ANIMAL_TEMPLATES, ANIMALS} from "./animal-rules.mjs";
+import {MORTAL_TEMPLATES, MORTALS} from "./mortal-rules.mjs";
 
 /** Temperament weights (0–2) and thresholds, per template. WoDX's readings of each line's usual conduct. */
 export const TEMPLATES = {
@@ -52,7 +53,9 @@ export const TEMPLATES = {
   mob: {label: "Mob", line: "mortal", aggression: 1.2, caution: 0.3, cunning: 0.1, loyalty: 0.6, cowardice: 1.2, berserk: 0.3, power: 0,
     fleeAt: 2, frenzyProne: false, fears: ["supernatural", "fire"], tactics: ["melee", "pack"]},
   // NPC 0.21.0 (B1000): the animal archetypes, from animal-rules.mjs
-  ...ANIMAL_TEMPLATES
+  ...ANIMAL_TEMPLATES,
+  // NPC 0.23.0 (B1005): criminals, combatants and townsfolk, from mortal-rules.mjs
+  ...MORTAL_TEMPLATES
 };
 
 /** Tactics a profile can list, and what each does (shown in the behaviour window). */
@@ -63,11 +66,14 @@ export const TACTICS = {
   masquerade: "Hides its nature before mortal eyes", alive: "Takes them alive", parley: "Speaks a challenge before a fight",
   // NPC 0.21.0 (B1001)
   swarm: "Many bodies on one foe", scatter: "Breaks and runs at the first sign of trouble", scavenge: "Goes for the fallen",
-  stalk: "Follows unseen and strikes at one alone"
+  stalk: "Follows unseen and strikes at one alone",
+  // NPC 0.23.0 (B1006)
+  cover: "Holds behind cover and shoots", formation: "Holds a line with others beside it", surrender: "Yields when beaten",
+  hostage: "Grabs a bystander when cornered", lead: "Leads the others; they waver if it falls", report: "Tells someone later what it saw"
 };
 
 /** The template a line's NPC starts from. info: {kind, generation, melee, ranged}. */
-export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = [], animal = null}) {
+export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = [], animal = null, mortal = null}) {
   const has = re => (sides ?? []).some(x => re.test(String(x)));
   if ( has(/fomor/) ) return "fomor";
   switch ( kind ) {
@@ -80,7 +86,7 @@ export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides
     case "spirit": return has(/spectre/) ? "spectre" : "spirit";
     case "wraith": return "ghost";
     case "beast": return ANIMALS[animal] ? animal : "beast";
-    case "mortal": return Math.max(melee, ranged) >= 2 ? "guard" : "civilian";
+    case "mortal": return MORTALS[mortal] ? mortal : Math.max(melee, ranged) >= 2 ? "guard" : "civilian";
     default: return "guard";
   }
 }
@@ -118,6 +124,10 @@ export function scoreOptions(profile, state) {
   // The Masquerade (or the Veil, or the Consensus): mortals watching and a foe who passes for human
   const hiding = tac("masquerade") && Number(state.witnesses ?? 0) > 0 && !enemies.some(e => e.obvious);
   const herd = Number(p.herd ?? 0), terr = Number(p.territory ?? 0), hung = Number(p.hunger ?? 0);
+  // NPC 0.23.0 (B1006): morale, for the archetypes that carry it. The line wavers when its leader falls or half of it is down.
+  const morale = p.morale === undefined || p.morale === null ? null : Number(p.morale);
+  const waver = morale !== null && (!!state.leaderDown || Number(state.sideDown ?? 0) >= 0.5);
+  if ( s.surrendered ) return [{action: "wait", score: 10, why: "has yielded and waits on the victors"}];
 
   // The Delirium, or a bystander facing violence, overrides the rest (WoDX reading of the line rules)
   if ( s.delirious ) out.push({action: "flee", score: 20, why: "The Delirium: the sight of a Crinos sends a mortal running"});
@@ -143,6 +153,9 @@ export function scoreOptions(profile, state) {
     if ( terr && s.onGround ) { sc += terr; r.push("defends its own patch"); }
     if ( hung && s.hungry ) { sc += 1.5 * hung; r.push("hungry"); }
     if ( herd && !allies.length ) sc -= 0.5 * herd;
+    if ( tac("formation") && allies.length >= 2 && !outnumbered ) { sc += 0.8; r.push("holds the line with the others"); }
+    if ( tac("cover") && state.canRanged && !e.reach ) { sc += 1.5; r.push("shoots from cover"); }
+    if ( waver ) sc -= 1;
     if ( tac("alive") && (e.supernatural || e.wounds >= 4) ) { sc += e.wounds >= 4 ? 1 : 0.3; r.push("aims to take them alive (stake, bind or seize)"); }
     const f = fearHere(e);
     if ( f.length ) { sc -= 4 * (1 + p.caution / 2); r.push(`afraid of their ${f.join(" and ")}`); }
@@ -164,8 +177,19 @@ export function scoreOptions(profile, state) {
     if ( herd && Number(state.alliesFled ?? 0) > 0 ) { sc += 2 * herd; r.push("the others are running"); }
     if ( tac("scatter") && enemies.length ) { sc += 2; r.push("scatters"); }
     if ( hung && s.hungry ) sc -= hung;
+    if ( waver ) { sc += 2.5 * (2 - morale); r.push(state.leaderDown ? "their leader is down" : "half their side is down"); }
+    if ( tac("formation") && allies.length >= 2 && !waver ) sc -= 1.5;
     if ( s.inFrenzy ) sc -= 10;
     if ( r.length ) out.push({action: "flee", score: sc, why: r.join("; ")});
+  }
+
+  // NPC 0.23.0: yield, or grab a bystander
+  if ( tac("surrender") && enemies.length && (s.wounds >= p.fleeAt || waver || (outnumbered && s.wounds >= Math.max(1, p.fleeAt - 1))) ) {
+    const r = [s.wounds >= p.fleeAt && "beaten", waver && "the fight has gone out of them", outnumbered && "outnumbered"].filter(Boolean);
+    out.push({action: "surrender", score: 4 + p.cowardice + (morale === null ? 0 : 2 - morale) - p.aggression, why: `yields: ${r.join(", ")}`});
+  }
+  if ( tac("hostage") && enemies.length && Number(state.witnesses ?? 0) > 0 && s.wounds >= Math.max(1, p.fleeAt - 1) ) {
+    out.push({action: "hostage", score: 3 + p.cunning, why: "cornered, with a bystander within reach"});
   }
 
   // Full defence when hurt and cornered or cautious
@@ -332,9 +356,10 @@ export function harmLog(cards, combatId) {
 }
 
 /** The actions WoDX can carry out by itself; the rest need the Storyteller's roll or choice. */
-export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search"];
+export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search", "surrender"];
 export const ACTION_LABEL = {attack: "Attack", shoot: "Shoot", flee: "Flee", defend: "Full defence", willpower: "Attack, spending Willpower",
-  frenzy: "Frenzy check", power: "Use a power", call: "Call for help", wait: "Wait", search: "Search for the unseen"};
+  frenzy: "Frenzy check", power: "Use a power", call: "Call for help", wait: "Wait", search: "Search for the unseen",
+  surrender: "Surrender", hostage: "Take a hostage"};
 
 /** Auto mode acts on the best option it can carry out itself; a better one that needs the Storyteller stops it. */
 export function autoChoice(options) {
@@ -404,7 +429,7 @@ export function onWall(p, walls = [], eps = 4) {
  * Before "=>" is a WoDX Chronicle "Only when" list (";" between tests); after it, the changes, separated by commas.
  * The first phase whose list passes is in force; none: the profile as saved. Thresholds are the Storyteller's.
  */
-export const PHASE_KEYS = ["template", "aggression", "caution", "cunning", "loyalty", "cowardice", "berserk", "power", "herd", "territory", "hunger", "fleeAt", "tactics", "fears"];
+export const PHASE_KEYS = ["template", "aggression", "caution", "cunning", "loyalty", "cowardice", "berserk", "power", "herd", "territory", "hunger", "morale", "fleeAt", "tactics", "fears"];
 
 /** Phase text to {phases: [{name, when, changes}], problems}. */
 export function parsePhases(text) {
