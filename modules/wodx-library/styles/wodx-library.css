@@ -9,3 +9,9 @@
 .wodx-ency-rumour, .wodx-ency-open { font-style: italic; }
 .wodx-ency-versions { margin: 0.2em 0 0.4em 1.2em; list-style: circle; }
 .wodx-ency-editions { margin: 0.2em 0 0.6em 1.2em; }
+
+/* 0.16.0: What they could know */
+.wodx-know .window-content { overflow-y: auto; }
+.wodx-know .wodx-know-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; max-height: calc(100% - 11rem); }
+.wodx-know .wodx-know-list > li { padding: 0.2em 0; border-bottom: 1px solid #8884; }
+.wodx-know .wodx-know-list .wodx-quiet { display: block; margin-left: 1.6em; font-size: 0.9em; }
