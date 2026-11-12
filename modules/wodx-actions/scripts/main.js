@@ -31,6 +31,7 @@ import * as MIG from "./migrate.js";
 import * as GX from "./garou.js";
 import * as KR from "./kindred-rules.js";
 import * as KX from "./kindred.js";
+import * as WRR from "./witness-rules.js";
 import * as SR from "./sunlight-rules.js";
 import * as SX from "./sunlight.js";
 import * as WR from "./wraith-rules.js";
@@ -1453,11 +1454,16 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     // Witnesses: living tokens that can see the feeding (walls block sight)
     const myTok = actor.getActiveTokens?.()[0];
     if (myTok && drunk > 0) {
-        const ws = kx().witnessesOf(myTok, { exclude: [actor.id, vesselActor?.id].filter(Boolean) });
+        // Who sees it by kind and place (3.42.0): mortals breach, other kinds are startled, Kindred and ghouls are calm
+        const o = kx().observersOf(myTok, { secret: "kindred", exclude: [actor.id, vesselActor?.id].filter(Boolean) });
+        const ws = o.breach;
         if (ws.length) {
             html += `<div class="vta-warn">Masquerade: ${ws.map(t => esc(t.name)).join(", ")} can see this.</div>`;
+            const pn = KX.placeNoteOf(o.mode, "feeding");
+            if (pn) html += `<div class="vta-note">${esc(pn)}</div>`;
             html += `<button type="button" class="vta-btn" data-kx="witnesses" data-actor="${esc(actor.uuid)}" data-arg="${esc(ws.map(t => t.actor.uuid).join(","))}">Record the witnesses</button>`;
-        }
+        } else if (o.mode === "guarded") html += `<div class="vta-note">${esc(KX.placeNoteOf(o.mode, "feeding"))}</div>`;
+        if (o.startled.length) kx().revealed(actor, { secret: "kindred", event: "feeding", startledOnly: true }).catch(e => console.error("WoDX |", e));
     }
     if (drunk > 0 && vampireVessel) {
         html += `<div class="vta-note">Cainite vitae: this drink is a step of the Blood Oath toward ${vesselActor ? esc(vesselActor.name) : "the donor"}. A Cainite victim may roll Self-Control/Instinct (diff 8) to resist the Kiss.</div>`;
@@ -2229,6 +2235,7 @@ let DXE = null;
 /** The fallen (3.10.0, Phase 6i). */
 function dx() {
     return DXE ??= DXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+        revealed: (a, o) => kx().revealed(a, o),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
@@ -2252,7 +2259,8 @@ function ox() {
 let ZXE = null;
 /** Mages of the later eras (3.11.0, Phase 6m). */
 function zx() {
-    return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m) });
+    return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
+        observersOf: a => { const t = a?.getActiveTokens?.()[0]; return t ? kx().observersOf(t, { secret: "mage", exclude: [a.id] }) : null; }, revealed: (a, o) => kx().revealed(a, o) });
 }
 
 let QXE = null;
@@ -2517,7 +2525,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.41.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.42.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2568,6 +2576,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),
     masquerade: (o = {}) => kx().masquerade(o.actor ? resolveActor(o.actor) : resolveActor()), endStory,
     recordBreach: o => kx().recordBreach(o), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
+    observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
     healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),

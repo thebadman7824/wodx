@@ -288,6 +288,14 @@ Ben approved every recommendation for dealing with NPCs from the Actions menu: t
 | 2026-11-11 | Stolen goods and barter (B895, B897). | A trader gives the fence's share for anything lifted; barter gives no change; a trader whose purse is short cannot buy. |
 | 2026-11-11 | Cheap goods sold to a trader (B898). | Anything with a price fetches at least the smallest coin, since half the price of cheap goods rounds down to nothing (340 of 797 goods). |
 
+## Approved by Ben, 12 November 2026, 00:33 UTC (witness desk)
+
+Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact/DH9xFLYAoSYxjacJZ4hd47).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
+
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
 Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
@@ -516,3 +524,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-12 | Years of the supernatural archetypes (B1009)? | Anarchs from 1381; the old Lasombra and Tzimisce lords to 1493; Glass Walkers and Bone Gnawers in towns from 1500; Hollow Ones from 1900; Kithain to 1400 and from 1969; Dauntain from 1969; the Arcanum from 1885; mummies from 1990; the Fallen and the imbued from 1999 (2023 in the Future Darkness). House readings of the V20, Revised and 2nd edition timelines. | from, to and spans in supernatural-rules.mjs. |
 | 2026-11-12 | Do clan, tribe and creed now change an NPC's template by themselves (B1009)? | Yes: a Kindred NPC whose sheet says Nosferatu now fights as a Nosferatu, not as a plain neonate. A template set by hand in the behaviour window still wins. | Set the template by hand, or drop the pickSupernatural call in templateFor. |
 | 2026-11-12 | Blood in animals V20 does not list (NPC 0.24.1)? | Cattle 5 (between the large horse at 4 and the camel at 6), sheep and goats 3 (as a small pig), geese and hens 1/2 (as a large bird). The rest follow the V20 core animals appendix, pdf 396-399 (printed 388-391): horse 4, pigs and boar 4, crows 1/2. | Change the numbers in animal-rules.mjs. |
+| 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
+| 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |
