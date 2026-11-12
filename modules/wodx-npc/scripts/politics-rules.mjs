@@ -881,3 +881,28 @@ export function boonChanges(state, entry, status, {info = {}, year = null} = {})
   }
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  What a player sees (NPC 0.29.0)                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * What the players whose characters belong to a faction see of its politics (B1116): the polity, who holds each seat,
+ * when it next gathers, and for their own characters only, standing, seats, favour, claims and the charges against
+ * them. Others' favour, claims, leanings, Vinculum and the charges they face stay with the Storyteller.
+ *   mine: the player's actor ids; info: as for innerTurn (only mine need be filled); names: {actor(id)}
+ * Returns null when the faction keeps no polity in that year or none of mine belong to it.
+ */
+export function playerView(f, mine = [], {year = null, info = {}, names = {}} = {}) {
+  const key = polityFor(f, year), P = POLITIES[key];
+  const own = mine.filter(id => f?.members?.includes(id));
+  if ( !P || !own.length ) return null;
+  const p = normPolitics(f.politics), an = id => names.actor?.(id) ?? info[id]?.name ?? "someone";
+  const every = Math.max(1, P.gathering.every), next = every - (p.inner % every);
+  const seats = P.offices.map(o => ({key: o.key, title: officeTitle(key, o.key, f), seats: o.seats,
+    holders: (p.offices[o.key] ?? []).filter(id => f.members.includes(id)).map(an)}));
+  const people = own.map(id => ({id, name: an(id), rank: rankOf(f, id, info, key), offices: officesOf(f, id).map(k => officeTitle(key, k, f)),
+    favour: p.favour[id] ?? 0, claims: p.claims.filter(c => c.who === id).map(c => officeTitle(key, c.office, f)),
+    charges: p.docket.filter(d => d.against === id).map(d => d.law)}));
+  return {key, label: P.label, rank: P.rank, gathering: P.gathering.name, nextIn: next, law: P.law.slice(), notes: P.notes, seats, people};
+}

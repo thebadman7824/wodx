@@ -1,12 +1,13 @@
 /**
- * WoDX NPC 0.28.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.29.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatepolitics.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four Kindred NPCs and deletes them, and puts back the factions record, the
  * faction settings, the Ledger, the approval queue and its chat cards.
  *   1. WoDX NPC 0.25.0+ and Storyteller 0.32.0+: the politics API and the setting
  *   2. the members' clan and Status are read from the sheets
  *   3. a Kindred court of four keeps the court of its age; a Sabbat before 1493 runs as the court of its age
- *   4. two faction turns with politics on (Auto): the leader holds the top seat, one Primogen seat per clan, a card
+ *   4. two faction turns with politics on (Auto): the leader holds the top seat, one Primogen seat per clan, a card;
+ *      what a member's player would see names the seats' holders
  *   5. Undo on the second turn's card puts the politics back as they were after the first
  *   6. a boon marked broken in the Ledger costs the debtor a dot of standing, with an Undo card
  *   7. a Garou sept, the fae courts, mages and hunters by year; a challenge with a player's character comes as a card (no tokens)
@@ -57,7 +58,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, sv = game.modules.get("wodx-storyteller")?.version;
-      ok("1. WoDX NPC 0.28.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.28.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
+      ok("1. WoDX NPC 0.29.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.29.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
         && game.settings.settings.has(`${MOD}.factionPolitics`) && typeof FX().politicsInfo === "function", {v, sv});
     });
 
@@ -93,8 +94,10 @@ export async function run() {
       const top = PO().topOffice(key).key;
       const clans = (p.offices.primogen ?? []).map(id => game.actors.get(id)?.system?.clan);
       const card = lastCard("factionTurn");
+      const view = PO().playerView(fac("gateCourt"), [made[1].id], {year: FX().eraInfo().year, info: FX().politicsInfo(FX().state()), names: FX().names(FX().state())});
+      R.notes.push({playerView: view?.people});
       ok("4. the leader holds the top seat; one seat a clan; the turn card tells it", p.offices[top]?.[0] === made[0].id && p.inner >= 2 && new Set(clans).size === clans.length
-        && /Gate Court/.test(card?.content ?? ""), {offices: p.offices, inner: p.inner});
+        && /Gate Court/.test(card?.content ?? "") && view?.people?.[0]?.name === "Gate Rose" && view.seats.some(o => o.holders.includes("Gate Prince")), {offices: p.offices, inner: p.inner});
     });
 
     await step("5. undo", async () => {
