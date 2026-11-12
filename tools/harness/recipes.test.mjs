@@ -98,12 +98,12 @@ test("recipes: a batch uses more and takes longer, but less than one at a time",
   assert.ok(R.batchGoal(3, 10) < 30);
 });
 
-test("recipes: everyday cooking needs no roll when the pool is enough; Kindred cook harder by taste", () => {
+test("recipes: everyday cooking needs no roll when the pool is enough; Kindred taste food and cook at the usual difficulty", () => {
   const stew = R.recipeOf(good("vegetable soup"), 1300).recipe;
   assert.equal(R.noRoll(stew, 6, 6), true);
   assert.equal(R.noRoll(stew, 5, 6), false);
   assert.equal(R.noRoll(R.recipeOf(good("morphine"), 1900).recipe, 10, 7), false, "drugs always roll");
-  assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 2}), 7);
+  assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 0}), 6, "vampires can taste, they just cannot eat");
   assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 3}), 6);
   assert.equal(R.diffFor(stew, {line: "mortal", abilityValue: 0}), 6);
 });
@@ -133,4 +133,28 @@ test("recipes: wiring in Storyteller and Library", () => {
   assert.match(src("modules/wodx-storyteller/scripts/tasks.mjs"), /Cook\.finishRecipe/);
   assert.match(src("modules/wodx-library/scripts/use.mjs"), /case "cook":/);
   assert.match(src("modules/wodx-storyteller/scripts/owners.mjs"), /action: "cook", label: "Cook, brew or mix"/);
+});
+
+test("take apart: tools and lamps give metal by era, electronics give scrap, food gives nothing", () => {
+  const opt = {goods: G.GOODS, valueAt: G.valueAt};
+  const crowbar = R.salvageOf(good("a crowbar"), 1990, opt);
+  assert.equal(crowbar.ok, true);
+  assert.equal(crowbar.parts[0].name, "steel bar stock");
+  const old = G.GOODS.find(g => g.kind === "tools" && /hammer/.test(g.name) && g.from < 1300);
+  assert.equal(R.salvageOf(old, 1300, opt).parts[0].name, "iron bar stock");
+  assert.equal(R.salvageOf(good("ale"), 1300, opt).ok, false);
+  assert.equal(R.salvageOf(good("a silver penny"), 1300, opt).ok, false);
+  const n = G.GOODS.filter(g => R.salvageOf(g, Math.min(g.to, Math.max(g.from, 1990)), opt).ok).length;
+  assert.ok(n > 100, `only ${n} can be taken apart`);
+  for ( const [k, names] of Object.entries(R.PART_CHOICES ?? {}) ) for ( const nm of names ) assert.ok(good(nm), `${k}: ${nm} is not a good`);
+});
+
+test("take apart: a tool in hand, V20 successes", () => {
+  assert.equal(R.apartTool("any", ["a pocket knife"]).ok, true);
+  assert.equal(R.apartTool("any", ["an apple"]).ok, false);
+  assert.equal(R.apartTool("technology", ["a pocket knife"]).ok, false);
+  assert.equal(R.apartTool("any", ["an odd thing"], () => ["pries"]).ok, true, "a quality serves");
+  assert.deepEqual(R.successes([7, 8, 1, 3], 6), {successes: 1, botch: false});
+  assert.deepEqual(R.successes([1, 3, 4], 6), {successes: 0, botch: true});
+  assert.deepEqual(R.successes([2, 3], 6), {successes: 0, botch: false});
 });

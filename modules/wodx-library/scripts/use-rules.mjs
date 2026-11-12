@@ -57,6 +57,7 @@ export const ABILITIES = {
   wash: {label: "Wash or groom", effect: "note", verb: "uses", uses: true},
   disguise: {label: "Change the look", effect: "note", verb: "changes the look with", uses: true},
   cook: {label: "Cook with it", effect: "cook", verb: "cooks with"},
+  salvage: {label: "Take apart for parts", effect: "salvage", verb: "takes apart"},
   plant: {label: "Plant it", effect: "note", verb: "plants", uses: true},
   call: {label: "Call someone", effect: "note", verb: "makes a call on"},
   switchon: {label: "Switch on or off", effect: "note", verb: "switches on"},
