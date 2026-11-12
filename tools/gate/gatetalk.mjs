@@ -231,7 +231,7 @@ export async function run() {
     await step("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet", async () => {
       const gen = await Actor.create({name: "WoDX gate: Talk grammar", type: "Mortal"});
       actors.push(gen);
-      await scene.createEmbeddedDocuments("Token", [{name: "gram", actorId: gen.id, x: G * 9, y: G * 6}]);
+      await scene.createEmbeddedDocuments("Token", [{name: "gram", actorId: gen.id, x: G * 5, y: G * 6}]);
       const gTok = scene.tokens.find(t => t.actorId === gen.id);
       const greq = {sceneId: scene.id, npcTokenId: gTok.id, meTokenId: meTok.id};
       const stockBefore = game.settings.get(MOD, "stockTalk"), genBefore = game.settings.get(MOD, "talkGrammar");
