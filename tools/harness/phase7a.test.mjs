@@ -79,6 +79,15 @@ test("a person: seeded, named for the era, with a sheet that fits the system", (
   const many = Array.from({length: 300}, (_, i) => mk(`people:3:${i}`));
   assert.ok(many.some(p => p.origin === "czech" && p.sex === "female" && /(á|ka|ová|ice|ena)$|^z /.test(p.family)));
   assert.ok(many.filter(p => p.origin === "jewish").every(p => /^(ben|bat) /.test(p.family) && (p.sex === "female") === p.family.startsWith("bat")));
+  // An asked origin is kept when the era names it (kin of a Jewish household); a missing one falls back to the draw
+  for ( let i = 0; i < 40; i++ ) {
+    const k = PR.person({rand: G.stream("rothenstein", `people:4:${i}`), tables: tablesFor(ctx), ...ctx, origin: "jewish"});
+    assert.equal(k.origin, "jewish", k.name);
+    assert.ok(/^(ben|bat) /.test(k.family), k.name);
+  }
+  const odd = PR.person({rand: G.stream("rothenstein", "people:5:0"), tables: tablesFor(ctx), ...ctx, origin: "nowhere"});
+  assert.ok(odd.given && odd.origin !== "nowhere");
+  assert.deepEqual(PR.person({rand: G.stream("rothenstein", "people:1:0"), tables: tablesFor(ctx), ...ctx, origin: null}), a, "no origin asked: the same person as before");
   // Modern Czech surnames by sex
   const mod = {era: "modern", culture: "bohemia"};
   const m = Array.from({length: 80}, (_, i) => PR.person({rand: G.stream("s", `m:${i}`), tables: tablesFor(mod), ...mod}));

@@ -203,7 +203,9 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0} = {}) 
       const sex = plan.role === "partner" ? (rand() < 0.9 ? (first.sex === "female" ? "male" : "female") : first.sex) : "any";
       // Kin of a Jewish household are Jewish, and kin of a Christian one are not (house reading of the Middle Ages to 1945)
       const sameFaith = o => !first.origin || !o || (o === "jewish") === (first.origin === "jewish") || (Number(year) >= 1946);
-      p = plan.kin ? drawFit(draw, i, {sex, trade: plan.label}, {sex: null, origin: sameFaith}) : draw(i, {sex, trade: plan.role});
+      // Before 1946 kin of a Jewish household are asked for by origin, since the generator draws few Jewish people
+      const asked = plan.kin && Number(year) < 1946 && first.origin === "jewish" ? {origin: "jewish"} : {};
+      p = plan.kin ? drawFit(draw, i, {sex, trade: plan.label, ...asked}, {sex: null, origin: sameFaith}) : draw(i, {sex, trade: plan.role});
     }
     let family = p.family;
     if ( i === 0 ) family = /^(ben|bat) /.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);
