@@ -743,6 +743,12 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |
 | 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Not deleted. Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
 
+## Approved by Ben, 12 November 2026, 12:42 UTC (battles, State of the Game review)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Battles: the book's army from Spoils of War (B2210) | When both sides list units, battles use the book's troop table and Right of Command turn (pools, Close and fight, Shoot, Withdraw, units lost, wavering); one line only, so no flanks or reserve; mortal units fall first; without units the house frame (B2200) stays | Leave the units empty, or drop the isBook branch in battles.mjs |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -764,4 +770,7 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | 2026-11-12 | Found clues on the open case (B2311) | On by default; a botched examine pins nothing | setting caseClues; pinClue call in wodx-interactables main.mjs |
 | 2026-11-12 | Case board look by era (B2312) | Parchment to 1449, commonplace board to 1799, pinboard to 1945, corkboard to 2022, lit display from 2023 | LOOKS in case-rules.mjs |
 | 2026-11-12 | What a character would know, l1 (B2313) | The lighter, Storyteller-only version: suggestions from line, year and Intelligence + Occult, Academics or Politics (4 own line, 6 another line), revealed through the codex; no per-entry tagging | ERA_FROM, OWN, OWN_NEED, OTHER_NEED in wodx-library know-rules.mjs |
-| 2026-11-12 | Battles: the book's army from Spoils of War (B2210) | When both sides list units, battles use the book's troop table and Right of Command turn (pools, Close and fight, Shoot, Withdraw, units lost, wavering); one line only, so no flanks or reserve; mortal units fall first; without units the house frame (B2200) stays | Leave the units empty, or drop the isBook branch in battles.mjs |
+| 2026-11-12 | Factions at war (B2211-B2216): how often, how many | Hostile 1 in 6 a turn, Hunted 1 in 3; at most one new war a turn; players' own factions never start one | WAR_CHANCE and pickWar in wodx-npc/scripts/war-rules.mjs |
+| 2026-11-12 | Factions at war: mortal or supernatural | Supernatural when both sides are hidden kinds or hunters fight one; a hidden faction against a mortal one fights through mortal followers (no powers, no breach) | warKind in war-rules.mjs |
+| 2026-11-12 | Factions at war: the leaders' powers | Status + 3 dice at 6 a phase as the side's deed, until the battle deeds table lands | powerPool in war-rules.mjs |
+| 2026-11-12 | Factions at war: what the dots field | Retainers (Herd for Kindred) and Status into book units up to 1499, men and quality after; Domain 3+ means a siege | unitsFor and forcesFor in war-rules.mjs |
