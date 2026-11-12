@@ -1125,3 +1125,39 @@ Reverse: make breaksPeace return false.
 Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
 
 Reverse: set witnessAsk off; drop the knows button.
+
+## B1100. Politics inside factions: one engine, a polity per line and era (2026-11-12)
+
+Ben asked for politics inside every faction built around one game line, with the Camarilla and Sabbat given their own (design: https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp; Ben approved the build and every review-desk recommendation on 2026-11-12). modules/wodx-npc/scripts/politics-rules.mjs holds the polities: offices, a rank for each member, blocs, law, favours and a gathering. NPC 0.25.0 ships the four Kindred polities (Dark Ages court, Camarilla from 1435, Sabbat from 1493, Anarchs from 1381); Garou, Changeling, Wraith, Mage, hunters, mummies, demons and Kuei-jin follow in later PRs. Setting "Politics inside factions", off by default.
+
+Reverse: turn the setting off; nothing else runs.
+
+## B1101. Which factions keep a polity (2026-11-12)
+
+The Storyteller picks one in the faction window. Left on the default, a Kindred faction of three or more members keeps a court of its age: the feudal court before 1435, the Camarilla court after. A sect picked before its founding year (the Sabbat before 1493) runs as the court of its age until then. House rule.
+
+Reverse: polityFor returns f.polity only.
+
+## B1102. The inner turn (2026-11-12)
+
+Each faction turn, up to three NPC members of a faction with a polity act, highest standing first, each picking one move by weight: Petition (Charisma + standing, difficulty 6, gains favour), Court a bloc (Manipulation + standing, difficulty 7, a clan leans their way), Accuse (Manipulation + standing against the target's Wits + standing; a charge for the next gathering), Call in a favour (an open Ledger boon owed to them by another member), Bid for office, Lie in wait (+1 difficulty to moves against them next turn). Player characters never act on their own. House rule.
+
+Reverse: set ACTORS_PER_TURN to 0.
+
+## B1103. Seats and how they are won (2026-11-12)
+
+Appointed seats are claimed and given at the gathering by the judge (the top seat). Primogen seats go one per clan present, to that clan's highest standing. Challenged seats (Prince, Archbishop, Bishop, Ductus) are won by an opposed Strength + Dexterity roll between NPCs (monomacy in the Sabbat, V20 pdf 517); the loser drops a dot of standing. Anarch seats go to whoever has more favour plus standing than the holder (V20 pdf 53). A Vinculum of 7 or more toward the holder makes a Sabbat challenge 1 harder. The top seat changing, and anything that touches a player character, waits in the approval queue. House rule. Staging a challenge as a fight through WoDX Combat's fight starter comes with the Garou challenges (PR 2).
+
+Reverse: drop the "challenge" and "backing" branches in innerTurn.
+
+## B1104. The gathering and standing (2026-11-12)
+
+Elysium and the esbat meet every second inner turn, the feudal court and the gangs every fourth. A gathering hears the charges (favour + standing + a die each, the judge's own charge leaning 3; guilty costs a dot of standing), fills empty seats, and grants a dot of standing to the member with 3 or more favour (favour spent). A Sabbat esbat shares the Vaulderie: a die per packmate the first time, then +1 when a die beats the rating, to 10 (V20 pdf 297). A boon marked broken in the Ledger costs the debtor a dot in every court they belong to (Guide to the Camarilla pdf 148-150); a major, blood or life boon marked kept earns one (house rule).
+
+Reverse: set every gathering's "every" very high, and PAID_GAINS to an empty set.
+
+## B1105. Standing kept beside the sheet (2026-11-12)
+
+A member's standing inside a polity is kept on the faction (0 to 5) and starts from the Status Background on the sheet. The sheet itself is never changed by politics; the Storyteller copies a change across when it should stick. House rule.
+
+Reverse: write politics.ranks back to the Status item when a pol-rank change applies.

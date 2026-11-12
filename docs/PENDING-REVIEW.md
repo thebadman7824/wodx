@@ -296,6 +296,21 @@ Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact
 |---|---|---|---|
 | 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
 
+## Approved by Ben, 12 November 2026, 01:33 UTC (faction politics desk)
+
+Ben approved the build (all four PRs, Kindred first) and every recommendation on the review desk in the design doc (https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Do NPC members play court politics on their own each week? | Yes, each faction turn, with the top seat changing and anything touching a player character waiting for the Storyteller (B1102) | Turn off "Politics inside factions" |
+| 2026-11-12 | Can a player character's standing change without the Storyteller? | No: the change waits in the approval queue | politicsBig in politics-rules.mjs |
+| 2026-11-12 | Rank for lines with no rank trait on the sheet | A standing 0 to 5 kept by WoDX, a house rule (B1105) | Read a sheet trait instead in rankOf |
+| 2026-11-12 | The title of a Moravian domain's ruler before the Camarilla | Chosen per court, Prince by default, with Voivode, Margrave and Lord offered | Clear "The top seat is called" |
+| 2026-11-12 | Gangrel and the Camarilla in the late 1990s | Follow the V20 core's account once read; until then they stay in | None needed yet |
+| 2026-11-12 | Sabbat monomacy and Garou combat challenges | Fights through WoDX Combat's fight starter, no killing blow for Garou; other challenges as opposed rolls. NPC 0.25.0 rolls NPC-against-NPC challenges; the fight-starter link comes with the Garou PR | B1103 |
+| 2026-11-12 | The Time of Judgment (2004, classic branch) | Polities keep running; the Storyteller's event says what ends | None |
+| 2026-11-12 | Build order | All four PRs, Kindred first | None |
+
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
 Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
@@ -526,3 +541,12 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-12 | Blood in animals V20 does not list (NPC 0.24.1)? | Cattle 5 (between the large horse at 4 and the camel at 6), sheep and goats 3 (as a small pig), geese and hens 1/2 (as a large bird). The rest follow the V20 core animals appendix, pdf 396-399 (printed 388-391): horse 4, pigs and boar 4, crows 1/2. | Change the numbers in animal-rules.mjs. |
 | 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
 | 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Which factions keep a polity by default? | A Kindred faction of three or more members keeps the court of its age; a sect picked before it exists runs as the court of its age (B1101) | polityFor returns f.polity only |
+| 2026-11-12 | How often a court meets | Elysium and the esbat every second faction turn, the feudal court and the gangs every fourth (B1104) | POLITIES[...].gathering.every |
+| 2026-11-12 | What a challenge for a seat rolls between NPCs | Strength + Dexterity, opposed, difficulty 6; the loser drops a dot of standing (B1103) | innerTurn "bid" branch |
+| 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |

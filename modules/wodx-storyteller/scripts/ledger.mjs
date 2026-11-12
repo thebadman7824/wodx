@@ -76,11 +76,18 @@ export async function saveEntry(raw) {
 }
 
 export async function setStatus(id, status) {
-  return mutate(s => {
+  let settled = null;
+  const out = await mutate(s => {
     const e = s.entries.find(x => x.id === id);
-    if ( e ) { e.status = status; e.history.push({at: now(), what: `Marked ${L.STATUS[status] ?? status}.`}); }
+    if ( e ) {
+      if ( e.kind === "boon" && e.status === "open" && (status === "kept" || status === "broken") ) settled = JSON.parse(JSON.stringify(e));
+      e.status = status; e.history.push({at: now(), what: `Marked ${L.STATUS[status] ?? status}.`});
+    }
     return {value: s};
   });
+  // Storyteller 0.31.0: a boon kept or broken moves the debtor's standing in WoDX NPC's courts
+  if ( settled && globalThis.Hooks ) Hooks.callAll("wodxBoonSettled", {entry: settled, status});
+  return out;
 }
 
 export async function removeEntry(id) {
