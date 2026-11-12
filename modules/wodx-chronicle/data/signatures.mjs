@@ -733,3 +733,61 @@ export const FAE_HOUSES = [
 
 /** The court that holds power by month: Samhain (1 November) to Beltaine (1 May) is the Unseelie half. */
 export const UNSEELIE_MONTHS = [11, 12, 1, 2, 3, 4];
+
+/* ================= Wraith (Chronicle 0.35.0) ================= */
+
+/**
+ * Guilds, legions and the factions of the dead. The wraith sheet has no guild or legion field, so they are kept in the
+ * actor flag wodx-chronicle.wraith = {guild, legion, faction}, picked in the feature window. A legion is suggested from
+ * the sheet's death field by the manner of death (death: words). Page refs: Wraith 20th.
+ */
+const guild = (key, label, art, title, text, effects = [], also = []) => ({key, label, match: [key, label.toLowerCase(), art.toLowerCase()], feature: "line", title,
+  page: "Wraith 20th, the Guild's pages", text, ...(effects.length ? {effects} : {}), ...(also.length ? {also} : {})});
+export const GUILDS = [
+  guild("alchemists", "Alchemists", "Flux", "The soulforge", "Flux works the decay of things: relics and soulsteel are made as recipes at a forge. Crafts gains a die.", [{tags: ["crafts"], dice: 1}]),
+  guild("artificers", "Artificers", "Inhabit", "Inside the thing", "An Artificer can inhabit a door, a lock, a lamp or a machine of the age and work it from inside. Living witnesses see it move by itself."),
+  guild("chanteurs", "Chanteurs", "Keening", "Songs that cross the Shroud", "Keening sways the feelings of a scene, heard by the living as a sound with no source. Performance gains a die.", [{tags: ["performance"], dice: 1}]),
+  guild("harbingers", "Harbingers", "Argos", "Tempest roads", "Argos carries them across the Tempest quickly, and others with them for a fee in oboli."),
+  guild("haunters", "Haunters", "Pandemonium", "Strange happenings", "Pandemonium brings cold spots, failing lights and blood on the walls; mortals who see it may flee. Intimidation gains a die.", [{tags: ["intimidation"], dice: 1}]),
+  guild("masquers", "Masquers", "Moliate", "Shaped corpus", "Moliate reshapes a wraith's body (claws, wings, a new face), their own or another's, and a disguise made with it is a false face to the crossover referee."),
+  guild("mnemoi", "Mnemoi", "Mnemosynis", "Written in the mind", "A Mnemoi can add, take or change a memory: a witness to a breach can be made to forget it before the rumour spreads."),
+  guild("monitors", "Monitors", "Lifeweb", "The web of ties", "A Monitor knows when a Fetter they watch is touched or harmed, and senses the ties of other wraiths. Awareness gains a die.", [{tags: ["awareness"], dice: 1}]),
+  guild("oracles", "Oracles", "Fatalism", "Strands of fate", "Once a night an Oracle can read a riddle about the next dated event, and can tell when a living person will die.", [], ["glimpse"]),
+  guild("pardoners", "Pardoners", "Castigate", "Castigate", "A Pardoner can ease another wraith's Angst and the Shadow's hold. Confessions heard become leverage, spent as favours in the Ledger.", [], ["leverage"]),
+  guild("proctors", "Proctors", "Embody", "Seen by the living", "Embody makes a wraith visible and solid: a mortal who sees it has seen a ghost, a breach, and animals shy."),
+  guild("puppeteers", "Puppeteers", "Puppetry", "Skinriding", "A Puppeteer rides a living body for the scene, with its own traits; those who know the person may notice the change in manner."),
+  guild("sandmen", "Sandmen", "Phantasm", "Dream work", "Phantasm shapes the dreams of sleepers, which sets their mood toward a person the next day."),
+  guild("solicitors", "Solicitors", "Intimation", "Whispered wants", "Intimation reads and pushes desires: the next social roll against that person is easier, and they learn what someone would trade. Subterfuge gains a die.", [{tags: ["subterfuge"], dice: 1}]),
+  guild("spooks", "Spooks", "Outrage", "Outrage", "Outrage moves and breaks things: doors burst, glass breaks, and thrown things hit as attacks."),
+  guild("usurers", "Usurers", "Usury", "The soul's bank", "Usury moves Corpus and Pathos between wraiths; it is bought and sold for oboli and kept as debts in the Ledger. Finance gains a die.", [{tags: ["finance"], dice: 1}]),
+];
+
+/** The legions (Wraith 20th pdf 136-137) and the manner of death each claims. */
+const legion = (key, label, lord, death, title, text, effects = [], also = []) => ({key, label, match: [key, label.toLowerCase()], death, feature: "line", title,
+  page: "Wraith 20th pdf 136-137; joining by the manner of death is a house reading", house: true, text: `Ruled by ${lord}. ${text}`, ...(effects.length ? {effects} : {}), ...(also.length ? {also} : {})});
+export const LEGIONS = [
+  legion("emerald", "Emerald Legion", "the Emerald Lord", ["accident", "chance", "drowned", "fell", "happenstance"], "Luck", "Once a week (a house reading of once a story), a reroll on a roll of chance.", [], ["luck"]),
+  legion("fate", "Fate Legion", "the Ladies of Fate", ["fate", "marked", "unknown cause", "destined"], "Outside politics", "They hear the riddle of the next dated event, as the Oracles do.", [], ["glimpse"]),
+  legion("grim", "Grim Legion", "the Smiling Lord", ["violence", "murder", "murdered", "killed", "war", "battle", "stabbed", "shot", "hanged", "executed"], "A die in fights", "Brawl and Melee gain a die.", [{tags: ["brawl", "melee"], dice: 1}]),
+  legion("iron", "Iron Legion", "the Ashen Lady", ["old age", "age", "natural", "in sleep", "peacefully"], "Patience", "Long tasks over the clock go a stage faster (the Storyteller counts it).", [{tags: ["crafts", "academics"], dice: 1}]),
+  legion("paupers", "Paupers Legion", "the Beggar Lord", ["mystery", "vanished", "lost", "never found"], "Hidden ways", "Stealth and the search for secrets gain a die.", [{tags: ["stealth", "investigation"], dice: 1}]),
+  legion("penitent", "Penitent Legion", "the Laughing Lady", ["madness", "insane", "mad", "asylum"], "The mad ear", "They hear the living through a derangement, as the Malkavians do.", [], ["hear"]),
+  legion("silent", "Silent Legion", "the Quiet Lord", ["despair", "suicide", "grief", "hopeless"], "Quiet against the Shadow", "Rolls against Angst and the Harrowing are one easier.", [{tags: ["angst", "harrowing"], difficulty: -1}]),
+  legion("skeletal", "Skeletal Legion", "the Skeletal Lord", ["disease", "plague", "illness", "sickness", "fever", "consumption", "cancer"], "Proof against decay", "Rolls against disease and the Withering are one easier.", [{tags: ["disease", "withering"], difficulty: -1}]),
+];
+
+/** Factions of the dead outside the Hierarchy, and what a wraith can become. */
+export const WRAITH_FACTIONS = [
+  {key: "heretics", label: "Heretics", match: ["heretic", "heretics", "fishers"], feature: "line", title: "The heretic cult", page: "Wraith 20th pdf 68",
+    text: "A faction of their own seeking Transcendence outside Stygia: Hierarchy NPCs hunt them, and their rites can restore Pathos."},
+  {key: "renegades", label: "Renegades", match: ["renegade", "renegades"], feature: "line", title: "Outlaws of the Shadowlands", page: "Wraith 20th, the Renegades",
+    text: "At war with the Hierarchy: its patrols attack on sight, and Renegade traders sell relics cheaper."},
+  {key: "ferrymen", label: "Ferrymen", match: ["ferryman", "ferrymen"], feature: "line", title: "The Tempest crossing", page: "Wraith 20th pdf 68",
+    text: "Boatmen of the Tempest who answer to no one: a crossing with them is safe and fast, for a price in oboli."},
+  {key: "spectres", label: "Spectres", match: ["spectre", "spectres", "doppelganger"], feature: "line", wyrm: false, title: "Shadow risen", page: "Wraith 20th, the Spectres",
+    text: "NPCs. A wraith whose Shadow wins too often becomes one; doppelgangers walk among wraiths wearing a friend's face."},
+  {key: "risen", label: "The Risen", match: ["risen"], feature: "line", title: "Walking dead", page: "Wraith 20th, the Risen",
+    text: "A Risen walks in their own body, which rots by the clock unless they spend Pathos on it."},
+];
+/** Days between uses of the Emerald luck (a house reading of "once a story"). */
+export const LUCK_DAYS = 7;

@@ -365,3 +365,23 @@ test("the court in power by the season, revel Glamour and the seal coat", () => 
   assert.equal(S.revelGlamour(S.rowIn(S.KITHS, "pooka"), {temporary: 2, permanent: 5}), 3);
   assert.ok(S.isCoat({name: "A seal coat"})); assert.ok(S.isCoat({name: "old sealskin"})); assert.ok(!S.isCoat({name: "a wool coat"}));
 });
+
+/* Chronicle 0.35.0: Wraith guilds, legions and factions (B1504 to B1506) */
+
+test("a wraith's picks find their rows, and the manner of death suggests a legion", () => {
+  assert.deepEqual(S.wraithRows({guild: "Oracles", legion: "fate", faction: "Renegades"}).map(r => r.key), ["oracles", "fate", "renegades"]);
+  assert.equal(S.wraithRows({guild: "Keening"})[0].key, "chanteurs", "the Arcanos names its Guild");
+  assert.equal(S.GUILDS.length, 16); assert.equal(S.LEGIONS.length, 8);
+  assert.equal(S.legionFor("Murdered in an alley")?.key, "grim");
+  assert.equal(S.legionFor("Died of consumption in 1840")?.key, "skeletal");
+  assert.equal(S.legionFor("Old age, in bed")?.key, "iron");
+  assert.equal(S.legionFor("Suicide")?.key, "silent");
+  assert.equal(S.legionFor(""), null);
+  assert.ok(S.rowIn(S.GUILDS, "oracles").also.includes("glimpse"));
+  assert.ok(S.rowIn(S.LEGIONS, "penitent").also.includes("hear"));
+  for ( const r of [...S.GUILDS, ...S.LEGIONS, ...S.WRAITH_FACTIONS] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("the Emerald luck once a week", () => {
+  assert.ok(S.mayLuck(null, 0)); assert.ok(!S.mayLuck(0, 3 * S.DAY)); assert.ok(S.mayLuck(0, 7 * S.DAY));
+});

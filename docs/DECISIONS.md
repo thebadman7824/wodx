@@ -1543,6 +1543,21 @@ Reverse: COURTS, SEEMINGS and UNSEELIE_MONTHS in data/signatures.mjs; whenNow in
 Each of the fourteen Houses has a row with a seat in the fae courts and a one-line theme. Ailil, Dougal, Eiluned, Gwydion and Scathach gain a die to the field of their theme. The Storyteller applies each House's boon and flaw from the book (C20 pdf 10, 51), because they are not written out here. A Fianna Galliard now gains Wisdom for a tale, as any Galliard does: the gate found that the tribe's row hid the auspice's.
 
 Reverse: FAE_HOUSES in data/signatures.mjs; isScarOnly and tale in signatures.mjs.
+
+## B1504. Wraith features: Guild, legion and faction, picked on the actor (2026-11-12)
+Splat Features Desk, approved by Ben. The wraith sheet has no field for a Guild or a legion, so the feature window picks them, and the picks are kept in the actor flag wodx-chronicle.wraith. Rows stack in the order Guild, legion, faction. A legion is suggested from the sheet's death field by the manner of death: violence for the Grim Legion, illness for the Skeletal, old age for the Iron, despair for the Silent, madness for the Penitent, mystery for the Paupers, chance for the Emerald and fate for the Fate Legion. Joining by the manner of death is a house reading, because the books do not say it outright. The new world setting "Guild and legion features (Wraith)" is off by default.
+
+Reverse: GUILDS, LEGIONS and WRAITH_FACTIONS in data/signatures.mjs; wraithRows and legionFor in signature-rules.mjs; the sigWraith setting.
+
+## B1505. The Wraith engines (2026-11-12)
+Several rows borrow engines already built. The Oracles and the Fate Legion read the Malkavian riddle of the next event, once a night. The Pardoners keep confessions as Shadow Lord leverage. The Penitent Legion hear through a derangement. The Emerald Legion's luck allows a reroll on a roll of chance once a week, a house reading of "once a story". The Guilds' Arcanoi name their rows too, so "Keening" finds the Chanteurs. Investigation, Angst and the Harrowing became roll tags.
+
+Reverse: setWraith and luck in signatures.mjs.
+
+## B1506. Factions of the dead (2026-11-12)
+Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
+
+Reverse: WRAITH_FACTIONS in data/signatures.mjs.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
