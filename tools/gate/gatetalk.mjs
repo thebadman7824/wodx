@@ -192,7 +192,7 @@ export async function run() {
         && typeof game.actors.get(kid.id).flags?.[MOD]?.talked?.[actors[1].id] === "number",
         {first: first.menu?.greet, second: second.menu?.greet, bye: bye.said, trade, cry});
     });
-    await step("talk generator (NPC 0.37.0): stock lines from the grammar, children keep their own, rumours carried, off as before", async () => {
+    await step("talk generator (NPC 0.42.0): stock lines from the grammar, children keep their own, rumours carried, off as before", async () => {
       const L = talk().lines;
       const gen = await Actor.create({name: "WoDX gate: Talk generated", type: "Mortal"});
       const kid2 = await Actor.create({name: "WoDX gate: Talk generated child", type: "Mortal", flags: {[MOD]: {behavior: {voice: "child"}}}});
@@ -222,7 +222,7 @@ export async function run() {
       if ( rum ) await st.rumours.remove(rum.id);
       const kidLines = Object.values(L.VOICES.child.greet).flat();
       const clean = said.every(l => /^".+"/.test(l) && !/#\w|\{\w+\}/.test(l));
-      ok("talk generator (NPC 0.37.0): stock lines from the grammar, children keep their own, rumours carried, off as before",
+      ok("talk generator (NPC 0.42.0): stock lines from the grammar, children keep their own, rumours carried, off as before",
         clean && kidLines.some(l => (k.menu?.greet ?? "").startsWith(l)) && (!st || /bridge toll is lifted/.test(r?.said ?? ""))
         && off.ok && (!pool.length || pool.includes(off.said)),
         {said, kid: k.menu?.greet, rumour: r?.said, off: off.said});

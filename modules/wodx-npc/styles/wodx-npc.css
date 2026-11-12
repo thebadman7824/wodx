@@ -46,3 +46,30 @@
 .wnpc-talk-ask, .wnpc-talk-local { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3em; }
 .wnpc-talk-ask li, .wnpc-talk-local li { margin: 0; }
 .wnpc-talk-ask button, .wnpc-talk-local button { width: auto; padding: 0 0.6em; }
+
+/* 0.30.0: the family and lineage tree, secrets, why an NPC feels as they do */
+.wnpc-tree-dialog .window-content { overflow-y: auto; }
+.wnpc-tree-wrap { max-height: 70vh; overflow-y: auto; }
+.wnpc-tree-line h3 { margin: 0.6em 0 0.2em; font-size: 1.05em; }
+.wnpc-tree, .wnpc-tree ul { list-style: none; margin: 0; padding-left: 1.1em; border-left: 1px dotted var(--color-border-light-tertiary, #999); }
+.wnpc-tree { padding-left: 0.4em; border-left: none; }
+.wnpc-tree li { margin: 0.15em 0; }
+.wnpc-tree-name, .wnpc-tree-root { cursor: pointer; }
+.wnpc-tree-root { margin-left: 0.3em; opacity: 0.7; }
+.wnpc-tree-unknown { font-style: italic; }
+.wnpc-secret { margin: 0.3em 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.25em 0.6em; }
+.wnpc-secret label:first-of-type { grid-column: 1 / -1; }
+.wnpc-secret p { grid-column: 1 / -1; margin: 0; }
+.wnpc-why ul { margin: 0.2em 0 0.4em; padding-left: 1.2em; }
+.wnpc-why-warm { color: var(--wodx-warm, #2f6b3a); }
+.wnpc-why-cold { color: var(--wodx-cold, #8a1f2d); }
+.wnpc-why-box summary { cursor: pointer; font-size: 0.9em; opacity: 0.8; }
+.wnpc-gate { font-size: 0.85em; margin: 0; }
+
+/* 0.41.0: the Followers window and Descriptions abroad */
+.wnpc-followers-rows, .wnpc-wanted-rows { display: grid; gap: 8px; max-height: 70vh; overflow-y: auto; }
+.wnpc-follower, .wnpc-wanted-row { border: 1px solid var(--color-border-light-2, #999); border-radius: 4px; padding: 6px 8px; }
+.wnpc-follower p, .wnpc-wanted-row p { margin: 2px 0; }
+.wnpc-follower-trouble { color: var(--color-level-warning, #a35a00); }
+.wnpc-follower-orders { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.wnpc-follower-orders button { flex: 0 0 auto; width: auto; font-size: 0.85em; padding: 0 6px; }

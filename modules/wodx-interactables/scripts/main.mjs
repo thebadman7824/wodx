@@ -62,10 +62,11 @@ import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
 import {setupChase} from "./chase.mjs";
+import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.28.0";
+const VERSION = "0.32.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -331,6 +332,23 @@ export function interactablesFor(tok) {
 /* ------------------------------------------------------------------ */
 
 const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
+/**
+ * 0.30.0: an attempt's time goes through WoDX Storyteller when it is on: the clock, or the character's own time when
+ * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
+ */
+async function passTime(actor, seconds) {
+  const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
+  if ( time?.spend && actor?.hasPlayerOwner ) {
+    try {
+      const r = await time.spend({actorIds: [actor.id], seconds, label: "an attempt"});
+      if ( r.how === "personal" ) return {advanced: 0, personal: r, line: `${timeWords(seconds)} pass for ${actor.name} alone, apart from the group.`};
+      if ( r.how === "clock" ) return {advanced: seconds, personal: null, line: `The clock moves on ${timeWords(seconds)}.`};
+    } catch (e) { console.error(`${MOD} | time`, e); }
+  }
+  await game.time.advance(seconds);
+  return {advanced: seconds, personal: null, line: `The clock moves on ${timeWords(seconds)}.`};
+}
+
 function timeWords(s) {
   if ( !s ) return "";
   if ( s < 60 ) return s <= R.TURN ? "a turn" : `${s} seconds`;
@@ -723,6 +741,8 @@ export async function applyAsk(msg) {
     if ( (op.id === "examine" || op.id === "look") && o.clue ) {
       whisper = await clueReport(o, out, author, actor);
       await clueCodex(o, doc, out, actor).catch(e => console.error(`${MOD} | clue codex`, e));
+      // 0.32.0: what was found goes on the open case board
+      if ( out.examine === undefined || out.examine >= 0 ) await pinClue({label: R.nameOf(o)}, doc, R.clueTexts(o, Math.max(0, out.examine ?? 0, Number(o.seen?.[actor.id]) || 0)), actor).catch(e => console.error(`${MOD} | case board`, e));
     }
     if ( o.watch ) {
       const w = await watchReport(o, doc, out, op, author, actor, tokDoc);
@@ -741,11 +761,11 @@ export async function applyAsk(msg) {
       catch (e) { lines.push(`${actor.name} takes ${out.hurt} lethal (apply it by hand).`); }
     }
     // Time, outside combat
-    let advanced = 0;
+    let advanced = 0, personal = null;
     if ( out.seconds >= R.MINUTE && setting("advanceClock") && !game.combat?.started ) {
-      await game.time.advance(out.seconds);
-      advanced = out.seconds;
-      lines.push(`The clock moves on ${timeWords(out.seconds)}.`);
+      const t = await passTime(actor, out.seconds);
+      advanced = t.advanced; personal = t.personal;
+      lines.push(t.line);
     } else if ( out.seconds >= R.MINUTE ) lines.push(`It takes ${timeWords(out.seconds)}.`);
     // Listening: what is on the far side
     const here = !!tok && canvas.scene?.id === scene.id;
@@ -757,7 +777,7 @@ export async function applyAsk(msg) {
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
     releaseEvents(doc.id, heard.map(h => h.uuid));
-    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
+    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, personal, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
       damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed: [...revealed, ...room.revealed], moved: climbed?.moved ?? null,
       roomDamage: room.damage, undone: false};
@@ -927,6 +947,7 @@ export async function undoCard(msg) {
   if ( done.hurt && actor ) { try { await game.wodxCombat?.healDamage?.(actor, "lethal", done.hurt); } catch (e) { /* by hand */ } }
   // The clock goes back only if nothing else has moved it since
   if ( done.advanced && game.time.worldTime === done.worldTime ) await game.time.advance(-done.advanced);
+  if ( done.personal ) { try { await game.modules.get("wodx-storyteller")?.api?.time?.unspend?.(done.personal); } catch (e) { /* by hand */ } }
   if ( done.waiting ) {
     const q = chron()?.approvals?.pending?.() ?? [];
     const entry = q.find(p => p.key === `breach:${ask.wall}`);
@@ -987,9 +1008,9 @@ async function applySearch(msg, ask, tokDoc, scene) {
     body: `<p>Still in hiding: ${esc(listWords(missedPeople))}.</p>`})});
   if ( missed.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: `${esc(actor.name)} searches`,
     body: `<p>Missed, still hidden: ${esc(listWords(missed.map(n => R.nameOf(n.o))))}.</p>`})});
-  let advanced = 0;
-  if ( setting("advanceClock") && !game.combat?.started ) { await game.time.advance(op.seconds); advanced = op.seconds; lines.push(`The clock moves on ${timeWords(op.seconds)}.`); }
-  const done = {result: out.result, text: out.text, noise: "silent", snap: null, hurt: 0, advanced, worldTime: game.time.worldTime, waiting: false, lines, given: [], found, revealed, undone: false};
+  let advanced = 0, personal = null;
+  if ( setting("advanceClock") && !game.combat?.started ) { const t = await passTime(actor, op.seconds); advanced = t.advanced; personal = t.personal; lines.push(t.line); }
+  const done = {result: out.result, text: out.text, noise: "silent", snap: null, hurt: 0, advanced, personal, worldTime: game.time.worldTime, waiting: false, lines, given: [], found, revealed, undone: false};
   const verdict = hit.length || revealed.length ? "Found" : out.result === "botch" ? "Botch" : "Nothing found";
   await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
   return done;
@@ -1835,6 +1856,7 @@ function installDoorClick() {
 Hooks.once("init", () => {
   registerSettings();
   registerStateSettings();
+  registerCaseSettings();
   game.keybindings?.register?.(MOD, "interact", {
     name: "Interact", hint: "The Interact window for the selected token: doors, windows and walls within reach.",
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
@@ -1848,6 +1870,7 @@ Hooks.once("init", () => {
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
+  game.modules.get(MOD).api.caseBoard = setupCase();
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

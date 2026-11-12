@@ -74,6 +74,17 @@ The Clock's buttons:
 - **X-card**, **Lines and veils**, **Session Zero**, **Chronicle Rules**, **Approval queue** and **House rules**.
 - Players see **Ask the Storyteller**, which sends a request to your queue.
 
+**How game time passes.** There is one clock for the whole world, and every scene and realm reads it. It never runs by itself: it moves when you press a button, or when something you approve moves it. About thirty parts of WoDX follow it (effects, healing, sunlight, routines, faction turns, long tasks, letters, money, dated events, era changes).
+
+- **Long rolls.** Tick Move the clock on an extended roll, a rite, a meditation, a prayer, downtime or mending. Your roll moves the time at once; a player's roll sends it to your queue as "Time for a long action".
+- **Long tasks** (days or weeks of work) never move the clock. They roll by themselves as it passes.
+- **A character's own time.** Travel and solo play move only that character's time. So does anything done apart from the main group (the scene with more than half of tonight's characters): a long roll, an interaction, a fight or a journey. With the party split two and two, both halves keep their own time. The Clock's **Time** row shows who is ahead or behind; **Convene** brings them together, moving the clock up to whoever is furthest ahead. Dawn pulls everyone who is behind up to the clock. Turn this off with the world setting "Work done apart goes on the character's own time".
+- **Fights.** When you end a fight, the time moves by its turns times 3 seconds (world setting "Seconds a turn takes"; 0 turns it off). The after-action card says how long it lasted.
+- **Otherworld journeys.** The journey card says how much time passes outside (a Moon Bridge takes a thousandth, a trod can run fast or slow or lose days). Press **Let the journey's time pass** on your copy when they arrive. The Labyrinth, the Far Dreaming with Arcadia, and the Deep Umbra are your call: the books say time runs differently there but give no rate, so the card keeps the plain clock and reminds you. A fight's turn is 3 seconds, the books' figure; raise it in the settings for a slow, tense scene.
+- **The sun on this scene.** For a scene far from home, set its latitude and its hours from home from the Clock. Sun, sky and the hour shown for that scene follow it; the clock itself keeps home time.
+- **The clock that runs with the table.** Off by default. Set "Clock runs with the table" to a number of game minutes and it moves that much every so many real minutes, the same on every scene. It waits while the game is paused, during a fight, while the world is held and when no player is connected.
+- NPCs keep no time of their own. They follow their routines on the world clock; on scenes nobody is viewing they are placed when the scene opens.
+
 **Eras.** The date picks an era profile: Dark Ages (1197 to 1346), Plague and Long Night (1347 to 1449), Renaissance (1450 to 1600), Victorian (1837 to 1901), Wild West (1860 to 1899, the Americas only), Great War (1914 to 1918), Modern (1990 to 2003), and two optional branches: Time of Judgment (2004) and Future Darkness (2010 onward). The profile sets which ability list each line gets when a character is made, which Gauntlet chart Otherworlds uses, which menus WoDX Actions shows (Dark Ages mages and fae have their own), which sheet WoDX Sheets draws, and the look of WoDX windows. When the clock crosses into another era, a proposal goes to the queue. You can lock an era from the Clock so it never changes by itself.
 
 **The approval queue.** Anything WoDX wants to change that you should see first waits here: era changes, a player's experience spend, a player's request, generated people, faction results, rumours rising, the year and a day in the Umbra, one-off data fixes. Each entry has **Approve** and **Reject**; a rejection can carry a note back to the player who asked. Decided entries move to a history list below. Both lists have a search box. The same proposal is never queued twice.
@@ -251,6 +262,28 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 **Who is alarmed, and where.** Witnesses depend on what the act shows and who sees it. Mortals and hunters who don't know are breach witnesses. Creatures of another kind, and animals, are startled: a Cainite seeing a Crinos or a demon's apocalyptic form gets you a "Seen by another kind" card, with no mortal rumour. Their own kind, ghouls of the Kindred, Kinfolk of the Garou and anyone marked as knowing stay calm, and wraiths, demons, mummies and spirits are never startled. For vulgar magick only Sleepers count, and the Cast window says who can see. The place matters too: in **WoDX places** each scene or region has a Masquerade setting. Left blank, a haven, caern or chantry is Closed and an Elysium is Guarded. There the witnesses are still recorded so you can deal with them, but no rumour goes out to the town. Feeding or violence in Elysium is flagged as breaking the Prince's peace. After a Discipline is used in sight, you get a card asking whether it showed (setting **Ask who saw a Discipline**).
 
+**Followers who take orders.** An NPC with no player serves a character when you mark it (the Serves box in Give an order), when it is that character's ghoul, when it came from their background through Make them real, or when Creation made it their ally. The player clicks the bullhorn, picks the follower and an order: Follow me, Wait here, Guard this place, Keep watch, Go to the one I point at, Attack the one I point at, Hold back, Go and do this (an errand), Help me with a long task, Deal with that witness, or Cut them off.
+
+- A hard order waits in the queue with WoDX's suggested refusal roll. WoDX counts an order as hard on its own when it sends the follower across a fight, toward someone hostile or something plainly not human, or tells it to start a fight.
+- Keep watch warns the master's player when a stranger comes into sight. Guard steps into the way of a stranger within 10 yards and challenges them.
+- In a fight the follower still acts on its own turn, but minds its order: it goes for the one pointed at, holds back, or stands its ground, and it strikes at whoever hurts its master.
+- An errand (buy, carry, find, ask around, bring someone to feed on, watch a rival) hides the follower and runs as a long task on its own dice. When it ends, a card says how it went; buying pays from the master's purse.
+- Help me with a long task adds the follower's dots in that task's Ability to its master's dice.
+- Deal with that witness rolls Manipulation + Subterfuge to talk a breach witness round in the Masquerade records.
+- When the master gives chase, a follower on Follow joins in. Cut them off joins the chase after the one pointed at.
+- Loyalty moves one step at a time on the attitude track: up when a ghoul drinks from its domitor, down for a month without vitae, for being fed on, and for hard orders. Drift alone stops at Distrusted, and then you are told it may refuse, leave or turn.
+### People: relationships, lineage, secrets and why an NPC feels as they do
+
+**Relationships.** Each sheet's Relationships tab (the old Ties tab) lists every tie WoDX keeps, grouped: sire and childer, blood bonds, domitor and ghouls, family, heirs and Kinfolk, mentors and students, Allies and Retainers, friends, lovers and rivals, and open debts and boons from the Ledger. Ties come from the lineage, the Sire box, Backgrounds made real, the Ledger and the hand-made list, and each shows at both ends. Drag a character, scene or journal entry in to add one by hand, pick its role and write a note. The eye button hides a hand-made tie from players; a tie a secret hides stays hidden until it is found out.
+
+**Family and lineage.** **Family and lineage** on the tab (or **Family tree** in the People window) draws one person's lines: sires back to the oldest known, childer, ghouls, family and heirs, mentors and students, patrons and retainers. Click a name to open the sheet, or the small tree button beside it to draw from there. Players see only what their characters know: a hidden sire shows as Unknown, a hidden childe is left out.
+
+**Secrets and hooks.** **Secrets** on the tab (Storyteller only) holds what a character hides, its kind, how grave it is, and the tie it hides. **Save and dig** lets someone dig: Investigation, Auspex Telepathy, Spies or Contacts, or Aura Perception for marks on the soul; or tell them which one. A clue or door can hand one over with `secret <words>` in its Then list. Whoever finds a secret holds a hook: a major boon in the Ledger, owed by the holder. With faction politics on, an NPC holding a hook accuses the holder at court, with proof; at the gathering the secret is laid bare and the hook is spent. Which secrets a court cares about follows the line and the age (heresy in the Church's centuries, infernalism always, a Sabbat tie for the Camarilla from 1493, a Technocracy defection from 1897).
+
+**Why an NPC feels as they do.** Under each talk card you get a fold, seen only by you, with the reasons behind the NPC's attitude: the first meeting, each change since, then boons kept or broken, debts, a fight, ties, secrets, the same clan or tribe. An NPC's Relationships tab lists the same for every character they have met.
+
+**Talk lines that need a trait.** A talk line's "Only when" can ask for any rated trait: `[the abbot] Etiquette 3 => ...`, `[the vault] Dominate 2 => ...`, or a clan, Tradition or kith. When the character qualifies, that line is tried before the plain ones and the card shows what unlocked it, such as [Etiquette 3].
+
 ## WoDX Interactables: doors, locks, windows, containers, traps, clues, lights, hiding places, hazards, holy places, watch points, vehicles and climbs
 
 *New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Everything here through targets (0.14.0) is deployed there.*
@@ -346,6 +379,20 @@ Each turn, set the ground the chase has reached, each racer's way (only what exi
 
 The players see who is gaining in words. Your copy, whispered, has the dice and totals, Undo this turn, a button for crash or fall damage, and Start a fight once someone is caught. End the chase from the window at any time.
 
+## Battles and sieges
+
+Open the Storyteller's hand and pick Battles and sieges, then A new battle or A new siege. If the chronicle has a war, battle or siege among its dated events near the clock's year, you can start from it. Give each side its men, quality, the supernatural in its ranks, where it stands and a commander: a sheet (WoDX reads Perception, Charisma, Intelligence + Leadership and Wits + Medicine from it) or a name with four pools. Tick the characters who fight and where they stand.
+
+Fight a phase rolls both commanders (Perception + Leadership at 6, the heavier side with extra dice). Put the successes of the characters' deeds in each side's Deeds box first: they count for the side and take that many foes out of the fight. A side that loses badly rolls to hold (wavering); a side whose resolve runs out breaks. The battle turns on a character throws the battle's counterattack at them through WoDX Combat's soak; tick drew attention when they opened a hole in the line. A siege goes a week at a time: the works fill the breach clock (it shows in Progress clocks), the stores run down, disease is rolled for both camps. Storm the walls when you are ready. Undo takes back any step. When it is over, Let the time pass moves the clock once by the time it took, and factions named on the sides get a proposal in the approval queue. The Legends book records it on its next build.
+
+The rolls come from Spoils of War and the Dark Ages Companion; how big a force weighs, resolve, the breach and every age after 1500 are house rules (docs/DECISIONS.md B2200 to B2209).
+
+## The case board and what they could know (2026-11-12)
+
+- **Case board** (token tools, or the Storyteller's hand): a shared board for the coterie. Press "Start a board" and name the case; the first board is the open case. Drop people, scenes, journal pages, Encyclopaedia entries or items on it, or add a note. Drag a card by its title; press the link button on one card and then on another to join them with a few words. The eye button hides a card from the players until they earn it (Alt while dropping hides it at once). A clue a character looks at or examines through Interact goes on the open case by itself, with what they learned; switch that off in the module settings ("Found clues go on the case board"). Players see hidden cards only as missing; do not keep true secrets in a card's words.
+- The board takes its era's look: parchment and thread before 1450, a commonplace board to 1800, pinboard and string to 1945, cork to 2022, a lit display in the World of Future Darkness.
+- **What they could know** (Storyteller's hand): pick a player character and see the Encyclopaedia entries that fit their line and the year, with a suggestion and the reason (Intelligence + Occult, Academics or Politics; a house rule). Tick what they know and press "Put the ticked in the codex"; their players read it there. Entries that have not happened yet are never offered.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.
@@ -418,3 +465,18 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 | WoDX Masquerade | Breaches |
 
 Folders: "WoDX · Before the Embrace", "WoDX · Before the years", "WoDX · The Dead", "WoDX people".
+
+## The Legends book, progress clocks and the spirits (2026-11-12)
+
+**Legends of the Chronicle.** A journal everyone can read, one page per century, of what has really happened: dated events, the dead, Embraces and ghoulings, seats won and lost, havens that changed hands, boons kept and broken. It brings itself up to date when you end a session, around each time skip, and when you press Bring it up to date in the Legends window (the book button). Untick a line there to keep it from the players; Embraces, oaths and debts start hidden.
+
+**Progress clocks.** The clock button opens them for everyone; the dashboard has them too. Long tasks, heat, ties and Ledger objectives show as clocks by themselves. Make your own for a faction's plan or a hunter closing in, and let it fill each faction turn, each session or each week if you like. Nobody but you sees a clock until you press the eye and choose who does.
+
+**Pacing.** The night's draw window now opens with a line for you alone: three quiet nights in a row, or a hard night just past. It never changes what the draw picks.
+
+**The spirits.** The feather button opens a character's standing with the spirit courts. Record chiminage, Banes, Bans and slights there; Summon a spirit, Perform a rite and Chiminage in WoDX Actions take the court and use its standing.
+
+## Followers, and descriptions that spread (2026-11-12)
+
+- **Followers window.** The people icon in the token tools, or Followers on a sheet's Relationships tab. Every NPC that serves the character, with where it is, its order, loyalty and why it last moved, the blood bond and any trouble. Followers on the scene you are viewing have buttons for the everyday orders; Give an order opens the full window with them picked. Players see their own characters' followers, once they may see the follower's sheet.
+- **Descriptions abroad.** When a breach, a theft, a break-in, a fire, a desecration or a fight has witnesses, you get a card with what they saw of the culprit. Word is heard there at once, goes on with the place's Alert zones, and reaches the rest of town by the means of the year (hue and cry, a printed notice, the wire, the news, cameras, face matching). When the culprit walks where word has reached, NPCs who see them may know them: you get a card with the match, the roll and Raise the alarm. Change clothes or hold a disguise to break the match; from 2000 the face shows through new clothes. The question-mark figure in the token tools lists every description going round, to drop one or let the whole town hear it now. Turn it off with the world setting Descriptions that spread.

@@ -9,6 +9,9 @@ import {runEraTest} from "./era-test.mjs";
 import {searchBox} from "./search.mjs";
 import * as church from "./church.mjs";
 import {reckon} from "./reckoning-rules.mjs";
+import * as place from "./place.mjs";
+import {offsetWords} from "./place-rules.mjs";
+import {paceLine} from "./pace.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
@@ -39,7 +42,8 @@ export class ClockApp extends ApplicationV2 {
       eraTest: () => runEraTest(),
       hold: ClockApp.#onHold,
       languages: () => game.modules.get("wodx-chronicle")?.api?.languages?.open(),
-      tour: () => game.modules.get("wodx-chronicle")?.api?.tours?.start()
+      tour: () => game.modules.get("wodx-chronicle")?.api?.tours?.start(),
+      placeHere: () => place.placeDialog()
     }
   };
 
@@ -63,6 +67,8 @@ export class ClockApp extends ApplicationV2 {
     const waiting = approvals.pending().length;
     const lockId = setting("eraLock");
     const held = !!setting("hold");
+    let here = null;
+    try { const d = globalThis.canvas?.scene ? place.describeAt(canvas.scene) : null; here = d?.ownPlace ? d : null; } catch (e) { here = null; }
 
     const eraOptions = [`<option value="">Follow the date</option>`]
       .concat(eras.profiles().map(e => `<option value="${esc(e.id)}" ${e.id === lockId ? "selected" : ""}>${esc(e.name)}</option>`))
@@ -96,7 +102,10 @@ export class ClockApp extends ApplicationV2 {
         ${gm && target.profile && p && target.profile.id !== p.id ? `<p class="wodx-notice">The date calls for ${esc(target.profile.name)}. ${waiting ? "A change is waiting in the approval queue." : ""}</p>` : ""}
         ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: proposals are held back tonight.</p>` : ""}
         ${held ? `<p class="wodx-notice">The world is held: the clock moves, but nothing reacts to it.</p>` : ""}
+        ${gm && paceLine() ? `<p class="wodx-quiet">${esc(paceLine())}</p>` : ""}
       </section>
+      ${here ? `<section class="wodx-scene-place"><p class="wodx-quiet">On ${esc(canvas.scene.navName || canvas.scene.name)} (${esc(offsetWords(here.offset))}, latitude ${esc(String(here.latitude))}): ${esc(here.timeLabel)}, sunrise ${esc(here.sunrise)}, sunset ${esc(here.sunset)}.</p></section>` : ""}
+      ${gm ? (game.modules.get("wodx-storyteller")?.api?.time?.clockRow?.() ?? "") : ""}
       ${gm ? `
       <section class="wodx-controls">
         <div class="wodx-buttons">
@@ -128,6 +137,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
           <button type="button" data-action="manageLinesVeils"><i class="fa-solid fa-eraser"></i> Remove a line or veil</button>
           <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>
+          <button type="button" data-action="placeHere" title="Latitude and hour for a scene far from home"><i class="fa-solid fa-earth-europe"></i> The sun on this scene</button>
           <button type="button" data-action="hold" title="Move the clock without the world reacting: no routines, faction turns, dated events or expiring effects"><i class="fa-solid fa-${held ? "play" : "pause"}"></i> ${held ? "Release the world" : "Hold the world"}</button>`
           : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>`}
         </div>
@@ -143,6 +153,7 @@ export class ClockApp extends ApplicationV2 {
     // The era select uses change, not click
     const select = this.element.querySelector("select[name=eraLock]");
     select?.addEventListener("change", ev => ClockApp.#onLockEra.call(this, ev, select));
+    try { game.modules.get("wodx-storyteller")?.api?.time?.bindClockRow?.(this.element); } catch (e) { /* no Storyteller */ }
   }
 
   static async #onAdvance(event, target) {

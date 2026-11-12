@@ -179,6 +179,18 @@ export function newChase({quarry, pursuers = [], ground = "streets", night = fal
   return {v: 2, turn: 0, ground: groundKind(ground), night: !!night, year: Number(year) || 0, quarry: q, pursuers: ps, status: "running", sight: false, log: []};
 }
 
+/**
+ * 0.31.0 (B1814): one more pursuer joins a running chase (a follower with its master). It starts level with the
+ * slowest pursuer still in it, so it neither gains nor loses by coming late. Returns a new state; a racer already
+ * in the chase, or a chase that has ended, is left as it is.
+ */
+export function joinChase(st, racer) {
+  if ( !st || st.status !== "running" || !racer?.id || st.quarry?.id === racer.id || st.pursuers.some(p => p.id === racer.id) ) return st;
+  const inIt = live(st);
+  const total = inIt.length ? Math.min(...inIt.map(p => p.total)) : 0;
+  return {...st, pursuers: [...st.pursuers, {...racer, way: WAYS[racer.way] ? racer.way : "foot", flatOut: false, total, out: null}]};
+}
+
 /** The quarry's lead over one pursuer, in successes (negative: caught up). */
 export const leadOver = (st, p) => st.quarry.total - p.total;
 /** The difficulty of a pursuer's Perception roll to keep sight, from the lead as the turn starts: 6, +1 for each success

@@ -26,6 +26,8 @@
  * f.politics (the state below).
  */
 
+import {hooksFor, SECRET_KINDS} from "./secrets-rules.mjs";
+
 export const MAX_RANK = 5;
 export const MAX_VINCULUM = 10;
 /** NPC members acting in one inner turn (B1102). */
@@ -223,16 +225,29 @@ export const POLITIES = {
     eras: {future: "In the Future Darkness the Construct runs on contracts and metrics."}
   },
   inquisition: {
-    label: "A tribunal of the Inquisition", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
-    body: "The tribunal", rank: "Status", blocs: "creed", gathering: {name: "tribunal", every: 4, meets: "The tribunal sits."},
+    label: "A cell of the Inquisition", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
+    body: "The cell", rank: "Rank", rankFrom: "rankbg", blocs: "order", gathering: {name: "chapter meeting", every: 1, meets: "The cell meets in chapter."},
     offices: [
-      {key: "inquisitor", title: "Inquisitor", seats: 1, fill: "appoint", top: true, judge: true},
-      {key: "notary", title: "Notary", seats: 1, fill: "appoint"},
-      {key: "confessor", title: "Confessor", seats: 1, fill: "appoint"},
-      {key: "familiar", title: "Familiar", seats: 3, fill: "appoint"}
+      {key: "rector", title: "Rector", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "subrector", title: "Sub-rector", seats: 1, fill: "backing"},
+      {key: "treasurer", title: "Treasurer", seats: 1, fill: "backing"},
+      {key: "archivist", title: "Archivist", seats: 1, fill: "backing"},
+      {key: "cellarer", title: "Cellarer", seats: 1, fill: "backing"}
     ],
-    law: ["heresy", "consorting with the Devil's creatures", "hiding a witch", "revealing the tribunal's work", "disobeying the Inquisitor"],
-    notes: "Inquisitors of the Dark Ages hunt the Devil's own; the Inquisitor names the tribunal's officers. A house rule, since the Dark Ages Inquisitor book is not yet read."
+    law: ["heresy", "consorting with the Devil's creatures", "hiding a witch", "breaking the Rule of the chapter house", "disobeying the rector"],
+    notes: "A cell answers to its city's Council of Faith, and through it to Marzone and the Supreme Council of Faith, not to the local bishop. The Council appoints the rector; the cell elects its other officers, subject to the rector's veto (DA:I Companion pr 72-75). Rank is the Rank Background (DA:I pr 157). The charges and the vote of the officers are house rules.",
+    backers: "The cell"
+  },
+  "council-of-faith": {
+    label: "A Council of Faith", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
+    body: "The Council", rank: "Rank", rankFrom: "rankbg", blocs: "order", gathering: {name: "Council", every: 4, meets: "The Council of Faith sits."},
+    offices: [
+      {key: "head", title: "Head of the Council", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "procurator", title: "Procurator Fiscalis", seats: 1, fill: "appoint"},
+      {key: "councillor", title: "Councillor for an order", seats: 5, fill: "clan"}
+    ],
+    law: ["heresy", "a cell's failure or its dead unanswered for", "a mixed cell made single-order", "defying the Supreme Council"],
+    notes: "The local Council of Faith over a city's cells, often housed by one of the five orders; it appoints and removes rectors and judges the cells' members (DA:I Companion pr 73-75, 82). The Sicae Dei answer to a council of two seniors from each order, ten in all, whose verdicts must be unanimous (Companion pr 83). The Storyteller picks this polity. Seats beyond the Procurator are house rules."
   },
   "hunter-society": {
     label: "A society of hunters", line: "hunter", kinds: ["hunters"], from: 1500, to: 1998,
@@ -355,7 +370,8 @@ export function normPolitics(p = {}) {
     offices, ranks: Object.fromEntries(Object.entries(o.ranks ?? {}).filter(([k, v]) => k && v !== null && v !== "" && Number.isFinite(Number(v))).map(([k, v]) => [k, clampInt(v, 0, MAX_RANK)])), favour: num(o.favour, 0, 9), vinculum: num(o.vinculum, 0, MAX_VINCULUM), wary: num(o.wary, 0, 1e9),
     claims: (Array.isArray(o.claims) ? o.claims : []).filter(c => c && c.office && c.who).map(c => ({office: String(c.office), who: String(c.who)})).slice(0, 20),
     docket: (Array.isArray(o.docket) ? o.docket : []).filter(c => c && c.id && c.against).map(c => ({id: String(c.id), by: c.by ? String(c.by) : null,
-      against: String(c.against), law: String(c.law ?? "").slice(0, 120), turn: Number(c.turn) || 0})).slice(0, 20),
+      against: String(c.against), law: String(c.law ?? "").slice(0, 120), turn: Number(c.turn) || 0,
+      ...(c.hook?.holder && c.hook?.secret ? {proof: Math.max(0, Math.min(2, Number(c.proof) || 0)), hook: {holder: String(c.hook.holder), secret: String(c.hook.secret), entry: c.hook.entry ? String(c.hook.entry) : null}} : {})})).slice(0, 20),
     lean: Object.fromEntries(Object.entries(o.lean ?? {}).filter(([k, v]) => k && typeof v === "string" && v)),
     inner: Math.max(0, Math.round(Number(o.inner) || 0)),
     title: o.title ? String(o.title).slice(0, 40) : null
@@ -371,7 +387,7 @@ export const officesOf = (f, id) => Object.entries(f?.politics?.offices ?? {}).f
 export const holdersOf = (f, key) => f?.politics?.offices?.[key] ?? [];
 const cap = t => String(t).replace(/\b\w+/g, (w, i) => (i && /^(of|the|and)$/.test(w) ? w : w[0].toUpperCase() + w.slice(1)));
 /** The plural a polity's blocs go by in the lines of a turn. */
-export const BLOC_WORDS = {clan: "clans", tribe: "tribes", house: "houses", court: "courts", legion: "legions"};
+export const BLOC_WORDS = {order: "orders", creed: "creeds", sect: "Traditions and Conventions", faction: "factions", wu: "wu", amenti: "Amenti", clan: "clans", tribe: "tribes", house: "houses", court: "courts", legion: "legions"};
 /** A member's bloc: the sheet field the polity sorts by (clan, tribe, house, court, legion). */
 const bloc = (info, id, key = null) => String(info?.[id]?.[POLITIES[key]?.blocs ?? "clan"] ?? "").trim().toLowerCase() || null;
 
@@ -381,7 +397,7 @@ const bloc = (info, id, key = null) => String(info?.[id]?.[POLITIES[key]?.blocs 
 
 /** The ops this file owns. */
 export const POL_OPS = new Set(["pol-office", "pol-rank", "pol-favour", "pol-docket", "pol-docket-remove", "pol-claim", "pol-claim-remove",
-  "pol-vinculum", "pol-wary", "pol-lean", "pol-inner", "pol-boon", "pol-fight"]);
+  "pol-vinculum", "pol-wary", "pol-lean", "pol-inner", "pol-boon", "pol-fight", "pol-expose"]);
 /**
  * Apply one politics change to a faction record in place. Returns its inverse (an array of changes), or null when
  * nothing changed.
@@ -479,6 +495,7 @@ export function applyPolitics(f, c) {
       return [{op: "pol-inner", faction: f.id, set: was}];
     }
     case "pol-boon": return []; // a report: the creditor calls in a boon; the Storyteller marks the ledger
+    case "pol-expose": return []; // NPC 0.37.0 (B1905): a secret laid bare; WoDX NPC makes it known and spends the hook
     case "pol-fight": return []; // a report: a challenge with a player's character, staged as a fight (B1111)
     default: return null;
   }
@@ -498,6 +515,7 @@ export function politicsBig(c, pcActors = new Set()) {
   if ( c.op === "pol-docket" && pcActors.has(c.charge?.against) ) return true;
   if ( c.op === "pol-boon" && pcActors.has(c.debtor) ) return true;
   if ( c.op === "pol-fight" ) return true;
+  if ( c.op === "pol-expose" && pcActors.has(c.holder) ) return true;
   return false;
 }
 
@@ -522,6 +540,7 @@ export function describePolitics(c, names = {}, state = null) {
     case "pol-lean": return c.who ? `The ${cap(c.bloc)} lean toward ${an(c.who)}` : `The ${c.bloc} lean toward nobody`;
     case "pol-inner": return `${fn(c.faction)}'s politics move on`;
     case "pol-boon": return `${an(c.creditor)} calls in a ${c.size ?? ""} boon from ${an(c.debtor)}`.replace("a  boon", "a boon");
+    case "pol-expose": return `${an(c.finder)} lays bare ${an(c.holder)}'s secret: ${c.law ?? "a hidden wrong"}`;
     case "pol-fight": return `${an(c.challenger)} challenges ${an(c.holder)} by ${c.how ?? "a challenge"}${c.office ? ` for ${c.title ?? "a seat"}` : " for Rank"}: stage it as a fight${c.noKill ? ", ended at submission" : ""}`;
     default: return c.op;
   }
@@ -642,8 +661,16 @@ export function innerTurn(f, ctx = {}) {
       case "accuse": {
         // The top seat is beyond a charge, save among the Anarchs
         const rivals = members.filter(m => m !== id && (key === "anarch" || !officesOf(view, m).includes(top?.key)));
-        const against = rivals.sort((a, b) => rankOf(view, b, info, key) - rankOf(view, a, info, key))[0] ?? null;
+        // NPC 0.37.0 (B1905): a secret found on a member is the charge, and the proof makes it stick
+        const hook = hooksFor(id, ctx.hooks ?? [], rivals, {polity: key, year: ctx.year ?? null})[0] ?? null;
+        const against = hook?.holder ?? rivals.sort((a, b) => rankOf(view, b, info, key) - rankOf(view, a, info, key))[0] ?? null;
         if ( !against ) { say(`${name(id)} finds nobody worth accusing.`); break; }
+        if ( hook ) {
+          const law = SECRET_KINDS[hook.secret.kind]?.law ?? "a hidden wrong";
+          add({op: "pol-docket", charge: {id: `${f.id}:${turn}:${id}`, by: id, against, law, turn, proof: hook.weight, hook: {holder: hook.holder, secret: hook.secret.id, entry: hook.entry ?? null}}});
+          say(`${name(id)} accuses ${name(against)} of ${law}, and has proof; it will be heard at the next ${P.gathering.name}.`);
+          break;
+        }
         const wary = (p.wary[against] ?? 0) >= turn;
         const x = roll(rand, attr(info, id, "manipulation") + r, 6 + (wary ? 1 : 0)), y = roll(rand, attr(info, against, "wits") + rankOf(view, against, info, key), 6);
         if ( x.net > y.net ) {
@@ -745,7 +772,9 @@ function gather(f, key, ctx, add, lines, step, sofar) {
     add({op: "pol-docket-remove", id: d.id});
     if ( !members.includes(d.against) ) { lines(`The charge against ${name(d.against)} is dropped: they are gone.`); continue; }
     // The judge's word weighs: a charge the judge brings, or one against the judge, leans that way
-    const a = weight(d.by ?? "") + rollDice(rand, 1)[0] + (judge && d.by === judge ? 3 : 0), b = weight(d.against) + rollDice(rand, 1)[0] + (judge && d.against === judge ? 3 : 0);
+    const a = weight(d.by ?? "") + rollDice(rand, 1)[0] + (judge && d.by === judge ? 3 : 0) + 3 * (Number(d.proof) || 0), b = weight(d.against) + rollDice(rand, 1)[0] + (judge && d.against === judge ? 3 : 0);
+    // A charge with proof lays the secret bare, whatever the verdict
+    if ( d.hook ) add({op: "pol-expose", holder: d.hook.holder, secret: d.hook.secret, entry: d.hook.entry ?? null, finder: d.by ?? null, law: d.law});
     if ( a > b ) {
       add({op: "pol-rank", actor: d.against, delta: -1, base: baseRank(info, d.against, key)});
       lines(`${judge ? name(judge) : body} finds ${name(d.against)} guilty of ${d.law}: they lose standing.`);

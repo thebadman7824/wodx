@@ -18,6 +18,7 @@ import * as totals from "./totals-rules.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import * as lifepath from "./lifepath.mjs";
 import * as lifepathRules from "./lifepath-rules.mjs";
+import {threadsOf} from "./lifepath-threads-rules.mjs";
 import * as firstNight from "./first-night.mjs";
 import * as firstNightRules from "./first-night-rules.mjs";
 
@@ -71,6 +72,7 @@ function start() {
     totals, check: actor => CreationCheckApp.open(actor),
     firstNight: actor => firstNight.FirstNightApp.open(actor ?? null), firstNightOf: firstNight.recordOf, forecast: firstNight.forecastFor, signOff: firstNight.signOff, firstNightRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
+    lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
   };

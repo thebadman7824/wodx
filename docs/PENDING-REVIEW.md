@@ -628,6 +628,29 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
 | 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 
+## Approved by Ben, 12 November 2026, 04:46 UTC (followers desk)
+
+Ben approved every recommendation on the Followers Review Desk (https://claude.ai/artifact/K4NCdhYriZjwgtzCgQQC4F). Built in three PRs; this table grows as each lands.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How does WoDX know who a follower serves? | Read all four ties (orders flag, Make them real, a ghoul's domitor, a Creation ally's patron); nothing migrated (B1800). | `servesFrom` in wodx-npc/scripts/order-rules.mjs: drop a tie from it. |
+| 2026-11-12 | Ties tab misses ghouls | Fixed on main by Sheets 0.11.0 (the Relationships tab) while this was built, so this build's own fix was dropped. | Nothing to reverse here. |
+| 2026-11-12 | Who decides hard orders? | WoDX counts an order as hard in a fight, or when sent toward someone hostile or plainly not human, and the Storyteller sees a suggested refusal roll: blood bound obeys (Willpower 8 only against near-certain death), else Willpower at 6 + attitude step + bond stage, 4 to 9. House rule (B1801, B1802). | `hardReasons` and `loyaltyCheck` in order-rules.mjs. |
+| 2026-11-12 | What do Keep watch and Guard do? | A follower on watch who notices a stranger (the reaction regions' notice roll) warns its master's player; a guard within 10 yards steps into their way and challenges them, farther off it warns. Players' characters, passers-by and fellow followers are never challenged (B1803). | `sentryAct`, `isIntruder` in order-rules.mjs; `sentries` in orders.mjs. |
+| 2026-11-12 | Do orders count in fights? | Yes: new Attack the one I point at and Hold back; Guard and Wait make running less likely; every follower guards its masters as a ghoul its domitor. In a fight only a Go-to order, or an attack on something plainly not human, is hard (B1804). | `fightShift` in order-rules.mjs; `OR.fightShift` in npc main.mjs. |
+| 2026-11-12 | Errands | Go and do this: six errands worked as a long task on the follower's own dice, its tokens hidden while away; a card when it ends (B1810). | `ERRANDS`, `errandTask` in order-rules.mjs. |
+| 2026-11-12 | Followers helping on long tasks | Each helper adds its dots in the task's Ability, at least one die (B1811). | `helperDice` in wodx-storyteller tasks-rules.mjs. |
+| 2026-11-12 | Shopping | A buying errand pays its price from the master's purse when it ends; if the purse is short nothing is bought (B1812). | `onTaskDone` in orders.mjs. |
+| 2026-11-12 | Masquerade | Deal with that witness: Manipulation + Subterfuge at 6 marks the witness talked round, a botch marks they told others; a follower's breach posts a card naming its masters (B1813). | `cleanupOutcome`, `onBreach`. |
+| 2026-11-12 | Chases | Followers on Follow behind a pursuing master, and those told to Cut them off, join a chase level with the slowest pursuer (B1814). | `joinChase` in wodx-interactables chase-rules.mjs. |
+| 2026-11-12 | Politics | Watch a rival is an errand; followers hold no seats (B1815). | `ERRANDS.spy`. |
+| 2026-11-12 | Loyalty drift | One step up or down on the attitude track for vitae, neglect, being fed on and hard orders; never below Distrusted by drift (B1816). | `drift` in order-rules.mjs. |
+
+## Approved by Ben, 12 November 2026, 11:34 UTC (all pending items)
+
+Ben explicitly approved every row that was waiting for review ("Approve all items on pending review"). That includes deleting the four stale test combats on rothenstein-wodx, done by the PC helper with a backup first. 4 lifepath rows that were listed twice are left out here, since the 04:40 UTC lifepaths table above already holds them.
+
 ## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
 
 All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
@@ -683,7 +706,7 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Sun let in through a window (B1322) | Direct sun 4 yards into the room from a window thrown open or smashed; indirect from a torn curtain | SUN_YARDS in interact-rules.mjs |
 | 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
 | 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
-| 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
+| 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. Done 2026-11-12 after Ben approved: all three removed (Actions 3.53.0, Combat 3.19.0, Chronicle 0.42.1 referee fallback too). |
 | 2026-11-12 | Disguises set by the Storyteller only (B1405) | Superseded 2026-11-12 by B1411: players set their own with Dress as someone else | B1411 |
 | 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
 | 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
@@ -709,3 +732,54 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Height in targeting (x7) | Range and areas measured in three dimensions from token elevation; a cone or line aims level, so a flyer must be within its spread | inShape(), withHeight() in wodx-targeting target-rules.mjs |
 | 2026-11-12 | Prelude runner rolls and stakes (B1611, B1612) | Difficulty 6 by default, ones cancel; failed stakes add 0-point Flaws (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie; gains capped at 3 freebie points | first-night-prelude-rules.mjs |
 | 2026-11-12 | Troupe tie questions (B1613) | Six questions, a ring by name, answers on the Group actor | TIE_QUESTIONS |
+| 2026-11-12 | Who may see a tie (B1901) | Owners of either end; a hidden hand-made tie is the Storyteller's; a tie a secret hides shows once the secret is found | visibleTo in ties-rules.mjs |
+| 2026-11-12 | What a found secret is worth (B1903) | A major boon owed by the holder to the finder, in the Ledger | hookEntry in secrets-rules.mjs |
+| 2026-11-12 | How secrets are dug up (B1904) | Investigation (Perception + Investigation 7), Telepathy (V20 roll), Spies or Contacts (Manipulation + Streetwise 7), Aura Perception (Perception + Empathy 8, marks on the soul only); 1 success for a secret that matters, 3 for a grave one, one fewer by Auspex | METHODS in secrets-rules.mjs |
+| 2026-11-12 | Which courts care about which secret, by age (B1905) | Table in secrets-rules.mjs: heresy to the Inquisition and any court to 1650, infernalism always, diablerie not to the Sabbat, sect ties from 1493, defection from 1897; proof adds 3 a point at the gathering and lays the secret bare | SECRET_KINDS, the accuse move in politics-rules.mjs |
+| 2026-11-12 | Trait-gated talk lines go first (B1907) | A fitting line that needs a trait beats a plain line on the same sheet | fitting in talk-rules.mjs |
+| 2026-11-12 | Seconds a fight turn takes (B1966) | 3, the books' figure (V20 pdf 262/277, V20 Dark Ages pdf 344, W20 pdf 241/290); V20 allows up to 3 minutes in a slow scene | World setting turnSeconds (WoDX Combat) |
+| 2026-11-12 | Time on a trod (B1965) | Stays a house figure: C20 pdf 53 says trod time can't be relied on but gives no table | slipWords and the trod rules in journey-rules.mjs |
+| 2026-11-12 | Time in the Labyrinth, Arcadia and the Deep Umbra (B1965) | The Storyteller's call, plain clock with a reminder on the card (WR20 pdf 307, W20 pdf 331/332, nothing in M20) | REALM_TIME in journey-rules.mjs |
+| 2026-11-12 | Time in the Shadowlands and the Tempest (B1965) | Keeps the world's time (house rule; WR20 gives no rate) | REALM_TIME in journey-rules.mjs |
+| 2026-11-12 | Which lines of the Legends book players see at first (B1700) | Dated events, deaths, court seats, holdings and boons shown; Embraces, ghoulings, oaths, debts and a secret faction's seats wait for the Storyteller | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |
+| 2026-11-12 | When a seat or a holding changed hands in the Legends book (B1701) | Dated to the build that first sees the change (session end, around each time skip, or on demand) | officeLines/holdingLines in legends-rules.mjs |
+| 2026-11-12 | Who sees a progress clock at first (B1711) | Every clock starts as the Storyteller's only; shown to everyone or chosen characters by hand | normClock in wodx-storyteller clock-rules.mjs |
+| 2026-11-12 | When an own clock fills by itself (B1712) | By hand by default; or one segment each faction turn, session's end or week of game time | TICKS in clock-rules.mjs |
+| 2026-11-12 | What makes a night hard for the pacing note (B1714) | A fight, a frenzy, a death or torpor, a breach, Diablerie or a road encounter; the note never changes the draw | pacing-rules.mjs |
+| 2026-11-12 | What moves spirit standing (B1721) | Chiminage paid +1, unpaid -2, a Bane destroyed +1 Wyld and totem -1 Wyrm, a spirit forced -2, Ban kept +1, Ban broken -3 | MOVES in wodx-otherworlds spirit-rules.mjs |
+| 2026-11-12 | What spirit standing does (B1722) | +3: -1 difficulty, +5: -2; -3: +1, -5: +2 and the court may refuse (summoning, being taught, binding) | effect() in spirit-rules.mjs |
+| 2026-11-12 | What players see of spirit standing (B1723) | Their own characters' standing in words only | spiritsDialog in spirits.mjs |
+| 2026-11-12 | Battles and sieges: book rolls with a house frame (B2200) | Spoils of War and Dark Ages Companion rolls (commander, wavering, demoralised, disease, counterattack, kills); forces as a weight, resolve and a breach clock instead of Spoils' unit army, whose table is garbled in the scan | battle-rules.mjs in wodx-storyteller |
+| 2026-11-12 | The heavier side's advantage (B2202) | A die for each point of weight it has over the other side | phaseSetup in battle-rules.mjs |
+| 2026-11-12 | How a siege runs (B2204) | Weekly Intelligence + Leadership fills an 8-segment breach clock, guns twice as fast; hunger after the stores; disease at 3 costs resolve | settleWeek in battle-rules.mjs |
+| 2026-11-12 | Counterattack dice after 1500 (B2205) | 5 (book, Dark Ages), 6 from 1500, 7 from 1860, 8 from 1914, 9 from 2000 | hazard in AGES, battle-rules.mjs |
+| 2026-11-12 | What a battle does to factions (B2206) | Proposed in the approval queue only: winner +1 Status; loser -1 standing, -1 Retainers, -1 Status if it broke | battleChanges in wodx-npc faction-rules.mjs |
+| 2026-11-12 | Battles in the Legends book shown to players (B2207) | Shown by default | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |
+| 2026-11-12 | What a crowd feels by place, person, hour and age (B2221) | Weighted tables, faith thinning after 1700 and the Future Darkness warier | PLACE_FEELINGS and the other tables in wodx-npc crowd-rules.mjs |
+| 2026-11-12 | Pathos from a passer-by (B2222) | Only from one who feels the Passion's emotion, read from the Passion's name; each wraith once a scene per mortal | passionFeeling, pathosCandidates in crowd-rules.mjs |
+| 2026-11-12 | Spark and Dreamers (B2223) | Spark 0 to 3 by age and kind of person; Reverie only on a Dreamer (2 or more) | AGE_SPARK, CAT_SPARK, DREAMER in crowd-rules.mjs |
+| 2026-11-12 | Ravaging a passer-by (B2224) | Once a night each; left dull and listless for the night and kept on the map | ravagedTonight in crowd-rules.mjs; the note in c20.js epiphany() |
+| 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |
+| 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Not deleted. Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Lifepath threads (cr2): when do they fall due? | The first 14 days of game time after Chronicle first sees the lifepath, then one every 30 days, each through the approval queue (B2301) | Change LP_DAYS in wodx-chronicle/data/pod-lifepath.mjs |
+| 2026-11-12 | Lifepath threads (cr2): what happens to people from long ago? | A mortal more than 70 years back is dead and a descendant carries the thread; the undying more than 150 years back come back stronger and may serve something older (B2302) | Change LP_ALIVE_SPAN or LP_OLD_SPAN in Chronicle's pod-rules.mjs |
+| 2026-11-12 | Lifepath threads (cr2): who counts as undying? | Read from the role: sires, vampires, princes, harpies, domitors, anarchs, the dead, spirits, monsters; for a vampire's past, elders and the court too (B2303) | Edit UNDYING in wodx-creation/scripts/lifepath-threads-rules.mjs |
+| 2026-11-12 | Guest in a prelude (bf1): how long does each line live, for the years check? | Mortal span 100 years; ghouls and revenants 200; mages 150; Kindred, wraiths, mummies, Kuei-jin and the fallen do not age once turned; 100 years turned makes an elder; a wraith comes as a ghost (B2305) | Change SPAN, UNDYING_LINES or ELDER_YEARS in first-night-prelude-rules.mjs |
+| 2026-11-12 | Guest in a prelude (bf1): are places checked? | No: every lifepath is set in the chronicle's own lands, so the Storyteller rules out a guest who was abroad (B2305) | Add a place check to guestFit once lifepaths have regions |
+| 2026-11-12 | Guest in a prelude (bf1): does a guest beat cost or give points? | No, it is story only (B2307) | Give a reward from the runner by hand |
+| 2026-11-12 | The Inquisition's seats, after the book check (B1114, NPC 0.40.3) | A cell: rector appointed from above; sub-rector, treasurer, archivist and cellarer elected by backing; chapter every faction turn; orders as blocs; Rank Background as standing (DA:I Companion pr 72-75, DA:I pr 157). A Council of Faith (head, Procurator Fiscalis, a councillor per order) picked by hand. Sicae Dei noted, not run. Replaces the tribunal approved earlier | POLITIES.inquisition and ["council-of-faith"] in politics-rules.mjs |
+| 2026-11-12 | Followers window (desk fo1): show players the reason for a follower's last loyalty change? | Yes, for their own followers: drift reasons come from their own acts (B1822) | Hide r.last for players in wodx-npc followers.mjs |
+| 2026-11-12 | Followers window: a player only sees followers Foundry lets them see (actor permission) | Kept as Foundry has it; the Storyteller grants Observer to show one | Ask for a Storyteller-side list by socket instead |
+| 2026-11-12 | Culprit descriptions (desk cw1): how word gets round and how long it lasts in each age | Hue and cry 24 h / 14 days to face matching 1 h / 365 days (B1824) | MEANS in wodx-npc wanted-rules.mjs |
+| 2026-11-12 | Culprit descriptions: height, with no height on V20 sheets | The token's size stands in (big, huge, small) with a face people remember (B1825) | marksOf and sizeOf in wodx-library look-rules.mjs |
+| 2026-11-12 | Culprit descriptions: what happens when an NPC may know the culprit | A Storyteller card with Perception + Alertness, difficulty 6 strong or 8 partial, and a Raise the alarm button; nothing by itself (B1826) | recogniseRoll in wanted-rules.mjs |
+| 2026-11-12 | Culprit descriptions: on by default? | Yes (world setting Descriptions that spread); cards only reach the Storyteller | Default false for culpritDescriptions in wanted.mjs |
+| 2026-11-12 | Case board storage and who may edit (B2310) | One journal per board, owned by every player; hidden cards are hidden on screen only | case.mjs newBoard (ownership), case-rules.mjs visibleTo |
+| 2026-11-12 | Found clues on the open case (B2311) | On by default; a botched examine pins nothing | setting caseClues; pinClue call in wodx-interactables main.mjs |
+| 2026-11-12 | Case board look by era (B2312) | Parchment to 1449, commonplace board to 1799, pinboard to 1945, corkboard to 2022, lit display from 2023 | LOOKS in case-rules.mjs |
+| 2026-11-12 | What a character would know, l1 (B2313) | The lighter, Storyteller-only version: suggestions from line, year and Intelligence + Occult, Academics or Politics (4 own line, 6 another line), revealed through the codex; no per-entry tagging | ERA_FROM, OWN, OWN_NEED, OTHER_NEED in wodx-library know-rules.mjs |

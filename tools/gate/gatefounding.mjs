@@ -133,6 +133,14 @@ export async function run() {
     });
 
     await step("8. a dated event", async () => {
+      // A proposal left in the queue under the same key (from an earlier run or real play) would stop a new one being made.
+      // Set it aside for this step; the clean up puts the whole queue back as it was.
+      const aq = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals") ?? {});
+      const other = p => p.key !== "event:thorns";
+      if ( [...(aq.pending ?? []), ...(aq.held ?? [])].some(p => !other(p)) ) {
+        await game.settings.set("wodx-chronicle", "approvals", {...aq, pending: (aq.pending ?? []).filter(other), held: (aq.held ?? []).filter(other)});
+        R.notes.push("set aside an earlier event:thorns proposal for step 8; put back at clean up");
+      }
       await FX().applyNow([{op: "faction-add", faction: F().normFaction({id: "gateRise", name: "Gate Rise", dormant: true, risesOn: "thorns"})}]);
       await FX().onEventFired({id: "thorns", year: 1493, name: "The Convention of Thorns"});
       await sleep(300);

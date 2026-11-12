@@ -95,6 +95,8 @@ export function lookOf(view = {}) {
   return {
     station: stationOf(items),
     worn: items.filter(i => i.worn).map(i => i.name),
+    // Library 0.16.0: the worn things a witness would remember, dress first (for a culprit's description)
+    dress: [...items.filter(i => i.worn && DRESS_KINDS.has(i.kind)), ...items.filter(i => i.worn && !DRESS_KINDS.has(i.kind) && seen(i) && i.kind !== null && i.kind !== "arms")].map(i => i.name).slice(0, 4),
     strange: items.filter(i => seen(i) && outOfTime(i, year)).map(i => i.name),
     condition,
     appearance: view.appearance === null || view.appearance === undefined ? null : num(view.appearance),
@@ -190,4 +192,42 @@ export function readLine(look) {
   if ( look.sides?.length ) bits.push(`shows ${look.sides.join(", ")}`);
   if ( look.disguise ) bits.push(`dressed as station ${look.disguise.station}${look.disguise.sides.length ? ` (${look.disguise.sides.join(", ")})` : ""}`);
   return bits.join("; ");
+}
+
+/* ---- Library 0.16.0: a witness's description of someone, from the look (WoDX NPC's culprit descriptions) ---- */
+
+const STATION_WORDS = ["ragged", "poorly dressed", "plainly dressed", "well dressed", "finely dressed", "richly dressed"];
+const SIDE_SEEN = {"kind:church": "in a churchman's habit", "kind:watch": "in the watch's uniform", military: "in uniform", livery: "in livery", pilgrim: "with a pilgrim's badge", corporate: "with a company badge"};
+const COND_SEEN = {bloody: "blood on them", wounded: "hurt", weapon: "a weapon drawn", torn: "torn clothes", filthy: "filthy", soaked: "soaked through"};
+/** Size words from the token (a witness's sense of height and bulk; V20 sheets carry no height). */
+export const SIZE_WORDS = {small: "small", big: "very big", huge: "huge"};
+export const sizeOf = gridWidth => (num(gridWidth) >= 3 ? "huge" : num(gridWidth) >= 2 ? "big" : num(gridWidth) > 0 && num(gridWidth) < 1 ? "small" : null);
+
+/**
+ * What a witness would remember: {station, sides, dress, condition, size, face, monstrous, disguised}.
+ * look: from lookOf (or asSeen when a disguise held). size: a SIZE_WORDS key or null.
+ */
+export function marksOf(look, {size = null} = {}) {
+  if ( !look ) return null;
+  const face = look.monstrous ? "monstrous" : look.appearance === null || look.appearance === undefined ? null : num(look.appearance) >= 4 ? "striking" : num(look.appearance) === 0 ? "ugly" : null;
+  return {station: Math.max(0, Math.min(5, Math.round(num(look.station)))), sides: [...(look.sides ?? [])], dress: [...(look.dress ?? [])].slice(0, 4),
+    condition: (look.condition ?? []).filter(c => COND_SEEN[c]), size: SIZE_WORDS[size] ? size : null, face, monstrous: !!look.monstrous, disguised: !!look.disguised};
+}
+
+/** The description in words: "a well dressed figure in livery, very big, wearing a red cloak and riding boots, with blood on them". */
+export function describeMarks(m) {
+  if ( !m ) return "";
+  let line = `a ${STATION_WORDS[m.station] ?? "plainly dressed"} figure`;
+  const side = (m.sides ?? []).map(sd => SIDE_SEEN[sd]).find(Boolean);
+  if ( side ) line += ` ${side}`;
+  const bits = [];
+  if ( m.size ) bits.push(SIZE_WORDS[m.size]);
+  if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
+  else if ( m.face === "striking" ) bits.push("with a face people remember");
+  else if ( m.face === "ugly" ) bits.push("with an ugly face");
+  const dress = (m.dress ?? []).map(d => String(d).toLowerCase());
+  if ( dress.length ) bits.push(`wearing ${dress.length > 1 ? `${dress.slice(0, -1).join(", ")} and ${dress.at(-1)}` : dress[0]}`);
+  const cond = (m.condition ?? []).map(c => COND_SEEN[c]).filter(Boolean);
+  if ( cond.length ) bits.push(`with ${cond.length > 1 ? `${cond.slice(0, -1).join(", ")} and ${cond.at(-1)}` : cond[0]}`);
+  return [line, ...bits].join(", ");
 }

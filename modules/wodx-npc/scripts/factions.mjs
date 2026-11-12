@@ -19,6 +19,7 @@
  */
 import * as F from "./faction-rules.mjs";
 import * as PO from "./politics-rules.mjs";
+import * as SX from "./secrets-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -156,7 +157,7 @@ export function build(ctx) {
       info[id] = {name: a.name, alive: !routines.downState?.(a), pc: !!a.hasPlayerOwner, clan: sheetText(a, "clan"), sect: sheetText(a, "sect"), status: bgValue(a, "status"),
         tribe: sheetText(a, "tribe"), house: sheetText(a, "house"), court: sheetText(a, "court"), legion: sheetText(a, "legion"),
         rank: num(a.system?.renown?.rank), title: bgValue(a, "title"),
-        creed: sheetText(a, "creed"), faction: sheetText(a, "faction"), amenti: sheetText(a, "amenti"), wu: sheetText(a, "wu"),
+        creed: sheetText(a, "creed"), order: sheetText(a, "order") || sheetText(a, "creed"), faction: sheetText(a, "faction"), amenti: sheetText(a, "amenti"), wu: sheetText(a, "wu"),
         arete: num(a.system?.advantages?.arete?.permanent), rankbg: bgValue(a, "rank"),
         attrs: Object.fromEntries(["charisma", "manipulation", "wits", "perception", "strength", "dexterity"].map(k => [k, attrOf(a, k)]))};
     }
@@ -167,6 +168,17 @@ export function build(ctx) {
     let entries = [];
     try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return []; }
     return entries.filter(e => e?.kind === "boon" && (e.status ?? "open") === "open" && e.from?.id && e.to?.id).map(e => ({id: e.id, size: e.size, from: e.from.id, to: e.to.id}));
+  }
+  /** NPC 0.37.0 (B1905): hooks held on secrets, as {holder, finder, secret, entry}, for the Accuse move. */
+  function openHooks() {
+    let open = null;
+    try { open = new Set((game.settings.get("wodx-storyteller", "ledger")?.entries ?? []).filter(e => (e?.status ?? "open") === "open").map(e => e.id)); } catch (e) { open = null; }
+    const out = [];
+    for ( const a of game.actors ?? [] ) for ( const sec of SX.secretsOf(a.flags) ) {
+      if ( sec.public ) continue;
+      for ( const [finder, f] of Object.entries(sec.found) ) if ( !f.entry || !open || open.has(f.entry) ) out.push({holder: a.id, finder, secret: sec, entry: f.entry ?? null});
+    }
+    return out;
   }
   const streamFor = key => {
     const g = chron()?.gen;
@@ -193,6 +205,7 @@ export function build(ctx) {
     });
     for ( const c of res?.applied ?? [] ) if ( c.op === "found" ) await foundCard(c);
     for ( const c of changes ) if ( c.op === "pol-fight" ) await stageFight(c);
+    for ( const c of changes ) if ( c.op === "pol-expose" ) await game.modules.get(MOD)?.api?.secrets?.expose?.(c.holder, c.secret, {by: c.finder, entry: c.entry, why: c.law}).catch?.(e => console.warn(`${MOD} | expose`, e));
     return res ?? {inverse: [], applied: []};
   }
   /**
@@ -275,7 +288,7 @@ export function build(ctx) {
         const alive = new Set(allActors().filter(a => !routines.downState?.(a)).map(a => a.id));
         const results = F.runTurn(s, {streamFor, seedKey: `turn:${turn}:${Math.floor(now)}`, leaders: lead, places: list, pcActors: pcActors(), spheres: era.spheres, turn, now, ids: newId,
           year: era.year, gone, alive, splits: setting("factionSplits") !== false, name: id => game.actors?.get(id)?.name ?? null,
-          politics: setting("factionPolitics") ? {info: politicsInfo(s), boons: openBoons()} : null});
+          politics: setting("factionPolitics") ? {info: politicsInfo(s), boons: openBoons(), hooks: openHooks()} : null});
         const lines = [];
         let undoAll = [];
         const n = names(s);
@@ -1007,6 +1020,16 @@ export function build(ctx) {
     } else await proposeChanges(why, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `boon:${entry.id}:${status}`});
   }
 
+  /** NPC 0.39.0: an ended WoDX Storyteller battle between factions goes to the approval queue (B2206). */
+  async function onBattle({battle} = {}) {
+    if ( !isActiveGM() || mode() === "off" || !battle?.over ) return;
+    const s = state();
+    const changes = F.battleChanges(s, battle);
+    if ( !changes.length ) return;
+    const n = names(s);
+    await proposeChanges(`After ${battle.name}`, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `battle:${battle.id}:${battle.over.at ?? ""}`});
+  }
+
   function hooks() {
     Hooks.on("wodxChronicleReady", () => registerHandler());
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
@@ -1022,6 +1045,7 @@ export function build(ctx) {
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBoonSettled", p => { onBoonSettled(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {

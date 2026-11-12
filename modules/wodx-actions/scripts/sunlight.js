@@ -59,11 +59,17 @@ export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, setting } = ctx;
 
     /** The sun now: {altitude, azimuth, phase, dateLabel, timeLabel, toDawn (s)}. */
-    async function sunNow(time = game.time.worldTime) {
+    async function sunNow(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
         try {
             const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
             const cm = await import("../../wodx-chronicle/scripts/calendar-math.mjs");
-            const lat = game.settings.get("wodx-chronicle", "latitude");
+            let lat = game.settings.get("wodx-chronicle", "latitude");
+            // 3.50.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
+            try {
+                const PR = await import("../../wodx-chronicle/scripts/place-rules.mjs");
+                const pt = PR.placeTime(scene?.flags?.["wodx-chronicle"]?.place ?? {}, time, lat);
+                lat = pt.latitude; time = pt.time;
+            } catch (e) { /* older Chronicle */ }
             const t = cal.describeTime(time, lat);
             const g = cm.jdnToGregorian(t.jdn);
             const doy = t.jdn - cm.gregorianToJDN(g.year, 1, 1) + 1;

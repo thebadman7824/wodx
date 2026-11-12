@@ -722,7 +722,7 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
     if ( !f || f.dormant ) continue;
     const key = polityFor(f, year);
     if ( !key ) continue;
-    const res = innerTurn(f, {rand: streamFor(`${seedKey}:${f.id}:politics`), polity: key, info: politics.info ?? {}, boons: politics.boons ?? [], turn, year});
+    const res = innerTurn(f, {rand: streamFor(`${seedKey}:${f.id}:politics`), polity: key, info: politics.info ?? {}, boons: politics.boons ?? [], hooks: politics.hooks ?? [], turn, year});
     if ( !res.groups.length ) continue;
     const small = {changes: [], lines: []};
     const bigs = [];
@@ -1048,4 +1048,35 @@ export function describeChange(c, names = {}) {
     case "stage": return `The rumour reaches ${c.stage === 1 ? `the Prince (${fn(c.faction)})` : `the hunters (${fn(c.faction)})`}`;
     default: return POL_OPS.has(c.op) ? describePolitics(c, names, names.state ?? null) : c.op;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Battles (NPC 0.39.0, B2206)                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * What an ended WoDX Storyteller battle does to the factions that fought it (a house rule). A side is a faction
+ * when its faction field names one (by id or name). The winner gains a dot of Status; the loser thinks worse of the
+ * winner, loses a dot of Retainers when it has any, and loses a dot of Status as well when it broke (a rout or a
+ * surrender). A drawn battle or a side drawing off in good order costs only the standing. Always proposed to the
+ * Storyteller, never applied by itself. `battle` is a normBattle from WoDX Storyteller with `over` set.
+ */
+export function battleChanges(state, battle) {
+  const o = battle?.over;
+  if ( !o || !Array.isArray(battle.sides) ) return [];
+  const facs = battle.sides.map(s => (s?.faction ? findFaction(state, s.faction) : null));
+  const out = [];
+  if ( o.winner === null ) {
+    if ( facs[0] && facs[1] && facs[0].id !== facs[1].id ) for ( const i of [0, 1] ) out.push({op: "standing", faction: facs[i].id, other: facs[1 - i].id, delta: -1});
+    return out;
+  }
+  const w = facs[o.winner], l = facs[1 - o.winner];
+  const broke = o.how === "rout" || o.how === "surrender";
+  if ( w && !w.dormant && (w.assets.status ?? 0) < MAX_DOTS ) out.push({op: "bg", faction: w.id, key: "status", delta: 1});
+  if ( l && !l.dormant ) {
+    if ( w && w.id !== l.id ) out.push({op: "standing", faction: l.id, other: w.id, delta: -1});
+    if ( o.how !== "withdraw" && o.how !== "lifted" && (l.assets.retainers ?? 0) > 0 ) out.push({op: "bg", faction: l.id, key: "retainers", delta: -1});
+    if ( broke && (l.assets.status ?? 0) > 0 ) out.push({op: "bg", faction: l.id, key: "status", delta: -1});
+  }
+  return out;
 }

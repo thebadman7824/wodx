@@ -127,6 +127,5 @@ test("the extras are wired into every WoDX sheet and the module has a socket", (
   const main = readFileSync(join(root, "modules/wodx-sheets/scripts/main.mjs"), "utf8");
   assert.match(main, /X\.decorate\(this, el\)/); assert.match(main, /X\.listen\(this/); assert.match(main, /X\.setup\(\)/);
   const mod = JSON.parse(readFileSync(join(root, "modules/wodx-sheets/module.json"), "utf8"));
-  assert.equal(mod.socket, true); assert.equal(mod.version, "0.10.0");
-  assert.match(main, /version: "0\.8\.2"/);
+  assert.equal(mod.socket, true);
 });

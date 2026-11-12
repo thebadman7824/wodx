@@ -15,6 +15,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: wraith-rules.js.
  */
 
+import { spendTime } from "./spend-time.js";
 import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -187,13 +188,28 @@ export function build(ctx) {
         const i = info(actor);
         if (!i.passions.length) return ctx.notify(`${actor.name} has no Passions on the sheet.`);
         const used = actor.getFlag(MOD, "passionScene") ?? {};
+        // The crowd in sight (3.52.0): mortals whose feeling matches a Passion give Pathos at second hand
+        const CR = ctx.crowdRules?.() ?? null, crowd = CR ? (ctx.crowdNear?.(actor) ?? []) : [];
+        const scene = sceneKey();
+        const feels = m => (m.feeling ? CR.FEELINGS[m.feeling] : "the Storyteller says what");
+        const crowdHint = crowd.length ? i.passions.map(p => { const c = CR.pathosCandidates(p.name, crowd, { wraithId: actor.id, scene });
+            return c.feeling ? `${esc(p.name)}: ${c.match.length} in sight feel ${esc(CR.FEELINGS[c.feeling])}` : `${esc(p.name)}: no feeling in its name, the Storyteller matches it`; }).join("; ") : "";
+        const crowdRow = crowd.length ? `<div class="form-group"><label>From the crowd (at second hand, 8)</label>${crowd.length > 6 ? searchBox("select[name=from]", "Search the crowd…", "Search the crowd") : ""}<select name="from"><option value="">Nobody picked</option>${crowd.map(m => `<option value="${m.id}"${(m.used?.pathos?.[scene] ?? []).includes(actor.id) ? " disabled" : ""}>${esc(m.name)}: feels ${esc(feels(m))}${(m.used?.pathos?.[scene] ?? []).includes(actor.id) ? " (already drawn on this scene)" : ""}</option>`).join("")}</select></div><p class="hint">${crowdHint}.</p>` : "";
         const content = `<form><p><b>${esc(actor.name)}</b>: Pathos ${i.pathos.temp}/${i.pathos.max}.</p>
           <div class="form-group"><label>Passion</label>${i.passions.length > 5 ? searchBox("select[name=p]", "Search Passions…", "Search Passions") : ""}<select name="p" data-fixed>${i.passions.map(p => `<option value="${p.id}">${esc(p.name)} (${p.value})${used[p.id] === sceneKey() ? " (already tapped this scene)" : ""}</option>`).join("")}</select></div>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="live">Living the Passion now (difficulty 6)</option><option value="second">A mortal nearby feels it, in the same context (8)</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="weaken">Weaken it toward Resolution (9)</option><option value="resolve">Resolution (Willpower)</option></select></div>
+          ${crowdRow}
           <div class="form-group"><label>Original rating (for Resolution)</label><input type="number" name="orig" value="0" min="0"/></div></form>`;
         return dialog(`Passion: ${actor.name}`, content, "Roll", async fd => {
             const p = i.passions.find(x => x.id === fd.p); const item = actor.items.get(fd.p);
             if (!p || !item) return null;
+            const from = fd.from ? crowd.find(m => m.id === fd.from) : null;
+            if (from) {
+                fd.how = "second";
+                const want = CR.passionFeeling(p.name);
+                if (want && from.feeling && from.feeling !== want) return ctx.notify(`${from.name} feels ${CR.FEELINGS[from.feeling]}, not ${CR.FEELINGS[want]}: ${p.name} finds nothing there.`);
+                if ((from.used?.pathos?.[scene] ?? []).includes(actor.id)) return ctx.notify(`${actor.name} has already drawn on ${from.name} this scene.`);
+            }
             if ((fd.how === "live" || fd.how === "second") && used[p.id] === sceneKey()) return ctx.notify(`${p.name} was already tapped this scene (Wraith 20th p. 305).`);
             let r, body = "", rolls = [];
             if (fd.how === "resolve") {
@@ -214,6 +230,10 @@ export function build(ctx) {
                 if (to > i.pathos.temp) await P.adjust(actor, "pathos", to - i.pathos.temp);
                 await actor.setFlag(MOD, "passionScene", { ...used, [p.id]: sceneKey() });
                 body += `<div class="vta-res ${to > i.pathos.temp ? "good" : ""}">Pathos ${i.pathos.temp} → ${to}</div>`;
+                if (from) {
+                    await ctx.setFlag(from.tok.actor, "crowdUse", CR.markPathos(from.used, { wraithId: actor.id, scene }));
+                    body += `<div class="vta-note">Drawn from ${esc(from.name)}, who ${from.feeling ? `feels ${esc(CR.FEELINGS[from.feeling])}` : "feels what the Storyteller says"}.</div>`;
+                }
             } else if (fd.how === "neglect") {
                 const out = W.neglectResult(p.value, r);
                 if (out.drop) await item.update({ "system.value": out.after });
@@ -294,7 +314,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: Corpus damage ${n(d.bashing)}B / ${n(d.lethal)}L / ${n(d.aggravated)}A; Pathos ${i.pathos.temp}.</p>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="pathos">Spend Pathos now (2 bashing or 1 lethal each)</option><option value="agg">Slumber or meditate 8 hours, 3 Pathos: one aggravated level</option><option value="rest">Rest (a bashing level an hour)</option></select></div>
           <div class="form-group"><label>Pathos to spend at most / hours</label><input type="number" name="max" value="${i.pathos.temp}" min="0" style="width:4em"/> <input type="number" name="hours" value="1" min="1" style="width:4em"/></div>
-          <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock by the time (GM)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock by the time (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Heal Corpus: ${actor.name}`, content, "Heal", async fd => {
             let after, html, spent = 0, hours = 0;
             if (fd.how === "rest") { hours = Math.max(1, n(fd.hours)); after = W.corpusRest(d, hours); html = `Rests ${hours} hour${hours === 1 ? "" : "s"}: ${n(d.bashing) - after.bashing} bashing heal.`; }
@@ -306,8 +326,8 @@ export function build(ctx) {
                 await P.adjust(actor, "pathos", -spent);
             }
             await setCorpusDamage(actor, { bashing: n(after.bashing), lethal: n(after.lethal), aggravated: n(after.aggravated) });
-            if (fd.advance && hours && game.user.isGM) await game.time.advance(hours * 3600);
-            return post(actor, `${actor.name} mends their Corpus`, `<div class="vta-sec">${esc(html)}</div><div class="wodx-quiet">Wraith 20th p. 295</div>`);
+            const tnote = fd.advance && hours ? await spendTime(actor, hours * 3600, "mending") : "";
+            return post(actor, `${actor.name} mends their Corpus`, `<div class="vta-sec">${esc(html)}</div>${tnote}<div class="wodx-quiet">Wraith 20th p. 295</div>`);
         });
     }
 

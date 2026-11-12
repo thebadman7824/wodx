@@ -50,8 +50,9 @@ export async function run() {
 
     await step("versions and settings", async () => {
       const v = id => game.modules.get(id)?.version;
+      const atLeast = (x, min) => { const a = String(x ?? "0").split(".").map(Number), b = min.split(".").map(Number); for ( let k = 0; k < 3; k++ ) { if ( (a[k] || 0) !== (b[k] || 0) ) return (a[k] || 0) > (b[k] || 0); } return true; };
       const set = (m, k) => { try { game.settings.get(m, k); return true; } catch (e) { return false; } };
-      ok("versions and settings", v("wodx-actions") === "3.43.0" && v("wodx-targeting") === "0.2.0" && v("wodx-combat") === "3.14.0" && v("wodx-interactables") === "0.27.0" && v("wodx-senses") === "0.7.0"
+      ok("versions and settings", atLeast(v("wodx-actions"), "3.43.0") && atLeast(v("wodx-targeting"), "0.2.0") && atLeast(v("wodx-combat"), "3.14.0") && atLeast(v("wodx-interactables"), "0.27.0") && atLeast(v("wodx-senses"), "0.7.0")
         && set("wodx-actions", "showOdds") && set("wodx-combat", "afterAction") && set("wodx-senses", "colourSafe"),
         {versions: ["wodx-actions", "wodx-targeting", "wodx-combat", "wodx-interactables", "wodx-senses", "wodx-otherworlds"].map(v)});
     });

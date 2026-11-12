@@ -15,7 +15,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.38.0";
+export const VERSION = "0.43.2";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -529,6 +529,8 @@ export async function endSession({factions = true} = {}) {
   try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
   Hooks.callAll("wodxSessionEnded");
+  // 0.41.0: clocks of the Storyteller's own that tick on a faction turn or at a session's end
+  try { const k = game.modules.get(MOD)?.api?.clocks; if ( factions ) await k?.tick?.("faction"); await k?.tick?.("session"); } catch (e) { console.error(`${MOD} |`, e); }
 }
 
 /** The report of everything since the last session ended. */

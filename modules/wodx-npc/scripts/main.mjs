@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs); passers-by and animals of the year who walk through a scene (0.25.0, passersby.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs); passers-by and animals of the year who walk through a scene (0.25.0, passersby.mjs); relationships, the lineage tree, secrets and why an NPC feels as they do (0.37.0, people.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -20,6 +20,7 @@ import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildFounding} from "./founding.mjs";
+import * as OR from "./order-rules.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
@@ -27,13 +28,16 @@ import {VOICES} from "../data/stock-talk-more.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
+import {build as buildPeople} from "./people.mjs";
+import {build as buildWanted} from "./wanted.mjs";
+import {build as buildFollowers} from "./followers.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.36.0";
+const VERSION = "0.41.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -220,6 +224,8 @@ export function readFight(tok, combat = game.combat) {
   const myHarm = harm.get(actor.uuid) ?? new Map();
   const lineage = actor.flags?.["wodx-creation"]?.lineage;
   const domitorId = lineage?.domitor?.id ?? null;
+  // NPC 0.38.0: a follower guards every character it serves (B1800), as a ghoul guards its domitor
+  const masters = OR.servesFrom(actor.flags);
   const plans = new Map();
   const E = enemies.map(t => {
     let plan = null;
@@ -235,7 +241,7 @@ export function readFight(tok, combat = game.combat) {
   });
   const AL = allies.map(t => {
     const hurt = harm.get(t.actor?.uuid) ?? new Map();
-    return {id: t.id, name: t.name, hurt: [...hurt.values()].reduce((a, b) => a + b, 0), isDomitor: !!domitorId && t.actor?.id === domitorId,
+    return {id: t.id, name: t.name, hurt: [...hurt.values()].reduce((a, b) => a + b, 0), isDomitor: (!!domitorId && t.actor?.id === domitorId) || masters.includes(t.actor?.id),
       attackerIds: enemies.filter(e => hurt.has(e.actor?.uuid)).map(e => e.id)};
   });
   const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
@@ -273,6 +279,8 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
+  // NPC 0.38.0 (B1804): a follower's standing order (attack that one, hold back, guard, wait)
+  options = OR.fightShift(options, actor.flags?.[MOD]?.order);
   // NPC 0.24.0: a Marauder's Quiet picks among what it could do
   if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
   if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
@@ -795,7 +803,7 @@ const founding = buildFounding({MOD, esc, gmIds, isActiveGM}, factions);
 factions.setFounding(founding);
 founding.hooks();
 /* 0.8.0: followers who take orders */
-const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor});
+const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor, yardsBetween, obvious, attitude: () => attitude});
 orders.hooks();
 Faces.registerFaceHooks();
 /* 0.10.0: the topic menu */
@@ -810,6 +818,13 @@ const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
+/* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
+const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
+people.hooks();
+/* 0.41.0: a description that spreads and fades; one window for all of a character's followers */
+const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
+wanted.hooks();
+const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
 
 Hooks.once("init", () => {
   registerSettings();
@@ -820,12 +835,15 @@ Hooks.once("init", () => {
   talk.registerSettings();
   rivalry.registerSettings();
   passersby.registerSettings();
+  wanted.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
-    politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor}};
+    politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
+    ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -913,12 +931,16 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
     button: true, visible: true, onChange: () => orders.openOrders()};
+  tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
+    button: true, visible: true, onChange: () => followers.openFollowers()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
+    button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });

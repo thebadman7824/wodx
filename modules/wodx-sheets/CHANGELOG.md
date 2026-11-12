@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.12.0 (a Followers button on the Relationships tab opens WoDX NPC's Followers window)
+- 0.11.0 (the Ties tab becomes Relationships: every tie WoDX keeps, grouped, with the Storyteller's hidden ties and secrets kept back from players; ghoul and domitor ties show again; Family and lineage and Secrets buttons; how an NPC regards the characters, for the Storyteller)
 - 0.10.0 (the Body tab: shape, parts, what the body can do, where blows land, lasting changes)
 - 0.8.2 (item descriptions in a fold under each possession, closed by default)
 - 0.8.1 (a cast button on each rote in the Rotes list)

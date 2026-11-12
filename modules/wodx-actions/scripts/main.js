@@ -21,6 +21,7 @@
  *   profileMenu({actor})           the launcher shows a different menu for each actor type (v2.0)
  */
 
+import { spendTime } from "./spend-time.js";
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as PM from "./profile-menus.js";
@@ -578,7 +579,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <p class="vta-note vta-suggest-note"></p>
       <div class="form-group vta-ext"><label>Successes needed (extended)</label><input type="number" name="goal" value="5" min="1"/></div>
       <div class="form-group vta-ext"><label><input type="checkbox" name="untilDone"/> Roll until done; each roll takes (minutes)</label><input type="number" name="interval" value="10" min="0" style="width:5em"/></div>
-      <div class="form-group vta-ext"><label><input type="checkbox" name="advance"/> Advance the clock by the time taken (GM)</label></div>
+      <div class="form-group vta-ext"><label><input type="checkbox" name="advance"/> Move the clock by the time taken (a player asks the Storyteller)</label></div>
       <div class="form-group vta-team"><label>Helpers' successes (e.g. 2,1,0) / helper limit</label><input type="text" name="helpers" value=""/> <input type="number" name="helperLimit" value="3" style="width:4em"/></div>
       <div class="form-group vta-team"><label><input type="checkbox" name="rollHelpers" checked/> Roll for the other selected tokens (${Math.max(0, (canvas.tokens?.controlled ?? []).filter(t => t.actor && t.actor.id !== actor.id).length)}), the same pool from their sheets</label></div>
       <fieldset class="vta-opp"><legend>Opponent ${target ? `(${esc(target.name)})` : "(no target: enter dice)"}</legend>
@@ -922,8 +923,7 @@ async function resolveAction(actor, target, fd) {
             }
             const minutes = num(fd.interval) * data.state.rolls;
             if (minutes) body += `<div class="vta-note">Time taken: ${minutes >= 120 ? `${Math.round(minutes / 6) / 10} hours` : `${minutes} minutes`} (${data.state.rolls} roll${data.state.rolls === 1 ? "" : "s"}).</div>`;
-            if (fd.advance && minutes && game.user.isGM) await game.time.advance(minutes * 60);
-            else if (fd.advance && minutes) body += `<div class="vta-note">Ask the GM to advance the clock.</div>`;
+            if (fd.advance && minutes) body += await spendTime(actor, minutes * 60, data.label);
         }
         body += extendedStatus(data);
         return post(actor, title, body, rolls, data);
@@ -2318,7 +2318,7 @@ function sox() {
 let CXE = null;
 /** Changelings of the later eras (3.9.0, Phase 6h). */
 function cx() {
-    return CXE ??= CXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m) });
+    return CXE ??= CXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
 }
 
 let DXE = null;
@@ -2383,10 +2383,28 @@ function sx() {
 }
 
 let WXE = null;
+/**
+ * Mortals in sight of a character, as the crowd rules see them (3.52.0, B2220 to B2226): passers-by of WoDX NPC carry a
+ * feeling and a spark; other mortals carry none, and the Storyteller says. used: the crowdUse flag on the mortal's
+ * token actor (who has drawn on them). Animals are never in it.
+ */
+function crowdNear(actor) {
+    const tok = actor?.getActiveTokens?.()[0];
+    if (!tok) return [];
+    const pb = game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc")?.api?.passersby : null;
+    return kx().witnessesOf(tok, { profiles: ["mortal"], exclude: [actor.id] }).map(t => {
+        const mind = pb?.mindOf?.(t.document) ?? null;
+        return { tok: t, id: t.document.id, uuid: t.actor.uuid, name: t.document.name ?? t.actor.name, passerby: !!mind, feeling: mind?.feeling ?? null,
+            spark: mind?.spark ?? null, used: t.actor.getFlag?.(MOD, "crowdUse") ?? {} };
+    });
+}
+/** The crowd rules from WoDX NPC, or null when it is off. */
+const crowdRules = () => (game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc")?.api?.passersby?.rules ?? null : null);
+
 /** The wraith line (3.4.0). */
 function wx() {
     return WXE ??= WX.build({ post, rollPool, rollBlock, dialog, updateActor, setFlag, attr, findAbility, abilityList, setting, spendWillpower,
-        applyDamage, setDamage, logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m) });
+        applyDamage, setDamage, logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
 }
 let HXE = null;
 /** Hunters, True Faith and Numina (3.4.0). */
@@ -2632,7 +2650,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.48.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.53.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -2682,6 +2700,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),
     masquerade: (o = {}) => kx().masquerade(o.actor ? resolveActor(o.actor) : resolveActor()), endStory,
     recordBreach: o => kx().recordBreach(o), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
+    crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
     healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), enterTorpor: (a, o) => kx().enterTorpor(a, o),

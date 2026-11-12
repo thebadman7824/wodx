@@ -614,6 +614,8 @@ export async function ghoulFed(actorOrId) {
   if ( !a ) return null;
   const sig = sigOf(a); sig.ghoul = {fedAt: now(), warned: 0};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  // 0.41.0: WoDX NPC's loyalty drift
+  Hooks.callAll("wodxGhoulFix", {actor: a, drank: true, months: 0});
   return sig.ghoul;
 }
 async function ghoulTick(a, t) {
@@ -626,6 +628,7 @@ async function ghoulTick(a, t) {
   const before = foundry.utils.deepClone(sig);
   sig.ghoul = {...g, warned: m};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
   await card(`${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
 }
 /** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */

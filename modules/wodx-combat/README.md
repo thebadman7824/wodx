@@ -2,7 +2,7 @@
 
 World of Darkness Expanded. Private use only; not for distribution or sale.
 
-WoDX Combat handles attack, defense, damage, soak (silver, cold iron, Fortitude, armor), the health track, the profiles for every actor type, and the maneuvers. Its API is `game.wodxCombat` (also `game.wodx.combat`). Macros are "WoDX: …". The actor type is kept in `flags.world.wodx.profile`; an actor that only carries the old `flags.world.vtda20.profile` is still read. It began as a port of vtda20-combat 2.2.1; the bridge from that module (old setting values and the `game.vtda20combat` alias) was removed in 3.15.0.
+WoDX Combat handles attack, defense, damage, soak (silver, cold iron, Fortitude, armor), the health track, the profiles for every actor type, and the maneuvers. Its API is `game.wodxCombat` (also `game.wodx.combat`). Macros are "WoDX: …". The actor type is kept in `flags.world.wodx.profile`; the old `flags.world.vtda20.profile` is no longer read (3.19.0). It began as a port of vtda20-combat 2.2.1; the bridge from that module (old setting values and the `game.vtda20combat` alias) was removed in 3.15.0.
 
 - **Conditions** (WoDX Chronicle, V20 Dark Ages p. 348). The attack dialog lists the conditions on both sides and fills in their dice and difficulty:
   - a blinded attacker, or a blinded or held target;

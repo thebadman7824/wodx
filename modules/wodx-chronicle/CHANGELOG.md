@@ -2,6 +2,13 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.44.0 (threads from a lifepath fall due one at a time, go to the approval queue and run as story chains with the person the lifepath made, written for the year of play; Threads from the past in the story chains window)
+- 0.42.1 (the crossover referee reads only the WoDX actor-type flag, not the old vtda20 one)
+- 0.42.0 (the Legends book keeps battles and sieges that have ended)
+- 0.41.0 (a ghoul's monthly fix tells WoDX NPC, for its loyalty)
+- 0.40.0 (the Legends book: what has really happened in this chronicle, one page per century, with filters by person, place, faction and year)
+- 0.39.0 (Game time: the Clock's Time row (each character's own time, with Convene, from WoDX Storyteller); The sun on this scene (a scene's own latitude and hours from home for sun and sky); the clock that runs with the table, off by default (world settings paceMinutes, paceEvery); api.place, api.pace, api.refreshClock)
+- 0.38.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)
 - 0.37.0 (four ideas from the Princes of Darkness mod, each with its own world setting off by default: a Masquerade exposure track for each city with the sect's law and a court card; nine great cities that change state by date, with Senses lines and a boon for a building raised; Golconda as a road of ten steps with setbacks and a mentor; story chains dealt by the clock and opening goals; the window Cities, Golconda and story chains)
 - 0.36.0 (signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus, each with its own world setting off by default; Hunter creeds by era, Demon House and faction stacked, a pick for Kuei-jin Dharmas and Orpheus groups)
 - 0.35.0 (Wraith features: the sixteen Guilds, eight legions with the one the manner of death suggests, and the factions of the dead, picked in the feature window; world setting Guild and legion features (Wraith), off by default)

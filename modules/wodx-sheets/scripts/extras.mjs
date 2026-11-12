@@ -239,8 +239,10 @@ function conditionNames(actor) {
 }
 function tieList(actor) {
   const own = actor.getFlag(MOD, "ties") ?? [];
-  const ghouls = game.actors.filter(x => x.flags?.["wodx-creation"]?.lineage?.domitor === actor.id).map(x => ({ uuid: x.uuid, role: "ghoul", note: "", auto: true }));
-  const dom = game.actors.get(actor.flags?.["wodx-creation"]?.lineage?.domitor);
+  // The lineage keeps the domitor as {id, name} (0.11.0 fix: it was compared as a bare id, so these never showed)
+  const domId = l => (typeof l?.domitor === "object" ? l.domitor?.id : l?.domitor) ?? null;
+  const ghouls = game.actors.filter(x => domId(x.flags?.["wodx-creation"]?.lineage) === actor.id).map(x => ({ uuid: x.uuid, role: "ghoul", note: "", auto: true }));
+  const dom = game.actors.get(domId(actor.flags?.["wodx-creation"]?.lineage));
   if ( dom ) ghouls.unshift({ uuid: dom.uuid, role: "domitor", note: "", auto: true });
   const resolve = uuid => {
     const d = fromUuidSync(uuid);
@@ -249,6 +251,29 @@ function tieList(actor) {
     return { name: d.name, kind: d.documentName === "Scene" ? "Place" : d.documentName === "JournalEntry" ? "Notes" : d.documentName };
   };
   return XR.tieRows(own, ghouls, resolve);
+}
+
+/**
+ * 0.11.0 (B1900): the Relationships tab's rows and extras, from WoDX NPC's ties (every link WoDX keeps, from both
+ * ends, with secrets and the Storyteller's hidden ties left out for players). Null when WoDX NPC is off.
+ */
+const npcApi = () => (game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null);
+function relationsOf(actor, editable) {
+  const api = npcApi();
+  if ( !api?.ties?.of ) return null;
+  const TR = api.ties.rules;
+  const rows = api.ties.of(actor).map(e => {
+    const d = e.uuid ? fromUuidSync(e.uuid) : null;
+    const isActor = d?.documentName === "Actor";
+    return { ...e, name: d?.name ?? e.to?.name ?? "(gone)", gone: !!e.uuid && !d, kindText: isActor ? d.type : d ? (d.documentName === "Scene" ? "Place" : d.documentName === "JournalEntry" ? "Notes" : d.documentName) : "",
+      xpSpent: isActor && e.hand ? XR.xpSpent([...d.items]) : null };
+  });
+  const gm = !!game.user.isGM, owner = gm || actor.isOwner;
+  const known = owner ? (api.secrets?.knownBy?.(actor) ?? []).filter(k => k.mine).map(k => ({ holder: k.holder.name, text: k.secret.text || TR.KINDS.other.label })) : [];
+  const own = owner ? (api.secrets?.of?.(actor) ?? []).map(s => ({ text: s.text || api.secrets.rules.SECRET_KINDS[s.kind]?.label || "" })).filter(s => s.text) : [];
+  let regard = "";
+  try { regard = gm && !actor.hasPlayerOwner ? api.opinion?.regardHtml?.(actor) ?? "" : ""; } catch (e) { regard = ""; }
+  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
 }
 
 /** Add the extras to a freshly drawn sheet (jQuery or element). */
@@ -272,8 +297,10 @@ export async function decorate(sheet, html) {
   // The Ties tab, beside Gear in the full menu
   const gearTab = el.querySelector("nav.sheet-tabs[data-group='primary'] [data-tab='gear']");
   if ( gearTab && !el.querySelector(".tab.wodxties") ) {
-    gearTab.insertAdjacentHTML("afterend", `<div id="tabwodxties" class="item wodx-tab-icon" data-tab="wodxties" data-tab-area="item" title="Ties"><i class="fa-solid fa-people-arrows"></i></div>`);
-    el.querySelector(".tab.gear")?.insertAdjacentHTML("afterend", `<div class="tab wodxties sheet-inner-area" data-group="primary" data-tab="wodxties">${XH.tiesHtml(tieList(actor), { editable })}</div>`);
+    gearTab.insertAdjacentHTML("afterend", `<div id="tabwodxties" class="item wodx-tab-icon" data-tab="wodxties" data-tab-area="item" title="Relationships"><i class="fa-solid fa-people-arrows"></i></div>`);
+    let inner = null;
+    try { inner = relationsOf(actor, editable); } catch (e) { console.warn("WoDX Sheets | relationships", e); inner = null; }
+    el.querySelector(".tab.gear")?.insertAdjacentHTML("afterend", `<div class="tab wodxties sheet-inner-area" data-group="primary" data-tab="wodxties">${inner ?? XH.tiesHtml(tieList(actor), { editable })}</div>`);
   }
   // The Body tab (0.10.0): the body plan from WoDX Combat, after Ties
   const cb = game.wodxCombat?.body;
@@ -391,8 +418,12 @@ export function listen(sheet, root) {
       const a = ev.target.closest(".wodx-act"); if ( !a ) return;
       ev.preventDefault();
       const uuid = a.closest("[data-uuid]")?.dataset.uuid;
-      if ( a.dataset.act === "tie-open" ) { const d = await fromUuid(uuid); return d?.sheet?.render(true); }
+      if ( a.dataset.act === "tie-open" ) { const d = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid); return d?.sheet?.render(true); }
       if ( a.dataset.act === "tie-remove" && editable ) return setTies(actor, list => list.filter(t => t.uuid !== uuid));
+      if ( a.dataset.act === "tie-hide" && editable && game.user.isGM ) return setTies(actor, list => list.map(t => t.uuid === uuid ? { ...t, hidden: !t.hidden } : t));
+      if ( a.dataset.act === "tie-tree" ) return npcApi()?.openTree?.(actor);
+      if ( a.dataset.act === "tie-followers" ) return npcApi()?.openFollowers?.(actor);
+      if ( a.dataset.act === "tie-secrets" && game.user.isGM ) return npcApi()?.openSecrets?.(actor);
     });
     ties.addEventListener("change", ev => {
       if ( !editable ) return;
