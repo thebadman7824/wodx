@@ -61,10 +61,11 @@ export function knownSex(v) {
 
 /**
  * The NPC's voice profile. override: the Storyteller's choice {voice, pitch, rate}, any part of it.
- * Returns {seed, sex, pitch, rate, voice, kokoro, lang}: voice (a browser voice), kokoro (a Kokoro voice or blend) and lang
- * (the NPC's tongue, for the browser's speech) are set only when the Storyteller chose them.
+ * Returns {seed, sex, pitch, rate, voice, kokoro, lang, chatterbox, temper}: voice (a browser voice), kokoro (a Kokoro voice
+ * or blend), lang (the NPC's tongue, for the browser's speech), chatterbox (a server voice) and temper (how the NPC
+ * usually speaks, TEMPERS) are set only when the Storyteller chose them.
  */
-export function profileFor({id = "", sex = null, age = null, style = null, override = null} = {}) {
+export function profileFor({id = "", sex = null, age = null, style = null, override = null, temper = null} = {}) {
   const seed = hashSeed("wodx-voice", id);
   const k = knownSex(sex);
   let pitch = 0.88 + frac(seed, "pitch") * 0.24;
@@ -77,7 +78,8 @@ export function profileFor({id = "", sex = null, age = null, style = null, overr
   if ( Number.isFinite(Number(o.pitch)) && o.pitch !== null && o.pitch !== "" ) pitch = Number(o.pitch);
   if ( Number.isFinite(Number(o.rate)) && o.rate !== null && o.rate !== "" ) rate = Number(o.rate);
   return {seed, sex: k, pitch: round2(clamp(pitch, 0.5, 1.6)), rate: round2(clamp(rate, 0.7, 1.3)), voice: o.voice ? String(o.voice) : null,
-    kokoro: o.kokoro ? String(o.kokoro) : null, lang: o.lang ? String(o.lang) : null};
+    kokoro: o.kokoro ? String(o.kokoro) : null, lang: o.lang ? String(o.lang) : null,
+    chatterbox: o.chatterbox ? String(o.chatterbox) : null, temper: TEMPERS[temper] ? temper : null};
 }
 
 /** First names in the voices Windows, Chrome, Edge and macOS ship, by the sex they sound. Used only to match a known sex. */
@@ -250,3 +252,82 @@ export const voiced = ({who = "plot", plot = false} = {}) => (who === "all" ? tr
  * or generated one. Cards say stock: true for stock lines; generated lines say generated: true (or kind "grammar").
  */
 export const prewritten = (talk = {}) => !!talk && talk.stock === false && !talk.generated && talk.kind !== "grammar" && talk.kind !== "stock";
+
+/* ------------------------------------------------------------------ */
+/* Chatterbox (0.3.0): a voice server on the Storyteller's own PC      */
+/* ------------------------------------------------------------------ */
+
+/** How an NPC usually speaks (flags.wodx-voices.temper), set by the Storyteller. Shifts to the delivery below. */
+export const TEMPERS = {
+  even: {label: "Even", ex: 0, cfg: 0, temp: 0},
+  calm: {label: "Calm, measured", ex: -0.15, cfg: 0.05, temp: -0.05},
+  warm: {label: "Warm", ex: 0.1, cfg: -0.05, temp: 0},
+  cold: {label: "Cold, clipped", ex: -0.1, cfg: 0.1, temp: -0.05},
+  fiery: {label: "Fiery", ex: 0.3, cfg: -0.1, temp: 0.05},
+  nervous: {label: "Nervous", ex: 0.15, cfg: -0.15, temp: 0.1},
+  weary: {label: "Weary", ex: -0.1, cfg: -0.2, temp: 0}
+};
+
+const step05 = n => Math.round(n * 20) / 20;
+
+/**
+ * How a line is delivered: Chatterbox's emotion (exaggeration), pace (cfg: lower is slower and looser) and variety
+ * (temperature). Read from the line itself (exclamations, questions, trailing off, shouted words), how the NPC regards
+ * the character it speaks to (step -3 Hunted to +3 Honoured), its wounds (health levels lost) and its temper.
+ * Rounded to steps of 0.05, so the same line in the same mood is rendered once.
+ * Returns {exaggeration, cfg, temperature, tone} where tone names the strongest cue, for the log and tests.
+ */
+export function deliveryFor({text = "", step = 0, wounds = 0, temper = null} = {}) {
+  const t = String(text ?? "");
+  let ex = 0.5, cfg = 0.5, temp = 0.8, tone = "even";
+  const bangs = (t.match(/!/g) ?? []).length;
+  const asks = (t.match(/\?/g) ?? []).length;
+  const trails = /(\.\.\.|…)\s*$/.test(t.trim()) || (t.match(/\.\.\.|…/g) ?? []).length >= 2;
+  const shout = (t.match(/\b[A-Z]{3,}\b/g) ?? []).filter(w => !/^(I{2,3}|IV|VI{0,3}|IX|XI{0,3})$/.test(w)).length;
+  if ( bangs ) { ex += Math.min(0.4, 0.15 * bangs); cfg -= 0.05; tone = "exclaims"; }
+  if ( shout ) { ex += 0.2; tone = "shouts"; }
+  if ( asks && !bangs ) { ex += 0.05; temp += 0.05; if ( tone === "even" ) tone = "asks"; }
+  if ( trails ) { cfg -= 0.15; ex -= 0.05; if ( tone === "even" ) tone = "trails off"; }
+  const s = Math.max(-3, Math.min(3, Math.round(Number(step) || 0)));
+  if ( s <= -2 ) { ex += bangs || shout ? 0.15 : -0.05; cfg += 0.1; if ( tone === "even" ) tone = "hostile"; }
+  else if ( s >= 2 ) { ex += 0.1; cfg -= 0.05; if ( tone === "even" ) tone = "warm"; }
+  const w = Math.max(0, Number(wounds) || 0);
+  if ( w >= 5 ) { ex += 0.35; cfg -= 0.2; tone = "in pain"; }
+  else if ( w >= 3 ) { ex += 0.2; cfg -= 0.1; tone = "hurt"; }
+  const tm = TEMPERS[temper] ?? null;
+  if ( tm ) { ex += tm.ex; cfg += tm.cfg; temp += tm.temp; }
+  return {exaggeration: step05(clamp(ex, 0.25, 1.5)), cfg: step05(clamp(cfg, 0.2, 0.8)), temperature: step05(clamp(temp, 0.6, 1)), tone};
+}
+
+/** A server voice's register from its speaking pitch (median F0 in Hz). */
+export const registerOf = f0 => (Number(f0) < 145 ? "low" : Number(f0) > 185 ? "high" : "mid");
+
+/**
+ * The server voice for a profile, from the list the server sends ([{id, f0, register, rate}]). The Storyteller's
+ * choice (override.chatterbox) wins when the server has it. A known sex narrows to the registers that sex usually
+ * speaks in (male low or mid, female high or mid), so nothing is assumed when the sex is not known.
+ * Old NPCs lean to the slower readers. Returns a voice id, or null when the list is empty.
+ */
+export function serverVoiceFor(profile = {}, voices = [], chosen = null) {
+  const list = (voices ?? []).filter(v => v && v.id).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  if ( !list.length ) return null;
+  if ( chosen && list.some(v => v.id === chosen) ) return chosen;
+  const reg = v => v.register ?? registerOf(v.f0);
+  let pool = list;
+  if ( profile.sex === "male" ) { const m = list.filter(v => reg(v) !== "high"); if ( m.length ) pool = m; }
+  if ( profile.sex === "female" ) { const m = list.filter(v => reg(v) !== "low"); if ( m.length ) pool = m; }
+  if ( Number(profile.rate) < 0.9 ) {
+    const slow = [...pool].sort((a, b) => (Number(a.rate) || 0) - (Number(b.rate) || 0)).slice(0, Math.max(1, Math.ceil(pool.length / 2)));
+    if ( slow.length ) pool = slow.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  }
+  return pool[hashSeed(profile.seed ?? 0, "cb") % pool.length].id;
+}
+
+/** The voice server's address for a fetch: http(s) only, no trailing slash; "" when it is not a web address. */
+export function serverBase(url) {
+  const u = String(url ?? "").trim().replace(/\/+$/, "");
+  return /^https?:\/\/[^\s/]+(:\d+)?(\/[^\s]*)?$/i.test(u) ? u : "";
+}
+
+/** The cache's voice key for a Chatterbox line: the server voice and the delivery. */
+export const serverVoiceKey = (voice, d = {}) => `cb_${voice}_${Number(d.exaggeration ?? 0.5).toFixed(2)}_${Number(d.cfg ?? 0.5).toFixed(2)}_${Number(d.temperature ?? 0.8).toFixed(2)}`;

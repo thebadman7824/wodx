@@ -84,7 +84,7 @@ Next free block: B2330
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2111 | NPC voices: browser speech, Kokoro, shared files from the token, plot NPCs and prewritten lines | Voices |
+| B2100-B2116 | NPC voices: browser speech, Kokoro, the Chatterbox voice server, shared files from the token, plot NPCs and prewritten lines | Voices |
 | B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War; B2211-B2216 factions at war by themselves) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
@@ -2453,3 +2453,28 @@ Reverse: the "Sound from the token" setting.
 Ben (12 November 2026), after Fallout 1 and 2 and Baldur's Gate 1 and 2: an NPC is voiced only when the Storyteller marks it as a plot NPC (Voiced (plot NPC) on the right-click menu in the Actors list, flags.wodx-voices.plot), and only the lines written beforehand on its WoDX NPC talk sheet are read. Stock lines, generated lines, barks and every unmarked NPC stay text. The world setting "Who speaks aloud" can open it to every NPC.
 
 Reverse: the "Who speaks aloud" setting; prewritten and voiced in voice-rules.mjs.
+
+## B2112. A voice server on the Storyteller's PC (2026-11-12)
+Ben found the Kokoro samples flat and chose Chatterbox on his own PC (12 November 2026). tools/voices/chatterbox_server.py runs Chatterbox (MIT) on the PC's graphics card, listening on 127.0.0.1 only, and answers the Storyteller's browser with a WAV per line. It is the default engine: the line is cached and shared exactly as with Kokoro. When the server is not running, Kokoro reads the line, and without Kokoro the browser's own speech. A stopped server is tried once a minute, not once a line.
+
+Reverse: the "Voice engine" setting.
+
+## B2113. Human reference voices, chosen for lively reading (2026-11-12)
+Chatterbox copies the cadence of its reference clip, so the clips decide how natural an NPC sounds. tools/voices/fetch_voices.py takes readers from LibriTTS-R (CC BY 4.0, from LibriVox public-domain recordings), prefers lines read as dialogue (quotes, exclamations, questions) and lines whose pitch moves, builds 8 to 14 second clips, and keeps 48 readers spread widest over pitch, pace and liveliness so no two voices sit close. Credits stay in voices.json and NOTICE.txt. The Storyteller may add clips of their own.
+
+Reverse: --count, --splits, --local.
+
+## B2114. Delivery from the line and the mood (2026-11-12)
+Each line's emotion, pace and variety come from the line itself (exclamations, shouted words, questions, trailing off), how the NPC regards the character it speaks to (WoDX NPC's attitude step), its wounds, and a temper the Storyteller may set (calm, warm, cold, fiery, nervous, weary). Figures are house ones, rounded to steps of 0.05 so a line in the same mood is rendered once; the server lifts an exclaimed sentence a little more and pauses longer after questions and trailing lines.
+
+Reverse: deliveryFor and TEMPERS in voice-rules.mjs.
+
+## B2115. A server voice per NPC (2026-11-12)
+Each NPC keeps one server voice, picked from its seed among the voices the server lists. A known sex narrows the pick by speaking pitch (male: low or mid; female: high or mid); with no known sex every voice is open. Slow speakers (old age, a slow speaking style) lean to the slower readers. The Storyteller's choice (override.chatterbox) wins.
+
+Reverse: serverVoiceFor in voice-rules.mjs.
+
+## B2116. The server's address and key stay in the Storyteller's browser (2026-11-12)
+The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and wodx.online by default).
+
+Reverse: --origin on the server; the two client settings.

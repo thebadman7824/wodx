@@ -28,7 +28,7 @@ const createActors = async data => { const made = await Actor.create(data); retu
 const near = (a, b) => Math.abs(Number(a) - Number(b)) < 0.005;
 const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p>${text}</p></div></div>`;
 
-export async function run() {
+export async function run({server = false} = {}) {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
@@ -118,15 +118,31 @@ export async function run() {
       const has = (S?.getVoices?.() ?? []).some(v => String(v.lang).toLowerCase().startsWith("cs"));
       ok("9 a tongue of its own", spoken.length === n + 1 && (!has || String(spoken.at(-1).voice ?? "") !== ""), {spoken: spoken.slice(n), czechVoiceHere: has});
     });
+    // The voice server on this PC (0.3.0), only when asked for: run({server: true}) with the server running and its key set.
+    if ( server ) await step("10 voice server renders, with the mood", async () => {
+      await game.settings.set(MOD, "engine", "chatterbox");
+      const st = await api().load();
+      if ( st?.state !== "ready" ) return ok("10 voice server renders, with the mood", false, {server: {state: st?.state, error: st?.error}});
+      const p = api().profileOf(t2);
+      const text = `Kneel! Now! (${Date.now() % 100000})`;
+      const t0 = performance.now(); const a = await api().fileFor(text, p, {step: -2, wounds: 0}, "chatterbox"); const first = Math.round(performance.now() - t0);
+      const b = await api().fileFor(text, p, {step: -2, wounds: 0}, "chatterbox");
+      const c = await api().fileFor(text, p, {step: 0, wounds: 6}, "chatterbox");
+      const r = await fetch(foundry.utils.getRoute(a.src), {cache: "no-store"});
+      const size = Number(r.headers.get("content-length")) || (await r.arrayBuffer()).byteLength;
+      ok("10 voice server renders, with the mood", a.rendered && !b.rendered && c.rendered && c.src !== a.src && r.ok && size > 10000,
+        {src: a.src, size, firstMs: first, voices: st.voices.length, device: st.device, voice: api().rules.serverVoiceFor(p, st.voices, p.chatterbox),
+          delivery: api().rules.deliveryFor({text, step: -2})});
+    });
   } catch (e) { R.errors.push(e.message); }
-  await step("10 clean up", async () => {
+  await step("11 clean up", async () => {
     if ( S && realSpeak ) S.speak = realSpeak;
     for ( const [k, v] of Object.entries(keep) ) await game.settings.set(MOD, k, v);
     for ( const m of made.msgs ) await m?.delete?.();
     for ( const a of made.actors ?? [] ) await a.delete();
     if ( viewed ) await game.scenes.get(viewed)?.view?.();
     await made.scene?.delete?.();
-    ok("10 clean up", !game.scenes.getName("WoDX gate: voices") && !game.actors.getName("Gate toll keeper"));
+    ok("11 clean up", !game.scenes.getName("WoDX gate: voices") && !game.actors.getName("Gate toll keeper"));
   });
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
