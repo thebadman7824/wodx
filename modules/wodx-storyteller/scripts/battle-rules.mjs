@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.43.0: battles and sieges, the pure part. No Foundry calls here (B2200-B2209).
+ * WoDX Storyteller 0.44.0: battles and sieges, the pure part. No Foundry calls here (B2200-B2210).
  *
  * A battle is fought between two abstract forces, not token by token. Each force has a size, a quality, the
  * supernatural help in its ranks, a position and a commander. Each phase of the battle both commanders roll; the
@@ -26,9 +26,10 @@
  * of a character's attack takes one foe out of the fight, killing more than 10 in a turn shakes the enemy (Spoils
  * p. 44), and the battle's counterattack on a character is 5 dice at 6, double the successes as damage, not
  * dodged, aggravated every third turn, five successes a stake through a Cainite's heart. WoDX's own readings (house
- * rules): the forces as a size step, quality and supernatural weight instead of the book's unit table (its columns
- * are garbled in the scan), resolve as the point a side breaks, the breach clock, the ages after 1500 and the
- * Umbra and Underworld.
+ * rules): resolve as the point a side breaks, the breach clock, the ages after 1500 and the Umbra and Underworld.
+ * When both sides list the book's units (Right of Command, Spoils of War p. 44, read from the page images), the
+ * battle is fought with the book's army pools and actions (B2210); otherwise each force is a size step, quality and
+ * supernatural weight (B2200), which is also how the ages after the book's troop types are fought.
  *
  * Stored in the world setting wodx-storyteller.battles: {v, list: [battle]}.
  */
@@ -133,15 +134,81 @@ export function positionBonus(posId, age, {breached = false} = {}) {
   return Math.max(0, b);
 }
 
+/**
+ * Right of Command, the book's army (Spoils of War p. 44 printed, pdf 45; read from the page images 12 November
+ * 2026, /mnt/project-files/book-checks-2026-11-12b.md): each unit adds its dice to the army's Maneuver, Melee,
+ * Ranged and Defense pools. `troops` is the men in one unit. `sup` marks the units with the supernatural in them,
+ * which are the last to be lost (a WoDX reading: the book leaves the choice to the Storyteller).
+ */
+export const UNIT_TYPES = {
+  peasants: {label: "Peasants", troops: 1000, maneuver: 1, melee: 1, ranged: 1, defense: 1},
+  swordsmen: {label: "Swordsmen", troops: 1000, maneuver: 1, melee: 2, ranged: 0, defense: 2},
+  spearmen: {label: "Spearmen", troops: 1000, maneuver: 1, melee: 2, ranged: 0, defense: 3},
+  archers: {label: "Archers", troops: 500, maneuver: 1, melee: 1, ranged: 2, defense: 1},
+  crossbowmen: {label: "Crossbowmen", troops: 500, maneuver: 1, melee: 1, ranged: 2, defense: 1},
+  skirmishers: {label: "Skirmishers", troops: 500, maneuver: 2, melee: 1, ranged: 2, defense: 1},
+  lightCavalry: {label: "Light cavalry", troops: 100, maneuver: 3, melee: 2, ranged: 0, defense: 2},
+  heavyCavalry: {label: "Heavy cavalry", troops: 100, maneuver: 2, melee: 3, ranged: 0, defense: 3},
+  horseArchers: {label: "Horse archers", troops: 100, maneuver: 2, melee: 2, ranged: 3, defense: 2},
+  siegeEngines: {label: "Siege engines", troops: 10, maneuver: 0, melee: 0, ranged: 5, defense: 1},
+  cainiteCavalry: {label: "Cainite cavalry", troops: 10, maneuver: 3, melee: 4, ranged: 1, defense: 3, sup: true},
+  cainiteSkirmishers: {label: "Cainite skirmishers", troops: 10, maneuver: 2, melee: 3, ranged: 1, defense: 3, sup: true},
+  ghoulKnights: {label: "Ghoul knights", troops: 50, maneuver: 2, melee: 3, ranged: 0, defense: 2, sup: true},
+  kinfolkWolves: {label: "Kinfolk wolves", troops: 10, maneuver: 4, melee: 2, ranged: 0, defense: 2, sup: true},
+  garouPack: {label: "Garou pack", troops: 5, maneuver: 3, melee: 5, ranged: 1, defense: 3, sup: true},
+  knightsOfAcre: {label: "Knights of Acre", troops: 25, maneuver: 2, melee: 3, ranged: 1, defense: 4}
+};
+export const POOLS = ["maneuver", "melee", "ranged", "defense"];
+/** The actions an army can take in a turn (Spoils of War p. 45). Flanking needs wings, which WoDX's one-line army does not have. */
+export const ACTIONS = {melee: "Close and fight", ranged: "Shoot", withdraw: "Withdraw"};
+/** A clean unit list: {type: count} for the known types, counts 0 to 999. */
+export function normUnits(u) {
+  const out = {};
+  for ( const k of Object.keys(UNIT_TYPES) ) { const c = Math.round(n(u?.[k])); if ( c > 0 ) out[k] = Math.min(999, c); }
+  return out;
+}
+const normUnitsMax = (a, b) => { const o = {}; for ( const k of Object.keys(UNIT_TYPES) ) { const v = Math.max(n(a?.[k]), n(b?.[k])); if ( v > 0 ) o[k] = v; } return o; };
+export const unitCount = units => Object.values(units ?? {}).reduce((t, c) => t + n(c), 0);
+export const menOfUnits = units => Math.max(1, Object.entries(units ?? {}).reduce((t, [k, c]) => t + (UNIT_TYPES[k]?.troops ?? 0) * n(c), 0));
+/** The army's four pools from its units, before any penalty. */
+export function unitPools(units) {
+  const p = {maneuver: 0, melee: 0, ranged: 0, defense: 0};
+  for ( const [k, c] of Object.entries(units ?? {}) ) for ( const x of POOLS ) p[x] += (UNIT_TYPES[k]?.[x] ?? 0) * n(c);
+  return p;
+}
+/**
+ * Take `k` units off an army: from the type with the most units first (mortal troops before the supernatural),
+ * ties in the table's order. Returns {units, lost: {type: count}}.
+ */
+export function loseUnits(units, k) {
+  const u = {...units}, lost = {};
+  const order = Object.keys(UNIT_TYPES);
+  for ( let i = 0; i < k; i++ ) {
+    const live = order.filter(t => n(u[t]) > 0);
+    if ( !live.length ) break;
+    const mortal = live.filter(t => !UNIT_TYPES[t].sup);
+    const pick = (mortal.length ? mortal : live).reduce((a, b) => (n(u[b]) > n(u[a]) ? b : a));
+    u[pick] -= 1; lost[pick] = (lost[pick] ?? 0) + 1;
+    if ( !u[pick] ) delete u[pick];
+  }
+  return {units: u, lost};
+}
+/** Both sides fight with the book's units (the side form's troop table is filled in for both). */
+export const isBook = battle => !!battle?.book;
+
 const pool = (v, d = 4) => clamp(Math.round(n(v) || d), 1, 15);
 /** A clean side. Commander pools: pool Perception + Leadership, morale Charisma + Leadership, works Intelligence + Leadership, medicine Wits + Medicine. */
 export function normSide(s = {}, fallbackName = "A side") {
-  const men = Math.max(1, Math.round(n(s.men) || 100));
+  const units = normUnits(s.units);
+  // a book army is as many men as its units; one with no units left has none in the fight
+  const men = unitCount(units) ? menOfUnits(units) : s.men === 0 ? 0 : Math.max(1, Math.round(n(s.men) || 100));
   return {
     name: str(s.name) || fallbackName,
     faction: str(s.faction, 80),
     men,
     start: Math.max(men, Math.round(n(s.start) || men)),
+    units,
+    startUnits: unitCount(units) ? normUnits({...units, ...normUnitsMax(s.startUnits, units)}) : {},
     quality: clamp(Math.round(n(s.quality) || 3), 1, 5),
     supernatural: clamp(Math.round(n(s.supernatural)), 0, 5),
     position: POSITIONS[s.position] ? s.position : "open",
@@ -202,6 +269,7 @@ export function normBattle(b = {}) {
     offers: normOffers(b.offers),
     aftermath: normAftermath(b.aftermath)
   };
+  out.book = b.book === undefined || b.book === null ? out.sides.every(x => unitCount(x.units) > 0) : !!b.book;
   // Field battles: the defender is side 1. A siege: side 1 holds the walls.
   if ( out.sides.every(s => !s.defends) ) out.sides[1].defends = true;
   for ( const s of out.sides ) if ( s.resolve === null ) s.resolve = startResolve(s);
@@ -298,6 +366,118 @@ export function applyWaver(battle, sideIdx, roll, at = null) {
   return b;
 }
 
+/* ---- Right of Command: the book's battle turn (Spoils of War pp. 44-45) ---- */
+
+/**
+ * The commanders' roll at the start of a book turn: Perception + Leadership, opposed, at 6 plus disease. `extra`
+ * adds dice (the Storyteller's call).
+ */
+export function bookSetup(battle, age, {extra = [0, 0]} = {}) {
+  return battle.sides.map((s, i) => ({pool: Math.max(1, s.commander.pool + n(extra[i])), difficulty: difficultyFor(s)}));
+}
+
+/**
+ * Each army's pools this turn: its units' dice, plus the commanders' net successes for the winner and minus them for
+ * the loser (a botch gives the other side 2 more), less 2 while wavering and a die a unit while demoralised, at
+ * least 1 while it has any units. A side that defends adds its position's bonus to Defense (a WoDX reading: the
+ * book's army has no terrain).
+ */
+export function bookPools(battle, age, commandRolls = [null, null]) {
+  const total = [0, 1].map(i => Math.max(0, n(commandRolls[i]?.successes)) + (commandRolls[1 - i]?.botch ? 2 : 0));
+  const net = total[0] - total[1];
+  const pools = battle.sides.map((s, i) => {
+    const base = unitPools(s.units);
+    const mod = (i === 0 ? net : -net) - s.penalty - demoralised(s);
+    const out = {};
+    for ( const x of POOLS ) out[x] = unitCount(s.units) && base[x] > 0 ? Math.max(1, base[x] + mod) : 0;
+    if ( s.defends && out.defense ) out.defense += positionBonus(s.position, age, {breached: battle.breached});
+    return out;
+  });
+  return {total, net, pools};
+}
+
+/**
+ * The rolls a book turn needs, once the commanders have rolled. `actions` = ["melee" | "ranged" | "withdraw", ...].
+ * Close and fight: Melee against the foe's Defense. Shoot: Ranged against half the foe's Defense. Withdraw:
+ * Maneuver against the foe's Maneuver. Returns [{side, action, attack: {pool, difficulty}, resist: {pool, difficulty}}].
+ */
+export function bookContests(battle, age, pools, actions = ["melee", "melee"]) {
+  const act = [0, 1].map(i => (ACTIONS[actions?.[i]] ? actions[i] : "melee"));
+  return [0, 1].map(i => {
+    const me = pools[i], foe = pools[1 - i], a = act[i];
+    const attack = a === "withdraw" ? me.maneuver : a === "ranged" ? me.ranged : me.melee;
+    const resist = a === "withdraw" ? foe.maneuver : a === "ranged" ? Math.ceil(foe.defense / 2) : foe.defense;
+    return {side: i, action: a, attack: {pool: Math.max(0, attack), difficulty: difficultyFor(battle.sides[i])},
+      resist: {pool: Math.max(0, resist), difficulty: difficultyFor(battle.sides[1 - i])}};
+  });
+}
+
+/**
+ * Settle a book turn. `plan` = {total, net, pools, contests} with each contest's `rolls` = {attack, resist}; `deeds`
+ * as for settlePhase. A character's deed adds its successes to its side's attack this turn (a WoDX reading of the
+ * Dark Ages Companion's one foe a success, in the book army's units).
+ *   Close and fight: the winner takes a unit off the other for each net success, either way.
+ *   Shoot: only the shooters do harm.
+ *   Withdraw: a win keeps the foe's Close and fight off it this turn and takes the army off the field; a loss gives
+ *   the foe's attack on it the net successes (the book: they count against its Defense and Maneuver).
+ * Wavering: an army that loses 3 or more units in a turn rolls Charisma + Leadership at that many (3 to 10).
+ * An army with no units left is beaten. Returns {phase, sides, over, waver} like settlePhase.
+ */
+export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
+  const deedSum = [0, 1].map(i => (deeds[i] ?? []).reduce((t, d) => t + Math.max(0, n(d.successes)), 0));
+  const bigDeed = [0, 1].map(i => (deeds[i] ?? []).some(d => n(d.successes) > 10));
+  const c = plan.contests;
+  const net = c.map(x => Math.max(0, n(x.rolls?.attack?.successes)) - Math.max(0, n(x.rolls?.resist?.successes)));
+  const loss = [0, 0];
+  const away = [0, 1].map(i => c[i].action === "withdraw" && net[i] > 0);
+  for ( const i of [0, 1] ) {
+    if ( c[i].action === "withdraw" ) continue;
+    let k = net[i] + deedSum[i];
+    // a failed withdrawal leaves the army open to the blow
+    if ( c[1 - i].action === "withdraw" && net[1 - i] < 0 ) k += -net[1 - i];
+    if ( c[i].action === "melee" && away[1 - i] ) continue;
+    if ( k > 0 ) loss[1 - i] += k;
+    else if ( k < 0 && c[i].action === "melee" ) loss[i] += -k;
+  }
+  const sides = battle.sides.map(s => ({...s, commander: {...s.commander}, units: {...s.units}, penalty: 0}));
+  const lostUnits = [{}, {}];
+  for ( const i of [0, 1] ) {
+    const r = loseUnits(sides[i].units, loss[i]);
+    sides[i].units = r.units; lostUnits[i] = r.lost;
+    const before = sides[i].men;
+    sides[i].men = unitCount(r.units) ? menOfUnits(r.units) : 0;
+    sides[i].lostUnits += unitCount(r.lost);
+    loss[i] = unitCount(r.lost);
+    lostUnits[i].men = before - sides[i].men;
+  }
+  const winner = loss[0] < loss[1] ? 0 : loss[1] < loss[0] ? 1 : null;
+  const phase = {
+    n: battle.phases.length + 1, kind: "phase", book: true, total: plan.total, net: loss[1] - loss[0], winner,
+    lost: lostUnits.map(x => x.men), units: loss, resolveLost: [0, 0], pools: plan.pools,
+    contests: c.map((x, i) => ({action: x.action, attack: x.attack, resist: x.resist, net: net[i],
+      rolls: {attack: rollOut(x.rolls?.attack), resist: rollOut(x.rolls?.resist)}})),
+    rolls: (plan.commandRolls ?? [null, null]).map(rollOut),
+    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes)), ...(d.seen ? {seen: true} : {})}))),
+    before: battle.sides.map(s => ({men: s.men, resolve: s.resolve, lostUnits: s.lostUnits, penalty: s.penalty, sick: s.sick, units: {...s.units}}))
+  };
+  const gone = [0, 1].filter(i => !unitCount(sides[i].units));
+  let over = null;
+  if ( gone.length === 2 ) over = {winner: null, how: "both"};
+  else if ( gone.length === 1 ) over = {winner: 1 - gone[0], how: "rout"};
+  else if ( away[0] && away[1] ) over = {winner: null, how: "stalemate"};
+  else if ( away[0] || away[1] ) over = {winner: away[0] ? 1 : 0, how: battle.kind === "siege" ? "lifted" : "withdraw"};
+  let waver = null;
+  if ( !over ) {
+    const hit = [0, 1].filter(i => loss[i] >= 3).sort((a, b) => loss[b] - loss[a]);
+    if ( hit.length ) waver = {side: hit[0], difficulty: clamp(loss[hit[0]], 3, 10)};
+    else { const shaken = [0, 1].find(i => bigDeed[1 - i]); if ( shaken !== undefined ) waver = {side: shaken, difficulty: 6}; }
+  }
+  // the men a broken army still has are no longer in the fight
+  for ( const i of [0, 1] ) if ( !sides[i].men ) sides[i].men = 0;
+  return {phase, sides, over, waver};
+}
+const rollOut = r => ({successes: Math.max(0, n(r?.successes)), botch: !!r?.botch, faces: Array.isArray(r?.faces) ? r.faces.slice(0, 40) : []});
+
 /** Disease in a camp (Spoils of War p. 41): the difficulty of the week's Wits + Medicine roll for a side. */
 export const diseaseDifficulty = side => clamp(Math.ceil(Math.max(1, n(side?.men)) / 1000), 4, 10);
 /** The new disease penalty after a week's roll: a failure adds 1; a success as big as the penalty takes 1 off. */
@@ -332,11 +512,13 @@ export function settleWeek(battle, age, roll, sickRolls = [null, null]) {
   const lost = [0, 0], resolveLost = [0, 0];
   const garrison = sides[1];
   let hungry = false;
+  // a book army's men are its units, so the week's hunger and sickness wear its resolve, not its numbers
+  const thin = side => (battle.book ? 0 : Math.round(side.men * 0.02));
   if ( garrison.stores > 0 ) garrison.stores = Math.max(0, garrison.stores - 7);
-  else { hungry = true; resolveLost[1] += 1; lost[1] = Math.round(garrison.men * 0.02); }
+  else { hungry = true; resolveLost[1] += 1; lost[1] = thin(garrison); }
   for ( const i of [0, 1] ) {
     if ( sickRolls[i] ) sides[i].sick = diseaseAfter(sides[i].sick, sickRolls[i]);
-    if ( sides[i].sick >= 3 ) { resolveLost[i] += 1; lost[i] += Math.round(sides[i].men * 0.02); }
+    if ( sides[i].sick >= 3 ) { resolveLost[i] += 1; lost[i] += thin(sides[i]); }
   }
   for ( const i of [0, 1] ) {
     lost[i] = Math.min(lost[i], sides[i].men - 1);
@@ -366,7 +548,7 @@ export function undoStep(battle) {
   if ( !last ) return battle;
   const sides = battle.sides.map((s, i) => {
     const o = {...s, commander: {...s.commander}};
-    for ( const k of ["men", "resolve", "stores", "lostUnits", "penalty", "sick"] ) if ( last.before[i][k] !== undefined ) o[k] = last.before[i][k];
+    for ( const k of ["men", "resolve", "stores", "lostUnits", "penalty", "sick", "units"] ) if ( last.before[i][k] !== undefined ) o[k] = last.before[i][k];
     return o;
   });
   const b = {...battle, sides, phases: battle.phases.slice(0, -1), over: null};
@@ -378,8 +560,14 @@ export function undoStep(battle) {
 export function withdraw(battle, sideIdx, at = null) {
   const i = sideIdx === 1 ? 1 : 0;
   const sides = battle.sides.map(s => ({...s, commander: {...s.commander}}));
-  const lost = Math.min(sides[i].men - 1, Math.round(sides[i].men * 0.1));
-  const before = battle.sides.map(s => ({men: s.men, resolve: s.resolve, stores: s.stores}));
+  const before = battle.sides.map(s => ({men: s.men, resolve: s.resolve, stores: s.stores, units: {...(s.units ?? {})}, lostUnits: s.lostUnits}));
+  let lost;
+  if ( battle.book && unitCount(sides[i].units) > 1 ) {
+    // a book army leaves a tenth of its units (at least one) to the pursuit
+    const r = loseUnits(sides[i].units, Math.max(1, Math.round(unitCount(sides[i].units) / 10)));
+    lost = sides[i].men - menOfUnits(r.units);
+    sides[i].units = r.units; sides[i].lostUnits += unitCount(r.lost);
+  } else lost = Math.min(sides[i].men - 1, Math.round(sides[i].men * 0.1));
   sides[i].men -= lost;
   const phase = {n: battle.phases.length + 1, kind: "withdraw", side: i, lost: i === 0 ? [lost, 0] : [0, lost], resolveLost: [0, 0], before,
     breachBefore: battle.breach, breachedBefore: battle.breached};

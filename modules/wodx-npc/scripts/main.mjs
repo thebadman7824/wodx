@@ -37,7 +37,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.41.0";
+const VERSION = "0.41.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -822,7 +822,7 @@ Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
 /* 0.41.0: a description that spreads and fades; one window for all of a character's followers */
-const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc)});
+const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
 wanted.hooks();
 const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
 

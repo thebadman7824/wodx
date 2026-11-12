@@ -9,7 +9,7 @@
  * Banality drifts the same way, on its own track (C20 rates a place's Banality 0 to 10): Glamour fed by art and
  * dreams lowers it, crowds of disbelief raise it. It only moves a place that has a Banality rating.
  *
- * The Shroud drifts too (Otherworlds 0.17.0, B2317): mass death thins it, a point for a year and a day after a
+ * The Shroud drifts too (Otherworlds 0.17.0, B2327): mass death thins it, a point for a year and a day after a
  * battle (Wraith 20th puts the Shroud lowest at places of death and grief), and it heals back. Only a place with a
  * Shroud rating moves, inside Wraith 20th's 4 to 10.
  */

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2320
+Next free block: B2330
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -84,10 +84,11 @@ Next free block: B2320
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
 | B2100-B2105 | NPC voices | Voices |
-| B2200-B2209 | Battles and sieges | Storyteller |
+| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
-| B2310-B2319 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
+| B2310-B2313 | The case board and what a character could know | Interactables, Library |
+| B2320-B2329 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2236,6 +2237,11 @@ A battle can be set in the Umbra (Garou, Fera and spirits against the Wyrm's hos
 
 Reverse: REALM_AGES in battle-rules.mjs.
 
+## B2210. The book's army when both sides list units (2026-11-12, Spoils of War pp. 44-45 printed)
+The Troop Types table of Spoils of War (p. 44 printed, pdf 45) was read from the page images (/mnt/project-files/book-checks-2026-11-12b.md, item 2); its figures give the book's example army exactly (Maneuver 19, Melee 20, Ranged 5, Defense 20). When both sides list units, a battle is fought with the book's Right of Command in place of the house weight of B2200 and B2203: the commanders' opposed Perception + Leadership (difficulty 6, a botch gives the other side 2) adds the net successes to the winner's four pools and takes them from the loser's; then each army takes one action, Close and fight (Melee against the foe's Defense, the winner takes a unit a net success either way), Shoot (Ranged against half the foe's Defense, only the shooters do harm) or Withdraw (Maneuver against Maneuver; a win keeps the foe's melee off and leaves the field, a loss adds the net successes to the foe's blow). Losing 3 or more units in a turn makes an army waver at that many; losses past the commander's Charisma + Leadership cost a die a unit (demoralised); an army with no units left is beaten. WoDX readings: the army is one line, so Flank, the wings, the Reserve and the turned flank are not used; units fall from the type with the most units, mortal troops before the supernatural ones; a defender adds its position's bonus to Defense; a character's deed adds its successes to its side's action; a book army drawing off leaves a tenth of its units; in a siege a book army's hunger and disease wear its resolve, not its men. Without units on both sides, and in every age the book's troop types do not fit, the house frame of B2200 stays.
+
+Reverse: clear the units on both sides (the battle then uses men and quality), or drop the isBook branch in fight() in wodx-storyteller/scripts/battles.mjs.
+
 ## B2220. The crowd as a resource (2026-11-12, house rule)
 The passers-by leftovers of the Master Plan (Passers-by and animals, priority 2) are built in WoDX NPC 0.40.0 and Actions 3.52.0. Each person in the street now carries a feeling and a spark (crowd-rules.mjs), kept on the token's passer-by flag. WoDX Actions reads them through api.passersby.mindOf and offers the mortals in sight to a wraith's Passion roll and a changeling's Epiphany. What a supernatural takes from a mortal is written on the mortal's token actor as flags.wodx-actions.crowdUse, by the Storyteller's client.
 
@@ -2272,7 +2278,7 @@ The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers
 Reverse: nothing to reverse.
 
 ## B2300. Lifepath threads become story chains (2026-11-12, house rule)
-Improvement Desk 2026-11-12b item cr2, approved by Ben. V20 asks for a prelude that sets up the character's past (page to be confirmed by a book check), but gives no table for when that past comes back. With WoDX Chronicle's Story chains setting on, each player character's kept lifepath is read by WoDX Creation for open threads: a person from the past whose role or note leaves something open (an enemy, a rival, a debt either way, a secret someone knows, someone lost, a promise), or a kept Flaw (Enemy, Clan Enmity, Hunted, Dark Secret) that no person already carries. At most four per character, sharpest first. Each kind has a three-step chain of its own; the person the lifepath made as an NPC is named in it.
+Improvement Desk 2026-11-12b item cr2, approved by Ben. V20 asks for a prelude that sets up the character's past (V20 pp. 352-353, pdf 360-361), but gives no table for when that past comes back. With WoDX Chronicle's Story chains setting on, each player character's kept lifepath is read by WoDX Creation for open threads: a person from the past whose role or note leaves something open (an enemy, a rival, a debt either way, a secret someone knows, someone lost, a promise), or a kept Flaw (Enemy, Clan Enmity, Hunted, Dark Secret) that no person already carries. At most four per character, sharpest first. Each kind has a three-step chain of its own; the person the lifepath made as an NPC is named in it.
 
 Reverse: turn off Story chains, or reject the thread in the approval queue.
 
@@ -2311,50 +2317,69 @@ The beat is story only. It spends none of the host's 3 prelude freebie points an
 
 Reverse: none needed; give a reward from the runner by hand.
 
-## B2310. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
+## B2310. The case board (2026-11-12)
+From the improvement desk (item i1, approved by Ben 2026-11-12). Each case board is a journal in the "WoDX case boards" folder, owned by every player so anyone can pin, move and join cards. Cards are clues, people, places, Encyclopaedia entries or journal pages, items, and notes; lines between two cards carry a few words. The Storyteller starts boards, picks the open case, and can hide a card until it is earned. Players do not see hidden cards or the lines to them, but the card is in the journal's data, so this only hides; real secrets stay in the Storyteller's own notes. Anyone opens a board from the token tools; the Storyteller also has it in the Storyteller's hand.
+
+Reverse: case.mjs and case-rules.mjs in wodx-interactables; setupCase and registerCaseSettings in main.mjs.
+
+## B2311. Found clues go on the open case (2026-11-12)
+A clue looked at or examined through Interact is pinned to the open case board on the Storyteller's client, with the texts the finder's best successes reached. Examining it again with more successes adds the new words to the same card. A botched examine pins nothing. World setting "Found clues go on the case board", on by default.
+
+Reverse: the pinClue call after clueCodex in wodx-interactables main.mjs; setting caseClues.
+
+## B2312. The case board by era (2026-11-12, house rule)
+The board keeps its era's look and name: parchment and red thread to 1449 ("The findings"), a commonplace board of pinned leaves to 1799, the detective's pinboard and string to 1945, the corkboard to 2022, and a lit case display in the World of Future Darkness from 2023.
+
+Reverse: LOOKS and lookFor in case-rules.mjs.
+
+## B2313. What they could know (2026-11-12, house rule)
+From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
+
+Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
+## B2320. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
 Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.45.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
 
 Reverse: DEEDS, POSTS and pickDeed in wodx-storyteller battle-deeds.mjs; the offers on a battle are dropped by setting offers to null.
 
-## B2311. The post a character stands at (2026-11-12, house rule)
+## B2321. The post a character stands at (2026-11-12, house rule)
 With no post picked, a character in command is with the commander, one at the rear is scouting, and one in the thick of it is in the line; in a siege that has been breached or stormed the defenders are on the walls and the attackers at the breach. No deeds are offered during the weeks of a siege, only when it is fought.
 
 Reverse: postFor in battle-deeds.mjs.
 
-## B2312. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
+## B2322. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
 A supernatural character (by WoDX Combat's kind of being) is offered a deed of their own kind about one time in three: a vampire commanding the enemy captain, showing what they are, or feeding in the press; a Garou in war form; a mage's vulgar or coincidental Effect; a changeling waking dreams of glory; a wraith reaching through the Shroud; a hunter finding the monster in the ranks; spirits of war called. Deeds that the living can see as more than human are marked seen; in a battle in the living world each seen deed that succeeded is counted by the aftermath, and sending the feeding line to the Ledger lets the Veil slip one point for each (at most 3), with an Undo.
 
 Reverse: the kinds and seen fields in DEEDS; seenDeeds in battle-aftermath.mjs.
 
-## B2313. Off-screen deeds for faction wars (2026-11-12, house rule)
+## B2323. Off-screen deeds for faction wars (2026-11-12, house rule)
 For battles fought with no window (factions at war), leaderDeed() picks a command deed for a side's leader, or a deed of the leader's kind when the side has supernatural help of 2 or more, with the commander's Perception + Leadership as the pool; deedSuccessesFor() rolls it with any random source (V20: successes at the difficulty less 1s, a botch when nothing succeeded and a 1 came up). Exposed as api.battleDeeds.leaderDeed and deedSuccessesFor.
 
 Reverse: leaderDeed, deedSuccessesFor in battle-deeds.mjs.
 
-## B2314. Deeds roll from the sheet, by the Storyteller (2026-11-12)
+## B2324. Deeds roll from the sheet, by the Storyteller (2026-11-12)
 The Storyteller rolls each deed from the window (the dice go to the Storyteller's card; the player gets a card with the deed when it is offered). A botched deed adds nothing. Rolling again replaces the roll. Offers belong to one phase: fighting the phase uses them and clears them; Undo of the phase does not bring them back.
 
 Reverse: rollDeed and offer in battle-extras.mjs.
 
-## B2315. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
+## B2325. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
 Ben approved desk item bt2 on 12 November 2026. When a battle ends, the Battles window lists the field's harvest by line: spoils, prisoners (a tenth of a routed side) and the wounded (twice the dead) by age; feeding among the dying for 3 nights (7 after 1,000 dead), 2 easier on the field; new wraiths among the fallen (one in a hundred of the dead, at least one from 20 dead) and a thinner Shroud; Banes and Wyrm taint from 100 dead; Entropy in the Resonance and nightmares from 50 dead; the Yin rising for the Kindred of the East; and the name the place keeps. All of it is a house rule; the counts are not from a book.
 
 Reverse: aftermathFor in wodx-storyteller battle-aftermath.mjs.
 
-## B2316. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
+## B2326. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
 A line with a lasting effect can go to the Ledger as a consequence that comes due (the feeding ends, the Shroud heals after a year and a day, the Resonance fades), to the Legends book (Chronicle 0.42.2 adds the sent lines to the battle's entry), or to a place picked as a scene (WoDX Otherworlds drift). Each sent line is kept on the battle with an Undo that removes the Ledger entry, takes the drift back, or drops the Legends text.
 
 Reverse: send and unsend in battle-extras.mjs.
 
-## B2317. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
+## B2327. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
 The desk wording said "a stronger Shroud"; Wraith 20th puts the Shroud lowest where death and grief are, so a battle thins it instead (logged in PENDING-REVIEW). WoDX Otherworlds 0.17.0 adds a Shroud track to drift: massdeath -1, shroudheals +1, inside -3 to +3, and a place with a Shroud rating reads it with the drift inside 4 to 10. A battle thins it 1, or 2 after 10,000 dead.
 
 Reverse: the massdeath and shroudheals kinds and shroudWithDrift in wodx-otherworlds drift-rules.mjs.
 
-## B2318. Old fields are felt in later years (2026-11-12, house rule)
+## B2328. Old fields are felt in later years (2026-11-12, house rule)
 A field of 10 or more dead in the living world appears under Old fields in the Battles list in later years: fresh graves in its first year, the survivors' memory for 40 years, then by the clock's year a chapel or a cross before 1800, a monument and walks from 1800, battlefield tourists by rail from 1860, a memorial and museum from 1914, a visitor centre, re-enactors and detectorists from 1960, and on the Future Darkness branch from 2026 a memorial seen through the lens. Fields of 1,000 dead (or 100 within 200 years) are still haunted; 10,000 dead keep the Shroud thin. The Legends book's battle entry carries any lines sent to it.
 
 Reverse: fieldEcho and oldFields in battle-aftermath.mjs.
 
-## B2319. Decision numbers kept for this work
-B2310 to B2319 are this work's block, all used.
+## B2329. Decision numbers kept for this work
+B2320 to B2329 are this work's block, all used.

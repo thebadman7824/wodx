@@ -1,5 +1,5 @@
 /**
- * Battles and sieges gate (WoDX Storyteller 0.43.0, NPC 0.39.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
+ * Battles and sieges gate (WoDX Storyteller 0.44.0, NPC 0.39.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
  * world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatebattle.mjs?${Date.now()}`)).run()
  * Runs battles through the API (no windows), then removes the battles, clock, factions, messages and actors it made.
@@ -15,7 +15,8 @@
  *   9. storming turns the siege into a field battle; Undo turns it back
  *  10. Let the time pass moves the clock by the time taken, once
  *  11. the counterattack on a character goes through WoDX Combat (damage on the sheet), then is taken off
- *  12. every other WoDX module still answers
+ *  12. the book's army: both sides by units fight a Right of Command turn (pools, actions, units lost); Undo puts the units back
+ *  13. every other WoDX module still answers
  * Result: Data/wodx-gate/gatebattle-result.json.
  */
 async function save(R, name) {
@@ -138,6 +139,18 @@ export async function run() {
       await new Promise(r => setTimeout(r, 500));
       const after = JSON.stringify(game.actors.get(k.id).system.health ?? {});
       ok("counterattack", !!res && (res.dice === 0 || before !== after), {res, tries: n, changed: before !== after});
+    });
+    await step("book army", async () => {
+      const k = await api().start({name: "WoDX gate: the book army", place: "Gate field", kind: "field", year: 1230,
+        sides: [{name: "Host", units: {peasants: 2, spearmen: 2, archers: 1, lightCavalry: 3, ghoulKnights: 1, cainiteCavalry: 1}, commander: {name: "Count", pool: 5, morale: 5}},
+          {name: "Levies", units: {peasants: 6, spearmen: 1}, commander: {name: "Reeve", pool: 4, morale: 4}}]});
+      made.push(k.id);
+      const pools = api().rules.unitPools(k.sides[0].units);
+      const t = await api().fight(k.id, {actions: ["melee", "ranged"]});
+      const p = t.phases.at(-1);
+      const u = await api().undo(k.id);
+      ok("book army", k.book && k.sides[0].men === 4860 && pools.melee === 20 && p.book && p.contests.length === 2 && p.contests[1].action === "ranged"
+        && api().rules.unitCount(u.sides[1].units) === 7 && u.phases.length === 0, {pools, units: p.units, contests: p.contests?.map(c => [c.action, c.attack.pool, c.resist.pool, c.net])});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-otherworlds", "wodx-creation"];
