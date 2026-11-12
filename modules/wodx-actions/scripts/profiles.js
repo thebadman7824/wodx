@@ -6,7 +6,7 @@
  * A "profile" decides which combat menu, soak model and action menu an actor gets.
  * Detection order:
  *   1. override flag  flags.world.wodx.profile   (set from the Profile button in either menu)
- *      -- falls back to the VtDA20 flags until the migration copies them: flags.world.vtda20.profile, then the
+ *      -- falls back to the old VtDA20 flags, read only: flags.world.vtda20.profile, then the
  *         v1.x flags flags["vtda20-combat"].profile / flags["vtda20-actions"].profile
  *   2. actor.type     (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Hunter, Demon, Mummy, Exalted,
  *                      Creature, Mortal) and, for the new "PC" type, system.settings.splat
@@ -23,8 +23,8 @@ const OLD_KEY = "vtda20";
 const LEGACY_FLAGS = ["vtda20-combat", "vtda20-actions"];
 
 /**
- * A per-actor value kept under flags.world.wodx (profile, form, elder), read from flags.world.vtda20 until the
- * migration has copied it.
+ * A per-actor value kept under flags.world.wodx (profile, form, elder), and read from the old flags.world.vtda20 when
+ * there is no WoDX value.
  */
 export function worldFlag(actor, key) {
     const w = actor?.flags?.[FLAG_SCOPE];

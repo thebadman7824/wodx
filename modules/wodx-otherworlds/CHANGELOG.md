@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.13.1 (the aura overlay names its colour)
 - 0.13.0 (sendAcross: a power that has worked takes a token across the Gauntlet or the Shroud with no second roll)
 - 0.12.0 (a layout of its own for every realm, drawn from what the realm is: no two realms share one, every place reachable)
 - 0.11.0 (map keywords: 22 kinds of feature, each with its own ground and marks; realms that share them look alike, the seed keeps them apart; some set the islands' form, caverns or a square city; the Storyteller can add more)

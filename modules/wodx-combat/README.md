@@ -2,11 +2,8 @@
 
 World of Darkness Expanded. Private use only; not for distribution or sale.
 
-WoDX Combat is vtda20-combat 2.2.1 brought into the WoDX project under a new id. Everything in `README-vtda20.md` still applies: attack, defense, damage, soak (silver, cold iron, Fortitude, armor), health track, the profiles for every actor type, and the maneuvers. What changed:
+WoDX Combat handles attack, defense, damage, soak (silver, cold iron, Fortitude, armor), the health track, the profiles for every actor type, and the maneuvers. Its API is `game.wodxCombat` (also `game.wodx.combat`). Macros are "WoDX: …". The actor type is kept in `flags.world.wodx.profile`; an actor that only carries the old `flags.world.vtda20.profile` is still read. It began as a port of vtda20-combat 2.2.1; the bridge from that module (old setting values and the `game.vtda20combat` alias) was removed in 3.15.0.
 
-- **New names.** The module is `wodx-combat`. Its API is `game.wodxCombat` (also `game.wodx.combat`); `game.vtda20combat` still works as an alias. Macros are "WoDX: …". The actor type is kept in `flags.world.wodx.profile`, and the old `flags.world.vtda20.profile` is read until the migration in WoDX Actions copies it.
-- **Settings** start from the choices you made in vtda20-combat.
-- **Never beside the old module.** While vtda20-combat is enabled, WoDX Combat stays off and says so.
 - **Conditions** (WoDX Chronicle, V20 Dark Ages p. 348). The attack dialog lists the conditions on both sides and fills in their dice and difficulty:
   - a blinded attacker, or a blinded or held target;
   - an immobilized or staked target, who is hit automatically;

@@ -47,4 +47,5 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
+| wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |
