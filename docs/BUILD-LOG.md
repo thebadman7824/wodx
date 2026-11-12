@@ -1649,6 +1649,8 @@ Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of th
 
 ## 2026-11-12: ghouls and revenant families
 Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
+## 2026-11-12: Changeling features (Chronicle 0.34.0)
+Chronicle 0.34.0 builds the Changeling part of the Splat Features Desk. A changeling stacks a kith, a seeming, a court and a sidhe House row. The system's whole kith list is covered, the Hsien included. The new engines are revels, the Pooka's truth, the Selkie's coat and the court in power by the season; oaths reuse the Hippolyta engine. The release also fixes a Werewolf bug: a Fianna Galliard got no Wisdom for a tale (testbed gatewolf step 9). Decisions B1500 to B1503. Gate tools/gate/gatefae.mjs, 9 steps. The harness passes. Not on Live.
 ## 2026-11-12: Mage features (Chronicle 0.33.0)
 Chronicle 0.33.0 builds the Mage part of the Splat Features Desk. Every Tradition, Craft and Convention has a row, along with the Order of Reason's conventions, the Hermetic Houses, the sorcerers, the Marauders and the Nephandi. Each row shows the group's old name for the year. The new engines are the Akashic dawn, the Euthanatos Good Death and Jhor, certámen, Hippolyta oaths and the Watchers of the New World Order; other groups borrow engines already built. Decisions B1165 to B1167. Gate tools/gate/gatemage.mjs, 11 steps. The harness passes. Not on Live.
 ## 2026-11-12: Werewolf features (Chronicle 0.31.0)
