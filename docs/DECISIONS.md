@@ -2181,22 +2181,62 @@ The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers
 
 Reverse: nothing to reverse.
 
-## B2300. The case board (2026-11-12)
+## B2300. Lifepath threads become story chains (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item cr2, approved by Ben. V20 asks for a prelude that sets up the character's past (page to be confirmed by a book check), but gives no table for when that past comes back. With WoDX Chronicle's Story chains setting on, each player character's kept lifepath is read by WoDX Creation for open threads: a person from the past whose role or note leaves something open (an enemy, a rival, a debt either way, a secret someone knows, someone lost, a promise), or a kept Flaw (Enemy, Clan Enmity, Hunted, Dark Secret) that no person already carries. At most four per character, sharpest first. Each kind has a three-step chain of its own; the person the lifepath made as an NPC is named in it.
+
+Reverse: turn off Story chains, or reject the thread in the approval queue.
+
+## B2301. When a thread falls due (2026-11-12, house rule)
+The first thread comes to the approval queue 14 days of game time after Chronicle first sees the character's lifepath, each next one 30 days after the last, one at a time per character. Approved, it runs as a story chain from the scene's city; rejected, it is left in the past and never put again. The Storyteller can also start any thread at once from Threads from the past in the story chains window.
+
+Reverse: change LP_DAYS in wodx-chronicle/data/pod-lifepath.mjs.
+
+## B2302. A thread in the year of play (2026-11-12, house rule)
+The chain is written for the year it fires, not the year of the scene. A mortal from more than 70 years back is long dead, and a descendant carries the thread. The undying (Kindred, the dead, spirits) from more than 150 years back come back far stronger, and an enemy, rival, creditor or keeper of a secret among them may now be the pawn of something older. A mortal from 40 to 70 years back is old. News and searching follow the era: a pedlar or inn talk before 1500, a sealed letter to 1799, telegrams and newspapers to 1945, a phone call or a private investigator to 2022, a filtered message or a data broker in the World of Future Darkness.
+
+Reverse: change LP_ALIVE_SPAN, LP_OLD_SPAN or MEANS in Chronicle's pod rules and data.
+
+## B2303. Who counts as undying in a lifepath (2026-11-12, house rule)
+A person's role and note are read for the Kindred and others who do not age: a sire, a vampire, a prince, a harpy, a domitor, an anarch, the dead, spirits and monsters; for a vampire's lifepath, an elder or a member of the court too. Everyone else ages and dies in a lifetime. When the Storyteller links a different NPC, its name is used, but its age is still judged from the role.
+
+Reverse: edit UNDYING in wodx-creation/scripts/lifepath-threads-rules.mjs.
+
+## B2304. Lifepath threads speak of the character, not to them (2026-11-12)
+Lifepath roles are written to the player ("your sire's rival, who would see you destroyed"). On the Storyteller's chain cards and the approval queue they are turned around to name the character ("Jana's sire's rival, who would see Jana destroyed").
+
+Reverse: drop third() in Chronicle's pod rules.
+
+## B2305. A guest in another character's prelude (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item bf1, approved by Ben. In the prelude runner, the Storyteller can ask another player's character into the current scene. It is offered only where the guest's lifepath years allow: at least 8 years old, and alive. Mortals, hunters, Garou, changelings and other lines with a mortal span live 100 years; ghouls and revenants 200; mages 150. The Kindred, the dead, mummies, Kuei-jin and the fallen do not age once turned; a guest turned 100 years or more before the scene comes only as an elder, a wraith only as a ghost. A guest with no lifepath is the Storyteller's call. Places are not checked: every lifepath is set in the chronicle's own lands of the Bohemian crown, so the Storyteller rules out a guest who was abroad.
+
+Reverse: change UNDYING_LINES, SPAN, GUEST_MIN_AGE or ELDER_YEARS in first-night-prelude-rules.mjs.
+
+## B2306. The guest's beat (2026-11-12)
+The Storyteller picks one beat question for how the guest was there (as a mortal, turned, an elder or a ghost), then asks the guest's player on a chat card, or writes what happened at the table. The answer goes to troupe ties on the Group actor as a guest tie (one per scene, beside the ring's questions, which it never replaces), into the host's prelude log with Undo, and ticks the guest's ties step. How they met lists it as "the guest in the host's prelude".
+
+Reverse: Undo in the prelude log removes the tie.
+
+## B2307. A guest beat costs and gives nothing (2026-11-12)
+The beat is story only. It spends none of the host's 3 prelude freebie points and gives the guest no points; a roll with stakes in the same scene still costs the host as before.
+
+Reverse: none needed; give a reward from the runner by hand.
+
+## B2340. The case board (2026-11-12)
 From the improvement desk (item i1, approved by Ben 2026-11-12). Each case board is a journal in the "WoDX case boards" folder, owned by every player so anyone can pin, move and join cards. Cards are clues, people, places, Encyclopaedia entries or journal pages, items, and notes; lines between two cards carry a few words. The Storyteller starts boards, picks the open case, and can hide a card until it is earned. Players do not see hidden cards or the lines to them, but the card is in the journal's data, so this only hides; real secrets stay in the Storyteller's own notes. Anyone opens a board from the token tools; the Storyteller also has it in the Storyteller's hand.
 
 Reverse: case.mjs and case-rules.mjs in wodx-interactables; setupCase and registerCaseSettings in main.mjs.
 
-## B2301. Found clues go on the open case (2026-11-12)
+## B2341. Found clues go on the open case (2026-11-12)
 A clue looked at or examined through Interact is pinned to the open case board on the Storyteller's client, with the texts the finder's best successes reached. Examining it again with more successes adds the new words to the same card. A botched examine pins nothing. World setting "Found clues go on the case board", on by default.
 
 Reverse: the pinClue call after clueCodex in wodx-interactables main.mjs; setting caseClues.
 
-## B2302. The case board by era (2026-11-12, house rule)
+## B2342. The case board by era (2026-11-12, house rule)
 The board keeps its era's look and name: parchment and red thread to 1449 ("The findings"), a commonplace board of pinned leaves to 1799, the detective's pinboard and string to 1945, the corkboard to 2022, and a lit case display in the World of Future Darkness from 2023.
 
 Reverse: LOOKS and lookFor in case-rules.mjs.
 
-## B2303. What they could know (2026-11-12, house rule)
+## B2343. What they could know (2026-11-12, house rule)
 From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
 
 Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
