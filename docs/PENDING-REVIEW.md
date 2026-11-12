@@ -662,3 +662,5 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
 | 2026-11-12 | What the stranger line shows (B1408) | Dress by station, side worn, blood or wounds, a drawn weapon, what they are doing, manner toward the viewer; no kind, clan or trade | autoStranger in faces-rules.mjs |
 | 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
+| 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
+| 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |

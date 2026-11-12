@@ -303,6 +303,31 @@ export function noteSeen(seenAs = {}, otherId, secret, at = 0) {
   for ( const k of keys.slice(0, Math.max(0, keys.length - 200)) ) delete out[k];
   return out;
 }
+/**
+ * What a fed-on vessel keeps of it (0.35.0, B1384). The Kiss leaves a mortal with a swoon and a lost hour, not the
+ * truth of it; one who fought it off saw what fed; a Kindred or ghoul vessel, or one who already knows the Kindred,
+ * knows what was done. A willing vessel learns nothing new. vessel: {kind, knows: [secrets] | "*"}.
+ * Returns "nothing", "lost time" or "saw".
+ */
+export function fedMemory({willing = false, fought = false, vessel = {}} = {}) {
+  if ( willing ) return "nothing";
+  const k = lc(vessel.kind);
+  const knows = vessel.knows === "*" || (Array.isArray(vessel.knows) && vessel.knows.includes("kindred"));
+  if ( fought || k === "kindred" || k === "ghoul" || knows ) return "saw";
+  return "lost time";
+}
+/** The vessel's list of feedings after one more (flags.wodx-npc.fedOn, {actorId: {at, times, saw}}), at most 50 kept. */
+export function noteFed(fedOn = {}, byId, {at = 0, saw = false} = {}) {
+  const out = {...(fedOn && typeof fedOn === "object" ? fedOn : {})};
+  if ( !byId || !/^[A-Za-z0-9]{1,32}$/.test(String(byId)) ) return out;
+  const was = out[byId];
+  delete out[byId];
+  out[byId] = {at: Number(at) || 0, times: (Number(was?.times) || 0) + 1, saw: !!saw || !!was?.saw};
+  const keys = Object.keys(out);
+  for ( const k of keys.slice(0, Math.max(0, keys.length - 50)) ) delete out[k];
+  return out;
+}
+
 /** Has the watcher seen this one for what it is? */
 export const hasSeen = (seenAs, otherId) => !!(otherId && seenAs && typeof seenAs === "object" && seenAs[otherId]);
 

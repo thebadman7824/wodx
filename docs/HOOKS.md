@@ -16,6 +16,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place) |
+| wodxFed | actions | npc (the vessel remembers it was fed on) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
