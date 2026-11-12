@@ -23,6 +23,8 @@
  * A line with no brackets is the Storyteller's own note, as before, and is never shown to a player.
  */
 
+import {parseWhen} from "../../wodx-chronicle/scripts/when-rules.mjs";
+
 /** Asked of anyone, always on the menu. */
 export const LOCAL = {news: "News", rumours: "Rumours", work: "Work", directions: "Directions"};
 const ALIAS = {rumors: "rumours", rumour: "rumours", rumor: "rumours", "the news": "news", direction: "directions", "the way": "directions"};
@@ -123,7 +125,35 @@ export function menuFor(chain = [], known = {}) {
 /** May this topic be asked now? */
 export const canAsk = (topic, menu) => { const t = normTopic(topic); return !!t && (menu.local.includes(t) || menu.ask.includes(t)); };
 
-const fitting = (lines, check) => (lines ?? []).filter(l => !l.when || (check ? !!check(l.when) : false));
+/**
+ * NPC 0.30.0 (B1307): a line that needs a trait. The tests in its "Only when" list that ask about the character's own
+ * traits (a rated trait such as Dominate 2 or Etiquette 3, a merit, flaw or background, a power, a clan, tribe,
+ * Tradition, kith or other sheet field, Generation, Arete or True Faith), as the Storyteller wrote them. A group's
+ * choices are joined with "or". Empty for a line anyone may get.
+ */
+const GATED = new Set(["rating", "feat", "power", "field"]);
+const GATED_NUM = new Set(["generation", "arete", "faith", "humanity"]);
+const isGate = t => !t.neg && (GATED.has(t.t) || (t.t === "num" && t.trait && GATED_NUM.has(t.key)));
+export function gateOf(when) {
+  if ( !String(when ?? "").trim() ) return [];
+  let parsed;
+  try { parsed = parseWhen(when); } catch (e) { return []; }
+  const out = [];
+  for ( const g of parsed.groups ?? [] ) {
+    const hits = (g.of ?? []).filter(isGate).map(t => t.src.replace(/^-\s*/, ""));
+    if ( hits.length ) out.push(hits.join(" or "));
+  }
+  return out;
+}
+/** The words that mark what unlocked a line on the talk card: "Dominate 2, clan Malkavian". */
+export const gateLabel = when => gateOf(when).join(", ");
+
+/** The lines that fit, those that need a trait first (a Bloodlines-style option the character has earned beats a plain one). */
+const fitting = (lines, check) => {
+  const ok = (lines ?? []).filter(l => !l.when || (check ? !!check(l.when) : false));
+  const gated = ok.filter(l => gateOf(l.when).length);
+  return gated.length ? [...gated, ...ok.filter(l => !gated.includes(l))] : ok;
+};
 
 /**
  * The answer to a topic: the first line that fits, the NPC's own sheet first. Then the first "none" line that fits.

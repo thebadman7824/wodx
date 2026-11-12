@@ -1455,3 +1455,48 @@ Reverse: settleContract and TITHE.
 A ledger of bound wraiths, each held by a fetter. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date, as the book check flagged) the window names the line as the Cappadocians, whose deathly look is a Masquerade sign up close.
 
 Reverse: giovanniName in signature-rules.mjs.
+
+## B1300. One list of relationships, read from both ends (2026-11-12)
+Ben picked "Build it as described" for Relationships on the sheet and the family tree on the Improvement Desk. WoDX NPC's ties-rules.mjs reads every place WoDX keeps a tie: the lineage (sire, domitor, blood bonds, formerly and became, heirs from Pass the Years), Allies and Retainers bought as Backgrounds, a vampire sheet's Sire box matched by name, the hand-made list on the sheet, and open debts, boons and oaths in the Ledger. Each tie is drawn at both ends, so a sire's record makes a childe on the other sheet. A tie made in two places is kept once, with the hand-made note. WoDX Sheets' Ties tab becomes Relationships, grouped by kind. The old roles still read.
+
+Reverse: relationsOf in wodx-sheets extras.mjs (null falls back to the old Ties tab); edges in ties-rules.mjs.
+
+## B1301. What players see of a tie (2026-11-12)
+Players see the ties of characters they own and of sheets they can open, except a hand-made tie the Storyteller marked hidden (Storyteller only, at both ends) and a tie a secret hides. A tie a secret hides shows to the owners of either end, who know it, and to anyone whose character found the secret out. House rule.
+
+Reverse: visibleTo in ties-rules.mjs.
+
+## B1302. The family and lineage tree (2026-11-12)
+A window from the sheet's Relationships tab and the People window. For one person it draws each line that has someone in it: sires and childer, domitors and ghouls, family, heirs, mentors and students, patrons and retainers, plus bonds, kin and changes of state on the side. Up to 13 steps up and 6 generations down. Going up, a tie the viewer may not see shows as Unknown; going down it is left out, so a hidden childe is not given away. A vampire with no sire recorded shows an Unknown sire. Any name can redraw the tree from there.
+
+Reverse: treeFor in ties-rules.mjs, openTree in people.mjs.
+
+## B1303. Secrets, and the hook a find makes (2026-11-12)
+Any actor can hold secrets (flags["wodx-npc"].secrets): a kind, the words, how much it matters (It matters, Grave), and a tie it hides. When someone finds one out, WoDX Storyteller's Ledger gets a major boon owed by the holder to the finder (a "hook"), spent like any boon. The Storyteller writes secrets in a Secrets window from the sheet; players never see it, but the Relationships tab shows a character's own secrets and those they found. House rule: CK3's hooks put into V20's prestation.
+
+Reverse: hookEntry in secrets-rules.mjs; reveal in people.mjs.
+
+## B1304. How a secret is found (2026-11-12)
+The Storyteller lets someone dig in the Secrets window, or tells them outright. Investigation: Perception + Investigation at 7. Auspex 4 Telepathy: Intelligence + Subterfuge against the holder's Willpower (the V20 Telepathy roll). Spies or Contacts: Manipulation + Streetwise at 7. Auspex 2 Aura Perception: Perception + Empathy at 8, and it only sees diablerie, infernal and Wyrm marks on the soul. One success finds a secret that matters, three a grave one, one fewer for Telepathy and Aura Perception. A botch tells the holder someone is asking. The oldest secret still hidden is found first. A clue's "secret <words>" outcome (WoDX Chronicle) hands over the best match. The dice, difficulties (except Telepathy) and successes are house rules.
+
+Reverse: METHODS and successesNeeded in secrets-rules.mjs.
+
+## B1305. Who cares about a secret, and the charge it makes (2026-11-12)
+Each kind of secret has the courts that care, by age: heresy to the Inquisition, and to any court up to 1650; infernalism always; diablerie to the Camarilla and Dark Ages courts, less to the Anarchs, not to the Sabbat; a tie to the other side from 1493 for the Camarilla; a Technocracy defection from 1897. In the faction politics turn an NPC who holds a hook on another member accuses them of that secret, with proof, when the court cares. At the gathering the proof adds 3 a point the court cares, and the secret is laid bare whatever the verdict: everyone knows it, and the hook in the Ledger is cancelled. Laying a player's character's secret bare waits for the Storyteller. House rules.
+
+Reverse: SECRET_KINDS and hooksFor in secrets-rules.mjs; the accuse move and the charges in politics-rules.mjs; pol-expose.
+
+## B1306. "Only when" reads any rated trait (2026-11-12)
+WoDX Chronicle's "Only when" lists take a trait name and dots: "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2", "not Occult 1". A bare number means at least that. The trait is found among Attributes, Abilities, Virtues, Spheres and rated items (Disciplines and other powers, Spheres, Realms, Backgrounds); a name that starts the item's name counts.
+
+Reverse: the rating test in when-rules.mjs.
+
+## B1307. Talk lines that need a trait (2026-11-12)
+Ben picked "Build it as described". A talk line whose "Only when" asks about the character's own traits (a rated trait, a merit, flaw or background, a power, a clan, tribe, Tradition, kith or other sheet field, Generation, Arete, True Faith) is tried before the plain lines on the same sheet, the way Bloodlines offers its clan and Discipline lines. The talk card and the Storyteller's "ask me first" card mark it with what unlocked it, in brackets. A not-test unlocks nothing; being Kindred is not a trait line.
+
+Reverse: fitting and gateOf in talk-rules.mjs.
+
+## B1308. Why an NPC feels as they do (2026-11-12)
+Ben picked "Build it as described". For the Storyteller only, under each talk card and on an NPC's Relationships tab: the first meeting and each change since, summed by cause, so the steps add up to the attitude; then what else is on the NPC's mind: boons kept or broken between them, debts still open, a fight between them (WoDX NPC now notes on the NPC who fought them when a combat ends), a tie (sire, childe, bond, kin, rival), a secret one found on the other, the same clan, tribe or Tradition, and a rival side. These do not move the attitude by themselves.
+
+Reverse: reasonsFor in opinion-rules.mjs; onRenderMessage and onCombatEnd in people.mjs.

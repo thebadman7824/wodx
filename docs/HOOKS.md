@@ -39,6 +39,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxChase | interactables | a chase starts, a turn is rolled, or it ends (caught, away, called off), with the chase state |
+| wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
+| wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
 | wodxSecretSeen | actions | a creature of another kind saw what someone is: {by, secret, seen: [{uuid, name, profile}], event} |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |

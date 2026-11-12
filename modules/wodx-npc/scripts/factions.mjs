@@ -19,6 +19,7 @@
  */
 import * as F from "./faction-rules.mjs";
 import * as PO from "./politics-rules.mjs";
+import * as SX from "./secrets-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -168,6 +169,17 @@ export function build(ctx) {
     try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return []; }
     return entries.filter(e => e?.kind === "boon" && (e.status ?? "open") === "open" && e.from?.id && e.to?.id).map(e => ({id: e.id, size: e.size, from: e.from.id, to: e.to.id}));
   }
+  /** NPC 0.30.0 (B1305): hooks held on secrets, as {holder, finder, secret, entry}, for the Accuse move. */
+  function openHooks() {
+    let open = null;
+    try { open = new Set((game.settings.get("wodx-storyteller", "ledger")?.entries ?? []).filter(e => (e?.status ?? "open") === "open").map(e => e.id)); } catch (e) { open = null; }
+    const out = [];
+    for ( const a of game.actors ?? [] ) for ( const sec of SX.secretsOf(a.flags) ) {
+      if ( sec.public ) continue;
+      for ( const [finder, f] of Object.entries(sec.found) ) if ( !f.entry || !open || open.has(f.entry) ) out.push({holder: a.id, finder, secret: sec, entry: f.entry ?? null});
+    }
+    return out;
+  }
   const streamFor = key => {
     const g = chron()?.gen;
     if ( g?.random ) return g.random(`faction:${key}`);
@@ -193,6 +205,7 @@ export function build(ctx) {
     });
     for ( const c of res?.applied ?? [] ) if ( c.op === "found" ) await foundCard(c);
     for ( const c of changes ) if ( c.op === "pol-fight" ) await stageFight(c);
+    for ( const c of changes ) if ( c.op === "pol-expose" ) await game.modules.get(MOD)?.api?.secrets?.expose?.(c.holder, c.secret, {by: c.finder, entry: c.entry, why: c.law}).catch?.(e => console.warn(`${MOD} | expose`, e));
     return res ?? {inverse: [], applied: []};
   }
   /**
@@ -275,7 +288,7 @@ export function build(ctx) {
         const alive = new Set(allActors().filter(a => !routines.downState?.(a)).map(a => a.id));
         const results = F.runTurn(s, {streamFor, seedKey: `turn:${turn}:${Math.floor(now)}`, leaders: lead, places: list, pcActors: pcActors(), spheres: era.spheres, turn, now, ids: newId,
           year: era.year, gone, alive, splits: setting("factionSplits") !== false, name: id => game.actors?.get(id)?.name ?? null,
-          politics: setting("factionPolitics") ? {info: politicsInfo(s), boons: openBoons()} : null});
+          politics: setting("factionPolitics") ? {info: politicsInfo(s), boons: openBoons(), hooks: openHooks()} : null});
         const lines = [];
         let undoAll = [];
         const n = names(s);

@@ -77,6 +77,7 @@ export function actorContext(actor) {
     items: [...(actor.items ?? [])].map(i => i.name),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
+    ratings: (() => { try { return W.ratingsOf(actor, loc); } catch (e) { return {}; } })(),
     ...(() => { try { return whenFeats(actor); } catch (e) { return {feats: [], powers: []}; } })(),
     traits: {
       blood: num(adv.bloodpool?.temporary), willpower: num(adv.willpower?.temporary), rage: num(adv.rage?.temporary), gnosis: num(adv.gnosis?.temporary),
@@ -167,6 +168,14 @@ export async function run(text, opts = {}) {
         if ( !foes.length ) { skipped.push(`fight: no one here to fight${a.text ? ` (${a.text})` : ""}`); continue; }
         const r = await fight.start({scene: canvas.scene, tokens: [tok.id, ...foes], source: "outcome", why: `${vars.name} at ${vars.place}`});
         if ( r?.done === "off" ) { skipped.push("fight: fights are set to start by hand"); continue; }
+      }
+      else if ( a.does === "secret" ) {
+        const sx = api("wodx-npc")?.secrets;
+        if ( !sx?.revealByText ) { skipped.push("secret: WoDX NPC is off"); continue; }
+        if ( !actor ) { skipped.push("secret: no character"); continue; }
+        if ( !text ) { skipped.push("secret: which secret?"); continue; }
+        const hit = await sx.revealByText(text, actor, {how: `a clue at ${vars.place}`});
+        if ( !hit ) { skipped.push(`secret: no secret matches "${text}"`); continue; }
       }
       else if ( a.does === "ledger" ) {
         const st = api("wodx-storyteller");

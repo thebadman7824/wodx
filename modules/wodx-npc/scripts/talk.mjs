@@ -276,9 +276,11 @@ export function build(ctx) {
     // WoDX Chronicle's clan features: what a deranged Malkavian hears beyond the true reply (Chronicle 0.26.0)
     let heard = null;
     try { heard = say ? chron()?.signatures?.hearAs?.(actor, {topic: TK.topicLabel(topic), name, npcId: r.npcTok.actor?.id ?? ""}) ?? null : null; } catch (e) { heard = null; }
+    // NPC 0.30.0 (B1307): a line that needs a trait is marked with what unlocked it
+    const gate = line?.when ? TK.gateLabel(line.when) : "";
     const extra = [taught.length ? `Now you can ask about ${taught.map(TK.topicLabel).join(", ")}.` : "", ...notes].filter(Boolean);
     const content = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} asks about ${esc(TK.topicLabel(topic).toLowerCase())}.</p>`
-      + `<p>${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
+      + `${gate ? `<p class="wodx-quiet wnpc-gate">[${esc(gate)}]</p>` : ""}<p>${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
@@ -308,7 +310,7 @@ export function build(ctx) {
   async function askFirstCard(r, user, topic, options, fallback) {
     const lines = options.length ? options.map(o => o.line) : (fallback?.line ? [fallback.line] : []);
     const data = {userId: user.id, sceneId: r.scene.id, npcTokenId: r.npcTok.id, meTokenId: r.me.id, topic, lines};
-    const btns = lines.map((l, i) => `<li><button type="button" class="wnpc-talk-pick" data-i="${i}">Say this</button> ${esc(l.say)}${l.when ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("");
+    const btns = lines.map((l, i) => `<li><button type="button" class="wnpc-talk-pick" data-i="${i}">Say this</button> ${TK.gateLabel(l.when) ? `<span class="wodx-quiet">[${esc(TK.gateLabel(l.when))}]</span> ` : ""}${esc(l.say)}${l.when ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("");
     await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {talkAsk: data}},
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(r.me.name)} asks ${esc(r.npcTok.name)} about ${esc(TK.topicLabel(topic).toLowerCase())}. You asked to answer for them.</p>`
         + `${btns ? `<ul data-fixed>${btns}</ul>` : "<p>Nothing on their sheets fits.</p>"}<button type="button" class="wnpc-talk-pick" data-i="-1">Say nothing (speak for them yourself)</button></div></div>`});
