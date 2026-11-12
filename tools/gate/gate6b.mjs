@@ -77,7 +77,9 @@ export async function run() {
         const H = game.actors.find(a => a.type === "Mortal" && a.name.startsWith("Hedda"));
         const tok = {};
         await step("tokens", async () => {
-            const sc = canvas.scene;
+            // The pack's own scene: an earlier gate's clean-up can leave the canvas on no scene
+            let sc = canvas.scene;
+            if (!sc) { sc = game.scenes.find(x => x.tokens.some(t => t.actorId === W?.id)) ?? game.scenes.active ?? game.scenes.contents[0]; await sc.view(); await sleep(1500); sc = canvas.scene; }
             const cx = sc.dimensions.sceneX + 200, cy = sc.dimensions.sceneY + 200, g = sc.grid.size;
             const want = [W, T, M, F, H].filter(a => !sc.tokens.some(t => t.actorId === a.id));
             const docs = [];
@@ -94,6 +96,11 @@ export async function run() {
             await W.update({ "system.advantages.rage.temporary": 5, "system.health.damage.lethal": 0, "system.health.damage.bashing": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
             await T.update({ "system.health.damage.bashing": 0, "system.settings.isupdated": false });
             if (form(W) !== "homid") { answer(r => { set(r, "how", "breed"); }); await A().shiftForm({ actor: { actor: W } }); await sleep(1500); }
+            // A run that crashed between shifts can leave form bonuses behind while the werewolf is back in Homid
+            if (form(W) === "homid") {
+                const left = W.items.filter(i => i.type === "Bonus" && ["glabro", "crinos", "hispo", "lupus"].includes(i.system.parentid) && i.system.isactive).map(i => ({ _id: i.id, "system.isactive": false }));
+                if (left.length) { await W.updateEmbeddedDocuments("Item", left); await W.update({ "system.settings.isupdated": false }); await sleep(800); R.formBonusesReset = left.length; }
+            }
             ok("tokens", Object.values(tok).every(Boolean) && Object.values(tok).every(t => t.actorLink), { scene: sc.name, str: tot(W, "strength") });
         });
 
@@ -111,9 +118,9 @@ export async function run() {
             await A().shiftForm({ actor: { actor: W } }); await sleep(1800);
             // Other cards can follow the Delirium card (a crossover "Seen by another kind" card when a vampire is on the scene), so look through every new one
             const delirium = game.messages.contents.slice(before).find(x => /Delirium/.test(text(x))) ?? lastMsg();
-            const c = { form: form(W), str: tot(W, "strength"), man: tot(W, "manipulation"), card: text(delirium).slice(0, 200) };
+            const c = { form: form(W), str: tot(W, "strength"), man: tot(W, "manipulation"), card: text(delirium) };
             ok("change form", g.form === "glabro" && g.bonus === -1 && g.man === base.man - 1 && g.str === base.str + 2 && !g.oldEffect && c.form === "crinos" && c.str === base.str + 4 && /Delirium/.test(c.card),
-                { base, glabro: g, crinos: c, rageLeft: W.system.advantages.rage.temporary });
+                { base, glabro: g, crinos: { ...c, card: c.card.slice(0, 300) }, rageLeft: W.system.advantages.rage.temporary });
             await W.update({ "system.advantages.rage.temporary": 5 });
             // A roll back toward Homid, to see the roll card (random)
             answer(r => { set(r, "form", "homid"); set(r, "how", "roll"); });

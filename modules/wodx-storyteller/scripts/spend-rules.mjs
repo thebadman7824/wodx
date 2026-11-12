@@ -103,3 +103,12 @@ export function fightHolds(fights = [], where = [], ids = null) {
   const want = ids ? new Set(ids) : new Set(at.keys());
   return (fights ?? []).some(f => f?.started && (f.actorIds ?? []).some(id => want.has(id) && at.has(id) && at.get(id) === (f.scene ?? null)));
 }
+
+/**
+ * Who waits when someone asks for time to pass (Storyteller 0.52.2): the present characters on the asker's scene.
+ * where: [{id, scene}] as presentWhere() gives it. No scene known: everyone present, as before.
+ */
+export function partyAt(where = [], sceneId = null) {
+  if ( !sceneId ) return [...(where ?? [])];
+  return (where ?? []).filter(p => (p.scene ?? null) === sceneId);
+}

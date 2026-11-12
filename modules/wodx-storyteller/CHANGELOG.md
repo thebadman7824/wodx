@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.52.2 (Let time pass asks only the party on the asker's scene: the players whose characters are there agree, and only their time passes. Characters elsewhere, and a fight they are in, no longer hold it back. B2460)
 - 0.52.1 (Let time pass and the small rule for time count only a fight on the scene where the waiting characters are, so a fight left running on another scene no longer stops time everywhere. B2459)
 - 0.52.0 (Let time pass: a player asks to wait, rest or sleep the day, and the clock moves when everyone here agrees and nobody is fighting; small rules for markets, time for a long action and downtime; the wrap-up names what is still waiting)
 - 0.51.0 (ships at sea: a new window from the Storyteller's hand for two ships of the year, from the longship and dromon of Spoils of War p. 40 to steam ironclads, dreadnoughts, missile frigates and the Future Darkness drone corvette as house rules; the chase every 4 hours at 500 yards a point, the turn for position for the initiative, navigation, shooting with the siege engines of p. 33 or with gun crews by range and torpedoes after Wraith: The Great War, ramming and breaking away, each health level lost costing Speed and Maneuverability, flooding every quarter hour below 0 Speed, repair as an extended roll, boarding until the defenders yield; each step has its cards and an Undo; also fixes the siege report line that read past the walls' health. api.naval)

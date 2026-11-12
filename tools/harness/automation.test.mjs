@@ -150,6 +150,13 @@ test("only a fight on the characters' own scene holds time back", () => {
   assert.equal(SR.fightHolds([{started: true, scene: "s2", actorIds: ["b"]}], where, ["a"]), false, "someone else's fight");
 });
 
+test("letting time pass asks the party on the asker's scene", () => {
+  const where = [{id: "a", scene: "s1"}, {id: "b", scene: "s2"}, {id: "c", scene: "s1"}];
+  assert.deepEqual(SR.partyAt(where, "s1").map(p => p.id), ["a", "c"]);
+  assert.deepEqual(SR.partyAt(where, null).map(p => p.id), ["a", "b", "c"]);
+  assert.equal(SR.fightHolds([{started: true, scene: "s2", actorIds: ["b"]}], where, SR.partyAt(where, "s1").map(p => p.id)), false, "a fight on another scene");
+});
+
 test("targeting: Automatic for everyone reaches players", () => {
   assert.equal(TR.modeFor("everyone", {isGM: false}), "auto");
   assert.equal(TR.modeFor("auto", {isGM: false}), "suggest");

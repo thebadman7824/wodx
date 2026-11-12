@@ -154,7 +154,9 @@ export async function run() {
       const mine = game.messages.filter(m => (m.timestamp ?? 0) >= msgStart).map(m => m.id);
       if ( mine.length ) await ChatMessage.deleteDocuments(mine);
       if ( scene ) await scene.delete();
-      if ( sceneBefore && game.scenes.get(sceneBefore.id) ) await sceneBefore.view();
+      // Never leave the canvas on no scene: the next gate reads canvas.scene
+      const back = (sceneBefore && game.scenes.get(sceneBefore.id)) ?? game.scenes.active ?? game.scenes.contents.find(x => x.id !== scene?.id);
+      if ( back && canvas.scene?.id !== back.id ) await back.view();
       if ( game.time.worldTime !== t0 ) await game.time.advance(t0 - game.time.worldTime);
       const left = game.actors.filter(a => a.name.startsWith("WoDX gate: auto")).length + game.scenes.filter(s => s.name === "WoDX gate: automation").length;
       ok("10. clean up", !left && game.time.worldTime === t0 && JSON.stringify(get(CH, "autoApprove") ?? {}) === JSON.stringify(keep[`${CH}.autoApprove`] ?? {}), {left, clock: game.time.worldTime - t0});
