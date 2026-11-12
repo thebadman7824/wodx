@@ -49,7 +49,7 @@ export async function run() {
     const by = n => game.actors.get(actors.find(a => a?.name === `WoDX gate: ${n}`)?.id);
 
     await step("1 api", async () => {
-      const app = api()?.open?.(); await sleep(500);
+      const app = await api()?.open?.(); await sleep(500);
       const shown = (app?.element?.querySelectorAll?.("h3")?.length ?? 0) >= 4;
       await app?.close?.();
       ok("1 api", atLeast(game.modules.get(C).version, "0.37.0") && typeof api()?.expose === "function" && shown && !!game.settings.menus.get(`${C}.podMenu`), {version: game.modules.get(C).version, shown});
