@@ -83,10 +83,8 @@ Next free block: B2330
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2105 | NPC voices | Voices |
-| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War) | Storyteller, NPC, Chronicle |
 | B2100-B2111 | NPC voices: browser speech, Kokoro, shared files from the token, plot NPCs and prewritten lines | Voices |
-| B2200-B2209 | Battles and sieges | Storyteller |
+| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
