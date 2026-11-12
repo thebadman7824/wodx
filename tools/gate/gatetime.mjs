@@ -1,5 +1,5 @@
 /**
- * Game time gate (Chronicle 0.37.0, Storyteller 0.40.0, Combat 3.18.0, Actions 3.50.0, Otherworlds 0.15.0), in
+ * Game time gate (Chronicle 0.39.0, Storyteller 0.40.0, Combat 3.18.0, Actions 3.50.0, Otherworlds 0.15.0), in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatetime.mjs?${Date.now()}`)).run()
  * Holds the world while it runs and sets the clock back to where it started at the end. Makes its own scene

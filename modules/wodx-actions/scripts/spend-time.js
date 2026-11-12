@@ -1,7 +1,7 @@
 /**
  * WoDX Actions 3.50.0: a long roll's time. With "Move the clock" ticked, the time goes through WoDX Storyteller:
  * on the Storyteller's client it moves the clock, or the character's own time when they are apart from the group;
- * on a player's client it goes to the approval queue (B1702). Without WoDX Storyteller, only the Storyteller's
+ * on a player's client it goes to the approval queue (B1962). Without WoDX Storyteller, only the Storyteller's
  * roll moves the clock, as before. Returns a line for the card ("" when nothing happens).
  */
 export async function spendTime(actor, seconds, label = "") {

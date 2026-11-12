@@ -333,7 +333,7 @@ export function interactablesFor(tok) {
 const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
 /**
  * 0.30.0: an attempt's time goes through WoDX Storyteller when it is on: the clock, or the character's own time when
- * they are apart from the group (B1701). Returns {advanced (clock seconds), personal (for Undo), line}.
+ * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
  */
 async function passTime(actor, seconds) {
   const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;

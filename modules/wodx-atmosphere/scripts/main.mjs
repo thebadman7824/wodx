@@ -96,7 +96,7 @@ function registerSettings() {
 const latitude = () => { try { return Number(game.settings.get("wodx-chronicle", "latitude")) || 50.1; } catch (e) { return 50.1; } };
 const hoursOf = s => { const m = String(s ?? "").match(/(\d+):(\d+)/); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
 function timeAt(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
-  // A scene far from home keeps its own latitude and hour (WoDX Chronicle 0.37.0, B1709)
+  // A scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
   try { const d = game.modules.get("wodx-chronicle")?.api?.place?.describeAt?.(scene, time); if ( d ) return d; } catch (e) { /* older Chronicle */ }
   try { return CAL?.describeTime(time, latitude()) ?? null; } catch (e) { return null; }
 }

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
 - 0.36.0 (missed connections, 12 November 2026: reaction cards read the sound of a fight or a chase; a fight counts as a weapon in the reaction rules)
 - 0.35.0 (a fed-on NPC remembers a swoon and a lost hour, or who fed if it fought, is Kindred or a ghoul, or already knows the Kindred; api.nameFor(actor, viewer) is the one lookup for what a viewer calls an NPC; api.knowledgeOf(actor) lists who an NPC has seen for what and who fed on it)
 - 0.34.0 (the stranger line: with Faces on, an unmet NPC's nameplate shows how they are dressed, a side they wear, blood or a drawn weapon, what they are doing and how they seem toward you; the Storyteller's own text still wins)

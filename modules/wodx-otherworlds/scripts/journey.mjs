@@ -75,7 +75,7 @@ export async function approveJourney(j) {
   const gms = all(game.users).filter(u => u.isGM).map(u => u.id);
   const owners = new Set(gms);
   if ( j.tell ) for ( const t of j.travellers ?? [] ) { const a = game.actors.get(t.actorId); for ( const u of all(game.users) ) if ( a?.testUserPermission?.(u, "OWNER") ) owners.add(u.id); }
-  // 0.15.0: the Storyteller's copy has a button that lets the journey's time pass (B1704)
+  // 0.15.0: the Storyteller's copy has a button that lets the journey's time pass (B1964)
   const ids = (j.travellers ?? []).map(t => t.actorId).filter(Boolean);
   const t = J.timeOutside(j);
   const button = t.seconds && ids.length ? `<button type="button" class="wow-journey-time" data-gm-only><i class="fa-solid fa-hourglass-half"></i> Let the journey's time pass</button>` : "";

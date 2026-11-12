@@ -1456,6 +1456,50 @@ A ledger of bound wraiths, each held by a fetter. Calling one sends a card to th
 
 Reverse: giovanniName in signature-rules.mjs.
 
+## B1900. One list of relationships, read from both ends (2026-11-12)
+Ben picked "Build it as described" for Relationships on the sheet and the family tree on the Improvement Desk. WoDX NPC's ties-rules.mjs reads every place WoDX keeps a tie: the lineage (sire, domitor, blood bonds, formerly and became, heirs from Pass the Years), Allies and Retainers bought as Backgrounds, a vampire sheet's Sire box matched by name, the hand-made list on the sheet, and open debts, boons and oaths in the Ledger. Each tie is drawn at both ends, so a sire's record makes a childe on the other sheet. A tie made in two places is kept once, with the hand-made note. WoDX Sheets' Ties tab becomes Relationships, grouped by kind. The old roles still read.
+
+Reverse: relationsOf in wodx-sheets extras.mjs (null falls back to the old Ties tab); edges in ties-rules.mjs.
+
+## B1901. What players see of a tie (2026-11-12)
+Players see the ties of characters they own and of sheets they can open, except a hand-made tie the Storyteller marked hidden (Storyteller only, at both ends) and a tie a secret hides. A tie a secret hides shows to the owners of either end, who know it, and to anyone whose character found the secret out. House rule.
+
+Reverse: visibleTo in ties-rules.mjs.
+
+## B1902. The family and lineage tree (2026-11-12)
+A window from the sheet's Relationships tab and the People window. For one person it draws each line that has someone in it: sires and childer, domitors and ghouls, family, heirs, mentors and students, patrons and retainers, plus bonds, kin and changes of state on the side. Up to 13 steps up and 6 generations down. Going up, a tie the viewer may not see shows as Unknown; going down it is left out, so a hidden childe is not given away. A vampire with no sire recorded shows an Unknown sire. Any name can redraw the tree from there.
+
+Reverse: treeFor in ties-rules.mjs, openTree in people.mjs.
+
+## B1903. Secrets, and the hook a find makes (2026-11-12)
+Any actor can hold secrets (flags["wodx-npc"].secrets): a kind, the words, how much it matters (It matters, Grave), and a tie it hides. When someone finds one out, WoDX Storyteller's Ledger gets a major boon owed by the holder to the finder (a "hook"), spent like any boon. The Storyteller writes secrets in a Secrets window from the sheet; players never see it, but the Relationships tab shows a character's own secrets and those they found. House rule: CK3's hooks put into V20's prestation.
+
+Reverse: hookEntry in secrets-rules.mjs; reveal in people.mjs.
+
+## B1904. How a secret is found (2026-11-12)
+The Storyteller lets someone dig in the Secrets window, or tells them outright. Investigation: Perception + Investigation at 7. Auspex 4 Telepathy: Intelligence + Subterfuge against the holder's Willpower (the V20 Telepathy roll). Spies or Contacts: Manipulation + Streetwise at 7. Auspex 2 Aura Perception: Perception + Empathy at 8, and it only sees diablerie, infernal and Wyrm marks on the soul. One success finds a secret that matters, three a grave one, one fewer for Telepathy and Aura Perception. A botch tells the holder someone is asking. The oldest secret still hidden is found first. A clue's "secret <words>" outcome (WoDX Chronicle) hands over the best match. The dice, difficulties (except Telepathy) and successes are house rules.
+
+Reverse: METHODS and successesNeeded in secrets-rules.mjs.
+
+## B1905. Who cares about a secret, and the charge it makes (2026-11-12)
+Each kind of secret has the courts that care, by age: heresy to the Inquisition, and to any court up to 1650; infernalism always; diablerie to the Camarilla and Dark Ages courts, less to the Anarchs, not to the Sabbat; a tie to the other side from 1493 for the Camarilla; a Technocracy defection from 1897. In the faction politics turn an NPC who holds a hook on another member accuses them of that secret, with proof, when the court cares. At the gathering the proof adds 3 a point the court cares, and the secret is laid bare whatever the verdict: everyone knows it, and the hook in the Ledger is cancelled. Laying a player's character's secret bare waits for the Storyteller. House rules.
+
+Reverse: SECRET_KINDS and hooksFor in secrets-rules.mjs; the accuse move and the charges in politics-rules.mjs; pol-expose.
+
+## B1906. "Only when" reads any rated trait (2026-11-12)
+WoDX Chronicle's "Only when" lists take a trait name and dots: "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2", "not Occult 1". A bare number means at least that. The trait is found among Attributes, Abilities, Virtues, Spheres and rated items (Disciplines and other powers, Spheres, Realms, Backgrounds); a name that starts the item's name counts.
+
+Reverse: the rating test in when-rules.mjs.
+
+## B1907. Talk lines that need a trait (2026-11-12)
+Ben picked "Build it as described". A talk line whose "Only when" asks about the character's own traits (a rated trait, a merit, flaw or background, a power, a clan, tribe, Tradition, kith or other sheet field, Generation, Arete, True Faith) is tried before the plain lines on the same sheet, the way Bloodlines offers its clan and Discipline lines. The talk card and the Storyteller's "ask me first" card mark it with what unlocked it, in brackets. A not-test unlocks nothing; being Kindred is not a trait line.
+
+Reverse: fitting and gateOf in talk-rules.mjs.
+
+## B1908. Why an NPC feels as they do (2026-11-12)
+Ben picked "Build it as described". For the Storyteller only, under each talk card and on an NPC's Relationships tab: the first meeting and each change since, summed by cause, so the steps add up to the attitude; then what else is on the NPC's mind: boons kept or broken between them, debts still open, a fight between them (WoDX NPC now notes on the NPC who fought them when a combat ends), a tie (sire, childe, bond, kin, rival), a secret one found on the other, the same clan, tribe or Tradition, and a rival side. These do not move the attitude by themselves.
+
+Reverse: reasonsFor in opinion-rules.mjs; onRenderMessage and onCombatEnd in people.mjs.
 ## B1155. Bloodlines come before clans in the table (2026-11-12)
 The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
 - roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
@@ -1558,6 +1602,66 @@ Reverse: setWraith and luck in signatures.mjs.
 Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
 
 Reverse: WRAITH_FACTIONS in data/signatures.mjs.
+
+## B1507. Signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus (2026-11-12)
+Splat Features Desk, approved by Ben. Each line has its own table and its own world setting, all off by default. The rows come from the sheet's own field where it has one: the Hunter's creed, the Mummy's Amenti, and the Demon's House and faction, which stack. Kuei-jin and Orpheus sheets have no field, so the group is picked in the feature window and kept in the actor flag wodx-chronicle.splat. A Kuei-jin is a Vampire whose variant or profile names kuei-jin; an Orpheus character is one whose profile names Orpheus, a projector or a Shade.
+
+Reverse: SMALL_LINES and its tables in data/signatures.mjs; smallRows in signature-rules.mjs; smallLineOf and setSplat in signatures.mjs.
+
+## B1508. The hunters by era (2026-11-12)
+Standing rule 12 sets the eras. Inquisitors and the Society of Leopold play in every era. Mortal hunters (Hunters Hunted II) run from 1500 to 1998, and the imbued creeds from 1999. Government agencies run from 1900, a house reading. The Avengers' and Waywards' fight die counts only against a target that is not mortal, when the roll knows its target; with no target it gives nothing. The Inquisition and the agencies hear of breaches as the New World Order does, and the Watchers card now names whichever groups heard.
+
+Reverse: HUNTER in data/signatures.mjs; the "monster" condition in sigRollEffects.
+
+## B1509. Borrowed engines across the small lines (2026-11-12)
+Defenders and the Kher-minu guard a place, with the Black Fury engine. Judges give a hidden verdict, and the Crane posts a ruling. Hermits, Fiends and the Banshee read the riddle of the next event, and the Mesektet read the stars. The Sefekhi bind the dead. Ishmaelites trade pages of secrets. Defilers use the Corruption ledger. Faustian pacts are leverage.
+
+Reverse: the also and feature fields on each row.
+
+## B1510. Lines with NPCs only (2026-11-12)
+Bane mummies, the Earthbound, the Wan Xian and the Cabiri have rows for the Storyteller's NPCs, with a lore page or a card where the desk asked for one.
+
+Reverse: those rows in data/signatures.mjs.
+## B1511. City Masquerade exposure (2026-11-12)
+Each city keeps one exposure track. A breach recorded by the witness rules adds 1, plus 1 for each witness past the first (2 more at most), plus 1 from 1605 when printed news carries it, plus 2 when the scene is marked watched by a camera. A breach kept in a closed place (spread off) gets no print point. Each 7 quiet days take 1 off. The bands are Quiet 0, Whispers 3, Talk 6, Watched 10 and Hunted 15. A Storyteller card comes when a band is crossed upward. Hunted starts a big rumour through the Storyteller module. Idea from the Princes of Darkness mod; numbers are a house rule.
+
+Reverse: setting podExposure off; EXPOSURE_BANDS and breachPoints in pod-rules.mjs.
+
+## B1512. Each sect's law and bringing a culprit to heel (2026-11-12)
+A Camarilla court (and the Church of Caine before 1435) acts at Watched; Sabbat, Anarch and sectless cities act only at Hunted. The court card names the culprit and the V20 means of enforcement (Dominate or Presence against Willpower, or an accusation before the court). Its button lowers the city's exposure by 3. The Storyteller sets each city's law in the window.
+
+Reverse: SECT_LAW and HEEL_DROP in data/pod.mjs.
+
+## B1513. The city of a scene (2026-11-12)
+A scene's flag wodx-chronicle.city names its city; otherwise the world setting podCity (Rothenstein by default).
+
+Reverse: cityOf in pod.mjs.
+
+## B1514. Great cities that change with history (2026-11-12)
+Constantinople, Rome, Paris, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc have dated states taken from history (sackings, occupations, rebuildings, changes of ruler). Each state has tags, a smell and a sound. Senses adds the smell and sound to every answer in that city through wodxSensesGather. Map generation reads api.pod.cityState(scene or name, year).
+
+Reverse: setting podCities off; CITIES in data/pod.mjs.
+
+## B1515. Raising or restoring a building (2026-11-12)
+The window's Raise or restore posts a card. Its button logs a minor boon in the Storyteller's Ledger, owed by the faction that gains to the patron. Money and holdings stay with the Storyteller's holdings window.
+
+Reverse: raiseBuilding in pod.mjs.
+
+## B1516. Golconda as a long road (2026-11-12)
+A Kindred seeker has a road of 10 steps, kept on the actor. Taking a life (lethal and aggravated damage reaching seven levels from the seeker's attack) costs 2 steps. Frenzy, a won pickpocket lift, and feeding of 3 or more blood points or by force each cost 1 step. A mentor teaches one step for each 30 days on the clock, through the approval queue. The Storyteller adds a step for a test passed. At 10 a card offers Grant Golconda, which sets WoDX Actions' own golconda flag. V20 p. 30 (pdf 38); the road's steps and costs are a house rule.
+
+Reverse: setting podGolconda off; GOLCONDA_SETBACKS and MENTOR_DAYS in data/pod.mjs.
+
+## B1517. Story chains (2026-11-12)
+Six dated chains: a Setite corrupting a faith, the Anarch Revolt (1381 to 1493), the Black Death (1347 to 1353), the Inquisition coming to town (1231 to 1834), a hunt for an Antediluvian (1493 to 1999) and the Week of Nightmares (1999). The Storyteller starts one in the window, at a place. The clock deals each step as a Storyteller card after its gap in days. These are different from the lifepath chains of B1311: they run in play, not in creation.
+
+Reverse: setting podChains off; CHAINS in data/pod.mjs.
+
+## B1518. Opening goals (2026-11-12)
+Each line has three opening goals for before 1800 and three from 1800, and mortals and other kinds use the mortal list. A character with a player owner and no goal gets the goals as buttons in the feature window. Signing off before the first night posts the list to the owner.
+
+Reverse: GOALS in data/pod.mjs; section in pod.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1741,57 +1845,83 @@ Reverse: first-night-seed.mjs.
 A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
 
 Reverse: suggestStanding in first-night-rules.mjs.
-## B1700. Game time: one world clock for every scene (2026-11-12)
-Ben approved every recommendation on the Game Time Desk. Foundry's one world time stays the only clock; scenes get no clocks of their own. Every timed part of WoDX (about thirty) reads it, and separate clocks would make dated events, eras and routines disagree between maps. Groups that are apart use personal time instead (B1701).
+
+## B1610. The guided builder (2026-11-12)
+Creation 0.13.0's Build window sets Attributes (1 to 5), Abilities (0 to 5) and the Virtues in use (1 to 5) on the sheet and shows the creation check's count live, for every line with creation totals. Backgrounds, powers, Merits and Flaws are added on the sheet and counted. Chronicle Start Desk b1.
+
+Reverse: first-night-build.mjs, first-night-build-rules.mjs.
+
+## B1611. The prelude runner (2026-11-12)
+Scenes: the lifepath's life-before scenes, then the line's Before, The turn and After from WoDX Storyteller's templates; a short prelude keeps the turn and after. A roll with stakes is the Storyteller's pool against a difficulty (6 by default), ones cancel (V20); on no successes the stake is paid. House rule.
+
+Reverse: buildScenes, STAKES in first-night-prelude-rules.mjs.
+
+## B1612. What a prelude may change (2026-11-12)
+Flaws earned in play are added at 0 points, so they give no freebies and do not count against the cap: Enemy (with a Hostile NPC), Dark Secret, Nightmares, Hunted. Gains: up to 3 freebie points, priced by the book's costs (an Ability, a Background or Willpower dot). Each change has Undo in the runner's log. House rule until the book check finds V20's own advice. Desk p3.
+
+Reverse: PRELUDE_BUDGET, REWARDS in first-night-prelude-rules.mjs.
+
+## B1613. Troupe ties (2026-11-12)
+Six questions in any era's words; each character asks about the next in a ring of the player characters by name. Answers go on the Group actor (flags.wodx-creation.ties) and tick the ties step; a player's answer reaches the Storyteller by socket. How they met makes an observer journal of the answers. Desk t1.
+
+Reverse: TIE_QUESTIONS, ring; sendTies, saveTie in first-night-prelude.mjs.
+
+## B1614. Late joiners (2026-11-12)
+Once any character in the world is signed off, a new character's hub says the chronicle is under way, and the prelude runner starts in short mode. The forecast reads the current year as for everyone. Desk t2.
+
+Reverse: underWay in first-night-prelude-rules.mjs.
+
+## B1960. Game time: one world clock for every scene (2026-11-12)
+Ben approved every recommendation on the Game Time Desk. Foundry's one world time stays the only clock; scenes get no clocks of their own. Every timed part of WoDX (about thirty) reads it, and separate clocks would make dated events, eras and routines disagree between maps. Groups that are apart use personal time instead (B1961).
 
 Reverse: nothing to undo; per-scene clocks were not built.
 
-## B1701. Work done apart goes on the character's own time (2026-11-12)
+## B1961. Work done apart goes on the character's own time (2026-11-12)
 WoDX Storyteller 0.40.0, api.time.spend. The main group is the scene holding more than half of the player characters present tonight (players marked away are left out). A long roll, an interaction, a fight or a journey by characters who share a scene that is not the main group's, while someone else is elsewhere, moves their personal time instead of the world clock. With no main group (a party split two and two) every half is apart. Convene lines them up as before. World setting timeApart, on.
 
 Reverse: set timeApart off; everything moves the world clock.
 
-## B1702. A player's long roll asks for its time (2026-11-12)
-Move the clock on an extended roll, a Garou meditation or rite, a Hunter's prayer, Kindred downtime and Wraith mending works for players: the player's client sends the seconds to the Storyteller's client by socket, which makes a "Time for a long action" proposal itself (B12 still holds: players send no typed proposals). Approving spends it under B1701 and tells the player. Capped at 90 days a request.
+## B1962. A player's long roll asks for its time (2026-11-12)
+Move the clock on an extended roll, a Garou meditation or rite, a Hunter's prayer, Kindred downtime and Wraith mending works for players: the player's client sends the seconds to the Storyteller's client by socket, which makes a "Time for a long action" proposal itself (B12 still holds: players send no typed proposals). Approving spends it under B1961 and tells the player. Capped at 90 days a request.
 
 Reverse: spendTime in wodx-actions spend-time.js back to the GM-only game.time.advance.
 
-## B1703. The Time row on the Clock (2026-11-12)
+## B1963. The Time row on the Clock (2026-11-12)
 The Storyteller's Chronicle Clock lists each player character's own time against the clock (with the clock, so long ahead, so long behind) and the scene they are on, with a Convene button. Drawn by WoDX Storyteller (api.time.clockRow) when it is on.
 
 Reverse: drop the clockRow call in clock-app.mjs.
 
-## B1704. Otherworld journeys let their time pass (2026-11-12)
-The approved journey card says how much time passes outside and, on the Storyteller's copy, has "Let the journey's time pass", which spends it once for the travellers under B1701. The journey itself never moves the clock on its own.
+## B1964. Otherworld journeys let their time pass (2026-11-12)
+The approved journey card says how much time passes outside and, on the Storyteller's copy, has "Let the journey's time pass", which spends it once for the travellers under B1961. The journey itself never moves the clock on its own.
 
 Reverse: drop the button in journey.mjs approveJourney.
 
-## B1705. Realms where time runs differently (2026-11-12)
+## B1965. Realms where time runs differently (2026-11-12)
 Otherworlds journey-rules REALM_TIME: the Tempest, the Labyrinth, the Umbral roads and Moon Paths keep the world's time; a Moon Bridge takes a thousandth (W20 pdf 209 / p. 207); a trod slips (C20 pdf 53 / p. 52, house figures). The Far Dreaming with Arcadia, and Deep Umbra realms, are listed as the Storyteller's call with check: true until a book check fixes what the books say and the pages (PC job game-time-book-check-2026-11-12). Realms the books are silent on keep the plain clock.
 
 Reverse: remove REALM_TIME and timeOutside.
 
-## B1706. A fight takes time when it ends (2026-11-12)
+## B1966. A fight takes time when it ends (2026-11-12)
 WoDX Combat 3.18.0. Foundry adds no seconds for a round unless a system sets it, and none did, so fights took no time. When a started fight is ended, the time moves once by its turns times the world setting turnSeconds (house figure 3 seconds; the book check confirms the V20 wording; 0 turns it off): the clock, or the fighters' own time when they are apart. One step at the end wakes the timed parts once instead of every round. The after-action card names the length.
 
 Reverse: set turnSeconds to 0.
 
-## B1707. The clock that runs with the table (2026-11-12)
-WoDX Chronicle 0.37.0, off by default. World settings paceMinutes (game minutes a step, 0 off) and paceEvery (real minutes, 10). The Storyteller's client checks every 30 seconds; it waits while the game is paused, during a fight, while the world is held or a skip runs, and when no player is connected. Moving the clock by hand starts the count again. The same for every scene.
+## B1967. The clock that runs with the table (2026-11-12)
+WoDX Chronicle 0.39.0, off by default. World settings paceMinutes (game minutes a step, 0 off) and paceEvery (real minutes, 10). The Storyteller's client checks every 30 seconds; it waits while the game is paused, during a fight, while the world is held or a skip runs, and when no player is connected. Moving the clock by hand starts the count again. The same for every scene.
 
 Reverse: leave paceMinutes at 0.
 
-## B1708. Off-screen NPCs settle when their scene opens (2026-11-12)
+## B1968. Off-screen NPCs settle when their scene opens (2026-11-12)
 Kept as built: NPCs on scenes nobody is viewing are placed by their routine when the scene opens. The result is the same as moving them all the time, at no cost while nobody watches.
 
 Reverse: nothing to undo.
 
-## B1709. A scene's own place for the sun (2026-11-12)
-WoDX Chronicle 0.37.0: scene flag wodx-chronicle.place {latitude, offset in hours from home}, set from the Clock's "The sun on this scene". Sunlight (WoDX Actions), the sky (WoDX Atmosphere) and day and night for the senses (WoDX Senses) read it for the scene being viewed; the Clock shows the scene's hour, sunrise and sunset under home time. The world clock, the Clock's dusk and dawn buttons, routines, healing and every timed rule keep home time. Before standard time zones the offset is the sun-time difference, rounded to the half hour.
+## B1969. A scene's own place for the sun (2026-11-12)
+WoDX Chronicle 0.39.0: scene flag wodx-chronicle.place {latitude, offset in hours from home}, set from the Clock's "The sun on this scene". Sunlight (WoDX Actions), the sky (WoDX Atmosphere) and day and night for the senses (WoDX Senses) read it for the scene being viewed; the Clock shows the scene's hour, sunrise and sunset under home time. The world clock, the Clock's dusk and dawn buttons, routines, healing and every timed rule keep home time. Before standard time zones the offset is the sun-time difference, rounded to the half hour.
 
 Reverse: unset the scene flags; describeAt falls back to the chronicle latitude.
 
-## B1710. The guides say how time passes (2026-11-12)
+## B1970. The guides say how time passes (2026-11-12)
 The Storyteller guide's clock section now covers personal time, Convene, time apart, fights, journeys, a scene's own place and the table's clock.
 
 Reverse: nothing to undo.

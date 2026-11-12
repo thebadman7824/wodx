@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Game time (Game Time Desk, B1700-B1710): time apart, the table's clock, a scene's own place, fight length, realms */
+/* Game time (Game Time Desk, B1960-B1970): time apart, the table's clock, a scene's own place, fight length, realms */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SR = await import(join(root, "modules/wodx-storyteller/scripts/spend-rules.mjs"));

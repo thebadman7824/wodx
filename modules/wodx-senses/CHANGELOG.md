@@ -2,7 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.7.1 (Day and night follow a scene's own latitude and hour (WoDX Chronicle 0.37.0))
+- 0.7.1 (Day and night follow a scene's own latitude and hour (WoDX Chronicle 0.39.0))
 - 0.7.0 (colour-blind safe colours for the sight rings, and words under every ring)
 - 0.6.1 (a vampire's wolf or bat shape sharpens the senses)
 - 0.6.0 (merits and flaws on the senses: Acute Sense, Bad Sight, Blind, Deaf; Medium and Deathsight channels; signs such as Smell of the Grave or Glowing Eyes for others to sense; a veiled token found only on a closer look)
