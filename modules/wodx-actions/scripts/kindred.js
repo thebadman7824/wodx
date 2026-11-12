@@ -23,6 +23,7 @@ import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as PE from "./path-effects.js";
 import * as TH from "./trait-hooks.js";
+import * as WR from "./witness-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -38,6 +39,8 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
 const lab = k => LABEL[k] ?? cap(k);
 
 export const DATA = { disc: null, roads: null };
+/** The place line for a card (3.40.0), from the witness rules. */
+export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
     [DATA.disc, DATA.roads] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json")]);
@@ -212,6 +215,8 @@ export function build(ctx) {
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
+            // Who could see it, if the power showed (3.40.0): the Storyteller judges whether it did
+            if (!p.passive && setting("witnessAsk")) revealed(actor, { event: `used ${p.n}`, ask: true }).catch(e => console.error("WoDX |", e));
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
@@ -385,16 +390,24 @@ export function build(ctx) {
         await j.pages.getName("Open breaches")?.update({ "text.content": openE.length ? `<table>${head}${openE.map(row).join("")}</table>` : "<p>No witness is left who remembers.</p>" });
         await j.pages.getName("All records")?.update({ "text.content": entries.length ? `<table>${head}${entries.map(row).join("")}</table>` : "<p></p>" });
     }
-    /** Record a breach: {by: actor, event: text, witnesses: [actors]} (GM; players' records go through the GM). */
-    async function recordBreach({ by, event, witnesses }) {
+    /** Record a breach: {by: actor, event: text, witnesses: [actors], secret?, place?} (GM; players' records go through the GM).
+     *  Witnesses of another kind are startled, not breach witnesses; those who already know are left out (3.40.0). */
+    async function recordBreach({ by, event, witnesses, secret = null, place = undefined }) {
         if (!witnesses?.length) return null;
-        if (!game.user.isGM) { ctx.requestGM?.({ action: "kx", op: "breach", by: by?.uuid, event, witnesses: witnesses.map(w => w.uuid) }); return null; }
+        if (!game.user.isGM) { ctx.requestGM?.({ action: "kx", op: "breach", by: by?.uuid, event, witnesses: witnesses.map(w => w.uuid), secret }); return null; }
+        const byActor = by?.documentName === "Actor" || by?.system ? by : null;
+        const sec = secret ?? (byActor ? WR.secretOf(P.detectProfile(byActor)) : null) ?? "kindred";
+        const sorted = WR.sortOnlookers(sec, witnesses.map(w => onlookerOf(w)));
+        if (sorted.startled.length) await startledCard(byActor ?? by, sec, sorted.startled.map(o => o.actor), event);
+        if (!sorted.breach.length) return null;
+        const where = place === undefined ? placeOf(byActor?.getActiveTokens?.()[0]) : place;
+        const mode = WR.placeMode(where);
         const list = MASQJ.entries();
         list.push({ id: foundry.utils.randomID(), date: (await clockNow()).dateLabel, by: by?.name ?? "?", byUuid: by?.uuid ?? null, event,
-            witnesses: witnesses.map(w => ({ name: w.name, uuid: w.uuid, state: "saw" })) });
+            witnesses: sorted.breach.map(o => ({ name: o.actor.name, uuid: o.actor.uuid, state: "saw" })), secret: sec, mode, spread: WR.spreads(mode) });
         await writeMasq(list);
-        if (by) await logEvent(by, `Seen by ${witnesses.map(w => w.name).join(", ")}: ${event}.`, "masquerade");
-        // WoDX NPC (7d) follows a recorded breach as a rumour
+        if (by) await logEvent(by, `Seen by ${sorted.breach.map(o => o.actor.name).join(", ")}: ${event}.`, "masquerade");
+        // WoDX NPC (7d) follows a recorded breach as a rumour, unless the place keeps it (entry.spread false)
         Hooks.callAll("wodxBreach", { entry: list.at(-1), by: by?.uuid ? { uuid: by.uuid, name: by.name } : null });
         return list.at(-1);
     }
@@ -433,8 +446,11 @@ export function build(ctx) {
             }
             if (!targets.length) return ctx.notify("Target the witnesses first.");
             const by = game.actors.getName(fd.by) ?? { name: fd.by || "?", uuid: null };
-            await recordBreach({ by, event: fd.event || "something no mortal should see", witnesses: targets });
-            return ChatMessage.create({ content: `<div class="vta-card"><h3>Masquerade</h3><p>${esc(by.name)} seen by ${targets.map(t => esc(t.name)).join(", ")}.</p><p class="wodx-quiet">Journal: WoDX Masquerade</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+            const ev = fd.event || "something no mortal should see";
+            const entry = await recordBreach({ by, event: ev, witnesses: targets });
+            if (!entry) return ChatMessage.create({ content: `<div class="vta-card"><h3>Masquerade</h3><p>None of them is a mortal who doesn't know: nothing is recorded as a breach.</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+            const note = WR.placeNote(entry.mode, entry.secret, ev);
+            return ChatMessage.create({ content: `<div class="vta-card"><h3>Masquerade</h3><p>${esc(by.name)} seen by ${entry.witnesses.map(w => esc(w.name)).join(", ")}.</p>${note ? `<p>${esc(note)}</p>` : ""}<p class="wodx-quiet">Journal: WoDX Masquerade</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
         }, { width: 520 });
     }
 
@@ -455,6 +471,72 @@ export function build(ctx) {
             if (!blocked) out.push(t);
         }
         return out;
+    }
+
+    /** An onlooker as the witness rules see it, from a token or an actor. */
+    function onlookerOf(x) {
+        const actor = x?.actor ?? x;
+        return { actor, tok: x?.actor ? x : null, profile: P.detectProfile(actor), knows: P.worldFlag(actor, "knows") ?? null, kinfolk: !!P.worldFlag(actor, "kinfolk") };
+    }
+    /** The place a token stands in: a WoDX NPC region tag, else the scene's ({kind, masq, uuid}) or null. */
+    function placeOf(tokenLike) {
+        const tok = tokenLike?.object ?? tokenLike;
+        const doc = tok?.document ?? tokenLike;
+        const scene = doc?.parent ?? canvas?.scene;
+        const tag = d => { const f = d?.flags?.["wodx-npc"]?.place; return f && (f.kind || f.masq) ? { kind: f.kind ?? "", masq: f.masq ?? "", uuid: d.uuid } : null; };
+        for (const r of doc?.regions ?? []) { const t = tag(r); if (t) return t; }
+        return tag(scene);
+    }
+    /** Everyone who can see a token, sorted by what the act shows (3.40.0): {secret, breach, startled, calm} as tokens, plus the place and its mode. */
+    function observersOf(tokenLike, { secret = null, range = null, exclude = [] } = {}) {
+        const tok = tokenLike?.object ?? tokenLike;
+        const sec = secret ?? WR.secretOf(P.detectProfile(tok?.actor));
+        const seers = witnessesOf(tok, { range, exclude, profiles: Object.keys(WR.KNOWS) });
+        const s = WR.sortOnlookers(sec, seers.map(onlookerOf));
+        const place = placeOf(tok), mode = WR.placeMode(place);
+        return { secret: sec, breach: s.breach.map(o => o.tok), startled: s.startled.map(o => o.tok), calm: s.calm.map(o => o.tok), place, mode };
+    }
+    /** A card for the Storyteller: creatures of another kind saw what this one is. */
+    async function startledCard(by, secret, actors, event = "") {
+        const list = actors.filter(Boolean);
+        if (!list.length || !isActiveGM()) return null;
+        const what = WR.SECRETS[secret] || "something they did not know of";
+        Hooks.callAll("wodxSecretSeen", { by: by?.uuid ? { uuid: by.uuid, name: by.name } : null, secret, seen: list.map(a => ({ uuid: a.uuid, name: a.name, profile: P.detectProfile(a) })), event });
+        if (by?.uuid) await logEvent(by, `${list.map(a => a.name).join(", ")} saw what ${by.name} is${event ? ` (${event})` : ""}.`, "masquerade");
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>Seen by another kind</h3><p>${list.map(a => `${esc(a.name)} (${esc(P.PROFILES[P.detectProfile(a)]?.label ?? "")})`).join(", ")} saw ${esc(by?.name ?? "someone")}${event ? `: ${esc(event)}` : ""}.</p>
+            <p>No mortal rumour comes of it, but they now know ${esc(what)} is here. How they take it is yours to play.</p>
+            ${by?.uuid ? kbtn("knows", by, "They know this kind from now on", `${secret}|${list.map(a => a.uuid).join(",")}`) : ""}</div>`,
+            whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+    }
+    /**
+     * An act that may show what someone is (3.40.0): finds who can see it, then tells the Storyteller who would breach
+     * the Masquerade (with a button to record them) and who of another kind is startled. ask: the act may not have
+     * shown at all (a Discipline), so the card asks rather than tells.
+     */
+    async function revealed(actor, { secret = null, event = "", ask = false, startledOnly = false } = {}) {
+        if (!isActiveGM() || !actor) return null;
+        const tok = actor.getActiveTokens?.()[0];
+        if (!tok) return null;
+        const o = observersOf(tok, { secret, exclude: [actor.id] });
+        if (!o.secret) return o;
+        const seenSet = new Set(canvas.scene?.getFlag?.(MOD, `startled.${actor.id}`) ?? []);
+        const fresh = o.startled.filter(t => !seenSet.has(t.actor.id));
+        if (fresh.length && !ask) {
+            await canvas.scene?.setFlag?.(MOD, `startled.${actor.id}`, [...seenSet, ...fresh.map(t => t.actor.id)]);
+            await startledCard(actor, o.secret, fresh.map(t => t.actor), event);
+        }
+        const note = WR.placeNote(o.mode, o.secret, event);
+        if (!startledOnly && (o.breach.length || (ask && o.startled.length))) {
+            const ev = String(event || "something no mortal should see").replace(/\|/g, "/");
+            const names = t => t.map(x => esc(x.name)).join(", ");
+            let html = ask ? `<p>If it showed, ${o.breach.length ? `${names(o.breach)} would see it.` : ""}${o.startled.length ? ` ${names(o.startled)} (another kind) would be startled.` : ""}</p>`
+                : `<p class="vta-warn">Masquerade: ${names(o.breach)} can see this.</p>`;
+            if (note) html += `<p>${esc(note)}</p>`;
+            const all = [...o.breach, ...(ask ? o.startled : [])];
+            html += kbtn("seen", actor, ask ? "It showed: record who saw" : "Record the witnesses", `${o.secret}|${ev}|${all.map(t => t.actor.uuid).join(",")}`);
+            await ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}: ${esc(ev)}</h3>${html}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+        }
+        return o;
     }
 
     /* ---------------- Prompts ---------------- */
@@ -678,7 +760,9 @@ export function build(ctx) {
         const form = GX.info(a).form;
         if (form !== "crinos") return null;
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
-        const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.id) && !P.worldFlag(t.actor, "kinfolk"));
+        // Creatures of another kind who see the Crinos are startled (3.40.0); the Delirium below is for the mortals
+        await revealed(a, { secret: "lupine", event: "in Crinos", startledOnly: true });
+        const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.id) && !P.worldFlag(t.actor, "kinfolk") && P.worldFlag(t.actor, "knows") !== "*" && !(P.worldFlag(t.actor, "knows") ?? []).includes?.("lupine"));
         if (!w.length) return null;
         await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => t.actor.id)]);
         const ids = w.map(t => t.document.uuid).join(",");
@@ -706,6 +790,23 @@ export function build(ctx) {
             case "stayAwake": return stayAwake(a);
             case "sun": return api.hazard({ actor: a, kind: "sun" });
             case "riseHeal": return riseHeal(a);
+            case "seen": {
+                const [sec, ev, list = ""] = arg.split("|");
+                const ws = []; for (const u of list.split(",").filter(Boolean)) { const d = await fromUuid(u); const x = d?.actor ?? d; if (x) ws.push(x); }
+                return recordBreach({ by: a, event: ev, witnesses: ws, secret: sec || null });
+            }
+            case "knows": {
+                if (!game.user.isGM) return ctx.notify("The Storyteller decides who knows.");
+                const [sec, list = ""] = arg.split("|");
+                for (const u of list.split(",").filter(Boolean)) {
+                    const d = await fromUuid(u); const x = d?.actor ?? d;
+                    if (!x || x.isToken) continue; // a passer-by or other unlinked token shares its actor: leave it
+                    const cur = P.worldFlag(x, "knows"); if (cur === "*") continue;
+                    const next = [...new Set([...(Array.isArray(cur) ? cur : []), sec])];
+                    await P.setWorldFlag(x, "knows", next);
+                }
+                return ctx.notify("Noted: they know this kind now.");
+            }
             case "witnesses": { const ws = []; for (const u of arg.split(",").filter(Boolean)) { const d = await fromUuid(u); const x = d?.actor ?? d; if (x) ws.push(x); } return recordBreach({ by: a, event: "seen feeding", witnesses: ws }); }
         }
         return null;
@@ -718,7 +819,7 @@ export function build(ctx) {
         if (p.op === "breach") {
             const by = p.by ? await fromUuid(p.by) : null;
             const ws = []; for (const u of p.witnesses ?? []) { const d = await fromUuid(u); const x = d?.actor ?? d; if (x) ws.push(x); }
-            return recordBreach({ by: by?.actor ?? by, event: p.event, witnesses: ws });
+            return recordBreach({ by: by?.actor ?? by, event: p.event, witnesses: ws, secret: p.secret ?? null });
         }
         return null;
     }
@@ -736,7 +837,7 @@ export function build(ctx) {
         });
     }
 
-    return { useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, logEvent, sinPrompt,
+    return { useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
@@ -747,6 +848,7 @@ export function registerSettings(register) {
     register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
     register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the GM gets a card to run the Delirium for them.", Boolean, true);
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
+    register("witnessAsk", "Ask who saw a Discipline", "After a Discipline is used where mortals or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw.", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);
     game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: a card with buttons (stay awake, sunlight, New Night, heal on rising), New Night run automatically at dusk, or nothing.",
         scope: "world", config: true, type: String, default: "prompt", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });

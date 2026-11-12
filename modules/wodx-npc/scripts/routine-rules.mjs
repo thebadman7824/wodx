@@ -25,6 +25,7 @@ export const PLACE_KINDS = {
   home: "Home", workplace: "Workplace or shop", church: "Church, chapel or cloister", tavern: "Tavern or inn",
   haven: "Haven (a Cainite's resting place)", gate: "Gate, watch-house or barracks", market: "Market or square",
   street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
+  elysium: "Elysium (the Prince's neutral ground)", chantry: "Chantry or Horizon (a mage's stronghold)",
   other: "Other"
 };
 

@@ -290,6 +290,29 @@ test("The Forgetful Mind marks a witness as made to forget in the Masquerade rec
   game.user.targets = new Set();
 });
 
+test("3.40.0: a Cainite witness is calm, a Garou startled, and a closed place keeps the rumour in", async () => {
+  reset();
+  const v = actor("Wilfried", {discs: {Dominate: 3}});
+  const k2 = actor("Ottilie");
+  const g = actor("Rolf", {type: "Werewolf"});
+  const m = actor("Hanne", {type: "Mortal", wp: [3, 3]});
+  let hook = null, seen = null;
+  const on = Hooks.on?.("wodxBreach", x => { hook = x; });
+  const on2 = Hooks.on?.("wodxSecretSeen", x => { seen = x; });
+  const none = await E.recordBreach({by: v, event: "used Dominate", witnesses: [k2]});
+  assert.equal(none, null, "another Cainite is no breach");
+  const chat0 = mock.log.chat.length;
+  const e = await E.recordBreach({by: v, event: "fed in the street", witnesses: [k2, g, m], place: {kind: "street"}});
+  assert.deepEqual(e.witnesses.map(w => w.name), ["Hanne"]);
+  assert.equal(e.spread, true);
+  assert.ok(mock.log.chat.slice(chat0).some(c => /Seen by another kind/.test(c.content) && /Rolf/.test(c.content)));
+  if ( on2 !== undefined ) assert.equal(seen?.secret, "kindred");
+  const h = await E.recordBreach({by: v, event: "fed", witnesses: [m], place: {kind: "haven"}});
+  assert.equal(h.mode, "closed");
+  assert.equal(h.spread, false);
+  if ( on !== undefined ) assert.equal(hook?.entry?.spread, false);
+});
+
 test("Roads: the WoDX choice wins over the sheet, and the sin prompt suggests the Road's level", async () => {
   reset();
   const k = actor("Konrad", {road: 5, roadName: "Road of Kings"});

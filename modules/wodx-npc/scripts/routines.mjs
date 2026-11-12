@@ -1082,6 +1082,8 @@ export function build(ctx) {
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${esc(k)}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
   // Built on first use: Foundry's classes exist only once the game has loaded
   let placesClass = null;
+  /** How far word of a breach goes from a place (WoDX Actions 3.40.0 reads it): blank follows the kind of place. */
+  const MASQ_MODES = {"": "By kind of place", open: "Open: word spreads", guarded: "Guarded, like Elysium", closed: "Closed: nothing leaves"};
   function PlacesAppClass() {
   if ( placesClass ) return placesClass;
   const {ApplicationV2} = foundry.applications.api;
@@ -1107,7 +1109,8 @@ export function build(ctx) {
         return `<tr data-key="${key}" data-name="${esc(doc.name)}" data-guess="${esc(g.kind)}" data-owner="${esc(g.owner)}" data-search-text="${esc(label)}">
           <td class="name">${esc(label)}</td><td><select name="${key}.kind" data-fixed>${opt(kinds, f.kind ?? "")}</select></td>
           <td><input type="text" name="${key}.owner" value="${esc(f.owner ?? "")}" placeholder="${esc(g.owner)}"></td>
-          <td><input type="checkbox" name="${key}.private" ${f.private ? "checked" : ""}></td></tr>`;
+          <td><input type="checkbox" name="${key}.private" ${f.private ? "checked" : ""}></td>
+          <td><select name="${key}.masq" data-fixed title="How far word of a Masquerade breach goes from here">${opt(MASQ_MODES, f.masq ?? "")}</select></td></tr>`;
       };
       const scenes = [...game.scenes].sort((a, b) => a.name.localeCompare(b.name));
       const viewed = canvas?.scene;
@@ -1123,9 +1126,9 @@ export function build(ctx) {
         <div class="wodx-field"><label>The chronicle's own feast days (one a line: 09-01 St Giles)</label><textarea name="feasts" rows="2">${esc(setting("feasts") ?? "")}</textarea></div>
         ${searchBox("table.wnpc-place-table", "Search scenes and regions…", "Search places")}</div>
         <div class="wodx-scroll wodx-table-wrap">
-        ${regions.length ? `<h3>Regions of ${esc(viewed.name)}</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Region</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th></tr></thead><tbody>
+        ${regions.length ? `<h3>Regions of ${esc(viewed.name)}</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Region</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th><th title="Masquerade: by kind of place, or set here">Masquerade</th></tr></thead><tbody>
           ${regions.map(r => row(r, `r:${r.id}`, r.name)).join("")}</tbody></table>` : ""}
-        <h3>Scenes</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Scene</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th></tr></thead><tbody>
+        <h3>Scenes</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Scene</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th><th title="Masquerade: by kind of place, or set here">Masquerade</th></tr></thead><tbody>
           ${scenes.map(s => row(s, `s:${s.id}`, s.name)).join("")}</tbody></table></div>
         <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button></footer>`;
       return div;
@@ -1150,9 +1153,9 @@ export function build(ctx) {
         const key = tr.dataset.key, [kind, id] = key.split(":");
         const doc = kind === "s" ? game.scenes.get(id) : canvas.scene?.regions?.get(id);
         if ( !doc ) continue;
-        const next = {kind: form.elements[`${key}.kind`].value, owner: form.elements[`${key}.owner`].value.trim(), private: form.elements[`${key}.private`].checked};
-        const prev = flag(doc, "place") ?? {kind: "", owner: "", private: false};
-        if ( prev.kind === next.kind && (prev.owner ?? "") === next.owner && !!prev.private === next.private ) continue;
+        const next = {kind: form.elements[`${key}.kind`].value, owner: form.elements[`${key}.owner`].value.trim(), private: form.elements[`${key}.private`].checked, masq: form.elements[`${key}.masq`]?.value ?? ""};
+        const prev = flag(doc, "place") ?? {kind: "", owner: "", private: false, masq: ""};
+        if ( prev.kind === next.kind && (prev.owner ?? "") === next.owner && !!prev.private === next.private && (prev.masq ?? "") === next.masq ) continue;
         const up = next.kind ? {_id: id, [`flags.${MOD}.place`]: next} : {_id: id, ...unsetKey(`flags.${MOD}.place`)};
         if ( kind === "s" ) scenes.push(up); else regions.set(id, up);
       }
@@ -1167,7 +1170,7 @@ export function build(ctx) {
   return (placesClass = PlacesApp);
   }
 
-  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work"};
+  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
   /** Give each place's named owner that place as home, haven, post, church or work. Asks first. */
   async function matchOwners() {
     const places = listPlaces().filter(p => p.owner);
