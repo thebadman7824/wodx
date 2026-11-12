@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2380
+Next free block: B2420
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -93,6 +93,7 @@ Next free block: B2380
 | B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
 | B2350-B2359 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
 | B2370-B2379 | The weekly market turn: making, recovery, trade links, seasons by era, skip catch-up, the queue and talk of dear goods | Storyteller |
+| B2400-B2419 | The Lone Chronicle: playing alone with a hidden browser in the Storyteller's seat | Solo |
 <!-- decision-index:end -->
 
 ## The decisions
