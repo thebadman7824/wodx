@@ -2138,3 +2138,23 @@ Reverse: doorsOf, exitFor, walkFor in wodx-npc passersby.mjs; planDoorWalk, near
 The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers-by in sight. That already happens: since Actions 3.42.0 the Cast window asks the Masquerade sight check who can see the caster, passers-by are ordinary mortals to it, and only animals in the street are left out. A harness test now holds this in place.
 
 Reverse: nothing to reverse.
+
+## B2300. The case board (2026-11-12)
+From the improvement desk (item i1, approved by Ben 2026-11-12). Each case board is a journal in the "WoDX case boards" folder, owned by every player so anyone can pin, move and join cards. Cards are clues, people, places, Encyclopaedia entries or journal pages, items, and notes; lines between two cards carry a few words. The Storyteller starts boards, picks the open case, and can hide a card until it is earned. Players do not see hidden cards or the lines to them, but the card is in the journal's data, so this only hides; real secrets stay in the Storyteller's own notes. Anyone opens a board from the token tools; the Storyteller also has it in the Storyteller's hand.
+
+Reverse: case.mjs and case-rules.mjs in wodx-interactables; setupCase and registerCaseSettings in main.mjs.
+
+## B2301. Found clues go on the open case (2026-11-12)
+A clue looked at or examined through Interact is pinned to the open case board on the Storyteller's client, with the texts the finder's best successes reached. Examining it again with more successes adds the new words to the same card. A botched examine pins nothing. World setting "Found clues go on the case board", on by default.
+
+Reverse: the pinClue call after clueCodex in wodx-interactables main.mjs; setting caseClues.
+
+## B2302. The case board by era (2026-11-12, house rule)
+The board keeps its era's look and name: parchment and red thread to 1449 ("The findings"), a commonplace board of pinned leaves to 1799, the detective's pinboard and string to 1945, the corkboard to 2022, and a lit case display in the World of Future Darkness from 2023.
+
+Reverse: LOOKS and lookFor in case-rules.mjs.
+
+## B2303. What they could know (2026-11-12, house rule)
+From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
+
+Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
