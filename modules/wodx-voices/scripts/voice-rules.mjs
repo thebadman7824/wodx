@@ -237,3 +237,16 @@ export function langTries(lang) {
   const map = {czech: "cs", german: "de", deutsch: "de", italian: "it", french: "fr", spanish: "es", polish: "pl", hungarian: "hu", slovak: "sk"};
   return [map[l] ?? l, "en"];
 }
+
+/* ------------------------------------------------------------------ */
+/* Plot NPCs and prewritten lines (Ben, 12 November 2026)               */
+/* ------------------------------------------------------------------ */
+
+/** Whether an NPC speaks aloud at all: plot NPCs only, unless the world says every NPC. */
+export const voiced = ({who = "plot", plot = false} = {}) => (who === "all" ? true : !!plot);
+
+/**
+ * Whether a WoDX NPC talk card carries a line the Storyteller wrote beforehand (the NPC's talk sheet), not a stock
+ * or generated one. Cards say stock: true for stock lines; generated lines say generated: true (or kind "grammar").
+ */
+export const prewritten = (talk = {}) => !!talk && talk.stock === false && !talk.generated && talk.kind !== "grammar" && talk.kind !== "stock";

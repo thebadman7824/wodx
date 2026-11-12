@@ -6,7 +6,7 @@
  *   1. the module: WoDX Voices 0.2.0 or later, its api, the browser's speech present
  *   2. a talk card whispered to this user is spoken once, the NPC's words only, in its profile's pitch and speed
  *   3. the same NPC speaks in the same voice again; another NPC differs
- *   4. silent: a card whispered to someone else, a card that is not a talk card, muted, Voices off
+ *   4. silent: a card whispered to someone else, not a talk card, a stock line, an NPC not marked as a plot NPC, muted, Voices off
  *   (5 was clean up in 0.1.0; it is now 10)
  *   6. the Storyteller chatting in character as the NPC is read; out of character is not
  *   7. Kokoro (needs the engine in Data/wodx-voices-engine): loads, renders a line to the cache, the same line again is a cache hit
@@ -32,7 +32,7 @@ export async function run() {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
-  const keep = Object.fromEntries(["enabled", "mute", "gmHears", "engine", "stLines", "fromToken"].map(k => [k, game.settings.get(MOD, k)]));
+  const keep = Object.fromEntries(["enabled", "mute", "gmHears", "engine", "stLines", "fromToken", "who"].map(k => [k, game.settings.get(MOD, k)]));
   const viewed = canvas.scene?.id;
   const S = globalThis.speechSynthesis;
   const spoken = [];
@@ -45,14 +45,14 @@ export async function run() {
     });
     if ( S ) S.speak = u => spoken.push({text: u.text, pitch: u.pitch, rate: u.rate, voice: u.voice?.name ?? null});
     await game.settings.set(MOD, "enabled", true); await game.settings.set(MOD, "mute", false); await game.settings.set(MOD, "gmHears", true);
-    await game.settings.set(MOD, "engine", "browser"); await game.settings.set(MOD, "stLines", true); await game.settings.set(MOD, "fromToken", false);
+    await game.settings.set(MOD, "engine", "browser"); await game.settings.set(MOD, "stLines", true); await game.settings.set(MOD, "who", "plot"); await game.settings.set(MOD, "fromToken", false);
     made.scene = await Scene.create({name: "WoDX gate: voices", width: 1000, height: 1000});
-    const [a1, a2] = await createActors([{name: "Gate toll keeper", type: "Mortal", flags: {"wodx-npc": {behavior: {voice: "peasant"}}}}, {name: "Gate prince", type: "Mortal"}]);
-    made.actors = [a1, a2];
-    const toks = await made.scene.createEmbeddedDocuments("Token", [{name: a1.name, actorId: a1.id, actorLink: true, x: 100, y: 100}, {name: a2.name, actorId: a2.id, actorLink: true, x: 300, y: 100}]);
-    const t1 = toks.find(t => t.actorId === a1.id), t2 = toks.find(t => t.actorId === a2.id);
+    const [a1, a2, a3] = await createActors([{name: "Gate toll keeper", type: "Mortal", flags: {"wodx-npc": {behavior: {voice: "peasant"}}, [MOD]: {plot: true}}}, {name: "Gate prince", type: "Mortal", flags: {[MOD]: {plot: true}}}, {name: "Gate passer-by", type: "Mortal"}]);
+    made.actors = [a1, a2, a3];
+    const toks = await made.scene.createEmbeddedDocuments("Token", [{name: a1.name, actorId: a1.id, actorLink: true, x: 100, y: 100}, {name: a2.name, actorId: a2.id, actorLink: true, x: 300, y: 100}, {name: a3.name, actorId: a3.id, actorLink: true, x: 500, y: 100}]);
+    const t1 = toks.find(t => t.actorId === a1.id), t2 = toks.find(t => t.actorId === a2.id), t3 = toks.find(t => t.actorId === a3.id);
     const post = async (tok, text, extra = {}) => {
-      const m = await ChatMessage.create({speaker: {alias: tok.name, scene: made.scene.id, token: tok.id}, content: CARD(text), whisper: [game.user.id], flags: {"wodx-npc": {talk: {actor: null}}}, ...extra});
+      const m = await ChatMessage.create({speaker: {alias: tok.name, scene: made.scene.id, token: tok.id}, content: CARD(text), whisper: [game.user.id], flags: {"wodx-npc": {talk: {actor: null, stock: false}}}, ...extra});
       made.msgs.push(m); await sleep(300); return m;
     };
     await step("2 spoken", async () => {
@@ -70,6 +70,8 @@ export async function run() {
       const other = game.users.find(u => u.id !== game.user.id);
       if ( other ) await post(t1, "Not for you.", {whisper: [other.id]});
       await post(t1, "Plain chat.", {flags: {}});
+      await post(t1, "A stock line.", {flags: {"wodx-npc": {talk: {actor: null, stock: true}}}});
+      await post(t3, "Not a plot NPC.");
       await game.settings.set(MOD, "mute", true); await post(t1, "Muted."); await game.settings.set(MOD, "mute", false);
       await game.settings.set(MOD, "enabled", false); await post(t1, "Off.");
       ok("4 silent", spoken.length === n, {extra: spoken.slice(n), otherUser: !!other});

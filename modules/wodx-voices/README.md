@@ -2,6 +2,8 @@
 
 NPCs speak aloud. Off by default: Game Settings, WoDX Voices, Voices.
 
+Only plot NPCs speak: right-click an actor in the Actors list and choose Voiced (plot NPC). Only the lines written on that NPC's WoDX NPC talk sheet are read; stock lines, generated lines and barks stay text, as in Fallout or Baldur's Gate.
+
 ## Kokoro (the default engine)
 
 Kokoro runs in the Storyteller's browser with no network. Its files go in Foundry's Data folder once:

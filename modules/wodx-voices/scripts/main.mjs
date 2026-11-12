@@ -1,9 +1,10 @@
 /**
  * WoDX Voices (the version is in module.json): NPCs speak aloud.
  *
- * What is spoken: WoDX NPC talk cards (answers, greetings, farewells), and the Storyteller's own lines when the
- * Storyteller chats in character as an NPC's token (0.2.0). Each NPC keeps one steady voice (voice-rules.mjs).
- * Only the people who see a line hear it.
+ * Who and what is spoken (Ben, 12 November 2026, as in Fallout and Baldur's Gate): only NPCs marked as plot NPCs, and
+ * only the lines the Storyteller wrote for them beforehand (their WoDX NPC talk sheet). Stock and generated lines,
+ * barks and everyone else stay text. The Storyteller's improvised chat in character can be read too, off by default.
+ * Each voiced NPC keeps one steady voice (voice-rules.mjs). Only the people who see a line hear it.
  *
  * Kokoro (0.2.0, the default engine): the active Storyteller's browser renders each line once (engine.mjs), saves it to
  * a cache folder in Data, and tells the people who see the line to play that file, from the NPC's token when its
@@ -49,9 +50,20 @@ export function profileOf(tokDoc) {
   return V.profileFor({id, sex: mine.sex ?? people.sex ?? null, age: mine.age ?? null, style, override: mine.override ?? null});
 }
 
+/** Whether an actor is marked as a plot NPC. */
+export const isPlot = actor => !!actor?.flags?.[MOD]?.plot;
+
+/** Mark or unmark a plot NPC (the Storyteller). */
+export async function setPlot(actor, on = true) {
+  if ( !actor || !game.user?.isGM ) return false;
+  await actor.setFlag(MOD, "plot", !!on);
+  return !!on;
+}
+
 /** What a chat message says aloud, or "": a talk card's words, or the Storyteller in character as an NPC. */
 function lineOf(msg, tok) {
-  if ( msg?.flags?.[NPC]?.talk ) return V.spokenLine(msg.content);
+  const talk = msg?.flags?.[NPC]?.talk;
+  if ( talk ) return V.prewritten(talk) ? V.spokenLine(msg.content) : "";
   if ( !setting("stLines") ) return "";
   const IC = globalThis.CONST?.CHAT_MESSAGE_STYLES?.IC ?? 2;
   const style = msg?.style ?? msg?.type;
@@ -153,6 +165,7 @@ function onMessage(msg) {
   if ( !setting("enabled") ) return;
   const tok = speakerToken(msg);
   if ( !tok ) return;
+  if ( !V.voiced({who: setting("who"), plot: isPlot(tok.actor)}) ) return;
   const text = lineOf(msg, tok);
   if ( !text ) return;
   const profile = profileOf(tok);
@@ -210,8 +223,11 @@ Hooks.once("init", () => {
     choices: {kokoro: "Kokoro (made once on the Storyteller's computer, played to everyone)", browser: "Each browser's own speech"},
     hint: "Kokoro needs its files in Foundry's Data folder (see the module's README). Without them, or when a line fails, the browser's own speech reads it.",
     onChange: () => loadEngine()});
-  reg("stLines", {name: "Read the Storyteller's lines", scope: "world", config: true, type: Boolean, default: true,
-    hint: "When the Storyteller chats in character as an NPC's token, the line is read in that NPC's voice."});
+  reg("who", {name: "Who speaks aloud", scope: "world", config: true, type: String, default: "plot",
+    choices: {plot: "Plot NPCs only (marked in the Actors list)", all: "Every NPC"},
+    hint: "Plot NPCs are marked with Voiced (plot NPC) on the right-click menu in the Actors list. Only the lines written on their talk sheet are read; stock and generated lines stay text."});
+  reg("stLines", {name: "Read the Storyteller's improvised lines", scope: "world", config: true, type: Boolean, default: false,
+    hint: "When the Storyteller chats in character as a voiced NPC's token, the line is read in that NPC's voice. Off by default: only prewritten lines are voiced."});
   reg("fromToken", {name: "Sound from the token", scope: "world", config: true, type: Boolean, default: true,
     hint: "A line plays from the NPC on the map, fading with distance and muffled by walls, when that scene is in view."});
   reg("hearRange", {name: "How far a voice carries", scope: "world", config: true, type: Number, default: 30, range: {min: 5, max: 120, step: 5},
@@ -237,7 +253,7 @@ Hooks.once("ready", () => {
   game.socket?.on?.(SOCKET, data => { try { onSocket(data); } catch (e) { console.error(`${MOD} | socket`, e); } });
   if ( game.user?.isGM ) { fillKnown(); if ( setting("enabled") ) loadEngine(); }
   game.modules.get(MOD).api = {
-    profileOf, speak, fileFor, freshCache, rules: V, engine: E.status, stats,
+    profileOf, speak, fileFor, freshCache, isPlot, setPlot, rules: V, engine: E.status, stats,
     load: loadEngine,
     /** Hear an NPC token's voice (the Storyteller), in Kokoro when it is ready. */
     preview: async (tokDoc, text = "Good evening. You wanted a word?") => {
@@ -249,5 +265,21 @@ Hooks.once("ready", () => {
     stop: () => synth()?.cancel?.()
   };
 });
+
+/** The right-click menu in the Actors list: mark a plot NPC. Foundry 13+ and older hook names both. */
+function plotOption(options) {
+  const actorOf = li => game.actors?.get((li?.dataset ?? li?.[0]?.dataset)?.entryId ?? (li?.dataset ?? li?.[0]?.dataset)?.documentId);
+  options.push({
+    name: "Voiced (plot NPC)", icon: '<i class="fas fa-microphone"></i>',
+    condition: li => game.user?.isGM && !!actorOf(li) && !isPlot(actorOf(li)),
+    callback: li => setPlot(actorOf(li), true)
+  }, {
+    name: "Not voiced", icon: '<i class="fas fa-microphone-slash"></i>',
+    condition: li => game.user?.isGM && isPlot(actorOf(li)),
+    callback: li => setPlot(actorOf(li), false)
+  });
+}
+Hooks.on("getActorContextOptions", (app, options) => plotOption(options));
+Hooks.on("getActorDirectoryEntryContext", (app, options) => plotOption(options));
 
 Hooks.on("createChatMessage", msg => { try { onMessage(msg); } catch (e) { console.error(`${MOD} | speak`, e); } });

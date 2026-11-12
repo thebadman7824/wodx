@@ -83,7 +83,7 @@ Next free block: B2310
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2110 | NPC voices: browser speech, Kokoro, shared files from the token, the Storyteller's own lines | Voices |
+| B2100-B2111 | NPC voices: browser speech, Kokoro, shared files from the token, plot NPCs and prewritten lines | Voices |
 | B2200-B2209 | Battles and sieges | Storyteller |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
@@ -2325,7 +2325,7 @@ Two of Kokoro's 27 English voices of one accent (American or British, by seed), 
 Reverse: kokoroVoiceFor in voice-rules.mjs.
 
 ## B2109. The Storyteller's own lines (2026-11-12)
-Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, is read in that NPC's voice to the people who see it. On by default.
+Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, can be read in that NPC's voice to the people who see it. Off by default since B2111: Ben asked the same day that only prewritten lines be voiced.
 
 Reverse: the "Read the Storyteller's lines" setting.
 
@@ -2333,3 +2333,8 @@ Reverse: the "Read the Storyteller's lines" setting.
 When the NPC's scene is in view, the line plays at the token through Foundry's positional sound, fading over the set range (30 grid units by default) and muffled by walls; the Storyteller always hears. Otherwise it plays plainly.
 
 Reverse: the "Sound from the token" setting.
+
+## B2111. Plot NPCs and prewritten lines only (2026-11-12)
+Ben (12 November 2026), after Fallout 1 and 2 and Baldur's Gate 1 and 2: an NPC is voiced only when the Storyteller marks it as a plot NPC (Voiced (plot NPC) on the right-click menu in the Actors list, flags.wodx-voices.plot), and only the lines written beforehand on its WoDX NPC talk sheet are read. Stock lines, generated lines, barks and every unmarked NPC stay text. The world setting "Who speaks aloud" can open it to every NPC.
+
+Reverse: the "Who speaks aloud" setting; prewritten and voiced in voice-rules.mjs.

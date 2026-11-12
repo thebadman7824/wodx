@@ -59,6 +59,14 @@ test("voices on the computer come first, English only, matched to a known sex", 
   assert.equal(V.pickVoice(order, V.profileFor({id: "q"})).name, V.pickVoice(VOICES, V.profileFor({id: "q"})).name, "list order does not matter");
 });
 
+test("plot NPCs and prewritten lines only (Ben, 12 November 2026)", () => {
+  assert.equal(V.voiced({plot: true}), true);
+  assert.equal(V.voiced({plot: false}), false);
+  assert.equal(V.voiced({who: "all", plot: false}), true);
+  assert.equal(V.prewritten({stock: false}), true);
+  for ( const t of [{stock: true}, {stock: false, generated: true}, {stock: false, kind: "grammar"}, {}, null] ) assert.equal(V.prewritten(t), false, JSON.stringify(t));
+});
+
 test("only the people who see a line hear it", () => {
   const on = {enabled: true, userId: "u1"};
   assert.equal(V.shouldSpeak({...on}), true);
@@ -134,8 +142,8 @@ test("in Foundry: talk cards, the Storyteller's lines, Kokoro's shared file and 
   const hooks = {};
   const spoken = [], played = [], emitted = [];
   let socketFn = null;
-  const settings = {enabled: true, gmHears: true, volume: 0.5, mute: false, engine: "browser", stLines: true, fromToken: false, hearRange: 30, cacheGen: 1, cacheBytes: 0, cacheMB: 500, engineDir: "wodx-voices-engine", cacheDir: "wodx-voices-cache", device: "wasm"};
-  const actor = {id: "npc1", hasPlayerOwner: false, flags: {"wodx-npc": {behavior: {voice: "noble"}}}};
+  const settings = {enabled: true, gmHears: true, volume: 0.5, mute: false, engine: "browser", who: "plot", stLines: true, fromToken: false, hearRange: 30, cacheGen: 1, cacheBytes: 0, cacheMB: 500, engineDir: "wodx-voices-engine", cacheDir: "wodx-voices-cache", device: "wasm"};
+  const actor = {id: "npc1", hasPlayerOwner: false, flags: {"wodx-npc": {behavior: {voice: "noble"}}, "wodx-voices": {plot: true}}};
   const pcActor = {id: "pc1", hasPlayerOwner: true, flags: {}};
   const tok = {id: "t1", actorId: "npc1", actorLink: true, actor, parent: {id: "s1"}};
   const pcTok = {id: "t2", actorId: "pc1", actorLink: true, actor: pcActor, parent: {id: "s1"}};
@@ -160,7 +168,7 @@ test("in Foundry: talk cards, the Storyteller's lines, Kokoro's shared file and 
   await import("../../modules/wodx-voices/scripts/main.mjs");
   for ( const f of [...hooks.init, ...hooks.ready] ) await f();
   const fire = m => hooks.createChatMessage.forEach(f => f(m));
-  const talk = {id: "m1", speaker: {scene: "s1", token: "t1"}, content: CARD, whisper: ["u1", "gm"], flags: {"wodx-npc": {talk: {actor: "pc"}}}};
+  const talk = {id: "m1", speaker: {scene: "s1", token: "t1"}, content: CARD, whisper: ["u1", "gm"], flags: {"wodx-npc": {talk: {actor: "pc", stock: false}}}};
 
   // the browser's own speech
   fire(talk);
@@ -172,7 +180,12 @@ test("in Foundry: talk cards, the Storyteller's lines, Kokoro's shared file and 
   fire({...talk, flags: {}});
   settings.mute = true; fire(talk); settings.mute = false;
   settings.enabled = false; fire(talk); settings.enabled = true;
-  assert.equal(spoken.length, 1, "not for this user, not a talk card, muted, or off: silent");
+  fire({...talk, flags: {"wodx-npc": {talk: {actor: "pc", stock: true}}}});
+  fire({...talk, flags: {"wodx-npc": {talk: {actor: "pc", stock: false, generated: true}}}});
+  actor.flags["wodx-voices"].plot = false; fire(talk);
+  settings.who = "all"; fire(talk); settings.who = "plot"; actor.flags["wodx-voices"].plot = true;
+  assert.equal(spoken.length, 2, "not for this user, not a talk card, a stock or generated line, muted, or off: silent; not a plot NPC: silent unless every NPC speaks");
+  spoken.pop();
 
   // the Storyteller in character as an NPC (Improvement Desk vo1)
   const st = {id: "m2", speaker: {scene: "s1", token: "t1"}, content: "<p>The gate stays shut.</p>", whisper: [], style: 2, author: gm, flags: {}};
@@ -200,11 +213,11 @@ test("in Foundry: talk cards, the Storyteller's lines, Kokoro's shared file and 
   assert.equal(spoken.at(-1).text, "Coin first, traveller & quickly.", "the Storyteller's engine failed: the browser reads it");
 
   // an NPC with a tongue of its own is read by the browser even with Kokoro on
-  actor.flags["wodx-voices"] = {override: {lang: "cs"}};
+  actor.flags["wodx-voices"] = {plot: true, override: {lang: "cs"}};
   const before = spoken.length;
   fire({...talk, id: "m4"});
   assert.equal(spoken.length, before + 1);
-  delete actor.flags["wodx-voices"];
+  actor.flags["wodx-voices"] = {plot: true};
 
   // the Storyteller's client with no engine files: it tells the players to fall back, and reads the line itself
   game.user = gm;
