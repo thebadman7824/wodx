@@ -387,6 +387,12 @@ Fight a phase rolls both commanders (Perception + Leadership at 6, the heavier s
 
 The rolls come from Spoils of War and the Dark Ages Companion; how big a force weighs, resolve, the breach and every age after 1500 are house rules (docs/DECISIONS.md B2200 to B2209).
 
+## The case board and what they could know (2026-11-12)
+
+- **Case board** (token tools, or the Storyteller's hand): a shared board for the coterie. Press "Start a board" and name the case; the first board is the open case. Drop people, scenes, journal pages, Encyclopaedia entries or items on it, or add a note. Drag a card by its title; press the link button on one card and then on another to join them with a few words. The eye button hides a card from the players until they earn it (Alt while dropping hides it at once). A clue a character looks at or examines through Interact goes on the open case by itself, with what they learned; switch that off in the module settings ("Found clues go on the case board"). Players see hidden cards only as missing; do not keep true secrets in a card's words.
+- The board takes its era's look: parchment and thread before 1450, a commonplace board to 1800, pinboard and string to 1945, cork to 2022, a lit display in the World of Future Darkness.
+- **What they could know** (Storyteller's hand): pick a player character and see the Encyclopaedia entries that fit their line and the year, with a suggestion and the reason (Intelligence + Occult, Academics or Politics; a house rule). Tick what they know and press "Put the ticked in the codex"; their players read it there. Entries that have not happened yet are never offered.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.
