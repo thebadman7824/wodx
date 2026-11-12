@@ -1,0 +1,304 @@
+# Modern nights, 1990 to 2009 (classic branch only). year[-month]|kind|lines|region|place|tags|title|text
+1990-1|H|mor|ME|Baku|massacre|Black January|Soviet troops storm Baku after pogroms against Armenians and kill over a hundred civilians.
+1990-3|H|mor|EU|Vilnius|founding|Lithuania breaks away|Lithuania declares independence from the Soviet Union, the first republic to do so.
+1990-4|H|mor|EU|Prague|law,founding|The hyphen war|Czechs and Slovaks quarrel over the country's new name and settle on the Czech and Slovak Federative Republic.
+1990-6|H|mor|MO|Brno|law|The first free election|Czechoslovakia's first free election in forty-four years gives Civic Forum a landslide; Moravian regional parties win seats.
+1990-6|H|mor|ME|Manjil|quake|The Manjil earthquake|An earthquake in northern Iran kills over thirty-five thousand.
+1990-8|H|mor|ME|Kuwait|war|Iraq invades Kuwait|Saddam Hussein's army overruns Kuwait in a day.
+1990-10|H|mor|EU|Berlin|founding|German reunification|East Germany joins the Federal Republic, and Germany is one state again.
+1990|H|mor|EU|Prague|travel,money|The tourists come|Western tourists flood Prague, and the old town fills with exchange booths and beer.
+1990|W|vam|EU|Prague|founding,occult|The Camarilla comes east|The house reading has Camarilla envoys reach Prague within weeks of the revolution, offering protection to the eastern Kindred who survived.
+1990|W|vam|MO|Brno|founding,occult|Brno's prince wakes|The house reading has the old prince of Brno rise from the Spilberk to claim the city again, and find younger Kindred who never knew the prince existed.
+1990|H|mor|EU|Bucharest|uprising|The miners' raid|Miners brought to Bucharest by the government beat students and opposition protesters.
+1990|H|mor|AS|Ulaanbaatar|revolution|Mongolia's democratic revolution|Hunger strikes in Ulaanbaatar end one-party rule in Mongolia.
+1990|H|mor|MO|Brno|money,law|The restitutions|Property taken by the communists is handed back to former owners and the Church, and Brno's old families return.
+1990|H|mor|MO|Ostrava|industry|The pits begin to close|Ostrava's deep coal mines begin to shut, one after another, and the black city starts to change.
+1990|H|mor|EU|Bratislava|uprising|The Slovak nationalists|Slovak nationalists march in Bratislava for an independent state.
+1990|H|mor|AS|Kabul|war|Najibullah holds|The Afghan communist government outlasts the Soviet withdrawal and holds the cities.
+1990|H|mor|AS|Tokyo|money|The bubble bursts|Tokyo's stock market falls by a third, and Japan's lost decade begins.
+1990|H|mor|AS|Kashmir|uprising,migration|The Kashmir insurgency|Insurgency breaks out in the Kashmir valley, and Kashmiri Pandits flee.
+1990|W|wra|EU|Berlin|occult|The Wall's ghosts|The house reading has the ghosts of those shot at the Berlin Wall at last cross freely, and many move on.
+1990|W|mag|EU|Prague|occult,learning|The Prague Hermetics return|The house reading has Prague's Hermetic chantry reopen its rooms near the castle after forty years in hiding.
+1991-1|H|mor|ME|Baghdad|war|Desert Storm|An American-led coalition bombs Iraq for six weeks and drives its army from Kuwait in four days.
+1991-1|H|mor|EU|Vilnius|massacre|The Vilnius television tower|Soviet troops kill fourteen unarmed people defending the television tower in Vilnius.
+1991-2|H|mor|ME|Kuwait|fire,disaster|The oil wells burn|Retreating Iraqi troops set hundreds of Kuwaiti oil wells on fire, and black smoke covers the Gulf for months.
+1991-3|H|mor|ME|Basra|uprising,massacre|The Iraqi uprisings|Shia in the south and Kurds in the north rise against Saddam and are crushed; Kurds flee into the mountains.
+1991-4|H|mor|AS|Chittagong|storm,disaster|The Bangladesh cyclone|A cyclone and storm surge kill some hundred and forty thousand in Bangladesh.
+1991-6|H|mor|EU|Ljubljana|founding,war|Slovenia and Croatia leave Yugoslavia|Slovenia and Croatia declare independence, and the Yugoslav army attacks.
+1991-6|H|mor|AS|Pinatubo|disaster,weather|Pinatubo|Mount Pinatubo in the Philippines erupts and cools the world for two years.
+1991-6|H|mor|MO|Brno|war|The last Soviet soldier leaves|The last Soviet troops leave Czechoslovakia after twenty-three years.
+1991-8|H|mor|EU|Moscow|revolution|The August coup|Hardliners try to depose Gorbachev; Yeltsin stands on a tank, and the coup collapses in three days.
+1991-8|W|vam|EU|Moscow|revolution,occult|The Kindred of Moscow divided|The house reading has Moscow's Brujah split as the Soviet dream fails, and Baba Yaga's servants watch from the forests.
+1991-11|H|mor|EU|Vukovar|siege,massacre|Vukovar|Vukovar falls after an eighty-seven-day siege, and Serb forces kill some two hundred wounded and prisoners.
+1991-12|H|mor|EU|Moscow|founding|The Soviet Union ends|The Soviet Union dissolves into fifteen states, and Gorbachev resigns.
+1991|H|mor|ME|Madrid|treaty|The Madrid peace conference|Israel, its neighbours and the Palestinians meet face to face for the first time.
+1991|W|mag|EU|Moscow|revolution,occult|The Technocracy loses a bloc|The house reading has the New World Order lose its grip on the Soviet apparatus, and Russian Traditions come out of hiding.
+1991|W|wer|EU|Chernobyl|disaster,occult|The zone's cubs|The house reading has the Black Spiral Dancers breed in the Chernobyl zone, and the Shadow Lords of Kiev raid them.
+1991|H|mor|MO|Brno|money|The voucher privatisation|Czechs buy vouchers to own shares in state firms; clever funds gather them up and many vanish.
+1991|H|mor|EU|Bosnia|war|The Bosnian referendum looms|Bosnia's peoples arm as the Yugoslav wars spread south.
+1991|H|mor|AS|Delhi|terror,death|Rajiv Gandhi killed|A Tamil Tiger suicide bomber kills Rajiv Gandhi at an election rally.
+1991|H|mor|AS|Phnom Penh|treaty|The Paris accords for Cambodia|The Cambodian factions sign a peace, and the UN takes over the country for an election.
+1991|W|kue|AS|Phnom Penh|treaty,occult|The Kuei-jin return to Cambodia|The house reading has the Kuei-jin courts send envoys back into Cambodia to reckon with what fed on the killing fields.
+1992-1|H|mor|ME|Nagorno-Karabakh|war|The Nagorno-Karabakh war|Armenia and Azerbaijan fight openly over Nagorno-Karabakh.
+1992-2|H|mor|EU|Maastricht|treaty|Maastricht|The European Community becomes the European Union.
+1992-4|H|mor|EU|Sarajevo|siege,war|The siege of Sarajevo|Bosnian Serb forces besiege Sarajevo; the siege lasts nearly four years.
+1992-6|H|mor|MO|Brno|law|The split agreed|Election results set Klaus's Czech right against Meciar's Slovak nationalists, and the two agree to divide the country.
+1992-8|H|mor|EU|Rostock|persecution,fire|Rostock-Lichtenhagen|Rioters set fire to a hostel for asylum seekers in Rostock while crowds cheer.
+1992-12|H|mor|AS|Ayodhya|faith,massacre|The Babri Masjid|Hindu nationalists tear down the mosque at Ayodhya, and riots kill two thousand.
+1992|H|mor|AS|Kabul|war|The Afghan civil war|The communist government falls, and the mujahideen factions shell Kabul into ruins.
+1992|W|wra|EU|Sarajevo|siege,occult|The Shadowlands of Sarajevo|The house reading has Sarajevo's dead crowd its Shadowlands, and Spectres prowl the sniper alleys.
+1992|W|vam|EU|Bosnia|war,occult|The Tzimisce in the Balkans|The house reading has old Tzimisce of the Balkans feed on the war and play the factions against each other.
+1992|H|mor|MO|Brno|art|The Brno Theatre|Brno's theatres and the Janacek Opera draw audiences from Vienna once again.
+1992|H|mor|AS|Seoul|treaty|Korea and China|South Korea and China establish relations.
+1992|H|mor|ME|Algiers|terror,war|Algeria's civil war|The army cancels an election the Islamists would win, and a decade of killing follows.
+1992|W|wer|EU|Sarajevo|war,occult|The Garou of the Dinaric|The house reading has the Shadow Lords and Silver Fangs of the Balkans fight each other as well as the Wyrm.
+1992|H|mor|MO|Brno|sport|MotoGP at Brno|The motorcycle Grand Prix returns to the Masaryk circuit, and two hundred thousand fans camp in the woods.
+1993-1|H|mor|MO|Brno|founding|The Czech Republic|Czechoslovakia splits peacefully at midnight, and Moravia becomes part of the Czech Republic.
+1993-1|W|all,vam|MO|Brno|founding,occult|A border through the Kindred|The house reading has the Kindred of Moravia and Slovakia redraw their domains, and the Bratislava prince loses havens east of the Morava.
+1993-3|H|mor|AS|Bombay|terror|The Bombay bombings|A series of bombs kills over two hundred and fifty in Bombay.
+1993-9|H|mor|ME|Jerusalem|treaty|The Oslo Accords|Rabin and Arafat shake hands on the Oslo Accords, and Palestinian self-rule begins in Gaza and Jericho.
+1993-9|H|mor|AS|Latur|quake|The Latur earthquake|An earthquake in Maharashtra kills nearly ten thousand villagers asleep.
+1993-10|H|mor|EU|Moscow|uprising|The Russian constitutional crisis|Yeltsin's tanks shell the parliament building in Moscow.
+1993-11|H|mor|EU|Mostar|war|The Mostar bridge|Croat artillery destroys the sixteenth-century bridge at Mostar.
+1993|H|mor|EU|Sarajevo|siege|The tunnel|Sarajevo digs a tunnel under the airport to bring in food and arms.
+1993|W|cha|EU|Prague|occult|The Prague fae|The house reading has the Kithain of Prague grow strong on the tourist crowds, and Banality fights back through the souvenir shops.
+1993|H|mor|EU|Bratislava|founding|Slovakia independent|Slovakia becomes an independent state.
+1993|H|mor|MO|Brno|money|The crown|The Czech crown replaces the Czechoslovak one.
+1993|H|mor|ME|Jerusalem|terror|Hamas's bombings|Hamas begins suicide bombings inside Israel.
+1993|W|hun|EU|London|occult|The Arcanum's new age|The house reading has the Arcanum put its library onto computers and fear what the networks will reveal.
+1994-2|H|mor|EU|Sarajevo|massacre|The Markale market|A mortar shell kills sixty-eight people in a Sarajevo market.
+1994-2|H|mor|ME|Hebron|massacre,faith|The Cave of the Patriarchs|An Israeli settler shoots twenty-nine Muslims at prayer in Hebron.
+1994-7|H|mor|AS|Pyongyang|crown,death|Kim Il-sung dies|North Korea's founder dies, and his son Kim Jong-il succeeds.
+1994-9|H|mor|EU|Baltic|sea,disaster|The Estonia sinks|The ferry Estonia sinks in a storm in the Baltic; over eight hundred die.
+1994-12|H|mor|EU|Grozny|war|The first Chechen war|Russia invades Chechnya, and Grozny is bombed to ruins.
+1994|H|mor|AS|Surat|plague|Plague at Surat|Plague breaks out in Surat in India, and hundreds of thousands flee.
+1994|H|mor|EU|London|travel,building|The Channel Tunnel|The tunnel under the Channel opens.
+1994|W|wer|EU|Grozny|war,occult|The Garou of the Caucasus|The house reading has the Garou of the Caucasus fight the Wyrm's servants in the Chechen ruins.
+1994|H|mor|EU|Moscow|money|The MMM collapse|The MMM pyramid scheme collapses and ruins millions of Russians.
+1994|H|mor|ME|Amman|treaty|Israel and Jordan|Israel and Jordan make peace.
+1994|H|mor|AS|Tokyo|terror|Matsumoto sarin|Aum Shinrikyo releases sarin in a quiet street in Matsumoto, killing eight; police suspect the wrong man.
+1994|W|vam|MO|Brno|occult|The Sabbat in Moravia|The house reading has a Sabbat pack test Brno's borders from Slovakia and leave three dead ghouls in the Svratka.
+1994|H|mor|EU|Kosice|art|The Slovak east|Kosice's old town is restored as Slovakia's second city finds its feet.
+1995-1|H|mor|AS|Kobe|quake|The Kobe earthquake|An earthquake destroys much of Kobe and kills over six thousand.
+1995-3|H|mor|AS|Tokyo|terror|Sarin on the Tokyo subway|Aum Shinrikyo releases sarin on the Tokyo subway and kills thirteen.
+1995-3|W|kue|AS|Tokyo|terror,occult|Aum and the Kuei-jin|The house reading has the Kuei-jin of Tokyo find Aum's leaders drawing on a power that was not theirs.
+1995-7|H|mor|EU|Srebrenica|massacre|Srebrenica|Bosnian Serb forces murder over eight thousand Bosniak men and boys at Srebrenica.
+1995-7|W|wra|EU|Srebrenica|massacre,occult|The Srebrenica Circle|The house reading has the Srebrenica dead form a vast Circle that will not leave the valley.
+1995-8|H|mor|EU|Krajina|war,migration|Operation Storm|Croatia retakes Krajina, and two hundred thousand Serbs flee.
+1995-11|H|mor|ME|Tel Aviv|terror,death|Rabin killed|An Israeli extremist shoots Prime Minister Rabin at a peace rally.
+1995-11|H|mor|EU|Dayton|treaty|Dayton|The Dayton agreement ends the Bosnian war.
+1995|H|mor|MO|Brno|law|The Constitutional Court in Brno|The Czech Constitutional Court and supreme courts sit in Brno, which becomes the country's judicial capital.
+1995|H|mor|EU|Vienna|treaty|Austria joins the Union|Austria, Finland and Sweden join the European Union.
+1995|H|mor|AS|Beijing|faith|The Panchen Lama|China takes the boy named Panchen Lama by the Dalai Lama and puts its own choice in his place.
+1995|H|mor|ME|Ankara|war|Turkey's war with the PKK|Turkey's army fights the PKK in the south-east, and thousands of Kurdish villages are emptied.
+1995|W|cha|EU|London|occult|The Kithain and the net|The house reading has young changelings find Glamour in the early web, and the elders do not understand it.
+1995|H|mor|MO|Mikulov|trade,art|The Palava wine route|Vineyards around Mikulov and the Palava hills open to tourists from Austria and beyond.
+1996|H|mor|AS|Kabul|war|The Taliban take Kabul|The Taliban take Kabul and hang the former president.
+1996|H|mor|EU|London|plague,science|Mad cow disease|Britain admits a link between mad cow disease and a new human brain disease.
+1996|H|mor|ME|Qana|massacre|Qana|Israeli shells kill over a hundred refugees in a UN compound at Qana.
+1996|W|vam|EU|London|plague,occult|Tainted beef|The house reading has the Kindred of London worry about the blood of the infected, and the Tremere study it.
+1996|H|mor|EU|Grozny|treaty|The Khasavyurt accord|Russia withdraws from Chechnya.
+1996|H|mor|EU|Belgrade|uprising|The Belgrade protests|Serbs march through Belgrade's winter for three months against vote rigging.
+1996|H|mor|MO|Brno|law|The first Senate|The Czech Senate is elected for the first time.
+1996|H|mor|AS|Kabul|faith,law|Taliban rule|The Taliban ban music, kites and girls' schooling in Kabul.
+1996|H|mor|ME|Dhahran|terror|Khobar Towers|A truck bomb kills nineteen American airmen in Saudi Arabia.
+1996|W|kue|AS|Hong Kong|occult|The Kuei-jin and the handover|The house reading has the Kuei-jin of Hong Kong bargain with mainland courts ahead of the handover.
+1996|H|mor|MO|Kromeriz|art,learning|Kromeriz's gardens|The archbishop's palace and gardens at Kromeriz are put on the World Heritage list two years later.
+1997-1|H|mor|EU|Tirana|uprising,money|Albania's pyramid collapse|Pyramid schemes swallow the savings of half of Albania, the state collapses, and armouries are looted.
+1997-2|H|mor|AS|Beijing|death|Deng Xiaoping dies|Deng Xiaoping, architect of China's opening, dies at ninety-two.
+1997-5|H|mor|ME|Tehran|law|Khatami elected|The reformer Mohammad Khatami wins Iran's presidency by a landslide.
+1997-7|H|mor|AS|Hong Kong|empire,treaty|Hong Kong handed back|Britain hands Hong Kong back to China at midnight in the rain.
+1997-7|H|mor|AS|Bangkok|money|The Asian financial crisis|The Thai baht collapses, and the crisis spreads to Indonesia, Korea and Malaysia.
+1997-7|H|mor|MO|Olomouc|flood,disaster|The Moravian flood|The Morava and the Oder burst their banks; Olomouc, Otrokovice and Troubky drown, and fifty die in Moravia.
+1997-7|W|all,wer|MO|Troubky|flood,occult|The river spirits rise|The house reading has the Garou of the Morava read the flood as the river's anger at the dams and drainage of the plain.
+1997-7|W|wra|MO|Olomouc|flood,occult|The flood's dead|The house reading has the flood stir old drowned wraiths of the Morava, some dead since the Thirty Years War.
+1997-8|H|mor|EU|Paris|death|Diana dies|Diana, Princess of Wales, dies in a car crash in a Paris underpass.
+1997-11|H|mor|ME|Luxor|terror,massacre|The Luxor massacre|Gunmen kill sixty-two people, most of them tourists, at the temple of Hatshepsut.
+1997-11|W|mum|ME|Luxor|terror,occult|Blood at Deir el-Bahari|The house reading has the Reborn of Thebes swear to find whoever guided the killers to Hatshepsut's temple.
+1997|W|vam|EU|London|occult|The Gangrel leave|The house reading follows Vampire canon in spirit: the Gangrel begin to quit the Camarilla, and their justicar walks out.
+1997|W|mag|EU|Vienna|occult|The Traditions under siege|The house reading has the Traditions' chantries in Europe prepare for a Technocratic push after the bloc's fall.
+1997|H|mor|MO|Brno|money,crown|The Klaus government falls|A party funding scandal and a currency crisis bring down Klaus's government.
+1997|H|mor|AS|Seoul|money|Korea rescued|South Korea takes an IMF rescue, and Koreans give gold to the state.
+1997|W|hun|MO|Olomouc|flood,occult|The flood's finds|The house reading has the Olomouc flood uncover a sealed cellar, and a parish priest asks the Arcanum for help.
+1998-1|H|mor|EU|Prague|sport|Nagano gold|Czech hockey players win Olympic gold at Nagano, and Prague celebrates in the streets.
+1998-4|H|mor|EU|Belfast|treaty|The Good Friday Agreement|Northern Ireland's parties agree to share power.
+1998-5|H|mor|AS|Pokhran|science,war|India's bomb tests|India tests five nuclear bombs, and Pakistan answers within weeks.
+1998-5|H|mor|AS|Jakarta|revolution,massacre|Suharto falls|Riots in Jakarta kill a thousand, many of them Chinese Indonesians, and Suharto resigns after thirty-two years.
+1998-8|H|mor|EU|Moscow|money|The rouble crash|Russia defaults on its debts, and the rouble loses two thirds of its value.
+1998-8|H|mor|EU|Omagh|terror|Omagh|A car bomb kills twenty-nine in the Northern Irish town of Omagh.
+1998|H|mor|EU|Kosovo|war|The Kosovo war|Serbian forces fight the Kosovo Liberation Army and drive villagers from their homes.
+1998|W|mag|EU|Doissetep|occult,disaster|Doissetep falls|The house reading follows Mage canon: the great Hermetic Horizon chantry of Doissetep tears itself apart in a war of its own masters.
+1998|W|hun|MO|Brno|crime,occult|The Brno files|The house reading has old secret police files on Brno's night-walkers sold to a private collector, and hunters learn of them.
+1998|H|mor|MO|Brno|crown|The opposition agreement|Zeman's Social Democrats rule with Klaus's support.
+1998|H|mor|MO|Brno|art|Ignis Brunensis|Brno begins its fireworks festival on the Brno dam.
+1998|H|mor|AS|Kabul|war|The missile strikes|American missiles strike training camps in Afghanistan after embassy bombings.
+1998|H|mor|ME|Baghdad|war|Desert Fox|America and Britain bomb Iraq for four days.
+1998|W|vam|EU|Vienna|occult|The Tremere and the Pyramid|The house reading has the Tremere of Vienna fear a breach in their own pyramid, and the Prague chantry is purged.
+1999-3|H|mor|EU|Brussels|treaty,war|The Czechs join NATO|The Czech Republic, Poland and Hungary join NATO.
+1999-3|H|mor|EU|Belgrade|war|The NATO bombing|NATO bombs Serbia for seventy-eight days to end the Kosovo campaign.
+1999-4|H|mor|EU|Kosovo|migration|The Kosovo exodus|Some eight hundred thousand Kosovar Albanians flee to Albania and Macedonia.
+1999-5|H|mor|AS|Kargil|war|Kargil|India and Pakistan fight on the icy heights of Kargil.
+1999-7|W|vam,kue|AS|Bangladesh|occult,disaster|The Week of Nightmares|The house reading follows canon: the Ravnos Antediluvian wakes in India, and Kuei-jin, Garou and Kindred fight it for a week of storms and madness.
+1999-7|W|mag|AS|Bangladesh|occult,science|The Technocracy's strike|The house reading follows canon: Technocratic satellites burn the Ravnos Antediluvian with sunlight focused from orbit.
+1999-7|W|wra|EU|Stygia|occult,storm|The Fifth Great Maelstrom|The house reading follows Wraith canon: the Antediluvian's death sends a Maelstrom through the Underworld, and Stygia falls into ruin.
+1999-7|W|mag|EU|Vienna|occult,storm|The Avatar Storm|The house reading follows Mage canon: an Avatar Storm closes the Umbra to Mages, and Horizon Realms are cut off.
+1999-7|W|vam|EU|Prague|occult|The Ravnos madness|The house reading has the Ravnos of Prague go mad in a week, and the clan is nearly gone by summer's end.
+1999-8|H|mor|EU|Munich|science|The great eclipse|A total eclipse crosses Europe from Cornwall to Romania; millions watch.
+1999-8|H|mor|ME|Izmit|quake|The Izmit earthquake|An earthquake in north-western Turkey kills seventeen thousand.
+1999-9|H|mor|EU|Moscow|terror|The apartment bombings|Bombs destroy apartment blocks in Moscow and other cities; Russia blames Chechens and goes to war again.
+1999-9|H|mor|AS|Dili|massacre,founding|East Timor votes|East Timor votes for independence, and militias backed by the army burn Dili.
+1999-9|H|mor|AS|Taiwan|quake|The Chi-Chi earthquake|An earthquake in central Taiwan kills over two thousand.
+1999|W|hun|EU|Europe|occult|The Imbuing|The house reading follows Hunter canon: ordinary people across Europe hear the Messengers and begin to see what walks among them.
+1999|W|dem|ME|Jerusalem|occult|The Fallen escape|The house reading follows Demon canon: the Maelstrom cracks the Abyss, and fallen angels slip into the bodies of the dying.
+1999|W|mum|ME|Cairo|occult|The Reborn after the storm|The house reading has the Maelstrom reach the Duat, and the Reborn of Egypt lose their path to the Underworld for a time.
+1999|H|mor|EU|Grozny|war|The second Chechen war|Russia invades Chechnya again and levels Grozny.
+1999|H|mor|EU|Moscow|crown|Putin|Yeltsin resigns on the last day of the year and leaves Vladimir Putin as acting president.
+1999|H|mor|EU|Brussels|money|The euro born|The euro begins as a currency for banks and markets.
+1999|H|mor|AS|Kathmandu|travel|The Kathmandu hijacking|An Indian airliner is hijacked to Kandahar.
+1999|H|mor|ME|Amman|crown,death|King Hussein dies|King Hussein of Jordan dies, and his son Abdullah succeeds.
+1999|H|mor|ME|Rabat|crown|Mohammed VI|Morocco's king dies and his son takes the throne.
+1999|W|wer|AS|Bangladesh|occult|The Garou's losses|The house reading has the Garou of India count their dead after the Week of Nightmares; whole septs are gone.
+1999|W|cha|EU|Europe|occult|The Dreaming's storm|The house reading has the Maelstrom's echo shake the Dreaming, and the Kithain dream of a red star.
+1999|W|wer|EU|Europe|occult|The Red Star|The house reading follows Werewolf canon: a red star appears in the Umbral sky, and the Garou fear the Apocalypse is near.
+1999|H|mor|MO|Olomouc|building,faith|The Holy Trinity Column|The baroque plague column of Olomouc is added to the World Heritage list.
+2000-1|H|mor|EU|Baia Mare|disaster,flood|The cyanide spill|A dam at a gold mine in Romania breaks, and cyanide kills the fish of the Tisza and the Danube.
+2000-7|H|mor|EU|Paris|travel,disaster|The Concorde crash|A Concorde crashes on take-off at Paris and kills a hundred and thirteen.
+2000-8|H|mor|EU|Barents Sea|sea,disaster|The Kursk|The Russian submarine Kursk sinks after an explosion; all a hundred and eighteen die.
+2000-9|H|mor|ME|Jerusalem|uprising|The second intifada|A visit to the Temple Mount sets off the second intifada.
+2000-9|H|mor|EU|Prague|uprising,money|The Prague IMF riots|Protesters fight police at the IMF and World Bank meeting in Prague.
+2000-10|H|mor|EU|Belgrade|revolution|Milosevic falls|Crowds storm the parliament in Belgrade, and Milosevic gives up power.
+2000-10|H|mor|MO|Temelin|science,industry|Temelin starts up|The Czech nuclear plant at Temelin begins its first reactor, and Austria protests at the border.
+2000|W|mag|MO|Temelin|science,occult|Temelin and the Weaver|The house reading has the Technocracy run Temelin's start quietly, while a Brno Verbena reads the land's unease.
+2000|H|mor|MO|Brno|law|The South Moravian Region|The Czech lands are divided into regions, and Brno becomes the seat of the South Moravian Region.
+2000|H|mor|AS|Seoul|treaty|The Korean summit|The leaders of the two Koreas meet in Pyongyang.
+2000|H|mor|ME|Damascus|crown,death|Hafez al-Assad dies|Syria's president dies, and his son Bashar succeeds.
+2000|H|mor|ME|Beirut|war|Israel leaves Lebanon|Israel withdraws from southern Lebanon.
+2000|W|vam|ME|Damascus|occult|The Assamite schism|The house reading follows Vampire canon in spirit: the Assamites split as the old one at Alamut wakes.
+2001-1|H|mor|AS|Gujarat|quake|The Gujarat earthquake|An earthquake kills twenty thousand in Gujarat.
+2001-3|H|mor|AS|Bamiyan|faith,building|The Bamiyan Buddhas|The Taliban blow up the giant Buddhas of Bamiyan.
+2001-6|H|mor|AS|Kathmandu|crown,death|The Nepal royal massacre|Nepal's crown prince kills the king, the queen and seven others at a family dinner.
+2001-9|H|mor|AS|Panjshir|terror,death|Massoud killed|Al-Qaeda assassins posing as journalists kill Ahmad Shah Massoud.
+2001-9|H|mor|EU|London|terror|The September attacks|Al-Qaeda's attacks on New York and Washington shake Europe, and NATO invokes its mutual defence clause.
+2001-10|H|mor|AS|Kabul|war|The Afghan war|America and its allies attack Afghanistan, and the Taliban fall by December.
+2001-12|H|mor|AS|Delhi|terror|The Indian parliament attack|Gunmen attack India's parliament, and India and Pakistan mass armies on the border.
+2001|W|vam|EU|London|terror,occult|The Camarilla tightens|The house reading has the Camarilla tighten the Masquerade as cameras and security spread after the attacks.
+2001|H|mor|MO|Zlin|learning|Tomas Bata University|Zlin opens its own university named for the shoe king.
+2001|H|mor|EU|Skopje|war|The Macedonian conflict|Albanian rebels fight Macedonia's army until a peace is made at Ohrid.
+2001|H|mor|AS|Beijing|trade|China joins the WTO|China joins the World Trade Organization.
+2001|W|mag|AS|Kabul|war,occult|The Technocracy in Afghanistan|The house reading has the Technocracy test its new watchers over Afghanistan.
+2001|H|mor|MO|Brno|building,art|Villa Tugendhat listed|The Tugendhat house in Brno becomes a World Heritage site.
+2002-1|H|mor|EU|Brussels|money|The euro in pockets|Euro notes and coins come into use in twelve countries.
+2002-2|H|mor|AS|Godhra|massacre,faith|The Gujarat riots|A train fire at Godhra sets off riots in Gujarat that kill a thousand or more, most of them Muslims.
+2002-4|H|mor|EU|Erfurt|crime|The Erfurt school shooting|A former pupil kills sixteen at a school in Erfurt.
+2002-8|H|mor|EU|Prague|flood|The 2002 flood|The Vltava floods Prague's metro and Mala Strana, and the Elbe drowns Dresden's old town.
+2002-8|W|vam|EU|Prague|flood,occult|Drowned havens|The house reading has the flood break into the Nosferatu warrens under Prague, and the prince's court meets on high ground.
+2002-10|H|mor|AS|Bali|terror|The Bali bombings|Bombs in Bali's nightclubs kill two hundred and two.
+2002-10|H|mor|EU|Moscow|terror,siege|The Moscow theatre siege|Chechen gunmen hold eight hundred hostages in a Moscow theatre; a gas used to end it kills a hundred and thirty.
+2002-11|H|mor|EU|Prague|treaty|The NATO summit in Prague|NATO meets in Prague and invites seven more countries to join.
+2002|W|kue|AS|Hong Kong|money,occult|The Kuei-jin of the Pearl River|The house reading has the Kuei-jin courts of Hong Kong and Guangzhou fight over the new factories and their hungry workers.
+2002|H|mor|MO|Brno|law|The Social Democrats win|Spidla's Social Democrats win the election.
+2002|H|mor|AS|Dili|founding|Timor-Leste|East Timor becomes independent.
+2002|H|mor|ME|Jenin|war|The battle of Jenin|Israeli troops storm the Jenin refugee camp.
+2002|H|mor|AS|Pyongyang|crime|The abducted Japanese|North Korea admits it kidnapped Japanese citizens.
+2002|W|dem|EU|Prague|occult|A Fallen in Prague|The house reading has one of the Fallen take a Prague banker's body after a car crash, and the city's Kindred notice the change.
+2002|W|wra|MO|Brno|occult|The Capuchin crypt|The house reading has the mummified friars of Brno's Capuchin crypt keep a ghostly court beneath the tourists' feet.
+2003-2|H|mor|EU|London|uprising,war|The march against the war|Over a million march in London and millions more across Europe against war in Iraq.
+2003-3|H|mor|ME|Baghdad|war|The Iraq invasion|American and British forces invade Iraq, and Baghdad falls in three weeks.
+2003-3|H|mor|AS|Hong Kong|plague|SARS|A new coronavirus spreads from southern China through a Hong Kong hotel to the world; eight hundred die.
+2003-3|H|mor|EU|Belgrade|terror,death|Djindjic shot|A sniper kills Serbia's reforming prime minister Zoran Djindjic.
+2003-3|H|mor|EU|Prague|crown|Klaus president|Vaclav Klaus succeeds Havel as Czech president.
+2003-4|H|mor|ME|Baghdad|crime,learning|The museum looted|Looters strip the National Museum of Iraq of thousands of objects while troops look on.
+2003-4|W|mum,mag|ME|Baghdad|crime,occult|Treasures in the dark|The house reading has looted tablets and seals from the Baghdad museum reach Mages and Reborn on the black market.
+2003-6|H|mor|MO|Brno|law,treaty|The EU referendum|Czechs vote to join the European Union.
+2003-8|H|mor|EU|Paris|weather,death|The heatwave|A summer heatwave kills over seventy thousand across Europe, fifteen thousand in France alone.
+2003-12|H|mor|ME|Bam|quake|The Bam earthquake|An earthquake destroys the city of Bam and its mud-brick citadel and kills twenty-six thousand.
+2003|H|mor|ME|Baghdad|terror|The insurgency|Bombings in Iraq kill the UN envoy and hundreds of Iraqis, and the insurgency grows.
+2003|W|vam|ME|Baghdad|war,occult|The Assamites and the war|The house reading has the Assamites of Alamut watch the war with cold calculation as Camarilla Kindred follow the armies.
+2003|H|mor|AS|Hong Kong|uprising|Half a million march|Half a million march in Hong Kong against a security law, and it is withdrawn.
+2003|H|mor|EU|Tbilisi|revolution|The Rose Revolution|Georgians storm their parliament with roses and topple Shevardnadze.
+2003|H|mor|EU|Istanbul|terror|The Istanbul bombings|Bombs hit synagogues, a bank and the British consulate in Istanbul.
+2003|W|mag|ME|Baghdad|war,occult|The Ahl-i-Batin and the war|The house reading has the hidden Mages of Baghdad move their libraries before the bombs.
+2003|W|cha|MO|Mikulov|art,occult|The vintage fae|The house reading has the Kithain of the Palava hills draw Glamour from the harvest festivals.
+2004-3|H|mor|EU|Madrid|terror|The Madrid train bombings|Bombs on commuter trains kill a hundred and ninety-three in Madrid.
+2004-5|H|mor|MO|Brno|founding,treaty|The Czechs join the Union|The Czech Republic joins the European Union with nine other countries.
+2004-5|W|all,vam|MO|Brno|treaty,occult|New roads west|The house reading has Brno's Kindred welcome open borders, and the prince's ghouls take jobs in Vienna and Brussels.
+2004-9|H|mor|EU|Beslan|terror,massacre|Beslan|Chechen gunmen seize a school in Beslan; over three hundred hostages die, most of them children.
+2004-11|H|mor|EU|Kiev|revolution|The Orange Revolution|Ukrainians camp in Kiev's square against a stolen election and win a new vote.
+2004-12|H|mor|AS|Aceh|disaster,sea|The Indian Ocean tsunami|An earthquake off Sumatra sends a tsunami across the Indian Ocean that kills some two hundred and thirty thousand.
+2004-12|W|wra,kue|AS|Aceh|disaster,occult|The drowned coast|The house reading has the tsunami fill the Yellow Springs with the dead, and the Dark Kingdom of Jade close its gates for a season.
+2004|W|dem|EU|Europe|occult|The Fallen at large|The house reading has the Fallen grown bold in European cities, and the hunters learn to tell them from the possessed.
+2004|W|hun|EU|Europe|occult|The hunters' networks|The house reading has the imbued meet on the internet, and the first cells form in Prague and Brno.
+2004|H|mor|ME|Fallujah|battle|Fallujah|American marines fight two battles for Fallujah.
+2004|H|mor|ME|Ramallah|death|Arafat dies|Yasser Arafat dies.
+2004|H|mor|EU|Beslan|massacre|The mourning of Beslan|Russia mourns Beslan, and Putin ends elections for regional governors.
+2004|W|hun|EU|Madrid|terror,occult|Hunters at Atocha|The house reading has the imbued of Madrid see something feeding on the dying at Atocha.
+2005-2|H|mor|ME|Beirut|terror,death|Hariri killed|A truck bomb kills Lebanon's former prime minister Rafik Hariri.
+2005-4|H|mor|EU|Rome|faith,death|John Paul II dies|The Polish pope dies after twenty-six years, and Benedict XVI follows.
+2005-4|H|mor|ME|Beirut|revolution|The Cedar Revolution|Mass protests in Beirut force Syrian troops out of Lebanon.
+2005-5|H|mor|AS|Andijan|massacre|Andijan|Uzbek troops fire on protesters in Andijan and kill hundreds.
+2005-7|H|mor|EU|London|terror|The London bombings|Four suicide bombers kill fifty-two on London's underground and a bus.
+2005-10|H|mor|AS|Kashmir|quake|The Kashmir earthquake|An earthquake in Kashmir kills over eighty thousand.
+2005-10|H|mor|EU|Paris|uprising,fire|The banlieue riots|Rioting in the Paris suburbs spreads across France; thousands of cars burn.
+2005|W|vam|EU|London|terror,occult|The Nosferatu in the tunnels|The house reading has London's Nosferatu tend the dying in the bombed tunnels before the rescuers come.
+2005|H|mor|ME|Gaza|war|Israel leaves Gaza|Israel withdraws its settlers from Gaza.
+2005|H|mor|AS|Kyrgyzstan|revolution|The Tulip Revolution|Protesters drive the president of Kyrgyzstan from power.
+2005|H|mor|AS|Kashmir|quake,war|Kashmir after the quake|India and Pakistan open the line of control for aid.
+2005|W|vam|EU|Paris|uprising,occult|The Brujah in the banlieues|The house reading has young Brujah in the Paris suburbs feed the riots.
+2005|H|mor|MO|Ostrava|industry|Ostrava's steel sold|The Nova Hut steelworks in Ostrava are sold to a foreign giant.
+2006-2|H|mor|ME|Samarra|faith,terror|The Golden Mosque|Bombers destroy the dome of the Shia shrine at Samarra, and Iraq slides into civil war.
+2006-5|H|mor|AS|Yogyakarta|quake|The Yogyakarta earthquake|An earthquake in Java kills nearly six thousand.
+2006-6|H|mor|EU|Podgorica|founding|Montenegro independent|Montenegro votes to leave Serbia.
+2006-7|H|mor|ME|Beirut|war|The Lebanon war|Israel and Hezbollah fight for thirty-four days.
+2006-7|H|mor|AS|Mumbai|terror|The Mumbai train bombings|Bombs on Mumbai's suburban trains kill over two hundred.
+2006-10|H|mor|AS|Pyongyang|science,war|North Korea's bomb|North Korea tests a nuclear bomb.
+2006-12|H|mor|ME|Baghdad|death,law|Saddam hanged|Saddam Hussein is hanged.
+2006|W|wer|ME|Baghdad|war,occult|The war in the Umbra|The house reading has the Garou find the Umbra over Iraq torn by banes feeding on the civil war.
+2006|H|mor|MO|Brno|crown|The stalemate election|A tied election leaves the Czech Republic without a government for seven months.
+2006|H|mor|AS|Bangkok|revolution|The Thai coup|The army overthrows Thailand's government.
+2006|H|mor|ME|Tehran|science|Iran's centrifuges|Iran enriches uranium and the UN imposes sanctions.
+2006|W|kue|AS|Bangkok|revolution,occult|The Kuei-jin of Bangkok|The house reading has the Kuei-jin of Bangkok shift allegiance with the generals.
+2006|W|hun|MO|Ostrava|crime,occult|The mine shafts|The house reading has hunters in Ostrava track something living in the flooded old shafts.
+2007-1|H|mor|EU|Bucharest|treaty|Romania and Bulgaria join|Romania and Bulgaria join the European Union.
+2007-7|H|mor|AS|Islamabad|siege,faith|The Red Mosque|Pakistani troops storm the Red Mosque in Islamabad after a week-long siege.
+2007-9|H|mor|AS|Yangon|uprising,faith|The Saffron Revolution|Buddhist monks march against Burma's generals and are beaten and jailed.
+2007-12|H|mor|AS|Rawalpindi|terror,death|Benazir Bhutto killed|Benazir Bhutto is killed at a rally in Rawalpindi.
+2007-12|H|mor|MO|Brno|travel,treaty|Schengen|The Czech Republic joins the Schengen area, and the border posts with Austria close.
+2007|W|cha|EU|Prague|occult,art|The Dreaming in decline|The house reading has the Kithain of Prague sense the Dreaming thin as the old cafes give way to chains.
+2007|H|mor|EU|Tallinn|uprising,media|The bronze soldier|Riots in Tallinn over a Soviet memorial come with a cyber attack on Estonia.
+2007|H|mor|EU|Brdy|building|The radar debate|Czechs argue over an American radar base planned near Brdy.
+2007|H|mor|ME|Gaza|war|Hamas takes Gaza|Hamas takes control of Gaza.
+2007|W|mag|EU|Tallinn|media,occult|The Virtual Adepts in Estonia|The house reading has the Virtual Adepts blamed for the Estonian cyber attack.
+2007|H|mor|MO|Brno|art|The Brno pavilion reborn|The exhibition grounds of 1928 are restored for new fairs.
+2008-2|H|mor|EU|Pristina|founding|Kosovo independent|Kosovo declares independence from Serbia.
+2008-3|H|mor|AS|Lhasa|uprising|The Tibet protests|Protests in Lhasa turn to riots and a crackdown.
+2008-5|H|mor|AS|Sichuan|quake|The Sichuan earthquake|An earthquake in Sichuan kills nearly seventy thousand; many die in badly built schools.
+2008-5|H|mor|AS|Irrawaddy|storm|Cyclone Nargis|Cyclone Nargis kills some hundred and forty thousand in Burma.
+2008-8|H|mor|AS|Beijing|sport|The Beijing Olympics|China stages the Olympics in a new Beijing.
+2008-8|H|mor|EU|Tskhinvali|war|The Georgian war|Russia and Georgia fight a five-day war over South Ossetia.
+2008-9|H|mor|EU|London|money|The banking crash|The collapse of Lehman Brothers sets off a world financial crisis, and British banks are rescued by the state.
+2008-11|H|mor|AS|Mumbai|terror|The Mumbai attacks|Gunmen attack hotels, a station and a Jewish centre in Mumbai for three days.
+2008-12|H|mor|EU|Athens|uprising|The Athens riots|Police shoot a teenager in Athens, and Greece riots for weeks.
+2008|W|mag|EU|London|money,occult|The Syndicate's crisis|The house reading has the Syndicate split over the crash, and Mages buy cheap what the markets throw away.
+2008|H|mor|MO|Brno|money|The Czech crown holds|The Czech economy shrinks but avoids the worst of the crisis.
+2008|H|mor|AS|Kathmandu|revolution|Nepal a republic|Nepal ends its monarchy and becomes a republic.
+2008|H|mor|ME|Baghdad|war|The surge ends|Violence in Iraq falls as the American surge ends.
+2008|W|wer|AS|Sichuan|quake,occult|The Garou in Sichuan|The house reading has the Stargazers of Sichuan read the quake as the Wyrm stirring.
+2008|W|vam|MO|Olomouc|occult|An Olomouc elder|The house reading has an elder sleeping beneath Olomouc's fortress stir as flood barriers go up.
+2009-1|H|mor|ME|Gaza|war|The Gaza war|Israel attacks Gaza for three weeks.
+2009-1|H|mor|EU|Kiev|money,weather|The gas cut|Russia cuts gas to Ukraine in midwinter, and Balkan countries freeze.
+2009-1|H|mor|MO|Brno|crown|The Czech presidency|The Czech Republic holds the EU presidency; its government falls halfway through.
+2009-4|H|mor|EU|Prague|treaty|The Prague speech|The American president calls for a world without nuclear weapons from Prague Castle.
+2009-4|H|mor|EU|L'Aquila|quake|The L'Aquila earthquake|An earthquake in the Abruzzo kills over three hundred.
+2009-4|H|mor|EU|London|plague|Swine flu|A new strain of flu spreads from the Americas to Europe and Asia, and schools close as a precaution.
+2009-5|H|mor|AS|Colombo|war|Sri Lanka's war ends|Sri Lanka's army crushes the Tamil Tigers.
+2009-6|H|mor|ME|Tehran|uprising|The Green Movement|Iranians protest a disputed election, and the protests are crushed.
+2009-7|H|mor|AS|Urumqi|uprising,massacre|The Urumqi riots|Ethnic riots in Urumqi kill nearly two hundred.
+2009-11|H|mor|EU|Prague|revolution|Twenty years free|Prague and Brno mark twenty years since the Velvet Revolution.
+2009|W|vam|EU|Europe|occult|The nights grow thin|The house reading has the Kindred of Europe whisper of Gehenna as the Thin-Blooded multiply and elders fall silent.
+2009|W|all,vam|MO|Brno|occult|Brno at the end of the classic nights|The house reading has the Kindred of Brno hold a last Elysium in the Tugendhat villa.
+2009|H|mor|MO|Brno|crown|The government falls|Topolanek's government falls in a no-confidence vote during the EU presidency.
+2009|H|mor|AS|Seoul|death|Roh Moo-hyun dies|South Korea's former president dies in a fall.
+2009|H|mor|ME|Baghdad|war|Iraq's elections|Iraq votes in provincial elections.
+2009|H|mor|EU|Lisbon|treaty|The Lisbon Treaty|The Czech president signs the Lisbon Treaty last of all.
+2009|W|mag|EU|Europe|occult|The Ascension War's end|The house reading has the Traditions and the Technocracy count the costs of the Avatar Storm.
+2009|W|wra|EU|Europe|occult|Stygia in ruins|The house reading has Europe's wraiths gather in the Shadowlands, Stygia still in ruins.

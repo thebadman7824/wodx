@@ -1,0 +1,327 @@
+# Renaissance, 1450 to 1600. year[-month]|kind|lines|region|place|tags|title|text
+1450|H|mor|EU|Formigny|battle|Formigny|French cannon break an English army; Normandy is French again.
+1450|H|mor|EU|Kent|uprising|Jack Cade's rebellion|Kentish rebels march on London against corrupt ministers.
+1450|H|mor|EU|Milan|crown|Francesco Sforza|The condottiere Francesco Sforza becomes Duke of Milan.
+1450|W|mag|EU|Horizon|founding,occult|Horizon is raised|Mages of nine traditions build the Horizon realm; the Grand Convocation begins.
+1450|H|mor|EU|Mainz|science,media|Gutenberg's press|Gutenberg sets up his press with Fust's money in Mainz.
+1451|H|mor|ME|Edirne|crown|Mehmed II returns|Mehmed II becomes sultan for good and plans to take Constantinople.
+1451|H|mor|EU|Glasgow|learning,founding|Glasgow university|A university is founded at Glasgow.
+1452|H|mor|ME|Rumeli Hisari|building,war|The throat-cutter fortress|Mehmed builds Rumeli Hisari on the Bosporus to close the strait.
+1452|H|mor|EU|Vinci|art|Leonardo born|Leonardo is born at Vinci near Florence.
+1452|H|mor|EU|Rome|crown|Frederick III crowned|The last emperor crowned in Rome by a pope.
+1453-5|W|all|ME|Constantinople|siege,crown,death|Constantinople falls|The Ottomans take the city on 29 May; the last emperor dies on the walls, and the last Cainites who remember the Dream leave by sea or bargain with the new masters.
+1453-7|H|mor|EU|Castillon|battle|Castillon|The French destroy the last English army in Gascony; the Hundred Years War ends.
+1453|H|mor|EU|London|crown|Henry VI goes mad|The English king falls into a stupor for over a year.
+1454|H|mor|EU|Lodi|treaty|The Peace of Lodi|Milan, Venice, Florence, Naples and the pope agree a balance of power in Italy.
+1454|H|mor|EU|Torun|war,uprising|The Thirteen Years War|The Prussian towns rise against the Teutonic Order and turn to Poland.
+1455|H|mor|EU|Mainz|media,faith|The Gutenberg Bible|The first great printed book is finished.
+1455|H|mor|EU|St Albans|battle|The Wars of the Roses begin|York and Lancaster fight at St Albans.
+1456|H|mor|EU|Belgrade|siege,battle|Belgrade|John Hunyadi breaks Mehmed II's siege of Belgrade; he dies of plague weeks later.
+1456|H|mor|EU|Rome|faith|The noon bell|Pope Callixtus III orders church bells rung at noon to pray against the Turks.
+1456|W|vam|EU|Wallachia|crown|Vlad Dracula takes Wallachia|Vlad III takes the Wallachian throne for the second time and rules by the stake.
+1457|H|mor|EU|Moldavia|crown|Stephen the Great|Stephen becomes Prince of Moldavia and rules for 47 years.
+1458|H|mor|EU|Prague|crown|George of Podebrady|The Czech diet elects the Hussite George of Podebrady king.
+1458|H|mor|EU|Buda|crown|Matthias Corvinus|Hunyadi's son Matthias is elected King of Hungary.
+1459|H|mor|EU|Serbia|war,crown|Serbia falls|The Ottomans take Smederevo; Serbia is a province.
+1459|W|vam|EU|Brasov|massacre|The forest of stakes|Vlad has merchants of Brasov impaled; the Tzimisce of the Carpathians wonder what they have made.
+1460|H|mor|EU|Northampton|battle|Northampton|Henry VI is captured by the Yorkists.
+1460|H|mor|EU|Wakefield|battle,death|Wakefield|Richard of York is killed; his head is set on York's gate in a paper crown.
+1460|H|mor|EU|Lisbon|exploration,death|Henry the Navigator dies|The prince who sent the Portuguese down Africa's coast dies.
+1461|H|mor|EU|Towton|battle|Towton|The bloodiest battle on English soil; Edward IV takes the throne.
+1461|H|mor|ME|Trebizond|crown|Trebizond falls|Mehmed II takes the last Byzantine state.
+1461|H|mor|EU|France|crown|Louis XI|The spider king takes the French throne.
+1462|W|vam|EU|Targoviste|war|The night attack|Vlad attacks the Ottoman camp at night and leaves a field of impaled prisoners for the sultan to find.
+1462|H|mor|EU|Moscow|crown|Ivan III|Ivan the Great becomes Grand Prince of Moscow.
+1463|H|mor|EU|Bosnia|war|Bosnia falls|The Ottomans conquer Bosnia.
+1463|H|mor|EU|Venice|war|The Ottoman-Venetian war|Venice and the Ottomans begin sixteen years of war.
+1464|H|mor|EU|Florence|crown,death|Cosimo de' Medici dies|Florence names Cosimo Father of the Fatherland.
+1465|H|mor|EU|Montlhery|battle|The League of the Public Weal|French princes rebel against Louis XI.
+1466|W|mag|EU|Horizon|founding|The Grand Convocation ends|The Council of Nine Mystic Traditions is founded.
+1466|H|mor|EU|Torun|treaty|The Second Peace of Torun|The Teutonic Order gives western Prussia to Poland.
+1467|H|mor|AS|Kyoto|war,fire|The Onin War|War between Hosokawa and Yamana burns Kyoto and starts a century of civil war.
+1467|H|mor|EU|Burgundy|crown|Charles the Bold|Charles the Bold becomes Duke of Burgundy.
+1468|H|mor|EU|Liege|massacre|Liege destroyed|Charles the Bold sacks and burns Liege.
+1468|H|mor|EU|Albania|death|Skanderbeg dies|Albania's defender dies of malaria; the Ottomans take the country within a decade.
+1469|H|mor|EU|Florence|crown|Lorenzo de' Medici|Lorenzo the Magnificent leads Florence.
+1469|H|mor|EU|Valladolid|crown|Ferdinand and Isabella marry|The heirs of Aragon and Castile marry in secret.
+1469|H|mor|EU|Olomouc|crown|Matthias king in Olomouc|Catholic lords elect Matthias Corvinus King of Bohemia at Olomouc.
+1470|H|mor|ME|Negroponte|siege|Negroponte|The Ottomans take Venice's island of Negroponte.
+1471|H|mor|EU|Tewkesbury|battle,death|Tewkesbury|Edward IV kills the Lancastrian prince; Henry VI dies in the Tower days later.
+1471|H|mor|EU|Prague|crown,death|George of Podebrady dies|The Hussite king dies; Vladislaus Jagiellon takes Bohemia.
+1471|H|mor|AS|Champa|war|Champa falls|Dai Viet conquers the Cham capital.
+1472|H|mor|EU|Moscow|crown|Ivan marries Sophia|Ivan III marries the niece of the last Byzantine emperor; Moscow begins to call itself the third Rome.
+1473|H|mor|EU|Torun|science|Copernicus born|Nicolaus Copernicus is born in Torun.
+1473|H|mor|ME|Otlukbeli|battle|Otlukbeli|Mehmed II beats Uzun Hasan of the White Sheep Turkmens.
+1474|H|mor|EU|Castile|crown|Isabella queen|Isabella becomes Queen of Castile.
+1475|H|mor|EU|Bruges|media|The first book in English|Caxton prints the first book in English, at Bruges.
+1475|H|mor|ME|Caffa|war|Caffa taken|The Ottomans take the Genoese colonies in the Crimea.
+1476|H|mor|EU|Grandson|battle|Grandson and Morat|The Swiss beat Charles the Bold twice.
+1476|H|mor|EU|London|media|Caxton's press in Westminster|Caxton sets up the first press in England.
+1476|W|vam|EU|Wallachia|death,crown|Dracula falls|Vlad III is killed fighting the Ottomans; Kindred say the voivode did not stay dead.
+1477|H|mor|EU|Nancy|battle,death|Nancy|Charles the Bold dies in the snow before Nancy; Burgundy breaks up.
+1477|H|mor|EU|Ghent|crown|Mary of Burgundy marries Maximilian|The Burgundian heiress marries a Habsburg; the Netherlands pass to Austria.
+1478|H|mor|EU|Florence|death,crown|The Pazzi conspiracy|Plotters kill Giuliano de' Medici in the cathedral; Lorenzo survives.
+1478|W|hun|EU|Seville|persecution,faith|The Spanish Inquisition|The pope allows Ferdinand and Isabella their own Inquisition; the first burnings come in 1481.
+1478|H|mor|EU|Novgorod|crown|Novgorod taken|Ivan III ends the Novgorod republic.
+1479|H|mor|EU|Olomouc|treaty|The Peace of Olomouc|Matthias keeps Moravia, Silesia and Lusatia for his lifetime.
+1479|H|mor|EU|Constantinople|treaty|Venice pays for peace|Venice makes peace with Mehmed II.
+1480|H|mor|EU|Ugra River|war|The Great Stand on the Ugra|Moscow and the Horde face each other across the Ugra; the Tatars ride away and the yoke ends.
+1480|H|mor|EU|Otranto|massacre|Otranto|The Ottomans take Otranto in Italy and kill hundreds who will not convert.
+1480|H|mor|EU|Rhodes|siege|Rhodes holds|The Hospitallers beat off an Ottoman siege.
+1481|H|mor|ME|Constantinople|crown,death|Mehmed II dies|The conqueror dies; Bayezid II succeeds after a fight with his brother.
+1481|H|hun|EU|Seville|fire,persecution|The first auto-da-fe|Six people are burned at Seville by the Spanish Inquisition.
+1482|H|mor|EU|Granada|war|The Granada war|Castile begins the ten-year conquest of Granada.
+1483|H|mor|EU|London|crown,death|The princes in the Tower|Edward IV dies; his sons vanish in the Tower and Richard III takes the crown.
+1483|H|mor|EU|Eisleben|faith|Luther born|Martin Luther is born.
+1483|H|hun|EU|Spain|persecution|Torquemada|Tomas de Torquemada becomes Inquisitor General.
+1484|H|hun|EU|Rome|persecution,occult|The witch bull|Innocent VIII's bull against witchcraft in Germany gives Kramer and Sprenger the pope's backing.
+1485|H|mor|EU|Bosworth|battle,crown|Bosworth|Henry Tudor kills Richard III and takes the crown.
+1485|H|mor|EU|Vienna|siege|Matthias takes Vienna|Matthias Corvinus captures Vienna and moves his court there.
+1486|W|vam|EU|Europe|faith|The first Conclave|The Camarilla holds its first Conclave and proclaims the Masquerade.
+1486|W|hun|EU|Speyer|occult,persecution,media|The Hammer of Witches|Kramer's Malleus Maleficarum is printed; hunters use it for two centuries.
+1487|H|mor|EU|Lisbon|exploration,sea|Dias rounds the Cape|Bartolomeu Dias sails round the southern tip of Africa.
+1488|H|mor|EU|Bruges|uprising|Maximilian held captive|Bruges imprisons Maximilian of Austria.
+1489|H|mor|ME|Cyprus|crown,trade|Venice takes Cyprus|Cyprus's Venetian queen hands the island to Venice.
+1490|H|mor|EU|Vienna|crown,death|Matthias dies|Matthias Corvinus dies; his library and his army scatter.
+1491|H|mor|EU|Brittany|crown|Brittany joins France|Anne of Brittany marries Charles VIII.
+1492-1|H|mor|EU|Granada|war,crown|Granada falls|The last Muslim kingdom in Spain surrenders.
+1492-3|H|hun|EU|Spain|persecution,migration|The Alhambra decree|Spain's Jews are ordered to convert or leave; many go to the Ottomans, who welcome them.
+1492-10|H|mor|EU|Palos|exploration,sea|Columbus sails west|Columbus reaches the Caribbean and claims it for Castile.
+1492|H|mor|EU|Florence|crown,death|Lorenzo dies|Lorenzo de' Medici dies; Savonarola's preaching grows.
+1492|H|mor|EU|Rome|faith|A Borgia pope|Rodrigo Borgia becomes Alexander VI.
+1493|W|vam|EU|Thorns|treaty|The Convention of Thorns|The Anarch Revolt ends; the anarchs who refuse form the Sabbat, and the Assamites are cursed.
+1493|H|mor|EU|Rome|law,exploration|The world divided|The pope draws a line through the Atlantic between Spain and Portugal.
+1494|H|mor|EU|Italy|war|Charles VIII invades Italy|The French march to Naples; the Italian Wars begin.
+1494|H|mor|EU|Tordesillas|treaty|The Treaty of Tordesillas|Spain and Portugal move the line west.
+1495|H|mor|EU|Naples|plague|The French disease|Syphilis breaks out among the armies at Naples and spreads across Europe.
+1495|H|mor|EU|Worms|law|The Perpetual Peace|The Diet of Worms bans private war in the Empire.
+1496|H|mor|EU|Portugal|persecution|Portugal's Jews|Portugal orders the Jews out, then forces them to convert instead.
+1497|H|mor|EU|Florence|fire,faith|The bonfire of the vanities|Savonarola's followers burn mirrors, cards and paintings in Florence.
+1497|H|mor|EU|Bristol|exploration,sea|Cabot reaches Newfoundland|John Cabot sails from Bristol to North America.
+1498|H|mor|EU|Florence|fire,death,heresy|Savonarola burned|The friar is hanged and burned in the Piazza della Signoria.
+1498|H|mor|AS|Calicut|exploration,trade|Da Gama in India|Vasco da Gama reaches Calicut.
+1499|H|mor|EU|Switzerland|war|The Swabian War|The Swiss win their freedom from the Empire in fact.
+1499|H|mor|EU|Milan|war|The French take Milan|Louis XII takes Milan; Leonardo leaves the city.
+1500|H|mor|EU|Lisbon|exploration|Cabral reaches Brazil|Pedro Alvares Cabral lands in Brazil on the way to India.
+1500|H|mor|EU|Ghent|crown|Charles V born|The future emperor is born at Ghent.
+1501|H|mor|ME|Tabriz|crown,faith|Shah Ismail|Ismail is crowned at Tabriz and makes Persia Shia.
+1502|H|mor|EU|Crimea|war|The Golden Horde ends|The Crimean Tatars destroy the last of the Golden Horde.
+1503|H|mor|EU|Rome|crown,death|Alexander VI dies|The Borgia pope dies; Cesare Borgia's power collapses.
+1503|H|mor|EU|Florence|art|The Mona Lisa begun|Leonardo begins the portrait of Lisa Gherardini.
+1504|H|mor|EU|Florence|art|Michelangelo's David|The David is set up before the Palazzo Vecchio.
+1504|H|mor|AS|Kabul|crown|Babur takes Kabul|Babur, driven from Fergana, takes Kabul.
+1505|H|mor|AS|Goa|empire|Portugal's viceroy of India|Francisco de Almeida becomes first viceroy of Portuguese India.
+1506|H|mor|EU|Rome|building|New St. Peter's|Julius II lays the first stone of the new St. Peter's.
+1506|H|mor|EU|Lisbon|massacre|The Lisbon massacre|Mobs kill hundreds of converted Jews in Lisbon.
+1507|H|mor|EU|Saint-Die|exploration|America named|Waldseemuller's map names the new lands America.
+1508|H|mor|EU|Cambrai|treaty,war|The League of Cambrai|The pope, France and the emperor ally against Venice.
+1508|H|mor|EU|Rome|art|The Sistine ceiling|Michelangelo begins painting the Sistine Chapel ceiling.
+1509|H|mor|EU|London|crown|Henry VIII|Henry VIII becomes King of England.
+1509|H|mor|AS|Diu|battle,sea|Diu|The Portuguese destroy a Mamluk and Gujarati fleet.
+1509|H|mor|ME|Constantinople|quake,disaster|The little Judgment Day|An earthquake wrecks Constantinople.
+1510|H|mor|AS|Goa|war,empire|Goa taken|Afonso de Albuquerque takes Goa.
+1511|H|mor|AS|Malacca|war,trade|Malacca taken|Albuquerque takes Malacca and its spice trade.
+1512|H|mor|EU|Ravenna|battle|Ravenna|The French win and lose their general Gaston de Foix.
+1512|H|mor|ME|Constantinople|crown|Selim the Grim|Selim I takes the Ottoman throne.
+1513|H|mor|EU|Flodden|battle,death|Flodden|James IV of Scotland is killed with much of his nobility.
+1513|H|mor|EU|Florence|learning|The Prince|Machiavelli writes The Prince in exile.
+1514|H|mor|ME|Chaldiran|battle|Chaldiran|Ottoman guns break Shah Ismail's army.
+1514|H|mor|EU|Hungary|uprising|Dozsa's revolt|A crusade turns into a peasant war in Hungary; Gyorgy Dozsa is burned on an iron throne.
+1515|H|mor|EU|Marignano|battle|Marignano|Francis I beats the Swiss and takes Milan.
+1515|H|mor|EU|Vienna|crown,treaty|The Habsburg double wedding|The Habsburgs and Jagiellons agree marriages that will bring Bohemia and Hungary to Austria.
+1516|H|mor|ME|Marj Dabiq|battle|Marj Dabiq|Selim destroys the Mamluk army in Syria.
+1516|H|mor|EU|Louvain|learning|Utopia|Thomas More publishes Utopia.
+1516|H|mor|EU|Spain|crown|Charles I of Spain|Charles of Habsburg inherits Spain.
+1517-1|W|vam|ME|Cairo|war,crown|The Ottomans take Cairo|Selim ends the Mamluk state; Mukhtar Bey spreads influence beyond Egypt under the new rulers.
+1517-10|H|mor|EU|Wittenberg|faith|The ninety-five theses|Luther publishes the theses against indulgences.
+1518|H|mor|EU|Strasbourg|occult|The dancing plague of 1518|Hundreds dance in Strasbourg's streets for weeks; some die.
+1519|H|mor|EU|Frankfurt|crown|Charles V elected emperor|Charles of Spain is chosen emperor, ruling half of Europe.
+1519|H|mor|EU|Amboise|art,death|Leonardo dies|Leonardo dies in France.
+1519|H|mor|EU|Seville|exploration,sea|Magellan sails|Magellan leaves Spain to sail round the world.
+1520|H|mor|EU|Stockholm|massacre|The Stockholm Bloodbath|Christian II of Denmark executes Swedish nobles after his coronation.
+1520|H|mor|ME|Constantinople|crown|Suleiman the Magnificent|Suleiman becomes sultan.
+1520|H|mor|EU|Field of the Cloth of Gold|treaty|The Field of the Cloth of Gold|Henry VIII and Francis I meet in tents of gold near Calais.
+1521|H|mor|EU|Worms|faith,law|The Diet of Worms|Luther refuses to recant and is outlawed.
+1521|H|mor|EU|Belgrade|siege|Belgrade falls|Suleiman takes Belgrade.
+1521|H|mor|AS|Mactan|death,exploration|Magellan killed|Magellan dies fighting on Mactan in the Philippines.
+1522|H|mor|EU|Seville|exploration|Round the world|The last ship of Magellan's fleet comes home.
+1522|H|mor|EU|Rhodes|siege|Rhodes falls|The Hospitallers surrender Rhodes after six months.
+1523|H|mor|EU|Sweden|crown|Gustav Vasa|Gustav Vasa is elected King of Sweden; the Kalmar Union ends.
+1524|H|mor|EU|Germany|uprising|The Peasants' War|Peasants rise across southern Germany.
+1525|H|mor|EU|Frankenhausen|battle,massacre|Frankenhausen|The princes crush Thomas Muntzer's peasants.
+1525|H|mor|EU|Pavia|battle,crown|Pavia|Charles V's army captures Francis I.
+1525|H|mor|EU|Prussia|faith,crown|Prussia turns Lutheran|The grand master of the Teutonic Order becomes Duke of Prussia.
+1526-4|H|mor|AS|Panipat|battle,founding|Panipat|Babur founds the Mughal empire.
+1526-8|H|mor|EU|Mohacs|battle,crown,death|Mohacs|Suleiman destroys the Hungarian army; King Louis II drowns fleeing.
+1526|H|mor|EU|Prague|crown|Ferdinand king of Bohemia|Ferdinand of Habsburg is elected King of Bohemia.
+1527|H|mor|EU|Rome|massacre,siege|The sack of Rome|Imperial troops sack Rome for weeks; the pope is besieged in Castel Sant'Angelo.
+1528|H|mor|EU|Moravia|faith,migration|Anabaptists in Moravia|Anabaptist communities settle in southern Moravia.
+1528|W|vam|EU|Venice|faith|The promise of 1528|Augustus Giovanni's clan comes to its arrangement with the Camarilla.
+1529|H|mor|EU|Vienna|siege|The siege of Vienna|Suleiman besieges Vienna and fails.
+1529|H|mor|EU|Marburg|faith|The Marburg Colloquy|Luther and Zwingli fail to agree.
+1530|H|mor|EU|Augsburg|faith|The Augsburg Confession|The Lutherans set out their faith.
+1530|H|mor|EU|Malta|founding|The Knights of Malta|Charles V gives Malta to the Hospitallers.
+1530|H|mor|AS|Agra|crown,death|Babur dies|Babur dies; Humayun takes the throne.
+1531|H|mor|EU|Kappel|battle,death|Kappel|Zwingli is killed in battle.
+1531|H|mor|EU|Lisbon|quake|Lisbon earthquake|An earthquake damages Lisbon.
+1532|H|mor|EU|Vienna|war|The Little War in Hungary|Suleiman's second march on Vienna stalls at Koszeg.
+1533|H|mor|EU|London|faith,crown|Henry marries Anne Boleyn|Henry VIII breaks with Rome to marry Anne Boleyn.
+1534|H|mor|EU|Munster|uprising,faith|The kingdom of Munster|Anabaptists seize Munster and proclaim the kingdom of God.
+1534|H|mor|EU|Rome|faith,founding|The Jesuits|Ignatius of Loyola and companions take vows at Montmartre.
+1534|H|mor|ME|Baghdad|war|Baghdad taken|Suleiman takes Baghdad from Persia.
+1535|H|mor|EU|Munster|massacre|Munster falls|The bishop's army retakes Munster; the leaders' bodies are hung in cages on the church tower.
+1535|H|mor|EU|Tunis|war|Tunis taken|Charles V takes Tunis from Barbarossa.
+1535|H|mor|EU|London|death,faith|Thomas More beheaded|More is beheaded for refusing to accept Henry as head of the Church.
+1536|W|wra|EU|London|death,crown|Anne Boleyn beheaded|Anne Boleyn dies in the Tower on 19 May; the Restless say the queen serves the Quiet Lord as an Anacreon of southern England.
+1536|H|mor|EU|England|faith,building|The monasteries dissolved|Henry VIII begins closing England's monasteries.
+1536|H|mor|EU|Geneva|faith|Calvin's Institutes|John Calvin publishes the Institutes of the Christian Religion.
+1537|H|mor|EU|England|uprising|The Pilgrimage of Grace|The north rises against the closing of the monasteries.
+1538|H|mor|ME|Preveza|battle,sea|Preveza|Barbarossa beats the Holy League's fleet.
+1540|H|mor|EU|Rome|faith|The Jesuits approved|The pope approves the Society of Jesus.
+1541|H|mor|EU|Buda|war|Buda taken|Suleiman takes Buda; Hungary is split three ways.
+1542|H|hun|EU|Rome|persecution,faith|The Roman Inquisition|Paul III sets up the Holy Office in Rome.
+1543|H|mor|EU|Nuremberg|science|Copernicus publishes|De revolutionibus puts the sun at the centre; its author dies that year.
+1543|H|mor|EU|Basel|science|Vesalius's anatomy|Vesalius publishes the Fabric of the Human Body.
+1543|H|mor|AS|Tanegashima|science,trade|Guns reach Japan|Portuguese traders bring arquebuses to Japan.
+1545|H|mor|EU|Trent|faith|The Council of Trent|The Catholic Church meets to answer the reformers.
+1545|H|mor|EU|Seville|money|Potosi silver reaches Seville|A silver mountain found in Peru sends its silver through Seville; prices across Europe begin to climb.
+1546|H|mor|EU|Eisleben|faith,death|Luther dies|Luther dies where he was born.
+1547|H|mor|EU|Muhlberg|battle|Muhlberg|Charles V crushes the Protestant princes.
+1547|H|mor|EU|Moscow|crown|Ivan the Terrible crowned tsar|Ivan IV is crowned the first tsar of Russia.
+1547|H|mor|EU|Prague|uprising|The Bohemian estates rise|Ferdinand crushes a revolt of Bohemian towns and nobles.
+1549|H|mor|AS|Kagoshima|faith|Francis Xavier in Japan|The Jesuit Francis Xavier lands in Japan.
+1550|H|mor|EU|Valladolid|law,faith|The Valladolid debate|Las Casas and Sepulveda argue whether the native peoples of America may be enslaved.
+1550|W|vam|EU|Europe|faith|The Black Hand's ranks|The Black Hand sets its ranks and marks.
+1551|H|mor|EU|Tripoli|war|Tripoli taken|The Ottomans take Tripoli from the Knights of Malta.
+1552|H|mor|EU|Kazan|siege|Kazan taken|Ivan IV takes the khanate of Kazan.
+1553|H|mor|EU|London|crown|Mary Tudor|Mary I takes the throne and restores the old Church.
+1553|H|mor|EU|Geneva|fire,heresy|Servetus burned|Calvin's Geneva burns Michael Servetus.
+1555|H|mor|EU|Augsburg|treaty,faith|The Peace of Augsburg|Each prince of the Empire chooses the faith of his land.
+1555|H|mor|EU|Oxford|fire,persecution|The Oxford martyrs|Bishops Latimer and Ridley are burned at Oxford.
+1556|H|mor|AS|Shaanxi|quake,disaster|The Shaanxi earthquake|The deadliest earthquake recorded kills perhaps 830,000 in China.
+1556|H|mor|AS|Panipat|battle|The second Panipat|The young Akbar's army wins northern India.
+1556|H|mor|EU|Spain|crown|Philip II|Charles V gives up his crowns; Philip II takes Spain and the Netherlands.
+1558|H|mor|EU|Calais|war|Calais lost|France takes Calais, England's last French town.
+1558|H|mor|EU|London|crown|Elizabeth I|Elizabeth becomes Queen of England.
+1558|H|mor|EU|Livonia|war|The Livonian War|Ivan IV invades Livonia.
+1559|H|mor|EU|Cateau-Cambresis|treaty|The Peace of Cateau-Cambresis|The Italian Wars end.
+1559|H|mor|EU|Paris|crown,death|Henry II killed at a joust|A lance splinter kills the French king.
+1560|H|mor|EU|Amboise|uprising|The Amboise conspiracy|Huguenot plotters try to seize the young king.
+1560|H|mor|AS|Okehazama|battle|Okehazama|Oda Nobunaga destroys a much larger army.
+1561|H|mor|EU|Madrid|founding|Madrid the capital|Philip II moves the court to Madrid.
+1562|H|mor|EU|Vassy|massacre,faith|Vassy|Soldiers kill Huguenots at worship; the French Wars of Religion begin.
+1563|H|mor|EU|Trent|faith|Trent ends|The council closes, having reshaped the Catholic Church.
+1564|H|mor|EU|Pisa|science|Galileo born|Galileo Galilei is born at Pisa.
+1564|H|mor|EU|Stratford|art|Shakespeare born|William Shakespeare is born.
+1565|H|mor|EU|Malta|siege|The Great Siege of Malta|The Knights hold Malta against the Ottomans.
+1565|H|mor|AS|Talikota|battle|Talikota|The Deccan sultans destroy Vijayanagara.
+1565|H|mor|AS|Manila|empire|The Spanish in the Philippines|Spain begins its rule of the Philippines.
+1566|H|mor|EU|Antwerp|uprising,faith|The iconoclast fury|Calvinists strip the churches of the Netherlands of images.
+1566|H|mor|EU|Szigetvar|siege,death|Szigetvar|Suleiman dies during the siege; Zrinyi's defenders die in a last sally.
+1567|H|mor|EU|Brussels|persecution|The Council of Blood|The Duke of Alba arrives to crush the Netherlands.
+1568|H|mor|EU|Netherlands|war|The Eighty Years War|William of Orange leads the Dutch revolt.
+1569|H|mor|EU|Lublin|treaty,crown|The Union of Lublin|Poland and Lithuania become one commonwealth.
+1569|H|mor|EU|Duisburg|science|Mercator's map|Mercator publishes his world map.
+1570|H|mor|EU|Novgorod|massacre|The Novgorod massacre|Ivan IV's men kill thousands in Novgorod.
+1570|H|mor|ME|Cyprus|war|Cyprus invaded|The Ottomans invade Venetian Cyprus.
+1571|H|mor|ME|Famagusta|siege,massacre|Famagusta|Famagusta falls; its commander is flayed alive.
+1571|H|mor|EU|Lepanto|battle,sea|Lepanto|The Holy League destroys the Ottoman fleet.
+1571|H|mor|EU|Moscow|fire|Moscow burned|The Crimean khan burns Moscow.
+1572|H|mor|EU|Paris|massacre,faith|St Bartholomew's Day|Thousands of Huguenots are killed in Paris and the provinces.
+1572|H|mor|EU|Molodi|battle|Molodi|Russia destroys a Crimean army south of Moscow.
+1572|H|mor|EU|Denmark|science|Tycho's new star|Tycho Brahe sees a new star in Cassiopeia.
+1573|H|mor|AS|Kyoto|crown|The Ashikaga end|Nobunaga drives out the last Ashikaga shogun.
+1574|H|mor|EU|Leiden|siege,flood|Leiden relieved|The Dutch flood their own land to lift the Spanish siege.
+1575|H|mor|AS|Nagashino|battle|Nagashino|Nobunaga's musketeers destroy the Takeda cavalry.
+1576|H|mor|EU|Antwerp|massacre|The Spanish Fury|Unpaid Spanish troops sack Antwerp.
+1576|H|mor|EU|Prague|crown|Rudolf II|Rudolf II becomes emperor.
+1576|W|mag|EU|Hven|science,building|Uraniborg|Tycho Brahe builds an observatory on Hven; the Order of Reason funds measurements, the Hermetics read omens in them.
+1577|H|mor|EU|Plymouth|exploration,sea|Drake sails|Francis Drake leaves on his voyage round the world.
+1578|H|mor|EU|Alcacer Quibir|battle,crown|The Battle of the Three Kings|King Sebastian of Portugal vanishes in a disaster in Morocco.
+1579|H|mor|EU|Utrecht|treaty|The Union of Utrecht|The northern Dutch provinces bind together.
+1580|H|mor|EU|Lisbon|crown|Spain takes Portugal|Philip II becomes King of Portugal.
+1581|H|mor|EU|Netherlands|law|The Act of Abjuration|The Dutch renounce Philip II.
+1582|H|mor|EU|Rome|science,law|The Gregorian calendar|Ten days are dropped from October in Catholic lands.
+1582|H|mor|AS|Kyoto|death|Honno-ji|Nobunaga is betrayed and dies in the burning temple.
+1583|H|mor|EU|Prague|crown|Rudolf moves to Prague|Rudolf II makes Prague the imperial capital.
+1584|H|mor|EU|Delft|death|William the Silent shot|The leader of the Dutch revolt is murdered.
+1584|H|mor|EU|Moscow|crown,death|Ivan the Terrible dies|Ivan IV dies over a chessboard.
+1585|H|mor|EU|Antwerp|siege|Antwerp falls|Parma takes Antwerp; trade moves to Amsterdam.
+1586|H|mor|AS|Kyoto|crown|Hideyoshi|Toyotomi Hideyoshi becomes chancellor of Japan.
+1587|H|mor|EU|Fotheringhay|death,crown|Mary Queen of Scots beheaded|Elizabeth signs her cousin's death warrant.
+1587|H|mor|ME|Isfahan|crown|Shah Abbas|Abbas the Great takes the Persian throne.
+1588|H|mor|EU|English Channel|battle,sea,storm|The Armada|The Spanish fleet is beaten off and wrecked by storms.
+1589|H|mor|EU|Paris|death,crown|Henry III murdered|A friar stabs the French king; Henry of Navarre is heir.
+1590|H|mor|AS|Odawara|siege|Japan unified|Hideyoshi takes Odawara; all Japan is his.
+1590|W|mag|EU|Prague|occult|The Golem tale|The tale of the rabbi who made a man of clay runs through the crown lands; mages argue whether it is a story or a working.
+1592|H|mor|AS|Busan|war|The invasion of Korea|Hideyoshi's army lands at Busan.
+1592|H|mor|AS|Hansan|battle,sea|Hansan Island|Admiral Yi Sun-sin's turtle ships destroy a Japanese fleet.
+1593|H|mor|EU|Saint-Denis|faith,crown|Paris is worth a mass|Henry IV becomes Catholic.
+1593|H|mor|EU|Sisak|battle|Sisak|The Long Turkish War begins.
+1594|H|mor|EU|Ireland|war|The Nine Years War|Hugh O'Neill rises against English rule.
+1595|H|mor|EU|Wallachia|battle|Calugareni|Michael the Brave beats the Ottomans.
+1596|H|mor|EU|Mezokeresztes|battle|Mezokeresztes|The Ottomans win a great battle in Hungary.
+1597|H|mor|AS|Nagasaki|persecution,faith|The Nagasaki martyrs|Twenty-six Christians are crucified at Nagasaki.
+1598|H|mor|AS|Noryang|battle,sea,death|Noryang|Admiral Yi dies winning the last sea battle; Japan leaves Korea.
+1598|H|mor|EU|Nantes|law,faith|The Edict of Nantes|Henry IV grants the Huguenots toleration.
+1598|H|mor|ME|Isfahan|founding|Isfahan the capital|Shah Abbas makes Isfahan his capital.
+1598|H|mor|EU|Moscow|crown,death|The Rurikids end|Tsar Fyodor dies; Boris Godunov is chosen tsar.
+1599|H|mor|EU|London|art,building|The Globe|Shakespeare's company builds the Globe.
+1600|H|mor|EU|Rome|fire,heresy|Giordano Bruno burned|The Roman Inquisition burns Bruno in the Campo de' Fiori.
+1600|H|mor|AS|Sekigahara|battle|Sekigahara|Tokugawa Ieyasu wins Japan.
+1600|H|mor|EU|London|trade,founding|The East India Company|Elizabeth charters the English East India Company.
+1600|W|wra|EU|Europe|storm|The Third Great Maelstrom|The worst storm yet cuts Stygia off.
+1600|H|mor|EU|Prague|science|Kepler joins Tycho|Johannes Kepler comes to Prague to work with Tycho Brahe.
+1450|W|vam|EU|Wallachia|war|The voivodes and the Order of the Dragon|Kindred of the Carpathians watch the princes of the Dragon order fight the Turk and each other.
+1451|H|mor|AS|Delhi|crown|The Lodi dynasty|Bahlul Lodi takes the throne of Delhi.
+1455|H|mor|EU|Cyprus|sea|Pirates of the Aegean|Corsairs make the Aegean islands unsafe as Byzantine power ends.
+1457|H|mor|AS|Edo|building,founding|Edo castle|Ota Dokan builds a castle at Edo, the future Tokyo.
+1460|H|mor|EU|Moravia|war|Moravia in the Bohemian wars|Catholic lords in Moravia fight George of Podebrady's Hussites.
+1465|W|mag|EU|Florence|learning,occult|Ficino translates Hermes|Marsilio Ficino translates the Hermetic writings for Cosimo de' Medici; the Order of Hermes is delighted and alarmed.
+1469|H|mor|AS|Punjab|faith|Guru Nanak born|The founder of the Sikh faith is born.
+1472|H|mor|ME|Persia|war|Venice seeks allies in Persia|Venetian envoys go to Uzun Hasan for help against the Ottomans.
+1474|W|mag|EU|Florence|learning,occult|The Platonic Academy|Ficino's circle at Careggi studies Plato and Hermes Trismegistus.
+1475|H|mor|EU|Trent|persecution,massacre|The Trent blood libel|The Jews of Trent are tortured and killed after a child's death.
+1482|H|mor|EU|Florence|art|The Birth of Venus|Botticelli paints the Birth of Venus about this time.
+1485|H|mor|EU|London|plague|The sweating sickness|A new and deadly fever kills thousands in London.
+1486|W|mag|EU|Rome|learning,occult|Pico's nine hundred theses|Pico della Mirandola offers to debate nine hundred theses, many from the Kabbalah; the pope condemns thirteen.
+1489|H|mor|EU|Granada|war|Baza|Castile takes Baza after a long siege.
+1495|W|vam|EU|Naples|plague|The new disease and the blood|Kindred learn quickly which mortals carry the French disease, and which feeding grounds to avoid.
+1497|H|mor|EU|Milan|art|The Last Supper|Leonardo finishes the Last Supper in Milan.
+1499|H|mor|ME|Zonchio|battle,sea|Zonchio|The Ottoman fleet beats Venice.
+1500|W|vam|AS|Hong Kong|trade|A backwater ruled from Canton|Hong Kong's villages fish and farm while Canton grows into a great port.
+1502|H|mor|EU|Wittenberg|learning,founding|Wittenberg university|Frederick the Wise founds a university at Wittenberg.
+1505|H|mor|EU|Moscow|crown,death|Ivan the Great dies|Ivan III dies having tripled the lands of Moscow.
+1507|W|mag|EU|Sponheim|occult|Trithemius and Faust|The abbot Trithemius warns of a vagabond calling himself Faustus.
+1509|H|mor|EU|Agnadello|battle|Agnadello|The French crush Venice's army.
+1510|W|mag|EU|Cologne|occult,learning|Agrippa's occult philosophy|Cornelius Agrippa drafts the Three Books of Occult Philosophy.
+1514|H|mor|EU|Moravia|faith|Brethren in Moravia|The Unity of Brethren grow in Moravia despite the king's ban.
+1515|W|hun|EU|Moravia|faith,persecution|A quiet march|The Unity of Brethren keep their faith in Moravia; inquirers from Prague find them hard to catch.
+1517|H|mor|AS|Delhi|crown|Ibrahim Lodi|The last Lodi sultan takes Delhi.
+1520|W|vam|EU|Rome|art,faith|Raphael dies|The painter dies in Rome; Toreador of the city call it a loss to the blood itself.
+1522|W|hun|EU|Bohemia|faith|Lutherans in Bohemia|Lutheran preachers reach Bohemia and Moravia.
+1523|H|mor|EU|Zurich|faith|Zwingli's reform|Zurich adopts Zwingli's reform.
+1527|H|mor|EU|Basel|science,occult|Paracelsus burns the old books|Paracelsus burns Avicenna's canon at Basel and lectures in German.
+1530|W|mag|EU|Basel|science,occult|Paracelsus and the craftsmen|Paracelsus's chemistry splits the alchemists: some go to the Hermetics, some to the Order of Reason.
+1531|H|mor|EU|Prague|building|Prague castle rebuilt|Ferdinand I rebuilds Prague castle in the new style.
+1535|W|vam|EU|Munster|uprising,faith|Kindred in the kingdom of God|Kindred in Munster find the prophets' kingdom an easy place to hunt and a hard one to hide in.
+1540|H|mor|AS|Kannauj|battle|Kannauj|Sher Shah Suri drives Humayun out of India.
+1542|H|mor|EU|Prague|fire|The Prague fire|A great fire burns Prague's Lesser Town and castle.
+1545|H|mor|AS|Delhi|crown,death|Sher Shah dies|Sher Shah Suri dies in a gunpowder explosion.
+1550|H|mor|AS|Beijing|war|Altan Khan at Beijing|The Mongol Altan Khan burns the suburbs of Beijing.
+1555|H|mor|AS|Delhi|crown|Humayun returns|Humayun takes back Delhi.
+1557|W|mag|EU|Antwerp|science|The age of printing|Antwerp printers flood Europe with books; the Order of Reason backs the printers of almanacs.
+1560|W|vam|EU|France|faith,war|The Toreador and the wars of religion|The Grand Court's Kindred back Catholic and Huguenot nobles as it suits them.
+1564|W|mag|EU|London|occult|John Dee's Monad|John Dee publishes the Hieroglyphic Monad; the Hermetic houses of England court him.
+1569|H|mor|AS|Fatehpur Sikri|building|Fatehpur Sikri|Akbar builds a new capital near Agra.
+1571|H|mor|AS|Nagasaki|trade,founding|Nagasaki opened|Nagasaki is opened to Portuguese trade.
+1575|H|mor|AS|Fatehpur Sikri|faith,learning|The house of worship|Akbar invites scholars of every faith to debate at his court.
+1579|H|mor|AS|Fatehpur Sikri|faith|Akbar's decree|Akbar claims the right to judge disputes of Islamic law.
+1580|W|vam|EU|Prague|occult|Kindred at Rudolf's court|Rudolf's alchemists and astrologers draw Tremere and Toreador to Prague.
+1583|W|mag|EU|Prague|occult|Dee and Kelley in Bohemia|John Dee and Edward Kelley come to Bohemia to speak with angels.
+1587|W|hun|EU|Trier|persecution,occult|The Trier witch trials|Hundreds are burned in the Trier trials over a decade.
+1589|W|hun|EU|Trier|persecution|Dietrich Flade burned|A judge who doubted the witch trials is himself burned at Trier.
+1591|H|mor|EU|Prague|science|Rudolf's cabinet of curiosities|Rudolf fills his rooms with clocks, stones, paintings and marvels.
+1595|W|hun|EU|Lorraine|persecution,occult|Nicholas Remy's book|A witch judge of Lorraine publishes his book on demons, boasting of hundreds burned.
+1597|W|hun|EU|Edinburgh|persecution,occult|King James's Daemonologie|James VI of Scotland writes against witches.
+1599|H|mor|EU|Prague|science|Tycho in Prague|Tycho Brahe becomes imperial mathematician to Rudolf.

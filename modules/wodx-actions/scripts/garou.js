@@ -862,10 +862,12 @@ export function naturalWeapons(actor) {
     const f = info(actor).form, daw = basis() === "daw";
     const T = {
         homid: { bite: "bashing", claw: null },
-        glabro: daw ? { bite: "lethal", claw: null } : { bite: "aggravated", claw: "aggravated" },
-        crinos: { bite: "aggravated", claw: "aggravated" },
+        // W20 p. 296: Glabro may bite at difficulty 8 for Strength - 1 lethal, and claws for Strength + 1 bashing (B1208)
+        glabro: daw ? { bite: "lethal", claw: null } : { bite: "lethal", claw: "bashing", biteBonus: -2, biteDiff: 8 },
+        crinos: daw ? { bite: "aggravated", claw: "aggravated" } : { bite: "aggravated", claw: "aggravated", biteDiff: 5 },
         hispo: { bite: "aggravated", claw: "aggravated", biteBonus: 1 },
-        lupus: daw ? { bite: "lethal", claw: null } : { bite: "aggravated", claw: null }
+        // W20 gives Lupus claws as lethal in the form text (p. 287) and bashing in the maneuver (p. 296): the form text wins (B1208)
+        lupus: daw ? { bite: "lethal", claw: null } : { bite: "aggravated", claw: "lethal" }
     }[f] ?? { bite: "bashing", claw: null };
-    return { form: f, biteBonus: 0, ...T, note: daw ? "DA:W pp. 106–107" : "W20: aggravated teeth and claws in every form but Homid" };
+    return { form: f, biteBonus: 0, ...T, note: daw ? "DA:W pp. 106–107" : "W20 pp. 287, 296" };
 }

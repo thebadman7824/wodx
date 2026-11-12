@@ -78,6 +78,8 @@ export async function newChangeDialog(a) {
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `A lasting change: ${a.name}`}, classes: ["wodx-dialog", "wst-body-new"],
     content: `<div class="form-group"><label>From</label><select name="source" data-fixed>${opts(B.SOURCES, "vicissitude")}</select></div>
       <div class="form-group"><label>Where</label><select name="part" data-fixed>${opts(B.PARTS, "face")}</select></div>
+      <div class="form-group"><label>What it does</label><select name="feature" data-fixed>${opts(B.FEATURE_OPTIONS, "")}</select></div>
+      <div class="form-group"><label>Part lost</label><select name="lostPart" data-fixed><option value="">None</option>${opts(B.LOSABLE, "")}</select></div>
       <div class="form-group"><label>What changed</label><input type="text" name="what" placeholder="Cheekbones raised, a second row of teeth"></div>
       <div class="form-group"><label>Appearance</label><input type="number" name="appearance" value="0" min="-5" max="5"></div>
       <p class="hint">${ap ? `Appearance is ${ap.value} now.${ap.locked ? " This character is held at 0 by their clan, so the dots stay where they are." : ""}` : "This sheet has no Appearance."} Use the dots the power or the book gives; 0 keeps Appearance as it is.</p>
@@ -86,6 +88,8 @@ export async function newChangeDialog(a) {
       <div class="form-group"><label>Note</label><input type="text" name="note"></div>`,
     buttons: [{action: "save", label: "Add", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
   if ( !res || res === "cancel" ) return null;
+  if ( res.feature === "lost" && !res.lostPart ) { ui.notifications.warn("Pick the part that was lost."); return null; }
+  if ( !String(res.what ?? "").trim() ) res.what = res.feature ? (res.feature === "lost" ? `${B.LOSABLE[res.lostPart]} lost` : B.FEATURE_OPTIONS[res.feature]) : "";
   if ( !String(res.what ?? "").trim() ) { ui.notifications.warn("Say what changed."); return null; }
   return addChange(a, {...res, appearance: num(res.appearance), shows: !!res.shows});
 }

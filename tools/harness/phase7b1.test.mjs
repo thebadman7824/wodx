@@ -68,7 +68,7 @@ test("Hold: a held character steps in right after the current one", () => {
 
 test("wiring: Combat 3.7.0 loads the conductor; NPC 0.1.3 reports its turns; players ask, the Storyteller's client acts", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-combat/module.json"), "utf8"));
-  assert.equal(m.version, "3.12.1");
+  assert.equal(m.version, "3.13.0");
   const main = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
   assert.match(main, /CD\.registerConductorSettings\(\)/);
   assert.match(main, /CD\.installConductor\(\)/);

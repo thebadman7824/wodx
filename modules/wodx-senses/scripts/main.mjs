@@ -209,6 +209,8 @@ const formOf = actor => {
   for ( const k of ["homid", "glabro", "crinos", "hispo", "lupus"] ) if ( sh?.[k]?.isactive ) return k;
   return "homid";
 };
+/** The body plan's senses (WoDX Combat 3.13.0): "wolf" or "bat" for a vampire in Shape of the Beast, and the like. */
+const bodySensesOf = actor => { try { return game.wodxCombat?.body?.of?.(actor)?.senses ?? null; } catch (e) { return null; } };
 const secondSightOn = (actor, scene) => {
   try { return actor?.flags?.["wodx-actions"]?.sightScene === `${scene?.id ?? "none"}:${num(game.settings.get("wodx-actions", "wraithScene"))}`; } catch (e) { return false; }
 };
@@ -222,7 +224,7 @@ export function traitsOf(actor, {scene = null, layer = "physical", useAuspex = t
     heightened: hasPower(actor, /^heightened senses$/i) && kindOf(actor) === "lupine",
     eyesOfCat: hasPower(actor, /^eyes of the cat$/i), senseWyrm: hasPower(actor, /^sense wyrm$/i),
     senseUnnatural: hasPower(actor, /^sense the unnatural$/i), trueForm: hasPower(actor, /^scent of the true form$/i),
-    form: formOf(actor), kind: kindOf(actor), layer, fae: kindOf(actor) === "fae", secondSight: secondSightOn(actor, scene),
+    form: formOf(actor), body: bodySensesOf(actor), kind: kindOf(actor), layer, fae: kindOf(actor) === "fae", secondSight: secondSightOn(actor, scene),
     spheres: {life: num(sp.life?.value), spirit: num(sp.spirit?.value), entropy: num(sp.entropy?.value), prime: num(sp.prime?.value)},
     woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
     // merits and flaws from WoDX Chronicle's trait table: Acute Sense, Bad Sight, Blind, Deaf, Medium, Deathsight

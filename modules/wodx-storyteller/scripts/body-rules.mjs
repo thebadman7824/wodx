@@ -24,6 +24,23 @@ export const PARTS = {
   hands: "Hands and claws", torso: "Chest and back", legs: "Legs", voice: "Voice", whole: "The whole body"
 };
 
+/**
+ * What a change does to the body plan (WoDX Combat body-rules.js FEATURES reads these keys, 0.33.0, B1206). Empty:
+ * it only shows. "lost" takes away the part in lostPart.
+ */
+export const FEATURE_OPTIONS = {
+  "": "Only how it looks", talons: "Bone talons (claws for lethal damage)", spikes: "Bone spikes", armor: "Bone armor",
+  arms: "An extra pair of arms", wings: "Wings", gills: "Gills", tail: "A tail", fangs: "Fangs", looks: "Changed looks",
+  prosthetic: "A false limb", lost: "A part lost"
+};
+export const FEATURE_KEYS = Object.keys(FEATURE_OPTIONS).filter(Boolean);
+
+/** Parts that can be lost, by the body plan's ids (person shape). */
+export const LOSABLE = {
+  "eye-r": "Right eye", "eye-l": "Left eye", "hand-r": "Right hand", "hand-l": "Left hand", "arm-r": "Right arm",
+  "arm-l": "Left arm", "leg-r": "Right leg", "leg-l": "Left leg", "wing-r": "Right wing", "wing-l": "Left wing", tail: "Tail"
+};
+
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clampInt = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(n(v))));
 
@@ -37,7 +54,8 @@ export function normChange(c = {}) {
   return {
     id: String(c.id || newId()), source: SOURCES[c.source] ? c.source : "other", part: PARTS[c.part] ? c.part : "whole",
     what, appearance: clampInt(c.appearance, -5, 5), shows: c.shows !== false, by: String(c.by ?? "").slice(0, 80),
-    at: n(c.at), note: String(c.note ?? "").slice(0, 300)
+    at: n(c.at), note: String(c.note ?? "").slice(0, 300),
+    feature: FEATURE_KEYS.includes(c.feature) ? c.feature : "", lostPart: /^[a-z0-9-]{1,20}$/.test(String(c.lostPart ?? "")) ? String(c.lostPart) : ""
   };
 }
 
