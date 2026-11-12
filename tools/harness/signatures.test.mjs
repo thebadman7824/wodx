@@ -385,3 +385,28 @@ test("a wraith's picks find their rows, and the manner of death suggests a legio
 test("the Emerald luck once a week", () => {
   assert.ok(S.mayLuck(null, 0)); assert.ok(!S.mayLuck(0, 3 * S.DAY)); assert.ok(S.mayLuck(0, 7 * S.DAY));
 });
+
+/* Chronicle 0.36.0: Hunter, Mummy, Demon, Kuei-jin and Orpheus (B1507 to B1510) */
+
+test("the small lines find their rows, and a Demon's House and faction stack", () => {
+  assert.deepEqual(S.smallRows("demon", ["Devils", "Faustian"]).map(r => r.key), ["devils", "faustians"]);
+  assert.deepEqual(S.smallRows("demon", ["Lammasu"]).map(r => r.key), ["defilers"], "the old name finds the House");
+  assert.equal(S.smallRows("hunter", ["Avenger"])[0].key, "avenger");
+  assert.equal(S.smallRows("hunter", ["Society of Leopold"])[0].feature, "watchers");
+  assert.equal(S.smallRows("mummy", ["Kher-minu"])[0].feature, "guard");
+  assert.ok(S.smallRows("mummy", ["Mesektet"])[0].also.includes("sky"));
+  assert.equal(S.smallRows("kueijin", ["Resplendent Crane"])[0].feature, "ruling");
+  assert.ok(S.smallRows("orpheus", ["Banshee"])[0].also.includes("glimpse"));
+  assert.deepEqual(S.smallRows("nonsense", ["Devils"]), []);
+  for ( const l of Object.values(S.SMALL_LINES) ) for ( const r of l.table ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("the hunters' years follow standing rule 12, and fights against monsters only", () => {
+  const avenger = S.rowIn(S.SMALL_LINES.hunter.table, "Avenger"), hh2 = S.rowIn(S.SMALL_LINES.hunter.table, "mortal hunter");
+  assert.ok(S.notYet(avenger, 1998)); assert.ok(!S.notYet(avenger, 1999));
+  assert.ok(S.goneBy(hh2, 1999)); assert.ok(!S.goneBy(hh2, 1998));
+  const fx = [{tags: ["melee"], dice: 1, when: "monster", why: "Avengers"}];
+  assert.equal(S.sigRollEffects(fx, {tags: ["melee"], against: "vampire"}).length, 1);
+  assert.equal(S.sigRollEffects(fx, {tags: ["melee"], against: "mortal"}).length, 0);
+  assert.equal(S.sigRollEffects(fx, {tags: ["melee"]}).length, 0, "no target known: no die");
+});
