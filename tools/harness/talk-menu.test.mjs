@@ -129,7 +129,7 @@ test("the Foundry side: answers decided on the Storyteller's client, the toolbar
   assert.match(m, /tokens\.tools\.wodxTalk = /);
   assert.match(m, /talkAsk: data\.talkAsk \? true : null/);
   assert.match(m, /openTalk: talk\.openTalk/);
-  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.38.0");
+  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.39.0");
 });
 
 /* NPC 0.12.0 + Chronicle 0.15.0: talk lines that test the NPC's attitude and a won social roll */

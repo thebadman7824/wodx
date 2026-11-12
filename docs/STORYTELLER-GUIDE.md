@@ -379,6 +379,14 @@ Each turn, set the ground the chase has reached, each racer's way (only what exi
 
 The players see who is gaining in words. Your copy, whispered, has the dice and totals, Undo this turn, a button for crash or fall damage, and Start a fight once someone is caught. End the chase from the window at any time.
 
+## Battles and sieges
+
+Open the Storyteller's hand and pick Battles and sieges, then A new battle or A new siege. If the chronicle has a war, battle or siege among its dated events near the clock's year, you can start from it. Give each side its men, quality, the supernatural in its ranks, where it stands and a commander: a sheet (WoDX reads Perception, Charisma, Intelligence + Leadership and Wits + Medicine from it) or a name with four pools. Tick the characters who fight and where they stand.
+
+Fight a phase rolls both commanders (Perception + Leadership at 6, the heavier side with extra dice). Put the successes of the characters' deeds in each side's Deeds box first: they count for the side and take that many foes out of the fight. A side that loses badly rolls to hold (wavering); a side whose resolve runs out breaks. The battle turns on a character throws the battle's counterattack at them through WoDX Combat's soak; tick drew attention when they opened a hole in the line. A siege goes a week at a time: the works fill the breach clock (it shows in Progress clocks), the stores run down, disease is rolled for both camps. Storm the walls when you are ready. Undo takes back any step. When it is over, Let the time pass moves the clock once by the time it took, and factions named on the sides get a proposal in the approval queue. The Legends book records it on its next build.
+
+The rolls come from Spoils of War and the Dark Ages Companion; how big a force weighs, resolve, the breach and every age after 1500 are house rules (docs/DECISIONS.md B2200 to B2209).
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

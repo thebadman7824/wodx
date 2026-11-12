@@ -27,7 +27,8 @@ export const KINDS = {
   embrace: "Embraces and ghouls",
   office: "Offices won and lost",
   holding: "Havens and holdings",
-  ledger: "Boons, oaths and debts"
+  ledger: "Boons, oaths and debts",
+  battle: "Battles and sieges"
 };
 
 /**
@@ -35,7 +36,7 @@ export const KINDS = {
  * are public among Kindred, so they show; oaths and debts are often private, and so are Embraces, so they wait.
  * Seats in a secret faction wait too (see officeLines).
  */
-export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true};
+export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true, battle: true};
 
 const str = (v, n = 200) => String(v ?? "").trim().slice(0, n);
 const int = v => (Number.isFinite(Number(v)) && v !== null && v !== "" ? Math.trunc(Number(v)) : null);
@@ -163,6 +164,22 @@ export function ledgerLines(entries = [], dateOf = () => ({})) {
     out.push(normEntry({id: `ledger:${e.id}:${e.status}`, kind: "ledger", ...dated(at, dateOf), people: [from, to].filter(p => p.name),
       shown: e.kind === "boon",
       text: `${e.status === "kept" ? "Kept" : "Broken"}: ${thing}${who}${what ? ` (${what})` : ""}.`}));
+  }
+  return out;
+}
+
+/**
+ * Battles and sieges that have ended in WoDX Storyteller (Chronicle 0.42.0, B2207). Dated when the battle ended.
+ * A battle the Storyteller marked to keep out of the book (legend: false) is left out. Battles are public.
+ */
+export function battleLines(battles = [], dateOf = () => ({})) {
+  const out = [];
+  for ( const b of battles ) {
+    if ( !b?.id || !b.over || b.legend === false ) continue;
+    const where = str(b.place, 160);
+    const text = `${str(b.name, 120)}${where ? ` at ${where}` : ""}: ${str(b.over.text, 360).replace(/[.\s]+$/, "")}.`;
+    out.push(normEntry({id: `battle:${b.id}`, kind: "battle", ...dated(b.over.at, dateOf), place: where,
+      faction: str(b.sides?.find?.((s, i) => i === b.over.winner)?.faction ?? "", 120), text}));
   }
   return out;
 }

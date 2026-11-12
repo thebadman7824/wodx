@@ -40,6 +40,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxXCard | chronicle | actions |
 | wodxTaskDone | storyteller | npc |
+| wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
 

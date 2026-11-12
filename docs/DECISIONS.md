@@ -2053,3 +2053,53 @@ Reverse: ERRANDS.spy in order-rules.mjs.
 A follower's attitude toward its master moves one step through WoDX NPC's attitude track: up when a ghoul drinks from its domitor, down for each month a ghoul goes without, when its master feeds on it, and when it is made to carry out a hard order. Drift never takes it below Distrusted, so it never starts a fight; at Distrusted the Storyteller is told it may refuse, leave or turn.
 
 Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs; WoDX Actions' wodxFed hook (by, vessel).
+
+## B2200. Battles and sieges as two abstract forces (2026-11-12, house rule)
+The Master Plan item "Battles and sieges" (Lines and eras that meet, priority 3) is built in WoDX Storyteller 0.43.0 as a Storyteller tool, "Battles and sieges" in the Storyteller's hand (api.battles). A battle is fought between two forces, not token by token: each has a name, a faction (optional), men, a quality (1 levies to 5 the best of the age), the supernatural in its ranks (0 to 5), where it stands, and a commander (a sheet, or a name and a pool). Players see a card in words each step; the Storyteller's card has the dice. Every step has an Undo. The book search (12 November 2026, /mnt/project-files/battle-book-check.md) found war rules only in two Dark Ages: Vampire books, Spoils of War (pp. 40-45 printed, pdf = printed + 1) and the Dark Ages Companion (pp. 42-48 printed, pdf = printed - 25); no V20 book has them. Their rolls are used where they fit (B2202 to B2205); the forces' weight, resolve, the breach clock and the ages after 1500 are house rules. Spoils of War's full Right of Command army (Centre, Wings and Reserve, units by type) is not built: its troop table is garbled in the scan and needs reading from the book.
+
+Reverse: remove the hand tool and the battles api in wodx-storyteller/scripts/main.mjs.
+
+## B2201. The ages of war (2026-11-12, house rule)
+How war is fought follows the year: knights, levies and crossbows (1197-1418); wagon forts, handguns and the first cannon (1419-1499, the Hussite wars that open in Bohemia and Moravia); pike and shot (1500-1649); the musket line and the star fort (1650-1789); columns, cannon and cavalry (1790-1859); rifles, rail and the telegraph (1860-1913); trenches, machine guns and gas (1914-1918); tanks, aircraft and radio (1919-1945); helicopters, rockets and the bomb (1946-1999); drones, satellites and the network (2000 on); on the Future Darkness branch from 2026, powered armour, swarms and orbital eyes. Each age sets how long a phase takes (an hour in 1197, a day in the trenches), the share of men who fall, whether guns can breach walls, and the dice the battle throws at a character in the thick of it (4 to 8). Bastion forts exist from 1530 and concrete bunkers from 1914.
+
+Reverse: AGES and POSITIONS in wodx-storyteller/scripts/battle-rules.mjs.
+
+## B2202. Weight, difficulty and resolve (2026-11-12, house rule)
+A side's weight is its size step (one for each tenfold: up to 10, 100, 1,000, 10,000, 100,000, more) plus its quality, the supernatural in its ranks and, for the defender, its position (high ground or field works 1, a walled town 2, a castle, bastion fort or bunker 3). Old stone walls count one less once guns can breach them, and half once breached. Each phase both commanders roll Perception + Leadership at difficulty 6 (Spoils of War p. 44), and the heavier side adds a die for each point it outweighs the other (a house stand-in for the book's troop dice). A commander from a sheet brings four pools: Perception + Leadership to direct, Charisma + Leadership for morale, Intelligence + Leadership for siege works, Wits + Medicine against disease; one without a sheet has numbers. Resolve, the house rule for when a side breaks, starts at 3 + quality, plus 1 or 2 for a defender behind works or walls.
+
+Reverse: weightOf, difficultyFor, phaseSetup, startResolve in battle-rules.mjs; commandPools in battles.mjs.
+
+## B2203. A phase and its losses (2026-11-12, house rule)
+The side with more successes, deeds included, takes the difference from the other's resolve and counts that many units lost. A botch hands the other side 2 net successes (Spoils of War p. 44). Wavering (p. 45): a side that loses by 3 or more rolls its commander's Charisma + Leadership at difficulty equal to the loss (3 to 10); a failure costs it 2 dice next phase and a botch breaks it. A character who kills more than 10 in a phase shakes the enemy the same way at 6 (p. 44). Demoralised (p. 45): each unit lost past the commander's Charisma + Leadership costs a die. The losing side loses its age's share of its men for each net success (at least one man), the winner a third of that; an even phase costs both half a share. A side at 0 resolve breaks (a rout); both at 0 leave the field to the dead. A side may draw off in good order and lose a tenth of its men to the pursuit; the Storyteller may stop the fighting with no winner (night, a truce, a storm).
+
+Reverse: settlePhase, withdraw, stalemate in battle-rules.mjs.
+
+## B2204. Sieges by the week (2026-11-12, house rule)
+A siege is rolled once a week: the besieging commander's Intelligence + Leadership (the Spoils of War p. 41 roll for mines and siege engines) at 6 plus the walls' bonus (one less with a strong supernatural force, 3 or more), plus the camp's disease, from 3 to 10. Each success fills a segment of the breach (8 segments, mirrored on a progress clock named after the walls; a house rule); guns fill two. Disease (p. 41): each side rolls Wits + Medicine each week at its men / 1,000 (4 to 10); a failure adds 1 to the difficulty of its army rolls, a success as big as the penalty takes 1 off, and at 3 or more a side loses a point of resolve that week (a house rule). The garrison eats a week of its stores; once they are gone, hunger costs it a point of resolve a week. Maintaining order and foraging (p. 40), sapping and countermining in yards (pp. 41-42), and naval battle (pp. 42-43) are not built yet. A garrison at 0 gives up the walls; besiegers at 0 lift the siege. Storm the walls turns the siege into a field battle with the walls at half (when the breach is full, the walls are open).
+
+Reverse: siegeSetup, settleWeek, assault, clockFor in battle-rules.mjs.
+
+## B2205. The characters in a battle (2026-11-12, house rule)
+Characters join a side in the thick of it, at the rear or in command. Their deeds are any roll the Storyteller asks for (cutting down the standard bearer, a Discipline on the enemy captain, a Gift on the guns); the successes go into the Deeds box for that phase, count for their side, and take that many foes out of the fight (Dark Ages Companion p. 45; a Discipline counts twice its dots, entered by the Storyteller). "The battle turns on" a character is the counterattack (pp. 46-47): 5 dice at 6 in the Dark Ages (6 from 1500, 7 from 1860, 8 from 1914, 9 from 2000, house rules), 2 more if they drew attention, 2 fewer at the rear or in command; double the successes is the damage, not dodged, aggravated every third phase, soaked through WoDX Combat with its Undo; five successes stake a Cainite (others just take the damage, Spoils of War p. 44). Nothing is thrown by itself.
+
+Reverse: hazardFor in battle-rules.mjs; hazard in battles.mjs.
+
+## B2206. Factions after a battle (2026-11-12, house rule)
+When a battle ends and a side names a WoDX NPC faction, WoDX NPC 0.39.0 puts a proposal in the approval queue (never applied by itself): the winner gains a dot of Status; the loser thinks one step worse of the winner, loses a dot of Retainers when it has any (not when it drew off or lifted a siege) and a dot of Status when it broke or surrendered. A battle with no winner costs both sides a step of standing toward each other. Faction mode Off turns it off.
+
+Reverse: battleChanges in wodx-npc/scripts/faction-rules.mjs; onBattle in factions.mjs.
+
+## B2207. Battles in the Legends book (2026-11-12)
+WoDX Chronicle 0.42.0's Legends book has a new kind, Battles and sieges, shown to players by default, with a line for each battle that has ended, dated when it ended. A line once in the book stays there after an Undo, as other Legends lines do; the Storyteller hides or removes it in the book.
+
+Reverse: battleLines in wodx-chronicle/scripts/legends-rules.mjs and its line in legends.mjs gather().
+
+## B2208. Time in a battle (2026-11-12)
+A battle does not move the clock by itself. "Let the time pass" moves the world clock once by the time it took: its phases times the age's phase length, plus a week for each siege week. The chronicle's dated events that look like wars (war, battle, siege, crusade, uprising and the like, within five years of the clock) are offered as a quick start when a battle is set up.
+
+Reverse: passTime in battles.mjs; warEvents in battle-rules.mjs.
+
+## B2209. Wars outside the living world (2026-11-12, house rule)
+A battle can be set in the Umbra (Garou, Fera and spirits against the Wyrm's hosts) or the Underworld (Legions against Spectres or Renegades). Those ignore the year: a phase is an hour, no guns breach walls, and the counterattack is 5 dice. The damage type of "The battle hits" stays lethal; the Storyteller changes it by hand where a realm calls for it.
+
+Reverse: REALM_AGES in battle-rules.mjs.
