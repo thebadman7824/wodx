@@ -25,7 +25,7 @@ export const MATCH_CELLS = 0.5;
 /** The tile flags a feature may carry, and which of them mark its kind. */
 export const TILE_KINDS = ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"];
 const OPENING_KEYS = new Set(["kind", "material", "build", "lock", "electronic", "keyName", "barred", "stuck", "wall"]);
-const PLACE_KINDS = new Set(["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "other"]);
+const PLACE_KINDS = new Set(["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "elysium", "chantry", "other"]);
 /** Region behaviours a sidecar may ask for, by its short name: the full type comes from WoDX NPC. */
 export const BEHAVIORS = {trigger: `${NPC}.trigger`, alertZone: `${NPC}.alertZone`, reaction: `${NPC}.reaction`};
 

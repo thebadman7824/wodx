@@ -1598,6 +1598,28 @@ Ben found the burgher palace too bare. ddcore.dress() now dresses every furnishe
 
 ## 2026-11-11: which way things face
 Ben saw chairs facing random ways and the hearth facing its wall. ddcore.orient() turns every piece after dressing. Seats face their nearest table, or else the middle of the room, in quarter turns. Pieces against a wall (beds, ovens, shelves, cupboards, mirrors) put their backs to it, keeping their footprint. Ovens, whose picture is half their 2 by 2 square deep, are moved flush to their wall. Only the pictures move: the WoDX files mark the same spots, and town features keep their footprint turn.
+## 2026-11-12: animals with their own ways (WoDX NPC 0.21.0)
+Ben approved the NPC behaviour archetypes brainstorm and asked for animals first. animal-rules.mjs holds 16 animals, each with a temperament, a ready routine by day, night and season, the kinds of place it belongs in and the years it is found there in Moravia. The fight scorer and the reactions read three new traits (herd, territory, hunger) and four new tactics (swarm, scatter, scavenge, stalk). Animals shy from wraiths but not from Kindred, by Ben's ruling. Passers-by animals pick up their archetype from the token flag; other beasts from a flag or their name. PLACE_KINDS gains alley, yard, docks, park, sewer, hospital and station; routine blocks can name months. Decisions B1000 to B1004.
+- Tests: animals.test.mjs (13).
+
+## 2026-11-12: feeding harms the vessel; clan and bloodline feeding rules (Actions 3.41.0, Creation 0.10.2, B960-B965)
+- New feeding-rules.js: bloodNow, available, kissDamage, vesselOutcome, parseTags, matchTags, preyExclusionTags, CLAN_FEEDING, clanKey, ruleFor, isDarkAgesFeeding, nourishment, lamiaDifficulty, addictionDifficulty, fleshPoints, nightPassed, fleshEaten, PALATE_BREADTH, HUNT_STYLES, styleAllowed, styleClash.
+- main.js: feed and feedResolve rewritten around the vessel's own blood (flag vesselBlood), damage, states and Undo (feedUndo, on the api); feedingRule, vesselTagsOf, feedingFields, savePalate, nagarajaPenalty; Hunt's usual hunt and palate difficulty; New Night flesh debt; a vampire's blow marks the target as fought; oathStep firstDouble.
+- social.js: Seduction's Feed passes the vessel as willing. Creation: recordDrink step, giveVitae firstDouble.
+- Fixed: mortal vessels read the sheet's blood pool, which starts at 0 on mortal sheets and nothing fills in, so a targeted mortal gave no blood unless it was set by hand; effects.test pinned the api version to 3.38.0.
+- Tests: feeding.test.mjs (20).
+
+## 2026-11-12: criminals, combatants and townsfolk (WoDX NPC 0.23.0)
+The second step of the archetypes Ben approved. mortal-rules.mjs holds 39 mortal archetypes by era with their own hours. Morale breaks a line whose leader falls or half of which is down; cover, formation, surrender and hostage join the tactics; and some townsfolk tell someone later what they saw, putting the place on alarm two hours on. Decisions B1005 to B1008.
+- Tests: mortals.test.mjs (9).
+
+## 2026-11-12: supernatural NPCs by line (WoDX NPC 0.24.0)
+The last step of the archetypes Ben approved. supernatural-rules.mjs holds 29 archetypes under the line templates, chosen by clan, tribe, kith, Tradition, legion or creed, each where and when it belongs. Orpheus crews only in the Future Darkness and Kuei-jin only in Asia, by Ben's rulings. A Marauder's madness picks its moves. Decisions B1009 to B1011.
+- Tests: supernaturals.test.mjs (8).
+
+## 2026-11-12: animal blood from the book (WoDX NPC 0.24.1)
+
+The PC book check of the V20 core animals appendix (pdf 396-399, printed 388-391) set the blood pools: horse 5 to 4, farm pigs 5 to 4, boar 3 to 4, crows 1/4 to 1/2. V20 lists no cattle, sheep, goats or geese, so these are house rules in PENDING-REVIEW: cattle 5, sheep and goats 3, geese and hens 1/2. A harness test pins every value. The testbed gate passed at 5cf4328 (gateanimals 5/5, gate7c 23/23).
 
 ## 2026-11-12: recipes for food, drink, medicine and drugs
 Ben asked for recipes after Cataclysm: Dark Days Ahead and approved the design with all four recommendations. Library 0.10.0 adds data/recipes.mjs (60 methods, 50 ingredient groups, 10 kits by era) and scripts/recipe-rules.mjs; 11 raw goods and middle products join goods.mjs. Storyteller 0.31.0 adds Cook, brew or mix (cookery.mjs): the window lists what a character can make in the year, greyed with what is missing (know-how, kit, ingredients), with a batch size, buying what is missing, and for the Storyteller the kits a scene has and teaching a recipe. Everyday food is made at once with no roll when the pool is enough; the rest runs as a long task. Things with a wait stand under a name like "ale (fermenting)" until the clock reaches the ready time. Made drugs and medicine carry a strength that Library's Use reports when taken; a botch makes them impure. "Cook with it" on an ingredient opens the window on the recipes that use it. Food, drink, medicine and drugs left Make something for this window. B947-B952. Test tools/harness/recipes.test.mjs.

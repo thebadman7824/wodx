@@ -23,6 +23,8 @@ import * as R from "./routine-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as FR from "./fight-rules.mjs";
+import * as AN from "./animal-rules.mjs";
+import * as MR from "./mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -344,6 +346,10 @@ export function build(ctx) {
       if ( a ) await a.update(p.prev ? {[`flags.${MOD}.paused`]: p.prev} : unsetKey(`flags.${MOD}.paused`));
     }
     if ( snap?.combat ) await game.combats.get(snap.combat)?.delete();
+    if ( snap?.reports ) {
+      const sc = await fromUuid(snap.reports.scene);
+      if ( sc ) await sc.update(snap.reports.prev?.length ? {[`flags.${MOD}.reports`]: snap.reports.prev} : unsetKey(`flags.${MOD}.reports`));
+    }
     if ( snap?.alert ) {
       const sc = await fromUuid(snap.alert.scene);
       if ( sc ) { await sc.update(snap.alert.prev ? {[`flags.${MOD}.alert`]: snap.alert.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
@@ -629,6 +635,13 @@ export function build(ctx) {
   /** Who lives or works at a place (their routine's home, work, haven or post points there). */
   const residentsOf = placeIds => routineNpcs().filter(a => Object.values(routineOf(a)?.roles ?? {}).some(v => placeIds.includes(v)));
 
+  /** NPC 0.21.0: no one else of the intruder's side within 5 yards of them (a stalker's chance). */
+  const aloneNow = doc => {
+    const t = canvas.tokens.get(doc.id);
+    if ( !t ) return false;
+    return !canvas.tokens.placeables.some(o => o.id !== t.id && o.actor && !o.document.hidden && o.document.disposition === t.document.disposition
+      && (ctx.yardsBetween(t, o) ?? 99) <= 5);
+  };
   /** Everything about one event in a Reaction region, then the card. Returns the card's message, or null. */
   async function react(system, region, doc, trigger) {
     const scene = region.parent, intruder = doc.actor;
@@ -640,7 +653,8 @@ export function build(ctx) {
     const placeIds = [region.uuid, scene.uuid];
     const allowed = names(system.allowed);
     const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder);
-    const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder)};
+    const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder),
+      wraith: ctx.C?.()?.getKind?.(intruder) === "wraith", alone: aloneNow(doc), month: d.month};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
     if ( !cond.met ) return null;
     // The watchers in view
@@ -659,7 +673,7 @@ export function build(ctx) {
       const yards = ctx.yardsBetween(w, tokNow);
       const inSight = (yards === null || yards <= range) && !sightBlocked(w.center, tokNow.center);
       const res = R.notice({perception: at(w.actor, "perception"), alertness: ab(w.actor, "alertness"), awareness: ab(w.actor, "awareness"),
-        auspex: disc(w.actor, "auspex") || (profileFor(w.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book, diff: AR.NOTICE_DIFF[alertLevel(scene)]});
+        auspex: disc(w.actor, "auspex") || (AN.isAnimal(profileFor(w.actor).template) ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book, diff: AR.NOTICE_DIFF[alertLevel(scene)]});
       return {tok: w, actor: wa, yards, ...res};
     });
     const seen = looks.filter(l => l.noticed).sort((a, b) => (a.yards ?? 0) - (b.yards ?? 0));
@@ -680,7 +694,8 @@ export function build(ctx) {
 
   /** The reaction card for one watcher, in the NPC's mode: a suggestion, or done at once in Auto with Undo. */
   async function reactionCard({wTok, wActor, sit, near = 0, home = false, forced = null, forcedWhy = "", head, why = "", lines = [], scene, intruder, region = null, trigger, event = null}) {
-    let options = R.pickReaction(profileFor(wTok.actor), {...sit, alliesNear: near, homeGround: home});
+    const prof = profileFor(wTok.actor);
+    let options = R.pickReaction(prof, {...sit, alliesNear: near, homeGround: home, hungry: AN.isHungry(prof, sit.month)});
     if ( forced && forced !== "profile" ) {
       const f0 = options.find(o => o.action === forced) ?? {action: forced, score: 99, why: forcedWhy};
       options = [{...f0, why: `${forcedWhy}; ${f0.why}`}, ...options.filter(o => o !== f0)];
@@ -829,6 +844,20 @@ export function build(ctx) {
     if ( !isActiveGM() ) return;
     for ( const scene of game.scenes ?? [] ) if ( (flag(scene, "marks") ?? []).length ) await repairMarks(scene);
     await deliverCarries();
+    // NPC 0.23.0: word that someone carried to the watch arrives, and the place goes on alarm
+    for ( const scene of game.scenes ?? [] ) {
+      const reps = flag(scene, "reports") ?? [];
+      if ( !reps.length ) continue;
+      const now = game.time.worldTime, due = reps.filter(r => r.at <= now), left = reps.filter(r => r.at > now);
+      if ( !due.length ) continue;
+      await scene.update(left.length ? {[`flags.${MOD}.reports`]: left} : unsetKey(`flags.${MOD}.reports`));
+      const prev = flag(scene, "alert") ?? null;
+      const full = await raiseAlarmFull(scene, `${due.map(r => r.by).join(", ")} told what they saw`);
+      await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev, carry: full?.carry ?? null}}},
+        content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Word reaches the watch</h3><span class="vta-verdict">Alarm</span></header><div class="vta-body">`
+          + `<p>${esc(due.map(r => `${r.by} told someone about ${r.about}`).join("; "))}. ${esc(scene.name)} is on alarm for an hour of world time, then wary until the next dusk.</p>`
+          + `<div class="wnpc-done"><button type="button" class="wnpc-a-undo">Undo</button></div></div></div>`});
+    }
     for ( const scene of game.scenes ?? [] ) {
       const a = alertOf(scene);
       if ( !a ) continue;
@@ -1023,6 +1052,15 @@ export function build(ctx) {
         await pause([w.actor, ...helpers]);
         return {text: `${w.name} sends for help: ${helpers.map(a => a.name).join(" and ")} come${helpers.length === 1 ? "s" : ""}.`, snap};
       }
+      case "report": {
+        // NPC 0.23.0 (B1007): the place goes on alarm when the word reaches the watch, a couple of hours from now
+        await pause([w.actor]);
+        const sc = canvas.scene, prev = flag(sc, "reports") ?? [];
+        snap.reports = {scene: sc.uuid, prev};
+        const at = t + MR.REPORT_HOURS * 3600;
+        await sc.setFlag(MOD, "reports", [...prev, {at, by: w.name, about: i?.name ?? "someone"}]);
+        return {text: `${w.name} says nothing now, and will tell someone what they saw about ${i?.name ?? "them"} within ${MR.REPORT_HOURS} hours.`, snap};
+      }
       case "flee": {
         await pause([w.actor]);
         if ( !onGrid() ) return {text: `${w.name} flees (move the token by hand).`, snap};
@@ -1082,6 +1120,8 @@ export function build(ctx) {
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${esc(k)}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
   // Built on first use: Foundry's classes exist only once the game has loaded
   let placesClass = null;
+  /** How far word of a breach goes from a place (WoDX Actions 3.42.0 reads it): blank follows the kind of place. */
+  const MASQ_MODES = {"": "By kind of place", open: "Open: word spreads", guarded: "Guarded, like Elysium", closed: "Closed: nothing leaves"};
   function PlacesAppClass() {
   if ( placesClass ) return placesClass;
   const {ApplicationV2} = foundry.applications.api;
@@ -1107,7 +1147,8 @@ export function build(ctx) {
         return `<tr data-key="${key}" data-name="${esc(doc.name)}" data-guess="${esc(g.kind)}" data-owner="${esc(g.owner)}" data-search-text="${esc(label)}">
           <td class="name">${esc(label)}</td><td><select name="${key}.kind" data-fixed>${opt(kinds, f.kind ?? "")}</select></td>
           <td><input type="text" name="${key}.owner" value="${esc(f.owner ?? "")}" placeholder="${esc(g.owner)}"></td>
-          <td><input type="checkbox" name="${key}.private" ${f.private ? "checked" : ""}></td></tr>`;
+          <td><input type="checkbox" name="${key}.private" ${f.private ? "checked" : ""}></td>
+          <td><select name="${key}.masq" data-fixed title="How far word of a Masquerade breach goes from here">${opt(MASQ_MODES, f.masq ?? "")}</select></td></tr>`;
       };
       const scenes = [...game.scenes].sort((a, b) => a.name.localeCompare(b.name));
       const viewed = canvas?.scene;
@@ -1123,9 +1164,9 @@ export function build(ctx) {
         <div class="wodx-field"><label>The chronicle's own feast days (one a line: 09-01 St Giles)</label><textarea name="feasts" rows="2">${esc(setting("feasts") ?? "")}</textarea></div>
         ${searchBox("table.wnpc-place-table", "Search scenes and regions…", "Search places")}</div>
         <div class="wodx-scroll wodx-table-wrap">
-        ${regions.length ? `<h3>Regions of ${esc(viewed.name)}</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Region</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th></tr></thead><tbody>
+        ${regions.length ? `<h3>Regions of ${esc(viewed.name)}</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Region</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th><th title="Masquerade: by kind of place, or set here">Masquerade</th></tr></thead><tbody>
           ${regions.map(r => row(r, `r:${r.id}`, r.name)).join("")}</tbody></table>` : ""}
-        <h3>Scenes</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Scene</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th></tr></thead><tbody>
+        <h3>Scenes</h3><table class="wodx-table wnpc-place-table"><thead><tr><th>Scene</th><th>Kind of place</th><th>Owner</th><th title="Private: for the Trespass condition">Private</th><th title="Masquerade: by kind of place, or set here">Masquerade</th></tr></thead><tbody>
           ${scenes.map(s => row(s, `s:${s.id}`, s.name)).join("")}</tbody></table></div>
         <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button></footer>`;
       return div;
@@ -1150,9 +1191,9 @@ export function build(ctx) {
         const key = tr.dataset.key, [kind, id] = key.split(":");
         const doc = kind === "s" ? game.scenes.get(id) : canvas.scene?.regions?.get(id);
         if ( !doc ) continue;
-        const next = {kind: form.elements[`${key}.kind`].value, owner: form.elements[`${key}.owner`].value.trim(), private: form.elements[`${key}.private`].checked};
-        const prev = flag(doc, "place") ?? {kind: "", owner: "", private: false};
-        if ( prev.kind === next.kind && (prev.owner ?? "") === next.owner && !!prev.private === next.private ) continue;
+        const next = {kind: form.elements[`${key}.kind`].value, owner: form.elements[`${key}.owner`].value.trim(), private: form.elements[`${key}.private`].checked, masq: form.elements[`${key}.masq`]?.value ?? ""};
+        const prev = flag(doc, "place") ?? {kind: "", owner: "", private: false, masq: ""};
+        if ( prev.kind === next.kind && (prev.owner ?? "") === next.owner && !!prev.private === next.private && (prev.masq ?? "") === next.masq ) continue;
         const up = next.kind ? {_id: id, [`flags.${MOD}.place`]: next} : {_id: id, ...unsetKey(`flags.${MOD}.place`)};
         if ( kind === "s" ) scenes.push(up); else regions.set(id, up);
       }
@@ -1167,7 +1208,7 @@ export function build(ctx) {
   return (placesClass = PlacesApp);
   }
 
-  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work"};
+  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
   /** Give each place's named owner that place as home, haven, post, church or work. Asks first. */
   async function matchOwners() {
     const places = listPlaces().filter(p => p.owner);
@@ -1302,7 +1343,7 @@ export function build(ctx) {
     const wa = base(nTok.actor), act = whereOf(wa)?.activity, intruder = pTok.actor;
     const ob = ctx.hiddenByObfuscate(pTok) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
     const res = R.notice({perception: at(nTok.actor, "perception"), alertness: ab(nTok.actor, "alertness"), awareness: ab(nTok.actor, "awareness"),
-      auspex: disc(nTok.actor, "auspex") || (profileFor(nTok.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight: true},
+      auspex: disc(nTok.actor, "auspex") || (AN.isAnimal(profileFor(nTok.actor).template) ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight: true},
       {dexterity: at(intruder, "dexterity"), stealth: ab(intruder, "stealth"), manipulation: at(intruder, "manipulation"), subterfuge: ab(intruder, "subterfuge"), sneaking: sneaking(pTok.document), obfuscate: ob},
       {book, diff: AR.NOTICE_DIFF[alarm] ?? 6});
     if ( !res.noticed ) return {skip: `does not notice (${res.why})`};

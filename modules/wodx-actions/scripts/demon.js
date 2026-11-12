@@ -189,6 +189,8 @@ export function build(ctx) {
                 body += `<div class="vta-big good">${esc(i.visage || "The apocalyptic form")} rises for the scene.</div>`;
                 if (chosen.length || peril.length) body += `<div class="vta-res">${esc([...chosen, ...peril].join(", "))}.</div>`;
                 body += `<div class="vta-note">${look === "glorious" ? "Witnesses see a glorious, awe-inspiring being." : look === "nightmarish" ? "Witnesses see a living nightmare." : "Witnesses see awe or terror, as their own minds take it."} Every mortal present suffers Revelation (Willpower against Faith ${i.faith.perm}). Stamina now soaks lethal damage.</div>`;
+                // Who sees it (3.42.0): mortals breach, other kinds are startled
+                ctx.revealed?.(actor, { secret: "demon", event: "the apocalyptic form" })?.catch?.(e => console.error("WoDX |", e));
             } else body += `<div class="vta-big">The mortal shell holds; no change.</div>`;
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 162, 170–171, 254</div>`;

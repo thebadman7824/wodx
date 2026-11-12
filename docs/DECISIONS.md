@@ -1002,6 +1002,129 @@ House rules, shown on the attack card and the check card; minus is easier:
 - In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
 
 Reverse: STANCES and attackStance in movement-rules.js.
+## B1000. Animal archetypes (2026-11-12)
+Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of ANIMAL_TEMPLATES in npc-rules TEMPLATES and of ANIMAL_PRESETS in routine-rules PRESETS.
+
+## B1001. Herd, territory and hunger; swarm, scatter, scavenge and stalk (2026-11-12)
+Three new temperament traits, 0 to 2, read by the fight scorer and the reactions: herd (runs when outnumbered or when the others run; weaker alone), territory (fights harder and bears one more wound on its own patch, fights trespassers), hunger (bolder in the lean months, December to March). Four new tactics: swarm, scatter, scavenge and stalk. Animals bark or raise a racket only when they have the call tactic (guard dogs, poultry), never send for the watch, and take no fright at the supernatural as such: Ben ruled (2026-11-12) that animals do not shy from Kindred but do shy from wraiths, so every animal fears "wraith" and an intruder or foe who is a wraith counts as that fear.
+
+Reverse: the new lines in scoreOptions and pickReaction are marked NPC 0.21.0.
+
+## B1002. More kinds of place and roles (2026-11-12)
+PLACE_KINDS gains alley, yard, docks and park (the same four the passers-by work adds) and sewer, hospital and station. Routines gain the roles yard, alley, sewer, docks and park, and the activities grazing and roosting. A routine block can name the months it runs in.
+
+Reverse: remove the kinds; old scenes keep their tags.
+
+## B1003. Which animal a beast is (2026-11-12)
+A beast's archetype comes from its passers-by token flag (archetype, else the crowd's animal kind mapped by place and year), else the actor flag wodx-npc.animal, else a guess from its name. Nothing found keeps the plain beast template.
+
+Reverse: animalOf() in main.mjs.
+
+## B1004. The other lines wait (2026-11-12)
+Ben approved the whole brainstorm and asked for animals first. Criminals, combatants, townsfolk and the supernatural lines follow in later versions. Ben's rulings for them: Orpheus travellers only in the World of Future Darkness; Kuei-jin travellers only in Asia.
+
+## B960. Feeding harms the vessel (2026-11-12)
+
+Each blood point a living vessel loses is one lethal level (V20 printed p. 57: a Giovanni Kiss does twice the damage of another vampire's, one point costing two levels; the Nagaraja entry on p. 407 reads the other way, and Ben chose this reading). A living vessel has the lower of its blood and (full blood less damage), the wounds rule of p. 269 read both ways, so the same loss is never counted twice. A mortal's blood is kept on the vessel (flag wodx-actions.vesselBlood, as the sheet's own pool is 0 on mortals) and comes back one point a day (p. 270); the damage heals by the healing chart. Passing out sets Unconscious, a botch on the vessel's roll also sets a "dying" flag, a vessel drained dry is marked dead, and a card button undoes the harm. The drink or drugs in a vessel's blood go when the blood does. Kindred vessels lose blood, not health. WoDX Actions 3.41.0.
+
+Reverse: kissDamage returns 0 in feeding-rules.js and feedResolve reads the sheet's pool again.
+
+## B961. Clan and bloodline feeding rules (2026-11-12)
+
+One table (CLAN_FEEDING in feeding-rules.js) for Ventrue, Nagaraja, Giovanni, Salubri (healers and warriors), Salubri antitribu, Noiad, Danava, Lamia, Assamite antitribu and Dark Ages Tremere, with the V20 Dark Ages version in the Dark Ages and Long Night eras or before 1450, and V20's after. The clan is read from the sheet (a custom clan's words, or a flag wodx-actions.bloodline). Feed and Hunt apply each rule: no nourishment (Ventrue miss, animals for Noiad and Danava, blood not taken by force), half without the Danava offering, a Willpower point or a Willpower roll and -2 dice for the night (a timed effect until dawn), two lethal levels a point for the Giovanni, the Seed of Lilith, the Assamite antitribu addiction roll, and the Dark Ages Tremere first drink counted twice toward the Blood Oath (WoDX Creation 0.10.2 giveVitae firstDouble). Readings: Dark Ages Giovanni take V20's two levels a point; Salubri warriors in modern nights follow the antitribu; the Lamia resist is 7 when the vessel's sex isn't known.
+
+Reverse: remove the clan's entry from CLAN_FEEDING.
+
+## B962. Ventrue palates and vessel tags (2026-11-12)
+
+A Ventrue's palate is saved on the character (flag wodx-actions.palate: words, tags, broad or narrow), set in the Feed or Hunt window. A vessel's tags come from its own flag wodx-actions.vesselTags (editable in the Feed window) and a passer-by's flags["wodx-npc"].passerby.tags. Matching tags tick "fits the palate"; with no tags on either side the Storyteller ticks it. Hunting with a palate is +1 difficulty for a broad one and +2 for a narrow one (house rule); Herd is taken to fit. Prey Exclusion reads the same tags: a match calls the frenzy at once.
+
+Reverse: palateHuntDifficulty returns 0; drop the palate fields from feedingFields.
+
+## B963. Nagaraja flesh (2026-11-12)
+
+The Feed window takes flesh points as well as blood (V20 printed p. 407): each gives a blood point and does one unsoakable lethal level; a human body has 10, a child 5, an animal its blood points (house reading). New Night adds a point of flesh debt for a night without flesh, shown as one less on Strength, Dexterity and Stamina per point (their bonus, as Quickening uses), and flesh eaten pays it back.
+
+Reverse: drop the flesh lines in feedResolve and newNight; nagarajaPenalty(actor, 0) clears the bonus.
+
+## B964. Feeding habits (2026-11-12)
+
+V20's argot for how a vampire feeds (printed pp. 35-36) becomes a saved "usual hunt" in the Hunt window: Alleycat or Slummer, Banker (from 1937, cold blood), Butterfly, Casanova or Tease, Farmer, Head, Headhunter, Rake, Sandman. Each fills in the hunting ground, prey, pool and what is in the blood, and warns when it clashes with the clan's rule. The pools, grounds and years are house readings; V20 gives none.
+
+Reverse: remove HUNT_STYLES entries.
+
+## B965. A fight on record (2026-11-12)
+
+When WoDX Combat applies a vampire's blow, the target gets flags wodx-actions.fought.<vampire id> = the clock time, and Feed ticks "fought and beaten first" for an hour after. Seduction that leads to Feed passes the vessel as willing.
+
+Reverse: remove the second wodxDamageApplied hook in main.js.
+
+## B1005. Criminals, combatants and townsfolk (2026-11-12)
+The second step of the approved archetypes brainstorm. WoDX NPC 0.23.0 adds 39 mortal archetypes in mortal-rules.mjs: 13 criminals (cutpurse, footpad, burglar, bandit to 1850, highwayman 1600 to 1850, smuggler, fence, con artist, street gang from 1850, organised crime from 1900, dealer from 1960, informer, fixer from 1990), 15 combatants (militia to 1700, knight and man-at-arms to 1550, Hussite wagon crew 1419 to 1434, mercenary 1480 to 1650, musketeer 1620 to 1870, hussar 1650 to 1918, rifleman 1914 to 1945, occupation trooper 1939 to 1945, partisan from 1939, riot police from 1948, armed police from 1970, private security from 1990, duellist 1550 to 1900, bodyguard), and 11 townsfolk (child, gossip, drunk, physician, executioner to 1850, pilgrim, servant, lamplighter 1700 to 1930, journalist from 1850, prophet, orderly from 1780). Each is a template and a routine; the routine picker leaves out presets past their years. A mortal's archetype comes from the actor flag wodx-npc.archetype, else its name. House readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of MORTAL_TEMPLATES and MORTAL_PRESETS.
+
+## B1006. Morale, cover, formation, surrender, hostage and lead (2026-11-12)
+Morale (0 to 2) is carried only by the 0.23.0 archetypes. It wavers when a fallen ally of the same side had the lead tactic, or when half the side is down: fleeing rises by 2.5 for each point under 2, and attacks drop by 1. Cover adds 1.5 to shooting a foe out of reach. Formation adds 0.8 to attacks with two or more allies and not outnumbered, and takes 1.5 off fleeing while the line holds. Surrender is a new action the NPC can carry out itself (Auto, with Undo): it is offered when beaten, wavering, or outnumbered and hurt, and once yielded the NPC only waits for the rest of that fight. Hostage is offered when cornered with a bystander near, and waits for the Storyteller.
+
+Reverse: the NPC 0.23.0 lines in scoreOptions; SELF_ACTING without surrender.
+
+## B1007. Tell someone later (2026-11-12)
+A new reaction for the report tactic (informers, children, gossips, servants, journalists, prophets): the NPC lets it pass now and, two hours of world time later, the place goes on alarm as if raised, with a card and Undo. Stored on the scene flag wodx-npc.reports.
+
+Reverse: REPORT_HOURS in mortal-rules.mjs; drop report from SELF_RESPONSES.
+
+## B1008. The supernatural lines are next (2026-11-12)
+Third and last step: supernatural NPCs by line, with Ben's rulings (Orpheus travellers only in the World of Future Darkness, Kuei-jin travellers only in Asia).
+
+## B1009. Supernatural NPCs by line (2026-11-12)
+The third step of the approved archetypes brainstorm. WoDX NPC 0.24.0 adds 29 archetypes in supernatural-rules.mjs under the line templates, picked by the sheet's clan, tribe, kith, Tradition, legion or creed: Nosferatu, Toreador, Gangrel, the old Lasombra and Tzimisce lords (to 1493, generation 8 or lower), Anarchs (from 1381), revenant families; Bone Gnawers and Glass Walkers in towns (from 1500), caern warders, Black Spiral Dancers, Kinfolk, Fera watchers; Hollow Ones (from 1900), Marauders, Nephandi; Hierarchy legionnaires, Renegades and Heretics; sidhe nobles, redcaps and trolls (to 1400 and from 1969), Dauntain (from 1969); the Arcanum (from 1885), the imbued by creed (Zeal, shielding, Mercy or Vision; from 1999, from 2023 in the World of Future Darkness); mummies (from 1990), the Fallen (from 1999); Kuei-jin and Orpheus travellers. The Sabbat, the Technocracy and the Inquisition keep their 0.18.0 templates. Spectres gain hunger and swarm. House readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of SUPERNATURAL_TEMPLATES and SUPERNATURAL_PRESETS, and the pickSupernatural call in templateFor.
+
+## B1010. Orpheus only in the Future Darkness, Kuei-jin only in Asia (2026-11-12)
+Ben's rulings. An archetype can name the eras (future-darkness, time-of-future-judgement) or regions (asia) it belongs to; outside them the NPC keeps its line template. A scene's region is its flag wodx-npc.region, else WoDX Storyteller's money region, else Moravia, so no Kuei-jin appears until a scene is set in Asia.
+
+Reverse: eras and regions in supernatural-rules.mjs.
+
+## B1011. A Marauder's Quiet (2026-11-12)
+A Marauder's turn takes one of its scored options by chance (the same for the same round), so it acts as its madness takes it. The card says so.
+
+Reverse: erratic on the marauder template.
+
+
+
+## B980. Who an act startles: breach, startled or calm, for every line (2026-11-12)
+
+Ben asked that Masquerade witnesses depend on who is looking: a Cainite is calm at another Cainite's Discipline, but startled by a Crinos or an apocalyptic form. modules/wodx-actions/scripts/witness-rules.js names the secret an act shows (the actor's profile) and sorts each onlooker. Mortals and hunters who do not know are breach witnesses; creatures of another kind are startled; their own kind, Kindred and ghouls for each other, Kinfolk for the Garou, and anyone the Storyteller has marked as knowing are calm. Ben ruled on the uncertain pairs on the witness desk (2026-11-12): animals are startled rather than breach witnesses (calm at vulgar magick), and wraiths, demons, mummies and spirits are never startled.
+
+Reverse: give witnessesOf back its profiles filter in the feeding card and let recordBreach skip sortOnlookers.
+
+## B981. Only Sleepers make vulgar magick witnessed (2026-11-12)
+
+For a mage, only mortals and hunters are breach witnesses (M20, Paradox and witnesses); an animal does not count, and other kinds are startled. The Cast window names the Sleepers who can see and sets the Effect to "with witnesses" when one does.
+
+Reverse: drop observersOf from the M20 ctx in main.js.
+
+## B982. The place decides how far word goes: open, guarded, closed (2026-11-12)
+
+A scene or region's WoDX NPC place tag gets a Masquerade setting. Left blank, its kind decides: a haven, caern or chantry is closed, an Elysium guarded, anywhere else open. Open places work as before. In a guarded or closed place the breach is still recorded, so the Storyteller can deal with the witnesses, but no rumour goes out to the town (entry.spread false; WoDX NPC skips it). New kinds of place: Elysium and Chantry or Horizon. House rule.
+
+Reverse: set MODE_OF_KIND to {} in witness-rules.js.
+
+## B983. Feeding or violence in Elysium breaks the Prince's peace (2026-11-12)
+
+In a guarded place, feeding, biting, frenzy or violence by a Cainite or ghoul gets a card line saying it breaks the Prince's peace and the Keeper of Elysium and the Prince will hear of it (V20, the Traditions and Elysium). Other Disciplines only note that the Kindred present keep the secret. House rule.
+
+Reverse: make breaksPeace return false.
+
+## B984. A Discipline used in sight asks; a startled onlooker can be marked as knowing (2026-11-12)
+
+Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
+
+Reverse: set witnessAsk off; drop the knows button.
 
 ## B947. Recipes for food, drink, medicine and drugs (2026-11-12)
 Ben asked for recipes and crafting for consumables after the way Cataclysm: Dark Days Ahead runs them, and approved the design (doc "Recipes and crafting for food, drink, medicine and drugs") with all four recommendations. Mechanics only, WoDX's own methods and words.

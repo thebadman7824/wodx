@@ -62,11 +62,15 @@ export function build(ctx) {
         const preset = roteItem ? EF.E.roteOfItem(roteItem) : null;
         const i = info(actor);
         const sg = suggest(actor), W = C.WORDS[sg.age.key];
+        // Sleepers who can see the caster (3.42.0): only they make vulgar magick witnessed
+        const seen = ctx.observersOf?.(actor) ?? null;
+        if (seen?.breach.length && sg.kind === "vulgar") sg.kind = "witnessed";
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;
         const content = `<form><p><b>${esc(actor.name)}</b>: Arete ${i.arete}${i.dice < i.arete ? ` (Willpower ${i.willpower.perm} caps it: ${i.dice} dice)` : ""}; Quintessence ${i.quint}, Paradox ${i.paradox}${i.avatar ? `; Avatar ${i.avatar}` : ""}.</p>
           <fieldset><legend>Spheres used</legend>${M.SPHERES.filter(k => i.spheres[k]).map(row).join("") || "<p>No Spheres on the sheet.</p>"}</fieldset>
           <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}"${k === sg.kind ? " selected" : ""}>${esc(W[k] ?? x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
           <div class="form-group"><label>The caster's style</label><input type="text" name="style" value="${esc(i.f.style ?? "")}" placeholder="Hermetic, Christian miracles, witchcraft, Taoist"/></div>
+          ${seen ? `<p class="hint">${seen.breach.length ? `Sleepers who can see: ${seen.breach.map(t => esc(t.name)).join(", ")}.` : "No Sleeper can see the caster."}${seen.startled.length ? ` Others who would notice vulgar magick: ${seen.startled.map(t => esc(t.name)).join(", ")}.` : ""}</p>` : ""}
           <p class="hint">${esc(sg.age.label)}${sg.why ? `: ${esc(sg.why)}` : "."}${sg.age.key === "dark" ? " A Dark Ages mage uses the Dark Ages cast." : ""} (${esc(sg.age.ref)})</p>
           ${EF.fieldset(i.spheres, EF.rotesOf(actor))}
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
@@ -107,6 +111,7 @@ export function build(ctx) {
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
             const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
+            if (["vulgar", "witnessed"].includes(fd.kind)) ctx.revealed?.(actor, { secret: "mage", event: "worked vulgar magick" })?.catch?.(e => console.error("WoDX |", e));
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
         }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }

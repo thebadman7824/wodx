@@ -249,6 +249,8 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 **Masquerade rumours.** A breach recorded in WoDX Actions, or one you enter with **Report a breach…**, spreads day by day through places and Contacts. It rises to the Prince and then to the era's hunters (the Inquisition before 1600, mortal hunters to 1998, the imbued after), and each rise is a proposal in the queue. Deal with every witness first and press **Contain**; a quiet week makes it fade, until the hunters hear of it. Each breach also has **Stop**, **Resume** and **Forget**.
 
+**Who is alarmed, and where.** Witnesses depend on what the act shows and who sees it. Mortals and hunters who don't know are breach witnesses. Creatures of another kind, and animals, are startled: a Cainite seeing a Crinos or a demon's apocalyptic form gets you a "Seen by another kind" card, with no mortal rumour. Their own kind, ghouls of the Kindred, Kinfolk of the Garou and anyone marked as knowing stay calm, and wraiths, demons, mummies and spirits are never startled. For vulgar magick only Sleepers count, and the Cast window says who can see. The place matters too: in **WoDX places** each scene or region has a Masquerade setting. Left blank, a haven, caern or chantry is Closed and an Elysium is Guarded. There the witnesses are still recorded so you can deal with them, but no rumour goes out to the town. Feeding or violence in Elysium is flagged as breaking the Prince's peace. After a Discipline is used in sight, you get a card asking whether it showed (setting **Ask who saw a Discipline**).
+
 ## WoDX Interactables: doors, locks, windows, containers, traps, clues, lights, hiding places, hazards, holy places, watch points, vehicles and climbs
 
 *New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Everything here through targets (0.14.0) is deployed there.*
@@ -363,6 +365,12 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 **Nights and days.** Use **Dusk** and **Dawn** on the Clock. At dusk the dawn-and-dusk card offers New Night (blood, Willpower) and healing on rising. Before dawn you get two warnings with each Cainite's haven checked.
 
 **Feeding.** From the Kindred menu: Hunt or Feed. Living tokens in range and sight are listed as witnesses, and a button records them. A seen feeding can be recorded as a breach and becomes a rumour.
+
+**What feeding does to the vessel.** A living vessel loses a lethal health level for every blood point drunk (two for a Giovanni), and has the lower of its blood and its full blood less its wounds, so a wounded mortal has less to give. Its blood comes back a point a day and the wounds heal by the chart. A vessel that passes out is marked Unconscious, one left dying gets a note, and one drained dry is marked dead; the card's **Undo the harm** button puts it all back. Drink or drugs in the blood go when the blood does. Cainite vessels lose blood, not health.
+
+**Clans and bloodlines.** Feed and Hunt know each clan's feeding law and show it in the window, with the Dark Ages version before 1450 and V20's after. A Ventrue's palate is written once in the Feed or Hunt window, with tags such as merchant or woman; a passer-by carries tags of its own, and you can type tags for any vessel. When they match, "fits the palate" is ticked for you; when nothing is tagged, tick it yourself. A narrow palate makes hunting harder. A Nagaraja eats flesh points in the Feed window, and New Night counts the nights without. Salubri pay for an unwilling vessel (Seduction counts as willing), the Salubri antitribu need a fight first (a blow in WoDX Combat is remembered for an hour), and the Lamia bite passes on the Seed of Lilith.
+
+**Feeding habits.** In Hunt, **Usual hunt** saves how the vampire likes to feed (Rake, Sandman, Farmer, Banker and the rest) and fills in the ground, the prey and the pool. It warns when the habit fights the clan's law, and Banker only appears once blood banks exist.
 
 **Experience.** Award at the end of the night. Players spend from the droplet button and you approve in the queue.
 

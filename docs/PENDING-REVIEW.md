@@ -251,6 +251,18 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 |---|---|---|---|
 | 2026-11-11 | Add the 1,136 items on the New Items Desk to the goods? | Yes, all approved by Ben. 1,134 added (two were already goods), each with an original description; "Chinese checkers" renamed "a star checkers set" (B906). | Delete the rows after "ADDED FROM THE NEW ITEMS DESK" in goods.mjs and their lines in goods-text.mjs. |
 
+## Approved by Ben, 12 November 2026, 00:15 UTC (feeding)
+
+Ben accepted every recommendation for feeding: the harm to the vessel and the clan and bloodline rules.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Does a vessel lose health as it loses blood? | Yes: one lethal level a point, two for the Giovanni; a living vessel's blood is the lower of its blood and (full less damage), back one a day; pass out, dying and dead are marked, with Undo (B960). | B960 |
+| 2026-11-12 | Which clan feeding rules, in which era? | One table with V20 Dark Ages versions before 1450 and V20's after; Dark Ages Giovanni use V20's two levels a point; modern Salubri warriors follow the antitribu; Lamia resist 7 when the vessel's sex isn't known (B961). | B961 |
+| 2026-11-12 | How hard is hunting with a Ventrue palate? | +1 for a broad palate, +2 for a narrow one; Herd is taken to fit (B962). | B962 |
+| 2026-11-12 | How many flesh points in a body? | 10 for a human, 5 for a child, an animal's blood points; the debt shows as one less on each Physical Attribute (B963). | B963 |
+| 2026-11-12 | Feeding habits? | V20's argot as saved usual hunts with house pools and grounds; Banker from 1937 (B964). | B964 |
+
 ## Approved by Ben, 11 November 2026, 20:38 UTC (goods without containers)
 
 | Date | Question | Choice made | How to reverse it |
@@ -275,6 +287,14 @@ Ben approved every recommendation for dealing with NPCs from the Actions menu: t
 | 2026-11-11 | Haggling with NPCs (B896). | Manipulation + Finance (Commerce in the Dark Ages) at difficulty 6; a tenth off per success, three tenths at most, a botch costs a tenth; attitude shifts the difficulty; hostile NPCs will not trade, distrusted ones charge a tenth more. House rule: V20 has no haggling system. |
 | 2026-11-11 | Stolen goods and barter (B895, B897). | A trader gives the fence's share for anything lifted; barter gives no change; a trader whose purse is short cannot buy. |
 | 2026-11-11 | Cheap goods sold to a trader (B898). | Anything with a price fetches at least the smallest coin, since half the price of cheap goods rounds down to nothing (340 of 797 goods). |
+
+## Approved by Ben, 12 November 2026, 00:33 UTC (witness desk)
+
+Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact/DH9xFLYAoSYxjacJZ4hd47).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
 
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
@@ -489,11 +509,23 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | Which goods can be used, and for what? | About 1,580 of 1,931 goods get abilities from their category and name (write in, draw in, play, light, sleep in, treat, eat, drink, take and more), used from a hand button on Possessions (B916). Ben checks the list on the Item Uses Desk (https://claude.ai/artifact/MdzoGaueVwRuHq48mpshCu). | Drop the Use button from Sheets extras-html.mjs. |
 | 2026-11-11 | What do food, drink and drugs do to each line? | The living eat and drink through hardship; vampires can't keep it down and drugs reach them only through blood (V20 printed pp. 301-302); wraiths can't take anything; changelings get drunk or high like anyone. Intoxication effects on the living are house rules. 54 cells (werewolves, mummies, demons and a few more) wait for Ben on the desk; the Storyteller decides until then (B917). | Set the EFFECTS cells in use-rules.mjs back to "storyteller". |
 | 2026-11-11 | First aid supplies, owned lights, playing instruments? | Supplies make the First aid check one easier and bandages are spent; lights start the token's carried light, oil and batteries refill it; instruments open the Performance roll (Charisma + Performance) (B918). | Remove the treat and light cases in use.mjs. |
-| 2026-11-11 | Who may fly, swim, climb, crawl, jump, go into the ground or pass through walls? (B940) | Fly, Through walls and Into the ground need a power or form that grants them; the leap and wall powers with the Rise keyword do not fly; the Storyteller can give a creature a way of moving for good. | GRANTS in wodx-combat movement-rules.js, or the setting off |
-| 2026-11-11 | Speeds for flying, swimming, climbing, crawling and jumping (B941) | House rules: fly at running speed, swim at half the jog, climb 3 yards a turn, crawl 3 yards, jump as far as the Jumping roll reached. | speedFor in movement-rules.js |
-| 2026-11-11 | How long breath lasts, and drowning (B942) | Drowning is one lethal level a turn (Hunter pdf 208). Breath lasts Stamina x 10 turns, halved in a fight (house rule; no V20 rule found yet). Book check queued. | breathTurns in movement-rules.js |
-| 2026-11-11 | Which regions are water (B943) | Named by the region ("WoDX: Deep water", a river, a lake) or a flag; shallow water costs double movement; a fall into deep water does no damage. | waterOf in movement-rules.js |
+| 2026-11-11 | Who may fly, swim, climb, crawl, jump, go into the ground or pass through walls? (B960) | Fly, Through walls and Into the ground need a power or form that grants them; the leap and wall powers with the Rise keyword do not fly; the Storyteller can give a creature a way of moving for good. | GRANTS in wodx-combat movement-rules.js, or the setting off |
+| 2026-11-11 | Speeds for flying, swimming, climbing, crawling and jumping (B961) | House rules: fly at running speed, swim at half the jog, climb 3 yards a turn, crawl 3 yards, jump as far as the Jumping roll reached. | speedFor in movement-rules.js |
+| 2026-11-11 | How long breath lasts, and drowning (B962) | Drowning is one lethal level a turn (Hunter pdf 208). Breath lasts Stamina x 10 turns, halved in a fight (house rule; no V20 rule found yet). Book check queued. | breathTurns in movement-rules.js |
+| 2026-11-11 | Which regions are water (B963) | Named by the region ("WoDX: Deep water", a river, a lake) or a flag; shallow water costs double movement; a fall into deep water does no damage. | waterOf in movement-rules.js |
 | 2026-11-11 | What each way of moving does to rolls (B946) | Prone: Stealth -2, hard to see and to shoot from afar, easy to strike up close. Flying, swimming, under the water, wading, climbing and a jump each have their own changes (DECISIONS B946). | STANCES in movement-rules.js |
+| 2026-11-12 | Animal years and places in Moravia (B1000)? | Wolves gone from the lowlands about 1850 and back in the Beskydy from 1995; bears to 1800; hunting hounds to 1914; horses in town streets to 1950; cattle at town markets to 1900; pigs rooting in the lanes to 1850; poultry in town yards to 1900; strays at 0.4 as common after 1900 (licensing). House readings of Moravian history. | Change from/to, years, townUntil or thinFrom in animal-rules.mjs. |
+| 2026-11-12 | Blood in animals not named by the crowd numbers (B1000)? | Wolves 2 like dogs, bears 5 like livestock, boar 3, birds and bats a quarter point like rats. A book check of the V20 animal vessel numbers is queued for the PC. | blood in animal-rules.mjs. |
+| 2026-11-12 | How herd, territory and hunger weigh (B1001)? | Herd adds 1.5 a point to fleeing when outnumbered and 2 when the others run, and takes 0.5 off attacking alone; territory adds its value to attacks and one wound to what it bears on its own patch, 1.5 a point to fighting a trespasser; hunger adds 1.5 a point to attacks December to March and to fighting someone alone. | The NPC 0.21.0 lines in npc-rules scoreOptions and routine-rules pickReaction. |
+| 2026-11-12 | Which animals call out (B1001)? | Only those with the call tactic (guard dogs bark, poultry raise a racket) raise an alarm; no animal sends for the watch. | Add call to a template's tactics. |
+| 2026-11-12 | Years of each mortal archetype (B1005)? | As listed in B1005: house readings of Moravian and Czech history (the Hussite wars 1419 to 1434, robber knights and bandits to 1850, highwaymen 1600 to 1850, the Protectorate 1939 to 1945, the People's Militia from 1948, private security from 1990). | from and to in mortal-rules.mjs. |
+| 2026-11-12 | How morale, cover and formation weigh, and when an NPC surrenders (B1006)? | See B1006: wavering at a fallen leader or half the side down, +2.5 to fleeing a point of morale under 2; surrender offered when beaten, wavering or outnumbered and hurt, and carried out by Auto with Undo. | The NPC 0.23.0 lines in npc-rules scoreOptions. |
+| 2026-11-12 | How long before someone who saw something tells the watch (B1007)? | Two hours of world time, then the place goes on alarm with an Undo card. | REPORT_HOURS in mortal-rules.mjs. |
+| 2026-11-12 | Years of the supernatural archetypes (B1009)? | Anarchs from 1381; the old Lasombra and Tzimisce lords to 1493; Glass Walkers and Bone Gnawers in towns from 1500; Hollow Ones from 1900; Kithain to 1400 and from 1969; Dauntain from 1969; the Arcanum from 1885; mummies from 1990; the Fallen and the imbued from 1999 (2023 in the Future Darkness). House readings of the V20, Revised and 2nd edition timelines. | from, to and spans in supernatural-rules.mjs. |
+| 2026-11-12 | Do clan, tribe and creed now change an NPC's template by themselves (B1009)? | Yes: a Kindred NPC whose sheet says Nosferatu now fights as a Nosferatu, not as a plain neonate. A template set by hand in the behaviour window still wins. | Set the template by hand, or drop the pickSupernatural call in templateFor. |
+| 2026-11-12 | Blood in animals V20 does not list (NPC 0.24.1)? | Cattle 5 (between the large horse at 4 and the camel at 6), sheep and goats 3 (as a small pig), geese and hens 1/2 (as a large bird). The rest follow the V20 core animals appendix, pdf 396-399 (printed 388-391): horse 4, pigs and boar 4, crows 1/2. | Change the numbers in animal-rules.mjs. |
+| 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
+| 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |
 | 2026-11-12 | Goals, times and dots for 60 recipes (B947) | House figures by family: cooking 2 successes an hour, brewing 3 a day, distilling 4 a day, laboratory 6 to 10 a day; dots 1 to 5 by difficulty of the work. Book check of Crafts, Science, Medicine, Herbalism and Hearth Wisdom ranges queued for the PC. | FAMILIES and METHODS in wodx-library/data/recipes.mjs |
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
 | 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
