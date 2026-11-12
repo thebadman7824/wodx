@@ -211,3 +211,32 @@ test("Assamite contracts: kept raises standing and pays a tithe, overdue ones fa
   r = S.settleContract(c, 0, false); assert.equal(r.standing, 0); assert.equal(r.tithe, 0);
   assert.equal(S.settleContract(c, 5, true).standing, 5);
 });
+
+/* Chronicle 0.29.0: bloodlines, castes and Laibon legacies (B1155 to B1157) */
+
+test("bloodlines find their own row before their parent clan's", () => {
+  assert.equal(S.vampireRow("True Brujah")?.key, "truebrujah");
+  assert.equal(S.vampireRow("Brujah")?.key, "brujah");
+  assert.equal(S.vampireRow("Salubri antitribu")?.key, "salubriat");
+  assert.equal(S.vampireRow("Salubri")?.key, "salubri");
+  assert.equal(S.vampireRow("Old Clan Tzimisce")?.key, "koldun");
+  assert.equal(S.vampireRow("Tzimisce")?.key, "tzimisce");
+  assert.equal(S.vampireRow("Harbingers of Skulls")?.key, "harbingers");
+  assert.equal(S.vampireRow("Xi Dundu")?.key, "xidundu");
+  assert.equal(S.vampireRow("Assamite vizier")?.key, "vizier");
+  assert.equal(S.vampireRow("Daughters of Cacophony")?.key, "daughters");
+  for ( const k of ["baali", "gargoyle", "kiasyd", "samedi", "ahrimanes", "anda", "lhiannan", "noiad", "bloodbrothers", "lamia", "nagaraja",
+    "akunanse", "guruhi", "ishtarri", "kinyonyi", "naglopers", "osebo", "shango"] ) assert.ok(S.VAMPIRE.some(r => r.key === k), k);
+  for ( const r of S.BLOODLINES ) {
+    assert.equal(r.feature, "line", r.key);
+    for ( const e of r.effects ?? [] ) assert.ok(e.tags?.length && (e.dice || e.difficulty), r.key);
+    for ( const f of r.also ?? [] ) assert.ok(S.VAMPIRE.some(x => x.feature === f), `${r.key} borrows ${f}`);
+  }
+});
+
+test("the Old Clan holds out one night longer without soil", () => {
+  const D = S.DAY, noon = 43200;
+  let r = S.soilNight({}, D + noon, true, 1);
+  r = S.soilNight(r.soil, 2 * D + noon, false, 1); assert.equal(r.halved, false);
+  r = S.soilNight(r.soil, 3 * D + noon, false, 1); assert.equal(r.halved, true);
+});

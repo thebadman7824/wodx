@@ -6,7 +6,7 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 
 /**
- * WoDX Chronicle 0.28.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
+ * WoDX Chronicle 0.29.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
  * signature-rules.mjs, table in data/signatures.mjs.
  *
  *   Actor flag wodx-chronicle.sig = {muses: [], cause, marks: []}: the character's own tracks (owner and Storyteller see them).
@@ -31,7 +31,7 @@ const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-act
 
 export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigVampire", {
-    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts and the Giovanni's bound dead. Off by default.",
+    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts the Giovanni's bound dead, and the bloodlines and Laibon legacies. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
 }
@@ -43,7 +43,9 @@ export function rowOf(actor) {
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return null;
   return S.vampireRow(clanNames(actor));
 }
-const isFeature = (actor, f) => on() && rowOf(actor)?.feature === f;
+/** Does a row use an engine (its own feature, or one borrowed by a bloodline)? */
+const rowHas = (row, f) => !!row && (row.feature === f || !!row.also?.includes(f));
+const isFeature = (actor, f) => on() && rowHas(rowOf(actor), f);
 
 /* ---------------- cards and Undo ---------------- */
 
@@ -223,7 +225,7 @@ export async function setVice(npc, setite, vice) {
 function onSocial(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
   if ( a?.isOwner && on() && isFeature(a, "vice") ) ravnosChance(a, p.act, npc);
-  if ( a?.isOwner && npc && on() && isFeature(a, "secrets") ) trueFace(a, npc);
+  if ( a?.isOwner && npc && on() && (isFeature(a, "secrets") || rowOf(a)?.face) ) trueFace(a, npc);
   if ( !a || !npc || !isFeature(a, "corruption") ) return;
   const d = S.stepFromSocial(p.act, p.result);
   if ( d ) work(npc, a, d, `${p.act}, ${p.result}`);
@@ -297,7 +299,7 @@ export function hearAs(actorOrId, {topic = "", name = "", npcId = ""} = {}) {
 const carriesSoil = a => (a?.items ?? []).some(i => S.isSoil({name: i.name, soil: i.flags?.[MODULE_ID]?.soil}));
 async function soilTick(a, t) {
   if ( !isFeature(a, "soil") ) return;
-  const sig = sigOf(a), r = S.soilNight(sig.soil, t, carriesSoil(a));
+  const sig = sigOf(a), r = S.soilNight(sig.soil, t, carriesSoil(a), rowOf(a)?.grace ?? 0);
   if ( !r.changed ) return;
   const before = foundry.utils.deepClone(sig);
   sig.soil = r.soil;
@@ -398,12 +400,13 @@ async function trueFace(a, npc) {
   if ( seen[npc.id] === tonightKey() ) return null;
   sig.faces = {...seen, [npc.id]: tonightKey()};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  return card(`${a.name}: the true face`, `<p>${esc(npc.name)} dealt with ${esc(a.name)} face to face. Unless Obfuscate held, that is a breach of the Masquerade.</p>`,
-    {act: {key: "breach", label: "Record the breach", who: "gm", data: {by: a.uuid, npc: npc.uuid}}});
+  const row = rowOf(a), saw = row?.faceText ?? "saw the true face of a Nosferatu";
+  return card(`${a.name}: ${row?.face ? "a sign of what they are" : "the true face"}`, `<p>${esc(npc.name)} dealt with ${esc(a.name)} face to face. Unless Obfuscate or a disguise held, ${esc(npc.name)} ${esc(saw)}: a breach of the Masquerade.</p>`,
+    {act: {key: "breach", label: "Record the breach", who: "gm", data: {by: a.uuid, npc: npc.uuid, event: saw}}});
 }
-ACTS.breach = async ({by, npc}) => {
+ACTS.breach = async ({by, npc, event}) => {
   const a = await fromUuid(by), w = await fromUuid(npc);
-  if ( a && w ) await actorsApi("wodx-actions")?.recordBreach?.({by: a, event: "saw the true face of a Nosferatu", witnesses: [w]});
+  if ( a && w ) await actorsApi("wodx-actions")?.recordBreach?.({by: a, event: event ?? "saw the true face of a Nosferatu", witnesses: [w]});
 };
 /** Write down a secret as an item in the Nosferatu's pack. */
 export async function secret(actorOrId, {about = "what was overheard", text = ""} = {}) {
@@ -537,9 +540,11 @@ export function effects(actorOrId) {
   const a = toActor(actorOrId), sig = a?.flags?.[MODULE_ID]?.[FLAG] ?? {};
   if ( !on() ) return [];
   const out = S.markEffects(sig.marks ?? [], now());
+  const row = rowOf(a);
+  for ( const e of row?.effects ?? [] ) out.push({...e, why: row.label});
   const pen = S.beautyPenalty(sig.muses ?? []);
   if ( pen ) out.push({tags: ["beauty"], difficulty: pen, why: "Obsession with a Muse"});
-  if ( sig.soil?.short > 0 && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
+  if ( sig.soil?.short > (row?.grace ?? 0) && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
   return out;
 }
 
@@ -555,8 +560,9 @@ export async function open(actorOrId) {
   if ( marks.length ) body += `<h4>Marks</h4><ul>${marks.map(m => { const r = S.markByKey(m.key); return `<li>${esc(r.label)}: ${esc(r.edge)}; ${esc(r.cost)}. Heals in ${Math.ceil((m.until - t) / 86400)} days.</li>`; }).join("")}</ul>`;
   if ( sig.soil ) body += `<h4>Native soil</h4><p>${carriesSoil(a) ? "Carried." : "Not carried."}${sig.soil.short ? ` Dice pools halved (${sig.soil.short} night${sig.soil.short === 1 ? "" : "s"} without it).` : ""}</p>`;
   if ( sig.ravnos?.vice ) body += `<h4>Vice</h4><p>${esc(S.ravnosVice(sig.ravnos.vice)?.label)}. Self-Control difficulty to resist now: ${S.ravnosDifficulty(sig.ravnos, t)}.</p>`;
-  if ( row?.feature === "camera" ) { const y = currentYear(), c = S.cameraAt(y); body += `<h4>Cameras</h4><p>${c ? `${esc(c.label)} is the camera of the year. This scene is ${S.watched(y, canvas?.scene?.flags?.[MODULE_ID]?.camera) ? "watched" : "not watched"}.` : "No camera exists yet."}</p>`; }
-  if ( row?.feature === "pyramid" ) body += `<h4>The Pyramid</h4><p>${esc(S.rankLabel(sig.rank ?? 0))}.</p>`;
+  if ( rowHas(row, "camera") ) { const y = currentYear(), c = S.cameraAt(y); body += `<h4>Cameras</h4><p>${c ? `${esc(c.label)} is the camera of the year. This scene is ${S.watched(y, canvas?.scene?.flags?.[MODULE_ID]?.camera) ? "watched" : "not watched"}.` : "No camera exists yet."}</p>`; }
+  if ( row?.effects?.length ) body += `<h4>On the rolls</h4><ul>${row.effects.map(e => `<li>${esc(e.tags.join(", "))}: ${e.dice ? `${e.dice > 0 ? "+" : ""}${e.dice} ${Math.abs(e.dice) === 1 ? "die" : "dice"}` : `difficulty +${e.difficulty}`}</li>`).join("")}</ul>`;
+  if ( rowHas(row, "pyramid") ) body += `<h4>The Pyramid</h4><p>${esc(S.rankLabel(sig.rank ?? 0))}.</p>`;
   if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / 86400))} days` : ""}</li>`).join("")}</ul>`;
   if ( sig.servants?.length ) body += `<h4>Bound dead</h4><ul>${sig.servants.map(w => `<li>${esc(w.name)}${w.fetter ? ` (held by ${esc(w.fetter)})` : ""}</li>`).join("")}</ul>`;
   if ( row?.feature === "family" && currentYear() < 1444 ) body += `<p class="vta-note">In this age the line is the Cappadocians: their deathly look is a Masquerade sign up close.</p>`;
@@ -566,26 +572,26 @@ export async function open(actorOrId) {
     if ( victims.length ) body += `<h4>Corruption ledger</h4><ul>${victims.map(v => { const r = v.flags[MODULE_ID][CFLAG][a.id]; return `<li>${esc(v.name)}: ${r.step} (${esc(r.vice || "no vice set")})</li>`; }).join("")}</ul>`;
   }
   const buttons = [{action: "close", label: "Close", default: true}];
-  if ( row?.feature === "glimpse" && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
-  if ( row?.feature === "cause" && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
-  if ( row?.feature === "soil" && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
-  if ( row?.feature === "secrets" && on() ) buttons.unshift({action: "secret", label: "Write a page of secrets"});
-  if ( row?.feature === "pyramid" && on() && game.user.isGM ) buttons.unshift({action: "rank", label: "Set rank"});
-  if ( row?.feature === "domain" && on() ) buttons.unshift({action: "influence", label: "Influence in place of income"});
-  if ( row?.feature === "contracts" && on() ) {
+  if ( rowHas(row, "glimpse") && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
+  if ( rowHas(row, "cause") && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
+  if ( rowHas(row, "soil") && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
+  if ( rowHas(row, "secrets") && on() ) buttons.unshift({action: "secret", label: "Write a page of secrets"});
+  if ( rowHas(row, "pyramid") && on() && game.user.isGM ) buttons.unshift({action: "rank", label: "Set rank"});
+  if ( rowHas(row, "domain") && on() ) buttons.unshift({action: "influence", label: "Influence in place of income"});
+  if ( rowHas(row, "contracts") && on() ) {
     buttons.unshift({action: "contract", label: "Take a contract"});
     const open = (sig.contracts ?? []).find(c => c.status === "open");
     if ( open ) buttons.unshift({action: `kept:${open.id}`, label: `Kept: ${open.target}`});
   }
-  if ( row?.feature === "family" && on() ) {
+  if ( rowHas(row, "family") && on() ) {
     buttons.unshift({action: "bind", label: "Bind a wraith"});
     (sig.servants ?? []).slice(0, 3).forEach(w => buttons.unshift({action: `call:${w.id}`, label: `Call ${w.name}`}));
   }
-  if ( row?.feature === "vice" && on() ) {
+  if ( rowHas(row, "vice") && on() ) {
     if ( !sig.ravnos?.vice ) S.RAVNOS_VICES.forEach(v => buttons.unshift({action: `vice:${v.key}`, label: `Vice: ${v.label}`}));
     else buttons.unshift({action: "fed", label: "The vice was fed"}, {action: "moved", label: "Moved on to a new domain"});
   }
-  if ( row?.feature === "camera" && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
+  if ( rowHas(row, "camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: clan feature`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "rant" ) return spendRant(a);
