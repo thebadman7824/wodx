@@ -20,6 +20,9 @@ import {checkCreation} from "./totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
+import {BuildApp} from "./first-night-build.mjs";
+import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";
+import {underWay} from "./first-night-prelude-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "firstNight";
@@ -55,6 +58,7 @@ export function registerFirstNightSettings() {
 /** At start: the approval handlers (a player's step, a player's story hook). */
 export function registerFirstNight() {
   registerSeedCards();
+  registerTies();
   const C = chron();
   C?.registerApprovalHandler?.(STEP_APPROVAL, {label: "A step before the first night", approve: e => tick(e.data?.actorId, e.data?.step, e.from)});
   C?.registerApprovalHandler?.(HOOK_APPROVAL, {label: "A story hook", approve: e => agreeHook(e.data?.actorId)});
@@ -269,7 +273,7 @@ export class FirstNightApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {
       open: FirstNightApp.#onOpen, done: FirstNightApp.#onDone, undo: FirstNightApp.#onUndo, actor: FirstNightApp.#onActor,
-      troupe: FirstNightApp.#onTroupe, signoff: FirstNightApp.#onSignOff, hook: FirstNightApp.#onHook, hookUsed: FirstNightApp.#onHookUsed
+      troupe: FirstNightApp.#onTroupe, ties: () => sendTies(), meeting: () => meetingJournal(), signoff: FirstNightApp.#onSignOff, hook: FirstNightApp.#onHook, hookUsed: FirstNightApp.#onHookUsed
     }
   };
 
@@ -310,7 +314,9 @@ export class FirstNightApp extends ApplicationV2 {
       return `<tr><td>${esc(a.name)}</td><td>${done} of ${st.length}</td><td>${rec.signed ? "Signed off" : ""}${R.hookDue(rec.hook) ? " · hook waits" : ""}</td>
         <td><button type="button" data-action="actor" data-id="${a.id}">Open</button></td></tr>`;
     }).join("");
-    return `<div class="wodx-top"><p class="wodx-prompt">Each player character's steps before the first night. Players work through their own; you approve and sign off.</p></div>
+    return `<div class="wodx-top"><p class="wodx-prompt">Each player character's steps before the first night. Players work through their own; you approve and sign off.</p>
+      <div class="wodx-buttons"><button type="button" data-action="ties"><i class="fa-solid fa-link"></i> Send the tie questions</button>
+      <button type="button" data-action="meeting"><i class="fa-solid fa-people-group"></i> How they met</button></div></div>
       <div class="wodx-scroll">${rows ? `<table class="wodx-table"><thead><tr><th>Character</th><th>Steps</th><th></th><th></th></tr></thead><tbody>${rows}</tbody></table>`
         : `<p class="wodx-quiet">No player characters yet. Make a character and give a player ownership of it.</p>`}</div>`;
   }
@@ -337,7 +343,7 @@ export class FirstNightApp extends ApplicationV2 {
     const card = s => {
       const ticked = !!rec.steps[s.key]?.done;
       const btns = [
-        OPENS[s.key] && (!OPENS[s.key].gm || gm) ? `<button type="button" data-action="open" data-step="${s.key}">${esc(OPENS[s.key].label)}</button>` : "",
+        OPENS[s.key] && (!OPENS[s.key].gm || gm) ? `<button type="button" data-action="open" data-step="${s.key}">${esc(typeof OPENS[s.key].label === "function" ? OPENS[s.key].label() : OPENS[s.key].label)}</button>` : "",
         s.state !== "done" && !s.last ? `<button type="button" data-action="done" data-step="${s.key}">${gm ? "Tick" : "Mark done"}</button>` : "",
         s.last && gm && s.state !== "done" ? `<button type="button" data-action="signoff" ${sign.ok ? "" : "disabled"} title="${sign.ok ? "" : esc(`Still open: ${sign.missing.join(", ")}`)}">Sign off</button>` : "",
         gm && ticked ? `<button type="button" data-action="undo" data-step="${s.key}">Undo</button>` : ""
@@ -350,7 +356,8 @@ export class FirstNightApp extends ApplicationV2 {
     const hook = rec.hook ? `<p><b>Story hook:</b> ${esc(rec.hook.text)} <span class="wodx-quiet">${rec.hook.used ? "brought in" : rec.hook.agreed ? `agreed, ${rec.hook.sessions} session${rec.hook.sessions === 1 ? "" : "s"} so far` : "waiting for the Storyteller"}</span>
       ${gm && rec.hook.agreed && !rec.hook.used ? `<button type="button" data-action="hookUsed">It came into play</button>` : ""}</p>` : "";
     const shown = gm ? this.forecast : R.playerView(this.forecast);
-    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last.</p>
+    const late = !rec.signed && underWay(pcs().filter(x => x.id !== a.id).map(x => x.flags?.[MODULE_ID]?.[FLAG]));
+    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last.${late ? " The chronicle is already under way: the forecast reads the current year, and the prelude can be short." : ""}</p>
         ${gm ? `<button type="button" data-action="troupe"><i class="fa-solid fa-users"></i> The whole troupe</button>` : ""}</div>
       <div class="wodx-scroll">
         <ol class="wodx-fn-steps">${states.map(card).join("")}</ol>
@@ -422,10 +429,10 @@ const OPENS = {
   sessionZero: {label: "Session Zero", run: () => chron()?.safety?.openSessionZero?.()},
   concept: {label: "The sheet", run: a => a.sheet?.render(true)},
   lifepath: {label: "Lifepath", run: a => LifepathApp.openFor(a)},
-  build: {label: "Creation check", run: a => CreationCheckApp.open(a)},
+  build: {label: "Build", run: a => BuildApp.openFor(a)},
   meritsFlaws: {label: "The sheet", run: a => a.sheet?.render(true)},
-  prelude: {label: "A prelude", gm: true, run: () => api("wodx-storyteller")?.prelude?.dialog?.()},
-  ties: {label: "The group", run: () => game.actors.find(x => /group/i.test(String(x.type)))?.sheet?.render(true)}
+  prelude: {label: () => (game.user.isGM ? "Run the prelude" : "Write my prelude"), run: a => (game.user.isGM ? PreludeRunApp.openFor(a) : writtenPrelude(a))},
+  ties: {label: () => (game.user.isGM ? "Send the tie questions" : "The group"), run: () => (game.user.isGM ? sendTies() : game.actors.find(x => /group/i.test(String(x.type)))?.sheet?.render(true))}
 };
 
 /** A "Before the First Night" button on the header of an owned character sheet, beside Lifepath. */
