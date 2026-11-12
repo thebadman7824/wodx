@@ -15,6 +15,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: wraith-rules.js.
  */
 
+import { spendTime } from "./spend-time.js";
 import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -294,7 +295,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: Corpus damage ${n(d.bashing)}B / ${n(d.lethal)}L / ${n(d.aggravated)}A; Pathos ${i.pathos.temp}.</p>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="pathos">Spend Pathos now (2 bashing or 1 lethal each)</option><option value="agg">Slumber or meditate 8 hours, 3 Pathos: one aggravated level</option><option value="rest">Rest (a bashing level an hour)</option></select></div>
           <div class="form-group"><label>Pathos to spend at most / hours</label><input type="number" name="max" value="${i.pathos.temp}" min="0" style="width:4em"/> <input type="number" name="hours" value="1" min="1" style="width:4em"/></div>
-          <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock by the time (GM)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock by the time (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Heal Corpus: ${actor.name}`, content, "Heal", async fd => {
             let after, html, spent = 0, hours = 0;
             if (fd.how === "rest") { hours = Math.max(1, n(fd.hours)); after = W.corpusRest(d, hours); html = `Rests ${hours} hour${hours === 1 ? "" : "s"}: ${n(d.bashing) - after.bashing} bashing heal.`; }
@@ -306,8 +307,8 @@ export function build(ctx) {
                 await P.adjust(actor, "pathos", -spent);
             }
             await setCorpusDamage(actor, { bashing: n(after.bashing), lethal: n(after.lethal), aggravated: n(after.aggravated) });
-            if (fd.advance && hours && game.user.isGM) await game.time.advance(hours * 3600);
-            return post(actor, `${actor.name} mends their Corpus`, `<div class="vta-sec">${esc(html)}</div><div class="wodx-quiet">Wraith 20th p. 295</div>`);
+            const tnote = fd.advance && hours ? await spendTime(actor, hours * 3600, "mending") : "";
+            return post(actor, `${actor.name} mends their Corpus`, `<div class="vta-sec">${esc(html)}</div>${tnote}<div class="wodx-quiet">Wraith 20th p. 295</div>`);
         });
     }
 

@@ -11,6 +11,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: hunter-rules.js.
  */
 
+import { spendTime } from "./spend-time.js";
 import * as H from "./hunter-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -204,15 +205,15 @@ export function build(ctx) {
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
           <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
-          <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock (GM)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (a player asks the Storyteller)</label></div></form>`;
         return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
             const r = await rollPool(n(fd.rating), diff);
             const to = H.convictionGain(i.conviction, r.botch ? 0 : r.successes, i.piety);
             await setConviction(actor, to);
             await setInq(actor, { prayerDay: today, prayerRun: run });
-            if (fd.advance && game.user.isGM) await game.time.advance(n(fd.hours) * 3600);
-            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div><div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
+            const tnote = fd.advance ? await spendTime(actor, n(fd.hours) * 3600, "prayer") : "";
+            return post(actor, `${actor.name} prays`, rollBlock(`${{ ground: "Holy Ground", relic: "Holy Relic", flock: "Flock" }[fd.src]} (${fd.rating})`, r) + `<div class="vta-res">Conviction ${i.conviction} → ${to}</div>` + tnote + `<div class="wodx-quiet">Dark Ages: Inquisitor p. 160</div>`, [r.roll]);
         });
     }
 
