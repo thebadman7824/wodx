@@ -64,7 +64,7 @@ export const ABILITIES = {
   seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true}
 };
 
-const R = (...parts) => new RegExp(`\\b(${parts.join("|")})`, "i");
+const R = (...parts) => new RegExp(`\\b(?:${parts.join("|")})(?:e?s)?\\b`, "i");
 
 /* What is in a thing that is eaten, drunk or taken. */
 const ALCOHOL = R("ale", "beer", "cider", "wine", "mead", "claret", "port\\b", "champagne", "brandy", "vodka", "gin\\b", "rum\\b", "whiskey", "liquor",
@@ -74,7 +74,7 @@ const ALCOHOL = R("ale", "beer", "cider", "wine", "mead", "claret", "port\\b", "
 const CAFFEINE = R("coffee", "tea\\b", "cola", "energy drink", "espresso", "cocoa", "chocolate drink", "mate\\b");
 const SUBSTANCES = [
   ["opiate", R("opium", "poppy", "laudanum", "soothing syrup", "morphine", "heroin", "fentanyl", "oxycodone", "codeine", "tramadol")],
-  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed")],
+  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "methamphetamine", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed(?! loader)")],
   ["cannabis", R("hashish", "marijuana", "joint", "cannabis")],
   ["hallucinogen", R("mushroom", "henbane", "peyote", "lsd", "belladonna", "dream gas", "ketamine")],
   ["sedative", R("chloral", "ether for", "sleeping pill", "sedatives", "chloroform", "anesthetic", "rocuronium")],
@@ -137,7 +137,7 @@ const READABLE = R("book", "letter", "report", "file\\b", "psalter", "broadsheet
 const BEDS = R("mattress", "feather bed", "hammock", "bedroll", "rollmat", "cot\\b", "sleeping bag", "cradle", "bunk");
 const INSTRUMENTS = R("flute", "hurdy-gurdy", "lute", "fiddle", "guitar", "harmonica", "concertina", "banjo", "clarinet", "kantele", "ukulele",
   "violin", "krar", "bagpipes", "tuba", "saxophone", "drum\\b", "trumpet", "horn\\b", "whistle", "recorder\\b", "accordion", "piano", "harp");
-const GAMES = R("knucklebones", "dice", "die\\b", "nine men", "tables and counters", "chess", "cards", "jigsaw", "board game", "checker", "tangram",
+const GAMES = R("knucklebones", "dice", "die\\b", "nine men", "tables and counters", "chess", "cards", "jigsaw", "board game", "checker", "checkerboard", "tangram",
   "mancala", "rummy", "reversi", "senet", "mahjong", "backgammon", "latrunculi", "go set", "shogi", "hnefatafl", "alquerque", "dominoes",
   "jackstraws", "ludo", "tic-tac-toe", "video game", "game console", "game system", "virtual reality", "ball\\b", "football", "basketball",
   "volleyball", "puck", "shuttlecock", "spinning top", "yo-?yo", "marble", "skateboard", "fidget", "kickboard", "golf");
