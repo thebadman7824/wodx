@@ -145,17 +145,21 @@ const TAG_MAP = {
   "check-notice": ["perception", "sight"], "check-search": ["perception", "sight"], "check-cow": ["intimidation", "social"], "check-lead": ["leadership", "social"],
   "check-persuade": ["social", "voice"], "check-etiquette": ["social"], "check-computer": ["computer"], "check-hide": ["stealth"], "check-agility": ["balance", "dexterity"],
   "check-staycalm": ["frenzy"], "check-selfcontrol": ["frenzy"], "check-readperson": ["perception"], "check-uncanny": ["awareness"],
-  "social-persuade": ["social", "voice"], "social-fasttalk": ["social", "voice"], "social-con": ["social", "voice"], "social-intimidate": ["intimidation", "social"],
+  "social-persuade": ["social", "voice"], "social-intimidate": ["intimidation", "social"],
   "social-threaten": ["intimidation", "social"], "social-question": ["social"], "social-bribe": ["social"], "social-charm": ["social", "voice"], "social-seduce": ["social", "voice"],
-  "social-lift": ["dexterity"], "social-plant": ["dexterity"],
+  "social-lift": ["dexterity", "lift"], "social-plant": ["dexterity", "lift"], "social-con": ["social", "voice", "con"], "social-fasttalk": ["social", "voice", "fasttalk"],
   frenzy: ["frenzy"], instinct: ["frenzy"]
 };
+/** Ability keys that are also tags of their own, for the signature features (Survival, Medicine and the rest). */
+const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
+  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {
     if ( !k ) continue;
     const s = String(k);
     for ( const t of TAG_MAP[s] ?? TAG_MAP[s.toLowerCase()] ?? [] ) out.add(t);
+    if ( RAW_TAGS.has(s.toLowerCase()) ) out.add(s.toLowerCase());
   }
   return [...out];
 }

@@ -165,7 +165,7 @@ function clearPreview() { try { preview?.destroy?.({children: true}); } catch (e
 /** Draw the shape on this user's map only, until the window closes or the area is used. */
 function drawPreview(sh, at) {
   clearPreview();
-  if ( !sh || !at?.origin || !canvas?.ready ) return;
+  if ( !sh || !at?.origin || !canvas?.ready || typeof PIXI === "undefined" ) return;
   try {
     const g = new PIXI.Graphics();
     const pts = T.outline(sh, at).map(toPx);

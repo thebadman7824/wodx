@@ -12,22 +12,24 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.vampire\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
+const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.[a-z]+\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
 
 /** The signature row for a clan or bloodline name, or null. Whole words only, so "Settler" is not a Setite. */
-export function vampireRow(...names) {
+export function vampireRow(...names) { return rowIn(VAMPIRE, ...names); }
+/** The first row of a table whose match words name one of the names (whole words). */
+export function rowIn(table, ...names) {
   for ( const name of names.flat() ) {
     const w = words(name), text = ` ${w.join(" ")} `;
     if ( !w.length ) continue;
-    for ( const row of VAMPIRE ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
+    for ( const row of table ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
   }
   return null;
 }
@@ -355,3 +357,56 @@ export function newFamily({name = "", founder = "", trait = "craft", disciplines
 }
 /** Whole months a ghoul has gone without vitae (30-day months). */
 export const monthsUnfed = (fedAt, now) => Math.max(0, Math.floor((n(now) - n(fedAt ?? now)) / (30 * DAY)));
+
+/* ---------------- Werewolf (Chronicle 0.31.0) ---------------- */
+
+/** A shapechanger's rows, stacked: tribe, auspice and breed for a Garou; the breed's own row first for the other Fera. */
+export function garouRows({tribe = "", auspice = "", breed = "", fera = ""} = {}) {
+  const f = fera && !/^garou$/i.test(String(fera)) ? rowIn(FERA, fera) : null;
+  const out = f ? [f, rowIn(BREEDS, breed)] : [rowIn(TRIBES, tribe), rowIn(AUSPICES, auspice), rowIn(BREEDS, breed)];
+  if ( f?.courts && !f.text.includes(COURTS_TEXT) ) out[0] = {...f, text: `${f.text} ${COURTS_TEXT}`};
+  return out.filter(Boolean);
+}
+/** Is the tribe or breed gone by this year (a lost tribe after its end, a lost Fera always)? */
+export const goneBy = (row, year) => row?.until != null && n(year) > n(row.until);
+/** Does a name or kind mark a creature of the Wyrm? */
+export const isWyrm = (...names) => names.flat().some(x => { const w = words(x); return w.some(t => WYRM_WORDS.includes(t)) || !!rowIn(TRIBES, x)?.wyrm; });
+/** The initiative that puts someone ahead of everyone else in the fight. */
+export const firstInit = (inits = []) => Math.max(0, ...inits.map(n)) + 1;
+/** The Stargazer's reading: once a lunar month, under a sky without cloud or rain. */
+export const mayReadSky = (last, now) => last == null || n(now) - n(last) >= LUNAR_MONTH * DAY;
+export const skyClear = wx => !wx || (!["overcast", "storm"].includes(wx.sky) && (!wx.precip || wx.precip === "none") && wx.fog !== "thick");
+/** A metis deformity's effects. */
+export const deformityByKey = key => DEFORMITIES.find(d => d.key === key) ?? null;
+
+/** Signature effects in the trait-effect shape for one roll: {key, name, dice, diff}. "all" fits every roll; halving is a note only. */
+const tagKey = t => String(t ?? "").toLowerCase().replace(/[^a-z]/g, "");
+const ALIAS = {resistfrenzy: {ch: "roll", tags: ["frenzy"]}, resistdominate: {ch: "resist", tags: ["mind"]}, deceit: {ch: "roll", tags: ["subterfuge", "con", "fasttalk"]}};
+export function sigRollEffects(list = [], ctx = {}) {
+  const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
+  for ( const e of list ) {
+    if ( e.halve ) continue;
+    let hit = false;
+    for ( const t of e.tags ?? [] ) {
+      const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
+      if ( tc === ch && (tt.includes("all") || tt.some(x => want.has(x))) ) hit = true;
+    }
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
+  }
+  return out;
+}
+
+/* ---------------- Mage (Chronicle 0.33.0) ---------------- */
+
+/** A mage's rows: the Tradition, Craft or Convention, then a Hermetic House when one is named. */
+export const mageRows = ({sect = [], house = []} = {}) => [rowIn(MAGE, sect), rowIn(HOUSES, house)].filter(Boolean);
+/** The name a group goes by in a year (the Dark Ages fellowships, the Order of Reason's conventions). */
+export const nameAt = (row, year) => (row?.names ?? []).find(x => n(year) <= n(x.until))?.label ?? row?.label ?? "";
+/** Is the group not founded yet in this year? */
+export const notYet = (row, year) => row?.from != null && n(year) < n(row.from);
+/** What records the Watchers read in a year. */
+export const recordsAt = year => [...RECORDS].reverse().find(r => n(year) >= r.from)?.label ?? RECORDS[0].label;
+/** A once-a-day Willpower point (the Akashic dawn): a day is counted from dawn, 06:00. */
+export const mayMeditate = (last, now) => last == null || Math.floor((n(now) - 21600) / DAY) > Math.floor((n(last) - 21600) / DAY);
+/** Willpower plus or minus one, kept between 0 and the permanent rating. */
+export const willpowerStep = (wp = {}, d = 1) => clamp(n(wp.temporary) + d, 0, Math.max(0, n(wp.permanent) || 10));

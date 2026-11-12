@@ -2,7 +2,11 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 3.45.0 (missed connections, 12 November 2026: the hunt window suggests extra difficulty from the hour, the era, the crowd and the weather (house rule); a completed trade sends wodxTradeDone for WoDX Storyteller's market count)
+- 3.48.0 (missed connections, 12 November 2026: the hunt window suggests extra difficulty from the hour, the era, the crowd and the weather (house rule); a completed trade sends wodxTradeDone for WoDX Storyteller's market count)
+- 3.47.0 (feeding on a named NPC tells WoDX NPC who fed, so the vessel can remember it; the With this person and Trade windows call an NPC by the stranger's words until the character has met them)
+- 3.46.0 (Look them over and Ask around about them in With this person: a fact per success about a stranger, to the player and the Storyteller only)
+- 3.45.1 (the odds line shows in the roll windows again: it went inside the form, not the window's content box)
+- 3.45.0 (made things of good, fine or masterwork quality sell and buy at their quality price; Pass as someone else in With this person: a disguise against the NPC's Perception + Alertness)
 - 3.44.0 (the VtDA20 bridge is gone: no game.vtda20actions alias, no settings read from vtda20-actions, no one-time migration or its approval, and the module no longer switches itself off beside vtda20-actions; the manifest still lists vtda20-actions as a conflict)
 - 3.43.0 (the odds before a roll in the Action and Common checks windows, with the other side's odds for the Storyteller only; pinned and lately used actions kept on the character; numina windows aim at a target)
 - 3.42.2 (W20 Glabro, Crinos and Lupus teeth and claws follow the book check)

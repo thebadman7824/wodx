@@ -9,7 +9,7 @@ import * as TR from "./trade-rules.js";
  */
 export function build(ctx) {
     const { R, PRESETS, pickPool, readPool, woundPenalty, setting, rollPool, rollBlock, post, esc, dialog, opts, willpower, spendWillpower,
-        attitudeOf, nameFor, npcApi, gmIds, proposeOrApply, moveItem } = ctx;
+        attitudeOf, nameFor, viewName = nameFor, npcApi, gmIds, proposeOrApply, moveItem } = ctx;
     const ST = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep : null;
     const money = () => ST()?.money ?? null;
     const ICS = "wodx-interactables";
@@ -38,13 +38,13 @@ export function build(ctx) {
     function wares(npc, shop) {
         const out = [];
         if (shop) for (const r of TR.shopRows(shop.tile.flags?.[ICS]?.items)) out.push({ key: `s${r.i}`, row: r.i, name: r.name, count: r.count, price: priceOf(r.name, shop) });
-        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: priceOf(it.name, shop) });
+        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it)) });
         return out.filter(w => w.price);
     }
     /** What the character can offer, with what the NPC would give for each. */
     function offers(actor, shop) {
         return TR.tradeable([...(actor.items ?? [])]).map(it => {
-            const p = priceOf(it.name, shop);
+            const p = TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it));
             return p ? { key: it.id, item: it.id, name: it.name, lifted: isLifted(it), price: p, give: TR.offerFor(p, { lifted: isLifted(it) }) } : null;
         }).filter(Boolean);
     }
@@ -69,7 +69,7 @@ export function build(ctx) {
             const pick = pickPool(actor, TR.HAGGLE_PRESET.haggleNpc.alts);
             const open = line("trade:open", npcTok, actor);
             const content = `<form>
-              <p>${esc(actor.name)} trades with <b>${esc(name)}</b>${shop ? " at their shop" : ""}.${open ? ` <i>${esc(open)}</i>` : ""}</p>
+              <p>${esc(actor.name)} trades with <b>${esc(viewName(npcTok))}</b>${shop ? " at their shop" : ""}.${open ? ` <i>${esc(open)}</i>` : ""}</p>
               <div class="form-group"><label>Deal</label><select name="mode" data-fixed>${opts([["buy", "Buy from them"], ["sell", "Sell to them"], ["barter", "Barter one thing for another"]], key)}</select></div>
               <div class="form-group"><label>What they have</label><select name="want">${opts([["", "(none)"], ...wantOpts], "")}</select></div>
               <div class="form-group"><label>How many</label><input type="number" name="count" value="1" min="1" style="width:4em"/></div>
@@ -80,7 +80,7 @@ export function build(ctx) {
               <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
               <p class="vta-note">${esc(TR.HAGGLE_PRESET.haggleNpc.note)} Prices are this era's and this market's. Things with no price in the goods list are settled in play.</p>
             </form>`;
-            fd = await dialog(`Trade with ${name}`, content, "Deal", d => d);
+            fd = await dialog(`Trade with ${viewName(npcTok)}`, content, "Deal", d => d);
             if (!fd) return null;
         }
         const mode = fd.mode || key;

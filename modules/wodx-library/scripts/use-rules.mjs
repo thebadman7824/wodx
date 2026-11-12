@@ -45,6 +45,7 @@ export const ABILITIES = {
   photograph: {label: "Take a picture", effect: "pages", page: "picture", verb: "takes a picture with"},
   read: {label: "Read it", effect: "read", verb: "reads"},
   wear: {label: "Put on or take off", effect: "wear", verb: "puts on"},
+  dressas: {label: "Dress as someone else", effect: "dressas", verb: "dresses as someone else in"},
   play: {label: "Play it", effect: "system", preset: "performance", verb: "plays"},
   game: {label: "Play a game", effect: "note", verb: "plays a game with"},
   gamble: {label: "Gamble", effect: "note", verb: "gambles with"},
@@ -198,6 +199,8 @@ export function abilitiesOf(good) {
   if ( out.has("write") || out.has("draw") ) out.add("read");
   if ( k === "cloth" && /needle case|hank of thread/i.test(n) ) out.add("fix");
   else if ( ["cloth", "valuables"].includes(k) || (k === "accessories" && /holster|sling/i.test(n)) ) out.add("wear");
+  // 0.15.0: clothes can be worn as a disguise (WoDX Library's look; the roll is WoDX Actions' Pass as someone else)
+  if ( k === "cloth" && out.has("wear") ) out.add("dressas");
   if ( (k === "toys" || k === "faith") && INSTRUMENTS.test(n) ) out.add("play");
   if ( k === "toys" && PLAYERS.test(n) ) out.add("switchon");
   if ( (k === "toys" || k === "vice") && GAMES.test(n) && !out.has("play") ) out.add(k === "vice" ? "gamble" : "game");

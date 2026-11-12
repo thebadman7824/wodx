@@ -255,6 +255,22 @@ async function supplyAct(actor, item, act) {
   return null;
 }
 
+/** 0.15.0: wear a thing as a disguise: the station and sides it passes for. Blank station takes the disguise off. */
+async function dressAs(actor, item) {
+  const d = item.flags?.[MOD]?.look?.dressedAs ?? null;
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+  const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 460}, window: {title: `Dress as someone else: ${item.name}`}, classes: ["wodx-dialog"],
+    content: `<p class="hint">Who should strangers take ${esc(actor.name)} for? Each NPC who looks gets a roll against it (With this person, Pass as someone else). Leave the station blank to stop.</p>
+      <label>Station it passes for (0 a beggar, 1 common folk, 2 an artisan, 3 a merchant, 4 gentry, 5 the great) <input type="number" name="station" min="0" max="5" value="${d ? Number(d.station) || 0 : ""}"></label>
+      <label>Sides it passes for, comma between (kind:church, livery, kind:watch, military) <input type="text" name="sides" maxlength="200" value="${esc((d?.sides ?? []).join(", "))}"></label>`,
+    buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}]});
+  if ( !res || res === "cancel" ) return null;
+  const st = String(res.station ?? "").trim();
+  const look = st === "" ? null : {station: Math.max(0, Math.min(5, Math.round(Number(st) || 0))), sides: String(res.sides ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean)};
+  await item.update({[`flags.${MOD}.look`]: {dressedAs: look}, ...(look && !item.system?.isequipped ? {"system.isequipped": true} : {})});
+  return say(actor, look ? `${actor.name} dresses to pass as someone else.` : `${actor.name} stops pretending to be someone else.`);
+}
+
 /** Do one ability with an item. */
 export async function run(item, ability, actor = holderOf(item)) {
   await load();
@@ -294,6 +310,7 @@ export async function run(item, ability, actor = holderOf(item)) {
       await say(actor, U.useLine(actor.name, ability, item.name));
       return null;
     }
+    case "dressas": return dressAs(actor, item);
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});
@@ -301,7 +318,9 @@ export async function run(item, ability, actor = holderOf(item)) {
     }
     case "check": {
       await say(actor, U.useLine(actor.name, ability, item.name));
-      return actions()?.quickCheck?.({actor, check: a.check, desc: `${a.label}: ${item.name}`});
+      // A fine or masterwork thing is easier to use (Storyteller's diffWhenUsed, -1)
+      const easier = Number(item.flags?.["wodx-storyteller"]?.diffWhenUsed) || 0;
+      return actions()?.quickCheck?.({actor, check: a.check, desc: `${a.label}: ${item.name}${easier ? " (well made, -1 difficulty)" : ""}`, extraDiff: easier});
     }
     case "system": {
       await say(actor, U.useLine(actor.name, ability, item.name));

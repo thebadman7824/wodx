@@ -18,6 +18,12 @@ export const NOTICE = {
   demon: ["\"I feel like I've told you more than I meant to.\"", "\"Your voice. It's like a hymn I half remember.\"", "\"I trust you, and I don't know why. That frightens me a little.\""],
   mummy: ["\"You speak like someone from very far away.\"", "\"There's dust on your sleeve. Old dust, like a tomb.\""],
   wounded: ["\"You're hurt! Sit down before you fall.\"", "\"That's blood on your coat. Yours?\"", "\"You're limping. Who did that to you?\"", "\"God's mercy, look at you. Let me fetch water.\""],
+  // NPC 0.32.0: what a stranger reads in the character's look (WoDX Library)
+  bloody: ["\"Is that blood? Whose blood is that?\"", "\"Stay where you are. You're covered in it.\"", "\"Wipe your hands before you touch anything here.\""],
+  strange: ["\"Where on earth did you get clothes like those?\"", "\"You're not from anywhere near here, are you?\"", "\"I've never seen the like of that. Is it foreign?\""],
+  fine: ["\"Forgive me. I didn't expect someone of your standing here.\"", "\"Please, take the good seat.\"", "\"We don't often see cloth like that on this street.\""],
+  poor: ["\"We've nothing to give away, if that's what you're after.\"", "\"Round the back. Not through the front.\"", "\"Mind you don't touch anything.\""],
+  seen: ["\"That's not yours to wear, is it?\"", "\"You can drop the act. I know who you are not.\"", "\"Nice costume. Who did you take it from?\""],
   frenzy: ["\"You're shaking. What's wrong with you?\"", "\"Easy. Easy now. Whatever it is, it isn't here.\"", "\"Your eyes. Stop looking at me like that.\""]
 };
 
