@@ -8,6 +8,10 @@
  * an average surface (the Climbing check), a jump of 1 yard across or 20 inches up a success (the Jumping check).
  * Everything else here is a house rule (B940-B945): the speeds of flying, swimming, climbing and crawling, how long
  * breath lasts, and which powers grant which way of moving.
+ *
+ * 3.20.0: riding and driving in a fight (the mount's own speed for the one at the reins, the saddle and the vehicle
+ * as stances, the mounted charge of V20 Dark Ages p. 398 read for a map), and a load that slows a swimmer (worn
+ * armor and what is carried; house rules B2440-B2444).
  */
 
 /** The ways a token moves. Foundry's own movement actions where they exist; "phase" is WoDX's. */
@@ -115,14 +119,14 @@ export function canUse(mode, ab = {}, {athletics = 0, gm = false} = {}) {
  * Yards a turn for a way of moving. base: movement() in auto.js ({walk, jog, run}). The walk mode keeps the walk,
  * jog and run paces; the others have one limit.
  *   fly:    the run, or the power's own speed (house rule)
- *   swim:   half the jog; jog with a swimming power; 1 yard with no Athletics (house rule)
+ *   swim:   the jog; the run with a swimming power; 1 yard with no Athletics (house rule); less under a load
  *   climb:  3 yards, an average climb's success; walking pace for wall-walkers (house rule)
  *   crawl:  3 yards, or the walk if less (house rule)
  *   jump:   the yards the last Jumping roll gave (1 a success)
  *   burrow: none: Earth Meld does not move through the ground
  *   phase:  the walk (house rule)
  */
-export function speedFor(mode, base = {walk: 7, jog: 14, run: 26}, ab = {}, {athletics = 0, jumpYards = 0} = {}) {
+export function speedFor(mode, base = {walk: 7, jog: 14, run: 26}, ab = {}, {athletics = 0, jumpYards = 0, load = null} = {}) {
   const m = modeOf(mode), walk = Math.max(0, Number(base.walk) || 0), jog = Math.max(0, Number(base.jog) || 0), run = Math.max(0, Number(base.run) || 0);
   if ( run === 0 ) return 0;
   switch ( m ) {
@@ -134,7 +138,12 @@ export function speedFor(mode, base = {walk: 7, jog: 14, run: 26}, ab = {}, {ath
       return f?.yards ?? 15;
     }
     // M20 pdf 402: 12 + Dexterity yards a turn for a trained swimmer, the same as the jog; no Athletics, no swimming
-    case "swim": return ab.swimfast ? run : athletics < 1 ? 1 : jog;
+    // 3.20.0: a load slows the swimmer by quarters, and past three steps there is no swimming at all
+    case "swim": {
+      const free = ab.swimfast ? run : athletics < 1 ? 1 : jog;
+      if ( !load?.steps ) return free;
+      return load.sinks ? 0 : Math.max(1, Math.floor(free * load.factor));
+    }
     case "climb": return ab.wallwalk ? walk : Math.min(3, walk || 3);
     case "crawl": return Math.min(3, walk);
     case "jump": return Math.max(0, Number(jumpYards) || 0) * (ab.leap ? 2 : 1);
@@ -216,8 +225,10 @@ export const drownType = profile => (profile === "fae" ? "bashing" : "lethal");
  * Athletics, they go under (house rule: a Stamina + Athletics roll at 8 brings their head up for the turn, the
  * Storyteller's call). Water-walkers stand on it, water-breathers never run short.
  */
-export function underWater({athletics = 0, dived = false, ab = {}} = {}) {
+export function underWater({athletics = 0, dived = false, ab = {}, load = null} = {}) {
   if ( ab.waterwalk && !dived ) return false;
+  // 3.20.0: more weight than they can swim with drags them under, power or no power
+  if ( load?.sinks ) return true;
   return dived || (athletics < 1 && !ab.swimfast);
 }
 
@@ -234,6 +245,73 @@ export function waterTurn(state = {}, {under = false, breathes: br = true, water
   return {breath: 0, max: full, damage: 1, drowning: true, note: "drowning: one lethal level this turn"};
 }
 
+/**
+ * What a swimmer carries (3.20.0, house rule B2443). The books give Strength a carrying limit and nothing on swimming
+ * under a load, so WoDX counts steps: one for each point of Dexterity penalty on worn armor, plus the burden the player
+ * or the Storyteller sets on the character (BURDENS). Strength and Potence together of 4 or more shrug off one step,
+ * 7 or more two. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of rolls made in the
+ * water (3 at most); at four steps there is no swimming: the character goes under and stays there until they drop
+ * something. Those who walk on water are not swimming, and a body that floats by itself (mist, a spirit) carries
+ * nothing.
+ */
+export const BURDENS = [
+  {id: 0, label: "Nothing that matters", hint: "clothes, a knife, a purse"},
+  {id: 1, label: "A pack or a long weapon", hint: "a full satchel, a sword and shield, a rifle, a small child"},
+  {id: 2, label: "A heavy load", hint: "a strongbox, a loaded pack, a wounded friend held up"},
+  {id: 3, label: "All they can lift", hint: "a body over the shoulder, a chest of coin"}
+];
+export const burdenOf = v => BURDENS[Math.max(0, Math.min(BURDENS.length - 1, Math.round(Number(v) || 0)))];
+export const LOAD_SINKS = 4;
+export function swimLoad({armorPenalty = 0, burden = 0, strength = 2, potence = 0} = {}) {
+  const armor = Math.max(0, Math.round(Number(armorPenalty) || 0)), carried = burdenOf(burden).id;
+  const might = (Number(strength) || 0) + (Number(potence) || 0);
+  const off = might >= 7 ? 2 : might >= 4 ? 1 : 0;
+  const steps = Math.max(0, armor + carried - off);
+  const parts = [];
+  if ( armor ) parts.push(`armor ${armor}`);
+  if ( carried ) parts.push(burdenOf(carried).label.toLowerCase());
+  if ( off && (armor || carried) ) parts.push(`strength takes off ${Math.min(off, armor + carried)}`);
+  const sinks = steps >= LOAD_SINKS;
+  return {steps, armor, burden: carried, sinks, factor: sinks ? 0 : 1 - steps * 0.25, diff: Math.min(3, steps), parts,
+    note: !steps ? "" : sinks ? "too much weight to swim with: they go under until they let something go"
+      : `weighed down (${parts.join(", ")}): swimming at ${["", "three quarters", "half", "a quarter"][steps]} speed, +${Math.min(3, steps)} difficulty in the water`};
+}
+
+/* ------------------------------------------------------------------ */
+/*  Riding and driving in a fight (3.20.0, house rules B2440-B2442)    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A fight turn at the reins. ride: what WoDX Interactables says of the mount or vehicle a token is on, {kind, label,
+ * role ("reins" or "passenger"), yards (its full pace this year on this ground, a turn), saddle (a horse, a mule, a
+ * motorcycle: something sat astride), hooves, motor, water (a boat), skill ("ride", "drive" or "athletics")}.
+ * The one at the reins moves at the mount's pace, not their own, and their wounds do not slow it. With no dot in the
+ * skill they keep to half of it (the books ask a roll for anything faster: Keep control, on the mount's own menu).
+ * A passenger is carried and spends none of their own movement; moving on their own is getting off.
+ * {limit (yards a turn, or null: the token's own paces), carried, note}
+ */
+export function rideMove(ride, {skill = 0} = {}) {
+  if ( !ride ) return {limit: null, carried: false, note: ""};
+  if ( ride.role !== "reins" ) return {limit: null, carried: true, note: `carried by the ${String(ride.label ?? "mount").toLowerCase()}`};
+  const full = Math.max(0, Math.round(Number(ride.yards) || 0));
+  const trained = (Number(skill) || 0) > 0;
+  return {limit: trained ? full : Math.floor(full / 2), carried: false,
+    note: trained ? `${ride.label ?? "the mount"}'s pace` : `${ride.label ?? "the mount"} at half pace: no ${ride.skill === "drive" ? "Drive" : ride.skill === "athletics" ? "Athletics" : "Ride"}`};
+}
+
+/**
+ * The mounted charge. V20 Dark Ages p. 398 gives a rider who catches someone at speed +1 damage die for each turn spent
+ * building speed, five at most. On a map there are no turns of building speed to count, so WoDX reads it by ground
+ * covered (house rule B2442): a rider on hooves, at the reins, gets +1 die on a hand-to-hand blow for each full
+ * 10 yards ridden this turn before it, five at most. A passenger, a cart and a motor car give none.
+ */
+export const CHARGE_PER = 10;
+export const CHARGE_MAX = 5;
+export function chargeDice(ride, yardsThisTurn = 0, {ranged = false} = {}) {
+  if ( !ride || ranged || ride.role !== "reins" || !ride.hooves || !ride.saddle ) return 0;
+  return Math.max(0, Math.min(CHARGE_MAX, Math.floor((Number(yardsThisTurn) || 0) / CHARGE_PER)));
+}
+
 /** Shallow water costs double movement (house rule B943). */
 export const SHALLOW_COST = 2;
 
@@ -243,13 +321,17 @@ export const SHALLOW_COST = 2;
 
 /**
  * Where a character is, from how it moves: one stance a roll reads. {mode, knockedDown, water ("deep"|"shallow"|
- * null), under, aloft (above the ground), ab, melded, jumped (a Jump move this turn)}
+ * null), under, aloft (above the ground), ab, melded, jumped (a Jump move this turn), ride (rideOf(): the mount or
+ * vehicle the character is on)}
  */
-export function stanceOf({mode = "walk", knockedDown = false, water = null, under = false, aloft = false, ab = {}, jumped = false} = {}) {
+export function stanceOf({mode = "walk", knockedDown = false, water = null, under = false, aloft = false, ab = {}, jumped = false, ride = null} = {}) {
   const m = modeOf(mode);
   if ( ab.meld ) return "melded";
   if ( m === "phase" ) return "phasing";
-  if ( knockedDown || m === "crawl" ) return "prone";
+  if ( knockedDown ) return "prone";
+  // In the saddle or aboard a vehicle (3.20.0): the mount's place, not the rider's own way of moving
+  if ( ride ) return ride.saddle ? "mounted" : "aboard";
+  if ( m === "crawl" ) return "prone";
   if ( aloft && (ab.fly || m === "fly") ) return "flying";
   if ( m === "climb" || (aloft && !ab.fly) ) return "climbing";
   if ( water === "deep" && !ab.waterwalk ) return under ? "under" : "swimming";
@@ -281,6 +363,10 @@ export const STANCES = {
     cannot: "dodge"},
   jumped:   {label: "After a jump", own: {close: -1, dodge: 1}, vs: {},
     note: "a leaping strike lands harder, but the landing leaves them off balance"},
+  mounted:  {label: "In the saddle", own: {ranged: 1, stealth: 2}, vs: {},
+    note: "height and weight over anyone on foot; a moving saddle spoils the aim, and nothing about it is quiet"},
+  aboard:   {label: "Aboard a vehicle", own: {close: 1, ranged: 1, dodge: 2, stealth: 2}, vs: {ranged: 1},
+    note: "cramped and shaken about; the sides give a little cover from shots"},
   melded:   {label: "In the earth", own: {}, vs: {}, note: "inside the ground: they cannot act on the world, and no physical attack or ordinary sense reaches them",
     cannot: "act physically, or be struck or seen without the right power"},
   phasing:  {label: "Passing through walls", own: {}, vs: {}, note: "the power's own rules say what can touch them",
@@ -300,22 +386,33 @@ export function attackStance(attacker = "standing", target = "standing", {close 
   // Two fliers, or two in the water, meet on even terms
   // A bat is small and quick: +2 to hit it (V20 pdf 208) in place of the flier's +1
   const vsFly = target === "flying" && targetFly?.vsDiff ? targetFly.vsDiff : null;
-  if ( !(sameStance && ["flying", "swimming", "under"].includes(target)) ) add(vsFly ?? T.vs[key] ?? 0, `Target ${T.label.toLowerCase()}${vsFly ? ` (${targetFly.ref})` : ""}`);
+  if ( !(sameStance && ["flying", "swimming", "under", "aboard"].includes(target)) ) add(vsFly ?? T.vs[key] ?? 0, `Target ${T.label.toLowerCase()}${vsFly ? ` (${targetFly.ref})` : ""}`);
   if ( attacker === "flying" && attackerFly?.ownDiff ) add(attackerFly.ownDiff, `Flying maneuvers (${attackerFly.ref})`);
-  if ( close && higher && !["flying", "melded"].includes(attacker) ) add(-1, "Higher ground");
+  // From the saddle down at someone on foot, and up at a rider from the ground (house rule B2441); never on top of
+  // higher ground, which is the same advantage
+  const afoot = st => !["mounted", "aboard", "flying", "melded", "phasing"].includes(st);
+  const saddle = close && attacker === "mounted" && afoot(target);
+  if ( saddle ) add(-1, "From the saddle");
+  if ( close && target === "mounted" && afoot(attacker) && attacker !== "climbing" ) add(1, "Reaching up at a rider");
+  if ( close && higher && !saddle && !["flying", "melded"].includes(attacker) ) add(-1, "Higher ground");
   if ( attacker === "melded" || attacker === "phasing" ) blocked = A.cannot;
   else if ( target === "melded" ) blocked = "the target is inside the earth";
   else if ( attacker === "under" && !close ) notes.push("Under the water: firearms do not fire and bows are useless");
   return {diff, notes, blocked};
 }
 
-/** A plain roll's change from a stance. kinds: any of close, ranged, dodge, stealth, perception, dexterity. {diff, parts[]} */
-export function rollStance(stance = "standing", kinds = []) {
+/** A plain roll's change from a stance. kinds: any of close, ranged, dodge, stealth, perception, dexterity; load:
+ *  swimLoad() for someone in the water. {diff, parts[]} */
+export function rollStance(stance = "standing", kinds = [], {load = null} = {}) {
   const S = STANCES[stance] ?? STANCES.standing, parts = [];
   let diff = 0;
   for ( const k of new Set(kinds) ) {
     const v = S.own[k] ?? 0;
     if ( v ) { diff += v; parts.push(`${S.label} ${v > 0 ? "+" : ""}${v} (${k})`); }
+  }
+  // 3.20.0: a load in the water spoils footing, blows and dodges alike, once
+  if ( load?.diff && ["swimming", "under"].includes(stance) && [...kinds].some(k => ["close", "dodge", "dexterity"].includes(k)) ) {
+    diff += load.diff; parts.push(`Weighed down in the water +${load.diff}`);
   }
   return {diff, parts};
 }

@@ -139,6 +139,20 @@ export function speedOf(r, ground, year) {
 /** Whether a way can go on that ground. */
 export const canGo = (way, ground) => !GROUNDS[groundKind(ground)].shuts.includes(way);
 
+/**
+ * 0.35.0: a mount or vehicle in a fight, outside any chase (for WoDX Combat's movement). kind: the Interactables mount
+ * kind; ground: a GROUNDS key (a boat is always on the water). The same full pace a chase gives it, held by the
+ * ground's caps; 0 where it cannot go at all. saddle: sat astride (a fall is a throw); skill: the Ability that
+ * keeps control. Null for a kind with no way to run.
+ */
+export function rideInFight(kind, year, ground = "streets") {
+  const way = Object.keys(WAYS).find(k => WAYS[k].mount && WAYS[k].mount === kind);
+  if ( !way ) return null;
+  const W = WAYS[way], g = W.water ? "water" : groundKind(ground);
+  const sp = canGo(way, g) ? speedOf({way}, g, year) : {yards: 0, capped: true};
+  return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, skill: W.pool[1]};
+}
+
 /** Free successes for the faster of two racers: one per 10 yards a turn, three at most. Returns {to: "a"|"b"|null, n}. */
 export function edge(aYards, bYards) {
   const d = (Number(aYards) || 0) - (Number(bYards) || 0);

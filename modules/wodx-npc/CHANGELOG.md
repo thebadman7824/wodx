@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.45.3 (the noticing roll takes a difficulty for each side, so WoDX Senses can count how the watcher and the hider move)
 - 0.45.2 (in a supernatural war the leaders' powers come from WoDX Storyteller's battle deeds table, by age and kind of being, and say whether the living could see them; Status + 3 dice stays as the fallback)
 - 0.45.1 (a war fought off the screen picks each army's action by its pools (Storyteller's chooseActions) instead of always closing)
 - 0.45.0 (the talk generator, setting off by default: stock talk put together from a grammar, the rule that fits the most facts winning, with words of the era for address, oaths, coin, who keeps order, light, drink and landmarks; the hand-written stock lines now speak through it, unchanged; Storyteller lines still first; B1640-B1642; and clans, tribes, Traditions, Conventions and kiths each speak in their own way, with Masquerade-safe lines; NPCs talk in a mood (afraid, hurt, angry, grieving, wary, weary, cheerful), set in the behaviour window or read from the place's alarm, wounds, a fight or a recent fall in regard; a name the character has heard of gets a made answer; the Storyteller writes extra lines in the journal "WoDX talk grammar", which reloads on save and reports lines it cannot read; made lines show the Storyteller Reroll and Keep, and Keep writes the line to the talk sheet; farewells go through the generator. B1643-B1647)

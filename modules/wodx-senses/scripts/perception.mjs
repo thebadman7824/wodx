@@ -193,12 +193,20 @@ export async function whoSees(token) {
     obfuscate: t.statuses?.has?.("wodx-obfuscated") ? Math.max(1, H.powerDots(t, /^obfuscate$/i)) : 0};
   const book = (() => { try { return ["dark-ages", "long-night"].includes(game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id) ? "v20da" : "v20"; } catch (e) { return "v20da"; } })();
   const watchers = (canvas.tokens?.placeables ?? []).filter(w => w.actor?.hasPlayerOwner && w.id !== token.id && !w.document.hidden);
+  // 0.8.0: how each one moves counts (WoDX Combat's stances): a watcher in the air sees better, one under the water
+  // worse; a hider who crawls is quieter and harder to pick out
+  const mv = (() => { try { return game.wodxCombat?.movement ?? null; } catch (e) { return null; } })();
+  const clamp = d => Math.max(2, Math.min(10, d));
+  const hide = (() => { try { return {stealth: mv?.rollMods?.(t, ["stealth"])?.diff ?? 0, spot: mv?.spotMod?.(t) ?? 0}; } catch (e) { return {stealth: 0, spot: 0}; } })();
   const results = watchers.map(w => {
     const a = w.actor;
     const blocked = H.sightBlocked(w.center, token.center, scene);
+    let own = 0;
+    try { own = mv?.rollMods?.(a, ["perception"])?.diff ?? 0; } catch (e) { own = 0; }
     const res = RR.notice({perception: H.attrOf(a, "perception"), alertness: H.abilityOf(a, "alertness"), awareness: H.abilityOf(a, "awareness"),
-      auspex: H.powerDots(a, /^(auspex|aura perception)$/i), awake: true, inSight: !blocked}, intruder, {book});
-    return {name: w.name, actorId: a.id, noticed: !!res.noticed, why: res.why};
+      auspex: H.powerDots(a, /^(auspex|aura perception)$/i), awake: true, inSight: !blocked}, intruder, {book, watcherDiff: clamp(6 + own + hide.spot), intruderDiff: clamp(6 + hide.stealth)});
+    const moved = own + hide.spot || hide.stealth ? `; how they move: watcher at ${clamp(6 + own + hide.spot)}, hider at ${clamp(6 + hide.stealth)} (house rule)` : "";
+    return {name: w.name, actorId: a.id, noticed: !!res.noticed, why: `${res.why}${res.rolls && !intruder.obfuscate ? moved : ""}`};
   });
   const before = seenBy(token);
   const after = P.seenAfter(before, results);

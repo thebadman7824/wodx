@@ -2,6 +2,10 @@
  * WoDX Combat 3.12.0: the Foundry side of movement-rules.js. Ways of moving on Foundry's movement actions (who may
  * choose Fly, Through walls, Into the ground), deep and shallow water regions with held breath and drowning in a
  * fight, a fall when flight ends over open air, and Earth Meld hiding the token. Setting "movementModes".
+ *
+ * 3.20.0: the mount or vehicle a token is on (read from WoDX Interactables) sets the pace of the one at the reins,
+ * gives the saddle and the vehicle their own stances and a rider's charge its dice; worn armor and a burden set on
+ * the token's HUD slow a swimmer or take them under.
  */
 import * as MV from "./movement-rules.js";
 
@@ -35,6 +39,27 @@ export const abilitiesOf = actor => {
   }
   return ab;
 };
+
+/** The mount or vehicle a token is on, as WoDX Interactables tells it (movement-rules rideMove), or null. */
+export function rideOf(tok) {
+  const doc = docOf(tok);
+  if ( !doc ) return null;
+  try {
+    const ix = game.modules.get("wodx-interactables");
+    return (ix?.active ? ix.api?.rideOf?.(doc) : null) ?? null;
+  } catch (e) { return null; }
+}
+/** What weighs on a swimmer: worn armor's Dexterity penalty and the burden set on the character (movement-rules swimLoad). */
+export function loadOf(actor) {
+  if ( !actor ) return MV.swimLoad();
+  const ab = abilitiesOf(actor);
+  // A shape of mist or a spirit carries nothing
+  if ( ab.phase ) return MV.swimLoad();
+  let potence = 0;
+  try { potence = Number(D.discipline?.(actor, "Potence")) || 0; } catch (e) { potence = 0; }
+  return MV.swimLoad({armorPenalty: D.armorPenalty?.(actor) ?? 0, burden: actor.getFlag?.(D.MOD, "load") ?? actor.flags?.[D.MOD]?.load ?? 0,
+    strength: D.attr(actor, "strength"), potence});
+}
 
 /** The regions holding a point on a scene. */
 function regionsAt(scene, p, elevation = 0) {
@@ -108,16 +133,20 @@ async function enterWater(doc, w) {
   if ( !actor ) return;
   const ab = abilitiesOf(actor), athletics = D.ability(actor, "athletics");
   const breathes = MV.breathes(D.getKind(actor), D.variant(actor));
+  const load = ab.waterwalk ? MV.swimLoad() : loadOf(actor);
   const fight = !!game.combat?.started && game.combat.combatants?.some?.(c => c.tokenId === doc.id);
   const max = breathOf(actor, fight);
   await doc.setFlag(D.MOD, "water", {kind: w.kind, region: w.region.id, breath: max, max});
   if ( w.kind !== "deep" ) return;
   const lines = [];
   if ( ab.waterwalk ) lines.push("Walks on the water.");
+  else if ( load.sinks && !breathes ) lines.push("Does not breathe and cannot drown, but carries too much to swim: they sink, and walk the bottom until they let something go.");
+  else if ( load.sinks ) lines.push(`Carries too much to swim (${load.parts.join(", ")}): goes under. ${ab.waterbreath ? "Breathes the water, so there is no hurry." : `Breath lasts ${max} turns, then one ${MV.drownType(D.getKind(actor))} level a turn, not soaked (W20 pdf 261, M20 pdf 441).`} Letting the load go, or a turn spent out of the armor, lets them swim (house rule).`);
   else if ( !breathes ) lines.push("Does not breathe: sinks or swims as they like, and cannot drown.");
   else if ( ab.waterbreath ) lines.push("Breathes the water.");
   else if ( athletics < 1 && !ab.swimfast ) lines.push(`Cannot swim (no Athletics): goes under. Breath lasts ${max} turns, then one ${MV.drownType(D.getKind(actor))} level a turn, not soaked (W20 pdf 261, M20 pdf 441). A Stamina + Athletics roll at 8 brings the head up for a turn (house rule).`);
   else lines.push(`Swims. After the first hour, Swimming (Stamina + Athletics) each hour, one success needed (V20 pdf 270). Under the surface, breath lasts ${max} turns${fight ? " while fighting" : ""}.`);
+  if ( load.steps && !load.sinks && !ab.waterwalk ) lines.push(`${load.note.charAt(0).toUpperCase()}${load.note.slice(1)} (house rule).`);
   await card(actor, `${doc.name} is in deep water`, `<p>${lines.join(" ")}</p>`);
 }
 
@@ -141,7 +170,7 @@ Hooks.on("updateCombat", (combat, changed) => {
       const w = waterAt(doc);
       const top = Number(w?.region?.elevation?.top);
       const dived = (Number(doc.elevation) || 0) < (Number.isFinite(top) ? top : 0);
-      const under = MV.underWater({athletics: D.ability(actor, "athletics"), dived, ab});
+      const under = MV.underWater({athletics: D.ability(actor, "athletics"), dived, ab, load: ab.waterwalk ? null : loadOf(actor)});
       const next = MV.waterTurn(st, {under, breathes: MV.breathes(D.getKind(actor), D.variant(actor)), waterbreath: ab.waterbreath});
       await doc.setFlag(D.MOD, "water", {...st, breath: next.breath, max: next.max});
       if ( next.damage ) {
@@ -237,11 +266,19 @@ export function moveCheck(doc, changes, base) {
   if ( rise > 0 && !game.user.isGM && !["fly", "climb", "jump"].includes(mode) && !ab.fly ) return {mode, limit: 0, cost: 1, refuse: "rising off the ground needs flight, a climb or a jump"};
   if ( mode === "jump" && rise > 0 && !game.user.isGM && !ab.fly && MV.toFeet(rise, unitsOf(doc)) > (Number(jump?.upFeet) || 0) * (ab.leap ? 2 : 1) + 0.5 )
     return {mode, limit: 0, cost: 1, refuse: `the last Jumping roll reaches ${Math.round((Number(jump?.upFeet) || 0) * (ab.leap ? 2 : 1))} feet up`};
+  // 3.20.0: at the reins, the mount's pace; a passenger is carried (WoDX Interactables moves them without counting)
+  const ride = rideOf(doc);
+  if ( ride?.role === "reins" ) {
+    const r = MV.rideMove(ride, {skill: D.ability(actor, ride.skill ?? "ride")});
+    return {mode: "ride", limit: r.limit, cost: 1, refuse: "", ride, note: r.note};
+  }
   const w = waterAt(doc, changes.x ?? doc.x, changes.y ?? doc.y);
   const inWater = w?.kind === "deep" && !ab.waterwalk && mode !== "fly";
   const m = inWater ? "swim" : mode;
-  const limit = m === "walk" ? null : MV.speedFor(m, base, ab, {athletics, jumpYards: Number(jump?.yards) || 0});
-  return {mode: m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump"};
+  const load = inWater ? loadOf(actor) : null;
+  const limit = m === "walk" ? null : MV.speedFor(m, base, ab, {athletics, jumpYards: Number(jump?.yards) || 0, load});
+  return {mode: m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump",
+    note: load?.steps ? (load.sinks ? "too much weight to swim" : "weighed down") : ""};
 }
 
 /* ------------------------------------------------------------------ */
@@ -264,8 +301,8 @@ export function stanceOfActor(actor, tok = null) {
   const w = waterAt(doc), top = Number(w?.region?.elevation?.top), elev = Number(doc.elevation) || 0;
   const moved = doc.getFlag?.(D.MOD, "moved"), c = game.combat;
   const tag = c?.started ? `${c.id}:${c.round}` : null;
-  return MV.stanceOf({mode: doc.movementAction ?? "walk", knockedDown, water: w?.kind ?? null, ab,
-    under: !!w && w.kind === "deep" && (elev < (Number.isFinite(top) ? top : 0) || MV.underWater({athletics: D.ability(actor, "athletics"), ab})),
+  return MV.stanceOf({mode: doc.movementAction ?? "walk", knockedDown, water: w?.kind ?? null, ab, ride: rideOf(doc),
+    under: !!w && w.kind === "deep" && (elev < (Number.isFinite(top) ? top : 0) || MV.underWater({athletics: D.ability(actor, "athletics"), ab, load: ab.waterwalk ? null : loadOf(actor)})),
     aloft: elev > groundAt(doc) + 0.5, jumped: !!tag && moved?.tag === tag && !!moved?.jumped});
 }
 /** An attack's changes from both stances: {diff, notes, blocked}. */
@@ -284,16 +321,36 @@ export function attackMods(attacker, target, {attackerTok = null, targetTok = nu
       higher = MV.toFeet((Number(at.elevation) || 0) - (Number(tt.elevation) || 0), unitsOf(at)) >= 3;
     }
   } catch (e) { /* no canvas */ }
-  return MV.attackStance(sa, st, {close, higher, sameStance: sa === st, attackerFly: abilitiesOf(attacker).flyBook, targetFly: abilitiesOf(target).flyBook});
+  const out = MV.attackStance(sa, st, {close, higher, sameStance: sa === st, attackerFly: abilitiesOf(attacker).flyBook, targetFly: abilitiesOf(target).flyBook});
+  // 3.20.0: a load in the water spoils the blow as it spoils the footing
+  if ( close && ["swimming", "under"].includes(sa) ) {
+    const load = loadOf(attacker);
+    if ( load.diff ) { out.diff += load.diff; out.notes.push(`Weighed down in the water: +${load.diff} difficulty`); }
+  }
+  return out;
+}
+/** A rider's charge: extra damage dice on a hand-to-hand blow from the yards ridden this turn (movement-rules chargeDice). */
+export function chargeOf(attacker, {ranged = false, attackerTok = null} = {}) {
+  if ( !on() || !attacker ) return {dice: 0, note: ""};
+  const doc = (attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker);
+  const ride = rideOf(doc);
+  if ( !ride ) return {dice: 0, note: ""};
+  const moved = doc?.getFlag?.(D.MOD, "moved"), c = game.combat;
+  const tag = c?.started ? `${c.id}:${c.round}` : null;
+  const yards = tag && moved?.tag === tag ? Number(moved.yards) || 0 : 0;
+  const dice = MV.chargeDice(ride, yards, {ranged});
+  return {dice, yards, note: dice ? `Mounted charge: ${Math.round(yards)} yards ridden this turn, +${dice} damage ${dice === 1 ? "die" : "dice"} (V20 Dark Ages p. 398, read for a map: house rule)` : ""};
 }
 /** The defender's own stance on a dodge: a difficulty change and its note. */
 export function defenseMods(target) {
-  const st = stanceOfActor(target), r = MV.rollStance(st, ["dodge"]);
+  const st = stanceOfActor(target), r = MV.rollStance(st, ["dodge"], {load: ["swimming", "under"].includes(st) ? loadOf(target) : null});
   return {diff: r.diff, notes: r.parts.map(p => `${target?.name ?? "Target"}: ${p} on a dodge`), stance: st};
 }
 /** A plain roll's changes: kinds from the roll's pool (stealth, perception, dexterity). */
 export function rollMods(actor, kinds = []) {
-  return on() ? MV.rollStance(stanceOfActor(actor), kinds) : {diff: 0, parts: []};
+  if ( !on() ) return {diff: 0, parts: []};
+  const st = stanceOfActor(actor);
+  return MV.rollStance(st, kinds, {load: ["swimming", "under"].includes(st) ? loadOf(actor) : null});
 }
 /** Noticing this actor: the observer's difficulty change. */
 export const spotMod = actor => (on() ? MV.spotStance(stanceOfActor(actor)) : 0);
@@ -304,13 +361,55 @@ export function heightBetween(a, b) {
   return on() ? eb - ea : 0;
 }
 
+/* ------------------------------------------------------------------ */
+/*  What they carry (3.20.0)                                           */
+/* ------------------------------------------------------------------ */
+
+/** Set the burden on a character (0 to 3, movement-rules BURDENS). Owners and the Storyteller. */
+export async function setBurden(actor, n) {
+  if ( !actor?.isOwner ) return null;
+  const b = MV.burdenOf(n);
+  if ( b.id ) await actor.setFlag(D.MOD, "load", b.id); else await actor.unsetFlag(D.MOD, "load");
+  return b;
+}
+/** The window: what the character carries, and what it does in the water. */
+export async function burdenDialog(actor) {
+  if ( !actor?.isOwner || !D.ask ) return null;
+  const cur = MV.burdenOf(actor.getFlag(D.MOD, "load")).id;
+  const pen = D.armorPenalty?.(actor) ?? 0;
+  const rows = MV.BURDENS.map(b => `<label class="vtc-burden"><input type="radio" name="burden" value="${b.id}"${b.id === cur ? " checked" : ""}> <b>${D.esc(b.label)}</b> <span class="hint">${D.esc(b.hint)}</span></label>`).join("");
+  const r = await D.ask({title: `What ${actor.name} carries`, width: 440,
+    content: `<form><p>Weight matters in deep water. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of rolls made in the water; four steps and there is no swimming at all. Worn armor counts by its Dexterity penalty (now ${pen}); Strength and Potence of 4 or more take a step off. A house rule.</p>
+      <div class="vtc-burdens" data-fixed>${rows}</div></form>`,
+    buttons: [{id: "ok", label: "Set", icon: "fa-solid fa-check", default: true}, {id: "cancel", label: "Cancel"}]});
+  if ( r?.id !== "ok" ) return null;
+  return setBurden(actor, Number(r.data?.burden) || 0);
+}
+Hooks.on("renderTokenHUD", (hud, html) => {
+  if ( !D || !on() ) return;
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  const tok = hud.object, actor = tok?.actor;
+  const col = root?.querySelector?.(".col.left");
+  if ( !actor?.isOwner || !col ) return;
+  const cur = MV.burdenOf(actor.getFlag(D.MOD, "load"));
+  const btn = document.createElement("div");
+  btn.className = `control-icon vtc-hud vtc-burden-btn${cur.id ? " active" : ""}`;
+  btn.title = `What they carry: ${cur.label.toLowerCase()} (weight slows a swimmer)`;
+  btn.setAttribute("role", "button");
+  btn.setAttribute("aria-label", "What they carry");
+  btn.innerHTML = '<i class="fa-solid fa-weight-hanging" aria-hidden="true"></i>';
+  btn.addEventListener("click", () => burdenDialog(actor));
+  col.appendChild(btn);
+});
+
 export function setupMovement(deps) {
   D = deps;
   game.settings.register(D.MOD, "movementModes", {
     name: "Flying, swimming, climbing and other ways of moving",
-    hint: "Fly, Through walls and Into the ground only for those with a power or form that grants it; speeds for each way of moving in a fight; deep and shallow water regions (name a region \"WoDX: Deep water\", a river or a lake), with breath and drowning in a fight; a fall when flight ends in the air; Earth Meld hides the token; height counts in range and reach. Most speeds are house rules.",
+    hint: "Fly, Through walls and Into the ground only for those with a power or form that grants it; speeds for each way of moving in a fight, the mount's own pace for whoever holds the reins; deep and shallow water regions (name a region \"WoDX: Deep water\", a river or a lake), with breath and drowning in a fight; a fall when flight ends in the air; Earth Meld hides the token; height counts in range and reach; worn armor and a burden slow a swimmer. Most speeds are house rules.",
     scope: "world", config: true, type: Boolean, default: true
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
-  return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod, rules: MV};
+  return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod,
+    rideOf, loadOf, chargeOf, setBurden, burdenDialog, rules: MV};
 }

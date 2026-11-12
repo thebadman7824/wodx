@@ -158,6 +158,18 @@ export function armor(actor) {
     return out;
 }
 
+/** The Dexterity penalty of the armor worn (3.20.0: it weighs on a swimmer). Implants are part of the body and weigh nothing. */
+export function armorPenalty(actor) {
+    const shaped = bodyOf(actor);
+    let pen = 0;
+    for (const i of actor?.items ?? []) {
+        if (i.type !== "Armor" || !i.system?.isequipped || i.flags?.["wodx-library"]?.implant) continue;
+        if (shaped && !shaped.armor) continue;
+        pen += Math.abs(num(i.system.dexpenalty));
+    }
+    return pen;
+}
+
 function willpower(actor) { return num(actor?.system?.advantages?.willpower?.temporary); }
 function blood(actor) { return num(actor?.system?.advantages?.bloodpool?.temporary); }
 
@@ -1082,6 +1094,9 @@ async function rollDefense(target, fd, w, maneuver) {
 function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     const parts = [];
     let dice = 0, auto = 0;
+    // 3.20.0: a rider's charge (V20 Dark Ages p. 398, read for a map)
+    let charge = 0;
+    try { charge = MVJ.chargeOf(attacker, { ranged: !!w.ranged }).dice; } catch (e) { charge = 0; }
     const add = (l, n) => { if (n) { dice += n; parts.push(`${l} ${n}`); } };
     if (w.dmgAttr) add(cap(w.dmgAttr), attr(attacker, w.dmgAttr));
     const strBased = w.dmgAttr === "strength";
@@ -1094,6 +1109,7 @@ function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     add("Maneuver", maneuver.dmg);
     add("Targeting", targeting.dmg);
     add("Extra", fd.extraDmg || 0);
+    add("Mounted charge", charge);
     return { dice: Math.max(0, dice), auto, parts };
 }
 
@@ -1443,11 +1459,11 @@ Hooks.once("init", () => {
     FTime.registerFightTimeSettings();
     P.register();
     const body = BD.setupBody();
-    const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
+    const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc, discipline, armorPenalty, ask: P.ask });
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.19.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.20.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1470,7 +1486,7 @@ Hooks.once("ready", async () => {
 /*  Movement in yards, any grid (3.5.0)                                */
 /* ------------------------------------------------------------------ */
 
-const MV_LABEL = m => ({ fly: "Flying", swim: "Swimming", climb: "Climbing", crawl: "Crawling", jump: "Jumping", burrow: "In the ground", phase: "Through walls" }[m] ?? "Moving");
+const MV_LABEL = m => ({ ride: "Riding", fly: "Flying", swim: "Swimming", climb: "Climbing", crawl: "Crawling", jump: "Jumping", burrow: "In the ground", phase: "Through walls" }[m] ?? "Moving");
 
 /** A token's movement allowance this turn (VtDA20 pp. 202, 241, 333, 351). */
 export function movementFor(actor) {
@@ -1535,13 +1551,15 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     const cap = way.limit === null ? lim.run : way.limit;
     const p = way.limit === null ? AU.pace(total, lim) : (total <= cap + 1e-6 ? way.mode : "over");
     if (p === "over" && mode === "block" && !game.user.isGM) {
-        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their ${way.limit === null ? "running speed" : `${MV_LABEL(way.mode).toLowerCase()} limit`} this turn (${cap}${lim.note ? `; ${lim.note}` : ""}).`);
+        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their ${way.limit === null ? "running speed" : `${MV_LABEL(way.mode).toLowerCase()} limit`} this turn (${cap}${way.note ? `; ${way.note}` : lim.note ? `; ${lim.note}` : ""}).`);
         return false;
     }
     foundry.utils.setProperty(changes, `flags.${MOD}.moved`, { tag, yards: Math.round(total * 10) / 10, jumped: !!way.jumped || (prev?.tag === tag && !!prev?.jumped) });
     if (way.jumped) doc.actor?.unsetFlag?.(MOD, "jump")?.catch?.(() => null);
     const label = { walk: "Walking", jog: "Jogging", run: "Running", over: "Past the limit" }[p] ?? MV_LABEL(p);
-    const msg = `${label}: ${Math.round(total)} / ${cap} yd${way.cost > 1 ? " (shallow water, double)" : ""}${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? "; no attack this turn" : ""}`;
+    // 3.20.0: at the reins the mount does the running: the rider's wounds and the walk-and-attack limit do not apply
+    const riding = way.mode === "ride";
+    const msg = `${label}: ${Math.round(total)} / ${cap} yd${way.cost > 1 ? " (shallow water, double)" : ""}${way.note ? ` (${way.note})` : ""}${!riding && lim.note ? ` (${lim.note})` : ""}${!riding && total > lim.attackAfter ? "; no attack this turn" : ""}`;
     try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, msg, { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: p === "over" ? "#ff6060" : "#ffffff", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
 });
 
