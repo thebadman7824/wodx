@@ -446,3 +446,69 @@ export function smallRows(line, names = []) {
   for ( const nm of names.flat() ) { const r = rowIn(t, nm); if ( r && !out.includes(r) ) out.push(r); }
   return out;
 }
+
+/* ---------------- The features summary on the sheet (Chronicle 0.43.0) ---------------- */
+
+/** When each engine comes into play, in a line, for the features card on the character sheet. */
+export const FEATURE_WHEN = {
+  muse: "Each week away from a Muse, and when a Muse is seen or harmed",
+  corruption: "When they charm, bribe or trade with a mortal",
+  cause: "When the cause is kept or betrayed; a full Rant can be called",
+  marks: "When the Beast leaves a mark",
+  soil: "At each day's rest, with or without native soil",
+  camera: "When a camera of the age watches the scene",
+  vice: "When a chance for the vice comes near",
+  glimpse: "Once a night, when a glimpse is asked for",
+  hear: "When they talk with someone",
+  oddity: "Once a year, when an odd gift may come",
+  secrets: "When a page of secrets is written or sold",
+  pyramid: "When an order comes down the Pyramid",
+  domain: "At each month's income, and when a holding is lost",
+  contracts: "When a contract is taken, kept or failed",
+  family: "When a bound servant is called or released",
+  ghoul: "Each month without the domitor's vitae",
+  luck: "Once a week, on a roll of chance",
+  revel: "When a revel is held",
+  truth: "When the plain truth is told",
+  coat: "When the seal coat is lost or won back",
+  dawn: "At meditation at dawn",
+  mercy: "At a death they give, in mercy or in anger",
+  certamen: "When a certámen is called",
+  oath: "When an oath is sworn or broken",
+  watchers: "When anyone breaks the Masquerade",
+  guard: "When harm is done at the guarded place",
+  truce: "In a fight, when a truce is offered",
+  leverage: "When another of their kind fails where they can see",
+  renown: "When a tale is told at a moot",
+  ruling: "When a dispute is put to them",
+  deformity: "Always: the deformity is part of them",
+  first: "When a fight with the Wyrm begins",
+  kin: "When Kinfolk of the tribe are harmed",
+  court: "For half of each year, while their Court holds power",
+  sky: "Once a lunar month, under a clear sky",
+  line: "In play, when the Storyteller calls for it"
+};
+const effectWords = e => `${e.tags.join(", ")}${e.when ? ` (${e.when})` : ""}`;
+/** When a row's feature fires: its engine's line, then the rolls it changes. */
+export function whenOf(row) {
+  const parts = [FEATURE_WHEN[row?.feature] ?? FEATURE_WHEN.line];
+  const fx = row?.effects ?? [];
+  if ( fx.length ) parts.push(`On rolls: ${fx.map(effectWords).join("; ")}`);
+  return parts.join(". ");
+}
+/** The engines a row runs: its own feature and any it borrows. */
+export const enginesOf = row => [row?.feature, ...(row?.also ?? [])].filter(Boolean);
+/**
+ * The features card's rows: every feature in force (or set aside), with what it does, when it fires and when it
+ * last fired. fired: {engine: worldTime}; off: [row keys]; dateOf(worldTime) gives the words of a date.
+ */
+export function featureSummary(rows = [], {fired = {}, off = [], year = 0, dateOf = () => ""} = {}) {
+  return rows.map(r => {
+    const last = Math.max(-Infinity, ...enginesOf(r).map(f => fired?.[f]).filter(v => typeof v === "number" && Number.isFinite(v)));
+    const notes = [];
+    if ( goneBy(r, year) ) notes.push(`By ${year} the ${r.label} are gone: met only in stories, dreams and relics.`);
+    if ( notYet(r, year) ) notes.push(`In ${year} the ${r.label} are not founded yet.`);
+    return {key: r.key, group: nameAt(r, year) || r.label, title: r.title ?? "", text: r.text ?? "", when: whenOf(r), page: r.page ?? "",
+      last: Number.isFinite(last) ? (dateOf(last) || "") : "", fired: Number.isFinite(last), off: off.includes(r.key), notes};
+  });
+}

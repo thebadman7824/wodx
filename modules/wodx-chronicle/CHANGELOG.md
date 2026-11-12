@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.45.0 (the features summary for the sheet: api.signatures.summary gives each feature with what it does, when it fires and when it last fired; every feature card notes the time it fired; the Storyteller can set a feature aside for a story with api.signatures.setOff, and a set-aside feature stops working until put back)
 - 0.44.1 (an Anda's frenzy leaves the Gangrel's animal marks, which heal in a month the same way)
 - 0.44.0 (threads from a lifepath fall due one at a time, go to the approval queue and run as story chains with the person the lifepath made, written for the year of play; Threads from the past in the story chains window)
 - 0.42.1 (the crossover referee reads only the WoDX actor-type flag, not the old vtda20 one)
