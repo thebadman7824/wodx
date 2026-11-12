@@ -560,3 +560,10 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | How often a court meets | Elysium and the esbat every second faction turn, the feudal court and the gangs every fourth (B1104) | POLITIES[...].gathering.every |
 | 2026-11-12 | What a challenge for a seat rolls between NPCs | Strength + Dexterity, opposed, difficulty 6; the loser drops a dot of standing (B1103) | innerTurn "bid" branch |
 | 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |
+| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
+| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
+| 2026-11-12 | Gear in Shape of the Beast, Mist Form and Earth Meld (no book says) | Weapons in hand and armor come off; dedicated items stay; Undo card (B1205) | Setting "Gear comes off", or gearToDrop |
+| 2026-11-12 | W20 Lupus claws: lethal (form text, p. 287) or bashing (maneuver, p. 296)? | Lethal (B1208) | lupus claw in garou.js naturalWeapons |
+| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
+| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
+| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |

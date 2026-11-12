@@ -1201,3 +1201,63 @@ Reverse: set every gathering's "every" very high, and PAID_GAINS to an empty set
 A member's standing inside a polity is kept on the faction (0 to 5) and starts from the Status Background on the sheet. The sheet itself is never changed by politics; the Storyteller copies a change across when it should stick. House rule.
 
 Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
+
+## B1200. The body plan (2026-11-12)
+
+Ben approved a light body plan, modelled as a small tree of parts after Caves of Qud's bodies (review desk, 12 November 2026). WoDX Combat body-rules.js keeps the trees (person, four-legged beast, winged, bird, serpent, fish, spider, winged person, formless) and the shapes that pick them. Gear slots, natural weapons, moves and senses come from the parts. Parts have no health of their own; the health track stays as the books have it. House rule in its details.
+
+Reverse: remove body.js and body-rules.js and the calls to them in main.js and movement.js.
+
+## B1201. Which shape a body is in (2026-11-12)
+
+The Storyteller's flag wodx-combat.shape wins, then a shape power's effect (Shape of the Beast is a wolf unless the effect names a bat or a rat; Mist Form, Earth Meld, Horrid Form, Chiropteran Marauder, a Shape keyword effect), then a shapechanger's form. Only shape powers count, so a Gift that names a wolf changes nothing. Corax, Camazotz, Nagah, Rokea and Ananasi take their animal's tree in Lupus and Hispo. House rule.
+
+Reverse: shapeOf in body-rules.js.
+
+## B1202. Claws need growing (2026-11-12)
+
+Protean 2 no longer means claws at all times: picking "Claws (grow them)" in the attack dialog spends 1 blood and makes a Feral Claws effect for the scene (V20 p. 199; VtDA20 p. 240). Vicissitude needs bone talons on the lasting changes record (Bonecraft, V20 p. 242). The automatic attack never grows claws, since that costs blood.
+
+Reverse: the claw branch of weaponList and attackUsable in wodx-combat main.js.
+
+## B1203. Hit locations (2026-11-12)
+
+Ben chose hit locations on every attack. A hit lands on a part: the one aimed at (Aim at, which sets the book's targeting size: limbs +1, head and hands +2, eyes and heart +3, V20 p. 274; VtDA20 p. 346), a random part of the size picked, or at random by weight (body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5). The card says where it landed. Setting "Hit locations", on by default. House rule.
+
+Reverse: turn the setting off, or change HIT_WEIGHTS.
+
+## B1204. Maiming is offered, never automatic (2026-11-12)
+
+A hit of 3 or more lethal or aggravated levels after soak on a limb, hand, eye, wing, tail or fin whispers the Storyteller a card: crippled until those levels heal (+2 difficulty on actions with it, VtDA20 p. 348) or lost for good, which adds a lasting change in WoDX Storyteller. Three matches the stake (V20 Dark Ages p. 347). House rule for the threshold.
+
+Reverse: maimOffer in body-rules.js.
+
+## B1205. Gear in a shape that cannot use it (2026-11-12)
+
+When the shape changes, weapons in hand come off in a shape with no hands, and armor in a shape that cannot wear it (Crinos, Hispo, Lupus and the animal shapes, Mist, Earth Meld, the Zulo and Chiropteran shapes). Dedicated items stay (W20 p. 211; DA:W p. 149). W20 p. 286 has undedicated clothes shred in the bigger forms; no book says what Shape of the Beast or Earth Meld does to gear, so for those this is a house rule. An Undo card puts everything back. Setting "Gear comes off", on by default.
+
+Reverse: turn the setting off.
+
+## B1206. Features on lasting changes (2026-11-12)
+
+A lasting change in WoDX Storyteller can say what it does: bone talons, spikes or armor, an extra pair of arms, wings, gills, a tail, fangs, changed looks, a false limb, or a part lost. The Storyteller can still write anything as free text. Numbers from the books where they exist (talons Strength + 1 lethal, V20 p. 242; bone plates +1 soak each for 1 Dexterity or 1 health level, VtDA20 p. 268); the rest the Storyteller sets.
+
+Reverse: drop feature and lostPart in normChange.
+
+## B1207. What a lost part stops (2026-11-12)
+
+A lost leg halves speed (W20 p. 260); with no legs, only crawling (house rule). A lost eye: +3 difficulty on depth, shooting and throwing, +2 on sight Perception (W20 p. 259). A lost hand holds nothing. Lost wings ground a flier. Regrowth follows each line's book (Kindred VtDA20 p. 340, ghouls V20 p. 501, Garou W20 p. 259) and is done by removing the change.
+
+Reverse: LOSS_TEXT and the mobility count in body-rules.js.
+
+## B1208. Garou teeth and claws by form, W20 (2026-11-12)
+
+The book check moved three W20 forms: Glabro bites at difficulty 8 for Strength - 1 lethal and claws for Strength + 1 bashing (W20 p. 296); Crinos bites at difficulty 5. W20 gives Lupus claws as lethal in the form text (p. 287) and bashing in the maneuver list (p. 296): the form text wins. Dark Ages: Werewolf is unchanged.
+
+Reverse: naturalWeapons in wodx-actions garou.js.
+
+## B1209. The Body tab (2026-11-12)
+
+Every WoDX sheet gets a Body tab after Ties: the shape and why, the parts as a tree with what each hand holds and the natural weapons, added and lost parts, what the body can do, where blows land, and the lasting changes. The Storyteller can set the shape by hand and add a lasting change from it. Players see only the changes that show.
+
+Reverse: the Body tab block in wodx-sheets extras.mjs.

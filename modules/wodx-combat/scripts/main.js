@@ -28,6 +28,8 @@ import * as CR from "./conductor-rules.js";
 import * as ST from "./start.js";
 import * as AM from "./ambush-rules.js";
 import * as MVJ from "./movement.js";
+import * as BD from "./body.js";
+import * as BodyRules from "./body-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -249,15 +251,24 @@ function weaponList(actor) {
             const form = cap(nat.form);
             // In Homid a Garou bites as a human does: only after a hold, so it is not counted as a natural weapon
             list.push({ id: `unarmed:${k}`, unarmed: true, natural: nat.form !== "homid", ranged: false, ...u, name: `${k === "bite" ? "Bite" : "Claw"} (${form}, ${type})`,
-                type, dmgBonus: 1 + (k === "bite" ? nat.biteBonus : 0), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
+                type, dmgBonus: 1 + (k === "bite" ? (nat.biteBonus ?? 0) : 0), ...(k === "bite" && nat.biteDiff ? { diff: nat.biteDiff } : {}), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
             continue;
         }
         const extra = {};
+        // The body plan (3.13.0): claws and teeth come from the shape, a power in use (Feral Claws) or a lasting change
+        const bw = (k === "bite" || k === "claw") ? bodyOf(actor)?.weapons?.[k] : null;
+        if (bw) {
+            list.push({ id: `unarmed:${k}`, unarmed: true, natural: true, ranged: false, ...u, type: bw.type, dmgBonus: bw.bonus,
+                name: `${k === "bite" ? "Bite" : "Claws"} (${bw.why}, ${bw.type})`, secondaryId: "", minStr: 0, piercing: 0, desc: bw.ref ?? "" });
+            continue;
+        }
         // Only fangs bite for aggravated damage (V20 pdf 284 / p. 276); anyone else bites as a punch does (house rule)
         if (k === "bite" && getKind(actor) !== "kindred") Object.assign(extra, { type: "bashing", name: "Bite (no fangs: bashing)" });
-        // Protean 2 grows aggravated claws; Vicissitude's Bonecraft (3) grows talons that do lethal (V20 pdf 250 / p. 242)
-        if (k === "claw" && !(discipline(actor, "Protean") >= 2) && discipline(actor, "Vicissitude") >= 3)
-            Object.assign(extra, { type: "lethal", name: "Bone talons (Vicissitude, lethal)" });
+        // Protean 2 grows aggravated claws (Feral Claws, 1 blood): offered, and grown when chosen (V20 pdf 250 / p. 242)
+        if (k === "claw") {
+            if (discipline(actor, "Protean") >= 2) Object.assign(extra, { grow: true, name: "Claws (grow them: Feral Claws, 1 blood)" });
+            else if (discipline(actor, "Vicissitude") >= 3) Object.assign(extra, { name: "Claws (needs bone talons on the lasting changes record)" });
+        }
         list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, ...extra, secondaryId: "", minStr: 0, piercing: 0 });
     }
     return list;
@@ -520,6 +531,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
     <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(), "normal")}</select></div>
     <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
+    ${aimHtml(target)}
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
     <div class="form-group"><label>Position</label><select name="flank" data-fixed>
        <option value="auto" selected>Automatic: from the tokens' facing</option><option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
@@ -669,6 +681,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const log = [], rolls = [], spendNotes = [];
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
+    // Aiming at a part sets the targeting size the book gives for it (hit locations, house rule B1203)
+    const tBody = target && setting("hitLocations") ? bodyOf(target) : null;
+    if (tBody && fd.aim) {
+        const p = tBody.parts.find(x => x.id === fd.aim);
+        const size = p ? BodyRules.PART_TYPES[p.type]?.size : null;
+        if (size && R.TARGETING[size]) fd.targeting = size;
+    }
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
     const pot = discipline(attacker, "Potence");
 
@@ -694,6 +713,14 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (w?.ranged && w.shots?.empty && countShots()) {
         const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
         throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
+    }
+    // ---- Feral Claws, grown when chosen: 1 blood, an effect that lasts the scene (the Storyteller ends it)
+    if (w?.grow) {
+        if (blood(attacker) < 1 && setting("spendResources")) throw new Error(`${attacker.name} has no blood to grow claws.`);
+        spendNotes.push(...await spend(attacker, 0, 1));
+        await attacker.createEmbeddedDocuments("ActiveEffect", [{ name: "Feral Claws", img: "icons/svg/claw.svg", description: "Protean: claws grown for the scene (aggravated, Strength + 1).", flags: { [MOD]: { grown: true } } }]);
+        w = weaponList(attacker).find(x => x.id === "unarmed:claw" && x.natural) ?? { ...w, grow: false, natural: true, type: "aggravated", dmgBonus: 1, name: "Claws (Feral Claws, aggravated)" };
+        log.push(`${esc(attacker.name)} grows claws (Feral Claws).`);
     }
     // ---- Attack pool
     const { attrKey, ab } = attackBasics(attacker, w);
@@ -795,6 +822,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         }
     }
 
+    // ---- Where it lands (hit locations, house rule B1203)
+    let location = null;
+    if (tBody && hit) {
+        location = BodyRules.hitLocation(tBody, { aimed: fd.aim || (fd.targeting !== "none" ? fd.targeting : null) });
+        if (location) log.unshift(`<b>Lands on:</b> ${esc(location.label.toLowerCase())}${location.aimed ? " (aimed)" : ""}.`);
+    }
+
     // ---- Riposte from parrying an unarmed attack (VtDA20 p. 344)
     let counter = null;
     if (target && def && !def.invalid && fd.defense === "parry" && isBrawl(w) && defSucc > atk.successes && !atk.botch) {
@@ -808,7 +842,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         attacker: attacker.uuid, target: target?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
         combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid),
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
-        counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null
+        counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null,
+        location: location ? { id: location.id, label: location.label } : null
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
@@ -825,6 +860,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (counter?.levels > 0) await applyFromMessage(msg, "counter");
     }
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
+    if (target && location && outcome?.levels) {
+        const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
+        if (offer) await BD.offerMaim(target, offer, { attacker });
+    }
     return { attack: atk, defense: def, damage: dmg, soak, outcome, counter, message: msg };
 }
 
@@ -907,8 +946,8 @@ const withHeightOf = (d, a, b) => { try { return Math.hypot(d, MVJ.heightBetween
 function attackUsable(attacker, w, distance, reachD = distance) {
     const shifter = !!garouRules()?.isShifter?.(attacker);
     if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
-    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 3 || shifter))
-        return "no claws (Protean 2 or Vicissitude 3)";
+    if (w.id === "unarmed:claw" && !w.natural && !w.grow && !shifter)
+        return discipline(attacker, "Vicissitude") >= 3 ? "no claws grown (sculpt bone talons first)" : "no claws (Protean 2, a shape with claws, or bone talons)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
@@ -934,6 +973,11 @@ export function bestAttack(attacker, target, fd = {}, { attackerTok = null, targ
     return { ...first, distance: measured };
 }
 
+/** The body plan of an actor (3.13.0), or null when it cannot be read. */
+function bodyOf(actor) {
+    try { return actor ? BD.bodyFor(actor) : null; } catch (e) { console.warn("WoDX Combat | body", e); return null; }
+}
+
 function planAttacks(attacker, target, fd, distance, reachD = distance) {
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
@@ -942,6 +986,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
     const pot = discipline(attacker, "Potence");
     const plans = [];
     for (const w of weaponList(attacker)) {
+        if (w.grow) continue; // growing claws costs blood: only when the player picks it
         const why = attackUsable(attacker, w, distance, reachD);
         if (why) { plans.push({ w, valid: false, why, score: -1 }); continue; }
         // Range band from the distance, for missiles
@@ -1074,6 +1119,16 @@ async function resolveCounter(defender, victim, extra, weaponItem) {
 /* ------------------------------------------------------------------ */
 
 const TYPE_LABEL = { bashing: "bashing", lethal: "lethal", aggravated: "aggravated" };
+
+/** "Aim at" for the attack dialog: the target's parts (hit locations, house rule B1203). */
+function aimHtml(target) {
+    if (!target || !setting("hitLocations")) return "";
+    const b = bodyOf(target);
+    const parts = b ? BodyRules.aimOptions(b) : [];
+    if (!parts.length) return "";
+    const size = { medium: "+1", small: "+2", precise: "+3" };
+    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the targeting size, or where it lands)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
+}
 
 function attackCard(c) {
     const { attacker, target, w, ab, attrKey, pool, atk, def, defNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log } = c;
@@ -1383,9 +1438,10 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     ST.registerStartSettings();
     P.register();
+    const body = BD.setupBody();
     const movement = MVJ.setupMovement({ MOD, off: () => OFF, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
-    const api = { movement, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.12.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.13.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
