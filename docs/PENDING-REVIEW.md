@@ -747,3 +747,9 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | Followers window (desk fo1): show players the reason for a follower's last loyalty change? | Yes, for their own followers: drift reasons come from their own acts (B1822) | Hide r.last for players in wodx-npc followers.mjs |
+| 2026-11-12 | Followers window: a player only sees followers Foundry lets them see (actor permission) | Kept as Foundry has it; the Storyteller grants Observer to show one | Ask for a Storyteller-side list by socket instead |
+| 2026-11-12 | Culprit descriptions (desk cw1): how word gets round and how long it lasts in each age | Hue and cry 24 h / 14 days to face matching 1 h / 365 days (B1824) | MEANS in wodx-npc wanted-rules.mjs |
+| 2026-11-12 | Culprit descriptions: height, with no height on V20 sheets | The token's size stands in (big, huge, small) with a face people remember (B1825) | marksOf and sizeOf in wodx-library look-rules.mjs |
+| 2026-11-12 | Culprit descriptions: what happens when an NPC may know the culprit | A Storyteller card with Perception + Alertness, difficulty 6 strong or 8 partial, and a Raise the alarm button; nothing by itself (B1826) | recogniseRoll in wanted-rules.mjs |
+| 2026-11-12 | Culprit descriptions: on by default? | Yes (world setting Descriptions that spread); cards only reach the Storyteller | Default false for culpritDescriptions in wanted.mjs |

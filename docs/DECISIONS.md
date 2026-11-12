@@ -2054,6 +2054,46 @@ A follower's attitude toward its master moves one step through WoDX NPC's attitu
 
 Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs; WoDX Actions' wodxFed hook (by, vessel).
 
+## B1820. One Followers window per character (2026-11-12, improvement desk fo1)
+WoDX NPC 0.41.0 lists everyone who serves a character in one window, opened from the Relationships tab's Followers button, the token tools (the people icon) or api.openFollowers(actor). A follower is any NPC that serves the character through one of the four ties order-rules.servesFrom reads (B1800). Each row gives its kind (Ghoul from the domitor tie; Retainer, Ally, Herd, Contact or Mentor from the Background made real; Ally from a Creation ally; else Follower), where it is (here, another scene, away on an errand, not on any map), its order, its loyalty with the last change and the reason from the attitude log, the blood bond step (V20's three drinks) and open trouble. Players see their own characters' followers only, and only those they are allowed to see in Foundry.
+
+Reverse: drop followers.mjs and followers-rules.mjs from wodx-npc, the wodxFollowers token tool and openFollowers in main.mjs, and the tie-followers button in wodx-sheets extras.
+
+## B1821. Orders from the Followers window (2026-11-12)
+A follower on the scene being viewed gets buttons for the everyday orders (Follow, Wait, Guard, Keep watch, Hold back, No order) and "Give an order…", which opens the full order window with that follower and master picked. The buttons go through the same path as the order window (orders.send: carried out on the active Storyteller's client, else by socket), so a hard order still waits in the approval queue. Followers elsewhere get no buttons, since an order needs the token on the map.
+
+Reverse: quickFor in followers-rules.mjs returns [] always.
+
+## B1822. What counts as trouble on a follower's row (2026-11-12)
+Dealing with a witness, set to cut someone off or attack, under a hard order, wavering in its loyalty (at Distrusted, the floor of loyalty drift, B1816), and a description of it going round (B1823). The reason for the last loyalty change is shown to the player whose character it serves: loyalty drift writes reasons from the player's own acts (kept fed, a hard order). A Storyteller's own reason typed into the attitude log shows too.
+
+Reverse: troubles and lastText in followers-rules.mjs; hide r.last for players in followers.mjs.
+
+## B1823. A description that spreads and fades (2026-11-12, house rule, improvement desk cw1)
+When WoDX Actions records a breach with witnesses, when WoDX Interactables reports a theft, break-in, fire, desecration or fight that someone on the map sees (WoDX NPC's noticing roll), or when a fight ends with foes alive or onlookers who see a player character, WoDX NPC 0.41.0 writes a description of the culprit (a player character, or an NPC who serves one) from WoDX Library's look. A second sighting of the same culprit at the same place within ten minutes of world time freshens the same description. The Storyteller gets a card with the words, Drop it, and the Descriptions abroad list (token tools, the question-mark figure). Players never see a description. World setting "Descriptions that spread" (on by default) turns it off. V20 has no rules for this.
+
+Reverse: world setting culpritDescriptions off, or drop wanted.mjs and wanted-rules.mjs.
+
+## B1824. How word gets round, by year (2026-11-12, house figures)
+1197-1499 the hue and cry and the town crier (the rest of town in 24 hours, forgotten in 14 days); 1500-1849 a printed notice and the constable's word (48 hours, 30 days); 1850-1979 a police sketch and the telegraph wire (12 hours, 60 days); 1980-1999 a police sketch on the evening news (6 hours, 90 days); 2000-2022 camera footage and phone photos (3 hours, 180 days); from 2023, the World of Future Darkness, cameras and face matching (1 hour, 365 days). The place where it happened hears at once, and the place's Alert zones carry it on by bell, telephone, radio or runner, as they carry the alarm (NPC 0.23.0). Word stops at the Shroud and the Gauntlet: an Umbral or Underworld map (wodx-otherworlds layer other than physical) hears only what a carrier takes there.
+
+Reverse: MEANS in wanted-rules.mjs.
+
+## B1825. When a description still matches (2026-11-12, house rule)
+Strong when the clothes, uniform and station still fit; none once the culprit has changed clothes, put on a disguise, or a disguise roll held against that NPC. Size (from the token: big, huge, small) and a face people remember, an ugly face or a monstrous one still give a partial match through new clothes. From 2000 photographs keep the face, so new clothes only make it partial; from 2023 face matching keeps the face whatever the clothes, and a held disguise only makes it partial. V20 sheets have no height, so the token's size stands in.
+
+Reverse: matchOf in wanted-rules.mjs; marksOf and sizeOf in wodx-library look-rules.mjs.
+
+## B1826. Who tests a description, and the roll (2026-11-12, house rule)
+When a player character moves where word has reached, NPCs there who see them (the noticing roll) test it: the watch, soldiers, sheriffs, hunters, inquisitors, Technocrats, ghouls, ordinary townsfolk and passers-by, never animals, spirits or the culprit's own followers, at most four a move and once a minute for each pair. The Storyteller gets a card: the match, its reason, and a roll of Perception + Alertness at difficulty 6 for a strong match or 8 for a partial one, 1 harder once the description is half forgotten, with a button to raise the alarm at that place. Nothing happens by itself.
+
+Reverse: TESTERS and recogniseRoll in wanted-rules.mjs; test in wanted.mjs.
+
+## B1827. Whether witnesses know the culprit's name (2026-11-12)
+A description carries the culprit's name when any witness has already met them (WoDX NPC's attitude: met). Otherwise the card says "someone", and only the Storyteller sees who it was.
+
+Reverse: namedBy in wanted.mjs.
+
 ## B2200. Battles and sieges as two abstract forces (2026-11-12, house rule)
 The Master Plan item "Battles and sieges" (Lines and eras that meet, priority 3) is built in WoDX Storyteller 0.43.0 as a Storyteller tool, "Battles and sieges" in the Storyteller's hand (api.battles). A battle is fought between two forces, not token by token: each has a name, a faction (optional), men, a quality (1 levies to 5 the best of the age), the supernatural in its ranks (0 to 5), where it stands, and a commander (a sheet, or a name and a pool). Players see a card in words each step; the Storyteller's card has the dice. Every step has an Undo. The book search (12 November 2026, /mnt/project-files/battle-book-check.md) found war rules only in two Dark Ages: Vampire books, Spoils of War (pp. 40-45 printed, pdf = printed + 1) and the Dark Ages Companion (pp. 42-48 printed, pdf = printed - 25); no V20 book has them. Their rolls are used where they fit (B2202 to B2205); the forces' weight, resolve, the breach clock and the ages after 1500 are house rules. Spoils of War's full Right of Command army (Centre, Wings and Reserve, units by type) is not built: its troop table is garbled in the scan and needs reading from the book.
 
