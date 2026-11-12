@@ -2518,6 +2518,8 @@ Reverse: LODGINGS and schedule() in country-rules.mjs.
 ## B2336. Day shelter for those the sun burns (2026-11-12)
 On the map, a Kindred or Kuei-jin moves only between dusk and dawn. The trip is cut at the towns it passes; before each stretch, if it could not be finished half an hour before dawn, the traveller waits out the day in that town and leaves at dusk. The dark slows such a trip in the years before roads were lit. A trip planned this way no longer goes to the Storyteller for arriving after dawn. A stretch between two towns that is longer than a whole night cannot be sheltered, and that trip still asks the Storyteller. Off the map the older dawn check stands.
 
+Amended 2026-11-12 (Storyteller 0.47.1, after the testbed gate): along a road there is a village within reach wherever dawn comes, so a ride on a road breaks for the day wherever the night runs out (a village on the way to the next town). Only a stretch off the roads, or a paid ride, must be finished in one night, and only such a stretch longer than a whole night leaves the travellers with no shelter. Before this a road stretch between two towns that was longer than a short summer night was wrongly called shelterless.
+
 Reverse: schedule() in country-rules.mjs; the plan branch of travelNeedsAsk in world-rules.mjs.
 
 ## B2337. Paying for the trip (2026-11-12)
