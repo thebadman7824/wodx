@@ -1643,3 +1643,6 @@ Chronicle 0.28.0 adds five clan features:
 - the Giovanni's bound wraiths
 
 Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A Ravnos vice and a Nosferatu face now fire on the player's own client, where social and trade acts happen. Decisions B1150 to B1154. Harness signatures.test.mjs: 17 tests. The gatesigs gate has 18 steps.
+
+## 2026-11-12: bloodlines and Laibon legacies
+Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of their own. Each one uses roll effects, a Masquerade sign card, or a clan engine borrowed through the row's "also" list. Decisions B1155 to B1157. Harness signatures.test.mjs: 19 tests. gatesigs: 19 steps.

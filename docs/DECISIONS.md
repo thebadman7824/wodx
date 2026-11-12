@@ -1455,3 +1455,21 @@ Reverse: settleContract and TITHE.
 A ledger of bound wraiths, each held by a fetter. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date, as the book check flagged) the window names the line as the Cappadocians, whose deathly look is a Masquerade sign up close.
 
 Reverse: giovanniName in signature-rules.mjs.
+
+## B1155. Bloodlines come before clans in the table (2026-11-12)
+The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
+- roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
+- a Masquerade sign card when a mortal deals with them (Gargoyles, Samedi, Harbingers, Salubri, Lhiannan, Xi Dundu)
+- engines borrowed from a clan: a vizier's Muse; contracts for Assamite sorcerers, a Baali pact and an Ahrimane spirit pact; bound dead for Harbingers and Nagaraja; the Ishtarri vice; soil for the Old Clan and the Naglopers
+
+Reverse: BLOODLINES in data/signatures.mjs; rowHas in signatures.mjs.
+
+## B1156. The Old Clan holds out a night longer without soil (2026-11-12)
+House reading from the desk: an Old Clan Tzimisce's pools halve only after a second night without native soil.
+
+Reverse: grace on the koldun row.
+
+## B1157. Laibon legacies (2026-11-12)
+Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
+
+Reverse: the Laibon rows in BLOODLINES.

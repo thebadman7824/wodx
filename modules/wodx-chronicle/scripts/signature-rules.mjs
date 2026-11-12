@@ -12,10 +12,10 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE} from "../data/signatures.mjs";
 
-export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
@@ -234,12 +234,12 @@ export const isSoil = item => !!item && (item.soil === true || /\b(native|grave|
  * The night's rest: carrying soil counts as resting on it. Returns {soil, halved, changed}; halved: dice pools are halved
  * tonight (V20 pdf 447), until a rest on the soil.
  */
-export function soilNight(soil = {}, now, carrying) {
+export function soilNight(soil = {}, now, carrying, grace = 0) {
   const s = {where: "", restedAt: null, short: 0, checked: null, ...soil};
   const tonight = night(now);
-  if ( s.checked != null && night(s.checked) >= tonight ) return {soil: s, halved: s.short > 0, changed: false};
+  if ( s.checked != null && night(s.checked) >= tonight ) return {soil: s, halved: s.short > n(grace), changed: false};
   if ( carrying ) return {soil: {...s, restedAt: n(now), short: 0, checked: n(now)}, halved: false, changed: s.short > 0 || s.checked == null};
-  return {soil: {...s, short: s.short + 1, checked: n(now)}, halved: true, changed: true};
+  return {soil: {...s, short: s.short + 1, checked: n(now)}, halved: s.short + 1 > n(grace), changed: true};
 }
 
 /* ---------------- Lasombra: cameras ---------------- */
