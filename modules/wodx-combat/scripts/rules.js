@@ -422,4 +422,19 @@ export function reloadTurns({ crossbow = false, darkAges = false, archery = 0 } 
     return { turns: 5, ref: "V20 p. 281", multi: false };
 }
 
+/**
+ * How loud an attack is, for NPCs nearby (3.16.0, house rule): firearms and explosives are loud, a silenced gun
+ * is quiet, everything else (blades, fists, bows, claws, powers) is quiet. A fight's shouting still carries a little.
+ */
+const GUN = /\b(gun|pistol|revolver|rifle|carbine|musket|arquebus|harquebus|caliver|blunderbuss|fusil|shotgun|smg|uzi|mac-?10|tommy|glock|colt|beretta|ak-?47|m16|ar-?15|handgonne|hand cannon|culverin|cannon|flintlock|matchlock|wheellock|derringer|magnum)\b/i;
+const BLAST = /\b(grenade|dynamite|bomb|explosive|petard|molotov|rocket|c-?4|semtex|mine)\b/i;
+const HUSH = /\b(silenc\w*|suppress\w*)\b/i;
+export function fightNoise(w = {}) {
+    const name = String(w?.name ?? "");
+    if (BLAST.test(name)) return "loud";
+    const gun = GUN.test(name) || (!!w?.ranged && !!w?.shots?.counted && !isCrossbow(name) && !/\b(bow|sling|dart|javelin|spear)\b/i.test(name));
+    if (gun) return HUSH.test(name) ? "quiet" : "loud";
+    return "quiet";
+}
+
 export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));
