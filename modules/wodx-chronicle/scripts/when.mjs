@@ -75,7 +75,7 @@ export function actorContext(actor) {
     // Won social rolls (WoDX Actions' "With this person"), read off the flags so it works with Actions off
     sways: Array.isArray(actor.flags?.["wodx-actions"]?.sways) ? actor.flags["wodx-actions"].sways : [],
     items: [...(actor.items ?? [])].map(i => i.name),
-    // Chronicle 0.31.0: what they wear and how they are (WoDX Library's look), for dressed, wears, station, out of time, bloody
+    // Chronicle 0.32.0: what they wear and how they are (WoDX Library's look), for dressed, wears, station, out of time, bloody
     look: (() => { try { return api("wodx-library")?.look?.of?.(actor) ?? null; } catch (e) { return null; } })(),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
@@ -96,7 +96,7 @@ export function npcContext(npc, actor) {
   if ( !n?.id ) return null;
   let attitude = null;
   try { attitude = api("wodx-npc")?.attitude?.of?.(n, actor)?.step ?? null; } catch (e) { attitude = null; }
-  // Chronicle 0.31.0: the NPC's station, the character's dress against it, and how a disguise went with this NPC
+  // Chronicle 0.32.0: the NPC's station, the character's dress against it, and how a disguise went with this NPC
   let station = null, dressed = null, disguise = null;
   try {
     const L = api("wodx-library")?.look;

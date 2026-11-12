@@ -172,7 +172,7 @@ export function parseTest(line, {eras = null} = {}) {
     if ( !Number.isFinite(n) ) return bad(`${c[3]} is not a step`);
     return ok({t: "standing", faction: low(unquote(c[1])), op: c[2], n});
   }
-  // Chronicle 0.31.0: the look (WoDX Library), against the NPC being dealt with where it compares
+  // Chronicle 0.32.0: the look (WoDX Library), against the NPC being dealt with where it compares
   if ( word === "dressed" ) {
     const want = {fine: "fine", above: "fine", rich: "fine", poor: "poor", below: "poor", shabby: "poor", even: "even"}[low(arg)];
     return want ? ok({t: "dressed", want}) : bad("write dressed fine, dressed poor or dressed even");

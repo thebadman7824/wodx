@@ -11,11 +11,11 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBreach | actions | npc, storyteller |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse), npc |
+| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk), npc |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
-| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
+| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |

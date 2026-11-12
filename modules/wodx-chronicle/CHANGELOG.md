@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.31.0 ("Only when" tests on the look: dressed fine or poor, wears, station, out of time, bloody, disguised, seen through)
+- 0.32.0 ("Only when" tests on the look: dressed fine or poor, wears, station, out of time, bloody, disguised, seen through)
+- 0.31.0 (Werewolf features: tribe, auspice and breed stacked, Kinfolk, the lost tribes, the eleven other Changing Breeds and the Beast Courts; signature roll effects now reach the dice; world setting Tribe, auspice and breed features (Werewolf), off by default)
 - 0.30.0 (ghouls and their monthly fix; revenant families, the four of the books and new ones founded in play with the Storyteller's approval)
 - 0.29.0 (bloodlines, castes and Laibon legacies: 27 rows of their own, with roll effects, Masquerade sign cards and engines borrowed from the clans)
 - 0.28.0 (five more clans: the Nosferatu's trade in secrets, the Tremere Pyramid and its orders, the Ventrue's influence from the institutions of the age, Assamite contracts and the tithe, the Giovanni's bound dead)
