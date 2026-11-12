@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.42.2 (the Legends book adds what a battle's field left behind, when the Storyteller sends it there from WoDX Storyteller's Battles window)
 - 0.42.1 (the crossover referee reads only the WoDX actor-type flag, not the old vtda20 one)
 - 0.42.0 (the Legends book keeps battles and sieges that have ended)
 - 0.41.0 (a ghoul's monthly fix tells WoDX NPC, for its loyalty)

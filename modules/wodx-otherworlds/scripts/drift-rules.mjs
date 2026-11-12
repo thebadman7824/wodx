@@ -8,6 +8,10 @@
  *
  * Banality drifts the same way, on its own track (C20 rates a place's Banality 0 to 10): Glamour fed by art and
  * dreams lowers it, crowds of disbelief raise it. It only moves a place that has a Banality rating.
+ *
+ * The Shroud drifts too (Otherworlds 0.17.0, B2307): mass death thins it, a point for a year and a day after a
+ * battle (Wraith 20th puts the Shroud lowest at places of death and grief), and it heals back. Only a place with a
+ * Shroud rating moves, inside Wraith 20th's 4 to 10.
  */
 
 export const DRIFT = {min: -3, max: 3};
@@ -20,7 +24,9 @@ export const DRIFT_KINDS = {
   neglect: {label: "The caern goes untended", step: 1},
   mend: {label: "The taint is cleansed", step: -1},
   dreaming: {label: "Dreams and art feed the place's Glamour (Banality)", step: -1, track: "banality"},
-  disbelief: {label: "Crowds, routine and disbelief (Banality)", step: 1, track: "banality"}
+  disbelief: {label: "Crowds, routine and disbelief (Banality)", step: 1, track: "banality"},
+  massdeath: {label: "Mass death: a battle, a massacre, a plague pit (the Shroud thins)", step: -1, track: "shroud"},
+  shroudheals: {label: "The Shroud heals as the grief fades", step: 1, track: "shroud"}
 };
 const trackOf = kind => DRIFT_KINDS[kind]?.track ?? "value";
 
@@ -29,7 +35,7 @@ const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 export function normDrift(d = {}) {
   const log = Array.isArray(d.log) ? d.log.slice(-30).map(e => ({at: num(e.at), kind: DRIFT_KINDS[e.kind] ? e.kind : "taint", step: num(e.step), why: String(e.why ?? "").slice(0, 200)})) : [];
   const clampD = v => Math.max(DRIFT.min, Math.min(DRIFT.max, Math.round(num(v))));
-  return {value: clampD(d.value), banality: clampD(d.banality), log};
+  return {value: clampD(d.value), banality: clampD(d.banality), shroud: clampD(d.shroud), log};
 }
 
 /** Move a place's drift one step for a kind of event. Returns the new record and whether it changed. */
@@ -61,4 +67,10 @@ export function withDrift(gauntlet, drift) {
 export function banalityWithDrift(banality, drift) {
   if ( banality === null || banality === undefined || banality === "" ) return null;
   return Math.max(0, Math.min(10, num(banality) + num(drift)));
+}
+
+/** A place's Shroud with its drift: only a rated place moves, inside 4 to 10 (Wraith 20th). */
+export function shroudWithDrift(shroud, drift) {
+  if ( shroud === null || shroud === undefined || shroud === "" ) return null;
+  return Math.max(4, Math.min(10, num(shroud) + num(drift)));
 }

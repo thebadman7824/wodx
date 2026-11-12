@@ -33,6 +33,9 @@
  * Stored in the world setting wodx-storyteller.battles: {v, list: [battle]}.
  */
 
+import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
+import {normAftermath} from "./battle-aftermath.mjs";
+
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
 
@@ -184,7 +187,8 @@ export function normBattle(b = {}) {
     eventId: str(b.eventId, 80),
     sides: [normSide(b.sides?.[0], "The attackers"), normSide(b.sides?.[1], "The defenders")],
     chars: (Array.isArray(b.chars) ? b.chars : []).filter(c => c?.actorId).map(c => ({
-      actorId: str(c.actorId, 40), name: str(c.name), side: c.side === 1 ? 1 : 0, stance: ["thick", "rear", "command"].includes(c.stance) ? c.stance : "thick"
+      actorId: str(c.actorId, 40), name: str(c.name), side: c.side === 1 ? 1 : 0, stance: ["thick", "rear", "command"].includes(c.stance) ? c.stance : "thick",
+      ...(DEED_POSTS[c.post] ? {post: c.post} : {})
     })).slice(0, 20),
     phases: (Array.isArray(b.phases) ? b.phases : []).slice(-200),
     weeks: Math.max(0, Math.round(n(b.weeks))),
@@ -193,7 +197,10 @@ export function normBattle(b = {}) {
     over: b.over ? {winner: b.over.winner === 1 ? 1 : b.over.winner === 0 ? 0 : null, how: str(b.over.how, 40), at: Math.round(n(b.over.at)) || null, text: str(b.over.text, 400)} : null,
     started: Math.round(n(b.started)) || null,
     timePassed: Math.max(0, Math.round(n(b.timePassed))),
-    legend: b.legend !== false
+    legend: b.legend !== false,
+    // Storyteller 0.45.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
+    offers: normOffers(b.offers),
+    aftermath: normAftermath(b.aftermath)
   };
   // Field battles: the defender is side 1. A siege: side 1 holds the walls.
   if ( out.sides.every(s => !s.defends) ) out.sides[1].defends = true;
@@ -259,7 +266,7 @@ export function settlePhase(battle, age, rolls, deeds = [[], []]) {
   const phase = {
     n: battle.phases.length + 1, kind: "phase", total, net, winner, lost, resolveLost,
     rolls: rolls.map(r => ({successes: Math.max(0, n(r?.successes)), botch: !!r?.botch, faces: Array.isArray(r?.faces) ? r.faces.slice(0, 30) : []})),
-    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes))}))),
+    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes)), ...(d.seen ? {seen: true} : {})}))),
     before: battle.sides.map(s => ({men: s.men, resolve: s.resolve, lostUnits: s.lostUnits, penalty: s.penalty, sick: s.sick}))
   };
   let over = null;

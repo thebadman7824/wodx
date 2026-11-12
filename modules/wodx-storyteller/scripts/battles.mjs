@@ -1,4 +1,5 @@
 import * as B from "./battle-rules.mjs";
+import * as X from "./battle-extras.mjs";
 import * as C from "./core.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as T from "./tasks-rules.mjs";
@@ -25,6 +26,7 @@ const opt = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${esc(
 
 export function registerBattleSettings() {
   game.settings.register(MOD, KEY, {scope: "world", config: false, type: Object, default: B.blankBattles(), onChange: () => BattlesApp.refresh()});
+  X.registerHooks();
 }
 
 export const state = () => B.normBattles(setting(KEY));
@@ -112,10 +114,11 @@ export async function fight(id, {deeds = [[], []], extra = [0, 0]} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || !game.user.isGM ) return null;
   const {age} = contextOf(b0);
+  deeds = X.withOffers(b0, deeds);
   const setup = B.phaseSetup(b0, age, {extra});
   const rolls = [await roll(setup[0].pool, setup[0].difficulty), await roll(setup[1].pool, setup[1].difficulty)];
   const step = B.settlePhase(b0, age, rolls, deeds);
-  let b = B.applyStep(b0, step, now());
+  let b = {...B.applyStep(b0, step, now()), offers: null};
   if ( step.waver ) {
     const w = step.waver, r = await roll(b.sides[w.side].commander.morale, w.difficulty);
     b = B.applyWaver(b, w.side, r, now());
@@ -326,6 +329,7 @@ export class BattlesApp extends ApplicationV2 {
       fight: (e, t) => BattlesApp.#onFight(t), week: (e, t) => week(t.dataset.id), storm: (e, t) => storm(t.dataset.id),
       withdraw: (e, t) => withdrawSide(t.dataset.id, Number(t.dataset.side)), draw: (e, t) => callDraw(t.dataset.id),
       undo: (e, t) => undo(t.dataset.id), time: (e, t) => passTime(t.dataset.id),
+      ...X.ACTIONS,
       hit: (e, t) => hazard(t.dataset.id, t.dataset.actor, {attention: !!BattlesApp.field(`att.${t.dataset.actor}`)?.checked}), remove: (e, t) => BattlesApp.#onRemove(t)
     }
   };
@@ -348,6 +352,7 @@ export class BattlesApp extends ApplicationV2 {
     div.className = "wodx-body";
     const b = this.#current ? get(this.#current) : null;
     div.innerHTML = b ? this.#detail(b) : this.#list();
+    X.bindChanges(div);
     return div;
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }
@@ -361,7 +366,8 @@ export class BattlesApp extends ApplicationV2 {
       <p class="wodx-quiet">Battles and sieges fought as two forces, with the characters' deeds tipping the result (Spoils of War and the Dark Ages Companion, with house rules for every age).</p>
       <div class="wodx-scroll wst-battle-list">${all.map(row).join("") || `<p class="wodx-quiet">No battles yet.</p>`}</div>
       <div class="wodx-buttons"><button type="button" data-action="newField"><i class="fa-solid fa-flag"></i> A new battle</button>
-        <button type="button" data-action="newSiege"><i class="fa-solid fa-chess-rook"></i> A new siege</button></div>`;
+        <button type="button" data-action="newSiege"><i class="fa-solid fa-chess-rook"></i> A new siege</button></div>
+      ${(() => { const {year, branch} = contextOf(null); return X.renderOldFields(list(), year, branch); })()}`;
   }
 
   #detail(b) {
@@ -388,6 +394,7 @@ export class BattlesApp extends ApplicationV2 {
       <div class="wst-battle-sides">${b.sides.map(side).join("")}</div>
       ${b.kind === "siege" ? `<p>Week ${b.weeks} of the siege. The breach: ${b.breach} of ${B.BREACH_SEGMENTS}${b.breached ? ", the walls are open" : ""}. The progress clock "${esc(B.clockFor(b).name)}" follows it.</p>` : ""}
       ${chars ? `<fieldset><legend>Characters</legend>${chars}</fieldset>` : ""}
+      ${X.renderOffers(b)}${X.renderAftermath(b)}
       <div class="wodx-buttons">
         ${b.over ? "" : b.kind === "siege" ? `<button type="button" data-action="week" data-id="${id}">A week of siege</button><button type="button" data-action="storm" data-id="${id}">Storm the walls</button>`
           : `<button type="button" data-action="fight" data-id="${id}"><i class="fa-solid fa-dice"></i> Fight a phase</button><button type="button" data-action="draw" data-id="${id}">Stop the fighting</button>`}
@@ -414,3 +421,6 @@ export class BattlesApp extends ApplicationV2 {
     if ( ok ) { await remove(b.id); BattlesApp.open(null); }
   }
 }
+
+// Storyteller 0.45.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
+X.bind({get, save: put, open: id => BattlesApp.open(id), ageId: b => contextOf(b).age.id});

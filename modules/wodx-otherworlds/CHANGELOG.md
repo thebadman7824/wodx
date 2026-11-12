@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.17.0 (the Shroud drifts on a track of its own: mass death thins it a point, it heals back; a place with a Shroud rating reads it with the drift; WoDX Storyteller's battle aftermath sends it)
 - 0.16.0 (standing with the spirit courts: Bird, Beast, Elemental, Wyld, Weaver, Wyrm and the totem, -5 to +5, moved by chiminage, Banes and Bans, changing the difficulty with that court's spirits)
 - 0.15.1 (after the book check: the Labyrinth is the Storyteller's call (WR20 pdf 307); the Far Dreaming, Arcadia and the Deep Umbra cards give their pages; the Shadowlands and the Tempest keep the world's time)
 - 0.15.0 (Game time: the journey card says how much time passes outside (a Moon Bridge's thousandth, a trod's slip) and has a button to let it pass; realm time table)

@@ -748,3 +748,8 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-12 | The Inquisition's seats, after the book check (B1114, NPC 0.40.3) | A cell: rector appointed from above; sub-rector, treasurer, archivist and cellarer elected by backing; chapter every faction turn; orders as blocs; Rank Background as standing (DA:I Companion pr 72-75, DA:I pr 157). A Council of Faith (head, Procurator Fiscalis, a councillor per order) picked by hand. Sicae Dei noted, not run. Replaces the tribunal approved earlier | POLITIES.inquisition and ["council-of-faith"] in politics-rules.mjs |
+| 2026-11-12 | The desk said a battlefield gives "a stronger Shroud for a while"; Wraith 20th has the Shroud lowest at places of death (B2307) | The Shroud thins a point for a year and a day (two after 10,000 dead), with a Ledger reminder to take it back | Swap the step of massdeath in wodx-otherworlds drift-rules.mjs to +1, or skip the Shroud line in battle-aftermath.mjs |
+| 2026-11-12 | How often a supernatural character gets a deed of their own kind (B2302) | About one phase in three; the rest are the deeds anyone could do | pickDeed in wodx-storyteller battle-deeds.mjs (h % 3) |
+| 2026-11-12 | The counts in a battle's aftermath (B2305) | One in a hundred of the dead rise as wraiths, prisoners a tenth of a routed side, wounded twice the dead, feeding 3 or 7 nights 2 easier | aftermathFor in battle-aftermath.mjs |
+| 2026-11-12 | Seen deeds and the Veil (B2302) | Sending the feeding line to the Ledger lets the Veil slip a point per seen deed, at most 3, with Undo; nothing moves by itself | send in battle-extras.mjs |
+
