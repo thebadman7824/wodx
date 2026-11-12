@@ -1431,6 +1431,59 @@ Ben approved the item-links study, which puts Cataclysm's reversible recipes on 
 It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.
 Reverse: empty SALVAGE in data/recipes.mjs.
 
+## B1150. The Nosferatu trade in secrets (2026-11-12)
+V20 pdf 71: a Nosferatu's Appearance is 0, and the clan trades in what it overhears (pdf 28). When a Nosferatu deals with a mortal face to face, the Storyteller gets one card a night for each mortal, with a button that records a Masquerade breach (unless Obfuscate held). A page of secrets is an item. Handed over in a trade, it buys a minor boon while fresh and a trivial one when stale. Freshness follows how fast word travels in the age (media-rules): 60 days by word of mouth, 30 in print, 14 with newspapers, 7 with the wireless, 3 with television and 1 with the internet. The under-town map layer waits for map generation.
+
+Reverse: SECRET_FRESH in data/signatures.mjs; trueFace and secretSold in signatures.mjs.
+
+## B1151. The Tremere Pyramid (2026-11-12)
+The book check found no rank ladder in V20 core, so the ranks are a house reading: the seven circles of apprentice, then Regent, Lord, Pontifex and the Inner Council. An order may only come down the Pyramid. Refusing it costs 1 Willpower, or 2 when the order comes from three or more ranks above, and the Storyteller hears of it. Rituals as recipes wait for the recipe work.
+
+Reverse: TREMERE_RANKS; refuseCost in signature-rules.mjs.
+
+## B1152. Ventrue influence (2026-11-12)
+Once a month, a Ventrue may take a minor boon from a mortal institution of the age instead of that month's holdings income. The Storyteller logs the boon in the Ledger from the card and skips the income. A Ventrue who loses a holding answers to the clan, through a card.
+
+Reverse: INSTITUTIONS in data/signatures.mjs.
+
+## B1153. Assamite contracts (2026-11-12)
+A contract has a target, a price and a deadline. Keeping it raises standing at Alamut by one (0 to 5, starting at 1) and sends a tenth of the fee to the clan as a tithe. A contract still open at its deadline fails at the daily tick and lowers standing by one.
+
+Reverse: settleContract and TITHE.
+
+## B1154. The Giovanni's bound dead (2026-11-12)
+A ledger of bound wraiths, each held by a fetter. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date, as the book check flagged) the window names the line as the Cappadocians, whose deathly look is a Masquerade sign up close.
+
+Reverse: giovanniName in signature-rules.mjs.
+
+## B1155. Bloodlines come before clans in the table (2026-11-12)
+The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
+- roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
+- a Masquerade sign card when a mortal deals with them (Gargoyles, Samedi, Harbingers, Salubri, Lhiannan, Xi Dundu)
+- engines borrowed from a clan: a vizier's Muse; contracts for Assamite sorcerers, a Baali pact and an Ahrimane spirit pact; bound dead for Harbingers and Nagaraja; the Ishtarri vice; soil for the Old Clan and the Naglopers
+
+Reverse: BLOODLINES in data/signatures.mjs; rowHas in signatures.mjs.
+
+## B1156. The Old Clan holds out a night longer without soil (2026-11-12)
+House reading from the desk: an Old Clan Tzimisce's pools halve only after a second night without native soil.
+
+Reverse: grace on the koldun row.
+
+## B1157. Laibon legacies (2026-11-12)
+Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
+
+Reverse: the Laibon rows in BLOODLINES.
+
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+
 ## B1300. Area shapes and their sizes (2026-11-12)
 Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
 Reverse: areaShape() in wodx-targeting target-rules.mjs; the area branch of attach() in main.mjs.

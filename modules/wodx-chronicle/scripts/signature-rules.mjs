@@ -11,11 +11,12 @@
  *   ravnos {vice, fedAt, arrivedAt, askedAt}
  *   odd {year (last year checked), gifts: [key]}
  */
-import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE} from "../data/signatures.mjs";
+import {mediaFor} from "./media-rules.mjs";
+import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE};
+export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -233,12 +234,12 @@ export const isSoil = item => !!item && (item.soil === true || /\b(native|grave|
  * The night's rest: carrying soil counts as resting on it. Returns {soil, halved, changed}; halved: dice pools are halved
  * tonight (V20 pdf 447), until a rest on the soil.
  */
-export function soilNight(soil = {}, now, carrying) {
+export function soilNight(soil = {}, now, carrying, grace = 0) {
   const s = {where: "", restedAt: null, short: 0, checked: null, ...soil};
   const tonight = night(now);
-  if ( s.checked != null && night(s.checked) >= tonight ) return {soil: s, halved: s.short > 0, changed: false};
+  if ( s.checked != null && night(s.checked) >= tonight ) return {soil: s, halved: s.short > n(grace), changed: false};
   if ( carrying ) return {soil: {...s, restedAt: n(now), short: 0, checked: n(now)}, halved: false, changed: s.short > 0 || s.checked == null};
-  return {soil: {...s, short: s.short + 1, checked: n(now)}, halved: true, changed: true};
+  return {soil: {...s, short: s.short + 1, checked: n(now)}, halved: s.short + 1 > n(grace), changed: true};
 }
 
 /* ---------------- Lasombra: cameras ---------------- */
@@ -283,3 +284,74 @@ export function oddGift(odd = {}, year, rand = Math.random) {
 }
 /** Does an actor's trait list name the Thin Blood flaw? */
 export const thinBlooded = names => names.some(x => /thin[- ]?blood/i.test(String(x)));
+
+/* ---------------- Nosferatu: secrets ---------------- */
+
+/** Days a secret learned in a year stays fresh. */
+export const freshDays = (year, future = false) => SECRET_FRESH[mediaFor(year, {future}).id] ?? 60;
+/** Is a secret still fresh? at: when it was learned. */
+export const secretFresh = (at, now, year, future = false) => n(now) - n(at) < freshDays(year, future) * DAY;
+/** The boon a secret buys: minor while fresh, trivial once stale. */
+export const secretPrice = (at, now, year, future = false) => secretFresh(at, now, year, future) ? "minor" : "trivial";
+export const isSecretPage = name => /^a page of secrets\b/i.test(String(name ?? ""));
+
+/* ---------------- Tremere: the Pyramid ---------------- */
+
+export const rankLabel = r => TREMERE_RANKS[clamp(n(r), 0, TREMERE_RANKS.length - 1)];
+/** May one rank give an order to another? Only from above. */
+export const mayOrder = (from, to) => n(from) > n(to);
+/** Willpower to refuse an order (house reading: 1, 2 when it comes from three or more ranks above). */
+export const refuseCost = (from, to) => n(from) - n(to) >= 3 ? 2 : 1;
+
+/* ---------------- Ventrue: domain to influence ---------------- */
+
+export const institutionsAt = year => INSTITUTIONS.filter(i => n(year) >= i.from).map(i => i.label);
+/** Once a month: month keys are year * 12 + month. */
+export const mayInfluence = (lastKey, key) => lastKey == null || n(key) > n(lastKey);
+
+/* ---------------- Assamite: contracts ---------------- */
+
+export function newContract({id, target = "", price = 0, days = 30, now = 0} = {}) {
+  return {id: id || `c-${Math.floor(n(now))}`, target: String(target), price: Math.max(0, n(price)), at: n(now), due: n(now) + Math.max(1, n(days)) * DAY, status: "open"};
+}
+/** Settle a contract: done raises standing by one and pays the tithe; failed or overdue lowers it. */
+export function settleContract(c, standing, done) {
+  const st = clamp(n(standing ?? 1) + (done ? 1 : -1), 0, STANDING_MAX);
+  return {contract: {...c, status: done ? "done" : "failed"}, standing: st, tithe: done ? Math.round(n(c.price) * TITHE * 100) / 100 : 0};
+}
+export const overdue = (list = [], now = 0) => list.filter(c => c.status === "open" && n(c.due) <= n(now));
+
+/* ---------------- Giovanni: the bound dead ---------------- */
+
+export const newServant = ({id, name = "a wraith", fetter = "", now = 0} = {}) => ({id: id || `w-${Math.floor(n(now))}`, name: String(name), fetter: String(fetter), at: n(now)});
+/** The line's name in a year: Cappadocian before 1444 (house reading of the date). */
+export const giovanniName = year => n(year) < 1444 ? "Cappadocian" : "Giovanni";
+
+/* ---------------- Ghouls and revenant families ---------------- */
+
+/** A family as a feature row: the ghoul engine, the family trait's effects and borrowed engine. */
+export function familyAsRow(f) {
+  const t = FAMILY_TRAITS[f.trait] ?? FAMILY_TRAITS.craft;
+  return {key: `family-${f.key}`, label: `${f.label} (revenant family)`, feature: "ghoul", also: [...(t.also ?? [])], effects: t.effects,
+    title: `The ${f.label} family`, page: f.page ?? "Guide to the Sabbat pdf 219; V20 Dark Ages pdf 454",
+    text: `${f.text ?? ""} Family trait: ${t.label.toLowerCase()}.${f.disciplines?.length ? ` Family Disciplines: ${f.disciplines.join(", ")}.` : ""}${f.flaw ? ` Family flaw: ${f.flaw}.` : ""} Revenants are born ghouls and need no domitor's drink to stay as they are.`.trim(), revenant: true};
+}
+/** The family a ghoul's names point at (the books' families first, then those founded in play), or null. */
+export function familyRow(names = [], founded = []) {
+  const all = [...REVENANT_FAMILIES, ...founded.filter(f => f.approved !== false)];
+  for ( const name of names.flat() ) {
+    const t = ` ${words(name).join(" ")} `;
+    const f = all.find(x => t.includes(` ${words(x.label).join(" ")} `));
+    if ( f ) return familyAsRow(f);
+  }
+  return null;
+}
+/** A family founded in play (Ben's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
+export function newFamily({name = "", founder = "", trait = "craft", disciplines = [], flaw = "", year = 1197, text = ""} = {}) {
+  const label = String(name).trim();
+  if ( !label || !FAMILY_TRAITS[trait] ) return null;
+  const ds = (Array.isArray(disciplines) ? disciplines : String(disciplines).split(",")).map(x => String(x).trim()).filter(Boolean).slice(0, 3);
+  return {key: words(label).join("-"), label, founder: String(founder), trait, disciplines: ds, flaw: String(flaw), founded: n(year), text: String(text), approved: false};
+}
+/** Whole months a ghoul has gone without vitae (30-day months). */
+export const monthsUnfed = (fedAt, now) => Math.max(0, Math.floor((n(now) - n(fedAt ?? now)) / (30 * DAY)));

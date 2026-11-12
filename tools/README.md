@@ -6,6 +6,8 @@
 - `release/`: release checks for the Linux live server: the letter-case path test and the build stamp (see release/README.md).
 - `harness/`: the mock-Foundry tests. `cd tools/harness`, `npm install`, then `node --test *.test.mjs`. The UI fit check is `node ui-fit.mjs <foundry2.css> [screenshot folder]`.
 
+- GitHub runs `.github/workflows/checks.yml` on every pull request and every push to main: `quality-check.sh` (with the harness skipped), then the harness once. The UI fit check and the testbed gates still run on the PC.
+
 ## On Windows
 
 - The tests load modules by file path, which Node on Windows reads as a URL. `harness/win-paths.mjs` fixes that, and every test file imports it first. A new test file should do the same.

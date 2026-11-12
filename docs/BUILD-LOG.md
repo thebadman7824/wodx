@@ -1634,6 +1634,22 @@ Chronicle 0.27.0 adds the Tzimisce's native soil (a night without it halves ever
 ## 2026-11-12: taking things apart for parts
 From the item-links study (Ben approved all): Library 0.13.0 adds SALVAGE rules to data/recipes.mjs and salvageOf, apartTool and successes to recipe-rules.mjs; Use offers "Take apart for parts" on the 155 goods that have parts. Storyteller 0.34.0 cookery.takeApart rolls Dexterity + Crafts (Technology for electronics), takes one of the thing and gives its parts by era. B953. Tests in recipes.test.mjs; gatecook step 8.
 
+## 2026-11-12: Nosferatu, Tremere, Ventrue, Assamite, Giovanni
+Chronicle 0.28.0 adds five clan features:
+- the Nosferatu's true-face breach card and pages of secrets that go stale at the speed of the age
+- the Tremere Pyramid, with orders that cost Willpower to refuse
+- Ventrue influence in place of a month's income
+- Assamite contracts with standing and a tithe
+- the Giovanni's bound wraiths
+
+Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A Ravnos vice and a Nosferatu face now fire on the player's own client, where social and trade acts happen. Decisions B1150 to B1154. Harness signatures.test.mjs: 17 tests. The gatesigs gate has 18 steps.
+
+## 2026-11-12: bloodlines and Laibon legacies
+Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of their own. Each one uses roll effects, a Masquerade sign card, or a clan engine borrowed through the row's "also" list. Decisions B1155 to B1157. Harness signatures.test.mjs: 19 tests. gatesigs: 19 steps.
+
+## 2026-11-12: ghouls and revenant families
+Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
+
 ## 2026-11-12: rolls and fights at the table
 
 From Ben's Improvement Desk picks a1, a2, t1, cb1, cb2 and se1 (B1300 to B1330). WoDX Actions 3.43.0: the odds before a roll, worked out exactly from the roller's own rules, with each modifier named; pinned and lately used actions on the character. WoDX Targeting 0.2.0: area shapes drawn on the map, and whoever stands inside suggested. WoDX Combat 3.14.0: the after-action card and the Use the room button. WoDX Interactables 0.27.0: lamps knocked over, chandeliers brought down, curtains and windows that let the sun in, sprinklers, each with Undo. WoDX Senses 0.7.0 and Otherworlds 0.13.1: colour-blind safe rings and words with every colour. Harness: tools/harness/table-fights.test.mjs. Gate: tools/gate/gatetable.mjs.

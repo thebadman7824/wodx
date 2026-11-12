@@ -14,7 +14,8 @@ test("clan names find their row on whole words only", () => {
   assert.equal(S.vampireRow("Settler"), null);
   assert.equal(S.vampireRow("", null, "Brujah")?.key, "brujah");
   assert.equal(S.vampireRow(["Gangrel antitribu"])?.key, "gangrel");
-  assert.equal(S.vampireRow("Ventrue"), null);
+  assert.equal(S.vampireRow("Ventrue")?.key, "ventrue");
+  assert.equal(S.vampireRow("Settite of nowhere"), null);
   for ( const r of S.VAMPIRE ) assert.ok(r.page && r.title && r.text, r.key);
 });
 
@@ -164,4 +165,99 @@ test("a thin-blooded Caitiff rolls once a year for an odd gift", () => {
   const all = {gifts: S.ODD_GIFTS.map(g => g.key), year: 1};
   assert.equal(S.oddGift(all, 2, () => 0).gift, null, "no gift left to give");
   assert.ok(S.thinBlooded(["Thin Blood"])); assert.ok(!S.thinBlooded(["Thick skin"]));
+});
+
+/* Chronicle 0.28.0: Nosferatu, Tremere, Ventrue, Assamite, Giovanni (B1150 to B1154) */
+
+test("the five clans find their rows; Cappadocians are the Giovanni row", () => {
+  assert.equal(S.vampireRow("Nosferatu")?.feature, "secrets");
+  assert.equal(S.vampireRow("Tremere")?.feature, "pyramid");
+  assert.equal(S.vampireRow("Ventrue")?.feature, "domain");
+  assert.equal(S.vampireRow("Banu Haqim")?.feature, "contracts");
+  assert.equal(S.vampireRow("Cappadocian")?.feature, "family");
+  assert.equal(S.giovanniName(1300), "Cappadocian");
+  assert.equal(S.giovanniName(1500), "Giovanni");
+});
+
+test("a secret goes stale as fast as word travels in its age", () => {
+  const D = S.DAY;
+  assert.equal(S.freshDays(1200), 60);
+  assert.equal(S.freshDays(2000), 1);
+  assert.equal(S.secretPrice(0, 30 * D, 1200), "minor");
+  assert.equal(S.secretPrice(0, 61 * D, 1200), "trivial");
+  assert.equal(S.secretPrice(0, 2 * D, 2000), "trivial");
+  assert.ok(S.isSecretPage("A page of secrets: the abbot"));
+  assert.ok(!S.isSecretPage("A page of sums"));
+});
+
+test("orders come only from above, and refusing costs more from far above", () => {
+  assert.ok(S.mayOrder(7, 2)); assert.ok(!S.mayOrder(2, 2));
+  assert.equal(S.refuseCost(3, 2), 1); assert.equal(S.refuseCost(8, 2), 2);
+  assert.equal(S.rankLabel(99), "Inner Council");
+});
+
+test("Ventrue influence once a month from the institutions of the age", () => {
+  assert.ok(S.institutionsAt(1197).includes("the bishop's court"));
+  assert.ok(!S.institutionsAt(1197).includes("a bank"));
+  assert.ok(S.institutionsAt(2030).includes("an arcology board"));
+  assert.ok(S.mayInfluence(null, 5)); assert.ok(!S.mayInfluence(5, 5)); assert.ok(S.mayInfluence(5, 6));
+});
+
+test("Assamite contracts: kept raises standing and pays a tithe, overdue ones fail", () => {
+  const c = S.newContract({target: "the reeve", price: 50, days: 10, now: 0});
+  assert.equal(S.overdue([c], 9 * S.DAY).length, 0);
+  assert.equal(S.overdue([c], 10 * S.DAY).length, 1);
+  let r = S.settleContract(c, 1, true); assert.equal(r.standing, 2); assert.equal(r.tithe, 5);
+  r = S.settleContract(c, 0, false); assert.equal(r.standing, 0); assert.equal(r.tithe, 0);
+  assert.equal(S.settleContract(c, 5, true).standing, 5);
+});
+
+/* Chronicle 0.29.0: bloodlines, castes and Laibon legacies (B1155 to B1157) */
+
+test("bloodlines find their own row before their parent clan's", () => {
+  assert.equal(S.vampireRow("True Brujah")?.key, "truebrujah");
+  assert.equal(S.vampireRow("Brujah")?.key, "brujah");
+  assert.equal(S.vampireRow("Salubri antitribu")?.key, "salubriat");
+  assert.equal(S.vampireRow("Salubri")?.key, "salubri");
+  assert.equal(S.vampireRow("Old Clan Tzimisce")?.key, "koldun");
+  assert.equal(S.vampireRow("Tzimisce")?.key, "tzimisce");
+  assert.equal(S.vampireRow("Harbingers of Skulls")?.key, "harbingers");
+  assert.equal(S.vampireRow("Xi Dundu")?.key, "xidundu");
+  assert.equal(S.vampireRow("Assamite vizier")?.key, "vizier");
+  assert.equal(S.vampireRow("Daughters of Cacophony")?.key, "daughters");
+  for ( const k of ["baali", "gargoyle", "kiasyd", "samedi", "ahrimanes", "anda", "lhiannan", "noiad", "bloodbrothers", "lamia", "nagaraja",
+    "akunanse", "guruhi", "ishtarri", "kinyonyi", "naglopers", "osebo", "shango"] ) assert.ok(S.VAMPIRE.some(r => r.key === k), k);
+  for ( const r of S.BLOODLINES ) {
+    assert.equal(r.feature, "line", r.key);
+    for ( const e of r.effects ?? [] ) assert.ok(e.tags?.length && (e.dice || e.difficulty), r.key);
+    for ( const f of r.also ?? [] ) assert.ok(S.VAMPIRE.some(x => x.feature === f), `${r.key} borrows ${f}`);
+  }
+});
+
+test("the Old Clan holds out one night longer without soil", () => {
+  const D = S.DAY, noon = 43200;
+  let r = S.soilNight({}, D + noon, true, 1);
+  r = S.soilNight(r.soil, 2 * D + noon, false, 1); assert.equal(r.halved, false);
+  r = S.soilNight(r.soil, 3 * D + noon, false, 1); assert.equal(r.halved, true);
+});
+
+/* Chronicle 0.30.0: ghouls and revenant families (B1158, B1159) */
+
+test("revenant families: the books' four, and new ones founded in play", () => {
+  assert.equal(S.familyRow(["Grimaldi"])?.key, "family-grimaldi");
+  assert.ok(S.familyRow(["Zantosa"])?.also.includes("vice"));
+  assert.ok(S.familyRow(["Bratovitch"])?.effects.some(e => e.tags.includes("animal ken")));
+  assert.equal(S.familyRow(["Toreador"]), null);
+  const f = S.newFamily({name: "Kessler", founder: "a Tzimisce voivode", trait: "war", disciplines: "Potence, Fortitude, Celerity, Auspex", flaw: "hot blood", year: 1250});
+  assert.equal(f.disciplines.length, 3); assert.equal(f.approved, false);
+  assert.equal(S.familyRow(["Kessler"], [f]), null, "waits for the Storyteller");
+  assert.equal(S.familyRow(["Kessler"], [{...f, approved: true}])?.key, "family-kessler");
+  assert.equal(S.newFamily({name: "", trait: "war"}), null);
+  assert.equal(S.newFamily({name: "X", trait: "nonsense"}), null);
+});
+
+test("a ghoul counts whole months without vitae", () => {
+  assert.equal(S.monthsUnfed(0, 29 * S.DAY), 0);
+  assert.equal(S.monthsUnfed(0, 61 * S.DAY), 2);
+  assert.equal(S.GHOUL.feature, "ghoul");
 });

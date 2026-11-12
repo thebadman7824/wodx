@@ -6,8 +6,45 @@
  * Rows marked house: true go past what the books say (Ben's notes on the desk, or a gap the book check found).
  */
 
+/**
+ * Bloodlines, castes and Laibon legacies (Chronicle 0.29.0). They come before the clans so that "True Brujah" or
+ * "Old Clan Tzimisce" finds its own row first. feature "line": a text feature with roll effects (effects), a Masquerade
+ * sign card when a mortal deals with them (face, faceText), and engines borrowed from a clan (also: muse, soil,
+ * contracts, family, vice). grace: nights without soil before pools halve.
+ */
+export const BLOODLINES = [
+  {key:  "truebrujah", label:  "True Brujah", match:  ["true brujah"], feature:  "line", title:  "Passion fades, time bends", page:  "V20 pdf 421 (p. 413)", text:  "Emotion fades with the years: Empathy and rolls that need warmth are one die worse. Temporis bends time: a True Brujah who slows the world takes extra actions in fights and on the move.", effects:  [{tags:  ["empathy"], dice:  -1}]},
+  {key:  "salubriat", label:  "Salubri antitribu", match:  ["salubri antitribu"], feature:  "line", title:  "Righteous fury", page:  "V20 pdf 439 (p. 431)", text:  "The warrior Salubri hunt the wicked: against a foe they know is wicked (Auspex or a codex page), fight rolls gain a die. Harming an innocent costs a Willpower point. The third eye opening is a Masquerade sign.", face:  true, faceText:  "saw the third eye open"},
+  {key:  "salubri", label:  "Salubri", match:  ["salubri"], feature:  "line", title:  "The healer's burden", page:  "V20 pdf 417 (p. 409)", text:  "Feeding on an unwilling vessel costs a Willpower point. The third eye opening is a Masquerade sign. Tremere NPCs treat a Salubri as prey.", face:  true, faceText:  "saw the third eye open"},
+  {key:  "koldun", label:  "Old Clan Tzimisce", match:  ["old clan", "koldun", "koldunic"], feature:  "line", title:  "Earth, wind, fire and water", page:  "Koldunic sorcery book pdf 2; Lore of the Clans pdf 6", text:  "No Vicissitude; Koldunic sorcery works the elements of the domain. Native soil matters as for any Tzimisce, but the old blood holds out one night longer before pools halve (house reading).", also:  ["soil"], grace:  1, house:  true},
+  {key:  "vizier", label:  "Assamite viziers", match:  ["vizier", "viziers"], feature:  "line", title:  "The vizier's obsession", page:  "V20 Dark Ages pdf 44 (p. 43); Lore of the Clans pdf 14-15", text:  "A vizier is obsessed with their best mental or creative field. It works as a Muse: a work, a study or a place of learning whose Obsession rises a point a week away from it.", also:  ["muse"]},
+  {key:  "assamitesorcerer", label:  "Assamite sorcerers", match:  ["assamite sorcerer", "assamite sorcerers"], feature:  "line", title:  "Contracts of the mind", page:  "Lore of the Clans pdf 14-15", text:  "Sorcerers keep the clan's contracts (as the warrior caste) and their rituals as long tasks.", also:  ["contracts"]},
+  {key:  "baali", label:  "Baali", match:  ["baali"], feature:  "line", title:  "The pact", page:  "V20 pdf 403 (p. 395)", text:  "Objects of faith burn a Baali to look at or touch. The pact with the patron is kept as contracts: each promise has a payment due on the clock, and missing one lowers the patron's favour. From 1999 a Baali can meet the Earthbound and the Fallen through the crossover referee.", also:  ["contracts"]},
+  {key:  "daughters", label:  "Daughters of Cacophony", match:  ["daughters of cacophony", "daughter of cacophony", "cacophony"], feature:  "line", title:  "The endless music", page:  "V20 pdf 406 (p. 398)", text:  "They hear music all the time: Perception rolls are one harder. A song can carry Melpominee over a crowd of passers-by.", effects:  [{tags:  ["perception"], difficulty:  1}]},
+  {key:  "gargoyle", label:  "Gargoyles", match:  ["gargoyle", "gargoyles"], feature:  "line", title:  "Stone and the master's voice", page:  "V20 pdf 409 (p. 401)", text:  "Appearance 0, so a mortal who sees one sees a monster: a breach. Highly open to mind control: rolls to resist Dominate are two harder. They fly and roost on high places.", face:  true, faceText:  "saw a Gargoyle", effects:  [{tags:  ["resist-dominate"], difficulty:  2}]},
+  {key:  "kiasyd", label:  "Kiasyd", match:  ["kiasyd"], feature:  "line", title:  "Cold iron", page:  "V20 pdf 413 (p. 405)", text:  "Touching iron calls for a frenzy roll, and cold iron does aggravated harm. They hoard knowledge: books from the Library are their trade goods, and they meet changelings easily."},
+  {key:  "samedi", label:  "Samedi", match:  ["samedi"], feature:  "line", title:  "The rotting dead", page:  "V20 pdf 419 (p. 411)", text:  "Putrid: Appearance 0, and a mortal who sees one sees a corpse that walks, a breach. They trade in bodies and the goods of death.", face:  true, faceText:  "saw a Samedi's rotting face"},
+  {key:  "harbingers", label:  "Harbingers of Skulls", match:  ["harbingers of skulls", "harbinger of skulls", "harbingers"], feature:  "line", title:  "Skull faces", page:  "V20 pdf 411 (p. 403)", text:  "Deathly pale and shrivelled, Appearance 0: a breach to mortal eyes. The Shadowlands are home ground, and like the Giovanni they keep a ledger of the dead they bind.", face:  true, faceText:  "saw a Harbinger's skull face", also:  ["family"]},
+  {key:  "ahrimanes", label:  "Ahrimanes", match:  ["ahrimanes", "ahrimane"], feature:  "line", title:  "Spirit pacts on the land", page:  "V20 pdf 422 (p. 414)", text:  "An Ahrimane can strike a pact with a spirit of a place on the Umbra realm map. The spirit warns of intruders, and the pact costs a blood point a month, kept as a contract with a due date.", also:  ["contracts"]},
+  {key:  "anda", label:  "Anda", match:  ["anda"], feature:  "line", title:  "The horde's road", page:  "V20 pdf 424 (p. 416)", text:  "Mounted, an Anda and their mount travel one step faster, and riding rolls gain a die. Marks from frenzy lean to horse and wolf. Dark Ages only.", effects:  [{tags:  ["ride"], dice:  1}]},
+  {key:  "lhiannan", label:  "Lhiannan", match:  ["lhiannan"], feature:  "line", title:  "The grove's blood", page:  "V20 Dark Ages pdf 94 (p. 93)", text:  "Few can pass on the Curse. Feeding on a worshipper at a sacred grove counts double. Their wild, blood-stained look and skull masks are a Masquerade sign in towns.", face:  true, faceText:  "saw a Lhiannan in the wild garb"},
+  {key:  "noiad", label:  "Noiad", match:  ["noiad"], feature:  "line", title:  "The Northern Lights", page:  "V20 pdf 434 (p. 426); V20 Dark Ages Low Clans pdf 133-134", text:  "Gangrel of the far north who guard a Sami people, an NPC household in their care. A drum lets the spirit walk in the Umbra while the body sleeps (house reading). Survival in the far north is one easier.", effects:  [{tags:  ["survival"], dice:  1}], house:  true},
+  {key:  "bloodbrothers", label:  "Blood Brothers", match:  ["blood brothers", "blood brother"], feature:  "line", title:  "One mind, many bodies", page:  "V20 pdf 404 (p. 396)", text:  "Made in circles of 3 to 10 that share one mind: what one sees, all know. With Sanguinus they pass wounds and limbs between them on the body plan. A circle fights as one formation."},
+  {key:  "lamia", label:  "Lamia", match:  ["lamia"], feature:  "line", title:  "The kiss that sickens", page:  "V20 Dark Ages pdf 92 (p. 91)", text:  "The bite passes a wasting plague, one lethal level a night, unless the Lamia holds it back. A town where they feed can start a plague house event. They guard the Path of Four Humors."},
+  {key:  "nagaraja", label:  "Nagaraja", match:  ["nagaraja"], feature:  "line", title:  "Eaters of flesh, seers of ghosts", page:  "V20 pdf 414 (p. 406)", text:  "They must eat flesh as well as drink blood. They always see wraiths nearby, and keep a ledger of the dead they bind, as the Giovanni do.", also:  ["family"]},
+  {key:  "akunanse", label:  "Akunanse", match:  ["akunanse"], feature:  "line", title:  "The Weavers", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "Closer to the Beast as they learn: each Abombwe dot makes frenzy one easier to fall into. Their woven stories are lore pages among the Laibon.", effects:  [{tags:  ["resist-frenzy"], difficulty:  1}]},
+  {key:  "guruhi", label:  "Guruhi", match:  ["guruhi"], feature:  "line", title:  "The Kings", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "Their looks change with their mood, so their lies are harder to sell: deceit is one harder.", effects:  [{tags:  ["subterfuge", "deceit"], difficulty:  1}]},
+  {key:  "ishtarri", label:  "Ishtarri", match:  ["ishtarri"], feature:  "line", title:  "The Gluttons", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "Easily addicted to excess: their own vice works as a Ravnos vice, with a Self-Control prompt a night when a chance comes up in talk or trade.", also:  ["vice"]},
+  {key:  "kinyonyi", label:  "Kinyonyi", match:  ["kinyonyi"], feature:  "line", title:  "The Nomads", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "Always moving: travel is cheaper, and a long stay in one place pulls at them as a Ravnos vice of the road would."},
+  {key:  "naglopers", label:  "Naglopers", match:  ["naglopers", "nagloper"], feature:  "line", title:  "The Horrors", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "They must bury themselves before sleep: a day's rest needs a grave or an earth floor, or there is no healing that day. Earth carried with them counts, as native soil does.", also:  ["soil"]},
+  {key:  "osebo", label:  "Osebo", match:  ["osebo"], feature:  "line", title:  "The Pride", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "Frenzy comes easily: rolls to resist it are one harder. A pride of Osebo hunts as one formation.", effects:  [{tags:  ["resist-frenzy"], difficulty:  1}]},
+  {key:  "shango", label:  "Shango", match:  ["shango"], feature:  "line", title:  "The Judges", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "A Shango can call a judgement among the Laibon, a faction politics card whose verdict moves standing."},
+  {key:  "xidundu", label:  "Xi Dundu", match:  ["xi dundu"], feature:  "line", title:  "The Shadows", page:  "Kindred of the Ebony Kingdom pdf 48-64", text:  "They cast no shadow under any light: a mortal who notices it in a bright place has seen a breach.", face:  true, faceText:  "saw that a Xi Dundu casts no shadow"}
+];
+
 /** Vampire clans and bloodlines. match: words that name the clan in a sheet's clan field or the bloodline flag. */
 export const VAMPIRE = [
+  ...BLOODLINES,
   {key: "toreador", label: "Toreador", match: ["toreador"], feature: "muse",
     title: "Muse and Obsession", page: "V20 pdf 75 (p. 67); V20 Dark Ages pdf 62 (p. 61)",
     text: "A person, work or place that entranced the Toreador can become a Muse. Each week away from it the Obsession track rises by one, and the Toreador's Self-Control roll against the next beautiful thing gets harder by the same amount. Seeing the Muse lowers it; owning it or making something for it lowers it more. Harm to a Muse who is a person raises it at once and calls for a frenzy check."},
@@ -35,6 +72,63 @@ export const VAMPIRE = [
   {key: "caitiff", label: "Caitiff", match: ["caitiff", "clanless"], feature: "oddity", house: true,
     title: "Nobody's child", page: "V20 pdf 40; Thin Blood V20 pdf 491 (p. 483)",
     text: "No clan weakness and no clan to speak for them: in a Camarilla court their Status needs a sponsor, while Anarch and Sabbat company takes them as they are. House rule: a thin-blooded Caitiff has a one in ten chance each year to wake with an odd gift (walking at dusk, keeping down a little food, passing for mortal at a glance), offered to the Storyteller as a card."},
+  {key: "nosferatu", label: "Nosferatu", match: ["nosferatu"], feature: "secrets",
+    title: "The trade in secrets", page: "V20 pdf 71 (p. 63), secrets pdf 28 (p. 20); V20 Dark Ages pdf 56 (p. 55)",
+    text: "A Nosferatu's true face is a breach of the Masquerade to any mortal who sees it, unless Obfuscate holds: the Storyteller gets a card to record it. What the Nosferatu learns can be written down as a page of secrets, an item that can be kept, sold or traded. A fresh secret buys a minor boon; a stale one only a trivial boon. A secret goes stale as fast as word travels in the age: slowly by word of mouth, overnight once the internet is here."},
+  {key: "tremere", label: "Tremere", match: ["tremere"], feature: "pyramid",
+    title: "Rank in the Pyramid", page: "V20 pdf 77 (p. 69); V20 Dark Ages pdf 64 (p. 63); the ranks are a house reading", house: true,
+    text: "Every Tremere holds a rank in the Pyramid, from an apprentice of the first circle up to the Inner Council. An order from someone of higher rank arrives as a card: obey it, or refuse at the cost of a Willpower point, which the Storyteller hears about. The clan's first-drink bond to the elders is built already."},
+  {key: "ventrue", label: "Ventrue", match: ["ventrue"], feature: "domain",
+    title: "Domain and duty", page: "V20 pdf 81 (p. 73); V20 Dark Ages pdf 68 (p. 67)",
+    text: "Once a month a Ventrue may turn their holdings' income into influence instead: a minor boon owed by a mortal institution of the age (a bishop's court, a guild, a bank, a ministry, a corporation), kept in the Ledger. Losing a holding means answering to the clan, which the Storyteller gets as a card. The palate is built already."},
+  {key: "assamite", label: "Assamite", match: ["assamite", "assamites", "banu haqim"], feature: "contracts",
+    title: "Contracts and the tithe", page: "V20 pdf 57 (p. 49); V20 Dark Ages pdf 42 (p. 41)",
+    text: "A contract names a target, a price and a deadline on the clock. Finishing it raises the Assamite's standing at Alamut and sends a tenth of the fee to the clan as a tithe; missing the deadline lowers that standing."},
+  {key: "giovanni", label: "Giovanni", match: ["giovanni", "cappadocian", "cappadocians"], feature: "family",
+    title: "The Family and its dead", page: "V20 pdf 65 (p. 57); V20 Dark Ages pdf 48 (p. 47); 1444 is a house reading", house: true,
+    text: "The Giovanni keep a ledger of the wraiths they have bound, each held by a fetter item. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date) the line is the Cappadocians, whose deathly look is a Masquerade sign up close. The double-damage Kiss is built already."},
+];
+
+/** Tremere ranks, lowest first (house reading: V20 core gives no ladder). */
+export const TREMERE_RANKS = ["Apprentice of the first circle", "Apprentice of the second circle", "Apprentice of the third circle",
+  "Apprentice of the fourth circle", "Apprentice of the fifth circle", "Apprentice of the sixth circle", "Apprentice of the seventh circle",
+  "Regent", "Lord", "Pontifex", "Inner Council"];
+
+/** Mortal institutions a Ventrue can draw a boon from, by the year they first make sense. */
+export const INSTITUTIONS = [
+  {from: 0, label: "the bishop's court"}, {from: 0, label: "the town council"}, {from: 0, label: "a craft guild"}, {from: 0, label: "the royal court"},
+  {from: 1400, label: "a merchant house"}, {from: 1400, label: "a bank"},
+  {from: 1800, label: "a ministry"}, {from: 1830, label: "a factory owners' association"}, {from: 1848, label: "a newspaper"},
+  {from: 1900, label: "the police"}, {from: 1950, label: "a corporation"}, {from: 2023, label: "an arcology board"},
+];
+
+/** How many days a secret stays fresh, by the way word travels in the age (media-rules ids). */
+export const SECRET_FRESH = {word: 60, print: 30, papers: 14, radio: 7, television: 3, internet: 1, net: 1};
+
+/** Assamite standing at Alamut. */
+export const STANDING_MAX = 5;
+export const TITHE = 0.1;
+
+/** Ghouls (V20 Dark Ages ghoul rules in every era, Ben's standing rule). */
+export const GHOUL = {key: "ghoul", label: "Ghoul", match: [], feature: "ghoul", title: "The fix", page: "V20 Dark Ages pdf 38",
+  text: "A ghoul lives on a domitor's vitae. A month without a drink drains a blood point; with none left, the years they have held off begin to come back. The craving pulls at them near Kindred blood, a Self-Control roll the Storyteller can call for."};
+
+/** Revenant family traits (Ben 2026-11-12: new families pick one). effects: roll effects; also: a borrowed engine. */
+export const FAMILY_TRAITS = {
+  beasts: {label: "Beasts and kennels", effects: [{tags: ["animal ken"], dice: 1}]},
+  money: {label: "Money, banks and courts", effects: [{tags: ["finance"], dice: 1}]},
+  learning: {label: "Faith or learning", effects: [{tags: ["academics", "occult"], dice: 1}]},
+  vice: {label: "Vice", effects: [], also: ["vice"]},
+  war: {label: "War", effects: [{tags: ["melee", "brawl"], dice: 1}]},
+  craft: {label: "A craft", effects: [{tags: ["crafts"], dice: 1}]},
+};
+
+/** The revenant families of the books (Guide to the Sabbat pdf 219; V20 Dark Ages pdf 454). */
+export const REVENANT_FAMILIES = [
+  {key: "bratovitch", label: "Bratovitch", trait: "beasts", text: "Hunters and kennel-keepers with their hounds."},
+  {key: "grimaldi", label: "Grimaldi", trait: "money", text: "In banks, courts and counting houses."},
+  {key: "obertus", label: "Obertus", trait: "learning", text: "In monasteries and libraries."},
+  {key: "zantosa", label: "Zantosa", trait: "vice", text: "Given over to vice and pleasure."},
 ];
 
 /** Ravnos vices (V20 Ravnos weakness, own words). acts: social or trade acts that feed it. */

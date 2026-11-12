@@ -1,10 +1,10 @@
 /**
- * Clan features gate (WoDX Chronicle 0.27.0 or later), in rothenstein-wodx, as Gamemaster Test:
+ * Clan features gate (WoDX Chronicle 0.30.0 or later), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesigs.mjs?${Date.now()}`)).run()
  * Makes its own vampires and a mortal, turns "Clan features (Vampire)" on, and puts the setting, actors and chat cards
  * back afterwards. The clock is not moved: weeks are made by setting a Muse's last visit back.
  *   1. the api and the setting
- *   2. each clan finds its row (Toreador, Followers of Set, Brujah, Gangrel; a Ventrue has none)
+ *   2. each clan finds its row (Toreador, Followers of Set, Brujah, Gangrel, Ventrue)
  *   3. a Muse unseen for two weeks: Obsession 2 after the tick, and a card with Undo
  *   4. Undo on that card puts Obsession back to 0
  *   5. a Setite's won charm (wodxSocial) moves the mortal's Corruption to 1; a gift of brandy after the vice is set
@@ -17,6 +17,13 @@
  *  11. a Lasombra in a scene marked watched: an empty frame card, if the year has cameras (the scene mark is put back)
  *  12. a Ravnos with a vice of lying: a persuasion is a chance (prompt), a deceit feeds the vice
  *  13. a thin-blooded Caitiff is rolled for this year's odd gift
+ *  14. a Nosferatu talks to a mortal: a true face card with a breach button; a page of secrets is made
+ *  15. a Tremere order from a Regent to an apprentice (seven ranks apart): Refuse costs two Willpower
+ *  16. a Ventrue's influence: a boon card once a month (the second is refused)
+ *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
+ *  18. a Giovanni binds and calls a wraith
+ *  20. a ghoul unfed for two months gets a card; a Grimaldi revenant finds its family row; a family founded by the Storyteller is kept (the list is put back)
+ *  19. bloodlines: a True Brujah finds its own row and roll effects; a Gargoyle talking to a mortal gets a breach card
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -47,15 +54,18 @@ export async function run() {
       vamp("WoDX gate: Brujah", "brujah"), vamp("WoDX gate: Gangrel", "gangrel"), vamp("WoDX gate: Ventrue", "ventrue"),
       {name: "WoDX gate: Malkavian", type: "Vampire", system: {clan: "malkavian", generation: 12, derangement: "Paranoia"}},
       {name: "WoDX gate: Mark", type: "Mortal"}, vamp("WoDX gate: Tzimisce", "tzimisce"), vamp("WoDX gate: Lasombra", "lasombra"),
-      vamp("WoDX gate: Ravnos", "ravnos"), vamp("WoDX gate: Caitiff", "caitiff")]);
+      vamp("WoDX gate: Ravnos", "ravnos"), vamp("WoDX gate: Caitiff", "caitiff"), vamp("WoDX gate: Nosferatu", "nosferatu"),
+      vamp("WoDX gate: Tremere", "tremere"), vamp("WoDX gate: Tremere Regent", "tremere"), vamp("WoDX gate: Assamite", "assamite"), vamp("WoDX gate: Giovanni", "giovanni"),
+      vamp("WoDX gate: True Brujah", "custom", "True Brujah"), vamp("WoDX gate: Gargoyle", "custom", "Gargoyle"),
+      {name: "WoDX gate: Ghoul", type: "Mortal", flags: {world: {wodx: {profile: "ghoul"}}}}, {name: "WoDX gate: Grimaldi", type: "Mortal", flags: {world: {wodx: {profile: "ghoul"}}, [C]: {family: "Grimaldi"}}}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     await step("1 api", async () => {
-      ok("1 api", atLeast(game.modules.get(C).version, "0.27.0") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
+      ok("1 api", atLeast(game.modules.get(C).version, "0.30.0") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
         {version: game.modules.get(C).version});
     });
     await step("2 rows", async () => {
       const keys = ["Toreador", "Setite", "Brujah", "Gangrel", "Ventrue"].map(n => api().rowOf(by(n))?.key ?? null);
-      ok("2 rows", JSON.stringify(keys) === JSON.stringify(["toreador", "setite", "brujah", "gangrel", null]), {keys});
+      ok("2 rows", JSON.stringify(keys) === JSON.stringify(["toreador", "setite", "brujah", "gangrel", "ventrue"]), {keys});
     });
     await step("3 Muse tick", async () => {
       const t = by("Toreador"), m = await api().addMuse(t, {name: "The portrait", kind: "work"});
@@ -151,6 +161,68 @@ export async function run() {
       await api().tick({force: true});
       await until(() => sig(c).odd?.year != null);
       ok("13 Caitiff gift roll", Number.isFinite(sig(c).odd?.year), {odd: sig(c).odd});
+    });
+    await step("14 Nosferatu", async () => {
+      const nf = by("Nosferatu"), m = by("Mark");
+      Hooks.callAll("wodxSocial", {actor: nf, npc: m, act: "persuade", result: "win"});
+      await until(() => lastCard()?.flags?.[C]?.sigAct?.key === "breach");
+      const face = lastCard()?.flags?.[C]?.sigAct?.key === "breach";
+      const page = await api().secret(nf, {about: "the gate", text: "a test"});
+      ok("14 Nosferatu", face && !!page?.flags?.[C]?.secret && api().rules.isSecretPage(page.name), {face, page: page?.name});
+    });
+    await step("15 Tremere order", async () => {
+      const ap = by("Tremere"), rg = by("Tremere Regent");
+      await api().setRank(rg, 7); await api().setRank(ap, 0);
+      await ap.update({"system.advantages.willpower.permanent": 10, "system.advantages.willpower.temporary": 5});
+      await api().order(rg, ap, "Fetch the folio");
+      await until(() => lastCard()?.flags?.[C]?.sigAct?.key === "refuse");
+      const msg = lastCard(), el = document.createElement("div"); el.innerHTML = msg.content;
+      Hooks.callAll("renderChatMessageHTML", msg, el);
+      el.querySelector("[data-wct-sig-act]")?.click();
+      await until(() => Number(game.actors.get(ap.id)?.system?.advantages?.willpower?.temporary) === 3);
+      const wp = Number(game.actors.get(ap.id)?.system?.advantages?.willpower?.temporary);
+      ok("15 Tremere order", wp === 3 && (await api().order(ap, rg, "no")) === null, {wp});
+    });
+    await step("16 Ventrue influence", async () => {
+      const v = by("Ventrue");
+      const one = await api().influence(v), two = await api().influence(v);
+      ok("16 Ventrue influence", !!one && two === null && lastCard()?.flags?.[C]?.sigAct?.key === "boon", {one, two});
+    });
+    await step("17 Assamite contract", async () => {
+      const as = by("Assamite");
+      const c1 = await api().contract(as, {target: "the reeve", price: 50, days: 10});
+      const r = await api().settle(as, c1.id, true);
+      const c2 = await api().contract(as, {target: "the bailiff", price: 10, days: 1});
+      const list = sig(as).contracts.map(c => c.id === c2.id ? {...c, due: game.time.worldTime - 1} : c);
+      await as.update({[`flags.${C}.sig.contracts`]: list});
+      await api().tick({force: true});
+      await until(() => sig(as).contracts?.find(c => c.id === c2.id)?.status === "failed");
+      ok("17 Assamite contract", r?.standing === 2 && r?.tithe === 5 && sig(as).contracts.find(c => c.id === c2.id)?.status === "failed" && sig(as).standing === 1, {standing: sig(as).standing});
+    });
+    await step("18 Giovanni dead", async () => {
+      const g = by("Giovanni");
+      const w = await api().bindWraith(g, {name: "Old Marta", fetter: "a wedding ring"});
+      const called = await api().callWraith(g, w.id);
+      ok("18 Giovanni dead", called?.name === "Old Marta" && sig(g).servants?.length === 1, {servants: sig(g).servants});
+    });
+    await step("19 bloodlines", async () => {
+      const tb = by("True Brujah"), gg = by("Gargoyle"), m = by("Mark");
+      const key = api().rowOf(tb)?.key, fx = api().effects(tb);
+      Hooks.callAll("wodxSocial", {actor: gg, npc: m, act: "persuade", result: "win"});
+      await until(() => lastCard()?.flags?.[C]?.sigAct?.key === "breach" && lastCard()?.content?.includes("Gargoyle"));
+      ok("19 bloodlines", key === "truebrujah" && fx.some(e => e.tags.includes("empathy")) && lastCard()?.content?.includes("Gargoyle"), {key, fx: fx.length});
+    });
+    await step("20 ghouls", async () => {
+      const gh = by("Ghoul"), gr = by("Grimaldi"), fams = game.settings.get(C, "sigFamilies");
+      const kind = api().rowOf(gh)?.feature;
+      await gh.update({[`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 61 * 86400, warned: 0}}});
+      await api().tick({force: true});
+      await until(() => sig(gh).ghoul?.warned === 2);
+      const fam = api().rowOf(gr)?.key;
+      const made = await api().foundFamily({name: "Gatewardens", trait: "war", disciplines: "Potence, Fortitude", year: 1197});
+      const kept = game.settings.get(C, "sigFamilies").some(f => f.key === "gatewardens");
+      await game.settings.set(C, "sigFamilies", fams);
+      ok("20 ghouls", kind === "ghoul" && sig(gh).ghoul?.warned === 2 && fam === "family-grimaldi" && made?.approved && kept, {kind, fam, warned: sig(gh).ghoul?.warned});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
