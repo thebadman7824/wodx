@@ -25,6 +25,7 @@ import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
 import {VOICES} from "../data/stock-talk-more.mjs";
+import {MOODS as TALK_MOODS} from "../data/grammar/groups.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
@@ -37,7 +38,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.44.0";
+const VERSION = "0.45.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -700,7 +701,8 @@ export async function editBehavior(actor) {
     <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
     <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label>
     <label class="wnpc-check"><input type="checkbox" name="noBarks"${saved.noBarks ? " checked" : ""}/> Quiet: no cries or remarks while about their routine</label>
-    <div class="wodx-field"><label>Voice</label><select name="voice" data-fixed>${opt({"": "From their factions and household", ...Object.fromEntries(Object.entries(VOICES).map(([k, v]) => [k, v.label]))}, saved.voice ?? "")}</select></div></fieldset>
+    <div class="wodx-field"><label>Voice</label><select name="voice" data-fixed>${opt({"": "From their factions and household", ...Object.fromEntries(Object.entries(VOICES).map(([k, v]) => [k, v.label]))}, saved.voice ?? "")}</select></div>
+    <div class="wodx-field"><label>Mood</label><select name="mood" data-fixed>${opt({"": "From what is happening", ...Object.fromEntries(TALK_MOODS.map(k => [k, k[0].toUpperCase() + k.slice(1)]))}, saved.mood ?? "")}</select></div></fieldset>
     <fieldset><legend>Phases (first that fits is used)</legend>
     <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
     <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
@@ -716,7 +718,7 @@ export async function editBehavior(actor) {
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
     household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
-    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null,
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null,
     sides: String(data.sides ?? "").trim().toLowerCase().slice(0, 300) || null, openSides: String(data.openSides ?? "").trim().toLowerCase().slice(0, 200) || null,
     rivals: String(data.rivals ?? "").trim().slice(0, 2000) || null};
   const tacs = String(data.tactics ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);

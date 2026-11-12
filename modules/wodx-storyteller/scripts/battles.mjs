@@ -443,5 +443,5 @@ export class BattlesApp extends ApplicationV2 {
   }
 }
 
-// Storyteller 0.46.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
+// Storyteller 0.47.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
 X.bind({get, save: put, open: id => BattlesApp.open(id), ageId: b => contextOf(b).age.id});

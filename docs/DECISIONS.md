@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2340
+Next free block: B2360
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -75,6 +75,7 @@ Next free block: B2340
 | B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
 | B1600-B1606 | Before the First Night | Creation |
 | B1610-B1614 | The guided builder and the prelude runner | Creation |
+| B1640-B1659 | The talk generator (grammar NPC talk with no AI model), who is speaking, mood, the Storyteller's grammar | NPC |
 | B1700-B1702 | The Legends book | Chronicle |
 | B1710-B1714 | Progress clocks | Storyteller |
 | B1720-B1724 | Standing with the spirit courts | Otherworlds |
@@ -83,13 +84,14 @@ Next free block: B2340
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2105 | NPC voices | Voices |
+| B2100-B2116 | NPC voices: browser speech, Kokoro, the Chatterbox voice server, shared files from the token, plot NPCs and prewritten lines | Voices |
 | B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War; B2211-B2216 factions at war by themselves) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
 | B2320-B2323 | The features card and what changed since last session | Sheets, Chronicle |
-| B2330-B2339 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
+| B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
+| B2350-B2359 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2246,6 +2248,8 @@ Reverse: REALM_AGES in battle-rules.mjs.
 ## B2210. The book's army when both sides list units (2026-11-12, Spoils of War pp. 44-45 printed)
 The Troop Types table of Spoils of War (p. 44 printed, pdf 45) was read from the page images (/mnt/project-files/book-checks-2026-11-12b.md, item 2); its figures give the book's example army exactly (Maneuver 19, Melee 20, Ranged 5, Defense 20). When both sides list units, a battle is fought with the book's Right of Command in place of the house weight of B2200 and B2203: the commanders' opposed Perception + Leadership (difficulty 6, a botch gives the other side 2) adds the net successes to the winner's four pools and takes them from the loser's; then each army takes one action, Close and fight (Melee against the foe's Defense, the winner takes a unit a net success either way), Shoot (Ranged against half the foe's Defense, only the shooters do harm) or Withdraw (Maneuver against Maneuver; a win keeps the foe's melee off and leaves the field, a loss adds the net successes to the foe's blow). Losing 3 or more units in a turn makes an army waver at that many; losses past the commander's Charisma + Leadership cost a die a unit (demoralised); an army with no units left is beaten. WoDX readings: the army is one line, so Flank, the wings, the Reserve and the turned flank are not used; units fall from the type with the most units, mortal troops before the supernatural ones; a defender adds its position's bonus to Defense; a character's deed adds its successes to its side's action; a book army drawing off leaves a tenth of its units; in a siege a book army's hunger and disease wear its resolve, not its men. Without units on both sides, and in every age the book's troop types do not fit, the house frame of B2200 stays.
 
+Amended 2026-11-12 (Storyteller 0.45.1): when both armies close and fight, each counts only the units its own blow takes; the book's rule that a beaten attack costs the attackers applies only when the foe stood to receive it (shooting or withdrawing). Counting both ways doubled every clash, and a small army was gone in the first hour more than half the time (a run of 2,000 faction-war battles in the harness).
+
 Reverse: clear the units on both sides (the battle then uses men and quality), or drop the isBook branch in fight() in wodx-storyteller/scripts/battles.mjs.
 
 ## B2211. Factions go to war by themselves (2026-11-12, Ben's pick, house rule)
@@ -2255,6 +2259,8 @@ Reverse: turn the setting off, or remove the warTurn call in runTurns (wodx-npc/
 
 ## B2212. Off the screen, and where the characters are (2026-11-12, house rule)
 A war is a WoDX Storyteller battle that remembers its war (who, for what place, mortal or supernatural). A battle in the field is fought to its end in the turn it starts, up to 30 phases and then a draw; a siege goes one week each faction turn (about seven days of game time) and is stormed once its walls are breached. No cards go to the players; the Storyteller gets one card when a war starts and one when it ends, and the Storyteller's log has the outcome. What it changes waits in the approval queue (B2206 and B2215). A war at a place where a player character's token stands is made but not fought: it waits in Battles and sieges for the Storyteller to fight with the players, or to remove.
+
+An army fought off the screen picks its action each turn (Storyteller 0.45.2, chooseActions): it closes when its Melee is above the foe's Defense, shoots when its Ranged does better against half that Defense, and withdraws once it has lost half its units and neither blow can tell. A much weaker army still loses; it is no longer made to close every turn.
 
 Reverse: call api.factions.warTurn by hand only, with the setting off.
 
@@ -2364,6 +2370,47 @@ Reverse: LOOKS and lookFor in case-rules.mjs.
 From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
 
 Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
+
+## B1640. A talk generator with no AI model (2026-11-12)
+When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots are always they, them and their. House writing, not from any book. Ben approved the desk 2026-11-12.
+
+Reverse: turn the world setting "Talk generator" off.
+
+## B1641. Where generated lines sit (2026-11-12)
+Storyteller talk sheet lines (trait-gated ones first) always come first. The generator answers only after them. The hand-written stock pools are now grammar rules, with the same pools for the same era, regard and voice; children, beggars and drunks keep to their own lines; someone who hates the character shares no gossip. A line is steady for one NPC, character and day, and a line just said is passed over while another fits. Talk cards mark a made line with flags.wodx-npc.talk.generated, so WoDX Voices leaves it as text.
+
+Reverse: setting off, which goes back to the old stock picker.
+
+## B1642. Era words by year (2026-11-12)
+Lexicon entries carry an era band or exact years: coin follows WoDX Storyteller's Moravian money rows (denars to 1299, groschen and heller 1300-1526, kreuzer 1527-1891, heller and kronen 1892-1918, korun 1919-2019, eurobucks and credits from 2020); gendarmes from 1849; no railway station before 1839; coffee from 1700.
+
+Reverse: edit SYMBOLS in data/grammar/house.mjs.
+
+## B1643. Who is speaking: clans, tribes, Traditions, Conventions and kiths (2026-11-12)
+The talk generator reads the NPC's sides (clan, tribe, Tradition or Convention, kith, sect and the like, from the sheet and factions) and adds a few greetings and brush-offs for each group: 15 clans and bloodlines, 13 tribes, 9 Traditions, 5 Conventions, 9 kiths. They pool with the era's lines, so the group colours the talk without taking it over. Every line keeps the Masquerade and the Veil: manner only, nothing that names what the speaker is. House writing. Ben approved on the desk 2026-11-12.
+
+Reverse: remove a group's rows from data/grammar/groups.mjs.
+
+## B1644. Mood (2026-11-12)
+An NPC talks in a mood: the one the Storyteller sets in the behaviour window wins; else a place in alarm makes them afraid, wounds make them hurt, a fight with the character or a fall in regard in the last day makes them angry, a wary place makes them wary. Afraid and hurt crowd out other lines; the rest pool with them. Moods: afraid, hurt, angry, grieving, wary, weary, cheerful.
+
+Reverse: set the mood in the behaviour window, or edit moodOf in scripts/talk-grammar.mjs.
+
+## B1645. Asking about a name with no answer written (2026-11-12)
+When a character asks about a person, place or faction they have heard of and nobody wrote an answer, the generator answers by regard and mood, naming the topic ("The old mill? I know the name. Not much more."). Before, it was a plain brush-off.
+
+Reverse: setting "Talk generator" off.
+
+## B1646. The Storyteller's own grammar (2026-11-12)
+A journal, "WoDX talk grammar", holds the Storyteller's grammar, one entry a line (greet [clan: ventrue, warmth: cold] => "You are not expected."; #coin# [year: 1300-1526] => groschen | heller). It adds to the house grammar; an entry with the id of a house rule replaces it; boost lets a line win. It is read again whenever a page changes, and lines it cannot read are listed to the Storyteller by line number. The talk API opens it (api.talk.openGrammar), making it with a help page the first time.
+
+Reverse: delete the journal.
+
+## B1647. Reroll and Keep (2026-11-12)
+A talk card with a made line shows the Storyteller, and only the Storyteller, which rule made it, with Reroll (another line from the same facts, replacing the one on the card) and Keep (the line goes onto the NPC's own talk sheet under the topic, where it becomes the Storyteller's line and always comes first).
+
+Reverse: none needed; a kept line can be deleted from the talk sheet.
+
 ## B2320. The features card on the sheet (2026-11-12, Improvement Desk sg1)
 Under the in-play strip, a folded card lists every line feature the character has (clan or bloodline, tribe, auspice, breed, kith, seeming, court, Tradition, Guild, legion, House, creed and the rest), each with what it does, when it fires and when it last fired in play. The owner and the Storyteller see it; players only ever open their own sheets. "When it fires" is one line for each engine (Chronicle FEATURE_WHEN) plus the rolls it changes. "Last fired" is the in-game date of the feature's latest card (flags.wodx-chronicle.sigFired), so a feature with no card (a plain roll bonus) reads "not yet in play".
 
@@ -2383,50 +2430,198 @@ Reverse: remove changesHtml from decorate and installChanges from setup in extra
 Each line names its causes, up to four: "a card: <its title>" when a chat card button was pressed in the four seconds before, "the time skip" while Chronicle's time skip runs, "Undo", "the Storyteller" for the Storyteller's own edits, or "<player>, by hand". The client that makes a change tags it and the active Storyteller's client keeps the causes by kind of change, saving at most once for each new cause, so play costs almost no extra saves.
 
 Reverse: drop the tag hooks; lines then show without causes.
-## B2330. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
-Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.46.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
+## B2106. Kokoro runs offline from the Data folder (2026-11-12)
+WoDX Voices loads kokoro-js 1.2.1 (its web build), the ONNX runtime wasm and the Kokoro-82M model (quantized) from Data/wodx-voices-engine, which tools/voices/fetch-engine.mjs fills once on the PC. The library asks for its files at their online home; a narrow fetch shim on the Storyteller's client answers only those requests from the folder. Nothing goes in the module bundle. Licences in the folder's NOTICE.txt (Apache 2.0; the phonemizer is espeak-ng, GPL 3, fine for private use).
+
+Reverse: set Voice engine to the browser's own speech.
+
+## B2107. One render, shared by file (2026-11-12)
+Only the active Storyteller's client renders. It saves the line as a WAV in Data/wodx-voices-cache/g<n>/ (a name from the voice, speed and words, so a line said twice is rendered once) and sends the path over the module socket to the people who see the line. Players play the file. With no Storyteller online, players fall back to their own speech.
+
+Reverse: engine setting.
+
+## B2108. A Kokoro voice per NPC (2026-11-12)
+Two of Kokoro's 27 English voices of one accent (American or British, by seed), matched to a known sex, blended 50:50 to 80:20 by seed, with the speed from the profile. The Storyteller can name one voice or a blend in flags.wodx-voices.override.kokoro ("bm_george" or "bm_george*0.6+bm_lewis").
+
+Reverse: kokoroVoiceFor in voice-rules.mjs.
+
+## B2109. The Storyteller's own lines (2026-11-12)
+Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, can be read in that NPC's voice to the people who see it. Off by default since B2111: Ben asked the same day that only prewritten lines be voiced.
+
+Reverse: the "Read the Storyteller's lines" setting.
+
+## B2110. Sound from the token (2026-11-12)
+When the NPC's scene is in view, the line plays at the token through Foundry's positional sound, fading over the set range (30 grid units by default) and muffled by walls; the Storyteller always hears. Otherwise it plays plainly.
+
+Reverse: the "Sound from the token" setting.
+
+## B2111. Plot NPCs and prewritten lines only (2026-11-12)
+Ben (12 November 2026), after Fallout 1 and 2 and Baldur's Gate 1 and 2: an NPC is voiced only when the Storyteller marks it as a plot NPC (Voiced (plot NPC) on the right-click menu in the Actors list, flags.wodx-voices.plot), and only the lines written beforehand on its WoDX NPC talk sheet are read. Stock lines, generated lines, barks and every unmarked NPC stay text. The world setting "Who speaks aloud" can open it to every NPC.
+
+Reverse: the "Who speaks aloud" setting; prewritten and voiced in voice-rules.mjs.
+
+## B2112. A voice server on the Storyteller's PC (2026-11-12)
+Ben found the Kokoro samples flat and chose Chatterbox on his own PC (12 November 2026). tools/voices/chatterbox_server.py runs Chatterbox (MIT) on the PC's graphics card, listening on 127.0.0.1 only, and answers the Storyteller's browser with a WAV per line. It is the default engine: the line is cached and shared exactly as with Kokoro. When the server is not running, Kokoro reads the line, and without Kokoro the browser's own speech. A stopped server is tried once a minute, not once a line.
+
+Reverse: the "Voice engine" setting.
+
+## B2113. Human reference voices, chosen for lively reading (2026-11-12)
+Chatterbox copies the cadence of its reference clip, so the clips decide how natural an NPC sounds. tools/voices/fetch_voices.py takes readers from LibriTTS-R (CC BY 4.0, from LibriVox public-domain recordings), prefers lines read as dialogue (quotes, exclamations, questions) and lines whose pitch moves, builds 8 to 14 second clips, and keeps 48 readers spread widest over pitch, pace and liveliness so no two voices sit close. Credits stay in voices.json and NOTICE.txt. The Storyteller may add clips of their own.
+
+Reverse: --count, --splits, --local.
+
+## B2114. Delivery from the line and the mood (2026-11-12)
+Each line's emotion, pace and variety come from the line itself (exclamations, shouted words, questions, trailing off), how the NPC regards the character it speaks to (WoDX NPC's attitude step), its wounds, and a temper the Storyteller may set (calm, warm, cold, fiery, nervous, weary). Figures are house ones, rounded to steps of 0.05 so a line in the same mood is rendered once; the server lifts an exclaimed sentence a little more and pauses longer after questions and trailing lines.
+
+Reverse: deliveryFor and TEMPERS in voice-rules.mjs.
+
+## B2115. A server voice per NPC (2026-11-12)
+Each NPC keeps one server voice, picked from its seed among the voices the server lists. A known sex narrows the pick by speaking pitch (male: low or mid; female: high or mid); with no known sex every voice is open. Slow speakers (old age, a slow speaking style) lean to the slower readers. The Storyteller's choice (override.chatterbox) wins.
+
+Reverse: serverVoiceFor in voice-rules.mjs.
+
+## B2116. The server's address and key stay in the Storyteller's browser (2026-11-12)
+The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and wodx.online by default).
+
+Reverse: --origin on the server; the two client settings.
+
+## B2330. A country map behind the travel sum (2026-11-12)
+Ben approved all eight items of the Daggerfall study desk on 12 November 2026. Moravia and its neighbours are laid on a grid of 5 km squares (117 by 85): each square has its ground (plain, river meadows, hills, uplands, mountains), any river, and the best road in it in a given year. The ground comes from 41 rough shapes, 13 rivers, 62 towns and the links between them, written for WoDX from general geography; no game's data and no book's is in it. A place sits on the map as a town plus an optional distance and direction. When both ends of a trip sit on the map and no minutes are typed, the trip finds its cheapest way across the squares; one end off the map keeps the older sums. The idea of a coarse stored map with roads as layers comes from Daggerfall Unity and its Basic Roads mod; the code and data are our own.
+
+Reverse: clear Near on the Travel places window; the map branch in tripPlan in world-rules.mjs.
+
+## B2331. The going by one's own means (2026-11-12)
+On foot, on horseback, by one's own cart and by car use the speeds road-rules.mjs already had, now by the road in each square. Roads wind (1.15 times the straight distance) and climb (hills 1.1, uplands 1.25, mountains 1.5; half that on a motorway). Off the road the going is a track's speed over 1.3 times the distance, slowed 1.3 in river meadows (1.1 from 1850, once the rivers are banked) and hills, 1.7 in uplands and 2.6 in mountains; carts and cars cannot leave the road in mountains. A big river away from a road costs 40 minutes for a ferry or ford before 1850 and 15 after. House figures.
+
+Reverse: step() in country-rules.mjs.
+
+## B2332. Paid rides run only between their stops (2026-11-12)
+A hired cart or coach (to 1945), a river boat, a train (each line from the year it opens, 1839 on), a bus (1925 on), a flight (airfields from 1920 on) and, on the Future Darkness branch, a transit pod each run only between towns their network joins in that year. The traveller first goes to the stop in the nearest town that has one, waits (10 minutes to 2 hours), rides, and goes on from the last stop. Ben's ruling of 13:09 UTC: travel from anywhere stays, and hired travel is added beside it. With no way asked for, the fastest way open is taken, but never a flight under 300 km. The idea of rides bound to their stops comes from the Travel Options and Immersive Travel mods for Daggerfall Unity.
+
+Reverse: HIRED in country-rules.mjs.
+
+## B2333. Fares (2026-11-12)
+A fare is a share of a month's plain wage (the money rules' wage for the year) for each km ridden: coach 1/500, boat 1/1500, train 1/1500 and 1/3000 from 1900, bus 1/3000, air 1/150 falling to 1/600 in 1950 and 1/2500 in 1980, pod 1/2000. So 100 km by post coach costs six days' wages and by a twentieth-century train one day's. House figures; no book prices travel.
+
+Reverse: the fare functions in HIRED.
+
+## B2334. Pace (2026-11-12)
+Careful: a quarter slower, 8 hours on the move a day, half the chance of an encounter. Steady: 10 hours. Forced: 15 percent faster and 14 hours a day, a quarter more encounters, and for each day a Stamina roll (difficulty 7) or a level of bashing harm, for mounts too; WoDX only tells the Storyteller, who calls for the rolls. Pace changes one's own going, not a paid ride. House rule; the careful and reckless choice is Daggerfall's, the numbers are ours.
+
+Reverse: PACES in country-rules.mjs.
+
+## B2335. Nights on the way (2026-11-12)
+After the day's hours the living rest until 24 hours have passed. With Inns and lodgings they sleep under a roof wherever the road is a road, for a thirtieth of a month's wage each night, and camp where there is only a track; with Camp by the road they always camp, free, with a quarter more encounters. A trip shorter than the day's hours has no night in it, and the last hour of a day is pushed through to arrive.
+
+Reverse: LODGINGS and schedule() in country-rules.mjs.
+
+## B2336. Day shelter for those the sun burns (2026-11-12)
+On the map, a Kindred or Kuei-jin moves only between dusk and dawn. The trip is cut at the towns it passes; before each stretch, if it could not be finished half an hour before dawn, the traveller waits out the day in that town and leaves at dusk. The dark slows such a trip in the years before roads were lit. A trip planned this way no longer goes to the Storyteller for arriving after dawn. A stretch between two towns that is longer than a whole night cannot be sheltered, and that trip still asks the Storyteller. Off the map the older dawn check stands.
+
+Reverse: schedule() in country-rules.mjs; the plan branch of travelNeedsAsk in world-rules.mjs.
+
+## B2337. Paying for the trip (2026-11-12)
+Fares and inn nights are taken from the purse before anyone moves. A purse that is short stops the trip and says the price and the shortfall. A trip the Storyteller approves from the queue goes ahead unpaid and the log says so.
+
+Reverse: the payment block in travel() in core.mjs.
+
+## B2338. An encounter knows its ground (2026-11-12)
+On a map trip the hour an encounter falls in is matched to the leg being travelled, so the proposal says where (in the wooded uplands between Jihlava and Třebíč) and carries the ground and the road for a map to be drawn there. Encounter hours count hours on the move, not hours asleep.
+
+Reverse: spotAt in country-rules.mjs; the encounter block in travel().
+
+## B2339. A generated map takes its land from where it sits (2026-11-12)
+tools/mapgen/ddtown.py takes --at town or town:km:DIR, the same way a place is put on the country map in Foundry. The landform the town is drawn on and whether a river crosses the map then come from the country at that spot (river meadows and plain draw as plain, the Drahany Highlands as karst, a river within 5 km puts a river on the map), unless --land or --river says otherwise. The sidecar gains a country block and a transit list naming where a paid ride is taken from on that map in that year: the tavern as the coach stand to 1945, the railway station once the town has one. Without --at nothing changes, so earlier maps come out byte for byte as before. The grid reaches Python as tools/mapgen/country.json, written by export_country.mjs; the harness fails when it is out of date.
+
+Reverse: leave --at off; the block after parse_args in ddtown.py.
+
+
+## B2340. Warrens are put together from our own kit of pieces (2026-11-12, Ben's pick, house rule)
+tools/mapgen/ddwarren.py --kind warren lays a warren from a kit of 24 square pieces drawn for WoDX (PIECES in that file; nothing is taken from any game's data): passages, bends, junctions, chambers, a store vault, two dens, four flooded pieces, a fall, two ways up and two caps. A piece is ten squares a side and opens only through the middle two squares of a side, so any two fit. The pieces go on a grid as one connected run: the ways up first, joined by wandering ways, then side runs until the count asked for (--pieces; 10 under a village, 18 a town, 28 a city) and a few ways round. A chamber may be laid where fewer ways are needed than it has, and the way that leads nowhere is capped. Dens fall farthest from the ways up. A den holds a nest to hide in and a hoard filled as a den of thieves; a vault holds a chest filled as a home; the fall is a crawl. The check in check_kit() stops the run if a piece opens anywhere it does not say.
+
+Reverse: delete ddwarren.py and tools/harness/warren.test.mjs; nothing else reads them.
+
+## B2341. A warren under a town uses the town's own squares (2026-11-12, Ben's pick)
+With --under <town sidecar> the warren's map has the same squares as the town map, so a square below is the same square above. The grid of pieces is shifted (by up to four squares either way) to the place where the most stairs come out wholly inside a building, the ways up are picked from those and spread apart, and each one records the building it comes up in (waysUp in the sidecar, and the stair's own label). Pieces under the river, a brook or an oxbow are the flooded ones nine times in ten. With no town above, the lowest corner of the warren stands in water.
+
+Reverse: run without --under.
+
+## B2342. What a warren is called and built of follows the year (2026-11-12, house rule)
+The same kit is dressed by the year (DRESS in ddwarren.py): to 1499 joined cellars and old workings; 1500 to 1849 brick vaults and casemates; 1850 to 2039 service tunnels, coal cellars and shelters; from 2040 the under-levels. Only the names, the wall and the kind of way up change (a stair before 1850, rungs after). --dress picks one whatever the year. Jihlava, Znojmo and Brno have real medieval undergrounds of this joined-cellar kind, which is why the first dress is the default for the early eras.
+
+Reverse: edit DRESS.
+
+## B2343. Sewers are laid from the town's street plan (2026-11-12, Ben's pick)
+ddtown.py --plan adds the centre lines of the ways, the river and the brooks to each sidecar (a new "plan" block, written only when asked, so maps made without it are unchanged). ddwarren.py --kind sewer --under <that sidecar> lays a main under every main street and road and a side sewer under every street and quay (never an alley or the railway), a round chamber wherever runs meet (a junction chamber where three or more meet on a main), and a manhole at each chamber as the way up to the same square of the street. No run passes under the river: each bank drains by itself to its nearest point on the river and leaves by a grated outfall, and every run records which way it falls. A run that reaches the map's edge goes on under the next part. Reflect needs nothing new on the map.
+
+Reverse: leave --plan off; delete the sewer() function.
+
+## B2344. When a place gets sewers, and what was there before (2026-11-12, house rule)
+Cities and the metropolis have sewers from 1850, towns from 1890, villages from 1950 (SEWER_FROM), and for the first thirty years only the mains. These are round figures for the Bohemian crown lands, not any one town's dates. Before that there are no sewers: a brook through the built-up part of the town runs under a cover from 1500 (a culvert wherever a house stands within eight squares of it, with its own mouth on the river) and open before then, and up to 24 houses with a yard have a cesspit under it, reached by the privy shaft. Once the sewers are in, a few cesspits remain.
+
+Reverse: change SEWER_FROM or COVERED_BROOKS_FROM in ddwarren.py.
+
+## B2345. Reflect reads a map from under the ground (2026-11-12, Ben's pick, house rule)
+Otherworlds 0.17.0: a sidecar marked "underground" (every warren and sewer map) is read piece by piece and run by run (underMarks in reflect-rules.mjs) instead of as a town. In the Penumbra a sewer carries the Weaver's webbing of its year and sours toward the Wyrm along the filth, most at the outfall and the cesspits; a covered brook still runs with the Wyld; a den is a lair that draws Banes; plain passages and chambers are faint. In the Shadowlands a fall and a closed way stand again as they were, a fall may open a Nihil, a den thins the Shroud, and filth rots fastest. The realm layouts themselves are untouched.
+
+Reverse: remove the underground branch at the top of reflect().
+
+## B2346. Two dresses of no year: the Labyrinth and a Black Spiral cavern (2026-11-12, Ben's pick, house rule)
+The warren kit has two more dresses picked only by name (--dress labyrinth, --dress spiral). They change the names, the wall and what stands in the flooded pieces (the dark between, or balefire), and the way up is a Nihil or a shaft to the pit. Reflect reads a Labyrinth map with no Penumbra at all and only decay and Nihils among the dead, and a Black Spiral cavern as a Blight all through. Whether a given night's Labyrinth looks like this stays the Storyteller's call, as before.
+
+Reverse: drop the two entries from DRESS and the two branches in underMarks.
+
+## B2347. Wild land with no edge for the open Umbra and the Tempest (2026-11-12, Ben's pick, house rule)
+Ben changed the realm-maps pick on the study desk at 13:55 UTC to add endless seeded wild land beside the small uses. Otherworlds 0.17.0, scripts/wild-rules.mjs: the open Umbra between the realms and the Tempest's storm sea are drawn a piece at a time. A piece is a realm map of the usual size at a place (x east, y south) in the wild; its ground is read off one unbroken field of smooth noise fixed by the seed, so pieces side by side meet square for square and a piece is the same every time. One trail winds across the whole wild from west to east and one from north to south (a moon path in the Umbra, a Byway in the Tempest). The Umbra is land, water, growth and rock, with ground soured toward the Wyrm that spreads by the age (nothing before 1500, most after 1950 and on the Future Darkness branch); the Tempest is open storm water with islets of rock and shoals. Each piece has an arrival, a way on at every side the travellers can walk off, and none, one or two things in it (a glen, standing stones, a soured hollow, webbing from 1850; an islet, a wreck, a maelstrom, a Nihil's mouth). The 34 realm layouts are untouched.
+
+In Foundry (realm-maps.mjs): Realm maps has a Wild land section. Draw wild land makes the piece at a place, or finds it if it is already drawn; Walk on draws or finds the piece beside the open one and sets the selected tokens down where they walk in. Tokens keep the record of where they first came from, so Bring them back still returns them to the living world. A piece of wild land cannot be redrawn with another seed. Travel time is still the journey card's, in hours; the pieces are for the scenes on the way.
+
+Reverse: remove wild-rules.mjs, the wild block in realm-maps.mjs and the Wild land section of realmMapsDialog.
+
+## B2350. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
+Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.47.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
 
 Reverse: DEEDS, POSTS and pickDeed in wodx-storyteller battle-deeds.mjs; the offers on a battle are dropped by setting offers to null.
 
-## B2331. The post a character stands at (2026-11-12, house rule)
+## B2351. The post a character stands at (2026-11-12, house rule)
 With no post picked, a character in command is with the commander, one at the rear is scouting, and one in the thick of it is in the line; in a siege that has been breached or stormed the defenders are on the walls and the attackers at the breach. No deeds are offered during the weeks of a siege, only when it is fought.
 
 Reverse: postFor in battle-deeds.mjs.
 
-## B2332. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
+## B2352. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
 A supernatural character (by WoDX Combat's kind of being) is offered a deed of their own kind about one time in three: a vampire commanding the enemy captain, showing what they are, or feeding in the press; a Garou in war form; a mage's vulgar or coincidental Effect; a changeling waking dreams of glory; a wraith reaching through the Shroud; a hunter finding the monster in the ranks; spirits of war called. Deeds that the living can see as more than human are marked seen; in a battle in the living world each seen deed that succeeded is counted by the aftermath, and sending the feeding line to the Ledger lets the Veil slip one point for each (at most 3), with an Undo.
 
 Reverse: the kinds and seen fields in DEEDS; seenDeeds in battle-aftermath.mjs.
 
-## B2333. Off-screen deeds for faction wars (2026-11-12, house rule)
+## B2353. Off-screen deeds for faction wars (2026-11-12, house rule)
 For battles fought with no window (factions at war), leaderDeed() picks a command deed for a side's leader, or a deed of the leader's kind when the side has supernatural help of 2 or more, with the commander's Perception + Leadership as the pool; deedSuccessesFor() rolls it with any random source (V20: successes at the difficulty less 1s, a botch when nothing succeeded and a 1 came up). Exposed as api.battleDeeds.leaderDeed and deedSuccessesFor.
 
 Reverse: leaderDeed, deedSuccessesFor in battle-deeds.mjs.
 
-## B2334. Deeds roll from the sheet, by the Storyteller (2026-11-12)
+## B2354. Deeds roll from the sheet, by the Storyteller (2026-11-12)
 The Storyteller rolls each deed from the window (the dice go to the Storyteller's card; the player gets a card with the deed when it is offered). A botched deed adds nothing. Rolling again replaces the roll. Offers belong to one phase: fighting the phase uses them and clears them; Undo of the phase does not bring them back.
 
 Reverse: rollDeed and offer in battle-extras.mjs.
 
-## B2335. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
+## B2355. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
 Ben approved desk item bt2 on 12 November 2026. When a battle ends, the Battles window lists the field's harvest by line: spoils, prisoners (a tenth of a routed side) and the wounded (twice the dead) by age; feeding among the dying for 3 nights (7 after 1,000 dead), 2 easier on the field; new wraiths among the fallen (one in a hundred of the dead, at least one from 20 dead) and a thinner Shroud; Banes and Wyrm taint from 100 dead; Entropy in the Resonance and nightmares from 50 dead; the Yin rising for the Kindred of the East; and the name the place keeps. All of it is a house rule; the counts are not from a book.
 
 Reverse: aftermathFor in wodx-storyteller battle-aftermath.mjs.
 
-## B2336. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
+## B2356. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
 A line with a lasting effect can go to the Ledger as a consequence that comes due (the feeding ends, the Shroud heals after a year and a day, the Resonance fades), to the Legends book (Chronicle 0.42.2 adds the sent lines to the battle's entry), or to a place picked as a scene (WoDX Otherworlds drift). Each sent line is kept on the battle with an Undo that removes the Ledger entry, takes the drift back, or drops the Legends text.
 
 Reverse: send and unsend in battle-extras.mjs.
 
-## B2337. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
-The desk wording said "a stronger Shroud"; Wraith 20th puts the Shroud lowest where death and grief are, so a battle thins it instead (logged in PENDING-REVIEW). WoDX Otherworlds 0.17.0 adds a Shroud track to drift: massdeath -1, shroudheals +1, inside -3 to +3, and a place with a Shroud rating reads it with the drift inside 4 to 10. A battle thins it 1, or 2 after 10,000 dead.
+## B2357. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
+The desk wording said "a stronger Shroud"; Wraith 20th puts the Shroud lowest where death and grief are, so a battle thins it instead (logged in PENDING-REVIEW). WoDX Otherworlds 0.18.0 adds a Shroud track to drift: massdeath -1, shroudheals +1, inside -3 to +3, and a place with a Shroud rating reads it with the drift inside 4 to 10. A battle thins it 1, or 2 after 10,000 dead.
 
 Reverse: the massdeath and shroudheals kinds and shroudWithDrift in wodx-otherworlds drift-rules.mjs.
 
-## B2338. Old fields are felt in later years (2026-11-12, house rule)
+## B2358. Old fields are felt in later years (2026-11-12, house rule)
 A field of 10 or more dead in the living world appears under Old fields in the Battles list in later years: fresh graves in its first year, the survivors' memory for 40 years, then by the clock's year a chapel or a cross before 1800, a monument and walks from 1800, battlefield tourists by rail from 1860, a memorial and museum from 1914, a visitor centre, re-enactors and detectorists from 1960, and on the Future Darkness branch from 2026 a memorial seen through the lens. Fields of 1,000 dead (or 100 within 200 years) are still haunted; 10,000 dead keep the Shroud thin. The Legends book's battle entry carries any lines sent to it.
 
 Reverse: fieldEcho and oldFields in battle-aftermath.mjs.
 
-## B2339. Decision numbers kept for this work
-B2330 to B2339 are this work's block, all used.
+## B2359. Decision numbers kept for this work
+B2350 to B2359 are this work's block, all used.

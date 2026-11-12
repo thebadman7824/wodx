@@ -571,6 +571,21 @@ def clip_whole(r, whole):
     c = clip(r, whole)
     return tuple(c) if c else (0, 0, 0, 0)
 
+def street_plan(t, pt):
+    """The ways of one part as centre lines in its own squares, with the river and the brooks: what runs under
+    the streets (sewers, culverts) is laid from this (ddwarren.py). Only written when --plan asks for it."""
+    import geom as G
+    win = pt["win"]
+    loc = lambda q: [round(q[0] - win[0], 2), round(q[1] - win[1], 2)]
+    def lines(pts):
+        return [[loc(q) for q in piece] for piece in G.clip_line(list(pts), win) if len(piece) >= 2]
+    streets = []
+    for a, b, half, kind in t.segs:
+        for piece in lines([a, b]): streets.append({"kind": kind, "half": half, "line": piece[0] + piece[-1]})
+    return {"streets": streets, "river": lines(t.river_line) if t.river_line else [], "riverHalf": round(getattr(t, "river_half", 0), 2),
+            "brooks": [l for st in t.streams for l in lines(st["line"])]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=1197)
@@ -583,9 +598,18 @@ def main():
     ap.add_argument("--river", choices=("random", "yes", "no"), default="random", help="organic layout only: a river across the map")
     ap.add_argument("--land", choices=("random", "plain", "hills", "upland", "foothills", "mountain", "karst"), default="random", help="organic layout only: the landform the town stands in (land.py); random picks by Moravian odds")
     ap.add_argument("--year", type=int, help="organic layout only: grow the medieval town through every later age up to this year (eras.py)")
+    ap.add_argument("--at", help="organic layout only: where the town stands on the country map, as town, or town:km:DIR (brno:12:NE). The landform and the river then come from the country there, unless --land or --river says otherwise")
+    ap.add_argument("--plan", action="store_true", help="organic layout only: add the street plan (centre lines of the ways, the river and the brooks) to each sidecar, for ddwarren.py to lay sewers and culverts under")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
+    where = None
+    if a.at:
+        import country
+        try: where = country.land_at(a.at, a.year or 1197)
+        except ValueError as e: raise SystemExit(str(e))
+        if a.land == "random": a.land = where["landform"]
+        if a.river == "random": a.river = "yes" if where["river"] and where["river"]["km"] <= 5 else "no"
     if a.part and a.part < 24: raise SystemExit("--part must be 24 squares or more (or 0 for one map)")
     if a.size == "metropolis" and a.layout != "organic": raise SystemExit("a metropolis needs the organic layout")
     C.init(a.seed, a.assets)
@@ -607,6 +631,15 @@ def main():
         lvl = C.level(cw, ch, walls, patterns, objects, paths, TERRAIN, t.splat(pt["win"]), NIGHT if t.night else DAY)
         C.write_map(f"{a.out}/{mapname}", cw, ch, a.seed, lvl)
         sc = t.sidecar(mapname, pt, base)
+        if where:
+            # The country the map stands in, and where a paid ride is taken from in this year (B2339).
+            sc["country"] = {"at": a.at, **where}
+            stops = []
+            for r in sc.get("regions", []):
+                if r.get("label") == "Tavern" and not any(x["mode"] == "hire:coach" for x in stops) and (a.year or 1197) <= 1945: stops.append({"mode": "hire:coach", "region": r["id"], "label": "Coach stand at the tavern"})
+                if r.get("label") == "Railway station" and not any(x["mode"] == "hire:train" for x in stops): stops.append({"mode": "hire:train", "region": r["id"], "label": "Railway station"})
+            sc["transit"] = stops
+        if a.plan and a.layout == "organic": sc["plan"] = street_plan(t, pt)
         json.dump(sc, open(f"{a.out}/{stem}.wodx.json", "w"), indent=1)
         totals[0] += len(walls); totals[1] += sum(len(w["portals"]) for w in walls); totals[2] += len(objects)
         index["parts"].append({"id": pt["id"], "map": mapname, "sidecar": f"{stem}.wodx.json", "origin": list(pt["win"][:2]), "cells": [cw, ch], "cut": list(pt["cell"]),
@@ -621,6 +654,8 @@ def main():
     print("  " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
     print(f"  {totals[0]} walls, {totals[1]} portals, {totals[2]} objects, {len(t.gardens)} gardens")
     for n in t.notes: print("  note:", n)
+    if where: print(f"  country: {where['km'] or ''}{' km ' + where['dir'] + ' of ' if where['km'] else 'at '}{where['town']}, {where['land']}" + (f" ({where['landName']})" if where["landName"] else "")
+                    + (f", {where['river']['name']} {where['river']['km']} km off" if where["river"] else "") + f"; drawn as {a.land}, river {a.river}")
 
 if __name__ == "__main__":
     main()

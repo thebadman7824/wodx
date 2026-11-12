@@ -177,7 +177,7 @@ export function battleLines(battles = [], dateOf = () => ({})) {
   for ( const b of battles ) {
     if ( !b?.id || !b.over || b.legend === false ) continue;
     const where = str(b.place, 160);
-    // What the field left behind, sent to the book from the battle's aftermath (Chronicle 0.45.1, B2338)
+    // What the field left behind, sent to the book from the battle's aftermath (Chronicle 0.45.1, B2358)
     const extra = (Array.isArray(b.aftermath?.sent) ? b.aftermath.sent : []).filter(x => x?.to === "legend" && x.legend).map(x => str(x.legend, 300)).slice(0, 6);
     const text = `${str(b.name, 120)}${where ? ` at ${where}` : ""}: ${str(b.over.text, 360).replace(/[.\s]+$/, "")}.${extra.length ? ` ${extra.join(" ")}` : ""}`;
     out.push(normEntry({id: `battle:${b.id}`, kind: "battle", ...dated(b.over.at, dateOf), place: where,

@@ -40,6 +40,7 @@ import * as RemainsRules from "./remains-rules.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Road from "./road-rules.mjs";
+import * as Country from "./country-rules.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
@@ -128,7 +129,7 @@ Hooks.once("ready", () => {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
     travel: C.travel, planTrip: C.planTrip, travelPlaces: C.travelPlaces, setTravel: C.setTravel, solo: C.solo,
-    tripContext: C.tripContext, tripWords: C.tripWords, roads: Road,
+    tripContext: C.tripContext, tripWords: C.tripWords, roads: Road, country: Country,
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,

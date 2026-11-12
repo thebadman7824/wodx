@@ -82,3 +82,13 @@ test("a test can keep the war step to its own factions", () => {
   assert.equal(W.pickWar(s, {rand: () => 0, only: new Set(["other"])}), null);
   assert.equal(W.pickWar(s, {rand: () => 0, only: new Set(["lords", "abbey"])}).attacker, "lords");
 });
+
+test("an army fought off the screen closes, shoots or withdraws by its pools", () => {
+  const age = B.ageFor(1230);
+  const b = B.normBattle({sides: [{units: {archers: 4, siegeEngines: 1}}, {units: {peasants: 2}}]});
+  assert.deepEqual(B.chooseActions(b, age), ["ranged", "melee"]);
+  const beaten = B.normBattle({sides: [{units: {heavyCavalry: 8}}, {units: {peasants: 2}, startUnits: {peasants: 6}}]});
+  assert.equal(B.chooseActions(beaten, age)[1], "withdraw", "half its units gone and no blow that tells");
+  const src = readFileSync(join(root, "modules/wodx-npc/scripts/factions.mjs"), "utf8");
+  assert.match(src, /api\.rules\.chooseActions\(x/);
+});

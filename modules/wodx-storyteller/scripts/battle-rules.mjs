@@ -268,7 +268,7 @@ export function normBattle(b = {}) {
     // a war between factions fought off the screen (WoDX NPC, B2211): who, for what place, and whether it runs by itself
     war: b.war && typeof b.war === "object" ? {attacker: str(b.war.attacker, 40), defender: str(b.war.defender, 40), place: str(b.war.place, 200),
       kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null,
-    // Storyteller 0.46.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
+    // Storyteller 0.47.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
     offers: normOffers(b.offers),
     aftermath: normAftermath(b.aftermath)
   };
@@ -419,7 +419,8 @@ export function bookContests(battle, age, pools, actions = ["melee", "melee"]) {
  * Settle a book turn. `plan` = {total, net, pools, contests} with each contest's `rolls` = {attack, resist}; `deeds`
  * as for settlePhase. A character's deed adds its successes to its side's attack this turn (a WoDX reading of the
  * Dark Ages Companion's one foe a success, in the book army's units).
- *   Close and fight: the winner takes a unit off the other for each net success, either way.
+ *   Close and fight: the winner takes a unit off the other for each net success, either way; when both armies
+ *   close, each counts only the units its own blow takes (a WoDX reading: otherwise each clash is counted twice).
  *   Shoot: only the shooters do harm.
  *   Withdraw: a win keeps the foe's Close and fight off it this turn and takes the army off the field; a loss gives
  *   the foe's attack on it the net successes (the book: they count against its Defense and Maneuver).
@@ -440,7 +441,8 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
     if ( c[1 - i].action === "withdraw" && net[1 - i] < 0 ) k += -net[1 - i];
     if ( c[i].action === "melee" && away[1 - i] ) continue;
     if ( k > 0 ) loss[1 - i] += k;
-    else if ( k < 0 && c[i].action === "melee" ) loss[i] += -k;
+    // a beaten attack costs the attackers only when the foe stood to receive it; when both close, each side's blow is its own count
+    else if ( k < 0 && c[i].action === "melee" && c[1 - i].action !== "melee" ) loss[i] += -k;
   }
   const sides = battle.sides.map(s => ({...s, commander: {...s.commander}, units: {...s.units}, penalty: 0}));
   const lostUnits = [{}, {}];
@@ -478,6 +480,21 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
   // the men a broken army still has are no longer in the fight
   for ( const i of [0, 1] ) if ( !sides[i].men ) sides[i].men = 0;
   return {phase, sides, over, waver};
+}
+/**
+ * What an army fought off the screen does this turn (a WoDX reading, B2210): it closes when its Melee outweighs the
+ * foe's Defense, shoots when its Ranged does better against half that Defense, and otherwise closes anyway, unless it
+ * has lost half its units, when it withdraws in what order it can. Returns ["melee" | "ranged" | "withdraw", ...].
+ */
+export function chooseActions(battle, age) {
+  const {pools} = bookPools(battle, age);
+  return [0, 1].map(i => {
+    const me = pools[i], foe = pools[1 - i], s = battle.sides[i];
+    const melee = me.melee - foe.defense, ranged = me.ranged - Math.ceil(foe.defense / 2);
+    const start = unitCount(s.startUnits) || unitCount(s.units);
+    if ( melee < 0 && ranged < 0 && unitCount(s.units) * 2 <= start ) return "withdraw";
+    return ranged > melee && ranged > 0 ? "ranged" : "melee";
+  });
 }
 const rollOut = r => ({successes: Math.max(0, n(r?.successes)), botch: !!r?.botch, faces: Array.isArray(r?.faces) ? r.faces.slice(0, 40) : []});
 
