@@ -12,10 +12,10 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
@@ -421,3 +421,16 @@ export const courtInPower = month => UNSEELIE_MONTHS.includes(n(month)) ? "unsee
 /** Glamour from a revel: one for each changeling there, one more for a Satyr. */
 export const revelGlamour = (row, glamour = {}) => clamp(n(glamour.temporary) + (row?.key === "satyr" ? 2 : 1), 0, Math.max(n(glamour.permanent) || 10, 10));
 export const isCoat = item => !!item && (item.coat === true || /\bseal\s*(skin|coat)\b/i.test(String(item.name ?? "")));
+
+/* ---------------- Wraith (Chronicle 0.35.0) ---------------- */
+
+/** A wraith's rows from the picks kept on the actor: guild, legion and faction. */
+export const wraithRows = ({guild = "", legion = "", faction = ""} = {}) =>
+  [rowIn(GUILDS, guild), rowIn(LEGIONS, legion), rowIn(WRAITH_FACTIONS, faction)].filter(Boolean);
+/** The legion the manner of death points to (the sheet's death field), or null. */
+export function legionFor(death = "") {
+  const text = ` ${words(death).join(" ")} `;
+  if ( text.trim() === "" ) return null;
+  return LEGIONS.find(l => l.death.some(w => text.includes(` ${w} `))) ?? null;
+}
+export const mayLuck = (last, now) => last == null || n(now) - n(last) >= LUCK_DAYS * DAY;
