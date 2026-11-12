@@ -91,7 +91,7 @@
 1861|H|mor|EU|London|death,crown|Prince Albert dies|The prince consort dies of typhoid, and the queen wears black for the rest of her life.
 1862|H|mor|EU|Berlin|crown|Bismarck|Bismarck becomes minister-president of Prussia and promises iron and blood.
 1862|H|mor|EU|Paris|art|Les Miserables|Victor Hugo publishes Les Miserables from exile.
-1862|H|mor|MO|Prague|founding,sport|The Sokol|Tyrs and Fugner found the Sokol gymnastic movement, and halls rise in every Czech and Moravian town.
+1862|H|mor|EU|Prague|founding,sport|The Sokol|Tyrs and Fugner found the Sokol gymnastic movement, and halls rise in every Czech and Moravian town.
 1863|H|mor|EU|Warsaw|uprising|The January Uprising|Poland rises against Russia again and fights for over a year in the forests.
 1863|H|mor|EU|London|travel,building|The Underground|The first underground railway opens between Paddington and Farringdon.
 1863|W|vam|EU|London|building,occult|The Nosferatu and the tunnels|The house reading has London's Nosferatu furious as the Underground cuts through warrens they have held since the Romans.
@@ -116,7 +116,7 @@
 1867|W|cha|EU|Ireland|occult,uprising|The Fenian rising|The house reading has Irish Kithain hoping the Fenians win; a few eshu carry their letters across the sea.
 1868|H|mor|AS|Kyoto|revolution,crown|The Meiji Restoration|The emperor's government defeats the shogun's last loyalists and moves to Edo, renamed Tokyo.
 1868|W|kue|AS|Tokyo|revolution,occult|Japan's courts uneasy|The house reading has the Kuei-jin of Japan split over the Meiji reforms; some court the new ministries, others retreat to the mountains.
-1868|H|mor|MO|Prague|building,learning|The National Theatre stone|Foundation stones from Czech mountains, Radhost among them, are laid for the National Theatre in Prague.
+1868|H|mor|EU|Prague|building,learning|The National Theatre stone|Foundation stones from Czech mountains, Radhost among them, are laid for the National Theatre in Prague.
 1868|H|mor|AS|Hakodate|war|The Boshin War ends|The last shogunate loyalists hold out at Hakodate under their Republic of Ezo and surrender the next spring.
 1869|H|mor|ME|Suez|trade,sea|The Suez Canal opens|The canal opens to shipping and the route to India is shortened by weeks.
 1869|H|mor|EU|Rome|faith|The First Vatican Council|The bishops meet in Rome and declare the pope infallible on faith and morals.
@@ -160,7 +160,7 @@
 1880|H|mor|EU|Brno|travel,building|Trams in Brno|Brno opens horse trams, among the first in the Czech lands.
 1881|H|mor|EU|St Petersburg|terror,death|Alexander II killed|Revolutionaries of the People's Will kill the tsar with bombs on the Catherine Canal.
 1881|H|mor|EU|Kiev|persecution,massacre|The pogroms|After the tsar's murder, mobs attack Jewish towns across the south of the empire, and emigration to America begins.
-1881|H|mor|MO|Prague|fire,building|The National Theatre burns|The new National Theatre in Prague burns before its formal opening; the nation pays to rebuild it in two years.
+1881|H|mor|EU|Prague|fire,building|The National Theatre burns|The new National Theatre in Prague burns before its formal opening; the nation pays to rebuild it in two years.
 1881|H|mor|ME|Tunis|empire|Tunisia taken|France occupies Tunisia.
 1882|H|mor|ME|Alexandria|war,empire|Britain takes Egypt|The Royal Navy shells Alexandria, and a British army defeats Urabi at Tel el-Kebir.
 1882|W|mum|ME|Cairo|empire,occult|The Reborn under British rule|The house reading has Egypt's mummies watching as British collectors empty tombs, and some go to London after their own bodies.
@@ -178,7 +178,7 @@
 1885|H|mor|ME|Khartoum|siege,war|Khartoum falls|The Mahdi's army storms Khartoum after a ten-month siege, and Gordon is killed two days before relief.
 1886|H|mor|EU|London|art|Jekyll and Hyde|Stevenson publishes The Strange Case of Dr Jekyll and Mr Hyde.
 1886|H|mor|EU|Bavaria|death,crown|The mad king drowns|Ludwig II of Bavaria is declared insane and found dead in Lake Starnberg with the doctor who certified him.
-1886|H|mor|MO|Prague|crime,learning|The forged manuscripts|Masaryk and others show that the medieval Czech manuscripts of Dvur Kralove and Zelena Hora are forgeries.
+1886|H|mor|EU|Prague|crime,learning|The forged manuscripts|Masaryk and others show that the medieval Czech manuscripts of Dvur Kralove and Zelena Hora are forgeries.
 1887|H|mor|EU|London|crown|The Golden Jubilee|Victoria marks fifty years on the throne, and kings come to London.
 1887|H|mor|AS|Yellow River|flood|The Yellow River flood|The Yellow River breaks its dykes and floods the plain; perhaps a million die.
 1887|W|mum|EU|London|occult,crime|A mummy unwrapped|The house reading has a mummy unwrapped before a London audience wake that night; the house rule notes the Reborn remember such things.
@@ -203,7 +203,7 @@
 1892|W|mor,all|MO|Brno|crime,occult|A doctor's case|The house reading has a Brno doctor's notes on a patient with no pulse who walks at night; the Arcanum buys them.
 1892|H|mor|AS|Bombay|founding,law|Indian members|The Indian Councils Act lets Indians sit on the legislative councils.
 1893|H|mor|EU|Corinth|building,sea|The Corinth Canal|A canal cut through rock opens across the isthmus of Corinth.
-1893|H|mor|MO|Prague|uprising,law|The Omladina trial|Young Czech radicals are tried and jailed, and Prague is placed under emergency law.
+1893|H|mor|EU|Prague|uprising,law|The Omladina trial|Young Czech radicals are tried and jailed, and Prague is placed under emergency law.
 1893|H|mor|EU|Prague|art|Dvorak's New World|Dvorak writes his symphony From the New World far from home.
 1894|H|mor|EU|Paris|law,persecution|The Dreyfus affair|A Jewish army captain is falsely convicted of spying and sent to Devil's Island; France splits for twelve years.
 1894|H|mor|AS|Korea|war|The First Sino-Japanese War|Japan defeats China in Korea and at sea, and takes Taiwan.
@@ -213,7 +213,7 @@
 1895|H|mor|EU|Paris|art,science|The first films|The Lumiere brothers show moving pictures to a paying audience in a Paris cafe.
 1895|H|mor|EU|Wurzburg|science|X-rays|Rontgen finds rays that pass through flesh and show the bones.
 1895|H|mor|EU|London|law,crime|Wilde convicted|Oscar Wilde is sentenced to two years' hard labour for gross indecency.
-1895|H|mor|MO|Prague|art,learning|The Czechoslavic Ethnographic Exhibition|Prague shows peasant life from every Czech land, Moravian Wallachia and Slovacko among them.
+1895|H|mor|EU|Prague|art,learning|The Czechoslavic Ethnographic Exhibition|Prague shows peasant life from every Czech land, Moravian Wallachia and Slovacko among them.
 1895|H|mor|AS|Seoul|crown,terror|The queen of Korea killed|Japanese agents murder Queen Min in the palace at Seoul and burn the body.
 1896|H|mor|EU|Athens|sport|The first modern Olympics|The Olympic Games return in Athens.
 1896|H|mor|EU|Paris|science|Radioactivity|Becquerel finds that uranium salts fog photographic plates in the dark.
@@ -287,7 +287,7 @@
 1908|H|mor|AS|Tunguska|disaster|Tunguska|Something explodes over the Siberian forest and flattens eighty million trees.
 1908|W|mag,wer|AS|Tunguska|disaster,occult|Tunguska and the Umbra|The house reading has the blast felt across the Umbra; Garou of Siberia and Mages argue over whether it was a falling star or a failed working.
 1908|H|mor|EU|Messina|quake,disaster|The Messina earthquake|An earthquake and tsunami destroy Messina and Reggio and kill some eighty thousand.
-1908|H|mor|MO|Prague|uprising,law|Martial law in Prague|Riots between Czechs and Germans bring martial law to Prague during the emperor's jubilee.
+1908|H|mor|EU|Prague|uprising,law|Martial law in Prague|Riots between Czechs and Germans bring martial law to Prague during the emperor's jubilee.
 1908|H|mor|ME|Masjed Soleyman|trade,industry|Oil struck in Persia|D'Arcy's drillers strike oil at Masjed Soleyman, and the Anglo-Persian Oil Company follows.
 1909|H|mor|EU|Dover|travel,science|Bleriot crosses|Louis Bleriot flies across the English Channel.
 1909|H|mor|ME|Istanbul|crown,revolution|Abdulhamid deposed|A counter-coup fails and the Young Turks depose Sultan Abdulhamid II.

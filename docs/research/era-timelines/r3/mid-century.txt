@@ -47,7 +47,7 @@
 1923|H|mor|EU|Munich|revolution|The beer hall putsch|Hitler tries to seize power in Munich and is jailed.
 1924|H|mor|ME|Istanbul|faith,law|The caliphate abolished|The Turkish republic abolishes the caliphate and sends the last caliph into exile.
 1924|H|mor|EU|Moscow|death|Lenin dies|Lenin dies after a series of strokes, and Stalin begins to outmanoeuvre the other heirs.
-1924|H|mor|MO|Prague|art,death|Kafka dies|Franz Kafka dies near Vienna; a friend refuses to burn the manuscripts.
+1924|H|mor|EU|Prague|art,death|Kafka dies|Franz Kafka dies near Vienna; a friend refuses to burn the manuscripts.
 1924|W|wra|EU|Ypres|death,occult|The Menin Gate|The house reading has the names on the Menin Gate draw the unremembered dead of Flanders in a slow crowd.
 1925|H|mor|ME|Damascus|uprising|The Great Syrian Revolt|The Druze rise against the French, and France shells Damascus.
 1925|H|mor|ME|Tehran|crown|Reza Shah|Reza Khan ends the Qajar dynasty and crowns himself shah of Persia.
@@ -87,7 +87,7 @@
 1934|H|mor|EU|Berlin|crime,terror|The Night of the Long Knives|Hitler has the SA leaders and other rivals murdered.
 1934|H|mor|AS|Jiangxi|migration,war|The Long March|The Red Army breaks out of encirclement and marches six thousand miles to Shaanxi.
 1934|H|mor|AS|Bihar|quake|The Bihar earthquake|An earthquake on the Nepal border kills ten thousand.
-1935|H|mor|MO|Prague|crown|Benes president|The aged Masaryk retires, and the foreign minister Edvard Benes becomes president of Czechoslovakia.
+1935|H|mor|EU|Prague|crown|Benes president|The aged Masaryk retires, and the foreign minister Edvard Benes becomes president of Czechoslovakia.
 1935|H|mor|EU|Nuremberg|law,persecution|The Nuremberg laws|Germany strips Jews of citizenship and forbids marriage between Jews and other Germans.
 1935|H|mor|AS|Quetta|quake|The Quetta earthquake|An earthquake in the night destroys Quetta in Baluchistan and kills thirty thousand.
 1935|H|mor|ME|Tehran|law|Persia becomes Iran|Reza Shah asks the world to call the country Iran.
@@ -128,7 +128,7 @@
 1941-8|H|mor|ME|Tehran|war,crown|Iran invaded|Britain and the Soviets invade Iran, and Reza Shah gives up the throne to his son.
 1941-9|H|mor|EU|Babi Yar|massacre|Babi Yar|German units shoot nearly thirty-four thousand Jews in two days in a ravine outside Kiev.
 1941-9|H|mor|EU|Leningrad|siege,famine|The siege of Leningrad|Germany surrounds Leningrad; about a million die in a siege of nearly nine hundred days.
-1941-9|H|mor|MO|Prague|terror|Heydrich arrives|Reinhard Heydrich takes charge of the protectorate and begins mass arrests and executions.
+1941-9|H|mor|EU|Prague|terror|Heydrich arrives|Reinhard Heydrich takes charge of the protectorate and begins mass arrests and executions.
 1941-10|H|mor|EU|Lodz|persecution|The deportations from the protectorate|Jews from Prague and Brno are deported to Lodz and Terezin.
 1941-12|H|mor|AS|Hong Kong|war|Hong Kong falls|Japan attacks Hong Kong, Malaya and Pearl Harbor in a day.
 1941-12|H|mor|EU|Moscow|battle,weather|Moscow holds|The Soviets stop the Germans before Moscow in the cold and counterattack.

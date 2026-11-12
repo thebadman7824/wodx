@@ -72,7 +72,7 @@
 1915-4|H|mor|ME|Istanbul|persecution,massacre|The Armenian deportations|Armenian leaders in Istanbul are arrested and killed, and the deportations of the Armenian people begin; about a million die.
 1915-4|W|wra|ME|Anatolia|massacre,occult|The marches of the dead|The house reading has the Armenian dead rise in the Shadowlands in such numbers that the Dark Kingdom of Jade sends envoys to see.
 1915-4|H|mor|ME|Van|siege,uprising|The defence of Van|The Armenians of Van hold their quarter against Ottoman troops for a month until the Russians come.
-1915-4|H|mor,all|MO|Prague|war,crime|The 28th regiment|The Prague 28th infantry regiment goes over to the Russians nearly whole in the Carpathians, and the army disbands it in disgrace.
+1915-4|H|mor,all|EU|Prague|war,crime|The 28th regiment|The Prague 28th infantry regiment goes over to the Russians nearly whole in the Carpathians, and the army disbands it in disgrace.
 1915-5|H|mor|EU|Gorlice|battle|Gorlice-Tarnow|German and Austrian armies break the Russian front at Gorlice, and the great retreat begins.
 1915-5|H|mor|EU|Irish Sea|sea,war|The Lusitania sunk|A German submarine sinks the liner Lusitania off Ireland; nearly twelve hundred die.
 1915-5|H|mor|EU|Rome|war|Italy declares war|Italy joins the Allies on promises of Austrian land.
@@ -228,7 +228,7 @@
 1918-4|H|mor|EU|Lys|battle|The Lys|Germany attacks again on the Lys; Haig orders his men to fight with their backs to the wall.
 1918-4|H|mor|EU|Zeebrugge|sea,war|The Zeebrugge raid|The Royal Navy tries to block the submarine port at Zeebrugge with sunken ships.
 1918-4|H|mor|EU|Somme|death,war|The Red Baron shot down|Manfred von Richthofen is shot down and killed over the Somme.
-1918-4|H|mor|MO|Prague|founding,law|The oath of the nation|Czech writers and deputies swear an oath in Prague to stand together until independence.
+1918-4|H|mor|EU|Prague|founding,law|The oath of the nation|Czech writers and deputies swear an oath in Prague to stand together until independence.
 1918-4|H|mor|EU|Rome|founding|The Congress of Oppressed Nationalities|Czechs, Poles, Romanians and South Slavs meet in Rome to plan the breakup of Austria-Hungary.
 1918-5|H|mor|EU|Chelyabinsk|war,uprising|The Czech Legion rises|The Czechoslovak Legion, crossing Russia to sail home from Vladivostok, fights the Bolsheviks at Chelyabinsk and seizes the railway.
 1918-5|H|mor|EU|Aisne|battle|The Aisne offensive|Germany breaks through on the Chemin des Dames and reaches the Marne again.
@@ -255,7 +255,7 @@
 1918-9|H|mor|EU|Meuse-Argonne|battle|The Meuse-Argonne|Over a million American soldiers attack in the Argonne forest in the war's last great battle.
 1918-10|H|mor|ME|Damascus|war,founding|Damascus taken|Arab and Australian troops enter Damascus.
 1918-10|H|mor|EU|Vienna|law,founding|Karl's manifesto|Emperor Karl offers to make Austria a federation of peoples; the peoples have already decided.
-1918-10|H|mor|MO|Prague|founding,revolution|Czechoslovakia proclaimed|The National Committee in Prague declares an independent Czechoslovakia on 28 October without a shot.
+1918-10|H|mor|EU|Prague|founding,revolution|Czechoslovakia proclaimed|The National Committee in Prague declares an independent Czechoslovakia on 28 October without a shot.
 1918-10|H|mor|MO|Brno|founding,revolution|Brno joins the republic|Czech officials take over Brno; German parties try to join the Moravian lands to German Austria and fail.
 1918-10|W|all,vam|MO|Brno|founding,occult|A new prince for a new state|The house reading has the Kindred of Brno use the new republic to settle old scores; the prince recognises Prague's claims for the first time.
 1918-10|H|mor|EU|Vittorio Veneto|battle|Vittorio Veneto|Italy breaks the Austro-Hungarian army as its regiments go home by nation.

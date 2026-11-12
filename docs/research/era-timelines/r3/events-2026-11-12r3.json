@@ -29102,7 +29102,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "founding",
@@ -29645,7 +29645,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "building",
@@ -30602,7 +30602,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "fire",
@@ -31002,7 +31002,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "crime",
@@ -31610,7 +31610,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "uprising",
@@ -31828,7 +31828,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "art",
@@ -33476,7 +33476,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "uprising",
@@ -35689,7 +35689,7 @@
 "Mortals",
 "All lines"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "war",
@@ -38837,7 +38837,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "founding",
@@ -39365,7 +39365,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "founding",
@@ -41238,7 +41238,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "art",
@@ -42029,7 +42029,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "crown"
@@ -42845,7 +42845,7 @@
 "lines": [
 "Mortals"
 ],
-"region": "Moravia",
+"region": "Europe",
 "place": "Prague",
 "tags": [
 "terror"
@@ -46366,5 +46366,6879 @@
 "text": "The house reading has the Velvet Revolution light the Dreaming of Prague, and the Kithain of Brno dance on Freedom Square.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
+},
+{
+"id": "r3-modern-001",
+"era": "modern",
+"year": 1990,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baku",
+"tags": [
+"massacre"
+],
+"title": "Black January",
+"text": "Soviet troops storm Baku after pogroms against Armenians and kill over a hundred civilians.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-002",
+"era": "modern",
+"year": 1990,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vilnius",
+"tags": [
+"founding"
+],
+"title": "Lithuania breaks away",
+"text": "Lithuania declares independence from the Soviet Union, the first republic to do so.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-003",
+"era": "modern",
+"year": 1990,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"founding"
+],
+"title": "The hyphen war",
+"text": "Czechs and Slovaks quarrel over the country's new name and settle on the Czech and Slovak Federative Republic.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-004",
+"era": "modern",
+"year": 1990,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The first free election",
+"text": "Czechoslovakia's first free election in forty-four years gives Civic Forum a landslide; Moravian regional parties win seats.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-005",
+"era": "modern",
+"year": 1990,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Manjil",
+"tags": [
+"quake"
+],
+"title": "The Manjil earthquake",
+"text": "An earthquake in northern Iran kills over thirty-five thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-006",
+"era": "modern",
+"year": 1990,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kuwait",
+"tags": [
+"war"
+],
+"title": "Iraq invades Kuwait",
+"text": "Saddam Hussein's army overruns Kuwait in a day.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-007",
+"era": "modern",
+"year": 1990,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"founding"
+],
+"title": "German reunification",
+"text": "East Germany joins the Federal Republic, and Germany is one state again.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "bjd-berlin",
+"title": "Berlin After the Purge"
+},
+{
+"id": "berbn-divided",
+"title": "Berlin's Two Princes"
+},
+{
+"id": "berbn-gustav",
+"title": "Gustav Breidenstein"
+}
+]
+},
+{
+"id": "r3-modern-008",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"travel",
+"money"
+],
+"title": "The tourists come",
+"text": "Western tourists flood Prague, and the old town fills with exchange booths and beer.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-009",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"founding",
+"occult"
+],
+"title": "The Camarilla comes east",
+"text": "The house reading has Camarilla envoys reach Prague within weeks of the revolution, offering protection to the eastern Kindred who survived.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-modern-010",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"occult"
+],
+"title": "Brno's prince wakes",
+"text": "The house reading has the old prince of Brno rise from the Spilberk to claim the city again, and find younger Kindred who never knew the prince existed.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-011",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bucharest",
+"tags": [
+"uprising"
+],
+"title": "The miners' raid",
+"text": "Miners brought to Bucharest by the government beat students and opposition protesters.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-012",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Ulaanbaatar",
+"tags": [
+"revolution"
+],
+"title": "Mongolia's democratic revolution",
+"text": "Hunger strikes in Ulaanbaatar end one-party rule in Mongolia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-013",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"law"
+],
+"title": "The restitutions",
+"text": "Property taken by the communists is handed back to former owners and the Church, and Brno's old families return.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-014",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry"
+],
+"title": "The pits begin to close",
+"text": "Ostrava's deep coal mines begin to shut, one after another, and the black city starts to change.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-015",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"uprising"
+],
+"title": "The Slovak nationalists",
+"text": "Slovak nationalists march in Bratislava for an independent state.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-016",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "Najibullah holds",
+"text": "The Afghan communist government outlasts the Soviet withdrawal and holds the cities.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-017",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"money"
+],
+"title": "The bubble bursts",
+"text": "Tokyo's stock market falls by a third, and Japan's lost decade begins.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodtok-imperial-palace",
+"title": "The Imperial Palace, Tokyo"
+},
+{
+"id": "wodtok-stock-exchange",
+"title": "Tokyo Stock Exchange"
+}
+]
+},
+{
+"id": "r3-modern-018",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kashmir",
+"tags": [
+"uprising",
+"migration"
+],
+"title": "The Kashmir insurgency",
+"text": "Insurgency breaks out in the Kashmir valley, and Kashmiri Pandits flee.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-019",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"occult"
+],
+"title": "The Wall's ghosts",
+"text": "The house reading has the ghosts of those shot at the Berlin Wall at last cross freely, and many move on.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "bjd-berlin",
+"title": "Berlin After the Purge"
+},
+{
+"id": "berbn-divided",
+"title": "Berlin's Two Princes"
+},
+{
+"id": "berbn-gustav",
+"title": "Gustav Breidenstein"
+}
+]
+},
+{
+"id": "r3-modern-020",
+"era": "modern",
+"year": 1990,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult",
+"learning"
+],
+"title": "The Prague Hermetics return",
+"text": "The house reading has Prague's Hermetic chantry reopen its rooms near the castle after forty years in hiding.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-021",
+"era": "modern",
+"year": 1991,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "Desert Storm",
+"text": "An American-led coalition bombs Iraq for six weeks and drives its army from Kuwait in four days.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-022",
+"era": "modern",
+"year": 1991,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vilnius",
+"tags": [
+"massacre"
+],
+"title": "The Vilnius television tower",
+"text": "Soviet troops kill fourteen unarmed people defending the television tower in Vilnius.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-023",
+"era": "modern",
+"year": 1991,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kuwait",
+"tags": [
+"fire",
+"disaster"
+],
+"title": "The oil wells burn",
+"text": "Retreating Iraqi troops set hundreds of Kuwaiti oil wells on fire, and black smoke covers the Gulf for months.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-024",
+"era": "modern",
+"year": 1991,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Basra",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "The Iraqi uprisings",
+"text": "Shia in the south and Kurds in the north rise against Saddam and are crushed; Kurds flee into the mountains.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-025",
+"era": "modern",
+"year": 1991,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Chittagong",
+"tags": [
+"storm",
+"disaster"
+],
+"title": "The Bangladesh cyclone",
+"text": "A cyclone and storm surge kill some hundred and forty thousand in Bangladesh.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-026",
+"era": "modern",
+"year": 1991,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ljubljana",
+"tags": [
+"founding",
+"war"
+],
+"title": "Slovenia and Croatia leave Yugoslavia",
+"text": "Slovenia and Croatia declare independence, and the Yugoslav army attacks.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-027",
+"era": "modern",
+"year": 1991,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pinatubo",
+"tags": [
+"disaster",
+"weather"
+],
+"title": "Pinatubo",
+"text": "Mount Pinatubo in the Philippines erupts and cools the world for two years.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-028",
+"era": "modern",
+"year": 1991,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war"
+],
+"title": "The last Soviet soldier leaves",
+"text": "The last Soviet troops leave Czechoslovakia after twenty-three years.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-029",
+"era": "modern",
+"year": 1991,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"revolution"
+],
+"title": "The August coup",
+"text": "Hardliners try to depose Gorbachev; Yeltsin stands on a tank, and the coup collapses in three days.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-030",
+"era": "modern",
+"year": 1991,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Kindred of Moscow divided",
+"text": "The house reading has Moscow's Brujah split as the Soviet dream fails, and Baba Yaga's servants watch from the forests.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-031",
+"era": "modern",
+"year": 1991,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vukovar",
+"tags": [
+"siege",
+"massacre"
+],
+"title": "Vukovar",
+"text": "Vukovar falls after an eighty-seven-day siege, and Serb forces kill some two hundred wounded and prisoners.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-032",
+"era": "modern",
+"year": 1991,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"founding"
+],
+"title": "The Soviet Union ends",
+"text": "The Soviet Union dissolves into fifteen states, and Gorbachev resigns.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-033",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Madrid",
+"tags": [
+"treaty"
+],
+"title": "The Madrid peace conference",
+"text": "Israel, its neighbours and the Palestinians meet face to face for the first time.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "mrva-new-madrid",
+"title": "The Difference Engineers and New Madrid"
+}
+]
+},
+{
+"id": "r3-modern-034",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Technocracy loses a bloc",
+"text": "The house reading has the New World Order lose its grip on the Soviet apparatus, and Russian Traditions come out of hiding.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-035",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Chernobyl",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The zone's cubs",
+"text": "The house reading has the Black Spiral Dancers breed in the Chernobyl zone, and the Shadow Lords of Kiev raid them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "w20ratw-chernobyl",
+"title": "The Chernobyl Exclusion Zone"
+}
+]
+},
+{
+"id": "r3-modern-036",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money"
+],
+"title": "The voucher privatisation",
+"text": "Czechs buy vouchers to own shares in state firms; clever funds gather them up and many vanish.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-037",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bosnia",
+"tags": [
+"war"
+],
+"title": "The Bosnian referendum looms",
+"text": "Bosnia's peoples arm as the Yugoslav wars spread south.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-038",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"terror",
+"death"
+],
+"title": "Rajiv Gandhi killed",
+"text": "A Tamil Tiger suicide bomber kills Rajiv Gandhi at an election rally.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-039",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Phnom Penh",
+"tags": [
+"treaty"
+],
+"title": "The Paris accords for Cambodia",
+"text": "The Cambodian factions sign a peace, and the UN takes over the country for an election.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-040",
+"era": "modern",
+"year": 1991,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Phnom Penh",
+"tags": [
+"treaty",
+"occult"
+],
+"title": "The Kuei-jin return to Cambodia",
+"text": "The house reading has the Kuei-jin courts send envoys back into Cambodia to reckon with what fed on the killing fields.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-041",
+"era": "modern",
+"year": 1992,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Nagorno-Karabakh",
+"tags": [
+"war"
+],
+"title": "The Nagorno-Karabakh war",
+"text": "Armenia and Azerbaijan fight openly over Nagorno-Karabakh.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-042",
+"era": "modern",
+"year": 1992,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Maastricht",
+"tags": [
+"treaty"
+],
+"title": "Maastricht",
+"text": "The European Community becomes the European Union.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-043",
+"era": "modern",
+"year": 1992,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"siege",
+"war"
+],
+"title": "The siege of Sarajevo",
+"text": "Bosnian Serb forces besiege Sarajevo; the siege lasts nearly four years.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-044",
+"era": "modern",
+"year": 1992,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The split agreed",
+"text": "Election results set Klaus's Czech right against Meciar's Slovak nationalists, and the two agree to divide the country.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-045",
+"era": "modern",
+"year": 1992,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rostock",
+"tags": [
+"persecution",
+"fire"
+],
+"title": "Rostock-Lichtenhagen",
+"text": "Rioters set fire to a hostel for asylum seekers in Rostock while crowds cheer.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-046",
+"era": "modern",
+"year": 1992,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Ayodhya",
+"tags": [
+"faith",
+"massacre"
+],
+"title": "The Babri Masjid",
+"text": "Hindu nationalists tear down the mosque at Ayodhya, and riots kill two thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-047",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "The Afghan civil war",
+"text": "The communist government falls, and the mujahideen factions shell Kabul into ruins.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-048",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"siege",
+"occult"
+],
+"title": "The Shadowlands of Sarajevo",
+"text": "The house reading has Sarajevo's dead crowd its Shadowlands, and Spectres prowl the sniper alleys.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-049",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Bosnia",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Tzimisce in the Balkans",
+"text": "The house reading has old Tzimisce of the Balkans feed on the war and play the factions against each other.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-050",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"art"
+],
+"title": "The Brno Theatre",
+"text": "Brno's theatres and the Janacek Opera draw audiences from Vienna once again.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-051",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"treaty"
+],
+"title": "Korea and China",
+"text": "South Korea and China establish relations.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-052",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Algiers",
+"tags": [
+"terror",
+"war"
+],
+"title": "Algeria's civil war",
+"text": "The army cancels an election the Islamists would win, and a decade of killing follows.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-053",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Garou of the Dinaric",
+"text": "The house reading has the Shadow Lords and Silver Fangs of the Balkans fight each other as well as the Wyrm.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-054",
+"era": "modern",
+"year": 1992,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"sport"
+],
+"title": "MotoGP at Brno",
+"text": "The motorcycle Grand Prix returns to the Masaryk circuit, and two hundred thousand fans camp in the woods.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-055",
+"era": "modern",
+"year": 1993,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding"
+],
+"title": "The Czech Republic",
+"text": "Czechoslovakia splits peacefully at midnight, and Moravia becomes part of the Czech Republic.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-056",
+"era": "modern",
+"year": 1993,
+"month": 1,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"occult"
+],
+"title": "A border through the Kindred",
+"text": "The house reading has the Kindred of Moravia and Slovakia redraw their domains, and the Bratislava prince loses havens east of the Morava.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-057",
+"era": "modern",
+"year": 1993,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bombay",
+"tags": [
+"terror"
+],
+"title": "The Bombay bombings",
+"text": "A series of bombs kills over two hundred and fifty in Bombay.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-058",
+"era": "modern",
+"year": 1993,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"treaty"
+],
+"title": "The Oslo Accords",
+"text": "Rabin and Arafat shake hands on the Oslo Accords, and Palestinian self-rule begins in Gaza and Jericho.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-059",
+"era": "modern",
+"year": 1993,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Latur",
+"tags": [
+"quake"
+],
+"title": "The Latur earthquake",
+"text": "An earthquake in Maharashtra kills nearly ten thousand villagers asleep.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-060",
+"era": "modern",
+"year": 1993,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"uprising"
+],
+"title": "The Russian constitutional crisis",
+"text": "Yeltsin's tanks shell the parliament building in Moscow.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-061",
+"era": "modern",
+"year": 1993,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mostar",
+"tags": [
+"war"
+],
+"title": "The Mostar bridge",
+"text": "Croat artillery destroys the sixteenth-century bridge at Mostar.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-062",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"siege"
+],
+"title": "The tunnel",
+"text": "Sarajevo digs a tunnel under the airport to bring in food and arms.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-063",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "The Prague fae",
+"text": "The house reading has the Kithain of Prague grow strong on the tourist crowds, and Banality fights back through the souvenir shops.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-064",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"founding"
+],
+"title": "Slovakia independent",
+"text": "Slovakia becomes an independent state.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-065",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money"
+],
+"title": "The crown",
+"text": "The Czech crown replaces the Czechoslovak one.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-066",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"terror"
+],
+"title": "Hamas's bombings",
+"text": "Hamas begins suicide bombings inside Israel.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-067",
+"era": "modern",
+"year": 1993,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult"
+],
+"title": "The Arcanum's new age",
+"text": "The house reading has the Arcanum put its library onto computers and fear what the networks will reveal.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-068",
+"era": "modern",
+"year": 1994,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"massacre"
+],
+"title": "The Markale market",
+"text": "A mortar shell kills sixty-eight people in a Sarajevo market.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-069",
+"era": "modern",
+"year": 1994,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Hebron",
+"tags": [
+"massacre",
+"faith"
+],
+"title": "The Cave of the Patriarchs",
+"text": "An Israeli settler shoots twenty-nine Muslims at prayer in Hebron.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-070",
+"era": "modern",
+"year": 1994,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pyongyang",
+"tags": [
+"crown",
+"death"
+],
+"title": "Kim Il-sung dies",
+"text": "North Korea's founder dies, and his son Kim Jong-il succeeds.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-071",
+"era": "modern",
+"year": 1994,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Baltic",
+"tags": [
+"sea",
+"disaster"
+],
+"title": "The Estonia sinks",
+"text": "The ferry Estonia sinks in a storm in the Baltic; over eight hundred die.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-072",
+"era": "modern",
+"year": 1994,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Grozny",
+"tags": [
+"war"
+],
+"title": "The first Chechen war",
+"text": "Russia invades Chechnya, and Grozny is bombed to ruins.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-073",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Surat",
+"tags": [
+"plague"
+],
+"title": "Plague at Surat",
+"text": "Plague breaks out in Surat in India, and hundreds of thousands flee.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-074",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"travel",
+"building"
+],
+"title": "The Channel Tunnel",
+"text": "The tunnel under the Channel opens.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-075",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Grozny",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Garou of the Caucasus",
+"text": "The house reading has the Garou of the Caucasus fight the Wyrm's servants in the Chechen ruins.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-076",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"money"
+],
+"title": "The MMM collapse",
+"text": "The MMM pyramid scheme collapses and ruins millions of Russians.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-077",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Amman",
+"tags": [
+"treaty"
+],
+"title": "Israel and Jordan",
+"text": "Israel and Jordan make peace.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-078",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"terror"
+],
+"title": "Matsumoto sarin",
+"text": "Aum Shinrikyo releases sarin in a quiet street in Matsumoto, killing eight; police suspect the wrong man.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodtok-imperial-palace",
+"title": "The Imperial Palace, Tokyo"
+},
+{
+"id": "wodtok-stock-exchange",
+"title": "Tokyo Stock Exchange"
+}
+]
+},
+{
+"id": "r3-modern-079",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"occult"
+],
+"title": "The Sabbat in Moravia",
+"text": "The house reading has a Sabbat pack test Brno's borders from Slovakia and leave three dead ghouls in the Svratka.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-080",
+"era": "modern",
+"year": 1994,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kosice",
+"tags": [
+"art"
+],
+"title": "The Slovak east",
+"text": "Kosice's old town is restored as Slovakia's second city finds its feet.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-081",
+"era": "modern",
+"year": 1995,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kobe",
+"tags": [
+"quake"
+],
+"title": "The Kobe earthquake",
+"text": "An earthquake destroys much of Kobe and kills over six thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-082",
+"era": "modern",
+"year": 1995,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"terror"
+],
+"title": "Sarin on the Tokyo subway",
+"text": "Aum Shinrikyo releases sarin on the Tokyo subway and kills thirteen.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodtok-imperial-palace",
+"title": "The Imperial Palace, Tokyo"
+},
+{
+"id": "wodtok-stock-exchange",
+"title": "Tokyo Stock Exchange"
+}
+]
+},
+{
+"id": "r3-modern-083",
+"era": "modern",
+"year": 1995,
+"month": 3,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"terror",
+"occult"
+],
+"title": "Aum and the Kuei-jin",
+"text": "The house reading has the Kuei-jin of Tokyo find Aum's leaders drawing on a power that was not theirs.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "wodtok-imperial-palace",
+"title": "The Imperial Palace, Tokyo"
+},
+{
+"id": "wodtok-stock-exchange",
+"title": "Tokyo Stock Exchange"
+}
+]
+},
+{
+"id": "r3-modern-084",
+"era": "modern",
+"year": 1995,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Srebrenica",
+"tags": [
+"massacre"
+],
+"title": "Srebrenica",
+"text": "Bosnian Serb forces murder over eight thousand Bosniak men and boys at Srebrenica.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-085",
+"era": "modern",
+"year": 1995,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Srebrenica",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The Srebrenica Circle",
+"text": "The house reading has the Srebrenica dead form a vast Circle that will not leave the valley.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-086",
+"era": "modern",
+"year": 1995,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Krajina",
+"tags": [
+"war",
+"migration"
+],
+"title": "Operation Storm",
+"text": "Croatia retakes Krajina, and two hundred thousand Serbs flee.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-087",
+"era": "modern",
+"year": 1995,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tel Aviv",
+"tags": [
+"terror",
+"death"
+],
+"title": "Rabin killed",
+"text": "An Israeli extremist shoots Prime Minister Rabin at a peace rally.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-088",
+"era": "modern",
+"year": 1995,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dayton",
+"tags": [
+"treaty"
+],
+"title": "Dayton",
+"text": "The Dayton agreement ends the Bosnian war.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-089",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The Constitutional Court in Brno",
+"text": "The Czech Constitutional Court and supreme courts sit in Brno, which becomes the country's judicial capital.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-090",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty"
+],
+"title": "Austria joins the Union",
+"text": "Austria, Finland and Sweden join the European Union.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-modern-091",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"faith"
+],
+"title": "The Panchen Lama",
+"text": "China takes the boy named Panchen Lama by the Dalai Lama and puts its own choice in his place.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "kotec-blood-court",
+"title": "The Blood Court of Beijing"
+}
+]
+},
+{
+"id": "r3-modern-092",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"war"
+],
+"title": "Turkey's war with the PKK",
+"text": "Turkey's army fights the PKK in the south-east, and thousands of Kurdish villages are emptied.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-093",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult"
+],
+"title": "The Kithain and the net",
+"text": "The house reading has young changelings find Glamour in the early web, and the elders do not understand it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-094",
+"era": "modern",
+"year": 1995,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Mikulov",
+"tags": [
+"trade",
+"art"
+],
+"title": "The Palava wine route",
+"text": "Vineyards around Mikulov and the Palava hills open to tourists from Austria and beyond.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-095",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "The Taliban take Kabul",
+"text": "The Taliban take Kabul and hang the former president.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-096",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague",
+"science"
+],
+"title": "Mad cow disease",
+"text": "Britain admits a link between mad cow disease and a new human brain disease.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-097",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Qana",
+"tags": [
+"massacre"
+],
+"title": "Qana",
+"text": "Israeli shells kill over a hundred refugees in a UN compound at Qana.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-098",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague",
+"occult"
+],
+"title": "Tainted beef",
+"text": "The house reading has the Kindred of London worry about the blood of the infected, and the Tremere study it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+},
+{
+"id": "wod2-carfax-abbey",
+"title": "Carfax Abbey"
+}
+]
+},
+{
+"id": "r3-modern-099",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Grozny",
+"tags": [
+"treaty"
+],
+"title": "The Khasavyurt accord",
+"text": "Russia withdraws from Chechnya.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-100",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"uprising"
+],
+"title": "The Belgrade protests",
+"text": "Serbs march through Belgrade's winter for three months against vote rigging.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-101",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The first Senate",
+"text": "The Czech Senate is elected for the first time.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-102",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"faith",
+"law"
+],
+"title": "Taliban rule",
+"text": "The Taliban ban music, kites and girls' schooling in Kabul.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-103",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dhahran",
+"tags": [
+"terror"
+],
+"title": "Khobar Towers",
+"text": "A truck bomb kills nineteen American airmen in Saudi Arabia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-104",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"occult"
+],
+"title": "The Kuei-jin and the handover",
+"text": "The house reading has the Kuei-jin of Hong Kong bargain with mainland courts ahead of the handover.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "wodhk-midnight-express",
+"title": "Necropolis Hong Kong and the Midnight Express"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+}
+]
+},
+{
+"id": "r3-modern-105",
+"era": "modern",
+"year": 1996,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Kromeriz",
+"tags": [
+"art",
+"learning"
+],
+"title": "Kromeriz's gardens",
+"text": "The archbishop's palace and gardens at Kromeriz are put on the World Heritage list two years later.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-106",
+"era": "modern",
+"year": 1997,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tirana",
+"tags": [
+"uprising",
+"money"
+],
+"title": "Albania's pyramid collapse",
+"text": "Pyramid schemes swallow the savings of half of Albania, the state collapses, and armouries are looted.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-107",
+"era": "modern",
+"year": 1997,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"death"
+],
+"title": "Deng Xiaoping dies",
+"text": "Deng Xiaoping, architect of China's opening, dies at ninety-two.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "kotec-blood-court",
+"title": "The Blood Court of Beijing"
+}
+]
+},
+{
+"id": "r3-modern-108",
+"era": "modern",
+"year": 1997,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"law"
+],
+"title": "Khatami elected",
+"text": "The reformer Mohammad Khatami wins Iran's presidency by a landslide.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-alamut",
+"title": "Alamut"
+}
+]
+},
+{
+"id": "r3-modern-109",
+"era": "modern",
+"year": 1997,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"empire",
+"treaty"
+],
+"title": "Hong Kong handed back",
+"text": "Britain hands Hong Kong back to China at midnight in the rain.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "wodhk-midnight-express",
+"title": "Necropolis Hong Kong and the Midnight Express"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+}
+]
+},
+{
+"id": "r3-modern-110",
+"era": "modern",
+"year": 1997,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bangkok",
+"tags": [
+"money"
+],
+"title": "The Asian financial crisis",
+"text": "The Thai baht collapses, and the crisis spreads to Indonesia, Korea and Malaysia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-111",
+"era": "modern",
+"year": 1997,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"flood",
+"disaster"
+],
+"title": "The Moravian flood",
+"text": "The Morava and the Oder burst their banks; Olomouc, Otrokovice and Troubky drown, and fifty die in Moravia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-112",
+"era": "modern",
+"year": 1997,
+"month": 7,
+"kind": "tied",
+"lines": [
+"All lines",
+"Werewolf"
+],
+"region": "Moravia",
+"place": "Troubky",
+"tags": [
+"flood",
+"occult"
+],
+"title": "The river spirits rise",
+"text": "The house reading has the Garou of the Morava read the flood as the river's anger at the dams and drainage of the plain.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-113",
+"era": "modern",
+"year": 1997,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"flood",
+"occult"
+],
+"title": "The flood's dead",
+"text": "The house reading has the flood stir old drowned wraiths of the Morava, some dead since the Thirty Years War.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-114",
+"era": "modern",
+"year": 1997,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"death"
+],
+"title": "Diana dies",
+"text": "Diana, Princess of Wales, dies in a car crash in a Paris underpass.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-modern-115",
+"era": "modern",
+"year": 1997,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Luxor",
+"tags": [
+"terror",
+"massacre"
+],
+"title": "The Luxor massacre",
+"text": "Gunmen kill sixty-two people, most of them tourists, at the temple of Hatshepsut.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "mrftlv-black-pyramid",
+"title": "The Black Pyramid Chantry"
+}
+]
+},
+{
+"id": "r3-modern-116",
+"era": "modern",
+"year": 1997,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Luxor",
+"tags": [
+"terror",
+"occult"
+],
+"title": "Blood at Deir el-Bahari",
+"text": "The house reading has the Reborn of Thebes swear to find whoever guided the killers to Hatshepsut's temple.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "mrftlv-black-pyramid",
+"title": "The Black Pyramid Chantry"
+}
+]
+},
+{
+"id": "r3-modern-117",
+"era": "modern",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult"
+],
+"title": "The Gangrel leave",
+"text": "The house reading follows Vampire canon in spirit: the Gangrel begin to quit the Camarilla, and their justicar walks out.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+},
+{
+"id": "wod2-carfax-abbey",
+"title": "Carfax Abbey"
+}
+]
+},
+{
+"id": "r3-modern-118",
+"era": "modern",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"occult"
+],
+"title": "The Traditions under siege",
+"text": "The house reading has the Traditions' chantries in Europe prepare for a Technocratic push after the bloc's fall.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-modern-119",
+"era": "modern",
+"year": 1997,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"crown"
+],
+"title": "The Klaus government falls",
+"text": "A party funding scandal and a currency crisis bring down Klaus's government.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-120",
+"era": "modern",
+"year": 1997,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"money"
+],
+"title": "Korea rescued",
+"text": "South Korea takes an IMF rescue, and Koreans give gold to the state.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-121",
+"era": "modern",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"flood",
+"occult"
+],
+"title": "The flood's finds",
+"text": "The house reading has the Olomouc flood uncover a sealed cellar, and a parish priest asks the Arcanum for help.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-122",
+"era": "modern",
+"year": 1998,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"sport"
+],
+"title": "Nagano gold",
+"text": "Czech hockey players win Olympic gold at Nagano, and Prague celebrates in the streets.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-123",
+"era": "modern",
+"year": 1998,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belfast",
+"tags": [
+"treaty"
+],
+"title": "The Good Friday Agreement",
+"text": "Northern Ireland's parties agree to share power.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-124",
+"era": "modern",
+"year": 1998,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pokhran",
+"tags": [
+"science",
+"war"
+],
+"title": "India's bomb tests",
+"text": "India tests five nuclear bombs, and Pakistan answers within weeks.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-125",
+"era": "modern",
+"year": 1998,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jakarta",
+"tags": [
+"revolution",
+"massacre"
+],
+"title": "Suharto falls",
+"text": "Riots in Jakarta kill a thousand, many of them Chinese Indonesians, and Suharto resigns after thirty-two years.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-126",
+"era": "modern",
+"year": 1998,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"money"
+],
+"title": "The rouble crash",
+"text": "Russia defaults on its debts, and the rouble loses two thirds of its value.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-127",
+"era": "modern",
+"year": 1998,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Omagh",
+"tags": [
+"terror"
+],
+"title": "Omagh",
+"text": "A car bomb kills twenty-nine in the Northern Irish town of Omagh.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-128",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kosovo",
+"tags": [
+"war"
+],
+"title": "The Kosovo war",
+"text": "Serbian forces fight the Kosovo Liberation Army and drive villagers from their homes.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-129",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Doissetep",
+"tags": [
+"occult",
+"disaster"
+],
+"title": "Doissetep falls",
+"text": "The house reading follows Mage canon: the great Hermetic Horizon chantry of Doissetep tears itself apart in a war of its own masters.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "nhw2-doissetep-decay",
+"title": "Doissetep in its last days"
+},
+{
+"id": "mroh-doissetep",
+"title": "The ruins of Doissetep"
+},
+{
+"id": "mrbt-flambeau-2000",
+"title": "House Flambeau after Doissetep"
+}
+]
+},
+{
+"id": "r3-modern-130",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crime",
+"occult"
+],
+"title": "The Brno files",
+"text": "The house reading has old secret police files on Brno's night-walkers sold to a private collector, and hunters learn of them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-131",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown"
+],
+"title": "The opposition agreement",
+"text": "Zeman's Social Democrats rule with Klaus's support.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-132",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"art"
+],
+"title": "Ignis Brunensis",
+"text": "Brno begins its fireworks festival on the Brno dam.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-133",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "The missile strikes",
+"text": "American missiles strike training camps in Afghanistan after embassy bombings.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-134",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "Desert Fox",
+"text": "America and Britain bomb Iraq for four days.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-135",
+"era": "modern",
+"year": 1998,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"occult"
+],
+"title": "The Tremere and the Pyramid",
+"text": "The house reading has the Tremere of Vienna fear a breach in their own pyramid, and the Prague chantry is purged.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-modern-136",
+"era": "modern",
+"year": 1999,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"treaty",
+"war"
+],
+"title": "The Czechs join NATO",
+"text": "The Czech Republic, Poland and Hungary join NATO.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-137",
+"era": "modern",
+"year": 1999,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"war"
+],
+"title": "The NATO bombing",
+"text": "NATO bombs Serbia for seventy-eight days to end the Kosovo campaign.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-138",
+"era": "modern",
+"year": 1999,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kosovo",
+"tags": [
+"migration"
+],
+"title": "The Kosovo exodus",
+"text": "Some eight hundred thousand Kosovar Albanians flee to Albania and Macedonia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-139",
+"era": "modern",
+"year": 1999,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kargil",
+"tags": [
+"war"
+],
+"title": "Kargil",
+"text": "India and Pakistan fight on the icy heights of Kargil.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-140",
+"era": "modern",
+"year": 1999,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Vampire",
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Bangladesh",
+"tags": [
+"occult",
+"disaster"
+],
+"title": "The Week of Nightmares",
+"text": "The house reading follows canon: the Ravnos Antediluvian wakes in India, and Kuei-jin, Garou and Kindred fight it for a week of storms and madness.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-141",
+"era": "modern",
+"year": 1999,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Bangladesh",
+"tags": [
+"occult",
+"science"
+],
+"title": "The Technocracy's strike",
+"text": "The house reading follows canon: Technocratic satellites burn the Ravnos Antediluvian with sunlight focused from orbit.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-142",
+"era": "modern",
+"year": 1999,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"occult",
+"storm"
+],
+"title": "The Fifth Great Maelstrom",
+"text": "The house reading follows Wraith canon: the Antediluvian's death sends a Maelstrom through the Underworld, and Stygia falls into ruin.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+},
+{
+"id": "whier-classes",
+"title": "The classes of Stygia"
+}
+]
+},
+{
+"id": "r3-modern-143",
+"era": "modern",
+"year": 1999,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"occult",
+"storm"
+],
+"title": "The Avatar Storm",
+"text": "The house reading follows Mage canon: an Avatar Storm closes the Umbra to Mages, and Horizon Realms are cut off.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-modern-144",
+"era": "modern",
+"year": 1999,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "The Ravnos madness",
+"text": "The house reading has the Ravnos of Prague go mad in a week, and the clan is nearly gone by summer's end.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-modern-145",
+"era": "modern",
+"year": 1999,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"science"
+],
+"title": "The great eclipse",
+"text": "A total eclipse crosses Europe from Cornwall to Romania; millions watch.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-146",
+"era": "modern",
+"year": 1999,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Izmit",
+"tags": [
+"quake"
+],
+"title": "The Izmit earthquake",
+"text": "An earthquake in north-western Turkey kills seventeen thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-147",
+"era": "modern",
+"year": 1999,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"terror"
+],
+"title": "The apartment bombings",
+"text": "Bombs destroy apartment blocks in Moscow and other cities; Russia blames Chechens and goes to war again.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-148",
+"era": "modern",
+"year": 1999,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dili",
+"tags": [
+"massacre",
+"founding"
+],
+"title": "East Timor votes",
+"text": "East Timor votes for independence, and militias backed by the army burn Dili.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-149",
+"era": "modern",
+"year": 1999,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taiwan",
+"tags": [
+"quake"
+],
+"title": "The Chi-Chi earthquake",
+"text": "An earthquake in central Taiwan kills over two thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-150",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Imbuing",
+"text": "The house reading follows Hunter canon: ordinary people across Europe hear the Messengers and begin to see what walks among them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+}
+]
+},
+{
+"id": "r3-modern-151",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"occult"
+],
+"title": "The Fallen escape",
+"text": "The house reading follows Demon canon: the Maelstrom cracks the Abyss, and fallen angels slip into the bodies of the dying.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-152",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"occult"
+],
+"title": "The Reborn after the storm",
+"text": "The house reading has the Maelstrom reach the Duat, and the Reborn of Egypt lose their path to the Underworld for a time.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "followers-of-set",
+"title": "The Followers of Set"
+},
+{
+"id": "cairbn-city",
+"title": "Cairo's Undead Melting Pot"
+},
+{
+"id": "cairbn-bey",
+"title": "Mukhtar Bey"
+}
+]
+},
+{
+"id": "r3-modern-153",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Grozny",
+"tags": [
+"war"
+],
+"title": "The second Chechen war",
+"text": "Russia invades Chechnya again and levels Grozny.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-154",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Putin",
+"text": "Yeltsin resigns on the last day of the year and leaves Vladimir Putin as acting president.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-155",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"money"
+],
+"title": "The euro born",
+"text": "The euro begins as a currency for banks and markets.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-156",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kathmandu",
+"tags": [
+"travel"
+],
+"title": "The Kathmandu hijacking",
+"text": "An Indian airliner is hijacked to Kandahar.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-157",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Amman",
+"tags": [
+"crown",
+"death"
+],
+"title": "King Hussein dies",
+"text": "King Hussein of Jordan dies, and his son Abdullah succeeds.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-158",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Rabat",
+"tags": [
+"crown"
+],
+"title": "Mohammed VI",
+"text": "Morocco's king dies and his son takes the throne.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-159",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Asia",
+"place": "Bangladesh",
+"tags": [
+"occult"
+],
+"title": "The Garou's losses",
+"text": "The house reading has the Garou of India count their dead after the Week of Nightmares; whole septs are gone.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-160",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Dreaming's storm",
+"text": "The house reading has the Maelstrom's echo shake the Dreaming, and the Kithain dream of a red star.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+}
+]
+},
+{
+"id": "r3-modern-161",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Red Star",
+"text": "The house reading follows Werewolf canon: a red star appears in the Umbral sky, and the Garou fear the Apocalypse is near.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+},
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "tbfia-clans-of-stag",
+"title": "The Clans of Stag"
+}
+]
+},
+{
+"id": "r3-modern-162",
+"era": "modern",
+"year": 1999,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"building",
+"faith"
+],
+"title": "The Holy Trinity Column",
+"text": "The baroque plague column of Olomouc is added to the World Heritage list.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-163",
+"era": "modern",
+"year": 2000,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Baia Mare",
+"tags": [
+"disaster",
+"flood"
+],
+"title": "The cyanide spill",
+"text": "A dam at a gold mine in Romania breaks, and cyanide kills the fish of the Tisza and the Danube.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-164",
+"era": "modern",
+"year": 2000,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"travel",
+"disaster"
+],
+"title": "The Concorde crash",
+"text": "A Concorde crashes on take-off at Paris and kills a hundred and thirteen.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-modern-165",
+"era": "modern",
+"year": 2000,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Barents Sea",
+"tags": [
+"sea",
+"disaster"
+],
+"title": "The Kursk",
+"text": "The Russian submarine Kursk sinks after an explosion; all a hundred and eighteen die.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-166",
+"era": "modern",
+"year": 2000,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"uprising"
+],
+"title": "The second intifada",
+"text": "A visit to the Temple Mount sets off the second intifada.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-167",
+"era": "modern",
+"year": 2000,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"uprising",
+"money"
+],
+"title": "The Prague IMF riots",
+"text": "Protesters fight police at the IMF and World Bank meeting in Prague.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-168",
+"era": "modern",
+"year": 2000,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"revolution"
+],
+"title": "Milosevic falls",
+"text": "Crowds storm the parliament in Belgrade, and Milosevic gives up power.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-169",
+"era": "modern",
+"year": 2000,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Temelin",
+"tags": [
+"science",
+"industry"
+],
+"title": "Temelin starts up",
+"text": "The Czech nuclear plant at Temelin begins its first reactor, and Austria protests at the border.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-170",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Moravia",
+"place": "Temelin",
+"tags": [
+"science",
+"occult"
+],
+"title": "Temelin and the Weaver",
+"text": "The house reading has the Technocracy run Temelin's start quietly, while a Brno Verbena reads the land's unease.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-171",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The South Moravian Region",
+"text": "The Czech lands are divided into regions, and Brno becomes the seat of the South Moravian Region.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-172",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"treaty"
+],
+"title": "The Korean summit",
+"text": "The leaders of the two Koreas meet in Pyongyang.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-173",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"crown",
+"death"
+],
+"title": "Hafez al-Assad dies",
+"text": "Syria's president dies, and his son Bashar succeeds.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-174",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"war"
+],
+"title": "Israel leaves Lebanon",
+"text": "Israel withdraws from southern Lebanon.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-175",
+"era": "modern",
+"year": 2000,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"occult"
+],
+"title": "The Assamite schism",
+"text": "The house reading follows Vampire canon in spirit: the Assamites split as the old one at Alamut wakes.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-176",
+"era": "modern",
+"year": 2001,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Gujarat",
+"tags": [
+"quake"
+],
+"title": "The Gujarat earthquake",
+"text": "An earthquake kills twenty thousand in Gujarat.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-177",
+"era": "modern",
+"year": 2001,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bamiyan",
+"tags": [
+"faith",
+"building"
+],
+"title": "The Bamiyan Buddhas",
+"text": "The Taliban blow up the giant Buddhas of Bamiyan.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-178",
+"era": "modern",
+"year": 2001,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kathmandu",
+"tags": [
+"crown",
+"death"
+],
+"title": "The Nepal royal massacre",
+"text": "Nepal's crown prince kills the king, the queen and seven others at a family dinner.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-179",
+"era": "modern",
+"year": 2001,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Panjshir",
+"tags": [
+"terror",
+"death"
+],
+"title": "Massoud killed",
+"text": "Al-Qaeda assassins posing as journalists kill Ahmad Shah Massoud.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-180",
+"era": "modern",
+"year": 2001,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror"
+],
+"title": "The September attacks",
+"text": "Al-Qaeda's attacks on New York and Washington shake Europe, and NATO invokes its mutual defence clause.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-181",
+"era": "modern",
+"year": 2001,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "The Afghan war",
+"text": "America and its allies attack Afghanistan, and the Taliban fall by December.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-182",
+"era": "modern",
+"year": 2001,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"terror"
+],
+"title": "The Indian parliament attack",
+"text": "Gunmen attack India's parliament, and India and Pakistan mass armies on the border.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-183",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror",
+"occult"
+],
+"title": "The Camarilla tightens",
+"text": "The house reading has the Camarilla tighten the Masquerade as cameras and security spread after the attacks.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+},
+{
+"id": "wod2-carfax-abbey",
+"title": "Carfax Abbey"
+}
+]
+},
+{
+"id": "r3-modern-184",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Zlin",
+"tags": [
+"learning"
+],
+"title": "Tomas Bata University",
+"text": "Zlin opens its own university named for the shoe king.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-185",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Skopje",
+"tags": [
+"war"
+],
+"title": "The Macedonian conflict",
+"text": "Albanian rebels fight Macedonia's army until a peace is made at Ohrid.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-186",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"trade"
+],
+"title": "China joins the WTO",
+"text": "China joins the World Trade Organization.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "kotec-blood-court",
+"title": "The Blood Court of Beijing"
+}
+]
+},
+{
+"id": "r3-modern-187",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Technocracy in Afghanistan",
+"text": "The house reading has the Technocracy test its new watchers over Afghanistan.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-188",
+"era": "modern",
+"year": 2001,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"building",
+"art"
+],
+"title": "Villa Tugendhat listed",
+"text": "The Tugendhat house in Brno becomes a World Heritage site.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-189",
+"era": "modern",
+"year": 2002,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"money"
+],
+"title": "The euro in pockets",
+"text": "Euro notes and coins come into use in twelve countries.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-190",
+"era": "modern",
+"year": 2002,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Godhra",
+"tags": [
+"massacre",
+"faith"
+],
+"title": "The Gujarat riots",
+"text": "A train fire at Godhra sets off riots in Gujarat that kill a thousand or more, most of them Muslims.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-191",
+"era": "modern",
+"year": 2002,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Erfurt",
+"tags": [
+"crime"
+],
+"title": "The Erfurt school shooting",
+"text": "A former pupil kills sixteen at a school in Erfurt.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-192",
+"era": "modern",
+"year": 2002,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"flood"
+],
+"title": "The 2002 flood",
+"text": "The Vltava floods Prague's metro and Mala Strana, and the Elbe drowns Dresden's old town.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-193",
+"era": "modern",
+"year": 2002,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"flood",
+"occult"
+],
+"title": "Drowned havens",
+"text": "The house reading has the flood break into the Nosferatu warrens under Prague, and the prince's court meets on high ground.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-modern-194",
+"era": "modern",
+"year": 2002,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bali",
+"tags": [
+"terror"
+],
+"title": "The Bali bombings",
+"text": "Bombs in Bali's nightclubs kill two hundred and two.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-195",
+"era": "modern",
+"year": 2002,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"terror",
+"siege"
+],
+"title": "The Moscow theatre siege",
+"text": "Chechen gunmen hold eight hundred hostages in a Moscow theatre; a gas used to end it kills a hundred and thirty.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-196",
+"era": "modern",
+"year": 2002,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"treaty"
+],
+"title": "The NATO summit in Prague",
+"text": "NATO meets in Prague and invites seven more countries to join.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-197",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"money",
+"occult"
+],
+"title": "The Kuei-jin of the Pearl River",
+"text": "The house reading has the Kuei-jin courts of Hong Kong and Guangzhou fight over the new factories and their hungry workers.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "wodhk-midnight-express",
+"title": "Necropolis Hong Kong and the Midnight Express"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+}
+]
+},
+{
+"id": "r3-modern-198",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The Social Democrats win",
+"text": "Spidla's Social Democrats win the election.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-199",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dili",
+"tags": [
+"founding"
+],
+"title": "Timor-Leste",
+"text": "East Timor becomes independent.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-200",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jenin",
+"tags": [
+"war"
+],
+"title": "The battle of Jenin",
+"text": "Israeli troops storm the Jenin refugee camp.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-201",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pyongyang",
+"tags": [
+"crime"
+],
+"title": "The abducted Japanese",
+"text": "North Korea admits it kidnapped Japanese citizens.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-202",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "A Fallen in Prague",
+"text": "The house reading has one of the Fallen take a Prague banker's body after a car crash, and the city's Kindred notice the change.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-203",
+"era": "modern",
+"year": 2002,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"occult"
+],
+"title": "The Capuchin crypt",
+"text": "The house reading has the mummified friars of Brno's Capuchin crypt keep a ghostly court beneath the tourists' feet.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-204",
+"era": "modern",
+"year": 2003,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"uprising",
+"war"
+],
+"title": "The march against the war",
+"text": "Over a million march in London and millions more across Europe against war in Iraq.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-205",
+"era": "modern",
+"year": 2003,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "The Iraq invasion",
+"text": "American and British forces invade Iraq, and Baghdad falls in three weeks.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-206",
+"era": "modern",
+"year": 2003,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"plague"
+],
+"title": "SARS",
+"text": "A new coronavirus spreads from southern China through a Hong Kong hotel to the world; eight hundred die.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "wodhk-midnight-express",
+"title": "Necropolis Hong Kong and the Midnight Express"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+}
+]
+},
+{
+"id": "r3-modern-207",
+"era": "modern",
+"year": 2003,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"terror",
+"death"
+],
+"title": "Djindjic shot",
+"text": "A sniper kills Serbia's reforming prime minister Zoran Djindjic.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-208",
+"era": "modern",
+"year": 2003,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Klaus president",
+"text": "Vaclav Klaus succeeds Havel as Czech president.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-209",
+"era": "modern",
+"year": 2003,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"crime",
+"learning"
+],
+"title": "The museum looted",
+"text": "Looters strip the National Museum of Iraq of thousands of objects while troops look on.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-210",
+"era": "modern",
+"year": 2003,
+"month": 4,
+"kind": "tied",
+"lines": [
+"Mummy",
+"Mage"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"crime",
+"occult"
+],
+"title": "Treasures in the dark",
+"text": "The house reading has looted tablets and seals from the Baghdad museum reach Mages and Reborn on the black market.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-211",
+"era": "modern",
+"year": 2003,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law",
+"treaty"
+],
+"title": "The EU referendum",
+"text": "Czechs vote to join the European Union.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-212",
+"era": "modern",
+"year": 2003,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"weather",
+"death"
+],
+"title": "The heatwave",
+"text": "A summer heatwave kills over seventy thousand across Europe, fifteen thousand in France alone.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-modern-213",
+"era": "modern",
+"year": 2003,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Bam",
+"tags": [
+"quake"
+],
+"title": "The Bam earthquake",
+"text": "An earthquake destroys the city of Bam and its mud-brick citadel and kills twenty-six thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-214",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"terror"
+],
+"title": "The insurgency",
+"text": "Bombings in Iraq kill the UN envoy and hundreds of Iraqis, and the insurgency grows.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-215",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Assamites and the war",
+"text": "The house reading has the Assamites of Alamut watch the war with cold calculation as Camarilla Kindred follow the armies.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-216",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"uprising"
+],
+"title": "Half a million march",
+"text": "Half a million march in Hong Kong against a security law, and it is withdrawn.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "wodhk-midnight-express",
+"title": "Necropolis Hong Kong and the Midnight Express"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+}
+]
+},
+{
+"id": "r3-modern-217",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tbilisi",
+"tags": [
+"revolution"
+],
+"title": "The Rose Revolution",
+"text": "Georgians storm their parliament with roses and topple Shevardnadze.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-218",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Istanbul",
+"tags": [
+"terror"
+],
+"title": "The Istanbul bombings",
+"text": "Bombs hit synagogues, a bank and the British consulate in Istanbul.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-219",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Ahl-i-Batin and the war",
+"text": "The house reading has the hidden Mages of Baghdad move their libraries before the bombs.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-220",
+"era": "modern",
+"year": 2003,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Moravia",
+"place": "Mikulov",
+"tags": [
+"art",
+"occult"
+],
+"title": "The vintage fae",
+"text": "The house reading has the Kithain of the Palava hills draw Glamour from the harvest festivals.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-221",
+"era": "modern",
+"year": 2004,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"terror"
+],
+"title": "The Madrid train bombings",
+"text": "Bombs on commuter trains kill a hundred and ninety-three in Madrid.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "mrva-new-madrid",
+"title": "The Difference Engineers and New Madrid"
+}
+]
+},
+{
+"id": "r3-modern-222",
+"era": "modern",
+"year": 2004,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"treaty"
+],
+"title": "The Czechs join the Union",
+"text": "The Czech Republic joins the European Union with nine other countries.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-223",
+"era": "modern",
+"year": 2004,
+"month": 5,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"treaty",
+"occult"
+],
+"title": "New roads west",
+"text": "The house reading has Brno's Kindred welcome open borders, and the prince's ghouls take jobs in Vienna and Brussels.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-224",
+"era": "modern",
+"year": 2004,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Beslan",
+"tags": [
+"terror",
+"massacre"
+],
+"title": "Beslan",
+"text": "Chechen gunmen seize a school in Beslan; over three hundred hostages die, most of them children.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-225",
+"era": "modern",
+"year": 2004,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"revolution"
+],
+"title": "The Orange Revolution",
+"text": "Ukrainians camp in Kiev's square against a stolen election and win a new vote.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-226",
+"era": "modern",
+"year": 2004,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Aceh",
+"tags": [
+"disaster",
+"sea"
+],
+"title": "The Indian Ocean tsunami",
+"text": "An earthquake off Sumatra sends a tsunami across the Indian Ocean that kills some two hundred and thirty thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-227",
+"era": "modern",
+"year": 2004,
+"month": 12,
+"kind": "tied",
+"lines": [
+"Wraith",
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Aceh",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The drowned coast",
+"text": "The house reading has the tsunami fill the Yellow Springs with the dead, and the Dark Kingdom of Jade close its gates for a season.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-228",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Fallen at large",
+"text": "The house reading has the Fallen grown bold in European cities, and the hunters learn to tell them from the possessed.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+}
+]
+},
+{
+"id": "r3-modern-229",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The hunters' networks",
+"text": "The house reading has the imbued meet on the internet, and the first cells form in Prague and Brno.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+}
+]
+},
+{
+"id": "r3-modern-230",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Fallujah",
+"tags": [
+"battle"
+],
+"title": "Fallujah",
+"text": "American marines fight two battles for Fallujah.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-231",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ramallah",
+"tags": [
+"death"
+],
+"title": "Arafat dies",
+"text": "Yasser Arafat dies.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-232",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Beslan",
+"tags": [
+"massacre"
+],
+"title": "The mourning of Beslan",
+"text": "Russia mourns Beslan, and Putin ends elections for regional governors.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-233",
+"era": "modern",
+"year": 2004,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"terror",
+"occult"
+],
+"title": "Hunters at Atocha",
+"text": "The house reading has the imbued of Madrid see something feeding on the dying at Atocha.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "mrva-new-madrid",
+"title": "The Difference Engineers and New Madrid"
+}
+]
+},
+{
+"id": "r3-modern-234",
+"era": "modern",
+"year": 2005,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"terror",
+"death"
+],
+"title": "Hariri killed",
+"text": "A truck bomb kills Lebanon's former prime minister Rafik Hariri.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-235",
+"era": "modern",
+"year": 2005,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"death"
+],
+"title": "John Paul II dies",
+"text": "The Polish pope dies after twenty-six years, and Benedict XVI follows.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "mrcc-schism-paladins",
+"title": "The great schism and the Paladins"
+}
+]
+},
+{
+"id": "r3-modern-236",
+"era": "modern",
+"year": 2005,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"revolution"
+],
+"title": "The Cedar Revolution",
+"text": "Mass protests in Beirut force Syrian troops out of Lebanon.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-237",
+"era": "modern",
+"year": 2005,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Andijan",
+"tags": [
+"massacre"
+],
+"title": "Andijan",
+"text": "Uzbek troops fire on protesters in Andijan and kill hundreds.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-238",
+"era": "modern",
+"year": 2005,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror"
+],
+"title": "The London bombings",
+"text": "Four suicide bombers kill fifty-two on London's underground and a bus.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-239",
+"era": "modern",
+"year": 2005,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kashmir",
+"tags": [
+"quake"
+],
+"title": "The Kashmir earthquake",
+"text": "An earthquake in Kashmir kills over eighty thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-240",
+"era": "modern",
+"year": 2005,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising",
+"fire"
+],
+"title": "The banlieue riots",
+"text": "Rioting in the Paris suburbs spreads across France; thousands of cars burn.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-modern-241",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror",
+"occult"
+],
+"title": "The Nosferatu in the tunnels",
+"text": "The house reading has London's Nosferatu tend the dying in the bombed tunnels before the rescuers come.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+},
+{
+"id": "wod2-carfax-abbey",
+"title": "Carfax Abbey"
+}
+]
+},
+{
+"id": "r3-modern-242",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"war"
+],
+"title": "Israel leaves Gaza",
+"text": "Israel withdraws its settlers from Gaza.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-243",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyrgyzstan",
+"tags": [
+"revolution"
+],
+"title": "The Tulip Revolution",
+"text": "Protesters drive the president of Kyrgyzstan from power.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-244",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kashmir",
+"tags": [
+"quake",
+"war"
+],
+"title": "Kashmir after the quake",
+"text": "India and Pakistan open the line of control for aid.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-245",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising",
+"occult"
+],
+"title": "The Brujah in the banlieues",
+"text": "The house reading has young Brujah in the Paris suburbs feed the riots.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+}
+]
+},
+{
+"id": "r3-modern-246",
+"era": "modern",
+"year": 2005,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry"
+],
+"title": "Ostrava's steel sold",
+"text": "The Nova Hut steelworks in Ostrava are sold to a foreign giant.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-247",
+"era": "modern",
+"year": 2006,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Samarra",
+"tags": [
+"faith",
+"terror"
+],
+"title": "The Golden Mosque",
+"text": "Bombers destroy the dome of the Shia shrine at Samarra, and Iraq slides into civil war.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-248",
+"era": "modern",
+"year": 2006,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Yogyakarta",
+"tags": [
+"quake"
+],
+"title": "The Yogyakarta earthquake",
+"text": "An earthquake in Java kills nearly six thousand.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-249",
+"era": "modern",
+"year": 2006,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Podgorica",
+"tags": [
+"founding"
+],
+"title": "Montenegro independent",
+"text": "Montenegro votes to leave Serbia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-250",
+"era": "modern",
+"year": 2006,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"war"
+],
+"title": "The Lebanon war",
+"text": "Israel and Hezbollah fight for thirty-four days.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-251",
+"era": "modern",
+"year": 2006,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mumbai",
+"tags": [
+"terror"
+],
+"title": "The Mumbai train bombings",
+"text": "Bombs on Mumbai's suburban trains kill over two hundred.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-252",
+"era": "modern",
+"year": 2006,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pyongyang",
+"tags": [
+"science",
+"war"
+],
+"title": "North Korea's bomb",
+"text": "North Korea tests a nuclear bomb.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-253",
+"era": "modern",
+"year": 2006,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"death",
+"law"
+],
+"title": "Saddam hanged",
+"text": "Saddam Hussein is hanged.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-254",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war",
+"occult"
+],
+"title": "The war in the Umbra",
+"text": "The house reading has the Garou find the Umbra over Iraq torn by banes feeding on the civil war.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-255",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown"
+],
+"title": "The stalemate election",
+"text": "A tied election leaves the Czech Republic without a government for seven months.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-256",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bangkok",
+"tags": [
+"revolution"
+],
+"title": "The Thai coup",
+"text": "The army overthrows Thailand's government.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-257",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"science"
+],
+"title": "Iran's centrifuges",
+"text": "Iran enriches uranium and the UN imposes sanctions.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-alamut",
+"title": "Alamut"
+}
+]
+},
+{
+"id": "r3-modern-258",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Bangkok",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Kuei-jin of Bangkok",
+"text": "The house reading has the Kuei-jin of Bangkok shift allegiance with the generals.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-259",
+"era": "modern",
+"year": 2006,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"crime",
+"occult"
+],
+"title": "The mine shafts",
+"text": "The house reading has hunters in Ostrava track something living in the flooded old shafts.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-260",
+"era": "modern",
+"year": 2007,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bucharest",
+"tags": [
+"treaty"
+],
+"title": "Romania and Bulgaria join",
+"text": "Romania and Bulgaria join the European Union.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-261",
+"era": "modern",
+"year": 2007,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Islamabad",
+"tags": [
+"siege",
+"faith"
+],
+"title": "The Red Mosque",
+"text": "Pakistani troops storm the Red Mosque in Islamabad after a week-long siege.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-262",
+"era": "modern",
+"year": 2007,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Yangon",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "The Saffron Revolution",
+"text": "Buddhist monks march against Burma's generals and are beaten and jailed.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-263",
+"era": "modern",
+"year": 2007,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Rawalpindi",
+"tags": [
+"terror",
+"death"
+],
+"title": "Benazir Bhutto killed",
+"text": "Benazir Bhutto is killed at a rally in Rawalpindi.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-264",
+"era": "modern",
+"year": 2007,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"travel",
+"treaty"
+],
+"title": "Schengen",
+"text": "The Czech Republic joins the Schengen area, and the border posts with Austria close.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-265",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult",
+"art"
+],
+"title": "The Dreaming in decline",
+"text": "The house reading has the Kithain of Prague sense the Dreaming thin as the old cafes give way to chains.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-266",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tallinn",
+"tags": [
+"uprising",
+"media"
+],
+"title": "The bronze soldier",
+"text": "Riots in Tallinn over a Soviet memorial come with a cyber attack on Estonia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-267",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brdy",
+"tags": [
+"building"
+],
+"title": "The radar debate",
+"text": "Czechs argue over an American radar base planned near Brdy.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-268",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"war"
+],
+"title": "Hamas takes Gaza",
+"text": "Hamas takes control of Gaza.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-269",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Tallinn",
+"tags": [
+"media",
+"occult"
+],
+"title": "The Virtual Adepts in Estonia",
+"text": "The house reading has the Virtual Adepts blamed for the Estonian cyber attack.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-270",
+"era": "modern",
+"year": 2007,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"art"
+],
+"title": "The Brno pavilion reborn",
+"text": "The exhibition grounds of 1928 are restored for new fairs.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-271",
+"era": "modern",
+"year": 2008,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pristina",
+"tags": [
+"founding"
+],
+"title": "Kosovo independent",
+"text": "Kosovo declares independence from Serbia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-272",
+"era": "modern",
+"year": 2008,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Lhasa",
+"tags": [
+"uprising"
+],
+"title": "The Tibet protests",
+"text": "Protests in Lhasa turn to riots and a crackdown.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-273",
+"era": "modern",
+"year": 2008,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Sichuan",
+"tags": [
+"quake"
+],
+"title": "The Sichuan earthquake",
+"text": "An earthquake in Sichuan kills nearly seventy thousand; many die in badly built schools.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-274",
+"era": "modern",
+"year": 2008,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Irrawaddy",
+"tags": [
+"storm"
+],
+"title": "Cyclone Nargis",
+"text": "Cyclone Nargis kills some hundred and forty thousand in Burma.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-275",
+"era": "modern",
+"year": 2008,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"sport"
+],
+"title": "The Beijing Olympics",
+"text": "China stages the Olympics in a new Beijing.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "kotec-blood-court",
+"title": "The Blood Court of Beijing"
+}
+]
+},
+{
+"id": "r3-modern-276",
+"era": "modern",
+"year": 2008,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tskhinvali",
+"tags": [
+"war"
+],
+"title": "The Georgian war",
+"text": "Russia and Georgia fight a five-day war over South Ossetia.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-277",
+"era": "modern",
+"year": 2008,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money"
+],
+"title": "The banking crash",
+"text": "The collapse of Lehman Brothers sets off a world financial crisis, and British banks are rescued by the state.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-278",
+"era": "modern",
+"year": 2008,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mumbai",
+"tags": [
+"terror"
+],
+"title": "The Mumbai attacks",
+"text": "Gunmen attack hotels, a station and a Jewish centre in Mumbai for three days.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-279",
+"era": "modern",
+"year": 2008,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Athens",
+"tags": [
+"uprising"
+],
+"title": "The Athens riots",
+"text": "Police shoot a teenager in Athens, and Greece riots for weeks.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-280",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money",
+"occult"
+],
+"title": "The Syndicate's crisis",
+"text": "The house reading has the Syndicate split over the crash, and Mages buy cheap what the markets throw away.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-281",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money"
+],
+"title": "The Czech crown holds",
+"text": "The Czech economy shrinks but avoids the worst of the crisis.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-282",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kathmandu",
+"tags": [
+"revolution"
+],
+"title": "Nepal a republic",
+"text": "Nepal ends its monarchy and becomes a republic.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-283",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "The surge ends",
+"text": "Violence in Iraq falls as the American surge ends.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-284",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Asia",
+"place": "Sichuan",
+"tags": [
+"quake",
+"occult"
+],
+"title": "The Garou in Sichuan",
+"text": "The house reading has the Stargazers of Sichuan read the quake as the Wyrm stirring.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-285",
+"era": "modern",
+"year": 2008,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"occult"
+],
+"title": "An Olomouc elder",
+"text": "The house reading has an elder sleeping beneath Olomouc's fortress stir as flood barriers go up.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-286",
+"era": "modern",
+"year": 2009,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"war"
+],
+"title": "The Gaza war",
+"text": "Israel attacks Gaza for three weeks.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-287",
+"era": "modern",
+"year": 2009,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"money",
+"weather"
+],
+"title": "The gas cut",
+"text": "Russia cuts gas to Ukraine in midwinter, and Balkan countries freeze.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-288",
+"era": "modern",
+"year": 2009,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown"
+],
+"title": "The Czech presidency",
+"text": "The Czech Republic holds the EU presidency; its government falls halfway through.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-289",
+"era": "modern",
+"year": 2009,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"treaty"
+],
+"title": "The Prague speech",
+"text": "The American president calls for a world without nuclear weapons from Prague Castle.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-290",
+"era": "modern",
+"year": 2009,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "L'Aquila",
+"tags": [
+"quake"
+],
+"title": "The L'Aquila earthquake",
+"text": "An earthquake in the Abruzzo kills over three hundred.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-291",
+"era": "modern",
+"year": 2009,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague"
+],
+"title": "Swine flu",
+"text": "A new strain of flu spreads from the Americas to Europe and Asia, and schools close as a precaution.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+},
+{
+"id": "kmw-dylan",
+"title": "Dylan"
+}
+]
+},
+{
+"id": "r3-modern-292",
+"era": "modern",
+"year": 2009,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Colombo",
+"tags": [
+"war"
+],
+"title": "Sri Lanka's war ends",
+"text": "Sri Lanka's army crushes the Tamil Tigers.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-293",
+"era": "modern",
+"year": 2009,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"uprising"
+],
+"title": "The Green Movement",
+"text": "Iranians protest a disputed election, and the protests are crushed.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "v20c-alamut",
+"title": "Alamut"
+}
+]
+},
+{
+"id": "r3-modern-294",
+"era": "modern",
+"year": 2009,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Urumqi",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "The Urumqi riots",
+"text": "Ethnic riots in Urumqi kill nearly two hundred.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-295",
+"era": "modern",
+"year": 2009,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution"
+],
+"title": "Twenty years free",
+"text": "Prague and Brno mark twenty years since the Velvet Revolution.",
+"ref": "Real history",
+"branch": "classic",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+}
+]
+},
+{
+"id": "r3-modern-296",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The nights grow thin",
+"text": "The house reading has the Kindred of Europe whisper of Gehenna as the Thin-Blooded multiply and elders fall silent.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+},
+{
+"id": "dav-midnight-crescent",
+"title": "The Midnight Crescent"
+}
+]
+},
+{
+"id": "r3-modern-297",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"occult"
+],
+"title": "Brno at the end of the classic nights",
+"text": "The house reading has the Kindred of Brno hold a last Elysium in the Tugendhat villa.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-298",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown"
+],
+"title": "The government falls",
+"text": "Topolanek's government falls in a no-confidence vote during the EU presidency.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-299",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"death"
+],
+"title": "Roh Moo-hyun dies",
+"text": "South Korea's former president dies in a fall.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-300",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "Iraq's elections",
+"text": "Iraq votes in provincial elections.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-301",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"treaty"
+],
+"title": "The Lisbon Treaty",
+"text": "The Czech president signs the Lisbon Treaty last of all.",
+"ref": "Real history",
+"branch": "classic",
+"links": []
+},
+{
+"id": "r3-modern-302",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Ascension War's end",
+"text": "The house reading has the Traditions and the Technocracy count the costs of the Avatar Storm.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+},
+{
+"id": "scwp-pagan-outlook",
+"title": "The Pagan outlook"
+}
+]
+},
+{
+"id": "r3-modern-303",
+"era": "modern",
+"year": 2009,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "Stygia in ruins",
+"text": "The house reading has Europe's wraiths gather in the Shadowlands, Stygia still in ruins.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "classic",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+},
+{
+"id": "bbrat-plagues-abroad",
+"title": "Ratkin Plagues of Asia and Europe"
+}
+]
 }
 ]
