@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.1 (the People generator takes an origin to ask for (api.people.generate({origin})), kept when the era's tables name it, so WoDX NPC can draw a household's kin of its own faith; with no origin asked every person is drawn as before)
 - 0.15.0 (an XP spend by the book (an Attribute, an Ability, Willpower or an own-clan Discipline at the book's cost, with the points there) can pass the approval queue on its own under a small rule; new Disciplines, Virtues and the Road wait)
 - 0.14.0 (lifepath threads: the open threads of a kept lifepath, a rival, a debt, someone lost, an enemy, for WoDX Chronicle to deal out as story chains; a guest in another character's prelude scene, where their years allow, with the beat written to troupe ties)
 - 0.13.1 (a Family tree button in the People window, beside the Lineage journal)

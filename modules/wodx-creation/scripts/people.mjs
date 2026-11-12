@@ -26,11 +26,11 @@ export function registerPeople() {
 }
 
 /** One person, seeded: batch and row name the stream; nonce counts re-rolls of that row. */
-export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", trade = "any"}) {
+export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", trade = "any", origin = null}) {
   const g = chron().gen;
   const ctx = fitContext(g, g.context());
   const rand = g.random(`people:${batch}:${row}`, nonce);
-  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade}), batch, row, nonce, eraId: ctx.eraId};
+  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin}), batch, row, nonce, eraId: ctx.eraId};
 }
 
 /** The nearest context that has people tables: the homeland's, else Bohemia's, else the medieval ones. */
