@@ -177,7 +177,7 @@ export function makePasserby({year, hour, area = "market", sick = false, place =
   else if ( dark && p.stim && rng() < p.stim ) vesselState = "stimulant";
   else if ( sick && rng() < 0.25 ) vesselState = "disease";
   const name = `${p.who.charAt(0).toUpperCase()}${p.who.slice(1)} ${look}`.trim();
-  return {kind, age, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng)};
+  return {kind, age, cat: p.cat, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng)};
 }
 
 /*
@@ -276,6 +276,16 @@ export function followSpot(me, leader, gap) {
 /** Real-time milliseconds a kept passer-by (fed on, hurt, led away) waits before startup clears it anyway. */
 export const KEPT_FOR = 24 * 60 * 60 * 1000;
 
+/** A street tick that runs past STALE_MS is taken as lost; one gives up after TICK_MS (NPC 0.40.1). */
+export const TICK_MS = 20 * 1000;
+export const STALE_MS = 30 * 1000;
+export const tickStale = (since, now = Date.now()) => !since || now - since > STALE_MS;
+/** A promise that rejects after ms if p has not settled. */
+export function withTimeout(p, ms) {
+  let t;
+  return Promise.race([p, new Promise((_, rej) => { t = setTimeout(() => rej(new Error(`passers-by tick took over ${ms} ms`)), ms); })]).finally(() => clearTimeout(t));
+}
+
 /**
  * Should a passer-by token go now? flag: its flags.wodx-npc.passerby; live: is its scene on and in view;
  * now: Date.now(). A kept one stays on its own scene until let go, and startup clears it after a day.
@@ -288,9 +298,9 @@ export function shouldRemove(flag, {live = true, now = Date.now(), startup = fal
 }
 
 /** The state of a passer-by after a tick, from what happened to it. */
-export function keepIf(flag, {bloodLost = false, hurt = false, following = false} = {}) {
+export function keepIf(flag, {bloodLost = false, hurt = false, following = false, touched = null} = {}) {
   if ( flag.kept ) return flag;
-  if ( bloodLost || hurt || following ) return {...flag, kept: true, keptAt: Date.now(), why: bloodLost ? "fed" : hurt ? "hurt" : "led"};
+  if ( bloodLost || hurt || following || touched ) return {...flag, kept: true, keptAt: Date.now(), why: bloodLost ? "fed" : hurt ? "hurt" : following ? "led" : touched};
   return flag;
 }
 

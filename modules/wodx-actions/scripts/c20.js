@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
 import * as C from "./c20-rules.js";
+import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim, castIntent } from "./aim.js";
 
 const MOD = "wodx-actions";
@@ -218,6 +219,12 @@ export function build(ctx) {
 
     async function epiphany(actor) {
         const i = info(actor);
+        // The crowd in sight (3.52.0): a mortal to Ravage, once a night each, or a Dreamer for a Reverie
+        const CR = ctx.crowdRules?.() ?? null, crowd = CR ? (ctx.crowdNear?.(actor) ?? []) : [];
+        const night = CR ? CR.nightOf(game.time.worldTime) : 0;
+        const spent = m => CR.ravagedTonight(m.used, night);
+        const who = m => `${esc(m.name)}: ${m.passerby ? esc(CR.SPARK_LABEL[Math.max(0, Math.min(3, m.spark ?? 0))]) : "the Storyteller knows their spark"}${spent(m) ? ", already Ravaged tonight" : ""}`;
+        const crowdRow = crowd.length ? `<div class="form-group"><label>The mortal (Reverie, Ravaging)</label>${crowd.length > 6 ? searchBox("select[name=from]", "Search the crowd…", "Search the crowd") : ""}<select name="from"><option value="">Nobody picked</option>${crowd.map(m => `<option value="${m.id}">${who(m)}</option>`).join("")}</select></div>` : "";
         const content = `<form><div class="form-group"><label>The path</label><select name="k" data-fixed>
             <option value="reverie">Reverie: inspire a Dreamer (Manipulation + Ability, 6)</option>
             <option value="rapture">Rapture: self-inspiration (Attribute + Ability, Banality − Glamour + 6)</option>
@@ -225,6 +232,7 @@ export function build(ctx) {
             <option value="revelry">Revelry: the kith's own (once a story; fills Glamour)</option>
             <option value="rhapsody">Rhapsody: forbidden (Manipulation + Expression + Glamour invested, 7)</option>
             <option value="sanctuary">Sanctuary: a night by a freehold's balefire</option></select></div>
+          ${crowdRow}
           <div class="form-group"><label>Dice from the Attribute and Ability (Reverie, Rapture, Rhapsody)</label><input type="number" name="dice" min="0" max="15" value="5"/></div>
           <div class="form-group"><label><input type="checkbox" name="thr"/> Following the Musing or Ravaging Threshold</label></div>
           <div class="form-group"><label>Glamour invested (Rhapsody, 1–5)</label><input type="number" name="inv" min="1" max="5" value="1"/></div>
@@ -234,6 +242,9 @@ export function build(ctx) {
         return dialog(`Epiphany: ${actor.name}`, content, "Seek it", async fd => {
             const k = fd.k;
             let r = null, out, body = "";
+            const from = fd.from && (k === "reverie" || k === "ravaging") ? crowd.find(m => m.id === fd.from) : null;
+            if (from && k === "ravaging" && spent(from)) return ctx.notify(`${from.name} was Ravaged already tonight: there is nothing left to take.`);
+            if (from && k === "reverie" && from.passerby && (from.spark ?? 0) < CR.DREAMER) return ctx.notify(`${from.name} has ${CR.SPARK_LABEL[from.spark ?? 0]}: no Dreamer to inspire.`);
             if (k === "revelry") out = C.epiphany("revelry");
             else if (k === "sanctuary") out = { glamour: C.sanctuary(n(fd.fr), n(fd.sl)) };
             else {
@@ -258,6 +269,10 @@ export function build(ctx) {
             if (out.blockedMonths) notes.push(`the artist cannot finish anything for ${out.blockedMonths} month${out.blockedMonths === 1 ? "" : "s"}`);
             if (out.artistBanalityDots) notes.push(`the artist gains ${out.artistBanalityDots} Banality dot${out.artistBanalityDots === 1 ? "" : "s"}`);
             if (out.note && !out.masterpiece) notes.push(out.note);
+            if (from) {
+                await ctx.setFlag(from.tok.actor, "crowdUse", k === "ravaging" ? CR.markRavaged(from.used, night) : CR.markReverie(from.used, actor.id));
+                notes.push(k === "ravaging" ? `${from.name} is left dull and listless for the night` : `${from.name} stays on the map for the Storyteller to keep`);
+            }
             if (out.trigger) body += (await trigger(actor, { why: k === "ravaging" ? "Ravaging a mortal" : "Rhapsody" }, false)).body;
             body += `<div class="vta-res">${notes.filter(Boolean).map(esc).join("; ") || "Nothing gained."}</div><div class="wodx-quiet">${REF} pp. 173, 259–264</div>`;
             return post(actor, `${actor.name}: ${k === "sanctuary" ? "Sanctuary" : `Epiphany (${k})`}`, body, r ? [r.roll].filter(Boolean) : []);
