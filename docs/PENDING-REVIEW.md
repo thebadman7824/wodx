@@ -738,3 +738,8 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 | 2026-11-12 | Counterattack dice after 1500 (B2205) | 5 (book, Dark Ages), 6 from 1500, 7 from 1860, 8 from 1914, 9 from 2000 | hazard in AGES, battle-rules.mjs |
 | 2026-11-12 | What a battle does to factions (B2206) | Proposed in the approval queue only: winner +1 Status; loser -1 standing, -1 Retainers, -1 Status if it broke | battleChanges in wodx-npc faction-rules.mjs |
 | 2026-11-12 | Battles in the Legends book shown to players (B2207) | Shown by default | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |
+| 2026-11-12 | What a crowd feels by place, person, hour and age (B2221) | Weighted tables, faith thinning after 1700 and the Future Darkness warier | PLACE_FEELINGS and the other tables in wodx-npc crowd-rules.mjs |
+| 2026-11-12 | Pathos from a passer-by (B2222) | Only from one who feels the Passion's emotion, read from the Passion's name; each wraith once a scene per mortal | passionFeeling, pathosCandidates in crowd-rules.mjs |
+| 2026-11-12 | Spark and Dreamers (B2223) | Spark 0 to 3 by age and kind of person; Reverie only on a Dreamer (2 or more) | AGE_SPARK, CAT_SPARK, DREAMER in crowd-rules.mjs |
+| 2026-11-12 | Ravaging a passer-by (B2224) | Once a night each; left dull and listless for the night and kept on the map | ravagedTonight in crowd-rules.mjs; the note in c20.js epiphany() |
+| 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |

@@ -2103,3 +2103,38 @@ Reverse: passTime in battles.mjs; warEvents in battle-rules.mjs.
 A battle can be set in the Umbra (Garou, Fera and spirits against the Wyrm's hosts) or the Underworld (Legions against Spectres or Renegades). Those ignore the year: a phase is an hour, no guns breach walls, and the counterattack is 5 dice. The damage type of "The battle hits" stays lethal; the Storyteller changes it by hand where a realm calls for it.
 
 Reverse: REALM_AGES in battle-rules.mjs.
+
+## B2220. The crowd as a resource (2026-11-12, house rule)
+The passers-by leftovers of the Master Plan (Passers-by and animals, priority 2) are built in WoDX NPC 0.40.0 and Actions 3.52.0. Each person in the street now carries a feeling and a spark (crowd-rules.mjs), kept on the token's passer-by flag. WoDX Actions reads them through api.passersby.mindOf and offers the mortals in sight to a wraith's Passion roll and a changeling's Epiphany. What a supernatural takes from a mortal is written on the mortal's token actor as flags.wodx-actions.crowdUse, by the Storyteller's client.
+
+Reverse: crowdNear and crowdRules in wodx-actions/scripts/main.js; the crowd rows in wraith.js passion() and c20.js epiphany().
+
+## B2221. What a crowd feels (2026-11-12, house rule)
+A passer-by's feeling is drawn when they walk on, weighted by the kind of place (a church devout and grieving, a tavern merry, lustful and quarrelsome, a hospital afraid), the kind of person (the devout, the poor, drinkers, the young), the part of the day and the age: faith fills the medieval street and thins toward the Future Darkness, which is warier and lonelier. Drunk and sick vessels lean to joy, anger, fear and despair.
+
+Reverse: PLACE_FEELINGS, CAT_FEELINGS, BAND_FEELINGS, AGE_FEELINGS in wodx-npc crowd-rules.mjs.
+
+## B2222. Pathos from the crowd (2026-11-12, house rule on W20 p. 305)
+Wraith 20th lets a wraith gain Pathos at second hand from a mortal who feels a Passion's emotion in the same context, at difficulty 8; the Passion window already had that roll. Now it lists the mortals in sight with what each feels. The Passion's feeling is read from its name, the bracketed emotion first ("Protect my daughter (Love)"); a passer-by who feels something else gives nothing. A name with no feeling in it leaves the match to the Storyteller. Each wraith can draw on each mortal once a scene, on top of the book's once a scene for each Passion.
+
+Reverse: passionFeeling, pathosCandidates, markPathos in crowd-rules.mjs.
+
+## B2223. The spark and Dreamers (2026-11-12, house rule on C20 pp. 259-264)
+Each passer-by keeps a spark from 0 to 3, rolled from the Banality of the age (high in 1197, low in the Future Darkness) and the kind of person (the young keep most). A spark of 2 or more is a Dreamer, the only passer-by a Reverie can start on. A Reverie picked from the crowd keeps the passer-by on the map for the Storyteller, who can make them an NPC of their own for the long work the book describes.
+
+Reverse: AGE_SPARK, CAT_SPARK, DREAMER in crowd-rules.mjs; the Reverie check in c20.js epiphany().
+
+## B2224. Ravaging once a night (2026-11-12, house rule)
+A mortal picked from the crowd can be Ravaged once a night (noon to noon); after that there is nothing left to take. A Ravaged passer-by is left dull and listless for the night and stays on the map, so the Storyteller can see the cost. The Ravaging roll, its Banality and its trigger are unchanged.
+
+Reverse: nightOf, ravagedTonight, markRavaged in crowd-rules.mjs; touched in passerby-rules.mjs keepIf.
+
+## B2225. Doors for passers-by on large maps (2026-11-12, house rule)
+On a large map passers-by can walk in from and out by regions instead of the edge of the map: the Storyteller ticks regions in the Passers-by window, and a region named "Passers-by" or "Crowd door" always counts. With one door they come and go by it; with several they cross from one to another. Someone running from a fight or a breach heads for the nearest door. With no doors the edge of the map is used, as before.
+
+Reverse: doorsOf, exitFor, walkFor in wodx-npc passersby.mjs; planDoorWalk, nearestDoor in crowd-rules.mjs.
+
+## B2226. Mage witnesses from passers-by (2026-11-12)
+The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers-by in sight. That already happens: since Actions 3.42.0 the Cast window asks the Masquerade sight check who can see the caster, passers-by are ordinary mortals to it, and only animals in the street are left out. A harness test now holds this in place.
+
+Reverse: nothing to reverse.

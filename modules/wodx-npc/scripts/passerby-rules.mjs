@@ -177,7 +177,7 @@ export function makePasserby({year, hour, area = "market", sick = false, place =
   else if ( dark && p.stim && rng() < p.stim ) vesselState = "stimulant";
   else if ( sick && rng() < 0.25 ) vesselState = "disease";
   const name = `${p.who.charAt(0).toUpperCase()}${p.who.slice(1)} ${look}`.trim();
-  return {kind, age, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng)};
+  return {kind, age, cat: p.cat, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng)};
 }
 
 /*
@@ -288,9 +288,9 @@ export function shouldRemove(flag, {live = true, now = Date.now(), startup = fal
 }
 
 /** The state of a passer-by after a tick, from what happened to it. */
-export function keepIf(flag, {bloodLost = false, hurt = false, following = false} = {}) {
+export function keepIf(flag, {bloodLost = false, hurt = false, following = false, touched = null} = {}) {
   if ( flag.kept ) return flag;
-  if ( bloodLost || hurt || following ) return {...flag, kept: true, keptAt: Date.now(), why: bloodLost ? "fed" : hurt ? "hurt" : "led"};
+  if ( bloodLost || hurt || following || touched ) return {...flag, kept: true, keptAt: Date.now(), why: bloodLost ? "fed" : hurt ? "hurt" : following ? "led" : touched};
   return flag;
 }
 
