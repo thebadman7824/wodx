@@ -1,5 +1,5 @@
 /**
- * The People generator's tables for the rest of the world (Creation 0.16.0, B2511). WoDX's own data: given and family
+ * The People generator's tables for the rest of the world (Creation 0.16.0, B2531). WoDX's own data: given and family
  * names as each people used them, and who lives in each of the world's regions in each age (the mixes in WoDX
  * Chronicle's world-rules.mjs). No book text.
  *

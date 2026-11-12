@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.47.0: the world's regions (B2510 to B2514). Pure data and rules, no Foundry.
+ * WoDX Chronicle 0.47.0: the world's regions (B2530 to B2534). Pure data and rules, no Foundry.
  *
  * WoDX runs anywhere on earth; Rothenstein in Moravia is only where the first chronicle starts. A region is a
  * homeland a chronicle can be set in, or a place a scene far from home can stand in. Each one names what the other

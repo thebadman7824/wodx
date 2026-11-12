@@ -3045,27 +3045,27 @@ WoDX Storyteller 0.52.2. The party is every present character on the asker's sce
 
 Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.
 
-## B2510. A global World of Darkness: the world's regions (2026-11-12, Ben's rule)
+## B2530. A global World of Darkness: the world's regions (2026-11-12, Ben's rule)
 Ben: the whole world is within WoDX's scope, and no work may look only at Moravia, Germany or Europe. WoDX Chronicle 0.47.0 adds world-rules.mjs: 37 regions on every inhabited continent, each with a typical city (latitude and longitude), a climate, a money region and the peoples who live there by age. A Homeland setting picks the chronicle's region and sets the latitude, the part of the world and the people's culture; money is left alone because purses hold sums in the old money. A scene's place flag may name a region; the scene then takes its latitude, and the people generator and the weather follow it there. The rule, the audit and what is still open are in docs/GLOBAL.md.
 
 Reverse: set the Homeland back to Moravia and clear the regions on scenes; the older settings (latitude, chronicle region, where the people come from) still work by themselves.
 
-## B2511. Peoples and names of the world (2026-11-12, house reading)
+## B2531. Peoples and names of the world (2026-11-12, house reading)
 WoDX Creation 0.16.0, data/people-world.mjs: 38 peoples with given and family names in WoDX's own lists, from history and common use, no book text. Name tables carry no culture, so any region whose mix names a people draws them; a region may also borrow a neighbour's tables (the German lands draw Bohemia's medieval German names). The family name comes first for Chinese, Japanese, Korean, Vietnamese and Hungarian names. Arabic, Malay and Swahili names may be "son of" or "daughter of" a father's name, an Amharic second name is the father's given name, and Turkish names are "-oğlu" until the modern age. Peoples who used no family name have the given name alone. Who lives in each region in each age is a rounded house mix. Regions settled or recorded late (Australia from 1788, Brazil from 1500, the Caribbean from 1492, the American West from 1598, eastern North America from 1607) say from which year WoDX has names; before it the generator borrows the later names and the Homeland notice tells the Storyteller to name people by hand.
 
 Reverse: remove WORLD_PEOPLE_TABLES from PEOPLE_TABLES; edit any list in the WoDX tables folder in the world.
 
-## B2512. Money of the world (2026-11-12, house figures)
+## B2532. Money of the world (2026-11-12, house figures)
 WoDX Storyteller 0.53.0: 20 more money regions (France, Italy, Spain and Portugal, the Low Countries, Scandinavia, Poland, Russia, the Ottoman lands, Egypt with the Levant and Arabia, Persia, India, China, Japan, West, East and Southern Africa, Spanish America, Brazil, Australia, the Pacific). Units and their worth follow the coins of each land; wages are rounded house figures on the same footing as the older four (a one-dot worker's month). Lands without coin reckon in goods (cacao beans and cotton cloaks in Mexico, cattle, hoes and beads in southern Africa, plain trade goods elsewhere). North America has no coin before 1607. The books give none of this.
 
 Reverse: change MONIES and COINS in money-rules.mjs.
 
-## B2513. Climates of the world (2026-11-12, house figures)
+## B2533. Climates of the world (2026-11-12, house figures)
 WoDX Atmosphere 0.14.0: 18 more climates, with southern ones whose summer falls at the turn of the year. With the climate set to follow the region, the weather is the homeland's, or that of the region the viewed scene stands in. The Little Ice Age and the cold summer of 1816 still apply everywhere as Europe felt them.
 
 Reverse: pick a climate by hand in the settings.
 
-## B2514. Tongues and households of the world (2026-11-12)
+## B2534. Tongues and households of the world (2026-11-12)
 The list of tongues to learn grows from 30 to 71, speech a character cannot follow has 21 sound sets, and spoken lines look for 37 browser languages (Voices 0.3.2). NPC 0.47.3: a household's women take the listed feminine family name of their people, and kin of a household named "son of" are named for its master in that people's words.
 
 Reverse: trim LANGUAGES and SOUNDS in languages-rules.mjs; drop the FEMININE lookup in kinFamily.
