@@ -58,6 +58,8 @@ import * as BuildRules from "./build-rules.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as ClockRules from "./clock-rules.mjs";
 import * as Battles from "./battles.mjs";
+import * as Naval from "./naval.mjs";
+import * as NavalRules from "./naval-rules.mjs";
 import * as BattleDeeds from "./battle-deeds.mjs";
 import * as BattleAftermath from "./battle-aftermath.mjs";
 import * as BattleExtras from "./battle-extras.mjs";
@@ -108,6 +110,8 @@ Hooks.once("init", () => {
   Clocks.registerClockHooks();
   Battles.registerBattleSettings();
   Hand.addTool({key: "battle", label: "Battles and sieges", icon: "fa-chess-rook", run: () => Battles.BattlesApp.open()});
+  Naval.registerNavalSettings();
+  Hand.addTool({key: "naval", label: "Ships at sea", icon: "fa-anchor", run: () => Naval.NavalApp.open()});
   Hand.registerHandSettings();
   Hand.registerHandHooks();
   Hand.registerHandKeys();
@@ -154,6 +158,9 @@ Hooks.once("ready", () => {
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},
+    naval: {open: id => Naval.NavalApp.open(id), list: Naval.list, get: Naval.get, start: Naval.start, setup: Naval.setupDialog, navigate: Naval.navigate,
+      pursue: Naval.pursue, manoeuvre: Naval.manoeuvre, fire: Naval.fire, ram: Naval.ram, breakAway: Naval.breakAway, setGap: Naval.setGap,
+      quarter: Naval.quarter, boarding: Naval.boarding, setRowing: Naval.setRowing, undo: Naval.undo, passTime: Naval.passTime, remove: Naval.remove, rules: NavalRules},
     battles: {open: id => Battles.BattlesApp.open(id), list: Battles.list, get: Battles.get, start: Battles.start, setup: Battles.setupDialog, fight: Battles.fight,
       week: Battles.week, storm: Battles.storm, withdraw: Battles.withdrawSide, draw: Battles.callDraw, undo: Battles.undo, passTime: Battles.passTime,
       hazard: Battles.hazard, remove: Battles.remove, commandPool: Battles.commandPool, commandPools: Battles.commandPools, rules: BattleRules},
