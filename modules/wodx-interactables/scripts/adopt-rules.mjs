@@ -234,8 +234,8 @@ export function plan(sc, scene, fr, types = new Set()) {
   }
   const already = sc.openings.length - todo.length + sc.features.length - feats.length;
   if ( already ) notes.push(`${already} ${already === 1 ? "thing was" : "things were"} adopted before and ${already === 1 ? "is" : "are"} left as ${already === 1 ? "it is" : "they are"}.`);
-  // The scene's own kind of place stays if the Storyteller already set one
-  const scenePlace = sc.place && !scene.placeKind ? sc.place : null;
+  // The scene's own kind of place stays if the Storyteller already set one, or cleared it after an earlier adoption
+  const scenePlace = sc.place && !scene.placeKind && !have.size ? sc.place : null;
   if ( sc.place && scene.placeKind && scene.placeKind !== sc.place.kind ) notes.push(`The scene is already tagged as ${scene.placeKind}; the map's ${sc.place.kind} was left out.`);
   return {wallUpdates, wallCreates, tiles, lights, regions, notes, scenePlace};
 }

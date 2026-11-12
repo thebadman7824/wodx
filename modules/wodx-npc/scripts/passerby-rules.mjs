@@ -411,13 +411,19 @@ PLACES.home = {label: "Home (indoors)", crowd: 0.2, indoor: true, people: {serva
   animals: {...NONE, stray: 0.5, cat: 1, rat: 0.5}};
 PLACES.workplace = {label: "Workplace or shop (indoors)", crowd: 0.5, indoor: true, people: {trade: 2, worker: 2, gentry: 1, local: 1, poor: 0.2, drinker: 0.1, street: 0},
   animals: {...NONE, cat: 1, rat: 0.6}};
+PLACES.sewer = {label: "Sewer, cellar or tunnels", crowd: 0.1, people: {poor: 3, worker: 1, drinker: 0.5, gentry: 0, servant: 0, religious: 0, trade: 0.2, young: 0.2, local: 0.2, street: 1},
+  animals: {...NONE, rat: 4, cat: 0.3, stray: 0.3}};
+PLACES.hospital = {label: "Hospital or asylum (indoors)", crowd: 0.5, indoor: true, people: {religious: 2, servant: 1.5, worker: 1.5, local: 1.5, poor: 1, gentry: 0.5, drinker: 0, street: 0, trade: 0.2},
+  animals: {...NONE, cat: 0.3, rat: 0.3}};
+PLACES.station = {label: "Station or depot", crowd: 1.2, people: {trade: 1.5, gentry: 1.5, worker: 1.2, local: 1.2, young: 1.2, religious: 0.3},
+  animals: {...NONE, stray: 0.6, cat: 0.3, rat: 1, bird: 1.5}};
 PLACES.none = {label: "Nobody passes", crowd: 0, people: {}, animals: {...NONE}};
 /*
  * The kind of place is WoDX NPC's own place tag (flags.wodx-npc.place.kind, PLACE_KINDS in routine-rules.mjs), the one
  * Interactables, Atmosphere and the Masquerade read; this is the crowd each kind draws. A haven draws nobody.
  */
 export const CROWD_OF_KIND = {street: "street", market: "square", church: "church", tavern: "tavern", castle: "interior", home: "home",
-  workplace: "workplace", gate: "street", haven: "none", wilds: "road", caern: "road", alley: "alley", yard: "yard", docks: "docks", park: "park", other: "street"};
+  workplace: "workplace", gate: "street", haven: "none", wilds: "road", caern: "road", alley: "alley", yard: "yard", docks: "docks", park: "park", sewer: "sewer", hospital: "hospital", station: "station", other: "street"};
 /** The crowd profile for a kind of place (a PLACE_KINDS key, or a crowd profile key). */
 export const placeOf = key => PLACES[CROWD_OF_KIND[key] ?? key] ?? PLACES.street;
 /** How a kind of place weighs a person or animal (p.cat). */
