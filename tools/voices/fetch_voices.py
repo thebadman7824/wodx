@@ -168,6 +168,22 @@ def decode(raw):
     return x.astype(np.float32), sr
 
 
+def edge_trim(x, sr, keep=0.05):
+    """A reference clip without its quiet or noisy edges: Chatterbox copies what the clip starts with."""
+    import numpy as np
+    fr = max(1, int(sr * 0.01))
+    n = x.size // fr
+    if n < 10:
+        return x
+    rms = np.sqrt(np.mean(x[: n * fr].reshape(n, fr) ** 2, axis=1) + 1e-12)
+    on = np.where(rms > rms.max() * 0.06)[0]
+    if not on.size:
+        return x
+    a = max(0, on[0] * fr - int(sr * keep))
+    b = min(x.size, (on[-1] + 1) * fr + int(sr * keep))
+    return x[a:b]
+
+
 def register(f0):
     return "low" if f0 < 145 else "high" if f0 > 185 else "mid"
 
@@ -267,7 +283,7 @@ def main():
     out = []
     for c in keep:
         fn = c["id"] + ".wav"
-        sf.write(os.path.join(a.folder, fn), c["x"], c["sr"], subtype="PCM_16")
+        sf.write(os.path.join(a.folder, fn), edge_trim(c["x"], c["sr"]), c["sr"], subtype="PCM_16")
         own = c.get("own")
         out.append({"id": c["id"], "file": fn, "f0": c["f0"], "register": register(c["f0"]), "rate": c["rate"], "lively": c["lively"],
                     "licence": "your own clip" if own else "CC BY 4.0",

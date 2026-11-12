@@ -36,12 +36,31 @@ def split_sentences(text):
             out.append(p[:cut].strip())
             p = p[cut:].strip()
         out.append(p)
+    return merge_short(out)
+
+
+def merge_short(parts, words=4):
+    """Chatterbox garbles very short inputs ("Ha!", "Halt!"), so a sentence under `words` words joins the next one."""
+    out = []
+    carry = ""
+    for p in parts:
+        cur = (carry + " " + p).strip() if carry else p
+        if len(cur.split()) < words:
+            carry = cur
+            continue
+        out.append(cur)
+        carry = ""
+    if carry:
+        if out:
+            out[-1] = out[-1] + " " + carry
+        else:
+            out.append(carry)
     return out
 
 
 def sentence_delivery(sentence, base):
     """A sentence's own lift: an exclamation gets a little more emotion, a trailing one a little less pace."""
-    ex, cfg = base["exaggeration"], base["cfg"]
+    ex, cfg = base["exaggeration"], max(0.3, base["cfg"])
     if sentence.endswith("!") or sentence.endswith("!\""):
         ex = min(1.5, ex + 0.1)
     if sentence.endswith("...") or sentence.endswith("…"):
@@ -73,6 +92,30 @@ def to_wav_bytes(samples, sr):
     return buf.getvalue()
 
 
+def drop_lead_burst(x, sr, max_burst=0.15, min_gap=0.12):
+    """Cut a short burst at the very start (a click or a garbled sound under 150 ms) that is followed by a gap of at
+    least 120 ms before the speech proper, the glitch Chatterbox sometimes puts before a line."""
+    import numpy as np
+    fr = max(1, int(sr * 0.01))
+    n = x.size // fr
+    if n < 10:
+        return x
+    rms = np.sqrt(np.mean(x[: n * fr].reshape(n, fr) ** 2, axis=1) + 1e-12)
+    on = rms > max(1e-4, rms.max() * 0.08)
+    i = 0
+    while i < n and not on[i]:
+        i += 1
+    j = i
+    while j < n and on[j]:
+        j += 1
+    k = j
+    while k < n and not on[k]:
+        k += 1
+    if i < n and (j - i) * 0.01 <= max_burst and (k - j) * 0.01 >= min_gap and k < n:
+        return x[max(0, k * fr - int(sr * 0.04)):]
+    return x
+
+
 def trim_and_level(x, sr):
     """Trim quiet ends (keeping 60 ms) and bring speech to about -20 dBFS RMS with a ceiling at -1 dBFS."""
     import numpy as np
@@ -88,6 +131,7 @@ def trim_and_level(x, sr):
             a = max(0, loud[0] * frame - pad)
             b = min(x.size, (loud[-1] + 1) * frame + pad)
             x = x[a:b]
+    x = drop_lead_burst(x, sr)
     rms = float(np.sqrt(np.mean(x ** 2) + 1e-12))
     x = x * (0.1 / rms)
     peak = float(np.max(np.abs(x)) or 1.0)
