@@ -197,7 +197,7 @@ test("the module: manifest, API and the card's buttons", () => {
   assert.equal(m.version, "0.21.0");
   assert.deepEqual(m.relationships.requires.map(r => r.id).sort(), ["wodx-actions", "wodx-chronicle", "wodx-combat"]);
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
-  assert.match(src, /const VERSION = "0\.19\.0"/);
+  assert.match(src, /const VERSION = "0\.21\.0"/);
   for ( const k of ["wnpc-go", "wnpc-undo", "wnpc-edit"] ) assert.ok(src.includes(k), k);
   assert.ok(/hasPlayerOwner\s*\)\s*return null/.test(src), "never moves a player's character");
   assert.ok(!/\b(he|she|him|her|his|hers)\b/.test(src.match(/`[^`]*`/g).join(" ").replace(/<[^>]+>/g, " ")), "card text is gender-neutral");
