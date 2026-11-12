@@ -528,6 +528,7 @@ export async function endSession({factions = true} = {}) {
   await game.settings.set(MOD, "session", {at: now(), real: Date.now()});
   try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
+  Hooks.callAll("wodxSessionEnded");
 }
 
 /** The report of everything since the last session ended. */

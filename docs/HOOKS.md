@@ -8,6 +8,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
+| wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
@@ -41,6 +42,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
+| wodxFirstNightSigned | creation | a player character signed off before the first night, with the trouble forecast |
 | wodxChase | interactables | a chase starts, a turn is rolled, or it ends (caught, away, called off), with the chase state |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
