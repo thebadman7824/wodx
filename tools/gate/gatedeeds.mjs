@@ -1,5 +1,5 @@
 /**
- * Battle deeds and aftermath gate (WoDX Storyteller 0.45.0, Otherworlds 0.17.0, Chronicle 0.44.2), in
+ * Battle deeds and aftermath gate (WoDX Storyteller 0.45.0, Otherworlds 0.17.0, Chronicle 0.45.1), in
  * rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatedeeds.mjs?${Date.now()}`)).run()
  * Fights a battle through the API, then removes the battle, the scene, the Ledger entries, messages and actors it made.

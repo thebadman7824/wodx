@@ -14,7 +14,7 @@
 export const BOARD_V = 1;
 export const BOARD_FOLDER = "WoDX case boards";
 export const KINDS = {clue: "Clue", person: "Person", place: "Place", entry: "Lore", note: "Note"};
-export const CARD_W = 180, CARD_H = 96, BOARD_W = 1600, BOARD_H = 1000;
+export const CARD_W = 180, CARD_H = 130, BOARD_W = 1600, BOARD_H = 1000;
 const MAX_TEXT = 600, MAX_TITLE = 80, MAX_LABEL = 60, MAX_CARDS = 200;
 
 const str = (v, n) => String(v ?? "").trim().slice(0, n);

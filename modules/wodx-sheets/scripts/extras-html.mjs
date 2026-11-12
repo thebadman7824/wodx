@@ -155,3 +155,34 @@ export function historyHtml(entries, now = Date.now()) {
     <span>${esc(e.label)}</span><span class="wodx-quiet">${esc(e.user)}, ${ago(e.at)}</span>
     <button type="button" class="wodx-hist-undo" data-i="${i}">Undo</button></div>`).join("")}</div>`;
 }
+
+/**
+ * 0.13.0: the "changed since last session" strip, under the in-play strip. lines: [{text, cause}]; empty draws
+ * nothing. The first few show; the rest fold away.
+ */
+export const CHANGES_SHOWN = 6;
+export function changesHtml(lines = [], { canClear = false, since = "" } = {}) {
+  if ( !lines.length ) return "";
+  const li = l => `<li>${esc(l.text)}${l.cause ? ` <span class="wodx-chg-cause">(${esc(l.cause)})</span>` : ""}</li>`;
+  const head = lines.slice(0, CHANGES_SHOWN).map(li).join(""), rest = lines.slice(CHANGES_SHOWN);
+  const more = rest.length ? `<details class="wodx-chg-more"><summary>${rest.length} more</summary><ul>${rest.map(li).join("")}</ul></details>` : "";
+  const btn = canClear ? `<button type="button" class="wodx-chg-read" title="Clear this list">Mark as read</button>` : "";
+  return `<section class="wodx-changes" aria-label="Changed since last session"><div class="wodx-chg-head"><b>Changed since last session</b>${since ? ` <span class="wodx-chg-since">${esc(since)}</span>` : ""}${btn}</div><ul>${head}</ul>${more}</section>`;
+}
+
+/**
+ * 0.13.0: the features card: each feature in force for this character, what it does, when it fires and when it last
+ * fired. The Storyteller can set one aside for a story. Folded by default to one line of names.
+ */
+export function featuresHtml(rows = [], { gm = false, open = false } = {}) {
+  if ( !rows.length ) return "";
+  const names = rows.map(r => `${r.group}${r.off ? " (set aside)" : ""}`).join(", ");
+  const row = r => `<div class="wodx-feat-row${r.off ? " off" : ""}" data-feat="${esc(r.key)}">
+    <div class="wodx-feat-name"><b>${esc(r.group)}: ${esc(r.title)}</b>${gm ? `<label class="wodx-feat-off" title="Set this feature aside for this story"><input type="checkbox" class="wodx-feat-toggle" data-feat="${esc(r.key)}"${r.off ? "" : " checked"}> In force</label>` : ""}</div>
+    <p>${esc(r.text)}</p>
+    <p class="wodx-feat-when"><span>When:</span> ${esc(r.when)}</p>
+    <p class="wodx-feat-last"><span>Last fired:</span> ${r.fired ? esc(r.last || "in play") : "not yet in play"}</p>
+    ${r.off ? `<p class="wodx-feat-note">Set aside by the Storyteller for this story.</p>` : ""}${r.notes.map(n => `<p class="wodx-feat-note">${esc(n)}</p>`).join("")}
+    <p class="wodx-feat-page">${esc(r.page)}</p></div>`;
+  return `<details class="wodx-features"${open ? " open" : ""}><summary><b>Features</b> <span class="wodx-feat-names">${esc(names)}</span></summary>${rows.map(row).join("")}</details>`;
+}

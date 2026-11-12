@@ -5,8 +5,8 @@ import * as T from "./tasks-rules.mjs";
 import * as Led from "./ledger.mjs";
 
 /**
- * WoDX Storyteller 0.45.0: the Foundry side of battle deeds (bt1, B2320-B2324) and the field's aftermath (bt2,
- * B2325-B2329), shown inside the Battles window (battles.mjs). The rules are in battle-deeds.mjs and
+ * WoDX Storyteller 0.45.0: the Foundry side of battle deeds (bt1, B2330-B2334) and the field's aftermath (bt2,
+ * B2335-B2339), shown inside the Battles window (battles.mjs). The rules are in battle-deeds.mjs and
  * battle-aftermath.mjs. battles.mjs calls bind() once with its own get, save and open.
  */
 
