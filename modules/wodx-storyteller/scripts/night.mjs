@@ -76,13 +76,24 @@ export async function drawNight({jdn = null, part = null, nonce = 0} = {}) {
   return {...n, pulls: pullsFor(g, jdn, nonce), jdn, nonce, date: jdn === at.jdn ? at.label : "", weather, era: ctx.eraId};
 }
 
+/** The trouble dial set before the first night (WoDX Creation 0.12.0): 0.5, 1 or 1.5. */
+function dialOf(actor) {
+  try {
+    const C = game.modules.get("wodx-creation")?.api;
+    return C?.firstNightRules?.dialScale?.(C.firstNightOf?.(actor)?.dial) ?? 1;
+  } catch (e) { return 1; }
+}
+
 /** Chronicle 0.22.0: what the player characters' merits and flaws bring into the night (Hunted, Haunted, Oracular Ability). */
 function pullsFor(g, jdn, nonce) {
   const T = chron()?.traits;
   if ( !T?.pulls ) return [];
   const out = [];
   for ( const a of all(game.actors).filter(isPC) ) {
-    const rand = g.random(`night:${jdn}:pull:${a.id}`, nonce);
+    const base = g.random(`night:${jdn}:pull:${a.id}`, nonce);
+    // Creation 0.12.0: the character's trouble dial (Quiet, Normal, Often) scales how often their own flaws turn up
+    const scale = dialOf(a);
+    const rand = scale === 1 ? base : () => base() / scale;
     try { for ( const p of T.pulls(a, rand) ) out.push({actorId: a.id, actorName: a.name, ...p}); } catch (e) { /* no traits */ }
   }
   return out;

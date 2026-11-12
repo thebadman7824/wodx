@@ -635,3 +635,101 @@ export const HOUSES = [
 /** What the Watchers read in each age (New World Order), by year. */
 export const RECORDS = [{from: 1197, label: "parish books and tax rolls"}, {from: 1800, label: "police files and the census"},
   {from: 1895, label: "photographs and newspapers"}, {from: 1970, label: "cameras and computer files"}, {from: 1995, label: "the net"}];
+
+/* ================= Changeling (Chronicle 0.34.0) ================= */
+
+/**
+ * Kiths (the sheet's kith field: the system keys, or the custom kith), then the seeming, the court and a sidhe House,
+ * stacked. Groups of the system's kith list share a row (the Thallain, the Inanimae, the Nunnehi, the Dark-Kin).
+ * Page refs: C20 pdf pages; the Hsien from Land of Eight Million Dreams.
+ */
+export const KITHS = [
+  {key: "boggan", label: "Boggans", match: ["boggan", "boggans"], feature: "line", title: "Many hands", page: "C20, the kith's pages",
+    text: "A Boggan at work in a household speeds crafting and building there by a step, and the household's goods come out a quality step better. Frailty: they cannot turn down a plea for help with work. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "clurichaun", label: "Clurichaun", match: ["clurichaun", "clurichauns"], feature: "revel", title: "Spirits in the cellar", page: "C20, the kith's pages",
+    text: "They brew stronger drink as recipes and hold it better than other fae. A tavern brawl they start counts as a revel: the Storyteller gives Glamour on the card."},
+  {key: "eshu", label: "Eshu", match: ["eshu"], feature: "line", title: "The road provides", page: "C20, the kith's pages",
+    text: "Travelling with no set goal, an Eshu meets what the road holds: the Storyteller pulls a dated event or an encounter along the way. Frailty: a chance at adventure must be taken, or a Willpower point is lost. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+  {key: "nocker", label: "Nockers", match: ["nocker", "nockers"], feature: "line", title: "The flaw in every work", page: "C20, the kith's pages",
+    text: "Everything a Nocker makes is a quality step better and carries one written flaw, which shows on a botched use. The machines of each age are their trade: clockwork, steam, then electronics. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "piskies", label: "Piskies", match: ["piskie", "piskies", "pixie", "pixies"], feature: "line", title: "Little kindnesses", page: "C20 pdf 98",
+    text: "A gift left in trade gives a Piskie a point of Glamour (the Storyteller's call). Keeping something lifted gnaws at them: a Willpower roll. Lifting gains a die.", effects: [{tags: ["lift"], dice: 1}]},
+  {key: "pooka", label: "Pooka", match: ["pooka", "pookas"], feature: "truth", title: "The liar's tongue", page: "C20, the kith's pages",
+    text: "Their animal shape is a body shape of its own. Frailty: they lie. When a Pooka answers a question, the player picks the lie; telling the plain truth costs a Willpower point."},
+  {key: "redcap", label: "Redcaps", match: ["redcap", "redcaps"], feature: "line", title: "Dark appetite", page: "C20, the kith's pages",
+    text: "A Redcap can eat anything, even what no one else can, and gain from it. Frailty: animals bolt and children cry around them. Intimidation gains a die.", effects: [{tags: ["intimidation"], dice: 1}, {tags: ["animalken"], difficulty: 2}]},
+  {key: "satyr", label: "Satyrs", match: ["satyr", "satyrs"], feature: "revel", title: "The revel", page: "C20, the kith's pages",
+    text: "A revel with drink, music and dancing raises Glamour for every changeling there, and the Satyr gains one more. Passers-by can be drawn in."},
+  {key: "selkie", label: "Selkies", match: ["selkie", "selkies"], feature: "coat", title: "The coat", page: "C20, the kith's pages",
+    text: "The seal coat is an item. Wearing it gives the seal shape and the sea's ways of moving. Without it the Selkie cannot change, and a stolen coat must be won back."},
+  {key: "sidhe", label: "Sidhe", match: ["sidhe"], feature: "oath", title: "Oaths and Houses", page: "C20, the kith and House pages",
+    text: "The noble Houses are a faction of their own, and a sidhe's oaths are kept as promises: breaking one costs a Willpower point and brings the Storyteller a curse to name. Banality bites them harder. Etiquette gains a die.", effects: [{tags: ["etiquette"], dice: 1}]},
+  {key: "sluagh", label: "Sluagh", match: ["sluagh"], feature: "line", title: "In the cracks", page: "C20, the kith's pages",
+    text: "They squeeze through narrow gaps and hear whispers clearly. They speak only in whispers. Hearing is one easier and Stealth gains a die.", effects: [{tags: ["hearing"], difficulty: -1}, {tags: ["stealth"], dice: 1}]},
+  {key: "troll", label: "Trolls", match: ["troll", "trolls"], feature: "oath", title: "Bound by their word", page: "C20, the kith's pages",
+    text: "A troll's oath is written down. While it holds, the troll soaks one more die fighting for its cause (the Storyteller adds it); broken, the strength goes and a Willpower point with it."},
+  {key: "ghilledhu", label: "Ghille Dhu", match: ["ghille dhu", "ghilledhu"], feature: "line", title: "Rooted in the green", page: "C20 pdf 12, 449-450",
+    text: "Glamour returns faster to them in wild places; in a city they wilt, and Banality there is one harder to resist."},
+  {key: "merfolk", label: "Merfolk", match: ["merfolk", "merrow", "merrows"], feature: "line", title: "The sea's call", page: "C20 pdf 12, 449-450",
+    text: "They swim freely, and Banality on dry land wears at them harder."},
+  {key: "inanimae", label: "Inanimae", match: ["inanimae", "glomes", "kuberas", "ondines", "parosemes", "solimonds", "mannikins"], feature: "line", title: "Bound to a thing", page: "Inanimae pdf 14, 16",
+    text: "An Inanimae's anchor is a thing or a place: harm to it harms them, and they rest best beside it."},
+  {key: "nunnehi", label: "Nunnehi", match: ["nunnehi", "canotili", "inuas", "kachinas", "maymaygwyashi", "nanehi", "numuzoho", "pugwis", "rockgiants", "surems", "tunghat", "waterbabies", "yunwitsunsdi"], feature: "line", title: "The tribes of the Nunnehi", page: "C20 pdf 12, 449-450",
+    text: "Each Nunnehi tribe keeps its own land in the Americas; a holding there needs their leave."},
+  {key: "thallain", label: "Thallain", match: ["thallain", "aithu", "beasties", "bodachs", "boggarts", "bogies", "ghasts", "goblins", "huakai", "kelpies", "lurks", "mandragoras", "nasties", "nighthags", "ogres", "sevartal", "skinwalkers", "spriggan", "weepingwights"], feature: "line", title: "Born of fear", page: "C20 pdf 12, 449-450",
+    text: "NPCs as a rule. They draw Glamour from fear and gather near the gateways to the Dreaming."},
+  {key: "darkkin", label: "Dark-Kin", match: ["darkkin", "dark kin", "acheri", "aonides", "firbholg", "fuath", "keremet", "moire", "naraka"], feature: "line", house: true, title: "The shadow kin", page: "C20 appendices; the feature is a house reading",
+    text: "Fae of the old shadow courts and far lands. Their Glamour comes from what the Seelie shun; Seelie fae treat them warily at first meeting."},
+  {key: "dauntain", label: "Dauntain", match: ["dauntain"], feature: "line", title: "The fae who hunt their own", page: "C20, the Dauntain",
+    text: "NPCs. Changelings in the grip of Banality who hunt the fae. Near one, other changelings feel their Glamour thin."},
+  {key: "kamuii", label: "Hsien nobles", match: ["kamuii"], feature: "line", title: "Rank in heaven", page: "Land of Eight Million Dreams pdf 13",
+    text: "A seat in the politics of the Shinma court, a faction standing of its own."},
+  {key: "komuko", label: "Komuko", match: ["komuko"], feature: "line", title: "The hearth", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "A house with a komuko in it is a safer haven: those who break in face one harder rolls."},
+  {key: "suijen", label: "Suijen", match: ["suijen"], feature: "line", title: "Water", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "They swim freely, and rain brings back their Glamour."},
+  {key: "hanumen", label: "Hanumen", match: ["hanumen"], feature: "line", title: "The monkey's tricks", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Tricks and climbing are one easier.", effects: [{tags: ["athletics", "lift"], difficulty: -1}]},
+  {key: "nyan", label: "Nyan", match: ["nyan"], feature: "line", title: "The cat's ease", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "They see at night and sleep anywhere. Sight in the dark is one easier.", effects: [{tags: ["sight"], difficulty: -1, when: "dark"}]},
+  {key: "chuihyu", label: "Chu-ih-yu", match: ["chu ih yu", "chuihyu"], feature: "line", title: "War", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Fight rolls are one easier; peace scenes one harder.", effects: [{tags: ["brawl", "melee"], difficulty: -1}, {tags: ["etiquette"], difficulty: 1}]},
+  {key: "tanuki", label: "Tanuki", match: ["tanuki"], feature: "line", title: "The shape of a thing", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Shapeshifting tricksters: a Tanuki can pass as a thing in the scene, a jar, a lantern or a stone."},
+  {key: "hirayanu", label: "Hsien commoners", match: ["hirayanu", "hsien"], feature: "line", title: "Animal nature", page: "Land of Eight Million Dreams pdf 13, 55-65",
+    text: "Animals answer them as kin. Animal Ken gains a die.", effects: [{tags: ["animalken"], dice: 1}]},
+];
+
+/** Seemings: the mortal age the clock moves through. */
+export const SEEMINGS = [
+  {key: "childling", label: "Childling", match: ["childling", "childlings"], feature: "line", title: "The child's wonder", page: "C20, the seemings",
+    text: "Banality touches them least. As the years on the clock pass, a childling grows into a wilder. Rolls to resist Banality are one easier.", effects: [{tags: ["banality"], difficulty: -1}]},
+  {key: "wilder", label: "Wilder", match: ["wilder", "wilders"], feature: "line", title: "The fire of youth", page: "C20, the seemings",
+    text: "Passion runs hot: Glamour comes and goes fast. With the years, a wilder grows into a grump."},
+  {key: "grump", label: "Grump", match: ["grump", "grumps"], feature: "line", title: "The weight of years", page: "C20, the seemings",
+    text: "Wisdom and the long view, and Banality closer: rolls to resist it are one harder. Lore of the fae gains a die.", effects: [{tags: ["banality"], difficulty: 1}, {tags: ["occult"], dice: 1}]},
+];
+
+/** Courts. season: which half of the year the court holds power (Samhain to Beltaine is the Unseelie half). */
+export const COURTS = [
+  {key: "seelie", label: "Seelie Court", match: ["seelie"], feature: "court", season: "summer", title: "Season of the court", page: "C20, the courts; Dark Ages Fae pdf 19-20, 25-26",
+    text: "From Beltaine to Samhain the Seelie hold power: in that half of the year their Etiquette and Leadership gain a die. In the Dark Ages the courts are the seasonal Courts, and the season on the clock favours its own.", effects: [{tags: ["etiquette", "leadership"], dice: 1, when: "court"}]},
+  {key: "unseelie", label: "Unseelie Court", match: ["unseelie"], feature: "court", season: "winter", title: "Season of the court", page: "C20, the courts; Dark Ages Fae pdf 19-20, 25-26",
+    text: "From Samhain to Beltaine the Unseelie hold power: in that half of the year their Intimidation and Subterfuge gain a die. In the Dark Ages the courts are the seasonal Courts, and the season on the clock favours its own.", effects: [{tags: ["intimidation", "subterfuge"], dice: 1, when: "court"}]},
+];
+
+/** Sidhe Houses (C20 pdf 10, 51): a seat in the courts; boon and flaw as the book gives them, applied by the Storyteller. */
+const house = (key, label, theme, effects = []) => ({key, label: `House ${label}`, match: [key, `house ${key}`], feature: "line", title: "The House's seat", page: "C20 pdf 10, 51",
+  text: `${theme} The House holds a seat in the fae courts; its boon and flaw are applied from the book.`, ...(effects.length ? {effects} : {})});
+export const FAE_HOUSES = [
+  house("aesin", "Aesin", "A House of the Courts."), house("ailil", "Ailil", "Masters of intrigue.", [{tags: ["subterfuge"], dice: 1}]),
+  house("balor", "Balor", "A House marked by the old Fomorian blood."), house("beaumayn", "Beaumayn", "Seers of dreams."),
+  house("danaan", "Danaan", "A House of the old Tuatha."), house("daireann", "Daireann", "A House of the Courts."),
+  house("dougal", "Dougal", "Smiths and makers.", [{tags: ["crafts"], dice: 1}]), house("eiluned", "Eiluned", "Sorcerers and keepers of secrets.", [{tags: ["occult"], dice: 1}]),
+  house("fiona", "Fiona", "Passion and love, and courage to match."), house("gwydion", "Gwydion", "Judges who seek the truth.", [{tags: ["empathy"], dice: 1}]),
+  house("leanhaun", "Leanhaun", "Muses who feed on those they inspire."), house("liam", "Liam", "The disgraced House, kind to commoners."),
+  house("scathach", "Scathach", "Warriors who take commoners in.", [{tags: ["melee", "brawl"], dice: 1}]), house("varich", "Varich", "The House of the far east of Europe."),
+];
+
+/** The court that holds power by month: Samhain (1 November) to Beltaine (1 May) is the Unseelie half. */
+export const UNSEELIE_MONTHS = [11, 12, 1, 2, 3, 4];

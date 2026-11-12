@@ -37,3 +37,13 @@
 .application.wodx-lifepath .wodx-lp-option { text-align: left; white-space: normal; height: auto; line-height: 1.35; padding: 0.4rem 0.6rem; }
 .application.wodx-lifepath .wodx-warn { color: #d8a24a; }
 .application.wodx-lifepath .wodx-list li { margin: 0.15rem 0; }
+/* Before the First Night (0.12.0) */
+.application.wodx-first-night .wodx-fn-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.application.wodx-first-night .wodx-fn-step { border: 1px solid var(--color-border-light-2, #8884); border-radius: 4px; padding: 0.4rem 0.6rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.application.wodx-first-night .wodx-fn-done { opacity: 0.8; }
+.application.wodx-first-night .wodx-fn-waiting { border-style: dashed; }
+.application.wodx-first-night .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.application.wodx-first-night .wodx-buttons button { flex: 0 0 auto; width: auto; }
+.wodx-fn-forecast { margin: 0.2rem 0 0.5rem; padding-left: 1.2rem; }
+.wodx-fn-forecast li.wodx-fn-hidden { font-style: italic; }
+.wodx-fn-costs { margin: 0.2rem 0; padding-left: 1.2rem; }

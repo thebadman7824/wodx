@@ -18,6 +18,8 @@ import * as totals from "./totals-rules.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import * as lifepath from "./lifepath.mjs";
 import * as lifepathRules from "./lifepath-rules.mjs";
+import * as firstNight from "./first-night.mjs";
+import * as firstNightRules from "./first-night-rules.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -33,6 +35,8 @@ Hooks.once("init", () => {
   people.registerPeopleSettings();
   archive.registerArchiveSettings();
   lifepath.registerSheetButton();
+  firstNight.registerFirstNightSettings();
+  firstNight.registerSheetButton();
   // The fork's Group actor (coterie, pack, cabal...) gets its sheet here
   if ( !groups.registerGroupSheet() ) console.warn("WoDX | No Group actor type in this system; update the WoDX fork to 7.3.2-wodx.2.");
 });
@@ -47,6 +51,7 @@ function start() {
   xp.registerXPHandler();
   people.registerPeople();
   lifepath.registerLifepath();
+  firstNight.registerFirstNight();
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
   });
@@ -64,6 +69,7 @@ function start() {
     fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,
     secondBreath: states.secondBreath, secondBreathDialog: states.secondBreathDialog,
     totals, check: actor => CreationCheckApp.open(actor),
+    firstNight: actor => firstNight.FirstNightApp.open(actor ?? null), firstNightOf: firstNight.recordOf, forecast: firstNight.forecastFor, signOff: firstNight.signOff, firstNightRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
