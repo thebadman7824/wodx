@@ -4,6 +4,7 @@ import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
 import {firstChangeDialog} from "./first-change.mjs";
 import {deathDialog, awakenDialog, revenantDialog, chrysalisDialog, fallenDialog, possessDialog, secondBreathDialog} from "./states.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
+import {LifepathApp} from "./lifepath.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
@@ -45,6 +46,7 @@ export class CreationApp extends ApplicationV2 {
       possess: () => possessDialog().then(() => CreationApp.refresh()),
       secondBreath: () => secondBreathDialog().then(() => CreationApp.refresh()),
       check: () => CreationCheckApp.open(),
+      lifepath: CreationApp.#onLifepath,
       award: () => awardDialog(),
       spend: CreationApp.#onSpend,
       ally: CreationApp.#onAlly,
@@ -59,6 +61,21 @@ export class CreationApp extends ApplicationV2 {
   };
 
   static #instance;
+
+  /** Lifepath for the selected token's character, or one picked from the list. */
+  static async #onLifepath() {
+    const sel = canvas?.tokens?.controlled?.[0]?.actor;
+    if ( sel ) return LifepathApp.openFor(sel);
+    const list = game.actors.filter(a => !/group|spirit|creature/i.test(String(a.type))).sort(byName);
+    if ( !list.length ) return ui.notifications.warn("Make a character first.");
+    const {DialogV2} = foundry.applications.api;
+    const id = await DialogV2.prompt({classes: ["wodx", "wodx-dialog"], window: {title: "Lifepath for…"}, rejectClose: false,
+      content: `<div class="form-group"><label>Character</label>${searchBox("select[name=who]", "Search…", "Search characters")}
+        <select name="who">${list.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("")}</select></div>`,
+      ok: {label: "Open", callback: (event, button) => button.form.elements.who.value}});
+    const actor = id ? game.actors.get(id) : null;
+    return actor ? LifepathApp.openFor(actor) : null;
+  }
 
   /** Storyteller: this window. Player: the spend window, or a choice of their characters and allies. */
   static open() {
@@ -110,6 +127,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="fallen"><i class="fa-solid fa-fire"></i> A Fallen takes a host</button>
           <button type="button" data-action="possess"><i class="fa-solid fa-person-rays"></i> A new host</button>
           <button type="button" data-action="secondBreath"><i class="fa-solid fa-wind"></i> The Second Breath</button>
+          <button type="button" data-action="lifepath" title="A chain of scenes from a character's life before play, for every line and era"><i class="fa-solid fa-route"></i> Lifepath</button>
           <button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>

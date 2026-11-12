@@ -1,5 +1,7 @@
 # Pending review
 
+Each Monday, approved sections more than a week old move to docs/archive/pending-review-<year>-<month>.md (stale design review, item m11, 12 November 2026). The Waiting for review table stays last in this file.
+
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
@@ -588,6 +590,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Ventrue influence (B1152) | Once a month, a minor boon from an institution of the age in place of holdings income | INSTITUTIONS |
 | 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
 | 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
+| 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
+| 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
+| 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
 ## Waiting for review
@@ -626,3 +631,7 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | How secrets are dug up (B1304) | Investigation (Perception + Investigation 7), Telepathy (V20 roll), Spies or Contacts (Manipulation + Streetwise 7), Aura Perception (Perception + Empathy 8, marks on the soul only); 1 success for a secret that matters, 3 for a grave one, one fewer by Auspex | METHODS in secrets-rules.mjs |
 | 2026-11-12 | Which courts care about which secret, by age (B1305) | Table in secrets-rules.mjs: heresy to the Inquisition and any court to 1650, infernalism always, diablerie not to the Sabbat, sect ties from 1493, defection from 1897; proof adds 3 a point at the gathering and lays the secret bare | SECRET_KINDS, the accuse move in politics-rules.mjs |
 | 2026-11-12 | Trait-gated talk lines go first (B1307) | A fitting line that needs a trait beats a plain line on the same sheet | fitting in talk-rules.mjs |
+| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
+| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
+| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
+| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
