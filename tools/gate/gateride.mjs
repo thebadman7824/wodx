@@ -87,7 +87,7 @@ export async function run() {
       await b.setFlag("wodx-combat", "moved", {tag, yards: 30});
       const ride = M().rideOf(b), none = M().chargeOf(b.actor, {attackerTok: b});
       await b.unsetFlag("wodx-combat", "moved");
-      ok("the charge", charge.dice === 3 && /V20 Dark Ages p\. 398/.test(charge.note) && shot.dice === 0 && ride?.role === "passenger" && none.dice === 0 && M().stanceOf(b.actor, b) === "mounted",
+      ok("the charge", charge.dice === 3 && /V20 Dark Ages p\. 399/.test(charge.note) && shot.dice === 0 && ride?.role === "passenger" && none.dice === 0 && M().stanceOf(b.actor, b) === "mounted",
         {charge, shot, ride, none});
     });
     await step("carried along", async () => {
