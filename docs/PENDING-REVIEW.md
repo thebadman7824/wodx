@@ -887,3 +887,8 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Ships at sea (B2483, B2485): the Great War's gunnery and ramming read for ships of the living world with Seamanship; ships soak at 6; a ship built to ram takes 1 die a net success | As listed | Name other figures |
 | 2026-11-12 | Ships at sea (B2482, B2486): a quarry 5,000 yards off gets away; repair at 6 with each helper a die | As listed | Change LOST_AT or the repair roll |
 | 2026-11-12 | Ships at sea leaves for later (B2487): fleets, spotting and the watch, special shot, relic ships of the Tempest, Umbral ships, tokens on a map | Not built | Name any to build |
+| 2026-11-12 | Sheet title bar (B2491): ten worded buttons left no room for the name | Buttons show as icons, with their words on hover | Remove section 1 of modules/wodx-sheets/styles/wodx-layout.css to bring the words back |
+| 2026-11-12 | Narrow list headings (B2492): one size in every line, or each line's own size | 14 pixels in every line, so they stop running into each other in Wraith, Dark Ages: Werewolf and Demon | Remove section 5 of wodx-layout.css |
+| 2026-11-12 | Sheets ApplicationV2 move: part of the layout pass or not | Not part of it. "(deprecated)" came from the system's type names, not from the old sheet class, so the move stays its own later job | Start the move as its own thread |
+| 2026-11-12 | Planned UI in the Master Plan: how the layout pass covers it | New windows and sheet parts must pass the wider UI fit check (B2494) and use the shared panel, field and pick rules; nothing planned was redrawn ahead of being built | Ask for mock-ups of a planned window before it is built |
+

@@ -11,6 +11,7 @@ import {dirname, join} from "node:path";
 import {writeFileSync, mkdirSync, existsSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {installMock} from "./foundry-mock.mjs";
+import {audit} from "../gate/fit-audit.mjs";
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -964,7 +965,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href,
   pathToFileURL(join(root, "modules/wodx-paperdoll/styles/wodx-paperdoll.css")).href,
   pathToFileURL(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css")).href];
-const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
+// WODX_FIT_SIZES=1366x768 checks one screen size (a quick run while fixing); the full run checks all three
+const sizes = process.env.WODX_FIT_SIZES ? process.env.WODX_FIT_SIZES.split(",").map(s => s.split("x").map(Number)) : [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
 const KIT = process.env.WODX_KIT ?? "dark-ages", SCALE = process.env.WODX_SCALE ?? "1", LOOK = process.env.WODX_LOOK ?? "era";
@@ -1149,6 +1151,10 @@ for ( const [vw, vh] of sizes ) {
       }
       return {problems, controls: controls.length, height: Math.round(ar.height)};
     }, iconCss);
+    // The layout checks (cut-off and crowded controls, words over words, uneven shade, hard-to-read words)
+    await page.evaluate(() => document.querySelectorAll("*").forEach(s => { if ( s.scrollTop ) s.scrollTop = 0; }));
+    const layout = await page.evaluate(`(${audit.toString()})(document.getElementById("app"))`);
+    for ( const f of layout ) result.problems.push(`${f.kind}: ${f.msg} [${f.el.slice(0, 70)}]`);
     const label = `${vw}x${vh} ${w.name}`;
     if ( result.problems.length ) {
       failures++;

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2490
+Next free block: B2500
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -101,6 +101,7 @@ Next free block: B2490
 | B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
 | B2470-B2479 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
+| B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2918,3 +2919,29 @@ Reverse: change the repair roll in quarter().
 Not built: fleets (more than two ships, moving at the slowest ship's speed, split pools), spotting range and the watch, special shot (chain shot, fire), the Shadowlands' relic ships of the Tempest, Umbral ships, and ships tied to battle maps or tokens. Logged in PENDING-REVIEW.md.
 
 Reverse: nothing to reverse.
+
+## B2490. The line actor types are not deprecated here (2026-11-12, Ben's request)
+The World of Darkness system names seven of its actor types "(deprecated)" (Vampire, Werewolf, Mage, Changeling, Hunter, Demon, Changing Breed) because its author is moving to one PC type. WoDX builds every line sheet on those types, so the fork's English type names drop the word. Nothing else about the types changes. Fork 7.3.2-wodx.9.
+
+Reverse: put the seven TYPES.Actor lines in system/worldofdarkness/lang/en.json back.
+
+## B2491. One arrangement for every character and item sheet (2026-11-12, Ben's request; house layout)
+Ben asked for the arrangement to be fixed and the look left alone. A snapshot of 57 testbed sheets (tools/gate/gateuisnap.mjs) showed four things. The title bar held up to ten worded buttons, so the character's name had 2 pixels left and one button wrapped: the buttons are now icons that keep their words as a tooltip, and the name always has room. The Possessions, Relationships, Body and Storyteller's notes sections lay on the bare sheet background while the system's sections sit in panels: they take the same panel. WoDX fields and buttons there were darker than the system's fields, and four buttons had dark words on a dark sheet: they take one shade and the sheet's own ink, in light and dark mode. Item sheets kept every field 200 pixels wide in a 650 pixel window and drew a white text editor on a dark sheet: fields share the width in columns, and the editor follows dark mode. All of it is in modules/wodx-sheets/styles/wodx-layout.css, loaded after the line skins; no colour, font or ornament of a skin changes. Sheets 0.15.0.
+
+Reverse: take styles/wodx-layout.css out of the module's styles list and remove nameHeaderButtons in main.mjs.
+
+## B2492. List headings and section titles keep to their own space (2026-11-12, house layout)
+In the lines whose heading font is wide (Wraith, Dark Ages: Werewolf, Demon) the narrow column headings of the weapon, armor and effect lists ran into each other, and a long section title wrapped over the first row under it. Narrow column headings are 14 pixels in every line; a section title's plate grows with its words.
+
+Reverse: remove section 5 of wodx-layout.css.
+
+## B2493. A pick shows its chosen entry (2026-11-12, house layout)
+In 70 WoDX dialogs the label took two thirds of a row and the pick one third, so the chosen entry was cut off ("Automatic: from the tokens' fa"). In every WoDX window a pick is now as wide as its entries need and drops under its label when both do not fit; a pick in a table column keeps room for a short entry. Chronicle 0.45.2 (the shared stylesheet).
+
+Reverse: remove the last block of modules/wodx-chronicle/styles/wodx-chronicle.css.
+
+## B2494. The UI fit check looks for six more things (2026-11-12)
+tools/gate/fit-audit.mjs holds checks that run on any drawn window: a control cut off with no way to scroll to it, words that do not fit their box, two controls drawn over each other, words over words, a field or button of another shade than the rest of its kind, and words too close to the shade behind them. tools/harness/ui-fit.mjs runs them on every module window at three screen sizes; tools/gate/gateuisnap.mjs runs them on every kind of sheet in Foundry and saves the drawn sheets. A pick wider than 400 pixels, or as wide as its row, passes even when its entry is longer, because the layout has no more to give.
+
+Reverse: remove the audit call in ui-fit.mjs.
+
