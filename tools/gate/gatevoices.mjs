@@ -19,6 +19,8 @@ const newer = (a, b) => {
   return true;
 };
 const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+// The browser keeps pitch and rate as 32-bit floats, so 1.12 reads back as 1.1200000047683716.
+const near = (a, b) => Math.abs(Number(a) - Number(b)) < 0.005;
 const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p>${text}</p></div></div>`;
 
 export async function run() {
@@ -50,7 +52,7 @@ export async function run() {
     await step("2 spoken", async () => {
       await post(t1, "Coin first, traveller &amp; quickly.");
       const p = api().profileOf(t1);
-      ok("2 spoken", spoken.length === 1 && spoken[0].text === "Coin first, traveller & quickly." && spoken[0].pitch === p.pitch && spoken[0].rate === p.rate, {spoken, profile: p});
+      ok("2 spoken", spoken.length === 1 && spoken[0].text === "Coin first, traveller & quickly." && near(spoken[0].pitch, p.pitch) && near(spoken[0].rate, p.rate), {spoken, profile: p});
     });
     await step("3 steady", async () => {
       await post(t1, "Again."); await post(t2, "And you.");
