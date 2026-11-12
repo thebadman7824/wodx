@@ -1616,3 +1616,7 @@ The second step of the archetypes Ben approved. mortal-rules.mjs holds 39 mortal
 ## 2026-11-12: supernatural NPCs by line (WoDX NPC 0.24.0)
 The last step of the archetypes Ben approved. supernatural-rules.mjs holds 29 archetypes under the line templates, chosen by clan, tribe, kith, Tradition, legion or creed, each where and when it belongs. Orpheus crews only in the Future Darkness and Kuei-jin only in Asia, by Ben's rulings. A Marauder's madness picks its moves. Decisions B1009 to B1011.
 - Tests: supernaturals.test.mjs (8).
+
+## 2026-11-12: animal blood from the book (WoDX NPC 0.24.1)
+
+The PC book check of the V20 core animals appendix (pdf 396-399, printed 388-391) set the blood pools: horse 5 to 4, farm pigs 5 to 4, boar 3 to 4, crows 1/4 to 1/2. V20 lists no cattle, sheep, goats or geese, so these are house rules in PENDING-REVIEW: cattle 5, sheep and goats 3, geese and hens 1/2. A harness test pins every value. The testbed gate passed at 5cf4328 (gateanimals 5/5, gate7c 23/23).
