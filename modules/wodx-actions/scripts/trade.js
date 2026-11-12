@@ -34,17 +34,19 @@ export function build(ctx) {
     const line = (kind, npcTok, actor) => { try { return npcApi()?.talk?.stock?.(kind, { npc: npcTok, pc: actor }) ?? null; } catch (e) { return null; } };
     const isLifted = it => !!it?.flags?.["wodx-actions"]?.lifted;
 
+    /** 3.54.0: a made thing's quality price, with its words in money redone (they still said the plain price). */
+    const qualityPrice = (p, it) => { const q = TR.withQuality(p, TR.qualityFactor(it)); return q && q !== p ? { ...q, text: fmt(q.total) } : q; };
     /** What the NPC has for sale: shop rows, then what they carry. Each {key, name, count, price}. */
     function wares(npc, shop) {
         const out = [];
         if (shop) for (const r of TR.shopRows(shop.tile.flags?.[ICS]?.items)) out.push({ key: `s${r.i}`, row: r.i, name: r.name, count: r.count, price: priceOf(r.name, shop) });
-        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it)) });
+        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: qualityPrice(priceOf(it.name, shop), it) });
         return out.filter(w => w.price);
     }
     /** What the character can offer, with what the NPC would give for each. */
     function offers(actor, shop) {
         return TR.tradeable([...(actor.items ?? [])]).map(it => {
-            const p = TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it));
+            const p = qualityPrice(priceOf(it.name, shop), it);
             return p ? { key: it.id, item: it.id, name: it.name, lifted: isLifted(it), price: p, give: TR.offerFor(p, { lifted: isLifted(it) }) } : null;
         }).filter(Boolean);
     }
