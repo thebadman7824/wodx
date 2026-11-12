@@ -598,6 +598,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Small lines (B1507) | Own table and setting each; sheet fields where they exist, a pick for Kuei-jin and Orpheus | SMALL_LINES |
+| 2026-11-12 | Hunters by era (B1508) | Inquisition every era, mortal hunters 1500 to 1998, imbued from 1999, agencies from 1900 (a house reading); monster-only fight dice | HUNTER |
+| 2026-11-12 | Borrowed engines (B1509) | Guard, rulings, riddles, stars, bound dead, secrets, corruption and leverage reused across the small lines | data/signatures.mjs |
+| 2026-11-12 | NPC-only rows (B1510) | Bane mummies, Earthbound, Wan Xian, Cabiri | data/signatures.mjs |
 | 2026-11-12 | Wraith picks (B1504) | Guild, legion and faction picked in the window and kept on the actor; a legion suggested by the manner of death (a house reading) | GUILDS, LEGIONS |
 | 2026-11-12 | Wraith engines (B1505) | Borrowed riddle, leverage and mad ear; the Emerald luck once a week (a house reading of once a story) | luck |
 | 2026-11-12 | Factions of the dead (B1506) | Heretics, Renegades, Ferrymen, Spectres and the Risen, one per wraith | WRAITH_FACTIONS |

@@ -6,7 +6,7 @@ import * as L from "./legends-rules.mjs";
 import {officeTitle, polityFor} from "../../wodx-npc/scripts/politics-rules.mjs";
 
 /**
- * WoDX Chronicle 0.36.0: the Legends book (B1700-B1702). A journal of what has really happened in this chronicle,
+ * WoDX Chronicle 0.37.0: the Legends book (B1700-B1702). A journal of what has really happened in this chronicle,
  * rebuilt when a session ends in WoDX Storyteller, before and after each time skip, and when the Storyteller asks.
  * It reads records other modules keep (their settings and actor flags, by name, so a module that is off is simply
  * skipped) and never changes them. The rules are in legends-rules.mjs.

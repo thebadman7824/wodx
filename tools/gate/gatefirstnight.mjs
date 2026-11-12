@@ -27,7 +27,6 @@ async function save(R, name) {
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
-  const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   if ( game.world.id === "rothenstein-live" ) return "Not on the Live world.";
   const M = "wodx-creation", api = () => game.modules.get(M)?.api;
@@ -36,8 +35,9 @@ export async function run() {
   const made = [];
   const closeAll = async () => { for ( const app of [...(foundry.applications.instances?.values?.() ?? [])] ) if ( /wodx-fn|wodx-first-night/.test(app.id) ) await app.close(); };
   try {
-    const [vamp, mortal] = await createActors([{name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}},
-      {name: "WoDX gate: First Night Mortal", type: "Mortal"}]);
+    // one at a time: a batch create does not keep its order (harness rule)
+    const vamp = await Actor.create({name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}});
+    const mortal = await Actor.create({name: "WoDX gate: First Night Mortal", type: "Mortal"});
     made.push(vamp, mortal);
     await vamp.createEmbeddedDocuments("Item", [{name: "Enemy", type: "Feature", system: {type: "wod.types.flaw", value: 3}}]).catch(e => R.notes.push(`flaw item: ${e.message}`));
 
