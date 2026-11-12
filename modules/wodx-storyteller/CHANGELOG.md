@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.36.0 (missed connections, 12 November 2026: market news: dated events (plague, war, crash, collapse) and a week of player trade suggest price, supply and crowd changes on a card, applied and undone by the Storyteller; Dreaming crossings go in the crossing log)
 - 0.34.1 (the prelude journal shows the character's lifepath)
 - 0.34.0 (taking things apart for parts)
 - 0.33.0 (a lasting change can say what it does to the body: talons, wings, extra arms, a part lost)

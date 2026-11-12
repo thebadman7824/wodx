@@ -2,7 +2,7 @@
   "id": "wodx-targeting",
   "title": "WoDX Targeting",
   "description": "World of Darkness Expanded: target suggestions for powers and attacks. When an action window opens and no one is targeted by hand, WoDX reads whether the power is aimed at a foe, a friend, the user or an area, and how far it reaches, then names a likely target and the next few. Automatic mode, for the Storyteller only, sets the target as the window opens. Private use only; not for distribution or sale.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "authors": [
     {
       "name": "WoDX Project (private)"

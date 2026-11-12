@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;
@@ -57,7 +57,8 @@ function mode() {
 
 const unitsYards = d => (C()?.auto?.toYards ? C().auto.toYards(d, canvas.scene?.grid?.units ?? "ft") : d / 3);
 function measure(a, b) {
-  try { return canvas.grid.measurePath([a.center, b.center]).distance; } catch (e) { return null; }
+  // Height counts (0.3.0): elevation is in scene units like the flat distance
+  try { return T.withHeight(canvas.grid.measurePath([a.center, b.center]).distance, a.document?.elevation, b.document?.elevation); } catch (e) { return null; }
 }
 function reachOf(a, b, d) {
   if ( d === null ) return null;
@@ -148,13 +149,15 @@ function yardsPerPx() {
   return unitsYards(num(g?.distance) || 5) / (num(canvas.grid?.size) || num(g?.size) || 100);
 }
 const toYd = p => { const k = yardsPerPx(); return {x: p.x * k, y: p.y * k}; };
+/** A token's height in yards (elevation is in scene units). */
+const elevYd = tok => { const e = num(tok?.document?.elevation); return e ? unitsYards(e) : 0; };
 const toPx = p => { const k = yardsPerPx(); return {x: p.x / k, y: p.y / k}; };
 /** Each candidate token with its place and size in yards, for inArea(). */
 function placed(state) {
   const k = yardsPerPx();
   return state.tokens.map(c => {
     const tok = canvas.tokens.get(c.id);
-    return tok ? {...c, pos: toYd(tok.center), radius: ((num(tok.document?.width) || 1) * (num(canvas.grid?.size) || 100) / 2) * k} : c;
+    return tok ? {...c, pos: {...toYd(tok.center), z: elevYd(tok)}, radius: ((num(tok.document?.width) || 1) * (num(canvas.grid?.size) || 100) / 2) * k} : c;
   });
 }
 let preview = null;
@@ -273,7 +276,7 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
         const foe = r.area.find(a => a.side === "foe") ?? r.area[0];
         const ft = foe ? canvas.tokens.get(foe.id) : null;
         const o = toYd(me.center), f = ft ? toYd(ft.center) : null;
-        at = sh.origin === "self" ? {origin: o, dir: f ? Math.atan2(f.y - o.y, f.x - o.x) : 0} : (f ? {origin: f, dir: 0} : null);
+        at = sh.origin === "self" ? {origin: {...o, z: elevYd(me)}, dir: f ? Math.atan2(f.y - o.y, f.x - o.x) : 0} : (f ? {origin: {...f, z: elevYd(ft)}, dir: 0} : null);
       }
       if ( sh && at ) { r.area = T.inArea(sh, at, placed(st), {selfId: me?.id}); r.why = r.area.length ? `${r.area.length} inside` : "no one inside"; drawPreview(sh, at); }
       else if ( sh && sh.origin === "point" ) { r.why = "place the circle on the map"; r.area = []; clearPreview(); }
@@ -313,7 +316,7 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
         if ( !p || !sh ) return;
         const q = toYd(p);
         if ( sh.origin === "point" ) at = {origin: q, dir: 0};
-        else if ( me ) { const o = toYd(me.center); at = {origin: o, dir: Math.atan2(q.y - o.y, q.x - o.x)}; }
+        else if ( me ) { const o = {...toYd(me.center), z: elevYd(me)}; at = {origin: o, dir: Math.atan2(q.y - o.y, q.x - o.x)}; }
         draw();
       });
       return;

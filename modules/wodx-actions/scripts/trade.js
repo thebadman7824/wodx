@@ -170,13 +170,19 @@ export function build(ctx) {
             }
         }
         // What the trader gets: into the shop when there is one, else onto the NPC
+        let soldCount = 0;
         if (d.give) {
             const it = ch.items.get(d.give.item);
+            soldCount = it ? Math.max(1, Number(it.flags?.["wodx-sheets"]?.qty) || 1) : 0;
             if (it && shop) {
                 await shop.update({ [`flags.${ICS}.items`]: TR.addToShop(shop.flags?.[ICS]?.items, it.name, Math.max(1, Number(it.flags?.["wodx-sheets"]?.qty) || 1)) });
                 await ch.deleteEmbeddedDocuments("Item", [it.id]);
             } else if (it) await moveItem(ch, npc, it.id, Math.max(1, Number(it.flags?.["wodx-sheets"]?.qty) || 1));
         }
+        // 3.45.0: the trade is done, on the Storyteller's client; WoDX Storyteller counts it against the market
+        Hooks.callAll("wodxTradeDone", { mode: d.mode, shop: d.shop ?? null, npc: d.npcToken ?? d.npc, scene: canvas?.scene?.id ?? null,
+            bought: d.want ? { name: d.want.name, count: Math.max(1, Number(d.want.count) || 1) } : null,
+            sold: d.give && soldCount ? { name: d.give.name, count: soldCount } : null });
         return { ok: true };
     }
 

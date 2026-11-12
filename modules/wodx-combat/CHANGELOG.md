@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.16.0 (missed connections, 12 November 2026: fights make noise: firearms and explosives loud, blades, fists, bows and silenced guns quiet; NPCs nearby who hear it react through WoDX Interactables, once a round)
 - 3.15.0 (the VtDA20 bridge is gone: no game.vtda20combat alias, no settings read from vtda20-combat, and the module no longer switches itself off beside vtda20-combat; the manifest still lists vtda20-combat as a conflict)
 - 3.14.0 (the after-action card for the Storyteller when a fight ends, with a breach button for the Masquerade ledger and the rumour mill; Use the room on the token HUD in a fight)
 - 3.13.0 (the body plan: a tree of parts for each shape, from a person to a wolf, bat, mist or Zulo shape; claws, teeth, moves and senses from the parts; hit locations with aiming at a part and a maiming the Storyteller may rule; gear that comes off in a shape that cannot use it, with Undo)

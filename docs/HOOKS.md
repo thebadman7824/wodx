@@ -14,7 +14,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse), npc |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
-| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
+| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news) |
+| wodxEventUndone | chronicle | interactables (living tiles resync), storyteller (market news undone) |
+| wodxDreamingGate | otherworlds | storyteller (the crossing log) |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
@@ -28,6 +30,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
+| wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
@@ -42,8 +45,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxSecretSeen | actions | a creature of another kind saw what someone is: {by, secret, seen: [{uuid, name, profile}], event} |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
-| wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
-| wodxEventUndone | chronicle | a dated event taken back |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
