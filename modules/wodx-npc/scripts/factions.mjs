@@ -18,6 +18,7 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
@@ -52,6 +53,10 @@ export function build(ctx) {
     });
     game.settings.register(MOD, "playerFactions", {
       name: "Players may found factions", hint: "Players can ask to found a faction from their characters' own Backgrounds, and give orders to a faction they run. Every founding waits in the approval queue.",
+      scope: "world", config: true, type: Boolean, default: true
+    });
+    game.settings.register(MOD, "factionWars", {
+      name: "Factions go to war by themselves", hint: "At a faction turn, a faction Hostile or worse toward a rival may take up arms for a place the rival holds. The war is fought off the screen with WoDX Storyteller's battles (a battle that turn, a siege a week a turn); what it changes waits in the approval queue. A war where a player character stands waits for the Storyteller. Needs WoDX Storyteller.",
       scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "factionPolitics", {
@@ -316,6 +321,7 @@ export function build(ctx) {
           return {state: st}; });
         reports.push({turn, lines});
         await turnCard(turn, reason, lines, undoAll, m);
+        if ( setting("factionWars") !== false ) await warTurn(turn, {now, places: list, year: era.year}).catch(e => console.error(`${MOD} | wars`, e));
       }
       return reports;
     })();
@@ -1021,10 +1027,79 @@ export function build(ctx) {
   }
 
   /** NPC 0.39.0: an ended WoDX Storyteller battle between factions goes to the approval queue (B2206). */
+  /* ---- Wars between factions, fought off the screen (B2211-B2216) ---- */
+
+  const battlesApi = () => game.wodx?.storyteller?.battles ?? game.modules.get("wodx-storyteller")?.api?.battles ?? null;
+  /** A place where a player character's token stands (its scene, or the scene its region is on). */
+  function charactersAt(placeId) {
+    const doc = sceneOf(placeId);
+    const scene = doc?.documentName === "Scene" ? doc : doc?.parent?.documentName === "Scene" ? doc.parent : null;
+    if ( !scene ) return false;
+    const pcs = pcActors();
+    return (scene.tokens?.contents ?? [...(scene.tokens ?? [])]).some(t => pcs.has(t.actorId));
+  }
+  /** Roll a hidden leader's powers into a phase: the successes at 6. */
+  async function powerDeed(f) {
+    const r = new Roll(`${WR.powerPool(f)}d10`);
+    await r.evaluate();
+    const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
+    return Math.max(0, faces.filter(x => x >= 6).length - faces.filter(x => x === 1).length);
+  }
+  async function fightOut(api, b, s) {
+    const facs = [b.war.attacker, b.war.defender].map(id => s.factions.find(f => f.id === id));
+    let x = b, k = 0;
+    while ( x && !x.over && x.kind === "field" && k < 30 ) {
+      const deeds = [];
+      for ( const f of facs ) deeds.push(WR.usesPowers(f, b.war.kind) ? [{name: game.actors?.get(f.leader)?.name || `${f.name}'s powers`, successes: await powerDeed(f)}] : []);
+      x = await api.fight(x.id, {deeds, quiet: true});
+      k++;
+    }
+    if ( x && !x.over && x.kind === "field" ) x = await api.draw(x.id, {quiet: true});
+    return x;
+  }
+  /** Advance every war fought off the screen, then perhaps start a new one. */
+  async function warTurn(turn, {now = game.time.worldTime, places = placeList(), year = eraInfo().year, only = null} = {}) {
+    const api = battlesApi();
+    if ( !api?.start || !game.user.isGM ) return null;
+    const s = state();
+    const wars = api.list().filter(b => b.war && !b.over && (!only || only.has(b.war.attacker)));
+    const done = [];
+    for ( const b of wars.filter(x => x.war.auto) ) {
+      let x = b;
+      if ( x.kind === "siege" ) {
+        x = await api.week(x.id, {quiet: true});
+        if ( x && !x.over && x.breached ) { x = await api.storm(x.id, {quiet: true}); x = await fightOut(api, x, s); }
+      } else x = await fightOut(api, x, s);
+      if ( x?.over ) done.push(x);
+    }
+    const busy = new Set(api.list().filter(b => b.war && !b.over).flatMap(b => [b.war.attacker, b.war.defender]));
+    const pick = WR.pickWar(s, {rand: streamFor(`war:${turn}:${Math.floor(now)}`), year, busy, places, only});
+    let started = null;
+    if ( pick ) {
+      const att = s.factions.find(f => f.id === pick.attacker), def = s.factions.find(f => f.id === pick.defender);
+      const lead = f => { const a = f.leader ? game.actors?.get(f.leader) : null; return a && !routines.downState?.(a) ? {actorId: a.id, name: a.name} : null; };
+      const near = charactersAt(pick.place);
+      const raw = {name: WR.warName(att, def, pick.placeName, pick.siege), place: pick.placeName, kind: pick.siege ? "siege" : "field", year,
+        war: {attacker: att.id, defender: def.id, place: pick.place, kind: pick.kind, auto: !near, turn},
+        sides: [WR.forcesFor(att, pick.kind, {year, leader: lead(att)}), WR.forcesFor(def, pick.kind, {year, defends: true, siege: pick.siege, leader: lead(def)})]};
+      started = await api.start(raw);
+      if ( started && !near ) {
+        let x = started.kind === "siege" ? await api.week(started.id, {quiet: true}) : await fightOut(api, started, s);
+        if ( x?.over ) done.push(x);
+      }
+      await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(raw.name)}</h3>
+        <p>${esc(att.name)} take${/s$/.test(att.name) ? "" : "s"} up arms against ${esc(def.name)}${pick.placeName ? ` for ${esc(pick.placeName)}` : ""}: ${pick.kind === "supernatural" ? "a war of the hidden world, fought with their powers" : "a war fought by mortal hands"}.</p>
+        <p class="wodx-quiet">${near ? "A player character is there, so it waits for you: open Battles and sieges in the Storyteller's hand to fight it with them, or remove it." : started?.kind === "siege" ? "The siege goes a week each faction turn, off the screen." : "Fought off the screen this turn."}</p></div>`});
+    }
+    for ( const x of done ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(x.name)}</h3>
+      <p>${esc(x.over.text)}</p><p class="wodx-quiet">What it changes waits in the approval queue. Players hear of it as news when word reaches them.</p></div>`});
+    return {started, done};
+  }
+
   async function onBattle({battle} = {}) {
     if ( !isActiveGM() || mode() === "off" || !battle?.over ) return;
     const s = state();
-    const changes = F.battleChanges(s, battle);
+    const changes = [...F.battleChanges(s, battle), ...WR.warChanges(s, battle)];
     if ( !changes.length ) return;
     const n = names(s);
     await proposeChanges(`After ${battle.name}`, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `battle:${battle.id}:${battle.over.at ?? ""}`});
@@ -1088,7 +1163,7 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  return {warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
     applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};

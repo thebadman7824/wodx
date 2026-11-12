@@ -743,6 +743,12 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |
 | 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Not deleted. Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
 
+## Approved by Ben, 12 November 2026, 12:42 UTC (battles, State of the Game review)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Battles: the book's army from Spoils of War (B2210) | When both sides list units, battles use the book's troop table and Right of Command turn (pools, Close and fight, Shoot, Withdraw, units lost, wavering); one line only, so no flanks or reserve; mortal units fall first; without units the house frame (B2200) stays | Leave the units empty, or drop the isBook branch in battles.mjs |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -772,3 +778,7 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 | 2026-11-12 | A disguise at a guarded place (B1407, NPC 0.43.0) | A disguise that held with a keeper of the place lets the wearer by as its sides (livery, habit); with no keeper's roll on record, any held roll counts; one a keeper saw through raises "dressed as one of us". The design asked for this and the first build missed it; the look hand checks found it | Use only the keeper's own roll, or leave guards to the Storyteller: disguiseAt in routine-rules.mjs |
 | 2026-11-12 | Look book check page refs (B1401-B1405) | Pinned: Appearance V20 p. 98, Status p. 118, Resources p. 116, Appearance 0 V20 Dark Ages p. 55, Mask of a Thousand Faces p. 185. No book rule for dress against station, sumptuary law or a mundane disguise roll, so those stay house rules | Change the refs in DECISIONS and look-rules.mjs |
 | 2026-11-12 | Daggerfall Unity study: what to take for travel, warrens, sewers and realm maps (desk https://claude.ai/artifact/LuPA8dftGnzVByRnQfuNXc, 7 items) | Recommended and waiting, nothing built: a country grid of Moravia with roads by era feeding the trip plan; pace and lodging choices on a trip; generated maps take their land from the grid; warrens from our own kit of pieces; sewers laid from the street plan; realm layouts left alone apart from Reflect on underground maps and a Labyrinth dress for the kit; travel built first. Ideas only, written fresh; no Daggerfall code or data | Pick other options on the desk; no code to undo |
+| 2026-11-12 | Factions at war (B2211-B2216): how often, how many | Hostile 1 in 6 a turn, Hunted 1 in 3; at most one new war a turn; players' own factions never start one | WAR_CHANCE and pickWar in wodx-npc/scripts/war-rules.mjs |
+| 2026-11-12 | Factions at war: mortal or supernatural | Supernatural when both sides are hidden kinds or hunters fight one; a hidden faction against a mortal one fights through mortal followers (no powers, no breach) | warKind in war-rules.mjs |
+| 2026-11-12 | Factions at war: the leaders' powers | Status + 3 dice at 6 a phase as the side's deed, until the battle deeds table lands | powerPool in war-rules.mjs |
+| 2026-11-12 | Factions at war: what the dots field | Retainers (Herd for Kindred) and Status into book units up to 1499, men and quality after; Domain 3+ means a siege | unitsFor and forcesFor in war-rules.mjs |
