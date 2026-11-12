@@ -503,8 +503,26 @@ export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "
 }
 
 /**
+ * NPC 0.43.0 (house rule, the NPC look design): what a worn disguise does at a guarded place. look: WoDX Library's
+ * reading (look.disguise = {station, sides}); records: the intruder's flags.wodx-actions.disguise ({npcId: {held}});
+ * watchers: ids of the NPCs who keep this place. Records from those watchers count; with none of theirs, any record does.
+ * Returns {pass: the disguise's sides count as worn, seenThrough: a watcher here saw through it}. Seen through wins.
+ */
+export function disguiseAt(look, records = {}, watchers = []) {
+  const none = {pass: false, seenThrough: false};
+  if ( !look?.disguise ) return none;
+  const all = Object.entries(records ?? {}).filter(([, r]) => r && typeof r === "object");
+  const theirs = all.filter(([id]) => watchers.includes(id));
+  const use = theirs.length ? theirs : all;
+  if ( !use.length ) return none;
+  const seenThrough = use.some(([, r]) => r.held === false);
+  return {pass: !seenThrough && use.some(([, r]) => r.held === true), seenThrough};
+}
+
+/**
  * What a watcher does about what it noticed, scored from its 7b profile. sit:
- *   {supernatural, weapon, trespass, curfew, night, alliesNear, intruderKind, watcherKind, homeGround, bloody (NPC 0.32.0)}
+ *   {supernatural, weapon, trespass, curfew, night, alliesNear, intruderKind, watcherKind, homeGround, bloody (NPC 0.32.0),
+ *    seenThrough (a disguise a watcher here saw through, NPC 0.43.0)}
  * Returns [{action, score, why}] best first.
  */
 export function pickReaction(profile, sit) {
@@ -515,10 +533,10 @@ export function pickReaction(profile, sit) {
   const beast = !!p.animal, herd = Number(p.herd ?? 0), terr = Number(p.territory ?? 0), hung = Number(p.hunger ?? 0);
   // Animals take no fright at the supernatural as such (Ben, 2026-11-12): only a wraith, through their fears
   const amiss = [sit.curfew && !beast && "abroad in the curfew", sit.trespass && "trespassing", sit.weapon && "weapon drawn", sit.supernatural && !beast && "the supernatural shown",
-    sit.bloody && !beast && "blood on them"].filter(Boolean);
+    sit.bloody && !beast && "blood on them", sit.seenThrough && !beast && "dressed as one of us"].filter(Boolean);
   const keeper = ["guard", "ghoul", "elder"].includes(p.template) || tac.includes("guard") || (tac.includes("call") && p.loyalty >= 1);
   if ( keeper ) {
-    let sc = 2 + p.loyalty + (sit.curfew ? 1.5 : 0) + (sit.trespass ? 1.5 : 0) + (sit.bloody ? 1 : 0) - (sit.weapon ? 0.5 : 0) - (afraid ? 3 : 0);
+    let sc = 2 + p.loyalty + (sit.curfew ? 1.5 : 0) + (sit.trespass ? 1.5 : 0) + (sit.bloody ? 1 : 0) + (sit.seenThrough ? 1.5 : 0) - (sit.weapon ? 0.5 : 0) - (afraid ? 3 : 0);
     const what = beast ? "barks and bristles" : "keeps order here";
     out.push({action: "challenge", score: sc, why: amiss.length ? `${what}: ${amiss.join(", ")}` : what});
   }
@@ -527,7 +545,7 @@ export function pickReaction(profile, sit) {
     out.push({action: "alarm", score: sc, why: beast ? "raises a racket" : sit.alliesNear ? `${sit.alliesNear} others within call` : "shouts for anyone near"});
   }
   if ( !beast && (tac.includes("call") || keeper) ) {
-    out.push({action: "send", score: 0.5 + p.loyalty + ((sit.supernatural || sit.weapon) ? 1.5 : 0) + (sit.bloody ? 1 : 0) - (sit.alliesNear ? 0.5 : 0), why: "sends for the watch"});
+    out.push({action: "send", score: 0.5 + p.loyalty + ((sit.supernatural || sit.weapon) ? 1.5 : 0) + (sit.bloody ? 1 : 0) + (sit.seenThrough ? 1 : 0) - (sit.alliesNear ? 0.5 : 0), why: "sends for the watch"});
   }
   {
     const startled = tac.includes("scatter") && amiss.length > 0;

@@ -8,7 +8,9 @@
  *  - the Storyteller's own notes on the Notes tab, kept in a Storyteller-only journal entry so players never get them;
  *  - search boxes on the long power lists;
  *  - a History window in the header with Undo for this session's edits (kept in memory, so it costs no saves);
- *  - a Print button that prints the sheet as it looks.
+ *  - a Print button that prints the sheet as it looks;
+ *  - (0.13.0) a "changed since last session" strip, each line with its cause, cleared when marked read;
+ *  - (0.13.0) a features card: every line feature in force, when it fires and when it last fired.
  * The pure parts are extras-rules.mjs and extras-html.mjs.
  */
 import * as XR from "./extras-rules.mjs";
@@ -276,6 +278,140 @@ function relationsOf(actor, editable) {
   return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
 }
 
+
+/* -------------------------------------------------------------- */
+/*  Changed since last session (0.13.0)                            */
+/* -------------------------------------------------------------- */
+
+const readJson = v => { if ( !v ) return null; if ( typeof v === "object" ) return v; try { return JSON.parse(v); } catch (e) { return null; } };
+const snapOf = actor => readJson(actor.getFlag(MOD, "snap"));
+const sinceOf = actor => readJson(actor.getFlag(MOD, "since")) ?? {};
+const tracked = actor => !!actor && actor.documentName === "Actor" && !!actor.hasPlayerOwner;
+
+/** The factions a character belongs to, in words (WoDX NPC's factions and their politics). */
+function standingOf(actor) {
+  const api = npcApi(), out = {};
+  let st = null;
+  try { st = api?.factions?.state?.(); } catch (e) { st = null; }
+  if ( !st?.factions ) return out;
+  const PO = api.politics?.rules, yr = yearNow();
+  for ( const f of st.factions ) {
+    const leader = f.leader === actor.id, member = (f.members ?? []).includes(actor.id);
+    if ( !leader && !member ) continue;
+    const parts = [leader ? "leader" : "member"];
+    try {
+      const pk = PO?.polityFor?.(f, yr);
+      if ( pk && f.politics ) {
+        const r = PO.rankOf(f, actor.id, {}, pk);
+        if ( r ) parts.push(`rank ${r}`);
+        for ( const o of PO.officesOf(f, actor.id) ) parts.push(PO.officeTitle(pk, o, f));
+      }
+    } catch (e) { /* no politics here */ }
+    out[f.id] = `${f.name}: ${parts.join(", ")}`;
+  }
+  return out;
+}
+/** The hand ties and the domitor, by uuid; ties the Storyteller hides never enter, so players see nothing new. */
+function tiesNow(actor) {
+  const out = {};
+  for ( const t of actor.getFlag(MOD, "ties") ?? [] ) if ( t?.uuid ) out[t.uuid] = fromUuidSync(t.uuid)?.name ?? t.name ?? "(gone)";
+  const l = actor.flags?.["wodx-creation"]?.lineage, dom = typeof l?.domitor === "object" ? l.domitor?.id : l?.domitor;
+  const d = dom ? game.actors.get(dom) : null;
+  if ( d ) out[d.uuid] = `${d.name} (domitor)`;
+  return out;
+}
+export function snapNow(actor) {
+  const sys = actor.system ?? {};
+  const label = (kind, k) => { const l = sys[kind]?.[k]?.label; return l ? game.i18n.localize(l) : XR.niceKey(k); };
+  return XR.snapshotOf(sys, [...actor.items], { ties: tiesNow(actor), standing: standingOf(actor), year: yearNow(), at: Date.now(), label });
+}
+/** A fresh starting point: the strip empties until something moves again. */
+export async function takeSnapshot(actor) {
+  if ( !actor || !(game.user.isGM || actor.isOwner) ) return;
+  await actor.update({ [`flags.${MOD}.snap`]: JSON.stringify(snapNow(actor)), [`flags.${MOD}.since`]: "{}" }, { wodxQuiet: true });
+}
+/** The strip's lines for a character, with causes. */
+export function changesOf(actor) {
+  return XR.withCauses(XR.changesSince(snapOf(actor), snapNow(actor)), sinceOf(actor));
+}
+
+/** The cause a change carries from the client that made it: a time skip, a chat card just pressed, or Undo. */
+let CARD = null;
+const CARD_MS = 4000;
+function currentCause(options = {}) {
+  if ( options.wodxUndo ) return "Undo";
+  let skip = null;
+  try { skip = game.settings.get("wodx-chronicle", "skipping"); } catch (e) { skip = null; }
+  if ( skip ) return `the time skip${skip.label ? `: ${skip.label}` : ""}`;
+  if ( CARD && Date.now() - CARD.at < CARD_MS ) return `a card: ${CARD.title}`;
+  return "";
+}
+const pending = new Map();
+/** Add a cause on the Storyteller's client, a moment later, so a burst of changes is one save. */
+function noteCause(actor, cats, cause) {
+  if ( !cats.length || !cause ) return;
+  const p = pending.get(actor.id) ?? { cats: [], causes: [] };
+  p.causes.push([cats, cause]);
+  pending.set(actor.id, p);
+  clearTimeout(p.timer);
+  p.timer = setTimeout(async () => {
+    pending.delete(actor.id);
+    let since = sinceOf(actor), changed = false;
+    for ( const [c, why] of p.causes ) { const n = XR.addCause(since, c, why); if ( n ) { since = n; changed = true; } }
+    if ( changed && snapOf(actor) ) await actor.update({ [`flags.${MOD}.since`]: JSON.stringify(since) }, { wodxQuiet: true }).catch(e => console.warn("WoDX Sheets | changes", e));
+  }, 600);
+}
+const causeFor = (options, userId) => options?.wodxCause || (game.users.get(userId)?.isGM ? "the Storyteller" : `${game.users.get(userId)?.name ?? "a player"}, by hand`);
+function installChanges() {
+  // Every client: a card pressed here names itself as the cause of what follows
+  document.addEventListener("click", ev => {
+    const b = ev.target.closest?.(".chat-message button, .chat-message [data-action]");
+    if ( !b ) return;
+    const m = b.closest(".chat-message");
+    const title = (m?.querySelector(".message-content h3, .message-content h2, .flavor-text")?.textContent ?? "").trim().slice(0, 60);
+    CARD = { title: title || "a chat card", at: Date.now() };
+  }, true);
+  const tag = (doc, options) => { if ( !options.wodxCause ) { const c = currentCause(options); if ( c ) options.wodxCause = c; } };
+  Hooks.on("preUpdateActor", (a, ch, options) => tag(a, options));
+  for ( const h of ["preUpdateItem", "preCreateItem", "preDeleteItem"] ) Hooks.on(h, (it, a1, a2) => tag(it, (h === "preDeleteItem" ? a1 : a2) ?? {}));
+  // The active Storyteller's client keeps the causes
+  Hooks.on("updateActor", (actor, changes, options, userId) => {
+    if ( !isActiveGM() || options.wodxQuiet || !tracked(actor) ) return;
+    noteCause(actor, XR.catsOf(XR.loudKeys(changes)), causeFor(options, userId));
+  });
+  const onItem = (item, options, userId, changes = {}) => {
+    const a = item.parent;
+    if ( !isActiveGM() || options?.wodxQuiet || !tracked(a) ) return;
+    noteCause(a, XR.catsOf(XR.loudKeys(changes), item.type), causeFor(options, userId));
+  };
+  Hooks.on("updateItem", (item, changes, options, userId) => onItem(item, options, userId, changes));
+  Hooks.on("createItem", (item, options, userId) => onItem(item, options, userId));
+  Hooks.on("deleteItem", (item, options, userId) => onItem(item, options, userId));
+  // A time skip is one cause for the year line, however far it goes
+  Hooks.on("wodxSkipEnd", info => {
+    if ( !isActiveGM() ) return;
+    for ( const a of game.actors.filter(tracked) ) noteCause(a, ["time"], `the time skip${info?.label ? `: ${info.label}` : ""}`);
+  });
+  // The end of a session (WoDX Storyteller) is the new starting point; a character with none gets one now
+  Hooks.on("wodxSessionEnded", async () => {
+    if ( !isActiveGM() ) return;
+    for ( const a of game.actors.filter(tracked) ) await takeSnapshot(a).catch(e => console.warn("WoDX Sheets | changes", e));
+  });
+  Hooks.once("ready", async () => {
+    if ( !isActiveGM() ) return;
+    for ( const a of game.actors.filter(x => tracked(x) && !snapOf(x)) ) await takeSnapshot(a).catch(e => console.warn("WoDX Sheets | changes", e));
+  });
+}
+
+/* -------------------------------------------------------------- */
+/*  The features card (0.13.0)                                     */
+/* -------------------------------------------------------------- */
+
+const FEATS_OPEN = new Set();
+function featuresOf(actor) {
+  try { return chron()?.signatures?.summary?.(actor) ?? []; } catch (e) { console.warn("WoDX Sheets | features", e); return []; }
+}
+
 /** Add the extras to a freshly drawn sheet (jQuery or element). */
 export async function decorate(sheet, html) {
   await loadGoods();
@@ -286,6 +422,16 @@ export async function decorate(sheet, html) {
   const strip = XH.stripHtml(XR.strip(actor.system, { healthLabel: healthLabel(actor), conditions: conditionNames(actor) }));
   const head = el.querySelector(".sheet-body > .sheet-headline") ?? el.querySelector(".sheet-body");
   head?.insertAdjacentHTML(head.classList.contains("sheet-headline") ? "afterend" : "afterbegin", strip);
+  // 0.13.0: what changed since last session, then the features card, under the strip, for the owner and the Storyteller
+  if ( game.user.isGM || actor.isOwner ) {
+    let more = "";
+    try {
+      const snap = snapOf(actor);
+      if ( snap ) more += XH.changesHtml(changesOf(actor), { canClear: true, since: snap.at ? `since ${new Date(snap.at).toLocaleDateString()}` : "" });
+    } catch (e) { console.warn("WoDX Sheets | changes", e); }
+    more += XH.featuresHtml(featuresOf(actor), { gm: !!game.user.isGM, open: FEATS_OPEN.has(actor.id) });
+    if ( more ) el.querySelector(".wodx-strip")?.insertAdjacentHTML("afterend", more);
+  }
   // Possessions in place of the Gear tab
   const gear = el.querySelector(".tab.gear");
   if ( gear ) {
@@ -342,6 +488,16 @@ export function bodyTabHtml(actor, cb) {
 
 export function listen(sheet, root) {
   const actor = sheet.actor, editable = !!sheet.options.editable;
+  // 0.13.0: mark the changes read; keep the features card open across redraws; the Storyteller sets a feature aside
+  root.querySelector(".wodx-chg-read")?.addEventListener("click", ev => { ev.preventDefault(); takeSnapshot(actor).catch(e => console.warn("WoDX Sheets | changes", e)); });
+  const feats = root.querySelector(".wodx-features");
+  feats?.addEventListener("toggle", () => { if ( feats.open ) FEATS_OPEN.add(actor.id); else FEATS_OPEN.delete(actor.id); });
+  feats?.addEventListener("change", ev => {
+    const t = ev.target.closest(".wodx-feat-toggle");
+    if ( !t || !game.user.isGM ) return;
+    ev.stopPropagation();
+    chron()?.signatures?.setOff?.(actor, t.dataset.feat, !t.checked);
+  });
   const itemOf = el => actor.items.get(el.closest("[data-wodx-item]")?.dataset.wodxItem);
   const poss = root.querySelector(".wodx-possessions");
   poss?.querySelector(".wodx-poss-filter")?.addEventListener("change", ev => {
@@ -515,6 +671,7 @@ export function setup() {
     scope: "world", config: true, type: String, default: "german", choices: Object.fromEntries(Object.entries(XR.CURRENCIES).map(([k, v]) => [k, v.label]))
   });
   installHistory();
+  installChanges();
   Hooks.once("ready", installSocket);
   // Header buttons on every WoDX sheet
   Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {

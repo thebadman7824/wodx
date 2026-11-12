@@ -1,5 +1,5 @@
 /**
- * Battles and sieges gate (WoDX Storyteller 0.45.0, NPC 0.42.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
+ * Battles and sieges gate (WoDX Storyteller 0.45.0, NPC 0.44.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
  * world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatebattle.mjs?${Date.now()}`)).run()
  * Runs battles through the API (no windows), then removes the battles, clock, factions, messages and actors it made.

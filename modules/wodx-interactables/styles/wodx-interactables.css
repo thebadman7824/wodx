@@ -47,13 +47,14 @@
 .wix-case-display .wix-case-link line { stroke: #4fd1e8; }
 .wix-case .wix-case-link line.wix-case-hit { stroke: transparent; stroke-width: 12; }
 .wix-case .wix-case-link text { fill: #fff; font-size: 12px; paint-order: stroke; stroke: #000; stroke-width: 3px; }
-.wix-case .wix-case-card { position: absolute; box-sizing: border-box; padding: 0.3em 0.4em; background: #f4ecd8; color: #222; border: 1px solid #0006; box-shadow: 2px 3px 6px #0006; font-size: 13px; }
+.wix-case .wix-case-card { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; padding: 0.3em 0.4em; background: #f4ecd8; color: #222; border: 1px solid #0006; box-shadow: 2px 3px 6px #0006; font-size: 13px; }
 .wix-case-display .wix-case-card { background: #102838ee; color: #d8f4ff; border-color: #4fd1e8; }
-.wix-case .wix-case-card p { margin: 0.2em 0; max-height: 7em; overflow-y: auto; white-space: normal; }
-.wix-case .wix-case-grip { cursor: move; user-select: none; border: 0; margin: 0; font-size: 13px; touch-action: none; }
+.wix-case .wix-case-card p { margin: 0.2em 0; flex: 1 1 auto; min-height: 0; overflow-y: auto; white-space: normal; }
+.wix-case .wix-case-card:not(:has(p)) .wix-case-tools { margin-top: auto; }
+.wix-case .wix-case-grip { flex: 0 0 auto; cursor: move; user-select: none; border: 0; margin: 0; font-size: 13px; touch-action: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wix-case .wix-case-hidden { opacity: 0.6; border-style: dashed; }
 .wix-case .wix-case-linking { outline: 3px solid #a01818; }
-.wix-case .wix-case-tools { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; }
+.wix-case .wix-case-tools { flex: 0 0 auto; display: flex; gap: 2px; align-items: center; flex-wrap: wrap; }
 .wix-case .wix-case-tools button { flex: 0 0 auto; width: 24px; height: 22px; line-height: 1; padding: 0; font-size: 11px; }
 .wix-case .wix-case-empty { position: absolute; left: 20px; top: 20px; }
 .wix-case .wix-case-card[hidden] { display: none; }

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.13.0 (under the in-play strip: "Changed since last session", each line with its cause (a card, the Storyteller, a player by hand, the time skip, Undo), cleared with Mark as read and started again at each session's end; a Features card listing every line feature in force, when it fires and when it last fired, with a switch for the Storyteller to set one aside for a story)
 - 0.12.0 (a Followers button on the Relationships tab opens WoDX NPC's Followers window)
 - 0.11.0 (the Ties tab becomes Relationships: every tie WoDX keeps, grouped, with the Storyteller's hidden ties and secrets kept back from players; ghoul and domitor ties show again; Family and lineage and Secrets buttons; how an NPC regards the characters, for the Storyteller)
 - 0.10.0 (the Body tab: shape, parts, what the body can do, where blows land, lasting changes)

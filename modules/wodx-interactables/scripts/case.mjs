@@ -120,8 +120,8 @@ export class CaseBoardApp extends ApplicationV2 {
       const lx = (p.x + q.x) / 2, ly = (p.y + q.y) / 2;
       return `<g class="wix-case-link" data-action="line" data-id="${l.id}"><line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/><line class="wix-case-hit" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>${l.label ? `<text x="${lx}" y="${ly - 4}" text-anchor="middle">${esc(l.label)}</text>` : ""}</g>`;
     }).join("");
-    const cards = b.cards.map(c => `<div class="wix-case-card wix-case-${c.kind}${c.hidden ? " wix-case-hidden" : ""}${this.linking === c.id ? " wix-case-linking" : ""}" data-id="${c.id}" data-search-item data-search-text="${esc(`${c.title} ${c.text} ${C.KINDS[c.kind]}`)}" style="left:${c.x}px;top:${c.y}px;width:${C.CARD_W}px;min-height:${C.CARD_H}px">
-        <header class="wix-case-grip" title="Drag to move"><i class="fa-solid ${ICON[c.kind]}" aria-hidden="true"></i> <b>${esc(c.title)}</b>${c.hidden ? ` <i class="fa-solid fa-eye-slash" title="Hidden from the players"></i>` : ""}</header>
+    const cards = b.cards.map(c => `<div class="wix-case-card wix-case-${c.kind}${c.hidden ? " wix-case-hidden" : ""}${this.linking === c.id ? " wix-case-linking" : ""}" data-id="${c.id}" data-search-item data-search-text="${esc(`${c.title} ${c.text} ${C.KINDS[c.kind]}`)}" style="left:${c.x}px;top:${c.y}px;width:${C.CARD_W}px;height:${C.CARD_H}px">
+        <header class="wix-case-grip" title="${esc(c.title)}: drag to move"><i class="fa-solid ${ICON[c.kind]}" aria-hidden="true"></i> <b>${esc(c.title)}</b>${c.hidden ? ` <i class="fa-solid fa-eye-slash" title="Hidden from the players"></i>` : ""}</header>
         ${c.text ? `<p>${esc(c.text).replace(/\n/g, "<br>")}</p>` : ""}
         <div class="wix-case-tools">${c.ref ? `<button type="button" data-action="card" data-op="open" data-id="${c.id}" title="Open it" aria-label="Open it"><i class="fa-solid fa-up-right-from-square"></i></button>` : ""}
           <button type="button" data-action="card" data-op="link" data-id="${c.id}" title="Join to another card: press here, then on the other card" aria-label="Join"><i class="fa-solid fa-link"></i></button>

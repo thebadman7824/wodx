@@ -53,7 +53,7 @@ export const STOCK_KIND = { persuade: "persuade", fasttalk: "deceive", con: "dec
 export const PRESETS = {
     disguiseNpc: { label: "Pass as someone else (Man + Subterfuge vs Per + Alertness)", attr: "manipulation", ability: "subterfuge", diff: 6, mode: "resisted",
         alts: [["manipulation", "subterfuge"], ["manipulation", "performance"], ["charisma", "performance"]], opp: { attr: "perception", ability: "alertness", diff: 6, needMore: true },
-        note: "House rule: the watcher must beat the disguise's successes. Obfuscate and powers that change the look still win over clothes." },
+        note: "House rule (no book has a mundane disguise roll; Performance as for the Mask of a Thousand Faces, V20 p. 185): the watcher must beat the disguise's successes. Obfuscate and powers that change the look still win over clothes." },
     persuadeNpc: { label: "Persuade someone (Man + Expression vs Willpower)", attr: "manipulation", ability: "expression", diff: 6, mode: "resisted",
         alts: [["manipulation", "expression"], ["manipulation", "persuasion"], ["charisma", "expression"]], opp: { pool: "willpower", diff: 6 }, aura: true,
         note: "House rule: V20's Persuasion pool against the listener's Willpower." },
