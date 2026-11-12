@@ -17,7 +17,8 @@
  *  11. the counterattack on a character goes through WoDX Combat (damage on the sheet), then is taken off
  *  12. the book's army: both sides by units fight a Right of Command turn (pools, actions, units lost); Undo puts the units back
  *  13. factions at war: two gate factions Hunted toward each other go to war at a faction step, fought off the screen with no cards to players
- *  14. every other WoDX module still answers
+ *  14. a supernatural war (Kindred against Garou): their own kind fight, and each phase brings a leader's deed from the battle deeds table
+ *  15. every other WoDX module still answers
  * Result: Data/wodx-gate/gatebattle-result.json.
  */
 async function save(R, name) {
@@ -55,7 +56,9 @@ export async function run() {
       s.factions = [...(s.factions ?? []), {id: "gateBattleA", name: "WoDX gate: Lords", kind: "other", assets: {status: 2, retainers: 2}},
         {id: "gateBattleB", name: "WoDX gate: Rebels", kind: "other", assets: {status: 1, retainers: 1}},
         {id: "gateWarA", name: "WoDX gate: Margrave", kind: "mortal", assets: {status: 3, retainers: 3, resources: 2}, standing: {gateWarB: -3}},
-        {id: "gateWarB", name: "WoDX gate: Abbey", kind: "church", assets: {status: 2, retainers: 2, domain: 1}, places: ["wodx-gate-place"], standing: {gateWarA: -3}}];
+        {id: "gateWarB", name: "WoDX gate: Abbey", kind: "church", assets: {status: 2, retainers: 2, domain: 1}, places: ["wodx-gate-place"], standing: {gateWarA: -3}},
+        {id: "gateWarC", name: "WoDX gate: Court", kind: "kindred", assets: {status: 3, retainers: 2, herd: 2}, standing: {gateWarD: -3}},
+        {id: "gateWarD", name: "WoDX gate: Sept", kind: "garou", assets: {status: 3, retainers: 2, domain: 1}, places: ["wodx-gate-caern"], standing: {gateWarC: -3}}];
       await game.settings.set(NPC, "factions", s);
     }
 
@@ -163,7 +166,7 @@ export async function run() {
       const pub0 = pub();
       let res = null, n = 0;
       // a Hunted faction takes up arms 1 turn in 3; the seeded roll changes with the turn number
-      while ( n < 12 && !res?.started ) { res = await fx.warTurn(9000 + n, {only: new Set(["gateWarA", "gateWarB"])}); n++; }
+      while ( n < 20 && !res?.started ) { res = await fx.warTurn(9000 + n, {only: new Set(["gateWarA", "gateWarB"])}); n++; }
       const war = api().list().find(x => x.war?.attacker === "gateWarA");
       if ( war ) made.push(war.id);
       await new Promise(r => setTimeout(r, 800));
@@ -176,6 +179,18 @@ export async function run() {
           turns: (war?.phases ?? []).filter(p => p.kind === "phase").map(p => ({command: p.total, pools: p.pools, units: p.units, waver: p.waver,
             contests: (p.contests ?? []).map(c => ({action: c.action, attack: c.attack?.pool, resist: c.resist?.pool, rolled: [c.rolls?.attack?.successes, c.rolls?.resist?.successes], net: c.net}))}))});
     });
+    await step("supernatural war", async () => {
+      const fx = game.modules.get(NPC)?.api?.factions;
+      if ( !fx?.warTurn || !factionsBefore ) return ok("supernatural war", true, {skipped: "no WoDX NPC factions"});
+      let res = null, n = 0;
+      while ( n < 20 && !res?.started ) { res = await fx.warTurn(9500 + n, {only: new Set(["gateWarC", "gateWarD"])}); n++; }
+      const war = api().list().find(x => x.war?.attacker === "gateWarC");
+      if ( war ) made.push(war.id);
+      const deeds = (war?.phases ?? []).filter(p => p.kind === "phase").flatMap(p => (p.deeds ?? []).flat());
+      const own = war?.book ? Object.keys(war.sides[0].units ?? {}).concat(Object.keys(war.sides[1].units ?? {})) : [];
+      ok("supernatural war", !!war && war.war.kind === "supernatural" && deeds.length > 0 && (!war.book || own.some(k => /cainite|ghoul|garou|kinfolk/i.test(k)) || war.phases.length > 0),
+        {tries: n, name: war?.name, over: war?.over?.text, phases: war?.phases?.length, units: war?.sides?.map(x => x.startUnits), deeds: deeds.slice(0, 6)});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-otherworlds", "wodx-creation"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
@@ -184,7 +199,7 @@ export async function run() {
   } catch (e) { R.errors.push(e.message); }
   finally {
     try {
-      for ( const x of api()?.list?.() ?? [] ) if ( x.war?.attacker === "gateWarA" && !made.includes(x.id) ) made.push(x.id);
+      for ( const x of api()?.list?.() ?? [] ) if ( ["gateWarA", "gateWarC"].includes(x.war?.attacker) && !made.includes(x.id) ) made.push(x.id);
       for ( const id of made ) await api()?.remove?.(id);
       if ( factionsBefore ) await game.settings.set(NPC, "factions", factionsBefore);
       if ( legendsBefore ) await game.settings.set("wodx-chronicle", "legends", legendsBefore);
