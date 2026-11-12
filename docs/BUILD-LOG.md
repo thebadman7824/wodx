@@ -1705,6 +1705,9 @@ From the Improvement Desk (Ben approved fo1 and cw1 as described). One Followers
 
 ## 2026-11-12: Anda marks (Chronicle 0.44.1)
 Ben's desk note: an Anda's frenzy leaves the Gangrel's animal marks, healing after a month. Decision B1519. Harness test added. Not on Live.
+
+The look gate's second PC run passed 9/9 (main 6ba1188). It showed one more slip: a fine-work item's trade price was scaled, but the words beside it still gave the plain price. Actions 3.54.0 redoes the words.
+
 ## WoDX Voices 0.2.0, 2026-11-12
 
 - Kokoro in the Storyteller's browser, offline from Data/wodx-voices-engine (tools/voices/fetch-engine.mjs), lines cached in Data and played to the people who see them, from the token. Only plot NPCs and their prewritten talk-sheet lines are voiced (Ben, B2111). The Storyteller's improvised lines as an NPC, off by default (Improvement Desk vo1). A tongue per NPC for the browser's speech (B2106-B2111). Harness voices.test.mjs (12 tests); gatevoices now 10 steps. In the cloud, kokoro.web.js loaded in Chromium and asked for its model at the engine folder; the model itself comes on the PC.
