@@ -30,7 +30,7 @@ export function registerNight() {
     chron()?.registerApprovalHandler?.(TN.aid, {label: "Story aid", approve: e => approveAid(e.data)});
   };
   if ( chron()?.gen ) go(); else Hooks.once("wodxChronicleReady", go);
-  // 0.35.0: a fight goes in the log, so the pacing note knows a night was hard
+  // 0.37.0: a fight goes in the log, so the pacing note knows a night was hard
   Hooks.on("wodxFightStarted", ({combat} = {}) => {
     if ( !isActiveGM() ) return;
     const sc = combat?.scene ?? canvas?.scene;

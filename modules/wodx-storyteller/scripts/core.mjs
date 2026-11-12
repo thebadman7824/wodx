@@ -528,7 +528,7 @@ export async function endSession({factions = true} = {}) {
   await game.settings.set(MOD, "session", {at: now(), real: Date.now()});
   try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
-  // 0.35.0: clocks of the Storyteller's own that tick on a faction turn or at a session's end
+  // 0.37.0: clocks of the Storyteller's own that tick on a faction turn or at a session's end
   try { const k = game.modules.get(MOD)?.api?.clocks; if ( factions ) await k?.tick?.("faction"); await k?.tick?.("session"); } catch (e) { console.error(`${MOD} |`, e); }
 }
 

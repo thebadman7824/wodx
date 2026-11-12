@@ -1568,9 +1568,48 @@ Reverse: ELECTRIC_FROM in interact-rules.mjs.
 ## B1330. Colour-blind safe colours (2026-11-12)
 Ben approved "Colours readable by everyone". A player setting in WoDX Senses swaps the sight rings to the Okabe and Ito palette with a thicker line, and every ring shows its words on the map (a second setting can hide them). The aura overlay of Read the Soul names its colour. V20's aura colours keep their names; only the drawing changes.
 Reverse: settings colourSafe and ringWords; SAFE in sight-rules.mjs.
+## B1400. Made things keep their quality in trade, Examine and use (2026-11-12)
+A made thing's quality tag ("a sword (fine work)") no longer hides the good from price lookups. Traders buy and sell it at its quality price (x1.25 good, x1.5 fine, x2 masterwork). Examine reads the crafted quality and the maker's name unless the Storyteller's notes say otherwise. A fine or masterwork thing gives -1 difficulty on its Use checks.
+
+Reverse: stripQuality in Storyteller money.mjs; withQuality in Actions trade-rules.js; withMade in Library examine-rules.mjs; extraDiff in use.mjs.
+
+## B1401. The look (2026-11-12)
+WoDX Library reads a character the way a stranger does: station 0 to 5 from the best worn dress (its value tier this era, a step for worn valuables of tier 4 or more), dress or shown gear out of its time, condition (blood, wounds, filth, wet, torn, a weapon drawn), Appearance, Status, sides shown by worn habits, uniforms and liveries, and a disguise. House rule throughout; Appearance, Status and Resources are V20's (page refs owed by the book check).
+
+Reverse: look-rules.mjs and look.mjs; api.look in Library main.mjs.
+
+## B1402. The look at a first meeting (2026-11-12)
+Mortal NPCs: dress the era's gap above their station +1, below -1; strange dress -1; blood or wounds -1; filth or wet -1 with station 3 or more. All NPCs: Appearance 4 to 5 +1; fine work worn +1 with an NPC who has the craft. Mortals only: Appearance 0 -1 unless Monstrous. Supernatural NPCs: Status 3 or more +1 with their own kind. The look is held to 2 steps, traits to 2, the two together to 3 (Ben's pick). NPC station: worn dress, else Resources, else template, else 1.
+
+Reverse: lookSeed and TEMPLATE_STATION in look-rules.mjs; seedFor in NPC attitude.mjs.
+
+## B1403. How loudly dress speaks, by era (2026-11-12)
+Gap needed: 2 until 1913 (from 1800, a gap of 1 also counts with NPCs of station 4 or 5); 3 from 1914. Worn dress always shows; carried things show only when they can't be hidden (conceal N).
+
+Reverse: ERA_WEIGHTS and seen in look-rules.mjs.
+
+## B1404. Blood at later meetings (2026-11-12)
+After a first meeting, blood or wounds lower a mortal NPC's attitude by 1 for that scene only. Nothing is stored. Kindred NPCs notice blood in talk tests, with no attitude step (Ben's pick).
+
+Reverse: sceneStep in look-rules.mjs; withScene in attitude-rules.mjs.
+
+## B1405. Pass as someone else (2026-11-12)
+A disguise roll in With this person: Manipulation + Subterfuge (or Performance) against the NPC's Perception + Alertness, difficulty 6; the watcher must beat the disguise's successes. The result is kept per NPC on the character (flags wodx-actions.disguise). While it holds, that NPC reads the disguise's station and sides. A disguise is set on a worn item in its Examine notes (station and sides). House rule until the book check names the book's roll.
+
+Reverse: the disguise act and disguiseNpc preset in social-rules.js.
+
+## B1406. Talk tests and notices on the look (2026-11-12)
+New "Only when" tests: dressed fine/poor/even (against the NPC being dealt with), wears, station, out of time, bloody, disguised, seen through. Mortals' first remark can now be about blood, a disguise seen through, strange dress, or rich or poor dress, with three stock lines each.
+
+Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-rules.mjs; NOTICE in stock-talk-more.mjs.
+
+## B1407. Guards and worn sides (2026-11-12)
+Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
+
+Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
 
 ## B1500. The Legends book (2026-11-12)
-Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.32.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
+Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.33.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
 Players see a new line of each kind as follows (a house rule, line by line in the window): dated events, deaths, seats, holdings and boons are shown; Embraces, ghoulings, oaths and debts, and the seats of a secret faction, wait for the Storyteller. Lines dated after today's date are the Storyteller's only.
 Reverse: SHOWN_BY_DEFAULT in legends-rules.mjs.
 ## B1501. When the book is written (2026-11-12)
@@ -1580,7 +1619,7 @@ Reverse: the hooks in Chronicle main.mjs (updateSetting, wodxSkipStart, wodxSkip
 One chapter (journal page) per century that has lines, oldest first, from 1197 to the World of Future Darkness, dated on the Chronicle Clock's calendar. Setting the clock back takes a dated event out again, as the dated events do; other lines stay but count as after today's date, so players stop seeing them until the clock passes them again. The book keeps 5000 lines, dropping the oldest.
 Reverse: LEGENDS_CAP and merge() in legends-rules.mjs.
 ## B1510. Progress clocks (2026-11-12)
-Ben approved the Improvement Desk item "Progress clocks" as described. WoDX Storyteller 0.35.0 shows long work and slow threats as segmented clocks (after Blades in the Dark). Clocks read from records WoDX keeps: long tasks (successes of the goal), heat on a hunting ground (of 10), ties that need tending (shown once half the time has gone), Ledger objectives (steps done) and open Ledger entries with a due date (time gone between made and due). The Storyteller makes clocks of their own (4, 6, 8, 10 or 12 segments) for a faction's plan or a hunter closing in. Rules in clock-rules.mjs; stored in the world setting wodx-storyteller.clocks.
+Ben approved the Improvement Desk item "Progress clocks" as described. WoDX Storyteller 0.37.0 shows long work and slow threats as segmented clocks (after Blades in the Dark). Clocks read from records WoDX keeps: long tasks (successes of the goal), heat on a hunting ground (of 10), ties that need tending (shown once half the time has gone), Ledger objectives (steps done) and open Ledger entries with a due date (time gone between made and due). The Storyteller makes clocks of their own (4, 6, 8, 10 or 12 segments) for a faction's plan or a hunter closing in. Rules in clock-rules.mjs; stored in the world setting wodx-storyteller.clocks.
 Reverse: remove the Clocks tool and the dashboard section.
 ## B1511. Who sees a clock (2026-11-12)
 Every clock starts as the Storyteller's only. The Storyteller shows a clock to everyone or to the players of chosen characters, read clocks included. A house rule.
