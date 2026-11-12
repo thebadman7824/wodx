@@ -589,6 +589,8 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
 | 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
 | 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
+| 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
+| 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
 ## Waiting for review

@@ -109,6 +109,28 @@ export const SECRET_FRESH = {word: 60, print: 30, papers: 14, radio: 7, televisi
 export const STANDING_MAX = 5;
 export const TITHE = 0.1;
 
+/** Ghouls (V20 Dark Ages ghoul rules in every era, Ben's standing rule). */
+export const GHOUL = {key: "ghoul", label: "Ghoul", match: [], feature: "ghoul", title: "The fix", page: "V20 Dark Ages pdf 38",
+  text: "A ghoul lives on a domitor's vitae. A month without a drink drains a blood point; with none left, the years they have held off begin to come back. The craving pulls at them near Kindred blood, a Self-Control roll the Storyteller can call for."};
+
+/** Revenant family traits (Ben 2026-11-12: new families pick one). effects: roll effects; also: a borrowed engine. */
+export const FAMILY_TRAITS = {
+  beasts: {label: "Beasts and kennels", effects: [{tags: ["animal ken"], dice: 1}]},
+  money: {label: "Money, banks and courts", effects: [{tags: ["finance"], dice: 1}]},
+  learning: {label: "Faith or learning", effects: [{tags: ["academics", "occult"], dice: 1}]},
+  vice: {label: "Vice", effects: [], also: ["vice"]},
+  war: {label: "War", effects: [{tags: ["melee", "brawl"], dice: 1}]},
+  craft: {label: "A craft", effects: [{tags: ["crafts"], dice: 1}]},
+};
+
+/** The revenant families of the books (Guide to the Sabbat pdf 219; V20 Dark Ages pdf 454). */
+export const REVENANT_FAMILIES = [
+  {key: "bratovitch", label: "Bratovitch", trait: "beasts", text: "Hunters and kennel-keepers with their hounds."},
+  {key: "grimaldi", label: "Grimaldi", trait: "money", text: "In banks, courts and counting houses."},
+  {key: "obertus", label: "Obertus", trait: "learning", text: "In monasteries and libraries."},
+  {key: "zantosa", label: "Zantosa", trait: "vice", text: "Given over to vice and pleasure."},
+];
+
 /** Ravnos vices (V20 Ravnos weakness, own words). acts: social or trade acts that feed it. */
 export const RAVNOS_VICES = [
   {key: "lying", label: "Lying", acts: ["con", "fasttalk"]},
