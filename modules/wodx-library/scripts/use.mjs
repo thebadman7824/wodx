@@ -301,7 +301,9 @@ export async function run(item, ability, actor = holderOf(item)) {
     }
     case "check": {
       await say(actor, U.useLine(actor.name, ability, item.name));
-      return actions()?.quickCheck?.({actor, check: a.check, desc: `${a.label}: ${item.name}`});
+      // A fine or masterwork thing is easier to use (Storyteller's diffWhenUsed, -1)
+      const easier = Number(item.flags?.["wodx-storyteller"]?.diffWhenUsed) || 0;
+      return actions()?.quickCheck?.({actor, check: a.check, desc: `${a.label}: ${item.name}${easier ? " (well made, -1 difficulty)" : ""}`, extraDiff: easier});
     }
     case "system": {
       await say(actor, U.useLine(actor.name, ability, item.name));

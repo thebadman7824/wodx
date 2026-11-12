@@ -10,6 +10,8 @@
  *  - Persuade: neither book has a Persuasion system; V20's sample pool (p. 255) set against the NPC's Willpower, as Fast-Talk is.
  *  - Bribe: no rule in V20 or V20 Dark Ages; Manipulation + Streetwise against Willpower, bonus dice for a rich offer.
  *  - The NPC's attitude moves the difficulty (WoDX NPC's attitude track), and each outcome may move the attitude.
+ *  - Pass as someone else (3.44.0): Manipulation + Subterfuge (or Performance) against Perception + Alertness; the result
+ *    is kept per NPC on the character (flags wodx-actions.disguise) for WoDX NPC's first meetings and talk lines.
  *  - A won roll leaves a note on the character for an hour of game time ("persuaded", "fooled"...), which talk lines
  *    and "Only when" lists can test.
  */
@@ -36,15 +38,22 @@ export const ACTS = [
         moves: { win: 0, lose: 0, botch: -1 } },
     { key: "bribe", label: "Bribe", icon: "fa-coins", preset: "bribeNpc", sway: "bribed", offer: true,
         note: "Offer something for a favour. They resist with Willpower; a rich offer adds dice. Pay with Trade or by hand.", ref: "house rule",
-        moves: { win: 1, lose: 0, botch: -1 } }
+        moves: { win: 1, lose: 0, botch: -1 } },
+    // 3.44.0: pass as someone else in borrowed dress (WoDX Library's look reads the disguise when it holds)
+    { key: "disguise", label: "Pass as someone else", icon: "fa-user-tie", preset: "disguiseNpc",
+        note: "Dress and manner as someone you are not. They see through it only by beating your successes with Perception + Alertness.", ref: "house rule",
+        moves: { win: 0, lose: -1, botch: -2 } }
 ];
 export const actByKey = key => ACTS.find(a => a.key === key) ?? null;
 
 /** The presets this file adds to main.js's dramatic systems. */
 /** Which of WoDX NPC's stock social lines fits each act (3.36.0): social:<kind>:<win|lose>. */
-export const STOCK_KIND = { persuade: "persuade", fasttalk: "deceive", con: "deceive", intimidate: "intimidate", threaten: "intimidate", question: "persuade", bribe: "bribe", charm: "charm" };
+export const STOCK_KIND = { persuade: "persuade", fasttalk: "deceive", con: "deceive", intimidate: "intimidate", threaten: "intimidate", question: "persuade", bribe: "bribe", charm: "charm", disguise: "deceive" };
 
 export const PRESETS = {
+    disguiseNpc: { label: "Pass as someone else (Man + Subterfuge vs Per + Alertness)", attr: "manipulation", ability: "subterfuge", diff: 6, mode: "resisted",
+        alts: [["manipulation", "subterfuge"], ["manipulation", "performance"], ["charisma", "performance"]], opp: { attr: "perception", ability: "alertness", diff: 6, needMore: true },
+        note: "House rule: the watcher must beat the disguise's successes. Obfuscate and powers that change the look still win over clothes." },
     persuadeNpc: { label: "Persuade someone (Man + Expression vs Willpower)", attr: "manipulation", ability: "expression", diff: 6, mode: "resisted",
         alts: [["manipulation", "expression"], ["manipulation", "persuasion"], ["charisma", "expression"]], opp: { pool: "willpower", diff: 6 }, aura: true,
         note: "House rule: V20's Persuasion pool against the listener's Willpower." },
@@ -79,6 +88,7 @@ export function attitudeMove(act, result) {
 /** What the player is told, in words. name: the NPC as the player knows them. */
 export function outcomeText(act, res, name = "They") {
     const n = name || "They";
+    if (act.key === "disguise") return res.result === "win" ? `${n} takes them for what they seem.` : res.result === "botch" ? `${n} sees through it at once, and will remember it.` : `${n} sees through it.`;
     switch (res.result) {
         case "botch": return act.key === "threaten" || act.key === "intimidate" ? `It goes badly wrong: ${n} is not cowed, and will remember this.` : `It goes badly wrong, and ${n} will remember it.`;
         case "tie": return act.key === "fasttalk" ? "Neither side gives way: it needs more talk." : "Neither side gives way.";
@@ -173,3 +183,6 @@ export function pocketsIn(year) {
     if (y < 2020) return "their pockets, wallet or phone";
     return "their pockets, cred chip or phone";
 }
+
+/** A disguise roll's record for one NPC (3.44.0): {held, at, scene}. A tie counts as seen through (the watcher wonders). */
+export const disguiseRecord = (result, at = 0, scene = null) => ({ held: result === "win", at: Number(at) || 0, scene: scene ?? null });

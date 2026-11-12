@@ -1646,3 +1646,6 @@ Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A 
 
 ## 2026-11-12: bloodlines and Laibon legacies
 Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of their own. Each one uses roll effects, a Masquerade sign card, or a clan engine borrowed through the row's "also" list. Decisions B1155 to B1157. Harness signatures.test.mjs: 19 tests. gatesigs: 19 steps.
+
+## 2026-11-12: how NPCs read a character's look
+Library 0.14.0 adds the look (look-rules.mjs, look.mjs, api.look). It covers station from worn dress by era, dress out of its time, blood, wounds, filth, a drawn weapon, Appearance, Status, sides shown by worn habits and uniforms, and disguises set in Examine notes. NPC 0.32.0 uses it at first meetings (held to 2, with traits to 3), as a scene-only step for blood at later meetings, for guards (blood alarms, a worn livery passes) and for sides worn openly. Chronicle 0.31.0 adds the "Only when" tests dressed, wears, station, out of time, bloody, disguised and seen through. Actions 3.44.0 adds Pass as someone else and quality prices in trade. Storyteller 0.36.0 finds made things by name with their quality tag and records the maker. Decisions B1400 to B1407. Harness look.test.mjs and made-quality.test.mjs: 15 tests. Design doc: https://claude.ai/artifact/WkMTJvYu77gpYukQ9cHchM

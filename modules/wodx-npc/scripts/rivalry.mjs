@@ -50,7 +50,10 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     const dom = domId ? game.actors.get(domId) : null;
     return {own, master: dom ? RV.sidesOf(sideInfo(dom)).filter(x => !x.startsWith("line:")) : []};
   }
-  const openSides = actor => String(savedProfile(baseOf(actor))?.openSides ?? "").split(/[,\n]/).map(x => x.trim().toLowerCase()).filter(Boolean);
+  const typedSides = actor => String(savedProfile(baseOf(actor))?.openSides ?? "").split(/[,\n]/).map(x => x.trim().toLowerCase()).filter(Boolean);
+  // NPC 0.32.0: a habit, livery or uniform actually worn shows its side too (WoDX Library's look)
+  const wornSides = actor => { try { return game.modules.get("wodx-library")?.api?.look?.of?.(baseOf(actor))?.sides ?? []; } catch (e) { return []; } };
+  const openSides = actor => [...new Set([...typedSides(actor), ...wornSides(actor)])];
   const disc = (a, n) => { const it = a?.items?.find?.(i => i.type === "Power" && String(i.system?.type ?? "").includes("discipline") && i.name.trim().toLowerCase().startsWith(n)); return it ? num(it.system?.value) : 0; };
   const pool = (a, rule) => num(a?.system?.attributes?.[rule.attr]?.value) + num(a?.system?.abilities?.[rule.ability]?.value ?? a?.system?.abilities?.[rule.ability.replace("-", "")]?.value);
   const sensed = new Map();

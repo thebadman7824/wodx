@@ -180,6 +180,9 @@ export function build(ctx) {
             const list = SR.addSway(actor.flags?.["wodx-actions"]?.sways, { kind: act.sway, npc: npc.id, npcName: npcNameOf(npc, name) }, now);
             await actor.update({ "flags.wodx-actions.sways": list });
         }
+        if (act.key === "disguise" && actor.isOwner) {
+            await actor.update({ [`flags.wodx-actions.disguise.${npc.id}`]: SR.disguiseRecord(res.result, now, canvas?.scene?.id ?? null) });
+        }
         const move = SR.attitudeMove(act, res.result);
         if (move) await npcApi()?.attitude?.propose?.(npc, actor, { delta: move, why: why || `${actor.name}: ${act.key}, ${res.result}` });
         Hooks.callAll("wodxSocial", { actor, npc, act: act.key, result: res.result });

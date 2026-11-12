@@ -75,6 +75,8 @@ export function actorContext(actor) {
     // Won social rolls (WoDX Actions' "With this person"), read off the flags so it works with Actions off
     sways: Array.isArray(actor.flags?.["wodx-actions"]?.sways) ? actor.flags["wodx-actions"].sways : [],
     items: [...(actor.items ?? [])].map(i => i.name),
+    // Chronicle 0.31.0: what they wear and how they are (WoDX Library's look), for dressed, wears, station, out of time, bloody
+    look: (() => { try { return api("wodx-library")?.look?.of?.(actor) ?? null; } catch (e) { return null; } })(),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
     ...(() => { try { return whenFeats(actor); } catch (e) { return {feats: [], powers: []}; } })(),
@@ -94,7 +96,21 @@ export function npcContext(npc, actor) {
   if ( !n?.id ) return null;
   let attitude = null;
   try { attitude = api("wodx-npc")?.attitude?.of?.(n, actor)?.step ?? null; } catch (e) { attitude = null; }
-  return {id: n.id, name: n.name ?? "", attitude};
+  // Chronicle 0.31.0: the NPC's station, the character's dress against it, and how a disguise went with this NPC
+  let station = null, dressed = null, disguise = null;
+  try {
+    const L = api("wodx-library")?.look;
+    const d = actor?.flags?.["wodx-actions"]?.disguise?.[n.id];
+    if ( d ) disguise = d.held ? "held" : "seen";
+    if ( L ) {
+      const tpl = n.getFlag?.("wodx-npc", "behavior")?.template ?? null;
+      station = L.station(n, tpl);
+      const look = L.asSeen(L.of(actor), disguise === "held");
+      const year = Number(api("wodx-chronicle")?.eras?.currentYear?.()) || null;
+      dressed = station === null ? null : L.dressedVs(look, station, year);
+    }
+  } catch (e) { station = null; }
+  return {id: n.id, name: n.name ?? "", attitude, station, dressed, disguise};
 }
 
 /** The full context for a check. opts: {actor, token, scene, time, npc}. */

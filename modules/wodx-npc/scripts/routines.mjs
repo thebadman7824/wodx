@@ -654,8 +654,13 @@ export function build(ctx) {
     const t = game.time.worldTime, d = describer()(t);
     const placeIds = [region.uuid, scene.uuid];
     const allowed = names(system.allowed);
-    const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder);
+    // NPC 0.32.0: what the intruder wears (WoDX Library's look): a livery or habit the place allows lets them by; blood alarms
+    let look = null;
+    try { look = game.modules.get("wodx-library")?.api?.look?.of?.(intruder) ?? null; } catch (e) { look = null; }
+    const wornPass = !!look && (look.sides ?? []).some(sd => allowed.some(n => String(n).toLowerCase() === sd));
+    const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder) && !wornPass;
     const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder),
+      bloody: !!look && (look.condition ?? []).some(c => c === "bloody" || c === "wounded"),
       wraith: ctx.C?.()?.getKind?.(intruder) === "wraith", alone: aloneNow(doc), month: d.month};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
     if ( !cond.met ) return null;
