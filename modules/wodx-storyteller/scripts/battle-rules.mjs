@@ -447,7 +447,7 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
     // a beaten attack costs the attackers only when the foe stood to receive it; when both close, each side's blow is its own count
     else if ( k < 0 && c[i].action === "melee" && c[1 - i].action !== "melee" ) loss[i] += -k;
   }
-  // no more than a third of the units an army began with fall in one turn (B2210, amended for Storyteller 0.48.1)
+  // no more than a third of the units an army began with fall in one turn (B2210, amended for Storyteller 0.48.2)
   for ( const i of [0, 1] ) loss[i] = Math.min(loss[i], turnCap(battle.sides[i]));
   const sides = battle.sides.map(s => ({...s, commander: {...s.commander}, units: {...s.units}, penalty: 0}));
   const lostUnits = [{}, {}];

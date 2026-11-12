@@ -148,6 +148,8 @@ test("market turn: wired into the Storyteller (setting, hooks, queue, window, ap
   const main = src("modules/wodx-storyteller/scripts/main.mjs");
   assert.match(main, /Turn\.registerMarketTurnSettings\(\)/);
   assert.match(main, /marketTurn: Turn\.api\(\)/);
+  // 0.48.1: the queue's handler waits for Chronicle's api, like the other handlers
+  assert.match(main, /Hooks\.once\("wodxChronicleReady"[^\n]*Turn\.registerApproval\(\)/);
   const w = src("modules/wodx-storyteller/scripts/markets.mjs");
   assert.match(w, /Run a week now/);
   assert.match(w, /name="cut"/);
