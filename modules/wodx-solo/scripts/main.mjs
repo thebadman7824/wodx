@@ -8,7 +8,8 @@
  *                approval gets a standing rule; the old values are kept in "before" and put back when it goes off
  *   the watcher  a card whispered to the Storyteller, a window opened on the seat or an entry left in the approval
  *                queue is answered after "wait" seconds when the choice is plain, and logged either way
- *   the scene    the seat views the scene the player views, since NPC sight and reach are read from the seat's map
+ *   the scene    the seat views the scene the player views (it looks every two seconds), since NPC sight and reach
+ *                are read from the seat's map
  *
  *   setting wodx-solo.on      Boolean  the switch
  *   setting wodx-solo.before  {at, settings: [{mod, key, from, to}], auto: {type: true}}  the way back
@@ -201,6 +202,16 @@ async function follow(user) {
   } catch (e) { console.warn(`${MOD} | follow`, e); }
 }
 const player = () => game.users.find(u => !u.isGM && u.active) ?? null;
+/**
+ * Foundry tells other clients which scene a user views as passing activity, not as a change to the user, so no hook
+ * fires for it (0.1.1). The seat looks every two seconds instead; follow() does nothing when the scene is the same.
+ */
+let watching = null;
+function watchPlayer() {
+  if ( watching ) return;
+  watching = setInterval(() => { if ( isSeat() ) follow(player()); }, 2000);
+  watching?.unref?.();
+}
 
 /* ------------------------------------------------------------------ */
 /*  Start                                                              */
@@ -237,6 +248,7 @@ Hooks.once("ready", () => {
   Hooks.on("updateUser", (u, ch) => { if ( "viewedScene" in (ch ?? {}) || ch?.active ) follow(u); });
   Hooks.on("userConnected", (u, on) => { if ( on ) setTimeout(() => follow(u), 1500); });
 
+  if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;
   if ( isActiveGM() ) {
     // Other modules register their approval types in their own ready hooks: top up once they have

@@ -1,5 +1,5 @@
 /**
- * The Lone Chronicle, first step (WoDX Solo 0.1.0 or later), rothenstein-wodx only. It runs in two browsers, so the
+ * The Lone Chronicle, first step (WoDX Solo 0.1.1 or later), rothenstein-wodx only. It runs in two browsers, so the
  * Storyteller's seat and the player are both real: tools/harness/gate-two.mjs drives it.
  *   node tools/harness/gate-two.mjs gatesolo
  * Phases (each a run({phase}) call in one of the browsers):
@@ -16,7 +16,8 @@
  *     8. the seat follows the player to the scene
  *     9. the Storyteller's cards are not shown to the player
  *   "finish" (Gamemaster Test):
- *    10. a fight between the character and the stranger: how far it runs with nobody at the Storyteller's hand
+ *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
+ *        stranger must then act with nobody at the Storyteller's hand
  *    11. the stall report holds what waited
  *    12. the switch off: every setting and the standing approvals are back exactly as they were
  *    13. clean up; the clock has not moved
@@ -66,7 +67,7 @@ async function setup() {
     before: (R?.PRESET ?? []).map(p => ({mod: p.mod, key: p.key, value: read(p.mod, p.key)})), auto: foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {})};
 
   await step("1. module", async () => {
-    ok("1. module", atLeast(MOD, "0.1.0") && !!S()?.apply && !!R?.PRESET && !!Q()?.types,
+    ok("1. module", atLeast(MOD, "0.1.1") && !!S()?.apply && !!R?.PRESET && !!Q()?.types,
       {versions: [MOD, CHRON, "wodx-npc", "wodx-combat", "wodx-actions", "wodx-storyteller"].map(id => `${id} ${game.modules.get(id)?.version}`)});
   });
   if ( !R ) return ids;
@@ -190,13 +191,19 @@ async function finish(ids, playerSteps) {
     await combat.createEmbeddedDocuments("Combatant", [{tokenId: pcTok.id, sceneId: scene.id, actorId: pcTok.actorId}, {tokenId: foeTok.id, sceneId: scene.id, actorId: foeTok.actorId}]);
     await combat.startCombat();
     const start = {round: combat.round, turn: combat.turn};
+    // The character's turn is the player's to end. When the character is first, end it as the player would, so the
+    // stranger's turn comes and shows whether it acts with nobody at the Storyteller's hand
+    await sleep(1500);
+    let live0 = game.combats.get(combat.id);
+    const passed = live0?.combatant?.tokenId === pcTok.id;
+    if ( passed ) await live0.nextTurn();
     const foeActed = await until(() => game.messages.some(m => m.timestamp >= t && /wodx-(npc|combat)/.test(Object.keys(m.flags ?? {}).join(" "))), 20000);
     await sleep(4000);
     const live = game.combats.get(combat.id);
     const end = {round: live?.round, turn: live?.turn, whose: live?.combatant?.name ?? null};
     const cards = game.messages.filter(m => m.timestamp >= t).map(m => ({from: rules.sourceOf(m.flags), title: rules.titleOf(m), toStoryteller: rules.forStoryteller(m.whisper, gmIds())})).slice(0, 20);
     // The stranger must act without a Storyteller. The character's own turn waits for the player: that is right.
-    ok("10. a fight with nobody at the hand", foeActed, {start, end, cards, note: "The character's turn ends when the player acts; the gate does not act for them."});
+    ok("10. a fight with nobody at the hand", foeActed, {start, end, cards, characterTurnEndedByGate: passed, note: "The character's turn ends when the player acts; the gate does not act for them."});
     if ( live ) await live.delete();
   });
 
