@@ -319,6 +319,13 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | Experience for a trait from another line (a Kinfolk's Gift, a mortal's Numina)? | The teaching book's price for an outsider; else the buyer's chart for its nearest trait (B504). | Change the xp-costs row and the purchase cost in actor-data.mjs. |
 | 2026-11-10 | Two possessors in one body? | The one inside holds; a newcomer must win a resisted Willpower roll at 6; a tie keeps the first (B506). | Drop B506 and the possession row. |
 | 2026-11-10 | Bite and fire for creatures the books may not cover (a mortal's bite, fire on a mortal or a Garou)? | Left as the code has them (aggravated) until the PC reads the pages; rows bite and fire are marked check. | Nothing to reverse yet. |
+
+## Approved by Ben, 12 November 2026, 01:36 UTC
+
+Ben approved every entry that was waiting for review at 01:36 UTC on 12 November 2026 (210 rows), so each choice already made stands. Each still lists how to reverse it.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
 | 2026-11-10 | Which Cascade fires in 2099 when the Storyteller has not picked one? | None (B508): the Storyteller picks in Dated events. | Set a default in the futureCascade setting in scripts/events.mjs. |
 | 2026-11-10 | Do the Future Darkness timeline events start on? | Yes, on the branch; each can be switched off in Dated events. | Mark them metaplot in tools/wofd/build-future-events.mjs and rebuild. |
 | 2026-11-10 | Demons and mummies in a fight: the Garou soak or their own? | Their own, from the page checks: a demon soaks bashing with Stamina, lethal only in the apocalyptic form, aggravated only through a power (DtF pp. 171, 247); a mummy soaks bashing and lethal, aggravated only through Hekau (MtR p. 136). | Set demon and mummy back to soak: "lupine" in both profiles.js. |
@@ -450,7 +457,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | Should fights start by themselves, and how far (Ben asked whether combat can begin automatically)? | Ben chose all seven triggers on Suggest (13:37Z). Built: setting "Start fights by themselves" on Suggest by default (a card with Start the fight), Auto with Undo; Light touch holds it at Suggest; off on Live until Ben says (B807-B810). | Set the world setting to Off, or revert the PR. |
 | 2026-11-11 | Who starts a fight on sight. | Hostile or Hunted NPCs with Aggression 0.5 or more; guards on alarm against anyone at Unknown or worse; 30 yards by day, a third at night; bystanders never (B808). | FR.wantsFight and FR.sightRange in wodx-npc fight-rules.mjs; the range is a world setting. |
 | 2026-11-11 | What surprise gives when a fight opens with an attack. | Only the opening blow (it is already rolled); no free turn or lost defence until the V20 p. 274 ambush rule is checked in the book (B809). | afterAttack in wodx-combat start.js. |
-
 | 2026-11-11 | How strong can the Storyteller's effect be, and does it go to the approval queue? | Strength 1 to 10, read as successes on each keyword's chart; it applies at once with Undo, since the Storyteller is the one deciding (B782). | ST_STRENGTH_MAX in effects-rules.js; stItems routes in effects.js. |
 | 2026-11-11 | Which buildings get cellars and what upper floors hold (B669). | Cellars under all but barns, coops, huts, sheds, granaries, warehouses; crypt, vault or morgue by kind; upper floors as bedrooms, guest rooms or offices; stair in the biggest closed room's corner. | NO_CELLAR, upper(), cellar(), stair_spot() in tools/mapgen/floors.py. |
 | 2026-11-11 | The hospital on town maps (B669). | Pull down up to 30 houses outside the old town; else an entrance block whose region names the hospital's own map. Lock-ups left out. | clearing() and CIVIC in tools/mapgen/eras.py; hospital-entrance in firstgroup.py. |
@@ -485,7 +491,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | How do workshops feed the markets (B855)? | Once a month, one working place that supplies a category lifts that market's short or empty supply to normal; three or more make it plenty. Private workshops stop 1948-1989; faction (state) ones go on. Card with Undo. | workshopsMonth in owners.mjs. |
 | 2026-11-11 | How often does an NPC faction want to build (B856)? | A faction with Resources 3 or more, a leader and nothing under way proposes a building 1 month in 6, through the approval queue; Resources 3 can afford up to 120 months' wage, 4 up to 600, 5 anything. Its build rolls Resources + Retainers. | factionBuildsMonth and factionPool in owners.mjs. |
 | 2026-11-11 | What counts as lying in wait for the ambush, and a Dark Ages tie. | Sneaking, Obfuscated or a token hidden by the Storyteller; an open attack is never an ambush. A Dark Ages tie strikes first with a defence, as V20 does (B836). | isAmbush and ambushOutcome in wodx-combat ambush-rules.js. |
-
 | 2026-11-11 | Rivalry dates the books did not confirm (B826): Anarch Revolt from 1394, Inquisition from 1231, Arcanum from 1885, Giovanni from 1444. | Kept as house readings (1231 is the real papal Inquisition), marked "not found" in docs/RIVALRIES.md; Shadow Lords against Tzimisce removed, Ascension War moved to 1210. | Approved by Ben, 11 November 2026, 16:14 UTC. Change from/to on the row in modules/wodx-npc/scripts/rivalry-rules.mjs. |
 | 2026-11-11 | How a Dungeondraft export becomes a Foundry scene. | Universal VTT export (walls, doors, lights and picture in one file), a new scene per export in "Generated maps", nothing overwritten, then Adopt; 100 px and 5 ft a square. | tools/ddmod/, tools/gate/mapimport.mjs. |
 | 2026-11-11 | What do Medium and Deathsight show in WoDX Senses? | Medium: the restless dead are heard nearby, and graveyards and churches whisper. Deathsight: decay seen on anyone hurt. House readings (B880). | channels restless and deathsight in wodx-senses/data/world.json. |
@@ -531,3 +536,8 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
 | 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
