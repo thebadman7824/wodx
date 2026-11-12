@@ -85,15 +85,18 @@ export async function scanMaps(before, after = now(), scenes = undefined) {
   return AR.mapNewlyOut(things, things.some(t => t.goods.length) ? await lineLooker() : () => null, before, after);
 }
 const docOf = (sceneId, id, wall) => { const sc = game.scenes?.get(sceneId); return (wall ? sc?.walls : sc?.tiles)?.get?.(id) ?? null; };
-/** Keep a thing on a map out of its time: the thing itself, or one line inside a container (key "goods:<line>"). */
-export async function keepThing(sceneId, id, wall, key = "") {
+/**
+ * Keep a thing on a map out of its time: the thing itself, or one line inside a container (key "goods:<line>").
+ * on: false takes the keeping back, for a button pressed by mistake.
+ */
+export async function keepThing(sceneId, id, wall, key = "", on = true) {
   const doc = docOf(sceneId, id, wall);
   if ( !doc || !game.user.isGM ) return false;
   if ( String(key).startsWith("goods:") ) {
     const line = String(key).slice(6), kept = Array.isArray(doc.flags?.[MOD]?.keptGoods) ? doc.flags[MOD].keptGoods : [];
-    if ( !kept.includes(line) ) await doc.update({[`flags.${MOD}.keptGoods`]: [...kept, line]});
+    if ( on !== kept.includes(line) ) await doc.update({[`flags.${MOD}.keptGoods`]: on ? [...kept, line] : kept.filter(k => k !== line)});
   }
-  else await doc.update({[`flags.${MOD}.keepOutOfEra`]: true});
+  else await doc.update({[`flags.${MOD}.keepOutOfEra`]: !!on});
   return true;
 }
 /** Open the scene and move the view to a thing on it. */
@@ -195,8 +198,8 @@ export function setup() {
     });
     const ref = b => { try { return JSON.parse(b.dataset.wodxKeepMap ?? b.dataset.wodxShowMap); } catch (e) { return []; } };
     for ( const b of el.querySelectorAll?.("[data-wodx-keep-map]") ?? [] ) b.addEventListener("click", async () => {
-      const [sc, id, wall, key] = ref(b);
-      if ( await keepThing(sc, id, !!wall, key) ) { b.disabled = true; b.textContent = "Kept"; }
+      const [sc, id, wall, key] = ref(b), on = b.dataset.kept !== "1";
+      if ( await keepThing(sc, id, !!wall, key, on) ) { b.dataset.kept = on ? "1" : ""; b.textContent = on ? "Kept (undo)" : "Keep it"; }
     });
     for ( const b of el.querySelectorAll?.("[data-wodx-show-map]") ?? [] ) b.addEventListener("click", async () => {
       const [sc, id, wall] = ref(b);

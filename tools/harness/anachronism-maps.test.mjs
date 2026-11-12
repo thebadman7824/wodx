@@ -81,6 +81,14 @@ test("Keep it marks the thing or the line, and the next read leaves it out; Show
   assert.equal((await AN.scanMaps({year: 1840}, {year: 1900})).length, 0);
   assert.ok(!(await AN.scanMaps({year: 2020}, {year: 1850})).some(f => f.id === "t1"));
   assert.equal(await AN.keepThing("s1", "nope", false, "mount"), false);
+  // Pressed by mistake: taking it back raises the thing again
+  await AN.keepThing("s1", "t1", false, "mount", false);
+  await AN.keepThing("s1", "t2", false, "goods:world pistol (2)", false);
+  assert.equal(car.flags[MOD].keepOutOfEra, false);
+  assert.deepEqual(safe.flags[MOD].keptGoods, []);
+  assert.equal((await AN.scanMaps({year: 1840}, {year: 1900})).length, 1);
+  await AN.keepThing("s1", "t1", false, "mount");
+  await AN.keepThing("s1", "t2", false, "goods:world pistol (2)");
   assert.equal(await AN.showThing("s1", "t1", false), true);
   assert.equal(s1.viewed, 1);
   assert.deepEqual({x: canvas.pans.at(-1).x, y: canvas.pans.at(-1).y}, {x: 150, y: 225});
