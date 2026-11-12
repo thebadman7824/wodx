@@ -361,7 +361,7 @@ export function datedParts(f = {}, {wall = false} = {}) {
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
-const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods"]);
+const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy"]);
 export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
 
 /**
