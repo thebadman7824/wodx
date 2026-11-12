@@ -487,6 +487,19 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// Storyteller 0.54.0: the world map (the Earth, a mirror, the chart of the worlds) and the closer look at one square
+{
+  const WMap = game.modules.get("wodx-storyteller").api.worldMap;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  for ( const [label, fn] of [["The world map", () => WMap.open({from: "moravia", to: "japan", year: 1700})], ["The world map, Shadowlands", () => WMap.open({layer: "shadowlands"})],
+    ["The world map, chart", () => WMap.open({layer: "chart"})], ["A closer look", () => WMap.closer({from: "italy", fromAt: "41.9, 12.5"})]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+}
 // NPC 0.48.0: a settlement's review (a village of 1995: 113 households, hidden folk, ties) and the Settlements window
 {
   const S = game.modules.get("wodx-npc").api.settlements;

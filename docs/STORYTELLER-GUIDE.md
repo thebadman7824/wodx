@@ -325,6 +325,15 @@ What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar
 
 Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, whether NPCs hear noise, and whether traps go off. You can Shift-click a locked door yourself to use Interact for the selected token.
 
+### The world map
+
+**The world map** in the Storyteller's hand shows the whole Earth by night, one square for about every 100 km. It makes nothing and changes nothing; it is for answering "where is that, and how long would it take to get there?"
+
+- **From** and **To** take a world region from the list, or a spot typed as north and east in degrees (49.2, 16.6 is Brno; south and west are negative). **Year** starts at the chronicle's year. Choose **Show**.
+- Under the map: where each spot lies (its ground, region and river), the distance, and how long the journey takes in that year by land and sea, leg by leg, and by air once there is air. The times are rough. A trip inside Moravia still uses Travel places, which knows the roads.
+- **Look closer at From** shows that one square at about 5 km to a small square. It is made from the world map and is the same every time.
+- With WoDX Otherworlds on, **Show** also offers the Penumbra, the Shadowlands and the Near Dreaming (the same map as it looks from the other side) and the chart of the worlds, which gives every realm of Realm maps a spot. Where a realm sits on the chart is WoDX's own arrangement, not a rule.
+
 ### Settlements: a whole town from the generator
 
 The town generator can make a whole place for any year from 1197 to 2099 in one command (tools/mapgen/ddsettle.py: a name, a seed, a size and a year). Beside the Dungeondraft maps it writes a settlement record, a file ending in .settlement.json: every household with its trade, its standing and its people, the offices of the age, and the ties between households.

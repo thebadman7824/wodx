@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2530
+Next free block: B2540
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -105,6 +105,7 @@ Next free block: B2530
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
 | B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
+| B2530-B2539 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3113,3 +3114,46 @@ Reverse: remove the settlement under Settlements.
 
 ## B2529. Left open (2026-11-12)
 The generator's building types, ages, trades and offices are those of Moravia and the Bohemian crown lands; the record says so (region) and the review tells the Storyteller. WoDX covers the whole world (Ben, 2026-11-12), so other regions are open work: each needs its own building types, ages and trade tables in tools/mapgen, chosen with --region. Also not built: the generator's markets and factions for a new settlement (WoDX Storyteller's markets read hand-set scenes), sheets for the hidden folk themselves, and ties inside one block of flats beyond those the record gives. The population the generator reaches still falls short of the figure it aims at for small places; that is the older layout's behaviour and is left as it is.
+
+## B2530. The whole Earth as one coarse grid (2026-11-12, Ben asked for a rough map of the Earth made the way Daggerfall makes its land)
+WoDX Storyteller 0.54.0 carries the world as 360 by 180 squares, one for each degree (about 100 km at the equator): each square's ground (sea, lake, ice, mountains, plateau, desert, tundra, plain, wetland, other land), the great rivers, and the named ranges, deserts and seas. tools/mapgen/world/build_world.py makes it from Natural Earth, which is in the public domain; nothing comes from a game. It is the far view only. WoDX is global (Ben, 2026-11-12), so this is the base every region's maps and trips can stand on.
+
+Reverse: remove "The world map" from the hand; nothing else reads the grid yet.
+
+## B2531. Every land square has a world region (2026-11-12)
+Each land square carries one of 44 region ids, the ids of WoDX Chronicle's world regions. That list gives a region one city and no borders, so the grid is the one place borders are kept. Modern countries are used only to cut the land up, with the large ones split where their regions part (Russia at the Urals, the United States at 100 west, Canada and Alaska's north to the Arctic, Tibet out of China, northern Chile to the Andes). A house reading; the squares can be re-cut in build_world.py.
+
+Reverse: nothing to undo.
+
+## B2532. Journeys across the world by year (2026-11-12, house rule)
+A journey between two spots takes the quickest way over the squares. By land: 40 km a day on horseback or with a caravan, 55 by coach and post road from 1650, 350 by motor road from 1925 and 650 from 1960, slowed by the ground (mountains to 45 percent, desert 70, tundra and wetland 50, ice 12). By rail where the railway has reached the region (from 1830 in Britain to 1930 in Persia; 550 km a day, 900 from 1950; a third of that where lines are few). By sea: 90 km a day coasting, 150 under sail from 1450, 380 by steam from 1840, 650 by liner from 1900, with a day lost each time a journey takes ship or lands, and no road through the pack ice. By air from 1935 in hops (3,200 km a day) and by jet from 1958, with two days for the ends. All of it is a house reading of history rounded for a journey told in a sentence; no book gives it. Trips inside Moravia keep the country map (B2330s), which knows its roads.
+
+Reverse: change waysIn, RAIL_FROM and GROUND_PACE in world-map-rules.mjs.
+
+## B2533. The closer view of one square (2026-11-12)
+Any square can be looked at closer: 22 by 22 small squares of about 5 km, made from the square and its eight neighbours plus steady noise, so coasts and ranges run on across squares and the same square is the same every time. It uses the country map's lands (plain, vale, hills, upland, mountain) plus sea, lake, ice, desert, tundra and marsh, and a great river's course. It is shown in the window only: feeding it to the trip planner and to the town generator's --at outside Moravia is the next step, not built.
+
+Reverse: nothing to undo.
+
+## B2534. Maps are drawn as night (2026-11-12)
+The world map and the closer view use the night palette, as every WoDX top-down map does.
+
+Reverse: change NIGHT in world-map-rules.mjs.
+
+## B2535. The otherworlds that lie over the Earth (2026-11-12, house reading)
+The Penumbra, the Shadowlands and the Near Dreaming are the living world seen from the other side, so WoDX Otherworlds 0.20.0 draws them as the world map in another dress. The Penumbra is bright where the ground is wild and dim where it is ploughed and built over; the Shadowlands are grey with black rivers; the Near Dreaming is bright. The dress follows the ground only: the grid does not know cities, battlefields or caerns, so those are not marked.
+
+Reverse: remove a row from MIRRORS in worlds-chart-rules.mjs.
+
+## B2536. The chart of the worlds (2026-11-12, our own arrangement)
+Realms with no place on the globe sit on one chart: rings from the living world outward (lying over the world, the near realms, the far realms, the deep) and four sides (the spirit wilds, the high and far reaches, the Dreaming, the lands of the dead), each behind its barrier (the Gauntlet, the Mists, the Shroud). All 34 realms of the realm maps catalogue have a spot. The books describe these places from inside each game line and give no one geography, so which ring and side a realm takes is our own arrangement for a readable chart, with the usual order where lines clash (Wraith, then Werewolf, then Mage). It is not a rule and nothing reads it for play.
+
+Reverse: move rows in CHART.
+
+## B2537. Steps on the chart (2026-11-12, house rule)
+"How far" between two places on the chart is one step for each ring crossed, going back through the living world when the two lie on different sides. It is for the Storyteller's sense of distance only.
+
+Reverse: nothing to undo.
+
+## B2538. Left open (2026-11-12)
+Not built: the closer view feeding trips and town maps outside Moravia; towns, ports and borders by era on the world grid; sea lanes and canals as such (Suez and Panama are crossed as a short land leg); clicking the map to pick a spot; the Yin and Yang Worlds, Arcadia and the High Umbra's own realms, which have no realm map yet; cities and haunted ground on the mirrored maps.
