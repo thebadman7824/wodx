@@ -15,6 +15,7 @@
  */
 import * as V from "./voice-rules.mjs";
 import * as E from "./engine.mjs";
+import * as C from "./chatterbox.mjs";
 
 const MOD = "wodx-voices";
 const NPC = "wodx-npc";
@@ -32,6 +33,8 @@ const pending = new Map();
 const known = new Set();
 const stats = {renders: 0, hits: 0, plays: 0, fallbacks: 0};
 let warnedFull = false;
+/** When the voice server was last tried, so a stopped server costs one wait a minute, not one per line. */
+let serverTried = 0;
 
 /** The token a chat message speaks for, or null. */
 function speakerToken(msg) {
@@ -47,7 +50,7 @@ export function profileOf(tokDoc) {
   const mine = actor?.flags?.[MOD] ?? {};
   const people = actor?.flags?.["wodx-creation"]?.people ?? {};
   const style = actor?.flags?.[NPC]?.behavior?.voice ?? null;
-  return V.profileFor({id, sex: mine.sex ?? people.sex ?? null, age: mine.age ?? null, style, override: mine.override ?? null});
+  return V.profileFor({id, sex: mine.sex ?? people.sex ?? null, age: mine.age ?? null, style, override: mine.override ?? null, temper: mine.temper ?? null});
 }
 
 /** Whether an actor is marked as a plot NPC. */
@@ -120,14 +123,41 @@ async function fillKnown() {
   try { const r = await FP().browse("data", cacheDir()); for ( const f of r?.files ?? [] ) known.add(decodeURIComponent(String(f)).replace(/^\/+/, "")); } catch (e) { /* none yet */ }
 }
 
-/** The cached file for a line in an NPC's voice, rendering it first if needed (the Storyteller's client). */
-export async function fileFor(text, profile) {
-  const spec = V.kokoroVoiceFor(profile, profile.kokoro);
-  const speed = V.kokoroSpeed(profile.rate);
-  const path = `${cacheDir()}/${V.cacheName({voice: spec.id, speed, text})}`;
+/** Health levels an actor has lost. */
+function woundsOf(actor) {
+  const d = actor?.system?.health?.damage ?? {};
+  return ["bashing", "lethal", "aggravated"].reduce((n, k) => n + (Number(d[k]) || 0), 0);
+}
+
+/** What colours a line's delivery: how the NPC regards the character it speaks to, and its wounds. */
+function moodOf(msg, tok) {
+  const pc = msg?.flags?.[NPC]?.talk?.actor ?? null;
+  const npc = game.actors?.get?.(tok?.actorId) ?? tok?.actor ?? null;
+  const step = pc ? Number(npc?.flags?.[NPC]?.attitude?.[pc]?.step ?? 0) : 0;
+  return {step: Number.isFinite(step) ? step : 0, wounds: woundsOf(tok?.actor)};
+}
+
+/**
+ * The cached file for a line in an NPC's voice, rendering it first if needed (the Storyteller's client).
+ * engine "chatterbox": the voice server, with the delivery from the line and mood; otherwise Kokoro.
+ */
+export async function fileFor(text, profile, mood = {}, engine = "kokoro") {
+  let path, make;
+  if ( engine === "chatterbox" ) {
+    const voice = V.serverVoiceFor(profile, C.status.voices, profile.chatterbox);
+    if ( !voice ) throw new Error("the voice server has no voices");
+    const d = V.deliveryFor({text, step: mood.step, wounds: mood.wounds, temper: profile.temper});
+    path = `${cacheDir()}/${V.cacheName({engine: "cb", voice: V.serverVoiceKey(voice, d), speed: 1, text})}`;
+    make = () => C.render(text, voice, d, profile.seed);
+  } else {
+    const spec = V.kokoroVoiceFor(profile, profile.kokoro);
+    const speed = V.kokoroSpeed(profile.rate);
+    path = `${cacheDir()}/${V.cacheName({voice: spec.id, speed, text})}`;
+    make = () => E.render(text, spec, speed);
+  }
   if ( known.has(path) ) { stats.hits += 1; return {src: path, rendered: false}; }
   const t0 = performance.now();
-  const blob = await E.render(text, spec, speed);
+  const blob = await make();
   await ensureDir();
   const name = path.split("/").pop();
   await FP().upload("data", cacheDir(), new File([blob], name, {type: "audio/wav"}), {}, {notify: false});
@@ -144,14 +174,26 @@ export async function fileFor(text, profile) {
   return {src: path, rendered: true, ms: Math.round(performance.now() - t0)};
 }
 
-const useKokoro = profile => setting("engine") === "kokoro" && V.langTries(profile.lang)[0] === "en";
+/** Whether a line is rendered on the Storyteller's computer: Kokoro and the voice server speak English only. */
+const useKokoro = profile => ["kokoro", "chatterbox"].includes(setting("engine")) && V.langTries(profile.lang)[0] === "en";
+
+/** A file for the line: the voice server first when chosen, then Kokoro, else an error (the browser's speech reads it). */
+async function bestFile(text, profile, mood) {
+  if ( setting("engine") === "chatterbox" ) {
+    try {
+      if ( C.status.state !== "ready" && Date.now() - serverTried > 60000 ) { serverTried = Date.now(); await loadServer(); }
+      if ( C.status.state === "ready" ) return await fileFor(text, profile, mood, "chatterbox");
+    } catch (e) { console.warn(`${MOD} | voice server`, e); }
+  }
+  if ( E.status.state !== "ready" ) await loadKokoro();
+  if ( E.status.state !== "ready" ) throw new Error(E.status.error ?? "engine not ready");
+  return fileFor(text, profile, mood, "kokoro");
+}
 
 /** The Storyteller's client: render, then tell everyone who sees the line to play it. */
 async function produce(msg, tok, text, profile, users) {
   try {
-    if ( E.status.state !== "ready" ) await loadEngine();
-    if ( E.status.state !== "ready" ) throw new Error(E.status.error ?? "engine not ready");
-    const {src} = await fileFor(text, profile);
+    const {src} = await bestFile(text, profile, moodOf(msg, tok));
     game.socket?.emit(SOCKET, {t: "play", id: msg.id, src, scene: tok.parent?.id, token: tok.id, users});
     if ( hears(users) ) playFrom(src, tok);
   } catch (e) {
@@ -187,9 +229,22 @@ function onSocket(data) {
   else if ( data.t === "fallback" && p ) speak(p.text, p.profile);
 }
 
-function loadEngine() {
-  if ( !game.user?.isGM || setting("engine") !== "kokoro" ) return Promise.resolve(E.status);
+function loadKokoro() {
+  if ( !game.user?.isGM ) return Promise.resolve(E.status);
   return E.load({dir: String(setting("engineDir") || "wodx-voices-engine"), device: setting("device") || "wasm", route});
+}
+
+function loadServer() {
+  if ( !game.user?.isGM ) return Promise.resolve(C.status);
+  return C.load({url: setting("serverUrl"), key: setting("serverKey")});
+}
+
+/** Get the chosen engine ready (the Storyteller). Kokoro waits until the voice server fails, to spare memory. */
+function loadEngine() {
+  if ( !game.user?.isGM ) return Promise.resolve(null);
+  if ( setting("engine") === "chatterbox" ) return loadServer();
+  if ( setting("engine") === "kokoro" ) return loadKokoro();
+  return Promise.resolve(null);
 }
 
 /** Start a fresh cache folder. Foundry can't delete files from the browser, so the old folder stays until removed by hand. */
@@ -219,9 +274,10 @@ Hooks.once("init", () => {
   reg("enabled", {name: "Voices", scope: "world", config: true, type: Boolean, default: false,
     hint: "NPCs speak their talk answers, greetings and farewells aloud, and the Storyteller's lines when chatting in character as an NPC. Each NPC keeps a voice of its own. Only the people who see a line hear it.",
     onChange: () => loadEngine()});
-  reg("engine", {name: "Voice engine", scope: "world", config: true, type: String, default: "kokoro",
-    choices: {kokoro: "Kokoro (made once on the Storyteller's computer, played to everyone)", browser: "Each browser's own speech"},
-    hint: "Kokoro needs its files in Foundry's Data folder (see the module's README). Without them, or when a line fails, the browser's own speech reads it.",
+  reg("engine", {name: "Voice engine", scope: "world", config: true, type: String, default: "chatterbox",
+    choices: {chatterbox: "Voice server on the Storyteller's PC (most natural, needs the server running)",
+      kokoro: "Kokoro (made once on the Storyteller's computer, played to everyone)", browser: "Each browser's own speech"},
+    hint: "The voice server and Kokoro are set up as the module's README says. When the server is not running, Kokoro reads the line; without Kokoro, the browser's own speech.",
     onChange: () => loadEngine()});
   reg("who", {name: "Who speaks aloud", scope: "world", config: true, type: String, default: "plot",
     choices: {plot: "Plot NPCs only (marked in the Actors list)", all: "Every NPC"},
@@ -240,6 +296,10 @@ Hooks.once("init", () => {
     hint: "A folder in Foundry's Data folder."});
   reg("cacheDir", {name: "Voice cache folder", scope: "world", config: true, type: String, default: "wodx-voices-cache",
     hint: "A folder in Foundry's Data folder, outside every world."});
+  reg("serverUrl", {name: "Voice server address", scope: "client", config: true, type: String, default: "http://127.0.0.1:7861",
+    hint: "Where tools/voices/chatterbox_server.py listens on this computer. Only the Storyteller's browser uses it.", onChange: () => loadEngine()});
+  reg("serverKey", {name: "Voice server key", scope: "client", config: true, type: String, default: "",
+    hint: "The key the server shows when it starts (also in its key file). Kept in this browser only.", onChange: () => loadEngine()});
   reg("cacheMB", {name: "Voice cache size warning (MB)", scope: "world", config: true, type: Number, default: 500, range: {min: 50, max: 5000, step: 50}});
   reg("cacheGen", {scope: "world", config: false, type: Number, default: 1});
   reg("cacheBytes", {scope: "world", config: false, type: Number, default: 0});
@@ -253,13 +313,15 @@ Hooks.once("ready", () => {
   game.socket?.on?.(SOCKET, data => { try { onSocket(data); } catch (e) { console.error(`${MOD} | socket`, e); } });
   if ( game.user?.isGM ) { fillKnown(); if ( setting("enabled") ) loadEngine(); }
   game.modules.get(MOD).api = {
-    profileOf, speak, fileFor, freshCache, isPlot, setPlot, rules: V, engine: E.status, stats,
+    profileOf, speak, fileFor, freshCache, isPlot, setPlot, rules: V, engine: E.status, server: C.status, stats,
     load: loadEngine,
     /** Hear an NPC token's voice (the Storyteller), in Kokoro when it is ready. */
     preview: async (tokDoc, text = "Good evening. You wanted a word?") => {
       const doc = tokDoc?.document ?? tokDoc;
       const p = profileOf(doc);
-      if ( game.user?.isGM && useKokoro(p) && E.status.state === "ready" ) { const {src} = await fileFor(text, p); return playFrom(src, doc); }
+      if ( game.user?.isGM && useKokoro(p) ) {
+        try { const {src} = await bestFile(text, p, {step: 0, wounds: woundsOf(doc?.actor)}); return playFrom(src, doc); } catch (e) { /* speech below */ }
+      }
       return speak(text, p);
     },
     stop: () => synth()?.cancel?.()

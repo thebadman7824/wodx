@@ -229,4 +229,79 @@ test("in Foundry: talk cards, the Storyteller's lines, Kokoro's shared file and 
   assert.equal(mod.api.engine.state, "failed");
   assert.match(mod.api.engine.error, /fetch-engine/);
   assert.equal(typeof mod.api.preview, "function");
+
+  // the voice server on the Storyteller's PC (0.3.0): the line goes to the server with the NPC's voice and delivery,
+  // is cached, and the players are told to play it; the NPC regards the character warmly, so the delivery says so
+  settings.engine = "chatterbox"; settings.serverUrl = "http://127.0.0.1:7861/"; settings.serverKey = "k3y";
+  actor.flags["wodx-npc"].attitude = {pc: {step: 3}};
+  const calls = [];
+  globalThis.fetch = async (url, init = {}) => {
+    calls.push({url: String(url), init});
+    if ( init.headers?.["X-WoDX-Key"] !== "k3y" ) return {ok: false, status: 401};
+    if ( String(url).endsWith("/health") ) return {ok: true, json: async () => ({ok: true, device: "cuda"})};
+    if ( String(url).endsWith("/voices") ) return {ok: true, json: async () => ({voices: [{id: "lsr84", f0: 118, register: "low", rate: 2.4}, {id: "lsr652", f0: 205, register: "high", rate: 2.9}]})};
+    if ( String(url).endsWith("/render") ) return {ok: true, blob: async () => new Blob([new Uint8Array(44)], {type: "audio/wav"})};
+    return {ok: false, status: 404};
+  };
+  emitted.length = 0;
+  fire({...talk, id: "m6", content: "<p>Welcome back, friend!</p>"});
+  for ( let i = 0; i < 50 && !emitted.length; i++ ) await new Promise(r => setTimeout(r, 10));
+  assert.equal(emitted.at(-1)?.t, "play", "the server's file is shared");
+  assert.match(emitted.at(-1).src, /^wodx-voices-cache\/g1\/[a-z0-9]+\.wav$/);
+  const body = JSON.parse(calls.find(c => c.url === "http://127.0.0.1:7861/render").init.body);
+  assert.equal(body.text, "Welcome back, friend!");
+  assert.ok(["lsr84", "lsr652"].includes(body.voice));
+  assert.deepEqual([body.exaggeration, body.cfg], [V.deliveryFor({text: "Welcome back, friend!", step: 3}).exaggeration, V.deliveryFor({text: "Welcome back, friend!", step: 3}).cfg]);
+  assert.equal(mod.api.server.state, "ready");
+  // the same line again comes from the cache
+  const renders = calls.filter(c => c.url.endsWith("/render")).length;
+  emitted.length = 0;
+  fire({...talk, id: "m7", content: "<p>Welcome back, friend!</p>"});
+  for ( let i = 0; i < 50 && !emitted.length; i++ ) await new Promise(r => setTimeout(r, 10));
+  assert.equal(calls.filter(c => c.url.endsWith("/render")).length, renders, "a cached line is not rendered again");
+  assert.equal(emitted.at(-1)?.t, "play");
+  // the server stops: Kokoro is tried next, and without it the players fall back to their own speech
+  globalThis.fetch = async () => ({ok: false, status: 503});
+  emitted.length = 0;
+  fire({...talk, id: "m8", content: "<p>Another thing.</p>"});
+  for ( let i = 0; i < 50 && !emitted.length; i++ ) await new Promise(r => setTimeout(r, 10));
+  assert.deepEqual(emitted.at(-1), {t: "fallback", id: "m8", users: ["u1", "gm"]});
+  delete actor.flags["wodx-npc"].attitude;
+});
+
+test("the voice server: delivery from the line, regard, wounds and temper; a voice per NPC from the server's list", () => {
+  const even = V.deliveryFor({text: "The road is long."});
+  assert.deepEqual(even, {exaggeration: 0.5, cfg: 0.5, temperature: 0.8, tone: "even"});
+  const shout = V.deliveryFor({text: "Get out! NOW!"});
+  assert.ok(shout.exaggeration > even.exaggeration + 0.3 && shout.tone === "shouts");
+  assert.equal(V.deliveryFor({text: "Chapter IV of the book."}).tone, "even", "Roman numerals are not shouting");
+  const trail = V.deliveryFor({text: "It was long ago..."});
+  assert.ok(trail.cfg < even.cfg && trail.tone === "trails off");
+  assert.equal(V.deliveryFor({text: "Leave.", step: -3}).tone, "hostile");
+  assert.equal(V.deliveryFor({text: "Welcome.", step: 2}).tone, "warm");
+  const hurt = V.deliveryFor({text: "Help me.", wounds: 5});
+  assert.ok(hurt.exaggeration >= 0.85 && hurt.cfg <= 0.3 && hurt.tone === "in pain");
+  assert.ok(V.deliveryFor({text: "Yes.", temper: "fiery"}).exaggeration > V.deliveryFor({text: "Yes.", temper: "calm"}).exaggeration);
+  const wild = V.deliveryFor({text: "NO! NO! NO! NO!", wounds: 9, temper: "fiery", step: -3});
+  assert.ok(wild.exaggeration <= 1.5 && wild.cfg >= 0.2, "kept in the server's range");
+  for ( const d of [even, shout, trail, hurt, wild] ) for ( const k of ["exaggeration", "cfg", "temperature"] ) assert.equal(Math.round(d[k] * 20), d[k] * 20, "steps of 0.05");
+
+  const list = [{id: "b", f0: 120, rate: 2.2}, {id: "a", f0: 210, rate: 3}, {id: "c", f0: 165, rate: 2.6}, {id: "d", f0: 130, rate: 3.1}];
+  assert.equal(V.registerOf(120), "low"); assert.equal(V.registerOf(165), "mid"); assert.equal(V.registerOf(210), "high");
+  const p = V.profileFor({id: "npc9"});
+  assert.equal(V.serverVoiceFor(p, list), V.serverVoiceFor(p, [...list].reverse()), "steady whatever order the server lists them in");
+  for ( let i = 0; i < 30; i++ ) {
+    assert.notEqual(V.serverVoiceFor(V.profileFor({id: `m${i}`, sex: "male"}), list), "a");
+    assert.notEqual(V.serverVoiceFor(V.profileFor({id: `f${i}`, sex: "female"}), list), "b");
+  }
+  const many = new Set(Array.from({length: 40}, (_, i) => V.serverVoiceFor(V.profileFor({id: `n${i}`}), list)));
+  assert.equal(many.size, 4, "unknown sex: every voice is open");
+  assert.equal(V.serverVoiceFor(p, list, "d"), "d", "the Storyteller's pick wins");
+  assert.equal(V.serverVoiceFor(p, list, "gone"), V.serverVoiceFor(p, list), "a pick the server lacks is ignored");
+  assert.equal(V.serverVoiceFor(p, []), null);
+  assert.equal(V.profileFor({id: "x", temper: "weary"}).temper, "weary");
+  assert.equal(V.profileFor({id: "x", temper: "made up"}).temper, null);
+  assert.equal(V.serverBase("http://127.0.0.1:7861/"), "http://127.0.0.1:7861");
+  assert.equal(V.serverBase("javascript:alert(1)"), "");
+  assert.equal(V.serverVoiceKey("lsr84", {exaggeration: 0.5, cfg: 0.45, temperature: 0.8}), "cb_lsr84_0.50_0.45_0.80");
 });

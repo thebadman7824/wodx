@@ -1711,3 +1711,7 @@ The look gate's second PC run passed 9/9 (main 6ba1188). It showed one more slip
 ## WoDX Voices 0.2.0, 2026-11-12
 
 - Kokoro in the Storyteller's browser, offline from Data/wodx-voices-engine (tools/voices/fetch-engine.mjs), lines cached in Data and played to the people who see them, from the token. Only plot NPCs and their prewritten talk-sheet lines are voiced (Ben, B2111). The Storyteller's improvised lines as an NPC, off by default (Improvement Desk vo1). A tongue per NPC for the browser's speech (B2106-B2111). Harness voices.test.mjs (12 tests); gatevoices now 10 steps. In the cloud, kokoro.web.js loaded in Chromium and asked for its model at the engine folder; the model itself comes on the PC.
+
+## WoDX Voices 0.3.0, 2026-11-12
+
+- Chatterbox voice server on the Storyteller's PC (tools/voices/chatterbox_server.py), the default engine, with Kokoro and the browser's speech behind it (B2112). Human reference voices from LibriTTS-R picked for lively reading (tools/voices/fetch_voices.py, B2113). Delivery from the line, regard, wounds and temper (B2114); a server voice per NPC (B2115); address and key per browser (B2116). Harness voices.test.mjs (13 tests). The server's HTTP side was tested in the cloud with a stand-in engine (key, origins, preflight, render); the model and voices come on the PC.
