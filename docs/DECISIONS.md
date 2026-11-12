@@ -1706,3 +1706,38 @@ Reverse: remove the wodxFed hook in wodx-npc rivalry.mjs (Actions may keep sendi
 WoDX NPC's api.nameFor(actor, viewer) answers what a viewer calls an NPC: the name for the Storyteller and when "Faces you have met" is off, else the stranger's words until one of the viewer's characters has met them. Chat and the combat tracker are masked per viewer at render (B1382), so cards keep the real name for the Storyteller; windows a player opens (With this person, Trade) ask nameFor. Missed Connections Desk x1.
 
 Reverse: viewName in wodx-actions social.js back to nameFor.
+
+## B1600. Before the First Night lives in WoDX Creation (2026-11-12)
+The guided start for player characters is a hub inside WoDX Creation (first-night.mjs, first-night-rules.mjs), with buttons on the character sheet header, the Creation window and the Chronicle Clock, and the Storyteller's setup wizard opens it when done. No new module. Chronicle Start Desk items c1 to c6, approved by Ben 2026-11-12 04:46Z.
+
+Reverse: remove first-night*.mjs and their lines in main.mjs, apps.mjs, clock-app.mjs and setup.mjs.
+
+## B1601. Steps, approval and sign-off (2026-11-12)
+Ten steps in any order, sign-off last; the lifepath is optional. A player marks a step done through the approval queue (type wodx-first-night-step); the Storyteller ticks or unticks directly. Concept, lifepath, build (the creation check matches the book's totals) and Merits and Flaws tick themselves from the sheet. Kept on flags.wodx-creation.firstNight, and carried through a change of state with the lifepath.
+
+Reverse: STEPS and autoDone in first-night-rules.mjs.
+
+## B1602. Flaw cap (2026-11-12)
+Flaw points are counted against V20's cap of 7 freebies; over the cap the step stays open. Each flaw shows a one-line cost from the trait effect tables while building.
+
+Reverse: FLAW_CAP in first-night-rules.mjs.
+
+## B1603. The trouble forecast (2026-11-12)
+Read from the systems WoDX has: trait effect tables (PULLS, LEDGER, PROMPTS, TRIGGERS, BG_WORLD), the splat feature row (even when that line's features are off), Generation 14 or more (thin blood) and 8 or less (envied blood, Storyteller only), Humanity or Road 4 or less, lifepath people whose role reads as hostile, flaws kept from the lifepath but not bought, faction standing below 0, rivalries at Hostile or worse toward the character's sides, dated events for the line up to five years ahead or the first year of the next era, no language shared with the troupe, and gear out of its time. A secret's clock, envied blood and coming events are for the Storyteller only; the rest the player sees. House rule.
+
+Reverse: forecast in first-night-rules.mjs.
+
+## B1604. The trouble dial and the story hook (2026-11-12)
+Each character's dial (Quiet 0.5, Normal 1, Often 1.5) scales the chance that their own flaws turn up in WoDX Storyteller's night draw (capped at 0.9). One story hook per character; once the Storyteller agrees (approval type wodx-first-night-hook), a reminder comes after four ended sessions if it has not been marked as brought in. House rules after Hero System's frequency and Ars Magica's story flaws.
+
+Reverse: DIAL and HOOK_SESSIONS in first-night-rules.mjs; dialOf in Storyteller night.mjs.
+
+## B1605. Seed cards at sign-off (2026-11-12)
+Sign-off posts the forecast (the player's view to the owners, all of it to the Storyteller) and one Storyteller card per seed: a living enemy from the lifepath made as an NPC at Hostile, the flaws' Ledger entries (one card), the Backgrounds made real (one card), a Ledger consequence dated to each coming event, and a starting faction standing. Make it, Skip, and Undo once made (Undo removes what the card made).
+
+Reverse: first-night-seed.mjs.
+
+## B1606. Starting faction standing (2026-11-12)
+A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
+
+Reverse: suggestStanding in first-night-rules.mjs.

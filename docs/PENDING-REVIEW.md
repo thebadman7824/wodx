@@ -671,3 +671,7 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
 | 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
 | 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |
+| 2026-11-12 | Before the First Night: steps and sign-off (B1600, B1601) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
+| 2026-11-12 | Trouble forecast sources and who sees what (B1603) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
+| 2026-11-12 | Trouble dial and story hook numbers (B1604) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
+| 2026-11-12 | Starting standing (B1606) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |

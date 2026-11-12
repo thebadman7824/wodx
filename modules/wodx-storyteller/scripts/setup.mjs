@@ -196,6 +196,8 @@ export async function openSetup() {
   if ( r?.error ) return openSetup();
   ui.notifications.info(`The chronicle is set up in ${r?.profile?.name ?? "its era"}.`);
   findDoc(game.journal, "screen")?.sheet?.render(true);
+  // Then the players' characters: Before the First Night (WoDX Creation 0.12.0), when it is on
+  try { game.modules.get("wodx-creation")?.api?.firstNight?.(); } catch (e) { console.warn(`${MOD} | first night`, e); }
   return r;
 }
 
