@@ -1474,6 +1474,75 @@ Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse
 
 Reverse: the Laibon rows in BLOODLINES.
 
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
+Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
+
+Reverse: remove the Lifepath button (apps.mjs, registerSheetButton) and lifepathPart in wodx-storyteller/scripts/prelude.mjs.
+
+## B1311. The chain follows Princes of Darkness's event chains, nothing else of it (2026-11-12)
+The CK3 mod runs a childe's education as an opening choice (strict, lenient, free) whose result weights a pool of follow-up events, rules some out (factor 0) and sometimes names the next one, ending in a closing event. WoDX's lifepath does the same with flags, weight factors (more) and named next scenes (n). The mod's V5 material (blood potency, resonance, predator types) is not used.
+
+Reverse: drop more and n from the tables; draws are then plain weighted picks.
+
+## B1312. Lifepath era windows (2026-11-12)
+Fourteen era bands from 1197 to the World of Future Darkness. Lines open by year: the Fallen from 1999, projectors from 1848 (the spiritualist mediums); every other line every era. Splats open by year where the setting fixes it: Cappadocians to 1444 and Giovanni from 1444, the Council's Traditions from 1466 with the Dark Ages Fellowships before, the Order of Reason's Conventions 1325 to 1896 and the Technocratic Union's from 1897, Sons of Ether from 1904, Virtual Adepts from 1961, Sidhe to 1400 and from 1969, imbued creeds from 1999 with mortal hunters 1500 to 1998, Amenti from 1999 with the old Immortals before. Rows the books give no clear year for are marked house: true and listed in PENDING-REVIEW.
+
+Reverse: the spans on each row in data/lifepaths-splats.mjs.
+
+## B1313. People from the past (2026-11-12)
+Up to three named people are ticked by default. Anyone more than 70 years before the chronicle's year is a name only, as most are long dead, unless the scene marks them lasting (a ghost, someone who shares the night). NPCs come from the People generator for the chronicle's own era, with a note of who they were to the character.
+
+Reverse: PEOPLE_DEFAULT and PEOPLE_ALIVE_SPAN in lifepath-rules.mjs.
+
+
+## B1300. Area shapes and their sizes (2026-11-12)
+Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
+Reverse: areaShape() in wodx-targeting target-rules.mjs; the area branch of attach() in main.mjs.
+
+## B1301. The odds before a roll (2026-11-12)
+Ben approved "Show the odds before a roll". The chances are worked out exactly from the same rules countSuccesses() rolls by (a specialty counts a 10 twice, Willpower adds a success and stops a botch). The resisting side's odds show to the Storyteller only. A client setting turns the line off.
+Reverse: oddsPanel() in wodx-actions main.js; setting showOdds.
+
+## B1302. Pinned and lately used actions (2026-11-12)
+Ben approved "Pinned and recent actions": the last five actions and up to eight pinned ones are kept on the character (flags.wodx-actions.quick); right-click or Alt+P pins or unpins. A player who does not own the character sees their own recent list as before.
+Reverse: quick rows in profile-menus.js menuFor and main.js menu().
+
+## B1340. The after-action card and how far a fight's tale travels (2026-11-12)
+Ben approved "An after-action card". When a started fight is ended, the Storyteller gets a whispered card: levels taken and dealt, blood, Willpower and other pools spent, Actions cards seen, and who outside the fight saw it (WoDX Actions' onlooker rules). House rule: a witness carries only their word before 1888, a snapshot camera is possible from 1888, a camcorder from 1985, a phone camera in most pockets from 2005, and in the Future Darkness everything is recorded. A breach is severity 2 when pictures are likely or five or more saw it. The button records the breach (the place may keep it) and starts a rumour, big at severity 2.
+Reverse: setting afterAction off; aftermath.js and aftermath-rules.js in wodx-combat.
+
+## B1320. Using the room in a fight: sizes (2026-11-12)
+Ben approved "Use the room in a fight". Fire, falling and sunlight follow the books (fire V20 Dark Ages pp. 355-360; falling V20 core printed p. 296; sunlight VtDA20 p. 359). House readings: knocked-over candles or a torch start a torch-sized fire; an oil lamp or lantern breaks and its oil burns as a bonfire (lamp) or torch-sized (lantern), at a torch's heat.
+Reverse: SPILL in wodx-interactables interact-rules.mjs.
+
+## B1321. A falling chandelier (2026-11-12)
+House rule: the falling dice for its drop (15 feet unless set) plus 4 for its weight, lethal; each success on Dexterity + Dodge at 7 takes a die away, as stepping carefully does on broken glass. Lit candles start a torch-sized fire.
+Reverse: CHANDELIER_MASS, DROP_DODGE, dropDice in interact-rules.mjs.
+
+## B1322. Sunlight let in through a window or curtain (2026-11-12)
+By day only. A window or shutter thrown open, or a pane smashed, makes a WoDX: Sunlight region of direct sun 4 yards deep on the character's side; a curtain torn from a closed window gives indirect sun (through glass, soak 7) 4 yards round it. Closing the window removes the region. WoDX Actions' sun then burns any Cainite inside.
+Reverse: SUN_YARDS and the letSun and tearCurtain cases in interact-rules.mjs; roomEffects() in main.mjs.
+
+## B1323. Sprinklers (2026-11-12)
+Fire sprinklers from 1874 (the first automatic sprinkler). Setting them off puts out every torch-sized fire and bonfire on the scene; an inferno burns on. Saving the tile's settings resets them.
+Reverse: WATCHES.sprinkler and douses() in interact-rules.mjs.
+
+## B1324. Electric light by era (2026-11-12)
+A light switch offers nothing before 1880. Oil lamps, candles, torches and chandeliers are offered in every era.
+Reverse: ELECTRIC_FROM in interact-rules.mjs.
+
+## B1330. Colour-blind safe colours (2026-11-12)
+Ben approved "Colours readable by everyone". A player setting in WoDX Senses swaps the sight rings to the Okabe and Ito palette with a thicker line, and every ring shows its words on the map (a second setting can hide them). The aura overlay of Read the Soul names its colour. V20's aura colours keep their names; only the drawing changes.
+Reverse: settings colourSafe and ringWords; SAFE in sight-rules.mjs.
 ## B1400. Made things keep their quality in trade, Examine and use (2026-11-12)
 A made thing's quality tag ("a sword (fine work)") no longer hides the good from price lookups. Traders buy and sell it at its quality price (x1.25 good, x1.5 fine, x2 masterwork). Examine reads the crafted quality and the maker's name unless the Storyteller's notes say otherwise. A fine or masterwork thing gives -1 difficulty on its Use checks.
 

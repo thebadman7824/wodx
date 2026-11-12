@@ -17,6 +17,22 @@ async function folder(type) {
   return game.folders.find(f => f.type === type && f.name === FOLDER) ?? Folder.create({name: FOLDER, type, color: "#5a2a2a"});
 }
 
+/**
+ * The character's lifepath (WoDX Creation 0.11.0), if one was written: the scenes the player chose and the people
+ * from the past, so the one-on-one session can start from them. The prelude's questions stay; the lifepath answers
+ * some of them already.
+ */
+function lifepathPart(actor) {
+  const C = game.modules.get("wodx-creation")?.api;
+  if ( !actor || !C?.lifepathRules ) return "";
+  const rec = C.lifepathOf?.(actor);
+  if ( !rec?.path ) return `<h2>Lifepath</h2><p class="wodx-quiet">None yet. The player can write one from the Lifepath button on the character sheet.</p>`;
+  const R = C.lifepathRules;
+  const sum = R.summary(rec.path, {nowYear: yearNow()});
+  sum.people = sum.people.map(p => ({...p, name: rec.people?.find(q => q.role === p.role && q.year === p.year)?.name ?? null}));
+  return `<h2>Lifepath</h2>${R.summaryHtml(sum, {name: actor.name, keptKeys: rec.kept, splatLabel: R.splatByKey(rec.path.line, rec.path.splat)?.label ?? ""})}`;
+}
+
 /** Make the prelude: the journal, and the scene if asked. Returns {journal, scene}. */
 export async function makePrelude({actorId = null, line = null, scene = false} = {}) {
   if ( !game.user.isGM ) return null;
@@ -25,7 +41,7 @@ export async function makePrelude({actorId = null, line = null, scene = false} =
   const p = P.composePrelude({line: key, name: actor?.name ?? "", year: yearNow(), futureBranch: futureOn()});
   const jf = await folder("JournalEntry");
   const journal = await JournalEntry.create({name: p.title, folder: jf?.id ?? null, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE},
-    pages: [{name: p.title, type: "text", text: {content: P.preludeHtml(p), format: 1}}],
+    pages: [{name: p.title, type: "text", text: {content: P.preludeHtml(p) + lifepathPart(actor), format: 1}}],
     flags: {[MOD]: {prelude: p.line, actorId: actor?.id ?? null}}});
   let made = null;
   if ( scene ) {

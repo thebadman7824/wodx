@@ -240,3 +240,24 @@ test("the Old Clan holds out one night longer without soil", () => {
   r = S.soilNight(r.soil, 2 * D + noon, false, 1); assert.equal(r.halved, false);
   r = S.soilNight(r.soil, 3 * D + noon, false, 1); assert.equal(r.halved, true);
 });
+
+/* Chronicle 0.30.0: ghouls and revenant families (B1158, B1159) */
+
+test("revenant families: the books' four, and new ones founded in play", () => {
+  assert.equal(S.familyRow(["Grimaldi"])?.key, "family-grimaldi");
+  assert.ok(S.familyRow(["Zantosa"])?.also.includes("vice"));
+  assert.ok(S.familyRow(["Bratovitch"])?.effects.some(e => e.tags.includes("animal ken")));
+  assert.equal(S.familyRow(["Toreador"]), null);
+  const f = S.newFamily({name: "Kessler", founder: "a Tzimisce voivode", trait: "war", disciplines: "Potence, Fortitude, Celerity, Auspex", flaw: "hot blood", year: 1250});
+  assert.equal(f.disciplines.length, 3); assert.equal(f.approved, false);
+  assert.equal(S.familyRow(["Kessler"], [f]), null, "waits for the Storyteller");
+  assert.equal(S.familyRow(["Kessler"], [{...f, approved: true}])?.key, "family-kessler");
+  assert.equal(S.newFamily({name: "", trait: "war"}), null);
+  assert.equal(S.newFamily({name: "X", trait: "nonsense"}), null);
+});
+
+test("a ghoul counts whole months without vitae", () => {
+  assert.equal(S.monthsUnfed(0, 29 * S.DAY), 0);
+  assert.equal(S.monthsUnfed(0, 61 * S.DAY), 2);
+  assert.equal(S.GHOUL.feature, "ghoul");
+});

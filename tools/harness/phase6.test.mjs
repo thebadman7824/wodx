@@ -168,25 +168,27 @@ game.socket.on ??= () => {};
 await import(join(root, "modules/wodx-combat/scripts/main.js"));
 await import(join(root, "modules/wodx-actions/scripts/main.js"));
 
-test("the WoDX modules start, keep the old API names, and take their settings from VtDA20", async () => {
+test("the WoDX modules start; the VtDA20 bridge is gone (no old API names, no old settings)", async () => {
   await Hooks.callAll("init");
   await Hooks.callAll("ready");
   await mock.settle();
   assert.ok(game.wodxActions?.menu && game.wodxCombat?.attack);
-  assert.equal(game.vtda20actions, game.wodxActions, "old macros keep working");
+  assert.equal(game.vtda20actions, undefined, "no game.vtda20actions alias");
+  assert.equal(game.vtda20combat, undefined, "no game.vtda20combat alias");
   assert.equal(game.wodx.combat, game.wodxCombat);
-  assert.equal(game.settings.get("wodx-combat", "showDice"), false, "vtda20-combat's stored choice");
-  assert.equal(game.settings.get("wodx-actions", "nightlyBlood"), false, "vtda20-actions' stored choice");
-  assert.equal(game.settings.get("wodx-combat", "autoApply"), true, "no old value: the default");
-  assert.equal(game.settings.get("wodx-actions", "flavorText"), "gm", "a String setting stored as plain text");
-  assert.ok(!game.macros.find(m => m.name === "WoDX: Actions Menu"), "no duplicate beside the VtDA20 macro the migration will rename");
-  assert.ok(game.macros.find(m => m.name === "WoDX: Hunt"), "macros the old module never made are made");
+  assert.equal(game.wodx.actions, game.wodxActions);
+  assert.equal(game.settings.get("wodx-combat", "showDice"), true, "vtda20-combat's stored choice is not read");
+  assert.equal(game.settings.get("wodx-actions", "nightlyBlood"), true, "vtda20-actions' stored choice is not read");
+  assert.equal(game.settings.get("wodx-actions", "flavorText"), "all", "the default, not the old stored text");
+  assert.equal(game.wodxActions.migrate, undefined, "no migration in the API");
+  assert.ok(game.macros.find(m => m.name === "WoDX: Actions Menu"), "WoDX macros are made even beside an old VtDA20 macro");
+  assert.ok(game.macros.find(m => m.name === "WoDX: Hunt"));
 });
 
 test("profiles read the WoDX flag first, then VtDA20's; 'Automatic' is stored, not deleted", async () => {
   const P = game.wodx.profiles;
   const a = makeActor("Thrall", "Mortal", {flags: {world: {vtda20: {profile: "ghoul", form: "crinos"}}}});
-  assert.equal(P.detectProfile(a), "ghoul", "VtDA20's flag still counts before the migration");
+  assert.equal(P.detectProfile(a), "ghoul", "an old VtDA20 flag is still read");
   await P.setProfile(a, "mortal");
   assert.equal(a.flags.world.wodx.profile, "mortal");
   assert.equal(P.detectProfile(a), "mortal", "the WoDX flag wins");
@@ -195,39 +197,6 @@ test("profiles read the WoDX flag first, then VtDA20's; 'Automatic' is stored, n
   assert.equal(P.detectProfile(a), "mortal", "automatic detection, not the old ghoul flag");
   assert.equal(a.flags.world.vtda20.profile, "ghoul", "nothing deleted");
   assert.equal(P.worldFlag(a, "form"), "crinos");
-});
-
-test("the migration: copies flags, renames the old macros, deletes nothing", async () => {
-  const garou = makeActor("Radek", "Werewolf", {flags: {world: {vtda20: {profile: "lupine", form: "hispo"}}, "vtda20-actions": {frenzyType: "rage"}}});
-  const done = makeActor("Already", "Mortal", {flags: {world: {vtda20: {profile: "mortal"}, wodx: {profile: "hunter"}}}});
-  const plain = makeActor("Nobody", "Mortal");
-  game.actors = new Coll([[garou.id, garou], [done.id, done], [plain.id, plain]]);
-  game.scenes = new Coll();
-  const plan = game.wodxActions.planMigration();
-  assert.equal(plan.actors.length, 1, "the actor already on WoDX names keeps its own value");
-  assert.deepEqual(plan.actors[0].keys.sort(), ["vtda20-actions.frenzyType", "world.form", "world.profile"]);
-  assert.equal(plan.macros.length, 4);
-  assert.deepEqual(plan.macros.filter(m => m.clash).map(m => m.command), ["game.wodxCombat.pickKind(a);"], "only the first Actor Type is renamed");
-  assert.equal(plan.settings.length, 3, "the old settings are listed in the report");
-  assert.equal(plan.others.length, 1);
-  mock.DialogV2.queue(() => true);
-  const r = await game.wodxActions.migrate();
-  assert.equal(garou.flags.world.wodx.form, "hispo");
-  assert.equal(garou.flags["wodx-actions"].frenzyType, "rage");
-  assert.equal(garou.flags.world.vtda20.form, "hispo", "the old flag stays");
-  assert.equal(done.flags.world.wodx.profile, "hunter", "never overwritten");
-  assert.ok(game.macros.find(m => m.name === "WoDX: Actions Menu" && m.command === "game.wodxActions.menu();"));
-  assert.ok(game.macros.find(m => m.name === "WoDX: Attack" && m.command === "game.wodxCombat.attack();"));
-  assert.equal(game.macros.find(m => m.name === "My own macro").command, "game.vtda20actions.frenzy();", "Ben's own macro is not touched");
-  assert.equal(game.macros.size, macroIds, "no macro deleted");
-  const report = r.report.pages.getName("Report").text.content;
-  assert.match(report, /Nothing was deleted/);
-  assert.match(report, /&quot;VtDA20: Attack&quot; → &quot;WoDX: Attack&quot;|"VtDA20: Attack" → "WoDX: Attack"/, "the old name, then the new");
-  assert.match(report, /VtDA20: Actor Type.*already exists; left as it is/);
-  assert.match(report, /vtda20-actions\.flavorText: &quot;gm&quot;|vtda20-actions\.flavorText: "gm"/);
-  assert.equal(game.macros.filter(m => m.name === "WoDX: Actor Type").length, 1, "one WoDX: Actor Type");
-  assert.equal(game.settings.get("wodx-actions", "migration").done, true);
-  assert.equal(game.wodxActions.planMigration().work, 0, "a second run has nothing to do");
 });
 
 test("WoDX Combat reads the conditions, and a heavy hit dazes (V20 Dark Ages p. 348)", async () => {
@@ -279,18 +248,6 @@ test("a caller can ask that a botched soak turns the damage aggravated (electroc
     const held = await C.soakAndApply(makeActor("Wired Elder"), {mode: "levels", amount: 2, type: "lethal", soak: true, soakBonus: 0, botchAggravated: true});
     assert.deepEqual([held.message.flags["wodx-combat"].data.type, held.levels], ["lethal", 0]);
   } finally { globalThis.Roll = keep; }
-});
-
-test("WoDX Actions refuses to run beside vtda20-actions", async () => {
-  // A fresh copy of the module, loaded as if vtda20-actions were still enabled
-  game.modules.set("vtda20-actions", {active: true});
-  const before = mock.log.notifications.length;
-  const mod = await import(join(root, "modules/wodx-actions/scripts/legacy.js") + "?again");
-  assert.equal(mod.oldActive("vtda20-actions"), true);
-  mod.warnOld("WoDX Actions", "vtda20-actions");
-  assert.match(mock.log.notifications.slice(before).map(n => n[1]).join(" "), /disable vtda20-actions/);
-  mock.log.notifications.splice(before);
-  game.modules.set("vtda20-actions", {active: false});
 });
 
 /* ---- The Group actor's sheet ---- */

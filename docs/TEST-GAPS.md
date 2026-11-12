@@ -28,14 +28,12 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | kindred.js | 80 | 81 |
 | kote-rules.js | 98 | 93 |
 | kote.js | 8 | 0 |
-| legacy.js | 56 | 33 |
 | m20-rules.js | 99 | 96 |
 | m20.js | 12 | 0 |
 | mage-da-grimoire.js | 100 | 100 |
 | mage-da-rules.js | 100 | 82 |
 | mage-da.js | 8 | 11 |
 | main.js | 37 | 17 |
-| migrate.js | 96 | 92 |
 | mummy-rules.js | 99 | 100 |
 | mummy.js | 11 | 0 |
 | orpheus-rules.js | 100 | 94 |
@@ -121,7 +119,6 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | conductor-rules.js | 100 | 100 |
 | conductor.js | 48 | 22 |
 | flavor.js | 100 | 88 |
-| legacy.js | 88 | 67 |
 | main.js | 67 | 66 |
 | profiles.js | 75 | 60 |
 | rules.js | 87 | 90 |

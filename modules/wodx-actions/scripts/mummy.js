@@ -98,7 +98,7 @@ export function build(ctx) {
             }
             body += `<div class="wodx-quiet">${REF} p. 78</div>`;
             return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean));
-        }, { width: 540, render: root => aim(root, { actor, power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : null; } }) });
+        }, { width: 540, render: root => aim(root, { actor, lib: "hekau", power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); const path = r.querySelector("[name=path]")?.value; return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : path ? { id: path, n: M.HEKAU[path]?.label ?? path } : null; } }) });
     }
 
     /* -- Sekhem --------------------------------------------------------- */

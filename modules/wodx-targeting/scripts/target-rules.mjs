@@ -32,11 +32,15 @@ export const OTHERS = 3;
 const num = v => (v === null || v === undefined || v === "" ? null : Number.isFinite(Number(v)) ? Number(v) : null);
 
 export function parseTag(code) {
-  const [i, r] = String(code ?? "").split(".");
+  const [base, sh] = String(code ?? "").split(":");
+  const [i, r] = base.split(".");
   if ( !INTENTS[i] || !RANGES[r] ) return null;
-  return {i, r, intent: INTENTS[i].key, range: RANGES[r].key};
+  const out = {i, r, intent: INTENTS[i].key, range: RANGES[r].key};
+  const shape = sh ? parseShape(sh) : null;
+  if ( shape ) out.shape = shape;
+  return out;
 }
-export const tagCode = t => `${t.i}.${t.r}`;
+export const tagCode = t => `${t.i}.${t.r}${t.shape ? `:${shapeCode(t.shape)}` : ""}`;
 export const validTag = code => parseTag(code) !== null;
 
 /* ------------------------------------------------------------------ */
@@ -91,8 +95,10 @@ export function seedTag(p = {}) {
 export function tagFor(table, lib, id, power = {}) {
   const code = table?.[lib]?.[id];
   const t = code ? parseTag(code) : null;
-  if ( t ) return {...t, by: "table"};
-  return seedTag(power);
+  const out = t ? {...t, by: "table"} : seedTag(power);
+  // An area power with no shape in its tag: a size its own text names (0.2.0)
+  if ( out?.intent === "area" && !out.shape ) { const sh = shapeFromText(power.text ?? ""); if ( sh ) out.shape = sh; }
+  return out;
 }
 
 /**
@@ -250,4 +256,121 @@ export function handSet(current = [], lastSet = []) {
   if ( current.length !== lastSet.length ) return true;
   const s = new Set(lastSet);
   return !current.every(id => s.has(id));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Area shapes (0.2.0)                                                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * An area power's shape, written after the tag: "a.v:b10" (a.intent.range:shape). Sizes are in yards.
+ *   b  burst: everyone within N yards of the user (the user is not in it)
+ *   c  circle of radius N yards, centred where the user points, within the power's range
+ *   k  cone N yards long from the user, CONE_DEGREES wide
+ *   l  line N yards long and LINE_WIDTH wide from the user
+ * The books give few sizes: where a power names one ("everyone within ten yards") the seed reads it; otherwise the
+ * size follows the range band (house rule, B1300): touch a 1-yard burst, reach 2, voice the voice range, sight a
+ * 5-yard circle where it lands, any distance no shape at all.
+ */
+export const SHAPES = {
+  b: {key: "burst", label: "a burst round the user", origin: "self"},
+  c: {key: "circle", label: "a circle where it is aimed", origin: "point"},
+  k: {key: "cone", label: "a cone from the user", origin: "self", aimed: true},
+  l: {key: "line", label: "a line from the user", origin: "self", aimed: true}
+};
+export const CONE_DEGREES = 60;
+export const LINE_WIDTH = 1;
+export const SIGHT_CIRCLE = 5;
+export const MAX_SIZE = 200;
+
+export function parseShape(code) {
+  const m = /^([bckl])(\d+(?:\.\d+)?)$/.exec(String(code ?? "").trim());
+  if ( !m ) return null;
+  const size = Math.min(MAX_SIZE, Number(m[2]));
+  if ( !(size > 0) ) return null;
+  return {s: m[1], ...SHAPES[m[1]], size};
+}
+export const shapeCode = sh => `${sh.s}${sh.size}`;
+
+const WORDN = {one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, fifty: 50, hundred: 100};
+const toYards = (n, unit) => (/^(foot|feet|ft)/i.test(unit) ? n / 3 : /^(met|metr)/i.test(unit) ? n * 1.09361 : n);
+
+/** A size and shape named in a power's text, or null. "within ten yards", "a 20-foot radius", "a cone ...". */
+export function shapeFromText(text = "") {
+  const t = String(text);
+  const m = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve|fifteen|twenty|thirty|fifty|hundred)[- ](yards?|feet|foot|ft|met(?:er|re)s?)\b/i.exec(t);
+  if ( !m ) return null;
+  const n = /^\d+$/.test(m[1]) ? Number(m[1]) : WORDN[m[1].toLowerCase()];
+  const size = Math.max(1, Math.round(toYards(n, m[2])));
+  const s = /\bcone\b/i.test(t) ? "k" : /\b(line|beam|ray|bolt)\b/i.test(t) ? "l" : /\b(of|around|round|about) (the|her|his|their|its) (user|vampire|caster|garou|wraith|self|body)|\bwithin\b/i.test(t) ? "b" : "c";
+  return parseShape(`${s}${Math.min(MAX_SIZE, size)}`);
+}
+
+/** The shape an area power uses: the tag's own, then one named in the power's text, then the range band's. */
+export function areaShape(tag, power = {}, {voiceYards = VOICE_YARDS} = {}) {
+  const t = typeof tag === "string" ? parseTag(tag) : tag;
+  if ( !t || t.intent !== "area" ) return null;
+  if ( t.shape ) return {...t.shape, by: "tag"};
+  const fromText = shapeFromText(power.text ?? "");
+  if ( fromText ) return {...fromText, by: "text"};
+  const def = {touch: "b1", reach: "b2", voice: `b${voiceYards}`, sight: `c${SIGHT_CIRCLE}`}[t.range];
+  return def ? {...parseShape(def), by: "range"} : null;
+}
+
+/** "a burst of 10 yd round the user" and the like. */
+export function shapeLabel(sh) {
+  if ( !sh ) return "anyone the user names";
+  const yd = `${Math.round(sh.size * 10) / 10} yd`;
+  if ( sh.s === "b" ) return `everyone within ${yd} of the user`;
+  if ( sh.s === "c" ) return `a circle of ${yd} radius where it is aimed`;
+  if ( sh.s === "k" ) return `a cone ${yd} long from the user`;
+  return `a line ${yd} long from the user`;
+}
+
+/**
+ * Is a point inside the shape? Positions in yards. at: {origin: {x, y}, dir (radians, for cones and lines)}.
+ * A token counts when its centre is inside, or its edge for a token wider than a yard (radius: half its width).
+ */
+export function inShape(sh, at, p, radius = 0) {
+  if ( !sh || !at?.origin || !p ) return false;
+  const dx = p.x - at.origin.x, dy = p.y - at.origin.y;
+  const d = Math.hypot(dx, dy);
+  const r = Math.max(0, Number(radius) || 0);
+  if ( sh.s === "b" || sh.s === "c" ) return d <= sh.size + r + 1e-9;
+  const dir = Number(at.dir) || 0;
+  const ux = Math.cos(dir), uy = Math.sin(dir);
+  const along = dx * ux + dy * uy, across = Math.abs(-dx * uy + dy * ux);
+  if ( sh.s === "l" ) return along >= -r && along <= sh.size + r && across <= LINE_WIDTH / 2 + r;
+  if ( d <= r ) return true;
+  if ( d > sh.size + r ) return false;
+  const ang = Math.acos(Math.max(-1, Math.min(1, along / d)));
+  return ang <= (CONE_DEGREES / 2) * Math.PI / 180 + Math.atan2(r, d);
+}
+
+/** The outline of a shape as points in yards (for drawing on the map): a circle as 32 points, a cone as a fan. */
+export function outline(sh, at) {
+  if ( !sh || !at?.origin ) return [];
+  const {x, y} = at.origin, dir = Number(at.dir) || 0, pts = [];
+  if ( sh.s === "b" || sh.s === "c" ) {
+    for ( let k = 0; k < 32; k++ ) { const a = (k / 32) * 2 * Math.PI; pts.push({x: x + sh.size * Math.cos(a), y: y + sh.size * Math.sin(a)}); }
+    return pts;
+  }
+  if ( sh.s === "l" ) {
+    const ux = Math.cos(dir), uy = Math.sin(dir), nx = -uy * LINE_WIDTH / 2, ny = ux * LINE_WIDTH / 2;
+    return [{x: x + nx, y: y + ny}, {x: x + ux * sh.size + nx, y: y + uy * sh.size + ny}, {x: x + ux * sh.size - nx, y: y + uy * sh.size - ny}, {x: x - nx, y: y - ny}];
+  }
+  const half = (CONE_DEGREES / 2) * Math.PI / 180;
+  pts.push({x, y});
+  for ( let k = 0; k <= 12; k++ ) { const a = dir - half + (k / 12) * 2 * half; pts.push({x: x + sh.size * Math.cos(a), y: y + sh.size * Math.sin(a)}); }
+  return pts;
+}
+
+/**
+ * The area list for a placed shape. tokens: as rank()'s state, each with pos {x, y} in yards and radius (yards).
+ * The user's own token is never in it. Allies come unticked, as for any area power.
+ */
+export function inArea(sh, at, tokens = [], {selfId = null} = {}) {
+  return tokens.filter(c => c.visible !== false && c.id !== selfId && c.pos && inShape(sh, at, c.pos, c.radius))
+    .map(c => ({id: c.id, name: c.name, side: c.side, distance: num(c.distance), why: c.side, tick: c.side !== "friend"}))
+    .sort((a, b) => (a.distance ?? 1e9) - (b.distance ?? 1e9) || String(a.name).localeCompare(String(b.name)));
 }

@@ -1,5 +1,7 @@
 # Pending review
 
+Each Monday, approved sections more than a week old move to docs/archive/pending-review-<year>-<month>.md (stale design review, item m11, 12 November 2026). The Waiting for review table stays last in this file.
+
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
@@ -357,7 +359,7 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-10 | A vampire drinking mage or fae blood, and a Kuei-jin drawing Chi from a Garou (the books are silent)? | Mage and fae blood are ordinary blood. A Kuei-jin gains two Chi a point from a Garou, with V20's frenzy step for werewolf blood (V20 p. 380) (B522). | Change the feeding-supernatural row. |
 | 2026-11-10 | Celerity and Initiative in the Dark Ages (VtDA20 page not found)? | Never added, in any era, as V20 p. 142 says (B523). | Restore the Celerity term in rollInitiative (wodx-combat main.js). |
 | 2026-11-10 | V20's Willpower cost for healing more than one aggravated level a day? | Outside the Dark Ages, each level past the first costs a Willpower point (V20 p. 285); in the Dark Ages, five blood a level only. | Remove extraWp in the Kindred healing window (wodx-actions main.js). |
-| 2026-11-10 | Dead code: drop the old migrations that copy vtda20 flags to WoDX flags? | Kept: the Live world may still need them, and it can't be checked from the cloud. | Remove migrate.js's vtda20 steps once the Live world is known to have run them. |
+| 2026-11-10 | Dead code: drop the old migrations that copy vtda20 flags to WoDX flags? | Kept: the Live world may still need them, and it can't be checked from the cloud. | Remove migrate.js's vtda20 steps once the Live world is known to have run them. Done 2026-11-12: Ben retired the original VtDA20 world, and migrate.js is removed (Actions 3.44.0). |
 | 2026-11-10 | Fill by place and era: gear only, goods only, or both by default? | Both (B570). | Change whatSel in fill.mjs to "gear". |
 | 2026-11-10 | Generated towns: night or day light in the Dungeondraft file? | Night blue ambient by default, as Rothenstein's maps are drawn at night (B572). | Run ddtown.py with --day, or set NIGHT to DAY in ddtown.py. |
 | 2026-11-10 | Town sizes for one map? | Village about 20 households (60 to 90 people); small town about 40 to 45 (160 to 200) on 96 x 72 squares (B572). | Change SIZES in ddtown.py. |
@@ -589,6 +591,8 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
 | 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
 | 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
+| 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
+| 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
 ## Waiting for review
@@ -622,6 +626,18 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
 | 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
 | 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |
+| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
+| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
+| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
+| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
+| 2026-11-12 | Area sizes when a power names none (B1300) | Touch a 1-yard burst, reach 2, voice 30, sight a 5-yard circle; cones 60 degrees, lines 1 yard wide | areaShape() in wodx-targeting target-rules.mjs |
+| 2026-11-12 | How far a fight's tale travels (B1340) | Word only before 1888, snapshot camera from 1888, camcorder 1985, phone cameras 2005, all recorded in the Future Darkness; severity 2 with pictures likely or five witnesses | EVIDENCE, severity() in wodx-combat aftermath-rules.js |
+| 2026-11-12 | Fires from knocked-over lights (B1320) | Candles and torches torch-sized; a lantern torch-sized and broken; an oil lamp a bonfire, broken; all at a torch's heat | SPILL in wodx-interactables interact-rules.mjs |
+| 2026-11-12 | A falling chandelier (B1321) | Falling dice for the drop (15 ft) plus 4, lethal; Dexterity + Dodge at 7 takes a die a success | CHANDELIER_MASS, DROP_DODGE in interact-rules.mjs |
+| 2026-11-12 | Sun let in through a window (B1322) | Direct sun 4 yards into the room from a window thrown open or smashed; indirect from a torn curtain | SUN_YARDS in interact-rules.mjs |
+| 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
+| 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
+| 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
 | 2026-11-12 | Disguises set by the Storyteller only (B1405) | A disguise is set on a worn item in its Examine notes, which only the Storyteller opens; players ask the Storyteller | Add a Dress as... use to Library's Use roster |
 | 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
 | 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
