@@ -150,6 +150,8 @@ Hooks.once("ready", async () => {
     manual: {open: Sh.openManual, ensure: Sh.ensureManual}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   try { await setupUse(); game.modules.get(MOD).api.use = useApi(); } catch (err) { console.warn("WoDX Library | Use could not start", err); }
+  // 0.10.0: recipes for food, drink, medicine and drugs (the window is Storyteller's Cook, brew or mix)
+  try { game.modules.get(MOD).api.recipes = await import("./recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();
     const have = game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");

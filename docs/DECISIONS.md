@@ -1002,6 +1002,20 @@ House rules, shown on the attack card and the check card; minus is easier:
 - In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
 
 Reverse: STANCES and attackStance in movement-rules.js.
+
+## B947. Ways of moving after the book check (2026-11-12)
+The book check (project files movement-book-check.md) replaces these house rules in B941, B942 and B946:
+- Breath: by Stamina at rest, 30 seconds up to an hour (W20 pdf 261, M20 pdf 441-442); in a fight, 2 x Stamina turns. Out of breath, one level a turn, not rolled or soaked: lethal (W20, M20), bashing for changelings (C20 pdf 294).
+- Swimming: 12 + Dexterity yards a turn with Athletics (M20 pdf 402), the jog; a swimming power doubles it to the run.
+- Flying: bat form 20 mph, about 29 yards a turn, and +2 to hit it (V20 pdf 208); Chiropteran Marauder and Dark Ages wings 25 mph (V20 pdf 250, V20 Dark Ages pdf 271); Wings of Pegasus 50 mph (W20 pdf 176); Spirit of the Bird 20 mph with its own maneuvers +1 (W20 pdf 200); Phantom Wings up to jogging speed (Wraith 20th pdf 217); Demon wings glide at up to three times the run; any other flight 15 yards (M20 pdf 402 gives 10 to 20). Wings of Rage is not flight (Wraith 20th pdf 266).
+- Prone: light cover, +1 to be shot (V20 pdf 286), and no change to fire from prone.
+- Climbing: 10 feet a success on an average climb, 15 easy, 5 hard (V20 pdf 266).
+- Jumping: 2 feet up or 3 feet across a success (V20 pdf 268).
+Still house rules, with no book rule found: an easier close attack on someone prone, the Stealth bonus for crawling, higher ground, fighting in water or while climbing, and the leaping strike.
+
+A flight power now sets the token's way of moving to Fly before it rises, and a fall sets it back to Walk; the token lookup finds unlinked tokens too.
+
+Reverse: FLY_SPEEDS, BREATH_SECONDS, drownType and STANCES in wodx-combat movement-rules.js; jumpReach in wodx-actions checks-rules.js.
 ## B1000. Animal archetypes (2026-11-12)
 Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
 
@@ -1125,3 +1139,29 @@ Reverse: make breaksPeace return false.
 Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
 
 Reverse: set witnessAsk off; drop the knows button.
+
+## B947. Recipes for food, drink, medicine and drugs (2026-11-12)
+Ben asked for recipes and crafting for consumables after the way Cataclysm: Dark Days Ahead runs them, and approved the design (doc "Recipes and crafting for food, drink, medicine and drugs") with all four recommendations. Mechanics only, WoDX's own methods and words.
+Library data/recipes.mjs holds 60 methods. Each names what it makes by a pattern on the goods' names, the ingredients by group (any grain, any fruit, a strong spirit), the kit by what it does (a fire, a kitchen, a brewhouse, a still, a herbalist's table, a laboratory from 1660, a pharmaceutical laboratory from 1900, a food printer from 2040), the roll, the time, the batch and any time the result must stand. A catch-all dish method reads the dish's name for its ingredients ("fish soup" needs any fish). Goods that are grown, gathered or caught, and goods made in a factory, are not made by hand. Every method carries its years.
+Rolls on V20: Dexterity + Crafts or the secondary Skill Cooking (V20 pdf 115, printed 107) for cooking and baking, Intelligence + Crafts for brewing and distilling, Intelligence + Medicine, Herbalism or Hearth Wisdom for remedies, Intelligence + Science or Medicine for the laboratory. Goals, times and dots are house rules. Eleven raw goods and middle products added to goods.mjs (raw meat, a plucked fowl, grapes, malt, rennet, lard, sugar, juniper berries, tobacco leaves, coca paste, wash).
+Reverse: delete data/recipes.mjs and scripts/recipe-rules.mjs, the cookery.mjs file in Storyteller and its calls; the old category recipes in craft-rules.mjs still work.
+
+## B948. Everyday food needs no roll (2026-11-12)
+Everyday dishes (cooking, baking, mixing a drink) are made at once when the cook's dice pool is at least the difficulty (Ben, recommendation 2). Brewing, curing, distilling, remedies and drugs always roll as a long task.
+Reverse: noRoll in recipe-rules.mjs returns false.
+
+## B949. Knowing a recipe (2026-11-12)
+A character knows a method by dots in its Ability (everyday food 1, cheese and wine 2, laudanum 3, laboratory work 4, designer drugs 5), by carrying a book that teaches its family (a cookery book, a guild's book, a herbal, a home medical guide), or by being taught (actor flag wodx-storyteller.recipes, set by the Storyteller in the window or by a training task with teaches). The Storyteller may start any recipe regardless.
+Reverse: knows in recipe-rules.mjs returns ok.
+
+## B950. Strength of made drugs and medicine (2026-11-12)
+Successes past the goal set a made drug's or medicine's strength: none weak, 1-2 usual, 3 or more strong. A botch while making one does not ruin the work; it makes the batch impure, which only the Storyteller is told when it is taken. Food and drink keep plain, good, fine and masterwork (B852).
+Reverse: STRENGTHS in recipe-rules.mjs; tasks.mjs sets impure on a botch.
+
+## B951. Kindred cannot taste (2026-11-12)
+A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; the PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
+Reverse: KINDRED_TASTE in recipe-rules.mjs.
+
+## B952. Batches and things that stand (2026-11-12)
+A batch's goal grows by half the base for each one past the first, up to the method's batch size, after Cataclysm's batch savings. A method with a wait (ale a week, wine three months, cheese a month, whiskey a year in the cask) makes the thing under a standing name ("ale (fermenting)"), which takes its own name when the clock passes the ready time (Storyteller ripen on world time). House rules on historical times.
+Reverse: batchGoal in recipe-rules.mjs; wait values in data/recipes.mjs.

@@ -67,7 +67,12 @@ export function normTask(t = {}) {
     building: String(t.building ?? "").slice(0, 40), stages: stagesOf(t.stages), stage: Math.max(0, Math.round(n(t.stage))),
     paidStage: Number.isFinite(Number(t.paidStage)) ? Math.round(Number(t.paidStage)) : -1, workers: Math.max(0, Math.min(10, Math.round(n(t.workers)))),
     owner: t.owner && typeof t.owner === "object" ? {...t.owner} : null, scene: String(t.scene ?? "").slice(0, 60), cost: Math.max(0, Math.round(n(t.cost))),
-    faction: String(t.faction ?? "").slice(0, 60), place: String(t.place ?? "").slice(0, 160)
+    faction: String(t.faction ?? "").slice(0, 60), place: String(t.place ?? "").slice(0, 160),
+    // 0.31.0: recipes for food, drink, medicine and drugs (Library recipe-rules): the method, how many, how long the
+    // result stands once made, its strength, and a train task that teaches a recipe
+    recipe: String(t.recipe ?? "").slice(0, 40), batch: Math.max(1, Math.min(100, Math.round(n(t.batch) || 1))),
+    wait: Math.max(0, Math.min(3650, Math.round(n(t.wait)))), waitWord: String(t.waitWord ?? "").slice(0, 40),
+    strength: !!t.strength, impure: !!t.impure, leaves: strs(t.leaves), teaches: String(t.teaches ?? "").slice(0, 40)
   };
 }
 
@@ -94,7 +99,13 @@ export const WORKSHOPS = {
   electronics: {label: "An electronics bench", from: 1920},
   computer: {label: "A computer and its software", from: 1975},
   fabricator: {label: "A fabricator (a 3D printer)", from: 2010},
-  biolab: {label: "A gene lab", from: 2030}
+  biolab: {label: "A gene lab", from: 2030},
+  // 0.31.0: kits for recipes (Library data/recipes.mjs KIT_WORKSHOP)
+  kitchen: {label: "A kitchen, or a pot over a fire", from: null},
+  brewhouse: {label: "A brewhouse, or a big pot and a fire", from: null},
+  apothecary: {label: "A herbalist's table", from: null},
+  pharma: {label: "A pharmaceutical laboratory", from: 1900},
+  printer: {label: "A food printer", from: 2040}
 };
 
 /** The lines of what a task needs, cleaned. */

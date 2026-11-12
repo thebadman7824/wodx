@@ -29,7 +29,7 @@ export const modeOf = m => (MODES[m] ? m : "walk");
  * "Soul's Flight" are not flight and are kept out.
  */
 export const GRANTS = {
-  fly: [/\bphantom wings\b/, /\bwings of (rage|pegasus)\b/, /\bspirit of the bird\b/, /\bsky running\b/, /\bwind runner\b/,
+  fly: [/\bphantom wings\b/, /\bwings of pegasus\b/, /\bspirit of the bird\b/, /\bsky running\b/, /\bwind runner\b/,
     /\bcloud[- ]walking\b/, /\bchiropteran marauder\b/, /\b(bat|bats|raven|owl|hawk|crow|bird)\b/, /\bwings\b/, /\bflight\b/, /\bflying\b/, /\blevitat/],
   wallwalk: [/\bsurface attunement\b/, /\bmanipulate adhesion\b/, /\bmonkey tail\b/, /\bspider/, /\bwall[- ]walk/],
   waterwalk: [/\bsurface attunement\b/, /\bgrip the water\b/, /\bwater[- ]walk/],
@@ -39,7 +39,29 @@ export const GRANTS = {
   phase: [/\btenebrous (form|avatar)\b/, /\bmist form\b/, /\blurking mists\b/, /\bspectral body\b/, /\bincorporeal passage\b/, /\bshape of mist\b/],
   meld: [/\bearth meld\b/, /\bmeld with the earth\b/]
 };
-const NOT_FLIGHT = /\b(coward'?s flight|soul'?s flight|flight from|in flight from|flight of the)\b/;
+// Wings of Rage adds Outrage to Athletics and running; it is not flight (Wraith 20th pdf 266)
+const NOT_FLIGHT = /\b(coward'?s flight|soul'?s flight|flight from|in flight from|flight of the|wings of rage)\b/;
+
+/**
+ * Flying speeds from the books, in yards a turn (a turn of about 3 seconds: 20 mph is about 29 yards), and what
+ * attacks against the flier change. First match wins.
+ *   bat form (Shape of the Beast): 20 mph, attacks against it +2 (V20 pdf 208)
+ *   Chiropteran Marauder: 25 mph (V20 pdf 250); the Dark Ages wings: 25 mph (V20 Dark Ages pdf 271)
+ *   Wings of Pegasus: 50 mph (W20 pdf 176); Spirit of the Bird: 20 mph, hovers, its own maneuvers +1 (W20 pdf 200)
+ *   Phantom Wings: up to jogging speed, double in the Tempest (Wraith 20th pdf 217)
+ *   Demon wings: a glide at up to three times the running speed (Demon: The Fallen pdf 177-195)
+ *   anything else: 10 to 20 yards a turn (M20 pdf 402), taken as 15
+ */
+export const FLY_SPEEDS = [
+  {re: /\bchiropteran marauder\b/, yards: 37, ref: "V20 pdf 250"},
+  {re: /\bwings of pegasus\b/, yards: 73, ref: "W20 pdf 176"},
+  {re: /\bspirit of the bird\b/, yards: 29, ownDiff: 1, ref: "W20 pdf 200"},
+  {re: /\bphantom wings\b/, pace: "jog", ref: "Wraith 20th pdf 217"},
+  {re: /\bshape of the beast\b.*\bbats?\b|\bbats?\b.*\bshape of the beast\b|\bbat form\b|\bshape of a bat\b/, yards: 29, vsDiff: 2, ref: "V20 pdf 208"},
+  {re: /\b(apocalyptic|demon(ic)?) (form|wings)\b|\bglid/, pace: "glide", ref: "Demon: The Fallen pdf 177-195"},
+  {re: /\bwings\b/, yards: 37, ref: "V20 Dark Ages pdf 271"}
+];
+const flyOf = text => FLY_SPEEDS.find(f => f.re.test(text)) ?? null;
 
 /**
  * What an actor's effects and flags let it do. effects: [{name, description, key}] of the actor's live effects
@@ -50,7 +72,7 @@ const NOT_FLIGHT = /\b(coward'?s flight|soul'?s flight|flight from|in flight fro
 export function abilities(effects = [], flags = {}) {
   const got = {fly: !!flags.fly, wallwalk: !!flags.wallwalk, waterwalk: !!flags.waterwalk, swimfast: !!flags.swim,
     waterbreath: !!flags.waterbreath, leap: false, phase: !!flags.phase, meld: false, burrow: !!flags.burrow,
-    flySpeed: Number(flags.flySpeed) || null, why: {}};
+    flySpeed: Number(flags.flySpeed) || null, flyBook: null, why: {}};
   const notFlight = [...GRANTS.wallwalk, ...GRANTS.waterwalk, ...GRANTS.leap];
   for ( const e of effects ) {
     const text = `${e?.name ?? ""} ${e?.description ?? ""}`.toLowerCase();
@@ -60,7 +82,11 @@ export function abilities(effects = [], flags = {}) {
     // Rise flies, unless it came from a leap or a wall or water walk (those powers carry the Rise keyword too)
     const rise = e?.key === "wodx-effect-rise" && !notFlight.some(p => p.test(text));
     const named = GRANTS.fly.some(p => p.test(text)) && !NOT_FLIGHT.test(text) && !notFlight.some(p => p.test(text));
-    if ( rise || named ) { got.fly = true; got.why.fly ??= e?.name || "Rise"; }
+    if ( rise || named ) {
+      got.fly = true; got.why.fly ??= e?.name || "Rise";
+      const f = flyOf(text);
+      if ( f && !got.flyBook ) got.flyBook = f;
+    }
   }
   return got;
 }
@@ -100,8 +126,15 @@ export function speedFor(mode, base = {walk: 7, jog: 14, run: 26}, ab = {}, {ath
   const m = modeOf(mode), walk = Math.max(0, Number(base.walk) || 0), jog = Math.max(0, Number(base.jog) || 0), run = Math.max(0, Number(base.run) || 0);
   if ( run === 0 ) return 0;
   switch ( m ) {
-    case "fly": return ab.flySpeed ? Math.max(1, ab.flySpeed) : run;
-    case "swim": return ab.swimfast ? jog : athletics < 1 ? 1 : Math.max(1, Math.floor(jog / 2));
+    case "fly": {
+      if ( ab.flySpeed ) return Math.max(1, ab.flySpeed);
+      const f = ab.flyBook;
+      if ( f?.pace === "jog" ) return jog;
+      if ( f?.pace === "glide" ) return run * 3;
+      return f?.yards ?? 15;
+    }
+    // M20 pdf 402: 12 + Dexterity yards a turn for a trained swimmer, the same as the jog; no Athletics, no swimming
+    case "swim": return ab.swimfast ? run : athletics < 1 ? 1 : jog;
     case "climb": return ab.wallwalk ? walk : Math.min(3, walk || 3);
     case "crawl": return Math.min(3, walk);
     case "jump": return Math.max(0, Number(jumpYards) || 0) * (ab.leap ? 2 : 1);
@@ -166,14 +199,17 @@ export function waterOf(name = "", flag = null) {
 }
 
 /**
- * How long a held breath lasts, in turns (house rule B942): Stamina × 10 turns at rest (a turn is about 3 seconds,
- * so a Stamina 2 mortal holds for about a minute), halved while swimming hard or fighting. Willpower adds one more
- * stretch of Stamina turns, once. Supernatural Stamina counts.
+ * How long a held breath lasts, in turns of about 3 seconds (W20 pdf 261, M20 pdf 441-442): by Stamina at rest
+ * 30 seconds, 1, 2, 4, 8, 12, 20, 30, 45 minutes, an hour; in a fight or other hard effort, 2 x Stamina turns. Each
+ * Willpower point spent adds 30 seconds at rest, one turn in a fight.
  */
-export function breathTurns(stamina = 2, {exerting = false} = {}) {
-  const t = Math.max(1, Number(stamina) || 1) * 10;
-  return exerting ? Math.max(1, Math.floor(t / 2)) : t;
+export const BREATH_SECONDS = [30, 30, 60, 120, 240, 480, 720, 1200, 1800, 2700, 3600];
+export function breathTurns(stamina = 2, {exerting = false, willpower = 0} = {}) {
+  const st = Math.max(1, Math.min(10, Number(stamina) || 1)), wp = Math.max(0, Number(willpower) || 0);
+  return exerting ? 2 * st + wp : Math.round((BREATH_SECONDS[st] + 30 * wp) / 3);
 }
+/** Out of breath: one level a turn, not rolled and not soaked; lethal (W20 pdf 261, M20 pdf 441), bashing for the fae (C20 pdf 294). */
+export const drownType = profile => (profile === "fae" ? "bashing" : "lethal");
 
 /**
  * Who is under the water this turn: a swimmer with Athletics stays up unless they dive (below the surface); with no
@@ -187,7 +223,7 @@ export function underWater({athletics = 0, dived = false, ab = {}} = {}) {
 
 /**
  * One turn in deep water. state: {breath, max} (breath left in turns). Returns the next state and the damage: none
- * while breath lasts, then one lethal level a turn (Hunter: The Reckoning pdf 208). Coming up for air fills it again.
+ * while breath lasts, then one level a turn (W20 pdf 261, M20 pdf 441). Coming up for air fills it again.
  */
 export function waterTurn(state = {}, {under = false, breathes: br = true, waterbreath = false, max = 20} = {}) {
   const full = Math.max(1, Number(state.max ?? max) || max);
@@ -229,8 +265,8 @@ export function stanceOf({mode = "walk", knockedDown = false, water = null, unde
  */
 export const STANCES = {
   standing: {label: "Standing", own: {}, vs: {}},
-  prone:    {label: "Prone or crawling", own: {close: 2, ranged: -1, dodge: 2, stealth: -2, dexterity: 1}, vs: {close: -2, ranged: 2, spot: 1},
-    note: "low to the ground: hard to see and to shoot from afar, easy to strike up close; a braced shot is steadier"},
+  prone:    {label: "Prone or crawling", own: {close: 2, dodge: 2, stealth: -2, dexterity: 1}, vs: {close: -2, ranged: 1, spot: 1},
+    note: "low to the ground: light cover against shots (V20 pdf 286), hard to see, easy to strike up close"},
   flying:   {label: "Flying", own: {ranged: 1, dodge: -1, perception: -1, stealth: 1}, vs: {close: 1, ranged: 1},
     note: "a wide view from above and room to dodge; unsteady shots, and a shape against the sky"},
   swimming: {label: "Swimming", own: {close: 2, ranged: 2, dodge: 2, dexterity: 1}, vs: {ranged: 1},
@@ -255,14 +291,17 @@ export const STANCES = {
  * An attack's changes from both stances. close: the target is in reach. higher: the attacker stands higher by a few
  * feet or more (high ground: -1 to close attacks, house rule). {diff, notes[], blocked (why or "")}
  */
-export function attackStance(attacker = "standing", target = "standing", {close = true, higher = false, sameStance = false} = {}) {
+export function attackStance(attacker = "standing", target = "standing", {close = true, higher = false, sameStance = false, attackerFly = null, targetFly = null} = {}) {
   const A = STANCES[attacker] ?? STANCES.standing, T = STANCES[target] ?? STANCES.standing;
   const key = close ? "close" : "ranged", notes = [];
   let diff = 0, blocked = "";
   const add = (v, why) => { if ( v ) { diff += v; notes.push(`${why}: ${v > 0 ? "+" : ""}${v} difficulty`); } };
   add(A.own[key] ?? 0, A.label);
   // Two fliers, or two in the water, meet on even terms
-  if ( !(sameStance && ["flying", "swimming", "under"].includes(target)) ) add(T.vs[key] ?? 0, `Target ${T.label.toLowerCase()}`);
+  // A bat is small and quick: +2 to hit it (V20 pdf 208) in place of the flier's +1
+  const vsFly = target === "flying" && targetFly?.vsDiff ? targetFly.vsDiff : null;
+  if ( !(sameStance && ["flying", "swimming", "under"].includes(target)) ) add(vsFly ?? T.vs[key] ?? 0, `Target ${T.label.toLowerCase()}${vsFly ? ` (${targetFly.ref})` : ""}`);
+  if ( attacker === "flying" && attackerFly?.ownDiff ) add(attackerFly.ownDiff, `Flying maneuvers (${attackerFly.ref})`);
   if ( close && higher && !["flying", "melded"].includes(attacker) ) add(-1, "Higher ground");
   if ( attacker === "melded" || attacker === "phasing" ) blocked = A.cannot;
   else if ( target === "melded" ) blocked = "the target is inside the earth";

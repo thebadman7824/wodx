@@ -322,7 +322,7 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 
 ## Approved by Ben, 12 November 2026, 01:36 UTC
 
-Ben approved every entry that was waiting for review at 01:36 UTC on 12 November 2026 (205 rows), so each choice already made stands. Each still lists how to reverse it.
+Ben approved every entry that was waiting for review at 01:36 UTC on 12 November 2026 (210 rows), so each choice already made stands. Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -519,6 +519,7 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-11 | How long breath lasts, and drowning (B962) | Drowning is one lethal level a turn (Hunter pdf 208). Breath lasts Stamina x 10 turns, halved in a fight (house rule; no V20 rule found yet). Book check queued. | breathTurns in movement-rules.js |
 | 2026-11-11 | Which regions are water (B963) | Named by the region ("WoDX: Deep water", a river, a lake) or a flag; shallow water costs double movement; a fall into deep water does no damage. | waterOf in movement-rules.js |
 | 2026-11-11 | What each way of moving does to rolls (B946) | Prone: Stealth -2, hard to see and to shoot from afar, easy to strike up close. Flying, swimming, under the water, wading, climbing and a jump each have their own changes (DECISIONS B946). | STANCES in movement-rules.js |
+| 2026-11-12 | Ways of moving after the book check (B947) | Breath, swim speed, flight speeds, prone against shots, climbing and jumping now follow the books (W20, M20, C20, V20). Still house rules: an easier close hit on someone prone, crawling Stealth, higher ground, fighting in water or while climbing, the leaping strike. | FLY_SPEEDS, BREATH_SECONDS and STANCES in movement-rules.js |
 | 2026-11-12 | Animal years and places in Moravia (B1000)? | Wolves gone from the lowlands about 1850 and back in the Beskydy from 1995; bears to 1800; hunting hounds to 1914; horses in town streets to 1950; cattle at town markets to 1900; pigs rooting in the lanes to 1850; poultry in town yards to 1900; strays at 0.4 as common after 1900 (licensing). House readings of Moravian history. | Change from/to, years, townUntil or thinFrom in animal-rules.mjs. |
 | 2026-11-12 | Blood in animals not named by the crowd numbers (B1000)? | Wolves 2 like dogs, bears 5 like livestock, boar 3, birds and bats a quarter point like rats. A book check of the V20 animal vessel numbers is queued for the PC. | blood in animal-rules.mjs. |
 | 2026-11-12 | How herd, territory and hunger weigh (B1001)? | Herd adds 1.5 a point to fleeing when outnumbered and 2 when the others run, and takes 0.5 off attacking alone; territory adds its value to attacks and one wound to what it bears on its own patch, 1.5 a point to fighting a trespasser; hunger adds 1.5 a point to attacks December to March and to fighting someone alone. | The NPC 0.21.0 lines in npc-rules scoreOptions and routine-rules pickReaction. |
@@ -531,6 +532,10 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | Blood in animals V20 does not list (NPC 0.24.1)? | Cattle 5 (between the large horse at 4 and the camel at 6), sheep and goats 3 (as a small pig), geese and hens 1/2 (as a large bird). The rest follow the V20 core animals appendix, pdf 396-399 (printed 388-391): horse 4, pigs and boar 4, crows 1/2. | Change the numbers in animal-rules.mjs. |
 | 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
 | 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |
+| 2026-11-12 | Goals, times and dots for 60 recipes (B947) | House figures by family: cooking 2 successes an hour, brewing 3 a day, distilling 4 a day, laboratory 6 to 10 a day; dots 1 to 5 by difficulty of the work. Book check of Crafts, Science, Medicine, Herbalism and Hearth Wisdom ranges queued for the PC. | FAMILIES and METHODS in wodx-library/data/recipes.mjs |
+| 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
+| 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
+| 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
 
 ## Waiting for review
 

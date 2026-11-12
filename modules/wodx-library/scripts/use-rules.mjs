@@ -54,7 +54,7 @@ export const ABILITIES = {
   divine: {label: "Divine with it", effect: "note", verb: "reads the signs with"},
   wash: {label: "Wash or groom", effect: "note", verb: "uses", uses: true},
   disguise: {label: "Change the look", effect: "note", verb: "changes the look with", uses: true},
-  cook: {label: "Cook with it", effect: "note", verb: "cooks with"},
+  cook: {label: "Cook with it", effect: "cook", verb: "cooks with"},
   plant: {label: "Plant it", effect: "note", verb: "plants", uses: true},
   call: {label: "Call someone", effect: "note", verb: "makes a call on"},
   switchon: {label: "Switch on or off", effect: "note", verb: "switches on"},
@@ -101,7 +101,7 @@ export function substanceOf(good) {
 }
 
 /** Food that is cooked with rather than eaten as it is. */
-const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|sugarloaf in blue paper|vinegar|yeast|cornmeal|flour|bread flour|maize meal|mustard|tomato sauce|mayonnaise|ketchup|barbecue sauce|hot sauce|buffalo sauce|italian seasoning|soy sauce|mushroom ketchup|raw soybeans|sugar beet|lard|suet|cooking oil|olive oil|honeycomb|rennet|malt|baking soda|baking powder|dry spicebush berries)$/i;
+const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|sugarloaf in blue paper|vinegar|yeast|cornmeal|flour|bread flour|maize meal|mustard|tomato sauce|mayonnaise|ketchup|barbecue sauce|hot sauce|buffalo sauce|italian seasoning|soy sauce|mushroom ketchup|raw soybeans|sugar beet|lard|suet|cooking oil|olive oil|honeycomb|rennet|malt|sugar|juniper berries|wash|a cut of raw meat|a plucked fowl|a bunch of grapes|baking soda|baking powder|dry spicebush berries)$/i;
 
 /* Which carried light a thing is (Interactables carry-rules CARRIED). */
 const LIGHTS = [
@@ -327,6 +327,16 @@ export function spends(good, ability) {
   if ( ability === "treat" ) return SPENT.test(good?.name ?? "");
   return false;
 }
+
+/**
+ * Library 0.10.0: how strong a made drug or medicine is (Storyteller's recipes set flags.wodx-storyteller.strength
+ * from the successes past the goal; house rule, B950). Impure is told to the Storyteller only.
+ */
+export const STRENGTH_TEXT = {
+  weak: "Weaker than usual: it does less and wears off sooner (house rule).",
+  strong: "Stronger than usual: one more difficulty on any roll to resist it, and it lasts longer (house rule).",
+  impure: "Impure: it was botched in the making. The Storyteller decides what that does, from nothing to sickness or poisoning."
+};
 
 /** Common check difficulty change for first aid with supplies: −1 with something to treat with (house rule). */
 export const CARE_DIFF = -1;

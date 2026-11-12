@@ -102,7 +102,12 @@ async function takeIt(actor, item, good, ability, patient = actor) {
     if ( U.VESSEL_STATE[state] ) upd["flags.wodx-actions.vesselState"] = U.VESSEL_STATE[state];
     await patient.update(upd);
   }
-  const text = eff.text ?? (state && U.STATES[state] ? `${U.STATES[state].label}: ${U.STATES[state].text}` : null);
+  let text = eff.text ?? (state && U.STATES[state] ? `${U.STATES[state].label}: ${U.STATES[state].text}` : null);
+  // 0.10.0: a made drug or medicine's strength; an impure batch is the Storyteller's to know
+  const made = item.flags?.["wodx-storyteller"] ?? {};
+  if ( text && U.STRENGTH_TEXT[made.strength] ) text = `${text} ${U.STRENGTH_TEXT[made.strength]}`;
+  if ( made.impure && eff.does !== "cannot" ) await ChatMessage.create({content: `<div class="wodx-card wlib-use-card"><p><b>${esc(patient.name)} and ${esc(thing)}</b></p><p>${esc(U.STRENGTH_TEXT.impure)}</p></div>`,
+    whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "What it does"}});
   if ( eff.does === "storyteller" ) await tellPrivately(patient, `${patient.name} and ${thing}`, `The Storyteller decides what this does to a ${U.LINE_LABELS[line].toLowerCase()}.`);
   else if ( text ) await tellPrivately(patient, `${patient.name} and ${thing}`, state === "drunk" ? `${text} Drinks in the last few hours: ${patient.flags?.[MOD]?.intox?.count ?? 1}.` : text);
   if ( U.spends(good, ability) && eff.does !== "cannot" ) await spendOne(item);
@@ -196,6 +201,13 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "pages": return writePage(actor, item, ability);
     case "read": { await say(actor, U.useLine(actor.name, "read", item.name)); return read(item); }
     case "letter": return letter(actor, item);
+    case "cook": {
+      // 0.10.0: Cook, brew or mix (Storyteller), showing the recipes this thing goes into
+      const ck = st()?.cookery;
+      if ( ck?.open ) return ck.open(actor, {using: item.kind === "kitchen" || good?.kind === "kitchen" ? "" : (good?.name ?? item.name)});
+      await say(actor, U.useLine(actor.name, ability, item.name));
+      return null;
+    }
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});

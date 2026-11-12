@@ -10,6 +10,16 @@ const on = () => { try { return !D.off() && game.settings.get(D.MOD, "movementMo
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
 const strip = s => String(s ?? "").replace(/<[^>]+>/g, " ");
 
+/** An actor's tokens: the token of an unlinked (synthetic) actor, else its active tokens, as documents. */
+export function tokensOf(actor) {
+  if ( !actor ) return [];
+  if ( actor.isToken && actor.token ) return [actor.token];
+  const out = (actor.getActiveTokens?.(false, true) ?? []).map(t => t.document ?? t);
+  if ( !out.length ) for ( const t of globalThis.canvas?.scene?.tokens ?? [] ) if ( t.actorId === actor.id ) out.push(t);
+  return out;
+}
+const docOf = t => (t?.documentName === "Token" ? t : (t?.document ?? t));
+
 /** The live effects of an actor, in the shape movement-rules reads. */
 export function effectsOf(actor) {
   return [...(actor?.effects ?? [])].filter(e => !e.disabled).map(e => ({name: e.name ?? "", description: strip(e.description), key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null}));
@@ -97,8 +107,8 @@ async function enterWater(doc, w) {
   if ( ab.waterwalk ) lines.push("Walks on the water.");
   else if ( !breathes ) lines.push("Does not breathe: sinks or swims as they like, and cannot drown.");
   else if ( ab.waterbreath ) lines.push("Breathes the water.");
-  else if ( athletics < 1 && !ab.swimfast ) lines.push(`Cannot swim (no Athletics): goes under. Breath lasts ${max} turns, then one lethal level a turn (Hunter: The Reckoning pdf 208). A Stamina + Athletics roll at 8 brings the head up for a turn (house rule).`);
-  else lines.push(`Swims. After the first hour, Swimming (Stamina + Athletics) at 6 each hour. Under the surface, breath lasts ${max} turns${fight ? " while fighting" : ""}.`);
+  else if ( athletics < 1 && !ab.swimfast ) lines.push(`Cannot swim (no Athletics): goes under. Breath lasts ${max} turns, then one ${MV.drownType(D.getKind(actor))} level a turn, not soaked (W20 pdf 261, M20 pdf 441). A Stamina + Athletics roll at 8 brings the head up for a turn (house rule).`);
+  else lines.push(`Swims. After the first hour, Swimming (Stamina + Athletics) each hour, one success needed (V20 pdf 270). Under the surface, breath lasts ${max} turns${fight ? " while fighting" : ""}.`);
   await card(actor, `${doc.name} is in deep water`, `<p>${lines.join(" ")}</p>`);
 }
 
@@ -110,7 +120,7 @@ Hooks.on("updateToken", (doc, changes, options) => {
   else if ( !w && had ) doc.unsetFlag(D.MOD, "water").catch(() => null);
 });
 
-// Each new round of a fight: breath runs out for those under the water, then one lethal level a turn
+// Each new round of a fight: breath runs out for those under the water, then one level a turn
 Hooks.on("updateCombat", (combat, changed) => {
   if ( !D || !on() || !isActiveGM() || !("round" in (changed ?? {})) || !combat.started ) return;
   (async () => {
@@ -126,8 +136,9 @@ Hooks.on("updateCombat", (combat, changed) => {
       const next = MV.waterTurn(st, {under, breathes: MV.breathes(D.getKind(actor), D.variant(actor)), waterbreath: ab.waterbreath});
       await doc.setFlag(D.MOD, "water", {...st, breath: next.breath, max: next.max});
       if ( next.damage ) {
-        await D.applyDamage(actor, "lethal", next.damage);
-        await card(actor, `${doc.name} is drowning`, `<p>One lethal level, not soaked (Hunter: The Reckoning pdf 208). It stops when they reach air.</p>`);
+        const type = MV.drownType(D.getKind(actor));
+        await D.applyDamage(actor, type, next.damage);
+        await card(actor, `${doc.name} is drowning`, `<p>One ${type} level, not rolled and not soaked (W20 pdf 261, M20 pdf 441${type === "bashing" ? ", C20 pdf 294" : ""}). It stops when they reach air.</p>`);
       } else if ( under && next.breath <= 3 ) await card(actor, `${doc.name} is running out of breath`, `<p>${D.esc(next.note)}.</p>`);
     }
   })().catch(e => console.warn("WoDX | drowning", e));
@@ -139,11 +150,11 @@ Hooks.on("updateCombat", (combat, changed) => {
 
 async function landOrFall(actor) {
   const ab = abilitiesOf(actor);
-  for ( const t of actor.getActiveTokens?.(false, true) ?? [] ) {
-    const doc = t.document ?? t, ground = groundAt(doc);
+  for ( const doc of tokensOf(actor) ) {
+    const ground = groundAt(doc);
     const r = MV.fallOnLanding(doc.elevation, ground, ab, unitsOf(doc));
     if ( !r.falls ) continue;
-    await doc.update({elevation: ground}, {wodxMove: false});
+    await doc.update({elevation: ground, ...(doc.movementAction === "fly" ? {movementAction: "walk"} : {})}, {wodxMove: false});
     const w = waterAt(doc);
     if ( w?.kind === "deep" ) { await card(actor, `${doc.name} falls into the water`, `<p>A drop of ${r.feet} feet into deep water: no falling damage (house rule).</p>`); continue; }
     const f = MV.fallingDamage(r.feet);
@@ -158,17 +169,19 @@ Hooks.on("deleteActiveEffect", (effect, options) => {
   if ( !(actor instanceof Actor) ) return;
   const one = MV.abilities(effectsOf({effects: [effect]}));
   if ( one.fly ) landOrFall(actor).catch(e => console.warn("WoDX | fall", e));
-  if ( one.meld ) for ( const t of actor.getActiveTokens?.(false, true) ?? [] ) {
-    const doc = t.document ?? t;
+  if ( one.meld ) for ( const doc of tokensOf(actor) ) {
     if ( doc.getFlag(D.MOD, "melded") ) doc.update({hidden: !!doc.getFlag(D.MOD, "melded").wasHidden, [`flags.${D.MOD}.-=melded`]: null}).catch(() => null);
   }
 });
 Hooks.on("createActiveEffect", effect => {
   if ( !D || !on() || !isActiveGM() ) return;
   const actor = effect.parent;
-  if ( !(actor instanceof Actor) || !MV.abilities(effectsOf({effects: [effect]})).meld ) return;
-  for ( const t of actor.getActiveTokens?.(false, true) ?? [] ) {
-    const doc = t.document ?? t;
+  if ( !(actor instanceof Actor) ) return;
+  const one = MV.abilities(effectsOf({effects: [effect]}));
+  // A flight power sets the token's way of moving to Fly, so the ruler and the HUD lift it
+  if ( one.fly ) for ( const doc of tokensOf(actor) ) if ( "movementAction" in doc && doc.movementAction !== "fly" ) doc.update({movementAction: "fly"}).catch(() => null);
+  if ( !one.meld ) return;
+  for ( const doc of tokensOf(actor) ) {
     doc.update({hidden: true, [`flags.${D.MOD}.melded`]: {wasHidden: !!doc.hidden}}).catch(() => null);
   }
 });
@@ -227,14 +240,14 @@ export function moveCheck(doc, changes, base) {
 /* ------------------------------------------------------------------ */
 
 const tokenOf = actor => {
-  const toks = actor?.getActiveTokens?.(false, true) ?? [];
+  const toks = tokensOf(actor);
   const sid = globalThis.canvas?.scene?.id;
   return toks.find(t => (t.parent?.id ?? t.document?.parent?.id) === sid) ?? toks[0] ?? null;
 };
 /** The stance of an actor's token on the scene (movement-rules stanceOf). */
 export function stanceOfActor(actor, tok = null) {
   if ( !on() || !actor ) return "standing";
-  const doc = tok?.document ?? tok ?? tokenOf(actor);
+  const doc = (tok ? docOf(tok) : null) ?? tokenOf(actor);
   const ab = abilitiesOf(actor);
   let knockedDown = false;
   try { knockedDown = !!game.modules.get("wodx-chronicle")?.api?.conditions?.hasCondition?.(actor, "knockdown"); } catch (e) { /* no Chronicle */ }
@@ -249,7 +262,7 @@ export function stanceOfActor(actor, tok = null) {
 /** An attack's changes from both stances: {diff, notes, blocked}. */
 export function attackMods(attacker, target, {attackerTok = null, targetTok = null} = {}) {
   if ( !on() || !attacker || !target ) return {diff: 0, notes: [], blocked: ""};
-  const at = attackerTok?.document ?? attackerTok ?? tokenOf(attacker), tt = targetTok?.document ?? targetTok ?? tokenOf(target);
+  const at = (attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker), tt = (targetTok ? docOf(targetTok) : null) ?? tokenOf(target);
   const sa = stanceOfActor(attacker, at), st = stanceOfActor(target, tt);
   let close = true, higher = false;
   try {
@@ -262,7 +275,7 @@ export function attackMods(attacker, target, {attackerTok = null, targetTok = nu
       higher = MV.toFeet((Number(at.elevation) || 0) - (Number(tt.elevation) || 0), unitsOf(at)) >= 3;
     }
   } catch (e) { /* no canvas */ }
-  return MV.attackStance(sa, st, {close, higher, sameStance: sa === st});
+  return MV.attackStance(sa, st, {close, higher, sameStance: sa === st, attackerFly: abilitiesOf(attacker).flyBook, targetFly: abilitiesOf(target).flyBook});
 }
 /** The defender's own stance on a dodge: a difficulty change and its note. */
 export function defenseMods(target) {
@@ -278,7 +291,7 @@ export const spotMod = actor => (on() ? MV.spotStance(stanceOfActor(actor)) : 0)
 
 /** Range and reach with height: flat distance plus the height between two tokens, in scene units. */
 export function heightBetween(a, b) {
-  const ea = Number((a?.document ?? a)?.elevation) || 0, eb = Number((b?.document ?? b)?.elevation) || 0;
+  const ea = Number(docOf(a)?.elevation) || 0, eb = Number(docOf(b)?.elevation) || 0;
   return on() ? eb - ea : 0;
 }
 
@@ -290,5 +303,5 @@ export function setupMovement(deps) {
     scope: "world", config: true, type: Boolean, default: true
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
-  return {abilitiesOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod, rules: MV};
+  return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod, rules: MV};
 }
