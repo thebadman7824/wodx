@@ -227,6 +227,32 @@ export async function run() {
         && off.ok && (!pool.length || pool.includes(off.said)),
         {said, kid: k.menu?.greet, rumour: r?.said, off: off.said});
     });
+    await step("talk grammar journal (NPC 0.44.0): a Storyteller line wins, Keep writes it to the talk sheet", async () => {
+      const gen = await Actor.create({name: "WoDX gate: Talk grammar", type: "Mortal"});
+      actors.push(gen);
+      await scene.createEmbeddedDocuments("Token", [{name: "gram", actorId: gen.id, x: G * 9, y: G * 6}]);
+      const gTok = scene.tokens.find(t => t.actorId === gen.id);
+      const greq = {sceneId: scene.id, npcTokenId: gTok.id, meTokenId: meTok.id};
+      const stockBefore = game.settings.get(MOD, "stockTalk"), genBefore = game.settings.get(MOD, "talkGrammar");
+      const hadJournal = !!game.journal.find(j => j.flags?.[MOD]?.talkGrammar);
+      await game.settings.set(MOD, "stockTalk", true);
+      await game.settings.set(MOD, "talkGrammar", true);
+      const j = await talk().openGrammar();
+      j?.sheet?.close?.();
+      const [pg] = await j.createEmbeddedDocuments("JournalEntryPage", [{name: "WoDX gate lines", type: "text", text: {content: "<p>work [boost: 9] =&gt; \"WoDX gate grammar line.\"</p>", format: 1}}]);
+      const problems = talk().loadGrammar();
+      const w = await talk().serve("ask", {...greq, topic: "work"}, asUser);
+      const msg = game.messages.contents.filter(m => m.flags?.[MOD]?.talk?.gen).at(-1);
+      await talk().keepLine(msg);
+      const kept = game.actors.get(gen.id)?.flags?.[MOD]?.behavior?.talk ?? "";
+      await pg.delete();
+      if ( !hadJournal ) await j.delete(); else talk().loadGrammar();
+      await game.settings.set(MOD, "talkGrammar", genBefore);
+      await game.settings.set(MOD, "stockTalk", stockBefore);
+      ok("talk grammar journal (NPC 0.44.0): a Storyteller line wins, Keep writes it to the talk sheet",
+        !problems.length && w.said === "\"WoDX gate grammar line.\"" && !!msg?.flags?.[MOD]?.talk?.gen && /\[work\] "WoDX gate grammar line\."/.test(kept),
+        {problems, said: w.said, kept});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);

@@ -285,9 +285,67 @@ export function mergeGrammars(...gs) {
         if ( i >= 0 ) have[i] = r; else have.push(r);
       }
     }
-    Object.assign(symbols, g.symbols ?? {});
+    for ( const [name, e] of Object.entries(g.symbols ?? {}) ) {
+      if ( !symbols[name] ) { symbols[name] = e; continue; }
+      // a later grammar's words for a symbol join the earlier ones; a more specific entry wins where it fits
+      const asRules = x => (Array.isArray(x) && x.every(y => typeof y === "string") ? [{when: {}, say: x}] : (Array.isArray(x) ? x : [x]));
+      symbols[name] = [...asRules(symbols[name]), ...asRules(e)];
+    }
   }
   return {rules, symbols};
+}
+
+/* ------------------------------------------------------------------ */
+/*  The Storyteller's own grammar, written in a journal (NPC 0.44.0, B1646)                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Read the Storyteller's grammar from plain text, one entry a line:
+ *   greet [clan: ventrue, warmth: cold] => "You are not expected."
+ *   none [mood: angry | wary] => "Not now."
+ *   work [year: 1300-1526, regard: !hate, boost: 1] => "The guild pays in #coin#."
+ *   ask [trait Dominate: 2] => "Of course. {topic} is just past the bridge."
+ *   greet [id: house.greet.cold] => "Out."            (an id replaces the house rule with that id)
+ *   #coin# [year: 1300-1526] => groschen | heller        (words for a symbol)
+ *   // a note, never read
+ * Returns {grammar: {rules, symbols}, problems: ["line 3: ..."]}.
+ */
+export function parseGrammarText(text = "") {
+  const rules = {}, symbols = {}, problems = [];
+  const lines = String(text).split(/\r?\n/);
+  lines.forEach((raw, i) => {
+    const line = raw.trim();
+    if ( !line || line.startsWith("//") ) return;
+    const m = line.match(/^(#[a-zA-Z]\w*#|[a-z][\w:]*)\s*(?:\[([^\]]*)\])?\s*=>\s*(.+)$/);
+    if ( !m ) { problems.push(`line ${i + 1}: write it as  kind [tests] => "what they say"`); return; }
+    const [, head, tests = "", rest] = m;
+    const when = {}, rule = {};
+    for ( const part of tests.split(",").map(x => x.trim()).filter(Boolean) ) {
+      const t = part.match(/^(trait\s+)?([^:]+):\s*(.+)$/i);
+      if ( !t ) { problems.push(`line ${i + 1}: "${part}" needs a colon, as in clan: ventrue`); continue; }
+      const key = t[2].trim().toLowerCase(), val = t[3].trim();
+      if ( t[1] ) { const n = Number(val); if ( !Number.isFinite(n) ) problems.push(`line ${i + 1}: a trait needs a number`); else (when.traits ??= {})[t[2].trim()] = n; continue; }
+      if ( key === "id" ) { rule.id = val; continue; }
+      if ( key === "boost" ) { const n = Number(val); if ( Number.isFinite(n) ) rule.boost = n; else problems.push(`line ${i + 1}: boost needs a number`); continue; }
+      if ( key === "year" ) {
+        const y = val.match(/^(\d{3,4})?\s*-\s*(\d{3,4})?$/) ?? val.match(/^(\d{3,4})$/);
+        if ( !y ) { problems.push(`line ${i + 1}: year is written 1300-1526, 1300- or -1526`); continue; }
+        when.year = y.length === 2 ? [Number(y[1]), Number(y[1])] : [y[1] ? Number(y[1]) : null, y[2] ? Number(y[2]) : null];
+        continue;
+      }
+      const vals = val.split("|").map(x => x.trim().toLowerCase()).filter(Boolean);
+      when[key] = vals.length === 1 ? vals[0] : vals;
+    }
+    if ( head.startsWith("#") ) {
+      const words = rest.split("|").map(x => x.trim()).filter(Boolean);
+      (symbols[head.slice(1, -1)] ??= []).push({when, say: words});
+      return;
+    }
+    const say = rest.trim();
+    if ( !/^".+"$/.test(say) && !/^[^"]+$/.test(say) ) { problems.push(`line ${i + 1}: put the whole line in one pair of quotes, or none`); return; }
+    (rules[head] ??= []).push({id: rule.id ?? `st.${head}.${i + 1}`, when, say: [say], ...(rule.boost ? {boost: rule.boost} : {})});
+  });
+  return {grammar: {rules, symbols}, problems};
 }
 
 /* ------------------------------------------------------------------ */

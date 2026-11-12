@@ -75,7 +75,7 @@ Next free block: B2330
 | B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
 | B1600-B1606 | Before the First Night | Creation |
 | B1610-B1614 | The guided builder and the prelude runner | Creation |
-| B1640-B1659 | The talk generator (grammar NPC talk with no AI model), who is speaking, mood | NPC |
+| B1640-B1659 | The talk generator (grammar NPC talk with no AI model), who is speaking, mood, the Storyteller's grammar | NPC |
 | B1700-B1702 | The Legends book | Chronicle |
 | B1710-B1714 | Progress clocks | Storyteller |
 | B1720-B1724 | Standing with the spirit courts | Otherworlds |
@@ -2372,6 +2372,16 @@ Reverse: set the mood in the behaviour window, or edit moodOf in scripts/talk-gr
 When a character asks about a person, place or faction they have heard of and nobody wrote an answer, the generator answers by regard and mood, naming the topic ("The old mill? I know the name. Not much more."). Before, it was a plain brush-off.
 
 Reverse: setting "Talk generator" off.
+
+## B1646. The Storyteller's own grammar (2026-11-12)
+A journal, "WoDX talk grammar", holds the Storyteller's grammar, one entry a line (greet [clan: ventrue, warmth: cold] => "You are not expected."; #coin# [year: 1300-1526] => groschen | heller). It adds to the house grammar; an entry with the id of a house rule replaces it; boost lets a line win. It is read again whenever a page changes, and lines it cannot read are listed to the Storyteller by line number. The talk API opens it (api.talk.openGrammar), making it with a help page the first time.
+
+Reverse: delete the journal.
+
+## B1647. Reroll and Keep (2026-11-12)
+A talk card with a made line shows the Storyteller, and only the Storyteller, which rule made it, with Reroll (another line from the same facts, replacing the one on the card) and Keep (the line goes onto the NPC's own talk sheet under the topic, where it becomes the Storyteller's line and always comes first).
+
+Reverse: none needed; a kept line can be deleted from the talk sheet.
 
 ## B2320. The features card on the sheet (2026-11-12, Improvement Desk sg1)
 Under the in-play strip, a folded card lists every line feature the character has (clan or bloodline, tribe, auspice, breed, kith, seeming, court, Tradition, Guild, legion, House, creed and the rest), each with what it does, when it fires and when it last fired in play. The owner and the Storyteller see it; players only ever open their own sheets. "When it fires" is one line for each engine (Chronicle FEATURE_WHEN) plus the rolls it changes. "Last fired" is the in-game date of the feature's latest card (flags.wodx-chronicle.sigFired), so a feature with no card (a plain roll bonus) reads "not yet in play".

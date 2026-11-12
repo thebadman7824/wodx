@@ -181,3 +181,24 @@ test("asking about a known name: the topic goes into the line, capitalised where
   for ( let seed = 0; seed < 40; seed++ ) { const x = G.generate("ask", {era: "modern", regard: "dislike", topic: "the old mill"}, {grammar, seed}); assert.ok(/^"[A-Z]/.test(x.say), x.say); }
   assert.equal(G.generate("ask", {era: "modern", regard: "neutral"}, {grammar}), null, "no topic, no answer");
 });
+
+test("the Storyteller's grammar journal: entries, tests, symbols, ids that replace, and problems named by line", () => {
+  const {grammar: st, problems} = G.parseGrammarText([
+    "// a note",
+    "greet [clan: ventrue, warmth: cold, boost: 5] => \"You are not expected.\"",
+    "none [mood: angry | wary] => \"Not now.\"",
+    "work [year: 1300-1526, regard: !hate, boost: 5] => \"The guild pays in #coin#.\"",
+    "ask [trait Dominate: 2, boost: 5] => \"Of course. {topic} is just past the bridge.\"",
+    "greet [id: house.greet.cold] => \"Out.\"",
+    "#coin# [year: 1300-1526, boost: 9] => pennies of the guild",
+    "this is not a line",
+    "work [year: soon] => \"x\""
+  ].join("\n"));
+  assert.deepEqual(problems.map(p => p.split(":")[0]), ["line 8", "line 9"]);
+  const g = G.mergeGrammars(grammar, st);
+  assert.equal(G.generate("greet", {era: "medieval", regard: "hate", clan: ["ventrue"]}, {grammar: g}).say, "\"You are not expected.\"");
+  assert.match(G.generate("work", {era: "medieval", year: 1400, regard: "neutral"}, {grammar: g}).say, /^"The guild pays in (groschen|heller|pennies of the guild)\."$/);
+  assert.equal(G.generate("ask", {era: "modern", regard: "neutral", topic: "the mill", traits: {Dominate: 3}}, {grammar: g}).say, "\"Of course. The mill is just past the bridge.\"".replace("The mill", "the mill"));
+  assert.ok(g.rules.greet.find(r => r.id === "house.greet.cold").say.includes("\"Out.\""));
+  assert.deepEqual(G.lint(g).filter(x => x.includes("unknown")), [], "replacing a rule may leave a symbol unused, never one unknown");
+});
