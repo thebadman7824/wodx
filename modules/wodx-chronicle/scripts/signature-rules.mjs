@@ -8,9 +8,9 @@
  *   cause {key, label, custom, approved, rant 0..3}
  *   mark {key, at, until}
  */
-import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX} from "../data/signatures.mjs";
+import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES} from "../data/signatures.mjs";
 
-export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX};
+export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -167,3 +167,53 @@ export const HEAL_EARLY_BLOOD = 5;
 
 /** Do any showing marks break the Masquerade to a mortal eye? */
 export const marksShow = (list = [], now = 0) => activeMarks(list, now).some(m => markByKey(m.key).sign || markByKey(m.key).key === "claws");
+
+/* ---------------- Malkavian: glimpses and the derangement's ear ---------------- */
+
+/** A small stable hash, so the same question on the same night gets the same line. */
+export function seedOf(...parts) {
+  let h = 2166136261;
+  for ( const ch of parts.join("|") ) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return h;
+}
+const fill = (t, vals) => t.replace(/\{(\w+)\}/g, (m, k) => vals[k] ?? "");
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+
+/** The derangements a sheet's derangement text names (V20 sheet field system.derangement). */
+export function derangementsOf(text) {
+  const t = String(text ?? "").toLowerCase();
+  return DERANGEMENTS.filter(d => d.match.some(m => t.includes(m))).map(d => d.key);
+}
+
+/**
+ * What a deranged character hears beyond an NPC's true reply: one line, picked by seed from every derangement they
+ * hold, or null. {name, topic}: who spoke and what about.
+ */
+export function hearLine(keys = [], {name = "they", topic = "it", seed = 0} = {}) {
+  const pool = keys.flatMap(k => DERANGEMENTS.find(d => d.key === k)?.lines ?? []);
+  if ( !pool.length ) return null;
+  const line = pool[seed % pool.length];
+  return cap(fill(line, {name, topic: String(topic).toLowerCase()}));
+}
+
+/** Roughly how far off an event is, in words. */
+export function whenWords(days) {
+  const d = n(days);
+  if ( d <= 7 ) return "within the week";
+  if ( d <= 31 ) return "before the moon is old";
+  if ( d <= 120 ) return "before the season turns";
+  if ( d <= 400 ) return "within the year";
+  if ( d <= 3650 ) return "in a handful of years";
+  return "long after tonight";
+}
+
+/** A riddle for an event ({name, summary}) days away. The event's own words are never shown. */
+export function glimpseFor(ev, days, seed = 0) {
+  if ( !ev ) return null;
+  const hay = `${ev.name ?? ""} ${ev.summary ?? ""}`;
+  const theme = GLIMPSE_THEMES.find(t => t.match.test(hay)) ?? GLIMPSE_THEMES.at(-1);
+  return {theme: theme.key, text: cap(fill(theme.lines[seed % theme.lines.length], {when: whenWords(days)}))};
+}
+
+/** One glimpse a night: true if the last one was taken on an earlier night (night = whole days of world time, at noon). */
+export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43200) / 86400) > Math.floor((n(last) - 43200) / 86400);

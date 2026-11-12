@@ -1,6 +1,8 @@
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
+import {getEngine} from "./calendar.mjs";
+import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 
 /**
@@ -229,6 +231,50 @@ function onTrade(p) {
   if ( d ) work(npc, a, d, `a gift: ${p.give}`);
 }
 
+/* ---------------- Malkavian ---------------- */
+
+const daysBetween = (a, b) => (b.year - a.year) * 365 + ((b.month ?? 1) - (a.month ?? 1)) * 30 + ((b.day ?? 1) - (a.day ?? 1));
+/** The next live dated event after today, and how many days off (roughly). */
+function nextEvent() {
+  const d = getEngine().timeToDate(now()), today = {year: d.year, month: d.month, day: d.day};
+  const k = today.year * 10000 + today.month * 100 + today.day;
+  const ev = events.list().find(e => e.live && e.key > k && !events.has(e.id));
+  return ev ? {ev, days: Math.max(1, daysBetween(today, ev))} : null;
+}
+
+/** A Malkavian asks for a glimpse: one a night, whispered to the player and the Storyteller. */
+export async function glimpse(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "glimpse") ) return null;
+  const sig = sigOf(a);
+  if ( !S.mayGlimpse(sig.glimpseAt, now()) ) { ui.notifications?.info?.("One glimpse a night."); return null; }
+  const nx = nextEvent();
+  const g = nx ? S.glimpseFor(nx.ev, nx.days, S.seedOf(a.id, nx.ev.id, Math.floor(now() / 86400))) : {theme: "none", text: "The Cobweb is quiet tonight. Nothing stirs that you can see."};
+  sig.glimpseAt = now();
+  if ( nx ) sig.glimpses = [...(sig.glimpses ?? []).filter(x => x.event !== nx.ev.id), {event: nx.ev.id, at: now(), text: g.text}].slice(-10);
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name}: a glimpse`, `<p><i>${esc(g.text)}</i></p>${game.user.isGM && nx ? `<p class="vta-note">Storyteller: ${esc(nx.ev.name)}.</p>` : ""}`, {whisper: ownerIds(a)});
+  if ( nx && !game.user.isGM ) await card(`${a.name}: a glimpse (Storyteller's note)`, `<p>The riddle points at ${esc(nx.ev.name)}.</p>`);
+  return g;
+}
+
+/** A dated event fired: the Storyteller hears which Malkavians saw it coming. */
+async function onEventFired(ev) {
+  if ( !on() || !isActiveGM() || !ev?.id ) return;
+  for ( const a of game.actors ) {
+    const hit = (a.flags?.[MODULE_ID]?.[FLAG]?.glimpses ?? []).find(x => x.event === ev.id);
+    if ( hit ) await card(`${a.name} saw it coming`, `<p>${esc(ev.name)}: the glimpse was <i>${esc(hit.text)}</i>. If ${esc(a.name)} acted on it, give back a Willpower point.</p>`);
+  }
+}
+
+/** What a deranged Malkavian hears beyond an NPC's reply, for WoDX NPC's talk cards; null when nothing. */
+export function hearAs(actorOrId, {topic = "", name = "", npcId = ""} = {}) {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "glimpse") ) return null;
+  const keys = S.derangementsOf(a.system?.derangement);
+  return S.hearLine(keys, {name: name || "they", topic: topic || "it", seed: S.seedOf(a.id, npcId, topic, Math.floor(now() / 86400))});
+}
+
 /* ---------------- the window ---------------- */
 
 /** The roll effects a character's signature tracks give now, in the trait effect shape. */
@@ -255,7 +301,13 @@ export async function open(actorOrId) {
     const victims = game.actors.filter(x => x.flags?.[MODULE_ID]?.[CFLAG]?.[a.id]);
     if ( victims.length ) body += `<h4>Corruption ledger</h4><ul>${victims.map(v => { const r = v.flags[MODULE_ID][CFLAG][a.id]; return `<li>${esc(v.name)}: ${r.step} (${esc(r.vice || "no vice set")})</li>`; }).join("")}</ul>`;
   }
-  return foundry.applications.api.DialogV2.prompt({window: {title: `${a.name}: clan feature`}, content: `<div class="wct-sig-window">${body}</div>`, ok: {label: "Close"}});
+  const buttons = [{action: "close", label: "Close", default: true}];
+  if ( row?.feature === "glimpse" && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
+  if ( row?.feature === "cause" && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
+  const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: clan feature`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
+  if ( pick === "glimpse" ) return glimpse(a);
+  if ( pick === "rant" ) return spendRant(a);
+  return null;
 }
 
 export function registerSignatureHooks() {
@@ -269,6 +321,7 @@ export function registerSignatureHooks() {
   Hooks.on("wodxTrade", onTrade);
   Hooks.on("wodxDamageApplied", actor => onDamage(actor));
   Hooks.on("updateActor", onActorUpdate);
+  Hooks.on("wodxEventFired", ev => onEventFired(ev));
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick());
   Hooks.on("renderChatMessageHTML", (message, el) => {
@@ -291,4 +344,4 @@ export function registerSignatureHooks() {
   });
 }
 
-export const signaturesApi = {rowOf, open, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work, effects, tick, rules: S};
+export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work, effects, tick, rules: S};
