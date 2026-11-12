@@ -1,5 +1,5 @@
 /**
- * WoDX Otherworlds 0.20.0 (B2535 to B2539): the rough map of the otherworlds. Pure rules, no Foundry.
+ * WoDX Otherworlds 0.20.0 (B2545 to B2549): the rough map of the otherworlds. Pure rules, no Foundry.
  *
  * Two kinds of place lie beyond the living world. Some lie over it, square for square: the Penumbra, the Shadowlands
  * and the Near Dreaming are the Earth seen from the other side, so they are drawn as the world map in another dress

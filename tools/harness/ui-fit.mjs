@@ -487,7 +487,7 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
-// Storyteller 0.54.0: the world map (the Earth, a mirror, the chart of the worlds) and the closer look at one square
+// Storyteller 0.55.0: the world map (the Earth, a mirror, the chart of the worlds) and the closer look at one square
 {
   const WMap = game.modules.get("wodx-storyteller").api.worldMap;
   const wait = api.DialogV2.wait;

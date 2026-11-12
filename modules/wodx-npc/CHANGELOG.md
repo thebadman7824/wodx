@@ -2,7 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.48.1 (the settlement review's hidden folk list is marked as a fixed list, so the fit check passes it)
+- 0.48.2 (the settlement review's hidden folk list is marked as a fixed list, so the fit check passes it)
 - 0.48.0 (settlements: "Settlements" in the Storyteller's hand brings in the record the town generator writes for a whole place in a chosen year, shows it for review (households to strike, hidden folk by game line to keep or draw again, ties between households to keep) and enters it as a journal no player can read; seeding the residents of its maps then leaves struck households empty, marks the hidden folk for the Storyteller only, gives those who go out to work their workplace on the map, and writes the ties between household heads as relationships; a block of flats seeds every flat's household, a few at a time if wished. B2520 to B2529)
 - 0.47.2 (residents: before 1946 the kin of a Jewish household are asked of the People generator as Jewish, so a Jewish weaver is no longer paired with a Christian partner when the generator draws few Jewish people; needs WoDX Creation 0.15.1. B2505)
 - 0.47.1 (residents: a role that asks for a faith or sex gets one: a priest, monk or friar is a Christian man, a nun a Christian woman, a rabbi Jewish, a Protestant parson a man before 1950; a household takes its name from a man of the master's own origin, and its kin keep the household's faith until 1946; the testbed named a chapel's priest "Bella bat David". B2505)

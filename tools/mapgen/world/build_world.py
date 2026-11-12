@@ -25,7 +25,7 @@ CODE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 
 # The WoDX world region each modern country's ground falls in. The ids are WORLD_REGIONS in WoDX Chronicle's
-# world-rules.mjs (Chronicle 0.48.1 has them all). That list gives each region one city and no borders: this grid is
+# world-rules.mjs (Chronicle 0.48.0 has them all). That list gives each region one city and no borders: this grid is
 # the one place the borders are kept. Modern countries are only a handy way to cut the land up.
 BY_COUNTRY = {
     "moravia": "CZE SVK", "german-lands": "DEU AUT CHE", "british-isles": "GBR IRL", "france": "FRA", "iberia": "ESP PRT", "italy": "ITA",

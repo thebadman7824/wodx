@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.54.0 (B2530 to B2539): the rough map of the whole Earth. Pure rules, no Foundry.
+ * WoDX Storyteller 0.55.0 (B2540 to B2549): the rough map of the whole Earth. Pure rules, no Foundry.
  *
  * The far view is one square for each degree (data/world.mjs, made from public-domain shapes): its ground, its world
  * region, the great rivers and the named ranges, deserts and seas. From it come

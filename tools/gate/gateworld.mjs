@@ -1,9 +1,9 @@
 /**
- * The world map (WoDX Storyteller 0.54.0, WoDX Otherworlds 0.20.0, B2530 to B2539), in Foundry, in rothenstein-wodx
+ * The world map (WoDX Storyteller 0.55.0, WoDX Otherworlds 0.20.0, B2540 to B2549), in Foundry, in rothenstein-wodx
  * only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateworld.mjs?${Date.now()}`)).run()
  * It reads and draws only: nothing is made, changed or deleted, and the clock is not touched.
- *   1. the modules: Storyteller 0.54.0 or later with api.worldMap, Otherworlds 0.20.0 or later with api.worldsChart
+ *   1. the modules: Storyteller 0.55.0 or later with api.worldMap, Otherworlds 0.20.0 or later with api.worldsChart
  *   2. the grid: Brno in Moravia, Cairo desert on the Nile in Egypt, Kyoto in Japan, Lima in the Andes; every region
  *      has a middle that lies in it
  *   3. a journey: London to New York takes weeks under sail in 1700, under three weeks by steam in 1880, and under
@@ -33,7 +33,7 @@ export async function run() {
   const S = game.modules.get("wodx-storyteller"), O = game.modules.get("wodx-otherworlds"), WMap = S?.api?.worldMap, WM = WMap?.rules, chart = O?.api?.worldsChart;
   const findWin = () => [...document.querySelectorAll("dialog.application, .application.dialog, .window-app.dialog")].find(el => el.querySelector("img.wst-world-map") && el.querySelector('select[name="layer"]'));
   try {
-    ok("1. modules", S?.active && O?.active && !foundry.utils.isNewerVersion("0.54.0", S.version) && !foundry.utils.isNewerVersion("0.20.0", O.version)
+    ok("1. modules", S?.active && O?.active && !foundry.utils.isNewerVersion("0.55.0", S.version) && !foundry.utils.isNewerVersion("0.20.0", O.version)
       && typeof WMap?.open === "function" && typeof WM?.journey === "function" && typeof chart?.svg === "function", {storyteller: S?.version, otherworlds: O?.version});
 
     const d = (lon, lat) => WM.describe({lon, lat});

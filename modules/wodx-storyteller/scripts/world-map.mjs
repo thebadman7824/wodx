@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.54.0 (B2530 to B2539): the world map window. "The world map" in the Storyteller's hand shows
+ * WoDX Storyteller 0.55.0 (B2540 to B2549): the world map window. "The world map" in the Storyteller's hand shows
  * the whole Earth by night, a journey between two spots in the chronicle's year (or any year typed), and a closer
  * view of one square. With WoDX Otherworlds on it also shows the Penumbra, the Shadowlands and the Near Dreaming as
  * the same map in another dress, and the chart of the worlds. It makes and changes nothing: it is a map to read.

@@ -1,5 +1,5 @@
 /**
- * The rough map of the whole Earth and the chart of the otherworlds (Storyteller 0.54.0, Otherworlds 0.20.0).
+ * The rough map of the whole Earth and the chart of the otherworlds (Storyteller 0.55.0, Otherworlds 0.20.0).
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -131,9 +131,7 @@ test("otherworlds chart: how far apart two places are", () => {
 test("world map: its regions are WoDX Chronicle's world regions, when that list is in the repo", {skip: !existsSync(new URL("../../modules/wodx-chronicle/scripts/world-rules.mjs", import.meta.url)) && "the world regions list is not merged yet"}, async () => {
   const {WORLD_REGIONS} = await import("../../modules/wodx-chronicle/scripts/world-rules.mjs");
   const unknown = W.REGION_IDS.filter(id => !WORLD_REGIONS[id]);
-  // the list grows in steps: ids it has not taken yet are named here until it does
-  const waiting = ["central-africa", "siberia", "arctic", "antarctica", "tibet-himalaya", "southern-cone", "canada"];
-  assert.deepEqual(unknown.filter(id => !waiting.includes(id)), []);
+  assert.deepEqual(unknown, []);
   assert.deepEqual(Object.keys(WORLD_REGIONS).filter(id => !W.REGION_IDS.includes(id)), [], "every world region has ground on the map");
 });
 
