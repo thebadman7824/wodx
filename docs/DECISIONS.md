@@ -1642,6 +1642,25 @@ Reverse: remove the renderChatMessageHTML and renderCombatTracker hooks in faces
 When WoDX Actions reports that a creature of another kind saw someone for what they are (the "Seen by another kind" card), the active Storyteller's WoDX NPC keeps it on that witness (flags.wodx-npc.seenAs). From then on that NPC can tell what the other is (B1380). Mortal witnesses are already kept in the Masquerade records. Player characters are not marked. At most 200 sightings are kept per NPC. Missed Connections Desk item x9, first half; the fed-on vessel waits on Actions adding the vessel to the hunt hook.
 
 Reverse: remove the wodxSecretSeen hook in wodx-npc rivalry.mjs.
+## B1408. The stranger line (2026-11-12)
+With Faces on, an unmet NPC's nameplate reads what a character can see before they meet: dress by station ("a well dressed stranger"), a side worn openly ("in livery"), blood or wounds, a weapon drawn, what their routine has them doing, and their manner toward the viewer's character as words ("wary of you"). Animals read as their kind. The Storyteller's own stranger text wins. House rule.
+
+Reverse: autoStranger and the auto argument of nameFor in faces-rules.mjs; autoFor in faces.mjs.
+
+## B1409. Look them over (2026-11-12)
+A roll in With this person: Perception + Empathy (or Etiquette, or Awareness), difficulty 6. One success gives their mood and condition, two their station and trade, three who they belong with, four what they hide (a concealed weapon, or a disguise that doesn't fit). Only a mortal's trade shows. A botch misreads them. The result goes to the player and the Storyteller only. House rule.
+
+Reverse: LOOKOVER and lookOverFacts in social-rules.js; lookOver in social.js.
+
+## B1410. Ask around about them (2026-11-12)
+Wits + Streetwise (or Charisma or Manipulation + Streetwise), difficulty 6, with a die for each dot of Contacts. One success: what people say of them; two: their name. Learning a name does not introduce the face: the Storyteller still does that from the token HUD. House rule.
+
+Reverse: askFacts in social-rules.js.
+
+## B1411. Players dress as someone else (2026-11-12)
+Worn clothes have a Dress as someone else use: the player sets the station and sides it passes for, and puts it on. The Storyteller can still set one in the Examine notes.
+
+Reverse: the dressas ability in use-rules.mjs; dressAs in use.mjs.
 
 ## B1384. A fed-on NPC remembers (2026-11-12)
 When a Kindred feeds on a named NPC through WoDX Actions (drinking at least one point), the NPC keeps it (flags.wodx-npc.fedOn). A mortal vessel keeps a swoon and a lost hour, not who or what: the Kiss leaves little more (V20 core, the Kiss). One who fought it, a Kindred or ghoul vessel, or one already marked as knowing the Kindred saw what fed, and from then on can tell that one (B1380). A willing vessel learns nothing new. House reading. Missed Connections Desk x9, second half.
@@ -1652,4 +1671,3 @@ Reverse: remove the wodxFed hook in wodx-npc rivalry.mjs (Actions may keep sendi
 WoDX NPC's api.nameFor(actor, viewer) answers what a viewer calls an NPC: the name for the Storyteller and when "Faces you have met" is off, else the stranger's words until one of the viewer's characters has met them. Chat and the combat tracker are masked per viewer at render (B1382), so cards keep the real name for the Storyteller; windows a player opens (With this person, Trade) ask nameFor. Missed Connections Desk x1.
 
 Reverse: viewName in wodx-actions social.js back to nameFor.
-

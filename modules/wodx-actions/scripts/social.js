@@ -68,6 +68,7 @@ export function build(ctx) {
             ${npcApi()?.openTalk ? btn("talk", "fa-comment", "Talk", "Ask about the topics they will talk about") : ""}
             ${SR.ACTS.map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
             ${Object.values(SR.LIFT).map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
+            ${Object.values(SR.LOOKOVER).map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
             ${money()?.priceSync ? btn("trade", "fa-scale-balanced", "Trade", "Buy, sell or barter, at this era's and this market's prices, with a haggle roll (house rule)") : ""}
             ${btn("charm", "fa-heart", "Charm or seduce", "The three-stage Seduction (V20 p. 266)")}
             ${btn("power", "fa-hand-sparkles", "Use a power on them", "Opens your menu with them still targeted")}
@@ -100,6 +101,7 @@ export function build(ctx) {
             }
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
+            if (act === "lookover" || act === "askabout") return lookOver(actor, npcTok, act);
             if (act === "trade") return tradeX().trade(actor, npcTok, "buy");
             return social(actor, npcTok, act);
         }, { render, width: 520 });
@@ -189,6 +191,58 @@ export function build(ctx) {
         if (move) await npcApi()?.attitude?.propose?.(npc, actor, { delta: move, why: why || `${actor.name}: ${act.key}, ${res.result}` });
         Hooks.callAll("wodxSocial", { actor, npc, act: act.key, result: res.result });
         return res;
+    }
+
+    /* ---------------- Look them over, ask around (3.46.0) ---------------- */
+
+    /** What the rules read about the NPC for a closer look. Nothing here is shown until the successes open it. */
+    function lookInfo(npc, actor) {
+        const base = (npc?.isToken ? npc.token?.baseActor : null) ?? game.actors?.get?.(npc?.id) ?? npc;
+        const api = npcApi();
+        const at = attitudeOf(npc, actor);
+        const look = game.modules.get("wodx-library")?.api?.look?.of?.(npc) ?? null;
+        const words = { bloody: "bloodied", wounded: "hurt", weapon: "armed", filthy: "filthy", soaked: "soaked through", torn: "in torn clothes" };
+        let trade = "", belongs = "";
+        // Only a mortal's trade shows to the eye; a supernatural template's label would give away what they are
+        try { const pf = api?.profileFor?.(base, { phases: false }); trade = !pf?.line || pf.line === "mortal" ? String(pf?.label ?? "").replace(/^mortal\s+/i, "") : ""; } catch (e) { trade = ""; }
+        try {
+            const saved = base?.getFlag?.("wodx-npc", "behavior") ?? {};
+            const st = api?.factions?.state?.();
+            const f = (st?.factions ?? []).find(x => (x.members ?? []).includes(base.id) || x.leader === base.id);
+            belongs = saved.household || f?.name || "";
+        } catch (e) { belongs = ""; }
+        const act = base?.flags?.["wodx-npc"]?.where?.activity ?? null;
+        const doing = { work: "at work", patrol: "keeping watch", pray: "at prayer", drink: "drinking", errand: "on an errand", attend: "attending someone", rest: "at rest", hide: "keeping out of sight" }[act] ?? "";
+        const hidden = [...(npc.items ?? [])].filter(i => (i.type === "Melee Weapon" || i.type === "Ranged Weapon") && !i.system?.isequipped && !i.system?.isnatural).map(i => i.name);
+        let station = null;
+        try { station = game.modules.get("wodx-library")?.api?.look?.station?.(npc, base?.getFlag?.("wodx-npc", "behavior")?.template ?? null) ?? null; } catch (e) { station = null; }
+        return { mood: at?.word ?? "", condition: (look?.condition ?? []).map(c => words[c]).filter(Boolean), station, trade, doing, belongs, hidden, disguised: !!look?.disguise,
+            said: belongs ? `${trade ? `${trade.toLowerCase()}, ` : ""}one of ${belongs}` : trade.toLowerCase(), name: base?.name ?? "" };
+    }
+    async function lookOver(actor, npcTok, key) {
+        const def = key === "askabout" ? SR.LOOKOVER.ask : SR.LOOKOVER.look;
+        const npc = npcTok?.actor;
+        if (!npc) return null;
+        const pick = pickPool(actor, def.alts);
+        if (!pick) { ui.notifications.warn("No pool fits."); return null; }
+        const pool = readPool(actor, pick.attr, pick.abilityId);
+        const contacts = key === "askabout" ? Math.max(0, Number([...(actor.items ?? [])].find(i => i.type === "Feature" && /^contacts\b/i.test(i.name ?? ""))?.system?.value ?? actor.system?.backgrounds?.contacts?.value) || 0) : 0;
+        const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
+            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0,
+            baseDifficulty: def.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0 });
+        if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
+        const me = await rollPool(built.dice, built.difficulty);
+        const info = lookInfo(npc, actor);
+        const facts = me.botch ? [key === "askabout" ? "What you hear is wrong, and you believe it." : "You misread them badly."] : key === "askabout" ? SR.askFacts(me.successes, info) : SR.lookOverFacts(me.successes, info);
+        const label = [pool.attributeLabel, pool.abilityLabel || pick.abilityName].filter(Boolean).join(" + ");
+        const body = rollBlock(label, me, built.parts.concat(contacts ? [`Contacts +${contacts}`] : []))
+            + (facts.length ? `<ul>${facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : `<p class="vta-note">You learn nothing more.</p>`);
+        // To the player and the Storyteller only: what was learned about someone else is the character's own
+        const owners = game.users.filter(u => actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+        await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), whisper: [...new Set([...owners, ...gmIds()])], rolls: me.roll ? [me.roll] : [],
+            content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(actor.name)}: ${esc(def.label.toLowerCase())}</div><div class="vta-body">${body}</div></div>` });
+        Hooks.callAll("wodxLookOver", { actor, npc, kind: key, successes: me.successes, botch: !!me.botch });
+        return { successes: me.successes, facts };
     }
 
     /* ---------------- Lift and plant (3.21.0) ---------------- */
