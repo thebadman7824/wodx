@@ -29,3 +29,10 @@ Needs WoDX Chronicle 0.1.7 or later. Werewolf, Mage and the other lines get thei
 - **The story hook.** The player names one flaw or tie for the story to come back to; the Storyteller agrees, and is reminded after four sessions if it has not come up.
 - **Sign-off** sends the forecast to chat, and then one card per thing the world can be given: an enemy from the past made as a Hostile NPC, the Ledger entries, the Backgrounds made real, a dated hook, a starting standing with each faction. Each card has Make it and Skip, and Undo once made.
 - World setting "Before the First Night": automatic (on everywhere except the Live world), on, or off.
+
+## 0.13.0: building, the prelude and the troupe
+
+- **Build** (the Build step's button). The book's creation points spent on the sheet with a live count: Attributes, Abilities and Virtues dot by dot; Backgrounds, the line's powers, Merits and Flaws counted from the sheet, each Merit, Flaw and Background with what it will bring later. The count is the creation check's, so the primary, secondary and tertiary groups fall where they cost least.
+- **Run the prelude** (Storyteller). The lifepath's scenes, then the line's prelude (before, the turn, after), one scene at a time. A roll with stakes on any beat: a failure costs the stake, a Flaw earned in play at 0 points (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie, and an enemy is made as a Hostile NPC. Up to 3 freebie points of gains (a dot of an Ability, a Background or Willpower). Every change is in the log with Undo. A character joining a chronicle already under way starts with the short prelude (the turn and after).
+- **Write my prelude** (player). A journal page of the prelude's questions, the player's own, which the Storyteller reads; the Storyteller's prelude journal links it.
+- **Troupe ties.** Each player gets one question about the next character in a ring; the answers go on the Group actor and tick the step. How they met gathers them into a journal for a shared scene.

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.1 (the prelude journal shows the player's written prelude and what the prelude runner logged)
 - 0.37.0 (the setup wizard opens Before the First Night when it is done; the night's draw follows each character's trouble dial; ending a session calls wodxSessionEnded; ledger.remove in the API)
 - 0.36.0 (prices find made things by name with their quality tag; made things record their maker)
 - 0.34.1 (the prelude journal shows the character's lifepath)

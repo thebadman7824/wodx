@@ -672,3 +672,5 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Trouble forecast sources and who sees what (B1603) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
 | 2026-11-12 | Trouble dial and story hook numbers (B1604) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
 | 2026-11-12 | Starting standing (B1606) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |
+| 2026-11-12 | Prelude runner rolls and stakes (B1611, B1612) | Difficulty 6 by default, ones cancel; failed stakes add 0-point Flaws (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie; gains capped at 3 freebie points | first-night-prelude-rules.mjs |
+| 2026-11-12 | Troupe tie questions (B1613) | Six questions, a ring by name, answers on the Group actor | TIE_QUESTIONS |

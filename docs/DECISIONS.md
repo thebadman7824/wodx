@@ -1726,3 +1726,28 @@ Reverse: first-night-seed.mjs.
 A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
 
 Reverse: suggestStanding in first-night-rules.mjs.
+
+## B1610. The guided builder (2026-11-12)
+Creation 0.13.0's Build window sets Attributes (1 to 5), Abilities (0 to 5) and the Virtues in use (1 to 5) on the sheet and shows the creation check's count live, for every line with creation totals. Backgrounds, powers, Merits and Flaws are added on the sheet and counted. Chronicle Start Desk b1.
+
+Reverse: first-night-build.mjs, first-night-build-rules.mjs.
+
+## B1611. The prelude runner (2026-11-12)
+Scenes: the lifepath's life-before scenes, then the line's Before, The turn and After from WoDX Storyteller's templates; a short prelude keeps the turn and after. A roll with stakes is the Storyteller's pool against a difficulty (6 by default), ones cancel (V20); on no successes the stake is paid. House rule.
+
+Reverse: buildScenes, STAKES in first-night-prelude-rules.mjs.
+
+## B1612. What a prelude may change (2026-11-12)
+Flaws earned in play are added at 0 points, so they give no freebies and do not count against the cap: Enemy (with a Hostile NPC), Dark Secret, Nightmares, Hunted. Gains: up to 3 freebie points, priced by the book's costs (an Ability, a Background or Willpower dot). Each change has Undo in the runner's log. House rule until the book check finds V20's own advice. Desk p3.
+
+Reverse: PRELUDE_BUDGET, REWARDS in first-night-prelude-rules.mjs.
+
+## B1613. Troupe ties (2026-11-12)
+Six questions in any era's words; each character asks about the next in a ring of the player characters by name. Answers go on the Group actor (flags.wodx-creation.ties) and tick the ties step; a player's answer reaches the Storyteller by socket. How they met makes an observer journal of the answers. Desk t1.
+
+Reverse: TIE_QUESTIONS, ring; sendTies, saveTie in first-night-prelude.mjs.
+
+## B1614. Late joiners (2026-11-12)
+Once any character in the world is signed off, a new character's hub says the chronicle is under way, and the prelude runner starts in short mode. The forecast reads the current year as for everyone. Desk t2.
+
+Reverse: underWay in first-night-prelude-rules.mjs.
