@@ -259,12 +259,16 @@ async function freshCache() {
   return cacheDir();
 }
 
-/** The settings button: asks, then starts a fresh cache. */
-class FreshCache {
-  render() {
+/**
+ * The settings button: asks, then starts a fresh cache. Foundry wants an application class for a settings menu,
+ * so this is one, but it opens no window of its own: render() only asks.
+ */
+const AppBase = globalThis.foundry?.applications?.api?.ApplicationV2 ?? class {};
+class FreshCache extends AppBase {
+  async render() {
     const D = foundry.applications?.api?.DialogV2;
-    const ask = D ? D.confirm({window: {title: "Start a fresh voice cache"}, content: "<p>New lines will be saved in a new folder. The old folder stays in Data until you delete it.</p>"}) : Promise.resolve(true);
-    Promise.resolve(ask).then(ok => (ok ? freshCache() : null));
+    const ok = D ? await D.confirm({window: {title: "Start a fresh voice cache"}, content: "<p>New lines will be saved in a new folder. The old folder stays in Data until you delete it.</p>"}) : true;
+    if ( ok ) await freshCache();
     return this;
   }
 }

@@ -1051,7 +1051,8 @@ export function build(ctx) {
     while ( x && !x.over && x.kind === "field" && k < 30 ) {
       const deeds = [];
       for ( const f of facs ) deeds.push(WR.usesPowers(f, b.war.kind) ? [{name: game.actors?.get(f.leader)?.name || `${f.name}'s powers`, successes: await powerDeed(f)}] : []);
-      x = await api.fight(x.id, {deeds, quiet: true});
+      const actions = x.book && api.rules?.chooseActions ? api.rules.chooseActions(x, api.rules.ageFor(x.year, {branch: x.branch, realm: x.realm})) : undefined;
+      x = await api.fight(x.id, {deeds, quiet: true, ...(actions ? {actions} : {})});
       k++;
     }
     if ( x && !x.over && x.kind === "field" ) x = await api.draw(x.id, {quiet: true});

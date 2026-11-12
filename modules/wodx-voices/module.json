@@ -2,7 +2,7 @@
   "id": "wodx-voices",
   "title": "WoDX Voices",
   "description": "World of Darkness Expanded: NPCs speak aloud, each in a steady voice of its own, heard only by the people who see the line: WoDX NPC talk cards and the Storyteller's own lines in character. Kokoro renders each line once on the Storyteller's computer, offline; the browser's own speech is the fallback. Private use only; not for distribution or sale.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "authors": [
     {
       "name": "WoDX Project (private)"

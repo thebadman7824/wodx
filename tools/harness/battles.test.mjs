@@ -314,9 +314,15 @@ test("a book turn: a lost melee costs the attackers, a withdrawal ends it, an ar
   const b = book();
   const age = B.ageFor(1230);
   const pl = B.bookPools(b, age, [r(0), r(0)]);
-  let c = B.bookContests(b, age, pl.pools, ["melee", "melee"]);
+  let c = B.bookContests(b, age, pl.pools, ["melee", "ranged"]);
   c[0].rolls = {attack: r(1), resist: r(3)}; c[1].rolls = {attack: r(0), resist: r(0)};
   assert.deepEqual(B.settleBookTurn(b, age, {...pl, contests: c}).phase.units, [2, 0]);
+  // both close: each side counts only what its own blow takes
+  c = B.bookContests(b, age, pl.pools, ["melee", "melee"]);
+  c[0].rolls = {attack: r(1), resist: r(3)}; c[1].rolls = {attack: r(4), resist: r(2)};
+  assert.deepEqual(B.settleBookTurn(b, age, {...pl, contests: c}).phase.units, [2, 0]);
+  c[1].rolls = {attack: r(0), resist: r(0)};
+  assert.deepEqual(B.settleBookTurn(b, age, {...pl, contests: c}).phase.units, [0, 0], "a beaten blow against a foe that also closed costs nothing more");
   c = B.bookContests(b, age, pl.pools, ["melee", "withdraw"]);
   c[0].rolls = {attack: r(5), resist: r(0)}; c[1].rolls = {attack: r(3), resist: r(1)};
   const away = B.settleBookTurn(b, age, {...pl, contests: c});

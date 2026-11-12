@@ -171,7 +171,10 @@ export async function run() {
       const q = [...(ap?.pending?.() ?? []), ...(ap?.history?.() ?? [])];
       const proposed = !!war?.over && q.some(e => String(e.key ?? "").startsWith(`battle:${war.id}`));
       ok("faction wars", !!war && war.war.auto && war.war.kind === "mortal" && war.book === (war.year <= 1499) && (!war.over || proposed) && pub() === pub0,
-        {tries: n, name: war?.name, over: war?.over?.text, phases: war?.phases?.length, proposed, publicCards: pub() - pub0});
+        {tries: n, name: war?.name, year: war?.year, book: war?.book, over: war?.over?.text, phases: war?.phases?.length, proposed, publicCards: pub() - pub0,
+          // what each phase rolled, to see how a war goes (pools, the commanders' totals, each army's blow and the units lost)
+          turns: (war?.phases ?? []).filter(p => p.kind === "phase").map(p => ({command: p.total, pools: p.pools, units: p.units, waver: p.waver,
+            contests: (p.contests ?? []).map(c => ({action: c.action, attack: c.attack?.pool, resist: c.resist?.pool, rolled: [c.rolls?.attack?.successes, c.rolls?.resist?.successes], net: c.net}))}))});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-otherworlds", "wodx-creation"];
