@@ -3039,3 +3039,8 @@ Reverse: set Targeting back to Suggest.
 WoDX Storyteller 0.52.1. Letting time pass, and the small rule for time for a long action, count a fight only when it has started, one of the waiting characters is in it, and that character is on the fight's scene now. A fight forgotten on another scene no longer stops time everywhere; the Storyteller still ends it by hand or with "End fights by themselves".
 
 Reverse: change fightHolds in spend-rules.mjs.
+
+## B2460. Letting time pass is for the party on the asker's scene (2026-11-12, testbed finding)
+WoDX Storyteller 0.52.2. The party is every present character on the asker's scene: a player's own character's scene, else the scene they look at; the Storyteller's is the scene in view. Only those players are asked and only those characters' time passes, so a party split across scenes waits apart, each on its own time (B1961). A fight elsewhere, or characters elsewhere, no longer stop it.
+
+Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.

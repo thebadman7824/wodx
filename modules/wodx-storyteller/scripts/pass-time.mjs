@@ -1,12 +1,12 @@
 /**
- * Players ask for time to pass (WoDX Storyteller 0.52.0, B2457; 0.52.1 counts only a fight on the characters' own scene). A player picks wait, rest or sleep the day from the
+ * Players ask for time to pass (WoDX Storyteller 0.52.0, B2457; 0.52.1 counts only a fight on the characters' own scene; 0.52.2 asks only the party on the asker's scene). A player picks wait, rest or sleep the day from the
  * toolbar. Every player who is here tonight and plays a present character is asked; when all agree and no fight is
  * running, the time passes through the same spend() the Storyteller's own buttons use, so dawn, sunlight and dated
  * events fire as usual. One "Not now" ends the ask. An ask nobody finishes lapses after ten minutes.
  * The Storyteller can agree for the table from the card. Asks are kept on the active Storyteller's client.
  */
 import * as SR from "./spend-rules.mjs";
-import {MOD, SOCKET, esc, isActiveGM, pcs, ownerOf, gmIds} from "./core.mjs";
+import {MOD, SOCKET, esc, isActiveGM, pcs, ownerOf, gmIds, whereIs} from "./core.mjs";
 import {presentWhere, spend} from "./spend.mjs";
 
 const LAPSE = 10 * 60 * 1000;
@@ -17,9 +17,18 @@ const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
 export const fightsNow = () => all(game.combats).map(c => ({started: !!c.started, scene: c.scene?.id ?? null, actorIds: c.combatants.map(x => x.actorId).filter(Boolean)}));
 const inFight = (ids = null) => SR.fightHolds(fightsNow(), presentWhere(), ids);
 
-/** The players who must agree, and the characters whose time passes. */
-function table() {
-  const here = presentWhere().map(p => game.actors.get(p.id)).filter(Boolean);
+/** The scene the asker is at: a player's own character's scene, else the one they look at; the Storyteller's view. */
+function askerScene(user) {
+  if ( !user ) return null;
+  if ( user.isGM ) return (user.id === game.user.id ? canvas?.scene?.id : user.viewedScene) ?? game.scenes?.viewed?.id ?? null;
+  const own = user.character ?? pcs().find(a => ownerOf(a)?.id === user.id);
+  return (own ? whereIs(own)?.id : null) ?? user.viewedScene ?? null;
+}
+
+/** The party on the asker's scene: the players who must agree, and the characters whose time passes. */
+function table(user = null) {
+  const party = SR.partyAt(presentWhere(), askerScene(user));
+  const here = party.map(p => game.actors.get(p.id)).filter(Boolean);
   const users = [...new Set(here.map(a => ownerOf(a)).filter(u => u && u.active && !u.isGM).map(u => u.id))];
   return {users, actorIds: here.map(a => a.id)};
 }
@@ -30,7 +39,7 @@ export async function passTimeDialog() {
   const {DialogV2} = foundry.applications.api;
   const pick = await DialogV2.prompt({classes: ["wodx", "wodx-dialog"], window: {title: "Let time pass"},
     content: `<div class="form-group"><label for="wst-pass">How long</label><select id="wst-pass" name="pass" data-fixed>${opts}</select></div>
-      <p class="wodx-quiet">Everyone at the table who is here tonight is asked. When all agree and nobody is fighting, the clock moves.</p>`,
+      <p class="wodx-quiet">Everyone whose character is on this scene with yours is asked. When all agree and nobody is fighting, the clock moves.</p>`,
     ok: {label: "Ask the table", callback: (ev, b) => b.form.elements.pass.value}, rejectClose: false});
   if ( !pick || !SR.PASS_CHOICES[pick] ) return;
   if ( game.user.isGM ) return open({userId: game.user.id, choice: pick});
@@ -44,8 +53,8 @@ export async function open({userId, choice}) {
   if ( !isActiveGM() ) return null;
   const c = SR.PASS_CHOICES[choice], asker = game.users.get(userId);
   if ( !c || !asker ) return null;
-  if ( inFight(table().actorIds) ) { await say([userId], "Not while a fight is running."); return null; }
-  const t = table();
+  const t = table(asker);
+  if ( inFight(t.actorIds) ) { await say([userId], "Not while a fight is running."); return null; }
   if ( !t.actorIds.length ) { await say([userId], "Nobody's character is here to wait."); return null; }
   const id = foundry.utils.randomID();
   const ask = {id, choice, seconds: c.seconds, label: c.label, needed: t.users, agreed: asker.isGM ? [] : [userId], refused: [], actorIds: t.actorIds, at: Date.now(), by: asker.name};
