@@ -482,7 +482,7 @@ export function pierce(auspex, obfuscate, book = "v20da") {
  * successes. An intruder in plain sight within view is seen.
  * Returns {noticed, why, rolls}.
  */
-export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "v20da"} = {}) {
+export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "v20da", watcherDiff = diff, intruderDiff = diff} = {}) {
   if ( !watcher.awake ) return {noticed: false, why: "asleep"};
   if ( !watcher.inSight ) return {noticed: false, why: "out of sight"};
   if ( (intruder.obfuscate ?? 0) > 0 ) {
@@ -496,8 +496,9 @@ export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "
     return {noticed: w.successes > 0, why: `${p.why}: Perception + Awareness at ${p.diff}, ${w.successes} success${w.successes === 1 ? "" : "es"}`, rolls: {w}};
   }
   if ( !intruder.sneaking ) return {noticed: true, why: "in plain sight"};
-  const w = rollSuccesses((watcher.perception ?? 0) + (watcher.alertness ?? 0), diff, rng);
-  const i = rollSuccesses((intruder.dexterity ?? 0) + (intruder.stealth ?? 0), diff, rng);
+  // 0.45.3: each side may have its own difficulty (WoDX Senses passes how each one moves)
+  const w = rollSuccesses((watcher.perception ?? 0) + (watcher.alertness ?? 0), watcherDiff, rng);
+  const i = rollSuccesses((intruder.dexterity ?? 0) + (intruder.stealth ?? 0), intruderDiff, rng);
   return {noticed: w.successes > i.successes,
     why: `Perception + Alertness ${w.successes} against Dexterity + Stealth ${i.successes} (V20 Dark Ages p. 169)`, rolls: {w, i}};
 }

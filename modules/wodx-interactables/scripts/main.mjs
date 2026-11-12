@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.34.0";
+const VERSION = "0.35.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1569,7 +1569,8 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
         if ( !td || td.parent?.id !== scene.id ) continue;
         const go = fixed(r) ? {x: at.x + r.dx, y: at.y + r.dy} : {x: num(td.x) + step.x, y: num(td.y) + step.y};
         carrying.set(td.uuid, go);
-        try { await td.update(go); } catch (e) { carrying.delete(td.uuid); }
+        // 0.35.0: a passenger is carried: WoDX Combat does not count it against their own movement this turn
+        try { await td.update(go, {wodxMove: false}); } catch (e) { carrying.delete(td.uuid); }
       }
       what = "drove";
     } else if ( moved && riders.some(r => r.t === tokDoc.uuid) ) {
@@ -1872,6 +1873,7 @@ Hooks.once("init", () => {
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
+  game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
   game.modules.get(MOD).api.caseBoard = setupCase();
 });
 Hooks.once("ready", () => {

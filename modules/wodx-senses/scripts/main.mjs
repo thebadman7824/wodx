@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.7.1";
+const VERSION = "0.8.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -302,7 +302,11 @@ export function gatherSources(scene, td, actor) {
       if ( obfuscated(t) ) out.push({id: `obf.${t.id}`, key: "obfuscated", at, secret: true, name: t.name, obf: powerDots(t.actor, /^obfuscate$/i) || 1, kind: kindOf(t.actor)});
       continue;
     }
-    seen.push({t, at});
+    // 0.8.0: someone prone or under the water is not one of the crowd at a glance: a closer look picks them out
+    let low = null;
+    try { const st = stanceOf(t.actor, t); low = R.lowFigure(st, game.wodxCombat?.movement?.rules?.spotStance?.(st) ?? 0); } catch (e) { low = null; }
+    if ( low ) out.push({id: `low.${t.id}`, key: "low", at, secret: true, name: t.name, person: true, loud: "quiet", lines: {sight: [low]}});
+    else seen.push({t, at});
     // what others can sense about this one: Smell of the Grave, Glowing Eyes, Cold Breeze and the like (WoDX Chronicle)
     try {
       for ( const sh of chron()?.traits?.shows?.(t.actor) ?? [] ) {
@@ -360,13 +364,17 @@ async function rollPool(dice, diff) {
   return {roll, faces, successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0, dice, diff};
 }
 
+/** WoDX Combat's stance for a token (standing when Combat or its ways of moving are off). */
+function stanceOf(actor, td) {
+  try { return game.wodxCombat?.movement?.stanceOf?.(actor, td) ?? "standing"; } catch (e) { return "standing"; }
+}
 function sourceLines(sense, src, ctx, pw, gathered) {
   const out = [];
   const t = ctx.traits;
   for ( const s of src ) {
     if ( s.key === "people" ) {
       if ( sense !== "sight" ) continue;
-      const visible = (s.people ?? []).filter(at => R.reachOf("sight", {yards: yardsBetween(gathered.me, at, ctx.scene), sightBlocked: sightBlocked(gathered.me, at, ctx.scene)}, {light: ctx.light, darkSight: !!pw.darkSight}) !== null).length;
+      const visible = (s.people ?? []).filter(at => R.reachOf("sight", {yards: yardsBetween(gathered.me, at, ctx.scene), sightBlocked: sightBlocked(gathered.me, at, ctx.scene)}, {light: ctx.light, darkSight: !!pw.darkSight, sightFar: pw.sightFar, sightCap: pw.sightCap}) !== null).length;
       if ( !visible ) continue;
       for ( const l of linesFor("people", sense) ) out.push({...l, id: s.id, vars: {people: R.peopleWord(visible)}});
       continue;
@@ -388,7 +396,7 @@ function sourceLines(sense, src, ctx, pw, gathered) {
     const yards = yardsBetween(gathered.me, s.at ?? gathered.me, ctx.scene);
     const walls = wallsBetween(gathered.me, s.at ?? gathered.me, ctx.scene);
     const extra = R.reachOf(sense, {yards, walls, sightBlocked: sense === "sight" ? sightBlocked(gathered.me, s.at ?? gathered.me, ctx.scene) : false, loud: s.loud, strong: s.strong, glows: s.glows},
-      {light: ctx.light, darkSight: !!pw.darkSight, extra: pw.reach});
+      {light: ctx.light, darkSight: !!pw.darkSight, extra: pw.reach, sightFar: pw.sightFar, sightCap: pw.sightCap});
     if ( extra === null ) { if ( s.secret ) out.push({t: "", n: 99, id: s.id, name: s.name, why: `out of reach for ${sense}`, held: true}); continue; }
     for ( const l of base ) out.push({...l, n: Math.max(num(l.n), num(s.need)) + extra, id: s.id, name: s.name, secret: !!s.secret,
       vars: {...(s.vars ?? {}), dir: R.directionWord(gathered.me, s.at ?? gathered.me)}});
@@ -447,7 +455,8 @@ export async function answer(req) {
   const ctx = {...moment(scene, me), scene};
   ctx.layer = layerOf(td);
   ctx.traits = traitsOf(actor, {scene, layer: ctx.layer, useAuspex: req.useAuspex !== false});
-  const pw = R.powersFor(ctx.traits);
+  // 0.8.0: where they are when they look: flying, prone, in or under the water, in the saddle (WoDX Combat's stances)
+  const pw = R.withStance(R.powersFor(ctx.traits), stanceOf(actor, td));
   const gathered = gatherSources(scene, td, actor);
   let senses = req.sense === "all" ? [...R.SENSE_KEYS] : [req.sense].filter(s => R.SENSES[s]);
   if ( pw.smellFirst && senses.length > 1 ) senses = ["smell", ...senses.filter(s => s !== "smell")];
@@ -503,7 +512,8 @@ export async function answer(req) {
     const ordered = c => R.byFocus(c, req.focus);
     const res = R.compose({place: ordered(placeL), cond: condL, sources: ordered(usable.filter(l => l.t)), channel: chanL, successes, botch, rand});
     const lines = R.render(res.lines, rand, {place: ctx.place.name});
-    if ( D.blind ) lines.unshift(D.lost ? R.lostLine(sense) : "It is pitch dark. Nothing can be seen.");
+    if ( D.blind ) lines.unshift(D.lost ? (D.lostLine ?? R.lostLine(sense)) : "It is pitch dark. Nothing can be seen.");
+    else if ( pw.stanceLines?.[sense] ) lines.unshift(pw.stanceLines[sense]);
     const held = [...heldOut, ...res.held.filter(l => l.secret || l.channel), ...live.filter(l => l.held)];
     memory[key] = {fp, best: Math.max(successes, sameAsBefore ? num(memo.best) : 0), botch: rolled ? botch : !!memo?.botch, closer: !!(req.closer || (sameAsBefore && memo.closer)), at: Date.now(),
       obfSeen: usable.filter(l => l.obfDiff && l.n === 0).map(l => l.id)};

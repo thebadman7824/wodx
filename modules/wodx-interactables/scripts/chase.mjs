@@ -54,6 +54,30 @@ function mountOf(tokDoc) {
   }
   return null;
 }
+/**
+ * 0.35.0: the mount or vehicle a token is on, at the reins or as a passenger, with its pace in a fight this year
+ * (chase-rules rideInFight). The ground is the scene's last chase ground, else flags.wodx-interactables.ground on the
+ * scene, else town streets. WoDX Combat reads this for the rider's movement, stance and charge. Null on foot.
+ */
+export function rideOf(tokDoc) {
+  const scene = tokDoc?.parent;
+  if ( !scene || !tokDoc.uuid ) return null;
+  for ( const t of scene.tiles ?? [] ) {
+    const f = t.flags?.[MOD];
+    if ( !f?.mount ) continue;
+    const reins = f.driver?.t === tokDoc.uuid;
+    if ( !reins && !(Array.isArray(f.riders) ? f.riders : []).some(r => r?.t === tokDoc.uuid) ) continue;
+    const o = deps.describeObj?.(t);
+    const kind = o?.kind ?? f.mountKind ?? "horse";
+    const sf = scene.flags?.[MOD] ?? {};
+    const r = C.rideInFight(kind, yearNow(), sf[FLAG]?.ground ?? sf.ground ?? "streets");
+    if ( !r ) return null;
+    return {...r, kind, tile: t.id, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount"};
+  }
+  return null;
+}
+const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat"};
+
 /** The Garou form a sheet is in (the system's shapes), or "homid". */
 const formOf = actor => { const sh = actor?.system?.shapes ?? {}; return ["glabro", "crinos", "hispo", "lupus"].find(k => sh[k]?.isactive) ?? "homid"; };
 const runOf = actor => {
@@ -327,5 +351,5 @@ export function setupChase(d = {}) {
     wire("button.wix-chase-fight", () => fight(msg));
     wire("button.wix-chase-grudge", () => grudges(msg));
   });
-  return {open, start, rollTurn, end, undoTurn, join, state: stateOf, rules: C};
+  return {open, start, rollTurn, end, undoTurn, join, state: stateOf, rideOf, rules: C};
 }

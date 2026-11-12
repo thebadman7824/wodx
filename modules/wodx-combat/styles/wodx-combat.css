@@ -47,3 +47,9 @@
 .wodx-turn-banner .wtb-count { color: var(--wx-quiet, #bbb); font-variant-numeric: tabular-nums; }
 .wodx-turn-banner button { width: auto; flex: 0 0 auto; line-height: 1.6; padding: 0 0.7em; }
 @media (prefers-reduced-motion: no-preference) { .wodx-turn-banner { transition: opacity .2s; } }
+
+/* 3.20.0: what they carry */
+.vtc-burdens { display: flex; flex-direction: column; gap: 6px; max-height: 50vh; overflow-y: auto; }
+.vtc-burdens .vtc-burden { display: block; cursor: pointer; }
+.vtc-burdens .vtc-burden .hint { opacity: 0.8; margin-left: 4px; }
+

@@ -393,6 +393,16 @@ Each turn, set the ground the chase has reached, each racer's way (only what exi
 
 The players see who is gaining in words. Your copy, whispered, has the dice and totals, Undo this turn, a button for crash or fall damage, and Start a fight once someone is caught. End the chase from the window at any time.
 
+## Riding, driving and swimming under a load
+
+Outside a chase, whoever holds the reins of a horse, cart, car or boat moves at the mount's pace in a fight: a horse covers 50 yards a turn on a road and 30 in town streets, and a car goes by its year. With no dot in Ride or Drive the limit is half; Keep control on the mount's own menu is still the roll for anything risky. Passengers are carried and keep their own move for getting off. The ground is the one the scene's last chase used, else town streets.
+
+In the saddle a blow down at someone on foot is 1 easier and a blow up at the rider 1 harder; shots from a saddle or a vehicle are 1 harder, and nobody sneaks on either. A rider on a horse or mule adds a damage die to a hand-to-hand blow for each 10 yards ridden that turn, five at most. A rider who is knocked down is prone: take them off with Get off.
+
+Weight matters in deep water. Worn armor counts by its Dexterity penalty, and the weight button on the token HUD sets what else the character carries, from nothing that matters to all they can lift. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of blows, dodges and footing in the water; at four steps the character goes under until they let something go. Strength and Potence of 4 or more take a step off. All of this is a house rule.
+
+Look, Listen and Smell answer from where the character is: from the air the eye reaches further, from the ground or the water less far, and under the water there is nothing to smell. Someone lying prone or under the water is found only on a closer look.
+
 ## Battles and sieges
 
 Open the Storyteller's hand and pick Battles and sieges, then A new battle or A new siege. If the chronicle has a war, battle or siege among its dated events near the clock's year, you can start from it. Give each side its men, quality, the supernatural in its ranks, where it stands and a commander: a sheet (WoDX reads Perception, Charisma, Intelligence + Leadership and Wits + Medicine from it) or a name with four pools. Tick the characters who fight and where they stand.

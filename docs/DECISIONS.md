@@ -96,6 +96,7 @@ Next free block: B2430
 | B2380-B2389 | The rest of the living economy: faction moves on markets (taxes, monopolies, smuggling, raids), traders going broke, caravans | Storyteller, Interactables |
 | B2400-B2419 | The Lone Chronicle: playing alone with a hidden browser in the Storyteller's seat | Solo |
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
+| B2430-B2439 | The last of the ways of moving: riding in a fight, the mounted charge, a swimmer's load, senses by stance | Combat, Interactables, Senses, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2773,3 +2774,28 @@ Reverse: edit ANTIQUE_AFTER or ELECTRONIC_FROM in interact-rules.mjs.
 The Storyteller's hand gets "Out of their time": one card of everything on the sheets and the maps that does not belong to the year now, whether or not the clock moved. It is for a map brought in from another age or a scene dressed by hand. It works in the Live world too, since it only runs when pressed and changes nothing until Keep it is pressed.
 
 Reverse: remove the addTool call in anachronism.mjs.
+
+## B2430. Riding and driving in a fight (2026-11-12, Master Plan leftover, priority 3; house rule)
+Ways of moving left three things open; this is the first. Outside a chase a token at the reins of a mount or vehicle tile now moves at the mount's pace in a fight, not its own: the same full pace a chase gives that way in that year (a horse 50 yards a turn, a car by its chart), held by the ground's caps (30 for hooves in town streets). The ground is the scene's last chase ground, else flags.wodx-interactables.ground on the scene, else town streets; a boat is always on the water. With no dot in Ride, Drive or (for oars) Athletics the limit is half. The rider's wounds do not slow the mount, and the walk-and-attack limit does not apply. A passenger is carried and spends none of their own movement; moving on their own is getting off, as before. The books give speeds only for chases, so the fight figures are a house reading of them.
+
+Reverse: remove the ride branch in movement.js moveCheck; turn the whole feature off with the world setting for ways of moving.
+
+## B2431. In the saddle, aboard a vehicle (2026-11-12, house rule)
+Two new stances. In the saddle (a horse, a mule, a motorcycle): shots from it +1 difficulty, Stealth +2, a hand-to-hand blow down at someone on foot -1, and someone on foot striking up at the rider +1; two riders meet level, and the saddle's edge is never added to higher ground. Aboard a vehicle (a cart, a carriage, a car, a boat): blows and shots +1, dodging +2, Stealth +2, and shots at those aboard +1 for the sides. A rider who is knocked down counts as prone; the Storyteller takes them off the mount. The books have no table for this; the mounted-combat pages of V20 Dark Ages are on the book check list.
+
+Reverse: delete the mounted and aboard rows of STANCES in movement-rules.js.
+
+## B2432. The mounted charge on a map (2026-11-12, house reading)
+V20 Dark Ages p. 398 gives a rider who catches someone at speed one more damage die for each turn spent building speed, five at most; WoDX already uses it for the first blow after a chase. A map has no turns of building speed, so in a fight the count is ground covered: a rider on hooves, at the reins, adds one damage die to a hand-to-hand blow for each full 10 yards ridden this turn before it, five at most. A passenger, a cart, a motorcycle and a car add none.
+
+Reverse: set CHARGE_MAX to 0 in movement-rules.js.
+
+## B2433. Weight that slows a swimmer (2026-11-12, house rule)
+WoDX keeps no weights on things (ruled out with the Cataclysm study), so a swimmer's load is counted in steps: one for each point of Dexterity penalty on worn armor, plus a burden of 0 to 3 set from the token HUD (nothing that matters, a pack or a long weapon, a heavy load, all they can lift). Strength and Potence together of 4 or more take one step off, 7 or more two. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of blows, dodges and footing in the water (3 at most). At four steps there is no swimming: the character goes under, breath runs as for anyone under the water, and those who do not breathe walk the bottom. Water-walkers and bodies of mist carry nothing. Implants weigh nothing. The burden does nothing on dry land.
+
+Reverse: remove the load arguments in movement.js; the burden flag is flags.wodx-combat.load on the actor.
+
+## B2434. The senses read how a character moves (2026-11-12, house rule)
+A look, a listen or a smell now starts from where the character is. Flying: sight 1 easier and the eye reaches twice as far, hearing and smell 1 harder. Low to the ground or swimming: the eye reaches half as far (swimming also hearing +1, smell +2). Under the water: sight and hearing +2, the eye reaches 8 yards, no smell. Wading: hearing +1. In the saddle: the eye reaches half as far again, hearing +1. Aboard a vehicle: hearing and smell +1. Inside the earth: no sight or smell, hearing +3. The sight numbers are the ones WoDX Combat already gives a Perception check, and a test keeps the two in step. One authored line for the stance comes first in the answer. Someone prone or under the water is no longer counted among the people in view at a glance: a closer look with 1 success (2 under the water) picks them out. Who sees them rolls each watcher at 6 plus their own sight change plus the hider's, and the hider at 6 plus their own Stealth change. The 28 new lines (25 for the stances, 3 for someone keeping low) wait for Ben's reading with the other line tables.
+
+Reverse: have stanceOf in the Senses main.mjs return "standing".
