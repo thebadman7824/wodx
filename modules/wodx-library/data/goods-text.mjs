@@ -40,131 +40,131 @@ a hardware crypto wallet | A small device like a USB stick that holds the keys t
 a credchip | A thumb-sized chip of electronic money that can be passed hand to hand.
 a scrip chit | A plastic chit printed with a company's logo and a value.
 a loaf of dark bread | A heavy round loaf of rye or mixed grain, dense and sour. It keeps for days.
-a sack of grain | A sack of threshed grain, ready for the mill or the pot.
-a bag of barley | A cloth bag of hulled barley, for soup, porridge or brewing.
-a bag of dried peas | A bag of hard dried peas, to be soaked overnight and boiled into pottage.
-a sack of oats | A sack of oats, for porridge, for bread on poor land, or for horses.
-a bag of rice | A cloth bag of white rice, hulled and polished. It keeps well if it stays dry.
-a sack of potatoes | A sack of earthy potatoes, still with soil on their skins.
-a bag of maize meal | A bag of coarse yellow cornmeal, for porridge, flatbread or mush.
-a cook-shop pie in a paper | A meat pie from a cook-shop, wrapped in greasy paper, still warm.
+a sack of grain | Threshed grain, ready for the mill or the pot.
+a bag of barley | Hulled barley, for soup, porridge or brewing.
+a bag of dried peas | Hard dried peas, to be soaked overnight and boiled into pottage.
+a sack of oats | Oats, for porridge, for bread on poor land, or for horses.
+a bag of rice | White rice, hulled and polished. It keeps well if it stays dry.
+a sack of potatoes | Earthy potatoes, still with soil on their skins.
+a bag of maize meal | Coarse yellow cornmeal, for porridge, flatbread or mush.
+a cook-shop pie | A meat pie from a cook-shop, greasy and still warm.
 an egg | A single brown hen's egg, still with a speck of straw stuck to the shell.
 a round of hard cheese | A whole round of hard cheese with a thick rind, made to keep through winter.
-a crock of salted pork | A stoneware crock packed with pork in salt. It lasts until spring.
+a crock of salted pork | Pork packed in salt. It lasts until spring.
 a smoked ham | A whole ham, dark and hard from the smokehouse, hung on a cord.
 a blood sausage | A dark sausage of blood, fat and grain in a casing.
-a dried fish wrapped in cloth | A split, dried fish, salty and stiff, wrapped in a scrap of cloth.
+a dried fish | A split, dried fish, salty and stiff.
 a salt herring | A herring packed in salt from the barrel. It needs a soak before eating.
 a slab of stockfish | A board-hard slab of wind-dried cod that must be beaten and soaked for days before cooking.
-a jug of milk | A jug of fresh milk. It sours within a day in warm weather.
-a pat of butter in a cloth | A pat of yellow butter wrapped in a damp cloth to keep it cool. It turns rancid in a few warm days.
+a jug of milk | Fresh milk. It sours within a day in warm weather.
+a pat of butter | A pat of yellow butter. It turns rancid in a few warm days.
 an onion | A single onion with a papery brown skin, strong enough to bring tears when cut.
 an apple | A single apple, small and a little wrinkled from the store-loft.
 a turnip | A single turnip, a winter food for the poor.
 a dried fig | A soft dried fig, sweet and seedy.
-a jar of olives | A clay jar of green or black olives in brine, sealed with a wooden plug.
+a jar of olives | Green or black olives in brine.
 an orange | A single orange.
 a pineapple | A whole pineapple with its crown of leaves.
-a pot of honey | A small pot of honey sealed with wax.
-a twist of salt | A twist of paper or cloth holding a little salt.
-a pouch of pepper | A small pouch of black peppercorns, worth more than its weight in many things.
+a pot of honey | Thick golden honey.
+a twist of salt | A little salt.
+a pouch of pepper | Black peppercorns, worth more than their weight in many things.
 a whole nutmeg | A single nutmeg, brown and wrinkled. It is grated onto food and drink.
-a paper of saffron threads | A folded paper holding red saffron threads, the costliest spice by weight.
+a paper of saffron threads | Red saffron threads, the costliest spice by weight.
 a stick of cinnamon | A rolled quill of cinnamon bark, sweet and woody when snapped.
-a pot of mustard | A small pot of ground mustard mixed with vinegar.
+a pot of mustard | Ground mustard mixed with vinegar.
 a sugarloaf in blue paper | A hard cone of white sugar wrapped in blue paper. Pieces are cut from it with sugar nips.
 a marzipan figure | A small figure moulded from almond paste and sugar, painted for a feast day.
 a gingerbread cake | A spiced honey cake, often pressed from a carved mould.
 a cake of drinking chocolate | A hard cake of ground cacao and sugar, to be grated into hot water or milk.
 a bar of chocolate | A bar of chocolate in a paper wrapper.
-a paper bag of boiled sweets | A twisted paper bag of hard sugar sweets in bright colours, stuck together in the warm.
-a packet of chewing gum | A paper packet of flat sticks of chewing gum, each in its own foil.
-a tin of caviar | A small round tin of salted sturgeon roe, the luxury of tsars and bankers.
+a paper bag of boiled sweets | Hard sugar sweets in bright colours, stuck together in the warm.
+a packet of chewing gum | Flat sticks of chewing gum, each in its own foil.
+a tin of caviar | Salted sturgeon roe, the luxury of tsars and bankers.
 a hardtack biscuit | A hard, dry biscuit of flour and water that keeps for months. It has to be soaked before anyone can bite it.
-a jar of pickled eggs | A glass jar of eggs in vinegar, of the kind kept on a tavern bar.
-a tin of corned beef | A tapered tin of salted beef with a key for opening it.
-a tin of sardines | A flat tin of sardines in oil with a roll-back lid.
-a tin of condensed milk | A tin of thick, sweetened milk that keeps without cooling.
-a tin of beans | A tin of baked beans in tomato sauce. It can be eaten cold from the tin.
-a tin of luncheon meat | A square tin of pink pressed pork with a key to roll back the lid.
-a box of breakfast cereal | A cardboard box of dry flakes with a cartoon on the front and sometimes a toy inside.
-a bag of potato crisps | A crackling foil bag of thin, salted fried potato slices.
+a jar of pickled eggs | Eggs pickled in vinegar, of the kind kept on a tavern bar.
+a tin of corned beef | Salted, pressed beef.
+a tin of sardines | Small oily fish, packed head to tail.
+a tin of condensed milk | Thick, sweetened milk that keeps without cooling.
+a tin of beans | Baked beans in tomato sauce. They can be eaten cold.
+a tin of luncheon meat | Pink pressed pork.
+a box of breakfast cereal | Dry flakes of breakfast cereal, eaten with milk.
+a bag of potato crisps | Thin, salted fried potato slices that crackle when bitten.
 a hamburger in greasy paper | A hamburger in a bun, wrapped in paper gone see-through with grease.
-a pizza box with two cold slices | A greasy cardboard pizza box holding two cold, stiff slices. Someone ate the rest.
+a cold pizza slice | A cold, stiff slice of pizza. Someone ate the rest.
 a packet of instant noodles | A brick of dried noodles with a sachet of flavour powder.
 a field ration pack | A sealed plastic pouch holding a soldier's meal, with a heater and a plastic spoon.
 a ration bar in foil | A dense bar of compressed food in foil, made for emergencies.
 a protein block | A pale block of protein with no flavour of its own.
-a tube of flavoured paste | A squeeze tube of green paste with a picture of a better meal on the label.
-a packet of crackers | A packet of crisp brown crackers.
+a tube of flavoured paste | Green paste that is meant to be a meal, and tastes of very little.
+a packet of crackers | Crisp brown crackers.
 a star-shaped snack bar | A snack bar in a neat star shape, in clear wrap.
-a tomato in a plastic dome | A perfect red tomato sold under a clear plastic dome.
-a slice of beef in a branded tray | A slice of red beef sealed in a branded tray.
-a jug of ale | A jug of brown ale, thick and cloudy, brewed without hops.
-a cask of small beer | A small cask of weak beer, safer to drink than the water.
-a jug of cider | A jug of cloudy apple cider, sharp and a little fizzy.
-a bottle of beer | A glass bottle of beer with a stopper or cap.
-a six-pack of beer cans | Six cans of cheap beer held together by plastic rings.
-a skin of wine | A leather skin of wine, sour and strong.
-a jug of mead | A jug of golden mead brewed from honey and water, sweet and strong.
-a bottle of claret | A bottle of light red wine, the gentleman's table wine.
-a bottle of port | A bottle of strong sweet wine.
-a bottle of champagne | A heavy bottle of sparkling wine with its cork wired down.
-a flask of rice wine | A ceramic flask of clear rice wine, served warm or cold.
-a flask of brandy | A flask of brandy distilled from wine, warming and strong. Physicians prescribe it as often as innkeepers sell it.
-a bottle of vodka | A bottle of clear grain spirit with almost no smell, bought to get drunk on.
-a bottle of gin | A bottle of gin. Its smell of juniper carries.
-a bottle of rum | A bottle of dark rum.
-a bottle of whiskey | A bottle of amber whiskey that smells of smoke and malt.
-a jar of corn liquor | A mason jar of raw white corn liquor from an illegal still.
-a bottle of absinthe | A bottle of green absinthe, bitter with wormwood.
-a bottle of synthetic vodka | A bottle of vodka made in a lab. It tastes of nothing and burns all the same.
-a bag of coffee beans | A cloth bag of roasted coffee beans with a dark, oily smell.
-a packet of tea | A packet of dried black or green tea leaves.
-a bottle of mineral water | A stoneware or glass bottle of water from a spa spring, sold for health.
-a bottle of lemonade | A stoppered bottle of sweet, fizzy lemonade.
-a bottle of cola | A curved glass bottle of dark, sweet cola with a crimped metal cap.
-a can of soda | A cold aluminium can of fizzy soda with a ring pull.
-a can of energy drink | A tall can of sugary energy drink full of caffeine.
-a pouch of electrolyte drink | A foil pouch of salted drink for heat and hard work.
+a tomato | A perfect red tomato, unblemished and evenly coloured.
+a slice of beef | A slice of red beef, cut and packed for sale.
+a jug of ale | Brown ale, thick and cloudy, brewed without hops.
+a cask of small beer | Weak beer, safer to drink than the water.
+a jug of cider | Cloudy apple cider, sharp and a little fizzy.
+a bottle of beer | Beer.
+a six-pack of lager | Cheap, thin lager.
+a skin of wine | Sour, strong wine.
+a jug of mead | Golden mead brewed from honey and water, sweet and strong.
+a bottle of claret | Light red wine, the gentleman's table wine.
+a bottle of port | Strong sweet wine.
+a bottle of champagne | Sparkling wine.
+a flask of rice wine | Clear rice wine, served warm or cold.
+a flask of brandy | Brandy distilled from wine, warming and strong. Physicians prescribe it as often as innkeepers sell it.
+a bottle of vodka | Clear grain spirit with almost no smell, bought to get drunk on.
+a bottle of gin | Gin. Its smell of juniper carries.
+a bottle of rum | Dark rum.
+a bottle of whiskey | Amber whiskey that smells of smoke and malt.
+a jar of corn liquor | Raw white corn liquor from an illegal still.
+a bottle of absinthe | Green absinthe, bitter with wormwood.
+a bottle of synthetic vodka | Vodka made in a lab. It tastes of nothing and burns all the same.
+a bag of coffee beans | Roasted coffee beans with a dark, oily smell.
+a packet of tea | Dried black or green tea leaves.
+a bottle of mineral water | Water from a spa spring, sold for health.
+a bottle of lemonade | Sweet, fizzy lemonade.
+a bottle of cola | Dark, sweet cola.
+a can of soda | Cold, fizzy soda.
+a can of energy drink | Sugary energy drink full of caffeine.
+a pouch of electrolyte drink | A salted drink for heat and hard work.
 a lump of opium | A sticky dark lump of opium wrapped in leaf or paper. It smells bitter and earthy.
-a twist of dried poppy heads | A twist of dried poppy seed heads, for a sleeping draught.
-a bottle of laudanum | A small brown bottle of opium dissolved in alcohol, sold for pain, coughs and sleeplessness.
-a bottle of soothing syrup | A bottle of syrup for teething children.
-a vial of morphine | A small glass vial of morphine solution for injection. It kills pain and makes the user drowsy.
-a paper wrap of heroin | A folded paper wrap of brown or off-white powder, cut with something to stretch it.
+a twist of dried poppy heads | Dried poppy seed heads, for a sleeping draught.
+a bottle of laudanum | Opium dissolved in alcohol, sold for pain, coughs and sleeplessness.
+a bottle of soothing syrup | A syrup for teething children.
+a vial of morphine | Morphine solution for injection. It kills pain and makes the user drowsy.
+a paper wrap of heroin | Brown or off-white powder, cut with something to stretch it.
 a fentanyl patch | A medical skin patch of a very strong opioid. It is dangerous in the wrong hands.
-a pouch of coca leaves | A pouch of dried coca leaves to be chewed with lime against hunger and cold.
-a bottle of coca tonic wine | A bottle of tonic wine sold for the nerves, with a bright label.
-a vial of cocaine | A small glass vial of white powder that numbs the gums.
+a pouch of coca leaves | Dried coca leaves to be chewed with lime against hunger and cold.
+a bottle of coca tonic wine | Tonic wine sold for the nerves.
+a vial of cocaine | White powder that numbs the gums.
 a rock of crack cocaine | A small off-white rock wrapped in cling film, smoked for a short, hard high.
 an amphetamine tablet | A small white tablet that keeps the taker awake and sharp, then crashes them.
-a baggie of white powder | A small plastic bag of white powder. What it is cut with is anyone's guess.
-a baggie of meth crystals | A small plastic bag of glassy crystals that smell of chemicals.
+a baggie of white powder | White powder. What it is cut with is anyone's guess.
+a baggie of meth crystals | Glassy crystals that smell of chemicals.
 a bundle of khat leaves | A bundle of fresh khat leaves wrapped in banana leaf, to be chewed while green.
 a betel nut wrapped in leaf with lime | A slice of areca nut folded in a betel leaf with a smear of lime. It stains the mouth red.
-a twist of hashish | A dark, resinous lump of hashish in a twist of paper.
-a bag of marijuana | A small plastic bag of dried, sticky green buds with a strong skunky smell.
+a twist of hashish | A dark, resinous lump of hashish.
+a bag of marijuana | Dried, sticky green buds with a strong skunky smell.
 a dried mushroom | A shrivelled dried mushroom. Some kinds bring visions.
-a pouch of henbane seeds | A pouch of henbane seeds, burned or brewed by those who want visions or to poison someone.
+a pouch of henbane seeds | Henbane seeds, burned or brewed by those who want visions or to poison someone.
 a peyote button | A dried, bitter button of the peyote cactus.
 a tab of LSD blotter paper | A small square of printed blotting paper soaked in LSD.
 a hand-rolled joint | A hand-rolled joint with a harsh chemical smell.
-a baggie of ecstasy pills | A small bag of pressed pills, each stamped with a little logo.
-a bottle of belladonna drops | A small bottle of nightshade drops, used to widen the pupils for beauty. Too much kills.
-a bottle of chloral hydrate | A bottle of sleeping drug, the knockout drops of a bar.
-a bottle of ether for sniffing | A small bottle of ether, sniffed on a cloth for a cheap high.
+a baggie of ecstasy pills | Pressed pills, each stamped with a little logo.
+a bottle of belladonna drops | Nightshade drops, used to widen the pupils for beauty. Too much kills.
+a bottle of chloral hydrate | A sleeping drug, the knockout drops of a bar.
+a bottle of ether for sniffing | Ether, sniffed on a cloth for a cheap high.
 a sleeping pill | A single small sleeping pill, the kind a doctor prescribes ten at a time.
-a vial of ketamine | A small vial of ketamine, an animal anaesthetic.
+a vial of ketamine | Ketamine, an animal anaesthetic.
 a glass syringe and a bent spoon | A glass syringe and a spoon blackened underneath from cooking drugs.
 a long opium pipe | A long pipe with a small bowl, made for smoking opium lying down.
 a hookah | A tall water pipe with a hose for smoking tobacco.
 a dermal patch | A skin patch of stimulants in a plain wrapper.
-a vial of designer neurostim | A vial of a designer drug made to sharpen the mind for a few hours.
+a vial of designer neurostim | A designer drug made to sharpen the mind for a few hours.
 an inhaler of synthetic dream gas | An inhaler of a gas that brings vivid waking dreams.
-a pouch of pipe tobacco | A leather or oilskin pouch of shredded pipe tobacco.
+a pouch of pipe tobacco | Shredded pipe tobacco.
 a clay pipe | A long, thin white clay pipe that breaks easily.
-a twist of snuff | A twist of fine ground tobacco for sniffing.
+a twist of snuff | Fine ground tobacco for sniffing.
 a cigar | A single hand-rolled cigar of dark leaf, with a paper band.
 a plug of chewing tobacco | A dark, sticky plug of pressed tobacco for chewing.
 a cigarette | A single cigarette, a little bent from the packet.
@@ -184,7 +184,7 @@ a coffee grinder | A wooden box with a brass hopper and a crank, for grinding co
 a tin opener | A small steel tin opener with a lever blade.
 a vacuum flask | A vacuum flask that keeps drinks hot or cold for hours.
 a pressure cooker | A heavy pot with a locking lid and a pressure valve.
-a microwave dinner tray | A plastic tray of frozen dinner under film.
+a microwave dinner | A frozen ready meal, made to be heated in a microwave.
 a self-heating meal pouch | A meal pouch that heats itself when a tab is pulled.
 a cartridge for a food printer | A sealed cartridge of flavoured paste for a food printer.
 a wooden bowl | A wooden bowl turned on a lathe.
@@ -260,7 +260,7 @@ a high-visibility vest | A bright yellow or orange vest with reflective strips.
 a bolt of undyed wool | A bolt of plain undyed woollen cloth, enough for several garments.
 a bolt of dyed silk | A bolt of shining dyed silk.
 a needle case and thread | A small case holding needles and a hank of thread.
-a paper of pins | A folded paper holding rows of brass pins.
+a paper of pins | Rows of brass pins.
 a smart-fabric jacket | A light jacket of a smooth, faintly shimmering fabric.
 a filter mask | A face mask with two filter cartridges.
 a cooling vest | A padded vest with pockets of gel.
@@ -269,27 +269,27 @@ a cake of lye soap | A coarse brown cake of soap made from lye and fat.
 a bar of scented soap | A bar of scented soap in a paper wrapper.
 a chewing stick for the teeth | A twig with a frayed end for cleaning the teeth.
 a bristle toothbrush | A toothbrush with a bone handle and hog bristles.
-a tin of tooth powder | A small tin of chalky tooth powder, flavoured with mint or cinnamon.
+a tin of tooth powder | Chalky tooth powder, flavoured with mint or cinnamon.
 a toothbrush and a tube of toothpaste | A plastic toothbrush and a tube of mint toothpaste.
 a pumice stone | A grey pumice stone for scrubbing hard skin.
-a packet of sanitary pads | A paper packet of disposable sanitary pads.
+a packet of sanitary pads | Disposable sanitary pads.
 a stick of deodorant | A stick of deodorant in a plastic case.
 a bone comb | A double-sided comb carved from bone or antler.
 a pair of bronze tweezers | A small pair of bronze tweezers for pulling hair and splinters.
 a silver ear scoop | A tiny silver scoop for cleaning the ears, often worn on a chain.
 a straight razor and strop | A folding straight razor and a leather strop for sharpening it.
 a safety razor | A safety razor with a guarded blade.
-a tin of hair pomade | A tin of scented hair grease for slick, shining hair.
-a horsehair wig in a box | A powdered wig of horsehair in a hatbox.
+a tin of hair pomade | Scented hair grease for slick, shining hair.
+a horsehair wig | A powdered wig of horsehair.
 curling tongs | A pair of metal tongs for curling hair, heated in a flame.
 a hair dryer | An electric hair dryer that blows hot air and smells faintly of dust.
 nail clippers | A small pair of nail clippers.
 a set of false teeth | A set of false teeth in a pink or ivory plate, sometimes made from the teeth of the dead.
-a bottle of rosewater | A small bottle of rosewater for scent and cooking.
-a pot of white face paint | A pot of white face paint for a pale, fashionable face.
-a pot of rouge | A small pot of red rouge for the cheeks and lips.
-a bottle of eau de Cologne | A bottle of light citrus scent.
-a tube of lipstick | A small metal tube of red lipstick.
+a bottle of rosewater | Rosewater for scent and cooking.
+a pot of white face paint | White face paint for a pale, fashionable face.
+a pot of rouge | Red rouge for the cheeks and lips.
+a bottle of eau de Cologne | A light citrus scent.
+a tube of lipstick | Red lipstick.
 a cut-glass perfume bottle | A cut-glass perfume bottle with a bulb sprayer.
 a compact of face powder | A small mirrored compact of face powder with a puff.
 a sickle | A curved blade on a short handle, for cutting grain.
@@ -328,7 +328,7 @@ a chainsaw | A loud petrol chainsaw with a long chain bar. It cuts a tree or a d
 a cordless drill | A battery drill with a set of bits.
 a multitool | A folding multitool with pliers, blades and drivers.
 a digital multimeter | A hand-held meter for testing voltage and current, with two probes.
-a set of lockpicks in a cloth roll | A cloth roll holding picks and tension tools for opening locks. Carrying them is a crime in many places.
+a set of lockpicks | A set of picks and tension tools for opening locks. Carrying them is a crime in many places.
 a dark lantern with a shutter | A lantern with a sliding shutter that hides its light in a moment.
 a glass cutter | A glass cutter with a small wheel.
 a lockpick gun | A spring-loaded tool that bumps the pins of a lock.
@@ -357,15 +357,15 @@ a flashlight | A metal battery flashlight with a switch on the side.
 a glow stick | A plastic stick that glows green when bent.
 a headlamp | A lamp on an elastic strap for the head.
 a palm-sized LED lantern | A small LED lantern that runs for days on one charge.
-a jerry can of petrol | A steel jerry can of petrol with a spout. It weighs about twenty kilograms full.
+a jerry can of petrol | Petrol. It stinks and catches at a spark.
 a split log of firewood | A split log of seasoned oak or beech for the fire.
-a sack of charcoal | A sack of black charcoal. It burns hot and almost smokeless, for forges and braziers.
-a flask of lamp oil | A flask of oil for lamps, pressed from olives, rapeseed or fish.
+a sack of charcoal | Black charcoal. It burns hot and almost smokeless, for forges and braziers.
+a flask of lamp oil | Oil for lamps, pressed from olives, rapeseed or fish.
 a peat turf | A dried brick of peat cut from the bog. It burns slow and smoky.
-a scuttle of coal | A metal scuttle of lump coal for a household fire.
-a can of kerosene | A tin can of kerosene for lamps and stoves. It stinks and burns well.
-a bottle of methylated spirits | A bottle of purple methylated spirits for stoves and cleaning. The desperate drink it.
-a canister of camp-stove gas | A small canister of gas for a camp stove.
+a scuttle of coal | Lump coal for a household fire.
+a can of kerosene | Kerosene for lamps and stoves. It stinks and burns well.
+a bottle of methylated spirits | Purple methylated spirits for stoves and cleaning. The desperate drink it.
+a canister of camp-stove gas | Gas for a camp stove.
 a hydrogen fuel cell | A sealed hydrogen fuel cell that powers a vehicle or a generator.
 a brick of compressed biomass | A brick of pressed plant waste that burns like wood.
 a folding solar charger | A folding panel of solar cells with a charging cable.
@@ -422,7 +422,7 @@ identity papers | A set of official identity papers.
 a passport | A passport with a photograph, a stamped visa or two, and the holder's name and nationality.
 a passport in a plastic sleeve | A passport in a plastic sleeve, with a photograph and a few stamped visas.
 a floppy disk | A square plastic floppy disk with a hand-written label.
-a spindle of blank CDs | A plastic spindle of blank recordable CDs.
+a blank CD | A blank recordable CD.
 a USB stick on a lanyard | A small memory stick on a lanyard.
 a data chip with no label | A small data chip with no label. Only reading it will tell what it holds.
 a Latin grammar | A Latin grammar, the first book of every schoolchild and cleric.
@@ -462,12 +462,12 @@ a wooden cross on a cord | A small wooden cross on a leather cord, worn under th
 a rosary | A string of beads with a crucifix, for counting prayers.
 a string of prayer beads | A string of worn beads, smooth from counting prayers through the fingers.
 a pilgrim's badge of lead | A small lead badge from a shrine, pinned to a hat to show the pilgrimage was made.
-a vial of holy water | A small glass vial of water blessed by a priest, stoppered with wax.
+a vial of holy water | Water blessed by a priest.
 a scapular | Two small squares of cloth joined by strings, worn over the shoulders for devotion.
 a saint's medal | A small stamped medal of a saint on a cord, worn for protection on a journey or in a trade.
 a reliquary holding a bone | A small case of gilt and crystal holding a fragment of bone.
 a painted icon on wood | A painted holy image on a wooden panel, darkened by candle smoke.
-a pyx of consecrated hosts | A small round box holding consecrated hosts for the sick.
+a consecrated host | A consecrated host, kept for the sick.
 a brass censer | A brass censer on chains for burning incense.
 an embroidered altar cloth | A linen altar cloth embroidered with crosses and lilies in silk thread.
 a monk's habit | A monk's habit of rough wool with a hood and cord belt.
@@ -502,7 +502,7 @@ a blue glass eye bead | A blue glass bead painted with an eye.
 a cloth poppet stuck with pins | A crude cloth doll stuck with pins, sometimes with a scrap of hair or cloth sewn in.
 a forked root wrapped in silk | A forked root wrapped in silk.
 a stoneware bottle full of pins | A small stoneware jug that rattles, stoppered and full of bent pins.
-a vial of graveyard dirt | A small vial of dirt dug from a grave, used in charms and curses.
+a vial of graveyard dirt | Dirt dug from a grave, used in charms and curses.
 a gris-gris bag | A small cloth bag of herbs, roots and charms, worn for protection or luck.
 a lucky rabbit's foot | A rabbit's foot on a little chain, carried for luck.
 a dried hand | A dried, blackened human hand.
@@ -523,28 +523,28 @@ a talking board | A board printed with letters, numbers and YES and NO, with a p
 a seance trumpet | A tin cone that spirits are said to speak through at a seance.
 a photograph with a pale figure | A photograph of a sitter with a pale figure standing behind.
 a phone with a ghost-finding app | A phone whose screen shows a blinking app with a dial and a pulsing light.
-a pouch of dried herbs | A pouch of dried herbs for teas, poultices and cooking.
+a pouch of dried herbs | Dried herbs for teas, poultices and cooking.
 a roll of clean linen bandage | A roll of clean linen bandage, boiled and dried in the sun.
-a jar of goose-grease salve | A jar of salve of goose grease and herbs.
-a pot of theriac | A pot of theriac, a costly cure-all paste of dozens of ingredients.
+a jar of goose-grease salve | A salve of goose grease and herbs.
+a pot of theriac | Theriac, a costly cure-all paste of dozens of ingredients.
 a live leech | A live leech in a jar of water.
 a glass cupping cup | A small glass cup for drawing blood to the skin.
-a pot of grey ointment | A pot of heavy grey ointment.
-a bottle of patent medicine | A bottle of patent medicine that promises to cure everything.
-a bottle of smelling salts | A small bottle of ammonia salts to bring someone round from a faint.
-a paper of quinine powder | A folded paper of bitter quinine powder against fever and the ague.
+a pot of grey ointment | Heavy grey ointment.
+a bottle of patent medicine | A patent medicine that promises to cure everything.
+a bottle of smelling salts | Ammonia salts to bring someone round from a faint.
+a paper of quinine powder | Bitter quinine powder against fever and the ague.
 a glass urine flask | A round glass flask in which physicians look at urine to judge illness.
 a barber-surgeon's lancet | A small, sharp folding lancet for bleeding patients.
 a bone saw | A surgeon's saw for cutting through bone in amputations.
-a bottle of chloroform | A small bottle of chloroform. A cloth soaked in it puts a patient to sleep.
-a bottle of carbolic acid | A bottle of carbolic acid for cleaning wounds and instruments. It smells of tar.
+a bottle of chloroform | Chloroform. A cloth soaked in it puts a patient to sleep.
+a bottle of carbolic acid | Carbolic acid for cleaning wounds and instruments. It smells of tar.
 a doctor's bag | A doctor's leather bag with instruments, bandages and medicines.
-a bottle of iodine | A small brown bottle of iodine for cleaning wounds. It stings.
+a bottle of iodine | Iodine for cleaning wounds. It stings.
 a field dressing | A sealed field dressing of gauze and bandage.
-a bottle of aspirin | A bottle of aspirin tablets for pain and fever.
+a bottle of aspirin | Aspirin tablets for pain and fever.
 a morphine syrette | A small tube of morphine with a needle.
-a vial of penicillin | A glass vial of penicillin. It cures infections that would otherwise kill.
-a bag of blood | A plastic bag of blood.
+a vial of penicillin | Penicillin. It cures infections that would otherwise kill.
+a bag of blood | Blood.
 a first aid kit | A metal or plastic first aid kit with bandages, plasters and antiseptic.
 a prescription pill | A single prescription pill with a number stamped on it. A pharmacist could name it.
 an asthma inhaler | An asthma inhaler. Its owner may need it urgently.
@@ -554,10 +554,10 @@ a condom | A condom in a paper or foil wrapper.
 a wooden crutch | A wooden crutch with a padded top.
 a pair of spectacles | A pair of spectacles with round lenses in a thin frame.
 an ear trumpet | A horn-shaped ear trumpet for the hard of hearing.
-a glass eye in a velvet box | A painted glass eye in a velvet box, made to match a living eye.
+a glass eye | A painted glass eye, made to match a living eye.
 a hearing aid | A hearing aid with a small battery.
 a trauma patch | A trauma patch that seals wounds and releases painkillers.
-a tube of nanite wound gel | A tube of grey gel full of nanites that seals and knits a wound.
+a tube of nanite wound gel | Grey gel full of nanites that seals and knits a wound.
 a hand-held med scanner | A hand-held scanner for reading pulse, blood and injuries.
 a lock of hair tied with thread | A lock of hair tied with a thread, kept in memory of someone.
 a hand-carved wooden animal | A small wooden animal carved with a knife, its edges smoothed by a child's hands.
@@ -586,8 +586,8 @@ a board for nine men's morris | A wooden board scratched with three squares for 
 a set of tables and counters | A folding board with counters and dice for tables, the game later called backgammon.
 a carved chess set | A carved chess set of bone and wood.
 a pack of playing cards | A pack of playing cards with painted or printed suits.
-a jigsaw puzzle in a box | A jigsaw puzzle in a box with a picture on the lid.
-a boxed board game | A boxed board game with a folded board, cards and counters.
+a jigsaw puzzle | A jigsaw puzzle of cut card pieces that make a picture.
+a board game | A board game with a folded board, cards and counters.
 a video game cartridge | A plastic video game cartridge with a printed label.
 a handheld game console | A battery handheld game console with a small screen.
 a virtual reality headset | A virtual reality headset that covers the eyes, with hand controllers.
@@ -602,7 +602,7 @@ a plastic action figure | A plastic action figure of a hero or a monster, with m
 a wooden flute | A simple wooden flute with six finger holes.
 a hurdy-gurdy | A stringed instrument played by turning a wheel with a crank.
 a lute | A lute with a round back.
-a fiddle in a case | A fiddle and bow in a wooden case lined with cloth.
+a fiddle | A fiddle and bow.
 a piece of sheet music | A sheet of printed or written music for one instrument or voice.
 a music box | A small box that plays a tune when wound.
 an acoustic guitar | An acoustic guitar with steel strings and a worn pick guard.
@@ -635,7 +635,7 @@ a gilded chalice | A silver chalice gilded inside and out, for the wine of the M
 a small oil painting in a gilt frame | A small oil painting of a landscape or a portrait in a gilt frame.
 a fur stole | A fur stole worn over the shoulders.
 a designer handbag | A designer handbag with a gold clasp.
-a comic sealed in a plastic case | A comic sealed in a graded plastic case.
+a graded collector's comic | A comic in mint condition, graded by a collectors' service.
 a bearer bond | A printed bond payable to whoever holds it, with coupons to clip for interest.
 a gold bullion coin | A gold bullion coin of exactly one ounce, worth its weight in gold.
 a corporate share token | A token holding a small number of shares in a corporation.
@@ -649,21 +649,21 @@ a switchblade | A folding knife whose blade springs open at the press of a butto
 a can of pepper spray | A small can of pepper spray that blinds and chokes.
 a stun gun | A hand-held stun gun that crackles with blue sparks.
 a sling and a pouch of stones | A sling of braided cord and a pouch of smooth stones.
-a quiver of arrows | A leather quiver of arrows fletched with goose feathers.
+an arrow | An arrow fletched with goose feathers.
 a crossbow bolt | A short, heavy crossbow bolt with an iron head.
 a powder horn | A cow's horn stoppered and filled with black powder.
 a lead musket ball | A round lead musket ball, cast in a mould at the fire.
 a cartridge | A metal cartridge for a firearm.
-a belt of shotgun shells | A leather belt with loops holding a row of shotgun shells.
+a shotgun shell | A paper or plastic shotgun shell with a brass base.
 a spare pistol magazine | A spare loaded magazine for a pistol.
 a gun cleaning kit | A kit of rods, brushes and oil for cleaning guns.
 a sword belt and scabbard | A leather sword belt and a scabbard of wood and leather.
 a bayonet | A long bayonet that fixes to the muzzle of a rifle.
-a gas mask in a canvas bag | A rubber gas mask with glass eyepieces and a filter canister, in a canvas bag.
+a gas mask | A rubber gas mask with glass eyepieces and a filter canister.
 a hand grenade | A hand grenade with a pin and lever.
 a flare pistol | A wide-barrelled flare pistol for signals. At close range it is a weapon.
 a spare bowstring | A spare bowstring of waxed linen or sinew.
-a pot of bowstring wax | A small pot of wax for keeping a bowstring from fraying.
+a pot of bowstring wax | Wax for keeping a bowstring from fraying.
 a crossbow cranequin | A geared crank for spanning a heavy crossbow.
 a gun sling | A leather or canvas sling for carrying a rifle on the shoulder.
 a leather holster | A leather holster for a pistol, worn on the belt.
@@ -741,13 +741,13 @@ a biometric passkey ring | A ring that opens locks keyed to its wearer's pulse.
 a tanned hide | A tanned cowhide, stiff and brown, ready to be cut and sewn.
 a seasoned timber plank | A plank of oak or pine, dried for a year.
 a bar of iron | A bar of wrought iron from the smelter, ready for the smith.
-a jar of saltpetre | A jar of saltpetre, for gunpowder or for curing meat.
-a pot of lye | A pot of lye leached from wood ash, for soap and tanning. It burns the skin.
+a jar of saltpetre | Saltpetre, for gunpowder or for curing meat.
+a pot of lye | Lye leached from wood ash, for soap and tanning. It burns the skin.
 a lump of beeswax | A lump of yellow beeswax for candles, sealing and polish.
-a bag of lime mortar | A bag of lime mortar for building walls.
+a bag of lime mortar | Lime mortar for building walls.
 a pig of lead | A heavy ingot of lead from the smelter.
-a flask of aqua fortis | A flask of aqua fortis, strong acid that eats metals.
-a bottle of sulphuric acid | A glass bottle of sulphuric acid. It burns skin and eats cloth.
+a flask of aqua fortis | Aqua fortis, strong acid that eats metals.
+a bottle of sulphuric acid | Sulphuric acid. It burns skin and eats cloth.
 a coil of copper wire | A coil of copper wire for electrical work.
 a stick of solder | A stick of tin and lead solder for joining metal.
 a piece of scrap electronics | A piece of scrap electronics, a circuit board with chips and wires.
@@ -755,21 +755,21 @@ a sheet of plastic | A sheet of clear or coloured plastic.
 a spool of printer filament | A spool of plastic filament for a 3D printer.
 a roll of carbon-fibre cloth | A roll of carbon-fibre cloth for making strong, light parts.
 a salvaged chip | A chip salvaged from broken electronics, maybe still working.
-a bag of seed corn | A bag of seed corn, kept back from the harvest. To eat it is to go hungry next year.
-a twist of garden seeds | A twist of paper holding garden seeds for beans, cabbage or herbs.
+a bag of seed corn | Seed corn, kept back from the harvest. To eat it is to go hungry next year.
+a twist of garden seeds | Garden seeds for beans, cabbage or herbs.
 a vine cutting | A vine cutting wrapped in damp moss.
-a pot of rose cuttings | A clay pot of rose cuttings taking root.
-a sack of seed potatoes | A sack of seed potatoes, sprouting pale shoots.
+a pot of rose cuttings | Rose cuttings taking root.
+a sack of seed potatoes | Seed potatoes, sprouting pale shoots.
 a tulip bulb | A tulip bulb. In the 1630s a rare one sold for the price of a house.
-a packet of flower seeds | A printed packet of flower seeds with a picture of the bloom.
+a packet of flower seeds | Flower seeds.
 a hydroponic seed pod | A seed pod for a hydroponic garden, ready to drop in water.
-a vial of seed | A sealed vial of seed with a printed licence number.
+a vial of seed | Seed with a printed licence number.
 an hourglass | An hourglass in a wooden frame that runs for an hour.
 a pocket sundial | A folding pocket sundial with a small compass.
 a magnetic compass | A magnetic compass in a brass case.
 a brass spyglass | A brass spyglass that collapses into itself.
 a magnifying glass | A magnifying glass with a horn or wooden handle.
-a microscope in a wooden case | A brass microscope in a fitted wooden case, with glass slides.
+a microscope | A brass microscope with glass slides.
 a sextant | A brass sextant for navigation by the stars.
 a pocket calculator | A pocket calculator with a small screen.
 a magic lantern and slides | A magic lantern that throws pictures from painted glass slides onto a wall.
@@ -797,17 +797,17 @@ a tablet computer | A tablet computer with a touch screen.
 a hacking deck held together with tape | A homemade hacking deck held together with tape and good intentions.
 a commlink earpiece | A commlink earpiece for calls and data.
 a pair of smart glasses with a dead battery | A pair of smart glasses that show information over the world, with a dead battery.
-augmented reality contact lenses in a case | A pair of augmented reality contact lenses in a case.
+a pair of augmented reality contact lenses | A pair of augmented reality contact lenses.
 a cheap drone with one rotor missing | A cheap camera drone with one rotor missing. It can't fly.
 a pocket holo-projector | A pocket holo-projector that throws small three-dimensional pictures into the air.
 a personal assistant pin that still talks | A small pin that answers questions, books things and talks in a friendly voice.
 @1800 a copper coin | A machine-struck copper coin with a milled rim and a clear date. It is change for small purchases.
 @1950 a banknote | A crisp printed banknote with a metal security thread and fine-line printing that is hard to copy.
 @2000 a bank card | A plastic bank card with a chip and a contactless symbol. It is useless without the PIN.
-@1900 a jug of milk | A glass bottle of milk with a cardboard or foil cap.
+@1900 a jug of milk | Fresh milk, delivered to the doorstep in the early morning.
 @1900 an orange | A single orange.
-@1500 a jug of ale | A jug of hopped ale.
-@1950 a bottle of mineral water | A plastic bottle of mineral water.
+@1500 a jug of ale | Hopped ale.
+@1950 a bottle of mineral water | Mineral water.
 @1800 a pair of leather shoes | A pair of laced leather shoes with stitched soles.
 @1920 curling tongs | An electric curling iron with a cord.
 @1850 an iron nail | A machine-cut steel nail.
@@ -818,7 +818,7 @@ a personal assistant pin that still talks | A small pin that answers questions, 
 @1900 a kettle | An enamel kettle with a whistle in the spout.
 @1950 a sewing machine | An electric sewing machine with a foot pedal and a light.
 @1800 a spade | A steel-bladed spade with a wooden handle.
-@1860 a flask of lamp oil | A flask of paraffin lamp oil.
+@1860 a flask of lamp oil | Paraffin lamp oil.
 @1900 a newspaper | A folded newspaper with photographs and advertisements.
 @1500 a small mirror | A small hand mirror of glass.
 @1800 a leather purse | A small leather purse with a clasp.
@@ -916,9 +916,9 @@ a bottle of latex | Milky sap of the rubber tree.
 rocuronium | A drug that stops the muscles working, used in surgery.
 a bottle of acetic anhydride | A sharp, choking chemical that reacts with water.
 a bag of pine resin | Sticky resin from pine trees.
-a bottle of silicone caulk | A tube of rubbery sealant.
-a bottle of weak glue | A pot of thin glue for paper.
-a bottle of strong glue | A pot of strong glue.
+a bottle of silicone caulk | Rubbery sealant, squeezed out in a bead.
+a bottle of weak glue | Thin glue for paper.
+a bottle of strong glue | Strong glue.
 a plush toy | A soft stuffed toy.
 a shark plushie | A soft stuffed shark.
 a figurine | A small figure of a person or animal.
@@ -1041,7 +1041,7 @@ fried liver | Slices of liver fried in fat, dark and rich.
 a humble pie | A pie of offal, the parts of a deer left to the servants once the lord's household has eaten.
 a bowl of stewed tripe | Strips of stomach stewed soft with onions.
 a plate of deep-fried tripe | Pieces of tripe in batter, fried crisp.
-a jar of leverpostej | A soft, spreadable liver paste, baked and pressed into the jar.
+a jar of leverpostej | A soft, spreadable liver paste, baked and pressed.
 grilled sweetbread | Pale glands of a calf or lamb, grilled until browned.
 töttchen | A thick stew of veal offal in a sour sauce, from Westphalia.
 a milkshake | Milk whipped with ice cream into a thick, cold drink.
@@ -1055,8 +1055,8 @@ sorbet | A frozen ice of fruit juice and sugar, with no cream in it.
 gelato | Dense Italian ice cream, smooth and strongly flavoured.
 a pair of frog legs | The meaty hind legs of a large frog, skinned.
 a fish fillet | A boneless side of fish.
-a can of fish | A tin of cooked fish packed in oil.
-a can of lobster | A tin of cooked lobster meat.
+a can of fish | Cooked fish packed in oil.
+a can of lobster | Cooked lobster meat.
 a plate of shucked oysters | Oysters opened and loosed from the shell, eaten raw or cooked.
 roasted bone marrow | Split bones roasted until the marrow inside is soft enough to scoop out.
 meat jerky | Strips of lean meat dried hard and salted, chewy and long-keeping.
@@ -1084,7 +1084,7 @@ a bag of raw soybeans | Hard, round dried soybeans.
 raw edamame | Green soybeans still in their fuzzy pods.
 a bowl of blood rice pudding | Rice cooked in blood and fat, set firm and sliced.
 a bag of dry dog food | Hard brown pellets made for dogs.
-a can of wet cat food | A tin of soft meat scraps in jelly, made for cats.
+a can of wet cat food | Soft meat scraps in jelly, made for cats.
 a bag of dry cat food | Small, hard pellets made for cats.
 nectar | Thick, sweet fruit juice with the pulp left in.
 an earthworm | A pink, wriggling earthworm. Food for fish, birds, or the truly desperate.
@@ -1113,7 +1113,7 @@ a plate of vegetable pie | A slice of pie filled with vegetables in gravy.
 a vegetable samosa | A fried triangle of pastry around spiced potato and peas.
 a vegetable pizza | A flat bread baked with tomato, cheese and vegetables.
 a jar of pesto | A green paste of basil, garlic, cheese, nuts and oil.
-a can of vegetables | A tin of cooked mixed vegetables.
+a can of vegetables | Cooked mixed vegetables.
 a plate of spaghetti al pesto | Spaghetti tossed in green basil pesto.
 dehydrated vegetable | Vegetables dried to brittle chips, light to carry. They soften in water.
 a garlic clove | One clove of garlic in its papery skin.
@@ -1269,12 +1269,12 @@ a jar of heavy cream | Thick cream skimmed from the top of the milk.
 tiramisù | Layers of coffee-soaked sponge and soft sweet cheese, dusted with cocoa.
 a jar of mascarpone | A soft, rich Italian cream cheese.
 pecorino | A hard, salty cheese of sheep's milk.
-a can of fruit | A tin of fruit in sweet syrup.
+a can of fruit | Fruit in sweet syrup.
 a jar of fruit jam | Fruit boiled with sugar into a thick, sweet spread.
 a bowl of hardtack pudding | Hard ship's biscuit soaked, boiled and sweetened into a pudding.
 brandied fruit | Fruit kept in brandy and sugar.
 a bowl of stewed elderberries | Dark elderberries cooked soft with sugar.
-a can of black beans in sauce | A tin of black beans in a thick sauce.
+a can of black beans in sauce | Black beans in a thick sauce.
 a bowl of chocolate pudding | A soft, sweet chocolate pudding.
 a jar of mushroom ketchup | A dark, salty sauce of mushrooms and spices.
 a plate of meat confit | Meat slow-cooked and kept in its own fat.
@@ -1293,10 +1293,10 @@ a plate of lutefisk | Dried cod soaked in lye until it turns soft and jelly-like
 a bowl of sausage gravy | Thick white gravy with crumbled sausage.
 a plate of ravioli | Small pasta parcels stuffed with meat or cheese.
 a bowl of chili con carne | A spicy stew of meat, beans and chili.
-a can of tuna fish | A tin of cooked tuna.
-a can of salmon | A tin of cooked salmon.
+a can of tuna fish | Cooked tuna.
+a can of salmon | Cooked salmon.
 a plate of fried chicken | Pieces of chicken fried in a crisp coating.
-a can of clams | A tin of cooked clams in their juice.
+a can of clams | Cooked clams in their juice.
 a plate of meat pie | A slice of pie filled with meat and gravy.
 a plate of meat pizza | A slice of flat bread baked with tomato, cheese and meat.
 a plate of supreme pizza | A slice of pizza heaped with meats and vegetables.
@@ -1528,7 +1528,7 @@ a curved needle | A curved needle for stitching leather or wounds.
 a wooden needle | A sewing needle of wood.
 a tanning frame | A wooden frame for stretching a hide while it is scraped and tanned.
 a tailoring pattern set | Paper patterns for cutting out clothes.
-a can of butane | A small can of butane gas for refilling lighters and torches.
+a can of butane | Butane gas for refilling lighters and torches.
 a clay urn | A tall clay jar with a lid.
 a crystal urn | A tall cut-glass jar with a lid.
 an entrenching tool | A short folding spade carried by soldiers.
@@ -1668,7 +1668,7 @@ a jar of mercury fulminate | A grey powder that explodes at a knock, used in per
 a jar of sodium | A soft metal kept under oil. It bursts into flame in water.
 a jar of potassium | A soft metal kept under oil. It burns violet in water.
 a bag of lead azide | A white powder that explodes at a touch, used in detonators.
-a box of hair dye | A box of hair dye.
+a box of hair dye | Hair dye.
 a long pole | A long wooden pole.
 a spear shaft | A straight wooden shaft for a spear.
 tonewood | Seasoned wood chosen for making instruments.
@@ -1997,8 +1997,8 @@ a protein block | 2 | Grown in a vat, not taken from any animal.
 a tube of flavoured paste | 2 | It is made from algae, flavoured to taste of something else.
 a packet of crackers | 2 | The flour is ground crickets: cheap protein for crowded cities.
 a star-shaped snack bar | 2 | It was laid down by a food printer.
-a tomato in a plastic dome | 2 | Grown without soil in a hydroponic farm.
-a slice of beef in a branded tray | 2 | From a real farmed animal. Eating it says something about who can afford to.
+a tomato | 2 | Grown without soil in a hydroponic farm.
+a slice of beef | 2 | From a real farmed animal. Eating it says something about who can afford to.
 a bottle of soothing syrup | 3 | The label does not say that it is laced with morphine.
 a hand-rolled joint | 3 | It is dusted with PCP. Its smoker may turn violent.
 a dermal patch | 2 | Street-cooked stimulants. Its dose is a guess.
@@ -2040,7 +2040,7 @@ a cracked tablet | 1 | It still holds years of someone's photos.
 a bill of exchange | 2 | It is drawn on an Italian bank, payable in another city.
 a luxury watch | 2 | Swiss made.
 a designer handbag | 3 | It was stolen: its owner's things are still inside.
-a comic sealed in a plastic case | 2 | It is rare and graded, worth far more than its cover price.
+a graded collector's comic | 2 | It is rare and graded, worth far more than its cover price.
 a key on a string | 3 | No one knows which door it opens.
 a great iron key | 2 | It is the key to a town gate.
 a heavy ring of keys | 2 | A jailer's keys, to cells and doors.
