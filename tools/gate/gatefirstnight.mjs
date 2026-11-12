@@ -35,9 +35,9 @@ export async function run() {
   const made = [];
   const closeAll = async () => { for ( const app of [...(foundry.applications.instances?.values?.() ?? [])] ) if ( /wodx-fn|wodx-first-night/.test(app.id) ) await app.close(); };
   try {
-    const made2 = await Actor.create([{name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}},
-      {name: "WoDX gate: First Night Mortal", type: "Mortal"}]);
-    const vamp = made2.find(a => a.type === "Vampire"), mortal = made2.find(a => a.type === "Mortal");
+    // one at a time: a batch create does not keep its order (harness rule)
+    const vamp = await Actor.create({name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}});
+    const mortal = await Actor.create({name: "WoDX gate: First Night Mortal", type: "Mortal"});
     made.push(vamp, mortal);
     await vamp.createEmbeddedDocuments("Item", [{name: "Enemy", type: "Feature", system: {type: "wod.types.flaw", value: 3}}]).catch(e => R.notes.push(`flaw item: ${e.message}`));
 
