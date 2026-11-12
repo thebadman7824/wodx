@@ -28,11 +28,11 @@ export async function setChronology(actor, changes) {
 }
 
 /** Record a drink of a vampire's blood. Returns the new bond stage. */
-export async function recordDrink(actor, regnant, time = game.time.worldTime) {
+export async function recordDrink(actor, regnant, time = game.time.worldTime, step = 1) {
   const l = lineage(actor);
   const bonds = {...(l.bonds ?? {})};
   const prev = bonds[regnant.id] ?? {name: regnant.name, drinks: 0};
-  bonds[regnant.id] = {name: regnant.name, drinks: prev.drinks + 1, last: time};
+  bonds[regnant.id] = {name: regnant.name, drinks: prev.drinks + Math.max(1, Number(step) || 1), last: time};
   await setLineage(actor, {bonds});
   return bondStage(bonds[regnant.id].drinks);
 }

@@ -16,6 +16,8 @@
  */
 
 import {ANIMAL_PRESETS, ANIMAL_DEFAULT_PRESET} from "./animal-rules.mjs";
+import {MORTAL_PRESETS, MORTAL_DEFAULT_PRESET} from "./mortal-rules.mjs";
+import {SUPERNATURAL_PRESETS, SUPERNATURAL_DEFAULT_PRESET} from "./supernatural-rules.mjs";
 
 export const ACTIVITIES = {
   sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
@@ -51,7 +53,9 @@ export const ROLES = {
   alley: {label: "Back alleys", kinds: ["alley", "street"]},
   sewer: {label: "Sewers and cellars", kinds: ["sewer", "alley"]},
   docks: {label: "The riverside", kinds: ["docks", "street"]},
-  park: {label: "Parks and churchyards", kinds: ["park", "church", "wilds"]}
+  park: {label: "Parks and churchyards", kinds: ["park", "church", "wilds"]},
+  hospital: {label: "Hospital or asylum", kinds: ["hospital", "workplace"]},
+  caern: {label: "The caern", kinds: ["caern", "wilds"]}
 };
 
 const weekdays = [0, 1, 2, 3, 4, 5];
@@ -142,7 +146,7 @@ export function presetBlocks(key, age = "medieval") {
   return p.blocks ?? [];
 }
 /** Ready routines that belong to the year (those with a `from` year after it are left out of the picker). */
-export const presetsFor = year => Object.fromEntries(Object.entries(PRESETS).filter(([, p]) => !p.from || !Number(year) || Number(year) >= p.from));
+export const presetsFor = year => Object.fromEntries(Object.entries(PRESETS).filter(([, p]) => !Number(year) || ((!p.from || Number(year) >= p.from) && (!p.to || Number(year) <= p.to))));
 
 const monFri = [0, 1, 2, 3, 4];
 /** Later ages of the first presets. Medieval hours stay as they were written above. */
@@ -263,6 +267,12 @@ Object.assign(PRESETS, {
 // NPC 0.21.0 (B1000): the animals' hours
 Object.assign(PRESETS, ANIMAL_PRESETS);
 Object.assign(DEFAULT_PRESET, ANIMAL_DEFAULT_PRESET);
+// NPC 0.23.0 (B1005): criminals, combatants and townsfolk
+Object.assign(PRESETS, MORTAL_PRESETS);
+Object.assign(DEFAULT_PRESET, MORTAL_DEFAULT_PRESET);
+// NPC 0.24.0 (B1009): supernatural NPCs by line
+Object.assign(PRESETS, SUPERNATURAL_PRESETS);
+Object.assign(DEFAULT_PRESET, SUPERNATURAL_DEFAULT_PRESET);
 Object.assign(DEFAULT_PRESET, {sabbat: "sabbat-pack", sheriff: "sheriff", mage: "mage", technocrat: "technocrat", changeling: "changeling",
   inquisitor: "inquisitor", soldier: "soldier", ghost: "wraith"});
 
@@ -423,9 +433,10 @@ export function isCurfew({hour, minute = 0, isNight}, start = 21) {
 export const TRIGGERS = {enter: "Entering", leave: "Leaving", stay: "Staying"};
 export const CONDITIONS = {night: "At night", curfew: "During the curfew", trespass: "Trespass (a private place)",
   weapon: "A weapon in hand", supernatural: "The supernatural shown openly"};
-export const RESPONSES = {challenge: "Challenge them", alarm: "Raise the alarm", send: "Send for help", flee: "Flee", fight: "Fight", ignore: "Let it pass"};
+export const RESPONSES = {challenge: "Challenge them", alarm: "Raise the alarm", send: "Send for help", flee: "Flee", fight: "Fight", ignore: "Let it pass",
+  report: "Tell someone later"};
 /** Responses WoDX can carry out by itself in Auto; a fight waits for the Storyteller unless fights start by themselves. */
-export const SELF_RESPONSES = ["challenge", "alarm", "send", "flee", "ignore"];
+export const SELF_RESPONSES = ["challenge", "alarm", "send", "flee", "ignore", "report"];
 
 /** Which of a region's conditions hold. sit: {night, curfew, trespass, weapon, supernatural}. No conditions: always. */
 export function conditionsMet(conds, sit, match = "any") {
@@ -529,6 +540,10 @@ export function pickReaction(profile, sit) {
     if ( terr && (sit.trespass || sit.homeGround) ) { sc += 1.5 * terr; r.push("defends its own patch"); }
     if ( hung && sit.hungry && sit.alone ) { sc += 1.5 * hung; r.push("hungry, and this one is alone"); }
     out.push({action: "fight", score: sc, why: r.length ? r.join("; ") : "picks a fight"});
+  }
+  // NPC 0.23.0 (B1007): lets it pass now and tells the watch, the gang or the secret police within a couple of hours
+  if ( tac.includes("report") && (amiss.length || sit.supernatural) ) {
+    out.push({action: "report", score: 2 + p.cunning + (afraid ? 1 : 0) + (sit.supernatural ? 1 : 0), why: "says nothing now, and tells someone later"});
   }
   out.push({action: "ignore", score: amiss.length ? 0.2 : 3, why: amiss.length ? "looks away" : "nothing amiss"});
   return out.sort((a, b) => b.score - a.score).map(o => ({...o, score: Math.round(o.score * 10) / 10}));
