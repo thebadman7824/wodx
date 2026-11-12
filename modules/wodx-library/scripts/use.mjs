@@ -42,6 +42,8 @@ export async function abilitiesOfItem(item) {
   const good = goodOfItem(item);
   const list = good ? U.abilitiesOf(good) : [];
   if ( U.normPages(item?.flags?.[MOD]?.pages).length && !list.includes("read") ) list.push("read");
+  // 0.12.0: things with parts in them can be taken apart (Storyteller's recipes, data/recipes.mjs SALVAGE)
+  try { if ( !list.includes("salvage") && (await st()?.cookery?.salvageOf?.(item))?.ok ) list.push("salvage"); } catch (e) { /* no Storyteller */ }
   return list;
 }
 
@@ -201,6 +203,12 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "pages": return writePage(actor, item, ability);
     case "read": { await say(actor, U.useLine(actor.name, "read", item.name)); return read(item); }
     case "letter": return letter(actor, item);
+    case "salvage": {
+      const ck = st()?.cookery;
+      const r = ck?.takeApart ? await ck.takeApart(actor, item) : {ok: false, why: "Taking apart needs WoDX Storyteller."};
+      if ( !r.ok && !r.rolled ) ui.notifications.warn(r.why);
+      return r;
+    }
     case "cook": {
       // 0.10.0: Cook, brew or mix (Storyteller), showing the recipes this thing goes into
       const ck = st()?.cookery;

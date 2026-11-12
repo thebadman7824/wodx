@@ -10,8 +10,9 @@
  *   5. a finished brew stands under its waiting name and takes its own name when its time comes (ripen)
  *   6. a made drug: strength and impure flags, the strength in its name
  *   7. teaching a recipe; a character without the know-how is refused
- *   8. the windows open and close (Cook, brew or mix; Property and building has the button); a tick runs without error
- *   9. every other WoDX module still answers
+ *   8. taking a crowbar apart with a saw in hand gives metal; Use offers it; soup cannot be taken apart
+ *   9. the windows open and close (Cook, brew or mix; Property and building has the button); a tick runs without error
+ *  10. every other WoDX module still answers
  * Result: Data/wodx-gate/gatecook-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -119,6 +120,16 @@ export async function run() {
       const listAfter = (await ck().list(A)).find(x => x.good.id === wine.id);
       await A.update({"system.abilities.crafts.value": 3});
       ok("know-how", listBefore && !listBefore.know.ok && listAfter?.know?.how === "taught", {before: listBefore?.know, after: listAfter?.know});
+    });
+
+    await step("take apart", async () => {
+      const [bar, saw] = await A.createEmbeddedDocuments("Item", [{name: "a crowbar", type: "Item"}, {name: "a hand saw", type: "Item"}]);
+      const uses = await game.modules.get("wodx-library")?.api?.use?.abilities?.(bar);
+      const before = A.items.size;
+      const r = await ck().takeApart(A, bar);
+      const food = await ck().salvageOf(A.items.find(i => i.name === "vegetable soup"));
+      ok("take apart", uses?.includes("salvage") && r.ok && !A.items.get(bar.id) && r.parts?.length && A.items.size === before - 1 + r.parts.length && !food.ok,
+        {uses, r: {ok: r.ok, why: r.why, parts: r.parts}, food: food.why});
     });
 
     await step("windows and tick", async () => {

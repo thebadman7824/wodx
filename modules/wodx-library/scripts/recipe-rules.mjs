@@ -7,10 +7,10 @@
  * tasks; everyday dishes need no roll when the cook's pool is at least the difficulty (Ben, 2026-11-12). Goals, waits,
  * batches, dots and strength are house rules (B947-B952).
  */
-import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER} from "../data/recipes.mjs";
+import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "../data/recipes.mjs";
 import {substanceOf} from "./use-rules.mjs";
 
-export {GROUPS, KITS, FAMILIES, METHODS};
+export {GROUPS, KITS, FAMILIES, METHODS, PART_CHOICES, SALVAGE};
 
 /** Strength for drugs and medicine, from the successes past the goal (house rule, B950). */
 export const STRENGTHS = [
@@ -202,6 +202,43 @@ export function usesOf(name, goods = [], year = 0) {
     if ( r.ok && r.recipe.needs.some(n => meets(n.group, name)) ) out.push(g);
   }
   return out;
+}
+
+/* ---------------------------------------------------------------- taking things apart (0.12.0) */
+
+/**
+ * The parts a good gives when taken apart in a year: {ok, why, parts: [{name, n}], ab, diff, tool, quick}.
+ * goods: the goods list (for the parts' years); valueAt: (good, year) => tier.
+ */
+export function salvageOf(good, year = 0, {goods = [], valueAt = g => Number(g?.value) || 0} = {}) {
+  if ( !good?.name ) return {ok: false, why: "No such thing."};
+  if ( NOT_APART.has(good.kind) || inScope(good) ) return {ok: false, why: `${cap(good.name)} is not something to take apart.`};
+  const rule = SALVAGE.find(r => r.kinds.includes(good.kind) && r.re.test(good.name));
+  if ( !rule ) return {ok: false, why: `${cap(good.name)} gives nothing worth keeping when taken apart.`};
+  const y = Number(year) || 0;
+  const tier = Math.max(0, Math.min(5, Math.round(valueAt(good, y) || 0)));
+  const inUse = name => goods.find(g => g.name === name && (!y || (y >= g.from && y <= g.to)));
+  const parts = [];
+  for ( const [choice, n] of rule.parts ) {
+    const g = (PART_CHOICES[choice] ?? []).map(inUse).find(Boolean);
+    if ( g ) parts.push({name: g.name, id: g.id, n: n + (tier >= 3 ? 1 : 0)});
+  }
+  if ( !parts.length ) return {ok: false, why: `${cap(good.name)} gives nothing worth keeping in ${y || "this year"}.`};
+  const ab = rule.ab === "technology" && y && y < 1900 ? "crafts" : rule.ab;
+  return {ok: true, why: "", parts, ab, attr: "dexterity", diff: 6 + (tier >= 4 ? 1 : 0), tool: rule.ab === "technology" ? "technology" : "any", quick: tier <= 1};
+}
+
+/** Has the character something to take it apart with? carried: names; qualitiesOf: Library link-rules, when there. */
+export function apartTool(tool = "any", carried = [], qualitiesOf = null) {
+  const re = APART_TOOLS[tool] ?? APART_TOOLS.any, want = APART_QUALITIES[tool] ?? APART_QUALITIES.any;
+  const hit = carried.find(c => re.test(String(c)) || (qualitiesOf && (qualitiesOf(c) ?? []).some(q => want.includes(q))));
+  return hit ? {ok: true, with: hit} : {ok: false, why: tool === "technology" ? "needs a screwdriver, pliers or a soldering iron" : "needs a knife, a hammer, a saw, pliers or a crowbar"};
+}
+
+/** V20 successes: each die at or over the difficulty, less one for each 1; a botch is ones and no successes. */
+export function successes(faces = [], diff = 6) {
+  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
 }
 
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());

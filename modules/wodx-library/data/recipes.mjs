@@ -285,3 +285,52 @@ export const FACTORY = /\b(crisps|breakfast cereal|corn flakes|luncheon meat|con
 
 /** Years the factory goods can be made by hand again: a food printer from 2040 makes any food. */
 export const FACTORY_PRINTER = 2040;
+
+/* ---------------------------------------------------------------- taking things apart */
+
+/**
+ * Library 0.12.0: taking a thing apart for parts (Cataclysm's reversible recipes; the item-links study, approved by
+ * Ben 2026-11-12). Each rule: a name pattern (and categories it applies to), the parts it gives, and the Ability.
+ * A part is a list of goods, first one in use in the year wins ("metal" gives steel bar stock after 1850, a bar of
+ * iron before). Things that are eaten, drunk, taken, burned, written on or struck as coin are not taken apart.
+ * House rules (B953).
+ */
+export const PART_CHOICES = {
+  metal: ["steel bar stock", "iron bar stock", "a bar of iron"],
+  wood: ["a seasoned timber plank", "a wooden panel"],
+  hide: ["a tanned hide", "a tanned pelt"],
+  wire: ["a coil of copper wire"],
+  scrap: ["a piece of scrap electronics"],
+  chip: ["a salvaged chip"],
+  plastic: ["a sheet of plastic", "a plastic sheet"],
+  wax: ["a lump of beeswax"],
+  hinge: ["a hinge"],
+  buckle: ["a steel buckle"],
+  cord: ["a short cordage piece"],
+  tube: ["copper tubing"],
+  aluminum: ["an aluminum sheet"]
+};
+const S = (re, kinds, parts, ab = "crafts") => ({re, kinds, parts, ab});
+/** First match wins. parts: [[choice, n]]; n grows by one at value tier 3 and up. */
+export const SALVAGE = [
+  S(/\b(phone|radio|television|computer|laptop|tablet|camera|recorder|player|console|scanner|drone|deck|calculator|gps|transistor|walkie|pager|watch|flashlight|headlamp|battery pack|power bank)\b/i,
+    ["tech", "power", "light", "toys", "tools", "medicine"], [["scrap", 1], ["wire", 1], ["plastic", 1], ["chip", 1]], "technology"),
+  S(/\b(lantern|lamp|stove|kettle|pot|pan|grill|oven|canteen|flask|tin|can|bucket|pail|cage)\b/i, ["light", "kitchen", "containers", "travel", "tools", "house"], [["metal", 1]]),
+  S(/\b(still|copper tubing)\b/i, ["kitchen", "tools"], [["tube", 1], ["metal", 1]]),
+  S(/\b(saddle|bridle|harness|boots?|shoes?|jerkin|belt|holster|sling|satchel|pouch|purse|bag|quiver|scabbard|sheath|bellows)\b/i, ["cloth", "travel", "containers", "accessories", "tools"], [["hide", 1], ["buckle", 1]]),
+  S(/\b(chest|coffer|cabinet|cupboard|wardrobe|trunk|door|box|crate)\b/i, ["house", "containers", "keepsake", "toys"], [["wood", 1], ["hinge", 1]]),
+  S(/\b(chair|stool|table|bench|bed|bedstead|shelf|shelves|cradle|loom|spinning wheel|barrel|cask|keg|cart|wheel|ladder|crutch|frame|easel|rack)\b/i, ["house", "containers", "travel", "medicine", "toys", "tools"], [["wood", 2]]),
+  S(/\b(candle|taper)\b/i, ["light", "faith"], [["wax", 1]]),
+  S(/\b(hammer|saw|axe|hatchet|pick|pickaxe|shovel|spade|crowbar|wrench|pliers|chisel|tongs|anvil|plough|plow|scythe|sickle|knife|blade|lock|padlock|key|chain|horseshoe|nails|trap|snare|spring)\b/i,
+    ["tools", "kitchen", "keys", "traps", "arms", "travel"], [["metal", 1]]),
+  S(/\b(tent|tarpaulin|hammock|net|rope)\b/i, ["travel", "house", "tools"], [["cord", 2]])
+];
+/** Categories never taken apart. */
+export const NOT_APART = new Set(["food", "drink", "drugs", "medicine", "coin", "papers", "manuals", "maps", "seeds", "fuel", "materials", "valuables", "faith", "occult", "hygiene"]);
+/** What a character needs in hand: a tool that cuts, pries or hammers; for electronics, one that turns screws or solders. */
+export const APART_TOOLS = {
+  any: /knife|dagger|blade|crowbar|screwdriver|hammer|\bsaw\b|hacksaw|multitool|pliers|wrench|chisel|hatchet|\baxe\b|mallet|tongs/i,
+  technology: /screwdriver|multitool|soldering iron|pliers|tool ?kit/i
+};
+/** The qualities from Library's link-rules (qualitiesOf) that serve instead of a named tool. */
+export const APART_QUALITIES = {any: ["cuts", "pries", "hammers"], technology: ["screws", "solders"]};

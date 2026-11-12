@@ -306,4 +306,56 @@ export async function cookDialog(actor = null, {using = ""} = {}) {
   return r;
 }
 
-export const cookApi = () => ({open: cookDialog, list: listFor, start, teach, unteach, known: knownOf, kits: sceneKits, setKits: setSceneKits, ripen, finish: finishRecipe, lib});
+/* ---------------------------------------------------------------- taking things apart (0.32.0) */
+
+/** What an item gives when taken apart now: the Library rule for its good. */
+export async function salvageOfItem(item) {
+  const l = await lib();
+  if ( !l || !item ) return {ok: false, why: "Taking apart needs WoDX Library."};
+  const id = item.flags?.[LIB]?.good;
+  const good = (id && l.G.GOODS.find(g => g.id === id)) || l.G.GOODS.find(g => g.name === l.R.cleanName(item.name) || g.name === item.name);
+  return l.R.salvageOf(good, yearNow(), {goods: l.G.GOODS, valueAt: l.G.valueAt});
+}
+
+/**
+ * Take one of an item apart for parts (V20 simple action, Dexterity + Crafts, or Technology for electronics; house
+ * rule B953). Cheap things need no roll when the pool is at least the difficulty. A failure keeps the thing; a botch
+ * spoils it and gives nothing.
+ */
+export async function takeApart(a, item) {
+  if ( !a || !item || !(game.user.isGM || a.isOwner) ) return {ok: false, why: "Only the character's owner or the Storyteller can do that."};
+  const l = await lib();
+  const s = await salvageOfItem(item);
+  if ( !s.ok ) return s;
+  let qualitiesOf = null;
+  try { qualitiesOf = (await import("../../wodx-library/scripts/link-rules.mjs")).qualitiesOf ?? null; } catch (e) { /* not there yet */ }
+  const carried = all(a.items).filter(i => i.id !== item.id).map(i => i.name);
+  const tool = l.R.apartTool(s.tool, carried, qualitiesOf);
+  if ( !tool.ok && !game.user.isGM ) return {ok: false, why: `${cap(tool.why)}.`};
+  const ab = abilitiesMap(a)[s.ab] ?? 0, at = a.system?.attributes?.[s.attr];
+  const pool = Math.max(1, num(at?.total ?? at?.value) + ab);
+  let res = {successes: 1, botch: false}, rolled = "";
+  if ( !(s.quick && pool >= s.diff) ) {
+    const roll = await new Roll(`${pool}d10`).evaluate();
+    const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+    res = l.R.successes(faces, s.diff);
+    rolled = ` (${pool} dice at ${s.diff}: ${faces.join(", ")})`;
+  }
+  const what = item.name.replace(/\s*\(\d+\)$/, "");
+  if ( !res.botch && !res.successes ) {
+    await ChatMessage.create({content: `<div class="wodx-card wst-cook"><p>${esc(a.name)} tries to take ${esc(what)} apart and gets nowhere${esc(rolled)}. It is still whole.</p></div>`, speaker: ChatMessage.getSpeaker({actor: a})});
+    return {ok: false, why: "No successes; it is still whole.", rolled: true};
+  }
+  const q = qtyOf(item);
+  if ( q > 1 ) await item.update({"flags.wodx-sheets.qty": q - 1}); else await item.delete();
+  if ( res.botch ) {
+    await ChatMessage.create({content: `<div class="wodx-card wst-cook"><p>${esc(a.name)} takes ${esc(what)} apart and spoils it: nothing worth keeping${esc(rolled)}.</p></div>`, speaker: ChatMessage.getSpeaker({actor: a})});
+    return {ok: true, botch: true, parts: []};
+  }
+  await a.createEmbeddedDocuments("Item", s.parts.map(p => ({name: p.name, type: "Item", flags: {[LIB]: {good: p.id}, "wodx-sheets": p.n > 1 ? {qty: p.n} : {}}})));
+  const got = s.parts.map(p => `${p.n} × ${p.name}`).join(", ");
+  await ChatMessage.create({content: `<div class="wodx-card wst-cook"><p>${esc(a.name)} takes ${esc(what)} apart${tool.ok ? ` with ${esc(tool.with)}` : ""} and keeps ${esc(got)}${esc(rolled)}.</p></div>`, speaker: ChatMessage.getSpeaker({actor: a})});
+  return {ok: true, parts: s.parts};
+}
+
+export const cookApi = () => ({open: cookDialog, salvageOf: salvageOfItem, takeApart, list: listFor, start, teach, unteach, known: knownOf, kits: sceneKits, setKits: setSceneKits, ripen, finish: finishRecipe, lib});

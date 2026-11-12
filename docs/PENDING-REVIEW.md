@@ -531,3 +531,4 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
 | 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
+| 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |

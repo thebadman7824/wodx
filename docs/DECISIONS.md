@@ -1165,3 +1165,8 @@ Reverse: KINDRED_TASTE in recipe-rules.mjs.
 ## B952. Batches and things that stand (2026-11-12)
 A batch's goal grows by half the base for each one past the first, up to the method's batch size, after Cataclysm's batch savings. A method with a wait (ale a week, wine three months, cheese a month, whiskey a year in the cask) makes the thing under a standing name ("ale (fermenting)"), which takes its own name when the clock passes the ready time (Storyteller ripen on world time). House rules on historical times.
 Reverse: batchGoal in recipe-rules.mjs; wait values in data/recipes.mjs.
+
+## B953. Taking things apart for parts (2026-11-12)
+Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.
+It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.
+Reverse: empty SALVAGE in data/recipes.mjs.
