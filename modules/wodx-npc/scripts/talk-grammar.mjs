@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.31.0: the talk generator, the pure part. No Foundry here, so the harness can test it.
+ * WoDX NPC 0.36.0: the talk generator, the pure part. No Foundry here, so the harness can test it.
  *
  * It makes what an NPC says when the Storyteller has written nothing that fits. No AI model: a grammar, in the
  * manner of Tracery (symbols that expand into words), with rules picked the way Left 4 Dead's dialogue picks them

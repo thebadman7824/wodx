@@ -597,12 +597,12 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 
 | Date | Question | Choice made | How to reverse |
 |---|---|---|---|
-| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1320) | setting "Talk generator" off; scripts/talk-grammar.mjs |
-| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1321) | setting off restores the old stock picker |
+| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
+| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
 | 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
 | 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
-| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1322) | data/grammar/house.mjs |
-| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1321; Reroll in PR 3) | |
+| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
+| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
 | 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
 | 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
 | 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
