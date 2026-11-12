@@ -1705,3 +1705,5 @@ From the Improvement Desk (Ben approved fo1 and cw1 as described). One Followers
 
 ## 2026-11-12: Anda marks (Chronicle 0.44.1)
 Ben's desk note: an Anda's frenzy leaves the Gangrel's animal marks, healing after a month. Decision B1519. Harness test added. Not on Live.
+
+The look gate's second PC run passed 9/9 (main 6ba1188). It showed one more slip: a fine-work item's trade price was scaled, but the words beside it still gave the plain price. Actions 3.54.0 redoes the words.
