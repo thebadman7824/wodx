@@ -846,7 +846,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid),
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null,
-        location: location ? { id: location.id, label: location.label } : null
+        location: location ? { id: location.id, label: location.label } : null,
+        noise: R.fightNoise(w)
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
@@ -1443,7 +1444,7 @@ Hooks.once("init", () => {
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
     const aftermath = AA.setupAftermath({ corpusTrack });
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.15.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.16.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1546,6 +1547,29 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
 /* ------------------------------------------------------------------ */
 
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
+
+/* ---- Fights make noise (3.16.0): an attack card is heard by NPCs nearby, through WoDX Interactables ---- */
+const fightHeard = new Map();
+Hooks.on("createChatMessage", msg => {
+    try {
+        const d = msg?.flags?.[MOD]?.data;
+        if (!d?.noise || !isActiveGM()) return;
+        const api = game.modules.get("wodx-interactables")?.api;
+        if (!api?.noiseAt) return;
+        const tokDoc = msg.speaker?.token ? game.scenes.get(msg.speaker.scene)?.tokens?.get(msg.speaker.token) : null;
+        if (!tokDoc?.object) return;
+        // Once a round per fight (or every few seconds outside one), louder wins
+        const key = `${tokDoc.parent.id}:${d.combatId ?? "none"}:${d.round ?? Math.floor(Date.now() / 6000)}`;
+        const was = fightHeard.get(key);
+        if (was === "loud" || (was === "quiet" && d.noise === "quiet")) return;
+        fightHeard.set(key, d.noise);
+        if (fightHeard.size > 50) fightHeard.delete(fightHeard.keys().next().value);
+        const combat = d.combatId ? game.combats.get(d.combatId) : null;
+        const except = [...(combat?.combatants ?? [])].map(c => c.token?.uuid).filter(Boolean);
+        if (d.targetToken) except.push(d.targetToken);
+        api.noiseAt({ token: tokDoc.object, noise: d.noise, kind: "fight", objectName: d.noise === "loud" ? "gunfire" : "a fight", except });
+    } catch (e) { console.warn(`${MOD} | fight noise`, e); }
+});
 Hooks.on("combatStart", combat => {
     if (!isActiveGM() || setting("autoInitiative") === "off") return;
     autoInitiative(combat).catch(e => console.error("WoDX |", e));

@@ -6,7 +6,7 @@ import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
- * WoDX NPC 0.35.0: people and what binds them, on the Foundry side (B1500-B1508).
+ * WoDX NPC 0.37.0: people and what binds them, on the Foundry side (B1500-B1508).
  *  - ties: every relationship WoDX keeps, read from both ends (ties-rules.mjs), for WoDX Sheets' Relationships tab;
  *  - the family and lineage tree window: sires and childer, domitors and ghouls, family, heirs, mentors, retainers;
  *  - secrets: kept on the holder, found by digging (Investigation, Auspex, spies) or a clue, each find a hook in the

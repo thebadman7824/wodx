@@ -65,7 +65,7 @@ import {setupChase} from "./chase.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.27.0";
+const VERSION = "0.28.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -818,6 +818,27 @@ export function hearersOf(tok, doc, noise) {
     out.push({name: t.name, uuid: t.document.uuid, likely});
   }
   return out;
+}
+
+/**
+ * Active Storyteller (0.28.0): a noise with no object behind it, such as a fight or a chase, heard from where a token
+ * stands. noise: quiet | loud; kind: "fight" | "chase"; except: token uuids that are part of it and so don't count as
+ * hearers. Passed on as a map event like any other, so NPCs who hear it react. Returns the event, or null.
+ */
+export function noiseAt({token, noise = "loud", kind = "fight", objectName = null, except = []} = {}) {
+  const tok = token?.object ?? token;
+  const tokDoc = tok?.document ?? token;
+  if ( !isActiveGM() || setting("noise") === false || !tok?.center || !R.EARSHOT[noise] || noise === "silent" ) return null;
+  if ( canvas.scene?.id !== tokDoc?.parent?.id ) return null;
+  const skip = new Set(except);
+  const heard = [];
+  for ( const t of canvas.tokens?.placeables ?? [] ) {
+    if ( !t.actor || t.id === tok.id || t.actor.hasPlayerOwner || t.document.hidden || skip.has(t.document.uuid) ) continue;
+    const h = R.hears(noise, {yards: yardsBetween(tok.center, t.center), walls: soundWalls(tok.center, t.center), asleep: asleepNow(t.actor),
+      perception: attrOf(t.actor, "perception"), alertness: num(t.actor.system?.abilities?.alertness?.value)});
+    if ( h.hears ) heard.push(t.document.uuid);
+  }
+  return publish(kind, {scene: tokDoc.parent, tokDoc, noise, heard, objectName, at: tok.center});
 }
 
 async function listenReport(tok, doc, out, author, actor) {
@@ -1819,14 +1840,14 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
-  game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf});
+  game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

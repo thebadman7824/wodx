@@ -12,10 +12,10 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
@@ -410,3 +410,27 @@ export const recordsAt = year => [...RECORDS].reverse().find(r => n(year) >= r.f
 export const mayMeditate = (last, now) => last == null || Math.floor((n(now) - 21600) / DAY) > Math.floor((n(last) - 21600) / DAY);
 /** Willpower plus or minus one, kept between 0 and the permanent rating. */
 export const willpowerStep = (wp = {}, d = 1) => clamp(n(wp.temporary) + d, 0, Math.max(0, n(wp.permanent) || 10));
+
+/* ---------------- Changeling (Chronicle 0.34.0) ---------------- */
+
+/** A changeling's rows, stacked: kith, seeming, court and a sidhe House. */
+export const faeRows = ({kith = [], seeming = [], court = [], house = []} = {}) =>
+  [rowIn(KITHS, kith), rowIn(SEEMINGS, seeming), rowIn(COURTS, court), rowIn(FAE_HOUSES, house)].filter(Boolean);
+/** Which court holds power in a month (1 to 12). */
+export const courtInPower = month => UNSEELIE_MONTHS.includes(n(month)) ? "unseelie" : "seelie";
+/** Glamour from a revel: one for each changeling there, one more for a Satyr. */
+export const revelGlamour = (row, glamour = {}) => clamp(n(glamour.temporary) + (row?.key === "satyr" ? 2 : 1), 0, Math.max(n(glamour.permanent) || 10, 10));
+export const isCoat = item => !!item && (item.coat === true || /\bseal\s*(skin|coat)\b/i.test(String(item.name ?? "")));
+
+/* ---------------- Wraith (Chronicle 0.35.0) ---------------- */
+
+/** A wraith's rows from the picks kept on the actor: guild, legion and faction. */
+export const wraithRows = ({guild = "", legion = "", faction = ""} = {}) =>
+  [rowIn(GUILDS, guild), rowIn(LEGIONS, legion), rowIn(WRAITH_FACTIONS, faction)].filter(Boolean);
+/** The legion the manner of death points to (the sheet's death field), or null. */
+export function legionFor(death = "") {
+  const text = ` ${words(death).join(" ")} `;
+  if ( text.trim() === "" ) return null;
+  return LEGIONS.find(l => l.death.some(w => text.includes(` ${w} `))) ?? null;
+}
+export const mayLuck = (last, now) => last == null || n(now) - n(last) >= LUCK_DAYS * DAY;

@@ -89,7 +89,7 @@ export function swapsFor({people = [], mine = [], gm = false, on = true, own = [
   for ( const p of people ?? [] ) {
     const name = String(p?.name ?? "").trim();
     if ( name.length < 2 || keep.has(name.toLowerCase()) || out.has(name) ) continue;
-    const as = nameFor({name, flags: p.flags ?? {}, mine, gm, on, playerOwned: !!p.playerOwned});
+    const as = nameFor({name, flags: p.flags ?? {}, mine, gm, on, playerOwned: !!p.playerOwned, auto: p.auto ?? ""});
     if ( as !== name ) out.set(name, as);
   }
   return [...out].map(([name, as]) => ({name, as})).sort((a, b) => b.name.length - a.name.length);

@@ -256,10 +256,32 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
       await w.update({[`flags.${MOD}.seenAs`]: next}, {render: false}).catch(e => console.warn(`${MOD} | seenAs`, e));
     }
   }
+  /** 0.35.0 (B1384): a named NPC was fed on (WoDX Actions); the vessel keeps that something happened, and who if it saw. */
+  async function onFed({by, vessel, willing, fought} = {}) {
+    if ( !isActiveGM() || !by?.uuid || !vessel?.uuid ) return;
+    const other = baseOf(fromUuidSync(by.uuid)), v = baseOf(fromUuidSync(vessel.uuid));
+    if ( !other?.id || !v?.update || v.id === other.id || v.hasPlayerOwner ) return;
+    const knows = v.flags?.world?.wodx?.knows ?? null;
+    const mem = RV.fedMemory({willing, fought, vessel: {kind: kindOf(v), knows}});
+    if ( mem === "nothing" ) return;
+    const at = game.time?.worldTime ?? 0;
+    const upd = {[`flags.${MOD}.fedOn`]: RV.noteFed(v.flags?.[MOD]?.fedOn ?? {}, other.id, {at, saw: mem === "saw"})};
+    if ( mem === "saw" ) upd[`flags.${MOD}.seenAs`] = RV.noteSeen(v.flags?.[MOD]?.seenAs ?? {}, other.id, "kindred", at);
+    await v.update(upd, {render: false}).catch(e => console.warn(`${MOD} | fedOn`, e));
+  }
+  /** What an NPC knows of others, for the Storyteller: who it has seen for what, and who fed on it. */
+  function knowledgeOf(actor) {
+    const f = baseOf(actor)?.flags?.[MOD] ?? {}, name = id => game.actors.get(id)?.name ?? "someone gone";
+    return {
+      seen: Object.entries(f.seenAs ?? {}).map(([id, x]) => ({id, name: name(id), secret: x.secret, at: x.at})),
+      fedOn: Object.entries(f.fedOn ?? {}).map(([id, x]) => ({id, name: name(id), at: x.at, times: x.times, saw: !!x.saw}))
+    };
+  }
   function hooks() {
     Hooks.on("updateToken", onTokenMoved);
+    Hooks.on("wodxFed", p => { onFed(p).catch(e => console.warn(`${MOD} | fed`, e)); });
     Hooks.on("wodxSecretSeen", p => { onSecretSeen(p).catch(e => console.warn(`${MOD} | secret seen`, e)); });
   }
 
-  return {registerSettings, hooks, sidesOf, knownTo, tells, regardOf, seedFor, checkPair, watchRivals, editRows, rules: RV};
+  return {registerSettings, hooks, sidesOf, knownTo, tells, knowledgeOf, regardOf, seedFor, checkPair, watchRivals, editRows, rules: RV};
 }

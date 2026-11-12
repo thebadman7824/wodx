@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX NPC 0.35.0, Chronicle 0.34.0, Sheets 0.11.0: relationships, the lineage tree, secrets and hooks, why an NPC
+// WoDX NPC 0.37.0, Chronicle 0.36.0, Sheets 0.11.0: relationships, the lineage tree, secrets and hooks, why an NPC
 // feels as they do, and talk lines that need a trait (the Improvement Desk's "people" group).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");

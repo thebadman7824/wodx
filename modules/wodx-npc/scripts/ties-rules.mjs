@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.35.0: relationships and lineage, the pure part (B1500-B1502). No Foundry here, so the harness can test it.
+ * WoDX NPC 0.37.0: relationships and lineage, the pure part (B1500-B1502). No Foundry here, so the harness can test it.
  *
  * WoDX already keeps who is tied to whom in several places; this file reads them all into one list of links, so the
  * sheet's Relationships tab and the family and lineage tree show the same thing:

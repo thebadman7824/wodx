@@ -126,7 +126,7 @@ export function menuFor(chain = [], known = {}) {
 export const canAsk = (topic, menu) => { const t = normTopic(topic); return !!t && (menu.local.includes(t) || menu.ask.includes(t)); };
 
 /**
- * NPC 0.35.0 (B1507): a line that needs a trait. The tests in its "Only when" list that ask about the character's own
+ * NPC 0.37.0 (B1507): a line that needs a trait. The tests in its "Only when" list that ask about the character's own
  * traits (a rated trait such as Dominate 2 or Etiquette 3, a merit, flaw or background, a power, a clan, tribe,
  * Tradition, kith or other sheet field, Generation, Arete or True Faith), as the Storyteller wrote them. A group's
  * choices are joined with "or". Empty for a line anyone may get.

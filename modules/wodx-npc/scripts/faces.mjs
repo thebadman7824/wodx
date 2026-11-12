@@ -20,6 +20,23 @@ export function registerFaceSettings() {
     scope: "world", config: true, type: Boolean, default: false, onChange: () => refreshAll()});
 }
 
+/**
+ * 0.35.0 (B1385): the one lookup for "what does this viewer call this NPC?" (api.nameFor). The Storyteller, and
+ * everyone when "Faces you have met" is off, gets the name; a player whose characters have not met the NPC gets the
+ * stranger's words. x: an actor, token or token document; user: the viewer (default this one).
+ */
+export function nameFor(x, user = game.user) {
+  const doc = x?.document ?? x;
+  const actor = doc?.actor ?? doc;
+  const name = doc?.name ?? actor?.name ?? "";
+  if ( !actor ) return name;
+  const theirs = (game.actors?.contents ?? []).filter(a => isPC(a) && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
+  const flags = (actor.isToken ? (actor.baseActor ?? actor) : actor)?.flags?.[MOD] ?? actor.flags?.[MOD] ?? {};
+  // a token gets the stranger line (0.34.0) when nobody wrote one
+  const auto = !user?.isGM && on() && doc?.documentName === "Token" ? autoFor(doc, actor, theirs) : "";
+  return F.nameFor({name, flags, mine: theirs, gm: !!user?.isGM, on: on(), playerOwned: actor.hasPlayerOwner, auto});
+}
+
 /** NPC 0.34.0: the stranger line, built from what shows, kept a few seconds per token (refreshToken fires often). */
 const autoCache = new Map();
 function autoFor(token, a, ids) {
@@ -78,9 +95,11 @@ export async function openFaces(actor) {
 function swapsNow(extra = []) {
   if ( game.user.isGM || !on() ) return [];
   const docs = new Set([...(canvas?.scene?.tokens?.contents ?? []), ...(game.combat?.combatants?.contents ?? []).map(c => c.token).filter(Boolean), ...extra]);
-  const people = [...docs].filter(d => d?.actor).map(d => ({name: d.name, flags: d.actor.flags?.[MOD] ?? {}, playerOwned: d.actor.hasPlayerOwner}));
+  const ids = mine();
+  const people = [...docs].filter(d => d?.actor).map(d => ({name: d.name, flags: d.actor.flags?.[MOD] ?? {}, playerOwned: d.actor.hasPlayerOwner,
+    auto: d.actor.hasPlayerOwner ? "" : autoFor(d, d.actor, ids)}));
   const own = (game.actors?.contents ?? []).filter(a => a.isOwner).map(a => a.name);
-  return F.swapsFor({people, mine: mine(), gm: false, on: true, own});
+  return F.swapsFor({people, mine: ids, gm: false, on: true, own});
 }
 /** Swap the names in every text node under el. */
 function maskEl(el, swaps) {

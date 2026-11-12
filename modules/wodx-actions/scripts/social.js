@@ -39,6 +39,8 @@ export function build(ctx) {
         return best;
     }
     const nameFor = tok => tok?.document?.name ?? tok?.name ?? "They";
+    /** What this player calls them in a window (WoDX NPC 0.35.0 nameFor: the stranger's words until met). Cards keep the name; NPC masks it per viewer. */
+    const viewName = tok => { try { return npcApi()?.nameFor?.(tok) || nameFor(tok); } catch (e) { return nameFor(tok); } };
     const attitudeOf = (npc, me) => { try { return npcApi()?.attitude?.of?.(npc, me) ?? null; } catch (e) { return null; } };
     const stockLine = (kind, npcTok, actor) => { try { return npcApi()?.talk?.stock?.(kind, { npc: npcTok, pc: actor }) ?? null; } catch (e) { return null; } };
 
@@ -61,7 +63,7 @@ export function build(ctx) {
         const btn = (k, icon, label, hint) => `<button type="button" class="wodx-wp-act" data-act="${k}" title="${esc(hint)}"><i class="fas ${icon}"></i> ${esc(label)}</button>`;
         // A div, not a form: the dialog wraps the content in its own form, and a form inside a form is dropped
         const content = `<div class="wodx-with-person">
-          <p>${esc(actor.name)} deals with <b>${esc(name)}</b>.</p>${gmLine}
+          <p>${esc(actor.name)} deals with <b>${esc(viewName(npcTok))}</b>.</p>${gmLine}
           <div class="wodx-wp-grid">
             ${npcApi()?.openTalk ? btn("talk", "fa-comment", "Talk", "Ask about the topics they will talk about") : ""}
             ${SR.ACTS.map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
@@ -80,7 +82,7 @@ export function build(ctx) {
                 root.closest?.(".application, .app, dialog")?.querySelector?.("[data-action=ok], button[data-button=ok], footer button")?.click();
             }));
         };
-        return dialog(`With ${name}`, content, "Choose", async fd => {
+        return dialog(`With ${viewName(npcTok)}`, content, "Choose", async fd => {
             if (game.user.isGM && fd.setAttitude !== undefined && fd.setAttitude !== "") await npcApi()?.attitude?.apply?.(npc, actor, { to: Number(fd.setAttitude), why: "Set by the Storyteller" });
             const act = fd.act;
             if (!act) return null;
@@ -92,7 +94,7 @@ export function build(ctx) {
                     await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
                     // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
                     if (res === "win" && feed && kindOf?.(actor) === "kindred") {
-                        const go = await dialog("Feed?", `<p>${esc(name)} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
+                        const go = await dialog("Feed?", `<p>${esc(viewName(npcTok))} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
                         if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
                     }
                 } });
@@ -118,7 +120,7 @@ export function build(ctx) {
         let fd = given;
         if (!fd) {
             const content = `<form>
-              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, against <b>${esc(name)}</b>.</p>
+              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, against <b>${esc(viewName(npcTok))}</b>.</p>
               <p class="vta-note">${esc(act.note)} (${esc(act.ref)})</p>
               <p class="vta-note">Pool: ${esc(pick ? `${pick.attr.replace(/^./, c => c.toUpperCase())} + ${pick.abilityName}` : "none")}, difficulty ${preset.diff ?? 6}. How they regard ${esc(actor.name)} may change it.</p>
               ${act.offer ? `<div class="form-group"><label>What is offered</label><select name="offer" data-fixed>${opts(SR.OFFERS.map(o => [o[0], o[1]]), "fair")}</select></div>
@@ -329,7 +331,7 @@ export function build(ctx) {
                 ? [["", "Whatever comes to hand"], ...(purse ? [["coins", "Coins from the purse"]] : []), ...(game.user.isGM ? theirs.map(i => [i.id, i.name]) : [])]
                 : mine.map(i => [i.id, i.name]);
             const content = `<form>
-              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, ${key === "lift" ? "from" : "on"} <b>${esc(name)}</b>.</p>
+              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, ${key === "lift" ? "from" : "on"} <b>${esc(viewName(npcTok))}</b>.</p>
               <p class="vta-note">${esc(act.note)} (${esc(act.ref)})</p>
               ${key === "lift" ? `<p class="vta-note">Worth a look: ${esc(SR.pocketsIn(yearNow()))}.</p>` : ""}
               <div class="form-group"><label>${key === "lift" ? "Go for" : "What to plant"}</label><select name="want" data-fixed>${opts(choices, "")}</select></div>
@@ -395,7 +397,7 @@ export function build(ctx) {
     /* ---------------- Trade (3.36.0) ---------------- */
     let TRE = null;
     const tradeX = () => TRE ??= TRD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, rollPool, rollBlock, post, esc, dialog, opts, willpower, spendWillpower,
-        attitudeOf, nameFor, npcApi, gmIds, proposeOrApply, moveItem });
+        attitudeOf, nameFor, viewName, npcApi, gmIds, proposeOrApply, moveItem });
     const trade = (actor, npcTok, key, given) => tradeX().trade(actor, npcTok, key, given);
 
     return { withPerson, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
