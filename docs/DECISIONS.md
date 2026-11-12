@@ -1754,6 +1754,11 @@ Each line has three opening goals for before 1800 and three from 1800, and morta
 
 Reverse: GOALS in data/pod.mjs; section in pod.mjs.
 
+## B1519. Anda marks heal like the Gangrel's (2026-11-12)
+Ben's note on the Splat Features Desk: an Anda takes the same animal marks from frenzy as any Gangrel, each lasting a month before it heals.
+
+Reverse: also on the anda row in data/signatures.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
