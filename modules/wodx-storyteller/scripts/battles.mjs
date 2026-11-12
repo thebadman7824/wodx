@@ -16,6 +16,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
  */
 
 const {MOD, esc, setting, isActiveGM} = C;
+const {ApplicationV2} = foundry.applications?.api ?? {ApplicationV2: class {}};
 const KEY = "battles";
 const n = v => Number(v) || 0;
 const now = () => globalThis.game?.time?.worldTime ?? 0;
