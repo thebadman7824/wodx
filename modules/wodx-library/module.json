@@ -2,7 +2,7 @@
   "id": "wodx-library",
   "title": "WoDX Library",
   "description": "World of Darkness Expanded: the library. Gear by era: the weapons, armor and cyberware of each era's books, with their pages, from the Dark Ages to Future Darkness, in a compendium and a window that hands them to characters. Everyday goods by era (food, drink, tools, cloth, money, papers, light, things of faith, medicine, keepsakes) for filling containers. The shelves: WoDX's own summaries of powers, roads, Arcanoi, conditions, house rules and eras with their pages, a compendium per line, shown by era in the Library window. A manual and a What's new journal every player can read. The Encyclopaedia Tenebrarum: a compendium of lore, characters and rules in plain summaries, every claim with its tier and page. Private use only; not for distribution or sale.",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "authors": [
     {
       "name": "WoDX Project (private)"

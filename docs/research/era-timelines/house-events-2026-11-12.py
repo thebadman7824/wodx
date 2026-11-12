@@ -3,9 +3,9 @@ Rothenstein in Moravia. Two kinds: 'history' (real Moravian and Bohemian history
 with what it means for the night) and 'house' (WoDX's own events). Each card says how it sits beside the approved
 book events (timeline-approved-2026-11-11.json). Named cast members of the chronicle are left out on purpose: what
 happens to them is the table's story.
-Writes desk-data-2026-11-12h1.json: the 8 eras, each with the house cards to review and the approved book cards
+Writes desk-data-2026-11-12h2.json: the 8 eras, each with the house cards to review and the approved book cards
 shown beside them for context (src 'book', not reviewed again)."""
-import json, os
+import json, os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 H, R = 'history', 'house'
 E = [
@@ -217,13 +217,13 @@ E = [
 # ---------------- Modern 1990 to 2009
 ('o01', 1993, H, 'Mortals', 'The Czech Republic',
  'On 1 January 1993 Czechoslovakia splits in two. Moravia is in the Czech Republic.',
- 'Real history (1993).', 'No clash. Mundane history; true on both branches.'),
+ 'Real history (1993).', 'No clash. Classic timeline only; the Future Darkness branch keeps its own approved history from 1990.'),
 ('o02', 1995, R, 'Mortals', 'The show mine',
  'The valley\'s Adit is reopened as a show mine for visitors. Guides tell of ghost miners; some of the stories are true.',
  'House rule.', 'No clash.'),
 ('o03', 1997, H, 'All lines', 'The great flood',
  'In July 1997 the Morava and Oder flood much of Moravia. Towns go under, and the Shadowlands shift.',
- 'Real history (Central European flood, July 1997).', 'No clash. True on both branches.'),
+ 'Real history (Central European flood, July 1997).', 'No clash. Classic timeline only; the Future Darkness branch keeps its own approved history from 1990.'),
 ('o04', 1999, R, 'Wraith', 'Refuge in the citadel',
  'When the Sixth Great Maelstrom breaks, the Moravian citadel takes in wraiths from across the east. It is the strongest the Hierarchy holds there.',
  'House rule.', 'The Sixth Great Maelstrom, 1999; leads into the Future Darkness cards where Moravia is the Hierarchy\'s last fortress.'),
@@ -234,20 +234,23 @@ E = [
  'The Czech Republic joins the European Union on 1 May 2004.',
  'Real history (2004).', 'The Time of Judgment year. Stands on its own because it is mundane; whatever the Storyteller chooses for the endings, the treaty is signed.'),
 ]
-LINES = {'Mortals', 'All lines', 'Vampire', 'Werewolf', 'Mage', 'Wraith', 'Changeling', 'Hunter'}
+sys.path.insert(0, '.')
+from house_events_wider import W
+LINES = {'Kindred of the East', 'Mummy', 'Mortals', 'All lines', 'Vampire', 'Werewolf', 'Mage', 'Wraith', 'Changeling', 'Hunter'}
 SPAN = [('dark-ages', 1197), ('long-night', 1347), ('renaissance', 1450), ('age-of-reason', 1601), ('victorian', 1837), ('great-war', 1914), ('mid-century', 1919), ('modern', 1990)]
 def era_of(y): return [k for k, lo in SPAN if lo <= y][-1]
 book = json.load(open('timeline-approved-2026-11-11.json'))
 ids = set()
-for i, y, kind, line, title, text, ref, fits in E:
+ALL = [t + ('Moravia', 1) for t in E] + [t + (2,) for t in W]
+for i, y, kind, line, title, text, ref, fits, region, rnd in ALL:
     assert line in LINES and i not in ids and 1197 <= y <= 2009, i
     assert '—' not in text + title + fits, i
     ids.add(i)
 out = []
 for e in book:
-    items = [{'id': 'h-' + i, 'era': e['id'], 'year': y, 'src': 'house', 'kind': kind, 'title': title, 'line': line, 'text': text, 'ref': ref, 'fits': fits}
-             for i, y, kind, line, title, text, ref, fits in E if era_of(y) == e['id']]
+    items = [{'id': 'h-' + i, 'era': e['id'], 'year': y, 'src': 'house', 'kind': kind, 'title': title, 'line': line, 'text': text, 'ref': ref, 'fits': fits, 'region': region, 'round': rnd}
+             for i, y, kind, line, title, text, ref, fits, region, rnd in ALL if era_of(y) == e['id']]
     ctx = [{'id': b['id'], 'year': b['year'], 'src': 'book', 'title': b['title'], 'line': b['line'], 'text': b['text']} for b in e['items']]
     out.append({'id': e['id'], 'name': e['name'], 'span': e['span'], 'items': sorted(items, key=lambda x: x['year']), 'book': ctx})
-json.dump(out, open('desk-data-2026-11-12h1.json', 'w'), ensure_ascii=False)
-print(len(E), {e['id']: len(e['items']) for e in out})
+json.dump(out, open('desk-data-2026-11-12h2.json', 'w'), ensure_ascii=False)
+print(len(E), len(W), {e['id']: len(e['items']) for e in out})

@@ -11,8 +11,12 @@
  *   Play, Look through, Make or fix: the common check. Sleep in it: marks sleep for the living.
  *   Everything else tells the table what the character does.
  * Anything a player cannot change themselves (hardship) goes to the Storyteller's client by socket.
+ * 0.11.0 (link-rules.mjs): a use that needs another thing (a light, a pipe, a syringe, ink, something to write with)
+ *   warns when nothing in Possessions has it, and the user may go ahead; full-or-empty supplies; liquids warn
+ *   when there is nothing to carry them in.
  */
 import * as U from "./use-rules.mjs";
+import * as L from "./link-rules.mjs";
 import * as X from "./examine-rules.mjs";
 
 const MOD = "wodx-library";
@@ -137,7 +141,12 @@ async function light(actor, item, good, refuel = false) {
     if ( !s || s.kind !== kind ) return ui.notifications.warn(kind === "electric" ? "There is no electric light to put it in." : "There is no oil lantern to fill.");
   }
   await carry(tok, "fresh", kind);
-  if ( refuel ) { await say(actor, U.useLine(actor.name, "refuel", item.name)); await spendOne(item); }
+  if ( refuel ) {
+    // 0.11.0: the lamp it goes into is full again
+    const lamp = (actor.items ?? []).find(i => isEmpty(i) && L.supplyOf(i.name)?.key === "lamp");
+    if ( lamp ) await lamp.update({[`flags.${MOD}.empty`]: false});
+    await say(actor, U.useLine(actor.name, "refuel", item.name)); await spendOne(item);
+  }
 }
 
 async function writePage(actor, item, ability) {
@@ -187,12 +196,59 @@ export async function read(item) {
     buttons: [{action: "close", label: "Close", default: true}]});
 }
 
+/* ---------------------------------------------------------------- what else a use needs (0.11.0) */
+
+const isEmpty = it => !!it?.flags?.[MOD]?.empty;
+/** The names of the other things a character holds that still work (an empty lighter lights nothing). */
+const heldNames = (actor, item) => (actor?.items ?? []).filter(i => i.id !== item?.id && !(isEmpty(i) && L.supplyOf(i.name))).map(i => i.name);
+
+/** What stops a use: needs no other thing meets, or an empty supply. "" when nothing does. */
+export function whatIsMissing(actor, item, good, ability) {
+  const sup = L.supplyOf(good ?? item?.name);
+  if ( sup && isEmpty(item) && L.SPENDS_SUPPLY.has(ability) ) return `${item.name} is empty: it needs ${sup.charge ? "charging" : `more ${sup.label}`}.`;
+  const missing = L.missingOf(L.needsOf(good ?? {name: item?.name}, ability, good ? U.lightOf(good) : null), heldNames(actor, item));
+  return L.missingLine(missing);
+}
+
+/** Warn, and let the user go ahead; the Storyteller hears of it and has the last word. True to go ahead. */
+async function goAhead(actor, item, ability, why) {
+  const a = U.ABILITIES[ability];
+  const ok = await foundry.applications.api.DialogV2.confirm({window: {title: `${a?.label ?? "Use"}: ${item.name}`}, classes: ["wodx-dialog", "wlib-use"],
+    content: `<p>${esc(why)}</p><p class="hint">Go ahead anyway? The Storyteller is told and has the last word.</p>`, rejectClose: false,
+    yes: {label: "Go ahead anyway"}, no: {label: "Cancel", default: true}});
+  if ( !ok ) return false;
+  if ( !game.user.isGM ) await ChatMessage.create({content: `<div class="wodx-card wlib-use-card"><p><b>${esc(actor.name)}: ${esc(a?.label ?? "Use")}, ${esc(item.name)}</b></p><p>${esc(why)} The player went ahead anyway; allow it or not.</p></div>`,
+    whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "What it needs"}});
+  return true;
+}
+
+/** Full or empty: mark it run out, refill it from a matching good (spent), or charge it (kept). */
+async function supplyAct(actor, item, act) {
+  const sup = L.supplyOf(goodOfItem(item) ?? item.name);
+  if ( !sup ) return null;
+  if ( act === "empty" ) {
+    await item.update({[`flags.${MOD}.empty`]: true});
+    return say(actor, sup.spentWhenEmpty ? `${item.name} has run out and cannot be refilled.` : `${item.name} has run out of ${sup.label}.`);
+  }
+  if ( sup.spentWhenEmpty ) return ui.notifications.warn(`${item.name} cannot be refilled.`);
+  const from = (actor?.items ?? []).find(i => i.id !== item.id && (L.fills(sup, i.name) || L.fills(sup, goodOfItem(i)?.name)));
+  const charging = from && sup.charge && L.fills({charge: sup.charge}, goodOfItem(from)?.name ?? from.name);
+  if ( !from ) return ui.notifications.warn(`Nothing in Possessions ${sup.charge ? "charges" : "refills"} it (${[...(sup.refill ?? []), ...(sup.charge ?? [])].join(", ")}).`);
+  await item.update({[`flags.${MOD}.empty`]: false});
+  await say(actor, charging ? `${actor.name} charges ${item.name} from ${from.name}.` : `${actor.name} refills ${item.name} with ${from.name}.`);
+  if ( !charging ) await spendOne(from);
+  return null;
+}
+
 /** Do one ability with an item. */
 export async function run(item, ability, actor = holderOf(item)) {
   await load();
   const good = goodOfItem(item);
+  if ( ability === "_empty" || ability === "_refill" ) return actor ? supplyAct(actor, item, ability.slice(1)) : null;
   const a = U.ABILITIES[ability];
   if ( !a || !actor ) return ui.notifications.warn("Pick the character who uses it first.");
+  const why = whatIsMissing(actor, item, good, ability);
+  if ( why && !(await goAhead(actor, item, ability, why)) ) return null;
   switch ( a.effect ) {
     case "take": return takeIt(actor, item, good, ability, ability === "throw" ? (targetActor() ?? actor) : actor);
     case "treat": return treat(actor, item, good);
@@ -238,17 +294,34 @@ export async function run(item, ability, actor = holderOf(item)) {
 /** The Use window: one button per ability. */
 export async function openUse(item, actor = holderOf(item)) {
   const list = await abilitiesOfItem(item);
-  if ( !list.length ) return ui.notifications.info("Nothing to do with it but keep it.");
-  if ( list.length === 1 ) return run(item, list[0], actor);
+  const good = goodOfItem(item);
+  const sup = L.supplyOf(good ?? item.name);
+  const extra = sup ? (isEmpty(item) ? (sup.spentWhenEmpty ? [] : [{action: "_refill", label: sup.charge ? "Charge it" : `Refill it (${sup.label})`}]) : [{action: "_empty", label: "It has run out"}]) : [];
+  if ( !list.length && !extra.length ) return ui.notifications.info("Nothing to do with it but keep it.");
+  if ( list.length === 1 && !extra.length ) return run(item, list[0], actor);
+  const can = L.qualitiesOf(good ?? item.name).map(k => L.QUALITIES[k].label);
+  const state = sup ? (isEmpty(item) ? `Empty: it needs ${sup.charge ? "charging" : `more ${sup.label}`}.` : `It has ${sup.label}.`) : "";
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 360}, window: {title: `Use: ${item.name}`}, classes: ["wodx-dialog", "wlib-use"],
-    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>`,
-    buttons: [...list.map((k, i) => ({action: k, label: U.ABILITIES[k].label, default: i === 0})), {action: "cancel", label: "Cancel"}]});
-  if ( res && U.ABILITIES[res] ) return run(item, res, actor);
+    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>${can.length ? `<p class="hint">It ${esc(can.join(", "))}.</p>` : ""}${state ? `<p class="hint">${esc(state)}</p>` : ""}`,
+    buttons: [...list.map((k, i) => ({action: k, label: U.ABILITIES[k].label, default: i === 0})), ...extra, {action: "cancel", label: "Cancel"}]});
+  if ( res && (U.ABILITIES[res] || res === "_empty" || res === "_refill") ) return run(item, res, actor);
+}
+
+/** A liquid needs something to carry it in (0.11.0): a soft check when one comes into Possessions. */
+async function onCreateItem(item, opts, userId) {
+  if ( userId !== game.user.id || item?.parent?.documentName !== "Actor" ) return;
+  await load();
+  const good = goodOfItem(item);
+  if ( !L.isLiquid(good) ) return;
+  const have = (item.parent.items ?? []).some(i => i.id !== item.id && L.qualitiesOf(i.name).includes("vessel"));
+  if ( have ) return;
+  await tellPrivately(item.parent, `${item.parent.name} and ${item.name}`, `${L.missingLine(["vessel"])} The Storyteller decides whether it can be carried.`);
 }
 
 export async function setupUse() {
   await load();
   game.socket?.on(SOCKET, onSocket);
+  Hooks.on("createItem", onCreateItem);
   const can = it => !!it && it.isOwner;
   Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {
     const it = app.document;
@@ -264,4 +337,4 @@ export async function setupUse() {
   });
 }
 
-export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, lineOf: lineOfActor});
+export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, links: L, missing: whatIsMissing, lineOf: lineOfActor});

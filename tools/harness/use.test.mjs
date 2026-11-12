@@ -27,7 +27,7 @@ test("use: every ability of every good is on the roster, and most goods have one
 
 test("use: a journal is written and drawn in, a fiddle played, a candle lit, a bedroll slept in", () => {
   assert.deepEqual(U.abilitiesOf(good("a leather journal")), ["write", "draw", "read"]);
-  assert.ok(U.abilitiesOf(good("a fiddle in a case")).includes("play"));
+  assert.ok(U.abilitiesOf(good("a fiddle")).includes("play"));
   assert.equal(U.lightOf(good("a tallow candle")), "candle");
   assert.equal(U.lightOf(good("a storm lantern")), "lantern");
   assert.equal(U.lightOf(good("a flashlight")), "electric");
