@@ -1687,3 +1687,11 @@ From the Improvement Desk (item c1, Ben approved as described): WoDX Chronicle 0
 
 ## 2026-11-12: progress clocks, the pacing note and spirit standing
 From the Improvement Desk (Ben approved s1, s2 as the lighter version, and o1). WoDX Storyteller 0.41.0: progress clocks (a Clocks tool for everyone, a section on the dashboard) read from long tasks, heat, ties and the Ledger, plus the Storyteller's own clocks that fill by hand or each faction turn, session or week; the night's draw carries a pacing note for the Storyteller; a fight started by WoDX Combat goes in the log. WoDX Otherworlds 0.16.0: standing with the spirit courts, with a Spirits tool; WoDX Actions 3.51.0 applies it to summoning, rites and chiminage. B1710 to B1714 and B1720 to B1724. Harness clocks.test.mjs (7 tests) and spirits.test.mjs (6); gate gategroup6.
+
+## 2026-11-12: followers, part 1 (NPC 0.38.0)
+
+Ben approved the Followers Review Desk. Part 1: the orders tool now reads every tie (B1800), so ghouls, backgrounds made real and Creation allies take orders without a macro. WoDX spots hard orders (B1801) and puts a suggested refusal roll on the approval (B1802). Keep watch and Guard notice strangers with routines.mjs noticeBy and warn or challenge (B1803). Fight orders: Attack the one I point at and Hold back, laid over the fight AI's choices with fightShift (B1804). The Ties tab fix landed on main first (Sheets 0.11.0), so it is not in this build. Harness tests in tools/harness/orders.test.mjs.
+
+## 2026-11-12: followers, part 2 (NPC 0.38.0, Storyteller 0.42.0, Chronicle 0.41.0, Interactables 0.31.0)
+
+The rest of the Followers Review Desk. Errands as long tasks on the follower's own sheet, with a wodxTaskDone hook from Storyteller (B1810); helpers on long tasks (B1811); buying from the master's purse (B1812); dealing with a witness and breaches traced to masters (B1813); followers join chases through a new Interactables chase.join (B1814); watching a rival (B1815); loyalty drift through Actions' wodxFed and a new wodxGhoulFix (Chronicle) hook (B1816).

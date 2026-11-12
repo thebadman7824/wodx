@@ -628,6 +628,25 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
 | 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 
+## Approved by Ben, 12 November 2026, 04:46 UTC (followers desk)
+
+Ben approved every recommendation on the Followers Review Desk (https://claude.ai/artifact/K4NCdhYriZjwgtzCgQQC4F). Built in three PRs; this table grows as each lands.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How does WoDX know who a follower serves? | Read all four ties (orders flag, Make them real, a ghoul's domitor, a Creation ally's patron); nothing migrated (B1800). | `servesFrom` in wodx-npc/scripts/order-rules.mjs: drop a tie from it. |
+| 2026-11-12 | Ties tab misses ghouls | Fixed on main by Sheets 0.11.0 (the Relationships tab) while this was built, so this build's own fix was dropped. | Nothing to reverse here. |
+| 2026-11-12 | Who decides hard orders? | WoDX counts an order as hard in a fight, or when sent toward someone hostile or plainly not human, and the Storyteller sees a suggested refusal roll: blood bound obeys (Willpower 8 only against near-certain death), else Willpower at 6 + attitude step + bond stage, 4 to 9. House rule (B1801, B1802). | `hardReasons` and `loyaltyCheck` in order-rules.mjs. |
+| 2026-11-12 | What do Keep watch and Guard do? | A follower on watch who notices a stranger (the reaction regions' notice roll) warns its master's player; a guard within 10 yards steps into their way and challenges them, farther off it warns. Players' characters, passers-by and fellow followers are never challenged (B1803). | `sentryAct`, `isIntruder` in order-rules.mjs; `sentries` in orders.mjs. |
+| 2026-11-12 | Do orders count in fights? | Yes: new Attack the one I point at and Hold back; Guard and Wait make running less likely; every follower guards its masters as a ghoul its domitor. In a fight only a Go-to order, or an attack on something plainly not human, is hard (B1804). | `fightShift` in order-rules.mjs; `OR.fightShift` in npc main.mjs. |
+| 2026-11-12 | Errands | Go and do this: six errands worked as a long task on the follower's own dice, its tokens hidden while away; a card when it ends (B1810). | `ERRANDS`, `errandTask` in order-rules.mjs. |
+| 2026-11-12 | Followers helping on long tasks | Each helper adds its dots in the task's Ability, at least one die (B1811). | `helperDice` in wodx-storyteller tasks-rules.mjs. |
+| 2026-11-12 | Shopping | A buying errand pays its price from the master's purse when it ends; if the purse is short nothing is bought (B1812). | `onTaskDone` in orders.mjs. |
+| 2026-11-12 | Masquerade | Deal with that witness: Manipulation + Subterfuge at 6 marks the witness talked round, a botch marks they told others; a follower's breach posts a card naming its masters (B1813). | `cleanupOutcome`, `onBreach`. |
+| 2026-11-12 | Chases | Followers on Follow behind a pursuing master, and those told to Cut them off, join a chase level with the slowest pursuer (B1814). | `joinChase` in wodx-interactables chase-rules.mjs. |
+| 2026-11-12 | Politics | Watch a rival is an errand; followers hold no seats (B1815). | `ERRANDS.spy`. |
+| 2026-11-12 | Loyalty drift | One step up or down on the attitude track for vitae, neglect, being fed on and hard orders; never below Distrusted by drift (B1816). | `drift` in order-rules.mjs. |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

@@ -20,6 +20,7 @@ import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildFounding} from "./founding.mjs";
+import * as OR from "./order-rules.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
@@ -34,7 +35,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.37.0";
+const VERSION = "0.38.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -221,6 +222,8 @@ export function readFight(tok, combat = game.combat) {
   const myHarm = harm.get(actor.uuid) ?? new Map();
   const lineage = actor.flags?.["wodx-creation"]?.lineage;
   const domitorId = lineage?.domitor?.id ?? null;
+  // NPC 0.38.0: a follower guards every character it serves (B1800), as a ghoul guards its domitor
+  const masters = OR.servesFrom(actor.flags);
   const plans = new Map();
   const E = enemies.map(t => {
     let plan = null;
@@ -236,7 +239,7 @@ export function readFight(tok, combat = game.combat) {
   });
   const AL = allies.map(t => {
     const hurt = harm.get(t.actor?.uuid) ?? new Map();
-    return {id: t.id, name: t.name, hurt: [...hurt.values()].reduce((a, b) => a + b, 0), isDomitor: !!domitorId && t.actor?.id === domitorId,
+    return {id: t.id, name: t.name, hurt: [...hurt.values()].reduce((a, b) => a + b, 0), isDomitor: (!!domitorId && t.actor?.id === domitorId) || masters.includes(t.actor?.id),
       attackerIds: enemies.filter(e => hurt.has(e.actor?.uuid)).map(e => e.id)};
   });
   const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
@@ -274,6 +277,8 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
+  // NPC 0.38.0 (B1804): a follower's standing order (attack that one, hold back, guard, wait)
+  options = OR.fightShift(options, actor.flags?.[MOD]?.order);
   // NPC 0.24.0: a Marauder's Quiet picks among what it could do
   if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
   if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
@@ -796,7 +801,7 @@ const founding = buildFounding({MOD, esc, gmIds, isActiveGM}, factions);
 factions.setFounding(founding);
 founding.hooks();
 /* 0.8.0: followers who take orders */
-const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor});
+const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor, yardsBetween, obvious, attitude: () => attitude});
 orders.hooks();
 Faces.registerFaceHooks();
 /* 0.10.0: the topic menu */

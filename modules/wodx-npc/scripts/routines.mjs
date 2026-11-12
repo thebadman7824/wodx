@@ -1358,6 +1358,27 @@ export function build(ctx) {
       why: `${nTok.name} ${want.why}, and sees ${pTok.name} (${res.why})`});
   }
 
+  /**
+   * NPC 0.38.0: does this NPC token notice that token now? The same sight range, walls and notice roll as the
+   * reaction regions. Returns {noticed, why, yards}. Used by followers on Keep watch or Guard (orders.mjs).
+   */
+  async function noticeBy(wTok, iTok) {
+    if ( !wTok?.actor || !iTok?.actor ) return {noticed: false, why: "no token", yards: null};
+    let d = {};
+    try { await loadCalendar(); d = describer()(game.time.worldTime) ?? {}; } catch (e) { d = {}; }
+    const range = d.isNight ? SIGHT_YARDS.night : SIGHT_YARDS.day;
+    const yards = ctx.yardsBetween(wTok, iTok);
+    const inSight = (yards === null || yards <= range) && !sightBlocked(wTok.center, iTok.center);
+    const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
+    const wa = base(wTok.actor), act = whereOf(wa)?.activity, intruder = iTok.actor;
+    const ob = ctx.hiddenByObfuscate(iTok) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
+    const res = R.notice({perception: at(wTok.actor, "perception"), alertness: ab(wTok.actor, "alertness"), awareness: ab(wTok.actor, "awareness"),
+      auspex: disc(wTok.actor, "auspex") || (AN.isAnimal(profileFor(wTok.actor).template) ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight},
+      {dexterity: at(intruder, "dexterity"), stealth: ab(intruder, "stealth"), manipulation: at(intruder, "manipulation"), subterfuge: ab(intruder, "subterfuge"), sneaking: sneaking(iTok.document), obfuscate: ob},
+      {book: bookNow(), diff: AR.NOTICE_DIFF[alertLevel(wTok.document?.parent ?? canvas.scene)] ?? 6});
+    return {noticed: !!res.noticed, why: res.why, yards};
+  }
+
   /** Active Storyteller: a token moved on the scene being viewed. Hostile NPCs who see a character start a fight. */
   async function watchFoes(docLike) {
     const doc = docLike?.document ?? docLike;
@@ -1441,5 +1462,5 @@ export function build(ctx) {
 
   return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
-    editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow};
+    editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }

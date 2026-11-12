@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.41.0 (a ghoul's monthly fix tells WoDX NPC, for its loyalty)
 - 0.40.0 (the Legends book: what has really happened in this chronicle, one page per century, with filters by person, place, faction and year)
 - 0.39.0 (Game time: the Clock's Time row (each character's own time, with Convene, from WoDX Storyteller); The sun on this scene (a scene's own latitude and hours from home for sun and sky); the clock that runs with the table, off by default (world settings paceMinutes, paceEvery); api.place, api.pace, api.refreshClock)
 - 0.38.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)

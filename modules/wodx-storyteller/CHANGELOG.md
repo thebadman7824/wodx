@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.42.0 (followers helping on a long task add their own dots in its Ability; a long task that ends tells WoDX NPC, for errands)
 - 0.41.0 (progress clocks from long tasks, heat, ties and the Ledger, and the Storyteller's own; a pacing note on the night's draw; a fight goes in the log)
 - 0.40.0 (Game time: api.time. Work done apart from the main group goes on the character's own time (world setting Work done apart goes on the character's own time, on); a player's long roll sends its time to the approval queue; the Time row on the Clock)
 - 0.38.1 (the prelude journal shows the player's written prelude and what the prelude runner logged)
