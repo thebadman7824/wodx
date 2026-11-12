@@ -135,15 +135,20 @@ async function setup() {
       {named, first, test, lines: lines.length, later: later.step, stored, clean: clean.step});
   });
   await step("4 fine work", async () => {
-    const TR = A().tradeRules;
-    const good = plain?.name ?? fine.name;
+        const good = plain?.name ?? fine.name;
     const [knife] = await pc.createEmbeddedDocuments("Item", [{name: `${good} (fine work)`, type: "Item", flags: {"wodx-storyteller": {quality: "fine", priceFactor: 1.5}}}]);
     const priceOf = async n => (await M()?.price?.(n)) ?? M()?.priceSync?.(n) ?? null;
     const base = await priceOf(good), tagged = await priceOf(knife.name);
-    const priced = tagged ? TR.withQuality(tagged, TR.qualityFactor(knife)) : null;
-    await knife.delete();
-    ok("4 fine work", !!base && !!tagged && tagged.each === base.each && priced?.each === Math.max(1, Math.round(base.each * 1.5)),
-      {good, money: !!M(), base, tagged, priced});
+    // What the trade window itself offers for it, beside a plain one: the price and its words in money
+    const [plainOne] = await pc.createEmbeddedDocuments("Item", [{name: good, type: "Item"}]);
+    const rows = A().tradeLists?.offers?.(pc) ?? [];
+    const fineRow = rows.find(r => r.item === knife.id), plainRow = rows.find(r => r.item === plainOne.id);
+    const priced = fineRow?.price ?? null;
+    await knife.delete(); await plainOne.delete();
+    const want = Math.max(1, Math.round(base?.each * 1.5));
+    ok("4 fine work", !!base && !!tagged && tagged.each === base.each && priced?.each === want && plainRow?.price?.each === base.each
+      && !!priced?.text && priced.text === M().format(priced.total),
+      {good, money: !!M(), base, tagged, fine: priced && {each: priced.each, text: priced.text}, plain: plainRow?.price && {each: plainRow.price.each, text: plainRow.price.text}});
   });
   await step("5 pass as someone else", async () => {
     const coat = pc.items.get(ids.fineCoat);
