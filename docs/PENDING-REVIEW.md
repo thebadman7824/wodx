@@ -651,35 +651,6 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 
 Ben explicitly approved every row that was waiting for review ("Approve all items on pending review"). That includes deleting the four stale test combats on rothenstein-wodx, done by the PC helper with a backup first. 4 lifepath rows that were listed twice are left out here, since the 04:40 UTC lifepaths table above already holds them.
 
-## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
-
-All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
-
-| Date | Question | Choice made | How to reverse |
-|---|---|---|---|
-| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
-| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
-| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
-| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
-| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
-| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
-| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
-| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
-| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
-| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
-
-### Approved by Ben, 12 November 2026, 18:50 UTC (body plan, "no suggestions")
-
-| Date | Question | Choice made | How to reverse it |
-|---|---|---|---|
-| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
-| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
-| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
-| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
-| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
-
-## Waiting for review
-
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-12 | Which factions keep a polity by default? | A Kindred faction of three or more members keeps the court of its age; a sect picked before it exists runs as the court of its age (B1101) | polityFor returns f.polity only |
@@ -765,7 +736,34 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Spark and Dreamers (B2223) | Spark 0 to 3 by age and kind of person; Reverie only on a Dreamer (2 or more) | AGE_SPARK, CAT_SPARK, DREAMER in crowd-rules.mjs |
 | 2026-11-12 | Ravaging a passer-by (B2224) | Once a night each; left dull and listless for the night and kept on the map | ravagedTonight in crowd-rules.mjs; the note in c20.js epiphany() |
 | 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |
-| 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Not deleted. Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
+| 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Deleted on the testbed 2026-11-12 after a backup (gates/delete-stale-combats-result-2026-11-12.md). Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
+
+## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
+
+All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
+| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
+| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
+| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
+| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
+| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
+| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
+| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
+| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
+| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
+
+### Approved by Ben, 12 November 2026, 18:50 UTC (body plan, "no suggestions")
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
+| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
+| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
+| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
+| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
 
 ## Approved by Ben, 12 November 2026, 12:42 UTC (battles, State of the Game review)
 
@@ -879,3 +877,13 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | A swimmer's load with no weights on items (B2443) | Steps from armor's Dexterity penalty and a burden of 0 to 3 set on the token HUD; a quarter of the speed and +1 difficulty a step; under at four | Say to count something else, or give other steps |
 | 2026-11-12 | What each way of moving does to the senses (B2444), and 28 new lines | As listed in B2444; the lines are in STANCE_SENSES and lowFigure in senses-rules.mjs | Edit any line or number |
 | 2026-11-12 | After the riding book check (B2445): what else to take from the books | Built: Abilities held to Ride in the saddle (V20 Dark Ages p. 399). Not built: the mount dodging for its rider, the mount's Attributes for the rider, Stamina + Ride to keep the saddle when hit, lance rules, mounted archery at +2 and +4 | Name any to build |
+| 2026-11-12 | Storyteller automation desk (B2450-B2469): 46 choices on which Storyteller steps run by themselves (https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P) | Study only, nothing built. Recommendations stand until picked: three automation levels starting at today's values, small-proposal rules per queue kind, a Waiting tray, fights end by themselves (Suggest), player time requests, 60 s talk wait, XP spends by the book; Priority 3 with the Lone Chronicle | Pick other options on the desk |
+| 2026-11-12 | The campaign around a siege: a week's foraging as 14 rolls by one leader, supply lines by the year feeding part of an army (B2471) | Wagons half, boats three quarters, rail from 1840, lorries from 1915, airlift from 1940, drone convoys on the Future Darkness branch all; a hungry camp loses a point of resolve a week | Change SUPPLY_LINES in siege-works-rules.mjs, or roll foraging per team |
+| 2026-11-12 | Mines (B2473): the dig roll at 6, a botch losing a quarter of the tunnel, the mine firing by itself at the walls, powder +2 dice from the Hussite age and high explosive +4 from 1860 | As listed | Say if the mine should wait for the Storyteller's word to fire, or other figures |
+| 2026-11-12 | Siege engines (B2474): one telling attack a day per engine, and the guns after the book's engines (bombard to railgun) with WoDX figures | As listed in B2474 | Change ENGINES in siege-works-rules.mjs |
+| 2026-11-12 | Walls (B2475, B2476): walls by where the garrison stands, the forts after the book (bastion, earth rampart, concrete) with WoDX figures, damage filling the breach clock in proportion, a ditch taking the first 4 works successes | As listed | Change WALLS, WALL_OF_POSITION or MOAT_FILL |
+| 2026-11-12 | Naval battle (B2477) waits on reading the Spoils of War ship table (Speed, Maneuverability) on the PC | Read; built as Ships at sea (B2480-B2487) | Nothing to reverse |
+| 2026-11-12 | Ships at sea (B2481): the ships after the book's (gun galley to drone corvette) and their guns are WoDX figures | As listed in B2481 | Change SHIPS and GUNS in naval-rules.mjs |
+| 2026-11-12 | Ships at sea (B2483, B2485): the Great War's gunnery and ramming read for ships of the living world with Seamanship; ships soak at 6; a ship built to ram takes 1 die a net success | As listed | Name other figures |
+| 2026-11-12 | Ships at sea (B2482, B2486): a quarry 5,000 yards off gets away; repair at 6 with each helper a die | As listed | Change LOST_AT or the repair roll |
+| 2026-11-12 | Ships at sea leaves for later (B2487): fleets, spotting and the watch, special shot, relic ships of the Tempest, Umbral ships, tokens on a map | Not built | Name any to build |

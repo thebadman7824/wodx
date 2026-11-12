@@ -36,12 +36,50 @@ def split_sentences(text):
             out.append(p[:cut].strip())
             p = p[cut:].strip()
         out.append(p)
+    return merge_short(out)
+
+
+def merge_short(parts, words=4):
+    """Chatterbox garbles very short inputs ("Ha!", "Halt!"), so a sentence under `words` words joins the next one."""
+    out = []
+    carry = ""
+    for p in parts:
+        cur = (carry + " " + p).strip() if carry else p
+        if len(cur.split()) < words:
+            carry = cur
+            continue
+        out.append(cur)
+        carry = ""
+    if carry:
+        if out:
+            out[-1] = out[-1] + " " + carry
+        else:
+            out.append(carry)
+    return out
+
+
+def chunks(text, limit=280):
+    """The line whole when it is short enough for one pass; else whole sentences grouped up to `limit` characters."""
+    t = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not t:
+        return []
+    if len(t) <= limit:
+        return [t]
+    out, cur = [], ""
+    for s in split_sentences(t):
+        if cur and len(cur) + 1 + len(s) > limit:
+            out.append(cur)
+            cur = s
+        else:
+            cur = (cur + " " + s).strip()
+    if cur:
+        out.append(cur)
     return out
 
 
 def sentence_delivery(sentence, base):
     """A sentence's own lift: an exclamation gets a little more emotion, a trailing one a little less pace."""
-    ex, cfg = base["exaggeration"], base["cfg"]
+    ex, cfg = base["exaggeration"], max(0.3, base["cfg"])
     if sentence.endswith("!") or sentence.endswith("!\""):
         ex = min(1.5, ex + 0.1)
     if sentence.endswith("...") or sentence.endswith("…"):
@@ -73,8 +111,32 @@ def to_wav_bytes(samples, sr):
     return buf.getvalue()
 
 
-def trim_and_level(x, sr):
-    """Trim quiet ends (keeping 60 ms) and bring speech to about -20 dBFS RMS with a ceiling at -1 dBFS."""
+def drop_lead_burst(x, sr, max_burst=0.15, min_gap=0.12):
+    """Cut a short burst at the very start (a click or a garbled sound under 150 ms) that is followed by a gap of at
+    least 120 ms before the speech proper, the glitch Chatterbox sometimes puts before a line."""
+    import numpy as np
+    fr = max(1, int(sr * 0.01))
+    n = x.size // fr
+    if n < 10:
+        return x
+    rms = np.sqrt(np.mean(x[: n * fr].reshape(n, fr) ** 2, axis=1) + 1e-12)
+    on = rms > max(1e-4, rms.max() * 0.08)
+    i = 0
+    while i < n and not on[i]:
+        i += 1
+    j = i
+    while j < n and on[j]:
+        j += 1
+    k = j
+    while k < n and not on[k]:
+        k += 1
+    if i < n and (j - i) * 0.01 <= max_burst and (k - j) * 0.01 >= min_gap and k < n:
+        return x[max(0, k * fr - int(sr * 0.04)):]
+    return x
+
+
+def edges(x, sr):
+    """Trim quiet ends, keeping 60 ms."""
     import numpy as np
     if x.size == 0:
         return x
@@ -85,15 +147,22 @@ def trim_and_level(x, sr):
         loud = np.where(rms > max(1e-4, rms.max() * 0.03))[0]
         if loud.size:
             pad = int(sr * 0.06)
-            a = max(0, loud[0] * frame - pad)
-            b = min(x.size, (loud[-1] + 1) * frame + pad)
-            x = x[a:b]
-    rms = float(np.sqrt(np.mean(x ** 2) + 1e-12))
-    x = x * (0.1 / rms)
-    peak = float(np.max(np.abs(x)) or 1.0)
-    if peak > 0.89:
-        x = x * (0.89 / peak)
+            x = x[max(0, loud[0] * frame - pad): min(x.size, (loud[-1] + 1) * frame + pad)]
     return x
+
+
+def level(x):
+    """Speech at about -20 dBFS RMS, with a ceiling at -1 dBFS."""
+    import numpy as np
+    if x.size == 0:
+        return x
+    x = x * (0.1 / float(np.sqrt(np.mean(x ** 2) + 1e-12)))
+    peak = float(np.max(np.abs(x)) or 1.0)
+    return x * (0.89 / peak) if peak > 0.89 else x
+
+
+def trim_and_level(x, sr):
+    return level(drop_lead_burst(edges(x, sr), sr))
 
 
 class Voices:
@@ -137,23 +206,24 @@ class Engine:
         self.model.conds = self.conds[vid]
 
     def render(self, text, vid, path, d, seed=0):
+        """One line in one pass, so its rhythm carries from sentence to sentence; only long speeches are cut into
+        chunks of whole sentences, joined with short, varied pauses. Loudness is evened once, over the whole line."""
         import numpy as np, random
         rng = random.Random(seed)
         out = []
         with self.lock:
-            for i, s in enumerate(split_sentences(text)):
+            for i, s in enumerate(chunks(text)):
                 ex, cfg = sentence_delivery(s, d)
                 self._use(vid, path, ex)
                 self.torch.manual_seed((int(seed) + i * 7919) % 2147483647)
                 wav = self.model.generate(s, exaggeration=ex, cfg_weight=cfg, temperature=d["temperature"])
                 x = wav.squeeze().detach().cpu().numpy().astype("float32")
-                x = trim_and_level(x, self.sr)
-                out.append(x)
+                out.append(drop_lead_burst(edges(x, self.sr), self.sr))
                 out.append(np.zeros(int(self.sr * pause_after(s, rng)), dtype="float32"))
         if not out:
             return b""
         y = np.concatenate(out[:-1]) if len(out) > 1 else out[0]
-        return to_wav_bytes(y, self.sr)
+        return to_wav_bytes(level(y), self.sr)
 
 
 def num(v, lo, hi, default):
@@ -310,10 +380,11 @@ def render_samples(engine, voices, out, picks=None):
     report = []
 
     def choose(want):
-        """The liveliest voice not used yet in the register wanted, else in any register."""
+        """A voice not used yet in the register wanted: lively, but not the extreme ones, whose pitch track is often
+        a sign of a creaky or odd voice. Takes the one at about the 70th percentile of liveliness."""
         pool = [v for v in voices.list if v["id"] not in used]
-        fit = [v for v in pool if v.get("register") == want] or pool or voices.list
-        return max(fit, key=lambda v: float(v.get("lively", 0)))["id"]
+        fit = sorted([v for v in pool if v.get("register") == want] or pool or voices.list, key=lambda v: float(v.get("lively", 0)))
+        return fit[min(len(fit) - 1, int(len(fit) * 0.7))]["id"]
 
     for i, (name, s) in enumerate(SAMPLES):
         vid = picks.get(name) or choose(s.get("want"))

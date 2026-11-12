@@ -58,10 +58,14 @@ import * as BuildRules from "./build-rules.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as ClockRules from "./clock-rules.mjs";
 import * as Battles from "./battles.mjs";
+import * as Naval from "./naval.mjs";
+import * as NavalRules from "./naval-rules.mjs";
 import * as BattleDeeds from "./battle-deeds.mjs";
 import * as BattleAftermath from "./battle-aftermath.mjs";
 import * as BattleExtras from "./battle-extras.mjs";
 import * as BattleRules from "./battle-rules.mjs";
+import * as SiegeWorks from "./siege-works.mjs";
+import * as SiegeWorksRules from "./siege-works-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -106,6 +110,8 @@ Hooks.once("init", () => {
   Clocks.registerClockHooks();
   Battles.registerBattleSettings();
   Hand.addTool({key: "battle", label: "Battles and sieges", icon: "fa-chess-rook", run: () => Battles.BattlesApp.open()});
+  Naval.registerNavalSettings();
+  Hand.addTool({key: "naval", label: "Ships at sea", icon: "fa-anchor", run: () => Naval.NavalApp.open()});
   Hand.registerHandSettings();
   Hand.registerHandHooks();
   Hand.registerHandKeys();
@@ -152,12 +158,17 @@ Hooks.once("ready", () => {
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},
+    naval: {open: id => Naval.NavalApp.open(id), list: Naval.list, get: Naval.get, start: Naval.start, setup: Naval.setupDialog, navigate: Naval.navigate,
+      pursue: Naval.pursue, manoeuvre: Naval.manoeuvre, fire: Naval.fire, ram: Naval.ram, breakAway: Naval.breakAway, setGap: Naval.setGap,
+      quarter: Naval.quarter, boarding: Naval.boarding, setRowing: Naval.setRowing, undo: Naval.undo, passTime: Naval.passTime, remove: Naval.remove, rules: NavalRules},
     battles: {open: id => Battles.BattlesApp.open(id), list: Battles.list, get: Battles.get, start: Battles.start, setup: Battles.setupDialog, fight: Battles.fight,
       week: Battles.week, storm: Battles.storm, withdraw: Battles.withdrawSide, draw: Battles.callDraw, undo: Battles.undo, passTime: Battles.passTime,
       hazard: Battles.hazard, remove: Battles.remove, commandPool: Battles.commandPool, commandPools: Battles.commandPools, rules: BattleRules},
     battleDeeds: {rules: BattleDeeds, offer: BattleExtras.offer, roll: BattleExtras.rollDeed, swap: BattleExtras.swap, skip: BattleExtras.skip,
       leaderDeed: BattleDeeds.leaderDeed, deedSuccessesFor: BattleDeeds.deedSuccessesFor},
     battleAftermath: {rules: BattleAftermath, send: BattleExtras.send, undo: BattleExtras.unsend},
+    siegeWorks: {rules: SiegeWorksRules, setup: SiegeWorks.setupDialog, mine: SiegeWorks.mineDialog, addEngine: SiegeWorks.addEngine, readyEngine: SiegeWorks.readyEngine,
+      removeEngine: SiegeWorks.removeEngine, endMine: SiegeWorks.endMine, draw: SiegeWorks.draw},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,

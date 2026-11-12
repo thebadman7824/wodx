@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2450
+Next free block: B2490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -98,6 +98,9 @@ Next free block: B2450
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
 | B2430-B2439 | Music from free sources: the sorter, where audio files live, the open credits journal | Atmosphere, tools |
 | B2440-B2449 | The last of the ways of moving: riding in a fight, the mounted charge, a swimmer's load, senses by stance | Combat, Interactables, Senses, NPC |
+| B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
+| B2470-B2479 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
+| B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2819,3 +2822,99 @@ Reverse: have stanceOf in the Senses main.mjs return "standing".
 The PC read the books (project-files ride-load-book-check.md). Taken up: in the saddle no Ability counts for more dots than the rider has in Ride (V20 Dark Ages p. 399), applied to attack pools on hooves with a saddle, using the Ability the chase uses for that mount. The mounted charge's page is 399, not 398. Left as they are: the charge by yards (the book counts turns of building speed, which a map does not have); the saddle's -1 down and +1 up (no book gives a height figure for a rider); the swimmer's load (no book has swimming in armor; V20 p. 259 and V20 Dark Ages p. 334 count pounds per Strength dot, and WoDX items carry no weights); the senses by stance (no book has senses under water). Not built, for Ben to say: the mount dodging once a turn for its rider and the rider using the mount's Attributes (V20 Dark Ages p. 399), Stamina + Ride to keep the saddle when hit and the lance rules (Dark Ages: Vampire pp. 244-245), a moving shooter at +1 (M20 p. 419) in place of the house +1.
 
 Reverse: have rideCapOf in movement.js return its plain answer.
+
+
+## B2470. The campaign around a siege (2026-11-12, Master Plan leftover of Battles and sieges, priority 3)
+Battles and sieges left foraging, keeping order, sapping in yards and the siege engines open. WoDX Storyteller 0.50.0 adds them as a campaign a siege can carry (Set up the campaign in the Battles window; nothing changes for a siege without one). Everything is rolled with the week of siege and comes back with its Undo. Book basis: Spoils of War pp. 40-42 (printed; pdf = printed + 1) for foraging, order, sapping, countermining and building and using engines, and pp. 33-34 (printed) for the siege weapon and fortification tables, read on the PC on 12 November 2026 (project files battle-book-check.md, book-checks-2026-11-12b.md). Naval battle waits on a reading of the ship table.
+
+Reverse: remove the campaign field from normBattle and the W.week call in battles.mjs week(); old sieges keep working.
+
+
+## B2471. A week's foraging and the besiegers' food (2026-11-12, house reading)
+The book has each foraging team's leader roll Perception + Survival twice a day; WoDX rolls one leader's pool 14 times a week for all the foragers, each success times the foragers being man-days of food, at the book's 4 to 9 by the land. The besiegers need 7 man-days a man a week. A supply line carries a share of that by the year (house rule): wagon trains half, boats three quarters, the railway from 1840, lorries from 1915, an airlift from 1940 and drone convoys on the Future Darkness branch all of it. A surplus fills the camp's stores in days; a shortfall eats them; with none left the camp is hungry and loses a point of resolve that week, as the garrison does.
+
+Reverse: set the supply line to nothing and turn foraging off in the campaign.
+
+
+## B2472. Keeping order by pay and supply (2026-11-12)
+Spoils of War p. 40: a weekly Charisma + Leadership (or Manipulation + Intimidation, typed in as the pool) at 6, needing 1 success well paid and supplied, 2 normal, 4 poorly; each success short adds 1 to every army roll the next week. WoDX keeps that as the side's unrest, added to the commanders' battle rolls and the siege works. Rolled at the end of each week for the week to come. By default the supply follows how the side was fed that week (a hungry camp or an empty storehouse is poorly supplied) and the pay box; the Storyteller can set it. A botch counts as no success (house rule).
+
+Reverse: turn order off in the campaign; unrest goes back to 0 with Undo.
+
+
+## B2473. Mines and countermines in yards (2026-11-12)
+Spoils of War pp. 41-42 as read: planning on Intelligence + Leadership at 6 (7 or 8 for bad ground), digging Strength + Crafts weekly at 50, 25 or 10 yards a success by ground, the charge rolling Intelligence + Leadership plus a die per planning success for 3 unsoakable health levels a success; listening each day at 2 per 10 yards; countermining as sapping, twice as fast without shoring when any failure brings it down. House readings: the dig roll is at 6 (the book gives none); a botch in a mine loses a quarter of it, at least a week's worth; a mine fires by itself when it reaches the walls; the countermine has to cover the yards between the wall and the mine's head; powder adds 2 dice to the charge from the Hussite age and high explosive 4 from 1860.
+
+Reverse: give up the mine in the window; the charge dice are chargeDice() in siege-works-rules.mjs.
+
+
+## B2474. Siege engines and guns (2026-11-12)
+Building and using follow Spoils of War p. 41: materials Perception + Crafts at 7 each day until the successes reach the engine's damage, then Intelligence + Crafts at 7 each week to the same number, a botch wrecking it; an engine shoots with Intelligence + Leadership at 6 plus its step, damage its dice plus the extra successes, against the walls' soak where each soak success counts as 2. House readings: one telling attack a day per engine (the book's turns are too fine for a week of siege); a Greek fire spigot against a wooden wall meets half soak; an engine can be marked ready when it was brought in built. The engines of the book stay to 1450-1650; the bombard (1380), siege cannon (1500), mortar (1550), rifled siege gun (1860), heavy howitzer (1914), bombers (1936), guided missiles (1990) and the Future Darkness railgun battery (2030) are WoDX figures.
+
+Reverse: remove the engine from the list; the figures are ENGINES in siege-works-rules.mjs.
+
+
+## B2475. Walls and the breach clock (2026-11-12, house rule)
+The walls come from the fortification table of Spoils of War p. 34 (soak and health levels), and the siege starts with walls by where the garrison stands: field works a palisade, a walled town a medium wall, a castle a heavy wall, a bastion fort the star fort's bastion and curtain, bunkers a concrete bunker line. The bastion trace (1530), earth ramparts (1600), concrete bunkers (1914) and reinforced concrete (1940) are WoDX figures. Damage from engines and mines fills the breach clock in proportion to the walls' health levels, on top of the works roll the siege already had.
+
+Reverse: pick no walls in the campaign; the breach then moves by the works roll alone.
+
+
+## B2476. A ditch or moat (2026-11-12, house rule)
+The book says a ditch or moat stops engines and troops until it is filled. WoDX has the first 4 successes of the works go into the ditch before the breach moves, and keeps rams, mice and crows from the walls until it is full. Mines go under it.
+
+Reverse: untick the ditch in the campaign.
+
+
+## B2477. What the campaign leaves for later (2026-11-12)
+Not built: scouting and the campaign strategy roll (pp. 40-41), siege towers, the defenders' boiling oil, quicklime and sand at the walls during an assault (p. 33), and filled towers. Logged in PENDING-REVIEW.md. Naval battle was built afterwards as Ships at sea (B2480-B2487).
+
+Reverse: nothing to reverse.
+
+
+## B2480. Ships at sea, its own window (2026-11-12)
+A fight between two ships is its own window, "Ships at sea", on the Storyteller's hand, kept in the world setting wodx-storyteller.naval, and not a kind of battle: the steps are minutes and hours, not phases and weeks, and the numbers are a ship's, not an army's. Each step posts a card in words for everyone and the dice for the Storyteller, keeps a snapshot for Undo, and nothing moves the world clock until "Let the time pass". Rules in naval-rules.mjs (pure), window in naval.mjs.
+
+Reverse: remove the hand tool; stored fights stay in the setting.
+
+
+## B2481. The ships (2026-11-12, book and house rule)
+The seven ships of Spoils of War p. 40 (longship, the small and large cog, dromon, sagitta, tarida, qayiq) with the book's Speed, Maneuverability, crew, arms, soak and health levels, offered until 1300 to 1450. After them WoDX figures: a gun galley with a ram (1450-1720), carrack, galleon, ship of the line, frigate, steam ironclad with a ram, torpedo boat, destroyer, dreadnought, cruiser, motor torpedo or patrol boat, missile frigate, a small boat for every era, and a drone corvette on the Future Darkness branch from 2030. Guns are sized to the Great War's: culverins, broadsides and carronades roll by the bank, shell guns and turrets by the barrel.
+
+Reverse: change SHIPS and GUNS in naval-rules.mjs.
+
+
+## B2482. The chase and the turn for position (2026-11-12, book)
+Every 4 hours each captain rolls Wits + Seamanship at 7 and adds the ship's Speed; each point the chaser wins by closes 500 yards (Spoils of War p. 42). Oars are rowed at most 12 hours a day, each point of extra oar Speed costing 3 more hours (p. 40). The turn for position is resisted Intelligence + Seamanship at 8 less Maneuverability, the net going to initiative. Navigation is Intelligence + Seamanship at 6 in sight of land and 9 out of it, 1 less each for a compass and a pilot's book. House rule: a quarry 5,000 yards off is lost from sight and gets away.
+
+Reverse: change PURSUIT_YARDS or LOST_AT.
+
+
+## B2483. Shooting (2026-11-12, book and house rule)
+The book's engines on a ship shoot with Dexterity + Archery at 6 plus the engine's step, with its damage from the siege table of p. 33. Guns follow Wraith: The Great War p. 77 read for the living world: Heavy Weaponry at 6, 7 or 8 for short, medium and long range, one roll per bank or barrel, 1 easier with central fire direction (destroyers and later). Torpedoes hit at 7, the target dodges with Wits + Seamanship at 8, and their damage rolls at 4 (p. 78). Damage is the weapon's dice plus the extra successes; the ship soaks at 6 (house rule), and fire from an engine with aggravated damage is not soaked.
+
+Reverse: change GUNS, or the soak line in fire().
+
+
+## B2484. Damage, flooding and sinking (2026-11-12, book)
+Each health level lost costs a point of Speed and of Maneuverability. Below 0 Speed the ship floods a level every quarter hour; at 0 health levels it sinks and the fight ends (Spoils of War pp. 40, 43).
+
+Reverse: nothing to reverse; these are the book's.
+
+
+## B2485. Ramming and breaking away (2026-11-12, book and house rule)
+From Wraith: The Great War p. 79-80: only from alongside, opposed Wits + Seamanship at 6 (the book's helm Ability read as Seamanship for ships of the living world); the rammed ship takes 3 dice a net success, 5 from a ship built to ram; damage rolls at 5. The rammer takes 3 dice a net success, or 1 when built to ram (house rule; the book only says such ships suffer badly). Breaking away or holding alongside is the first to 5 successes at 6. Spoils of War has no ramming: the galley's beak is a boarding hook, so only the gun galley and the ironclad are built to ram.
+
+Reverse: change the ram flags in SHIPS.
+
+
+## B2486. Repair and boarding (2026-11-12, book and house rule)
+Repair is an extended roll every quarter hour, needing successes equal to the damage, and mends a level when it gets there (Spoils of War p. 43); WoDX rolls it at 6 with the carpenter's dice and a die for each of up to 6 helpers. Boarding is fought with the usual combat; the Storyteller enters who is down, and the defenders yield once half of them are out and they are outnumbered two to one (pp. 42-43).
+
+Reverse: change the repair roll in quarter().
+
+
+## B2487. What ships at sea leaves for later (2026-11-12)
+Not built: fleets (more than two ships, moving at the slowest ship's speed, split pools), spotting range and the watch, special shot (chain shot, fire), the Shadowlands' relic ships of the Tempest, Umbral ships, and ships tied to battle maps or tokens. Logged in PENDING-REVIEW.md.
+
+Reverse: nothing to reverse.
