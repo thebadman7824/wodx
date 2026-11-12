@@ -892,3 +892,9 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Sheets ApplicationV2 move: part of the layout pass or not | Not part of it. "(deprecated)" came from the system's type names, not from the old sheet class, so the move stays its own later job | Start the move as its own thread |
 | 2026-11-12 | Planned UI in the Master Plan: how the layout pass covers it | New windows and sheet parts must pass the wider UI fit check (B2494) and use the shared panel, field and pick rules; nothing planned was redrawn ahead of being built | Ask for mock-ups of a planned window before it is built |
 
+| 2026-11-12 | Prologue timeline (Living Gods, Classical): which years each era covers | Keep the house spans already in goods.mjs: Living Gods 10,000 BCE to 801 BCE, Classical 800 BCE to 1196 CE, with four parts marked inside Classical on the desk (to 27 BCE, to 476, to 907, to 1196) | End Classical at 476 and add an early medieval era for 477 to 1196 |
+| 2026-11-12 | Prologue timeline: how to date myth (Caine, the Second City, the Fall, the Impergium) | A new event kind M (myth) with an approximate year that is the house's reading, said so on the card | Leave myth undated and keep it in the Encyclopaedia only |
+| 2026-11-12 | Prologue timeline: regions for Egypt, Carthage and the Americas | Add Africa and Americas to the event regions | Fold Egypt and Carthage into Middle East and leave the Americas out |
+| 2026-11-12 | Prologue timeline: where Living Gods starts | 10,000 BCE; older sites such as Dolni Vestonice appear as old finds and stories | Name an earlier start year |
+| 2026-11-12 | Prologue timeline: hunters before 1197 | No hunter line events; Church inquirers appear as mortals from the 1100s | Name hunter events to add |
+| 2026-11-12 | Prologue timeline: size | About 300 events each, the floor the other eras use | Name another number |
