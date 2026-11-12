@@ -1,5 +1,5 @@
 /**
- * The Lone Chronicle, first step (WoDX Solo 0.1.1 or later), rothenstein-wodx only. It runs in two browsers, so the
+ * The Lone Chronicle, first step (WoDX Solo 0.1.2 or later), rothenstein-wodx only. It runs in two browsers, so the
  * Storyteller's seat and the player are both real: tools/harness/gate-two.mjs drives it.
  *   node tools/harness/gate-two.mjs gatesolo
  * Phases (each a run({phase}) call in one of the browsers):
@@ -67,7 +67,7 @@ async function setup() {
     before: (R?.PRESET ?? []).map(p => ({mod: p.mod, key: p.key, value: read(p.mod, p.key)})), auto: foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {})};
 
   await step("1. module", async () => {
-    ok("1. module", atLeast(MOD, "0.1.1") && !!S()?.apply && !!R?.PRESET && !!Q()?.types,
+    ok("1. module", atLeast(MOD, "0.1.2") && !!S()?.apply && !!R?.PRESET && !!Q()?.types,
       {versions: [MOD, CHRON, "wodx-npc", "wodx-combat", "wodx-actions", "wodx-storyteller"].map(id => `${id} ${game.modules.get(id)?.version}`)});
   });
   if ( !R ) return ids;
@@ -101,7 +101,7 @@ async function setup() {
     const wrong = now.filter(n => n.value !== undefined && n.value !== n.to), missing = now.filter(n => n.value === undefined).map(n => n.key);
     const auto = read(CHRON, "autoApprove") ?? {};
     const notAuto = Q().types().map(t => t.type).filter(t => t !== "request" && auto[t] !== true);
-    ok("2. the switch", S().isOn() && S().isSeat() && !wrong.length && !notAuto.length, {wrong, missing, notAuto, kinds: Q().types().length});
+    ok("2. the switch", S().isOn() && S().isSeat() && !wrong.length && !notAuto.length && !game.paused, {wrong, missing, notAuto, kinds: Q().types().length, paused: game.paused});
   });
 
   await step("3. a card is answered", async () => {
@@ -200,10 +200,20 @@ async function finish(ids, playerSteps) {
     const foeActed = await until(() => game.messages.some(m => m.timestamp >= t && /wodx-(npc|combat)/.test(Object.keys(m.flags ?? {}).join(" "))), 20000);
     await sleep(4000);
     const live = game.combats.get(combat.id);
+    // Why, when it does not: what the NPC module sees on the seat, and whether a forced turn works
+    const N = game.modules.get("wodx-npc")?.api;
+    const diag = {paused: game.paused, npcMode: read("wodx-npc", "mode"), modeFor: N?.modeFor?.(foeTok.actor) ?? null, seatScene: canvas.scene?.id === scene.id,
+      foeOnCanvas: !!foeTok.object, foeTurn: live?.combatant?.tokenId === foeTok.id, foeHasPlayerOwner: !!foeTok.actor?.hasPlayerOwner, defeated: !!live?.combatant?.isDefeated};
+    if ( !foeActed && live && N?.takeTurn ) {
+      const t2 = Date.now();
+      try { const r = await N.takeTurn(live, {force: true}); diag.forced = r === null ? "returned nothing" : "ran"; } catch (e) { diag.forced = `error: ${e.message}`; }
+      await sleep(1500);
+      diag.forcedCards = game.messages.filter(m => m.timestamp >= t2).map(m => `${rules.sourceOf(m.flags)}: ${rules.titleOf(m)}`).slice(0, 5);
+    }
     const end = {round: live?.round, turn: live?.turn, whose: live?.combatant?.name ?? null};
     const cards = game.messages.filter(m => m.timestamp >= t).map(m => ({from: rules.sourceOf(m.flags), title: rules.titleOf(m), toStoryteller: rules.forStoryteller(m.whisper, gmIds())})).slice(0, 20);
     // The stranger must act without a Storyteller. The character's own turn waits for the player: that is right.
-    ok("10. a fight with nobody at the hand", foeActed, {start, end, cards, characterTurnEndedByGate: passed, note: "The character's turn ends when the player acts; the gate does not act for them."});
+    ok("10. a fight with nobody at the hand", foeActed, {start, end, cards, diag, characterTurnEndedByGate: passed, note: "The character's turn ends when the player acts; the gate does not act for them."});
     if ( live ) await live.delete();
   });
 
