@@ -4,7 +4,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 /**
- * WoDX Otherworlds 0.14.0: standing with the spirit courts (B1520-B1524). The rules are in spirit-rules.mjs.
+ * WoDX Otherworlds 0.14.0: standing with the spirit courts (B1720-B1724). The rules are in spirit-rules.mjs.
  * The Storyteller records what moves it; players see their own characters' standing in words.
  * WoDX Actions reads `api.spirits.effect(actor, court)` for summoning, the rites and learning a Gift from a spirit.
  */

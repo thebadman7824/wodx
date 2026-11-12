@@ -13,9 +13,9 @@ Runs only in worlds whose `world.json` carries `flags.wodx` (the WoDX worlds). A
 - **Safety tools.** The X-card (token controls, the clock, or Ctrl+Shift+X) shows everyone the card, never says who pressed it, and pauses the game if that switch is on. Lines and veils go into the Session Zero journal, unsigned unless the switch allows names.
 - **Era test** (Chronicle Clock, Storyteller only). The Phase 1 gate: creates a test character per line in every era and writes the results to the "WoDX Era Test" journal.
 
-## The Legends book (0.33.0)
+## The Legends book (0.34.0)
 
-A journal, "Legends of the Chronicle", of what has really happened in this chronicle: dated events that fired, the dead, Embraces and ghoulings, court seats won and lost, havens and holdings that changed hands, and boons, oaths and debts kept or broken. One page per century. The Legends window (the book button with the token tools) filters it by kind, person, place, faction and years; the Storyteller unticks a line to keep it from the players. It is brought up to date when a session ends, around each time skip, and on demand. API: `api.legends.open()`, `build()`, `book()`, `visible(filter)`, `setShown(id, shown)`. Decisions B1500 to B1502.
+A journal, "Legends of the Chronicle", of what has really happened in this chronicle: dated events that fired, the dead, Embraces and ghoulings, court seats won and lost, havens and holdings that changed hands, and boons, oaths and debts kept or broken. One page per century. The Legends window (the book button with the token tools) filters it by kind, person, place, faction and years; the Storyteller unticks a line to keep it from the players. It is brought up to date when a session ends, around each time skip, and on demand. API: `api.legends.open()`, `build()`, `book()`, `visible(filter)`, `setShown(id, shown)`. Decisions B1700 to B1702.
 
 ## API
 

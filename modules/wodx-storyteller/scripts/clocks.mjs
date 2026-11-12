@@ -8,7 +8,7 @@ import {huntOf, tieActors, tiesOf} from "./upkeep.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
- * WoDX Storyteller 0.37.0: progress clocks (B1510-B1513). The rules are in clock-rules.mjs. Read clocks follow long
+ * WoDX Storyteller 0.37.0: progress clocks (B1710-B1713). The rules are in clock-rules.mjs. Read clocks follow long
  * tasks, heat, ties and the Ledger; the Storyteller's own clocks tick by hand or by themselves. Players see what the
  * Storyteller shows them, in the Clocks window.
  */

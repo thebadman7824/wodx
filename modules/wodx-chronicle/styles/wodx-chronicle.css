@@ -89,7 +89,7 @@
 .wodx-referee .wodx-referee-all { margin-top: 0.75rem; }
 .wodx-referee .wodx-referee-list > li { padding: 0.35rem 0; }
 
-/* The Legends book (0.33.0) */
+/* The Legends book (0.34.0) */
 .wodx-legends-app .wodx-legend-list h3 { margin: 10px 0 4px; border-bottom: 1px solid var(--wodx-line, #8886); }
 .wodx-legends-app .wodx-legend-row { display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; }
 .wodx-legends-app .wodx-legend-row input[type=checkbox] { flex: none; margin-top: 3px; }

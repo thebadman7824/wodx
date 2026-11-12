@@ -529,3 +529,109 @@ export const COURTS_TEXT = "A Hengeyokai of the Beast Courts: rank in the Courts
 export const WYRM_WORDS = ["wyrm", "spiral", "fomor", "fomori", "bane", "banes", "pentex"];
 /** Days in a lunar month, for the Stargazer's sky reading. */
 export const LUNAR_MONTH = 29.53;
+
+/* ================= Mage (Chronicle 0.33.0) ================= */
+
+/**
+ * Traditions, Crafts, Conventions, the Order of Reason and the mad and fallen. match: words of the sheet's sect field
+ * (the system's keys: akashic, speakers, ether, adepts, batin, iterationx, engineers and the rest) or its custom sect.
+ * names: older names by year ({until, label}); from and until: the years the group is played. servant: what a borrowed
+ * "family" engine binds. Dates the books do not pin are house readings (house: true). Dark Ages fellowships from
+ * Dark Ages Mage pdf 15-36; the Order of Reason from Sorcerers Crusade pdf 29, 63.
+ */
+export const MAGE = [
+  {key: "akashic", label: "Akashic Brotherhood", match: ["akashic", "akashic brotherhood", "akashayana"], feature: "dawn", title: "Do and the still mind", page: "M20, the Tradition's pages",
+    text: "Meditation at dawn gives back a Willpower point once a day. Do lets an Akashic trade soak for dice or defence each turn when fighting unarmed, and body magick that looks like skill passes as coincidence. Brawl gains a die.", effects: [{tags: ["brawl"], dice: 1}]},
+  {key: "chorus", label: "Celestial Chorus", match: ["chorus", "celestial chorus", "messianic voices"], feature: "line", names: [{until: 1465, label: "Messianic Voices"}], title: "The choir", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "When three or more of the faithful sing together in a church, magick there is one easier (the Storyteller counts the voices). Faithful passers-by notice the Chorus and help. Churches and monasteries are their sites."},
+  {key: "ecstasy", label: "Cult of Ecstasy", match: ["ecstasy", "cult of ecstasy", "ecstatics", "ecstatic"], feature: "line", names: [{until: 1465, label: "the Ecstatics"}], title: "Sacred highs", page: "M20, the Tradition's pages",
+    text: "Drink and drugs made as recipes or used from the pack can be foci: the substance works as it always does, and its strength makes the effect one easier. Time magick lets them glimpse a few minutes ahead."},
+  {key: "dreamspeakers", label: "Dreamspeakers", match: ["speakers", "dreamspeakers", "dreamspeaker", "spirit talkers"], feature: "line", names: [{until: 1465, label: "Spirit-Talkers"}], title: "Spirit allies", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "Animals are spirit messengers: an animal in the scene can carry a message. Stepping into the Umbra is one easier for them.", effects: [{tags: ["animalken"], dice: 1}]},
+  {key: "euthanatos", label: "Euthanatos", match: ["euthanatos", "chakravanti"], feature: "mercy", title: "Seeing death", page: "M20, the Tradition's pages",
+    text: "They see who is dying and how long is left. A death given in mercy, a Good Death, gives back a Willpower point; a death given in anger adds a point of Jhor, the stain of death, kept on the sheet's feature window."},
+  {key: "hermes", label: "Order of Hermes", match: ["hermes", "order of hermes", "hermetic"], feature: "certamen", title: "Certámen and Tribunal", page: "M20 and Dark Ages Mage, the Order's pages",
+    text: "A Hermetic can call a certámen: a magical duel, not to the death, fought for a stake that the loser owes as a favour in the Ledger. Rotes are made as recipes with time and kit. The Houses each add a feature of their own."},
+  {key: "sonsofether", label: "Sons of Ether", match: ["ether", "sons of ether", "electrodyne engineers", "natural philosophers"], feature: "line", from: 1904, names: [{until: 1903, label: "the Electrodyne Engineers of the Order of Reason"}], title: "Inventions", page: "M20; Sorcerers Crusade pdf 29, 63",
+    text: "Devices are built with the crafting rules, each with a quality and a quirk. They run on Ether, so before believers in the old science a vulgar effect passes as coincidence. Science gains a die.", effects: [{tags: ["science"], dice: 1}]},
+  {key: "verbena", label: "Verbena", match: ["verbena", "old faith"], feature: "line", names: [{until: 1465, label: "the Old Faith"}], title: "Herb lore", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "Remedies, poisons and medicines are made as recipes with an herbalist's kit, stronger in their right season. Their own blood is a focus: a health level spent makes an effect one easier. Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "va", label: "Virtual Adepts", match: ["adepts", "virtual adepts", "virtual adept", "difference engineers"], feature: "line", from: 1961, house: true, names: [{until: 1960, label: "the Difference Engineers"}], title: "The Digital Web", page: "M20; the 1961 date is a house reading",
+    text: "The Digital Web is a realm of their own, where avatars take the shape of the old screen portraits. Before 1961 their forerunners are the Difference Engineers. Computer gains a die.", effects: [{tags: ["computer"], dice: 1}]},
+  {key: "hollow", label: "Hollow Ones", match: ["hollow", "hollow ones", "hollow one"], feature: "line", from: 1890, house: true, title: "Among the lost", page: "M20, the Crafts; the 1890 date is a house reading",
+    text: "They move in the same clubs, salons and squats as the Kindred and the fae. Meeting another line there starts no suspicion, and a Hollow One can vouch for a stranger."},
+  {key: "ahl", label: "Ahl-i-Batin", match: ["batin", "ahl i batin", "batini", "subtle ones"], feature: "line", names: [{until: 1465, label: "the Batini"}], title: "Hidden hands", page: "M20 and Dark Ages Mage",
+    text: "In faction politics they may act without a name on it: the move works, and no rival can answer it. Effects to find a person are one easier in a place they have worked."},
+  {key: "bataa", label: "Bata'a", match: ["bataa", "bata a"], feature: "line", title: "The loa ride them", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A loa can ride a Bata'a: for the scene the spirit gives a die to its own field and asks a price, which the Storyteller names."},
+  {key: "childrenKnowledge", label: "Children of Knowledge", match: ["children", "children of knowledge", "solificati"], feature: "line", title: "The great work", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Alchemy: their rotes are recipes with real ingredients and hours of work. Their dual nature lets one of them hold two minds about any matter."},
+  {key: "kopaLoei", label: "Kopa Loei", match: ["kopa", "kopa loei"], feature: "line", title: "The islands", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Magick is easier on their own islands and in the sea: one easier there (the Storyteller says where)."},
+  {key: "ngoma", label: "Ngoma", match: ["ngoma"], feature: "line", title: "Ancestors and the high ways", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Ancestor spirits answer them in the Umbra, and the old ways of the high courts open to them."},
+  {key: "orphans", label: "Orphans", match: ["orphans", "orphan"], feature: "line", house: true, title: "Self-taught", page: "M20, Orphans; the Paradox change is a house reading",
+    text: "No Tradition taught them: an Orphan writes their own focus list. With no rote to forget, a botch gives one point less Paradox."},
+  {key: "hippolyta", label: "Sisters of Hippolyta", match: ["hippolyta", "sisters of hippolyta"], feature: "oath", title: "The sisterhood", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A sister's oath is kept as a promise in the Ledger; breaking it costs a Willpower point."},
+  {key: "taftani", label: "Taftani", match: ["taftani"], feature: "line", also: ["family"], servant: "a djinn", title: "Bargains with djinn", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A djinn they bind is kept in a ledger of servants, each held by a vessel. Their magick is always vulgar, and they take pride in it."},
+  {key: "templar", label: "Templar Knights", match: ["templar", "templar knights", "templars"], feature: "line", title: "Faith and the sword", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Fighting for the Order's cause, their faith guards them as True Faith would. Melee gains a die.", effects: [{tags: ["melee"], dice: 1}]},
+  {key: "wulung", label: "Wu Lung", match: ["wulung", "wu lung"], feature: "line", title: "The dragon court", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Rank in the dragon court is a faction standing of its own, and weather magick comes easier to them."},
+  {key: "hemKaSobk", label: "Hem-Ka Sobk", match: ["hem ka sobk", "sobk"], feature: "line", title: "The crocodile cult", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Guardians of the Nile who ward mummies and tombs: they meet the Undying as old allies through the crossover referee."},
+  {key: "wuKeng", label: "Wu-Keng", match: ["wu keng"], feature: "line", title: "The spirit courts", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Shamans of the old spirit courts: bargains with spirits are struck on the Umbra realm map."},
+  {key: "valdaermen", label: "Valdaermen", match: ["valdaermen"], feature: "line", title: "Runes carved", page: "Dark Ages Mage pdf 15-36",
+    text: "A rune carved on an item is a talisman with one effect; carving is a recipe. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "itx", label: "Iteration X", match: ["iterationx", "iteration x", "artificers", "artificer"], feature: "line", names: [{until: 1896, label: "the Artificers of the Order of Reason"}], title: "Cybernetics", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Cybernetic parts go on the body plan as prosthetics do: an arm with a weapon, eyes that see heat, legs for running. Used where people would see them as impossible, they risk Paradox. Before 1897 they are the Artificers, whose inventions use workshops and recipes."},
+  {key: "nwo", label: "New World Order", match: ["nwo", "new world order", "cabal of pure thought"], feature: "watchers", names: [{until: 1896, label: "the Cabal of Pure Thought"}], title: "The Watchers", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Every record of the age reports to them: parish books and tax rolls, then police files, cameras and the net. A breach of the Masquerade sends the Storyteller a card that the Watchers heard of it first. Before 1897 the Cabal of Pure Thought speaks for the Order's reason."},
+  {key: "progenitors", label: "Progenitors", match: ["progenitors", "progenitor", "hippocratic circle"], feature: "line", names: [{until: 1896, label: "the Hippocratic Circle"}], title: "The lab", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Medicines and drugs from the laboratory kits come out a quality step better. Clones and vat-grown servants are NPCs; surgery changes the body plan. Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "syndicate", label: "Syndicate", match: ["syndicate", "high guild"], feature: "line", also: ["leverage"], names: [{until: 1896, label: "the High Guild"}], title: "Moving the market", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "A debt they learn of becomes leverage, spent as a favour owed in the Ledger. They can push a town's prices for a month, and their money counts double for bribes. Finance gains a die.", effects: [{tags: ["finance"], dice: 1}]},
+  {key: "void", label: "Void Engineers", match: ["engineers", "void engineers", "void seekers"], feature: "line", names: [{until: 1896, label: "the Void Seekers"}], title: "Navigators", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Travel between realms is cheaper and safer: they keep the charts. They hunt what comes from beyond the Gauntlet. Before 1897, as the Void Seekers, they make sea voyages faster."},
+  {key: "celestialMasters", label: "Celestial Masters", match: ["celestial masters"], feature: "line", also: ["sky"], from: 1325, until: 1896, house: true, title: "Masters of the heavens", page: "Sorcerers Crusade pdf 29, 63; the end date is not pinned",
+    text: "Their charts of the heavens give a riddle about the next dated event, once a lunar month under a clear sky."},
+  {key: "craftmasons", label: "Craftmasons", match: ["craftmasons", "craftmason"], feature: "line", from: 1325, until: 1896, house: true, title: "Builders", page: "Sorcerers Crusade pdf 29, 63; the end date is not pinned",
+    text: "A building they raise goes up a stage faster. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "ksirafai", label: "Ksirafai", match: ["ksirafai", "ksirafa"], feature: "line", title: "Spies", page: "Sorcerers Crusade pdf 29",
+    text: "NPC agents of the Order: what they learn reaches the Order at the speed news travels in the age."},
+  {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], title: "The inverted Avatar", page: "M20, the Nephandi",
+    text: "NPCs. A Nephandus corrupts as a Follower of Set does, with the same hidden ledger on the victim. Their magick is not vulgar to their own kind; a lore page reveals the cabal."},
+  {key: "marauder", label: "Marauders", match: ["marauder", "marauders"], feature: "line", title: "Living madness", page: "M20, the Marauders",
+    text: "NPCs. Paradox spirits shy from a Marauder, and reality bends near one: the Storyteller can change a region's look and rules for the scene."},
+  {key: "sorcerer", label: "Sorcerers and psychics", match: ["sorcerer", "sorcerers", "psychic", "psychics", "hedge"], feature: "line", title: "The path and its cost", page: "Sorcerer (Revised); M20, the sorcerer rules",
+    text: "A sorcerer's path (Alchemy, Conjuration, Divination and the rest) works as recipes with hours and components. A psychic's numina cost Willpower."},
+];
+
+/** Houses of the Order of Hermes (the custom sect field or the house flag). Stack with the Order's row. */
+export const HOUSES = [
+  {key: "bonisagus", label: "House Bonisagus", match: ["bonisagus"], feature: "line", title: "Keepers of research", page: "M20 pdf 127",
+    text: "A research ledger: new rotes are made as recipes over weeks. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
+  {key: "flambeau", label: "House Flambeau", match: ["flambeau"], feature: "certamen", title: "Fire and honour", page: "Book of Secrets pdf 65-66",
+    text: "A die on fire effects of Forces (the Storyteller adds it). An insult to the House calls for a certámen."},
+  {key: "quaesitor", label: "House Quaesitor", match: ["quaesitor"], feature: "ruling", title: "Judges of the Order", page: "Book of Secrets pdf 65-66",
+    text: "A Quaesitor can call a Tribunal and post its ruling for all to see."},
+  {key: "shaea", label: "House Shaea", match: ["shaea"], feature: "line", title: "The House of the far lands", page: "M20 pdf 160",
+    text: "Its own temper from the book: travellers who bring foreign lore into the Order. Linguistics gains a die.", effects: [{tags: ["linguistics"], dice: 1}]},
+  {key: "exmisc", label: "House Ex Miscellanea", match: ["ex miscellanea", "miscellanea"], feature: "line", title: "A home for strange traditions", page: "M20 pdf 160",
+    text: "A member takes one feature from any other House, as the Storyteller agrees."},
+  {key: "janissary", label: "House Janissary", match: ["janissary"], feature: "line", until: 1700, house: true, title: "The Order's soldiers", page: "M20 pdf 160; the end year is a house reading",
+    text: "The Order's soldiers, gone after the purge (1700 here). Melee gains a die.", effects: [{tags: ["melee"], dice: 1}]},
+  {key: "diedne", label: "House Diedne", match: ["diedne"], feature: "line", until: 0, title: "The lost House", page: "M20 pdf 127",
+    text: "Destroyed in the Schism War long before 1197: only ghosts, relics and rumours remain. A Diedne relic is a talisman."},
+  {key: "housetremere", label: "House Tremere", match: ["house tremere"], feature: "line", until: 1199, house: true, title: "The House that turned", page: "M20 pdf 127; the year is a house reading",
+    text: "The House that turned to vampires. Its old chantries are Tremere clan chantries, and Hermetic NPCs hate its name on sight."},
+  {key: "hOthers", label: "The other Houses", match: ["tytalus", "verditius", "criamon", "merinita", "jerbiton", "bjornaer", "guernicus", "mercere", "fortunae", "solificati house"], feature: "line", title: "The other Houses", page: "Houses of Hermes is not in the store",
+    text: "Each takes a row of its own once Houses of Hermes is in the store; until then, the Order's row."},
+];
+
+/** What the Watchers read in each age (New World Order), by year. */
+export const RECORDS = [{from: 1197, label: "parish books and tax rolls"}, {from: 1800, label: "police files and the census"},
+  {from: 1895, label: "photographs and newspapers"}, {from: 1970, label: "cameras and computer files"}, {from: 1995, label: "the net"}];

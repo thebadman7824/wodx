@@ -39,6 +39,8 @@ export function build(ctx) {
         return best;
     }
     const nameFor = tok => tok?.document?.name ?? tok?.name ?? "They";
+    /** What this player calls them in a window (WoDX NPC 0.35.0 nameFor: the stranger's words until met). Cards keep the name; NPC masks it per viewer. */
+    const viewName = tok => { try { return npcApi()?.nameFor?.(tok) || nameFor(tok); } catch (e) { return nameFor(tok); } };
     const attitudeOf = (npc, me) => { try { return npcApi()?.attitude?.of?.(npc, me) ?? null; } catch (e) { return null; } };
     const stockLine = (kind, npcTok, actor) => { try { return npcApi()?.talk?.stock?.(kind, { npc: npcTok, pc: actor }) ?? null; } catch (e) { return null; } };
 
@@ -61,11 +63,12 @@ export function build(ctx) {
         const btn = (k, icon, label, hint) => `<button type="button" class="wodx-wp-act" data-act="${k}" title="${esc(hint)}"><i class="fas ${icon}"></i> ${esc(label)}</button>`;
         // A div, not a form: the dialog wraps the content in its own form, and a form inside a form is dropped
         const content = `<div class="wodx-with-person">
-          <p>${esc(actor.name)} deals with <b>${esc(name)}</b>.</p>${gmLine}
+          <p>${esc(actor.name)} deals with <b>${esc(viewName(npcTok))}</b>.</p>${gmLine}
           <div class="wodx-wp-grid">
             ${npcApi()?.openTalk ? btn("talk", "fa-comment", "Talk", "Ask about the topics they will talk about") : ""}
             ${SR.ACTS.map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
             ${Object.values(SR.LIFT).map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
+            ${Object.values(SR.LOOKOVER).map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
             ${money()?.priceSync ? btn("trade", "fa-scale-balanced", "Trade", "Buy, sell or barter, at this era's and this market's prices, with a haggle roll (house rule)") : ""}
             ${btn("charm", "fa-heart", "Charm or seduce", "The three-stage Seduction (V20 p. 266)")}
             ${btn("power", "fa-hand-sparkles", "Use a power on them", "Opens your menu with them still targeted")}
@@ -79,7 +82,7 @@ export function build(ctx) {
                 root.closest?.(".application, .app, dialog")?.querySelector?.("[data-action=ok], button[data-button=ok], footer button")?.click();
             }));
         };
-        return dialog(`With ${name}`, content, "Choose", async fd => {
+        return dialog(`With ${viewName(npcTok)}`, content, "Choose", async fd => {
             if (game.user.isGM && fd.setAttitude !== undefined && fd.setAttitude !== "") await npcApi()?.attitude?.apply?.(npc, actor, { to: Number(fd.setAttitude), why: "Set by the Storyteller" });
             const act = fd.act;
             if (!act) return null;
@@ -91,13 +94,14 @@ export function build(ctx) {
                     await after(actor, npc, name, { key: "charm", sway: "charmed", moves: { win: 1, lose: 0, botch: -1 } }, { result: res });
                     // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
                     if (res === "win" && feed && kindOf?.(actor) === "kindred") {
-                        const go = await dialog("Feed?", `<p>${esc(name)} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
+                        const go = await dialog("Feed?", `<p>${esc(viewName(npcTok))} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
                         if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
                     }
                 } });
             }
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
+            if (act === "lookover" || act === "askabout") return lookOver(actor, npcTok, act);
             if (act === "trade") return tradeX().trade(actor, npcTok, "buy");
             return social(actor, npcTok, act);
         }, { render, width: 520 });
@@ -116,7 +120,7 @@ export function build(ctx) {
         let fd = given;
         if (!fd) {
             const content = `<form>
-              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, against <b>${esc(name)}</b>.</p>
+              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, against <b>${esc(viewName(npcTok))}</b>.</p>
               <p class="vta-note">${esc(act.note)} (${esc(act.ref)})</p>
               <p class="vta-note">Pool: ${esc(pick ? `${pick.attr.replace(/^./, c => c.toUpperCase())} + ${pick.abilityName}` : "none")}, difficulty ${preset.diff ?? 6}. How they regard ${esc(actor.name)} may change it.</p>
               ${act.offer ? `<div class="form-group"><label>What is offered</label><select name="offer" data-fixed>${opts(SR.OFFERS.map(o => [o[0], o[1]]), "fair")}</select></div>
@@ -187,6 +191,58 @@ export function build(ctx) {
         if (move) await npcApi()?.attitude?.propose?.(npc, actor, { delta: move, why: why || `${actor.name}: ${act.key}, ${res.result}` });
         Hooks.callAll("wodxSocial", { actor, npc, act: act.key, result: res.result });
         return res;
+    }
+
+    /* ---------------- Look them over, ask around (3.46.0) ---------------- */
+
+    /** What the rules read about the NPC for a closer look. Nothing here is shown until the successes open it. */
+    function lookInfo(npc, actor) {
+        const base = (npc?.isToken ? npc.token?.baseActor : null) ?? game.actors?.get?.(npc?.id) ?? npc;
+        const api = npcApi();
+        const at = attitudeOf(npc, actor);
+        const look = game.modules.get("wodx-library")?.api?.look?.of?.(npc) ?? null;
+        const words = { bloody: "bloodied", wounded: "hurt", weapon: "armed", filthy: "filthy", soaked: "soaked through", torn: "in torn clothes" };
+        let trade = "", belongs = "";
+        // Only a mortal's trade shows to the eye; a supernatural template's label would give away what they are
+        try { const pf = api?.profileFor?.(base, { phases: false }); trade = !pf?.line || pf.line === "mortal" ? String(pf?.label ?? "").replace(/^mortal\s+/i, "") : ""; } catch (e) { trade = ""; }
+        try {
+            const saved = base?.getFlag?.("wodx-npc", "behavior") ?? {};
+            const st = api?.factions?.state?.();
+            const f = (st?.factions ?? []).find(x => (x.members ?? []).includes(base.id) || x.leader === base.id);
+            belongs = saved.household || f?.name || "";
+        } catch (e) { belongs = ""; }
+        const act = base?.flags?.["wodx-npc"]?.where?.activity ?? null;
+        const doing = { work: "at work", patrol: "keeping watch", pray: "at prayer", drink: "drinking", errand: "on an errand", attend: "attending someone", rest: "at rest", hide: "keeping out of sight" }[act] ?? "";
+        const hidden = [...(npc.items ?? [])].filter(i => (i.type === "Melee Weapon" || i.type === "Ranged Weapon") && !i.system?.isequipped && !i.system?.isnatural).map(i => i.name);
+        let station = null;
+        try { station = game.modules.get("wodx-library")?.api?.look?.station?.(npc, base?.getFlag?.("wodx-npc", "behavior")?.template ?? null) ?? null; } catch (e) { station = null; }
+        return { mood: at?.word ?? "", condition: (look?.condition ?? []).map(c => words[c]).filter(Boolean), station, trade, doing, belongs, hidden, disguised: !!look?.disguise,
+            said: belongs ? `${trade ? `${trade.toLowerCase()}, ` : ""}one of ${belongs}` : trade.toLowerCase(), name: base?.name ?? "" };
+    }
+    async function lookOver(actor, npcTok, key) {
+        const def = key === "askabout" ? SR.LOOKOVER.ask : SR.LOOKOVER.look;
+        const npc = npcTok?.actor;
+        if (!npc) return null;
+        const pick = pickPool(actor, def.alts);
+        if (!pick) { ui.notifications.warn("No pool fits."); return null; }
+        const pool = readPool(actor, pick.attr, pick.abilityId);
+        const contacts = key === "askabout" ? Math.max(0, Number([...(actor.items ?? [])].find(i => i.type === "Feature" && /^contacts\b/i.test(i.name ?? ""))?.system?.value ?? actor.system?.backgrounds?.contacts?.value) || 0) : 0;
+        const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
+            abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: contacts, extraDiff: 0,
+            baseDifficulty: def.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0 });
+        if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
+        const me = await rollPool(built.dice, built.difficulty);
+        const info = lookInfo(npc, actor);
+        const facts = me.botch ? [key === "askabout" ? "What you hear is wrong, and you believe it." : "You misread them badly."] : key === "askabout" ? SR.askFacts(me.successes, info) : SR.lookOverFacts(me.successes, info);
+        const label = [pool.attributeLabel, pool.abilityLabel || pick.abilityName].filter(Boolean).join(" + ");
+        const body = rollBlock(label, me, built.parts.concat(contacts ? [`Contacts +${contacts}`] : []))
+            + (facts.length ? `<ul>${facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : `<p class="vta-note">You learn nothing more.</p>`);
+        // To the player and the Storyteller only: what was learned about someone else is the character's own
+        const owners = game.users.filter(u => actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+        await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), whisper: [...new Set([...owners, ...gmIds()])], rolls: me.roll ? [me.roll] : [],
+            content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(actor.name)}: ${esc(def.label.toLowerCase())}</div><div class="vta-body">${body}</div></div>` });
+        Hooks.callAll("wodxLookOver", { actor, npc, kind: key, successes: me.successes, botch: !!me.botch });
+        return { successes: me.successes, facts };
     }
 
     /* ---------------- Lift and plant (3.21.0) ---------------- */
@@ -275,7 +331,7 @@ export function build(ctx) {
                 ? [["", "Whatever comes to hand"], ...(purse ? [["coins", "Coins from the purse"]] : []), ...(game.user.isGM ? theirs.map(i => [i.id, i.name]) : [])]
                 : mine.map(i => [i.id, i.name]);
             const content = `<form>
-              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, ${key === "lift" ? "from" : "on"} <b>${esc(name)}</b>.</p>
+              <p>${esc(actor.name)}: ${esc(act.label.toLowerCase())}, ${key === "lift" ? "from" : "on"} <b>${esc(viewName(npcTok))}</b>.</p>
               <p class="vta-note">${esc(act.note)} (${esc(act.ref)})</p>
               ${key === "lift" ? `<p class="vta-note">Worth a look: ${esc(SR.pocketsIn(yearNow()))}.</p>` : ""}
               <div class="form-group"><label>${key === "lift" ? "Go for" : "What to plant"}</label><select name="want" data-fixed>${opts(choices, "")}</select></div>
@@ -341,7 +397,7 @@ export function build(ctx) {
     /* ---------------- Trade (3.36.0) ---------------- */
     let TRE = null;
     const tradeX = () => TRE ??= TRD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, rollPool, rollBlock, post, esc, dialog, opts, willpower, spendWillpower,
-        attitudeOf, nameFor, npcApi, gmIds, proposeOrApply, moveItem });
+        attitudeOf, nameFor, viewName, npcApi, gmIds, proposeOrApply, moveItem });
     const trade = (actor, npcTok, key, given) => tradeX().trade(actor, npcTok, key, given);
 
     return { withPerson, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };

@@ -535,7 +535,7 @@ export function build(ctx) {
         });
     }
 
-    /* ---------------- Standing with the spirit courts (WoDX Otherworlds 0.14.0, B1522) ---------------- */
+    /* ---------------- Standing with the spirit courts (WoDX Otherworlds 0.14.0, B1722) ---------------- */
     const spiritApi = () => game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds")?.api?.spirits : null;
     const courtField = () => spiritApi() ? `<div class="form-group"><label>The spirit's court</label><select name="court" data-fixed>${spiritApi().courtOptions()}</select></div>` : "";
     const courtEffect = (actor, court) => spiritApi()?.effect?.(actor, court) ?? { diff: 0, refuses: false, note: "" };
