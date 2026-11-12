@@ -20,6 +20,8 @@
 import * as TK from "./talk-rules.mjs";
 import * as STOCK from "../data/stock-talk.mjs";
 import * as MORE from "../data/stock-talk-more.mjs";
+import * as G from "./talk-grammar.mjs";
+import {HOUSE} from "../data/grammar/house.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -39,6 +41,9 @@ export function build(ctx) {
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
+    // NPC 0.37.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
+    game.settings.register(MOD, "talkGrammar", {name: "Talk generator", hint: "With stock talk on, NPCs put their stock lines together from words of the era and of who they are, so they repeat less. Your lines always come first. Off: the hand-written stock lines alone.",
+      scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "When a player's character walks within talking distance, an NPC may greet them out loud, once a day of game time. Only greet lines marked aloud on a talk sheet are used; otherwise a stock greeting.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passChance", {name: "Chance an NPC calls out", hint: "From 0 (never) to 1 (every time someone passes, once a day).",
@@ -114,6 +119,19 @@ export function build(ctx) {
 
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
+  /* NPC 0.37.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
+  const GRAMMAR = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE);
+  const lately = new Map(); // NPC|character -> the last few generated lines, passed over while others fit
+  /** A generated line for this kind of talk, or null (generator off, or nothing fits). */
+  function genLine(r, kind, c, extra = {}) {
+    if ( !setting("talkGrammar") ) return null;
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me), key = `${npc?.id}|${pc?.id}`;
+    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...extra};
+    let hit = null;
+    try { hit = G.generate(kind, facts, {grammar: GRAMMAR, seed: c.seed, recent: lately.get(key) ?? []}); } catch (e) { console.warn("WoDX NPC | talk generator", e); hit = null; }
+    if ( hit?.say ) lately.set(key, [...(lately.get(key) ?? []), hit.say].slice(-6));
+    return hit;
+  }
   /** Era, regard and a steady seed for one NPC and one character. */
   function stockCtx(r, kind) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
@@ -198,6 +216,9 @@ export function build(ctx) {
     const kind = TK.LOCAL[topic] ? topic : "none";
     const c = stockCtx(r, kind);
     const rum = kind === "rumours" && c.regard !== "hate" ? rumourFor(r) : null;
+    const gk = kind === "rumours" ? (rum ? "rumour" : "gossip") : kind;
+    const gen = genLine(r, gk, c, rum ? {rumour: rum.text} : {});
+    if ( gen?.say ) return {kind: "stock", say: gen.say, when: "", then: TK.parseThen(""), rumourId: gk === "rumour" && rum ? rum.id : null, rule: gen.rule};
     const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null, voice: c.voice});
     return hit ? {kind: "stock", say: hit.say, when: "", then: TK.parseThen(""), rumourId: hit.rumour ? rum.id : null} : null;
   }
@@ -212,7 +233,7 @@ export function build(ctx) {
     let greet = g?.say ?? "";
     if ( stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "greet"), a = asidesOf(r, c);
-      const plain = greet || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+      const plain = greet || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
       // the Storyteller's own greeting is never replaced, only followed
       greet = TK.composeGreet({greet: plain, remember: greet ? "" : a.remember, notice: a.notice, ledger: a.ledger, about: a.about, small: a.small});
     }
@@ -553,7 +574,7 @@ export function build(ctx) {
       const r = {npcTok: n, me: tokDoc, scene};
       const sheet = TK.greetFor(chainOf(npc, scene), checker(pc, tokDoc, npc));
       let plain = "";
-      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
+      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
       const text = TK.passingLine(sheet, plain);
       if ( !text ) continue;
       await say(n, text);
@@ -611,5 +632,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, grammar: GRAMMAR};
 }

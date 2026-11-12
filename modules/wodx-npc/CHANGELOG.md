@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.0 (the talk generator, setting off by default: stock talk put together from a grammar, the rule that fits the most facts winning, with words of the era for address, oaths, coin, who keeps order, light, drink and landmarks; the hand-written stock lines now speak through it, unchanged; Storyteller lines still first; B1640-B1642)
 - 0.36.0 (missed connections, 12 November 2026: reaction cards read the sound of a fight or a chase; a fight counts as a weapon in the reaction rules)
 - 0.35.0 (a fed-on NPC remembers a swoon and a lost hour, or who fed if it fought, is Kindred or a ghoul, or already knows the Kindred; api.nameFor(actor, viewer) is the one lookup for what a viewer calls an NPC; api.knowledgeOf(actor) lists who an NPC has seen for what and who fed on it)
 - 0.34.0 (the stranger line: with Faces on, an unmet NPC's nameplate shows how they are dressed, a side they wear, blood or a drawn weapon, what they are doing and how they seem toward you; the Storyteller's own text still wins)

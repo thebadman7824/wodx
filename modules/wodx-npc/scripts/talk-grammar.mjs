@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.36.0: the talk generator, the pure part. No Foundry here, so the harness can test it.
+ * WoDX NPC 0.37.0: the talk generator, the pure part. No Foundry here, so the harness can test it.
  *
  * It makes what an NPC says when the Storyteller has written nothing that fits. No AI model: a grammar, in the
  * manner of Tracery (symbols that expand into words), with rules picked the way Left 4 Dead's dialogue picks them
@@ -18,7 +18,7 @@
  * In a line: #symbol# expands from the grammar's symbols (a list of words, or rules like the above whose best
  * match is used), #symbol.cap# capitalises the first letter, #symbol.a# puts "a" or "an" before it. {fact} is
  * the fact's own words (a rumour, a feast, a name). #they# #them# #their# #theirs# #themself# #theyre# #theyve#
- * follow the fact "gender" ("m" or "f" when the Storyteller has set one), else they, so text stays neutral.
+ * are always they, them and so on, so generated text stays gender-neutral.
  */
 
 /** Era bands, as stock talk (data/stock-talk.mjs) has them. */
@@ -91,12 +91,8 @@ export function mix(seed, salt) {
   return h >>> 0;
 }
 
-const PRONOUN = {
-  they: {m: "he", f: "she", n: "they"}, them: {m: "him", f: "her", n: "them"}, their: {m: "his", f: "her", n: "their"},
-  theirs: {m: "his", f: "hers", n: "theirs"}, themself: {m: "himself", f: "herself", n: "themself"},
-  theyre: {m: "he's", f: "she's", n: "they're"}, theyve: {m: "he's", f: "she's", n: "they've"}
-};
-const genderOf = f => { const g = lc(f.gender); return g === "m" || g === "male" ? "m" : g === "f" || g === "female" ? "f" : "n"; };
+/** Pronoun slots, always neutral (B48): the generator never guesses a gender. */
+const PRONOUN = {they: "they", them: "them", their: "their", theirs: "theirs", themself: "themself", theyre: "they're", theyve: "they've"};
 const capFirst = s => s.replace(/^(\W*)(\p{L})/u, (m, a, b) => a + b.toUpperCase());
 const withA = s => (/^[aeiou]/i.test(s.trim()) && !/^(uni|use|eu|one)/i.test(s.trim()) ? "an " : "a ") + s;
 
@@ -118,7 +114,7 @@ export function expand(text, facts = {}, symbols = {}, seed = 0, depth = 0) {
   let out = String(text ?? "").replace(/#([a-zA-Z][\w]*)((?:\.\w+)*)#/g, (m, name, mods) => {
     n += 1;
     let word;
-    if ( PRONOUN[name] ) word = PRONOUN[name][genderOf(facts)];
+    if ( PRONOUN[name] ) word = PRONOUN[name];
     else {
       const words = symbolWords(symbols[name], facts);
       if ( !words?.length ) return m;

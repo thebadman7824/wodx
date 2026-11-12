@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* The talk generator (NPC 0.36.0): a grammar that speaks when the Storyteller has written nothing that fits */
+/* The talk generator (NPC 0.37.0): a grammar that speaks when the Storyteller has written nothing that fits */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
@@ -50,7 +50,7 @@ test("symbols, modifiers, facts and pronouns expand; unknown symbols stay for li
   assert.equal(G.expand("#who.a#", {era: "modern"}, sy), "an owl");
   assert.equal(G.expand("{rumour}!", {rumour: "\"The mill burned\""}, sy), "The mill burned!");
   assert.equal(G.expand("#they# lost #their# hat", {}, sy), "they lost their hat");
-  assert.equal(G.expand("#they# lost #their# hat", {gender: "f"}, sy), "she lost her hat");
+  assert.equal(G.expand("#they# lost #their# hat", {gender: "f"}, sy), "they lost their hat", "never a guessed gender");
   assert.equal(G.expand("#nope#", {}, sy), "#nope#");
   assert.ok(G.lint({rules: {greet: [{id: "x", say: ["#nope#"]}]}, symbols: {}}).some(p => p.includes("#nope#")));
 });

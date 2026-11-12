@@ -1743,7 +1743,7 @@ A faction whose name carries one of the character's own sides starts at Tolerate
 Reverse: suggestStanding in first-night-rules.mjs.
 
 ## B1640. A talk generator with no AI model (2026-11-12)
-When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots follow a gender the Storyteller set, else they. House writing, not from any book. Ben approved the desk 2026-11-12.
+When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots are always they, them and their. House writing, not from any book. Ben approved the desk 2026-11-12.
 
 Reverse: turn the world setting "Talk generator" off.
 
