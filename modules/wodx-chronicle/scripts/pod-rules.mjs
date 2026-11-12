@@ -4,6 +4,8 @@
  */
 import * as D from "../data/pod.mjs";
 export * from "../data/pod.mjs";
+import * as LPD from "../data/pod-lifepath.mjs";
+export {LP_CHAINS, LP_DAYS, meansFor} from "../data/pod-lifepath.mjs";
 
 const DAY = 86400;
 const norm = s => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
@@ -82,9 +84,61 @@ export const chainByKey = k => D.CHAINS.find(c => c.key === k) ?? null;
 export function chainsFor(year, lines = []) {
   return D.CHAINS.filter(c => year >= c.from && year <= c.to && (c.lines.includes("all") || !lines.length || c.lines.some(l => lines.includes(l))));
 }
+/* ---------------- lifepath threads as story chains (cr2, B2300 to B2304) ---------------- */
+
+/** Mortals further back than this are dead by the year of play, and an heir carries the thread (B2302). */
+export const LP_ALIVE_SPAN = 70;
+/** The undying from this far back have had time to grow strong, or to fall under something older (B2302). */
+export const LP_OLD_SPAN = 150;
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+
+/** A lifepath's "your sire", "who owes you" told of the character instead: "Jana's sire", "who owes Jana". */
+export const third = (text = "", name = "the character") => String(text).replace(/\byour\b/gi, `${name}'s`).replace(/\byou\b/gi, name);
+
+/** Who comes back: the NPC's name with the role, or the role; an heir when a mortal is long dead. */
+export function lpWho(lp = {}, year = null) {
+  const role = third(lp.role || "someone from the past", lp.actorName || "the character");
+  const base = lp.name ? `${lp.name} (${role})` : role;
+  const gap = Number(year) - Number(lp.year);
+  if ( !lp.undying && Number.isFinite(gap) && gap > LP_ALIVE_SPAN ) return {who: `a descendant of ${base}`, heir: true, gap};
+  return {who: base, heir: false, gap: Number.isFinite(gap) ? gap : null};
+}
+
+/** A lifepath run's chain, written for the year of play. run.lp = the thread plus {actorName}. */
+export function lpChain(run = {}, year = null) {
+  const lp = run.lp ?? {}, tpl = LPD.LP_CHAINS[lp.kind];
+  if ( !tpl ) return null;
+  const {who, heir, gap} = lpWho(lp, year), m = LPD.meansFor(year);
+  const name = lp.actorName || "the character";
+  const fill = t => t.replaceAll("{seek}", m.seek).replaceAll("{word}", m.word).replaceAll("{Who}", cap(who)).replaceAll("{who}", who)
+    .replaceAll("{name}", name).replaceAll("{where}", run.where || "the city").replaceAll("{turning}", lp.turning || "the change");
+  const past = `From ${name}'s past (${lp.year}, ${lp.scene || "the lifepath"}): ${third(lp.role, name)}${lp.note ? `, ${third(lp.note, name)}` : ""}.`;
+  const age = heir ? ` ${cap(third(lp.role, name))} is long dead; the thread passed down the family.`
+    : lp.undying && gap !== null && gap > LP_OLD_SPAN && ["enemy", "rival", "debt", "secret"].includes(lp.kind) ? ` ${gap} years on, they are far stronger, and may now be the pawn of something older.`
+    : !lp.undying && gap !== null && gap >= 40 ? " They are old now." : "";
+  const steps = tpl.steps.map((s, i) => ({...s, text: (i === 0 ? `${past}${age} ` : "") + fill(s.text)}));
+  return {key: run.key, label: `${tpl.label}: ${name}`, lines: ["all"], from: 0, to: 99999, page: LPD.LP_PAGE, steps};
+}
+
+/** Any running chain, a preset or a lifepath one. */
+export const chainOf = (run = {}, year = null) => run.lp ? lpChain(run, year) : chainByKey(run.key);
+
+/**
+ * The next thread to put to the Storyteller, or null. st = {since, last, seen: {id: status}}; threads from
+ * Creation. The first falls due LP_DAYS.first days after the character is first seen, each next LP_DAYS.gap
+ * days after the last was put (B2301).
+ */
+export function lpNext(st = {}, threads = [], t = 0) {
+  const seen = st.seen ?? {};
+  const open = threads.filter(x => !seen[x.id]);
+  if ( !open.length ) return null;
+  const due = st.last ? st.last + LPD.LP_DAYS.gap * DAY : (Number(st.since) || 0) + LPD.LP_DAYS.first * DAY;
+  return t >= due ? open[0] : null;
+}
+
 /** A running chain's next step and when it falls due. */
-export function nextStep(run = {}) {
-  const c = chainByKey(run.key);
+export function nextStep(run = {}, year = null) {
+  const c = chainOf(run, year);
   if ( !c ) return null;
   const i = Number(run.at) || 0;
   if ( i >= c.steps.length ) return null;
