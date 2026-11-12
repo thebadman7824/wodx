@@ -568,3 +568,8 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | How a challenge with a player's character runs (B1111) | Never rolled: approval, then a fight through WoDX Combat when both are on the scene and the contest is physical, else a card; the Storyteller sets the winner | pol-fight in politics-rules.mjs, stageFight in factions.mjs |
 | 2026-11-12 | How a Garou rises in Rank at a moot (B1111) | One with 2+ favour challenges the nearest higher Rank; the challenged picks strength, riddles or a staring contest; a win is +1 Rank inside the sept | gather riseByChallenge |
 | 2026-11-12 | What a Great Maelstrom does to a necropolis (B1112) | Each seat but the Anacreon's lost on 1-5 on a die, with Undo | maelstromChanges |
+| 2026-11-12 | How a Mage faction finds its side (B1113) | By name or notes: Order of Reason, Technocracy, Union, Construct or a Convention's name means Reason; anything else, the Traditions | REASON in politics-rules.mjs |
+| 2026-11-12 | What stands in for standing among mages (B1113) | Arete for the Traditions, the Rank Background for the Order and the Technocracy | rankFrom |
+| 2026-11-12 | The Inquisition's tribunal seats (B1114) | Inquisitor, notary, confessor and three familiars, a house rule until the Dark Ages Inquisitor book is read | POLITIES.inquisition |
+| 2026-11-12 | Imbued cells in a Future Darkness chronicle (B1114) | The polity follows the year, from 1999; set No politics until 2023 by hand | POLITIES["imbued-cell"] |
+| 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
