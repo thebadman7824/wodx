@@ -28,8 +28,8 @@ export function strengthFor(extra) {
 /** A batch's goal grows by half the base for each one past the first (house rule, after Cataclysm's batch savings). */
 export const batchGoal = (goal, n = 1) => Math.max(1, Math.ceil((Number(goal) || 1) * (1 + (Math.max(1, Math.round(n)) - 1) / 2)));
 
-/** Kindred cannot taste: one more difficulty to food and drink cooked for taste, unless Crafts is 3 or more (house rule, B951). */
-export const KINDRED_TASTE = {diff: 1, unless: 3};
+/** Kindred can taste food, though they cannot eat it, so they cook as well as anyone (Ben, B951). Set diff above 0 to bring a penalty back. */
+export const KINDRED_TASTE = {diff: 0, unless: 3};
 
 /** The thing a carried item is, as a name: "3 claret (in a bottle) (good work)" -> "claret". */
 export function cleanName(name) {
@@ -163,7 +163,7 @@ export function planBatch(recipe, carried = [], batch = 1) {
   return {take, missing};
 }
 
-/** Difficulty for this cook: one more for a Kindred cooking by taste without three dots (house rule). */
+/** Difficulty for this cook: KINDRED_TASTE adds to it for a Kindred cooking by taste below its dots (0 now), and an old kit adds one. */
 export function diffFor(recipe, {line = "mortal", abilityValue = 0, old = false} = {}) {
   let d = recipe.diff;
   if ( recipe.taste && line === "vampire" && (Number(abilityValue) || 0) < KINDRED_TASTE.unless ) d += KINDRED_TASTE.diff;

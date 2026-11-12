@@ -98,12 +98,12 @@ test("recipes: a batch uses more and takes longer, but less than one at a time",
   assert.ok(R.batchGoal(3, 10) < 30);
 });
 
-test("recipes: everyday cooking needs no roll when the pool is enough; Kindred cook harder by taste", () => {
+test("recipes: everyday cooking needs no roll when the pool is enough; Kindred taste food and cook at the usual difficulty", () => {
   const stew = R.recipeOf(good("vegetable soup"), 1300).recipe;
   assert.equal(R.noRoll(stew, 6, 6), true);
   assert.equal(R.noRoll(stew, 5, 6), false);
   assert.equal(R.noRoll(R.recipeOf(good("morphine"), 1900).recipe, 10, 7), false, "drugs always roll");
-  assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 2}), 7);
+  assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 0}), 6, "vampires can taste, they just cannot eat");
   assert.equal(R.diffFor(stew, {line: "vampire", abilityValue: 3}), 6);
   assert.equal(R.diffFor(stew, {line: "mortal", abilityValue: 0}), 6);
 });

@@ -1158,8 +1158,8 @@ Reverse: knows in recipe-rules.mjs returns ok.
 Successes past the goal set a made drug's or medicine's strength: none weak, 1-2 usual, 3 or more strong. A botch while making one does not ruin the work; it makes the batch impure, which only the Storyteller is told when it is taken. Food and drink keep plain, good, fine and masterwork (B852).
 Reverse: STRENGTHS in recipe-rules.mjs; tasks.mjs sets impure on a botch.
 
-## B951. Kindred cannot taste (2026-11-12)
-A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; the PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
+## B951. Kindred can taste (2026-11-12)
+Vampires can taste food; they just cannot eat it (Ben, 2026-11-12). A vampire cooks and brews at the usual difficulty. The first draft gave one more difficulty below 3 dots; Ben overruled it. The PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
 Reverse: KINDRED_TASTE in recipe-rules.mjs.
 
 ## B952. Batches and things that stand (2026-11-12)
