@@ -133,13 +133,18 @@ export async function run() {
     ok("8. fight ends", ended, {left: !!game.combats.get(combat.id), watch: game.combats.get(combat.id)?.getFlag("wodx-combat", "endWatch") ?? null});
     if ( game.combats.get(combat.id) ) await game.combats.get(combat.id).delete();
 
-    // 9. Letting time pass
+    // 9. Letting time pass. When the hero is apart from the other player characters the hour goes on the hero's own
+    // time (B1961) and the world clock stays; either counts.
+    const ST = game.modules.get("wodx-storyteller").api;
     const others = game.users.filter(u => !u.isGM && u.active).length;
-    const tp0 = game.time.worldTime;
-    await game.modules.get("wodx-storyteller").api.passTime.open({userId: game.user.id, choice: "hour"});
+    const tp0 = game.time.worldTime, self0 = ST.personalTime?.(pc.id) ?? tp0;
+    await ST.passTime.open({userId: game.user.id, choice: "hour"});
     await sleep(800);
-    ok("9. let time pass", others > 0 ? true : game.time.worldTime - tp0 >= 3600, {moved: game.time.worldTime - tp0, otherPlayers: others,
+    const clock = game.time.worldTime - tp0, self = (ST.personalTime?.(pc.id) ?? game.time.worldTime) - self0;
+    ok("9. let time pass", others > 0 ? true : (clock >= 3600 || self >= 3600), {clock, self, otherPlayers: others,
       note: others ? "a player is logged in, so the ask waits for them; not checked" : ""});
+    // The hero's own time goes back to the world clock before the hero is deleted
+    if ( self && ST.setPersonal ) await ST.setPersonal(pc.id, game.time.worldTime);
   } catch (e) {
     R.errors.push(String(e?.stack ?? e));
   } finally {
