@@ -324,11 +324,13 @@ export async function unbuild(made = {}) {
  * a short or empty supply to normal; three or more make it plenty (house rule, B855). A private workshop run by a
  * person is closed while private trade is forbidden (1948-1989); one held by a faction (the state) still works.
  */
-export async function workshopsMonth() {
-  const mk = markets();
-  if ( !isActiveGM() || !mk ) return null;
+/**
+ * Storyteller 0.48.0: the working places in each market, {marketId: {category: count}}, shared by the month's
+ * workshops and the weekly market turn (what a town makes).
+ */
+export function workshopCounts(st = markets()?.state?.()) {
+  if ( !st ) return {};
   const right = O.tradeRightAt(yearNow());
-  const st = mk.state();
   const count = {};
   for ( const h of holdings() ) {
     const cat = h.prop.makes || B.WORKS[h.prop.type];
@@ -338,6 +340,14 @@ export async function workshopsMonth() {
     if ( !m ) continue;
     (count[m.id] ??= {})[cat] = (count[m.id][cat] ?? 0) + 1;
   }
+  return count;
+}
+
+export async function workshopsMonth() {
+  const mk = markets();
+  if ( !isActiveGM() || !mk ) return null;
+  const st = mk.state();
+  const count = workshopCounts(st);
   const changes = [];
   for ( const [id, cats] of Object.entries(count) ) {
     const m = MK.marketById(st, id);
