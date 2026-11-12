@@ -6,7 +6,8 @@
  * a cottage, a chapel), seeds them, checks the sheets, routines and records, removes them, and deletes the scene,
  * the folder and the test Cainite at the end. It does not switch the Storyteller's view or change the clock.
  *   1. the modules: NPC 0.46.0 or later with api.residents; WoDX Creation's People generator on
- *   2. the plan: 3 households, 9 people, every one named, kin of one sex sharing one family name, routines that exist
+ *   2. the plan: 3 households, 9 people, every one named, kin of one sex sharing one family name, routines that exist,
+ *      the chapel's priest a Christian man (NPC 0.47.1)
  *   3. seeded: 9 sheets in the residents folder, each with its routine on, its building as home or work, its household
  *   4. the records: each region lists its residents; the smithy's owner is the smith
  *   5. the routines read the places: a resident's home block resolves to its building
@@ -59,8 +60,10 @@ export async function run() {
       return bySex("male").size <= 1 && bySex("female").size <= 1;
     });
     const presets = M.api.routineRules.PRESETS;
-    ok("2. plan", list.length === 3 && people.length === 9 && people.every(p => p.name && p.name.trim().includes(" ")) && sameFamily && people.every(p => presets[p.plan.preset]),
-      {households: list.map(h => ({label: h.household.label, people: h.people.map(p => `${p.name} (${p.plan.label}, ${p.plan.preset})`)}))});
+    const priest = list.find(h => h.household.trade === "priest")?.people?.[0];
+    const priestOk = priest?.sex === "male" && priest?.origin !== "jewish";
+    ok("2. plan", priestOk && list.length === 3 && people.length === 9 && people.every(p => p.name && p.name.trim().includes(" ")) && sameFamily && people.every(p => presets[p.plan.preset]),
+      {priest: priest ? `${priest.name}, ${priest.sex}, ${priest.origin}` : null, households: list.map(h => ({label: h.household.label, people: h.people.map(p => `${p.name} (${p.plan.label}, ${p.plan.preset})`)}))});
 
     const made = await X.seed(scene, list, list.map(h => ({index: h.index, ghoulOf: null})));
     await sleep(300);
