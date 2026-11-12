@@ -458,6 +458,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.13.0", extras: X, rules: SR, sheetFor, viewFor,
-    anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep } };
+  game.modules.get(MOD).api = { version: "0.14.0", extras: X, rules: SR, sheetFor, viewFor,
+    anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything } };
 });

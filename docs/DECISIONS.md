@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2420
+Next free block: B2430
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -95,6 +95,7 @@ Next free block: B2420
 | B2370-B2379 | The weekly market turn: making, recovery, trade links, seasons by era, skip catch-up, the queue and talk of dear goods | Storyteller |
 | B2380-B2389 | The rest of the living economy: faction moves on markets (taxes, monopolies, smuggling, raids), traders going broke, caravans | Storyteller, Interactables |
 | B2400-B2419 | The Lone Chronicle: playing alone with a hidden browser in the Storyteller's seat | Solo |
+| B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2752,3 +2753,23 @@ Reverse: reorder in the Master Plan.
 Once The Lone Chronicle is complete, the solo world gets each release at the same time as the Live world, from the same bundle, and nothing in between. Every world in the PC's Foundry data folder shares one set of modules, which are the testbed's builds, so the solo world gets a Foundry user-data folder of its own with its own modules, on another port, under the same license. It never runs while the testbed runs. Until the mode is complete it is built and tested on the testbed like everything else.
 
 Reverse: point the solo world back at the shared data folder.
+
+## B2420. The anachronism check reads the maps (2026-11-12, Master Plan leftover, priority 1)
+The check built in Sheets 0.8.0 read only what player characters carry; the plan left "vehicles and tools placed on the map" open. Sheets 0.14.0 reads every scene's walls and tiles through WoDX Interactables' own tables (datedParts in interact-rules.mjs), so the years stay in one place: mounts and vehicles, telephones, radios and sprinklers, electric light switches, live wires, keypads and alarms on doors and containers, and each line inside a container, looked up as the Possessions tab looks up an item (Gear by era by link or name, a world item, the everyday goods). As on the sheets, only what the jump changed is raised. The card groups the rows by scene and shows at most 60; the rest are counted. Traps, clues, hiding places, climbs, targets and sacred things carry no year and are left alone: a relic is meant to be old. NPCs' own possessions are not read; Pass the Years is where they change.
+
+Reverse: turn the world setting "Anachronism check" off, or pass maps: false to report.
+
+## B2421. Kept on the map (2026-11-12, house rule)
+Keep it on a map row writes flags.wodx-sheets.keepOutOfEra on the wall or tile, or adds the line to flags.wodx-sheets.keptGoods for one line inside a container. Sheets writes only its own flags. Interactables reads the first: a kept thing works in any year, so a time-lost motor car can be driven in 1850, a kept telephone rings and a kept keypad can be worked. Before this, a thing before its year offered only a note.
+
+Reverse: clear the flag on the tile; drop the kept test in characterFor.
+
+## B2422. Antiques and keypads by year (2026-11-12, house readings)
+The books give no years for these. A carriage or coach on a map is a rare antique after 1930 and an oil or gas lamp after 1950 (ANTIQUE_AFTER); keypads, card readers and electronic alarms appear in 1970 (ELECTRONIC_FROM), the year Interactables already used for them. Horses, carts, rowing boats, torches, candles, lanterns, bells, mirrors and windows belong to every year.
+
+Reverse: edit ANTIQUE_AFTER or ELECTRONIC_FROM in interact-rules.mjs.
+
+## B2423. Out of their time, on demand (2026-11-12)
+The Storyteller's hand gets "Out of their time": one card of everything on the sheets and the maps that does not belong to the year now, whether or not the clock moved. It is for a map brought in from another age or a scene dressed by hand. It works in the Live world too, since it only runs when pressed and changes nothing until Keep it is pressed.
+
+Reverse: remove the addTool call in anachronism.mjs.

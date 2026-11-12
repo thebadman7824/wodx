@@ -10,6 +10,11 @@
  *   4. Keep marks the item and the next read leaves it out
  *   5. the clock check reads the jump from the stored year and stores the year now
  *   6. every other WoDX module still answers
+ * Sheets 0.14.0 with Interactables 0.34.0, on two tiles the gate puts on one scene and takes off again:
+ *   7. the maps: back from 2020 to 1850 the motor car and the radio in the chest's company are not made yet; the horse says nothing
+ *   8. the card has an "On the maps" part with Keep it and Show me for each
+ *   9. Keep it marks the tile, the next read leaves it out, and the kept car can be driven in any year
+ *  10. "Out of their time" is in the Storyteller's hand
  * Result: Data/wodx-gate/gateanachronism-result.json.
  */
 async function save(R, name) {
@@ -28,7 +33,8 @@ export async function run() {
   const MOD = "wodx-sheets";
   const api = () => game.modules.get(MOD)?.api?.anachronism;
   const stored = foundry.utils.deepClone(game.settings.get(MOD, "anachronismAt") ?? {});
-  let actor, msgs = [];
+  let actor, msgs = [], tiles = [], scene = null;
+  const IX = "wodx-interactables";
   const lib = (firstYear, lastYear) => ({"wodx-library": {firstYear, lastYear}});
   try {
     actor = await Actor.create({name: "WoDX gate: Anachronism", type: "Mortal"});
@@ -70,6 +76,42 @@ export async function run() {
       const at = game.settings.get(MOD, "anachronismAt");
       ok("the clock check", at.year === now.year && at.era === now.era, {now, at, card: !!m});
     });
+    if ( game.modules.get(IX)?.active ) {
+      scene = game.scenes.viewed ?? game.scenes.active ?? game.scenes.contents[0];
+      const back = {era: "modern", year: 2020}, then = {era: "victorian", year: 1850};
+      await step("the maps", async () => {
+        const at = {x: 0, y: 0, width: 100, height: 100, hidden: true, texture: {src: null}};
+        tiles = await scene.createEmbeddedDocuments("Tile", [
+          {...at, flags: {[IX]: {mount: true, mountKind: "car", title: "WoDX gate car"}}},
+          {...at, flags: {[IX]: {watch: true, watchKind: "radio", title: "WoDX gate radio"}}},
+          {...at, flags: {[IX]: {mount: true, mountKind: "horse", title: "WoDX gate horse"}}}]);
+        const mine = new Set(tiles.map(t => t.id));
+        const got = (await api().scanMaps(back, then, [scene])).filter(r => mine.has(r.id)).map(r => `${r.key}:${r.status}`).sort();
+        ok("the maps", got.join() === "mount:early,watch:early", {got, scene: scene.name});
+      });
+      await step("the map card", async () => {
+        const mine = new Set(tiles.map(t => t.id));
+        const rows = (await api().scanMaps(back, then, [scene])).filter(r => mine.has(r.id));
+        const m = await api().report(back, then, [], {maps: rows});
+        if ( m ) msgs.push(m);
+        const keep = (m?.content.match(/data-wodx-keep-map=/g) ?? []).length, show = (m?.content.match(/data-wodx-show-map=/g) ?? []).length;
+        ok("the map card", !!m && /On the maps/.test(m.content) && keep === 2 && show === 2, {keep, show});
+      });
+      await step("keep on the map", async () => {
+        const car = tiles[0];
+        await api().keepThing(scene.id, car.id, false, "mount");
+        const left = (await api().scanMaps(back, then, [scene])).filter(r => r.id === car.id).length;
+        const ix = game.modules.get(IX).api;
+        const kept = ix.characterFor(null, null, car).kept === true, plain = ix.characterFor(null, null, tiles[1]).kept === false;
+        const ops = ix.rules.optionsFor(ix.describeTile(car), {actorId: "x", year: 1850, kept: true, abilities: {}});
+        ok("keep on the map", !!car.flags?.[MOD]?.keepOutOfEra && left === 0 && kept && plain && !ops.some(o => o.id === "eraNote"), {left, kept, plain, ops: ops.map(o => o.id)});
+      });
+      await step("the hand", async () => {
+        const hand = game.wodx?.storyteller?.hand;
+        const inHand = !!hand?.tools?.some?.(t => t.key === "anachronism");
+        ok("the hand", typeof api().everything === "function" && (inHand || !game.modules.get("wodx-storyteller")?.active), {inHand});
+      });
+    } else R.notes.push("WoDX Interactables is off: the map steps were skipped.");
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
@@ -81,6 +123,7 @@ export async function run() {
       await game.settings.set(MOD, "anachronismAt", stored);
       for ( const m of msgs ) await m.delete();
       if ( actor ) await actor.delete();
+      if ( scene && tiles.length ) await scene.deleteEmbeddedDocuments("Tile", tiles.map(t => t.id).filter(id => scene.tiles.has(id)));
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gateanachronism-result.json");
