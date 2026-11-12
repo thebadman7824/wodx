@@ -1,0 +1,17 @@
+# wodx-paperdoll changelog
+
+Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
+
+- 0.6.3 (thinner lips in a colour drawn toward the skin; faces at rest are neutral, smiles and frowns only by choice or mood; "Face drawn as" woman, man, nonbinary or not stated: women's lips a little fuller, men's thinner, nonbinary either way by seed, no facial hair rolled for women; WoDX Creation keeps the sex it rolled on the actor; not deployed)
+- 0.6.2 (mouths redrawn in the face's own inked style: flat colour, tapered sepia parting and corners; a Lips part with 12 shapes plus a per-seed nudge so no two mouths match; lips shrink to fit narrow faces; moustaches lie over the mouth; not deployed, art style under review)
+- 0.6.1 (the new grounds matched to kinds for NPCs: rose for ghouls, diaper for the faithful, lilies for sorcerers, vine for changelings and changing breeds, chequer for wraiths, punched gold for mummies)
+- 0.6.0 (mouths drawn by WoDX itself and fitted under the nose and between the eyes, 15 expressions with shading and teeth, checked as their own stage; 16 fantastic skin tones rolled only for the fae and the uncanny; Mauled and worse drain the face to grey instead of a pale film; no paper grain over the figure; six more grounds: rose stars, diaper, vine, lilies, chequer, punched gold)
+- 0.5.0 (lasting changes from WoDX Storyteller that show are drawn on the face: seams, brow ridges, eyes, mouth, skin, the whole face)
+- 0.4.0 (fuller lips grown from each mouth's shape, 9 lip colours; lips, brows and nose coloured to stand out from the skin, a light rim under brows on the darkest skin; serious faces: cartoonish Lorelei eyes, brows, mouths and hair left out, saved looks moved to the nearest kept part; soft modelling on every face; each face built in six checked stages, head, features, skin, over the eye, clothes, ring; face outline measured on the bare face so long fringes no longer cut it short; health marks under the mask of visible skin)
+- 0.3.0 (illuminated finish: gilt or starred ground, sepia ink, paper grain, woven cloth, gilt trim, a gilt ring with an inner ring by kind; 23 eye colours, 12 strange; 14 afflictions; background and inner ring chosen by the player, or matched to the character's kind)
+- 0.2.0 (new faces: 38 skin tones, 25 hair colours, 15 face builds, 7 ages, 8 complexions, 12 marks, 12 scars, 13 kinds of facial hair, drawn under a mask of the visible skin; a placed token that still shows its old picture on the Storyteller's screen is prepared again and redrawn)
+- 0.1.4 (eyes closed at Incapacitated; placed tokens updated with diff off and checked again after a moment)
+- 0.1.3 (api.last: what the last bake found and updated)
+- 0.1.2 (only real placed tokens are updated)
+- 0.1.1 (placed tokens found through the actor too)
+- Paperdoll tokens: each player builds a look (Lorelei face parts, colours, the era's clothes) in a window on the sheet; the token shows head, shoulders and chest inside the era's ring, every garment fitted to the face; the face follows the health track and frenzy; baked once on the Storyteller's computer. Carried things are not drawn, 0.6.4 (dead code removed)

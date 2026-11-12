@@ -23,11 +23,11 @@ import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerPerceptionSettings, setupPerception, refreshScreen} from "./perception.mjs";
 import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
-import {registerSight, setupSight, cycleSight} from "./sight.mjs";
+import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.6.1";
+const VERSION = "0.7.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -717,7 +717,7 @@ Hooks.once("init", () => {
   registerSight();
   setupSight({powerDots});
   const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
-  const api = {perception, sight: {cycle: cycleSight}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  const api = {perception, sight: {cycle: cycleSight, colourSafe}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });

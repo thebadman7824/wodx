@@ -240,3 +240,148 @@ test("the Old Clan holds out one night longer without soil", () => {
   r = S.soilNight(r.soil, 2 * D + noon, false, 1); assert.equal(r.halved, false);
   r = S.soilNight(r.soil, 3 * D + noon, false, 1); assert.equal(r.halved, true);
 });
+
+/* Chronicle 0.30.0: ghouls and revenant families (B1158, B1159) */
+
+test("revenant families: the books' four, and new ones founded in play", () => {
+  assert.equal(S.familyRow(["Grimaldi"])?.key, "family-grimaldi");
+  assert.ok(S.familyRow(["Zantosa"])?.also.includes("vice"));
+  assert.ok(S.familyRow(["Bratovitch"])?.effects.some(e => e.tags.includes("animal ken")));
+  assert.equal(S.familyRow(["Toreador"]), null);
+  const f = S.newFamily({name: "Kessler", founder: "a Tzimisce voivode", trait: "war", disciplines: "Potence, Fortitude, Celerity, Auspex", flaw: "hot blood", year: 1250});
+  assert.equal(f.disciplines.length, 3); assert.equal(f.approved, false);
+  assert.equal(S.familyRow(["Kessler"], [f]), null, "waits for the Storyteller");
+  assert.equal(S.familyRow(["Kessler"], [{...f, approved: true}])?.key, "family-kessler");
+  assert.equal(S.newFamily({name: "", trait: "war"}), null);
+  assert.equal(S.newFamily({name: "X", trait: "nonsense"}), null);
+});
+
+test("a ghoul counts whole months without vitae", () => {
+  assert.equal(S.monthsUnfed(0, 29 * S.DAY), 0);
+  assert.equal(S.monthsUnfed(0, 61 * S.DAY), 2);
+  assert.equal(S.GHOUL.feature, "ghoul");
+});
+
+/* Chronicle 0.31.0: Werewolf tribes, auspices, breeds, Kinfolk and the other Changing Breeds (B1160 to B1164) */
+
+test("a Garou stacks tribe, auspice and breed; other Fera get their own row", () => {
+  assert.deepEqual(S.garouRows({tribe: ["get-of-fenris"], auspice: ["ahroun"], breed: ["metis"]}).map(r => r.key), ["fenris", "ahroun", "metis"]);
+  assert.deepEqual(S.garouRows({tribe: "Glass Walkers", auspice: "", breed: "homid", fera: "Garou"}).map(r => r.key), ["glasswalkers", "homid"]);
+  assert.equal(S.garouRows({tribe: "Warders of Men"})[0].key, "glasswalkers", "the Dark Ages name");
+  const k = S.garouRows({fera: "Kitsune", breed: "lupus", tribe: "Black Furies"});
+  assert.deepEqual(k.map(r => r.key), ["kitsune", "lupus"], "a Fera has no Garou tribe row");
+  assert.ok(k[0].text.includes(S.COURTS_TEXT));
+  assert.ok(!S.rowIn(S.FERA, "Kitsune").text.includes(S.COURTS_TEXT), "the table itself is not changed");
+  assert.equal(S.garouRows({fera: "Bastet"})[0].also[0], "secrets");
+});
+
+test("every tribe, auspice, breed and Changing Breed on the desk has a row", () => {
+  const want = ["blackfuries", "bonegnawers", "childrengaia", "fianna", "fenris", "glasswalkers", "redtalons", "shadowlords", "silentstriders", "silverfangs",
+    "stargazers", "uktena", "wendigo", "croatan", "bunyip", "whitehowlers", "bsd"];
+  assert.deepEqual(S.TRIBES.map(r => r.key), want);
+  assert.equal(S.AUSPICES.length, 5); assert.equal(S.BREEDS.length, 3);
+  for ( const k of ["ajaba", "ananasi", "bastet", "corax", "gurahl", "kitsune", "mokole", "nagah", "nuwisha", "ratkin", "rokea", "hakken", "khan", "nezumi",
+    "samebito", "zhonglung", "tengu", "kumo", "okuma", "apis", "camazotz", "grondr"] ) assert.ok(S.FERA.some(r => r.key === k), k);
+  for ( const r of [...S.TRIBES, ...S.AUSPICES, ...S.BREEDS, ...S.FERA, S.KINFOLK] ) {
+    assert.ok(r.title && r.text && r.page && r.feature, r.key);
+    assert.ok(!/—/.test(r.text), `${r.key}: no em-dash`);
+  }
+});
+
+test("lost tribes and lost Fera are gone by their year", () => {
+  const cro = S.rowIn(S.TRIBES, "Croatan"), apis = S.rowIn(S.FERA, "Apis");
+  assert.equal(S.goneBy(cro, 1500), false); assert.equal(S.goneBy(cro, 1600), true);
+  assert.equal(S.goneBy(apis, 1197), true);
+  assert.equal(S.goneBy(S.rowIn(S.TRIBES, "Fianna"), 2026), false);
+});
+
+test("creatures of the Wyrm, first into battle, and the Stargazer's sky", () => {
+  assert.ok(S.isWyrm("Black Spiral Dancers")); assert.ok(S.isWyrm("a fomor of Pentex")); assert.ok(!S.isWyrm("Hans the miller"));
+  assert.equal(S.firstInit([3, 14, null]), 15);
+  assert.ok(S.mayReadSky(null, 0)); assert.ok(!S.mayReadSky(0, 20 * S.DAY)); assert.ok(S.mayReadSky(0, 30 * S.DAY));
+  assert.ok(S.skyClear({sky: "clear", precip: "none", fog: "none"})); assert.ok(!S.skyClear({sky: "overcast"})); assert.ok(!S.skyClear({sky: "clear", precip: "rain"}));
+  assert.ok(S.skyClear(null), "no weather module: the Storyteller decides");
+});
+
+test("signature effects in the trait shape, with tag aliases", () => {
+  const fx = [{tags: ["resist-frenzy"], difficulty: 1, why: "Osebo"}, {tags: ["survival"], dice: 1, why: "Red Talons"}, {tags: ["resist-dominate"], difficulty: 2, why: "Gargoyles"},
+    {tags: ["animal ken"], dice: 1, why: "Bratovitch"}, {tags: ["all"], halve: true, why: "soil"}];
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff]), [["Osebo", 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "resist", tags: ["mind"]}).map(e => e.name), ["Gargoyles"]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).map(e => e.name), ["Bratovitch"]);
+  assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
+});
+
+/* Chronicle 0.33.0: Mage Traditions, Crafts, Conventions and Houses (B1165 to B1167) */
+
+test("a mage finds the group row by the system's sect keys, and a House stacks", () => {
+  for ( const [k, want] of [["wod.bio.mage.akashic", "akashic"], ["wod.bio.mage.speakers", "dreamspeakers"], ["wod.bio.mage.ether", "sonsofether"], ["wod.bio.mage.adepts", "va"],
+    ["wod.bio.mage.batin", "ahl"], ["wod.bio.mage.iterationx", "itx"], ["wod.bio.mage.engineers", "void"], ["wod.bio.mage.children", "childrenKnowledge"],
+    ["wod.bio.mage.kopa", "kopaLoei"], ["wod.bio.mage.templar", "templar"], ["wod.bio.mage.wulung", "wulung"], ["wod.bio.mage.marauder", "marauder"],
+    ["wod.bio.mage.nephandi", "nephandi"], ["wod.bio.mage.hollow", "hollow"], ["wod.bio.mage.orphans", "orphans"], ["wod.bio.mage.bataa", "bataa"]] )
+    assert.equal(S.mageRows({sect: [k]})[0]?.key, want, k);
+  assert.deepEqual(S.mageRows({sect: ["Order of Hermes"], house: ["Flambeau"]}).map(r => r.key), ["hermes", "flambeau"]);
+  assert.equal(S.mageRows({sect: ["Order of Hermes"], house: ["Tytalus"]})[1].key, "hOthers");
+  assert.ok(S.rowIn(S.MAGE, "Nephandi").also.includes("corruption"));
+  assert.equal(S.rowIn(S.MAGE, "Taftani").servant, "a djinn");
+  for ( const r of [...S.MAGE, ...S.HOUSES] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("old names, founding years and the Watchers' records follow the year", () => {
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "verbena"), 1300), "the Old Faith");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "verbena"), 1500), "Verbena");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "syndicate"), 1600), "the High Guild");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "syndicate"), 1897), "Syndicate");
+  assert.ok(S.notYet(S.rowIn(S.MAGE, "ether"), 1900)); assert.ok(!S.notYet(S.rowIn(S.MAGE, "ether"), 1904));
+  assert.ok(S.goneBy(S.rowIn(S.MAGE, "craftmasons"), 1900));
+  assert.equal(S.recordsAt(1300), "parish books and tax rolls"); assert.equal(S.recordsAt(2010), "the net");
+});
+
+test("dawn meditation once a day, and Willpower kept in bounds", () => {
+  assert.ok(S.mayMeditate(null, 0));
+  assert.ok(!S.mayMeditate(7 * 3600, 20 * 3600), "same day");
+  assert.ok(S.mayMeditate(7 * 3600, S.DAY + 7 * 3600));
+  assert.equal(S.willpowerStep({temporary: 5, permanent: 5}, 1), 5);
+  assert.equal(S.willpowerStep({temporary: 3, permanent: 6}, 1), 4);
+  assert.equal(S.willpowerStep({temporary: 0, permanent: 6}, -1), 0);
+});
+
+/* Chronicle 0.34.0: Changeling kiths, seemings, courts and Houses (B1500 to B1503) */
+
+test("a changeling stacks kith, seeming, court and House, from the system's kith keys", () => {
+  assert.deepEqual(S.faeRows({kith: ["wod.bio.changeling.satyrs"], seeming: ["Wilder"], court: ["Unseelie"], house: ["Fiona"]}).map(r => r.key), ["satyr", "wilder", "unseelie", "fiona"]);
+  for ( const [k, want] of [["wod.bio.changeling.nighthags", "thallain"], ["wod.bio.changeling.glomes", "inanimae"], ["wod.bio.changeling.kachinas", "nunnehi"],
+    ["wod.bio.changeling.firbholg", "darkkin"], ["wod.bio.changeling.merrow", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
+    ["Hsien: Komuko", "komuko"], ["Hsien", "hirayanu"], ["wod.bio.changeling.sidhe", "sidhe"]] )
+    assert.equal(S.faeRows({kith: [k]})[0]?.key, want, k);
+  assert.equal(S.faeRows({court: ["Seelie"]})[0].key, "seelie", "Seelie is not read inside Unseelie");
+  for ( const r of [...S.KITHS, ...S.SEEMINGS, ...S.COURTS, ...S.FAE_HOUSES] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("the court in power by the season, revel Glamour and the seal coat", () => {
+  assert.equal(S.courtInPower(11), "unseelie"); assert.equal(S.courtInPower(4), "unseelie"); assert.equal(S.courtInPower(5), "seelie"); assert.equal(S.courtInPower(10), "seelie");
+  assert.equal(S.revelGlamour(S.rowIn(S.KITHS, "satyr"), {temporary: 2, permanent: 5}), 4);
+  assert.equal(S.revelGlamour(S.rowIn(S.KITHS, "pooka"), {temporary: 2, permanent: 5}), 3);
+  assert.ok(S.isCoat({name: "A seal coat"})); assert.ok(S.isCoat({name: "old sealskin"})); assert.ok(!S.isCoat({name: "a wool coat"}));
+});
+
+/* Chronicle 0.35.0: Wraith guilds, legions and factions (B1504 to B1506) */
+
+test("a wraith's picks find their rows, and the manner of death suggests a legion", () => {
+  assert.deepEqual(S.wraithRows({guild: "Oracles", legion: "fate", faction: "Renegades"}).map(r => r.key), ["oracles", "fate", "renegades"]);
+  assert.equal(S.wraithRows({guild: "Keening"})[0].key, "chanteurs", "the Arcanos names its Guild");
+  assert.equal(S.GUILDS.length, 16); assert.equal(S.LEGIONS.length, 8);
+  assert.equal(S.legionFor("Murdered in an alley")?.key, "grim");
+  assert.equal(S.legionFor("Died of consumption in 1840")?.key, "skeletal");
+  assert.equal(S.legionFor("Old age, in bed")?.key, "iron");
+  assert.equal(S.legionFor("Suicide")?.key, "silent");
+  assert.equal(S.legionFor(""), null);
+  assert.ok(S.rowIn(S.GUILDS, "oracles").also.includes("glimpse"));
+  assert.ok(S.rowIn(S.LEGIONS, "penitent").also.includes("hear"));
+  for ( const r of [...S.GUILDS, ...S.LEGIONS, ...S.WRAITH_FACTIONS] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("the Emerald luck once a week", () => {
+  assert.ok(S.mayLuck(null, 0)); assert.ok(!S.mayLuck(0, 3 * S.DAY)); assert.ok(S.mayLuck(0, 7 * S.DAY));
+});

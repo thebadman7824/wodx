@@ -75,6 +75,22 @@ export function barter(want, offer) {
     return { owe: w - o, even: w === o };
 }
 
+/**
+ * A price scaled by a made thing's quality (Storyteller's priceFactor: 1.25 good, 1.5 fine, 2 masterwork).
+ * Returns a new price, or the same one for no factor. Each, total, sell and fence all scale; the smallest coin stays 1.
+ */
+export function withQuality(price, factor = 1) {
+    const f = Number(factor);
+    if (!price || !Number.isFinite(f) || f <= 0 || f === 1) return price;
+    const up = v => (Number(v) > 0 ? Math.max(1, Math.round(Number(v) * f)) : 0);
+    return { ...price, each: up(price.each), total: up(price.total), sell: up(price.sell), fence: up(price.fence), quality: f };
+}
+/** The quality factor stored on an item, 1 when none. */
+export const qualityFactor = item => {
+    const f = Number(item?.flags?.["wodx-storyteller"]?.priceFactor);
+    return Number.isFinite(f) && f > 0 ? f : 1;
+};
+
 /** What a trader gives for a thing: the sell price, or the fence's for something stolen (lifted). */
 export const offerFor = (price, { lifted = false } = {}) => {
     if (!price) return 0;

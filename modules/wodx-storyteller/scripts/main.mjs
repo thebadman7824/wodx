@@ -24,6 +24,7 @@ import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
 import * as Markets from "./markets.mjs";
+import * as News from "./market-news.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
@@ -73,6 +74,7 @@ Hooks.once("init", () => {
   Money.registerMoneySettings();
   Money.registerMoneyHooks();
   Markets.registerMarketSettings();
+  News.registerMarketNewsSettings();
   Tasks.registerTaskSettings();
   Tasks.registerTaskHooks();
   Cook.registerCookHooks();
@@ -106,6 +108,7 @@ Hooks.once("ready", () => {
   game.socket.on(C.SOCKET, onSocket);
   C.primeQueue();
   Markets.setupMarkets().catch(e => console.error("WoDX | markets", e));
+  News.setupMarketNews().catch(e => console.error("WoDX | market news", e));
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -114,7 +117,7 @@ Hooks.once("ready", () => {
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
-    ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
+    ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
     night: {draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
@@ -129,7 +132,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api()},
+      markets: Markets.api(), marketNews: News.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
@@ -200,6 +203,18 @@ Hooks.on("wodxShroudCrossing", p => {
     if ( !C.isPC(a) ) continue;
     safe(C.log({kind: "cross", actor: a.id, name: a.name, user: C.ownerOf(a)?.id, place: p?.place?.where ?? null,
       text: p?.back ? "Came back across the Shroud." : "Crossed the Shroud."}));
+  }
+});
+// A Dreaming gateway (Otherworlds): log only those who actually went through, read from the status the gate set
+Hooks.on("wodxDreamingGate", p => {
+  if ( !active ) return;
+  for ( const t of p?.tokens ?? [] ) {
+    const a = t?.actor ?? t?.document?.actor;
+    if ( !C.isPC(a) ) continue;
+    const there = !!a.statuses?.has?.("wodx-dreaming");
+    if ( p?.out ? there : !there ) continue;
+    safe(C.log({kind: "cross", actor: a.id, name: a.name, user: C.ownerOf(a)?.id, place: null,
+      text: p?.out ? "Came back out of the Near Dreaming." : "Went into the Near Dreaming."}));
   }
 });
 function fromUuidSyncSafe(id) { try { return fromUuidSync(id); } catch (e) { return null; } }

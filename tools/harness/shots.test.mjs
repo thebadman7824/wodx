@@ -38,5 +38,5 @@ test("shots: the setting starts off, an empty weapon is refused and a shot is sp
   assert.ok(s.indexOf("const atk = await rollPool(pool.dice") < s.indexOf("spendShot(attacker, w)"), "the round is spent after the attack roll");
   assert.match(s, /export async function reload/);
   assert.match(s, /name: "WoDX: Reload"/);
-  assert.equal(JSON.parse(src("modules/wodx-combat/module.json")).version, "3.13.0");
+  assert.equal(JSON.parse(src("modules/wodx-combat/module.json")).version, "3.16.0");
 });

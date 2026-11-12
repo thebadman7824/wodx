@@ -3,6 +3,7 @@ import {propose, registerHandler} from "./approvals.mjs";
 import * as BW from "./bg-world.mjs";
 import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
+import {rollEffects as sigRollEffects} from "./signatures.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
 /**
@@ -36,7 +37,8 @@ export function view(actor) {
 
 export const of = actor => T.traitsOf(view(actor));
 export const has = (actor, keyOrName) => T.has(view(actor), keyOrName);
-export const effects = (actor, ctx = {}) => T.effectsFor(view(actor), ctx);
+/** The traits' effects on one roll, and the signature features' (clan, tribe, auspice, breed) when their line is on. */
+export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx)];
 /** For WoDX Senses: what the character's traits do to their own senses, and what others sense about them. */
 export const senses = actor => T.senseEffects(view(actor));
 export const shows = actor => T.showsOf(view(actor));

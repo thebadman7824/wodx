@@ -20,3 +20,6 @@
 .wodx-aim-cast select { flex: 1 1 auto; }
 ul.wodx-aim-area { list-style: none; margin: 0.25em 0; padding: 0; max-height: 9em; overflow-y: auto; }
 ul.wodx-aim-area li label { display: flex; gap: 0.35em; align-items: center; }
+/* 0.2.0: area shapes */
+.wodx-aim .wodx-aim-shape { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.9em; margin: 2px 0; }
+.wodx-aim .wodx-aim-shape button { flex: 0 0 auto; width: auto; line-height: 1.4; padding: 1px 8px; }

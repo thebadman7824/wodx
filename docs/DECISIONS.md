@@ -1474,6 +1474,274 @@ Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse
 
 Reverse: the Laibon rows in BLOODLINES.
 
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+
+## B1160. Werewolf features stack: tribe, auspice and breed (2026-11-12)
+Splat Features Desk, all items approved by Ben (03:29 UTC). A Garou has three rows at once, read from the sheet's tribe, auspice and breed (through WoDX Actions where it is on). Any other Changing Breed has the row of its breed and its breed form (homid, metis or lupus). Kinfolk (the Kinfolk flag WoDX Actions sets) have a row of their own. A new world setting, "Tribe, auspice and breed features (Werewolf)", is off by default and works apart from the Vampire switch. The window on the sheet header is now called "Signature feature".
+
+Reverse: rowsOf in signatures.mjs (rowOf is its first row); TRIBES, AUSPICES, BREEDS, FERA and KINFOLK in data/signatures.mjs; the sigWerewolf setting.
+
+## B1161. Signature roll effects reach the dice (2026-11-12)
+The roll effects on the signature rows (the bloodlines' since 0.29.0, and now the tribes', breeds' and Fera's) were shown in the window but never reached a roll. The traits api now adds them to the merits and flaws on each roll, so WoDX Actions picks them up with no change of its own. Survival, Medicine, Etiquette, Occult and the other ability keys these rows name became roll tags of their own; lifting and planting gained the tag lift, cons and fast talk con and fasttalk. "resist-frenzy" reads as the frenzy roll and "resist-dominate" as a resist on mind powers. An effect can name a condition: crinos (the form the sheet shows) or a weather tag (cold, thunder). Soil halving stays a note in the window.
+
+Reverse: rollEffects in signatures.mjs and its use in traits.mjs effects; RAW_TAGS in trait-rules.mjs.
+
+## B1162. The tribes' engines (2026-11-12)
+Black Furies guard the scene they stand in: a fight breaking out there, or someone taking things from it, sends the Fury a card with the hour, and the Storyteller's button gives one Rage point for the hunt. Children of Gaia offer a truce in a fight; the Storyteller's button takes every NPC out of it (the roll, Charisma + Empathy, is a house reading). Shadow Lords keep failures they learn as leverage and spend one as a minor favour in the Ledger. Silver Fangs hear NPCs through their derangement, as Malkavians do. Stargazers read a riddle from the stars once a lunar month, only under a clear sky. Fianna tales and Get of Fenris scars go to the Storyteller as a Glory card. Wendigo gain a die to Survival and attacks in cold weather; Shadow Lords to Intimidation in a thunderstorm. Croatan (to 1590) and Bunyip (to 1890) carry an end year; both years are house readings. White Howlers and the Black Spiral Dancers are for NPCs and stories.
+
+Reverse: guardPlace, desecrated, offerTruce, leverage, spendLeverage, readSky, tale in signatures.mjs.
+
+## B1163. The auspices and breeds (2026-11-12)
+Rage at the auspice's moon is already built in WoDX Actions, so the auspices add their own work. A Philodox posts a ruling for everyone to see. A Galliard's tale goes to the Storyteller, whose button gives Glory to its hero and Wisdom to the teller. An Ahroun goes first when a fight with a creature of the Wyrm begins (a Black Spiral Dancer, or a name with wyrm, fomor, bane or Pentex in it). The extra soak die in Crinos is a house reading the Storyteller adds. Ragabash and Theurge get a die on lifting and on Occult. Metis pick one deformity from six, and it works on the rolls. Lupus perceive one easier by smell and hearing.
+
+Reverse: AUSPICES, BREEDS and DEFORMITIES in data/signatures.mjs; ruling, setDeformity and onCombatStart in signatures.mjs.
+
+## B1164. The other Changing Breeds and the Beast Courts (2026-11-12)
+Each of the eleven Fera of W20 Changing Breeds has a row. Bastet borrow the Nosferatu's pages of secrets, without the true face. A Nagah verdict goes to the Storyteller alone. The Hengeyokai breeds (Hakken, Khan, Nezumi, Same-Bito, Zhong Lung, Tengu, Kumo, Okuma, with the Kitsune and Nagah) also say that rank in the Beast Courts is a faction standing of its own. Apis, Camazotz and Grondr are gone before 1197 and are met only as relics. Their extinction is a house reading, because no book in the store dates it. Harm to Kinfolk sends a card for each player's Garou of that tribe, once a day.
+
+Reverse: FERA and COURTS_TEXT in data/signatures.mjs; kinHarmed in signatures.mjs.
+
+## B1165. Mage features: the group and the House (2026-11-12)
+Splat Features Desk, approved by Ben. A mage's row comes from the sheet's sect (the system keys: akashic, speakers, ether, adepts, batin, iterationx, engineers and the rest) or its custom sect. A Hermetic House named in the custom sect, or in the house flag, adds a second row. Each row carries the older names of its age: the Dark Ages fellowships to 1465 (Old Faith, Messianic Voices, Spirit-Talkers, the Batini, the Ecstatics), and the Order of Reason's conventions to 1896 (the Artificers, the Cabal of Pure Thought, the Hippocratic Circle, the High Guild, the Void Seekers). Some groups have their own years: the Sons of Ether from 1904, the Virtual Adepts from 1961 (a house reading), the Hollow Ones from 1890 (a house reading), and the Celestial Masters and Craftmasons from 1325 to 1896 (a house reading). The new world setting "Tradition, Craft and Convention features (Mage)" is off by default.
+
+Reverse: MAGE and HOUSES in data/signatures.mjs; mageRows, nameAt and notYet in signature-rules.mjs; the sigMage setting.
+
+## B1166. The Mage engines (2026-11-12)
+The Akashic Brotherhood meditate at dawn for a Willpower point, once a day. The Euthanatos gain a Willpower point for a Good Death and a point of Jhor for a death in anger. The Order of Hermes and House Flambeau call a certámen: a public card whose button logs the stake as a minor favour. The Sisters of Hippolyta keep oaths, and breaking one costs a Willpower point. The New World Order hear of every breach of the Masquerade first, through the records of the age. Some groups borrow an engine: the Taftani bind djinn in the Giovanni's servant ledger, the Syndicate use the Shadow Lords' leverage, the Celestial Masters use the Stargazers' reading of the sky, House Quaesitor posts rulings, and the Nephandi use the Followers of Set's Corruption ledger. Science became a roll tag, for the Sons of Ether.
+
+Reverse: meditate, death, certamen, oath, breakOath and onBreach in signatures.mjs.
+
+## B1167. The Houses (2026-11-12)
+Bonisagus, Flambeau, Quaesitor, Shaea, Ex Miscellanea, Janissary, Diedne and Tremere have rows. Janissary ends in 1700 (a house reading). Diedne were gone before 1197. House Tremere leaves the Order in 1199 (a house reading) and is the clan from then on. The other Houses (Tytalus, Verditius, Criamon, Merinita, Jerbiton, Bjornaer, Guernicus, Mercere, Fortunae) share one row until Houses of Hermes is in the store.
+
+Reverse: HOUSES in data/signatures.mjs.
+
+## B1500. Changeling features stack: kith, seeming, court and House (2026-11-12)
+Splat Features Desk, approved by Ben. A changeling's rows come from the sheet's kith (the system's keys or the custom kith), seeming, court and House, all at once. The system's longer kith list is grouped: every Thallain kith reads as the Thallain row, the Inanimae kinds as the Inanimae, the Nunnehi tribes as the Nunnehi, and the Dark-Kin as one row (its feature is a house reading). The Dauntain and the Hsien have rows, the Hsien by their shinma. The new world setting "Kith, seeming and court features (Changeling)" is off by default.
+
+Reverse: KITHS, SEEMINGS, COURTS and FAE_HOUSES in data/signatures.mjs; faeRows in signature-rules.mjs; the sigChangeling setting.
+
+## B1501. The Changeling engines (2026-11-12)
+A Satyr or Clurichaun holds a revel: a public card whose button gives a point of Glamour to each changeling on the scene, and two to a Satyr. A Pooka who tells the plain truth loses a Willpower point. A Selkie's seal coat is an item, and the Storyteller hears when it leaves the pack. Trolls and sidhe keep oaths with the Hippolyta engine, and breaking one costs a Willpower point. The extra soak die for a troll's cause is the Storyteller's to add.
+
+Reverse: revel, toldTruth, giveCoat and onItemGone in signatures.mjs.
+
+## B1502. Courts by the season, seemings by the years (2026-11-12)
+From Samhain (1 November) to Beltaine (1 May) the Unseelie Court holds power, and the Seelie Court holds it for the rest of the year. The court in power gains a die on its own social rolls (Etiquette and Leadership for the Seelie, Intimidation and Subterfuge for the Unseelie). In the Dark Ages the text reads the courts as the seasonal Courts. A childling resists Banality one easier and a grump one harder, and a grump gains a die to lore. Banality became a roll tag, and an effect can name dark (a scene at half darkness or more) as its condition.
+
+Reverse: COURTS, SEEMINGS and UNSEELIE_MONTHS in data/signatures.mjs; whenNow in signatures.mjs.
+
+## B1503. The sidhe Houses (2026-11-12)
+Each of the fourteen Houses has a row with a seat in the fae courts and a one-line theme. Ailil, Dougal, Eiluned, Gwydion and Scathach gain a die to the field of their theme. The Storyteller applies each House's boon and flaw from the book (C20 pdf 10, 51), because they are not written out here. A Fianna Galliard now gains Wisdom for a tale, as any Galliard does: the gate found that the tribe's row hid the auspice's.
+
+Reverse: FAE_HOUSES in data/signatures.mjs; isScarOnly and tale in signatures.mjs.
+
+## B1504. Wraith features: Guild, legion and faction, picked on the actor (2026-11-12)
+Splat Features Desk, approved by Ben. The wraith sheet has no field for a Guild or a legion, so the feature window picks them, and the picks are kept in the actor flag wodx-chronicle.wraith. Rows stack in the order Guild, legion, faction. A legion is suggested from the sheet's death field by the manner of death: violence for the Grim Legion, illness for the Skeletal, old age for the Iron, despair for the Silent, madness for the Penitent, mystery for the Paupers, chance for the Emerald and fate for the Fate Legion. Joining by the manner of death is a house reading, because the books do not say it outright. The new world setting "Guild and legion features (Wraith)" is off by default.
+
+Reverse: GUILDS, LEGIONS and WRAITH_FACTIONS in data/signatures.mjs; wraithRows and legionFor in signature-rules.mjs; the sigWraith setting.
+
+## B1505. The Wraith engines (2026-11-12)
+Several rows borrow engines already built. The Oracles and the Fate Legion read the Malkavian riddle of the next event, once a night. The Pardoners keep confessions as Shadow Lord leverage. The Penitent Legion hear through a derangement. The Emerald Legion's luck allows a reroll on a roll of chance once a week, a house reading of "once a story". The Guilds' Arcanoi name their rows too, so "Keening" finds the Chanteurs. Investigation, Angst and the Harrowing became roll tags.
+
+Reverse: setWraith and luck in signatures.mjs.
+
+## B1506. Factions of the dead (2026-11-12)
+Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
+
+Reverse: WRAITH_FACTIONS in data/signatures.mjs.
+## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
+Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
+
+Reverse: remove the Lifepath button (apps.mjs, registerSheetButton) and lifepathPart in wodx-storyteller/scripts/prelude.mjs.
+
+## B1311. The chain follows Princes of Darkness's event chains, nothing else of it (2026-11-12)
+The CK3 mod runs a childe's education as an opening choice (strict, lenient, free) whose result weights a pool of follow-up events, rules some out (factor 0) and sometimes names the next one, ending in a closing event. WoDX's lifepath does the same with flags, weight factors (more) and named next scenes (n). The mod's V5 material (blood potency, resonance, predator types) is not used.
+
+Reverse: drop more and n from the tables; draws are then plain weighted picks.
+
+## B1312. Lifepath era windows (2026-11-12)
+Fourteen era bands from 1197 to the World of Future Darkness. Lines open by year: the Fallen from 1999, projectors from 1848 (the spiritualist mediums); every other line every era. Splats open by year where the setting fixes it: Cappadocians to 1444 and Giovanni from 1444, the Council's Traditions from 1466 with the Dark Ages Fellowships before, the Order of Reason's Conventions 1325 to 1896 and the Technocratic Union's from 1897, Sons of Ether from 1904, Virtual Adepts from 1961, Sidhe to 1400 and from 1969, imbued creeds from 1999 with mortal hunters 1500 to 1998, Amenti from 1999 with the old Immortals before. Rows the books give no clear year for are marked house: true and listed in PENDING-REVIEW.
+
+Reverse: the spans on each row in data/lifepaths-splats.mjs.
+
+## B1313. People from the past (2026-11-12)
+Up to three named people are ticked by default. Anyone more than 70 years before the chronicle's year is a name only, as most are long dead, unless the scene marks them lasting (a ghost, someone who shares the night). NPCs come from the People generator for the chronicle's own era, with a note of who they were to the character.
+
+Reverse: PEOPLE_DEFAULT and PEOPLE_ALIVE_SPAN in lifepath-rules.mjs.
+
+
+## B1300. Area shapes and their sizes (2026-11-12)
+Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
+Reverse: areaShape() in wodx-targeting target-rules.mjs; the area branch of attach() in main.mjs.
+
+## B1301. The odds before a roll (2026-11-12)
+Ben approved "Show the odds before a roll". The chances are worked out exactly from the same rules countSuccesses() rolls by (a specialty counts a 10 twice, Willpower adds a success and stops a botch). The resisting side's odds show to the Storyteller only. A client setting turns the line off.
+Reverse: oddsPanel() in wodx-actions main.js; setting showOdds.
+
+## B1302. Pinned and lately used actions (2026-11-12)
+Ben approved "Pinned and recent actions": the last five actions and up to eight pinned ones are kept on the character (flags.wodx-actions.quick); right-click or Alt+P pins or unpins. A player who does not own the character sees their own recent list as before.
+Reverse: quick rows in profile-menus.js menuFor and main.js menu().
+
+## B1340. The after-action card and how far a fight's tale travels (2026-11-12)
+Ben approved "An after-action card". When a started fight is ended, the Storyteller gets a whispered card: levels taken and dealt, blood, Willpower and other pools spent, Actions cards seen, and who outside the fight saw it (WoDX Actions' onlooker rules). House rule: a witness carries only their word before 1888, a snapshot camera is possible from 1888, a camcorder from 1985, a phone camera in most pockets from 2005, and in the Future Darkness everything is recorded. A breach is severity 2 when pictures are likely or five or more saw it. The button records the breach (the place may keep it) and starts a rumour, big at severity 2.
+Reverse: setting afterAction off; aftermath.js and aftermath-rules.js in wodx-combat.
+
+## B1320. Using the room in a fight: sizes (2026-11-12)
+Ben approved "Use the room in a fight". Fire, falling and sunlight follow the books (fire V20 Dark Ages pp. 355-360; falling V20 core printed p. 296; sunlight VtDA20 p. 359). House readings: knocked-over candles or a torch start a torch-sized fire; an oil lamp or lantern breaks and its oil burns as a bonfire (lamp) or torch-sized (lantern), at a torch's heat.
+Reverse: SPILL in wodx-interactables interact-rules.mjs.
+
+## B1321. A falling chandelier (2026-11-12)
+House rule: the falling dice for its drop (15 feet unless set) plus 4 for its weight, lethal; each success on Dexterity + Dodge at 7 takes a die away, as stepping carefully does on broken glass. Lit candles start a torch-sized fire.
+Reverse: CHANDELIER_MASS, DROP_DODGE, dropDice in interact-rules.mjs.
+
+## B1322. Sunlight let in through a window or curtain (2026-11-12)
+By day only. A window or shutter thrown open, or a pane smashed, makes a WoDX: Sunlight region of direct sun 4 yards deep on the character's side; a curtain torn from a closed window gives indirect sun (through glass, soak 7) 4 yards round it. Closing the window removes the region. WoDX Actions' sun then burns any Cainite inside.
+Reverse: SUN_YARDS and the letSun and tearCurtain cases in interact-rules.mjs; roomEffects() in main.mjs.
+
+## B1323. Sprinklers (2026-11-12)
+Fire sprinklers from 1874 (the first automatic sprinkler). Setting them off puts out every torch-sized fire and bonfire on the scene; an inferno burns on. Saving the tile's settings resets them.
+Reverse: WATCHES.sprinkler and douses() in interact-rules.mjs.
+
+## B1324. Electric light by era (2026-11-12)
+A light switch offers nothing before 1880. Oil lamps, candles, torches and chandeliers are offered in every era.
+Reverse: ELECTRIC_FROM in interact-rules.mjs.
+
+## B1330. Colour-blind safe colours (2026-11-12)
+Ben approved "Colours readable by everyone". A player setting in WoDX Senses swaps the sight rings to the Okabe and Ito palette with a thicker line, and every ring shows its words on the map (a second setting can hide them). The aura overlay of Read the Soul names its colour. V20's aura colours keep their names; only the drawing changes.
+Reverse: settings colourSafe and ringWords; SAFE in sight-rules.mjs.
+## B1400. Made things keep their quality in trade, Examine and use (2026-11-12)
+A made thing's quality tag ("a sword (fine work)") no longer hides the good from price lookups. Traders buy and sell it at its quality price (x1.25 good, x1.5 fine, x2 masterwork). Examine reads the crafted quality and the maker's name unless the Storyteller's notes say otherwise. A fine or masterwork thing gives -1 difficulty on its Use checks.
+
+Reverse: stripQuality in Storyteller money.mjs; withQuality in Actions trade-rules.js; withMade in Library examine-rules.mjs; extraDiff in use.mjs.
+
+## B1401. The look (2026-11-12)
+WoDX Library reads a character the way a stranger does: station 0 to 5 from the best worn dress (its value tier this era, a step for worn valuables of tier 4 or more), dress or shown gear out of its time, condition (blood, wounds, filth, wet, torn, a weapon drawn), Appearance, Status, sides shown by worn habits, uniforms and liveries, and a disguise. House rule throughout; Appearance, Status and Resources are V20's (page refs owed by the book check).
+
+Reverse: look-rules.mjs and look.mjs; api.look in Library main.mjs.
+
+## B1402. The look at a first meeting (2026-11-12)
+Mortal NPCs: dress the era's gap above their station +1, below -1; strange dress -1; blood or wounds -1; filth or wet -1 with station 3 or more. All NPCs: Appearance 4 to 5 +1; fine work worn +1 with an NPC who has the craft. Mortals only: Appearance 0 -1 unless Monstrous. Supernatural NPCs: Status 3 or more +1 with their own kind. The look is held to 2 steps, traits to 2, the two together to 3 (Ben's pick). NPC station: worn dress, else Resources, else template, else 1.
+
+Reverse: lookSeed and TEMPLATE_STATION in look-rules.mjs; seedFor in NPC attitude.mjs.
+
+## B1403. How loudly dress speaks, by era (2026-11-12)
+Gap needed: 2 until 1913 (from 1800, a gap of 1 also counts with NPCs of station 4 or 5); 3 from 1914. Worn dress always shows; carried things show only when they can't be hidden (conceal N).
+
+Reverse: ERA_WEIGHTS and seen in look-rules.mjs.
+
+## B1404. Blood at later meetings (2026-11-12)
+After a first meeting, blood or wounds lower a mortal NPC's attitude by 1 for that scene only. Nothing is stored. Kindred NPCs notice blood in talk tests, with no attitude step (Ben's pick).
+
+Reverse: sceneStep in look-rules.mjs; withScene in attitude-rules.mjs.
+
+## B1405. Pass as someone else (2026-11-12)
+A disguise roll in With this person: Manipulation + Subterfuge (or Performance) against the NPC's Perception + Alertness, difficulty 6; the watcher must beat the disguise's successes. The result is kept per NPC on the character (flags wodx-actions.disguise). While it holds, that NPC reads the disguise's station and sides. A disguise is set on a worn item in its Examine notes (station and sides). House rule until the book check names the book's roll.
+
+Reverse: the disguise act and disguiseNpc preset in social-rules.js.
+
+## B1406. Talk tests and notices on the look (2026-11-12)
+New "Only when" tests: dressed fine/poor/even (against the NPC being dealt with), wears, station, out of time, bloody, disguised, seen through. Mortals' first remark can now be about blood, a disguise seen through, strange dress, or rich or poor dress, with three stock lines each.
+
+Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-rules.mjs; NOTICE in stock-talk-more.mjs.
+
+## B1407. Guards and worn sides (2026-11-12)
+Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
+
+Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
+
+## B1380. What an NPC can tell of a character (2026-11-12)
+An NPC can tell what someone is only when it is plainly inhuman (a war form, Horrid Form, a spirit or wraith that shows itself, or the Storyteller's "obvious" tick), when one of its senses shows that line (Auspex 2 and up, Second Sight, Kenning; Garou scent, Sense Wyrm and mage Awareness by roll, as for rivalries), or when the Masquerade records list it as a witness who saw that character and was not made to forget. The same check now runs for player characters as for NPCs. A hunter NPC's "goes for the monster first" and "take them alive" use it, not the sheet's kind.
+
+Reverse: canTell in wodx-npc/scripts/main.mjs back to supernatural(t.actor).
+
+## B1381. Mortals noticing a tell (2026-11-12)
+A mortal NPC's greeting remark on a character's oddness ("Your hands are like ice") needs the NPC to tell what the character is (B1380), or one success on Perception + Alertness at difficulty 7, seeded by the day so it stays the same all day. An NPC with no sheet numbers rolls three dice. Wounds and frenzy anyone sees. House rule.
+
+Reverse: noticesTell in talk-rules.mjs returns true.
+
+## B1382. Strangers in chat and the combat tracker (2026-11-12)
+With "Faces you have met" on, each player's chat and combat tracker show the stranger's words in place of the name of any NPC on the scene or in the fight whose face that player has not met. Names of the player's own characters are never swapped. Sheets are not changed.
+
+Reverse: remove the renderChatMessageHTML and renderCombatTracker hooks in faces.mjs.
+
+## B1383. Creatures of another kind remember what they saw (2026-11-12)
+When WoDX Actions reports that a creature of another kind saw someone for what they are (the "Seen by another kind" card), the active Storyteller's WoDX NPC keeps it on that witness (flags.wodx-npc.seenAs). From then on that NPC can tell what the other is (B1380). Mortal witnesses are already kept in the Masquerade records. Player characters are not marked. At most 200 sightings are kept per NPC. Missed Connections Desk item x9, first half; the fed-on vessel waits on Actions adding the vessel to the hunt hook.
+
+Reverse: remove the wodxSecretSeen hook in wodx-npc rivalry.mjs.
+## B1408. The stranger line (2026-11-12)
+With Faces on, an unmet NPC's nameplate reads what a character can see before they meet: dress by station ("a well dressed stranger"), a side worn openly ("in livery"), blood or wounds, a weapon drawn, what their routine has them doing, and their manner toward the viewer's character as words ("wary of you"). Animals read as their kind. The Storyteller's own stranger text wins. House rule.
+
+Reverse: autoStranger and the auto argument of nameFor in faces-rules.mjs; autoFor in faces.mjs.
+
+## B1409. Look them over (2026-11-12)
+A roll in With this person: Perception + Empathy (or Etiquette, or Awareness), difficulty 6. One success gives their mood and condition, two their station and trade, three who they belong with, four what they hide (a concealed weapon, or a disguise that doesn't fit). Only a mortal's trade shows. A botch misreads them. The result goes to the player and the Storyteller only. House rule.
+
+Reverse: LOOKOVER and lookOverFacts in social-rules.js; lookOver in social.js.
+
+## B1410. Ask around about them (2026-11-12)
+Wits + Streetwise (or Charisma or Manipulation + Streetwise), difficulty 6, with a die for each dot of Contacts. One success: what people say of them; two: their name. Learning a name does not introduce the face: the Storyteller still does that from the token HUD. House rule.
+
+Reverse: askFacts in social-rules.js.
+
+## B1411. Players dress as someone else (2026-11-12)
+Worn clothes have a Dress as someone else use: the player sets the station and sides it passes for, and puts it on. The Storyteller can still set one in the Examine notes.
+
+Reverse: the dressas ability in use-rules.mjs; dressAs in use.mjs.
+
+## B1384. A fed-on NPC remembers (2026-11-12)
+When a Kindred feeds on a named NPC through WoDX Actions (drinking at least one point), the NPC keeps it (flags.wodx-npc.fedOn). A mortal vessel keeps a swoon and a lost hour, not who or what: the Kiss leaves little more (V20 core, the Kiss). One who fought it, a Kindred or ghoul vessel, or one already marked as knowing the Kindred saw what fed, and from then on can tell that one (B1380). A willing vessel learns nothing new. House reading. Missed Connections Desk x9, second half.
+
+Reverse: remove the wodxFed hook in wodx-npc rivalry.mjs (Actions may keep sending it).
+
+## B1385. One name lookup (2026-11-12)
+WoDX NPC's api.nameFor(actor, viewer) answers what a viewer calls an NPC: the name for the Storyteller and when "Faces you have met" is off, else the stranger's words until one of the viewer's characters has met them. Chat and the combat tracker are masked per viewer at render (B1382), so cards keep the real name for the Storyteller; windows a player opens (With this person, Trade) ask nameFor. Missed Connections Desk x1.
+
+Reverse: viewName in wodx-actions social.js back to nameFor.
+
+## B1600. Before the First Night lives in WoDX Creation (2026-11-12)
+The guided start for player characters is a hub inside WoDX Creation (first-night.mjs, first-night-rules.mjs), with buttons on the character sheet header, the Creation window and the Chronicle Clock, and the Storyteller's setup wizard opens it when done. No new module. Chronicle Start Desk items c1 to c6, approved by Ben 2026-11-12 04:46Z.
+
+Reverse: remove first-night*.mjs and their lines in main.mjs, apps.mjs, clock-app.mjs and setup.mjs.
+
+## B1601. Steps, approval and sign-off (2026-11-12)
+Ten steps in any order, sign-off last; the lifepath is optional. A player marks a step done through the approval queue (type wodx-first-night-step); the Storyteller ticks or unticks directly. Concept, lifepath, build (the creation check matches the book's totals) and Merits and Flaws tick themselves from the sheet. Kept on flags.wodx-creation.firstNight, and carried through a change of state with the lifepath.
+
+Reverse: STEPS and autoDone in first-night-rules.mjs.
+
+## B1602. Flaw cap (2026-11-12)
+Flaw points are counted against V20's cap of 7 freebies; over the cap the step stays open. Each flaw shows a one-line cost from the trait effect tables while building.
+
+Reverse: FLAW_CAP in first-night-rules.mjs.
+
+## B1603. The trouble forecast (2026-11-12)
+Read from the systems WoDX has: trait effect tables (PULLS, LEDGER, PROMPTS, TRIGGERS, BG_WORLD), the splat feature row (even when that line's features are off), Generation 14 or more (thin blood) and 8 or less (envied blood, Storyteller only), Humanity or Road 4 or less, lifepath people whose role reads as hostile, flaws kept from the lifepath but not bought, faction standing below 0, rivalries at Hostile or worse toward the character's sides, dated events for the line up to five years ahead or the first year of the next era, no language shared with the troupe, and gear out of its time. A secret's clock, envied blood and coming events are for the Storyteller only; the rest the player sees. House rule.
+
+Reverse: forecast in first-night-rules.mjs.
+
+## B1604. The trouble dial and the story hook (2026-11-12)
+Each character's dial (Quiet 0.5, Normal 1, Often 1.5) scales the chance that their own flaws turn up in WoDX Storyteller's night draw (capped at 0.9). One story hook per character; once the Storyteller agrees (approval type wodx-first-night-hook), a reminder comes after four ended sessions if it has not been marked as brought in. House rules after Hero System's frequency and Ars Magica's story flaws.
+
+Reverse: DIAL and HOOK_SESSIONS in first-night-rules.mjs; dialOf in Storyteller night.mjs.
+
+## B1605. Seed cards at sign-off (2026-11-12)
+Sign-off posts the forecast (the player's view to the owners, all of it to the Storyteller) and one Storyteller card per seed: a living enemy from the lifepath made as an NPC at Hostile, the flaws' Ledger entries (one card), the Backgrounds made real (one card), a Ledger consequence dated to each coming event, and a starting faction standing. Make it, Skip, and Undo once made (Undo removes what the card made).
+
+Reverse: first-night-seed.mjs.
+
+## B1606. Starting faction standing (2026-11-12)
+A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
+
+Reverse: suggestStanding in first-night-rules.mjs.
+
 ## B1640. A talk generator with no AI model (2026-11-12)
 When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots follow a gender the Storyteller set, else they. House writing, not from any book. Ben approved the desk 2026-11-12.
 

@@ -1,5 +1,7 @@
 # Pending review
 
+Each Monday, approved sections more than a week old move to docs/archive/pending-review-<year>-<month>.md (stale design review, item m11, 12 November 2026). The Waiting for review table stays last in this file.
+
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
@@ -357,7 +359,7 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-10 | A vampire drinking mage or fae blood, and a Kuei-jin drawing Chi from a Garou (the books are silent)? | Mage and fae blood are ordinary blood. A Kuei-jin gains two Chi a point from a Garou, with V20's frenzy step for werewolf blood (V20 p. 380) (B522). | Change the feeding-supernatural row. |
 | 2026-11-10 | Celerity and Initiative in the Dark Ages (VtDA20 page not found)? | Never added, in any era, as V20 p. 142 says (B523). | Restore the Celerity term in rollInitiative (wodx-combat main.js). |
 | 2026-11-10 | V20's Willpower cost for healing more than one aggravated level a day? | Outside the Dark Ages, each level past the first costs a Willpower point (V20 p. 285); in the Dark Ages, five blood a level only. | Remove extraWp in the Kindred healing window (wodx-actions main.js). |
-| 2026-11-10 | Dead code: drop the old migrations that copy vtda20 flags to WoDX flags? | Kept: the Live world may still need them, and it can't be checked from the cloud. | Remove migrate.js's vtda20 steps once the Live world is known to have run them. |
+| 2026-11-10 | Dead code: drop the old migrations that copy vtda20 flags to WoDX flags? | Kept: the Live world may still need them, and it can't be checked from the cloud. | Remove migrate.js's vtda20 steps once the Live world is known to have run them. Done 2026-11-12: Ben retired the original VtDA20 world, and migrate.js is removed (Actions 3.44.0). |
 | 2026-11-10 | Fill by place and era: gear only, goods only, or both by default? | Both (B570). | Change whatSel in fill.mjs to "gear". |
 | 2026-11-10 | Generated towns: night or day light in the Dungeondraft file? | Night blue ambient by default, as Rothenstein's maps are drawn at night (B572). | Run ddtown.py with --day, or set NIGHT to DAY in ddtown.py. |
 | 2026-11-10 | Town sizes for one map? | Village about 20 households (60 to 90 people); small town about 40 to 45 (160 to 200) on 96 x 72 squares (B572). | Change SIZES in ddtown.py. |
@@ -589,7 +591,33 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
 | 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
 | 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
+| 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
+| 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
+| 2026-11-12 | Werewolf rows stack (B1160) | Tribe, auspice and breed rows at once; other Fera by their breed; Kinfolk their own; a separate Werewolf switch, off by default | rowsOf, sigWerewolf |
+| 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
+| 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
+| 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Wraith picks (B1504) | Guild, legion and faction picked in the window and kept on the actor; a legion suggested by the manner of death (a house reading) | GUILDS, LEGIONS |
+| 2026-11-12 | Wraith engines (B1505) | Borrowed riddle, leverage and mad ear; the Emerald luck once a week (a house reading of once a story) | luck |
+| 2026-11-12 | Factions of the dead (B1506) | Heretics, Renegades, Ferrymen, Spectres and the Risen, one per wraith | WRAITH_FACTIONS |
+| 2026-11-12 | Changeling rows (B1500) | Kith, seeming, court and House stacked; Thallain, Inanimae, Nunnehi and Dark-Kin kiths grouped; the Dark-Kin feature is a house reading | KITHS |
+| 2026-11-12 | Changeling engines (B1501) | Revel Glamour by card, Pooka truth costs Willpower, the seal coat item, troll and sidhe oaths | signatures.mjs |
+| 2026-11-12 | Courts and seemings (B1502) | Unseelie hold power Samhain to Beltaine, Seelie the rest; a die to the court's own social rolls in its half | COURTS |
+| 2026-11-12 | Sidhe Houses (B1503) | Fourteen Houses with a theme and a seat; boons and flaws from the book by the Storyteller | FAE_HOUSES |
+| 2026-11-12 | Mage rows (B1165) | Group row plus a House row; old names by year; Virtual Adepts from 1961, Hollow Ones from 1890, Celestial Masters and Craftmasons 1325 to 1896 are house readings | MAGE, HOUSES |
+| 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
+| 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
+| 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
+
+## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
+| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
+| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
+| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 
 ## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
 
@@ -639,3 +667,34 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
 | 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
 | 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |
+| 2026-11-12 | Area sizes when a power names none (B1300) | Touch a 1-yard burst, reach 2, voice 30, sight a 5-yard circle; cones 60 degrees, lines 1 yard wide | areaShape() in wodx-targeting target-rules.mjs |
+| 2026-11-12 | How far a fight's tale travels (B1340) | Word only before 1888, snapshot camera from 1888, camcorder 1985, phone cameras 2005, all recorded in the Future Darkness; severity 2 with pictures likely or five witnesses | EVIDENCE, severity() in wodx-combat aftermath-rules.js |
+| 2026-11-12 | Fires from knocked-over lights (B1320) | Candles and torches torch-sized; a lantern torch-sized and broken; an oil lamp a bonfire, broken; all at a torch's heat | SPILL in wodx-interactables interact-rules.mjs |
+| 2026-11-12 | A falling chandelier (B1321) | Falling dice for the drop (15 ft) plus 4, lethal; Dexterity + Dodge at 7 takes a die a success | CHANDELIER_MASS, DROP_DODGE in interact-rules.mjs |
+| 2026-11-12 | Sun let in through a window (B1322) | Direct sun 4 yards into the room from a window thrown open or smashed; indirect from a torn curtain | SUN_YARDS in interact-rules.mjs |
+| 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
+| 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
+| 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
+| 2026-11-12 | Disguises set by the Storyteller only (B1405) | Superseded 2026-11-12 by B1411: players set their own with Dress as someone else | B1411 |
+| 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
+| 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
+| 2026-11-12 | Which worn names show a side (B1407) | habit, cassock, surplice, vestments, cowl, clerical collar: kind:church; police, constable, gendarme: kind:watch; military, soldier's, regimental, army: military; livery; pilgrim's badge; corporate | SIDE_WORDS in look-rules.mjs |
+| 2026-11-12 | Worn dress always shows for era fit (B1403) | The design said conceal T or N; worn clothing now always counts and carried things only at N, so a hidden phone stays hidden | seen in look-rules.mjs |
+| 2026-11-12 | What an NPC can tell of a character (B1380) | Only when plainly inhuman, shown by a sense, or seen and not forgotten; the same for player characters; hunter NPCs go for the monster only then | canTell in wodx-npc main.mjs |
+| 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
+| 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
+| 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
+| 2026-11-12 | What the stranger line shows (B1408) | Dress by station, side worn, blood or wounds, a drawn weapon, what they are doing, manner toward the viewer; no kind, clan or trade | autoStranger in faces-rules.mjs |
+| 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
+| 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
+| 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |
+| 2026-11-12 | Before the First Night: steps and sign-off (B1600, B1601) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
+| 2026-11-12 | Trouble forecast sources and who sees what (B1603) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
+| 2026-11-12 | Trouble dial and story hook numbers (B1604) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
+| 2026-11-12 | Starting standing (B1606) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |
+| 2026-11-12 | How loud is a fight? (missed connections x2) | Firearms and explosives loud (30 yards open, 10 through a wall), silenced guns, blades, fists and bows quiet (5 yards); one noise a round per fight; combatants don't count as hearers | fightNoise() in wodx-combat rules.js; the createChatMessage listener in wodx-combat main.js |
+| 2026-11-12 | Chase noise and hard feelings (x3) | Hooves, motors and carts loud, feet, oars and bicycles quiet; after a chase the Storyteller's card offers one step down on the attitude track: a chased NPC toward each PC who chased them, an NPC pursuer toward a PC who got away | chaseNoise(), chaseGrudges() in wodx-interactables chase-rules.mjs |
+| 2026-11-12 | Which dated events move markets (x4) | Black Death (plague), the Great War's Maelstrom (war), the 1994 crash, the 1996 Collapse, the 2000 wasting plague and the 2012 bioplague; an event with its own market field picks a preset; always a card, never automatic | EVENT_NEWS, PRESETS in wodx-storyteller market-news-rules.mjs |
+| 2026-11-12 | Player trade and markets (x5) | 10 lots of one kind sold to (or bought from) one market in a week: plenty and price x0.8 (or short and x1.25), suggested on a card | TRADE_THRESHOLD, TRADE_STEP in market-news-rules.mjs |
+| 2026-11-12 | The night's nudge on a hunt (x6) | +2 when the street is all but empty for the era and hour, +1 when few are out, +1 for a storm, downpour, gale, sleet or heavy snow outdoors; at most +3; shown in the hunt window, editable | huntNudge() in wodx-actions hunt-night-rules.js |
+| 2026-11-12 | Height in targeting (x7) | Range and areas measured in three dimensions from token elevation; a cone or line aims level, so a flyer must be within its spread | inShape(), withHeight() in wodx-targeting target-rules.mjs |

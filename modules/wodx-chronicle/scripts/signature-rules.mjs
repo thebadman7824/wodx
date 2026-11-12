@@ -12,22 +12,24 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE} from "../data/signatures.mjs";
+import {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE};
+export {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.vampire\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
+const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.[a-z]+\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
 
 /** The signature row for a clan or bloodline name, or null. Whole words only, so "Settler" is not a Setite. */
-export function vampireRow(...names) {
+export function vampireRow(...names) { return rowIn(VAMPIRE, ...names); }
+/** The first row of a table whose match words name one of the names (whole words). */
+export function rowIn(table, ...names) {
   for ( const name of names.flat() ) {
     const w = words(name), text = ` ${w.join(" ")} `;
     if ( !w.length ) continue;
-    for ( const row of VAMPIRE ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
+    for ( const row of table ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
   }
   return null;
 }
@@ -326,3 +328,109 @@ export const overdue = (list = [], now = 0) => list.filter(c => c.status === "op
 export const newServant = ({id, name = "a wraith", fetter = "", now = 0} = {}) => ({id: id || `w-${Math.floor(n(now))}`, name: String(name), fetter: String(fetter), at: n(now)});
 /** The line's name in a year: Cappadocian before 1444 (house reading of the date). */
 export const giovanniName = year => n(year) < 1444 ? "Cappadocian" : "Giovanni";
+
+/* ---------------- Ghouls and revenant families ---------------- */
+
+/** A family as a feature row: the ghoul engine, the family trait's effects and borrowed engine. */
+export function familyAsRow(f) {
+  const t = FAMILY_TRAITS[f.trait] ?? FAMILY_TRAITS.craft;
+  return {key: `family-${f.key}`, label: `${f.label} (revenant family)`, feature: "ghoul", also: [...(t.also ?? [])], effects: t.effects,
+    title: `The ${f.label} family`, page: f.page ?? "Guide to the Sabbat pdf 219; V20 Dark Ages pdf 454",
+    text: `${f.text ?? ""} Family trait: ${t.label.toLowerCase()}.${f.disciplines?.length ? ` Family Disciplines: ${f.disciplines.join(", ")}.` : ""}${f.flaw ? ` Family flaw: ${f.flaw}.` : ""} Revenants are born ghouls and need no domitor's drink to stay as they are.`.trim(), revenant: true};
+}
+/** The family a ghoul's names point at (the books' families first, then those founded in play), or null. */
+export function familyRow(names = [], founded = []) {
+  const all = [...REVENANT_FAMILIES, ...founded.filter(f => f.approved !== false)];
+  for ( const name of names.flat() ) {
+    const t = ` ${words(name).join(" ")} `;
+    const f = all.find(x => t.includes(` ${words(x.label).join(" ")} `));
+    if ( f ) return familyAsRow(f);
+  }
+  return null;
+}
+/** A family founded in play (Ben's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
+export function newFamily({name = "", founder = "", trait = "craft", disciplines = [], flaw = "", year = 1197, text = ""} = {}) {
+  const label = String(name).trim();
+  if ( !label || !FAMILY_TRAITS[trait] ) return null;
+  const ds = (Array.isArray(disciplines) ? disciplines : String(disciplines).split(",")).map(x => String(x).trim()).filter(Boolean).slice(0, 3);
+  return {key: words(label).join("-"), label, founder: String(founder), trait, disciplines: ds, flaw: String(flaw), founded: n(year), text: String(text), approved: false};
+}
+/** Whole months a ghoul has gone without vitae (30-day months). */
+export const monthsUnfed = (fedAt, now) => Math.max(0, Math.floor((n(now) - n(fedAt ?? now)) / (30 * DAY)));
+
+/* ---------------- Werewolf (Chronicle 0.31.0) ---------------- */
+
+/** A shapechanger's rows, stacked: tribe, auspice and breed for a Garou; the breed's own row first for the other Fera. */
+export function garouRows({tribe = "", auspice = "", breed = "", fera = ""} = {}) {
+  const f = fera && !/^garou$/i.test(String(fera)) ? rowIn(FERA, fera) : null;
+  const out = f ? [f, rowIn(BREEDS, breed)] : [rowIn(TRIBES, tribe), rowIn(AUSPICES, auspice), rowIn(BREEDS, breed)];
+  if ( f?.courts && !f.text.includes(COURTS_TEXT) ) out[0] = {...f, text: `${f.text} ${COURTS_TEXT}`};
+  return out.filter(Boolean);
+}
+/** Is the tribe or breed gone by this year (a lost tribe after its end, a lost Fera always)? */
+export const goneBy = (row, year) => row?.until != null && n(year) > n(row.until);
+/** Does a name or kind mark a creature of the Wyrm? */
+export const isWyrm = (...names) => names.flat().some(x => { const w = words(x); return w.some(t => WYRM_WORDS.includes(t)) || !!rowIn(TRIBES, x)?.wyrm; });
+/** The initiative that puts someone ahead of everyone else in the fight. */
+export const firstInit = (inits = []) => Math.max(0, ...inits.map(n)) + 1;
+/** The Stargazer's reading: once a lunar month, under a sky without cloud or rain. */
+export const mayReadSky = (last, now) => last == null || n(now) - n(last) >= LUNAR_MONTH * DAY;
+export const skyClear = wx => !wx || (!["overcast", "storm"].includes(wx.sky) && (!wx.precip || wx.precip === "none") && wx.fog !== "thick");
+/** A metis deformity's effects. */
+export const deformityByKey = key => DEFORMITIES.find(d => d.key === key) ?? null;
+
+/** Signature effects in the trait-effect shape for one roll: {key, name, dice, diff}. "all" fits every roll; halving is a note only. */
+const tagKey = t => String(t ?? "").toLowerCase().replace(/[^a-z]/g, "");
+const ALIAS = {resistfrenzy: {ch: "roll", tags: ["frenzy"]}, resistdominate: {ch: "resist", tags: ["mind"]}, deceit: {ch: "roll", tags: ["subterfuge", "con", "fasttalk"]}};
+export function sigRollEffects(list = [], ctx = {}) {
+  const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
+  for ( const e of list ) {
+    if ( e.halve ) continue;
+    let hit = false;
+    for ( const t of e.tags ?? [] ) {
+      const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
+      if ( tc === ch && (tt.includes("all") || tt.some(x => want.has(x))) ) hit = true;
+    }
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
+  }
+  return out;
+}
+
+/* ---------------- Mage (Chronicle 0.33.0) ---------------- */
+
+/** A mage's rows: the Tradition, Craft or Convention, then a Hermetic House when one is named. */
+export const mageRows = ({sect = [], house = []} = {}) => [rowIn(MAGE, sect), rowIn(HOUSES, house)].filter(Boolean);
+/** The name a group goes by in a year (the Dark Ages fellowships, the Order of Reason's conventions). */
+export const nameAt = (row, year) => (row?.names ?? []).find(x => n(year) <= n(x.until))?.label ?? row?.label ?? "";
+/** Is the group not founded yet in this year? */
+export const notYet = (row, year) => row?.from != null && n(year) < n(row.from);
+/** What records the Watchers read in a year. */
+export const recordsAt = year => [...RECORDS].reverse().find(r => n(year) >= r.from)?.label ?? RECORDS[0].label;
+/** A once-a-day Willpower point (the Akashic dawn): a day is counted from dawn, 06:00. */
+export const mayMeditate = (last, now) => last == null || Math.floor((n(now) - 21600) / DAY) > Math.floor((n(last) - 21600) / DAY);
+/** Willpower plus or minus one, kept between 0 and the permanent rating. */
+export const willpowerStep = (wp = {}, d = 1) => clamp(n(wp.temporary) + d, 0, Math.max(0, n(wp.permanent) || 10));
+
+/* ---------------- Changeling (Chronicle 0.34.0) ---------------- */
+
+/** A changeling's rows, stacked: kith, seeming, court and a sidhe House. */
+export const faeRows = ({kith = [], seeming = [], court = [], house = []} = {}) =>
+  [rowIn(KITHS, kith), rowIn(SEEMINGS, seeming), rowIn(COURTS, court), rowIn(FAE_HOUSES, house)].filter(Boolean);
+/** Which court holds power in a month (1 to 12). */
+export const courtInPower = month => UNSEELIE_MONTHS.includes(n(month)) ? "unseelie" : "seelie";
+/** Glamour from a revel: one for each changeling there, one more for a Satyr. */
+export const revelGlamour = (row, glamour = {}) => clamp(n(glamour.temporary) + (row?.key === "satyr" ? 2 : 1), 0, Math.max(n(glamour.permanent) || 10, 10));
+export const isCoat = item => !!item && (item.coat === true || /\bseal\s*(skin|coat)\b/i.test(String(item.name ?? "")));
+
+/* ---------------- Wraith (Chronicle 0.35.0) ---------------- */
+
+/** A wraith's rows from the picks kept on the actor: guild, legion and faction. */
+export const wraithRows = ({guild = "", legion = "", faction = ""} = {}) =>
+  [rowIn(GUILDS, guild), rowIn(LEGIONS, legion), rowIn(WRAITH_FACTIONS, faction)].filter(Boolean);
+/** The legion the manner of death points to (the sheet's death field), or null. */
+export function legionFor(death = "") {
+  const text = ` ${words(death).join(" ")} `;
+  if ( text.trim() === "" ) return null;
+  return LEGIONS.find(l => l.death.some(w => text.includes(` ${w} `))) ?? null;
+}
+export const mayLuck = (last, now) => last == null || n(now) - n(last) >= LUCK_DAYS * DAY;

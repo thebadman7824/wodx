@@ -8,14 +8,18 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
-| wodxBreach | actions | npc, storyteller |
+| wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
+| wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse), npc |
+| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk), npc |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
-| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
-| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
+| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news) |
+| wodxEventUndone | chronicle | interactables (living tiles resync), storyteller (market news undone) |
+| wodxDreamingGate | otherworlds | storyteller (the crossing log) |
+| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place) |
+| wodxFed | actions | npc (the vessel remembers it was fed on) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
@@ -24,12 +28,14 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxNpcTurnDone | combat, npc | combat |
 | wodxPlaceAlarm | npc | npc (remarks and cries) |
 | wodxRegisterMigrations | chronicle | chronicle |
+| wodxSecretSeen | actions | npc (the witness remembers what it saw) |
 | wodxSensesGather | senses | senses |
-| wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
-| wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
-| wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
+| wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
+| wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
+| wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
+| wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxXCard | chronicle | actions |
 
 ## Extension points (sent, nobody listens yet)
@@ -38,13 +44,13 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
+| wodxFirstNightSigned | creation | a player character signed off before the first night, with the trouble forecast |
 | wodxChase | interactables | a chase starts, a turn is rolled, or it ends (caught, away, called off), with the chase state |
-| wodxSecretSeen | actions | a creature of another kind saw what someone is: {by, secret, seen: [{uuid, name, profile}], event} |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
-| wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
-| wodxEventUndone | chronicle | a dated event taken back |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
+| wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

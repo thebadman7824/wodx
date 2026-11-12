@@ -65,7 +65,7 @@ import {setupChase} from "./chase.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.26.7";
+const VERSION = "0.28.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -218,6 +218,12 @@ const powerDots = (actor, name) => {
   const it = actor?.items?.find?.(i => i.type === "Power" && String(i.system?.type ?? "").includes("discipline") && i.name.trim().toLowerCase().startsWith(name));
   return it ? num(it.system?.value) : 0;
 };
+/* 0.27.0: is the sun up now? Read from WoDX Actions' sun (the Chronicle clock), kept fresh as the clock moves. */
+let SUN_UP = false;
+async function refreshSun() {
+  try { const s = await game.wodxActions?.sunNow?.(); SUN_UP = !!s && !s.unknown && s.phase !== "night"; } catch (e) { SUN_UP = false; }
+}
+export const sunUp = () => SUN_UP;
 function eraNow() {
   try {
     const e = chron()?.eras;
@@ -253,7 +259,7 @@ export function characterFor(actor, center, doc) {
   const o = doc?.flags?.[MOD] ?? {};
   const key = String(o.keyName ?? "").trim().toLowerCase();
   return {
-    actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(),
+    actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(), sunUp: SUN_UP,
     strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"), wits: attrOf(actor, "wits"),
     potence: powerDots(actor, "potence"), abilities, meta,
     side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
@@ -354,9 +360,12 @@ function pickToken() {
 }
 
 /** The window. tok: the acting token (default the selected one); onlyWall: a wall id to list alone. */
-export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
+export async function openInteract(tok = pickToken(), {onlyWall = null, fight = false} = {}) {
   if ( !tok?.actor ) { ui.notifications.warn("Select your token first."); return null; }
+  if ( fight ) await refreshSun();
   let list = interactablesFor(tok);
+  // 0.27.0: in a fight, only what can be used in a fight
+  if ( fight ) list = list.filter(({doc, o}) => R.optionsFor(o, characterFor(tok.actor, tok.center, doc)).some(op => R.FIGHT_OPS.has(op.id) && !op.disabled));
   if ( onlyWall ) list = list.filter(x => x.doc.id === onlyWall);
   if ( !list.length && onlyWall ) {
     ui.notifications.info(`${tok.name} is too far from that door to reach it.`);
@@ -364,7 +373,7 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
   }
   const rows = list.map(({doc, o}) => {
     const ch = characterFor(tok.actor, tok.center, doc);
-    const ops = R.optionsFor(o, ch);
+    const ops = R.optionsFor(o, ch).filter(op => !fight || R.FIGHT_OPS.has(op.id));
     let mine = "";
     try { mine = game.modules.get("wodx-storyteller")?.api?.owners?.whose?.(doc, tok.actor) ?? ""; } catch (e) { mine = ""; }
     const bar = o.barred && o.barSide && Array.isArray(doc.c) ? ` (barred on the ${R.sideLabel(doc.c, o.barSide)} side)` : "";
@@ -373,13 +382,13 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
       + `<div class="wodx-quiet">${esc(optionSummary(op))}</div></li>`).join("");
     return `<li data-search-text="${esc(R.nameOf(o, ch))}"><h4>${esc(R.nameOf(o, ch))}${esc(bar)}${mine ? ` <small class="wodx-quiet">(${esc(mine)})</small>` : ""}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
   }).join("");
-  const search = onlyWall ? null : R.searchOption(characterFor(tok.actor, tok.center, null));
+  const search = onlyWall || fight ? null : R.searchOption(characterFor(tok.actor, tok.center, null));
   const searchHtml = search ? `<div class="wix-search wix-op"><button type="button" data-wall="${SEARCH}" data-op="search">${esc(search.label)}</button><div class="wodx-quiet">${esc(optionSummary(search))}</div></div>` : "";
   const content = `<p class="wodx-quiet">${esc(tok.name)}: what is within reach, nearest first. The roll, the difficulty and the time each takes are shown before anything is rolled.</p>
     ${searchHtml}${list.length > 3 ? searchBox("ul.wix-list", "Search…", "Search what is within reach") : ""}${list.length ? `<ul class="wix-list">${rows}</ul>` : `<p class="wodx-quiet">Nothing else within reach.</p>`}`;
   let picked = null;
   await foundry.applications.api.DialogV2.wait({
-    window: {title: `Interact: ${tok.name}`, resizable: true}, classes: ["wodx-dialog", "wix-dialog"], position: {width: 500, height: "auto"}, content,
+    window: {title: `${fight ? "Use the room" : "Interact"}: ${tok.name}`, resizable: true}, classes: ["wodx-dialog", "wix-dialog"], position: {width: 500, height: "auto"}, content,
     render: (ev, dlg) => {
       dlg.element.querySelectorAll("button[data-op]").forEach(b => b.addEventListener("click", () => { picked = {wall: b.dataset.wall, op: b.dataset.op}; dlg.close(); }));
     },
@@ -504,6 +513,102 @@ async function giveItems(actor, refs) {
 
 const busy = new Set();
 /** Active GM: work out and apply the result of a card. Returns the result, or null. */
+/* ------------------------------------------------------------------ */
+/*  Using the room in a fight (0.27.0)                                 */
+/* ------------------------------------------------------------------ */
+
+/** Canvas pixels in a yard on a scene. */
+function pxPerYard(scene) {
+  const g = scene?.grid ?? {}, units = String(g.units ?? "ft");
+  const dist = num(g.distance) || 5, yards = /yd|yard|m\b|meter|metre/i.test(units) ? dist : dist / 3;
+  return (num(g.size) || 100) / (yards || 1);
+}
+async function roomEffects({out, doc, scene, tokDoc, actor, o, snap}) {
+  const res = {lines: [], revealed: [], damage: []};
+  const tile = isTile(doc);
+  const grid = num(scene.grid?.size) || 100;
+  // A fire where a light fell
+  const makeFire = async (f, rect) => {
+    const n = f.size === "large" ? 2 : 1;
+    const c = rect ? {x: rect.x + rect.w / 2, y: rect.y + rect.h / 2} : centerOf(tokDoc, scene);
+    const [t] = await scene.createEmbeddedDocuments("Tile", [{x: c.x - n * grid / 2, y: c.y - n * grid / 2, width: n * grid, height: n * grid,
+      texture: {src: null}, flags: {[MOD]: {hazard: true, hazardKind: "fire", size: f.size, heat: f.heat, burning: true, title: f.title, roomMade: true}}}]);
+    if ( t ) { snap.spawned.tiles.push(t.id); res.lines.push(`${f.title}: a fire (${R.FIRE_SIZES[f.size].levels} level${R.FIRE_SIZES[f.size].levels === 1 ? "" : "s"} a turn, soaked at ${R.FIRE_HEAT[f.heat].diff}).`); }
+  };
+  if ( out.spawnFire && tile ) await makeFire(out.spawnFire, rectOf(doc));
+  // A chandelier: whoever stands under it dodges, then takes what is left
+  if ( out.drop && tile ) {
+    const r = rectOf(doc);
+    const under = (scene.tokens?.contents ?? []).filter(t => { const c = centerOf(t, scene); return c.x >= r.x && c.x <= r.x + r.w && c.y >= r.y && c.y <= r.y + r.h; });
+    if ( !under.length ) res.lines.push("Nobody was under it.");
+    for ( const t of under ) {
+      const a = t.actor;
+      if ( !a ) continue;
+      const pool = attrOf(a, "dexterity") + num(a.system?.abilities?.dodge?.value);
+      let dodge = {successes: 0, botch: false};
+      if ( pool > 0 ) {
+        const roll = await new Roll(`${pool}d10`).evaluate();
+        dodge = countSuccesses(roll.dice[0]?.results?.map(x => x.result) ?? [], out.drop.dodge);
+      }
+      const left = R.dropLeft(out.drop.dice, dodge);
+      res.lines.push(`${a.name} dodges with ${pool} dice at ${out.drop.dodge}: ${dodge.botch ? "a botch" : `${dodge.successes} success${dodge.successes === 1 ? "" : "es"}`}; ${left} of ${out.drop.dice} dice of lethal left.`);
+      if ( left > 0 && game.wodxCombat?.soakAndApply ) {
+        const before = new Set(game.messages.contents.map(m => m.id));
+        try { await game.wodxCombat.soakAndApply(t.object ?? t, {mode: "pool", amount: left, type: "lethal", soak: true}); } catch (e) { res.lines.push(`Roll ${left} dice of lethal for ${a.name} by hand.`); }
+        for ( const m of game.messages.contents ) if ( !before.has(m.id) && m.flags?.["wodx-combat"]?.data ) res.damage.push(m.id);
+      }
+    }
+    if ( out.drop.fire ) await makeFire(out.drop.fire, r);
+  }
+  // The sun let in: a sunlit region on the character's side of the window, or round the curtain
+  if ( out.sun ) {
+    const depth = R.SUN_YARDS * pxPerYard(scene);
+    const me = centerOf(tokDoc, scene);
+    const shape = Array.isArray(doc.c) ? {type: "polygon", points: R.sunPatch(doc.c, me, depth), hole: false}
+      : (() => { const q = R.sunRect(rectOf(doc), depth); return {type: "rectangle", x: q.x, y: q.y, width: q.w, height: q.h, rotation: 0, hole: false}; })();
+    try {
+      const [rg] = await scene.createEmbeddedDocuments("Region", [{name: "WoDX: Sunlight let in", color: "#ffd060", shapes: [shape],
+        behaviors: [{type: "wodx-actions.sunlight", name: "Sunlight", system: {light: out.sun.light, exposure: out.sun.exposure ?? 3, ignoreSky: false}}],
+        flags: {[MOD]: {roomSun: doc.id}}}]);
+      if ( rg ) {
+        snap.spawned.regions.push(rg.id);
+        res.lines.push(`Sunlight (${out.sun.light === "direct" ? "direct, soaked at 10" : "through glass, soaked at 7"}) reaches ${R.SUN_YARDS} yards into the room.`);
+        // Cainites in the patch: WoDX Actions' sun works out each one's exposure
+        setTimeout(() => { for ( const t of scene.tokens?.contents ?? [] ) game.wodxActions?.sunCheck?.(t)?.catch?.(e => console.error(`${MOD} | sun`, e)); }, 700);
+      }
+    } catch (e) { console.warn(`${MOD} | the sunlit area could not be made`, e); res.lines.push("Mark the sunlit area by hand: the region could not be made."); }
+  }
+  // A window closed again: the sun it let in goes
+  if ( out.shutSun && !tile ) {
+    const ids = (scene.regions?.contents ?? []).filter(r => r.flags?.[MOD]?.roomSun === doc.id).map(r => r.id);
+    try { if ( ids.length ) { await scene.deleteEmbeddedDocuments("Region", ids); res.lines.push("The sunlight is shut out again."); } } catch (e) { console.warn(`${MOD} | sun`, e); }
+  }
+  // Sprinklers: every torch-sized fire and bonfire on the scene goes out
+  if ( out.douse ) {
+    let n = 0;
+    for ( const t of tilesOf(scene) ) {
+      const h = describeTile(t);
+      if ( !R.douses(h) ) continue;
+      const ls = lightsOf(t, {onlySet: true});
+      snap.others.push({id: t.id, burning: true, lights: ls.map(l => ({id: l.id, hidden: !!l.hidden}))});
+      await t.update({[`flags.${MOD}.burning`]: false});
+      for ( const l of ls ) if ( !l.hidden ) await l.update({hidden: true});
+      n++;
+    }
+    res.lines.push(n ? `The water puts out ${n === 1 ? "a fire" : `${n} fires`}.` : "No fire small enough to put out.");
+    if ( tilesOf(scene).some(t => { const h = describeTile(t); return h?.hazard && h.burning && h.size === "inferno"; }) ) res.lines.push("An inferno burns on.");
+  }
+  // A curtain torn down: whoever hid behind it is seen
+  if ( out.revealAll && o.hide && o.occupants?.length ) {
+    res.revealed = await revealHidden(o.occupants.map(occ => ({doc, occ})));
+    if ( res.revealed.length ) res.lines.push(`${listWords(res.revealed.map(x => x.occ.n))} ${res.revealed.length === 1 ? "is" : "are"} seen.`);
+  }
+  return res;
+}
+
+/** The Use the room window (WoDX Combat's fight button): only what can be used in a fight. */
+export function useRoom(tok = pickToken()) { return openInteract(tok, {fight: true}); }
+
 export async function applyAsk(msg) {
   const ask = msg?.flags?.[MOD]?.ask;
   if ( !ask || ask.state || !isActiveGM() || busy.has(msg.id) ) return null;
@@ -529,7 +634,7 @@ export async function applyAsk(msg) {
       return countSuccesses(faces, clampDifficulty(num(ask.diff) || 6), {specialty: !!ask.specialty, willpower: !!ask.willpower && k === 0, autoSuccesses: num(op.roll?.auto)});
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
-    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow()});
+    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP});
     const tile = isTile(doc);
     const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];
@@ -569,6 +674,12 @@ export async function applyAsk(msg) {
       lines.push(`${actor.name} ${sprung.text}`, ...sprung.lines);
     }
     if ( Object.keys(update).length ) await doc.update(update, tile ? {} : {sound: true});
+    // Using the room in a fight (0.27.0): a fire where a light fell, a chandelier on whoever is under it, the sun let in,
+    // the sprinklers; everything made here goes on the card's Undo
+    snap.spawned = {tiles: [], regions: []};
+    snap.others = [];
+    const room = await roomEffects({out, doc, scene, tokDoc, actor, o, snap});
+    lines.push(...room.lines);
     // A botch fighting a fire: the fire burns the one fighting it
     let burned = null;
     if ( out.burns && o.hazard ) {
@@ -648,7 +759,8 @@ export async function applyAsk(msg) {
     releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
-      damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, moved: climbed?.moved ?? null, undone: false};
+      damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed: [...revealed, ...room.revealed], moved: climbed?.moved ?? null,
+      roomDamage: room.damage, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
@@ -708,6 +820,27 @@ export function hearersOf(tok, doc, noise) {
   return out;
 }
 
+/**
+ * Active Storyteller (0.28.0): a noise with no object behind it, such as a fight or a chase, heard from where a token
+ * stands. noise: quiet | loud; kind: "fight" | "chase"; except: token uuids that are part of it and so don't count as
+ * hearers. Passed on as a map event like any other, so NPCs who hear it react. Returns the event, or null.
+ */
+export function noiseAt({token, noise = "loud", kind = "fight", objectName = null, except = []} = {}) {
+  const tok = token?.object ?? token;
+  const tokDoc = tok?.document ?? token;
+  if ( !isActiveGM() || setting("noise") === false || !tok?.center || !R.EARSHOT[noise] || noise === "silent" ) return null;
+  if ( canvas.scene?.id !== tokDoc?.parent?.id ) return null;
+  const skip = new Set(except);
+  const heard = [];
+  for ( const t of canvas.tokens?.placeables ?? [] ) {
+    if ( !t.actor || t.id === tok.id || t.actor.hasPlayerOwner || t.document.hidden || skip.has(t.document.uuid) ) continue;
+    const h = R.hears(noise, {yards: yardsBetween(tok.center, t.center), walls: soundWalls(tok.center, t.center), asleep: asleepNow(t.actor),
+      perception: attrOf(t.actor, "perception"), alertness: num(t.actor.system?.abilities?.alertness?.value)});
+    if ( h.hears ) heard.push(t.document.uuid);
+  }
+  return publish(kind, {scene: tokDoc.parent, tokDoc, noise, heard, objectName, at: tok.center});
+}
+
 async function listenReport(tok, doc, out, author, actor) {
   if ( !tok ) return ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: `${esc(actor.name)} listens`, body: "<p>View the scene to hear what is on the far side.</p>"})});
   const mySide = R.sideOf(doc.c, tok.center) ?? "a", far = mySide === "a" ? "b" : "a";
@@ -747,6 +880,20 @@ export async function undoCard(msg) {
     }
     await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
+  // 0.27.0: what using the room made goes, and what it changed elsewhere on the scene comes back
+  const usc = game.scenes.get(ask.scene);
+  if ( usc && done.snap?.spawned ) {
+    const tl = (done.snap.spawned.tiles ?? []).filter(id => usc.tiles?.get?.(id));
+    const rg = (done.snap.spawned.regions ?? []).filter(id => usc.regions?.get?.(id));
+    try { if ( tl.length ) await usc.deleteEmbeddedDocuments("Tile", tl); } catch (e) { console.warn(`${MOD} | undo`, e); }
+    try { if ( rg.length ) await usc.deleteEmbeddedDocuments("Region", rg); } catch (e) { console.warn(`${MOD} | undo`, e); }
+  }
+  for ( const x of done.snap?.others ?? [] ) {
+    const t = usc?.tiles?.get?.(x.id);
+    if ( t ) await t.update({[`flags.${MOD}.burning`]: x.burning});
+    for ( const l0 of x.lights ?? [] ) { const l = usc?.lights?.get?.(l0.id); if ( l && !!l.hidden !== l0.hidden ) await l.update({hidden: l0.hidden}); }
+  }
+  for ( const id of done.roomDamage ?? [] ) { const m = game.messages?.get?.(id); const d = m?.flags?.["wodx-combat"]?.data; const a = d?.target ? await fromUuid(d.target) : null; if ( a ) await undoDamage(a?.actor ?? a, id); }
   // People found in hiding go back into hiding (their places' occupant lists come back with each tile's flags)
   for ( const r of done.revealed ?? [] ) {
     const t = game.scenes.get(ask.scene)?.tiles?.get?.(r.tile);
@@ -1526,7 +1673,8 @@ export function tileConfigHtml(doc) {
     ${field("Light source", `<input type="checkbox" name="${p}.light"${l.light ? " checked" : ""}>`, "A container, trap or clue on the same tile wins.")}
     ${field("Kind of light", `<select name="${p}.lightKind" data-fixed>${opt(R.LIGHTS, l.lightKind)}</select>`)}
     ${field("Lights it works", `<input type="text" name="${p}.lightIds" value="${esc(l.lightIds)}" placeholder="Light ids, or blank for those nearby">`, "Copy a light's id from its config window's title bar.")}
-    ${field("Broken", `<input type="checkbox" name="${p}.broken"${l.broken ? " checked" : ""}>`, "Untick to mend a broken one.")}
+    ${field("Broken", `<input type="checkbox" name="${p}.broken"${l.broken ? " checked" : ""}>`, "Untick to mend a broken one (a chandelier hangs again).")}
+    ${field("Chandelier drop (feet)", `<input type="number" name="${p}.dropFeet" value="${esc(l.dropFeet ?? "")}" min="5" max="60" placeholder="${R.CHANDELIER_FEET}">`, "A chandelier only: how far it falls when brought down. Put the tile over the floor beneath it.")}
     <h4 class="wix-sub">Hiding place</h4>
     <p class="hint">A wardrobe, a space under a bed, a curtain, deep shadows, a crawlspace or a priest hole. Characters hide in it with Dexterity + Stealth and go out of sight; searchers find them by their successes.</p>
     ${field("Hiding place", `<input type="checkbox" name="${p}.hide"${h.hide ? " checked" : ""}>`, "A container, trap, clue or light on the same tile wins.")}
@@ -1692,19 +1840,21 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
-  game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf});
+  game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
   ensureStyles();
+  refreshSun();
 });
+Hooks.on("updateWorldTime", () => { refreshSun(); });
 Hooks.on("createChatMessage", msg => { if ( msg.flags?.[MOD]?.ask && isActiveGM() ) applyAsk(msg).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("renderChatMessageHTML", (msg, el) => {
   if ( !msg.flags?.[MOD]?.done ) return;
