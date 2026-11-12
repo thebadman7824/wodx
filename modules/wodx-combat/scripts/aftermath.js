@@ -22,6 +22,8 @@ export function registerAftermathSettings() {
     hint: "When a fight ends, the Storyteller gets a card: damage taken and dealt, blood and Willpower spent, powers seen, witnesses in sight, and a button to record a Masquerade breach and start a rumour."
   });
 }
+/** The start snapshots as {uuid: snap}, from the stored pairs. */
+export const startOf = aar => Array.isArray(aar?.start) ? Object.fromEntries(aar.start.filter(e => Array.isArray(e) && e.length === 2)) : {};
 const on = () => { try { return game.settings.get(MOD, "afterAction") !== false; } catch (e) { return true; } };
 
 export function setupAftermath({corpusTrack}) {
@@ -31,9 +33,12 @@ export function setupAftermath({corpusTrack}) {
 
   async function noteStart(combat) {
     if ( !isActiveGM() || !on() || !combat ) return;
-    const start = {...(combat.getFlag(MOD, "aar")?.start ?? {})};
-    for ( const c of combat.combatants ) if ( c.actor && !start[c.actor.uuid] ) start[c.actor.uuid] = snap(c.actor);
-    await combat.setFlag(MOD, "aar", {t0: combat.getFlag(MOD, "aar")?.t0 ?? Date.now(), start});
+    // Kept as [uuid, snapshot] pairs: a flag key with the dot of "Actor.id" would be split into nested objects (3.15.1)
+    const start = startOf(combat.getFlag(MOD, "aar"));
+    let added = false;
+    for ( const c of combat.combatants ) if ( c.actor && !start[c.actor.uuid] ) { start[c.actor.uuid] = snap(c.actor); added = true; }
+    if ( !added && combat.getFlag(MOD, "aar")?.t0 ) return;
+    await combat.setFlag(MOD, "aar", {t0: combat.getFlag(MOD, "aar")?.t0 ?? Date.now(), start: Object.entries(start)});
   }
 
   /** The acts seen in chat while the fight ran: WoDX Actions cards by a fighter, not whispered. */
@@ -58,12 +63,13 @@ export function setupAftermath({corpusTrack}) {
   async function onEnd(combat) {
     if ( !isActiveGM() || !on() || !combat?.started ) return null;
     const aar = combat.getFlag(MOD, "aar");
-    if ( !aar?.start ) return null;
+    const start = startOf(aar);
+    if ( !Object.keys(start).length ) return null;
     const fighters = combat.combatants.map(c => c.actor).filter(Boolean);
     const end = Object.fromEntries(fighters.map(a => [a.uuid, snap(a)]));
     const cards = (game.messages?.contents ?? []).map(m => m.getFlag?.(MOD, "data")).filter(d => d?.combatId === combat.id);
     const uuids = new Set(fighters.map(a => a.uuid));
-    const list = AR.rows({start: aar.start, end, cards, acts: actsSince(aar.t0 ?? 0, uuids)});
+    const list = AR.rows({start, end, cards, acts: actsSince(aar.t0 ?? 0, uuids)});
     // Who outside the fight saw it: WoDX Actions sorts each onlooker by what each fighter showed
     const ax = game.wodxActions;
     const breach = new Map(), startled = new Map(), kinds = new Set(), by = [];
