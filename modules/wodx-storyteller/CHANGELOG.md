@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.49.1 (Bring it in works on a caravan that set out this very moment, as straight after a market turn; before, it stayed on the road until the clock moved; testbed gate step 3)
 - 0.49.0 (the rest of the living economy. Factions act on markets: a tax by the faction that holds the place, a monopoly on one kind of goods, smuggling past a rival's tax, and raids that take a caravan or strip the stalls and close a road, each in the words of the year and each through the approval queue where a player character stands. Traders can go broke: a week's takings follow supply and taxes, four weeks the till cannot cover shuts the shop, and it opens again after eight weeks once trade is good. Caravans: goods traded between linked markets leave as a pack train, wagons, a goods train, lorries or an automated convoy, arrive after the days the road takes, can be lost, and are noted when a character travels the same road. A Caravans window, and the Markets window shows and sets faction moves, closed roads and shut shops)
 - 0.48.2 (a book army loses at most a third of the units it began with in one turn, so a small army is no longer gone in the first hour; faction wars now run three or more phases)
 - 0.48.1 (approving a market change from the queue applies it: the Markets approval handler now registers when WoDX Chronicle is ready, as the other Storyteller handlers do; testbed gate step 5)

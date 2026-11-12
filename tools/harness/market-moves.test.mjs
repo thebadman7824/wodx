@@ -369,3 +369,18 @@ test("market moves: the wiring", () => {
   // Factions are read, never written, from the market code
   assert.doesNotMatch(moves + car + turn, /factions\?\.(mutate|save|applyNow)/);
 });
+
+test("caravans: brought in at the moment it set out, it arrives at once", () => {
+  const load = CR.cargoes([{from: "town", to: "village", kind: "food"}], [])[0];
+  const c = CR.setOut(load, {id: "c1", now: 5000, year: 1300, names: {from: "Town", to: "Village"}});
+  const r = CR.bringForward({v: 1, list: [c]}, "c1", 5000);
+  assert.equal(r.caravan.arrive, 5000);
+  assert.ok(r.caravan.left < r.caravan.arrive, "it still has a road behind it");
+  const t = CR.tick(r.state, 5000);
+  assert.equal(t.arrived.length, 1, "the same moment's look brings it in");
+  assert.equal(t.state.list[0].state, "town");
+  // Later on the road, the day it left stands
+  const late = CR.bringForward({v: 1, list: [c]}, "c1", 9000);
+  assert.equal(late.caravan.left, 5000);
+  assert.equal(CR.bringForward({v: 1, list: [c]}, "nobody", 9000).caravan, null);
+});
