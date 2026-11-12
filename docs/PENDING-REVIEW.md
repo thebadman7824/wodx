@@ -594,6 +594,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
 | 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
+| 2026-11-12 | Werewolf rows stack (B1160) | Tribe, auspice and breed rows at once; other Fera by their breed; Kinfolk their own; a separate Werewolf switch, off by default | rowsOf, sigWerewolf |
+| 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
+| 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
+| 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
 
 ## Waiting for review
 
