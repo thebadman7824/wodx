@@ -35,7 +35,42 @@ export const VAMPIRE = [
   {key: "caitiff", label: "Caitiff", match: ["caitiff", "clanless"], feature: "oddity", house: true,
     title: "Nobody's child", page: "V20 pdf 40; Thin Blood V20 pdf 491 (p. 483)",
     text: "No clan weakness and no clan to speak for them: in a Camarilla court their Status needs a sponsor, while Anarch and Sabbat company takes them as they are. House rule: a thin-blooded Caitiff has a one in ten chance each year to wake with an odd gift (walking at dusk, keeping down a little food, passing for mortal at a glance), offered to the Storyteller as a card."},
+  {key: "nosferatu", label: "Nosferatu", match: ["nosferatu"], feature: "secrets",
+    title: "The trade in secrets", page: "V20 pdf 71 (p. 63), secrets pdf 28 (p. 20); V20 Dark Ages pdf 56 (p. 55)",
+    text: "A Nosferatu's true face is a breach of the Masquerade to any mortal who sees it, unless Obfuscate holds: the Storyteller gets a card to record it. What the Nosferatu learns can be written down as a page of secrets, an item that can be kept, sold or traded. A fresh secret buys a minor boon; a stale one only a trivial boon. A secret goes stale as fast as word travels in the age: slowly by word of mouth, overnight once the internet is here."},
+  {key: "tremere", label: "Tremere", match: ["tremere"], feature: "pyramid",
+    title: "Rank in the Pyramid", page: "V20 pdf 77 (p. 69); V20 Dark Ages pdf 64 (p. 63); the ranks are a house reading", house: true,
+    text: "Every Tremere holds a rank in the Pyramid, from an apprentice of the first circle up to the Inner Council. An order from someone of higher rank arrives as a card: obey it, or refuse at the cost of a Willpower point, which the Storyteller hears about. The clan's first-drink bond to the elders is built already."},
+  {key: "ventrue", label: "Ventrue", match: ["ventrue"], feature: "domain",
+    title: "Domain and duty", page: "V20 pdf 81 (p. 73); V20 Dark Ages pdf 68 (p. 67)",
+    text: "Once a month a Ventrue may turn their holdings' income into influence instead: a minor boon owed by a mortal institution of the age (a bishop's court, a guild, a bank, a ministry, a corporation), kept in the Ledger. Losing a holding means answering to the clan, which the Storyteller gets as a card. The palate is built already."},
+  {key: "assamite", label: "Assamite", match: ["assamite", "assamites", "banu haqim"], feature: "contracts",
+    title: "Contracts and the tithe", page: "V20 pdf 57 (p. 49); V20 Dark Ages pdf 42 (p. 41)",
+    text: "A contract names a target, a price and a deadline on the clock. Finishing it raises the Assamite's standing at Alamut and sends a tenth of the fee to the clan as a tithe; missing the deadline lowers that standing."},
+  {key: "giovanni", label: "Giovanni", match: ["giovanni", "cappadocian", "cappadocians"], feature: "family",
+    title: "The Family and its dead", page: "V20 pdf 65 (p. 57); V20 Dark Ages pdf 48 (p. 47); 1444 is a house reading", house: true,
+    text: "The Giovanni keep a ledger of the wraiths they have bound, each held by a fetter item. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date) the line is the Cappadocians, whose deathly look is a Masquerade sign up close. The double-damage Kiss is built already."},
 ];
+
+/** Tremere ranks, lowest first (house reading: V20 core gives no ladder). */
+export const TREMERE_RANKS = ["Apprentice of the first circle", "Apprentice of the second circle", "Apprentice of the third circle",
+  "Apprentice of the fourth circle", "Apprentice of the fifth circle", "Apprentice of the sixth circle", "Apprentice of the seventh circle",
+  "Regent", "Lord", "Pontifex", "Inner Council"];
+
+/** Mortal institutions a Ventrue can draw a boon from, by the year they first make sense. */
+export const INSTITUTIONS = [
+  {from: 0, label: "the bishop's court"}, {from: 0, label: "the town council"}, {from: 0, label: "a craft guild"}, {from: 0, label: "the royal court"},
+  {from: 1400, label: "a merchant house"}, {from: 1400, label: "a bank"},
+  {from: 1800, label: "a ministry"}, {from: 1830, label: "a factory owners' association"}, {from: 1848, label: "a newspaper"},
+  {from: 1900, label: "the police"}, {from: 1950, label: "a corporation"}, {from: 2023, label: "an arcology board"},
+];
+
+/** How many days a secret stays fresh, by the way word travels in the age (media-rules ids). */
+export const SECRET_FRESH = {word: 60, print: 30, papers: 14, radio: 7, television: 3, internet: 1, net: 1};
+
+/** Assamite standing at Alamut. */
+export const STANDING_MAX = 5;
+export const TITHE = 0.1;
 
 /** Ravnos vices (V20 Ravnos weakness, own words). acts: social or trade acts that feed it. */
 export const RAVNOS_VICES = [
