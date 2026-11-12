@@ -124,7 +124,7 @@ export function build(ctx) {
   /* NPC 0.44.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
   const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR);
   let GRAMMAR = BASE;
-  /* NPC 0.44.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
+  /* NPC 0.45.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
   const GRAMMAR_JOURNAL = "WoDX talk grammar";
   const grammarJournal = () => game.journal?.find(j => j.flags?.[MOD]?.talkGrammar) ?? null;
   const pageText = html => { const d = document.createElement("div"); d.innerHTML = String(html ?? "").replace(/<\/(p|div|li|h\d)>|<br\s*\/?>/gi, "\n"); return d.textContent ?? ""; };
@@ -160,7 +160,7 @@ export function build(ctx) {
     return j;
   }
   const lately = new Map(); // NPC|character -> the last few generated lines, passed over while others fit
-  /** NPC 0.43.0: the speaker's clan, tribe, Tradition, kith and the like, and their mood (B1643, B1644). */
+  /** NPC 0.45.0: the speaker's clan, tribe, Tradition, kith and the like, and their mood (B1643, B1644). */
   function whoAndMood(r) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me), now = game.time?.worldTime ?? 0;
     let sides = [];
@@ -265,7 +265,7 @@ export function build(ctx) {
     if ( !stockOn(r.npcTok.actor) ) return null;
     const kind = TK.LOCAL[topic] ? topic : "none";
     const c = stockCtx(r, kind);
-    // NPC 0.43.0: a topic the character has heard of, with no line written for it, gets a generated answer
+    // NPC 0.45.0: a topic the character has heard of, with no line written for it, gets a generated answer
     if ( kind === "none" && topic && topic !== "none" ) {
       const ask = genLine(r, "ask", c, {topic: String(topic)});
       if ( ask?.say ) return {kind: "stock", say: ask.say, when: "", then: TK.parseThen(""), rumourId: null, rule: ask.rule, gen: ask.gen};
@@ -707,7 +707,7 @@ export function build(ctx) {
         const body = html?.querySelector?.(".wnpc-talk-card .vta-body");
         if ( body && !body.querySelector(".wnpc-stock-tag") ) body.insertAdjacentHTML("beforeend", `<p class="wodx-quiet wnpc-stock-tag">Stock talk${msg.flags[MOD].talk.rumour ? ", passing on a rumour from the network" : ""}. Write a line on their talk sheet to say something else.</p>`);
       }
-      // NPC 0.44.0 (B1647): a made line shows the Storyteller which rule made it, with Reroll and Keep
+      // NPC 0.45.0 (B1647): a made line shows the Storyteller which rule made it, with Reroll and Keep
       const tg = msg.flags?.[MOD]?.talk;
       if ( tg?.gen && game.user.isGM && !tg.kept ) {
         const body = html?.querySelector?.(".wnpc-talk-card .vta-body");

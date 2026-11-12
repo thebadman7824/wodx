@@ -164,7 +164,7 @@ export function generate(kind, facts = {}, {grammar, seed = 0, recent = []} = {}
 }
 
 /* ------------------------------------------------------------------ */
-/*  Who is speaking, and in what mood (NPC 0.43.0)                     */
+/*  Who is speaking, and in what mood (NPC 0.45.0)                     */
 /* ------------------------------------------------------------------ */
 
 /** Other spellings of a group as sheets and factions write it. */
@@ -296,7 +296,7 @@ export function mergeGrammars(...gs) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  The Storyteller's own grammar, written in a journal (NPC 0.44.0, B1646)                                      */
+/*  The Storyteller's own grammar, written in a journal (NPC 0.45.0, B1646)                                      */
 /* ------------------------------------------------------------------ */
 
 /**

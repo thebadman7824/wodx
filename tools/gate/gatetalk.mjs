@@ -227,7 +227,7 @@ export async function run() {
         && off.ok && (!pool.length || pool.includes(off.said)),
         {said, kid: k.menu?.greet, rumour: r?.said, off: off.said});
     });
-    await step("talk grammar journal (NPC 0.44.0): a Storyteller line wins, Keep writes it to the talk sheet", async () => {
+    await step("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet", async () => {
       const gen = await Actor.create({name: "WoDX gate: Talk grammar", type: "Mortal"});
       actors.push(gen);
       await scene.createEmbeddedDocuments("Token", [{name: "gram", actorId: gen.id, x: G * 9, y: G * 6}]);
@@ -249,7 +249,7 @@ export async function run() {
       if ( !hadJournal ) await j.delete(); else talk().loadGrammar();
       await game.settings.set(MOD, "talkGrammar", genBefore);
       await game.settings.set(MOD, "stockTalk", stockBefore);
-      ok("talk grammar journal (NPC 0.44.0): a Storyteller line wins, Keep writes it to the talk sheet",
+      ok("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet",
         !problems.length && w.said === "\"WoDX gate grammar line.\"" && !!msg?.flags?.[MOD]?.talk?.gen && /\[work\] "WoDX gate grammar line\."/.test(kept),
         {problems, said: w.said, kept});
     });

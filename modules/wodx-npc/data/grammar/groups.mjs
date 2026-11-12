@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.43.0: who the speaker is and how they feel, for the talk generator (scripts/talk-grammar.mjs).
+ * WoDX NPC 0.45.0: who the speaker is and how they feel, for the talk generator (scripts/talk-grammar.mjs).
  * House writing, not from any book. A flavour layer (B1643): a few greetings and brush-offs for each clan, tribe,
  * Tradition, Convention and kith, pooled with the era's own lines, so a Ventrue sounds like one without saying so.
  * Every line keeps the Masquerade and the Veil: mannerisms only, never a word a mortal should not hear.

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.45.0 (the talk generator, part two: clans, tribes, Traditions, Conventions and kiths each speak in their own way, with Masquerade-safe lines; NPCs talk in a mood (afraid, hurt, angry, grieving, wary, weary, cheerful), set in the behaviour window or read from the place's alarm, wounds, a fight or a recent fall in regard; a name the character has heard of gets a made answer; the Storyteller writes extra lines in the journal "WoDX talk grammar", which reloads on save and reports lines it cannot read; made lines show the Storyteller Reroll and Keep, and Keep writes the line to the talk sheet; farewells go through the generator. B1643-B1647)
 - 0.44.0 (the talk generator, setting off by default: stock talk put together from a grammar, the rule that fits the most facts winning, with words of the era for address, oaths, coin, who keeps order, light, drink and landmarks; the hand-written stock lines now speak through it, unchanged; Storyteller lines still first; B1640-B1642)
 - 0.43.0 (a disguise that held lets the character past a guarded place's keepers as what it shows, livery or habit; one a keeper saw through raises the alarm: "dressed as one of us")
 - 0.41.1 (every person hears a description going round, the era templates too, not only a few; the test says why it stopped, for gates)
