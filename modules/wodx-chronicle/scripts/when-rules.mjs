@@ -66,6 +66,10 @@ export const TESTS = {
   merit: "merit <name>: has this merit (WoDX trait table names and aliases)", flaw: "flaw <name>: has this flaw",
   background: "background <name> [>= 2]: has this background, or at this rating", power: "power <name>: has a power whose name contains this",
   rating: "Dominate 2, Etiquette >= 3, rating Animal Ken 2: any rated trait by name (an Attribute, Ability, Discipline, Sphere, Art, Virtue or other power); a bare number means at least that",
+  dressed: "dressed fine (or poor, even): the character's dress against the station of the NPC being dealt with (WoDX Library's look)",
+  wears: "wears habit: has something on whose name contains this", station: "station >= 3: how well dressed the character is, 0 to 5",
+  out: "out of time: wears or shows something from another age", bloody: "bloody: blood on them or wounds showing",
+  disguised: "disguised: the character's disguise holds with the NPC being dealt with", seen: "seen through: the disguise failed with that NPC",
   persuaded: "persuaded [by <name>]: won a social roll against that NPC lately (also charmed, intimidated, bribed, fooled); bare: by the NPC being dealt with"
 };
 
@@ -170,6 +174,20 @@ export function parseTest(line, {eras = null} = {}) {
     if ( !Number.isFinite(n) ) return bad(`${c[3]} is not a step`);
     return ok({t: "standing", faction: low(unquote(c[1])), op: c[2], n});
   }
+  // Chronicle 0.32.0: the look (WoDX Library), against the NPC being dealt with where it compares
+  if ( word === "dressed" ) {
+    const want = {fine: "fine", above: "fine", rich: "fine", poor: "poor", below: "poor", shabby: "poor", even: "even"}[low(arg)];
+    return want ? ok({t: "dressed", want}) : bad("write dressed fine, dressed poor or dressed even");
+  }
+  if ( word === "wears" ) { const want = low(unquote(arg)); return want ? ok({t: "wears", want}) : bad("wears what?"); }
+  if ( word === "station" ) {
+    const c = /^(<=|>=|<|>|==|=|!=)\s*(\d)$/.exec(arg);
+    return c ? ok({t: "station", op: c[1], n: Number(c[2])}) : bad("write station >= 3 (0 to 5)");
+  }
+  if ( word === "out" || word === "strange" ) return (word === "strange" ? !arg : low(arg) === "of time") ? ok({t: "look", key: "strange"}) : bad("write out of time");
+  if ( word === "bloody" ) return arg ? bad("takes nothing after it") : ok({t: "look", key: "bloody"});
+  if ( word === "disguised" ) return arg ? bad("takes nothing after it") : ok({t: "disguise", want: "held"});
+  if ( word === "seen" ) return low(arg) === "through" ? ok({t: "disguise", want: "seen"}) : bad("write seen through");
   if ( word === "condition" ) return arg ? ok({t: "state", id: low(arg)}) : bad("which condition?");
   if ( word === "attitude" ) {
     const c = /^(<=|>=|<|>|==|=|!=)\s*(\S+)$/.exec(arg);
@@ -200,7 +218,7 @@ export function parseTest(line, {eras = null} = {}) {
     }
     return ok({t: "num", key: traitKey, op: c[1], n, trait: true});
   }
-  // Chronicle 0.31.0 (B1306): any rated trait by name, "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2"
+  // Chronicle 0.33.0 (B1506): any rated trait by name, "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2"
   const rt = /^(?:rating\s+)?(.+?)\s*(<=|>=|<|>|==|=|!=)?\s*(\d+)$/i.exec(text);
   if ( rt && /[a-z]/i.test(rt[1]) && ratingKey(unquote(rt[1])) ) return ok({t: "rating", want: ratingKey(unquote(rt[1])), op: rt[2] ?? ">=", n: Number(rt[3])});
   if ( word === "rating" ) return bad("write rating Dominate 2, or just Dominate 2");
@@ -281,7 +299,7 @@ export function parseWhen(text, opts = {}) {
 /** Does one test pass? Returns true, false, or null when the context lacks what it reads (counts as a fail). */
 export function testOne(t, ctx = {}) {
   const a = ctx.actor ?? null;
-  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway", "feat", "power", "rating"].includes(t.t) || t.trait;
+  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway", "feat", "power", "dressed", "wears", "station", "look", "disguise", "rating"].includes(t.t) || t.trait;
   if ( needActor && !a ) return null;
   let r;
   switch ( t.t ) {
@@ -330,6 +348,14 @@ export function testOne(t, ctx = {}) {
       if ( v === undefined || v === null || !Number.isFinite(Number(v)) ) return null;
       r = OPS[t.op](Number(v), t.n); break;
     }
+    case "dressed": { const d = ctx.npc?.dressed; if ( !d ) return null; r = d === t.want; break; }
+    case "wears": { if ( !a.look ) return null; r = (a.look.worn ?? []).some(n => low(n).includes(t.want)); break; }
+    case "station": { if ( !a.look ) return null; r = OPS[t.op](Number(a.look.station) || 0, t.n); break; }
+    case "look": {
+      if ( !a.look ) return null;
+      r = t.key === "strange" ? !!a.look.strange?.length : (a.look.condition ?? []).some(c => c === "bloody" || c === "wounded"); break;
+    }
+    case "disguise": { if ( !ctx.npc?.id ) return null; r = ctx.npc.disguise === t.want; break; }
     case "sway": {
       const now = Number.isFinite(ctx.time) ? ctx.time : null;
       const live = (a.sways ?? []).filter(x => x && low(x.kind) === t.kind && (now === null || !Number.isFinite(Number(x.until)) || Number(x.until) >= now));

@@ -224,6 +224,10 @@ export async function goodsList() {
 }
 export const goodsLoaded = () => goodsCache ?? [];
 
+/** A made thing's name without its quality tag: "a sword (fine work)" gives "a sword". */
+export const QUALITY_TAG = /\s*\((plain work|good work|fine work|masterwork|weak|strong)\)\s*$/i;
+export const stripQuality = name => String(name ?? "").replace(QUALITY_TAG, "").trim();
+
 /** A good by name, "7 bronze coins" (a count and its plural) or "bronze coins (7)" (a stock line). Sync once loaded. */
 export function findGoodSync(name) {
   const list = goodsLoaded();
@@ -231,6 +235,8 @@ export function findGoodSync(name) {
   const st = /^(.*?)\s*\((\d+)\)\s*$/.exec(s);
   let count = 1;
   if ( st ) { s = st[1].trim(); count = Number(st[2]); }
+  // 0.35.0: a made thing's quality tag ("a sword (fine work)", "ale (strong)") names the same good
+  s = stripQuality(s);
   const held = /^(.+?)\s*\(in (an?|\d+) [^)]+\)$/.exec(s);
   if ( held ) { s = held[1].trim(); if ( /^\d+$/.test(held[2]) ) count *= Number(held[2]); }
   const m = /^(\d+)\s+(.+)$/.exec(s);

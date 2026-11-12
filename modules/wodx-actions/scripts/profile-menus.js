@@ -501,7 +501,7 @@ export function build(ctx) {
     function rules(actor, key) { return post(actor, "Rules reminder", `<div class="vta-note">${RULES[key] ?? ""}</div>`); }
 
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
-    async function menuFor(actor, { recent = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
+    async function menuFor(actor, { recent = [], pinned = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
         const kind = P.detectProfile(actor);
         const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (kind === "kindred" && ctx.isKotE?.(actor)) ? MENUS.kote : (kind === "mortal" && ctx.isOrpheus?.(actor)) ? MENUS.orpheus : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
@@ -512,25 +512,36 @@ export function build(ctx) {
             const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
-            const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);
             const mine = new Set(all.map(x => x.spec));
             const extras = (ctx.searchExtras?.() ?? []).filter(x => !mine.has(x.spec));
+            // 3.43.0: the character's pinned actions, then the last ones used (a pinned one shows once)
+            const known = s => all.find(x => x.spec === s) ?? extras.find(x => x.spec === s);
+            const pins = pinned.map(known).filter(Boolean);
+            const rec = TR.recentShown(recent, pinned).map(known).filter(Boolean);
             const html = `<div class="vta-grp-wrap wodx-menu2" data-line="${esc(kind)}">
               <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(def === MENUS.kote ? "Kuei-jin (Kindred of the East)" : def === MENUS.orpheus ? "Orpheus (a spook)" : P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
               <input type="search" class="wodx-search vta-menu-find" data-search=".vta-intents" placeholder="Find an action…" aria-label="Find an action" autocomplete="off" spellcheck="false">
+              ${pins.length ? `<div class="vta-recent vta-pinned" role="group" aria-label="Pinned"><span><i class="fas fa-thumbtack" aria-hidden="true"></i> Pinned</span>${pins.map(x => btn(x, false)).join("")}</div>` : ""}
               ${rec.length ? `<div class="vta-recent" role="group" aria-label="Used lately"><span>Lately</span>${rec.map(x => btn(x, false)).join("")}</div>` : ""}
               <div class="vta-intents">
               ${g.bands.map(b => `<fieldset class="vta-grp vta-band vta-band-${b.id}"><legend>${esc(b.label)} <small>${esc(b.hint)}</small></legend><div class="vta-grp-btns">${b.buttons.map(x => btn(x)).join("")}</div></fieldset>`).join("")}
               ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}
               ${extras.length ? `<fieldset class="vta-grp vta-elsewhere"><legend>Also found <small>common checks and dramatic systems</small></legend><div class="vta-grp-btns">${extras.map(x => btn(x)).join("")}</div></fieldset>` : ""}
               </div>
-              <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it">Type to find an action · arrow keys move · Enter uses it</p>
+              <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it">Type to find an action · arrow keys move · Enter uses it · right-click or Alt+P pins it</p>
             </div>`;
             return { kind, html };
         }
+        const flat = def.sections.flatMap(([, btns]) => btns);
+        const quick = (label, list, icon = "") => {
+            const got = list.map(s => flat.find(([k]) => k === s)).filter(Boolean);
+            return got.length ? `<fieldset class="vta-grp vta-quick"><legend>${icon}${esc(label)}</legend><div class="vta-grp-btns">${got.map(([k, l, i]) =>
+                `<button type="button" data-k="${esc(k)}" title="${esc(TR.DESC[k] ?? l)}"><i class="fas ${i}"></i> ${esc(l)}</button>`).join("")}</div></fieldset>` : "";
+        };
         const html = `<div class="vta-grp-wrap">
           <p class="vta-menu-head"><span><b>${esc(actor.name)}</b>: ${esc(P.profileLabel(kind))}${overridden ? " <i>(override)</i>" : " <i>(auto)</i>"}</span>
              ${kindBtn}</p>
+          ${quick("Pinned", pinned, '<i class="fas fa-thumbtack" aria-hidden="true"></i> ')}${quick("Lately", TR.recentShown(recent, pinned))}
           ${def.sections.map(([title, btns]) => `<fieldset class="vta-grp"><legend>${esc(title)}</legend><div class="vta-grp-btns">${btns.map(([k, l, i]) =>
               `<button type="button" data-k="${esc(k)}" title="${esc(TR.DESC[k] ?? l)}"><i class="fas ${i}"></i> ${esc(l)}</button>`).join("")}</div></fieldset>`).join("")}
         </div>`;

@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.42.2");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.45.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {

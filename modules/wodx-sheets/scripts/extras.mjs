@@ -254,7 +254,7 @@ function tieList(actor) {
 }
 
 /**
- * 0.11.0 (B1300): the Relationships tab's rows and extras, from WoDX NPC's ties (every link WoDX keeps, from both
+ * 0.11.0 (B1500): the Relationships tab's rows and extras, from WoDX NPC's ties (every link WoDX keeps, from both
  * ends, with secrets and the Storyteller's hidden ties left out for players). Null when WoDX NPC is off.
  */
 const npcApi = () => (game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null);

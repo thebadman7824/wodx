@@ -38,13 +38,13 @@ export function build(ctx) {
     function wares(npc, shop) {
         const out = [];
         if (shop) for (const r of TR.shopRows(shop.tile.flags?.[ICS]?.items)) out.push({ key: `s${r.i}`, row: r.i, name: r.name, count: r.count, price: priceOf(r.name, shop) });
-        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: priceOf(it.name, shop) });
+        for (const it of TR.tradeable([...(npc.items ?? [])])) out.push({ key: `i${it.id}`, item: it.id, name: it.name, count: 1, price: TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it)) });
         return out.filter(w => w.price);
     }
     /** What the character can offer, with what the NPC would give for each. */
     function offers(actor, shop) {
         return TR.tradeable([...(actor.items ?? [])]).map(it => {
-            const p = priceOf(it.name, shop);
+            const p = TR.withQuality(priceOf(it.name, shop), TR.qualityFactor(it));
             return p ? { key: it.id, item: it.id, name: it.name, lifted: isLifted(it), price: p, give: TR.offerFor(p, { lifted: isLifted(it) }) } : null;
         }).filter(Boolean);
     }

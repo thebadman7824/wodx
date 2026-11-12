@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.30.0: secrets and hooks, the pure part (B1303-B1305). No Foundry here, so the harness can test it.
+ * WoDX NPC 0.33.0: secrets and hooks, the pure part (B1503-B1505). No Foundry here, so the harness can test it.
  *
  * Any character or NPC can hold secrets: a diablerie, a childe made without leave, a tie to the other sect, a debt.
  * Each lives on the holder's world actor:

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.27.0 (use the room in a fight: knock a lamp or candle over to start a fire, bring a chandelier down, tear a curtain or throw a window open to let the sun in by day, set off the sprinklers from 1874)
 - 0.26.1 (chases follow the book check: keeping sight by Perception against the lead, safe and top speeds and Maneuver for cars and motorcycles, crashes rolled as falls, Garou forms run faster, a rider charges in)
 - 0.26.0 (chases and pursuit for the Storyteller: on foot, mounted or in the vehicles of the year, over the ground the chase crosses, with Undo and a fight on a catch)
 - 0.25.0 (Can't Cross Running Water, Garlic, Crosses, Light-Sensitive and a Phobia go off when a character walks into a tile or region named for them)

@@ -124,6 +124,18 @@ export function factsOf(good, {kinds = {}, values = {}, conceal = {}, uses = nul
   return out;
 }
 
+/**
+ * The Storyteller's Examine notes with what crafting recorded filled in (Library 0.14.0). examine: flags.wodx-library.examine;
+ * made: flags.wodx-storyteller (quality, maker). The Storyteller's own choice wins; a maker's name goes with "where it comes from".
+ */
+export function withMade(examine = {}, made = {}) {
+  const f = {...(examine ?? {})}, m = made ?? {};
+  if ( !f.quality && m.quality && QUALITY[m.quality] ) f.quality = m.quality;
+  const maker = String(m.maker ?? "").trim();
+  if ( maker && !f.origin ) f.origin = `It is the work of ${maker}.`;
+  return f;
+}
+
 /** What a closer look finds. Returns [{need, text, secret}] for every line the successes open, in order. */
 export function findings(kind, successes = 0, flag = {}, owner = null, details = []) {
   const s = num(successes), f = flag ?? {};
@@ -162,7 +174,8 @@ export const joinLines = (lines = []) => lines.map(l => `${l.need}: ${l.text}`).
 /** The good a name refers to: "a bronze coin (7)" or "7 bronze coins" or "a bronze coin". */
 export function goodOf(name, goods = []) {
   const s = String(name ?? "").trim();
-  const bare = s.replace(/\s*\(\d+\)\s*$/, "").replace(/\s*\(in (an?|\d+) [^)]+\)\s*$/, "");
+  // A made thing's quality tag names the same good: "a sword (fine work)" is a sword (Library 0.14.0)
+  const bare = s.replace(/\s*\((plain work|good work|fine work|masterwork|weak|strong)\)\s*$/i, "").replace(/\s*\(\d+\)\s*$/, "").replace(/\s*\(in (an?|\d+) [^)]+\)\s*$/, "");
   const lc = bare.toLowerCase();
   const byName = goods.find(g => g.name.toLowerCase() === lc || (g.was && g.was.toLowerCase() === lc) || (g.former && g.former.toLowerCase() === lc));
   if ( byName ) return byName;

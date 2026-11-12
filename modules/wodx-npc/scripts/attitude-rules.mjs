@@ -33,6 +33,13 @@ export function seedFrom(npc = {}, standing = {}) {
   return {step: 0, from: ""};
 }
 
+/** A met attitude moved for this scene only by what shows (blood, wounds): {step, word, met, from, scene}. */
+export function withScene(now, {delta = 0, names = []} = {}) {
+  if ( !now || !Number(delta) ) return now;
+  const step = clampStep(now.step + Number(delta));
+  return {...now, step, word: word(step), scene: {delta: Number(delta), names, was: now.step}};
+}
+
 /** A seed moved by the character's traits: {step, from}, from naming the traits when nothing else set it. */
 export function withTraits(seed = {step: 0, from: ""}, {delta = 0, names = []} = {}) {
   const step = clampStep((Number(seed.step) || 0) + (Number(delta) || 0));

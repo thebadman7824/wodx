@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.30.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
+- 0.33.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
+- 0.32.0 (first meetings read the look: dress against the NPC's station by era, dress out of its time, blood, Appearance, Status, fine work; blood sours a later meeting for the scene; guards mind blood and let a worn livery pass; worn habits and uniforms show their side; stock lines on dress and a disguise seen through)
 - 0.29.0 (players see the politics of their own factions: who holds each seat, the next gathering, the law, and their own characters' standing, seats, favour, claims and charges)
 - 0.28.0 (politics for mages, on the Traditions' side and Reason's, hunters by era from the Inquisition to the imbued, the Shemsu-heru, the Fallen and Kuei-jin courts)
 - 0.27.1 (talk cards add what a deranged Malkavian hears, from WoDX Chronicle)
