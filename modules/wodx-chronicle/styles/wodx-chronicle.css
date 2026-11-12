@@ -95,3 +95,11 @@
 .wodx-legends-app .wodx-legend-row input[type=checkbox] { flex: none; margin-top: 3px; }
 .wodx-legends-app .wodx-legend-row .hint { display: block; font-size: 0.85em; opacity: 0.8; }
 .wodx-legends-app .form-fields input[type=text], .wodx-legends-app .form-fields input[type=number] { min-width: 0; }
+
+/* Layout pass: a pick (select) in a WoDX window is as wide as its entries need, and drops under its label
+   when the two do not fit side by side, so the chosen entry is never cut off */
+:is(.application.wodx, .application.wodx-dialog) .form-group:has(> select) { flex-wrap: wrap; }
+:is(.application.wodx, .application.wodx-dialog) .form-group:has(> select) > label { flex: 1 1 8em; }
+:is(.application.wodx, .application.wodx-dialog) .form-group:has(> select) > select { flex: 1 1 auto; width: auto; min-width: 8em; max-width: 100%; }
+/* ...and a pick in a table column keeps room for a short entry in full */
+:is(.application.wodx, .application.wodx-dialog) td > select { min-width: 9.5em; }
