@@ -40297,5 +40297,6074 @@
 "text": "The house reading has the influenza and the war fill the Moravian Shadowlands; the local Hierarchy cannot ferry them all.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
+},
+{
+"id": "r3-mid-century-001",
+"era": "mid-century",
+"year": 1919,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"treaty"
+],
+"title": "The Paris Peace Conference",
+"text": "The victors meet in Paris to redraw the map of Europe and the Middle East; the beaten are not invited.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-002",
+"era": "mid-century",
+"year": 1919,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"uprising",
+"death"
+],
+"title": "The Spartacist rising",
+"text": "Freikorps veterans crush a communist rising in Berlin and murder Rosa Luxemburg and Karl Liebknecht.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-003",
+"era": "mid-century",
+"year": 1919,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Cieszyn",
+"tags": [
+"war"
+],
+"title": "The Seven Days' War",
+"text": "Czechoslovakia and Poland fight over the coal district of Cieszyn Silesia, beside Ostrava.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-004",
+"era": "mid-century",
+"year": 1919,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"revolution"
+],
+"title": "The Hungarian Soviet Republic",
+"text": "Bela Kun's communists take power in Hungary for a hundred and thirty-three days.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-005",
+"era": "mid-century",
+"year": 1919,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Kadan",
+"tags": [
+"massacre"
+],
+"title": "The March killings",
+"text": "Czech troops fire on Germans demonstrating for self-rule in the Sudeten towns; fifty-four die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-006",
+"era": "mid-century",
+"year": 1919,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"uprising"
+],
+"title": "The Egyptian revolution",
+"text": "Egyptians rise against British rule when the nationalist Zaghlul is exiled.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-007",
+"era": "mid-century",
+"year": 1919,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"uprising"
+],
+"title": "The March First Movement",
+"text": "Koreans read a declaration of independence in Seoul; Japanese troops kill thousands across the country.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-008",
+"era": "mid-century",
+"year": 1919,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Amritsar",
+"tags": [
+"massacre"
+],
+"title": "Amritsar",
+"text": "General Dyer's troops fire into an unarmed crowd in the Jallianwala Bagh and kill hundreds.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-009",
+"era": "mid-century",
+"year": 1919,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"uprising",
+"learning"
+],
+"title": "The May Fourth Movement",
+"text": "Beijing students march against the treaty giving Shandong to Japan, and a new Chinese culture is born.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-010",
+"era": "mid-century",
+"year": 1919,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Smyrna",
+"tags": [
+"war"
+],
+"title": "The Greeks land at Smyrna",
+"text": "Greek troops land at Smyrna with Allied blessing, and the war for Anatolia begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-011",
+"era": "mid-century",
+"year": 1919,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Samsun",
+"tags": [
+"war",
+"founding"
+],
+"title": "Mustafa Kemal at Samsun",
+"text": "Mustafa Kemal lands at Samsun and begins organising Turkish resistance.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-012",
+"era": "mid-century",
+"year": 1919,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Versailles",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Versailles",
+"text": "Germany signs the treaty in the Hall of Mirrors, accepting guilt for the war and huge reparations.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-013",
+"era": "mid-century",
+"year": 1919,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Scapa Flow",
+"tags": [
+"sea"
+],
+"title": "Scapa Flow",
+"text": "The interned German fleet scuttles itself at Scapa Flow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-014",
+"era": "mid-century",
+"year": 1919,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Saint-Germain",
+"tags": [
+"treaty"
+],
+"title": "Saint-Germain",
+"text": "Austria signs away its empire and is forbidden to join Germany.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-015",
+"era": "mid-century",
+"year": 1919,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"learning"
+],
+"title": "Masaryk University",
+"text": "Brno gets its Czech university at last, named for the president.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-016",
+"era": "mid-century",
+"year": 1919,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "Great Brno",
+"text": "Brno absorbs twenty-three villages and suburbs and becomes the second city of the republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-017",
+"era": "mid-century",
+"year": 1919,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"occult"
+],
+"title": "Brno's Kindred renamed",
+"text": "The house reading has Brno's Kindred court give itself Czech names for its offices, and the German-speaking elders take offence.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-018",
+"era": "mid-century",
+"year": 1919,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war",
+"founding"
+],
+"title": "The Third Afghan War",
+"text": "Afghanistan fights Britain for a month and wins control of its own foreign affairs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-019",
+"era": "mid-century",
+"year": 1919,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Weimar",
+"tags": [
+"founding",
+"law"
+],
+"title": "The Weimar Republic",
+"text": "Germany's national assembly meets at Weimar and writes a democratic constitution.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-020",
+"era": "mid-century",
+"year": 1920,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Trianon",
+"tags": [
+"treaty"
+],
+"title": "Trianon",
+"text": "Hungary loses two thirds of its land, Slovakia among it, by the Treaty of Trianon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-021",
+"era": "mid-century",
+"year": 1920,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"battle"
+],
+"title": "The Miracle on the Vistula",
+"text": "Pilsudski's Poles turn the Red Army back before Warsaw and stop the revolution from marching west.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-022",
+"era": "mid-century",
+"year": 1920,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Sevres",
+"tags": [
+"treaty"
+],
+"title": "Sevres",
+"text": "The Ottoman sultan signs away most of Anatolia; the Turkish nationalists refuse it.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-023",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law"
+],
+"title": "The Czechoslovak constitution",
+"text": "Czechoslovakia adopts a democratic constitution on the French model.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-024",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"war",
+"crown"
+],
+"title": "Faisal driven out",
+"text": "France defeats King Faisal's Syrian army at Maysalun and takes Damascus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-025",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"uprising"
+],
+"title": "The Iraqi revolt",
+"text": "Iraq rises against British rule; the RAF bombs villages to end it.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-026",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "San Remo",
+"tags": [
+"treaty",
+"empire"
+],
+"title": "The mandates",
+"text": "The Allies give Syria and Lebanon to France and Iraq and Palestine to Britain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-027",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"uprising",
+"occult"
+],
+"title": "The Reborn and the new Egypt",
+"text": "The house reading has the Reborn watch Egypt's nationalists with hope, for a free Egypt guards its own dead.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-028",
+"era": "mid-century",
+"year": 1920,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"faith"
+],
+"title": "The Czechoslovak Hussite Church",
+"text": "Priests break from Rome to found a national Czechoslovak church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-029",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kronstadt",
+"tags": [
+"uprising"
+],
+"title": "Kronstadt",
+"text": "The sailors of Kronstadt rise against the Bolsheviks and are crushed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-030",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Volga",
+"tags": [
+"famine"
+],
+"title": "The Volga famine",
+"text": "War and requisitions bring famine to the Volga; five million die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-031",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"treaty"
+],
+"title": "The Cairo Conference",
+"text": "Churchill makes Faisal king of Iraq and Abdullah emir of Transjordan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-032",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"founding"
+],
+"title": "The Chinese Communist Party",
+"text": "A dozen delegates found the Chinese Communist Party in Shanghai.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-033",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dublin",
+"tags": [
+"treaty"
+],
+"title": "The Anglo-Irish Treaty",
+"text": "The Irish Free State is born, and the civil war follows.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-034",
+"era": "mid-century",
+"year": 1921,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"occult",
+"learning"
+],
+"title": "The Order in Vienna",
+"text": "The house reading has Vienna's Hermetics salvage the old court library's secret shelves as the empire's archives are split.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-035",
+"era": "mid-century",
+"year": 1922,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Smyrna",
+"tags": [
+"fire",
+"massacre"
+],
+"title": "Smyrna burns",
+"text": "The Turkish army retakes Smyrna, and the Greek and Armenian quarters burn.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-036",
+"era": "mid-century",
+"year": 1922,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"revolution"
+],
+"title": "The March on Rome",
+"text": "Mussolini's Blackshirts march on Rome and the king makes him prime minister.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-037",
+"era": "mid-century",
+"year": 1922,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Luxor",
+"tags": [
+"occult",
+"exploration"
+],
+"title": "Tutankhamun's tomb",
+"text": "Howard Carter opens the sealed tomb of Tutankhamun in the Valley of the Kings.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-038",
+"era": "mid-century",
+"year": 1922,
+"month": 11,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Luxor",
+"tags": [
+"occult",
+"crime"
+],
+"title": "The curse of the pharaoh",
+"text": "The house reading has the tomb's guardians wake, and Lord Carnarvon's death the next spring is no accident.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-039",
+"era": "mid-century",
+"year": 1922,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"founding"
+],
+"title": "The Soviet Union",
+"text": "Russia, Ukraine, Belarus and Transcaucasia join as the Union of Soviet Socialist Republics.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-040",
+"era": "mid-century",
+"year": 1922,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult",
+"crime"
+],
+"title": "The Cottingley fairies",
+"text": "The house reading has the Arcanum smile at the fairy photographs that fool Conan Doyle, and quietly visit the beck at Cottingley.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-041",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Lausanne",
+"tags": [
+"treaty",
+"migration"
+],
+"title": "The Lausanne exchange",
+"text": "Greece and Turkey trade populations; over a million Greeks and half a million Muslims are uprooted.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-042",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"founding"
+],
+"title": "The Turkish Republic",
+"text": "Mustafa Kemal proclaims the Republic of Turkey with its capital at Ankara.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-043",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"quake",
+"fire"
+],
+"title": "The Great Kanto earthquake",
+"text": "An earthquake and firestorm destroy Tokyo and Yokohama and kill over a hundred thousand; mobs murder Koreans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-044",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"quake",
+"occult"
+],
+"title": "Kanto and the Wan Kuei",
+"text": "The house reading has the Kuei-jin of Tokyo see the quake as a sign of the Sixth Age deepening.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-045",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"money"
+],
+"title": "Hyperinflation",
+"text": "The German mark collapses; a loaf of bread costs billions and the savings of the middle class vanish.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-046",
+"era": "mid-century",
+"year": 1923,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"revolution"
+],
+"title": "The beer hall putsch",
+"text": "Hitler tries to seize power in Munich and is jailed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-047",
+"era": "mid-century",
+"year": 1924,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"faith",
+"law"
+],
+"title": "The caliphate abolished",
+"text": "The Turkish republic abolishes the caliphate and sends the last caliph into exile.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-048",
+"era": "mid-century",
+"year": 1924,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"death"
+],
+"title": "Lenin dies",
+"text": "Lenin dies after a series of strokes, and Stalin begins to outmanoeuvre the other heirs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-049",
+"era": "mid-century",
+"year": 1924,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"art",
+"death"
+],
+"title": "Kafka dies",
+"text": "Franz Kafka dies near Vienna; a friend refuses to burn the manuscripts.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-050",
+"era": "mid-century",
+"year": 1924,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Ypres",
+"tags": [
+"death",
+"occult"
+],
+"title": "The Menin Gate",
+"text": "The house reading has the names on the Menin Gate draw the unremembered dead of Flanders in a slow crowd.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-051",
+"era": "mid-century",
+"year": 1925,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"uprising"
+],
+"title": "The Great Syrian Revolt",
+"text": "The Druze rise against the French, and France shells Damascus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-052",
+"era": "mid-century",
+"year": 1925,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"crown"
+],
+"title": "Reza Shah",
+"text": "Reza Khan ends the Qajar dynasty and crowns himself shah of Persia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-053",
+"era": "mid-century",
+"year": 1925,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"uprising"
+],
+"title": "The May Thirtieth Movement",
+"text": "British-led police fire on protesters in Shanghai, and strikes spread across China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-054",
+"era": "mid-century",
+"year": 1925,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Locarno",
+"tags": [
+"treaty"
+],
+"title": "Locarno",
+"text": "Germany, France and Belgium agree their western borders; the eastern ones are left open.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-055",
+"era": "mid-century",
+"year": 1926,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Guangzhou",
+"tags": [
+"war"
+],
+"title": "The Northern Expedition",
+"text": "Chiang Kai-shek's Nationalists march north from Canton to beat the warlords and unify China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-056",
+"era": "mid-century",
+"year": 1926,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"uprising",
+"industry"
+],
+"title": "The General Strike",
+"text": "British unions call a general strike for nine days in support of the miners.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-057",
+"era": "mid-century",
+"year": 1926,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"art"
+],
+"title": "The Makropulos Affair",
+"text": "Janacek's opera of a woman who has lived three hundred years opens in Brno.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-058",
+"era": "mid-century",
+"year": 1926,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"art",
+"occult"
+],
+"title": "An opera about the undying",
+"text": "The house reading has the Kindred of Brno attend Janacek's premiere and wonder who told the composer.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-059",
+"era": "mid-century",
+"year": 1927,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"massacre"
+],
+"title": "The Shanghai massacre",
+"text": "Chiang turns on his communist allies in Shanghai and kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-060",
+"era": "mid-century",
+"year": 1927,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kirkuk",
+"tags": [
+"industry",
+"trade"
+],
+"title": "Oil at Baba Gurgur",
+"text": "Oil gushes for days from the well at Baba Gurgur near Kirkuk, and Iraq's oil age begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-061",
+"era": "mid-century",
+"year": 1927,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"art"
+],
+"title": "Metropolis",
+"text": "Fritz Lang's film of a city of machines and workers opens in Berlin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-062",
+"era": "mid-century",
+"year": 1928,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"building",
+"art"
+],
+"title": "The Exhibition of Contemporary Culture",
+"text": "Brno opens its new exhibition grounds with a show of ten years of the republic; functionalist buildings rise across the city.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-063",
+"era": "mid-century",
+"year": 1928,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ismailia",
+"tags": [
+"founding",
+"faith"
+],
+"title": "The Muslim Brotherhood",
+"text": "Hassan al-Banna, a schoolteacher, founds the Muslim Brotherhood in Ismailia to renew Egypt through Islam.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-064",
+"era": "mid-century",
+"year": 1928,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science"
+],
+"title": "Penicillin",
+"text": "Alexander Fleming notices mould killing bacteria in a dish.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-065",
+"era": "mid-century",
+"year": 1929,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"faith"
+],
+"title": "The St Wenceslas millennium",
+"text": "Czechoslovakia marks a thousand years since the murder of St Wenceslas, and St Vitus Cathedral is finished.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-066",
+"era": "mid-century",
+"year": 1929,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Hebron",
+"tags": [
+"massacre"
+],
+"title": "The Hebron massacre",
+"text": "Arab rioters kill sixty-seven Jews in Hebron, ending a community that had lived there for centuries.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-067",
+"era": "mid-century",
+"year": 1929,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"money"
+],
+"title": "The Great Crash",
+"text": "The Wall Street crash spreads ruin to Europe; two years later the Vienna Creditanstalt fails and the Depression deepens.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-068",
+"era": "mid-century",
+"year": 1929,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money",
+"occult"
+],
+"title": "The Syndicate's crash",
+"text": "The house reading has the Syndicate allow the crash, the better to buy up the wreckage.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-069",
+"era": "mid-century",
+"year": 1930,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"building",
+"art"
+],
+"title": "Villa Tugendhat",
+"text": "Mies van der Rohe finishes the Tugendhat house on a Brno hillside, a landmark of modern architecture.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-070",
+"era": "mid-century",
+"year": 1930,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dandi",
+"tags": [
+"uprising"
+],
+"title": "The Salt March",
+"text": "Gandhi walks to the sea at Dandi to make salt against British law; tens of thousands are jailed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-071",
+"era": "mid-century",
+"year": 1930,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taiwan",
+"tags": [
+"uprising"
+],
+"title": "The Wushe rising",
+"text": "Indigenous Seediq rise against Japanese rule in Taiwan and are crushed with gas.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-072",
+"era": "mid-century",
+"year": 1931,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mukden",
+"tags": [
+"war",
+"empire"
+],
+"title": "The Mukden Incident",
+"text": "Japanese officers blow up a railway and use it to seize Manchuria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-073",
+"era": "mid-century",
+"year": 1931,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Wuhan",
+"tags": [
+"flood"
+],
+"title": "The China floods",
+"text": "The Yangtze and Huai flood, and perhaps two million die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-074",
+"era": "mid-century",
+"year": 1931,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Zlin",
+"tags": [
+"industry",
+"founding"
+],
+"title": "Bata's Zlin",
+"text": "The shoe king Tomas Bata builds Zlin into a company town of brick and glass and sells shoes across the world.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-075",
+"era": "mid-century",
+"year": 1931,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"revolution"
+],
+"title": "The Spanish Republic",
+"text": "Spain's king leaves and a republic is proclaimed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-076",
+"era": "mid-century",
+"year": 1932,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Otrokovice",
+"tags": [
+"death",
+"travel"
+],
+"title": "Bata dies",
+"text": "Tomas Bata dies when his plane crashes on take-off at Otrokovice.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-077",
+"era": "mid-century",
+"year": 1932,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ukraine",
+"tags": [
+"famine"
+],
+"title": "The Holodomor",
+"text": "Stalin's seizure of grain and seed starves Ukraine and the Kuban; millions die in villages sealed off by police.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-078",
+"era": "mid-century",
+"year": 1932,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"founding",
+"crown"
+],
+"title": "Saudi Arabia",
+"text": "Ibn Saud, master of Najd and the Hejaz, names his kingdom Saudi Arabia after his own house.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-079",
+"era": "mid-century",
+"year": 1932,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"founding"
+],
+"title": "Iraq independent",
+"text": "Iraq joins the League of Nations as an independent kingdom.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-080",
+"era": "mid-century",
+"year": 1933,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"crown"
+],
+"title": "Hitler chancellor",
+"text": "President Hindenburg appoints Hitler chancellor of Germany, and the Nazis take the state apart within months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-081",
+"era": "mid-century",
+"year": 1933,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"fire",
+"law"
+],
+"title": "The Reichstag fire",
+"text": "The German parliament burns, and the Nazis use it to suspend civil rights.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-082",
+"era": "mid-century",
+"year": 1933,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire",
+"Mage"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"occult",
+"terror"
+],
+"title": "The shadow over Germany",
+"text": "The house reading has German Kindred and Mages split over the Nazis; some see a tool, most see a fire that burns the hand.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "bjd-berlin",
+"title": "Berlin After the Purge"
+},
+{
+"id": "berbn-divided",
+"title": "Berlin's Two Princes"
+},
+{
+"id": "berbn-gustav",
+"title": "Gustav Breidenstein"
+}
+]
+},
+{
+"id": "r3-mid-century-083",
+"era": "mid-century",
+"year": 1933,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dachau",
+"tags": [
+"persecution"
+],
+"title": "Dachau",
+"text": "The first concentration camp opens at Dachau outside Munich, for communists, socialists and other enemies of the state.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-084",
+"era": "mid-century",
+"year": 1933,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"treaty"
+],
+"title": "Japan leaves the League",
+"text": "Japan walks out of the League of Nations over Manchuria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-085",
+"era": "mid-century",
+"year": 1934,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"uprising"
+],
+"title": "The Austrian civil war",
+"text": "Socialist workers fight the government in Vienna for four days; the army shells the workers' flats.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-086",
+"era": "mid-century",
+"year": 1934,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"crime",
+"terror"
+],
+"title": "The Night of the Long Knives",
+"text": "Hitler has the SA leaders and other rivals murdered.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-087",
+"era": "mid-century",
+"year": 1934,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jiangxi",
+"tags": [
+"migration",
+"war"
+],
+"title": "The Long March",
+"text": "The Red Army breaks out of encirclement and marches six thousand miles to Shaanxi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-088",
+"era": "mid-century",
+"year": 1934,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bihar",
+"tags": [
+"quake"
+],
+"title": "The Bihar earthquake",
+"text": "An earthquake on the Nepal border kills ten thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-089",
+"era": "mid-century",
+"year": 1935,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Benes president",
+"text": "The aged Masaryk retires, and the foreign minister Edvard Benes becomes president of Czechoslovakia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-090",
+"era": "mid-century",
+"year": 1935,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nuremberg",
+"tags": [
+"law",
+"persecution"
+],
+"title": "The Nuremberg laws",
+"text": "Germany strips Jews of citizenship and forbids marriage between Jews and other Germans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-091",
+"era": "mid-century",
+"year": 1935,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Quetta",
+"tags": [
+"quake"
+],
+"title": "The Quetta earthquake",
+"text": "An earthquake in the night destroys Quetta in Baluchistan and kills thirty thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-092",
+"era": "mid-century",
+"year": 1935,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"law"
+],
+"title": "Persia becomes Iran",
+"text": "Reza Shah asks the world to call the country Iran.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-093",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"war"
+],
+"title": "The Spanish Civil War",
+"text": "Generals rise against the Spanish republic, and Europe's armies try out their weapons in Spain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-094",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Lasombra in Spain",
+"text": "The house reading has the Sabbat and the Camarilla both fight in the shadow of the Spanish war; the Lasombra claim Madrid.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-095",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"sport"
+],
+"title": "The Berlin Olympics",
+"text": "Germany stages the Olympics as propaganda; Jesse Owens wins four gold medals.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-096",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jaffa",
+"tags": [
+"uprising"
+],
+"title": "The Arab revolt in Palestine",
+"text": "Palestinian Arabs strike and rise against British rule and Jewish immigration.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-097",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Xi'an",
+"tags": [
+"crime"
+],
+"title": "The Xi'an Incident",
+"text": "Chiang Kai-shek is kidnapped by his own generals until he agrees to fight Japan with the communists.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-098",
+"era": "mid-century",
+"year": 1936,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"building"
+],
+"title": "The Masaryk circuit",
+"text": "Brno opens its road racing circuit, and the Czechoslovak Grand Prix draws crowds of a hundred thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-099",
+"era": "mid-century",
+"year": 1937,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Marco Polo Bridge",
+"tags": [
+"war"
+],
+"title": "The war with Japan",
+"text": "Fighting at the Marco Polo Bridge begins full war between China and Japan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-100",
+"era": "mid-century",
+"year": 1937,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nanjing",
+"tags": [
+"massacre"
+],
+"title": "The Nanjing massacre",
+"text": "Japanese troops kill hundreds of thousands of civilians and prisoners in Nanjing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-101",
+"era": "mid-century",
+"year": 1937,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Nanjing",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "Nanjing's hungry dead",
+"text": "The house reading has the Yomi stir beneath Nanjing, and the Kuei-jin courts of the city fall.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-102",
+"era": "mid-century",
+"year": 1937,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Guernica",
+"tags": [
+"war",
+"terror"
+],
+"title": "Guernica",
+"text": "German and Italian bombers destroy the Basque town of Guernica on market day, and Picasso paints it.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-103",
+"era": "mid-century",
+"year": 1937,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"terror"
+],
+"title": "The Great Terror",
+"text": "Stalin's police shoot hundreds of thousands and send millions to the camps.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-104",
+"era": "mid-century",
+"year": 1938,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"empire"
+],
+"title": "The Anschluss",
+"text": "Germany annexes Austria, and Czechoslovakia is surrounded on three sides.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-105",
+"era": "mid-century",
+"year": 1938,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"treaty"
+],
+"title": "Munich",
+"text": "Britain and France agree that Germany may take the Sudetenland; Czechoslovakia is not asked.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-106",
+"era": "mid-century",
+"year": 1938,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Opava",
+"tags": [
+"empire",
+"migration"
+],
+"title": "The Sudetenland taken",
+"text": "German troops march into the borderlands, Opava and Znojmo among them, and Czechs flee inland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-107",
+"era": "mid-century",
+"year": 1938,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"persecution",
+"fire"
+],
+"title": "Kristallnacht",
+"text": "Nazis burn synagogues and smash Jewish shops across Germany and Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-108",
+"era": "mid-century",
+"year": 1938,
+"month": null,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"occult",
+"war"
+],
+"title": "The prince goes to ground",
+"text": "The house reading has the Kindred of Brno split after Munich; some flee to Prague, the prince goes to ground under the Spilberk.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-109",
+"era": "mid-century",
+"year": 1938,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"science"
+],
+"title": "Fission",
+"text": "Hahn and Strassmann split the uranium atom in Berlin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-110",
+"era": "mid-century",
+"year": 1939,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"empire",
+"war"
+],
+"title": "The Protectorate",
+"text": "German troops enter Prague and Brno; Bohemia and Moravia become a protectorate of the Reich and Slovakia a client state.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-111",
+"era": "mid-century",
+"year": 1939,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"war"
+],
+"title": "Poland invaded",
+"text": "Germany invades Poland, the Soviets follow from the east, and Britain and France declare war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-112",
+"era": "mid-century",
+"year": 1939,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"persecution",
+"learning"
+],
+"title": "The universities closed",
+"text": "After student protests, Czech universities are closed, nine students are shot and twelve hundred sent to camps.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-113",
+"era": "mid-century",
+"year": 1939,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Finland",
+"tags": [
+"war",
+"weather"
+],
+"title": "The Winter War",
+"text": "The Soviet Union attacks Finland, and the Finns hold in the snow for three months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-114",
+"era": "mid-century",
+"year": 1939,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"war",
+"occult"
+],
+"title": "The coming storm",
+"text": "The house reading has the Underworld shake as the war begins; the Hierarchy prepares for the worst Maelstrom in memory.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-115",
+"era": "mid-century",
+"year": 1939,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Technocracy and the Reich",
+"text": "The house reading has the Technocracy's council forbid any convention to serve the Reich, though some Progenitors ignore it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-116",
+"era": "mid-century",
+"year": 1940,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Katyn",
+"tags": [
+"massacre"
+],
+"title": "Katyn",
+"text": "Soviet police shoot over twenty thousand Polish officers and prisoners in the Katyn forest and elsewhere.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-117",
+"era": "mid-century",
+"year": 1940,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sedan",
+"tags": [
+"war",
+"battle"
+],
+"title": "The fall of France",
+"text": "German armour breaks through the Ardennes at Sedan; France falls in six weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-118",
+"era": "mid-century",
+"year": 1940,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dunkirk",
+"tags": [
+"sea",
+"war"
+],
+"title": "Dunkirk",
+"text": "Over three hundred thousand Allied soldiers are taken off the beaches at Dunkirk.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-119",
+"era": "mid-century",
+"year": 1940,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"fire"
+],
+"title": "The Blitz",
+"text": "German bombers attack London night after night for eight months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-120",
+"era": "mid-century",
+"year": 1940,
+"month": 9,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Blitz and the Kindred",
+"text": "The house reading has London's Kindred shelter deep in the Underground with the mortals, and Masquerade breaches go unreported in the chaos.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+},
+{
+"id": "dbi-lothian",
+"title": "The Fief of Lothian"
+}
+]
+},
+{
+"id": "r3-mid-century-121",
+"era": "mid-century",
+"year": 1940,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"founding"
+],
+"title": "The Czechoslovak government in exile",
+"text": "Benes forms a government in exile in London; Czechoslovak airmen fly in the Battle of Britain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-122",
+"era": "mid-century",
+"year": 1940,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hanoi",
+"tags": [
+"war",
+"empire"
+],
+"title": "Japan in Indochina",
+"text": "Japanese troops enter French Indochina by agreement with Vichy, and America cuts off Japan's oil.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-123",
+"era": "mid-century",
+"year": 1940,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Arcanum's blackout",
+"text": "The house reading has the Arcanum move its London library to the country and lose a crate of Prague papers on the way.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-124",
+"era": "mid-century",
+"year": 1941,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"war",
+"terror"
+],
+"title": "Yugoslavia invaded",
+"text": "Germany bombs Belgrade without warning and overruns Yugoslavia and Greece in a few weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-125",
+"era": "mid-century",
+"year": 1941,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war",
+"uprising"
+],
+"title": "The Iraqi coup",
+"text": "A pro-Axis government in Iraq fights the British and loses; a pogrom follows in Baghdad.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-126",
+"era": "mid-century",
+"year": 1941,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"war"
+],
+"title": "Barbarossa",
+"text": "Germany invades the Soviet Union with three million men.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-127",
+"era": "mid-century",
+"year": 1941,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"war",
+"crown"
+],
+"title": "Iran invaded",
+"text": "Britain and the Soviets invade Iran, and Reza Shah gives up the throne to his son.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-128",
+"era": "mid-century",
+"year": 1941,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Babi Yar",
+"tags": [
+"massacre"
+],
+"title": "Babi Yar",
+"text": "German units shoot nearly thirty-four thousand Jews in two days in a ravine outside Kiev.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-129",
+"era": "mid-century",
+"year": 1941,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leningrad",
+"tags": [
+"siege",
+"famine"
+],
+"title": "The siege of Leningrad",
+"text": "Germany surrounds Leningrad; about a million die in a siege of nearly nine hundred days.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-130",
+"era": "mid-century",
+"year": 1941,
+"month": 9,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Prague",
+"tags": [
+"terror"
+],
+"title": "Heydrich arrives",
+"text": "Reinhard Heydrich takes charge of the protectorate and begins mass arrests and executions.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-131",
+"era": "mid-century",
+"year": 1941,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lodz",
+"tags": [
+"persecution"
+],
+"title": "The deportations from the protectorate",
+"text": "Jews from Prague and Brno are deported to Lodz and Terezin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-132",
+"era": "mid-century",
+"year": 1941,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"war"
+],
+"title": "Hong Kong falls",
+"text": "Japan attacks Hong Kong, Malaya and Pearl Harbor in a day.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-133",
+"era": "mid-century",
+"year": 1941,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"battle",
+"weather"
+],
+"title": "Moscow holds",
+"text": "The Soviets stop the Germans before Moscow in the cold and counterattack.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-134",
+"era": "mid-century",
+"year": 1941,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Terezin",
+"tags": [
+"persecution"
+],
+"title": "Terezin",
+"text": "The fortress town of Terezin becomes a ghetto and transit camp for the Jews of Bohemia and Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-135",
+"era": "mid-century",
+"year": 1941,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Terezin",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The children's drawings",
+"text": "The house reading has an Arcanum member smuggle out drawings from Terezin, and some of them show things no child should know.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-136",
+"era": "mid-century",
+"year": 1942,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wannsee",
+"tags": [
+"persecution"
+],
+"title": "Wannsee",
+"text": "Nazi officials meet at a villa by the Wannsee to plan the murder of Europe's Jews.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-137",
+"era": "mid-century",
+"year": 1942,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"war"
+],
+"title": "Singapore falls",
+"text": "Britain surrenders Singapore with eighty thousand troops, the worst defeat in its history.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-138",
+"era": "mid-century",
+"year": 1942,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"terror",
+"death"
+],
+"title": "The Heydrich attack",
+"text": "Czechoslovak paratroopers Gabcik and Kubis ambush Heydrich in a Prague street; Heydrich dies a week later.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-139",
+"era": "mid-century",
+"year": 1942,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lidice",
+"tags": [
+"massacre"
+],
+"title": "Lidice",
+"text": "In revenge the Germans shoot the men of Lidice, send the women and children to camps, and raze the village.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-140",
+"era": "mid-century",
+"year": 1942,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lezaky",
+"tags": [
+"massacre"
+],
+"title": "Lezaky",
+"text": "The Germans destroy the hamlet of Lezaky and kill its people.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-141",
+"era": "mid-century",
+"year": 1942,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"siege"
+],
+"title": "The church of St Cyril and Methodius",
+"text": "The paratroopers die fighting in the crypt of a Prague church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-142",
+"era": "mid-century",
+"year": 1942,
+"month": 6,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Lidice",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The Lidice dead",
+"text": "The house reading has the dead of Lidice refuse the Hierarchy and haunt the empty fields as a Circle.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-143",
+"era": "mid-century",
+"year": 1942,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Midway",
+"tags": [
+"sea",
+"battle"
+],
+"title": "Midway",
+"text": "Japan loses four carriers at Midway in the Pacific.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-144",
+"era": "mid-century",
+"year": 1942,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Stalingrad",
+"tags": [
+"battle",
+"siege"
+],
+"title": "Stalingrad",
+"text": "The Germans reach the Volga at Stalingrad, and the city becomes a battle of streets and cellars.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-145",
+"era": "mid-century",
+"year": 1942,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "El Alamein",
+"tags": [
+"battle"
+],
+"title": "El Alamein",
+"text": "Montgomery's Eighth Army breaks Rommel's lines at El Alamein.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-146",
+"era": "mid-century",
+"year": 1942,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Auschwitz",
+"tags": [
+"persecution",
+"massacre"
+],
+"title": "The death camps",
+"text": "The camps of Auschwitz, Treblinka, Sobibor and Belzec murder millions of Jews, Roma and others.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-147",
+"era": "mid-century",
+"year": 1942,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf",
+"Wraith"
+],
+"region": "Europe",
+"place": "Auschwitz",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The Wyrm's harvest",
+"text": "The house reading has the Garou of Europe find the camps the deepest wounds the Wyrm has made in their age.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-148",
+"era": "mid-century",
+"year": 1942,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bataan",
+"tags": [
+"war",
+"massacre"
+],
+"title": "The Bataan death march",
+"text": "Japan marches American and Filipino prisoners to camps; thousands die on the road.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-149",
+"era": "mid-century",
+"year": 1943,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Stalingrad",
+"tags": [
+"battle"
+],
+"title": "Stalingrad surrenders",
+"text": "The frozen remnant of the German Sixth Army surrenders at Stalingrad; ninety thousand men go into captivity.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-150",
+"era": "mid-century",
+"year": 1943,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"uprising"
+],
+"title": "The Warsaw ghetto rising",
+"text": "The Jews of the Warsaw ghetto fight the Germans for a month.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-151",
+"era": "mid-century",
+"year": 1943,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kursk",
+"tags": [
+"battle"
+],
+"title": "Kursk",
+"text": "The greatest tank battle in history is fought at Kursk, and Germany loses the east.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-152",
+"era": "mid-century",
+"year": 1943,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"fire",
+"war"
+],
+"title": "The Hamburg firestorm",
+"text": "Allied bombing creates a firestorm in Hamburg that kills about forty thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-153",
+"era": "mid-century",
+"year": 1943,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bengal",
+"tags": [
+"famine"
+],
+"title": "The Bengal famine",
+"text": "Famine kills perhaps three million in Bengal while rice is shipped elsewhere.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-154",
+"era": "mid-century",
+"year": 1943,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Ascension War's other front",
+"text": "The house reading has the Technocracy work quietly on both the radar and the bomb, and Traditions fight to keep magic out of the war.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-155",
+"era": "mid-century",
+"year": 1944,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Normandy",
+"tags": [
+"battle",
+"sea"
+],
+"title": "D-Day",
+"text": "Allied armies land on five beaches in Normandy, and the liberation of western Europe begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-156",
+"era": "mid-century",
+"year": 1944,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"uprising"
+],
+"title": "The Warsaw Uprising",
+"text": "The Polish Home Army rises in Warsaw; the Soviets wait across the river while the Germans destroy the city.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-157",
+"era": "mid-century",
+"year": 1944,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Banska Bystrica",
+"tags": [
+"uprising"
+],
+"title": "The Slovak National Uprising",
+"text": "Slovaks rise against the Germans and their own regime; the rising is crushed in two months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-158",
+"era": "mid-century",
+"year": 1944,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war"
+],
+"title": "Brno bombed",
+"text": "Allied bombers strike Brno's factories and rail yards; hundreds of civilians die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-159",
+"era": "mid-century",
+"year": 1944,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dukla",
+"tags": [
+"battle"
+],
+"title": "The Dukla Pass",
+"text": "Soviet and Czechoslovak troops fight their way through the Dukla Pass into Slovakia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-160",
+"era": "mid-century",
+"year": 1944,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Imphal",
+"tags": [
+"battle"
+],
+"title": "Imphal and Kohima",
+"text": "The British and Indians stop the Japanese invasion of India at Imphal and Kohima.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-161",
+"era": "mid-century",
+"year": 1944,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"war",
+"occult"
+],
+"title": "The liberation of Paris",
+"text": "The house reading has the Toreador of Paris return from hiding and quarrel over who collaborated.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-mid-century-162",
+"era": "mid-century",
+"year": 1945,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Auschwitz",
+"tags": [
+"persecution"
+],
+"title": "Auschwitz liberated",
+"text": "Soviet troops reach Auschwitz and find seven thousand prisoners left behind by the death marches.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-163",
+"era": "mid-century",
+"year": 1945,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dresden",
+"tags": [
+"fire",
+"war"
+],
+"title": "Dresden",
+"text": "Allied bombers destroy the old city of Dresden in a firestorm that kills some twenty-five thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-164",
+"era": "mid-century",
+"year": 1945,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Yalta",
+"tags": [
+"treaty"
+],
+"title": "Yalta",
+"text": "Churchill, Roosevelt and Stalin meet at Yalta to shape postwar Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-165",
+"era": "mid-century",
+"year": 1945,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war",
+"battle"
+],
+"title": "Brno liberated",
+"text": "The Red Army takes Brno after a week of fighting.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-166",
+"era": "mid-century",
+"year": 1945,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"battle"
+],
+"title": "The Ostrava operation",
+"text": "Soviet and Czechoslovak troops take Ostrava after weeks of fighting.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-167",
+"era": "mid-century",
+"year": 1945,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"uprising"
+],
+"title": "The Prague Uprising",
+"text": "Prague rises against the Germans; the Vlasov army changes sides and helps.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-168",
+"era": "mid-century",
+"year": 1945,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"war"
+],
+"title": "Germany surrenders",
+"text": "Hitler is dead in the Berlin bunker, and Germany surrenders on 8 May; Prague is still fighting.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-169",
+"era": "mid-century",
+"year": 1945,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"migration",
+"massacre"
+],
+"title": "The Brno death march",
+"text": "Some twenty thousand German-speaking people of Brno are driven toward the Austrian border; thousands die on the road.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-170",
+"era": "mid-century",
+"year": 1945,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Usti",
+"tags": [
+"massacre"
+],
+"title": "The expulsions begin",
+"text": "Czechoslovakia begins expelling its three million Germans; many are killed in the first wild months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-171",
+"era": "mid-century",
+"year": 1945,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hiroshima",
+"tags": [
+"war",
+"science"
+],
+"title": "Hiroshima and Nagasaki",
+"text": "American atomic bombs destroy Hiroshima and Nagasaki, and Japan surrenders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-172",
+"era": "mid-century",
+"year": 1945,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Asia",
+"place": "Hiroshima",
+"tags": [
+"war",
+"occult"
+],
+"title": "The bomb in the Underworld",
+"text": "The house reading has the bombs tear holes in the Shroud, and the Dark Kingdom of Jade shaken to its depths.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "wdkj-hiroshima-storm",
+"title": "The storm after Hiroshima"
+}
+]
+},
+{
+"id": "r3-mid-century-173",
+"era": "mid-century",
+"year": 1945,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Hiroshima",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Kuei-jin and the bomb",
+"text": "The house reading has the Kuei-jin of Japan hide from the sun the bombs made, and many never return.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-174",
+"era": "mid-century",
+"year": 1945,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Hiroshima",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Technocracy's victory",
+"text": "The house reading has the Technocracy see the bomb as proof that its paradigm has won the war.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-175",
+"era": "mid-century",
+"year": 1945,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Potsdam",
+"tags": [
+"treaty"
+],
+"title": "Potsdam",
+"text": "The Allies agree how to run Germany and approve the expulsion of Germans from the east.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-176",
+"era": "mid-century",
+"year": 1945,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hanoi",
+"tags": [
+"founding",
+"revolution"
+],
+"title": "Vietnam declares independence",
+"text": "Ho Chi Minh declares an independent Vietnam in Hanoi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-177",
+"era": "mid-century",
+"year": 1945,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"empire"
+],
+"title": "Korea divided",
+"text": "Korea is divided at the thirty-eighth parallel between Soviet and American zones.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-178",
+"era": "mid-century",
+"year": 1945,
+"month": null,
+"kind": "tied",
+"lines": [
+"All lines",
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war",
+"occult"
+],
+"title": "Brno's empty havens",
+"text": "The house reading has the Kindred who fled Brno return to a city of Soviet soldiers and missing German elders.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-179",
+"era": "mid-century",
+"year": 1946,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nuremberg",
+"tags": [
+"law"
+],
+"title": "The Nuremberg trials",
+"text": "The Nazi leaders are tried and many are hanged.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-180",
+"era": "mid-century",
+"year": 1946,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The communists win Moravia",
+"text": "The Communists come first in the free election of 1946.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-181",
+"era": "mid-century",
+"year": 1946,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"terror"
+],
+"title": "The King David Hotel",
+"text": "Jewish militants of the Irgun bomb the British headquarters in Jerusalem's King David Hotel and kill ninety-one.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-182",
+"era": "mid-century",
+"year": 1946,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Calcutta",
+"tags": [
+"massacre"
+],
+"title": "The Calcutta killings",
+"text": "Riots between Hindus and Muslims in Calcutta kill thousands in four days and foreshadow partition.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-183",
+"era": "mid-century",
+"year": 1946,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The road to Pohorelice",
+"text": "The house reading has the dead of the Brno march haunt the road south, and the Moravian Hierarchy argue about whose they are.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-184",
+"era": "mid-century",
+"year": 1947,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"founding",
+"migration"
+],
+"title": "Partition",
+"text": "India and Pakistan become independent; millions flee and perhaps a million die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-185",
+"era": "mid-century",
+"year": 1947,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Qumran",
+"tags": [
+"learning",
+"exploration"
+],
+"title": "The Dead Sea Scrolls",
+"text": "A Bedouin shepherd finds ancient scrolls in a cave near Qumran.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-186",
+"era": "mid-century",
+"year": 1947,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage",
+"Hunter"
+],
+"region": "Middle East",
+"place": "Qumran",
+"tags": [
+"learning",
+"occult"
+],
+"title": "The scrolls watched",
+"text": "The house reading has the Celestial Chorus and the Society of Leopold both send scholars to the scrolls.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-187",
+"era": "mid-century",
+"year": 1948,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution"
+],
+"title": "The February coup",
+"text": "The Communists take power in Czechoslovakia when the democratic ministers resign and Benes gives way.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-188",
+"era": "mid-century",
+"year": 1948,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"death"
+],
+"title": "Jan Masaryk falls",
+"text": "The foreign minister Jan Masaryk is found dead below his window.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-189",
+"era": "mid-century",
+"year": 1948,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tel Aviv",
+"tags": [
+"founding",
+"war"
+],
+"title": "Israel",
+"text": "Ben-Gurion declares the state of Israel in Tel Aviv, and the armies of its Arab neighbours invade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-190",
+"era": "mid-century",
+"year": 1948,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Deir Yassin",
+"tags": [
+"massacre",
+"migration"
+],
+"title": "The Nakba",
+"text": "Some seven hundred thousand Palestinians flee or are driven from their homes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-191",
+"era": "mid-century",
+"year": 1948,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"siege"
+],
+"title": "The Berlin airlift",
+"text": "The Soviets blockade West Berlin, and the Allies fly in its food for a year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-192",
+"era": "mid-century",
+"year": 1948,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"death"
+],
+"title": "Gandhi killed",
+"text": "A Hindu nationalist shoots Gandhi at a prayer meeting in Delhi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-193",
+"era": "mid-century",
+"year": 1949,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"founding",
+"revolution"
+],
+"title": "The People's Republic",
+"text": "Mao proclaims the People's Republic of China from the Gate of Heavenly Peace, and Chiang flees to Taiwan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-194",
+"era": "mid-century",
+"year": 1949,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Middle Kingdom falls silent",
+"text": "The house reading has the Kuei-jin courts of China driven underground by the new state.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-195",
+"era": "mid-century",
+"year": 1949,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"treaty"
+],
+"title": "NATO",
+"text": "America, Canada and ten European states found the North Atlantic alliance against the Soviet bloc.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-196",
+"era": "mid-century",
+"year": 1950,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"war"
+],
+"title": "The Korean War",
+"text": "North Korea invades the south, and American and United Nations troops are drawn in, then China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-197",
+"era": "mid-century",
+"year": 1950,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Lhasa",
+"tags": [
+"empire"
+],
+"title": "Tibet invaded",
+"text": "The Chinese army enters Tibet and defeats its small army at Chamdo.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-198",
+"era": "mid-century",
+"year": 1950,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Lhasa",
+"tags": [
+"empire",
+"occult"
+],
+"title": "The Akashics scatter",
+"text": "The house reading has the Akashic Brotherhood carry treasures out of Tibet.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-199",
+"era": "mid-century",
+"year": 1951,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"trade",
+"law"
+],
+"title": "Iranian oil nationalised",
+"text": "Prime Minister Mossadegh nationalises Iran's oil, and Britain blockades Iranian exports.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-200",
+"era": "mid-century",
+"year": 1952,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"revolution"
+],
+"title": "The Free Officers",
+"text": "Nasser's Free Officers overthrow King Farouk, and Egypt becomes a republic within a year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-201",
+"era": "mid-century",
+"year": 1952,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"persecution"
+],
+"title": "The Slansky trial",
+"text": "Fourteen Communist leaders, most of them Jewish, are tried as traitors; eleven are hanged.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-202",
+"era": "mid-century",
+"year": 1953,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"death"
+],
+"title": "Stalin dies",
+"text": "Stalin dies at his dacha after a stroke, and the camps begin slowly to empty.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-203",
+"era": "mid-century",
+"year": 1953,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Plzen",
+"tags": [
+"uprising",
+"money"
+],
+"title": "The Plzen rising",
+"text": "A currency reform wipes out savings, and workers in Plzen storm the town hall.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-204",
+"era": "mid-century",
+"year": 1953,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"revolution"
+],
+"title": "The coup in Iran",
+"text": "American and British agents help the army and the mobs overthrow Mossadegh, and the shah returns.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-205",
+"era": "mid-century",
+"year": 1953,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Panmunjom",
+"tags": [
+"treaty"
+],
+"title": "The Korean armistice",
+"text": "The fighting in Korea ends with the peninsula divided.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-206",
+"era": "mid-century",
+"year": 1953,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"occult"
+],
+"title": "The Kindred in the show trials",
+"text": "The house reading has Prague's Kindred use the purges to settle their own accounts, and hunters among the secret police note odd deaths.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-mid-century-207",
+"era": "mid-century",
+"year": 1954,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dien Bien Phu",
+"tags": [
+"battle",
+"siege"
+],
+"title": "Dien Bien Phu",
+"text": "The Viet Minh crush the French at Dien Bien Phu.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-208",
+"era": "mid-century",
+"year": 1955,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"treaty"
+],
+"title": "The Warsaw Pact",
+"text": "The Soviet bloc forms its own military alliance in Warsaw in answer to NATO.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-209",
+"era": "mid-century",
+"year": 1955,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty"
+],
+"title": "The Austrian treaty",
+"text": "The four powers leave Austria, which becomes free and neutral; Vienna is no longer divided.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-210",
+"era": "mid-century",
+"year": 1955,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bandung",
+"tags": [
+"treaty"
+],
+"title": "Bandung",
+"text": "Asian and African leaders meet at Bandung in Java and found the movement of non-aligned nations.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-211",
+"era": "mid-century",
+"year": 1955,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"faith"
+],
+"title": "Japan's new parties",
+"text": "Japan's conservatives merge into the Liberal Democratic Party, which will rule for decades.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-212",
+"era": "mid-century",
+"year": 1956,
+"month": 2,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"law"
+],
+"title": "The secret speech",
+"text": "Khrushchev denounces Stalin's crimes to a closed session of the party congress, and the speech leaks abroad.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-213",
+"era": "mid-century",
+"year": 1956,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"uprising",
+"revolution"
+],
+"title": "The Hungarian revolution",
+"text": "Hungary rises against Soviet rule; Soviet tanks crush it within weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-214",
+"era": "mid-century",
+"year": 1956,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Suez",
+"tags": [
+"war",
+"trade"
+],
+"title": "The Suez crisis",
+"text": "Israel, Britain and France attack Egypt after Nasser takes the canal; America forces them out.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-215",
+"era": "mid-century",
+"year": 1956,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poznan",
+"tags": [
+"uprising"
+],
+"title": "Polish October",
+"text": "Poland wins a gentler communism under Gomulka after riots in Poznan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-216",
+"era": "mid-century",
+"year": 1956,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "Blood on the Danube",
+"text": "The house reading has the Brujah of Budapest fight beside the students and the Tzimisce feed on the reprisals.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "vav-budapest",
+"title": "Budapest"
+}
+]
+},
+{
+"id": "r3-mid-century-217",
+"era": "mid-century",
+"year": 1957,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"science"
+],
+"title": "Sputnik",
+"text": "The Soviet Union puts the first satellite in orbit.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-218",
+"era": "mid-century",
+"year": 1957,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Void Engineers look up",
+"text": "The house reading has the Void Engineers race to claim space for the Technocracy before the Traditions can dream it otherwise.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-219",
+"era": "mid-century",
+"year": 1957,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kyshtym",
+"tags": [
+"disaster",
+"science"
+],
+"title": "The Kyshtym disaster",
+"text": "A nuclear waste tank explodes in the Urals and poisons a wide stretch of land; the Soviets keep it secret.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-220",
+"era": "mid-century",
+"year": 1957,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Rome",
+"text": "France, Germany, Italy and the Low Countries found the European Economic Community.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-221",
+"era": "mid-century",
+"year": 1958,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"revolution"
+],
+"title": "The Iraqi revolution",
+"text": "Officers overthrow Iraq's monarchy and kill the young king and his family in the palace courtyard.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-222",
+"era": "mid-century",
+"year": 1958,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"famine"
+],
+"title": "The Great Leap Forward",
+"text": "Mao's Great Leap brings famine that kills tens of millions.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-223",
+"era": "mid-century",
+"year": 1958,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"building",
+"art"
+],
+"title": "Expo 58",
+"text": "Czechoslovakia's pavilion and its Laterna Magika win the Brussels fair.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-224",
+"era": "mid-century",
+"year": 1959,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Lhasa",
+"tags": [
+"uprising"
+],
+"title": "The Tibetan rising",
+"text": "Tibet rises against China, and the Dalai Lama flees to India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-225",
+"era": "mid-century",
+"year": 1960,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The new constitution",
+"text": "Czechoslovakia declares itself a socialist republic, the second in the bloc after the Soviet Union.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-226",
+"era": "mid-century",
+"year": 1960,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"founding",
+"trade"
+],
+"title": "OPEC",
+"text": "Iran, Iraq, Kuwait, Saudi Arabia and Venezuela found OPEC in Baghdad to take back control of oil prices.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-227",
+"era": "mid-century",
+"year": 1961,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"science",
+"travel"
+],
+"title": "Gagarin",
+"text": "Yuri Gagarin orbits the earth in Vostok 1, the first person in space.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-228",
+"era": "mid-century",
+"year": 1961,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"building"
+],
+"title": "The Berlin Wall",
+"text": "East Germany builds a wall through Berlin overnight to stop its people from leaving.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-229",
+"era": "mid-century",
+"year": 1961,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"building",
+"occult"
+],
+"title": "The Wall and the Kindred",
+"text": "The house reading follows canon in spirit: Berlin's Kindred divide like the city, and crossing becomes a matter for princes.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "bjd-berlin",
+"title": "Berlin After the Purge"
+},
+{
+"id": "berbn-divided",
+"title": "Berlin's Two Princes"
+},
+{
+"id": "berbn-gustav",
+"title": "Gustav Breidenstein"
+}
+]
+},
+{
+"id": "r3-mid-century-230",
+"era": "mid-century",
+"year": 1962,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"terror"
+],
+"title": "The Cuban missile crisis",
+"text": "Europe waits for nuclear war for thirteen days while America and the Soviets face off over missiles in Cuba.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-231",
+"era": "mid-century",
+"year": 1962,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Ladakh",
+"tags": [
+"war"
+],
+"title": "The Sino-Indian War",
+"text": "China defeats India in a short war high in the Himalayas and keeps Aksai Chin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-232",
+"era": "mid-century",
+"year": 1962,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art",
+"occult"
+],
+"title": "The Beatles and Glamour",
+"text": "The house reading has Liverpool's music pour Glamour into the Dreaming years before the Resurgence.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-mid-century-233",
+"era": "mid-century",
+"year": 1963,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Skopje",
+"tags": [
+"quake"
+],
+"title": "The Skopje earthquake",
+"text": "An earthquake destroys most of Skopje and kills over a thousand; the city is rebuilt to a Japanese plan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-234",
+"era": "mid-century",
+"year": 1963,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vajont",
+"tags": [
+"disaster",
+"flood"
+],
+"title": "The Vajont dam",
+"text": "A landslide into a dam reservoir in Italy sends a wave over the dam that kills two thousand.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-235",
+"era": "mid-century",
+"year": 1964,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"sport",
+"travel"
+],
+"title": "The Tokyo Olympics",
+"text": "Japan hosts the Olympics and opens the bullet train.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-236",
+"era": "mid-century",
+"year": 1964,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tonkin",
+"tags": [
+"war"
+],
+"title": "The Tonkin Gulf",
+"text": "Reports of attacks on American destroyers in the Gulf of Tonkin let America widen its war in Vietnam.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-237",
+"era": "mid-century",
+"year": 1964,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"science"
+],
+"title": "China's bomb",
+"text": "China tests its first atomic bomb.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-238",
+"era": "mid-century",
+"year": 1965,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jakarta",
+"tags": [
+"massacre"
+],
+"title": "The Indonesian killings",
+"text": "The army and militias kill half a million or more suspected communists.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-239",
+"era": "mid-century",
+"year": 1965,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kashmir",
+"tags": [
+"war"
+],
+"title": "The second Kashmir war",
+"text": "India and Pakistan fight a three-week war over Kashmir that ends where it began.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-240",
+"era": "mid-century",
+"year": 1965,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Sons of Ether and the space race",
+"text": "The house reading has the Sons of Ether launch their own etherships while the Void Engineers race the Soviets.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-241",
+"era": "mid-century",
+"year": 1966,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"revolution",
+"persecution"
+],
+"title": "The Cultural Revolution",
+"text": "Mao unleashes the Red Guards against teachers, temples and party rivals.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-242",
+"era": "mid-century",
+"year": 1966,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Red Guards and the shrines",
+"text": "The house reading has the Red Guards smash shrines the Kuei-jin had guarded for centuries; some courts are destroyed.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-243",
+"era": "mid-century",
+"year": 1966,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"flood",
+"art"
+],
+"title": "The Florence flood",
+"text": "The Arno floods Florence, drowns its streets and damages thousands of paintings and books.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-244",
+"era": "mid-century",
+"year": 1967,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"war"
+],
+"title": "The Six-Day War",
+"text": "Israel takes Sinai, Gaza, the West Bank, East Jerusalem and the Golan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-245",
+"era": "mid-century",
+"year": 1967,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Athens",
+"tags": [
+"revolution"
+],
+"title": "The colonels",
+"text": "Greek colonels seize power in a coup and rule Greece for seven years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-246",
+"era": "mid-century",
+"year": 1968,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution",
+"law"
+],
+"title": "The Prague Spring",
+"text": "Alexander Dubcek begins socialism with a human face, and censorship lifts.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-247",
+"era": "mid-century",
+"year": 1968,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hue",
+"tags": [
+"battle"
+],
+"title": "The Tet Offensive",
+"text": "Communist forces attack cities across South Vietnam at the lunar new year; Hue is fought over for a month.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-248",
+"era": "mid-century",
+"year": 1968,
+"month": 5,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising"
+],
+"title": "May 1968",
+"text": "Students raise barricades in Paris, millions of workers strike, and France comes to a standstill.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-249",
+"era": "mid-century",
+"year": 1968,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war",
+"empire"
+],
+"title": "The invasion",
+"text": "Warsaw Pact troops invade Czechoslovakia; Brno's people stand in front of the tanks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-250",
+"era": "mid-century",
+"year": 1968,
+"month": 8,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Kindred and the tanks",
+"text": "The house reading has Prague's Kindred split over the Spring; Ventrue loyal to Moscow help the invaders and the Anarchs pay for it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-mid-century-251",
+"era": "mid-century",
+"year": 1968,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "My Lai",
+"tags": [
+"massacre"
+],
+"title": "My Lai",
+"text": "American soldiers kill hundreds of villagers at My Lai.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-252",
+"era": "mid-century",
+"year": 1968,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "Hunters behind the tanks",
+"text": "The house reading has the StB open files on Brno's nightwalkers after the invasion, a knot later hunters will untangle.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-253",
+"era": "mid-century",
+"year": 1969,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"death",
+"uprising"
+],
+"title": "Jan Palach",
+"text": "The student Jan Palach sets fire to himself in Wenceslas Square in protest.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-254",
+"era": "mid-century",
+"year": 1969,
+"month": 3,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"sport",
+"uprising"
+],
+"title": "The hockey riots",
+"text": "Czechoslovakia beats the Soviets twice at ice hockey, and crowds attack the Soviet airline office.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-255",
+"era": "mid-century",
+"year": 1969,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"travel"
+],
+"title": "The Moon landing",
+"text": "Apollo 11 lands on the Moon, and the world watches on television.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-256",
+"era": "mid-century",
+"year": 1969,
+"month": 7,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Resurgence",
+"text": "The house reading follows Changeling canon: the Moon landing reopens the Dreaming, and the sidhe return.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-mid-century-257",
+"era": "mid-century",
+"year": 1969,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law",
+"persecution"
+],
+"title": "Normalisation",
+"text": "Husak's regime purges half a million party members and fires the reformers from universities, papers and theatres.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-258",
+"era": "mid-century",
+"year": 1970,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dhaka",
+"tags": [
+"storm",
+"disaster"
+],
+"title": "The Bhola cyclone",
+"text": "A cyclone kills perhaps half a million in East Pakistan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-259",
+"era": "mid-century",
+"year": 1970,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Amman",
+"tags": [
+"war"
+],
+"title": "Black September",
+"text": "Jordan's army fights the Palestinian guerrillas and drives them out to Lebanon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-260",
+"era": "mid-century",
+"year": 1971,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dhaka",
+"tags": [
+"war",
+"founding"
+],
+"title": "Bangladesh",
+"text": "Bangladesh breaks from Pakistan after a war and mass killings.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-261",
+"era": "mid-century",
+"year": 1972,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"terror",
+"sport"
+],
+"title": "The Munich massacre",
+"text": "Palestinian gunmen kill eleven Israeli athletes at the Olympics.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-262",
+"era": "mid-century",
+"year": 1972,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art"
+],
+"title": "The Czech film wave",
+"text": "Many of the Czech new-wave films are banned and their makers silenced.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-263",
+"era": "mid-century",
+"year": 1973,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Sinai",
+"tags": [
+"war"
+],
+"title": "The Yom Kippur War",
+"text": "Egypt and Syria attack Israel on the holiest day of the Jewish year and are thrown back after hard fighting.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-264",
+"era": "mid-century",
+"year": 1973,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"money",
+"trade"
+],
+"title": "The oil shock",
+"text": "Arab states cut oil to the West, prices quadruple, and Europe has car-free Sundays.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-265",
+"era": "mid-century",
+"year": 1974,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cyprus",
+"tags": [
+"war"
+],
+"title": "Cyprus divided",
+"text": "Turkey invades Cyprus after a Greek-backed coup, and the island is divided by a green line.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-266",
+"era": "mid-century",
+"year": 1975,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Saigon",
+"tags": [
+"war"
+],
+"title": "Saigon falls",
+"text": "North Vietnamese tanks break into the presidential palace in Saigon; the last Americans leave by helicopter.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-267",
+"era": "mid-century",
+"year": 1975,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Helsinki",
+"tags": [
+"treaty",
+"law"
+],
+"title": "The Helsinki Accords",
+"text": "The Soviet bloc signs a promise to respect human rights.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-268",
+"era": "mid-century",
+"year": 1975,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"war"
+],
+"title": "The Lebanese civil war",
+"text": "Lebanon falls into fifteen years of civil war among its faiths, the Palestinians and foreign armies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-269",
+"era": "mid-century",
+"year": 1975,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Phnom Penh",
+"tags": [
+"massacre",
+"revolution"
+],
+"title": "The Khmer Rouge",
+"text": "The Khmer Rouge empty Phnom Penh into the countryside; in four years perhaps two million Cambodians die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-270",
+"era": "mid-century",
+"year": 1975,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Phnom Penh",
+"tags": [
+"massacre",
+"occult"
+],
+"title": "The killing fields",
+"text": "The house reading has the Yama Kings' servants grow strong on Cambodia's dead, and the Kuei-jin of Angkor go to war against them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-271",
+"era": "mid-century",
+"year": 1976,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tangshan",
+"tags": [
+"quake"
+],
+"title": "Tangshan",
+"text": "An earthquake destroys Tangshan and kills a quarter of a million.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-272",
+"era": "mid-century",
+"year": 1976,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art",
+"law"
+],
+"title": "The Plastic People trial",
+"text": "The rock band Plastic People of the Universe is jailed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-273",
+"era": "mid-century",
+"year": 1977,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law"
+],
+"title": "Charter 77",
+"text": "Dissidents sign Charter 77 asking the state to keep its own human rights laws.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-274",
+"era": "mid-century",
+"year": 1977,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"occult"
+],
+"title": "Kindred dissidents",
+"text": "The house reading has a few signers of Charter 77 Embraced in later years, so that some Kindred of Prague still carry the Charter's grudge.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-mid-century-275",
+"era": "mid-century",
+"year": 1978,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"money"
+],
+"title": "Deng's reforms",
+"text": "Deng Xiaoping opens China's economy to markets and foreign money after Mao's death.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-276",
+"era": "mid-century",
+"year": 1978,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "The Polish pope",
+"text": "Karol Wojtyla of Krakow becomes Pope John Paul II, the first pope from beyond Italy in four centuries.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-277",
+"era": "mid-century",
+"year": 1979,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"revolution"
+],
+"title": "The Iranian revolution",
+"text": "The shah flees, and Ayatollah Khomeini returns from exile to found an Islamic republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-278",
+"era": "mid-century",
+"year": 1979,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mecca",
+"tags": [
+"terror"
+],
+"title": "The Grand Mosque seized",
+"text": "Armed militants seize the Grand Mosque in Mecca and hold it for two weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-279",
+"era": "mid-century",
+"year": 1979,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war"
+],
+"title": "The Soviet invasion of Afghanistan",
+"text": "Soviet troops enter Afghanistan to prop up a communist government and fight a ten-year war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-280",
+"era": "mid-century",
+"year": 1979,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Garou and the mountains",
+"text": "The house reading has the Garou of the Hindu Kush fight the Soviets' shadow in the Umbra.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-281",
+"era": "mid-century",
+"year": 1980,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Gdansk",
+"tags": [
+"uprising"
+],
+"title": "Solidarity",
+"text": "Shipyard workers in Gdansk strike under Lech Walesa and found Solidarity, the first free union in the bloc.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-282",
+"era": "mid-century",
+"year": 1980,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Basra",
+"tags": [
+"war"
+],
+"title": "The Iran-Iraq War",
+"text": "Iraq invades Iran, and eight years of trench war and gas follow along the Shatt al-Arab.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-283",
+"era": "mid-century",
+"year": 1981,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"law"
+],
+"title": "Martial law in Poland",
+"text": "General Jaruzelski declares martial law and jails Solidarity's leaders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-284",
+"era": "mid-century",
+"year": 1981,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"terror",
+"death"
+],
+"title": "Sadat killed",
+"text": "Soldiers shoot President Sadat at a military parade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-285",
+"era": "mid-century",
+"year": 1982,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"war",
+"massacre"
+],
+"title": "Sabra and Shatila",
+"text": "Lebanese militias kill hundreds of Palestinians in the Sabra and Shatila camps while Israeli troops ring them.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-286",
+"era": "mid-century",
+"year": 1982,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Hama",
+"tags": [
+"massacre"
+],
+"title": "Hama",
+"text": "Syria crushes a rising in Hama and kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-287",
+"era": "mid-century",
+"year": 1983,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Beirut",
+"tags": [
+"terror"
+],
+"title": "The Beirut barracks",
+"text": "Truck bombs kill American and French peacekeepers in Beirut.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-288",
+"era": "mid-century",
+"year": 1984,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bhopal",
+"tags": [
+"disaster",
+"industry"
+],
+"title": "Bhopal",
+"text": "A gas leak from a pesticide plant kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-289",
+"era": "mid-century",
+"year": 1984,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Amritsar",
+"tags": [
+"war",
+"faith"
+],
+"title": "The Golden Temple",
+"text": "Indian troops storm the Golden Temple, and Indira Gandhi is killed by bodyguards.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-290",
+"era": "mid-century",
+"year": 1985,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Gorbachev",
+"text": "Mikhail Gorbachev takes power and begins glasnost and perestroika.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-291",
+"era": "mid-century",
+"year": 1986,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Chernobyl",
+"tags": [
+"disaster",
+"science"
+],
+"title": "Chernobyl",
+"text": "A reactor explodes at Chernobyl and spreads fallout across Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-292",
+"era": "mid-century",
+"year": 1986,
+"month": 4,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Chernobyl",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The Wyrm at Chernobyl",
+"text": "The house reading follows Werewolf canon in spirit: the Black Spiral Dancers claim the poisoned zone.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "w20ratw-chernobyl",
+"title": "The Chernobyl Exclusion Zone"
+}
+]
+},
+{
+"id": "r3-mid-century-293",
+"era": "mid-century",
+"year": 1986,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Chernobyl",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The Technocracy covers Chernobyl",
+"text": "The house reading has the New World Order help the Soviets hide the scale of the disaster.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-mid-century-294",
+"era": "mid-century",
+"year": 1987,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Gaza",
+"tags": [
+"uprising"
+],
+"title": "The first intifada",
+"text": "Palestinians in Gaza and the West Bank rise against Israeli occupation.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-295",
+"era": "mid-century",
+"year": 1988,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Halabja",
+"tags": [
+"massacre"
+],
+"title": "Halabja",
+"text": "Iraq attacks the Kurdish town of Halabja with poison gas and kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-296",
+"era": "mid-century",
+"year": 1988,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Armenia",
+"tags": [
+"quake"
+],
+"title": "The Spitak earthquake",
+"text": "An earthquake in northern Armenia kills twenty-five thousand and levels Spitak.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-297",
+"era": "mid-century",
+"year": 1988,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lockerbie",
+"tags": [
+"terror"
+],
+"title": "Lockerbie",
+"text": "A bomb destroys an airliner over Lockerbie in Scotland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-298",
+"era": "mid-century",
+"year": 1989,
+"month": 6,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"massacre"
+],
+"title": "Tiananmen",
+"text": "The army clears Tiananmen Square of protesters and kills hundreds or more.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-299",
+"era": "mid-century",
+"year": 1989,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"revolution"
+],
+"title": "The Wall falls",
+"text": "A muddled announcement opens the border, and East Germans pour through the Berlin Wall.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-300",
+"era": "mid-century",
+"year": 1989,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution"
+],
+"title": "The Velvet Revolution",
+"text": "Students beaten in Prague start the Velvet Revolution, and the communists give way within weeks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-301",
+"era": "mid-century",
+"year": 1989,
+"month": 11,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"revolution"
+],
+"title": "Brno's Velvet days",
+"text": "Crowds fill Freedom Square in Brno as the regime collapses.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-302",
+"era": "mid-century",
+"year": 1989,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bucharest",
+"tags": [
+"revolution"
+],
+"title": "The Romanian revolution",
+"text": "Romania rises against Ceausescu, who is caught, tried in an hour and shot on Christmas Day.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-303",
+"era": "mid-century",
+"year": 1989,
+"month": 12,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Havel president",
+"text": "The playwright Vaclav Havel, jailed a year before, is elected president by the old parliament.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-mid-century-304",
+"era": "mid-century",
+"year": 1989,
+"month": 12,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The Kindred after the fall",
+"text": "The house reading has the Camarilla rush into the old bloc as the Sabbat and the old bloc's princes scramble.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-mid-century-305",
+"era": "mid-century",
+"year": 1989,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"revolution",
+"occult"
+],
+"title": "The velvet Dreaming",
+"text": "The house reading has the Velvet Revolution light the Dreaming of Prague, and the Kithain of Brno dance on Freedom Square.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
 }
 ]
