@@ -1,5 +1,5 @@
 /**
- * The case board (WoDX Interactables 0.32.0) and What they could know (WoDX Library 0.16.0), in Foundry, in
+ * The case board (WoDX Interactables 0.32.0) and What they could know (WoDX Library 0.17.0), in Foundry, in
  * rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecase.mjs?${Date.now()}`)).run()
  * It makes a scratch board, scene, tile and actor and deletes them; it does not move the clock. The open-case and
@@ -38,7 +38,7 @@ export async function run() {
   let board = null, scene = null, actor = null;
   const folderBefore = !!game.folders.find(f => f.type === "JournalEntry" && f.name === C?.BOARD_FOLDER);
   try {
-    ok("1. modules", atLeast(MOD, "0.32.0") && atLeast("wodx-library", "0.16.0") && !!CB?.newBoard && !!CB?.pinClue && !!KN?.open && !!KN?.rules?.listFor,
+    ok("1. modules", atLeast(MOD, "0.32.0") && atLeast("wodx-library", "0.17.0") && !!CB?.newBoard && !!CB?.pinClue && !!KN?.open && !!KN?.rules?.listFor,
       {versions: [MOD, "wodx-library", "wodx-storyteller", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
 
     // 2. A new board

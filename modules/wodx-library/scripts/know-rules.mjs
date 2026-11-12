@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.16.0: what a character could know, the pure part. For the Storyteller only: from the Encyclopaedia,
+ * WoDX Library 0.17.0: what a character could know, the pure part. For the Storyteller only: from the Encyclopaedia,
  * the entries that fit a character's line and the chronicle's year, each with a suggestion (would they know it?) and
  * the reason. Nothing is shown to a player until the Storyteller puts the entry in that character's codex.
  *

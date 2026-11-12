@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.19.0 (the last VtDA20 pieces are gone: the manifest no longer lists vtda20-combat as a conflict, the actor type no longer falls back to the old vtda20 flags, and the dialog class is wodx-form-dialog)
 - 3.18.0 (Game time: when a fight ends the clock moves by its turns times the seconds a turn takes (world setting Seconds a turn takes, 3; 0 keeps fights timeless), or the fighters' own time when they are apart; the after-action card names the length)
 - 3.16.0 (missed connections, 12 November 2026: fights make noise: firearms and explosives loud, blades, fists, bows and silenced guns quiet; NPCs nearby who hear it react through WoDX Interactables, once a round)
 - 3.15.1 (the after-action card names each fighter and their numbers: the start of the fight is stored so the actor's id is not split; it is written only when a fighter is new)

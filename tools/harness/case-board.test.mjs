@@ -95,7 +95,7 @@ test("the board window is wired: declared classes, the token tool, the hand, clu
   assert.match(main, /registerCaseSettings\(\)/);
 });
 
-/* WoDX Library 0.16.0: what a character could know. */
+/* WoDX Library 0.17.0: what a character could know. */
 const camarilla = {id: "camarilla", title: "The Camarilla", kind: "faction", lines: ["vampire"], eras: ["renaissance", "modern"]};
 const convention = {id: "convention-of-thorns", title: "The Convention of Thorns", kind: "event", lines: ["vampire"], eras: ["renaissance"], date: {from: 1493}};
 const caern = {id: "caern", title: "Caern", kind: "term", lines: ["werewolf"], eras: ["dark-ages", "modern"]};

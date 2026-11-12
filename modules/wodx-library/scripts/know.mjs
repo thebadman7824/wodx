@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.16.0: What they could know (rules in know-rules.mjs). The Storyteller picks a player character and
+ * WoDX Library 0.17.0: What they could know (rules in know-rules.mjs). The Storyteller picks a player character and
  * sees the Encyclopaedia entries that fit the character's line and the clock's year, with a suggestion and its reason.
  * Ticked entries go into the character's codex (WoDX Storyteller), so the player reads only what was put there.
  * Opened from the Storyteller's hand, or game.modules.get("wodx-library").api.know.open().

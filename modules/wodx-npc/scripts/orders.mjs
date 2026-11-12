@@ -340,7 +340,7 @@ export function build(ctx) {
   /* ---------------- The window ---------------- */
 
   /** Give an order: pick a follower on this scene, the order, and who it serves. */
-  async function openOrders() {
+  async function openOrders({tokenId = null, leader: wantLeader = null} = {}) {
     if ( !setting("followerOrders") ) return ui.notifications.info("Followers taking orders is off in this world.");
     const list = followersFor();
     const pcs = game.user.isGM ? game.actors.filter(a => a.hasPlayerOwner) : game.actors.filter(a => a.isOwner && a.hasPlayerOwner);
@@ -349,10 +349,10 @@ export function build(ctx) {
     const n = names();
     const opt = (v, l, s) => `<option value="${esc(v)}"${s ? " selected" : ""}>${esc(l)}</option>`;
     const taskOpts = pcs.flatMap(a => (ST()?.tasks?.of?.(a) ?? []).filter(t => t.status === "open").map(t => opt(t.id, `${a.name}: ${t.name}`, false)));
-    const followers = (game.user.isGM ? gmList : list).map(t => opt(t.id, `${t.name}: ${O.describeOrder(flag(t.actor, "order"), n)}`, false)).join("");
+    const followers = (game.user.isGM ? gmList : list).map(t => opt(t.id, `${t.name}: ${O.describeOrder(flag(t.actor, "order"), n)}`, t.id === tokenId)).join("");
     const nFollow = (game.user.isGM ? gmList : list).length;
     const target = [...(game.user.targets ?? [])][0]?.document ?? null;
-    const lead = (canvas?.tokens?.controlled ?? []).map(t => t.actor?.id).find(id => pcs.some(a => a.id === id)) ?? game.user.character?.id ?? pcs[0]?.id;
+    const lead = (wantLeader && pcs.some(a => a.id === wantLeader) ? wantLeader : null) ?? (canvas?.tokens?.controlled ?? []).map(t => t.actor?.id).find(id => pcs.some(a => a.id === id)) ?? game.user.character?.id ?? pcs[0]?.id;
     const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 480}, window: {title: "Give an order"}, classes: ["wodx-dialog", "wnpc-orders"],
       content: `${nFollow > 5 ? searchBox("select[name=token]", "Search followers…", "Search followers") : ""}
         <div class="form-group"><label>Follower</label><select name="token">${followers || opt("", "No NPC on this scene", true)}</select></div>
@@ -376,6 +376,10 @@ export function build(ctx) {
     }
     const req = {sceneId: canvas.scene.id, tokenId: res.token, kind: res.kind, leader: res.leader, target: target?.id ?? null, hard: !!res.hard, note: res.note,
       errand: res.kind === "errand" ? res.errand : null, task: res.kind === "help" ? res.task : null, cost: res.kind === "errand" && res.errand === "buy" ? Number(res.cost) || 0 : 0};
+    return send(req);
+  }
+  /** Send an order request: carried out here on the active Storyteller's client, else by socket (NPC 0.41.0: the Followers window uses it too). */
+  async function send(req) {
     if ( isActiveGM() ) { const r = await give(req); if ( !r.ok ) ui.notifications.warn(r.why); return r; }
     game.socket.emit(SOCKET, {type: "order", payload: {...req, userId: game.user.id}});
     ui.notifications.info(req.hard ? "The hard order goes to the Storyteller." : "Order sent.");
@@ -430,6 +434,6 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, registerHandler, give, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
+  return {registerSettings, hooks, registerHandler, give, send, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
     onTaskDone, onChase, onBreach, driftFor, setHelper, rules: O};
 }

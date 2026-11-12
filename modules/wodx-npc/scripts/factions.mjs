@@ -157,7 +157,7 @@ export function build(ctx) {
       info[id] = {name: a.name, alive: !routines.downState?.(a), pc: !!a.hasPlayerOwner, clan: sheetText(a, "clan"), sect: sheetText(a, "sect"), status: bgValue(a, "status"),
         tribe: sheetText(a, "tribe"), house: sheetText(a, "house"), court: sheetText(a, "court"), legion: sheetText(a, "legion"),
         rank: num(a.system?.renown?.rank), title: bgValue(a, "title"),
-        creed: sheetText(a, "creed"), faction: sheetText(a, "faction"), amenti: sheetText(a, "amenti"), wu: sheetText(a, "wu"),
+        creed: sheetText(a, "creed"), order: sheetText(a, "order") || sheetText(a, "creed"), faction: sheetText(a, "faction"), amenti: sheetText(a, "amenti"), wu: sheetText(a, "wu"),
         arete: num(a.system?.advantages?.arete?.permanent), rankbg: bgValue(a, "rank"),
         attrs: Object.fromEntries(["charisma", "manipulation", "wits", "perception", "strength", "dexterity"].map(k => [k, attrOf(a, k)]))};
     }

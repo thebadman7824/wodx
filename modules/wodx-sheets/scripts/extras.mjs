@@ -273,7 +273,7 @@ function relationsOf(actor, editable) {
   const own = owner ? (api.secrets?.of?.(actor) ?? []).map(s => ({ text: s.text || api.secrets.rules.SECRET_KINDS[s.kind]?.label || "" })).filter(s => s.text) : [];
   let regard = "";
   try { regard = gm && !actor.hasPlayerOwner ? api.opinion?.regardHtml?.(actor) ?? "" : ""; } catch (e) { regard = ""; }
-  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree });
+  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
 }
 
 /** Add the extras to a freshly drawn sheet (jQuery or element). */
@@ -422,6 +422,7 @@ export function listen(sheet, root) {
       if ( a.dataset.act === "tie-remove" && editable ) return setTies(actor, list => list.filter(t => t.uuid !== uuid));
       if ( a.dataset.act === "tie-hide" && editable && game.user.isGM ) return setTies(actor, list => list.map(t => t.uuid === uuid ? { ...t, hidden: !t.hidden } : t));
       if ( a.dataset.act === "tie-tree" ) return npcApi()?.openTree?.(actor);
+      if ( a.dataset.act === "tie-followers" ) return npcApi()?.openFollowers?.(actor);
       if ( a.dataset.act === "tie-secrets" && game.user.isGM ) return npcApi()?.openSecrets?.(actor);
     });
     ties.addEventListener("change", ev => {
