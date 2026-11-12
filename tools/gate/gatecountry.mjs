@@ -1,8 +1,9 @@
 /**
- * Country map gate (WoDX Storyteller 0.46.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Country map gate (WoDX Storyteller 0.46.0, windows as of 0.47.1), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecountry.mjs?${Date.now()}`)).run()
  * Makes four scenes "WoDX gate: Map A" to "Map D", a mortal and a vampire traveller; deletes all of it after and puts
  * back the log, personal times, the approval queue and the encounter settings as they were. The clock does not move.
+ * A window that does not close within 15 seconds is closed and its step fails, so the tidy-up at the end always runs.
  *   1. versions and api
  *   2. two places on the country map: the trip goes by the map, in legs, with km
  *   3. hand-typed minutes still win, and a place off the map keeps the older sum
@@ -23,6 +24,19 @@ async function save(R, name) {
   const file = new File([JSON.stringify(R, null, 1)], name, {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
+}
+/** Wait for a window's promise, but never for ever: a window nobody closed is closed here and the step fails. */
+async function within(promise, ms, what) {
+  let timer;
+  const late = new Promise(r => { timer = setTimeout(() => r("__late__"), ms); });
+  const got = await Promise.race([promise.then(v => v, e => { throw e; }), late]);
+  clearTimeout(timer);
+  if ( got !== "__late__" ) return got;
+  for ( const el of document.querySelectorAll("dialog.application, .application.dialog, .window-app.dialog") ) {
+    const b = el.querySelector('button[data-action="cancel"]') ?? el.querySelector('button[data-action="close"]');
+    if ( b ) b.click();
+  }
+  throw new Error(`${what} did not close within ${ms / 1000} seconds`);
 }
 const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 
@@ -111,21 +125,29 @@ export async function run() {
     await step("9. the windows", async () => {
       const A2 = game.modules.get(MOD).api;
       const pr = A2.placesDialog();
+      pr.catch(() => {});
       await sleep(700);
-      const near = document.querySelector(`select[name="near.${B.id}"]`), off = document.querySelector(`input[name="off.${Dd.id}"]`);
-      const shown = near?.value === "olomouc" && off?.value === "12 N";
+      // 0.47.1: Near is a typed field over one shared list of towns
+      const near = document.querySelector(`input[name="near.${B.id}"]`), off = document.querySelector(`input[name="off.${Dd.id}"]`);
+      const list = document.getElementById("wstory-towns");
+      const shown = near?.value === "Olomouc" && near?.getAttribute("list") === "wstory-towns" && (list?.options.length ?? 0) > 50 && off?.value === "12 N";
       if ( off ) off.value = "15 SE";
-      const saveBtn = near?.closest(".application, .window-app, dialog")?.querySelector('button[data-action="save"]');
-      saveBtn?.click();
-      await pr; await sleep(400);
+      const nearC = document.querySelector(`input[name="near.${Cc.id}"]`);
+      if ( nearC ) nearC.value = "krakow";                       // typed without its marks: still found
+      const saveBtn = (near ?? off)?.closest(".application, .window-app, dialog")?.querySelector('button[data-action="save"]');
+      if ( !saveBtn ) throw new Error("the Travel places window has no Near field or no Save button");
+      saveBtn.click();
+      await within(pr, 15000, "Travel places"); await sleep(400);
       const at = Dd.flags?.[MOD]?.travel?.at;
       const po = A2.openOnYourOwn(mortal.id);
+      po.catch(() => {});
       await sleep(700);
       const pace = document.querySelector('select[name="pace"]'), lodging = document.querySelector('select[name="lodging"]');
       const both = pace?.options.length === 3 && lodging?.options.length === 2;
       pace?.closest(".application, .window-app, dialog")?.querySelector('button[data-action="cancel"]')?.click();
-      await po;
-      ok("9. the windows show and save the map fields", shown && at?.km === 15 && at?.dir === "SE" && both, {shown, at, both});
+      await within(po, 15000, "Out on your own");
+      const atC = Cc.flags?.[MOD]?.travel?.at;
+      ok("9. the windows show and save the map fields", shown && at?.km === 15 && at?.dir === "SE" && atC?.town === "krakow" && both, {shown, at, atC, both});
     });
     await step("10. other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-atmosphere", "wodx-library", "wodx-sheets"];
@@ -134,13 +156,13 @@ export async function run() {
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
-    try {
-      for ( const s of scenes ) await s.delete();
-      for ( const x of actors ) await game.actors.get(x.id)?.delete();
-      for ( const k of KEYS ) await game.settings.set(MOD, k, keep.settings[k]);
-      await game.settings.set("wodx-chronicle", "approvals", keep.approvals);
-      for ( const m of game.messages.filter(m => !keep.messages.has(m.id)) ) await m.delete();
-    } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
+    // Each part of the tidy-up by itself, so one failure leaves nothing else behind
+    const tidy = async (what, fn) => { try { await fn(); } catch (e) { R.errors.push(`cleanup (${what}): ${e.message}`); } };
+    for ( const s of scenes ) await tidy("scene", async () => { if ( s && game.scenes.get(s.id) ) await s.delete(); });
+    for ( const x of actors ) await tidy("actor", async () => { if ( x ) await game.actors.get(x.id)?.delete(); });
+    for ( const k of KEYS ) await tidy(k, () => game.settings.set(MOD, k, keep.settings[k]));
+    await tidy("approvals", () => game.settings.set("wodx-chronicle", "approvals", keep.approvals));
+    await tidy("messages", async () => { for ( const m of game.messages.filter(m => !keep.messages.has(m.id)) ) await m.delete(); });
   }
   return save(R, "gatecountry-result.json");
 }
