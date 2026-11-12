@@ -1558,6 +1558,26 @@ Reverse: setWraith and luck in signatures.mjs.
 Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
 
 Reverse: WRAITH_FACTIONS in data/signatures.mjs.
+
+## B1507. Signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus (2026-11-12)
+Splat Features Desk, approved by Ben. Each line has its own table and its own world setting, all off by default. The rows come from the sheet's own field where it has one: the Hunter's creed, the Mummy's Amenti, and the Demon's House and faction, which stack. Kuei-jin and Orpheus sheets have no field, so the group is picked in the feature window and kept in the actor flag wodx-chronicle.splat. A Kuei-jin is a Vampire whose variant or profile names kuei-jin; an Orpheus character is one whose profile names Orpheus, a projector or a Shade.
+
+Reverse: SMALL_LINES and its tables in data/signatures.mjs; smallRows in signature-rules.mjs; smallLineOf and setSplat in signatures.mjs.
+
+## B1508. The hunters by era (2026-11-12)
+Standing rule 12 sets the eras. Inquisitors and the Society of Leopold play in every era. Mortal hunters (Hunters Hunted II) run from 1500 to 1998, and the imbued creeds from 1999. Government agencies run from 1900, a house reading. The Avengers' and Waywards' fight die counts only against a target that is not mortal, when the roll knows its target; with no target it gives nothing. The Inquisition and the agencies hear of breaches as the New World Order does, and the Watchers card now names whichever groups heard.
+
+Reverse: HUNTER in data/signatures.mjs; the "monster" condition in sigRollEffects.
+
+## B1509. Borrowed engines across the small lines (2026-11-12)
+Defenders and the Kher-minu guard a place, with the Black Fury engine. Judges give a hidden verdict, and the Crane posts a ruling. Hermits, Fiends and the Banshee read the riddle of the next event, and the Mesektet read the stars. The Sefekhi bind the dead. Ishmaelites trade pages of secrets. Defilers use the Corruption ledger. Faustian pacts are leverage.
+
+Reverse: the also and feature fields on each row.
+
+## B1510. Lines with NPCs only (2026-11-12)
+Bane mummies, the Earthbound, the Wan Xian and the Cabiri have rows for the Storyteller's NPCs, with a lore page or a card where the desk asked for one.
+
+Reverse: those rows in data/signatures.mjs.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 

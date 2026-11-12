@@ -1649,6 +1649,8 @@ Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of th
 
 ## 2026-11-12: ghouls and revenant families
 Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
+## 2026-11-12: Hunter, Mummy, Demon, Kuei-jin and Orpheus features (Chronicle 0.36.0)
+Chronicle 0.36.0 finishes the lines of the Splat Features Desk. The Hunter creeds, mortal hunters and the Inquisition get rows by era, and so do the Mummy Amenti, the Demon Houses and factions, the Kuei-jin Dharmas and the Orpheus projectors and Shades. Most rows borrow engines already built. Fight dice against monsters count only when the target is not mortal. Decisions B1507 to B1510. Gate tools/gate/gatesmall.mjs, 7 steps. The harness passes. Not on Live.
 ## 2026-11-12: Wraith features (Chronicle 0.35.0)
 Chronicle 0.35.0 builds the Wraith part of the Splat Features Desk. The sixteen Guilds, the eight legions and five factions of the dead get rows. The sheet has no field for them, so they are picked in the feature window, and the legion is suggested by the manner of death. The rows borrow engines already built: the riddle of the next event, leverage and the mad ear. The Emerald luck is new. Decisions B1504 to B1506. Gate tools/gate/gatedead.mjs, 7 steps. The harness passes. Not on Live.
 ## 2026-11-12: Changeling features (Chronicle 0.34.0)

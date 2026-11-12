@@ -12,10 +12,10 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {SMALL_LINES, GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {SMALL_LINES, GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
@@ -386,6 +386,8 @@ export function sigRollEffects(list = [], ctx = {}) {
   const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
   for ( const e of list ) {
     if ( e.halve ) continue;
+    // "monster": only against a target that is not mortal (the roll's other side, when Actions knows it)
+    if ( e.when === "monster" && !(ctx.against && !/mortal|human|kinfolk|ghoul/.test(String(ctx.against))) ) continue;
     let hit = false;
     for ( const t of e.tags ?? [] ) {
       const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
@@ -434,3 +436,13 @@ export function legionFor(death = "") {
   return LEGIONS.find(l => l.death.some(w => text.includes(` ${w} `))) ?? null;
 }
 export const mayLuck = (last, now) => last == null || n(now) - n(last) >= LUCK_DAYS * DAY;
+
+/* ---------------- Hunter, Mummy, Demon, Kuei-jin, Orpheus (Chronicle 0.36.0) ---------------- */
+
+/** A small line's rows: each name (field or pick) finds its own row, so a Demon's House and faction stack. */
+export function smallRows(line, names = []) {
+  const t = SMALL_LINES[line]?.table ?? [];
+  const out = [];
+  for ( const nm of names.flat() ) { const r = rowIn(t, nm); if ( r && !out.includes(r) ) out.push(r); }
+  return out;
+}
