@@ -336,7 +336,7 @@ export function campaignWeek(campaign, ctx, draw) {
       lines.push(`${E.label}: ${hits} health level${hits === 1 ? "" : "s"}`);
     }
     c.wall.damage += total;
-    say(0, total ? "Stones and shot strike the walls." : "The walls shrug off the bombardment.", `${lines.join("; ")}; the walls have taken ${c.wall.damage} of ${w.health}`);
+    say(0, total ? "Stones and shot strike the walls." : "The walls shrug off the bombardment.", `${lines.join("; ")}; ${c.wall.damage >= w.health ? "the walls are down" : `the walls have taken ${c.wall.damage} of ${w.health}`}`);
   }
 
   // 6. Keeping order, rolled at the week's end for the week to come.
