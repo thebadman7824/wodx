@@ -130,7 +130,8 @@ export function setupLiving() {
   Hooks.on("renderTileConfig", onRenderTileConfig);
   Hooks.on("preUpdateTile", onPreUpdateTile);
   Hooks.on("updateWorldTime", () => { if ( isActiveGM() ) sync().catch(e => console.error(`${MOD} |`, e)); });
-  Hooks.on("wodxEventFired", () => { lastKey = null; if ( isActiveGM() ) sync().catch(e => console.error(`${MOD} |`, e)); });
+  // A dated event fired or taken back: living tiles follow either way
+  for ( const h of ["wodxEventFired", "wodxEventUndone"] ) Hooks.on(h, () => { lastKey = null; if ( isActiveGM() ) sync().catch(e => console.error(`${MOD} |`, e)); });
   Hooks.on("updateTile", (doc, changes, options) => {
     if ( options?.wodxLiving || !isActiveGM() || !changes?.flags?.[MOD]?.living ) return;
     context().then(ctx => syncOne(doc, ctx)).catch(e => console.error(`${MOD} |`, e));
