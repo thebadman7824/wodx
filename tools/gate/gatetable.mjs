@@ -78,7 +78,7 @@ export async function run() {
       const div = document.createElement("div");
       div.innerHTML = "<form></form>";
       document.body.append(div);
-      const h = TG.attach(div, {actor: actors[0], tag: () => "h.v:b3"});
+      const h = TG.attach(div, {actor: actors[0], tag: () => "a.v:b3"});
       await sleep(100);
       const txt = div.textContent;
       const listed = [...div.querySelectorAll("ul.wodx-aim-area li")].map(li => li.textContent.trim());
@@ -89,7 +89,7 @@ export async function run() {
       combat = await Combat.create({scene: scene.id, active: true});
       await combat.createEmbeddedDocuments("Combatant", [{tokenId: a.id, sceneId: scene.id, actorId: actors[0].id}, {tokenId: b.id, sceneId: scene.id, actorId: actors[1].id}]);
       await combat.startCombat();
-      await until(() => combat.getFlag("wodx-combat", "aar")?.start, 5000);
+      await until(() => combat.getFlag("wodx-combat", "aar")?.start?.length, 5000);
       await game.wodxCombat.applyDamage(actors[1], "lethal", 2, {status: false});
       await combat.delete(); combat = null;
       await until(() => game.messages.some(m => !startMsgs.has(m.id) && m.getFlag("wodx-combat", "aar")), 6000);

@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.2.0";
+const VERSION = "0.2.1";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;
@@ -162,7 +162,7 @@ function clearPreview() { try { preview?.destroy?.({children: true}); } catch (e
 /** Draw the shape on this user's map only, until the window closes or the area is used. */
 function drawPreview(sh, at) {
   clearPreview();
-  if ( !sh || !at?.origin || !canvas?.ready ) return;
+  if ( !sh || !at?.origin || !canvas?.ready || typeof PIXI === "undefined" ) return;
   try {
     const g = new PIXI.Graphics();
     const pts = T.outline(sh, at).map(toPx);
