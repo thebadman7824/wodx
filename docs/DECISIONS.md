@@ -75,6 +75,7 @@ Next free block: B2320
 | B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
 | B1600-B1606 | Before the First Night | Creation |
 | B1610-B1614 | The guided builder and the prelude runner | Creation |
+| B1640-B1659 | The talk generator (grammar NPC talk with no AI model) | NPC |
 | B1700-B1702 | The Legends book | Chronicle |
 | B1710-B1714 | Progress clocks | Storyteller |
 | B1720-B1724 | Standing with the spirit courts | Otherworlds |
