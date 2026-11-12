@@ -45,7 +45,8 @@ export async function run() {
     await game.settings.set(C, "podChains", true);
     await game.settings.set(C, "podState", {cities: {}, chains: []});
     const own = player ? {default: 0, [player.id]: 3} : {default: 0};
-    [host, guest] = await Actor.create([{name: "WoDX gate: Host", type: "Vampire", ownership: own}, {name: "WoDX gate: Guest", type: "Vampire", ownership: own}]);
+    const both = await Actor.create([{name: "WoDX gate: Host", type: "Vampire", ownership: own}, {name: "WoDX gate: Guest", type: "Vampire", ownership: own}]);
+    host = both.find(a => a.name === "WoDX gate: Host"); guest = both.find(a => a.name === "WoDX gate: Guest");
     made.push(host, guest);
     group = game.actors.find(x => /group/i.test(String(x.type)));
     if ( !group && game.system.documentTypes?.Actor && Object.keys(game.system.documentTypes.Actor).some(t => /group/i.test(t)) ) {
