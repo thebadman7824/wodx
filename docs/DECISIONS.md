@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2430
+Next free block: B2440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -96,6 +96,7 @@ Next free block: B2430
 | B2380-B2389 | The rest of the living economy: faction moves on markets (taxes, monopolies, smuggling, raids), traders going broke, caravans | Storyteller, Interactables |
 | B2400-B2419 | The Lone Chronicle: playing alone with a hidden browser in the Storyteller's seat | Solo |
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
+| B2430-B2439 | Music from free sources: the sorter, where audio files live, the open credits journal | Atmosphere, tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2773,3 +2774,18 @@ Reverse: edit ANTIQUE_AFTER or ELECTRONIC_FROM in interact-rules.mjs.
 The Storyteller's hand gets "Out of their time": one card of everything on the sheets and the maps that does not belong to the year now, whether or not the clock moved. It is for a map brought in from another age or a scene dressed by hand. It works in the Live world too, since it only runs when pressed and changes nothing until Keep it is pressed.
 
 Reverse: remove the addTool call in anachronism.mjs.
+
+## B2430. Era kit music comes from free sources only (2026-11-12, Ben)
+Ben chose free sources only and took every recommendation on the music sources desk. Dark Ages and Renaissance: Scott Buckley (CC BY 4.0) beside the project's own tracks. Places and weather: Tabletop Audio (CC BY-NC-ND 4.0). Victorian to Long Night: Scott Buckley, Soundimage.org and Kevin MacLeod, picked per mood. Music heard in the scene: Musopen public domain recordings, checked track by track. Future Darkness: Soundimage sci-fi and looping synth. Freesound sounds under CC0, CC BY or CC BY-NC (the game is non-commercial). No paid libraries and no subscriptions. The sorter in tools/atmosphere refuses any other source. Sources and terms: docs/MUSIC-SOURCES.md.
+
+Reverse: add a source to SOURCES in tools/atmosphere/sort-downloads.py after reading its terms.
+
+## B2431. Audio files live in the Data folder only (2026-11-12, Ben)
+Downloaded music and ambience go in the Data folder's wodx-kits folders, never in the repo or a release bundle, since most of these licences forbid passing the files on. Copying kits to Live is a Live change and waits for Ben.
+
+Reverse: none needed; files can be added to the repo later if a licence allows it.
+
+## B2432. The credits journal is open to every player (2026-11-12, Ben)
+WoDX · Asset credits is readable by everyone at the table, and only the Storyteller edits it. It also lists files a kit's credits.json names that no playlist holds, such as music heard in the scene.
+
+Reverse: set the journal's default ownership back to None.
