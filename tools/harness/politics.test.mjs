@@ -308,3 +308,23 @@ test("every polity runs an inner turn and a gathering without a fault", () => {
     assert.ok(PO.POLITIES[key].notes && PO.POLITIES[key].law.length, `${key} has notes and law`);
   }
 });
+
+// WoDX NPC 0.29.0: what a player sees of the politics.
+test("a player sees the seats and their own character's standing, never others' favour or charges", () => {
+  const f = court({politics: {offices: {prince: ["p"], harpy: ["a"]}, favour: {pc: 2, a: 5}, claims: [{office: "sheriff", who: "pc"}, {office: "keeper", who: "b"}],
+    docket: [{id: "1", by: "a", against: "pc", law: "breaking the Masquerade"}, {id: "2", by: "pc", against: "b", law: "trespass"}], inner: 3}});
+  const v = PO.playerView(f, ["pc", "elsewhere"], {year: 1600, info, names: {actor: id => info[id]?.name ?? id}});
+  assert.equal(v.key, "camarilla");
+  assert.deepEqual(v.seats.find(o => o.key === "prince").holders, ["Ottokar"]);
+  assert.equal(v.people.length, 1);
+  const me = v.people[0];
+  assert.equal(me.favour, 2);
+  assert.deepEqual(me.claims, ["Sheriff"]);
+  assert.deepEqual(me.charges, ["breaking the Masquerade"]);
+  assert.equal(me.rank, 1);
+  assert.equal(v.nextIn, 1, "Elysium every second turn, three turns run");
+  const all = JSON.stringify(v);
+  assert.doesNotMatch(all, /trespass|"favour":5/, "others' charges and favour stay hidden");
+  assert.equal(PO.playerView(f, ["nobody"], {year: 1600, info}), null);
+  assert.equal(PO.playerView({...f, polity: "none"}, ["pc"], {year: 1600, info}), null);
+});
