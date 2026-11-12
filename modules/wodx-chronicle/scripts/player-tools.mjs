@@ -15,14 +15,17 @@ export const PLAYER_TOOLS = [
   {name: "wodxStepSideways", label: "Step sideways", module: "WoDX Otherworlds"},
   {name: "wodxPeek", label: "Peek across the Gauntlet", module: "WoDX Otherworlds"},
   {name: "wodxSoul", label: "Read the Soul", module: "WoDX Otherworlds"},
+  {name: "wodxSpirits", label: "Standing with the spirits", module: "WoDX Otherworlds"},
   {name: "wodxOtherRolls", label: "Otherworld rolls", module: "WoDX Otherworlds"},
   {name: "wodxJack", label: "Jack into the Net", module: "WoDX Otherworlds"},
   {name: "wodxCreation", label: "Spend experience", module: "WoDX Creation"},
   {name: "wodxFindMe", label: "Find my character", module: "WoDX Chronicle"},
+  {name: "wodxLegends", label: "Legends of the Chronicle", module: "WoDX Chronicle"},
   {name: "wodxOnYourOwn", label: "Out on your own", module: "WoDX Storyteller"},
   {name: "wodxLetters", label: "Send a letter", module: "WoDX Storyteller"},
   {name: "wodxDowntime", label: "Downtime request", module: "WoDX Storyteller"},
   {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"},
+  {name: "wodxClocks", label: "Progress clocks", module: "WoDX Storyteller"},
   {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"}
 ];
 

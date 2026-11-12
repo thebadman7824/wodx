@@ -705,3 +705,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Time on a trod (B1965) | Stays a house figure: C20 pdf 53 says trod time can't be relied on but gives no table | slipWords and the trod rules in journey-rules.mjs |
 | 2026-11-12 | Time in the Labyrinth, Arcadia and the Deep Umbra (B1965) | The Storyteller's call, plain clock with a reminder on the card (WR20 pdf 307, W20 pdf 331/332, nothing in M20) | REALM_TIME in journey-rules.mjs |
 | 2026-11-12 | Time in the Shadowlands and the Tempest (B1965) | Keeps the world's time (house rule; WR20 gives no rate) | REALM_TIME in journey-rules.mjs |
+| 2026-11-12 | Which lines of the Legends book players see at first (B1700) | Dated events, deaths, court seats, holdings and boons shown; Embraces, ghoulings, oaths, debts and a secret faction's seats wait for the Storyteller | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |
+| 2026-11-12 | When a seat or a holding changed hands in the Legends book (B1701) | Dated to the build that first sees the change (session end, around each time skip, or on demand) | officeLines/holdingLines in legends-rules.mjs |
+| 2026-11-12 | Who sees a progress clock at first (B1711) | Every clock starts as the Storyteller's only; shown to everyone or chosen characters by hand | normClock in wodx-storyteller clock-rules.mjs |
+| 2026-11-12 | When an own clock fills by itself (B1712) | By hand by default; or one segment each faction turn, session's end or week of game time | TICKS in clock-rules.mjs |
+| 2026-11-12 | What makes a night hard for the pacing note (B1714) | A fight, a frenzy, a death or torpor, a breach, Diablerie or a road encounter; the note never changes the draw | pacing-rules.mjs |
+| 2026-11-12 | What moves spirit standing (B1721) | Chiminage paid +1, unpaid -2, a Bane destroyed +1 Wyld and totem -1 Wyrm, a spirit forced -2, Ban kept +1, Ban broken -3 | MOVES in wodx-otherworlds spirit-rules.mjs |
+| 2026-11-12 | What spirit standing does (B1722) | +3: -1 difficulty, +5: -2; -3: +1, -5: +2 and the court may refuse (summoning, being taught, binding) | effect() in spirit-rules.mjs |
+| 2026-11-12 | What players see of spirit standing (B1723) | Their own characters' standing in words only | spiritsDialog in spirits.mjs |

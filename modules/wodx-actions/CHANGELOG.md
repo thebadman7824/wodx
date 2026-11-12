@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.51.0 (Summon a spirit, Perform a rite and Chiminage take the spirit's court and its standing)
 - 3.50.0 (Game time: Move the clock on long rolls, rites, prayer, downtime and mending works for players too (it asks the Storyteller) and goes on the character's own time when apart; sunlight follows a scene's own latitude and hour)
 - 3.48.0 (missed connections, 12 November 2026: the hunt window suggests extra difficulty from the hour, the era, the crowd and the weather (house rule); a completed trade sends wodxTradeDone for WoDX Storyteller's market count)
 - 3.47.0 (feeding on a named NPC tells WoDX NPC who fed, so the vessel can remember it; the With this person and Trade windows call an NPC by the stranger's words until the character has met them)
