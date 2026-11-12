@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.6.4 (dead code removed)
 - 0.6.3 (thinner lips in a colour drawn toward the skin; faces at rest are neutral, smiles and frowns only by choice or mood; "Face drawn as" woman, man, nonbinary or not stated: women's lips a little fuller, men's thinner, nonbinary either way by seed, no facial hair rolled for women; WoDX Creation keeps the sex it rolled on the actor; not deployed)
 - 0.6.2 (mouths redrawn in the face's own inked style: flat colour, tapered sepia parting and corners; a Lips part with 12 shapes plus a per-seed nudge so no two mouths match; lips shrink to fit narrow faces; moustaches lie over the mouth; not deployed, art style under review)
 - 0.6.1 (the new grounds matched to kinds for NPCs: rose for ghouls, diaper for the faithful, lilies for sorcerers, vine for changelings and changing breeds, chequer for wraiths, punched gold for mummies)
