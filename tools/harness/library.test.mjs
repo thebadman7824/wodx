@@ -24,7 +24,7 @@ test("every source lands on a shelf, every entry tagged and with a page referenc
     assert.ok(e.pages.length >= 1 && e.pages.every(p => p.text.content.length), e.name);
   }
   assert.equal(new Set(all.map(e => e.flags["wodx-library"].shelf)).size, all.length, "keys are unique");
-  assert.ok(all.some(e => e.name === "Era: Dark Ages" && e.flags["wodx-library"].eras.join() === "dark-ages"));
+  assert.ok(all.some(e => e.name === "Era: The Dark Medieval" && e.flags["wodx-library"].eras.join() === "dark-ages"));
   assert.ok(all.find(e => e.name === "Road of the Beast").pages[0].text.content.includes("p. 115"));
 });
 test("the era filter: Dark Ages powers in the Dark Ages only, Wraith 20th in every era, the Great War's in its own", () => {

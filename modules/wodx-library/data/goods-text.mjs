@@ -219,6 +219,7 @@ a water filter jug | A plastic jug with a filter cartridge that cleans tap water
 a robot vacuum | A flat disc-shaped vacuum cleaner that runs itself around the floor.
 a smart speaker | A small speaker that listens for its name and answers questions.
 an air purifier | A box that hums and filters the air of a room.
+a hide cloak | A cloak of tanned animal hide, fur side in, tied at the throat with a thong.
 a folded wool cloak | A wool cloak with a pin at the shoulder, used as a blanket at night.
 a linen shift | A plain linen undergarment, worn next to the skin.
 a coarse wool tunic | A knee-length tunic of rough undyed wool, belted at the waist. It is everyday wear for peasants and townsfolk.
@@ -338,6 +339,7 @@ a lockpick gun | A spring-loaded tool that bumps the pins of a lock.
 a diagnostic plug for cyberware | A cable and plug for reading a cyberware implant's status.
 a spool of monofilament wire | A spool of monofilament wire, thin enough to cut flesh.
 a hand-held 3D printer pen | A pen that draws in melted plastic, building small parts in the air.
+a stone lamp of animal fat | A hollowed stone holding melted fat and a moss wick; it gives a small smoky flame.
 a clay oil lamp | A small clay lamp with a spout for a wick, burning olive or animal oil.
 a pitch torch | A stick wrapped with pitch-soaked rags. It burns smoky and bright for an hour.
 a rushlight | A peeled rush dipped in fat, held in a clip. It gives a feeble light for a little while.

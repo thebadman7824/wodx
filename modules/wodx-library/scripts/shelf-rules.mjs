@@ -21,7 +21,8 @@ export const LINE_LABELS = {all: "Every line", vampire: "Vampire", ghoul: "Ghoul
   hunter: "Hunter", mummy: "Mummy", demon: "Demon", mortal: "Mortal"};
 
 const DA = ["dark-ages", "long-night", "renaissance", "age-of-reason"];
-export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement", "classical", "living-gods"];
+export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement", "classical", "living-gods",
+  "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy"];
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const title = s => String(s ?? "").replace(/[-_]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
