@@ -1607,3 +1607,23 @@ Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-
 Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
 
 Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
+
+## B1408. The stranger line (2026-11-12)
+With Faces on, an unmet NPC's nameplate reads what a character can see before they meet: dress by station ("a well dressed stranger"), a side worn openly ("in livery"), blood or wounds, a weapon drawn, what their routine has them doing, and their manner toward the viewer's character as words ("wary of you"). Animals read as their kind. The Storyteller's own stranger text wins. House rule.
+
+Reverse: autoStranger and the auto argument of nameFor in faces-rules.mjs; autoFor in faces.mjs.
+
+## B1409. Look them over (2026-11-12)
+A roll in With this person: Perception + Empathy (or Etiquette, or Awareness), difficulty 6. One success gives their mood and condition, two their station and trade, three who they belong with, four what they hide (a concealed weapon, or a disguise that doesn't fit). Only a mortal's trade shows. A botch misreads them. The result goes to the player and the Storyteller only. House rule.
+
+Reverse: LOOKOVER and lookOverFacts in social-rules.js; lookOver in social.js.
+
+## B1410. Ask around about them (2026-11-12)
+Wits + Streetwise (or Charisma or Manipulation + Streetwise), difficulty 6, with a die for each dot of Contacts. One success: what people say of them; two: their name. Learning a name does not introduce the face: the Storyteller still does that from the token HUD. House rule.
+
+Reverse: askFacts in social-rules.js.
+
+## B1411. Players dress as someone else (2026-11-12)
+Worn clothes have a Dress as someone else use: the player sets the station and sides it passes for, and puts it on. The Storyteller can still set one in the Examine notes.
+
+Reverse: the dressas ability in use-rules.mjs; dressAs in use.mjs.
