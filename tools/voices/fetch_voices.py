@@ -157,7 +157,11 @@ def measure(x, sr, words):
         return None
     f0 = float(np.median(v))
     semis = 12 * np.log2(v / f0)
-    return {"f0": round(f0, 1), "lively": round(float(np.std(semis)), 2), "rate": round(words / (len(x) / sr), 2)}
+    semis = semis[np.abs(semis) < 9]  # octave slips of the pitch tracker are not liveliness
+    if semis.size < 10:
+        return None
+    q75, q25 = np.percentile(semis, [75, 25])
+    return {"f0": round(f0, 1), "lively": round(float(q75 - q25), 2), "rate": round(words / (len(x) / sr), 2)}
 
 
 def decode(raw):
