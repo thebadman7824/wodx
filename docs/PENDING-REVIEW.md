@@ -296,6 +296,13 @@ Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact
 |---|---|---|---|
 | 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
 
+## Approved by Ben, 12 November 2026, 02:24 UTC (body plan book check gaps)
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | Gear in Shape of the Beast, Mist Form and Earth Meld (no book says) | Worn clothes, armor, jewellery and pocket or pouch contents go along and come back; held things and anything bigger than a small pack drop; no soak from armor in the shape (B1210) | carries in SHAPES, the shaped check in armor() |
+| 2026-11-12 | W20 Lupus claws: lethal (form text, p. 287) or bashing (maneuver, p. 296)? | Lethal (B1208) | lupus claw in garou.js naturalWeapons |
+
 ## Approved by Ben, 12 November 2026, 01:33 UTC (faction politics desk)
 
 Ben approved the build (all four PRs, Kindred first) and every recommendation on the review desk in the design doc (https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp).
@@ -562,8 +569,6 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |
 | 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
 | 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
-| 2026-11-12 | Gear in Shape of the Beast, Mist Form and Earth Meld (no book says) | Weapons in hand and armor come off; dedicated items stay; Undo card (B1205) | Setting "Gear comes off", or gearToDrop |
-| 2026-11-12 | W20 Lupus claws: lethal (form text, p. 287) or bashing (maneuver, p. 296)? | Lethal (B1208) | lupus claw in garou.js naturalWeapons |
 | 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
 | 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
 | 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |

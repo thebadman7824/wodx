@@ -35,7 +35,7 @@ export function bodyHtml(body, opts = {}) {
       <div><h4>Parts</h4>${rows ? `<ul class="wodx-body-tree">${rows}</ul>` : `<p class="wodx-hint">${body.intangible ? "A body of mist: no parts to hold, wear or strike." : body.hidden ? "Sunk in the earth: nothing to strike." : "No parts."}</p>`}</div>
       <div><h4>Can</h4><ul class="wodx-body-can">
         ${yes(body.holds, `hold things (${body.hands} hand${body.hands === 1 ? "" : "s"})`, "hold nothing")}
-        ${yes(body.armor, "wear armor and clothes", "wear no armor (it comes off)")}
+        ${body.carries && !body.armor ? `<li class="no">wears nothing as such: clothes and armor go along and come back with the change (no soak from armor)</li>` : yes(body.armor, "wear armor and clothes", "wear no armor (it comes off)")}
         ${yes(body.speaks, body.speakHard ? "speak, with effort" : "speak", "not speak")}
         ${moves.map(m => `<li class="ok">${esc(m)}</li>`).join("")}${walk ? `<li class="no">${esc(walk)}</li>` : ""}
       </ul>

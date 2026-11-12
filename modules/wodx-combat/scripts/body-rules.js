@@ -64,15 +64,15 @@ export const SHAPES = {
   crinos:     {label: "Crinos", plan: "person", armor: false, speaks: "hard", ref: "W20"},
   hispo:      {label: "Hispo", plan: "beast", armor: false, speaks: false, senses: "wolf", ref: "W20"},
   lupus:      {label: "Lupus", plan: "beast", armor: false, speaks: false, senses: "wolf", ref: "W20"},
-  wolf:       {label: "Wolf", plan: "beast", armor: false, speaks: false, senses: "wolf", weapons: {bite: {type: "aggravated", bonus: 1}, claw: {type: "aggravated", bonus: 1}}, ref: "Shape of the Beast, V20 p. 200; VtDA20 p. 241", note: "Running speed doubled; Perception at -2 difficulty"},
-  bat:        {label: "Bat", plan: "winged", armor: false, speaks: false, senses: "bat", moves: {fly: true}, ref: "Shape of the Beast, V20 p. 200; VtDA20 p. 241", note: "Strength 1; flies up to 20 mph; hearing at -3 difficulty; attacks against it at +2 difficulty (Dark Ages: attackers lose 2 dice)"},
-  rat:        {label: "Rat", plan: "beast", armor: false, speaks: false, weapons: {bite: {type: "aggravated", bonus: 0}}, ref: "Shape of the Beast, VtDA20 p. 241", note: "Strength 1; running speed doubled; attackers lose 1 die"},
+  wolf:       {label: "Wolf", carries: true, plan: "beast", armor: false, speaks: false, senses: "wolf", weapons: {bite: {type: "aggravated", bonus: 1}, claw: {type: "aggravated", bonus: 1}}, ref: "Shape of the Beast, V20 p. 200; VtDA20 p. 241", note: "Running speed doubled; Perception at -2 difficulty"},
+  bat:        {label: "Bat", carries: true, plan: "winged", armor: false, speaks: false, senses: "bat", moves: {fly: true}, ref: "Shape of the Beast, V20 p. 200; VtDA20 p. 241", note: "Strength 1; flies up to 20 mph; hearing at -3 difficulty; attacks against it at +2 difficulty (Dark Ages: attackers lose 2 dice)"},
+  rat:        {label: "Rat", carries: true, plan: "beast", armor: false, speaks: false, weapons: {bite: {type: "aggravated", bonus: 0}}, ref: "Shape of the Beast, VtDA20 p. 241", note: "Strength 1; running speed doubled; attackers lose 1 die"},
   bird:       {label: "Bird", plan: "bird", armor: false, speaks: false, moves: {fly: true}},
   serpent:    {label: "Serpent", plan: "serpent", armor: false, speaks: false, moves: {swimfast: true}},
   fish:       {label: "Fish", plan: "fish", armor: false, speaks: false, moves: {swimfast: true, waterbreath: true}},
   spider:     {label: "Spider", plan: "spider", armor: false, speaks: false, moves: {wallwalk: true}},
-  mist:       {label: "Mist", plan: "formless", armor: false, speaks: false, intangible: true, moves: {fly: true}, ref: "Mist Form, V20 p. 200; Lurking Mists, VtDA20 p. 242", note: "Slips through tiny openings; mundane physical attacks pass through; fire and sun 1 die less; cannot attack physically"},
-  earth:      {label: "In the earth", plan: "formless", armor: false, speaks: false, hidden: true, moves: {meld: true}, ref: "Earth Meld, V20 pp. 199-200; VtDA20 pp. 240-241", note: "Cannot move; finding the vampire is at +2 difficulty"},
+  mist:       {label: "Mist", carries: true, plan: "formless", armor: false, speaks: false, intangible: true, moves: {fly: true}, ref: "Mist Form, V20 p. 200; Lurking Mists, VtDA20 p. 242", note: "Slips through tiny openings; mundane physical attacks pass through; fire and sun 1 die less; cannot attack physically"},
+  earth:      {label: "In the earth", carries: true, plan: "formless", armor: false, speaks: false, hidden: true, moves: {meld: true}, ref: "Earth Meld, V20 pp. 199-200; VtDA20 pp. 240-241", note: "Cannot move; finding the vampire is at +2 difficulty"},
   zulo:       {label: "Zulo shape", plan: "person", armor: false, ref: "Horrid Form, V20 p. 242; Zulo shape, VtDA20 pp. 268-269", note: "Physical Attributes +3; Social Attributes 0 except with others in the same shape; Brawl damage +1; about 8 feet tall"},
   chiropteran: {label: "Chiropteran", plan: "wingedPerson", armor: false, moves: {fly: true}, weapons: {claw: {type: "aggravated", bonus: 2}}, ref: "Chiropteran Marauder, V20 pp. 242-243; VtDA20 p. 269", note: "Everything the Zulo shape gives; flies 25 mph; the wings carry but cannot handle things"}
 };
@@ -224,7 +224,7 @@ export function bodyOf(view = {}) {
   return {
     shape: sh.key, form: sh.form ?? null, label: S.label, why: sh.why, ref: S.ref ?? "",
     intangible: !!S.intangible, hidden: !!S.hidden, tree, parts, lost: lost.filter(Boolean),
-    hands, holds: hands > 0 && !S.intangible, armor: !!S.armor && !!tree,
+    hands, holds: hands > 0 && !S.intangible, armor: !!S.armor && !!tree, carries: !!S.carries,
     speaks: S.speaks === undefined ? has("mouth") : (S.speaks && has("mouth")), speakHard: S.speaks === "hard",
     weapons, moves, mobility, senses: S.senses ?? null, notes
   };
@@ -310,14 +310,16 @@ export function maimOffer(loc, {levels = 0, type = "bashing", aimed = false} = {
 
 /**
  * What comes off when a body changes shape. items: [{id, kind: "weapon"|"armor", equipped, dedicated}].
- * Dedicated items (Rite of Talisman Dedication) stay with a shapechanger. Returns the ids to unequip, with reasons.
+ * Dedicated items (Rite of Talisman Dedication) stay with a shapechanger. A vampire's beast, mist or earth shape
+ * carries worn clothes, armor, jewellery and what is in pockets and pouches along, to come back with the change back;
+ * held things drop (B1210, approved by Ben 2026-11-12). Returns the ids to unequip, with reasons.
  */
 export function gearToDrop(body, items = []) {
   const out = [];
   for ( const i of items ) {
     if ( !i?.equipped || i.dedicated ) continue;
     if ( i.kind === "weapon" && !body.holds ) out.push({id: i.id, why: body.intangible ? "a body of mist holds nothing" : "no hands to hold it"});
-    else if ( i.kind === "armor" && !body.armor ) out.push({id: i.id, why: "it does not fit this shape"});
+    else if ( i.kind === "armor" && !body.armor && !body.carries ) out.push({id: i.id, why: "it does not fit this shape"});
   }
   return out;
 }

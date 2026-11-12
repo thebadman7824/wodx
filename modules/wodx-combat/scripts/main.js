@@ -143,9 +143,12 @@ export function discipline(actor, name) {
 
 export function armor(actor) {
     const out = { bashing: 0, lethal: 0, aggravated: 0, names: [] };
+    // A shape that cannot wear armor gets no soak from it, even when it goes along with the body (B1210)
+    const shaped = bodyOf(actor);
     for (const i of actor?.items ?? []) {
         // Implants (WoDX Library cyberware) are always worn
         if (i.type !== "Armor" || !(i.system?.isequipped || i.flags?.["wodx-library"]?.implant)) continue;
+        if (shaped && !shaped.armor && !i.flags?.["wodx-library"]?.implant) continue;
         out.bashing += num(i.system.soak?.bashing);
         out.lethal += num(i.system.soak?.lethal);
         out.aggravated += num(i.system.soak?.aggravated);

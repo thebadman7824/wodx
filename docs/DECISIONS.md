@@ -1234,7 +1234,7 @@ Reverse: maimOffer in body-rules.js.
 
 ## B1205. Gear in a shape that cannot use it (2026-11-12)
 
-When the shape changes, weapons in hand come off in a shape with no hands, and armor in a shape that cannot wear it (Crinos, Hispo, Lupus and the animal shapes, Mist, Earth Meld, the Zulo and Chiropteran shapes). Dedicated items stay (W20 p. 211; DA:W p. 149). W20 p. 286 has undedicated clothes shred in the bigger forms; no book says what Shape of the Beast or Earth Meld does to gear, so for those this is a house rule. An Undo card puts everything back. Setting "Gear comes off", on by default.
+When the shape changes, weapons in hand come off in a shape with no hands, and armor in a shape that cannot wear it (a vampire's shapes carry it along instead, B1210) (Crinos, Hispo, Lupus and the animal shapes, Mist, Earth Meld, the Zulo and Chiropteran shapes). Dedicated items stay (W20 p. 211; DA:W p. 149). W20 p. 286 has undedicated clothes shred in the bigger forms; no book says what Shape of the Beast or Earth Meld does to gear, so for those this is a house rule. An Undo card puts everything back. Setting "Gear comes off", on by default.
 
 Reverse: turn the setting off.
 
@@ -1261,3 +1261,9 @@ Reverse: naturalWeapons in wodx-actions garou.js.
 Every WoDX sheet gets a Body tab after Ties: the shape and why, the parts as a tree with what each hand holds and the natural weapons, added and lost parts, what the body can do, where blows land, and the lasting changes. The Storyteller can set the shape by hand and add a lasting change from it. Players see only the changes that show.
 
 Reverse: the Body tab block in wodx-sheets extras.mjs.
+
+## B1210. What goes along into a vampire's shape (2026-11-12)
+
+Ben approved the light helper's recommendation after the book check found no rule: in Shape of the Beast, Mist Form and Earth Meld, worn clothes, armor, jewellery and what is in pockets and pouches go with the vampire and come back with the change back; held things, and anything bigger than a small pack, drop. Armor that goes along gives no soak in the shape. WoDX does not know item sizes, so a large pack is left for the Storyteller to drop by hand.
+
+Reverse: carries in SHAPES (body-rules.js) and the shaped check in armor() (wodx-combat main.js).

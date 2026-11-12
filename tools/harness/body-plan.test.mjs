@@ -115,3 +115,12 @@ test("the Body tab shows parts, losses and what the body can do", () => {
   assert.match(bodyHtml(B.bodyOf({effects: [{name: "Mist Form"}]}), {}), /body of mist/);
   assert.match(bodyHtml(null), /needs WoDX Combat/);
 });
+
+test("a vampire's beast shape carries worn things along; held things drop; no soak from armor in the shape", () => {
+  const w = B.bodyOf({effects: [{name: "Shape of the Beast"}]});
+  assert.equal(w.carries, true);
+  const drop = B.gearToDrop(w, [{id: "sword", kind: "weapon", equipped: true}, {id: "mail", kind: "armor", equipped: true}]);
+  assert.deepEqual(drop.map(d => d.id), ["sword"]);
+  const crinos = B.bodyOf({shifter: true, garouForm: "crinos"});
+  assert.deepEqual(B.gearToDrop(crinos, [{id: "mail", kind: "armor", equipped: true}]).map(d => d.id), ["mail"]);
+});
