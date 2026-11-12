@@ -1,12 +1,13 @@
 /**
  * Animal archetypes gate (WoDX NPC 0.21.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateanimals.mjs?${Date.now()}`)).run()
- * Makes one Creature actor, reads its profile and routine, then deletes it. The clock is not moved.
+ * Makes one Creature actor and one Mortal actor, reads their profiles and routines, then deletes them. The clock is not moved.
  *   1. the api is 0.21.0, with 16 animal templates and the new place kinds
  *   2. a Creature named "grey wolf" takes the wolf template and its routine
  *   3. the actor flag wodx-npc.animal wins over the name (cat), and the cat keeps the alley at night
  *   4. a wraith foe sends a horse running; a Kindred foe does not stop a guard dog
- *   5. every other WoDX module still answers
+ *   5. NPC 0.23.0: a Mortal named "Hans the footpad" takes the footpad template; a beaten footpad offers to surrender
+ *   6. every other WoDX module still answers
  * Result: Data/wodx-gate/gateanimals-result.json.
  */
 async function save(R, name) {
@@ -23,11 +24,11 @@ export async function run() {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   if ( game.world.id === "rothenstein-live" ) return "Not on the Live world.";
   const api = game.modules.get("wodx-npc")?.api;
-  let actor;
+  let actor, mortal;
   try {
     await step("api", async () => {
       const animals = Object.values(api.rules.TEMPLATES).filter(t => t.animal).length;
-      ok("api", api.version.startsWith("0.21") && animals === 16 && !!api.routineRules.PLACE_KINDS.sewer && !!api.routineRules.PLACE_KINDS.alley, {version: api.version, animals});
+      ok("api", Number(api.version.split(".")[1]) >= 21 && animals === 16 && !!api.routineRules.PLACE_KINDS.sewer && !!api.routineRules.PLACE_KINDS.alley, {version: api.version, animals});
     });
     actor = await Actor.create({name: "WoDX gate grey wolf", type: "Creature"});
     await step("wolf by name", async () => {
@@ -47,6 +48,13 @@ export async function run() {
       const dog = NR.scoreOptions(NR.profileOf({}, "guard-dog"), {self: {wounds: 0}, enemies: [foe({supernatural: true})], allies: []})[0].action;
       ok("wraiths, not Kindred", horse === "flee" && dog === "attack", {horse, dog});
     });
+    await step("mortal by name", async () => {
+      mortal = await Actor.create({name: "WoDX gate Hans the footpad", type: "Mortal"});
+      const p = api.profileFor(mortal);
+      const NR = api.rules, foe = {id: "e", name: "Foe", visible: true, distance: 1, reach: true, wounds: 0, fearSources: [], attackDice: 4};
+      const opts = NR.scoreOptions(p, {self: {wounds: 3}, enemies: [foe], allies: []}).map(o => o.action);
+      ok("mortal by name", p.template === "footpad" && opts.includes("surrender") && api.routines.blocksFor(mortal).some(b => b.place === "alley"), {template: p.template, opts});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-atmosphere"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
@@ -54,7 +62,7 @@ export async function run() {
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
-    try { if ( actor ) await actor.delete(); } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
+    try { if ( actor ) await actor.delete(); if ( mortal ) await mortal.delete(); } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gateanimals-result.json");
 }

@@ -1608,3 +1608,7 @@ Ben approved the NPC behaviour archetypes brainstorm and asked for animals first
 - social.js: Seduction's Feed passes the vessel as willing. Creation: recordDrink step, giveVitae firstDouble.
 - Fixed: mortal vessels read the sheet's blood pool, which starts at 0 on mortal sheets and nothing fills in, so a targeted mortal gave no blood unless it was set by hand; effects.test pinned the api version to 3.38.0.
 - Tests: feeding.test.mjs (20).
+
+## 2026-11-12: criminals, combatants and townsfolk (WoDX NPC 0.23.0)
+The second step of the archetypes Ben approved. mortal-rules.mjs holds 39 mortal archetypes by era with their own hours. Morale breaks a line whose leader falls or half of which is down; cover, formation, surrender and hostage join the tactics; and some townsfolk tell someone later what they saw, putting the place on alarm two hours on. Decisions B1005 to B1008.
+- Tests: mortals.test.mjs (9).
