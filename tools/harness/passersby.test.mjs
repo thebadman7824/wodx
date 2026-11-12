@@ -135,6 +135,9 @@ test("the crowd's place is WoDX NPC's own place tag: every kind draws a crowd pr
   assert.equal(PR.placeOf("market"), PR.PLACES.square);
   assert.equal(PR.crowdSize({year: 1995, hour: 12, place: "haven"}), 0);
   assert.equal(PR.animalCount({year: 1300, hour: 23, place: "haven"}), 0);
+  assert.equal(PR.crowdSize({year: 1995, hour: 21, place: "chantry"}), 0);
+  assert.equal(PR.placeOf("elysium"), PR.PLACES.elysium);
+  assert.ok(PR.PLACES.elysium.people.gentry > 1 && PR.PLACES.elysium.people.servant > 1 && !PR.PLACES.elysium.people.poor);
   const r = f => readFileSync(new URL(`../../modules/${f}`, import.meta.url), "utf8");
   for ( const f of ["wodx-atmosphere/scripts/kits-rules.mjs", "wodx-interactables/scripts/adopt-rules.mjs"] ) assert.match(r(f), /"alley", "yard", "docks", "park"/, f);
   assert.match(r("wodx-npc/scripts/passersby.mjs"), /place\.kind/);

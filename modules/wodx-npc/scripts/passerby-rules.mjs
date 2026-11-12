@@ -417,13 +417,16 @@ PLACES.hospital = {label: "Hospital or asylum (indoors)", crowd: 0.5, indoor: tr
   animals: {...NONE, cat: 0.3, rat: 0.3}};
 PLACES.station = {label: "Station or depot", crowd: 1.2, people: {trade: 1.5, gentry: 1.5, worker: 1.2, local: 1.2, young: 1.2, religious: 0.3},
   animals: {...NONE, stray: 0.6, cat: 0.3, rat: 1, bird: 1.5}};
+PLACES.elysium = {label: "Elysium (indoors): a thin, well-dressed evening crowd", crowd: 0.3, indoor: true,
+  people: {gentry: 4, servant: 3, trade: 0.3, religious: 0.2, worker: 0.2, local: 0.3, young: 0.5, poor: 0, drinker: 0.3, street: 0},
+  animals: {...NONE, cat: 0.2}};
 PLACES.none = {label: "Nobody passes", crowd: 0, people: {}, animals: {...NONE}};
 /*
  * The kind of place is WoDX NPC's own place tag (flags.wodx-npc.place.kind, PLACE_KINDS in routine-rules.mjs), the one
- * Interactables, Atmosphere and the Masquerade read; this is the crowd each kind draws. A haven draws nobody.
+ * Interactables, Atmosphere and the Masquerade read; this is the crowd each kind draws. A haven or a chantry draws nobody.
  */
 export const CROWD_OF_KIND = {street: "street", market: "square", church: "church", tavern: "tavern", castle: "interior", home: "home",
-  workplace: "workplace", gate: "street", haven: "none", wilds: "road", caern: "road", alley: "alley", yard: "yard", docks: "docks", park: "park", sewer: "sewer", hospital: "hospital", station: "station", other: "street"};
+  workplace: "workplace", gate: "street", haven: "none", wilds: "road", caern: "road", alley: "alley", yard: "yard", docks: "docks", park: "park", sewer: "sewer", hospital: "hospital", station: "station", elysium: "elysium", chantry: "none", other: "street"};
 /** The crowd profile for a kind of place (a PLACE_KINDS key, or a crowd profile key). */
 export const placeOf = key => PLACES[CROWD_OF_KIND[key] ?? key] ?? PLACES.street;
 /** How a kind of place weighs a person or animal (p.cat). */

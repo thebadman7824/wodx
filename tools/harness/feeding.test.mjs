@@ -227,11 +227,7 @@ test("boot", async () => {
   game.time.worldTime ??= 0;
   globalThis.fromUuid = async u => game.actors.find(a => a.uuid === u) ?? null;
   if ( process.env.FEED_DEBUG ) { ui.notifications.error = m => console.log("ERR", m); ui.notifications.warn = m => console.log("WARN", m); }
-<<<<<<< HEAD
-  assert.equal(game.wodxActions.version, "3.42.0");
-=======
-  assert.equal(game.wodxActions.version, "3.41.1");
->>>>>>> e5e271a (WIP passers-by)
+  assert.equal(game.wodxActions.version, "3.42.1");
 });
 
 const lastCard = () => mock.log.chat.at(-1)?.content ?? "";
