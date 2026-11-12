@@ -898,3 +898,6 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Prologue timeline: where Living Gods starts | 10,000 BCE; older sites such as Dolni Vestonice appear as old finds and stories | Name an earlier start year |
 | 2026-11-12 | Prologue timeline: hunters before 1197 | No hunter line events; Church inquirers appear as mortals from the 1100s | Name hunter events to add |
 | 2026-11-12 | Prologue timeline: size | About 300 events each, the floor the other eras use | Name another number |
+| 2026-11-12 | Residents of a generated town (B2501): the routine each role keeps and which trades work at home | As listed in B2501 | Change presetForTrade or planRole in resident-rules.mjs |
+| 2026-11-12 | Residents (B2502): a household's family name in the form for each member's sex (Czech -ová and -á, German medieval -in), a partner of the other sex nine times in ten, Jewish medieval kin named ben or bat the master | As listed in B2502 | Change nameHousehold or kinFamily |
+| 2026-11-12 | Residents (B2503): the master's name filled in as the building's owner when it had none | Filled in | Clear the owner; or drop the owner line in residents.mjs |
