@@ -221,7 +221,8 @@ export async function run() {
       await game.settings.set(MOD, "stockTalk", stockBefore);
       if ( rum ) await st.rumours.remove(rum.id);
       const kidLines = Object.values(L.VOICES.child.greet).flat();
-      const clean = said.every(l => /^".+"/.test(l) && !/#\w|\{\w+\}/.test(l));
+      // a stock line may be a quoted line or a gesture ("Points down the road."); either way nothing left unexpanded
+      const clean = said.every(l => /^("|[A-Z]).+/.test(l) && !/#\w|\{\w+\}/.test(l));
       ok("talk generator (NPC 0.45.0): stock lines from the grammar, children keep their own, rumours carried, off as before",
         clean && kidLines.some(l => (k.menu?.greet ?? "").startsWith(l)) && (!st || /bridge toll is lifted/.test(r?.said ?? ""))
         && off.ok && (!pool.length || pool.includes(off.said)),
@@ -241,6 +242,7 @@ export async function run() {
       j?.sheet?.close?.();
       const [pg] = await j.createEmbeddedDocuments("JournalEntryPage", [{name: "WoDX gate lines", type: "text", text: {content: "<p>work [boost: 9] =&gt; \"WoDX gate grammar line.\"</p>", format: 1}}]);
       const problems = talk().loadGrammar();
+      await talk().serve("menu", greq, asUser); // topics open once they have been greeted
       const w = await talk().serve("ask", {...greq, topic: "work"}, asUser);
       const msg = game.messages.contents.filter(m => m.flags?.[MOD]?.talk?.gen).at(-1);
       await talk().keepLine(msg);
@@ -251,7 +253,7 @@ export async function run() {
       await game.settings.set(MOD, "stockTalk", stockBefore);
       ok("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet",
         !problems.length && w.said === "\"WoDX gate grammar line.\"" && !!msg?.flags?.[MOD]?.talk?.gen && /\[work\] "WoDX gate grammar line\."/.test(kept),
-        {problems, said: w.said, kept});
+        {problems, said: w.said, why: w.why, ok: w.ok, kept});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];
