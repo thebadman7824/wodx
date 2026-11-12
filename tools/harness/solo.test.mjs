@@ -163,10 +163,9 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
   messages.set("m1", msg);
   hooks.createChatMessage[0](msg);
   hooks.createChatMessage[0]({id: "m2", whisper: ["g1", "p1"], flags: {}, content: `<button>Accept</button>`});
-  await hooks.updateUser[0](users[1], {viewedScene: "s1"});
-  await new Promise(r => setTimeout(r, 1200));
+  await new Promise(r => setTimeout(r, 2300));
   assert.equal(clicked, 1);
-  assert.equal(viewed, "s1");
+  assert.equal(viewed, "s1", "the seat finds the player's scene by looking, with no hook");
   const rep = api.log.stalls(0);
   assert.equal(rep.total, 1);
   assert.equal(rep.rows[0].end, "answered by the seat");
