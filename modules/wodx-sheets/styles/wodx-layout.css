@@ -4,8 +4,8 @@
 /* ---- 1. The title bar: the name always shows; the buttons are icons, with their names on hover ---- */
 .wod20.window-app .window-header { flex-wrap: nowrap; }
 .wod20.window-app .window-header .window-title { flex: 1 1 9em; min-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) { flex: 0 0 auto; font-size: 0; line-height: 30px; margin: 0 0 0 9px; white-space: nowrap; }
-.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) > i { font-size: 14px; margin: 0; min-width: 14px; text-align: center; }
+.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) { flex: 0 0 auto; font-size: 0; line-height: 30px; margin: 0 0 0 9px; white-space: nowrap; overflow: visible; }
+.wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) > i { font-size: 14px; margin: 0; min-width: 18px; text-align: center; overflow: visible; }
 .wod20.window-app .window-header a.alter-ego-config > span { display: none; }
 .wod20.window-app.minimized .window-header :is(a.header-button, a.alter-ego-config):not(.close, .minimize, .maximize) { display: none; }
 
@@ -50,7 +50,7 @@
 .wod20.wod-item .sheet-header .top-side { display: flex; align-items: flex-start; gap: 6px; }
 .wod20.wod-item .sheet-header .top-side .area-box :is(select, input).sheet-infoValues { width: 100%; max-width: 420px; }
 .wod20.wod-item input.sheet-infoValues.smallbox { width: 130px; }
-.wod20.wod-item select.sheet-infoValues.smallbox { width: 160px; }
+.wod20.wod-item select.sheet-infoValues.smallbox { width: 190px; max-width: 100%; }
 /* The text editor follows dark mode like the fields around it */
 .wod-theme-dark.wod20 .editor.prosemirror, .wod-theme-dark.wod20 .editor.prosemirror .editor-container, .wod-theme-dark.wod20 .editor.prosemirror .editor-content { background: var(--darkmode-background-dark); color: var(--darkmode-textcolor-dark); }
 .wod-theme-dark.wod20 .editor.prosemirror menu.editor-menu { background: rgb(70, 70, 70); color: var(--darkmode-textcolor-dark); }

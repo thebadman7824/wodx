@@ -439,12 +439,14 @@ const LABELS = {
 const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
 // The title bar (layout pass): the buttons show as icons so the name always fits; each keeps its words as a tooltip
+/** Names for the title bar buttons that carry no words of their own. */
+const HEADER_NAMES = [["close", "Close"], ["minimize", "Minimize"], ["maximize", "Restore"], ["pin", "Pin"], ["alter-ego-config", "Alter ego"]];
 function nameHeaderButtons(app, html) {
   const el = html?.[0] ?? html ?? app?.element?.[0];
   const win = el?.closest?.(".window-app") ?? app?.element?.[0];
   if (!win?.classList?.contains("wod20")) return;
   for (const b of win.querySelectorAll(".window-header a.header-button, .window-header a.alter-ego-config")) {
-    const words = (b.textContent ?? "").replace(/\s+/g, " ").trim() || b.getAttribute("title") || "";
+    const words = (b.textContent ?? "").replace(/\s+/g, " ").trim() || b.getAttribute("title") || HEADER_NAMES.find(([c]) => b.classList.contains(c))?.[1] || "";
     if (!words) continue;
     if (!b.dataset.tooltip) b.dataset.tooltip = words;
     if (!b.getAttribute("aria-label")) b.setAttribute("aria-label", words);
