@@ -579,6 +579,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Brujah causes (Ben's note) | A list to pick from by era, or the player's own with the Storyteller's approval; NPCs draw from the same list; three kept tempers make a Rant (B1123) | CAUSES in data/signatures.mjs |
 | 2026-11-12 | Gangrel marks (Ben's note) | Each frenzy leaves a mark with an edge and a cost; it heals after a month. Claws from a mark do Strength + 1 lethal, a house rule (B1124) | MARK_LASTS and MARKS |
 | 2026-11-12 | Malkavian glimpses and the derangement's ear (B1125) | A riddle a night about the next dated event, only a rough when; the Storyteller may give back a Willpower point when it comes true; one extra heard line on NPC talk cards per derangement, eight to ten lines each, the true reply always shown | GLIMPSE_THEMES, DERANGEMENTS |
+| 2026-11-12 | Tzimisce native soil (B1126) | Carrying the soil counts as resting on it; a night without halves every pool until the next rest | soilNight in signature-rules.mjs |
+| 2026-11-12 | Lasombra and cameras (B1127) | House rule: no image on photographs (1839), film (1895), video (1970) or digital (2000); a watched scene gives a breach found later; every scene watched from 2023 unless marked | CAMERAS in data/signatures.mjs |
+| 2026-11-12 | The Ravnos vice (B1128) | Lying, theft, cheating or a dare; one Self-Control prompt a night, difficulty 6 rising with weeks unfed and a long stay, to 9 | ravnosDifficulty |
+| 2026-11-12 | Caitiff odd gifts (B1129) | A thin-blooded Caitiff rolls once a year, one in ten, for one of four gifts; Storyteller card with Undo | ODD_GIFTS |
 
 ## Waiting for review
 

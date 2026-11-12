@@ -1366,3 +1366,23 @@ V20 pdf 69 gives one derangement that never heals. House rule from the desk: onc
 
 Reverse: DERANGEMENTS and GLIMPSE_THEMES in data/signatures.mjs; the hearAs call in wodx-npc talk.mjs.
 
+
+## B1126. Tzimisce native soil (2026-11-12)
+V20 pdf 79 and V20 Dark Ages pdf 66: a Tzimisce must rest with two handfuls of native soil, or every dice pool is halved (pdf 447) until they do. Built: carrying an item flagged as soil (or named native soil or earth) counts as resting on it; each night without it posts a card and the trait effects show pools halved. "Take native soil" in the clan feature window makes the item. A thief who lifts it makes the next night hard.
+
+Reverse: soilNight and isSoil in signature-rules.mjs; soilTick in signatures.mjs.
+
+## B1127. The Lasombra's empty frame (2026-11-12)
+V20 pdf 67 names mirrors only, so cameras are a house rule (book check flag). The camera of the year: a photograph from 1839, film from 1895, video and closed-circuit television from 1970, digital from 2000. A scene the Storyteller marks as watched gives one card a night for each Lasombra token in it: a breach found later by whoever studies the picture. From 2023 (the Future Darkness) every scene counts as watched unless marked otherwise.
+
+Reverse: CAMERAS and CAMERAS_EVERYWHERE in data/signatures.mjs; setCamera in signatures.mjs.
+
+## B1128. The Ravnos vice (2026-11-12)
+V20 pdf 73: a Ravnos must roll Self-Control to resist the vice when the chance comes. The sheet keeps one: lying (fed by deceit and fast-talk), theft (a lift, or taking from someone else's container), cheating (any trade) or a dare (marked by hand). Any other talk or trade is a chance, with one prompt a night. House reading of the difficulty: 6, +1 for each week unfed to +2, and +1 after a month in one domain, never above 9. "Moved on to a new domain" resets the stay.
+
+Reverse: RAVNOS_VICES in data/signatures.mjs; ravnosDifficulty in signature-rules.mjs.
+
+## B1129. Caitiff odd gifts (2026-11-12)
+V20 pdf 40: Caitiff have no clan weakness. House rule from the desk: a Caitiff with the Thin Blood flaw rolls once a year, one chance in ten, for an odd gift (walks at dusk and dawn, keeps down a little food, passes for mortal for a scene, one less die from sunlight). The card goes to the Storyteller with an Undo. Status that needs a sponsor in Camarilla courts waits for faction politics.
+
+Reverse: ODD_GIFTS and ODD_GIFT_CHANCE in data/signatures.mjs.
