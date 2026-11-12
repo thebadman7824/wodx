@@ -30,6 +30,7 @@ import * as AM from "./ambush-rules.js";
 import * as MVJ from "./movement.js";
 import * as BD from "./body.js";
 import * as BodyRules from "./body-rules.js";
+import * as AA from "./aftermath.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -1440,11 +1441,13 @@ Hooks.once("init", () => {
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
+    AA.registerAftermathSettings();
     P.register();
     const body = BD.setupBody();
     const movement = MVJ.setupMovement({ MOD, off: () => OFF, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
-    const api = { body, movement, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.13.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+    const aftermath = AA.setupAftermath({ corpusTrack });
+    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.14.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1828,7 +1831,20 @@ Hooks.on("renderTokenHUD", (hud, html) => {
     btn.addEventListener("click", ev => ev.shiftKey ? quickAttack({ attacker: tok }) : attack({ attacker: tok }));
     btn.addEventListener("contextmenu", ev => { ev.preventDefault(); pickKind(tok.actor); });
     col.appendChild(btn);
+    // 3.14.0: in a fight, use the room (WoDX Interactables): knock a lamp over, let the sun in, bring the chandelier down
+    const ix = game.modules.get("wodx-interactables");
+    if (ix?.active && ix.api?.useRoom && game.combat?.started && game.combat.combatants.some(c => c.tokenId === tok.id)) {
+        const rb = document.createElement("div");
+        rb.className = "control-icon vtc-hud vtc-room";
+        rb.title = "Use the room: lamps, curtains, windows, chandeliers and sprinklers within reach";
+        rb.setAttribute("role", "button");
+        rb.setAttribute("aria-label", "Use the room");
+        rb.innerHTML = '<i class="fas fa-house-fire" aria-hidden="true"></i>';
+        rb.addEventListener("click", () => ix.api.useRoom(tok));
+        col.appendChild(rb);
+    }
 });
+export function useRoom(tok) { return game.modules.get("wodx-interactables")?.api?.useRoom?.(tok); }
 
 /* ------------------------------------------------------------------ */
 /*  WoDX conditions (registry in WoDX Chronicle)                       */

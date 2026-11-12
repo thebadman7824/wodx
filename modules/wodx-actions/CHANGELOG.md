@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.43.0 (the odds before a roll in the Action and Common checks windows, with the other side's odds for the Storyteller only; pinned and lately used actions kept on the character; numina windows aim at a target)
 - 3.42.2 (W20 Glabro, Crinos and Lupus teeth and claws follow the book check)
 - 3.42.1 (Jumping and Climbing follow V20: 2 feet up or 3 across, 10 feet a success; Rise sets the token to Fly before it goes up)
 - 3.41.0 (feeding harms the vessel: a lethal level a point, two for the Giovanni, blood back a day, pass out, dying and dead marked with Undo; clan and bloodline feeding rules for Ventrue palates, Nagaraja flesh, Salubri, Lamia, Noiad, Danava, Assamite antitribu and Dark Ages Tremere; saved feeding habits in Hunt)

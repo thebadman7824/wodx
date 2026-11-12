@@ -344,7 +344,9 @@ export function build(ctx) {
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, n(fd.wp) ? [`${fd.wp} Willpower`] : []) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
                 fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 540, render: root => { describe(root); root.querySelector("[name=nm]")?.addEventListener("change", () => describe(root)); } });
+        }, { width: 540, render: root => { describe(root); root.querySelector("[name=nm]")?.addEventListener("change", () => describe(root));
+            // Who it is aimed at: curses and pyrokinesis at a foe, healing at a friend, the rest by its tag (3.43.0)
+            aim(root, { actor, lib: "numina", power: r => { const { key, item } = pick(r); return key ? { id: key, n: H.NUMINA[key]?.label ?? key } : item ? { id: item.name, n: item.name } : null; } }); } });
     }
 
     /* ---------------- Hedge magic (Sorcerer) ---------------- */

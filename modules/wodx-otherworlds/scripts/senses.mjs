@@ -136,6 +136,8 @@ export function reading(actor, successes, {botch = false, random = Math.random} 
     const M = MOODS[mood];
     lines.push(`${M.colour}: ${M.condition.toLowerCase()}.`);
     draw.colour = M.hex;
+    // Colour is never the only sign (WoDX Senses 0.7.0): the overlay names it too
+    draw.word = `${M.colour}: ${M.condition.toLowerCase()}`;
   }
   // 3: patterns
   if ( n >= 3 ) {
@@ -210,6 +212,15 @@ export function drawAura(token, draw, {seconds = 20} = {}) {
     if ( p === "ripples" ) for ( let i = 1; i <= 3; i++ ) ring(r * (1.25 + i * 0.12), r * 0.02, base, 0.7);
     if ( p === "mottled" ) around(14, (a, i) => dot(cx + Math.cos(a) * r * (0.9 + (i % 3) * 0.15), cy + Math.sin(a) * r * (0.9 + (i % 3) * 0.15), r * 0.09, Object.values(MOODS)[(i * 5) % 22].hex, 0.4));
   }
+  // The colour's name under the aura, for eyes that cannot tell the colours apart
+  const word = draw.word ?? (draw.shade === "pale" ? "pale" : "bright");
+  try {
+    const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(h / 6)), fill: "#ffffff", stroke: {color: "#000000", width: 3}, strokeThickness: 3};
+    const label = v8 ? new PIXI.Text({text: word, style}) : new PIXI.Text(word, style);
+    label.anchor?.set?.(0.5, 0);
+    label.x = cx; label.y = cy + r * 1.5;
+    g.addChild(label);
+  } catch (e) { /* the words are in the chat whisper either way */ }
   canvas.interface.addChild(g);
   const timer = setTimeout(() => clearAura(token.id), seconds * 1000);
   overlays.set(token.id, {g, timer});
