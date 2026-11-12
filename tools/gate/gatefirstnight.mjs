@@ -9,7 +9,7 @@
  *   4. the Build window renders and a + button raises a dot
  *   5. the prelude runner renders its scenes, a short one starts at the turn
  *   6. the written prelude makes a journal page
- *   7. sign-off ticks the step and posts the forecast and the seed cards; Skip closes a card
+ *   7. sign-off (with a rival from the lifepath) ticks the step and posts the forecast and the seed cards; Skip closes a card
  *   8. ties go round two characters as chat cards
  *   9. every other WoDX module still answers
  * Result: Data/wodx-gate/gatefirstnight-result.json.
@@ -36,10 +36,16 @@ export async function run() {
   const closeAll = async () => { for ( const app of [...(foundry.applications.instances?.values?.() ?? [])] ) if ( /wodx-fn|wodx-first-night/.test(app.id) ) await app.close(); };
   try {
     // one at a time: a batch create does not keep its order (harness rule)
-    const vamp = await Actor.create({name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}});
-    const mortal = await Actor.create({name: "WoDX gate: First Night Mortal", type: "Mortal"});
+    // The hub and the troupe view are for player characters: the gate's two are owned by everyone, so a player owns them when the world has one
+    const own = {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER};
+    const players = game.users.filter(u => !u.isGM).length;
+    if ( !players ) R.notes.push("No player users in the world: the troupe view and ties checks are skipped.");
+    const vamp = await Actor.create({name: "WoDX gate: First Night Toreador", type: "Vampire", system: {clan: "toreador", generation: 12}, ownership: own});
+    const mortal = await Actor.create({name: "WoDX gate: First Night Mortal", type: "Mortal", ownership: own});
     made.push(vamp, mortal);
     await vamp.createEmbeddedDocuments("Item", [{name: "Enemy", type: "Feature", system: {type: "wod.types.flaw", value: 3}}]).catch(e => R.notes.push(`flaw item: ${e.message}`));
+    // A rival from the lifepath: the forecast's enemy item, so sign-off always has a seed card to make
+    await vamp.update({[`flags.${M}.lifepath`]: {path: ["gate"], people: [{role: "rival", note: "A gate rival", year: null}], kept: []}});
 
     await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.13.0") && typeof api()?.firstNight === "function"
       && typeof api()?.forecast === "function" && typeof api()?.signOff === "function" && !!api()?.firstNightRules
@@ -52,7 +58,7 @@ export async function run() {
       const one = !!app?.element?.querySelector("[data-action]");
       await app?.close?.();
       const troupe = await api().firstNight(null); await sleep(400);
-      const all = !!troupe?.element?.textContent?.includes(vamp.name);
+      const all = !players || !!troupe?.element?.textContent?.includes(vamp.name);
       await troupe?.close?.();
       ok("2 hub", one && all, {one, all});
     });
@@ -110,7 +116,7 @@ export async function run() {
     await step("8 ties", async () => {
       const P = await import("/modules/wodx-creation/scripts/first-night-prelude.mjs");
       const out = await P.sendTies();
-      ok("8 ties", Array.isArray(out), {cards: out.length, note: "Cards only go to player characters; none of the gate's own have a player owner."});
+      ok("8 ties", Array.isArray(out) && (!players || out.length >= 2), {cards: out.length});
     });
 
     await step("9 other modules", async () => {
