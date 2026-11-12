@@ -156,7 +156,7 @@
 106|W|vam|EU|Dacia|empire,crown|Romans beyond the Danube|The Tzimisce of the Carpathians first meet Roman Cainites when the legions cross into Dacia.
 110|H|mor|EU|Germania|faith|Tacitus' Germania|Tacitus describes the Germanic peoples, the Quadi and Marcomanni among them.
 122|H|mor|EU|Britain|building|Hadrian's Wall|Hadrian begins his wall across northern Britain, finished by 128.
-122|W|wer|EU|Caledonia|war,occult|The White Howlers fall|Over the years from 200 BCE to 200 CE the White Howlers fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42).
+122|W|wer|EU|Caledonia|war,occult|The White Howlers fall|The White Howlers back the Picts whose raids raise Hadrian's Wall, then cross into the Empire while Rome's fomori slip north; between 200 BCE and 200 CE they fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42; W20 Book of the Wyrm pdf 88-89).
 132|H|mor|ME|Judea|uprising|Bar Kokhba|Bar Kokhba leads the last great Jewish revolt.
 150|H|mor|AF|Alexandria|science|Ptolemy's Almagest|Claudius Ptolemy sets out the earth-centred heavens that Europe will follow for 1,400 years.
 161|H|mor|EU|Rome|crown|Marcus Aurelius|Marcus Aurelius becomes emperor.
@@ -257,7 +257,7 @@
 751|H|mor|AS|Talas|battle,science|Talas|Arab armies defeat the Tang at Talas; papermaking spreads west.
 754|W|vam|EU|Ostia|heresy,faith|The Heresy revealed at Ostia|The Cainite Heresy shows itself openly at Ostia (The Cainite Heresy pdf 31).
 756|W|mag|ME|Baghdad|occult|The end of the Devil-King Age|M20 marks 756 as the end of the Devil-King Age (pdf 126).
-767-12|W|mag|EU|Durenmar|founding,occult|The Order of Hermes founded|On Midwinter Night twelve founders gathered by Trianoma found the Order of Hermes at Durenmar (M20 pdf 126; Sorcerers Crusade pdf 70).
+767-12|W|mag|EU|Durenmar|founding,occult|The Order of Hermes founded|On Midwinter Night Trianoma and Bonisagus bring twelve founders together at Durenmar; they accept the Code of Hermes and found the Order and its Houses (M20 pdf 126; Sorcerers Crusade pdf 70; Mage: The Dark Ages pdf 58; Order of Hermes Revised pdf 27).
 768|H|mor|EU|Francia|crown|Charlemagne|Charlemagne becomes king of the Franks.
 786|H|mor|ME|Baghdad|crown,learning|Harun al-Rashid|Harun al-Rashid's Baghdad becomes a centre of learning and trade.
 791|H|mor|EU|Pannonia|war|Charlemagne against the Avars|The Franks attack the Avars along the Danube.
@@ -348,3 +348,11 @@
 1192|H|mor|MO|Prague|crown|Premysl Ottokar returns|Premysl Ottokar takes the Bohemian throne, losing it again in 1193.
 1194|N|vam|EU|Orvieto|massacre|The massacre at Orvieto|The Encyclopaedia's massacre at Orvieto falls here.
 1196|H|mor|EU|Germany|crown|Henry VI's last year|Henry VI plans to make the empire hereditary; he dies at Messina the next year.
+-530|W|mag|EU|Croton|learning,occult|Pythagoras carries Thoth's lore west|Hermetic history says Pythagoras brought the lore of Thoth to the Greeks (Order of Hermes Revised pdf 20-21).
+-400|W|mag|EU|Greece|occult,crime|The Hermes cults at war|For three centuries rival cults of Hermes murder and riot against each other in Greece and Egypt (Order of Hermes Revised pdf 22).
+-100|W|mag|AF|Alexandria|treaty,occult|The council of twenty|About a century before Christ, twenty mystics meet to end the feuds of the Hermes cults (Order of Hermes Revised pdf 22).
+70|W|vam|ME|Jerusalem|siege,occult|A fragment smuggled out|One fragment of Lilith's lore survives in writings smuggled out of the Roman siege of Jerusalem; the book prints the year as 64 (Revelations of the Dark Mother pdf 18).
+100|W|mag|ME|Persia|occult,crown|The Devil Kings|A dynasty of Infernalist mages takes hold of Arabia and Persia, and keeps it until 756 (Mage: The Dark Ages pdf 164).
+130|W|wer|EU|Britannia|occult|The first Hollow Men|Fianna songs of Roman Britain first name the Hollow Men, the oldest breed of fomori (W20 Book of the Wyrm pdf 135).
+615|W|mag|ME|Mecca|faith,occult|The Prophet's helpers|Some Batini later claim the Prophet had magical help (Mage: The Dark Ages pdf 40).
+700|W|mag|EU|Europe|founding,occult|The covenants|By 700 the mages of Europe have gathered into covenants (Order of Hermes Revised pdf 26).
