@@ -5,6 +5,7 @@
  */
 import * as W from "./world-rules.mjs";
 import * as Road from "./road-rules.mjs";
+import * as Country from "./country-rules.mjs";
 import * as C from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -146,13 +147,19 @@ export async function openOnYourOwn(actorId = null) {
   const at = C.tripContext(C.personalTime(actor.id));
   const ways = new Map();
   for ( const k of Object.keys(Road.ROADS) ) for ( const m of Road.modesFor(k, at.year, {future: at.future}) ) ways.set(m.id, m.label);
+  // Paid rides the older list does not name (they run only between places set on the country map).
+  const onMap = places.some(p => W.normPlace(p.travel).at);
+  if ( onMap ) for ( const m of Country.hiredModes(at.year, {future: at.future}) ) if ( ["hire:coach", "hire:bus", "hire:air"].includes(m.id) ) ways.set(m.id, m.label);
+  const pick = (name, list, def) => `<select name="${name}" data-fixed>${Object.entries(list).map(([k, v]) => `<option value="${k}"${k === def ? " selected" : ""}>${esc(v.label)}: ${esc(v.hint)}</option>`).join("")}</select>`;
   const content = `<form class="wstory-own">
     <div class="wodx-field"><label>Character</label><span>${list.length > 5 ? searchBox("select[name=actor]", "Search…", "Search characters") : ""}<select name="actor" ${list.length > 5 ? "" : "data-fixed"}>${opt(Object.fromEntries(list.map(a => [a.id, a.name])), actor.id)}</select></span></div>
     ${statusLine(actor)}
     <fieldset><legend>Travel</legend>
       <div class="wodx-field"><label>Go to</label><span>${searchBox("select[name=dest]", "Search places…", "Search places")}<select name="dest"><option value="">Stay here</option>${places.map(p => `<option value="${esc(p.id)}">${esc(p.name)} (${esc(plan(p.id))})</option>`).join("")}</select></span></div>
       <div class="wodx-field"><label>How</label><select name="mode" data-fixed><option value="">The fastest way open</option>${[...ways].map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("")}</select></div>
-      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter. A way the road cannot take (a train with no line) goes by the fastest way open instead.</p>
+      ${onMap ? `<div class="wodx-field"><label>Pace</label>${pick("pace", Country.PACES, "steady")}</div>
+      <div class="wodx-field"><label>Nights</label>${pick("lodging", Country.LODGINGS, "inn")}</div>` : ""}
+      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter. A way the road cannot take (a train with no line) goes by the fastest way open instead.${onMap ? " Between places set on the country map, a long trip stops for the night, or for the day for those the sun burns; a paid ride leaves from its stop in the nearest town that has one, and the fare and any inn come out of the purse." : ""}</p>
     </fieldset>
     <fieldset><legend>Act on your own</legend>
       <div class="wodx-field"><label>What</label><select name="kind" data-fixed><option value="">Nothing now</option>${opt(Object.fromEntries(Object.entries(W.SOLO_KINDS).map(([k, v]) => [k, v.label])), "")}</select></div>
@@ -166,7 +173,7 @@ export async function openOnYourOwn(actorId = null) {
   if ( !data || data === "cancel" ) return null;
   const who = game.actors.get(data.actor) ?? actor;
   const out = {};
-  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null});
+  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null, pace: data.pace || null, lodging: data.lodging || null});
   if ( data.kind ) out.solo = await request("solo", {actorId: who.id, kind: data.kind, hours: Number(data.hours) || null, note: data.note ?? "", changesWorld: !!data.world});
   return out;
 }
@@ -285,6 +292,9 @@ export async function placesDialog() {
   if ( !game.user.isGM ) return null;
   const scenes = all(game.scenes).slice().sort((a, b) => C.sceneName(a).localeCompare(C.sceneName(b)));
   const anyMarked = scenes.some(s => s.flags?.[C.MOD]?.travel);
+  const townList = Country.towns();
+  const atOf = (town, off) => (town ? Country.normAt({town, ...(Country.parseOffset(off) ?? {})}) : null);
+  const sameAt = (a, b) => (a?.town ?? null) === (b?.town ?? null) && (a?.km ?? 0) === (b?.km ?? 0) && (a ? a.dir : null) === (b ? b.dir : null);
   const rows = scenes.map(s => {
     const t = C.travelOf(s), marked = !!s.flags?.[C.MOD]?.travel;
     const on = marked ? t.on : (!anyMarked && !W.NOT_A_PLACE.test(s.name ?? ""));
@@ -294,23 +304,25 @@ export async function placesDialog() {
       <td><input type="number" name="min.${esc(s.id)}" min="0" max="1440" value="${t.minutes ?? ""}" placeholder="${C.setting("travelMinutes") ?? 30}" aria-label="Minutes"></td>
       <td><input type="number" name="km.${esc(s.id)}" min="0" max="2000" step="0.1" value="${t.km ?? ""}" aria-label="Distance in km"></td>
       <td><select name="road.${esc(s.id)}" data-fixed aria-label="Road"><option value="">Country road</option>${Object.entries(Road.ROADS).filter(([k]) => k !== "road").map(([k, v]) => `<option value="${k}"${t.road === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></td>
+      <td><select name="near.${esc(s.id)}" aria-label="Nearest town on the country map"><option value="">Not on the map</option>${townList.map(o => `<option value="${o.id}"${t.at?.town === o.id ? " selected" : ""}>${esc(o.name)}</option>`).join("")}</select></td>
+      <td><input type="text" name="off.${esc(s.id)}" maxlength="12" value="${esc(Country.offsetWords(t.at))}" placeholder="in town" aria-label="Distance and direction from that town, such as 12 NE"></td>
       <td><input type="text" name="tab.${esc(s.id)}" maxlength="120" value="${esc(t.table ?? "")}" placeholder="world's table" aria-label="Encounter table"></td></tr>`;
   }).join("");
-  const content = `<p>Where players may travel. While no place is marked here, every scene that is not a battle map or a test is open. "Asks first" sends the trip to the approval queue. Minutes: how long it takes to get there; filled in, they win. Left blank with a distance, the time comes from the distance, the road and the way of travelling the year allows, slowed by the weather and the dark (blank with no distance: ${C.setting("travelMinutes") ?? 30}). The table is a roll table's name for encounters on the way.</p>
+  const content = `<p>Where players may travel. While no place is marked here, every scene that is not a battle map or a test is open. "Asks first" sends the trip to the approval queue. Minutes: how long it takes to get there; filled in, they win. Left blank with a distance, the time comes from the distance, the road and the way of travelling the year allows, slowed by the weather and the dark (blank with no distance: ${C.setting("travelMinutes") ?? 30}). The table is a roll table's name for encounters on the way. Near and From there put a place on the country map: pick the nearest town and, if the place lies outside it, how far and which way (12 NE is 12 km to the north-east). When both ends of a trip are on the map, the trip finds its own way across the country by the roads, railways and rides of the year, and the Km and Road columns are not used for it.</p>
     ${searchBox("table.wstory-places", "Search scenes…", "Search scenes")}
-    <div class="wodx-table-wrap wstory-places-wrap"><table class="wodx-table wstory-places"><thead><tr><th>Scene</th><th>Open</th><th>Asks first</th><th>Minutes</th><th>Km</th><th>Road</th><th>Encounter table</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  const data = await wait({window: {title: "Travel places", resizable: true}, position: {width: 960, height: "auto"}, content,
+    <div class="wodx-table-wrap wstory-places-wrap"><table class="wodx-table wstory-places"><thead><tr><th>Scene</th><th>Open</th><th>Asks first</th><th>Minutes</th><th>Km</th><th>Road</th><th>Near</th><th>From there</th><th>Encounter table</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const data = await wait({window: {title: "Travel places", resizable: true}, position: {width: 1180, height: "auto"}, content,
     buttons: [{action: "save", label: "Save", default: true, callback: formData}, {action: "cancel", label: "Cancel"}]});
   if ( !data || data === "cancel" ) return null;
   for ( const s of scenes ) {
     const next = {on: !!data[`on.${s.id}`], ask: !!data[`ask.${s.id}`], minutes: Number(data[`min.${s.id}`]) || null, table: String(data[`tab.${s.id}`] ?? "").trim() || null,
-      km: Number(data[`km.${s.id}`]) || null, road: data[`road.${s.id}`] || null};
+      km: Number(data[`km.${s.id}`]) || null, road: data[`road.${s.id}`] || null, at: atOf(data[`near.${s.id}`], data[`off.${s.id}`])};
     const was = s.flags?.[C.MOD]?.travel;
-    const plainDefault = !was && next.on === (!anyMarked && !W.NOT_A_PLACE.test(s.name ?? "")) && !next.ask && !next.minutes && !next.table && !next.km && !next.road;
+    const plainDefault = !was && next.on === (!anyMarked && !W.NOT_A_PLACE.test(s.name ?? "")) && !next.ask && !next.minutes && !next.table && !next.km && !next.road && !next.at;
     if ( plainDefault ) continue;
     const cur = W.normPlace(was ?? {});
     const fresh = W.normPlace({...cur, ...next});
-    if ( was && cur.on === fresh.on && cur.ask === fresh.ask && cur.minutes === fresh.minutes && cur.table === fresh.table && cur.km === fresh.km && cur.road === fresh.road ) continue;
+    if ( was && cur.on === fresh.on && cur.ask === fresh.ask && cur.minutes === fresh.minutes && cur.table === fresh.table && cur.km === fresh.km && cur.road === fresh.road && sameAt(cur.at, fresh.at) ) continue;
     await C.setTravel(s, {...cur, ...next});
   }
   return true;

@@ -15,6 +15,9 @@
  * graveyards); Umbra: The Velvet Shadow pdf 15 / p. 14; Book of the Weaver pdf 33 / p. 32; Beyond the Barriers: The
  * Book of Worlds pdf 75 / p. 74; Wraith 20th pdf 85 / p. 20. Loved places looming is a house rule (W20 speaks of
  * spiritual weight and age); so are how strong each mark is and the webbing by age. No Foundry here.
+ *
+ * 0.17.0: a map from under the ground (a warren or sewers from tools/mapgen/ddwarren.py, "underground" in its
+ * sidecar) is read piece by piece and run by run instead: see underMarks.
  */
 
 /** The marks, with how each is drawn and what it means. */
@@ -58,6 +61,11 @@ export function reflect(sidecar, layer = "penumbra", {year = null, future = fals
       rect: (r.rect ?? []).map(Number), points: Array.isArray(r.points) ? r.points.map(Number) : null, strength: Math.max(0, Math.min(1, strength))});
   };
   const web = webbing(y, {future});
+  if ( sc.underground ) {
+    for ( const r of sc.regions ?? [] ) for ( const [kind, strength, label, note] of underMarks(r.area, sc.dress, web) ) add(kind, r, strength, label ?? null, note ?? null);
+    const order = Object.keys(MARKS);
+    return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind) || b.strength - a.strength);
+  }
   for ( const r of sc.regions ?? [] ) {
     const kind = r.place?.kind, area = r.area, p = places[id(r)] ?? {}, rid = id(r);
     if ( kind === "church" || p.type === "chapel" || rid === "market-cross" ) { add("loom", r, 0.9); add("thin", r, 0.6); continue; }
@@ -90,6 +98,36 @@ export function reflect(sidecar, layer = "penumbra", {year = null, future = fals
   }
   const order = Object.keys(MARKS);
   return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind) || b.strength - a.strength);
+}
+
+/**
+ * Under the ground (0.17.0): what one piece of a warren or one run of a sewer means in the near worlds. area: the
+ * region's area in the sidecar (ddwarren.py); dress: what the map is dressed as; web: the Weaver's webbing that year.
+ * Returns [[mark, strength, label?, note?]]. All of it is a house rule, read from the same pages as the town above:
+ * built works carry webbing, filth and lairs sour toward the Wyrm, buried water still runs with the Wyld, a fall or a
+ * walled-up way stands as it was for the dead, and where something died badly a Nihil may open.
+ */
+export function underMarks(area, dress, web = 0.2) {
+  if ( dress === "labyrinth" ) {            // a reach of the Labyrinth has no living-world twin: only how near Oblivion each piece lies
+    return area === "den" || area === "flooded" ? [["nihil", 0.9], ["rot", 0.9]] : area === "collapse" ? [["nihil", 0.6], ["rot", 0.9]] : [["rot", 0.7]];
+  }
+  if ( dress === "spiral" ) {               // a Black Spiral cavern is a Blight through and through
+    return area === "flooded" ? [["blight", 1, null, "Balefire: the Wyrm's own light burns in the pool."]] : area === "den" ? [["blight", 1], ["thin", 0.6]] : [["blight", 0.8]];
+  }
+  switch ( area ) {
+    case "main-sewer": case "junction": return [["web", web], ["blight", 0.45, null, "Filth runs here night and day: Banes gather along it."], ["rot", 0.6]];
+    case "side-sewer": return [["web", web * 0.7], ["blight", 0.3], ["rot", 0.5]];
+    case "outfall": return [["blight", 0.6, null, "Where the town's filth meets the river."], ["rot", 0.7]];
+    case "culvert": return [["wyld", 0.35, null, "A buried brook still runs wild under its cover."], ["faint", 0.4]];
+    case "cesspit": return [["blight", 0.5], ["rot", 0.8]];
+    case "den": return [["blight", 0.6, null, "A lair: whatever dens here draws Banes."], ["thin", 0.5]];
+    case "flooded": return [["wyld", 0.4], ["rot", 0.5]];
+    case "collapse": return [["relic", 0.7, "Relic: the passage before the fall", "The way stands whole again for the dead."], ["nihil", 0.5]];
+    case "cap": return [["relic", 0.4, "Relic: the way that was closed", "The closed way stands open for the dead."]];
+    case "vault": case "chamber": return [["faint", 0.3]];
+    case "passage": return [["faint", 0.4]];
+    default: return [];
+  }
 }
 
 /* ------------------------------------------------------------------ drawing */

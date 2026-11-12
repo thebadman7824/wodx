@@ -15,6 +15,7 @@ import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
+import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
 import * as spirits from "./spirits.mjs";
@@ -62,7 +63,8 @@ Hooks.once("ready", () => {
     drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
-      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules},
+      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules,
+      drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}

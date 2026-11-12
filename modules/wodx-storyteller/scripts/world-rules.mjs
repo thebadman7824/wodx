@@ -17,6 +17,7 @@
  */
 
 import * as Road from "./road-rules.mjs";
+import * as Country from "./country-rules.mjs";
 const ROAD_KINDS = Object.keys(Road.ROADS);
 
 export const LOG_VERSION = 1;
@@ -168,7 +169,7 @@ export function normPlace(p = {}) {
   const km = Math.round(Number(p.km) * 10) / 10;
   return {on: p.on !== false, ask: !!p.ask, minutes: minutes > 0 ? Math.min(24 * 60, minutes) : null, routes,
     km: km > 0 ? Math.min(2000, km) : null, road: ROAD_KINDS.includes(p.road) ? p.road : null,
-    table: p.table ? String(p.table) : null, x: Number.isFinite(p.x) ? p.x : null, y: Number.isFinite(p.y) ? p.y : null};
+    table: p.table ? String(p.table) : null, x: Number.isFinite(p.x) ? p.x : null, y: Number.isFinite(p.y) ? p.y : null, at: Country.normAt(p.at)};
 }
 
 /** Minutes from one place to another: the route either way, then the destination's own, then the default. */
@@ -177,9 +178,11 @@ export function travelMinutes(from, to, fallback = 30) {
 }
 
 /**
- * A trip's plan (0.22.0): hand-typed minutes on the route, then on the place, win; else the place's distance by the
- * way the year allows (road-rules.mjs); else the default. ctx: {fallback, year, want, weather, night, future}.
- * Returns {minutes, by: "route"|"place"|"distance"|"default", mode, modeLabel, road, why}.
+ * A trip's plan (0.22.0): hand-typed minutes on the route, then on the place, win; else, when both places sit on the
+ * country map (0.46.0), the way across it (country-rules.mjs); else the place's distance by the way the year allows
+ * (road-rules.mjs); else the default. ctx: {fallback, year, want, weather, night, future, wage}.
+ * Returns {minutes, by: "route"|"place"|"map"|"distance"|"default", mode, modeLabel, road, why} and, by the map, legs,
+ * km, hired, fare and options.
  */
 export function tripPlan(from, to, ctx = {}) {
   const a = normPlace(from?.travel ?? {}), b = normPlace(to?.travel ?? {});
@@ -187,6 +190,10 @@ export function tripPlan(from, to, ctx = {}) {
   if ( from?.id && b.routes[from.id] ) return {...none, minutes: b.routes[from.id], by: "route"};
   if ( to?.id && a.routes[to.id] ) return {...none, minutes: a.routes[to.id], by: "route"};
   if ( b.minutes ) return {...none, minutes: b.minutes, by: "place"};
+  if ( a.at && b.at ) {
+    const t = Country.countryTrip({at: a.at, name: from?.name}, {at: b.at, name: to?.name}, ctx);
+    if ( t ) return t;
+  }
   if ( b.km ) {
     const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future});
     if ( t ) return {...t, by: "distance"};
@@ -209,8 +216,9 @@ export function rollRoad(minutes, chance, rand = Math.random) {
 }
 
 /** Does a trip wait for the Storyteller? A locked place, or a trip that would end after dawn for a character the sun burns. */
-export function travelNeedsAsk({place, arrive, dawnAt = null, sunBurns = false} = {}) {
+export function travelNeedsAsk({place, arrive, dawnAt = null, sunBurns = false, plan = null} = {}) {
   if ( normPlace(place?.travel ?? {}).ask ) return "This place asks the Storyteller first.";
+  if ( plan ) return sunBurns && plan.exposed ? "A stretch of this trip is longer than a night, with no shelter on it." : null;
   if ( sunBurns && Number.isFinite(dawnAt) && arrive >= dawnAt ) return "The trip would end after dawn.";
   return null;
 }

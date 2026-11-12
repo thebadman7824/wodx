@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.17.0 (wild land with no edge: the open Umbra and the Tempest's storm sea are drawn a piece at a time from a seed and a place, pieces side by side meet square for square, a moon path or a Byway winds across the whole wild, and Walk on in Realm maps draws the next piece and sets the travellers down on it; Reflect reads a map from under the ground: a warren piece by piece and sewers run by run, with webbing on built works, sour ground along filth and in lairs, buried water running wild, and falls and closed ways standing for the dead; a reach of the Labyrinth and a Black Spiral cavern are read their own way)
 - 0.16.0 (standing with the spirit courts: Bird, Beast, Elemental, Wyld, Weaver, Wyrm and the totem, -5 to +5, moved by chiminage, Banes and Bans, changing the difficulty with that court's spirits)
 - 0.15.1 (after the book check: the Labyrinth is the Storyteller's call (WR20 pdf 307); the Far Dreaming, Arcadia and the Deep Umbra cards give their pages; the Shadowlands and the Tempest keep the world's time)
 - 0.15.0 (Game time: the journey card says how much time passes outside (a Moon Bridge's thousandth, a trod's slip) and has a button to let it pass; realm time table)
