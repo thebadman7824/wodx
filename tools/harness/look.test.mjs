@@ -11,7 +11,7 @@ import * as RR from "../../modules/wodx-npc/scripts/routine-rules.mjs";
 import * as RV from "../../modules/wodx-npc/scripts/rivalry-rules.mjs";
 import * as MORE from "../../modules/wodx-npc/data/stock-talk-more.mjs";
 
-/* How NPCs read a character's look (Library 0.14.0, NPC 0.32.0, Chronicle 0.31.0, Actions 3.44.0) */
+/* How NPCs read a character's look (Library 0.14.0, NPC 0.32.0, Chronicle 0.31.0, Actions 3.45.0) */
 const src = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const cloth = (name, tier, o = {}) => ({name, worn: true, kind: "cloth", from: 1197, to: 2099, conceal: "T", tier, ...o});
 

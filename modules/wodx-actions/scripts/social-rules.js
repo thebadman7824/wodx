@@ -10,7 +10,7 @@
  *  - Persuade: neither book has a Persuasion system; V20's sample pool (p. 255) set against the NPC's Willpower, as Fast-Talk is.
  *  - Bribe: no rule in V20 or V20 Dark Ages; Manipulation + Streetwise against Willpower, bonus dice for a rich offer.
  *  - The NPC's attitude moves the difficulty (WoDX NPC's attitude track), and each outcome may move the attitude.
- *  - Pass as someone else (3.44.0): Manipulation + Subterfuge (or Performance) against Perception + Alertness; the result
+ *  - Pass as someone else (3.45.0): Manipulation + Subterfuge (or Performance) against Perception + Alertness; the result
  *    is kept per NPC on the character (flags wodx-actions.disguise) for WoDX NPC's first meetings and talk lines.
  *  - A won roll leaves a note on the character for an hour of game time ("persuaded", "fooled"...), which talk lines
  *    and "Only when" lists can test.
@@ -39,7 +39,7 @@ export const ACTS = [
     { key: "bribe", label: "Bribe", icon: "fa-coins", preset: "bribeNpc", sway: "bribed", offer: true,
         note: "Offer something for a favour. They resist with Willpower; a rich offer adds dice. Pay with Trade or by hand.", ref: "house rule",
         moves: { win: 1, lose: 0, botch: -1 } },
-    // 3.44.0: pass as someone else in borrowed dress (WoDX Library's look reads the disguise when it holds)
+    // 3.45.0: pass as someone else in borrowed dress (WoDX Library's look reads the disguise when it holds)
     { key: "disguise", label: "Pass as someone else", icon: "fa-user-tie", preset: "disguiseNpc",
         note: "Dress and manner as someone you are not. They see through it only by beating your successes with Perception + Alertness.", ref: "house rule",
         moves: { win: 0, lose: -1, botch: -2 } }
@@ -184,5 +184,5 @@ export function pocketsIn(year) {
     return "their pockets, cred chip or phone";
 }
 
-/** A disguise roll's record for one NPC (3.44.0): {held, at, scene}. A tie counts as seen through (the watcher wonders). */
+/** A disguise roll's record for one NPC (3.45.0): {held, at, scene}. A tie counts as seen through (the watcher wonders). */
 export const disguiseRecord = (result, at = 0, scene = null) => ({ held: result === "win", at: Number(at) || 0, scene: scene ?? null });
