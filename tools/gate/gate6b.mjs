@@ -107,8 +107,11 @@ export async function run() {
             const gm = W.items.find(i => i.type === "Bonus" && i.system.parentid === "glabro" && i.system.settingtype === "manipulation");
             const g = { form: form(W), str: tot(W, "strength"), man: tot(W, "manipulation"), bonus: gm?.system.value, oldEffect: !!W.effects.find(e => e.getFlag("wodx-actions", "formFix")) };
             answer(r => { set(r, "form", "crinos"); set(r, "how", "rage"); });
+            const before = game.messages.size;
             await A().shiftForm({ actor: { actor: W } }); await sleep(1800);
-            const c = { form: form(W), str: tot(W, "strength"), man: tot(W, "manipulation"), card: text(lastMsg()).slice(0, 200) };
+            // Other cards can follow the Delirium card (a crossover "Seen by another kind" card when a vampire is on the scene), so look through every new one
+            const delirium = game.messages.contents.slice(before).find(x => /Delirium/.test(text(x))) ?? lastMsg();
+            const c = { form: form(W), str: tot(W, "strength"), man: tot(W, "manipulation"), card: text(delirium).slice(0, 200) };
             ok("change form", g.form === "glabro" && g.bonus === -1 && g.man === base.man - 1 && g.str === base.str + 2 && !g.oldEffect && c.form === "crinos" && c.str === base.str + 4 && /Delirium/.test(c.card),
                 { base, glabro: g, crinos: c, rageLeft: W.system.advantages.rage.temporary });
             await W.update({ "system.advantages.rage.temporary": 5 });
