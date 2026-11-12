@@ -290,7 +290,7 @@ test("The Forgetful Mind marks a witness as made to forget in the Masquerade rec
   game.user.targets = new Set();
 });
 
-test("3.40.0: a Cainite witness is calm, a Garou startled, and a closed place keeps the rumour in", async () => {
+test("3.41.0: a Cainite witness is calm, a Garou startled, and a closed place keeps the rumour in", async () => {
   reset();
   const v = actor("Wilfried", {discs: {Dominate: 3}});
   const k2 = actor("Ottilie");

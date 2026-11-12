@@ -1082,7 +1082,7 @@ export function build(ctx) {
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${esc(k)}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
   // Built on first use: Foundry's classes exist only once the game has loaded
   let placesClass = null;
-  /** How far word of a breach goes from a place (WoDX Actions 3.40.0 reads it): blank follows the kind of place. */
+  /** How far word of a breach goes from a place (WoDX Actions 3.41.0 reads it): blank follows the kind of place. */
   const MASQ_MODES = {"": "By kind of place", open: "Open: word spreads", guarded: "Guarded, like Elysium", closed: "Closed: nothing leaves"};
   function PlacesAppClass() {
   if ( placesClass ) return placesClass;
