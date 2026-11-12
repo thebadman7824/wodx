@@ -558,6 +558,20 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
 
+## Approved by Ben, 12 November 2026, 02:42 UTC (Splat Features Desk)
+
+Ben picked "Build as written" on every item of the Splat Features Desk (https://claude.ai/artifact/Wy4A2X3qjJ88t5QTddhsk5), with notes on five. Each feature is built line by line, Vampire first.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Where the features live | One table per line, data/signatures.mjs in WoDX Chronicle, read by signature-rules.mjs (B1120) | None |
+| 2026-11-12 | Who sees the new tracks | The owner sees their own; a victim's Corruption is the Storyteller's only | open() in signatures.mjs |
+| 2026-11-12 | Switching it on | One world setting per line, off by default; Vampire is "Clan features (Vampire)" | Turn the setting off |
+| 2026-11-12 | A Toreador's Obsession between visits (B1121) | A point a week unseen, to 5; it adds to the difficulty of resisting beauty; seeing the Muse -1, owning or making for it -2; harm to a Muse who is a person +2 and a frenzy check. House rule: the books give only the scene-long trance | WEEK and museSeen in signature-rules.mjs |
+| 2026-11-12 | What moves a Setite victim's Corruption (B1122) | A won charm, persuasion, deceit, fast-talk or bribe +1, a botch -1, a gift that feeds the named vice +1; at 3 small wrongs, at 5 the victim is owned. Moves from a player's client wait in the approval queue | CORRUPTING_ACTS and stepFromTrade |
+| 2026-11-12 | Brujah causes (Ben's note) | A list to pick from by era, or the player's own with the Storyteller's approval; NPCs draw from the same list; three kept tempers make a Rant (B1123) | CAUSES in data/signatures.mjs |
+| 2026-11-12 | Gangrel marks (Ben's note) | Each frenzy leaves a mark with an edge and a cost; it heals after a month. Claws from a mark do Strength + 1 lethal, a house rule (B1124) | MARK_LASTS and MARKS |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
