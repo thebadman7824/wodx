@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.16.0 (what a witness remembers of someone, from the look: dress, uniform, size, face, blood and a drawn weapon, for WoDX NPC's descriptions)
 - 0.15.0 (Dress as someone else: players set the station and sides their own clothes pass for)
 - 0.14.0 (the look: what a character wears and how they are, read as a stranger reads it, for NPC meetings, talk and guards; Examine shows how well a made thing was made and who made it, and marks bloodstains and disguises; a fine or masterwork thing is 1 easier to use; its worth follows its quality)
 - 0.13.0 (what things give when taken apart, by era; Take apart for parts in Use)

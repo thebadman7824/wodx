@@ -106,7 +106,7 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).
  */
 const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", hand: "" };
-export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true } = {}) {
+export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true, followers = false } = {}) {
   const groups = new Map();
   for ( const r of rows ) { if ( !groups.has(r.groupLabel) ) groups.set(r.groupLabel, []); groups.get(r.groupLabel).push(r); }
   const row = r => {
@@ -128,6 +128,7 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
     ${own.map(s => `<div class="wodx-tie" data-search-item><span class="wodx-tie-role">Their own</span> ${esc(s.text)}</div>`).join("")}
     ${known.map(s => `<div class="wodx-tie" data-search-item><span class="wodx-tie-role">Knows of ${esc(s.holder)}</span> ${esc(s.text)}</div>`).join("")}</div>` : "";
   const buttons = [tree ? `<button type="button" class="wodx-act" data-act="tie-tree"><i class="fa-solid fa-sitemap"></i> Family and lineage</button>` : "",
+    followers ? `<button type="button" class="wodx-act" data-act="tie-followers"><i class="fa-solid fa-users"></i> Followers</button>` : "",
     gm ? `<button type="button" class="wodx-act" data-act="tie-secrets"><i class="fa-solid fa-user-secret"></i> Secrets</button>` : ""].filter(Boolean).join(" ");
   return `<div class="wodx-ties" data-drop-tie="1">
     <div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">Relationships</span></div>

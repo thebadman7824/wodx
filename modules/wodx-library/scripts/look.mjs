@@ -1,5 +1,6 @@
 /**
  * WoDX Library 0.14.0: the look of a character, read off their sheet (look-rules.mjs has the rules).
+ * 0.16.0: api.look.describe(actor) -> what a witness remembers ({marks, text}), for WoDX NPC's culprit descriptions.
  * api.look.of(actor) -> the reading; api.look.station(actor) -> an NPC's own station; api.look.rules.
  * Nothing is stored here: WoDX NPC reads it at a meeting, WoDX Chronicle's "Only when" tests read it for talk lines.
  */
@@ -72,4 +73,16 @@ export function station(actor, template = null) {
   return L.npcStation({wornStation: v ? L.stationOf(v.items) : null, resources, template});
 }
 
-export const api = () => ({of, viewOf, station, seed: L.lookSeed, scene: L.sceneStep, line: L.readLine, dressedVs: L.dressedVs, asSeen: L.asSeen, rules: L});
+/**
+ * Library 0.16.0: what a witness would remember of someone now: {marks, text}. A worn disguise shows as what it passes
+ * for, so taking it off later breaks the match. token: for size (its grid width), optional.
+ */
+export function describe(actor, {token = null} = {}) {
+  const look = of(actor);
+  if ( !look ) return null;
+  const tok = token?.document ?? token ?? (actor?.getActiveTokens?.()[0]?.document ?? null);
+  const marks = L.marksOf(look.disguise ? L.asSeen(look, true) : look, {size: L.sizeOf(tok?.width)});
+  return {marks, text: L.describeMarks(marks)};
+}
+
+export const api = () => ({of, viewOf, station, describe, seed: L.lookSeed, scene: L.sceneStep, line: L.readLine, dressedVs: L.dressedVs, asSeen: L.asSeen, rules: L});
