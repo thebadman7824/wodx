@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.29.1 (the book check of 12 November: the Avatar Storm rivalry starts in 1999 (M20 pdf 480) and the Ascension War row ends in 1998; the Kin-jin are Tense, not Hostile, toward the Cathayans (Kindred of the East pdf 32); pooled Background page refs)
 - 0.29.0 (players see the politics of their own factions: who holds each seat, the next gathering, the law, and their own characters' standing, seats, favour, claims and charges)
 - 0.28.0 (politics for mages, on the Traditions' side and Reason's, hunters by era from the Inquisition to the imbued, the Shemsu-heru, the Fallen and Kuei-jin courts)
 - 0.27.1 (talk cards add what a deranged Malkavian hears, from WoDX Chronicle)
