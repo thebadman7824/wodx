@@ -15,7 +15,7 @@
  *
  * Book basis: V20 caps the points a character takes from Flaws at 7 (V20 core, Merits and Flaws chapter; the book
  * check pins the page). Thin blood at the 14th and 15th Generation (V20 core). The trouble dial, the story hook, the
- * five-year horizon, the step list and the forecast wording are WoDX readings (house rules, B1500 to B1509).
+ * five-year horizon, the step list and the forecast wording are WoDX readings (house rules, B1600 to B1609).
  *
  * Record on the actor: flags["wodx-creation"].firstNight = {steps: {[key]: {done, at, by}}, dial, hook, signed, at}.
  */

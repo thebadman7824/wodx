@@ -186,3 +186,44 @@ export function pocketsIn(year) {
 
 /** A disguise roll's record for one NPC (3.45.0): {held, at, scene}. A tie counts as seen through (the watcher wonders). */
 export const disguiseRecord = (result, at = 0, scene = null) => ({ held: result === "win", at: Number(at) || 0, scene: scene ?? null });
+
+/* ---- 3.46.0: Look them over, and what the street says (house rules, the NPC look design) ---- */
+
+/** The pools: a closer look (Perception + Empathy, Etiquette among the well-born) and local knowledge (Wits + Streetwise, Contacts adds dice). */
+export const LOOKOVER = {
+    look: { key: "lookover", label: "Look them over", icon: "fa-eye", diff: 6,
+        alts: [["perception", "empathy"], ["perception", "etiquette"], ["perception", "awareness"]],
+        note: "A careful look before you deal with them. Each success tells you one more thing: their mood, their station and trade, where they belong, what they hide.", ref: "house rule" },
+    ask: { key: "askabout", label: "Ask around about them", icon: "fa-people-arrows", diff: 6,
+        alts: [["wits", "streetwise"], ["charisma", "streetwise"], ["manipulation", "streetwise"]],
+        note: "What the street knows of them. One success: what people say of them. Two: their name. Contacts add a die each.", ref: "house rule" }
+};
+
+/**
+ * What a closer look finds, a fact per success, in order. info: {mood (an attitude word or ""), condition: [words],
+ * station (0 to 5 or null), trade (a template label), doing (an activity word), belongs (household or faction name),
+ * hidden: [names of concealed weapons], disguised (bool)}. Returns [text].
+ */
+export function lookOverFacts(successes, info = {}) {
+    const n = Math.max(0, Math.floor(Number(successes) || 0)), out = [];
+    if (n >= 1) out.push(info.mood ? `They seem ${info.mood.toLowerCase()} toward you${info.condition?.length ? `, and ${info.condition.join(", ")}` : ""}.` : `You can't read their mood${info.condition?.length ? `; they are ${info.condition.join(", ")}` : ""}.`);
+    if (n >= 2) {
+        const st = Number.isFinite(Number(info.station)) && info.station !== null ? ["destitute", "poor", "common folk", "comfortable", "well-to-do", "wealthy"][Math.max(0, Math.min(5, Number(info.station)))] : "";
+        out.push(`By their dress and bearing: ${[st, info.trade ? String(info.trade).toLowerCase() : ""].filter(Boolean).join(", ") || "nothing out of the ordinary"}${info.doing ? `, ${info.doing}` : ""}.`);
+    }
+    if (n >= 3) out.push(info.belongs ? `They carry themselves like someone of ${info.belongs}.` : "Nothing marks them as anyone's.");
+    if (n >= 4) {
+        if (info.disguised) out.push("Their clothes don't fit the way they move. They are not what they are dressed as.");
+        else if (info.hidden?.length) out.push(`They carry something hidden: ${info.hidden.join(", ")}.`);
+        else out.push("They hide nothing that you can see.");
+    }
+    return out;
+}
+
+/** What the street says, a fact per success. info: {said (what people call them), name}. */
+export function askFacts(successes, info = {}) {
+    const n = Math.max(0, Math.floor(Number(successes) || 0)), out = [];
+    if (n >= 1) out.push(info.said ? `People say they are ${info.said}.` : "Nobody seems to know much about them.");
+    if (n >= 2 && info.name) out.push(`Their name is ${info.name}.`);
+    return out;
+}

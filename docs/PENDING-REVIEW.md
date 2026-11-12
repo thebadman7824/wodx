@@ -598,6 +598,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Changeling rows (B1500) | Kith, seeming, court and House stacked; Thallain, Inanimae, Nunnehi and Dark-Kin kiths grouped; the Dark-Kin feature is a house reading | KITHS |
+| 2026-11-12 | Changeling engines (B1501) | Revel Glamour by card, Pooka truth costs Willpower, the seal coat item, troll and sidhe oaths | signatures.mjs |
+| 2026-11-12 | Courts and seemings (B1502) | Unseelie hold power Samhain to Beltaine, Seelie the rest; a die to the court's own social rolls in its half | COURTS |
+| 2026-11-12 | Sidhe Houses (B1503) | Fourteen Houses with a theme and a seat; boons and flaws from the book by the Storyteller | FAE_HOUSES |
 | 2026-11-12 | Mage rows (B1165) | Group row plus a House row; old names by year; Virtual Adepts from 1961, Hollow Ones from 1890, Celestial Masters and Craftmasons 1325 to 1896 are house readings | MAGE, HOUSES |
 | 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
 | 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
@@ -651,7 +655,7 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
 | 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
 | 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
-| 2026-11-12 | Disguises set by the Storyteller only (B1405) | A disguise is set on a worn item in its Examine notes, which only the Storyteller opens; players ask the Storyteller | Add a Dress as... use to Library's Use roster |
+| 2026-11-12 | Disguises set by the Storyteller only (B1405) | Superseded 2026-11-12 by B1411: players set their own with Dress as someone else | B1411 |
 | 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
 | 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
 | 2026-11-12 | Which worn names show a side (B1407) | habit, cassock, surplice, vestments, cowl, clerical collar: kind:church; police, constable, gendarme: kind:watch; military, soldier's, regimental, army: military; livery; pilgrim's badge; corporate | SIDE_WORDS in look-rules.mjs |
@@ -660,7 +664,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
 | 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
 | 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
-| 2026-11-12 | Before the First Night: steps and sign-off (B1500, B1501) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
-| 2026-11-12 | Trouble forecast sources and who sees what (B1503) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
-| 2026-11-12 | Trouble dial and story hook numbers (B1504) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
-| 2026-11-12 | Starting standing (B1506) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |
+| 2026-11-12 | What the stranger line shows (B1408) | Dress by station, side worn, blood or wounds, a drawn weapon, what they are doing, manner toward the viewer; no kind, clan or trade | autoStranger in faces-rules.mjs |
+| 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
+| 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
+| 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |
+| 2026-11-12 | Before the First Night: steps and sign-off (B1600, B1601) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
+| 2026-11-12 | Trouble forecast sources and who sees what (B1603) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
+| 2026-11-12 | Trouble dial and story hook numbers (B1604) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
+| 2026-11-12 | Starting standing (B1606) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |

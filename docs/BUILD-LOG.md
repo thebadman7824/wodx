@@ -1649,6 +1649,8 @@ Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of th
 
 ## 2026-11-12: ghouls and revenant families
 Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
+## 2026-11-12: Changeling features (Chronicle 0.34.0)
+Chronicle 0.34.0 builds the Changeling part of the Splat Features Desk. A changeling stacks a kith, a seeming, a court and a sidhe House row. The system's whole kith list is covered, the Hsien included. The new engines are revels, the Pooka's truth, the Selkie's coat and the court in power by the season; oaths reuse the Hippolyta engine. The release also fixes a Werewolf bug: a Fianna Galliard got no Wisdom for a tale (testbed gatewolf step 9). Decisions B1500 to B1503. Gate tools/gate/gatefae.mjs, 9 steps. The harness passes. Not on Live.
 ## 2026-11-12: Mage features (Chronicle 0.33.0)
 Chronicle 0.33.0 builds the Mage part of the Splat Features Desk. Every Tradition, Craft and Convention has a row, along with the Order of Reason's conventions, the Hermetic Houses, the sorcerers, the Marauders and the Nephandi. Each row shows the group's old name for the year. The new engines are the Akashic dawn, the Euthanatos Good Death and Jhor, certámen, Hippolyta oaths and the Watchers of the New World Order; other groups borrow engines already built. Decisions B1165 to B1167. Gate tools/gate/gatemage.mjs, 11 steps. The harness passes. Not on Live.
 ## 2026-11-12: Werewolf features (Chronicle 0.31.0)
@@ -1667,3 +1669,5 @@ Library 0.14.0 adds the look (look-rules.mjs, look.mjs, api.look). It covers sta
 ## 2026-11-12: testbed fixes for the table and fight groups
 
 The testbed gate (gatetable 6/9 on 752ca8b) found two code faults and one gate fault. WoDX Actions 3.45.1: the odds line was put into the form beside a field that sits in the window's content box, so it never showed; it now goes beside the field. WoDX Combat 3.15.1: the after-action card's start snapshots were stored under actor ids, whose dot Foundry splits into nested flags, so the card read "?: took NaN levels"; they are kept as pairs now, and written only when a fighter is new. WoDX Targeting 0.2.1: no area preview without PIXI. The gate's area step uses the area tag a.v:b3. Harness 1529 pass, 0 fail (mapgen left out, as before).
+## 2026-11-12: what a character can tell about a stranger
+NPC 0.34.0 builds a stranger line for unmet NPCs' nameplates from their look, routine and manner. Actions 3.46.0 adds Look them over and Ask around about them to With this person. Library 0.15.0 lets players dress as someone else in their own clothes. Decisions B1408 to B1411. Harness stranger.test.mjs: 4 tests.
