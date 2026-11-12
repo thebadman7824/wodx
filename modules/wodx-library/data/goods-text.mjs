@@ -156,7 +156,8 @@ a bottle of chloral hydrate | A sleeping drug, the knockout drops of a bar.
 a bottle of ether for sniffing | Ether, sniffed on a cloth for a cheap high.
 a sleeping pill | A single small sleeping pill, the kind a doctor prescribes ten at a time.
 a vial of ketamine | Ketamine, an animal anaesthetic.
-a glass syringe and a bent spoon | A glass syringe and a spoon blackened underneath from cooking drugs.
+a glass syringe | A glass syringe with a steel needle.
+a bent spoon | A spoon bent at the neck and blackened underneath from cooking drugs.
 a long opium pipe | A long pipe with a small bowl, made for smoking opium lying down.
 a hookah | A tall water pipe with a hose for smoking tobacco.
 a dermal patch | A skin patch of stimulants in a plain wrapper.
@@ -259,7 +260,8 @@ a hard hat | A hard plastic or fibreglass helmet worn on building sites.
 a high-visibility vest | A bright yellow or orange vest with reflective strips.
 a bolt of undyed wool | A bolt of plain undyed woollen cloth, enough for several garments.
 a bolt of dyed silk | A bolt of shining dyed silk.
-a needle case and thread | A small case holding needles and a hank of thread.
+a needle case | A small case of bone, wood or tin holding sewing needles.
+a hank of thread | A hank of linen or cotton thread for sewing.
 a paper of pins | Rows of brass pins.
 a smart-fabric jacket | A light jacket of a smooth, faintly shimmering fabric.
 a filter mask | A face mask with two filter cartridges.
@@ -270,7 +272,8 @@ a bar of scented soap | A bar of scented soap in a paper wrapper.
 a chewing stick for the teeth | A twig with a frayed end for cleaning the teeth.
 a bristle toothbrush | A toothbrush with a bone handle and hog bristles.
 a tin of tooth powder | Chalky tooth powder, flavoured with mint or cinnamon.
-a toothbrush and a tube of toothpaste | A plastic toothbrush and a tube of mint toothpaste.
+a toothbrush | A plastic toothbrush.
+a tube of toothpaste | Mint toothpaste.
 a pumice stone | A grey pumice stone for scrubbing hard skin.
 a packet of sanitary pads | Disposable sanitary pads.
 a stick of deodorant | A stick of deodorant in a plastic case.
@@ -378,7 +381,9 @@ a rechargeable battery pack | A rechargeable battery pack for tools or electroni
 a phone power bank | A pocket battery for charging a phone.
 a charged power cell | A fully charged power cell for weapons, vehicles or tools.
 a wax tablet and stylus | Two hinged wooden leaves filled with dark wax, and a stylus with a flat end for rubbing out.
-a quill, a knife and a pot of ink | A goose quill, a small knife to cut its nib, and a stoppered pot of oak-gall ink.
+a quill pen | A goose quill cut to a nib for writing. It needs ink.
+a penknife | A small folding knife for cutting a quill's nib and sharpening pencils.
+a pot of ink | Black oak-gall ink.
 a quire of paper | A quire of paper, about two dozen sheets folded together.
 a sheet of vellum | A sheet of fine calfskin, scraped thin for writing.
 a stick of sealing wax | A stick of red sealing wax for closing letters.
@@ -648,7 +653,8 @@ a set of brass knuckles | A set of brass knuckles that fits over the fingers.
 a switchblade | A folding knife whose blade springs open at the press of a button.
 a can of pepper spray | A small can of pepper spray that blinds and chokes.
 a stun gun | A hand-held stun gun that crackles with blue sparks.
-a sling and a pouch of stones | A sling of braided cord and a pouch of smooth stones.
+a sling | A sling of braided cord with a pouch for the stone.
+a sling stone | A smooth, rounded stone the size of an egg, for a sling.
 an arrow | An arrow fletched with goose feathers.
 a crossbow bolt | A short, heavy crossbow bolt with an iron head.
 a powder horn | A cow's horn stoppered and filled with black powder.
@@ -812,7 +818,7 @@ a personal assistant pin that still talks | A small pin that answers questions, 
 @1920 curling tongs | An electric curling iron with a cord.
 @1850 an iron nail | A machine-cut steel nail.
 @1900 a match | A safety match that strikes only on the side of its box.
-@1850 a quill, a knife and a pot of ink | A dip pen with a steel nib and a bottle of ink.
+@1850 a quill pen | A dip pen with a steel nib. It needs ink.
 @1850 a pair of dice | A pair of dice.
 @1900 an apple | A single shiny apple, picked for size and colour.
 @1900 a kettle | An enamel kettle with a whistle in the spout.
@@ -1959,14 +1965,14 @@ a simple cloth quiver | A cloth quiver for arrows.
 a cut of raw meat | A red cut of fresh meat with a rind of fat, wrapped against the flies. It will not keep long.
 a plucked fowl | A whole bird, plucked and drawn, its legs tied with string for hanging.
 a bunch of grapes | A heavy bunch of dusky grapes, some already split and sticky.
-a sack of malt | A sack of barley that has been sprouted and dried in a kiln. It smells sweet, like biscuits.
-a jar of rennet | A small jar of rennet, the curdling stuff taken from a calf's stomach, for setting cheese.
-a crock of lard | A crock of white rendered pork fat for frying, baking and salves.
-a bag of sugar | A bag of loose white sugar.
-a pouch of juniper berries | A pouch of dark blue juniper berries with a sharp, piney smell.
+a sack of malt | Barley that has been sprouted and dried in a kiln. It smells sweet, like biscuits.
+a jar of rennet | Rennet, the curdling stuff taken from a calf's stomach, for setting cheese.
+a crock of lard | White rendered pork fat for frying, baking and salves.
+a bag of sugar | Loose white sugar.
+a pouch of juniper berries | Dark blue juniper berries with a sharp, piney smell.
 a bundle of tobacco leaves | A bundle of broad brown tobacco leaves tied at the stems, cured and ready to cut.
-a jar of coca paste | A jar of greyish, foul-smelling paste worked out of coca leaves, halfway to the white powder.
-a cask of wash | A cask of soured, bubbling mash, too rough to drink, waiting for the still.
+a jar of coca paste | Greyish, foul-smelling paste worked out of coca leaves, halfway to the white powder.
+a cask of wash | Soured, bubbling mash, too rough to drink, waiting for the still.
 `;
 
 /**

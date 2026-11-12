@@ -1203,7 +1203,7 @@ A member's standing inside a polity is kept on the faction (0 to 5) and starts f
 Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
 
 ## B1012. Nothing starts in a container (2026-11-12)
-Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.10.2, Interactables 0.26.6.
+Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
 
 Reverse: put the "(in ...)" branch back in stackLine and goodsLine, and the old names back from RENAMED.
 
@@ -1211,3 +1211,14 @@ Reverse: put the "(in ...)" branch back in stackLine and goodsLine, and the old 
 The word lists that sort goods into substances and abilities match whole words, with an optional plural. Crackers and cracklins are food, not a stimulant, and a speed loader, cracked screens, methanol and methylated spirits are no longer drugs.
 
 Reverse: the R() helper in wodx-library/scripts/use-rules.mjs.
+
+## B1014. How things work together (2026-11-12)
+After a study of how Cataclysm DDA links its items (Ben approved all seven recommendations), Library 0.11.0 adds scripts/link-rules.mjs:
+- Qualities read from a thing's name (cuts, hammers, pries, sews, thread, boils, cooks, lights a fire, writes, ink, holds a liquid, picks locks, digs, injects, pipe), for goods and Gear alike. The recipes work can ask for a quality instead of a named tool.
+- Needs: smoking needs a light, and loose tobacco, opium, hashish or crack also need a pipe; heroin and morphine need a syringe; a candle, lamp or torch needs a flame; writing, drawing and marking need something to write with; a quill needs ink. When nothing in Possessions meets a need, the Use window says so and the user may go ahead; a player's go-ahead is whispered to the Storyteller, who has the last word.
+- Liquids: a liquid coming into Possessions with nothing to carry it in (bottle, flask, skin, canteen, jug, cup) gets a private note that the Storyteller decides whether it can be carried. Nothing is blocked.
+- Full or empty: lamps, petrol lighters, disposable lighters, fountain pens, needle cases, flashlights and phones carry flags.wodx-library.empty. "It has run out" marks one empty; "Refill it" spends one matching good (lamp oil, petrol, ink, thread, a battery) and "Charge it" uses a power bank or charger without spending it. No amounts. An empty lighter does not count as a light.
+- The five kits are separate goods: a glass syringe and a bent spoon; a needle case and a hank of thread; a toothbrush and toothpaste; a quill pen, a penknife and ink; a sling and sling stones. Old ids stay on the first part.
+- Later: parts fitted to guns (scopes, silencers), only where a V20 book gives a rule, after a PC book check. Taking things apart goes to the recipes work.
+
+Reverse: drop the whatIsMissing check and supply buttons in use.mjs; the kits through RENAMED in goods.mjs.

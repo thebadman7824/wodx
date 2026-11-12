@@ -85,7 +85,7 @@ const SUBSTANCES = [
   ["blood", /^(a bag of )?blood$/i],
   ["holywater", R("holy water")]
 ];
-const PARAPHERNALIA = R("syringe", "opium pipe", "hookah", "clay pipe", "dermal patch", "lighter");
+const PARAPHERNALIA = R("syringe", "bent spoon", "opium pipe", "hookah", "clay pipe", "dermal patch", "lighter");
 
 /** What is in a thing: food, water, alcohol, caffeine, a drug class, a remedy, blood, holy water, or null. */
 export function substanceOf(good) {
@@ -188,7 +188,8 @@ export function abilitiesOf(good) {
   if ( ["papers", "manuals", "faith", "occult", "keepsake", "vice", "toys", "travel"].includes(k) && READABLE.test(n) ) out.add("read");
   if ( (k === "papers" || k === "manuals") && !out.has("read") && !out.has("write") && /\b(book|letter|novel)\b/i.test(n) ) out.add("read");
   if ( out.has("write") || out.has("draw") ) out.add("read");
-  if ( ["cloth", "valuables"].includes(k) || (k === "accessories" && /holster|sling/i.test(n)) ) out.add("wear");
+  if ( k === "cloth" && /needle case|hank of thread/i.test(n) ) out.add("fix");
+  else if ( ["cloth", "valuables"].includes(k) || (k === "accessories" && /holster|sling/i.test(n)) ) out.add("wear");
   if ( (k === "toys" || k === "faith") && INSTRUMENTS.test(n) ) out.add("play");
   if ( k === "toys" && PLAYERS.test(n) ) out.add("switchon");
   if ( (k === "toys" || k === "vice") && GAMES.test(n) && !out.has("play") ) out.add(k === "vice" ? "gamble" : "game");
