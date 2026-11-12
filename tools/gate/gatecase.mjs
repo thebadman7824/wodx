@@ -33,6 +33,8 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const msgStart = Date.now(), viewed = canvas.scene;
   const IA = game.modules.get(MOD)?.api, CB = IA?.caseBoard, C = CB?.rules;
+  // Library sets api.know in its ready hook after an import, a moment after the world is ready: wait for it
+  for ( let i = 0; i < 50 && !game.modules.get("wodx-library")?.api?.know; i++ ) await sleep(100);
   const KN = game.modules.get("wodx-library")?.api?.know;
   const openBefore = game.settings.get(MOD, "caseBoard"), cluesBefore = game.settings.get(MOD, "caseClues");
   let board = null, scene = null, actor = null;

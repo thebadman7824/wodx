@@ -770,6 +770,41 @@ game.world.id = worldId;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;
 }
+// Interactables 0.32.0: the case board (twelve cards, long words, lines, a hidden card); Library 0.17.0: What they could know
+{
+  const CB = await import(join(root, "modules/wodx-interactables/scripts/case.mjs"));
+  const CR = await import(join(root, "modules/wodx-interactables/scripts/case-rules.mjs"));
+  let b = CR.emptyBoard();
+  for ( let i = 0; i < 12; i++ ) b = CR.addCard(b, {kind: Object.keys(CR.KINDS)[i % 5], ref: i % 5 === 4 ? "" : `Actor.x${i}`, title: `A card with a long title to wrap, number ${i}`,
+    text: "What the finder learned, written out at some length so the card has to scroll a little. ".repeat(2), hidden: i === 3, by: "Gamemaster Test"}).board;
+  for ( let i = 1; i < 12; i++ ) b = CR.link(b, `c${i}`, `c${i + 1}`, `seen with, number ${i}`);
+  const j = {id: "caseboard00001", name: "Case board: the missing courier and the burnt mill", flags: {"wodx-interactables": {board: b}}, isOwner: true,
+    testUserPermission: () => true, update: async () => {}};
+  game.journal.set(j.id, j);
+  const ca = new CB.CaseBoardApp({});
+  ca.boardId = j.id;
+  await ca.render({force: true});
+  const cop = CB.CaseBoardApp.DEFAULT_OPTIONS;
+  windows.push({name: "Case board", tag: cop.tag ?? "div", classes: ["application", ...(cop.classes ?? [])].join(" "), width: cop.position.width, height: cop.position.height,
+    content: ca.element.querySelector("section.window-content").innerHTML});
+  game.journal.delete(j.id);
+
+  const Sh = await import(join(root, "modules/wodx-library/scripts/shelves.mjs"));
+  const KN = await import(join(root, "modules/wodx-library/scripts/know.mjs"));
+  Sh.setSources({encyclopedia: {books: [], entries: Array.from({length: 60}, (_, i) => ({id: `fit-${i}`, title: `An entry with a long title that wraps, number ${i}`,
+    kind: ["term", "faction", "event", "lore", "character"][i % 5], lines: [i % 3 ? "vampire" : "werewolf"], eras: ["dark-ages"]}))}});
+  const pc = {id: "knowpc0000001", name: "Anezka of the Silver Adit, a long name", type: "Vampire", hasPlayerOwner: true, items: [],
+    system: {attributes: {intelligence: {value: 3}}, abilities: {occult: {value: 3}, academics: {value: 2}, politics: {value: 1}}}};
+  game.actors.set(pc.id, pc);
+  const ka = new KN.KnowApp({});
+  ka.actorId = pc.id;
+  await ka.render({force: true});
+  const kop = KN.KnowApp.DEFAULT_OPTIONS;
+  windows.push({name: "What they could know", tag: kop.tag ?? "div", classes: ["application", ...(kop.classes ?? [])].join(" "), width: kop.position.width, height: kop.position.height,
+    content: ka.element.querySelector("section.window-content").innerHTML});
+  game.actors.delete(pc.id);
+  Sh.setSources(null);
+}
 // WoDX Senses 0.1.0: the ask window (a character with Auspex) and the Place senses window (a scene with twelve regions)
 {
   game.modules.set("wodx-senses", {active: true});
