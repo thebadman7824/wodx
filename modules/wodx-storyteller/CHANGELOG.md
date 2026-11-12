@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.48.1 (approving a market change from the queue applies it: the Markets approval handler now registers when WoDX Chronicle is ready, as the other Storyteller handlers do; testbed gate step 5)
 - 0.48.0 (the weekly market turn: every market makes, uses and trades goods once a week of game time; supply comes back toward normal, workshops hold it up, linked markets trade and meet on price, prices follow supply and the season by era; big swings where a player character is wait in the approval queue, the rest apply with one Undo card; long skips play twelve weeks and settle the rest; talk of dear and cheap goods starts in the rumour network; markets list their trade links and can be cut off; Run a week now in the Markets window)
 - 0.47.1 (those the sun burns stop for the day at a village anywhere along a road, so a short summer night no longer leaves a road trip with no shelter; only a stretch off the roads or a paid ride must fit one night. Travel places: the Near column is typed and searched from one list of towns)
 - 0.47.0 (battle deeds: each character is offered a deed each phase by post, age of war, realm and kind of being, with Swap, Skip and Roll; leaderDeed and deedSuccessesFor for off-screen battles; what the field leaves behind, by line, sent to the Ledger, the Legends book or the place with Undo; Old fields in later years)

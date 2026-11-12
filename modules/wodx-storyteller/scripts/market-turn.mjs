@@ -142,7 +142,9 @@ async function talk() {
   return out;
 }
 
-function registerApproval() {
+/** Chronicle's approval queue. Called from main.mjs on wodxChronicleReady (Chronicle sets its api in its own ready,
+ * which may come after ours) and again at setup in case that hook has already passed. */
+export function registerApproval() {
   chron()?.registerApprovalHandler?.(TYPE, {label: "Markets", approve: async entry => applyChanges(entry.data?.changes ?? [])});
 }
 
