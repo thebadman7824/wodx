@@ -732,3 +732,9 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 | 2026-11-12 | What moves spirit standing (B1721) | Chiminage paid +1, unpaid -2, a Bane destroyed +1 Wyld and totem -1 Wyrm, a spirit forced -2, Ban kept +1, Ban broken -3 | MOVES in wodx-otherworlds spirit-rules.mjs |
 | 2026-11-12 | What spirit standing does (B1722) | +3: -1 difficulty, +5: -2; -3: +1, -5: +2 and the court may refuse (summoning, being taught, binding) | effect() in spirit-rules.mjs |
 | 2026-11-12 | What players see of spirit standing (B1723) | Their own characters' standing in words only | spiritsDialog in spirits.mjs |
+| 2026-11-12 | Battles and sieges: book rolls with a house frame (B2200) | Spoils of War and Dark Ages Companion rolls (commander, wavering, demoralised, disease, counterattack, kills); forces as a weight, resolve and a breach clock instead of Spoils' unit army, whose table is garbled in the scan | battle-rules.mjs in wodx-storyteller |
+| 2026-11-12 | The heavier side's advantage (B2202) | A die for each point of weight it has over the other side | phaseSetup in battle-rules.mjs |
+| 2026-11-12 | How a siege runs (B2204) | Weekly Intelligence + Leadership fills an 8-segment breach clock, guns twice as fast; hunger after the stores; disease at 3 costs resolve | settleWeek in battle-rules.mjs |
+| 2026-11-12 | Counterattack dice after 1500 (B2205) | 5 (book, Dark Ages), 6 from 1500, 7 from 1860, 8 from 1914, 9 from 2000 | hazard in AGES, battle-rules.mjs |
+| 2026-11-12 | What a battle does to factions (B2206) | Proposed in the approval queue only: winner +1 Status; loser -1 standing, -1 Retainers, -1 Status if it broke | battleChanges in wodx-npc faction-rules.mjs |
+| 2026-11-12 | Battles in the Legends book shown to players (B2207) | Shown by default | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |

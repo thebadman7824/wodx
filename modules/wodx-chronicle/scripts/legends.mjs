@@ -87,6 +87,7 @@ export function gather(prevSnap = null) {
     ...L.eventLines(fired.map(id => byId.get(id)).filter(Boolean)),
     ...L.actorLines(actorRows(), other(CREATION, "archived", {}), dateOf),
     ...L.ledgerLines(other(ST, "ledger", {entries: []})?.entries ?? [], dateOf),
+    ...L.battleLines(other(ST, "battles", {list: []})?.list ?? [], dateOf),
     ...L.officeLines(prevSnap?.offices ?? null, snap.offices, when),
     ...L.holdingLines(prevSnap?.holdings ?? null, snap.holdings, when)
   ];

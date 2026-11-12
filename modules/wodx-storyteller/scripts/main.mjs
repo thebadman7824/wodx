@@ -53,6 +53,8 @@ import * as CraftRules from "./craft-rules.mjs";
 import * as BuildRules from "./build-rules.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as ClockRules from "./clock-rules.mjs";
+import * as Battles from "./battles.mjs";
+import * as BattleRules from "./battle-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -92,6 +94,8 @@ Hooks.once("init", () => {
   Dash.registerDashboardHooks();
   Clocks.registerClockSettings();
   Clocks.registerClockHooks();
+  Battles.registerBattleSettings();
+  Hand.addTool({key: "battle", label: "Battles and sieges", icon: "fa-chess-rook", run: () => Battles.BattlesApp.open()});
   Hand.registerHandSettings();
   Hand.registerHandHooks();
   Hand.registerHandKeys();
@@ -135,6 +139,9 @@ Hooks.once("ready", () => {
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},
+    battles: {open: id => Battles.BattlesApp.open(id), list: Battles.list, get: Battles.get, start: Battles.start, setup: Battles.setupDialog, fight: Battles.fight,
+      week: Battles.week, storm: Battles.storm, withdraw: Battles.withdrawSide, draw: Battles.callDraw, undo: Battles.undo, passTime: Battles.passTime,
+      hazard: Battles.hazard, remove: Battles.remove, commandPool: Battles.commandPool, commandPools: Battles.commandPools, rules: BattleRules},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,

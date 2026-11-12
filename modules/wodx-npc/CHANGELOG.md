@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.39.0 (an ended battle between factions proposes Status, Retainers and standing changes (wodxBattle))
 - 0.38.0 (followers: an NPC serves its domitor, the character whose background made it and its patron as well as anyone the Storyteller marks; WoDX spots hard orders and suggests the refusal roll; Keep watch warns the master and Guard challenges strangers; in a fight a follower minds its orders: Attack the one I point at, Hold back, Guard and Wait, and guards every character it serves; followers on errands: buy, carry, find, ask around, bring someone to feed on, watch a rival, worked as long tasks; help on a master's long task; deal with a witness; join a chase with the master or cut the quarry off; a follower's breach is traced to its master; loyalty drifts with vitae, neglect, feeding and hard orders)
 - 0.37.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
 - 0.36.0 (missed connections, 12 November 2026: reaction cards read the sound of a fight or a chase; a fight counts as a weapon in the reaction rules)

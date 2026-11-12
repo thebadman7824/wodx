@@ -1020,6 +1020,16 @@ export function build(ctx) {
     } else await proposeChanges(why, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `boon:${entry.id}:${status}`});
   }
 
+  /** NPC 0.39.0: an ended WoDX Storyteller battle between factions goes to the approval queue (B2206). */
+  async function onBattle({battle} = {}) {
+    if ( !isActiveGM() || mode() === "off" || !battle?.over ) return;
+    const s = state();
+    const changes = F.battleChanges(s, battle);
+    if ( !changes.length ) return;
+    const n = names(s);
+    await proposeChanges(`After ${battle.name}`, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `battle:${battle.id}:${battle.over.at ?? ""}`});
+  }
+
   function hooks() {
     Hooks.on("wodxChronicleReady", () => registerHandler());
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
@@ -1035,6 +1045,7 @@ export function build(ctx) {
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBoonSettled", p => { onBoonSettled(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
