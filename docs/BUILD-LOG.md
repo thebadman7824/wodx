@@ -1658,3 +1658,7 @@ Improvement Desk cr1. A Lifepath button on every owned character sheet and in th
 ## 2026-11-12: rolls and fights at the table
 
 From Ben's Improvement Desk picks a1, a2, t1, cb1, cb2 and se1 (B1300 to B1330, and B1340). WoDX Actions 3.43.0: the odds before a roll, worked out exactly from the roller's own rules, with each modifier named; pinned and lately used actions on the character. WoDX Targeting 0.2.0: area shapes drawn on the map, and whoever stands inside suggested. WoDX Combat 3.14.0: the after-action card and the Use the room button. WoDX Interactables 0.27.0: lamps knocked over, chandeliers brought down, curtains and windows that let the sun in, sprinklers, each with Undo. WoDX Senses 0.7.0 and Otherworlds 0.13.1: colour-blind safe rings and words with every colour. Harness: tools/harness/table-fights.test.mjs. Gate: tools/gate/gatetable.mjs.
+
+## 2026-11-12: testbed fixes for the table and fight groups
+
+The testbed gate (gatetable 6/9 on 752ca8b) found two code faults and one gate fault. WoDX Actions 3.44.1: the odds line was put into the form beside a field that sits in the window's content box, so it never showed; it now goes beside the field. WoDX Combat 3.15.1: the after-action card's start snapshots were stored under actor ids, whose dot Foundry splits into nested flags, so the card read "?: took NaN levels"; they are kept as pairs now, and written only when a fighter is new. WoDX Targeting 0.2.1: no area preview without PIXI. The gate's area step uses the area tag a.v:b3. Harness 1529 pass, 0 fail (mapgen left out, as before).
