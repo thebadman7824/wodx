@@ -11193,25 +11193,6 @@
 {
 "id": "r3-long-night-183",
 "era": "long-night",
-"year": 1438,
-"month": null,
-"kind": "history",
-"lines": [
-"Mortals"
-],
-"region": "Asia",
-"place": "Cuzco",
-"tags": [
-"crown"
-],
-"title": "Pachacuti",
-"text": "Pachacuti takes the Inca throne.",
-"ref": "Real history",
-"links": []
-},
-{
-"id": "r3-long-night-184",
-"era": "long-night",
 "year": 1439,
 "month": null,
 "kind": "history",
@@ -11230,7 +11211,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-185",
+"id": "r3-long-night-184",
 "era": "long-night",
 "year": 1439,
 "month": null,
@@ -11249,7 +11230,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-186",
+"id": "r3-long-night-185",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -11269,7 +11250,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-187",
+"id": "r3-long-night-186",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -11302,7 +11283,7 @@
 ]
 },
 {
-"id": "r3-long-night-188",
+"id": "r3-long-night-187",
 "era": "long-night",
 "year": 1441,
 "month": null,
@@ -11322,7 +11303,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-189",
+"id": "r3-long-night-188",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -11341,7 +11322,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-190",
+"id": "r3-long-night-189",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -11360,7 +11341,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-191",
+"id": "r3-long-night-190",
 "era": "long-night",
 "year": 1444,
 "month": 11,
@@ -11381,7 +11362,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-192",
+"id": "r3-long-night-191",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -11414,7 +11395,7 @@
 ]
 },
 {
-"id": "r3-long-night-193",
+"id": "r3-long-night-192",
 "era": "long-night",
 "year": 1445,
 "month": null,
@@ -11433,7 +11414,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-194",
+"id": "r3-long-night-193",
 "era": "long-night",
 "year": 1446,
 "month": null,
@@ -11452,7 +11433,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-195",
+"id": "r3-long-night-194",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -11471,7 +11452,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-196",
+"id": "r3-long-night-195",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -11491,7 +11472,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-197",
+"id": "r3-long-night-196",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -11511,7 +11492,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-198",
+"id": "r3-long-night-197",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -11530,7 +11511,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-199",
+"id": "r3-long-night-198",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -11563,7 +11544,7 @@
 ]
 },
 {
-"id": "r3-long-night-200",
+"id": "r3-long-night-199",
 "era": "long-night",
 "year": 1347,
 "month": null,
@@ -11582,7 +11563,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-201",
+"id": "r3-long-night-200",
 "era": "long-night",
 "year": 1347,
 "month": null,
@@ -11602,7 +11583,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-202",
+"id": "r3-long-night-201",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -11634,7 +11615,7 @@
 ]
 },
 {
-"id": "r3-long-night-203",
+"id": "r3-long-night-202",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -11653,7 +11634,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-204",
+"id": "r3-long-night-203",
 "era": "long-night",
 "year": 1349,
 "month": null,
@@ -11673,7 +11654,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-205",
+"id": "r3-long-night-204",
 "era": "long-night",
 "year": 1350,
 "month": null,
@@ -11692,7 +11673,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-206",
+"id": "r3-long-night-205",
 "era": "long-night",
 "year": 1351,
 "month": null,
@@ -11711,7 +11692,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-207",
+"id": "r3-long-night-206",
 "era": "long-night",
 "year": 1352,
 "month": null,
@@ -11731,7 +11712,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-208",
+"id": "r3-long-night-207",
 "era": "long-night",
 "year": 1353,
 "month": null,
@@ -11750,7 +11731,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-209",
+"id": "r3-long-night-208",
 "era": "long-night",
 "year": 1355,
 "month": null,
@@ -11770,7 +11751,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-210",
+"id": "r3-long-night-209",
 "era": "long-night",
 "year": 1356,
 "month": null,
@@ -11789,7 +11770,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-211",
+"id": "r3-long-night-210",
 "era": "long-night",
 "year": 1357,
 "month": null,
@@ -11808,7 +11789,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-212",
+"id": "r3-long-night-211",
 "era": "long-night",
 "year": 1359,
 "month": null,
@@ -11827,7 +11808,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-213",
+"id": "r3-long-night-212",
 "era": "long-night",
 "year": 1360,
 "month": null,
@@ -11846,7 +11827,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-214",
+"id": "r3-long-night-213",
 "era": "long-night",
 "year": 1362,
 "month": null,
@@ -11865,7 +11846,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-215",
+"id": "r3-long-night-214",
 "era": "long-night",
 "year": 1363,
 "month": null,
@@ -11884,7 +11865,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-216",
+"id": "r3-long-night-215",
 "era": "long-night",
 "year": 1364,
 "month": null,
@@ -11904,7 +11885,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-217",
+"id": "r3-long-night-216",
 "era": "long-night",
 "year": 1366,
 "month": null,
@@ -11923,7 +11904,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-218",
+"id": "r3-long-night-217",
 "era": "long-night",
 "year": 1368,
 "month": null,
@@ -11942,7 +11923,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-219",
+"id": "r3-long-night-218",
 "era": "long-night",
 "year": 1369,
 "month": null,
@@ -11961,7 +11942,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-220",
+"id": "r3-long-night-219",
 "era": "long-night",
 "year": 1372,
 "month": null,
@@ -11980,7 +11961,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-221",
+"id": "r3-long-night-220",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -12000,7 +11981,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-222",
+"id": "r3-long-night-221",
 "era": "long-night",
 "year": 1375,
 "month": null,
@@ -12020,7 +12001,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-223",
+"id": "r3-long-night-222",
 "era": "long-night",
 "year": 1377,
 "month": null,
@@ -12040,7 +12021,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-224",
+"id": "r3-long-night-223",
 "era": "long-night",
 "year": 1378,
 "month": null,
@@ -12059,7 +12040,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-225",
+"id": "r3-long-night-224",
 "era": "long-night",
 "year": 1380,
 "month": null,
@@ -12078,7 +12059,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-226",
+"id": "r3-long-night-225",
 "era": "long-night",
 "year": 1381,
 "month": null,
@@ -12097,7 +12078,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-227",
+"id": "r3-long-night-226",
 "era": "long-night",
 "year": 1382,
 "month": null,
@@ -12116,7 +12097,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-228",
+"id": "r3-long-night-227",
 "era": "long-night",
 "year": 1383,
 "month": null,
@@ -12136,7 +12117,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-229",
+"id": "r3-long-night-228",
 "era": "long-night",
 "year": 1385,
 "month": null,
@@ -12155,7 +12136,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-230",
+"id": "r3-long-night-229",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -12174,7 +12155,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-231",
+"id": "r3-long-night-230",
 "era": "long-night",
 "year": 1387,
 "month": null,
@@ -12193,7 +12174,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-232",
+"id": "r3-long-night-231",
 "era": "long-night",
 "year": 1388,
 "month": null,
@@ -12212,7 +12193,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-233",
+"id": "r3-long-night-232",
 "era": "long-night",
 "year": 1390,
 "month": null,
@@ -12231,7 +12212,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-234",
+"id": "r3-long-night-233",
 "era": "long-night",
 "year": 1391,
 "month": null,
@@ -12251,7 +12232,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-235",
+"id": "r3-long-night-234",
 "era": "long-night",
 "year": 1392,
 "month": null,
@@ -12276,7 +12257,7 @@
 ]
 },
 {
-"id": "r3-long-night-236",
+"id": "r3-long-night-235",
 "era": "long-night",
 "year": 1394,
 "month": null,
@@ -12295,7 +12276,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-237",
+"id": "r3-long-night-236",
 "era": "long-night",
 "year": 1395,
 "month": null,
@@ -12314,7 +12295,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-238",
+"id": "r3-long-night-237",
 "era": "long-night",
 "year": 1396,
 "month": null,
@@ -12333,7 +12314,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-239",
+"id": "r3-long-night-238",
 "era": "long-night",
 "year": 1397,
 "month": null,
@@ -12352,7 +12333,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-240",
+"id": "r3-long-night-239",
 "era": "long-night",
 "year": 1399,
 "month": null,
@@ -12372,7 +12353,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-241",
+"id": "r3-long-night-240",
 "era": "long-night",
 "year": 1400,
 "month": null,
@@ -12391,7 +12372,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-242",
+"id": "r3-long-night-241",
 "era": "long-night",
 "year": 1401,
 "month": null,
@@ -12410,7 +12391,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-243",
+"id": "r3-long-night-242",
 "era": "long-night",
 "year": 1402,
 "month": null,
@@ -12429,7 +12410,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-244",
+"id": "r3-long-night-243",
 "era": "long-night",
 "year": 1403,
 "month": null,
@@ -12448,7 +12429,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-245",
+"id": "r3-long-night-244",
 "era": "long-night",
 "year": 1404,
 "month": null,
@@ -12468,7 +12449,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-246",
+"id": "r3-long-night-245",
 "era": "long-night",
 "year": 1405,
 "month": null,
@@ -12487,7 +12468,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-247",
+"id": "r3-long-night-246",
 "era": "long-night",
 "year": 1406,
 "month": null,
@@ -12506,7 +12487,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-248",
+"id": "r3-long-night-247",
 "era": "long-night",
 "year": 1407,
 "month": null,
@@ -12525,7 +12506,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-249",
+"id": "r3-long-night-248",
 "era": "long-night",
 "year": 1408,
 "month": null,
@@ -12557,7 +12538,7 @@
 ]
 },
 {
-"id": "r3-long-night-250",
+"id": "r3-long-night-249",
 "era": "long-night",
 "year": 1409,
 "month": null,
@@ -12577,7 +12558,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-251",
+"id": "r3-long-night-250",
 "era": "long-night",
 "year": 1410,
 "month": null,
@@ -12597,7 +12578,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-252",
+"id": "r3-long-night-251",
 "era": "long-night",
 "year": 1411,
 "month": null,
@@ -12616,7 +12597,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-253",
+"id": "r3-long-night-252",
 "era": "long-night",
 "year": 1411,
 "month": null,
@@ -12636,7 +12617,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-254",
+"id": "r3-long-night-253",
 "era": "long-night",
 "year": 1412,
 "month": null,
@@ -12656,7 +12637,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-255",
+"id": "r3-long-night-254",
 "era": "long-night",
 "year": 1414,
 "month": null,
@@ -12675,7 +12656,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-256",
+"id": "r3-long-night-255",
 "era": "long-night",
 "year": 1415,
 "month": null,
@@ -12694,7 +12675,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-257",
+"id": "r3-long-night-256",
 "era": "long-night",
 "year": 1416,
 "month": null,
@@ -12714,7 +12695,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-258",
+"id": "r3-long-night-257",
 "era": "long-night",
 "year": 1417,
 "month": null,
@@ -12734,7 +12715,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-259",
+"id": "r3-long-night-258",
 "era": "long-night",
 "year": 1418,
 "month": null,
@@ -12753,7 +12734,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-260",
+"id": "r3-long-night-259",
 "era": "long-night",
 "year": 1419,
 "month": null,
@@ -12786,7 +12767,7 @@
 ]
 },
 {
-"id": "r3-long-night-261",
+"id": "r3-long-night-260",
 "era": "long-night",
 "year": 1420,
 "month": null,
@@ -12805,7 +12786,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-262",
+"id": "r3-long-night-261",
 "era": "long-night",
 "year": 1421,
 "month": null,
@@ -12824,7 +12805,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-263",
+"id": "r3-long-night-262",
 "era": "long-night",
 "year": 1421,
 "month": null,
@@ -12844,7 +12825,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-264",
+"id": "r3-long-night-263",
 "era": "long-night",
 "year": 1422,
 "month": null,
@@ -12863,7 +12844,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-265",
+"id": "r3-long-night-264",
 "era": "long-night",
 "year": 1423,
 "month": null,
@@ -12882,7 +12863,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-266",
+"id": "r3-long-night-265",
 "era": "long-night",
 "year": 1424,
 "month": null,
@@ -12901,7 +12882,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-267",
+"id": "r3-long-night-266",
 "era": "long-night",
 "year": 1425,
 "month": null,
@@ -12921,7 +12902,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-268",
+"id": "r3-long-night-267",
 "era": "long-night",
 "year": 1425,
 "month": null,
@@ -12941,7 +12922,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-269",
+"id": "r3-long-night-268",
 "era": "long-night",
 "year": 1426,
 "month": null,
@@ -12960,7 +12941,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-270",
+"id": "r3-long-night-269",
 "era": "long-night",
 "year": 1428,
 "month": null,
@@ -12979,7 +12960,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-271",
+"id": "r3-long-night-270",
 "era": "long-night",
 "year": 1429,
 "month": null,
@@ -12998,7 +12979,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-272",
+"id": "r3-long-night-271",
 "era": "long-night",
 "year": 1430,
 "month": null,
@@ -13017,7 +12998,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-273",
+"id": "r3-long-night-272",
 "era": "long-night",
 "year": 1431,
 "month": null,
@@ -13036,7 +13017,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-274",
+"id": "r3-long-night-273",
 "era": "long-night",
 "year": 1432,
 "month": null,
@@ -13055,7 +13036,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-275",
+"id": "r3-long-night-274",
 "era": "long-night",
 "year": 1433,
 "month": null,
@@ -13074,7 +13055,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-276",
+"id": "r3-long-night-275",
 "era": "long-night",
 "year": 1434,
 "month": null,
@@ -13093,7 +13074,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-277",
+"id": "r3-long-night-276",
 "era": "long-night",
 "year": 1435,
 "month": null,
@@ -13112,7 +13093,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-278",
+"id": "r3-long-night-277",
 "era": "long-night",
 "year": 1436,
 "month": null,
@@ -13131,7 +13112,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-279",
+"id": "r3-long-night-278",
 "era": "long-night",
 "year": 1437,
 "month": null,
@@ -13150,26 +13131,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-280",
-"era": "long-night",
-"year": 1438,
-"month": null,
-"kind": "history",
-"lines": [
-"Mortals"
-],
-"region": "Asia",
-"place": "Cuzco",
-"tags": [
-"empire"
-],
-"title": "The Inca expand",
-"text": "Pachacuti begins the Inca empire.",
-"ref": "Real history",
-"links": []
-},
-{
-"id": "r3-long-night-281",
+"id": "r3-long-night-279",
 "era": "long-night",
 "year": 1439,
 "month": null,
@@ -13188,7 +13150,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-282",
+"id": "r3-long-night-280",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -13207,7 +13169,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-283",
+"id": "r3-long-night-281",
 "era": "long-night",
 "year": 1440,
 "month": null,
@@ -13226,7 +13188,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-284",
+"id": "r3-long-night-282",
 "era": "long-night",
 "year": 1441,
 "month": null,
@@ -13245,7 +13207,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-285",
+"id": "r3-long-night-283",
 "era": "long-night",
 "year": 1442,
 "month": null,
@@ -13265,7 +13227,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-286",
+"id": "r3-long-night-284",
 "era": "long-night",
 "year": 1442,
 "month": null,
@@ -13284,7 +13246,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-287",
+"id": "r3-long-night-285",
 "era": "long-night",
 "year": 1443,
 "month": null,
@@ -13304,7 +13266,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-288",
+"id": "r3-long-night-286",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -13323,7 +13285,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-289",
+"id": "r3-long-night-287",
 "era": "long-night",
 "year": 1444,
 "month": null,
@@ -13342,7 +13304,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-290",
+"id": "r3-long-night-288",
 "era": "long-night",
 "year": 1445,
 "month": null,
@@ -13361,7 +13323,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-291",
+"id": "r3-long-night-289",
 "era": "long-night",
 "year": 1446,
 "month": null,
@@ -13380,7 +13342,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-292",
+"id": "r3-long-night-290",
 "era": "long-night",
 "year": 1447,
 "month": null,
@@ -13400,7 +13362,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-293",
+"id": "r3-long-night-291",
 "era": "long-night",
 "year": 1447,
 "month": null,
@@ -13420,7 +13382,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-294",
+"id": "r3-long-night-292",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -13439,7 +13401,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-295",
+"id": "r3-long-night-293",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -13458,7 +13420,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-296",
+"id": "r3-long-night-294",
 "era": "long-night",
 "year": 1448,
 "month": null,
@@ -13486,7 +13448,7 @@
 ]
 },
 {
-"id": "r3-long-night-297",
+"id": "r3-long-night-295",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -13505,7 +13467,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-298",
+"id": "r3-long-night-296",
 "era": "long-night",
 "year": 1449,
 "month": null,
@@ -13524,7 +13486,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-299",
+"id": "r3-long-night-297",
 "era": "long-night",
 "year": 1348,
 "month": null,
@@ -13544,7 +13506,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-300",
+"id": "r3-long-night-298",
 "era": "long-night",
 "year": 1350,
 "month": null,
@@ -13572,7 +13534,7 @@
 ]
 },
 {
-"id": "r3-long-night-301",
+"id": "r3-long-night-299",
 "era": "long-night",
 "year": 1363,
 "month": null,
@@ -13592,7 +13554,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-302",
+"id": "r3-long-night-300",
 "era": "long-night",
 "year": 1371,
 "month": null,
@@ -13612,7 +13574,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-303",
+"id": "r3-long-night-301",
 "era": "long-night",
 "year": 1383,
 "month": null,
@@ -13631,7 +13593,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-304",
+"id": "r3-long-night-302",
 "era": "long-night",
 "year": 1386,
 "month": null,
@@ -13650,7 +13612,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-305",
+"id": "r3-long-night-303",
 "era": "long-night",
 "year": 1388,
 "month": null,
@@ -13669,7 +13631,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-306",
+"id": "r3-long-night-304",
 "era": "long-night",
 "year": 1407,
 "month": null,
@@ -13702,7 +13664,7 @@
 ]
 },
 {
-"id": "r3-long-night-307",
+"id": "r3-long-night-305",
 "era": "long-night",
 "year": 1413,
 "month": null,
@@ -13721,7 +13683,7 @@
 "links": []
 },
 {
-"id": "r3-long-night-308",
+"id": "r3-long-night-306",
 "era": "long-night",
 "year": 1432,
 "month": null,
@@ -13738,6 +13700,6542 @@
 "title": "The painter's light",
 "text": "Van Eyck's oils catch the light so truly that Ecstatics and the craftsmen of the Order of Reason both claim the method.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-001",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Formigny",
+"tags": [
+"battle"
+],
+"title": "Formigny",
+"text": "French cannon break an English army; Normandy is French again.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-002",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kent",
+"tags": [
+"uprising"
+],
+"title": "Jack Cade's rebellion",
+"text": "Kentish rebels march on London against corrupt ministers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-003",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"crown"
+],
+"title": "Francesco Sforza",
+"text": "The condottiere Francesco Sforza becomes Duke of Milan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-004",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Horizon",
+"tags": [
+"founding",
+"occult"
+],
+"title": "Horizon is raised",
+"text": "Mages of nine traditions build the Horizon realm; the Grand Convocation begins.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "sc-void-seekers",
+"title": "Void Seekers"
+},
+{
+"id": "m2bow-etherspace",
+"title": "Etherspace, the Deep Umbra and the Void"
+},
+{
+"id": "mroh-doissetep",
+"title": "The ruins of Doissetep"
+}
+]
+},
+{
+"id": "r3-renaissance-005",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mainz",
+"tags": [
+"science",
+"media"
+],
+"title": "Gutenberg's press",
+"text": "Gutenberg sets up his press with Fust's money in Mainz.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-006",
+"era": "renaissance",
+"year": 1451,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Edirne",
+"tags": [
+"crown"
+],
+"title": "Mehmed II returns",
+"text": "Mehmed II becomes sultan for good and plans to take Constantinople.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-007",
+"era": "renaissance",
+"year": 1451,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Glasgow",
+"tags": [
+"learning",
+"founding"
+],
+"title": "Glasgow university",
+"text": "A university is founded at Glasgow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-008",
+"era": "renaissance",
+"year": 1452,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Rumeli Hisari",
+"tags": [
+"building",
+"war"
+],
+"title": "The throat-cutter fortress",
+"text": "Mehmed builds Rumeli Hisari on the Bosporus to close the strait.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-009",
+"era": "renaissance",
+"year": 1452,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vinci",
+"tags": [
+"art"
+],
+"title": "Leonardo born",
+"text": "Leonardo is born at Vinci near Florence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-010",
+"era": "renaissance",
+"year": 1452,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"crown"
+],
+"title": "Frederick III crowned",
+"text": "The last emperor crowned in Rome by a pope.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-011",
+"era": "renaissance",
+"year": 1453,
+"month": 5,
+"kind": "tied",
+"lines": [
+"All lines"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"siege",
+"crown",
+"death"
+],
+"title": "Constantinople falls",
+"text": "The Ottomans take the city on 29 May; the last emperor dies on the walls, and the last Cainites who remember the Dream leave by sea or bargain with the new masters.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mrcc-schism-paladins",
+"title": "The great schism and the Paladins"
+},
+{
+"id": "ndan1-dracon-face",
+"title": "The Dracon’s borrowed face"
+},
+{
+"id": "dac-constantinople",
+"title": "Constantinople after the Dream"
+}
+]
+},
+{
+"id": "r3-renaissance-012",
+"era": "renaissance",
+"year": 1453,
+"month": 7,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Castillon",
+"tags": [
+"battle"
+],
+"title": "Castillon",
+"text": "The French destroy the last English army in Gascony; the Hundred Years War ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-013",
+"era": "renaissance",
+"year": 1453,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Henry VI goes mad",
+"text": "The English king falls into a stupor for over a year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-014",
+"era": "renaissance",
+"year": 1454,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lodi",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Lodi",
+"text": "Milan, Venice, Florence, Naples and the pope agree a balance of power in Italy.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-015",
+"era": "renaissance",
+"year": 1454,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Torun",
+"tags": [
+"war",
+"uprising"
+],
+"title": "The Thirteen Years War",
+"text": "The Prussian towns rise against the Teutonic Order and turn to Poland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-016",
+"era": "renaissance",
+"year": 1455,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mainz",
+"tags": [
+"media",
+"faith"
+],
+"title": "The Gutenberg Bible",
+"text": "The first great printed book is finished.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-017",
+"era": "renaissance",
+"year": 1455,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Albans",
+"tags": [
+"battle"
+],
+"title": "The Wars of the Roses begin",
+"text": "York and Lancaster fight at St Albans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-018",
+"era": "renaissance",
+"year": 1456,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"siege",
+"battle"
+],
+"title": "Belgrade",
+"text": "John Hunyadi breaks Mehmed II's siege of Belgrade; he dies of plague weeks later.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-019",
+"era": "renaissance",
+"year": 1456,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "The noon bell",
+"text": "Pope Callixtus III orders church bells rung at noon to pray against the Turks.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-020",
+"era": "renaissance",
+"year": 1456,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Wallachia",
+"tags": [
+"crown"
+],
+"title": "Vlad Dracula takes Wallachia",
+"text": "Vlad III takes the Wallachian throne for the second time and rules by the stake.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "coti-dracula",
+"title": "Vlad Tepes, Dracula"
+}
+]
+},
+{
+"id": "r3-renaissance-021",
+"era": "renaissance",
+"year": 1457,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moldavia",
+"tags": [
+"crown"
+],
+"title": "Stephen the Great",
+"text": "Stephen becomes Prince of Moldavia and rules for 47 years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-022",
+"era": "renaissance",
+"year": 1458,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "George of Podebrady",
+"text": "The Czech diet elects the Hussite George of Podebrady king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-023",
+"era": "renaissance",
+"year": 1458,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Buda",
+"tags": [
+"crown"
+],
+"title": "Matthias Corvinus",
+"text": "Hunyadi's son Matthias is elected King of Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-024",
+"era": "renaissance",
+"year": 1459,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Serbia",
+"tags": [
+"war",
+"crown"
+],
+"title": "Serbia falls",
+"text": "The Ottomans take Smederevo; Serbia is a province.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-025",
+"era": "renaissance",
+"year": 1459,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Brasov",
+"tags": [
+"massacre"
+],
+"title": "The forest of stakes",
+"text": "Vlad has merchants of Brasov impaled; the Tzimisce of the Carpathians wonder what they have made.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-026",
+"era": "renaissance",
+"year": 1460,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Northampton",
+"tags": [
+"battle"
+],
+"title": "Northampton",
+"text": "Henry VI is captured by the Yorkists.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-027",
+"era": "renaissance",
+"year": 1460,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wakefield",
+"tags": [
+"battle",
+"death"
+],
+"title": "Wakefield",
+"text": "Richard of York is killed; his head is set on York's gate in a paper crown.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-028",
+"era": "renaissance",
+"year": 1460,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"exploration",
+"death"
+],
+"title": "Henry the Navigator dies",
+"text": "The prince who sent the Portuguese down Africa's coast dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-029",
+"era": "renaissance",
+"year": 1461,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Towton",
+"tags": [
+"battle"
+],
+"title": "Towton",
+"text": "The bloodiest battle on English soil; Edward IV takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-030",
+"era": "renaissance",
+"year": 1461,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Trebizond",
+"tags": [
+"crown"
+],
+"title": "Trebizond falls",
+"text": "Mehmed II takes the last Byzantine state.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-031",
+"era": "renaissance",
+"year": 1461,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "France",
+"tags": [
+"crown"
+],
+"title": "Louis XI",
+"text": "The spider king takes the French throne.",
+"ref": "Real history",
+"links": [
+{
+"id": "mtbn-ville-marie",
+"title": "The Sabbat of Ville-Marie"
+},
+{
+"id": "scsw-france",
+"title": "France in the Age of Masks"
+}
+]
+},
+{
+"id": "r3-renaissance-032",
+"era": "renaissance",
+"year": 1462,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Targoviste",
+"tags": [
+"war"
+],
+"title": "The night attack",
+"text": "Vlad attacks the Ottoman camp at night and leaves a field of impaled prisoners for the sultan to find.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-033",
+"era": "renaissance",
+"year": 1462,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Ivan III",
+"text": "Ivan the Great becomes Grand Prince of Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-034",
+"era": "renaissance",
+"year": 1463,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bosnia",
+"tags": [
+"war"
+],
+"title": "Bosnia falls",
+"text": "The Ottomans conquer Bosnia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-035",
+"era": "renaissance",
+"year": 1463,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"war"
+],
+"title": "The Ottoman-Venetian war",
+"text": "Venice and the Ottomans begin sixteen years of war.",
+"ref": "Real history",
+"links": [
+{
+"id": "cbgv-premascines",
+"title": "The Premascines"
+}
+]
+},
+{
+"id": "r3-renaissance-036",
+"era": "renaissance",
+"year": 1464,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"crown",
+"death"
+],
+"title": "Cosimo de' Medici dies",
+"text": "Florence names Cosimo Father of the Fatherland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-037",
+"era": "renaissance",
+"year": 1465,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Montlhery",
+"tags": [
+"battle"
+],
+"title": "The League of the Public Weal",
+"text": "French princes rebel against Louis XI.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-038",
+"era": "renaissance",
+"year": 1466,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Horizon",
+"tags": [
+"founding"
+],
+"title": "The Grand Convocation ends",
+"text": "The Council of Nine Mystic Traditions is founded.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "sc-void-seekers",
+"title": "Void Seekers"
+},
+{
+"id": "m2bow-etherspace",
+"title": "Etherspace, the Deep Umbra and the Void"
+},
+{
+"id": "mroh-doissetep",
+"title": "The ruins of Doissetep"
+}
+]
+},
+{
+"id": "r3-renaissance-039",
+"era": "renaissance",
+"year": 1466,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Torun",
+"tags": [
+"treaty"
+],
+"title": "The Second Peace of Torun",
+"text": "The Teutonic Order gives western Prussia to Poland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-040",
+"era": "renaissance",
+"year": 1467,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyoto",
+"tags": [
+"war",
+"fire"
+],
+"title": "The Onin War",
+"text": "War between Hosokawa and Yamana burns Kyoto and starts a century of civil war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-041",
+"era": "renaissance",
+"year": 1467,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Burgundy",
+"tags": [
+"crown"
+],
+"title": "Charles the Bold",
+"text": "Charles the Bold becomes Duke of Burgundy.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-042",
+"era": "renaissance",
+"year": 1468,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Liege",
+"tags": [
+"massacre"
+],
+"title": "Liege destroyed",
+"text": "Charles the Bold sacks and burns Liege.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-043",
+"era": "renaissance",
+"year": 1468,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Albania",
+"tags": [
+"death"
+],
+"title": "Skanderbeg dies",
+"text": "Albania's defender dies of malaria; the Ottomans take the country within a decade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-044",
+"era": "renaissance",
+"year": 1469,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"crown"
+],
+"title": "Lorenzo de' Medici",
+"text": "Lorenzo the Magnificent leads Florence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-045",
+"era": "renaissance",
+"year": 1469,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Valladolid",
+"tags": [
+"crown"
+],
+"title": "Ferdinand and Isabella marry",
+"text": "The heirs of Aragon and Castile marry in secret.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-046",
+"era": "renaissance",
+"year": 1469,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Olomouc",
+"tags": [
+"crown"
+],
+"title": "Matthias king in Olomouc",
+"text": "Catholic lords elect Matthias Corvinus King of Bohemia at Olomouc.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-047",
+"era": "renaissance",
+"year": 1470,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Negroponte",
+"tags": [
+"siege"
+],
+"title": "Negroponte",
+"text": "The Ottomans take Venice's island of Negroponte.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-048",
+"era": "renaissance",
+"year": 1471,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tewkesbury",
+"tags": [
+"battle",
+"death"
+],
+"title": "Tewkesbury",
+"text": "Edward IV kills the Lancastrian prince; Henry VI dies in the Tower days later.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-049",
+"era": "renaissance",
+"year": 1471,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown",
+"death"
+],
+"title": "George of Podebrady dies",
+"text": "The Hussite king dies; Vladislaus Jagiellon takes Bohemia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-050",
+"era": "renaissance",
+"year": 1471,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Champa",
+"tags": [
+"war"
+],
+"title": "Champa falls",
+"text": "Dai Viet conquers the Cham capital.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-051",
+"era": "renaissance",
+"year": 1472,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Ivan marries Sophia",
+"text": "Ivan III marries the niece of the last Byzantine emperor; Moscow begins to call itself the third Rome.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-052",
+"era": "renaissance",
+"year": 1473,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Torun",
+"tags": [
+"science"
+],
+"title": "Copernicus born",
+"text": "Nicolaus Copernicus is born in Torun.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-053",
+"era": "renaissance",
+"year": 1473,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Otlukbeli",
+"tags": [
+"battle"
+],
+"title": "Otlukbeli",
+"text": "Mehmed II beats Uzun Hasan of the White Sheep Turkmens.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-054",
+"era": "renaissance",
+"year": 1474,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Castile",
+"tags": [
+"crown"
+],
+"title": "Isabella queen",
+"text": "Isabella becomes Queen of Castile.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-055",
+"era": "renaissance",
+"year": 1475,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bruges",
+"tags": [
+"media"
+],
+"title": "The first book in English",
+"text": "Caxton prints the first book in English, at Bruges.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-056",
+"era": "renaissance",
+"year": 1475,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Caffa",
+"tags": [
+"war"
+],
+"title": "Caffa taken",
+"text": "The Ottomans take the Genoese colonies in the Crimea.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-057",
+"era": "renaissance",
+"year": 1476,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Grandson",
+"tags": [
+"battle"
+],
+"title": "Grandson and Morat",
+"text": "The Swiss beat Charles the Bold twice.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-058",
+"era": "renaissance",
+"year": 1476,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"media"
+],
+"title": "Caxton's press in Westminster",
+"text": "Caxton sets up the first press in England.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-059",
+"era": "renaissance",
+"year": 1476,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Wallachia",
+"tags": [
+"death",
+"crown"
+],
+"title": "Dracula falls",
+"text": "Vlad III is killed fighting the Ottomans; Kindred say the voivode did not stay dead.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "coti-dracula",
+"title": "Vlad Tepes, Dracula"
+}
+]
+},
+{
+"id": "r3-renaissance-060",
+"era": "renaissance",
+"year": 1477,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nancy",
+"tags": [
+"battle",
+"death"
+],
+"title": "Nancy",
+"text": "Charles the Bold dies in the snow before Nancy; Burgundy breaks up.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-061",
+"era": "renaissance",
+"year": 1477,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ghent",
+"tags": [
+"crown"
+],
+"title": "Mary of Burgundy marries Maximilian",
+"text": "The Burgundian heiress marries a Habsburg; the Netherlands pass to Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-062",
+"era": "renaissance",
+"year": 1478,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"death",
+"crown"
+],
+"title": "The Pazzi conspiracy",
+"text": "Plotters kill Giuliano de' Medici in the cathedral; Lorenzo survives.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-063",
+"era": "renaissance",
+"year": 1478,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Seville",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "The Spanish Inquisition",
+"text": "The pope allows Ferdinand and Isabella their own Inquisition; the first burnings come in 1481.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-064",
+"era": "renaissance",
+"year": 1478,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Novgorod",
+"tags": [
+"crown"
+],
+"title": "Novgorod taken",
+"text": "Ivan III ends the Novgorod republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-065",
+"era": "renaissance",
+"year": 1479,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Olomouc",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Olomouc",
+"text": "Matthias keeps Moravia, Silesia and Lusatia for his lifetime.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-066",
+"era": "renaissance",
+"year": 1479,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Constantinople",
+"tags": [
+"treaty"
+],
+"title": "Venice pays for peace",
+"text": "Venice makes peace with Mehmed II.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-067",
+"era": "renaissance",
+"year": 1480,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ugra River",
+"tags": [
+"war"
+],
+"title": "The Great Stand on the Ugra",
+"text": "Moscow and the Horde face each other across the Ugra; the Tatars ride away and the yoke ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-068",
+"era": "renaissance",
+"year": 1480,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Otranto",
+"tags": [
+"massacre"
+],
+"title": "Otranto",
+"text": "The Ottomans take Otranto in Italy and kill hundreds who will not convert.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-069",
+"era": "renaissance",
+"year": 1480,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rhodes",
+"tags": [
+"siege"
+],
+"title": "Rhodes holds",
+"text": "The Hospitallers beat off an Ottoman siege.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-070",
+"era": "renaissance",
+"year": 1481,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"crown",
+"death"
+],
+"title": "Mehmed II dies",
+"text": "The conqueror dies; Bayezid II succeeds after a fight with his brother.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-071",
+"era": "renaissance",
+"year": 1481,
+"month": null,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Seville",
+"tags": [
+"fire",
+"persecution"
+],
+"title": "The first auto-da-fe",
+"text": "Six people are burned at Seville by the Spanish Inquisition.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-072",
+"era": "renaissance",
+"year": 1482,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Granada",
+"tags": [
+"war"
+],
+"title": "The Granada war",
+"text": "Castile begins the ten-year conquest of Granada.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-073",
+"era": "renaissance",
+"year": 1483,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown",
+"death"
+],
+"title": "The princes in the Tower",
+"text": "Edward IV dies; his sons vanish in the Tower and Richard III takes the crown.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-074",
+"era": "renaissance",
+"year": 1483,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Eisleben",
+"tags": [
+"faith"
+],
+"title": "Luther born",
+"text": "Martin Luther is born.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-075",
+"era": "renaissance",
+"year": 1483,
+"month": null,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Spain",
+"tags": [
+"persecution"
+],
+"title": "Torquemada",
+"text": "Tomas de Torquemada becomes Inquisitor General.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-076",
+"era": "renaissance",
+"year": 1484,
+"month": null,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The witch bull",
+"text": "Innocent VIII's bull against witchcraft in Germany gives Kramer and Sprenger the pope's backing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-077",
+"era": "renaissance",
+"year": 1485,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bosworth",
+"tags": [
+"battle",
+"crown"
+],
+"title": "Bosworth",
+"text": "Henry Tudor kills Richard III and takes the crown.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-078",
+"era": "renaissance",
+"year": 1485,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"siege"
+],
+"title": "Matthias takes Vienna",
+"text": "Matthias Corvinus captures Vienna and moves his court there.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-079",
+"era": "renaissance",
+"year": 1486,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"faith"
+],
+"title": "The first Conclave",
+"text": "The Camarilla holds its first Conclave and proclaims the Masquerade.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cbv-trade",
+"title": "The Ventrue and the new trade"
+},
+{
+"id": "scwp-pagan-outlook",
+"title": "The Pagan outlook"
+},
+{
+"id": "dav-midnight-crescent",
+"title": "The Midnight Crescent"
+}
+]
+},
+{
+"id": "r3-renaissance-080",
+"era": "renaissance",
+"year": 1486,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Speyer",
+"tags": [
+"occult",
+"persecution",
+"media"
+],
+"title": "The Hammer of Witches",
+"text": "Kramer's Malleus Maleficarum is printed; hunters use it for two centuries.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-081",
+"era": "renaissance",
+"year": 1487,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"exploration",
+"sea"
+],
+"title": "Dias rounds the Cape",
+"text": "Bartolomeu Dias sails round the southern tip of Africa.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-082",
+"era": "renaissance",
+"year": 1488,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bruges",
+"tags": [
+"uprising"
+],
+"title": "Maximilian held captive",
+"text": "Bruges imprisons Maximilian of Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-083",
+"era": "renaissance",
+"year": 1489,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cyprus",
+"tags": [
+"crown",
+"trade"
+],
+"title": "Venice takes Cyprus",
+"text": "Cyprus's Venetian queen hands the island to Venice.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-084",
+"era": "renaissance",
+"year": 1490,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"death"
+],
+"title": "Matthias dies",
+"text": "Matthias Corvinus dies; his library and his army scatter.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-085",
+"era": "renaissance",
+"year": 1491,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brittany",
+"tags": [
+"crown"
+],
+"title": "Brittany joins France",
+"text": "Anne of Brittany marries Charles VIII.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-086",
+"era": "renaissance",
+"year": 1492,
+"month": 1,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Granada",
+"tags": [
+"war",
+"crown"
+],
+"title": "Granada falls",
+"text": "The last Muslim kingdom in Spain surrenders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-087",
+"era": "renaissance",
+"year": 1492,
+"month": 3,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Spain",
+"tags": [
+"persecution",
+"migration"
+],
+"title": "The Alhambra decree",
+"text": "Spain's Jews are ordered to convert or leave; many go to the Ottomans, who welcome them.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-088",
+"era": "renaissance",
+"year": 1492,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Palos",
+"tags": [
+"exploration",
+"sea"
+],
+"title": "Columbus sails west",
+"text": "Columbus reaches the Caribbean and claims it for Castile.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-089",
+"era": "renaissance",
+"year": 1492,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"crown",
+"death"
+],
+"title": "Lorenzo dies",
+"text": "Lorenzo de' Medici dies; Savonarola's preaching grows.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-090",
+"era": "renaissance",
+"year": 1492,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "A Borgia pope",
+"text": "Rodrigo Borgia becomes Alexander VI.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-091",
+"era": "renaissance",
+"year": 1493,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Thorns",
+"tags": [
+"treaty"
+],
+"title": "The Convention of Thorns",
+"text": "The Anarch Revolt ends; the anarchs who refuse form the Sabbat, and the Assamites are cursed.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "gtanarch-convention-of-thorns",
+"title": "The Convention of Thorns"
+},
+{
+"id": "sc-paths",
+"title": "The Paths of Gold, Thorns and Screams"
+},
+{
+"id": "v20c-abbey-sacred-crown",
+"title": "The Abbey of the Sacred Crown"
+}
+]
+},
+{
+"id": "r3-renaissance-092",
+"era": "renaissance",
+"year": 1493,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"law",
+"exploration"
+],
+"title": "The world divided",
+"text": "The pope draws a line through the Atlantic between Spain and Portugal.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-093",
+"era": "renaissance",
+"year": 1494,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Italy",
+"tags": [
+"war"
+],
+"title": "Charles VIII invades Italy",
+"text": "The French march to Naples; the Italian Wars begin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-094",
+"era": "renaissance",
+"year": 1494,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tordesillas",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Tordesillas",
+"text": "Spain and Portugal move the line west.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-095",
+"era": "renaissance",
+"year": 1495,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"plague"
+],
+"title": "The French disease",
+"text": "Syphilis breaks out among the armies at Naples and spreads across Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-096",
+"era": "renaissance",
+"year": 1495,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Worms",
+"tags": [
+"law"
+],
+"title": "The Perpetual Peace",
+"text": "The Diet of Worms bans private war in the Empire.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-097",
+"era": "renaissance",
+"year": 1496,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Portugal",
+"tags": [
+"persecution"
+],
+"title": "Portugal's Jews",
+"text": "Portugal orders the Jews out, then forces them to convert instead.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-098",
+"era": "renaissance",
+"year": 1497,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"fire",
+"faith"
+],
+"title": "The bonfire of the vanities",
+"text": "Savonarola's followers burn mirrors, cards and paintings in Florence.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-099",
+"era": "renaissance",
+"year": 1497,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bristol",
+"tags": [
+"exploration",
+"sea"
+],
+"title": "Cabot reaches Newfoundland",
+"text": "John Cabot sails from Bristol to North America.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-100",
+"era": "renaissance",
+"year": 1498,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"fire",
+"death",
+"heresy"
+],
+"title": "Savonarola burned",
+"text": "The friar is hanged and burned in the Piazza della Signoria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-101",
+"era": "renaissance",
+"year": 1498,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Calicut",
+"tags": [
+"exploration",
+"trade"
+],
+"title": "Da Gama in India",
+"text": "Vasco da Gama reaches Calicut.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-102",
+"era": "renaissance",
+"year": 1499,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Switzerland",
+"tags": [
+"war"
+],
+"title": "The Swabian War",
+"text": "The Swiss win their freedom from the Empire in fact.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-103",
+"era": "renaissance",
+"year": 1499,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"war"
+],
+"title": "The French take Milan",
+"text": "Louis XII takes Milan; Leonardo leaves the city.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-104",
+"era": "renaissance",
+"year": 1500,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"exploration"
+],
+"title": "Cabral reaches Brazil",
+"text": "Pedro Alvares Cabral lands in Brazil on the way to India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-105",
+"era": "renaissance",
+"year": 1500,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ghent",
+"tags": [
+"crown"
+],
+"title": "Charles V born",
+"text": "The future emperor is born at Ghent.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-106",
+"era": "renaissance",
+"year": 1501,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tabriz",
+"tags": [
+"crown",
+"faith"
+],
+"title": "Shah Ismail",
+"text": "Ismail is crowned at Tabriz and makes Persia Shia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-107",
+"era": "renaissance",
+"year": 1502,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Crimea",
+"tags": [
+"war"
+],
+"title": "The Golden Horde ends",
+"text": "The Crimean Tatars destroy the last of the Golden Horde.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-108",
+"era": "renaissance",
+"year": 1503,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"crown",
+"death"
+],
+"title": "Alexander VI dies",
+"text": "The Borgia pope dies; Cesare Borgia's power collapses.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-109",
+"era": "renaissance",
+"year": 1503,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"art"
+],
+"title": "The Mona Lisa begun",
+"text": "Leonardo begins the portrait of Lisa Gherardini.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-110",
+"era": "renaissance",
+"year": 1504,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"art"
+],
+"title": "Michelangelo's David",
+"text": "The David is set up before the Palazzo Vecchio.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-111",
+"era": "renaissance",
+"year": 1504,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kabul",
+"tags": [
+"crown"
+],
+"title": "Babur takes Kabul",
+"text": "Babur, driven from Fergana, takes Kabul.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-112",
+"era": "renaissance",
+"year": 1505,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Goa",
+"tags": [
+"empire"
+],
+"title": "Portugal's viceroy of India",
+"text": "Francisco de Almeida becomes first viceroy of Portuguese India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-113",
+"era": "renaissance",
+"year": 1506,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"building"
+],
+"title": "New St. Peter's",
+"text": "Julius II lays the first stone of the new St. Peter's.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-114",
+"era": "renaissance",
+"year": 1506,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"massacre"
+],
+"title": "The Lisbon massacre",
+"text": "Mobs kill hundreds of converted Jews in Lisbon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-115",
+"era": "renaissance",
+"year": 1507,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Saint-Die",
+"tags": [
+"exploration"
+],
+"title": "America named",
+"text": "Waldseemuller's map names the new lands America.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-116",
+"era": "renaissance",
+"year": 1508,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cambrai",
+"tags": [
+"treaty",
+"war"
+],
+"title": "The League of Cambrai",
+"text": "The pope, France and the emperor ally against Venice.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-117",
+"era": "renaissance",
+"year": 1508,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"art"
+],
+"title": "The Sistine ceiling",
+"text": "Michelangelo begins painting the Sistine Chapel ceiling.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-118",
+"era": "renaissance",
+"year": 1509,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Henry VIII",
+"text": "Henry VIII becomes King of England.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-119",
+"era": "renaissance",
+"year": 1509,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Diu",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Diu",
+"text": "The Portuguese destroy a Mamluk and Gujarati fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-120",
+"era": "renaissance",
+"year": 1509,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"quake",
+"disaster"
+],
+"title": "The little Judgment Day",
+"text": "An earthquake wrecks Constantinople.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-121",
+"era": "renaissance",
+"year": 1510,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Goa",
+"tags": [
+"war",
+"empire"
+],
+"title": "Goa taken",
+"text": "Afonso de Albuquerque takes Goa.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-122",
+"era": "renaissance",
+"year": 1511,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Malacca",
+"tags": [
+"war",
+"trade"
+],
+"title": "Malacca taken",
+"text": "Albuquerque takes Malacca and its spice trade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-123",
+"era": "renaissance",
+"year": 1512,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ravenna",
+"tags": [
+"battle"
+],
+"title": "Ravenna",
+"text": "The French win and lose their general Gaston de Foix.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-124",
+"era": "renaissance",
+"year": 1512,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"crown"
+],
+"title": "Selim the Grim",
+"text": "Selim I takes the Ottoman throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-125",
+"era": "renaissance",
+"year": 1513,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Flodden",
+"tags": [
+"battle",
+"death"
+],
+"title": "Flodden",
+"text": "James IV of Scotland is killed with much of his nobility.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-126",
+"era": "renaissance",
+"year": 1513,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"learning"
+],
+"title": "The Prince",
+"text": "Machiavelli writes The Prince in exile.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-127",
+"era": "renaissance",
+"year": 1514,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Chaldiran",
+"tags": [
+"battle"
+],
+"title": "Chaldiran",
+"text": "Ottoman guns break Shah Ismail's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-128",
+"era": "renaissance",
+"year": 1514,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hungary",
+"tags": [
+"uprising"
+],
+"title": "Dozsa's revolt",
+"text": "A crusade turns into a peasant war in Hungary; Gyorgy Dozsa is burned on an iron throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-129",
+"era": "renaissance",
+"year": 1515,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marignano",
+"tags": [
+"battle"
+],
+"title": "Marignano",
+"text": "Francis I beats the Swiss and takes Milan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-130",
+"era": "renaissance",
+"year": 1515,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"treaty"
+],
+"title": "The Habsburg double wedding",
+"text": "The Habsburgs and Jagiellons agree marriages that will bring Bohemia and Hungary to Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-131",
+"era": "renaissance",
+"year": 1516,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Marj Dabiq",
+"tags": [
+"battle"
+],
+"title": "Marj Dabiq",
+"text": "Selim destroys the Mamluk army in Syria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-132",
+"era": "renaissance",
+"year": 1516,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Louvain",
+"tags": [
+"learning"
+],
+"title": "Utopia",
+"text": "Thomas More publishes Utopia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-133",
+"era": "renaissance",
+"year": 1516,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Spain",
+"tags": [
+"crown"
+],
+"title": "Charles I of Spain",
+"text": "Charles of Habsburg inherits Spain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-134",
+"era": "renaissance",
+"year": 1517,
+"month": 1,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"war",
+"crown"
+],
+"title": "The Ottomans take Cairo",
+"text": "Selim ends the Mamluk state; Mukhtar Bey spreads influence beyond Egypt under the new rulers.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "ww-setites-west",
+"title": "Setites of the West"
+},
+{
+"id": "followers-of-set",
+"title": "The Followers of Set"
+},
+{
+"id": "cairbn-city",
+"title": "Cairo's Undead Melting Pot"
+}
+]
+},
+{
+"id": "r3-renaissance-135",
+"era": "renaissance",
+"year": 1517,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wittenberg",
+"tags": [
+"faith"
+],
+"title": "The ninety-five theses",
+"text": "Luther publishes the theses against indulgences.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-136",
+"era": "renaissance",
+"year": 1518,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Strasbourg",
+"tags": [
+"occult"
+],
+"title": "The dancing plague of 1518",
+"text": "Hundreds dance in Strasbourg's streets for weeks; some die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-137",
+"era": "renaissance",
+"year": 1519,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Frankfurt",
+"tags": [
+"crown"
+],
+"title": "Charles V elected emperor",
+"text": "Charles of Spain is chosen emperor, ruling half of Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-138",
+"era": "renaissance",
+"year": 1519,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amboise",
+"tags": [
+"art",
+"death"
+],
+"title": "Leonardo dies",
+"text": "Leonardo dies in France.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-139",
+"era": "renaissance",
+"year": 1519,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Seville",
+"tags": [
+"exploration",
+"sea"
+],
+"title": "Magellan sails",
+"text": "Magellan leaves Spain to sail round the world.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-140",
+"era": "renaissance",
+"year": 1520,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Stockholm",
+"tags": [
+"massacre"
+],
+"title": "The Stockholm Bloodbath",
+"text": "Christian II of Denmark executes Swedish nobles after his coronation.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-141",
+"era": "renaissance",
+"year": 1520,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"crown"
+],
+"title": "Suleiman the Magnificent",
+"text": "Suleiman becomes sultan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-142",
+"era": "renaissance",
+"year": 1520,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Field of the Cloth of Gold",
+"tags": [
+"treaty"
+],
+"title": "The Field of the Cloth of Gold",
+"text": "Henry VIII and Francis I meet in tents of gold near Calais.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-143",
+"era": "renaissance",
+"year": 1521,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Worms",
+"tags": [
+"faith",
+"law"
+],
+"title": "The Diet of Worms",
+"text": "Luther refuses to recant and is outlawed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-144",
+"era": "renaissance",
+"year": 1521,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"siege"
+],
+"title": "Belgrade falls",
+"text": "Suleiman takes Belgrade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-145",
+"era": "renaissance",
+"year": 1521,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mactan",
+"tags": [
+"death",
+"exploration"
+],
+"title": "Magellan killed",
+"text": "Magellan dies fighting on Mactan in the Philippines.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-146",
+"era": "renaissance",
+"year": 1522,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Seville",
+"tags": [
+"exploration"
+],
+"title": "Round the world",
+"text": "The last ship of Magellan's fleet comes home.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-147",
+"era": "renaissance",
+"year": 1522,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rhodes",
+"tags": [
+"siege"
+],
+"title": "Rhodes falls",
+"text": "The Hospitallers surrender Rhodes after six months.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-148",
+"era": "renaissance",
+"year": 1523,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sweden",
+"tags": [
+"crown"
+],
+"title": "Gustav Vasa",
+"text": "Gustav Vasa is elected King of Sweden; the Kalmar Union ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-149",
+"era": "renaissance",
+"year": 1524,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Germany",
+"tags": [
+"uprising"
+],
+"title": "The Peasants' War",
+"text": "Peasants rise across southern Germany.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-150",
+"era": "renaissance",
+"year": 1525,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Frankenhausen",
+"tags": [
+"battle",
+"massacre"
+],
+"title": "Frankenhausen",
+"text": "The princes crush Thomas Muntzer's peasants.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-151",
+"era": "renaissance",
+"year": 1525,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pavia",
+"tags": [
+"battle",
+"crown"
+],
+"title": "Pavia",
+"text": "Charles V's army captures Francis I.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-152",
+"era": "renaissance",
+"year": 1525,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prussia",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Prussia turns Lutheran",
+"text": "The grand master of the Teutonic Order becomes Duke of Prussia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-153",
+"era": "renaissance",
+"year": 1526,
+"month": 4,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Panipat",
+"tags": [
+"battle",
+"founding"
+],
+"title": "Panipat",
+"text": "Babur founds the Mughal empire.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-154",
+"era": "renaissance",
+"year": 1526,
+"month": 8,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mohacs",
+"tags": [
+"battle",
+"crown",
+"death"
+],
+"title": "Mohacs",
+"text": "Suleiman destroys the Hungarian army; King Louis II drowns fleeing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-155",
+"era": "renaissance",
+"year": 1526,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Ferdinand king of Bohemia",
+"text": "Ferdinand of Habsburg is elected King of Bohemia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-156",
+"era": "renaissance",
+"year": 1527,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"massacre",
+"siege"
+],
+"title": "The sack of Rome",
+"text": "Imperial troops sack Rome for weeks; the pope is besieged in Castel Sant'Angelo.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-157",
+"era": "renaissance",
+"year": 1528,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"faith",
+"migration"
+],
+"title": "Anabaptists in Moravia",
+"text": "Anabaptist communities settle in southern Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-158",
+"era": "renaissance",
+"year": 1528,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"faith"
+],
+"title": "The promise of 1528",
+"text": "Augustus Giovanni's clan comes to its arrangement with the Camarilla.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cbgv-premascines",
+"title": "The Premascines"
+},
+{
+"id": "v20c-poveglia",
+"title": "Poveglia"
+},
+{
+"id": "giovanni",
+"title": "Clan Giovanni"
+}
+]
+},
+{
+"id": "r3-renaissance-159",
+"era": "renaissance",
+"year": 1529,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"siege"
+],
+"title": "The siege of Vienna",
+"text": "Suleiman besieges Vienna and fails.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-160",
+"era": "renaissance",
+"year": 1529,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marburg",
+"tags": [
+"faith"
+],
+"title": "The Marburg Colloquy",
+"text": "Luther and Zwingli fail to agree.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-161",
+"era": "renaissance",
+"year": 1530,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Augsburg",
+"tags": [
+"faith"
+],
+"title": "The Augsburg Confession",
+"text": "The Lutherans set out their faith.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-162",
+"era": "renaissance",
+"year": 1530,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Malta",
+"tags": [
+"founding"
+],
+"title": "The Knights of Malta",
+"text": "Charles V gives Malta to the Hospitallers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-163",
+"era": "renaissance",
+"year": 1530,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Agra",
+"tags": [
+"crown",
+"death"
+],
+"title": "Babur dies",
+"text": "Babur dies; Humayun takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-164",
+"era": "renaissance",
+"year": 1531,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kappel",
+"tags": [
+"battle",
+"death"
+],
+"title": "Kappel",
+"text": "Zwingli is killed in battle.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-165",
+"era": "renaissance",
+"year": 1531,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"quake"
+],
+"title": "Lisbon earthquake",
+"text": "An earthquake damages Lisbon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-166",
+"era": "renaissance",
+"year": 1532,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"war"
+],
+"title": "The Little War in Hungary",
+"text": "Suleiman's second march on Vienna stalls at Koszeg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-167",
+"era": "renaissance",
+"year": 1533,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Henry marries Anne Boleyn",
+"text": "Henry VIII breaks with Rome to marry Anne Boleyn.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-168",
+"era": "renaissance",
+"year": 1534,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munster",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "The kingdom of Munster",
+"text": "Anabaptists seize Munster and proclaim the kingdom of God.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-169",
+"era": "renaissance",
+"year": 1534,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"founding"
+],
+"title": "The Jesuits",
+"text": "Ignatius of Loyola and companions take vows at Montmartre.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-170",
+"era": "renaissance",
+"year": 1534,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "Baghdad taken",
+"text": "Suleiman takes Baghdad from Persia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-171",
+"era": "renaissance",
+"year": 1535,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munster",
+"tags": [
+"massacre"
+],
+"title": "Munster falls",
+"text": "The bishop's army retakes Munster; the leaders' bodies are hung in cages on the church tower.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-172",
+"era": "renaissance",
+"year": 1535,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tunis",
+"tags": [
+"war"
+],
+"title": "Tunis taken",
+"text": "Charles V takes Tunis from Barbarossa.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-173",
+"era": "renaissance",
+"year": 1535,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"death",
+"faith"
+],
+"title": "Thomas More beheaded",
+"text": "More is beheaded for refusing to accept Henry as head of the Church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-174",
+"era": "renaissance",
+"year": 1536,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"death",
+"crown"
+],
+"title": "Anne Boleyn beheaded",
+"text": "Anne Boleyn dies in the Tower on 19 May; the Restless say the queen serves the Quiet Lord as an Anacreon of southern England.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-175",
+"era": "renaissance",
+"year": 1536,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "England",
+"tags": [
+"faith",
+"building"
+],
+"title": "The monasteries dissolved",
+"text": "Henry VIII begins closing England's monasteries.",
+"ref": "Real history",
+"links": [
+{
+"id": "sccc-cabot-grange",
+"title": "Lord Cabot's Grange"
+}
+]
+},
+{
+"id": "r3-renaissance-176",
+"era": "renaissance",
+"year": 1536,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"faith"
+],
+"title": "Calvin's Institutes",
+"text": "John Calvin publishes the Institutes of the Christian Religion.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-177",
+"era": "renaissance",
+"year": 1537,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "England",
+"tags": [
+"uprising"
+],
+"title": "The Pilgrimage of Grace",
+"text": "The north rises against the closing of the monasteries.",
+"ref": "Real history",
+"links": [
+{
+"id": "sccc-cabot-grange",
+"title": "Lord Cabot's Grange"
+}
+]
+},
+{
+"id": "r3-renaissance-178",
+"era": "renaissance",
+"year": 1538,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Preveza",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Preveza",
+"text": "Barbarossa beats the Holy League's fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-179",
+"era": "renaissance",
+"year": 1540,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "The Jesuits approved",
+"text": "The pope approves the Society of Jesus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-180",
+"era": "renaissance",
+"year": 1541,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Buda",
+"tags": [
+"war"
+],
+"title": "Buda taken",
+"text": "Suleiman takes Buda; Hungary is split three ways.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-181",
+"era": "renaissance",
+"year": 1542,
+"month": null,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "The Roman Inquisition",
+"text": "Paul III sets up the Holy Office in Rome.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-182",
+"era": "renaissance",
+"year": 1543,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nuremberg",
+"tags": [
+"science"
+],
+"title": "Copernicus publishes",
+"text": "De revolutionibus puts the sun at the centre; its author dies that year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-183",
+"era": "renaissance",
+"year": 1543,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Basel",
+"tags": [
+"science"
+],
+"title": "Vesalius's anatomy",
+"text": "Vesalius publishes the Fabric of the Human Body.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-184",
+"era": "renaissance",
+"year": 1543,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tanegashima",
+"tags": [
+"science",
+"trade"
+],
+"title": "Guns reach Japan",
+"text": "Portuguese traders bring arquebuses to Japan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-185",
+"era": "renaissance",
+"year": 1545,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Trent",
+"tags": [
+"faith"
+],
+"title": "The Council of Trent",
+"text": "The Catholic Church meets to answer the reformers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-186",
+"era": "renaissance",
+"year": 1545,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Seville",
+"tags": [
+"money"
+],
+"title": "Potosi silver reaches Seville",
+"text": "A silver mountain found in Peru sends its silver through Seville; prices across Europe begin to climb.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-187",
+"era": "renaissance",
+"year": 1546,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Eisleben",
+"tags": [
+"faith",
+"death"
+],
+"title": "Luther dies",
+"text": "Luther dies where he was born.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-188",
+"era": "renaissance",
+"year": 1547,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Muhlberg",
+"tags": [
+"battle"
+],
+"title": "Muhlberg",
+"text": "Charles V crushes the Protestant princes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-189",
+"era": "renaissance",
+"year": 1547,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Ivan the Terrible crowned tsar",
+"text": "Ivan IV is crowned the first tsar of Russia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-190",
+"era": "renaissance",
+"year": 1547,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"uprising"
+],
+"title": "The Bohemian estates rise",
+"text": "Ferdinand crushes a revolt of Bohemian towns and nobles.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-191",
+"era": "renaissance",
+"year": 1549,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kagoshima",
+"tags": [
+"faith"
+],
+"title": "Francis Xavier in Japan",
+"text": "The Jesuit Francis Xavier lands in Japan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-192",
+"era": "renaissance",
+"year": 1550,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Valladolid",
+"tags": [
+"law",
+"faith"
+],
+"title": "The Valladolid debate",
+"text": "Las Casas and Sepulveda argue whether the native peoples of America may be enslaved.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-193",
+"era": "renaissance",
+"year": 1550,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"faith"
+],
+"title": "The Black Hand's ranks",
+"text": "The Black Hand sets its ranks and marks.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cbv-trade",
+"title": "The Ventrue and the new trade"
+},
+{
+"id": "scwp-pagan-outlook",
+"title": "The Pagan outlook"
+},
+{
+"id": "dav-midnight-crescent",
+"title": "The Midnight Crescent"
+}
+]
+},
+{
+"id": "r3-renaissance-194",
+"era": "renaissance",
+"year": 1551,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tripoli",
+"tags": [
+"war"
+],
+"title": "Tripoli taken",
+"text": "The Ottomans take Tripoli from the Knights of Malta.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-195",
+"era": "renaissance",
+"year": 1552,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kazan",
+"tags": [
+"siege"
+],
+"title": "Kazan taken",
+"text": "Ivan IV takes the khanate of Kazan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-196",
+"era": "renaissance",
+"year": 1553,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Mary Tudor",
+"text": "Mary I takes the throne and restores the old Church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-197",
+"era": "renaissance",
+"year": 1553,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"fire",
+"heresy"
+],
+"title": "Servetus burned",
+"text": "Calvin's Geneva burns Michael Servetus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-198",
+"era": "renaissance",
+"year": 1555,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Augsburg",
+"tags": [
+"treaty",
+"faith"
+],
+"title": "The Peace of Augsburg",
+"text": "Each prince of the Empire chooses the faith of his land.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-199",
+"era": "renaissance",
+"year": 1555,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Oxford",
+"tags": [
+"fire",
+"persecution"
+],
+"title": "The Oxford martyrs",
+"text": "Bishops Latimer and Ridley are burned at Oxford.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-200",
+"era": "renaissance",
+"year": 1556,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shaanxi",
+"tags": [
+"quake",
+"disaster"
+],
+"title": "The Shaanxi earthquake",
+"text": "The deadliest earthquake recorded kills perhaps 830,000 in China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-201",
+"era": "renaissance",
+"year": 1556,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Panipat",
+"tags": [
+"battle"
+],
+"title": "The second Panipat",
+"text": "The young Akbar's army wins northern India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-202",
+"era": "renaissance",
+"year": 1556,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Spain",
+"tags": [
+"crown"
+],
+"title": "Philip II",
+"text": "Charles V gives up his crowns; Philip II takes Spain and the Netherlands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-203",
+"era": "renaissance",
+"year": 1558,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Calais",
+"tags": [
+"war"
+],
+"title": "Calais lost",
+"text": "France takes Calais, England's last French town.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-204",
+"era": "renaissance",
+"year": 1558,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Elizabeth I",
+"text": "Elizabeth becomes Queen of England.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-205",
+"era": "renaissance",
+"year": 1558,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Livonia",
+"tags": [
+"war"
+],
+"title": "The Livonian War",
+"text": "Ivan IV invades Livonia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-206",
+"era": "renaissance",
+"year": 1559,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cateau-Cambresis",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Cateau-Cambresis",
+"text": "The Italian Wars end.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-207",
+"era": "renaissance",
+"year": 1559,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown",
+"death"
+],
+"title": "Henry II killed at a joust",
+"text": "A lance splinter kills the French king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-208",
+"era": "renaissance",
+"year": 1560,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amboise",
+"tags": [
+"uprising"
+],
+"title": "The Amboise conspiracy",
+"text": "Huguenot plotters try to seize the young king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-209",
+"era": "renaissance",
+"year": 1560,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Okehazama",
+"tags": [
+"battle"
+],
+"title": "Okehazama",
+"text": "Oda Nobunaga destroys a much larger army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-210",
+"era": "renaissance",
+"year": 1561,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"founding"
+],
+"title": "Madrid the capital",
+"text": "Philip II moves the court to Madrid.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-211",
+"era": "renaissance",
+"year": 1562,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vassy",
+"tags": [
+"massacre",
+"faith"
+],
+"title": "Vassy",
+"text": "Soldiers kill Huguenots at worship; the French Wars of Religion begin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-212",
+"era": "renaissance",
+"year": 1563,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Trent",
+"tags": [
+"faith"
+],
+"title": "Trent ends",
+"text": "The council closes, having reshaped the Catholic Church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-213",
+"era": "renaissance",
+"year": 1564,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pisa",
+"tags": [
+"science"
+],
+"title": "Galileo born",
+"text": "Galileo Galilei is born at Pisa.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-214",
+"era": "renaissance",
+"year": 1564,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Stratford",
+"tags": [
+"art"
+],
+"title": "Shakespeare born",
+"text": "William Shakespeare is born.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-215",
+"era": "renaissance",
+"year": 1565,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Malta",
+"tags": [
+"siege"
+],
+"title": "The Great Siege of Malta",
+"text": "The Knights hold Malta against the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-216",
+"era": "renaissance",
+"year": 1565,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Talikota",
+"tags": [
+"battle"
+],
+"title": "Talikota",
+"text": "The Deccan sultans destroy Vijayanagara.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-217",
+"era": "renaissance",
+"year": 1565,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Manila",
+"tags": [
+"empire"
+],
+"title": "The Spanish in the Philippines",
+"text": "Spain begins its rule of the Philippines.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-218",
+"era": "renaissance",
+"year": 1566,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Antwerp",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "The iconoclast fury",
+"text": "Calvinists strip the churches of the Netherlands of images.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-219",
+"era": "renaissance",
+"year": 1566,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Szigetvar",
+"tags": [
+"siege",
+"death"
+],
+"title": "Szigetvar",
+"text": "Suleiman dies during the siege; Zrinyi's defenders die in a last sally.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-220",
+"era": "renaissance",
+"year": 1567,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"persecution"
+],
+"title": "The Council of Blood",
+"text": "The Duke of Alba arrives to crush the Netherlands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-221",
+"era": "renaissance",
+"year": 1568,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Netherlands",
+"tags": [
+"war"
+],
+"title": "The Eighty Years War",
+"text": "William of Orange leads the Dutch revolt.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-222",
+"era": "renaissance",
+"year": 1569,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lublin",
+"tags": [
+"treaty",
+"crown"
+],
+"title": "The Union of Lublin",
+"text": "Poland and Lithuania become one commonwealth.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-223",
+"era": "renaissance",
+"year": 1569,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Duisburg",
+"tags": [
+"science"
+],
+"title": "Mercator's map",
+"text": "Mercator publishes his world map.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-224",
+"era": "renaissance",
+"year": 1570,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Novgorod",
+"tags": [
+"massacre"
+],
+"title": "The Novgorod massacre",
+"text": "Ivan IV's men kill thousands in Novgorod.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-225",
+"era": "renaissance",
+"year": 1570,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cyprus",
+"tags": [
+"war"
+],
+"title": "Cyprus invaded",
+"text": "The Ottomans invade Venetian Cyprus.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-226",
+"era": "renaissance",
+"year": 1571,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Famagusta",
+"tags": [
+"siege",
+"massacre"
+],
+"title": "Famagusta",
+"text": "Famagusta falls; its commander is flayed alive.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-227",
+"era": "renaissance",
+"year": 1571,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lepanto",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Lepanto",
+"text": "The Holy League destroys the Ottoman fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-228",
+"era": "renaissance",
+"year": 1571,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"fire"
+],
+"title": "Moscow burned",
+"text": "The Crimean khan burns Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-229",
+"era": "renaissance",
+"year": 1572,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"massacre",
+"faith"
+],
+"title": "St Bartholomew's Day",
+"text": "Thousands of Huguenots are killed in Paris and the provinces.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-230",
+"era": "renaissance",
+"year": 1572,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Molodi",
+"tags": [
+"battle"
+],
+"title": "Molodi",
+"text": "Russia destroys a Crimean army south of Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-231",
+"era": "renaissance",
+"year": 1572,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Denmark",
+"tags": [
+"science"
+],
+"title": "Tycho's new star",
+"text": "Tycho Brahe sees a new star in Cassiopeia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-232",
+"era": "renaissance",
+"year": 1573,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyoto",
+"tags": [
+"crown"
+],
+"title": "The Ashikaga end",
+"text": "Nobunaga drives out the last Ashikaga shogun.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-233",
+"era": "renaissance",
+"year": 1574,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leiden",
+"tags": [
+"siege",
+"flood"
+],
+"title": "Leiden relieved",
+"text": "The Dutch flood their own land to lift the Spanish siege.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-234",
+"era": "renaissance",
+"year": 1575,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nagashino",
+"tags": [
+"battle"
+],
+"title": "Nagashino",
+"text": "Nobunaga's musketeers destroy the Takeda cavalry.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-235",
+"era": "renaissance",
+"year": 1576,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Antwerp",
+"tags": [
+"massacre"
+],
+"title": "The Spanish Fury",
+"text": "Unpaid Spanish troops sack Antwerp.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-236",
+"era": "renaissance",
+"year": 1576,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Rudolf II",
+"text": "Rudolf II becomes emperor.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-237",
+"era": "renaissance",
+"year": 1576,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Hven",
+"tags": [
+"science",
+"building"
+],
+"title": "Uraniborg",
+"text": "Tycho Brahe builds an observatory on Hven; the Order of Reason funds measurements, the Hermetics read omens in them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-238",
+"era": "renaissance",
+"year": 1577,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Plymouth",
+"tags": [
+"exploration",
+"sea"
+],
+"title": "Drake sails",
+"text": "Francis Drake leaves on his voyage round the world.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-239",
+"era": "renaissance",
+"year": 1578,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Alcacer Quibir",
+"tags": [
+"battle",
+"crown"
+],
+"title": "The Battle of the Three Kings",
+"text": "King Sebastian of Portugal vanishes in a disaster in Morocco.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-240",
+"era": "renaissance",
+"year": 1579,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Utrecht",
+"tags": [
+"treaty"
+],
+"title": "The Union of Utrecht",
+"text": "The northern Dutch provinces bind together.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-241",
+"era": "renaissance",
+"year": 1580,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"crown"
+],
+"title": "Spain takes Portugal",
+"text": "Philip II becomes King of Portugal.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-242",
+"era": "renaissance",
+"year": 1581,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Netherlands",
+"tags": [
+"law"
+],
+"title": "The Act of Abjuration",
+"text": "The Dutch renounce Philip II.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-243",
+"era": "renaissance",
+"year": 1582,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"science",
+"law"
+],
+"title": "The Gregorian calendar",
+"text": "Ten days are dropped from October in Catholic lands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-244",
+"era": "renaissance",
+"year": 1582,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyoto",
+"tags": [
+"death"
+],
+"title": "Honno-ji",
+"text": "Nobunaga is betrayed and dies in the burning temple.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-245",
+"era": "renaissance",
+"year": 1583,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Rudolf moves to Prague",
+"text": "Rudolf II makes Prague the imperial capital.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-246",
+"era": "renaissance",
+"year": 1584,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Delft",
+"tags": [
+"death"
+],
+"title": "William the Silent shot",
+"text": "The leader of the Dutch revolt is murdered.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-247",
+"era": "renaissance",
+"year": 1584,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"death"
+],
+"title": "Ivan the Terrible dies",
+"text": "Ivan IV dies over a chessboard.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-248",
+"era": "renaissance",
+"year": 1585,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Antwerp",
+"tags": [
+"siege"
+],
+"title": "Antwerp falls",
+"text": "Parma takes Antwerp; trade moves to Amsterdam.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-249",
+"era": "renaissance",
+"year": 1586,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyoto",
+"tags": [
+"crown"
+],
+"title": "Hideyoshi",
+"text": "Toyotomi Hideyoshi becomes chancellor of Japan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-250",
+"era": "renaissance",
+"year": 1587,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Fotheringhay",
+"tags": [
+"death",
+"crown"
+],
+"title": "Mary Queen of Scots beheaded",
+"text": "Elizabeth signs her cousin's death warrant.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-251",
+"era": "renaissance",
+"year": 1587,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Isfahan",
+"tags": [
+"crown"
+],
+"title": "Shah Abbas",
+"text": "Abbas the Great takes the Persian throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-252",
+"era": "renaissance",
+"year": 1588,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "English Channel",
+"tags": [
+"battle",
+"sea",
+"storm"
+],
+"title": "The Armada",
+"text": "The Spanish fleet is beaten off and wrecked by storms.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-253",
+"era": "renaissance",
+"year": 1589,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"death",
+"crown"
+],
+"title": "Henry III murdered",
+"text": "A friar stabs the French king; Henry of Navarre is heir.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-254",
+"era": "renaissance",
+"year": 1590,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Odawara",
+"tags": [
+"siege"
+],
+"title": "Japan unified",
+"text": "Hideyoshi takes Odawara; all Japan is his.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-255",
+"era": "renaissance",
+"year": 1590,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "The Golem tale",
+"text": "The tale of the rabbi who made a man of clay runs through the crown lands; mages argue whether it is a story or a working.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-256",
+"era": "renaissance",
+"year": 1592,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Busan",
+"tags": [
+"war"
+],
+"title": "The invasion of Korea",
+"text": "Hideyoshi's army lands at Busan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-257",
+"era": "renaissance",
+"year": 1592,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hansan",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Hansan Island",
+"text": "Admiral Yi Sun-sin's turtle ships destroy a Japanese fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-258",
+"era": "renaissance",
+"year": 1593,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Saint-Denis",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Paris is worth a mass",
+"text": "Henry IV becomes Catholic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-259",
+"era": "renaissance",
+"year": 1593,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sisak",
+"tags": [
+"battle"
+],
+"title": "Sisak",
+"text": "The Long Turkish War begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-260",
+"era": "renaissance",
+"year": 1594,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ireland",
+"tags": [
+"war"
+],
+"title": "The Nine Years War",
+"text": "Hugh O'Neill rises against English rule.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-261",
+"era": "renaissance",
+"year": 1595,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wallachia",
+"tags": [
+"battle"
+],
+"title": "Calugareni",
+"text": "Michael the Brave beats the Ottomans.",
+"ref": "Real history",
+"links": [
+{
+"id": "coti-dracula",
+"title": "Vlad Tepes, Dracula"
+}
+]
+},
+{
+"id": "r3-renaissance-262",
+"era": "renaissance",
+"year": 1596,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Mezokeresztes",
+"tags": [
+"battle"
+],
+"title": "Mezokeresztes",
+"text": "The Ottomans win a great battle in Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-263",
+"era": "renaissance",
+"year": 1597,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nagasaki",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "The Nagasaki martyrs",
+"text": "Twenty-six Christians are crucified at Nagasaki.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-264",
+"era": "renaissance",
+"year": 1598,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Noryang",
+"tags": [
+"battle",
+"sea",
+"death"
+],
+"title": "Noryang",
+"text": "Admiral Yi dies winning the last sea battle; Japan leaves Korea.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-265",
+"era": "renaissance",
+"year": 1598,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nantes",
+"tags": [
+"law",
+"faith"
+],
+"title": "The Edict of Nantes",
+"text": "Henry IV grants the Huguenots toleration.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-266",
+"era": "renaissance",
+"year": 1598,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Isfahan",
+"tags": [
+"founding"
+],
+"title": "Isfahan the capital",
+"text": "Shah Abbas makes Isfahan his capital.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-267",
+"era": "renaissance",
+"year": 1598,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"death"
+],
+"title": "The Rurikids end",
+"text": "Tsar Fyodor dies; Boris Godunov is chosen tsar.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-268",
+"era": "renaissance",
+"year": 1599,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art",
+"building"
+],
+"title": "The Globe",
+"text": "Shakespeare's company builds the Globe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-269",
+"era": "renaissance",
+"year": 1600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"fire",
+"heresy"
+],
+"title": "Giordano Bruno burned",
+"text": "The Roman Inquisition burns Bruno in the Campo de' Fiori.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-270",
+"era": "renaissance",
+"year": 1600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Sekigahara",
+"tags": [
+"battle"
+],
+"title": "Sekigahara",
+"text": "Tokugawa Ieyasu wins Japan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-271",
+"era": "renaissance",
+"year": 1600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"trade",
+"founding"
+],
+"title": "The East India Company",
+"text": "Elizabeth charters the English East India Company.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-272",
+"era": "renaissance",
+"year": 1600,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"storm"
+],
+"title": "The Third Great Maelstrom",
+"text": "The worst storm yet cuts Stygia off.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "scwp-pagan-outlook",
+"title": "The Pagan outlook"
+},
+{
+"id": "cbv-trade",
+"title": "The Ventrue and the new trade"
+}
+]
+},
+{
+"id": "r3-renaissance-273",
+"era": "renaissance",
+"year": 1600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"science"
+],
+"title": "Kepler joins Tycho",
+"text": "Johannes Kepler comes to Prague to work with Tycho Brahe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-274",
+"era": "renaissance",
+"year": 1450,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Wallachia",
+"tags": [
+"war"
+],
+"title": "The voivodes and the Order of the Dragon",
+"text": "Kindred of the Carpathians watch the princes of the Dragon order fight the Turk and each other.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "coti-dracula",
+"title": "Vlad Tepes, Dracula"
+}
+]
+},
+{
+"id": "r3-renaissance-275",
+"era": "renaissance",
+"year": 1451,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown"
+],
+"title": "The Lodi dynasty",
+"text": "Bahlul Lodi takes the throne of Delhi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-276",
+"era": "renaissance",
+"year": 1455,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cyprus",
+"tags": [
+"sea"
+],
+"title": "Pirates of the Aegean",
+"text": "Corsairs make the Aegean islands unsafe as Byzantine power ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-277",
+"era": "renaissance",
+"year": 1457,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Edo",
+"tags": [
+"building",
+"founding"
+],
+"title": "Edo castle",
+"text": "Ota Dokan builds a castle at Edo, the future Tokyo.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-278",
+"era": "renaissance",
+"year": 1460,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"war"
+],
+"title": "Moravia in the Bohemian wars",
+"text": "Catholic lords in Moravia fight George of Podebrady's Hussites.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-279",
+"era": "renaissance",
+"year": 1465,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"learning",
+"occult"
+],
+"title": "Ficino translates Hermes",
+"text": "Marsilio Ficino translates the Hermetic writings for Cosimo de' Medici; the Order of Hermes is delighted and alarmed.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-280",
+"era": "renaissance",
+"year": 1469,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Punjab",
+"tags": [
+"faith"
+],
+"title": "Guru Nanak born",
+"text": "The founder of the Sikh faith is born.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-281",
+"era": "renaissance",
+"year": 1472,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Persia",
+"tags": [
+"war"
+],
+"title": "Venice seeks allies in Persia",
+"text": "Venetian envoys go to Uzun Hasan for help against the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-282",
+"era": "renaissance",
+"year": 1474,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"learning",
+"occult"
+],
+"title": "The Platonic Academy",
+"text": "Ficino's circle at Careggi studies Plato and Hermes Trismegistus.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-283",
+"era": "renaissance",
+"year": 1475,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Trent",
+"tags": [
+"persecution",
+"massacre"
+],
+"title": "The Trent blood libel",
+"text": "The Jews of Trent are tortured and killed after a child's death.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-284",
+"era": "renaissance",
+"year": 1482,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"art"
+],
+"title": "The Birth of Venus",
+"text": "Botticelli paints the Birth of Venus about this time.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-285",
+"era": "renaissance",
+"year": 1485,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague"
+],
+"title": "The sweating sickness",
+"text": "A new and deadly fever kills thousands in London.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-286",
+"era": "renaissance",
+"year": 1486,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"learning",
+"occult"
+],
+"title": "Pico's nine hundred theses",
+"text": "Pico della Mirandola offers to debate nine hundred theses, many from the Kabbalah; the pope condemns thirteen.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mrcc-schism-paladins",
+"title": "The great schism and the Paladins"
+}
+]
+},
+{
+"id": "r3-renaissance-287",
+"era": "renaissance",
+"year": 1489,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Granada",
+"tags": [
+"war"
+],
+"title": "Baza",
+"text": "Castile takes Baza after a long siege.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-288",
+"era": "renaissance",
+"year": 1495,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"plague"
+],
+"title": "The new disease and the blood",
+"text": "Kindred learn quickly which mortals carry the French disease, and which feeding grounds to avoid.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-289",
+"era": "renaissance",
+"year": 1497,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"art"
+],
+"title": "The Last Supper",
+"text": "Leonardo finishes the Last Supper in Milan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-290",
+"era": "renaissance",
+"year": 1499,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Zonchio",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Zonchio",
+"text": "The Ottoman fleet beats Venice.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-291",
+"era": "renaissance",
+"year": 1500,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"trade"
+],
+"title": "A backwater ruled from Canton",
+"text": "Hong Kong's villages fish and farm while Canton grows into a great port.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "wodhk-sleeping-dragons",
+"title": "The sleeping dragons of Hong Kong"
+},
+{
+"id": "hkbn-hong-kong",
+"title": "Hong Kong by Night"
+},
+{
+"id": "hkbn-chun",
+"title": "Anguo Chun"
+}
+]
+},
+{
+"id": "r3-renaissance-292",
+"era": "renaissance",
+"year": 1502,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wittenberg",
+"tags": [
+"learning",
+"founding"
+],
+"title": "Wittenberg university",
+"text": "Frederick the Wise founds a university at Wittenberg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-293",
+"era": "renaissance",
+"year": 1505,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"death"
+],
+"title": "Ivan the Great dies",
+"text": "Ivan III dies having tripled the lands of Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-294",
+"era": "renaissance",
+"year": 1507,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Sponheim",
+"tags": [
+"occult"
+],
+"title": "Trithemius and Faust",
+"text": "The abbot Trithemius warns of a vagabond calling himself Faustus.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-295",
+"era": "renaissance",
+"year": 1509,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Agnadello",
+"tags": [
+"battle"
+],
+"title": "Agnadello",
+"text": "The French crush Venice's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-296",
+"era": "renaissance",
+"year": 1510,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Cologne",
+"tags": [
+"occult",
+"learning"
+],
+"title": "Agrippa's occult philosophy",
+"text": "Cornelius Agrippa drafts the Three Books of Occult Philosophy.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-297",
+"era": "renaissance",
+"year": 1514,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"faith"
+],
+"title": "Brethren in Moravia",
+"text": "The Unity of Brethren grow in Moravia despite the king's ban.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-298",
+"era": "renaissance",
+"year": 1515,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"faith",
+"persecution"
+],
+"title": "A quiet march",
+"text": "The Unity of Brethren keep their faith in Moravia; inquirers from Prague find them hard to catch.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-299",
+"era": "renaissance",
+"year": 1517,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown"
+],
+"title": "Ibrahim Lodi",
+"text": "The last Lodi sultan takes Delhi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-300",
+"era": "renaissance",
+"year": 1520,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"art",
+"faith"
+],
+"title": "Raphael dies",
+"text": "The painter dies in Rome; Toreador of the city call it a loss to the blood itself.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cbt-byzantium",
+"title": "Toreador of the dark centuries"
+},
+{
+"id": "dav-long-night",
+"title": "The Long Night"
+},
+{
+"id": "dac-rome",
+"title": "Rome in the Dark Medieval"
+}
+]
+},
+{
+"id": "r3-renaissance-301",
+"era": "renaissance",
+"year": 1522,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Bohemia",
+"tags": [
+"faith"
+],
+"title": "Lutherans in Bohemia",
+"text": "Lutheran preachers reach Bohemia and Moravia.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-302",
+"era": "renaissance",
+"year": 1523,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zurich",
+"tags": [
+"faith"
+],
+"title": "Zwingli's reform",
+"text": "Zurich adopts Zwingli's reform.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-303",
+"era": "renaissance",
+"year": 1527,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Basel",
+"tags": [
+"science",
+"occult"
+],
+"title": "Paracelsus burns the old books",
+"text": "Paracelsus burns Avicenna's canon at Basel and lectures in German.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-304",
+"era": "renaissance",
+"year": 1530,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Basel",
+"tags": [
+"science",
+"occult"
+],
+"title": "Paracelsus and the craftsmen",
+"text": "Paracelsus's chemistry splits the alchemists: some go to the Hermetics, some to the Order of Reason.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-305",
+"era": "renaissance",
+"year": 1531,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"building"
+],
+"title": "Prague castle rebuilt",
+"text": "Ferdinand I rebuilds Prague castle in the new style.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-306",
+"era": "renaissance",
+"year": 1535,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Munster",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "Kindred in the kingdom of God",
+"text": "Kindred in Munster find the prophets' kingdom an easy place to hunt and a hard one to hide in.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-307",
+"era": "renaissance",
+"year": 1540,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kannauj",
+"tags": [
+"battle"
+],
+"title": "Kannauj",
+"text": "Sher Shah Suri drives Humayun out of India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-308",
+"era": "renaissance",
+"year": 1542,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"fire"
+],
+"title": "The Prague fire",
+"text": "A great fire burns Prague's Lesser Town and castle.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-309",
+"era": "renaissance",
+"year": 1545,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown",
+"death"
+],
+"title": "Sher Shah dies",
+"text": "Sher Shah Suri dies in a gunpowder explosion.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-310",
+"era": "renaissance",
+"year": 1550,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"war"
+],
+"title": "Altan Khan at Beijing",
+"text": "The Mongol Altan Khan burns the suburbs of Beijing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-311",
+"era": "renaissance",
+"year": 1555,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown"
+],
+"title": "Humayun returns",
+"text": "Humayun takes back Delhi.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-312",
+"era": "renaissance",
+"year": 1557,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Antwerp",
+"tags": [
+"science"
+],
+"title": "The age of printing",
+"text": "Antwerp printers flood Europe with books; the Order of Reason backs the printers of almanacs.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-313",
+"era": "renaissance",
+"year": 1560,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "France",
+"tags": [
+"faith",
+"war"
+],
+"title": "The Toreador and the wars of religion",
+"text": "The Grand Court's Kindred back Catholic and Huguenot nobles as it suits them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mtbn-ville-marie",
+"title": "The Sabbat of Ville-Marie"
+},
+{
+"id": "scsw-france",
+"title": "France in the Age of Masks"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+}
+]
+},
+{
+"id": "r3-renaissance-314",
+"era": "renaissance",
+"year": 1564,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult"
+],
+"title": "John Dee's Monad",
+"text": "John Dee publishes the Hieroglyphic Monad; the Hermetic houses of England court him.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-315",
+"era": "renaissance",
+"year": 1569,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Fatehpur Sikri",
+"tags": [
+"building"
+],
+"title": "Fatehpur Sikri",
+"text": "Akbar builds a new capital near Agra.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-316",
+"era": "renaissance",
+"year": 1571,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nagasaki",
+"tags": [
+"trade",
+"founding"
+],
+"title": "Nagasaki opened",
+"text": "Nagasaki is opened to Portuguese trade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-317",
+"era": "renaissance",
+"year": 1575,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Fatehpur Sikri",
+"tags": [
+"faith",
+"learning"
+],
+"title": "The house of worship",
+"text": "Akbar invites scholars of every faith to debate at his court.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-318",
+"era": "renaissance",
+"year": 1579,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Fatehpur Sikri",
+"tags": [
+"faith"
+],
+"title": "Akbar's decree",
+"text": "Akbar claims the right to judge disputes of Islamic law.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-319",
+"era": "renaissance",
+"year": 1580,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "Kindred at Rudolf's court",
+"text": "Rudolf's alchemists and astrologers draw Tremere and Toreador to Prague.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-renaissance-320",
+"era": "renaissance",
+"year": 1583,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "Dee and Kelley in Bohemia",
+"text": "John Dee and Edward Kelley come to Bohemia to speak with angels.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-321",
+"era": "renaissance",
+"year": 1587,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Trier",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Trier witch trials",
+"text": "Hundreds are burned in the Trier trials over a decade.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-322",
+"era": "renaissance",
+"year": 1589,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Trier",
+"tags": [
+"persecution"
+],
+"title": "Dietrich Flade burned",
+"text": "A judge who doubted the witch trials is himself burned at Trier.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-323",
+"era": "renaissance",
+"year": 1591,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"science"
+],
+"title": "Rudolf's cabinet of curiosities",
+"text": "Rudolf fills his rooms with clocks, stones, paintings and marvels.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-renaissance-324",
+"era": "renaissance",
+"year": 1595,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Lorraine",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "Nicholas Remy's book",
+"text": "A witch judge of Lorraine publishes his book on demons, boasting of hundreds burned.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-325",
+"era": "renaissance",
+"year": 1597,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Edinburgh",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "King James's Daemonologie",
+"text": "James VI of Scotland writes against witches.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-renaissance-326",
+"era": "renaissance",
+"year": 1599,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"science"
+],
+"title": "Tycho in Prague",
+"text": "Tycho Brahe becomes imperial mathematician to Rudolf.",
+"ref": "Real history",
 "links": []
 }
 ]

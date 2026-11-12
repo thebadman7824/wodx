@@ -181,7 +181,6 @@
 1436|H|mor|EU|Paris|war|Paris taken back|The French retake Paris from the English.
 1437|H|mor|EU|Prague|crown,death|Sigismund dies|The last Luxembourg emperor dies; Albert of Habsburg follows.
 1438|H|mor|EU|Ferrara|faith|The council of union|Greek and Latin churchmen meet at Ferrara and then Florence.
-1438|H|mor|AS|Cuzco|crown|Pachacuti|Pachacuti takes the Inca throne.
 1439|H|mor|EU|Florence|faith,treaty|Union of the churches|The Greeks accept union with Rome at Florence; at home they reject it.
 1439|H|mor|EU|Mainz|science|The press is tried|Johannes Gutenberg works on printing with movable type in Strasbourg and Mainz.
 1440|H|mor|EU|Brittany|crime,death|Gilles de Rais tried|Joan's comrade Gilles de Rais is tried for murdering children and hanged at Nantes.
@@ -278,7 +277,6 @@
 1435|H|mor|EU|Basel|faith|Basel and the pope|The council quarrels with the pope over who rules the Church.
 1436|H|mor|EU|Prague|crown|Sigismund back in Prague|Sigismund is accepted as King of Bohemia after the Compacts.
 1437|H|mor|EU|Transylvania|uprising|The Budai Nagy Antal revolt|Transylvanian peasants rise; the nobles, Saxons and Szekelys league against them.
-1438|H|mor|AS|Cuzco|empire|The Inca expand|Pachacuti begins the Inca empire.
 1439|H|mor|EU|Basel|faith|The antipope Felix|The council deposes Eugenius IV and elects the Duke of Savoy as Felix V.
 1440|H|mor|EU|Florence|art|Fra Angelico at San Marco|Fra Angelico paints the cells of San Marco.
 1440|H|mor|EU|Germany|crown|Frederick III|Frederick of Habsburg becomes King of the Romans; he will reign 53 years.
