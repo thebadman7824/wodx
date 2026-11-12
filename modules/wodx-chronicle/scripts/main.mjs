@@ -286,7 +286,7 @@ async function onSocket(message) {
 }
 
 // A new session begun in WoDX Storyteller starts the count of NPC proposals again
-// It also brings the Legends book up to date (WoDX Chronicle 0.31.0)
+// It also brings the Legends book up to date (WoDX Chronicle 0.32.0)
 Hooks.on("updateSetting", s => {
   if ( s?.key !== "wodx-storyteller.session" ) return;
   approvals.resetSession();

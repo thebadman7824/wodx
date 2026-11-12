@@ -1,5 +1,5 @@
 /**
- * WoDX Otherworlds 0.14.0: standing with the spirit courts, the pure part. No Foundry calls here (B1320-B1324).
+ * WoDX Otherworlds 0.14.0: standing with the spirit courts, the pure part. No Foundry calls here (B1520-B1524).
  *
  * The books give chiminage (what a spirit asks for a service), Bans (what a totem forbids) and spirits that remember
  * how they were treated, but no number for it. This is a house rule that keeps that memory as a number per court,

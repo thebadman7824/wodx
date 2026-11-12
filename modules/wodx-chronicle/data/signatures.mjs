@@ -388,3 +388,144 @@ export const GLIMPSE_THEMES = [
     "The spiders are weaving a different pattern, {when}.",
   ]},
 ];
+
+/* ================= Werewolf (Chronicle 0.31.0) ================= */
+
+/**
+ * Garou tribes, the lost tribes, the Black Spiral Dancers and Kinfolk. Same row shape as the bloodlines (feature "line"),
+ * plus: until (the last year the tribe is played; later years show it as gone), wyrm (counts as a Wyrm foe for the
+ * Ahroun), and engines of their own (guard, truce, leverage, hear, sky, renown). match: words of the sheet's tribe field.
+ * Page refs are to W20 (pdf pages unless marked printed); Dark Ages names from Werewolf: the Dark Ages.
+ */
+export const TRIBES = [
+  {key: "blackfuries", label: "Black Furies", match: ["black furies", "black fury", "furies"], feature: "guard", title: "Sacred places remember", page: "W20, the tribe's pages",
+    text: "A Fury can take a place into their care (a grove, a spring, a shrine, a women's house): the scene they stand in. When a fight breaks out there or something is taken from it, the Fury hears of it wherever they are, with the hour. The Storyteller can give a Rage point once for hunting the wrongdoer."},
+  {key: "bonegnawers", label: "Bone Gnawers", match: ["bone gnawers", "bone gnawer", "gnawers"], feature: "line", title: "The Grapevine and the trash heap", page: "W20, the tribe's pages",
+    text: "The poor talk freely to a Bone Gnawer: beggars, tramps and street children give real rumours when asked for news or directions. Scavenging an alley or a yard turns up something cheap from the era's goods. Streetwise and Survival in towns gain a die.", effects: [{tags: ["streetwise"], dice: 1}]},
+  {key: "childrengaia", label: "Children of Gaia", match: ["children of gaia", "child of gaia"], feature: "truce", title: "Calling a truce", page: "W20, the tribe's pages",
+    text: "In a fight, a Child of Gaia can spend a turn to offer a truce. The Storyteller hears the offer on a card; the NPCs who take it leave the fight. In sept politics they can broker a month's peace between two rivals."},
+  {key: "fianna", label: "Fianna", match: ["fianna"], feature: "renown", title: "Tales and drink", page: "W20, the tribe's pages",
+    text: "A tale told at a moot can earn Renown: the Fianna tells it, the Storyteller hears it on a card and can award Glory to its hero. They hold their drink longer than most, and meetings with the fae come easier. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+  {key: "fenris", label: "Get of Fenris", match: ["get of fenris", "fenrir", "fenris"], feature: "renown", title: "Trials and scars", page: "W20, the tribe's pages",
+    text: "A challenge in the sept is settled as a duel, through the fight starter. A lasting scar won in battle counts as a trophy: the Storyteller can award Glory for it on a card."},
+  {key: "glasswalkers", label: "Glass Walkers", match: ["glass walkers", "glass walker", "warders of men", "warder of men", "iron riders"], feature: "line", title: "City spirits and holdings", page: "W20, the tribe's pages; Werewolf: the Dark Ages pdf 75 for the old name",
+    text: "Glass Walkers own holdings and businesses that pay a monthly income. Machines they carry keep working in the Umbra. In the Dark Ages they are the Warders of Men; in the World of Future Darkness the net and the arcologies are their home ground. Computer and Finance gain a die.", effects: [{tags: ["computer", "finance"], dice: 1}]},
+  {key: "redtalons", label: "Red Talons", match: ["red talons", "red talon"], feature: "line", title: "Wolf ways", page: "W20, the tribe's pages",
+    text: "Lupus only. Most human goods are no use to them. In towns, passers-by feel fear around them; in the wild they read tracks with ease. Survival gains a die and Etiquette among humans is one harder.", effects: [{tags: ["survival"], dice: 1}, {tags: ["etiquette"], difficulty: 1}]},
+  {key: "shadowlords", label: "Shadow Lords", match: ["shadow lords", "shadow lord"], feature: "leverage", title: "Leverage and storms", page: "W20, the tribe's pages",
+    text: "Each failure of another Garou the Shadow Lord learns of becomes a point of leverage, spent as a favour owed in the Ledger. Grandfather Thunder favours them: in a thunderstorm Intimidation gains a die.", effects: [{tags: ["intimidation"], dice: 1, when: "thunder"}]},
+  {key: "silentstriders", label: "Silent Striders", match: ["silent striders", "silent strider"], feature: "line", title: "Roads and ghosts", page: "W20, the tribe's pages",
+    text: "Overland travel is quicker for them and moon bridges cost them less. Ghosts seek them out: the Shadowlands lie close, and a careful look can show a ghost nearby. They can never go home to the spirit lands of Egypt. Athletics for running gains a die.", effects: [{tags: ["athletics"], dice: 1}]},
+  {key: "silverfangs", label: "Silver Fangs", match: ["silver fangs", "silver fang"], feature: "hear", title: "Blood of kings", page: "W20 pdf 115 (p. 113)",
+    text: "Every Silver Fang carries Pure Breed and the madness of the old blood: a derangement that colours what they hear when NPCs answer them, with the true reply beneath. Their Kinfolk are noble houses of Bohemia, Poland and Russia. In sept politics their bid for office counts one higher."},
+  {key: "stargazers", label: "Stargazers", match: ["stargazers", "stargazer"], feature: "sky", title: "Stars and stillness", page: "W20 pdf 42, 49",
+    text: "Under a clear night sky, once a lunar month, a Stargazer can read a riddle about what comes next from the stars. Kailindo lets them change form mid-fight without the usual cost once a scene. They stand with the Garou Nation and with the Beast Courts of the East."},
+  {key: "uktena", label: "Uktena", match: ["uktena"], feature: "line", title: "Bound banes", page: "W20, the tribe's pages",
+    text: "Fetishes and talens are made as recipes with a spirit among the ingredients. A bane bound in an item can get loose on a botched use, as an NPC. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
+  {key: "wendigo", label: "Wendigo", match: ["wendigo"], feature: "line", title: "The cold wind", page: "W20, the tribe's pages",
+    text: "Cold weather never troubles a Wendigo, and in it their Survival and their attacks gain a die. In the Americas their feud with the newcomer tribes starts in 1492 and grows with each dated colonial event.", effects: [{tags: ["survival", "brawl", "melee"], dice: 1, when: "cold"}]},
+  {key: "croatan", label: "Croatan", match: ["croatan"], feature: "line", until: 1590, house: true, title: "The last sacrifice", page: "W20, the lost tribes; the year is a house reading",
+    text: "For stories in the Americas before the tribe gave itself up (1590 here). Their rites strengthen a caern. After that year the tribe is gone and lives only in Galliard tales."},
+  {key: "bunyip", label: "Bunyip", match: ["bunyip"], feature: "line", until: 1890, house: true, title: "The War of Tears", page: "W20, the lost tribes; the year is a house reading",
+    text: "For stories in Australia before the War of Tears ended the tribe (1890 here). A Garou who meets a Bunyip spirit or relic feels the old shame: the Storyteller can call for a Harano test."},
+  {key: "whitehowlers", label: "White Howlers", match: ["white howlers", "white howler"], feature: "line", until: 0, title: "Fallen kin", page: "W20, the fall of the White Howlers",
+    text: "Gone long before 1197: they walked the Spiral and became the Black Spiral Dancers. They appear only in old stories and dreams. A Garou who learns the story gains a lore page that opens Spiral lore."},
+  {key: "bsd", label: "Black Spiral Dancers", match: ["black spiral dancers", "black spiral dancer", "black spiral", "spiral dancer", "spiral dancers"], feature: "line", wyrm: true, title: "Hive and taint", page: "W20 pdf 42",
+    text: "NPCs of the Wyrm. A Hive taints the land around it, and those with the senses for it smell the Wyrm there. A Garou who walks the Spiral in a dream rite risks a derangement. An Ahroun goes first against them."},
+];
+
+/** The Kinfolk row (flag world.wodx.kinfolk, set from WoDX Actions' Kinfolk button). */
+export const KINFOLK = {key: "kinfolk", label: "Kinfolk", match: [], feature: "kin", title: "Blood that hides the Veil", page: "W20, Kinfolk and the Delirium",
+  text: "Kinfolk do not suffer the Delirium. Harm done to them reaches the tribe: each player's Garou of that tribe hears of it on a card. A match between families is a matter for sept politics."};
+
+/** Auspices. moon: the auspice's own phase (Rage at moonrise is built in WoDX Actions). */
+export const AUSPICES = [
+  {key: "ragabash", label: "Ragabash", match: ["ragabash"], feature: "line", title: "Pranks without shame", page: "W20, the auspices",
+    text: "A trick played to test an elder costs no Honour, and a prank that shows up a real fault earns Wisdom. Lifting and planting gain a die.", effects: [{tags: ["lift"], dice: 1}]},
+  {key: "theurge", label: "Theurge", match: ["theurge"], feature: "line", title: "Spirit sight", page: "W20, the auspices",
+    text: "Where the Gauntlet is low (a caern, the deep wild), a Theurge sees the spirits in a scene without a roll. Rites are made as recipes: ingredients, hours on the clock and a place. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
+  {key: "philodox", label: "Philodox", match: ["philodox"], feature: "ruling", title: "The judge's word", page: "W20, the auspices",
+    text: "A Philodox can settle a challenge or an accusation with a ruling, posted for all to see. Both sides abide by it or lose Honour, and the loser cannot raise the matter again for a month."},
+  {key: "galliard", label: "Galliard", match: ["galliard"], feature: "renown", title: "Telling the tale", page: "W20, the auspices",
+    text: "A tale at a moot earns Renown for its hero and Wisdom for the teller: the Storyteller hears it on a card. The form follows the age: chant and saga, songbook, radio and the recorded song. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+  {key: "ahroun", label: "Ahroun", match: ["ahroun"], feature: "first", title: "First into battle", page: "W20, the auspices; the soak die is a house reading", house: true,
+    text: "When a fight starts against a creature of the Wyrm, the Ahroun goes first in the first turn. In Crinos that scene the Ahroun soaks with one more die, which the Storyteller adds."},
+];
+
+/** Breeds. A breed row stacks with the tribe and auspice rows. */
+export const BREEDS = [
+  {key: "homid", label: "Homid", match: ["homid"], feature: "line", title: "Born human", page: "W20, the breeds",
+    text: "Full use of human goods and human ways. Etiquette and Computer come as easily as to any human."},
+  {key: "lupus", label: "Lupus", match: ["lupus"], feature: "line", title: "Born wolf", page: "W20, the breeds",
+    text: "Many human goods answer cannot when used, and city ways are strange. Wolf senses: Perception by smell and hearing is one easier.", effects: [{tags: ["smell", "hearing"], difficulty: -1}]},
+  {key: "metis", label: "Metis", match: ["metis"], feature: "deformity", title: "Born wrong", page: "W20, the breeds",
+    text: "Born of two Garou, sterile, and marked by one deformity, picked from the list. Metis start a step lower in sept politics."},
+];
+
+/** Metis deformities (own words, a short list from the W20 breed pages). effects: what it does on rolls. */
+export const DEFORMITIES = [
+  {key: "hairless", label: "No fur or hair", effects: [{tags: ["social"], difficulty: 1}]},
+  {key: "eyes", label: "Weak eyes", effects: [{tags: ["sight"], difficulty: 1}]},
+  {key: "lame", label: "A twisted leg", effects: [{tags: ["athletics"], dice: -1}]},
+  {key: "hunch", label: "A hunched back", effects: [{tags: ["dexterity"], difficulty: 1}]},
+  {key: "voice", label: "A broken voice", effects: [{tags: ["voice"], difficulty: 1}]},
+  {key: "smell", label: "No sense of smell", effects: [{tags: ["smell"], difficulty: 2}]},
+];
+
+/**
+ * The other Changing Breeds, the lost ones and the Hengeyokai of the Beast Courts. match: the sheet's changing breed field.
+ * courts: a Hengeyokai breed (the Beast Courts are a faction for them). until 0: gone before 1197, met only as relics.
+ */
+export const FERA = [
+  {key: "ajaba", label: "Ajaba", match: ["ajaba"], feature: "line", title: "Pack scavenging", page: "W20 Changing Breeds",
+    text: "Ajaba hunt as a pack: each one beside another adds a die to attack (the Storyteller counts them). They find food on the plains and in towns as Bone Gnawers do. Survival gains a die.", effects: [{tags: ["survival"], dice: 1}]},
+  {key: "ananasi", label: "Ananasi", match: ["ananasi"], feature: "line", title: "Webs and blood", page: "W20 Changing Breeds",
+    text: "Ananasi live on blood, so the feeding rules apply to them. Their webs make a place slow or closed to movement, and they can break into a swarm of spiders."},
+  {key: "bastet", label: "Bastet", match: ["bastet"], feature: "line", also: ["secrets"], title: "Curiosity and secrets", page: "W20 Changing Breeds",
+    text: "When a secret is near, a Willpower roll keeps a Bastet from looking into it. What they learn they can write down as a page of secrets and trade, as the Nosferatu do. Each cat tribe keeps its own land."},
+  {key: "corax", label: "Corax", match: ["corax"], feature: "line", title: "Eyes in the sky", page: "W20 Changing Breeds",
+    text: "They fly. News a Corax carries spreads to every faction they visit. Eating the eye of the dead shows its last sight. Alertness and Perception by sight gain a die.", effects: [{tags: ["sight"], dice: 1}]},
+  {key: "gurahl", label: "Gurahl", match: ["gurahl"], feature: "line", title: "Healing and the long sleep", page: "W20 Changing Breeds",
+    text: "Their care heals better: Medicine gains a die. A winter sleep heals all harm, but the season is lost to it.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "kitsune", label: "Kitsune", match: ["kitsune"], feature: "line", courts: true, title: "Tails with age", page: "W20 Changing Breeds",
+    text: "A Kitsune grows a tail with each Rank, each a mark of power on the body. Fox-fire lights a scene as a carried light."},
+  {key: "mokole", label: "Mokole", match: ["mokole"], feature: "line", title: "Mnesis", page: "W20 Changing Breeds",
+    text: "Mnesis reads the memory of the line: a roll gives a hint from history, and the Storyteller can show the house cards of earlier years in that land."},
+  {key: "nagah", label: "Nagah", match: ["nagah"], feature: "ruling", courts: true, title: "The hidden judges", page: "W20 Changing Breeds",
+    text: "They swim with ease. A Nagah can pass a verdict on a Garou who broke the Litany, carried out in secret: the ruling goes to the Storyteller alone."},
+  {key: "nuwisha", label: "Nuwisha", match: ["nuwisha"], feature: "line", title: "Tricks", page: "W20 Changing Breeds",
+    text: "Lifting and planting are one easier. A prank that teaches a lesson gives its target a Willpower point once they learn it.", effects: [{tags: ["lift"], difficulty: -1}]},
+  {key: "ratkin", label: "Ratkin", match: ["ratkin"], feature: "line", title: "Swarm and plague", page: "W20 Changing Breeds",
+    text: "Sewers, drains and walls are their roads. The plague years are their years of strength. Stealth in towns gains a die.", effects: [{tags: ["stealth"], dice: 1}]},
+  {key: "rokea", label: "Rokea", match: ["rokea"], feature: "line", title: "Deep water", page: "W20 Changing Breeds",
+    text: "In deep water they move and breathe without limit. On land they are slow and wary: Etiquette among humans is one harder.", effects: [{tags: ["etiquette"], difficulty: 1}]},
+  {key: "hakken", label: "Hakken", match: ["hakken"], feature: "line", courts: true, title: "Honour and the master", page: "Hengeyokai pdf 8-11, 32",
+    text: "A Hakken who serves a lord gains a die on loyal deeds, and shame before the lord costs a Willpower point (the Storyteller calls it)."},
+  {key: "khan", label: "Khan", match: ["khan"], feature: "line", courts: true, title: "The tiger's hunt", page: "Hengeyokai pdf 8-11, 32",
+    text: "A die on an ambush. A Khan alone in its own land is never lost. Stealth gains a die.", effects: [{tags: ["stealth"], dice: 1}]},
+  {key: "nezumi", label: "Nezumi", match: ["nezumi"], feature: "line", courts: true, title: "The city's underside", page: "Hengeyokai pdf 8-11, 32",
+    text: "Plague and the under-town are home: the hidden ways beneath a city open to them as to the Nosferatu."},
+  {key: "samebito", label: "Same-Bito", match: ["same bito", "samebito"], feature: "line", courts: true, title: "Sea and blood", page: "Hengeyokai pdf 8-11, 32",
+    text: "Swimming costs them nothing, and the smell of blood in water carries far to them.", effects: [{tags: ["smell"], difficulty: -1}]},
+  {key: "zhonglung", label: "Zhong Lung", match: ["zhong lung"], feature: "line", courts: true, title: "Old memory", page: "Hengeyokai pdf 8-11, 32",
+    text: "Like the Mokole, they can ask the memory of old events: a hint from history in that land."},
+  {key: "tengu", label: "Tengu", match: ["tengu"], feature: "line", courts: true, title: "Messengers of the Courts", page: "Hengeyokai pdf 8-11, 32",
+    text: "News travels faster through them: a rumour a Tengu carries reaches every Court they visit."},
+  {key: "kumo", label: "Kumo", match: ["kumo"], feature: "line", courts: true, title: "Webs and plots", page: "Hengeyokai pdf 8-11, 32",
+    text: "A Kumo can lay a trap that holds whoever walks into it, and plots as patiently as it spins."},
+  {key: "okuma", label: "Okuma", match: ["okuma"], feature: "line", courts: true, title: "Healers of the Courts", page: "Hengeyokai pdf 8-11, 32",
+    text: "As the Gurahl: Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "apis", label: "Apis", match: ["apis"], feature: "line", until: 0, house: true, title: "Memory only", page: "not in the books in the store; a house reading",
+    text: "Gone before 1197. Their ghosts and relics turn up in Umbra stories; a relic of theirs is a fetish that holds one Gift."},
+  {key: "camazotz", label: "Camazotz", match: ["camazotz"], feature: "line", until: 0, house: true, title: "Memory only", page: "not in the books in the store; a house reading",
+    text: "Gone before 1197. Only relics and spirits of theirs remain, in the Umbra."},
+  {key: "grondr", label: "Grondr", match: ["grondr"], feature: "line", until: 0, house: true, title: "Memory only", page: "not in the books in the store; a house reading",
+    text: "Gone before 1197. Only relics and spirits of theirs remain, in the Umbra."},
+];
+
+/** What the Beast Courts add to each Hengeyokai row (Hengeyokai pdf 8-11). */
+export const COURTS_TEXT = "A Hengeyokai of the Beast Courts: rank in the Courts is a faction standing of its own.";
+/** Words that make an NPC a creature of the Wyrm for the Ahroun. */
+export const WYRM_WORDS = ["wyrm", "spiral", "fomor", "fomori", "bane", "banes", "pentex"];
+/** Days in a lunar month, for the Stargazer's sky reading. */
+export const LUNAR_MONTH = 29.53;

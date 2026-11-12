@@ -121,7 +121,8 @@ export const LIGHTS = {
   candle: {label: "Candles", on: "Light them", off: "Put them out", breaks: false},
   lantern: {label: "Lantern", on: "Light it", off: "Put it out", breaks: true},
   lamp: {label: "Oil or gas lamp", on: "Light it", off: "Turn it down", breaks: true},
-  switch: {label: "Electric light switch", on: "Switch it on", off: "Switch it off", breaks: true}
+  switch: {label: "Electric light switch", on: "Switch it on", off: "Switch it off", breaks: true},
+  chandelier: {label: "Chandelier", on: "Light the candles", off: "Put the candles out", breaks: true, drops: true}
 };
 /**
  * Hiding places on tiles. need: the search successes it takes to find someone hidden there, before their own Stealth;
@@ -159,6 +160,50 @@ export const FIRE_SIZES = {
 };
 /** The heat of a fire and its soak difficulty: the same table as WoDX Actions' fire check. */
 export const FIRE_HEAT = Object.fromEntries(Object.entries(ACTIONS_FIRE_HEAT).map(([k, v]) => [k, {label: v.label, diff: v.diff}]));
+
+/*
+ * Using the room in a fight (0.27.0). The fire, falling and sunlight rules are the books' (fire V20 Dark Ages
+ * pp. 355-360; falling V20 core printed p. 296, a die of bashing each 10 feet; sunlight VtDA20 p. 359); the sizes are house
+ * readings (B1320 to B1324):
+ *   A light knocked over: candles and a torch start a torch-sized fire; an oil lamp or lantern breaks and its oil a
+ *   bonfire's worth (half the body), at a torch's heat.
+ *   A chandelier brought down: the falling dice for its drop, plus CHANDELIER_MASS for its iron and glass, lethal; each
+ *   success on Dexterity + Dodge at DROP_DODGE takes a die away (the way stepping carefully does on broken glass).
+ *   A window or shutter thrown open by day: direct sun SUN_YARDS into the room, on the side the character stands; a
+ *   curtain torn down from a closed window: indirect sun through the glass.
+ *   Sprinklers (from 1874): out go every torch-sized fire and bonfire on the scene; an inferno burns on.
+ * Electric light is not offered before ELECTRIC_FROM.
+ */
+export const SPILL = {
+  candle: {label: "Knock the candles over", size: "small", heat: "candle", fire: "Spilled candles", text: "knocks the candles over, and they catch."},
+  torch: {label: "Knock the torch over", size: "small", heat: "torch", fire: "Fallen torch", text: "knocks the torch down, and it catches."},
+  lantern: {label: "Smash the lantern", size: "small", heat: "torch", breaks: true, fire: "Burning lantern oil", text: "smashes the lantern, and the oil catches."},
+  lamp: {label: "Knock the lamp over", size: "large", heat: "torch", breaks: true, fire: "Burning lamp oil", text: "knocks the lamp over, and burning oil spreads."}
+};
+export const CHANDELIER_FEET = 15;
+export const CHANDELIER_MASS = 4;
+export const DROP_DODGE = 7;
+export const SUN_YARDS = 4;
+export const ELECTRIC_FROM = 1880;
+export const dropDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet) || 0)) / 10)) + CHANDELIER_MASS;
+/** What a dodge leaves of a falling chandelier: dice less successes, none on a botch's luck. */
+export const dropLeft = (dice, dodge = {successes: 0, botch: false}) => Math.max(0, (Number(dice) || 0) - (dodge?.botch ? 0 : Math.max(0, Number(dodge?.successes) || 0)));
+/** The options the Use the room window lists in a fight. */
+export const FIGHT_OPS = new Set(["spillLight", "dropChandelier", "tearCurtain", "letSun", "setSprinklers", "knockOver", "breakLight", "lightOff", "lightOn", "smash", "ringAlarm", "trigger", "alight"]);
+/** A fire's place doused by sprinklers? */
+export const douses = h => !!h?.hazard && (h.kind === "fire" || h.kind === "brazier") && h.burning && h.size !== "inferno";
+
+/** The sunlit patch in from a window, as points: the wall a-b pushed depth pixels to the side of the point p. */
+export function sunPatch(c, p, depth) {
+  const [ax, ay, bx, by] = c.map(Number);
+  const dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1;
+  let nx = -dy / L, ny = dx / L;
+  const mx = (ax + bx) / 2, my = (ay + by) / 2;
+  if ( (p.x - mx) * nx + (p.y - my) * ny < 0 ) { nx = -nx; ny = -ny; }
+  return [ax, ay, bx, by, bx + nx * depth, by + ny * depth, ax + nx * depth, ay + ny * depth];
+}
+/** The sunlit patch round a tile (a curtain): its rectangle grown by depth pixels on every side. */
+export const sunRect = (r, depth) => ({x: r.x - depth, y: r.y - depth, w: r.w + 2 * depth, h: r.h + 2 * depth});
 export const SHOCKS = {
   minor: {label: "Wall socket", levels: 2},
   major: {label: "Fuse box", levels: 4},
@@ -192,7 +237,8 @@ export const WATCHES = {
   mirror: {label: "Mirror", verb: "Look in it", sees: true, mirror: true},
   phone: {label: "Telephone", calls: true, from: 1890},
   radio: {label: "Radio or walkie-talkie", calls: true, from: 1930},
-  bell: {label: "Bell, horn or alarm", alarm: true}
+  bell: {label: "Bell, horn or alarm", alarm: true},
+  sprinkler: {label: "Fire sprinklers", sprinkler: true, from: 1874}
 };
 /**
  * Mounts and vehicles on tiles. Getting on and riding or driving at an ordinary pace needs no roll with a dot in the
@@ -355,7 +401,7 @@ export function describe(w) {
     electronic: ELECTRONIC[f.electronic] ? f.electronic : "none",
     barSide: f.barSide === "a" || f.barSide === "b" ? f.barSide : null, barred: !!f.barred,
     stuck: !!f.stuck, broken: !!f.broken, jammed: !!f.jammed, alarm: !!f.alarm, beaten: !!f.beaten, keyName: String(f.keyName ?? "").trim(),
-    breakable: WALLS[f.wall] ? f.wall : null, breached: !!f.breached,
+    breakable: WALLS[f.wall] ? f.wall : null, breached: !!f.breached, sunIn: !!f.sunIn,
     progress: {pick: 0, force: 0, hack: 0, ...(f.progress ?? {})}, tries: f.tries ?? {}
   };
 }
@@ -427,7 +473,8 @@ export function describeLight(f = {}, {on = false, count = 0} = {}) {
   const kind = LIGHTS[f.lightKind] ? f.lightKind : "torch";
   return {
     light: true, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind,
-    title: String(f.title ?? "").trim().slice(0, 80), on: !!on && !f.broken, count: Number(count) || 0, broken: !!f.broken,
+    title: String(f.title ?? "").trim().slice(0, 80), on: !!on && !f.broken, count: Number(count) || 0, broken: !!f.broken, dropped: !!f.dropped,
+    height: Math.max(5, Math.min(60, Math.round(Number(f.dropFeet) || CHANDELIER_FEET))),
     electronic: "none", lock: "none", items: [], progress: {}, tries: {}
   };
 }
@@ -440,7 +487,7 @@ export function describeHide(f = {}) {
   const room = Math.max(1, Math.min(12, Math.round(Number(f.room) || HIDES[kind].room)));
   const occupants = (Array.isArray(f.occupants) ? f.occupants : []).filter(x => x && x.a).slice(0, 12);
   return {
-    hide: true, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind, room, occupants,
+    hide: true, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind, room, occupants, torn: !!f.torn,
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
@@ -525,7 +572,7 @@ export function describeWatch(f = {}) {
   const kind = WATCHES[f.watchKind] ? f.watchKind : "window";
   return {
     watch: true, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
-    kind, target: String(f.target ?? "").trim().slice(0, 200), title: String(f.title ?? "").trim().slice(0, 80),
+    kind, target: String(f.target ?? "").trim().slice(0, 200), title: String(f.title ?? "").trim().slice(0, 80), spent: !!f.spent,
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
@@ -677,7 +724,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.container ) return containerOptions(o, ch);
   if ( o.trap ) return trapOptions(o, ch);
   if ( o.clue ) return clueOptions(o, ch);
-  if ( o.light ) return lightOptions(o);
+  if ( o.light ) return lightOptions(o, ch);
   if ( o.hide ) return hideOptions(o, ch);
   if ( o.hazard ) return hazardOptions(o, ch);
   if ( o.sacred ) return sacredOptions(o, ch);
@@ -705,6 +752,16 @@ export function optionsFor(o, ch = {}) {
       note: `Strength ${w.feat} on the lifting chart goes straight through. The Storyteller decides what the hole looks like.`}));
     return out;
   }
+  // In a fight by day (0.27.0): a window or shutter thrown open, or a pane smashed, lets the sun in
+  const windowish = o.kind === "window" || o.kind === "shutter";
+  if ( windowish && ch.sunUp && !o.sunIn && !(o.secret && !o.found) ) {
+    const open0 = o.ds === "open" || o.broken;
+    const shut = o.ds === "locked" || barredAgainst || (o.barred && !o.barSide) || o.stuck || o.jammed;
+    const note = `Direct sunlight (soaked at 10) for ${SUN_YARDS} yards into the room, on this side.`;
+    if ( open0 ) out.push({id: "letSun", label: "Let the sun in", roll: null, seconds: TURN, noise: {success: "quiet"}, fight: true, note: `Curtains or shutters pulled aside. ${note}`});
+    else if ( pane ) out.push({id: "letSun", label: "Smash it and let the sun in", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true, note: `Loud. ${note}`});
+    else if ( !shut ) out.push({id: "letSun", label: `Throw the ${KINDS[o.kind].toLowerCase()} open to the day`, roll: null, seconds: TURN, noise: {success: "quiet"}, fight: true, note});
+  }
   if ( o.broken ) return out;
   const isOpen = o.ds === "open", locked = o.ds === "locked";
 
@@ -729,7 +786,7 @@ export function optionsFor(o, ch = {}) {
   }
   if ( o.electronic !== "none" && isModern(ch) && !isOpen && !o.alarm && !o.beaten ) out.push(hackOption(o, ch));
   if ( !isOpen ) {
-    if ( pane ) out.push({id: "smash", label: "Break the pane", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud. The window stays open and can't be closed."});
+    if ( pane ) out.push({id: "smash", label: "Break the pane", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud. The window stays open and can't be closed.", fight: true});
     else out.push(forceOption("force", `Force the ${KINDS[o.kind].toLowerCase()}`, strength, ch, BUILDS[o.build], o.progress.force ?? 0,
       {extra: barredAgainst ? 2 : 0, note: barredAgainst ? "Barred from the other side: 2 more successes." : ""}));
     if ( o.kind !== "window" ) {
@@ -815,6 +872,10 @@ function hideOptions(o, ch) {
       noise: {success: "silent", fail: "quiet", botch: "loud"},
       note: `Hidden even on a failure, but easier to find; every two successes make it harder (${HIDES[o.kind].need} search success${HIDES[o.kind].need === 1 ? "" : "es"} at least). A botch makes a noise.`});
   } else out.push({id: "fullNote", label: "No room to hide", roll: null, disabled: true, note: `It holds ${o.room}.`});
+  if ( o.kind === "curtain" && !o.torn ) out.push(ch.sunUp
+    ? {id: "tearCurtain", label: "Tear the curtain down and let the day in", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
+      note: `Sunlight through the glass (indirect, soaked at 7) for ${SUN_YARDS} yards into the room. Whoever hid behind it is seen.`}
+    : {id: "tearCurtain", label: "Tear the curtain down", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true, note: "Night outside: no sunlight comes in. Whoever hid behind it is seen."});
   const sk = bestOf(ch.abilities ?? {}, ["alertness", "investigation"]);
   out.push({id: "searchHide", label: "Search it", roll: {attr: "perception", attrLabel: "Perception", ability: sk.key, abilityLabel: cap(sk.key),
     dice: (Number(ch.perception) || 0) + sk.value, diff: 6, need: null}, seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "quiet"},
@@ -891,19 +952,32 @@ function watchOptions(o, ch) {
       : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
     out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
   }
-  if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it."});
+  if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it.", fight: true});
+  if ( W.sprinkler ) {
+    const year = Number(ch.year) || 0;
+    if ( year && year < W.from ) return [{id: "eraNote", label: "No sprinklers yet", roll: null, disabled: true, note: `Not before about ${W.from}.`}];
+    if ( o.spent ) out.push({id: "sprinklerNote", label: "The sprinklers have run", roll: null, disabled: true, note: "The Storyteller resets them."});
+    else out.push({id: "setSprinklers", label: "Set off the sprinklers", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
+      note: "Puts out every torch-sized fire and bonfire on the scene; an inferno burns on. The floor is wet."});
+  }
   return out;
 }
 
-/** A light source: light it or put it out; break it if it can break. */
-function lightOptions(o) {
-  const L = LIGHTS[o.kind], out = [];
+/** A light source: light it or put it out; break it if it can break; in a fight, knock it over or bring it down (0.27.0). */
+function lightOptions(o, ch = {}) {
+  const L = LIGHTS[o.kind], out = [], fx = [];
   if ( o.broken ) return out;
-  if ( !o.count ) return [{id: "noLight", label: "Not tied to any light", roll: null, disabled: true, note: "The Storyteller has not tied this to a light on the scene."}];
+  const year = Number(ch.year) || 0;
+  if ( o.kind === "chandelier" && !o.dropped ) fx.push({id: "dropChandelier", label: "Bring the chandelier down", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
+    note: `Cut or loose its chain: it falls ${o.height} feet on whoever is under it (${dropDice(o.height)} dice of lethal; each success on Dexterity + Dodge at ${DROP_DODGE} takes one away).${o.on ? " Lit candles start a small fire." : ""}`});
+  if ( o.on && SPILL[o.kind] ) fx.push({id: "spillLight", label: SPILL[o.kind].label, roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
+    note: `A ${FIRE_SIZES[SPILL[o.kind].size].label.split(":")[0].toLowerCase()} fire where it falls (${FIRE_SIZES[SPILL[o.kind].size].levels} level${FIRE_SIZES[SPILL[o.kind].size].levels === 1 ? "" : "s"} a turn, soaked at ${FIRE_HEAT[SPILL[o.kind].heat].diff}).`});
+  if ( o.kind === "switch" && year && year < ELECTRIC_FROM ) return [{id: "eraNote", label: "No electric light yet", roll: null, disabled: true, note: `Not before about ${ELECTRIC_FROM}.`}];
+  if ( !o.count ) return [{id: "noLight", label: "Not tied to any light", roll: null, disabled: true, note: "The Storyteller has not tied this to a light on the scene."}, ...fx];
   out.push(o.on ? {id: "lightOff", label: L.off, roll: null, seconds: TURN, noise: {success: "silent"}}
     : {id: "lightOn", label: L.on, roll: null, seconds: TURN, noise: {success: "silent"}});
   if ( L.breaks ) out.push({id: "breakLight", label: "Break it", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud, and it stays dark until the Storyteller mends it."});
-  return out;
+  return [...out, ...fx];
 }
 
 /** A clue: look at it (no roll, when there is nothing deeper to find), or examine it for what successes add. */
@@ -1096,7 +1170,8 @@ export function resolve(o, option, rolls = [], ctx = {}) {
   }
   return out;
 }
-function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
+function resolveCore(o, option, rolls, {actorId = "", actorName = "", sunUp = false} = {}) {
+  const ctxSun = !!sunUp;
   const id = option.id, flags = {}, out = {patch: {flags}, hurt: 0, waits: !!option.waits, seconds: 0};
   const noise = option.noise ?? {};
   const done = (text, patch = {}) => Object.assign(out, {result: "done", noise: noise.success ?? "silent", text}, {patch: {...patch, flags}});
@@ -1104,7 +1179,7 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
     out.seconds = option.seconds ?? 0;
     switch ( id ) {
       case "open": return done("opens it.", {ds: "open"});
-      case "close": return done("closes it.", {ds: "closed"});
+      case "close": if ( o.sunIn ) { flags.sunIn = false; out.shutSun = true; } return done("closes it.", {ds: "closed"});
       case "unlock": return done(/key/.test(option.label ?? "key") ? "unlocks it with the key." : "unlocks it.", {ds: "closed"});
       case "lock": return done(/key/.test(option.label ?? "key") ? "locks it with the key." : "locks it.", {ds: "locked"});
       case "unbar": flags.barred = false; return done("lifts the bar.");
@@ -1133,6 +1208,28 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
       case "powerOn": flags.live = true; return done("turns the power back on.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
+      // Use the room in a fight (0.27.0)
+      case "spillLight": {
+        const sp = SPILL[o.kind] ?? SPILL.candle;
+        out.lights = false;
+        if ( sp.breaks ) flags.broken = true;
+        out.spawnFire = {size: sp.size, heat: sp.heat, title: sp.fire};
+        return done(sp.text);
+      }
+      case "dropChandelier":
+        out.lights = false; flags.broken = true; flags.dropped = true;
+        out.drop = {feet: o.height, dice: dropDice(o.height), dodge: DROP_DODGE, fire: o.on ? {size: "small", heat: "candle", title: "Fallen candles"} : null};
+        return done("brings the chandelier crashing down.");
+      case "tearCurtain":
+        flags.torn = true; out.revealAll = true;
+        if ( ctxSun ) out.sun = {light: "indirect", exposure: 3};
+        return done(ctxSun ? "tears the curtain down, and daylight floods in." : "tears the curtain down.");
+      case "letSun":
+        flags.sunIn = true;
+        out.sun = {light: "direct", exposure: 3};
+        if ( o.ds !== "open" && !o.broken && (o.material === "glass" || o.material === "horn") && o.kind === "window" ) { flags.broken = true; return done("smashes the window, and the sun pours in.", {ds: "open"}); }
+        return done("throws it open, and the sun pours in.", {ds: "open"});
+      case "setSprinklers": flags.spent = true; out.douse = true; return done("sets off the sprinklers.");
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
       case "breach": return done("breaks through the wall.");
       case "breakIt": flags.smashed = true; flags.progress = {...o.progress, breakIt: 0}; return done("breaks it.");
@@ -1469,14 +1566,17 @@ export function cleanClue(s = {}) {
 /** Clean a tile's light settings from the config form. lightIds: the ids of the scene lights it works, comma separated. */
 export function cleanLight(s = {}) {
   const ids = String(s.lightIds ?? "").split(/[\s,;]+/).map(x => x.trim()).filter(x => /^[A-Za-z0-9]{1,32}$/.test(x)).slice(0, 20);
-  return {light: !!s.light, lightKind: LIGHTS[s.lightKind] ? s.lightKind : "torch", lightIds: ids.join(", "), broken: !!s.broken};
+  const feet = s.dropFeet === "" || s.dropFeet === null || s.dropFeet === undefined ? "" : Math.max(5, Math.min(60, Math.round(Number(s.dropFeet) || CHANDELIER_FEET)));
+  // A chandelier mended (Broken unticked) hangs again
+  return {light: !!s.light, lightKind: LIGHTS[s.lightKind] ? s.lightKind : "torch", lightIds: ids.join(", "), broken: !!s.broken, dropFeet: feet, ...(s.broken ? {} : {dropped: false})};
 }
 
 /** Clean a tile's hiding-place settings from the config form. */
 export function cleanHide(s = {}) {
   const kind = HIDES[s.hideKind] ? s.hideKind : "wardrobe";
   const room = s.room === "" || s.room === null || s.room === undefined ? "" : Math.max(1, Math.min(12, Math.round(Number(s.room) || 1)));
-  return {hide: !!s.hide, hideKind: kind, room};
+  // Saving the settings hangs a torn curtain again (0.27.0)
+  return {hide: !!s.hide, hideKind: kind, room, ...("torn" in s ? {torn: false} : {})};
 }
 
 /** Clean a tile's hazard settings from the config form. */
@@ -1511,7 +1611,8 @@ export function cleanClimb(s = {}) {
 /** Clean a tile's watch point settings from the config form. target: the id of the tile it looks at or calls. */
 export function cleanWatch(s = {}) {
   const target = String(s.target ?? "").trim();
-  return {watch: !!s.watch, watchKind: WATCHES[s.watchKind] ? s.watchKind : "window", target: /^[A-Za-z0-9.]{1,200}$/.test(target) ? target : ""};
+  // Saving the settings resets sprinklers that have run (0.27.0)
+  return {watch: !!s.watch, watchKind: WATCHES[s.watchKind] ? s.watchKind : "window", target: /^[A-Za-z0-9.]{1,200}$/.test(target) ? target : "", ...("spent" in s ? {spent: false} : {})};
 }
 
 /** Clean a tile's target settings from the config form. */

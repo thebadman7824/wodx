@@ -44,10 +44,24 @@ export const AURAS = {
   mortal: {colour: 0xffd27a, alpha: 0.5, words: "living colours"},
   hunter: {colour: 0xffd27a, alpha: 0.5, words: "living colours"}
 };
-/** The ring a token gets under a sight: {colour, alpha} or null. */
-export function ringFor(sight, profile) {
+/**
+ * 0.7.0: the same rings in colours that stay apart for colour-blind eyes (the Okabe and Ito palette), with a stronger
+ * line; and every ring carries its words on the map, so colour never carries the meaning alone.
+ */
+export const SAFE = {
+  kindred: 0xffffff, ghoul: 0x999999, lupine: 0xd55e00, mage: 0x56b4e9, fae: 0xf0e442,
+  wraith: 0x0072b2, spirit: 0x0072b2, mortal: 0xe69f00, hunter: 0xe69f00, life: 0x009e73
+};
+export const LIFE = {colour: 0xffb347, alpha: 0.6, words: "alive"};
+/** The ring a token gets under a sight: {colour, alpha, words} or null. safe: the colour-blind palette. */
+export function ringFor(sight, profile, {safe = false} = {}) {
   const kind = SIGHTS[sight]?.rings;
-  if ( kind === "aura" ) return AURAS[profile] ?? AURAS.mortal;
-  if ( kind === "life" ) return ["kindred", "wraith", "spirit"].includes(profile) ? null : {colour: 0xffb347, alpha: 0.6};
-  return null;
+  let r = null;
+  if ( kind === "aura" ) r = AURAS[profile] ? {...AURAS[profile], key: profile} : {...AURAS.mortal, key: "mortal"};
+  else if ( kind === "life" ) r = ["kindred", "wraith", "spirit"].includes(profile) ? null : {...LIFE, key: "life"};
+  if ( r && safe ) r = {...r, colour: SAFE[r.key] ?? r.colour, alpha: Math.max(0.6, r.alpha)};
+  return r;
 }
+
+/** Hex colour as CSS ("#rrggbb"). */
+export const css = n => `#${(Number(n) >>> 0).toString(16).padStart(6, "0").slice(-6)}`;

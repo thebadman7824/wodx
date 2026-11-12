@@ -267,7 +267,6 @@ game.world.id = worldId;
     ["Frenzy", () => game.wodxActions.frenzy({actor})], ["Rötschreck", () => game.wodxActions.rotschreck({actor})],
     ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
     ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
-    ["Migration", () => game.wodxActions.migrate()],
     // 3.20.0 and 3.21.0: dealing with one NPC
     ["With this person", () => game.wodxActions.withPerson({actor, token: {actor: target, document: {name: target.name, actor: target}}})],
     ["Persuade someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "persuade")],

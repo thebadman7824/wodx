@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.1.1";
+const VERSION = "0.2.0";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;
@@ -139,6 +139,75 @@ export function setTargets(ids) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Area shapes on the map (0.2.0)                                     */
+/* ------------------------------------------------------------------ */
+
+/** Yards in one canvas pixel on this scene. */
+function yardsPerPx() {
+  const g = canvas.scene?.grid;
+  return unitsYards(num(g?.distance) || 5) / (num(canvas.grid?.size) || num(g?.size) || 100);
+}
+const toYd = p => { const k = yardsPerPx(); return {x: p.x * k, y: p.y * k}; };
+const toPx = p => { const k = yardsPerPx(); return {x: p.x / k, y: p.y / k}; };
+/** Each candidate token with its place and size in yards, for inArea(). */
+function placed(state) {
+  const k = yardsPerPx();
+  return state.tokens.map(c => {
+    const tok = canvas.tokens.get(c.id);
+    return tok ? {...c, pos: toYd(tok.center), radius: ((num(tok.document?.width) || 1) * (num(canvas.grid?.size) || 100) / 2) * k} : c;
+  });
+}
+let preview = null;
+function clearPreview() { try { preview?.destroy?.({children: true}); } catch (e) { /* gone */ } preview = null; }
+/** Draw the shape on this user's map only, until the window closes or the area is used. */
+function drawPreview(sh, at) {
+  clearPreview();
+  if ( !sh || !at?.origin || !canvas?.ready ) return;
+  try {
+    const g = new PIXI.Graphics();
+    const pts = T.outline(sh, at).map(toPx);
+    const flat = pts.flatMap(p => [p.x, p.y]);
+    if ( typeof g.poly === "function" && typeof g.stroke === "function" ) g.poly(flat).fill({color: 0xe8c86a, alpha: 0.15}).stroke({width: 3, color: 0xe8c86a, alpha: 0.9});
+    else { g.lineStyle(3, 0xe8c86a, 0.9).beginFill(0xe8c86a, 0.15); g.drawPolygon(flat); g.endFill(); }
+    g.eventMode = "none";
+    (canvas.controls ?? canvas.interface ?? canvas.stage).addChild(g);
+    preview = g;
+  } catch (e) { console.warn(`${MOD} | area preview`, e); }
+}
+/** On use: the shape for everyone to see for a few seconds, where the user may draw on the map. */
+async function shareShape(sh, at, label) {
+  try {
+    if ( !sh || !at?.origin || !game.user.can?.("DRAWING_CREATE") ) return;
+    const pts = T.outline(sh, at).map(toPx);
+    const minX = Math.min(...pts.map(p => p.x)), minY = Math.min(...pts.map(p => p.y));
+    const [d] = await canvas.scene.createEmbeddedDocuments("Drawing", [{
+      x: minX, y: minY, author: game.user.id, shape: {type: "p", points: pts.flatMap(p => [p.x - minX, p.y - minY])},
+      strokeColor: "#e8c86a", strokeWidth: 3, strokeAlpha: 0.9, fillType: 1, fillColor: "#e8c86a", fillAlpha: 0.15,
+      text: label, fontSize: 18, textColor: "#ffffff", flags: {[MOD]: {area: true}}
+    }]);
+    if ( d ) setTimeout(() => d.delete().catch(() => {}), 10000);
+  } catch (e) { console.warn(`${MOD} | the area could not be drawn for everyone`, e); }
+}
+/** Wait for one click on the map; resolves with the point in canvas pixels, or null after a minute or on Escape. */
+function pickPoint(hint) {
+  return new Promise(resolve => {
+    if ( !canvas?.ready ) return resolve(null);
+    ui.notifications.info(hint);
+    let done = false;
+    const finish = p => { if ( done ) return; done = true; canvas.stage.off("pointerdown", onDown); document.removeEventListener("keydown", onKey, true); resolve(p); };
+    const onDown = ev => {
+      let p = null;
+      try { p = ev.getLocalPosition ? ev.getLocalPosition(canvas.stage) : ev.data?.getLocalPosition?.(canvas.stage); } catch (e) { p = null; }
+      finish(p ?? canvas.mousePosition ?? null);
+    };
+    const onKey = ev => { if ( ev.key === "Escape" ) finish(null); };
+    canvas.stage.on("pointerdown", onDown);
+    document.addEventListener("keydown", onKey, true);
+    setTimeout(() => finish(null), 60000);
+  });
+}
+
+/* ------------------------------------------------------------------ */
 /*  The panel in an action window                                      */
 /* ------------------------------------------------------------------ */
 
@@ -163,7 +232,7 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
   box.setAttribute("role", "group");
   box.setAttribute("aria-label", "Target");
   form.prepend(box);
-  let chosen = null, area = [], intent = cast?.intent ?? null, lastKey = "", userIntent = false;
+  let chosen = null, area = [], intent = cast?.intent ?? null, lastKey = "", userIntent = false, at = null;
   const castDefault = () => { if ( cast?.from && !userIntent ) { try { intent = cast.from(root) || intent || "e"; } catch (e) { intent ??= "e"; } } };
 
   const pickActor = id => canvas.tokens.get(id)?.actor ?? null;
@@ -181,7 +250,7 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
   function draw() {
     castDefault();
     const t = currentTag();
-    const key = t ? `${t.i}.${t.r}` : "none";
+    const key = t ? T.tagCode(t) : "none";
     const castRow = cast ? `<div class="wodx-aim-cast"><label>Aimed at <select class="wodx-aim-intent" data-fixed aria-label="Aimed at">${intentOptions(intent)}</select></label></div>` : "";
     if ( handSet() ) {
       const names = [...game.user.targets].map(x => x.name);
@@ -195,11 +264,28 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
     const r = T.rank(t, stateFor(actor));
     const head = `<small class="wodx-aim-tag">${esc(T.INTENTS[t.i].label)}, ${esc(T.RANGES[t.r].label)}</small>`;
     if ( t.intent === "area" ) {
+      // 0.2.0: a shape and size; the list is who stands inside it once it is placed
+      const sh = T.areaShape(t);
+      const st = stateFor(actor);
+      const me = tokenOf(actor);
+      if ( key !== lastKey ) at = null;
+      if ( sh && me && !at ) {
+        const foe = r.area.find(a => a.side === "foe") ?? r.area[0];
+        const ft = foe ? canvas.tokens.get(foe.id) : null;
+        const o = toYd(me.center), f = ft ? toYd(ft.center) : null;
+        at = sh.origin === "self" ? {origin: o, dir: f ? Math.atan2(f.y - o.y, f.x - o.x) : 0} : (f ? {origin: f, dir: 0} : null);
+      }
+      if ( sh && at ) { r.area = T.inArea(sh, at, placed(st), {selfId: me?.id}); r.why = r.area.length ? `${r.area.length} inside` : "no one inside"; drawPreview(sh, at); }
+      else if ( sh && sh.origin === "point" ) { r.why = "place the circle on the map"; r.area = []; clearPreview(); }
+      else clearPreview();
       area = r.area.map(a => ({...a}));
+      const shapeRow = sh ? `<div class="wodx-aim-shape"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i> ${esc(T.shapeLabel(sh))}${sh.by === "range" ? " <small>(house rule size)</small>" : ""}
+        ${me ? (sh.origin === "point" ? `<button type="button" class="wodx-aim-place">Place it on the map</button>` : sh.aimed ? `<button type="button" class="wodx-aim-place">Aim it on the map</button>` : "") : ""}</div>` : "";
       const list = area.length ? `${area.length > 5 ? searchBox("ul.wodx-aim-area", "Search…", "Search the area") : ""}<ul class="wodx-aim-area">${area.map((a, k) =>
         `<li><label><input type="checkbox" data-k="${k}"${a.tick ? " checked" : ""}> ${esc(a.name)} <small>(${esc(SIDE[a.side] ?? a.side)}${a.distance !== null ? `, ${Math.round(a.distance)} yd` : ""})</small></label></li>`).join("")}</ul>
         <button type="button" class="wodx-aim-area-go"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i> Target these</button>` : "";
-      box.innerHTML = `${castRow}<div class="wodx-aim-line"><i class="fa-solid fa-burst" aria-hidden="true"></i> In the area: <b>${esc(r.why)}</b> ${head}</div>${list}`;
+      box.innerHTML = `${castRow}<div class="wodx-aim-line"><i class="fa-solid fa-burst" aria-hidden="true"></i> In the area: <b>${esc(r.why)}</b> ${head}</div>${shapeRow}${list}`;
+      box._shape = sh;
       chosen = null;
       lastKey = key;
       return;
@@ -221,8 +307,21 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
     const b = ev.target.closest("button");
     if ( !b ) return;
     ev.preventDefault();
+    if ( b.classList.contains("wodx-aim-place") ) {
+      const sh = box._shape, me = tokenOf(actor);
+      pickPoint(sh?.origin === "point" ? "Click the map where the circle is centred (Escape to cancel)." : "Click the map in the direction to aim (Escape to cancel).").then(p => {
+        if ( !p || !sh ) return;
+        const q = toYd(p);
+        if ( sh.origin === "point" ) at = {origin: q, dir: 0};
+        else if ( me ) { const o = toYd(me.center); at = {origin: o, dir: Math.atan2(q.y - o.y, q.x - o.x)}; }
+        draw();
+      });
+      return;
+    }
     if ( b.classList.contains("wodx-aim-area-go") ) {
       const ids = [...box.querySelectorAll("input[type=checkbox][data-k]")].filter(i => i.checked).map(i => area[num(i.dataset.k)]?.id).filter(Boolean);
+      if ( box._shape && at ) shareShape(box._shape, at, actor.name);
+      clearPreview();
       setTargets(ids);
       onPick(ids.length ? pickActor(ids[0]) : null);
       draw();
@@ -254,8 +353,10 @@ export function attach(root, {actor, tag = () => null, onPick = () => {}, cast =
   const app = root.closest?.(".application, .app, dialog") ?? root;
   app.querySelectorAll?.("button[data-action=ok], button[data-action=attack], button[data-button=ok]").forEach(b => b.addEventListener("click", commit, true));
   form.addEventListener("submit", commit, true);
+  // The map preview goes when the window does
+  const watch = setInterval(() => { if ( !box.isConnected ) { clearInterval(watch); clearPreview(); } }, 1000);
   draw();
-  return {chosen: () => chosen, redraw: draw};
+  return {chosen: () => chosen, redraw: draw, shape: () => box._shape ?? null, placed: () => at};
 }
 
 /**

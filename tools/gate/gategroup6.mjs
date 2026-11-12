@@ -1,9 +1,9 @@
 /**
- * Progress clocks, the pacing note and spirit standing gate (Storyteller 0.35.0, Otherworlds 0.14.0, Actions 3.43.0),
+ * Progress clocks, the pacing note and spirit standing gate (Storyteller 0.35.0, Otherworlds 0.14.0, Actions 3.45.0),
  * in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gategroup6.mjs?${Date.now()}`)).run()
  * Back the world up first. It holds the world and puts back the clocks, the log and its own actors at the end.
- *   1. the modules: Storyteller 0.35.0+, Otherworlds 0.14.0+, Actions 3.43.0+, with the clocks, pacing and spirits APIs
+ *   1. the modules: Storyteller 0.35.0+, Otherworlds 0.14.0+, Actions 3.45.0+, with the clocks, pacing and spirits APIs
  *   2. a new own clock of 4 fills by hand, and a full clock says so in a whispered card
  *   3. a clock set to tick each faction turn fills one segment when the factions take their turn
  *   4. a long task on a gate actor shows as a read clock, Storyteller only until shown; shown to that actor, the rule lets its player see it
@@ -39,7 +39,7 @@ export async function run() {
   const made = [];
   try {
     const v = id => game.modules.get(id)?.version;
-    ok("1. modules", newer(v(ST), "0.35.0") && newer(v(OW), "0.14.0") && newer(v(AC), "3.43.0") && !!st?.clocks && !!st?.night?.pacing && !!ow?.spirits,
+    ok("1. modules", newer(v(ST), "0.35.0") && newer(v(OW), "0.14.0") && newer(v(AC), "3.45.0") && !!st?.clocks && !!st?.night?.pacing && !!ow?.spirits,
       {storyteller: v(ST), otherworlds: v(OW), actions: v(AC)});
     await ch.hold(true);
 

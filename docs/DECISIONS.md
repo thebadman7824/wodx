@@ -1483,6 +1483,31 @@ Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
 The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
 
 Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+
+## B1160. Werewolf features stack: tribe, auspice and breed (2026-11-12)
+Splat Features Desk, all items approved by Ben (03:29 UTC). A Garou has three rows at once, read from the sheet's tribe, auspice and breed (through WoDX Actions where it is on). Any other Changing Breed has the row of its breed and its breed form (homid, metis or lupus). Kinfolk (the Kinfolk flag WoDX Actions sets) have a row of their own. A new world setting, "Tribe, auspice and breed features (Werewolf)", is off by default and works apart from the Vampire switch. The window on the sheet header is now called "Signature feature".
+
+Reverse: rowsOf in signatures.mjs (rowOf is its first row); TRIBES, AUSPICES, BREEDS, FERA and KINFOLK in data/signatures.mjs; the sigWerewolf setting.
+
+## B1161. Signature roll effects reach the dice (2026-11-12)
+The roll effects on the signature rows (the bloodlines' since 0.29.0, and now the tribes', breeds' and Fera's) were shown in the window but never reached a roll. The traits api now adds them to the merits and flaws on each roll, so WoDX Actions picks them up with no change of its own. Survival, Medicine, Etiquette, Occult and the other ability keys these rows name became roll tags of their own; lifting and planting gained the tag lift, cons and fast talk con and fasttalk. "resist-frenzy" reads as the frenzy roll and "resist-dominate" as a resist on mind powers. An effect can name a condition: crinos (the form the sheet shows) or a weather tag (cold, thunder). Soil halving stays a note in the window.
+
+Reverse: rollEffects in signatures.mjs and its use in traits.mjs effects; RAW_TAGS in trait-rules.mjs.
+
+## B1162. The tribes' engines (2026-11-12)
+Black Furies guard the scene they stand in: a fight breaking out there, or someone taking things from it, sends the Fury a card with the hour, and the Storyteller's button gives one Rage point for the hunt. Children of Gaia offer a truce in a fight; the Storyteller's button takes every NPC out of it (the roll, Charisma + Empathy, is a house reading). Shadow Lords keep failures they learn as leverage and spend one as a minor favour in the Ledger. Silver Fangs hear NPCs through their derangement, as Malkavians do. Stargazers read a riddle from the stars once a lunar month, only under a clear sky. Fianna tales and Get of Fenris scars go to the Storyteller as a Glory card. Wendigo gain a die to Survival and attacks in cold weather; Shadow Lords to Intimidation in a thunderstorm. Croatan (to 1590) and Bunyip (to 1890) carry an end year; both years are house readings. White Howlers and the Black Spiral Dancers are for NPCs and stories.
+
+Reverse: guardPlace, desecrated, offerTruce, leverage, spendLeverage, readSky, tale in signatures.mjs.
+
+## B1163. The auspices and breeds (2026-11-12)
+Rage at the auspice's moon is already built in WoDX Actions, so the auspices add their own work. A Philodox posts a ruling for everyone to see. A Galliard's tale goes to the Storyteller, whose button gives Glory to its hero and Wisdom to the teller. An Ahroun goes first when a fight with a creature of the Wyrm begins (a Black Spiral Dancer, or a name with wyrm, fomor, bane or Pentex in it). The extra soak die in Crinos is a house reading the Storyteller adds. Ragabash and Theurge get a die on lifting and on Occult. Metis pick one deformity from six, and it works on the rolls. Lupus perceive one easier by smell and hearing.
+
+Reverse: AUSPICES, BREEDS and DEFORMITIES in data/signatures.mjs; ruling, setDeformity and onCombatStart in signatures.mjs.
+
+## B1164. The other Changing Breeds and the Beast Courts (2026-11-12)
+Each of the eleven Fera of W20 Changing Breeds has a row. Bastet borrow the Nosferatu's pages of secrets, without the true face. A Nagah verdict goes to the Storyteller alone. The Hengeyokai breeds (Hakken, Khan, Nezumi, Same-Bito, Zhong Lung, Tengu, Kumo, Okuma, with the Kitsune and Nagah) also say that rank in the Beast Courts is a faction standing of its own. Apis, Camazotz and Grondr are gone before 1197 and are met only as relics. Their extinction is a house reading, because no book in the store dates it. Harm to Kinfolk sends a card for each player's Garou of that tribe, once a day.
+
+Reverse: FERA and COURTS_TEXT in data/signatures.mjs; kinHarmed in signatures.mjs.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1503,43 +1528,84 @@ Up to three named people are ticked by default. Anyone more than 70 years before
 
 Reverse: PEOPLE_DEFAULT and PEOPLE_ALIVE_SPAN in lifepath-rules.mjs.
 
-## B1300. The Legends book (2026-11-12)
-Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.31.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
+
+## B1300. Area shapes and their sizes (2026-11-12)
+Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
+Reverse: areaShape() in wodx-targeting target-rules.mjs; the area branch of attach() in main.mjs.
+
+## B1301. The odds before a roll (2026-11-12)
+Ben approved "Show the odds before a roll". The chances are worked out exactly from the same rules countSuccesses() rolls by (a specialty counts a 10 twice, Willpower adds a success and stops a botch). The resisting side's odds show to the Storyteller only. A client setting turns the line off.
+Reverse: oddsPanel() in wodx-actions main.js; setting showOdds.
+
+## B1302. Pinned and lately used actions (2026-11-12)
+Ben approved "Pinned and recent actions": the last five actions and up to eight pinned ones are kept on the character (flags.wodx-actions.quick); right-click or Alt+P pins or unpins. A player who does not own the character sees their own recent list as before.
+Reverse: quick rows in profile-menus.js menuFor and main.js menu().
+
+## B1340. The after-action card and how far a fight's tale travels (2026-11-12)
+Ben approved "An after-action card". When a started fight is ended, the Storyteller gets a whispered card: levels taken and dealt, blood, Willpower and other pools spent, Actions cards seen, and who outside the fight saw it (WoDX Actions' onlooker rules). House rule: a witness carries only their word before 1888, a snapshot camera is possible from 1888, a camcorder from 1985, a phone camera in most pockets from 2005, and in the Future Darkness everything is recorded. A breach is severity 2 when pictures are likely or five or more saw it. The button records the breach (the place may keep it) and starts a rumour, big at severity 2.
+Reverse: setting afterAction off; aftermath.js and aftermath-rules.js in wodx-combat.
+
+## B1320. Using the room in a fight: sizes (2026-11-12)
+Ben approved "Use the room in a fight". Fire, falling and sunlight follow the books (fire V20 Dark Ages pp. 355-360; falling V20 core printed p. 296; sunlight VtDA20 p. 359). House readings: knocked-over candles or a torch start a torch-sized fire; an oil lamp or lantern breaks and its oil burns as a bonfire (lamp) or torch-sized (lantern), at a torch's heat.
+Reverse: SPILL in wodx-interactables interact-rules.mjs.
+
+## B1321. A falling chandelier (2026-11-12)
+House rule: the falling dice for its drop (15 feet unless set) plus 4 for its weight, lethal; each success on Dexterity + Dodge at 7 takes a die away, as stepping carefully does on broken glass. Lit candles start a torch-sized fire.
+Reverse: CHANDELIER_MASS, DROP_DODGE, dropDice in interact-rules.mjs.
+
+## B1322. Sunlight let in through a window or curtain (2026-11-12)
+By day only. A window or shutter thrown open, or a pane smashed, makes a WoDX: Sunlight region of direct sun 4 yards deep on the character's side; a curtain torn from a closed window gives indirect sun (through glass, soak 7) 4 yards round it. Closing the window removes the region. WoDX Actions' sun then burns any Cainite inside.
+Reverse: SUN_YARDS and the letSun and tearCurtain cases in interact-rules.mjs; roomEffects() in main.mjs.
+
+## B1323. Sprinklers (2026-11-12)
+Fire sprinklers from 1874 (the first automatic sprinkler). Setting them off puts out every torch-sized fire and bonfire on the scene; an inferno burns on. Saving the tile's settings resets them.
+Reverse: WATCHES.sprinkler and douses() in interact-rules.mjs.
+
+## B1324. Electric light by era (2026-11-12)
+A light switch offers nothing before 1880. Oil lamps, candles, torches and chandeliers are offered in every era.
+Reverse: ELECTRIC_FROM in interact-rules.mjs.
+
+## B1330. Colour-blind safe colours (2026-11-12)
+Ben approved "Colours readable by everyone". A player setting in WoDX Senses swaps the sight rings to the Okabe and Ito palette with a thicker line, and every ring shows its words on the map (a second setting can hide them). The aura overlay of Read the Soul names its colour. V20's aura colours keep their names; only the drawing changes.
+Reverse: settings colourSafe and ringWords; SAFE in sight-rules.mjs.
+
+## B1500. The Legends book (2026-11-12)
+Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.32.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
 Players see a new line of each kind as follows (a house rule, line by line in the window): dated events, deaths, seats, holdings and boons are shown; Embraces, ghoulings, oaths and debts, and the seats of a secret faction, wait for the Storyteller. Lines dated after today's date are the Storyteller's only.
 Reverse: SHOWN_BY_DEFAULT in legends-rules.mjs.
-## B1301. When the book is written (2026-11-12)
+## B1501. When the book is written (2026-11-12)
 The book is brought up to date when a session ends in WoDX Storyteller (its session setting changes), just before each time skip moves the clock and again when it ends, the first time the world loads, and when the Storyteller presses Bring it up to date. Seats and holdings have no history of their own, so each build compares them with the last build and dates a change to the day of the build; the first build records who holds each seat and place "when this book began", dated by the owner record's own year where it has one.
 Reverse: the hooks in Chronicle main.mjs (updateSetting, wodxSkipStart, wodxSkipEnd, ready).
-## B1302. The book across the eras (2026-11-12)
+## B1502. The book across the eras (2026-11-12)
 One chapter (journal page) per century that has lines, oldest first, from 1197 to the World of Future Darkness, dated on the Chronicle Clock's calendar. Setting the clock back takes a dated event out again, as the dated events do; other lines stay but count as after today's date, so players stop seeing them until the clock passes them again. The book keeps 5000 lines, dropping the oldest.
 Reverse: LEGENDS_CAP and merge() in legends-rules.mjs.
-## B1310. Progress clocks (2026-11-12)
+## B1510. Progress clocks (2026-11-12)
 Ben approved the Improvement Desk item "Progress clocks" as described. WoDX Storyteller 0.35.0 shows long work and slow threats as segmented clocks (after Blades in the Dark). Clocks read from records WoDX keeps: long tasks (successes of the goal), heat on a hunting ground (of 10), ties that need tending (shown once half the time has gone), Ledger objectives (steps done) and open Ledger entries with a due date (time gone between made and due). The Storyteller makes clocks of their own (4, 6, 8, 10 or 12 segments) for a faction's plan or a hunter closing in. Rules in clock-rules.mjs; stored in the world setting wodx-storyteller.clocks.
 Reverse: remove the Clocks tool and the dashboard section.
-## B1311. Who sees a clock (2026-11-12)
+## B1511. Who sees a clock (2026-11-12)
 Every clock starts as the Storyteller's only. The Storyteller shows a clock to everyone or to the players of chosen characters, read clocks included. A house rule.
 Reverse: normClock's shown default in clock-rules.mjs.
-## B1312. Clocks that fill by themselves (2026-11-12)
+## B1512. Clocks that fill by themselves (2026-11-12)
 An own clock can fill by hand only (the default), one segment each faction turn, one each session's end, or one each full week of game time (counted from when the setting is chosen; setting the clock back starts the count again). When a clock fills, the Storyteller gets a whispered card; what happens is theirs to decide.
 Reverse: TICKS and tickAll in clock-rules.mjs.
-## B1313. A fight goes in the Storyteller's log (2026-11-12)
+## B1513. A fight goes in the Storyteller's log (2026-11-12)
 When WoDX Combat starts a fight (wodxFightStarted), the Storyteller's log gets a note "A fight began on <scene>." It feeds the pacing note and the session report.
 Reverse: the wodxFightStarted listener in night.mjs registerNight.
-## B1314. The pacing note on the night's draw (2026-11-12)
+## B1514. The pacing note on the night's draw (2026-11-12)
 Ben chose the lighter version of the pacing dial: a note for the Storyteller only, on the night's draw window and its queue entry, that never changes what the draw picks. It reads the last seven nights of the log (a night runs noon to noon): a night is hard when it had a fight, a frenzy, a death or torpor, a Masquerade breach, Diablerie or a road encounter. The note says, first that matches: three or more hard nights of the last four; a hard night just past; three or more quiet nights in a row. Rules in pacing-rules.mjs.
 Reverse: pacingNow in night.mjs.
-## B1320. Standing with the spirit courts (2026-11-12)
+## B1520. Standing with the spirit courts (2026-11-12)
 Ben approved the Improvement Desk item "Standing with the spirit courts" as described. WoDX Otherworlds 0.14.0 keeps, on each character who deals with spirits (Garou and the other Changing Breeds, Kinfolk, mages, mortal shamans), a standing from -5 to +5 with seven courts: Bird, Beast, Elementals, Wyld, Weaver, Wyrm and the character's totem. The books give chiminage, Bans and spirits who remember; the number is a house rule. Stored on flags.wodx-otherworlds.spirits; rules in spirit-rules.mjs.
 Reverse: remove the Spirits tool; the flag can stay.
-## B1321. What moves standing (2026-11-12)
+## B1521. What moves standing (2026-11-12)
 House rule: chiminage paid +1 with the spirit's court; chiminage owed and not paid -2; a Bane destroyed +1 with the Wyld and the totem and -1 with the Wyrm; a spirit bound or slain against its will -2 with its court; the totem's Ban kept through a hard test +1; the Ban broken -3; a favour +1 and a slight -1 with a chosen court; or the Storyteller moves a court by hand. WoDX Actions' Chiminage, when the Storyteller records a debt paid with a court picked, moves it by itself.
 Reverse: MOVES in spirit-rules.mjs.
-## B1322. What standing does (2026-11-12)
+## B1522. What standing does (2026-11-12)
 House rule: +3 or more is -1 difficulty to summon a spirit of the court, to be taught a Gift by one, or to bind one into a fetish or talen; +5 is -2. -3 or less is +1 difficulty, -5 is +2 and the court may refuse outright. WoDX Actions applies it to Summon a spirit and Perform a rite when a court is picked, and shows the standing when learning a Gift.
 Reverse: effect() in spirit-rules.mjs; courtField in Actions garou.js.
-## B1323. What players see of standing (2026-11-12)
+## B1523. What players see of standing (2026-11-12)
 Players see their own characters' standing in words (honoured, well regarded, known kindly, unknown, mistrusted, resented, scorned), not the number or what moved it.
 Reverse: spiritsDialog in Otherworlds spirits.mjs.
-## B1324. The courts across the eras (2026-11-12)
+## B1524. The courts across the eras (2026-11-12)
 The Storyteller's window gives a house note for the era from the clock's year: the Weaver's spirits gather where people build before 1800, spread with mills, rail and wire after, and take the Net from 1990; the Wyrm's feed on war and plague, then on industry; the Wyld's draw back from the cities. In the World of Future Darkness the courts of the machines and the Net are the Storyteller's to name, kept under Weaver spirits.
 Reverse: eraNotes in spirit-rules.mjs.

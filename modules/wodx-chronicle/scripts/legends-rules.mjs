@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.31.0: the Legends book, the pure part. No Foundry calls here.
+ * WoDX Chronicle 0.32.0: the Legends book, the pure part. No Foundry calls here.
  *
  * The book lists what has really happened in this chronicle, gathered from records WoDX already keeps:
  *   event    a dated event that fired (Chronicle's dated events)
@@ -31,7 +31,7 @@ export const KINDS = {
 };
 
 /**
- * Whether players see a new line of each kind (B1300, a house rule the Storyteller changes line by line). Boons
+ * Whether players see a new line of each kind (B1500, a house rule the Storyteller changes line by line). Boons
  * are public among Kindred, so they show; oaths and debts are often private, and so are Embraces, so they wait.
  * Seats in a secret faction wait too (see officeLines).
  */

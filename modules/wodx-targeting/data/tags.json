@@ -943,5 +943,23 @@
   "juggernaut": "s.t",
   "unearthlyrepose": "e.s",
   "stormwending": "s.t"
+ },
+ "numina": {
+  "curses": "h.s",
+  "divination": "s.t",
+  "healing": "x.t",
+  "astral": "s.t",
+  "cyberkinesis": "e.s",
+  "psychometry": "s.t",
+  "pyrokinesis": "h.s",
+  "telekinesis": "e.s"
+ },
+ "hekau": {
+  "alchemy": "e.t",
+  "amulets": "p.t",
+  "celestial": "s.t",
+  "effigy": "h.u",
+  "necromancy": "e.s",
+  "nomenclature": "e.v"
  }
 }
