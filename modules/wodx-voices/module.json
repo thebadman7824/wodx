@@ -1,0 +1,41 @@
+{
+  "id": "wodx-voices",
+  "title": "WoDX Voices",
+  "description": "World of Darkness Expanded: NPCs speak their talk lines aloud, each in a steady voice of its own, heard only by the people who see the line. First build uses the browser's own speech. Private use only; not for distribution or sale.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "WoDX Project (private)"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "worldofdarkness",
+        "type": "system",
+        "compatibility": {
+          "minimum": "7.3.2"
+        }
+      }
+    ],
+    "recommends": [
+      {
+        "id": "wodx-npc",
+        "type": "module",
+        "reason": "Voices reads WoDX NPC's talk cards."
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "flags": {
+    "wodx": {
+      "phase": 7
+    }
+  }
+}
