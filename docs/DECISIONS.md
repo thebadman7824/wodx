@@ -1002,6 +1002,7 @@ House rules, shown on the attack card and the check card; minus is easier:
 - In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
 
 Reverse: STANCES and attackStance in movement-rules.js.
+<<<<<<< HEAD
 
 ## B947. Ways of moving after the book check (2026-11-12)
 The book check (project files movement-book-check.md) replaces these house rules in B941, B942 and B946:
@@ -1016,3 +1017,27 @@ Still house rules, with no book rule found: an easier close attack on someone pr
 A flight power now sets the token's way of moving to Fly before it rises, and a fall sets it back to Walk; the token lookup finds unlinked tokens too.
 
 Reverse: FLY_SPEEDS, BREATH_SECONDS, drownType and STANCES in wodx-combat movement-rules.js; jumpReach in wodx-actions checks-rules.js.
+=======
+## B1000. Animal archetypes (2026-11-12)
+Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of ANIMAL_TEMPLATES in npc-rules TEMPLATES and of ANIMAL_PRESETS in routine-rules PRESETS.
+
+## B1001. Herd, territory and hunger; swarm, scatter, scavenge and stalk (2026-11-12)
+Three new temperament traits, 0 to 2, read by the fight scorer and the reactions: herd (runs when outnumbered or when the others run; weaker alone), territory (fights harder and bears one more wound on its own patch, fights trespassers), hunger (bolder in the lean months, December to March). Four new tactics: swarm, scatter, scavenge and stalk. Animals bark or raise a racket only when they have the call tactic (guard dogs, poultry), never send for the watch, and take no fright at the supernatural as such: Ben ruled (2026-11-12) that animals do not shy from Kindred but do shy from wraiths, so every animal fears "wraith" and an intruder or foe who is a wraith counts as that fear.
+
+Reverse: the new lines in scoreOptions and pickReaction are marked NPC 0.21.0.
+
+## B1002. More kinds of place and roles (2026-11-12)
+PLACE_KINDS gains alley, yard, docks and park (the same four the passers-by work adds) and sewer, hospital and station. Routines gain the roles yard, alley, sewer, docks and park, and the activities grazing and roosting. A routine block can name the months it runs in.
+
+Reverse: remove the kinds; old scenes keep their tags.
+
+## B1003. Which animal a beast is (2026-11-12)
+A beast's archetype comes from its passers-by token flag (archetype, else the crowd's animal kind mapped by place and year), else the actor flag wodx-npc.animal, else a guess from its name. Nothing found keeps the plain beast template.
+
+Reverse: animalOf() in main.mjs.
+
+## B1004. The other lines wait (2026-11-12)
+Ben approved the whole brainstorm and asked for animals first. Criminals, combatants, townsfolk and the supernatural lines follow in later versions. Ben's rulings for them: Orpheus travellers only in the World of Future Darkness; Kuei-jin travellers only in Asia.
+>>>>>>> origin/main

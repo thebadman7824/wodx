@@ -6,6 +6,7 @@
  * Wounds are the health-track index (0 unhurt, 1 Bruised … 6 Crippled, 7 Incapacitated).
  */
 import * as TK from "./talk-rules.mjs";
+import {ANIMAL_TEMPLATES, ANIMALS} from "./animal-rules.mjs";
 
 /** Temperament weights (0–2) and thresholds, per template. WoDX's readings of each line's usual conduct. */
 export const TEMPLATES = {
@@ -49,7 +50,9 @@ export const TEMPLATES = {
   soldier: {label: "Soldier or man-at-arms", line: "mortal", aggression: 1, caution: 0.8, cunning: 0.6, loyalty: 1.4, cowardice: 0.5, berserk: 0, power: 0,
     fleeAt: 4, frenzyProne: false, fears: ["supernatural"], tactics: ["melee", "ranged", "pack", "ground"]},
   mob: {label: "Mob", line: "mortal", aggression: 1.2, caution: 0.3, cunning: 0.1, loyalty: 0.6, cowardice: 1.2, berserk: 0.3, power: 0,
-    fleeAt: 2, frenzyProne: false, fears: ["supernatural", "fire"], tactics: ["melee", "pack"]}
+    fleeAt: 2, frenzyProne: false, fears: ["supernatural", "fire"], tactics: ["melee", "pack"]},
+  // NPC 0.21.0 (B1000): the animal archetypes, from animal-rules.mjs
+  ...ANIMAL_TEMPLATES
 };
 
 /** Tactics a profile can list, and what each does (shown in the behaviour window). */
@@ -57,11 +60,14 @@ export const TACTICS = {
   melee: "Fights hand to hand", ranged: "Shoots", power: "Uses its powers", willpower: "Spends Willpower", call: "Calls for help",
   guard: "Guards its master", flee: "Runs", supernatural: "Goes for the monster first",
   pack: "Goes for the foe an ally has already hurt", ground: "Fights harder on its own ground",
-  masquerade: "Hides its nature before mortal eyes", alive: "Takes them alive", parley: "Speaks a challenge before a fight"
+  masquerade: "Hides its nature before mortal eyes", alive: "Takes them alive", parley: "Speaks a challenge before a fight",
+  // NPC 0.21.0 (B1001)
+  swarm: "Many bodies on one foe", scatter: "Breaks and runs at the first sign of trouble", scavenge: "Goes for the fallen",
+  stalk: "Follows unseen and strikes at one alone"
 };
 
 /** The template a line's NPC starts from. info: {kind, generation, melee, ranged}. */
-export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = []}) {
+export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = [], animal = null}) {
   const has = re => (sides ?? []).some(x => re.test(String(x)));
   if ( has(/fomor/) ) return "fomor";
   switch ( kind ) {
@@ -73,7 +79,7 @@ export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides
     case "hunter": return has(/inquisit|leopold/) ? "inquisitor" : "hunter";
     case "spirit": return has(/spectre/) ? "spectre" : "spirit";
     case "wraith": return "ghost";
-    case "beast": return "beast";
+    case "beast": return ANIMALS[animal] ? animal : "beast";
     case "mortal": return Math.max(melee, ranged) >= 2 ? "guard" : "civilian";
     default: return "guard";
   }
@@ -111,6 +117,7 @@ export function scoreOptions(profile, state) {
   const tac = t => (p.tactics ?? []).includes(t);
   // The Masquerade (or the Veil, or the Consensus): mortals watching and a foe who passes for human
   const hiding = tac("masquerade") && Number(state.witnesses ?? 0) > 0 && !enemies.some(e => e.obvious);
+  const herd = Number(p.herd ?? 0), terr = Number(p.territory ?? 0), hung = Number(p.hunger ?? 0);
 
   // The Delirium, or a bystander facing violence, overrides the rest (WoDX reading of the line rules)
   if ( s.delirious ) out.push({action: "flee", score: 20, why: "The Delirium: the sight of a Crinos sends a mortal running"});
@@ -128,6 +135,14 @@ export function scoreOptions(profile, state) {
     if ( (p.tactics ?? []).includes("supernatural") && e.supernatural ) { sc += 2; r.push("a hunter goes for the monster first"); }
     if ( tac("pack") && e.hurtByAllies ) { sc += 1.5 * (0.5 + p.loyalty / 2); r.push("the pack goes for the one already bleeding"); }
     if ( tac("ground") && s.onGround ) { sc += 1; r.push("on its own ground"); }
+    // NPC 0.21.0 (B1001): the animal tactics and traits
+    if ( tac("swarm") && allies.length >= 2 ) { sc += 1 + (e.hurtByAllies ? 1 : 0); r.push("the swarm closes on one foe"); }
+    if ( tac("scavenge") && e.wounds >= 5 ) { sc += 1.5; r.push("goes for the fallen"); }
+    if ( tac("stalk") && e.alone === true ) { sc += 1.5; r.push("this one stands alone"); }
+    if ( tac("stalk") && e.alone === false ) sc -= 1;
+    if ( terr && s.onGround ) { sc += terr; r.push("defends its own patch"); }
+    if ( hung && s.hungry ) { sc += 1.5 * hung; r.push("hungry"); }
+    if ( herd && !allies.length ) sc -= 0.5 * herd;
     if ( tac("alive") && (e.supernatural || e.wounds >= 4) ) { sc += e.wounds >= 4 ? 1 : 0.3; r.push("aims to take them alive (stake, bind or seize)"); }
     const f = fearHere(e);
     if ( f.length ) { sc -= 4 * (1 + p.caution / 2); r.push(`afraid of their ${f.join(" and ")}`); }
@@ -139,12 +154,16 @@ export function scoreOptions(profile, state) {
   {
     let sc = p.cowardice;
     const r = [];
-    const bear = p.fleeAt + (tac("ground") && s.onGround ? 1 : 0);
+    const bear = p.fleeAt + (tac("ground") && s.onGround ? 1 : 0) + (terr >= 1 && s.onGround ? 1 : 0);
     if ( s.wounds >= bear ) { sc += 6 + (s.wounds - bear); r.push(`wounded past what this NPC will bear (${s.wounds} ≥ ${bear})`); }
     if ( hiding ) { sc += 2; r.push(`${state.witnesses} mortal witness${state.witnesses === 1 ? "" : "es"}: better to slip away`); }
     if ( outnumbered ) { sc += 1.5 * (p.caution); r.push("outnumbered"); }
     if ( anyFear ) { sc += 2 + 1.5 * p.caution; r.push("faces what it fears"); }
     if ( (p.fears ?? []).includes("violence") && enemies.length ) { sc += 3; r.push("not a fighter"); }
+    if ( herd && outnumbered ) { sc += 1.5 * herd; r.push("the herd gives way"); }
+    if ( herd && Number(state.alliesFled ?? 0) > 0 ) { sc += 2 * herd; r.push("the others are running"); }
+    if ( tac("scatter") && enemies.length ) { sc += 2; r.push("scatters"); }
+    if ( hung && s.hungry ) sc -= hung;
     if ( s.inFrenzy ) sc -= 10;
     if ( r.length ) out.push({action: "flee", score: sc, why: r.join("; ")});
   }
@@ -385,7 +404,7 @@ export function onWall(p, walls = [], eps = 4) {
  * Before "=>" is a WoDX Chronicle "Only when" list (";" between tests); after it, the changes, separated by commas.
  * The first phase whose list passes is in force; none: the profile as saved. Thresholds are the Storyteller's.
  */
-export const PHASE_KEYS = ["template", "aggression", "caution", "cunning", "loyalty", "cowardice", "berserk", "power", "fleeAt", "tactics", "fears"];
+export const PHASE_KEYS = ["template", "aggression", "caution", "cunning", "loyalty", "cowardice", "berserk", "power", "herd", "territory", "hunger", "fleeAt", "tactics", "fears"];
 
 /** Phase text to {phases: [{name, when, changes}], problems}. */
 export function parsePhases(text) {
