@@ -152,7 +152,7 @@ const TAG_MAP = {
 };
 /** Ability keys that are also tags of their own, for the signature features (Survival, Medicine and the rest). */
 const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
-  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality"]);
+  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {

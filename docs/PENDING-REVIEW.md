@@ -598,6 +598,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Wraith picks (B1504) | Guild, legion and faction picked in the window and kept on the actor; a legion suggested by the manner of death (a house reading) | GUILDS, LEGIONS |
+| 2026-11-12 | Wraith engines (B1505) | Borrowed riddle, leverage and mad ear; the Emerald luck once a week (a house reading of once a story) | luck |
+| 2026-11-12 | Factions of the dead (B1506) | Heretics, Renegades, Ferrymen, Spectres and the Risen, one per wraith | WRAITH_FACTIONS |
 | 2026-11-12 | Changeling rows (B1500) | Kith, seeming, court and House stacked; Thallain, Inanimae, Nunnehi and Dark-Kin kiths grouped; the Dark-Kin feature is a house reading | KITHS |
 | 2026-11-12 | Changeling engines (B1501) | Revel Glamour by card, Pooka truth costs Willpower, the seal coat item, troll and sidhe oaths | signatures.mjs |
 | 2026-11-12 | Courts and seemings (B1502) | Unseelie hold power Samhain to Beltaine, Seelie the rest; a die to the court's own social rolls in its half | COURTS |
