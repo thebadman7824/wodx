@@ -668,6 +668,16 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
 | 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
 
+### Approved by Ben, 12 November 2026, 18:50 UTC (body plan, "no suggestions")
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
+| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
+| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
+| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
+| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -676,11 +686,6 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | How often a court meets | Elysium and the esbat every second faction turn, the feudal court and the gangs every fourth (B1104) | POLITIES[...].gathering.every |
 | 2026-11-12 | What a challenge for a seat rolls between NPCs | Strength + Dexterity, opposed, difficulty 6; the loser drops a dot of standing (B1103) | innerTurn "bid" branch |
 | 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |
-| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
-| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
-| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
-| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
-| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
 | 2026-11-12 | Where a good no longer names its container, what does it become (B1012)? | The thing alone: "a fiddle", "an arrow" (stacks 3-20), "a shotgun shell" (2-25), "a consecrated host" (1-12), "a blank CD", "a cold pizza slice", "a set of lockpicks", "a gas mask", "a microscope", "lager" (from the six-pack). A quiver, gun belt or pyx is no longer part of any good. "a passport in a plastic sleeve" stays, since a plain "a passport" is already a different good. | Old names in RENAMED in goods.mjs. |
 | 2026-11-12 | What needs what when a thing is used (B1014)? | Smoking: a light, plus a pipe for loose tobacco, opium, hashish, marijuana and crack. Heroin and morphine: a syringe (laudanum and pills need nothing). Candles, oil lamps and torches: a flame. Writing, drawing and marking on paper: a pen, pencil, chalk or stylus. A quill: ink. Never a hard stop: the Use window warns, and a player who goes ahead is reported to the Storyteller. | needsOf in link-rules.mjs. |
 | 2026-11-12 | Which things are full or empty (B1014)? | Oil lamps and the storm lantern (lamp oil, kerosene, camphine), the petrol lighter (petrol, gasoline, butane), the disposable lighter (cannot be refilled), the fountain pen (ink), the needle case (thread), flashlights, headlamps and LED lanterns (batteries), phones, laptops, tablets, cameras and smart glasses (a power bank, solar charger, power cell or car battery, not spent). | SUPPLIES in link-rules.mjs. |
