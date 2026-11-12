@@ -6684,6 +6684,163 @@
 ]
 },
 {
+"id": "r3-living-gods-318",
+"era": "living-gods",
+"year": -10000,
+"month": null,
+"kind": "myth",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Eden",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Lilith cast out",
+"text": "In the lore of Ur and Babylon, Lilith is the first woman, Adam's equal, and is cast out of Eden into the unformed world (Revelations of the Dark Mother pdf 4).",
+"ref": "Legend; the year is a house reading",
+"links": []
+},
+{
+"id": "r3-living-gods-319",
+"era": "living-gods",
+"year": -9300,
+"month": null,
+"kind": "myth",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Land of Nod",
+"tags": [
+"crown"
+],
+"title": "Caine weds Zillah",
+"text": "Bound to a crone by her blood, Caine in turn gives Zillah his blood for three nights and marries her (Book of Nod pdf 12-13).",
+"ref": "Legend; the year is a house reading",
+"links": []
+},
+{
+"id": "r3-living-gods-320",
+"era": "living-gods",
+"year": -9300,
+"month": null,
+"kind": "myth",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Land of Nod",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Bahari",
+"text": "Lilith's cult, the Bahari, keep her teaching; in their telling Caine's line turns on her for thirteen generations (Revelations of the Dark Mother pdf 4-5).",
+"ref": "Legend; the year is a house reading",
+"links": []
+},
+{
+"id": "r3-living-gods-321",
+"era": "living-gods",
+"year": -6900,
+"month": null,
+"kind": "myth",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "The Umbra",
+"tags": [
+"occult"
+],
+"title": "The Wyrm splits",
+"text": "Caught in the Weaver's web, the Wyrm goes mad and splits into Beast-of-War, Eater-of-Souls and the Defiler (W20 Book of the Wyrm pdf 12-14).",
+"ref": "Legend; the year is a house reading",
+"links": [
+{
+"id": "umbra",
+"title": "The Umbra"
+},
+{
+"id": "bbnuw-ptah-wagnerians",
+"title": "The Ptah and the Wagnerians"
+}
+]
+},
+{
+"id": "r3-living-gods-322",
+"era": "living-gods",
+"year": -4500,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Sumer",
+"tags": [
+"learning",
+"occult"
+],
+"title": "The oldest leaf of the Book of Nod",
+"text": "By the reckoning of the book's own scholar, its oldest fragment was written just before Sumer (Book of Nod pdf 19).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "tbcog-lagash",
+"title": "The Sacred Peace of Lagash"
+}
+]
+},
+{
+"id": "r3-living-gods-323",
+"era": "living-gods",
+"year": -1479,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Africa",
+"place": "Thebes",
+"tags": [
+"occult",
+"founding"
+],
+"title": "The Reed of Thoth and the Cupbearers of Isis",
+"text": "Hatshepsut and Thutmose III call a gathering that founds two lodges of magicians (Order of Hermes Revised pdf 20).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-living-gods-324",
+"era": "living-gods",
+"year": -1400,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Africa",
+"place": "Egypt",
+"tags": [
+"occult",
+"heresy"
+],
+"title": "A hundred sects",
+"text": "Within a century the two Egyptian lodges split into more than a hundred rival sects (Order of Hermes Revised pdf 20).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "scinf-gatekeepers",
+"title": "The Gatekeepers"
+}
+]
+},
+{
 "id": "r3-classical-001",
 "era": "classical",
 "year": -776,
@@ -10043,7 +10200,7 @@
 "occult"
 ],
 "title": "The White Howlers fall",
-"text": "Over the years from 200 BCE to 200 CE the White Howlers fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42).",
+"text": "The White Howlers back the Picts whose raids raise Hadrian's Wall, then cross into the Empire while Rome's fomori slip north; between 200 BCE and 200 CE they fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42; W20 Book of the Wyrm pdf 88-89).",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -12368,7 +12525,7 @@
 "occult"
 ],
 "title": "The Order of Hermes founded",
-"text": "On Midwinter Night twelve founders gathered by Trianoma found the Order of Hermes at Durenmar (M20 pdf 126; Sorcerers Crusade pdf 70).",
+"text": "On Midwinter Night Trianoma and Bonisagus bring twelve founders together at Durenmar; they accept the Code of Hermes and found the Order and its Houses (M20 pdf 126; Sorcerers Crusade pdf 70; Mage: The Dark Ages pdf 58; Order of Hermes Revised pdf 27).",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
 },
@@ -14327,6 +14484,201 @@
 "text": "Henry VI plans to make the empire hereditary; he dies at Messina the next year.",
 "ref": "Real history",
 "links": []
+},
+{
+"id": "r3-classical-348",
+"era": "classical",
+"year": -530,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Croton",
+"tags": [
+"learning",
+"occult"
+],
+"title": "Pythagoras carries Thoth's lore west",
+"text": "Hermetic history says Pythagoras brought the lore of Thoth to the Greeks (Order of Hermes Revised pdf 20-21).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-classical-349",
+"era": "classical",
+"year": -400,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Greece",
+"tags": [
+"occult",
+"crime"
+],
+"title": "The Hermes cults at war",
+"text": "For three centuries rival cults of Hermes murder and riot against each other in Greece and Egypt (Order of Hermes Revised pdf 22).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mrdm-delphi",
+"title": "The Oracle at Delphi"
+}
+]
+},
+{
+"id": "r3-classical-350",
+"era": "classical",
+"year": -100,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Africa",
+"place": "Alexandria",
+"tags": [
+"treaty",
+"occult"
+],
+"title": "The council of twenty",
+"text": "About a century before Christ, twenty mystics meet to end the feuds of the Hermes cults (Order of Hermes Revised pdf 22).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-classical-351",
+"era": "classical",
+"year": 70,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"siege",
+"occult"
+],
+"title": "A fragment smuggled out",
+"text": "One fragment of Lilith's lore survives in writings smuggled out of the Roman siege of Jerusalem; the book prints the year as 64 (Revelations of the Dark Mother pdf 18).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "darh-diet-of-jerusalem",
+"title": "The Diet of Jerusalem"
+},
+{
+"id": "dajbn-cainite-influx",
+"title": "Cainites under the Kingdom of Jerusalem"
+},
+{
+"id": "dajbn-gabriel-chavez",
+"title": "Gabriel Chavez, the Eyes of Alamut"
+}
+]
+},
+{
+"id": "r3-classical-352",
+"era": "classical",
+"year": 100,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Middle East",
+"place": "Persia",
+"tags": [
+"occult",
+"crown"
+],
+"title": "The Devil Kings",
+"text": "A dynasty of Infernalist mages takes hold of Arabia and Persia, and keeps it until 756 (Mage: The Dark Ages pdf 164).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "dam-devil-kings",
+"title": "The Devil Kings"
+}
+]
+},
+{
+"id": "r3-classical-353",
+"era": "classical",
+"year": 130,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Britannia",
+"tags": [
+"occult"
+],
+"title": "The first Hollow Men",
+"text": "Fianna songs of Roman Britain first name the Hollow Men, the oldest breed of fomori (W20 Book of the Wyrm pdf 135).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-classical-354",
+"era": "classical",
+"year": 615,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Middle East",
+"place": "Mecca",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Prophet's helpers",
+"text": "Some Batini later claim the Prophet had magical help (Mage: The Dark Ages pdf 40).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-classical-355",
+"era": "classical",
+"year": 700,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"founding",
+"occult"
+],
+"title": "The covenants",
+"text": "By 700 the mages of Europe have gathered into covenants (Order of Hermes Revised pdf 26).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "tbfia-clans-of-stag",
+"title": "The Clans of Stag"
+},
+{
+"id": "scwp-pagan-outlook",
+"title": "The Pagan outlook"
+},
+{
+"id": "dagrim-northern-shamans",
+"title": "Shamans beyond the north"
+}
+]
 },
 {
 "id": "r3-dark-ages-001",

@@ -319,3 +319,10 @@
 -2000|H|mor|AS|Hokkaido|migration|The Ainu of the north|The Ainu people's ancestors live in the northern islands of Japan.
 -2000|W|kue|AS|Hokkaido|faith,occult|The Ainu and the spirits|Kindred of the East places the Ainu in the islands by this age, with their own bond to the spirits (Kindred of the Thousand Hells pdf 44).
 -8500|M|dem|ME|The world|faith,occult|The Time of Babel|After the Time of Atrocities and the Long March, the war of Heaven and the Fallen calms into the Time of Babel (Houses of the Fallen pdf 19, 73).
+-10000|M|vam|ME|Eden|faith,occult|Lilith cast out|In the lore of Ur and Babylon, Lilith is the first woman, Adam's equal, and is cast out of Eden into the unformed world (Revelations of the Dark Mother pdf 4).
+-9300|M|vam|ME|Land of Nod|crown|Caine weds Zillah|Bound to a crone by her blood, Caine in turn gives Zillah his blood for three nights and marries her (Book of Nod pdf 12-13).
+-9300|M|vam|ME|Land of Nod|faith,occult|The Bahari|Lilith's cult, the Bahari, keep her teaching; in their telling Caine's line turns on her for thirteen generations (Revelations of the Dark Mother pdf 4-5).
+-6900|M|wer|EU|The Umbra|occult|The Wyrm splits|Caught in the Weaver's web, the Wyrm goes mad and splits into Beast-of-War, Eater-of-Souls and the Defiler (W20 Book of the Wyrm pdf 12-14).
+-4500|W|vam|ME|Sumer|learning,occult|The oldest leaf of the Book of Nod|By the reckoning of the book's own scholar, its oldest fragment was written just before Sumer (Book of Nod pdf 19).
+-1479|W|mag|AF|Thebes|occult,founding|The Reed of Thoth and the Cupbearers of Isis|Hatshepsut and Thutmose III call a gathering that founds two lodges of magicians (Order of Hermes Revised pdf 20).
+-1400|W|mag|AF|Egypt|occult,heresy|A hundred sects|Within a century the two Egyptian lodges split into more than a hundred rival sects (Order of Hermes Revised pdf 20).
