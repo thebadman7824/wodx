@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.8.0";
+const VERSION = "0.8.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -36,7 +36,7 @@ const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { ret
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
 const modOn = id => !!game.modules.get(id)?.active;
-const cap = s => s ? s[0].toUpperCase() + s.slice(1) : "";
+const cap = s => { s = String(s ?? ""); return s ? s[0].toUpperCase() + s.slice(1) : ""; };
 const TABLES = {places: null, conditions: null, sources: null, otherworlds: null, channels: null};
 const NOISES = [];
 
@@ -130,7 +130,8 @@ function placeAt(scene, p) {
   return {...o, kind: o.kind || guessKind(scene?.navName || scene?.name) || "other", name: scene?.navName || scene?.name || "", id: `s.${scene?.id}`};
 }
 let guessPlace = null;
-const guessKind = name => { try { return guessPlace?.(name) || ""; } catch (e) { return ""; } };
+// guessPlace answers {kind, owner}; only the kind is wanted here (0.8.1: the whole answer used to come back and broke the Storyteller's card)
+const guessKind = name => { try { const g = guessPlace?.(name); return String((g && typeof g === "object" ? g.kind : g) || ""); } catch (e) { return ""; } };
 
 function timeNow() {
   try {
