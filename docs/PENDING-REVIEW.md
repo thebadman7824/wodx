@@ -783,6 +783,12 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 
 All 46 recommendations on https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P ("Reviewed all. Proceed as outlined."). Built as B2450-B2458.
 
+## Approved by Ben, 12 November 2026, 23:38 UTC (era naming desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | World of Darkness names for every era (naming desk https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV) | Ben's picks, with his edits: The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement; prologues Before the Flood, The Age of Living Gods, The Age of Burning Palaces, The Age of Oracles, The Age of Silk and Eagles, The Age of Fallen Thrones, The Age of Gathering Darkness | Ids unchanged, so only names move (B2512) |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -915,6 +921,5 @@ All 46 recommendations on https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P ("Re
 | 2026-11-12 | Pixel art sprites for player and NPC tokens (study only, nothing built): which art, where it shows, and what comes next. Desk: https://claude.ai/artifact/7x2vGtSzPsZnVMcD2kAG4n | Recommended: Liberated Pixel Cup layered sprites (free with credit) with own pieces for era gaps; sprites on the map and busts kept for sheets and chat; facing and a walk cycle; drawn by our own code in the paperdoll module; the three-quarter view judged on a real night map from a testbed prototype before any wider build | Nothing to undo: no code or art is in the repo. Pick otherwise on the desk and the prototype follows that |
 | 2026-11-12 | Prologue timeline, book check 2: likely misprints (Order of Hermes Revised pdf 46 dates the Code of Hermes 787; Revelations of the Dark Mother pdf 18 puts the siege of Jerusalem in 64; Mage: The Dark Ages pdf 226 dates St Agnes 309 BC) | Read as 767, 70 and AD 304; the Jerusalem card says what the book prints | Use the printed years |
 | 2026-11-12 | Prologue timeline: Dark Ages: Wraith is not in the book collection, so Stygia's founding and the early Maelstroms stay undated (Ends of Empire and Charnel Houses of Europe read instead) | Only the First Great Maelstrom is placed, at 476 with the fall of Rome | Name years from another book |
-| 2026-11-12 | World of Darkness names for three eras Ben turned down every proposal for (the Iron dawn, the Roman Empire, the Wild West). Desk: https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV | New recommended names in use until picked: The Age of Cold Iron, The Age of Silk and Eagles, The Wyld West. Ben's picks for the other sixteen are applied | Ids unchanged, so only names move (B2512) |
 | 2026-11-12 | Prologue goods: Before the Flood had no light or cloth | Added a hide cloak and a stone lamp of animal fat | Small; change in goods.mjs |
 

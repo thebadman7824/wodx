@@ -3047,7 +3047,7 @@ WoDX Storyteller 0.52.2. The party is every present character on the asker's sce
 Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.
 
 ## B2510. The two prologues become seven eras (2026-11-12, Ben picked seven real eras)
-WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Cold Iron (1177 to 801 BCE), The Classical Age (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
+WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Burning Palaces (1177 to 801 BCE), The Age of Oracles (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
 
 Reverse: put the two old profiles back in data/eras.json and drop the seven.
 
@@ -3057,7 +3057,7 @@ WoDX Chronicle 0.47.0. eras.json "legacy" maps living-gods to The Age of Living 
 Reverse: remove "legacy" and the fallback in getProfile.
 
 ## B2512. Every era takes a World of Darkness name (2026-11-12, Ben asked; naming desk https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV)
-WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (2026-11-12 23:26Z; The Age of Cold Iron, The Age of Silk and Eagles and The Wyld West are new proposals waiting on Ben): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
+WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (final 2026-11-12 23:38Z): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
 
 Reverse: put the old names back in data/eras.json and the kits.
 
