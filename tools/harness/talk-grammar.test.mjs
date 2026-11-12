@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* The talk generator (NPC 0.44.0): a grammar that speaks when the Storyteller has written nothing that fits */
+/* The talk generator (NPC 0.45.0): a grammar that speaks when the Storyteller has written nothing that fits */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));

@@ -22,10 +22,11 @@ async function join(browser, name, password = "") {
   const page = await ctx.newPage();
   page.on("pageerror", e => console.log(`[${name}] page error: ${e.message}`));
   await page.goto(`${url}/join`, {waitUntil: "domcontentloaded"});
-  await page.waitForSelector("select[name=userid]", {timeout: 60000});
-  const id = await page.$$eval("select[name=userid] option", (os, n) => os.find(o => o.textContent.trim() === n)?.value ?? null, name);
+  const SEL = "select[name=userId], select[name=userid]";
+  await page.waitForSelector(SEL, {timeout: 60000});
+  const id = await page.$$eval("select[name=userId] option, select[name=userid] option", (os, n) => os.find(o => o.textContent.trim() === n)?.value ?? null, name);
   if ( !id ) throw new Error(`No user "${name}" on the join page`);
-  await page.selectOption("select[name=userid]", id);
+  await page.selectOption(SEL, id);
   if ( password ) await page.fill("input[name=password]", password);
   await Promise.all([page.waitForURL(/\/game/, {timeout: 60000}), page.click("button[name=join], button[type=submit][name=join], form button[type=submit]")]);
   await page.waitForFunction(() => window.game?.ready === true, null, {timeout: 120000});

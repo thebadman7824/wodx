@@ -1,5 +1,5 @@
 /**
- * Battles and sieges gate (WoDX Storyteller 0.44.0, NPC 0.39.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
+ * Battles and sieges gate (WoDX Storyteller 0.45.0, NPC 0.44.0, Chronicle 0.42.0), in rothenstein-wodx (the testing
  * world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatebattle.mjs?${Date.now()}`)).run()
  * Runs battles through the API (no windows), then removes the battles, clock, factions, messages and actors it made.
@@ -16,7 +16,8 @@
  *  10. Let the time pass moves the clock by the time taken, once
  *  11. the counterattack on a character goes through WoDX Combat (damage on the sheet), then is taken off
  *  12. the book's army: both sides by units fight a Right of Command turn (pools, actions, units lost); Undo puts the units back
- *  13. every other WoDX module still answers
+ *  13. factions at war: two gate factions Hunted toward each other go to war at a faction step, fought off the screen with no cards to players
+ *  14. every other WoDX module still answers
  * Result: Data/wodx-gate/gatebattle-result.json.
  */
 async function save(R, name) {
@@ -52,7 +53,9 @@ export async function run() {
     if ( factionsBefore ) {
       const s = foundry.utils.deepClone(factionsBefore);
       s.factions = [...(s.factions ?? []), {id: "gateBattleA", name: "WoDX gate: Lords", kind: "other", assets: {status: 2, retainers: 2}},
-        {id: "gateBattleB", name: "WoDX gate: Rebels", kind: "other", assets: {status: 1, retainers: 1}}];
+        {id: "gateBattleB", name: "WoDX gate: Rebels", kind: "other", assets: {status: 1, retainers: 1}},
+        {id: "gateWarA", name: "WoDX gate: Margrave", kind: "mortal", assets: {status: 3, retainers: 3, resources: 2}, standing: {gateWarB: -3}},
+        {id: "gateWarB", name: "WoDX gate: Abbey", kind: "church", assets: {status: 2, retainers: 2, domain: 1}, places: ["wodx-gate-place"], standing: {gateWarA: -3}}];
       await game.settings.set(NPC, "factions", s);
     }
 
@@ -138,7 +141,8 @@ export async function run() {
       while ( n < 6 && !(res?.dice) ) { res = await api().hazard(b.id, k.id, {attention: true}); n++; }
       await new Promise(r => setTimeout(r, 500));
       const after = JSON.stringify(game.actors.get(k.id).system.health ?? {});
-      ok("counterattack", !!res && (res.dice === 0 || before !== after), {res, tries: n, changed: before !== after});
+      // all of it may be soaked: then nothing changes on the sheet, and that is a pass
+      ok("counterattack", !!res && (res.dice === 0 || res.levels === 0 || before !== after), {res: {...res, message: undefined}, tries: n, changed: before !== after});
     });
     await step("book army", async () => {
       const k = await api().start({name: "WoDX gate: the book army", place: "Gate field", kind: "field", year: 1230,
@@ -152,6 +156,23 @@ export async function run() {
       ok("book army", k.book && k.sides[0].men === 4860 && pools.melee === 20 && p.book && p.contests.length === 2 && p.contests[1].action === "ranged"
         && api().rules.unitCount(u.sides[1].units) === 7 && u.phases.length === 0, {pools, units: p.units, contests: p.contests?.map(c => [c.action, c.attack.pool, c.resist.pool, c.net])});
     });
+    await step("faction wars", async () => {
+      const fx = game.modules.get(NPC)?.api?.factions;
+      if ( !fx?.warTurn || !factionsBefore ) return ok("faction wars", true, {skipped: "no WoDX NPC factions"});
+      const pub = () => msgsSince().filter(m => !m.whisper.length && /WoDX gate: (Margrave|Abbey)/.test(m.content)).length;
+      const pub0 = pub();
+      let res = null, n = 0;
+      // a Hunted faction takes up arms 1 turn in 3; the seeded roll changes with the turn number
+      while ( n < 12 && !res?.started ) { res = await fx.warTurn(9000 + n, {only: new Set(["gateWarA", "gateWarB"])}); n++; }
+      const war = api().list().find(x => x.war?.attacker === "gateWarA");
+      if ( war ) made.push(war.id);
+      await new Promise(r => setTimeout(r, 800));
+      const ap = game.modules.get("wodx-chronicle")?.api?.approvals;
+      const q = [...(ap?.pending?.() ?? []), ...(ap?.history?.() ?? [])];
+      const proposed = !!war?.over && q.some(e => String(e.key ?? "").startsWith(`battle:${war.id}`));
+      ok("faction wars", !!war && war.war.auto && war.war.kind === "mortal" && war.book === (war.year <= 1499) && (!war.over || proposed) && pub() === pub0,
+        {tries: n, name: war?.name, over: war?.over?.text, phases: war?.phases?.length, proposed, publicCards: pub() - pub0});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-otherworlds", "wodx-creation"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
@@ -160,6 +181,7 @@ export async function run() {
   } catch (e) { R.errors.push(e.message); }
   finally {
     try {
+      for ( const x of api()?.list?.() ?? [] ) if ( x.war?.attacker === "gateWarA" && !made.includes(x.id) ) made.push(x.id);
       for ( const id of made ) await api()?.remove?.(id);
       if ( factionsBefore ) await game.settings.set(NPC, "factions", factionsBefore);
       if ( legendsBefore ) await game.settings.set("wodx-chronicle", "legends", legendsBefore);
@@ -170,7 +192,7 @@ export async function run() {
         if ( Array.isArray(ap.history) ) ap.history = ap.history.filter(keep);
         await game.settings.set("wodx-chronicle", "approvals", ap);
       } catch (e) { R.notes.push(`approvals cleanup: ${e.message}`); }
-      for ( const m of msgsSince() ) if ( /WoDX gate|Battles|battle/i.test(m.content) || m.speaker?.alias === "Battles" ) await m.delete();
+      for ( const m of msgsSince() ) if ( /WoDX gate|Battles|battle/i.test(m.content) || m.speaker?.alias === "Battles" || (m.speaker?.alias === "WoDX factions" && /WoDX gate/.test(m.content)) ) await m.delete();
       for ( const a of actors ) await a?.delete();
       if ( game.time.worldTime !== time0 ) await game.time.advance(time0 - game.time.worldTime);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
