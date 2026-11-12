@@ -121,6 +121,18 @@ export function whereWords(c, now, landWords = {}) {
 }
 
 /**
+ * Bring a caravan on the road in at this moment, whatever its day of arrival was. One that set out this very moment
+ * counts as having left a second earlier, so that it still has a road behind it. Returns {state, caravan}.
+ */
+export function bringForward(state, id, now) {
+  const next = normState(state), c = next.list.find(x => x.id === id && x.state === "road");
+  if ( !c ) return {state: next, caravan: null};
+  c.arrive = Number(now);
+  c.left = Math.min(c.left, c.arrive - 1);
+  return {state: next, caravan: deep(c)};
+}
+
+/**
  * Bring the list up to a moment. A caravan whose time has come stands in its market; one that has stood two days,
  * or was lost a week ago, leaves the list. Returns {state, arrived: [caravans that came in just now]}.
  */

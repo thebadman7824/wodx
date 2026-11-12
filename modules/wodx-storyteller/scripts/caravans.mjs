@@ -129,10 +129,9 @@ export async function loseCaravan(id, {by = null, quiet = false} = {}) {
 /** Bring a caravan in now, whatever the clock says. */
 export async function arriveNow(id) {
   if ( !isActiveGM() ) return null;
-  const st = state(), c = st.list.find(x => x.id === id && x.state === "road");
-  if ( !c ) return null;
-  c.arrive = Math.max(c.left + 1, now());
-  await save(st);
+  const r = CR.bringForward(state(), id, now());
+  if ( !r.caravan ) return null;
+  await save(r.state);
   return tick();
 }
 
