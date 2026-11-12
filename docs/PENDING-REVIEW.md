@@ -613,6 +613,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
 | 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
 | 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
+| 2026-11-12 | City exposure (B1511) | Bands Quiet 0, Whispers 3, Talk 6, Watched 10, Hunted 15; a point a breach plus witnesses, print from 1605 and cameras; a point off a quiet week (house numbers) | EXPOSURE_BANDS, breachPoints |
+| 2026-11-12 | Sect law (B1512) | Camarilla and the Church of Caine act at Watched, the others at Hunted; bringing to heel takes 3 off | SECT_LAW, HEEL_DROP |
+| 2026-11-12 | Great cities (B1514) | Nine cities with dated states from history; Senses adds the city's smell and sound | CITIES |
+| 2026-11-12 | Golconda road (B1516) | Ten steps; killing costs 2, frenzy, theft and harmful feeding 1; a mentor a step a month (house numbers) | GOLCONDA_SETBACKS |
+| 2026-11-12 | Story chains and goals (B1517, B1518) | Six chains in play, separate from the lifepath chains; three goals a line for each of two ages | CHAINS, GOALS |
 
 ## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
 
