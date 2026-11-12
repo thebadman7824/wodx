@@ -1671,3 +1671,58 @@ Reverse: remove the wodxFed hook in wodx-npc rivalry.mjs (Actions may keep sendi
 WoDX NPC's api.nameFor(actor, viewer) answers what a viewer calls an NPC: the name for the Storyteller and when "Faces you have met" is off, else the stranger's words until one of the viewer's characters has met them. Chat and the combat tracker are masked per viewer at render (B1382), so cards keep the real name for the Storyteller; windows a player opens (With this person, Trade) ask nameFor. Missed Connections Desk x1.
 
 Reverse: viewName in wodx-actions social.js back to nameFor.
+
+## B1600. Game time: one world clock for every scene (2026-11-12)
+Ben approved every recommendation on the Game Time Desk. Foundry's one world time stays the only clock; scenes get no clocks of their own. Every timed part of WoDX (about thirty) reads it, and separate clocks would make dated events, eras and routines disagree between maps. Groups that are apart use personal time instead (B1601).
+
+Reverse: nothing to undo; per-scene clocks were not built.
+
+## B1601. Work done apart goes on the character's own time (2026-11-12)
+WoDX Storyteller 0.38.0, api.time.spend. The main group is the scene holding more than half of the player characters present tonight (players marked away are left out). A long roll, an interaction, a fight or a journey by characters who share a scene that is not the main group's, while someone else is elsewhere, moves their personal time instead of the world clock. With no main group (a party split two and two) every half is apart. Convene lines them up as before. World setting timeApart, on.
+
+Reverse: set timeApart off; everything moves the world clock.
+
+## B1602. A player's long roll asks for its time (2026-11-12)
+Move the clock on an extended roll, a Garou meditation or rite, a Hunter's prayer, Kindred downtime and Wraith mending works for players: the player's client sends the seconds to the Storyteller's client by socket, which makes a "Time for a long action" proposal itself (B12 still holds: players send no typed proposals). Approving spends it under B1601 and tells the player. Capped at 90 days a request.
+
+Reverse: spendTime in wodx-actions spend-time.js back to the GM-only game.time.advance.
+
+## B1603. The Time row on the Clock (2026-11-12)
+The Storyteller's Chronicle Clock lists each player character's own time against the clock (with the clock, so long ahead, so long behind) and the scene they are on, with a Convene button. Drawn by WoDX Storyteller (api.time.clockRow) when it is on.
+
+Reverse: drop the clockRow call in clock-app.mjs.
+
+## B1604. Otherworld journeys let their time pass (2026-11-12)
+The approved journey card says how much time passes outside and, on the Storyteller's copy, has "Let the journey's time pass", which spends it once for the travellers under B1601. The journey itself never moves the clock on its own.
+
+Reverse: drop the button in journey.mjs approveJourney.
+
+## B1605. Realms where time runs differently (2026-11-12)
+Otherworlds journey-rules REALM_TIME: the Tempest, the Labyrinth, the Umbral roads and Moon Paths keep the world's time; a Moon Bridge takes a thousandth (W20 pdf 209 / p. 207); a trod slips (C20 pdf 53 / p. 52, house figures). The Far Dreaming with Arcadia, and Deep Umbra realms, are listed as the Storyteller's call with check: true until a book check fixes what the books say and the pages (PC job game-time-book-check-2026-11-12). Realms the books are silent on keep the plain clock.
+
+Reverse: remove REALM_TIME and timeOutside.
+
+## B1606. A fight takes time when it ends (2026-11-12)
+WoDX Combat 3.16.0. Foundry adds no seconds for a round unless a system sets it, and none did, so fights took no time. When a started fight is ended, the time moves once by its turns times the world setting turnSeconds (house figure 3 seconds; the book check confirms the V20 wording; 0 turns it off): the clock, or the fighters' own time when they are apart. One step at the end wakes the timed parts once instead of every round. The after-action card names the length.
+
+Reverse: set turnSeconds to 0.
+
+## B1607. The clock that runs with the table (2026-11-12)
+WoDX Chronicle 0.35.0, off by default. World settings paceMinutes (game minutes a step, 0 off) and paceEvery (real minutes, 10). The Storyteller's client checks every 30 seconds; it waits while the game is paused, during a fight, while the world is held or a skip runs, and when no player is connected. Moving the clock by hand starts the count again. The same for every scene.
+
+Reverse: leave paceMinutes at 0.
+
+## B1608. Off-screen NPCs settle when their scene opens (2026-11-12)
+Kept as built: NPCs on scenes nobody is viewing are placed by their routine when the scene opens. The result is the same as moving them all the time, at no cost while nobody watches.
+
+Reverse: nothing to undo.
+
+## B1609. A scene's own place for the sun (2026-11-12)
+WoDX Chronicle 0.35.0: scene flag wodx-chronicle.place {latitude, offset in hours from home}, set from the Clock's "The sun on this scene". Sunlight (WoDX Actions), the sky (WoDX Atmosphere) and day and night for the senses (WoDX Senses) read it for the scene being viewed; the Clock shows the scene's hour, sunrise and sunset under home time. The world clock, the Clock's dusk and dawn buttons, routines, healing and every timed rule keep home time. Before standard time zones the offset is the sun-time difference, rounded to the half hour.
+
+Reverse: unset the scene flags; describeAt falls back to the chronicle latitude.
+
+## B1610. The guides say how time passes (2026-11-12)
+The Storyteller guide's clock section now covers personal time, Convene, time apart, fights, journeys, a scene's own place and the table's clock.
+
+Reverse: nothing to undo.

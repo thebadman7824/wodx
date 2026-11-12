@@ -111,3 +111,27 @@ export const NET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height
   + `<feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1" preserveAlpha="true"/>`
   + `<feComponentTransfer><feFuncR type="linear" slope="0.25"/><feFuncG type="linear" slope="3"/><feFuncB type="linear" slope="2.4" intercept="0.04"/></feComponentTransfer>`
   + `</filter></svg>`;
+
+/**
+ * 0.15.0: how much time passes outside while travellers make a journey (B1604, B1605). Most roads keep the world's
+ * time: the hours planned. A Moon Bridge takes a thousandth of it (W20, above). A trod runs fast, slow or loses days
+ * (C20, above; house figures). Realms whose books may say time runs differently there are listed in REALM_TIME with
+ * check: true until the book check fixes their pages; until then they keep the plain clock and the card says it is the
+ * Storyteller's call.
+ */
+export const REALM_TIME = {
+  tempest: {rule: "same"}, labyrinth: {rule: "same"}, umbra: {rule: "same"}, moonpath: {rule: "same"},
+  moonbridge: {rule: "thousandth", ref: "W20 pdf 209 / p. 207"},
+  "trod-silver": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-balor": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-twilight": {rule: "trod", ref: "C20 pdf 53 / p. 52"},
+  "far-dreaming": {rule: "storyteller", check: true, note: "Time in the Far Dreaming and Arcadia may not match the world's: the Storyteller's call until the book check."},
+  "deep-umbra": {rule: "storyteller", check: true, note: "Some Deep Umbra realms may keep their own time: the Storyteller's call until the book check."}
+};
+
+/** Seconds that pass outside for a drawn journey, and the words for the card: {seconds, rule, words}. */
+export function timeOutside(j) {
+  const t = REALM_TIME[j?.realm] ?? {rule: "same"};
+  const hours = Math.max(0, Number(j?.hours) || 0);
+  if ( t.rule === "thousandth" ) { const s = Math.max(1, Math.round(hours * 3600 / 1000)); return {seconds: s, rule: t.rule, words: `${s} seconds outside (a thousandth of ${hours} hours)`}; }
+  if ( t.rule === "trod" && j?.arrival ) { const h = Math.max(1, Number(j.arrival.hours) || hours); return {seconds: h * 3600, rule: t.rule, words: `${h} hours outside (${slipWords(j.arrival)})`}; }
+  return {seconds: Math.round(hours * 3600), rule: t.rule, words: `${hours} hours outside`, note: t.note ?? null};
+}

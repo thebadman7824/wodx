@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.35.0 (Game time: the Clock's Time row (each character's own time, with Convene, from WoDX Storyteller); The sun on this scene (a scene's own latitude and hours from home for sun and sky); the clock that runs with the table, off by default (world settings paceMinutes, paceEvery); api.place, api.pace, api.refreshClock)
 - 0.33.0 (Mage features: every Tradition, Craft and Convention with the old names of each age, the Order of Reason, the Hermetic Houses, the mad and the fallen; world setting Tradition, Craft and Convention features (Mage), off by default)
 - 0.32.0 ("Only when" tests on the look: dressed fine or poor, wears, station, out of time, bloody, disguised, seen through)
 - 0.31.0 (Werewolf features: tribe, auspice and breed stacked, Kinfolk, the lost tribes, the eleven other Changing Breeds and the Beast Courts; signature roll effects now reach the dice; world setting Tribe, auspice and breed features (Werewolf), off by default)

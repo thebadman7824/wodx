@@ -30,6 +30,7 @@ import * as MVJ from "./movement.js";
 import * as BD from "./body.js";
 import * as BodyRules from "./body-rules.js";
 import * as AA from "./aftermath.js";
+import * as FTime from "./fight-time.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
@@ -1438,10 +1439,12 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     ST.registerStartSettings();
     AA.registerAftermathSettings();
+    FTime.registerFightTimeSettings();
     P.register();
     const body = BD.setupBody();
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
     const aftermath = AA.setupAftermath({ corpusTrack });
+    FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
         getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.15.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,

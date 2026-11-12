@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.38.0 (Game time: api.time. Work done apart from the main group goes on the character's own time (world setting Work done apart goes on the character's own time, on); a player's long roll sends its time to the approval queue; the Time row on the Clock)
 - 0.36.0 (prices find made things by name with their quality tag; made things record their maker)
 - 0.34.1 (the prelude journal shows the character's lifepath)
 - 0.34.0 (taking things apart for parts)

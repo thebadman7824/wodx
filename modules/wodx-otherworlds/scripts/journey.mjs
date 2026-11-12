@@ -60,6 +60,7 @@ function journeyHtml(j) {
     ${j.moonRisk ? `<p class="wodx-quiet">${j.moonRisk < 1 ? "The moon is full or near it: the road is safer." : j.moonRisk > 1 ? "The moon is dark or nearly: the road is more dangerous." : "A half moon."}</p>` : ""}
     ${j.arrival ? `<p class="wodx-quiet">Time on the trod: ${esc(J.slipWords(j.arrival))}.</p>` : ""}
     ${j.note ? `<p class="wodx-quiet">${esc(j.note)}</p>` : ""}
+    ${(() => { const t = J.timeOutside(j); return `<p class="wodx-quiet">Time: ${esc(t.words)}.${t.note ? ` ${esc(t.note)}` : ""}</p>`; })()}
     <ol>${j.legs.map(l => `<li>${esc(l.landmark)}${l.hazard ? `<br><b>Hazard:</b> ${esc(l.hazard)}` : ""}${l.maelstrom ? `<br><b>The Maelstrom:</b> ${esc(l.maelstrom)}` : ""}</li>`).join("")}</ol>`;
 }
 
@@ -74,8 +75,12 @@ export async function approveJourney(j) {
   const gms = all(game.users).filter(u => u.isGM).map(u => u.id);
   const owners = new Set(gms);
   if ( j.tell ) for ( const t of j.travellers ?? [] ) { const a = game.actors.get(t.actorId); for ( const u of all(game.users) ) if ( a?.testUserPermission?.(u, "OWNER") ) owners.add(u.id); }
-  await ChatMessage.create({content: `<div class="wodx-card wow-journey"><h3>The journey</h3>${journeyHtml(j)}</div>`, whisper: [...owners], speaker: {alias: "The road"},
-    flags: {[MODULE_ID]: {journey: j.count}}});
+  // 0.15.0: the Storyteller's copy has a button that lets the journey's time pass (B1604)
+  const ids = (j.travellers ?? []).map(t => t.actorId).filter(Boolean);
+  const t = J.timeOutside(j);
+  const button = t.seconds && ids.length ? `<button type="button" class="wow-journey-time" data-gm-only><i class="fa-solid fa-hourglass-half"></i> Let the journey's time pass</button>` : "";
+  await ChatMessage.create({content: `<div class="wodx-card wow-journey"><h3>The journey</h3>${journeyHtml(j)}${button}</div>`, whisper: [...owners], speaker: {alias: "The road"},
+    flags: {[MODULE_ID]: {journey: j.count, time: button ? {ids, seconds: t.seconds, done: false} : null}}});
   try { await game.modules.get("wodx-storyteller")?.api?.log?.({kind: "travel", text: `Otherworld journey (${j.realmLabel}, ${j.hours} h): ${J.journeyText(j)}`}); } catch (e) { /* tracker off */ }
 }
 
@@ -163,3 +168,24 @@ export function applyDecay() {
   last = css;
   board.style.filter = css;
 }
+
+/** 0.15.0: Storyteller presses the card's button: the travellers' time passes (their own time when apart), once. */
+export async function passJourneyTime(msg) {
+  const d = msg?.getFlag?.(MODULE_ID, "time");
+  if ( !game.user.isGM || !d || d.done ) return null;
+  const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
+  let line;
+  if ( time?.spend ) {
+    const r = await time.spend({actorIds: d.ids ?? [], seconds: d.seconds, label: "an Otherworld journey"});
+    line = time.note?.(r, (d.ids ?? []).map(id => game.actors.get(id)?.name).filter(Boolean).join(", ")) ?? "";
+  } else { await game.time.advance(d.seconds); line = "The clock has moved on."; }
+  await msg.setFlag(MODULE_ID, "time", {...d, done: true});
+  if ( line ) ui.notifications.info(line);
+  return line;
+}
+Hooks.on("renderChatMessageHTML", (msg, el) => {
+  const b = el?.querySelector?.(".wow-journey-time");
+  if ( !b ) return;
+  if ( !game.user.isGM || msg.getFlag?.(MODULE_ID, "time")?.done ) { b.remove(); return; }
+  b.addEventListener("click", () => { b.disabled = true; passJourneyTime(msg).catch(e => { b.disabled = false; console.error("WoDX | journey time", e); }); });
+});
