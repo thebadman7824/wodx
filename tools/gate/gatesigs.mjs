@@ -1,5 +1,5 @@
 /**
- * Clan features gate (WoDX Chronicle 0.25.1 or later), in rothenstein-wodx, as Gamemaster Test:
+ * Clan features gate (WoDX Chronicle 0.26.0 or later), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesigs.mjs?${Date.now()}`)).run()
  * Makes its own vampires and a mortal, turns "Clan features (Vampire)" on, and puts the setting, actors and chat cards
  * back afterwards. The clock is not moved: weeks are made by setting a Muse's last visit back.
@@ -11,7 +11,8 @@
  *      to drink (wodxTrade) moves it to 2
  *   6. a Brujah's Cause: three kept tempers make a Rant, and spending it empties it
  *   7. a Gangrel's frenzy leaves a mark that heals in 30 days, and its roll effects show
- *   8. every other WoDX module still answers
+ *   8. a Malkavian with Paranoia: a glimpse a night (the second is refused) and a heard line for a talk card
+ *   9. every other WoDX module still answers
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -40,6 +41,7 @@ export async function run() {
     await game.settings.set(C, "sigVampire", true);
     actors = await Actor.create([vamp("WoDX gate: Toreador", "toreador"), vamp("WoDX gate: Setite", "custom", "Followers of Set"),
       vamp("WoDX gate: Brujah", "brujah"), vamp("WoDX gate: Gangrel", "gangrel"), vamp("WoDX gate: Ventrue", "ventrue"),
+      {name: "WoDX gate: Malkavian", type: "Vampire", system: {clan: "malkavian", generation: 12, derangement: "Paranoia"}},
       {name: "WoDX gate: Mark", type: "Mortal"}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     await step("1 api", async () => {
@@ -92,9 +94,15 @@ export async function run() {
       ok("7 Gangrel mark", !!mk && mk.until - mk.at === 30 * 86400 && fx.length > 0, {mark: mk, effects: fx.length});
       await g.update({"system.conditions.isfrenzy": false});
     });
-    await step("8 other modules", async () => {
+    await step("8 Malkavian", async () => {
+      const k = by("Malkavian");
+      const g1 = await api().glimpse(k), g2 = await api().glimpse(k);
+      const heard = api().hearAs(k, {topic: "News", name: "Old Jan", npcId: "x"});
+      ok("8 Malkavian", !!g1?.text && g2 === null && typeof heard === "string" && !/[{}]/.test(heard), {g1, heard});
+    });
+    await step("9 other modules", async () => {
       const off = game.modules.filter(m => m.id.startsWith("wodx-") && m.active && !m.api && !["wodx-library"].includes(m.id)).map(m => m.id);
-      ok("8 other modules", !!game.wodxCombat && off.length === 0, {off});
+      ok("9 other modules", !!game.wodxCombat && off.length === 0, {off});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
