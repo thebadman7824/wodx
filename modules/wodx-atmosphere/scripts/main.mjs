@@ -25,7 +25,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.12.0";
+const VERSION = "0.13.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -770,10 +770,17 @@ export async function writeCredits() {
     let credits = null;
     try { const r = await fetch(`${root}/${kit}/credits.json`); credits = r.ok ? await r.json() : null; } catch (e) { credits = null; }
     const ps = all(game.playlists).filter(p => Object.values(playlistMap()[kit] ?? {}).includes(p.id));
+    const listed = new Set();
     for ( const p of ps ) for ( const s of all(p.sounds) ) {
       const file = decodeURIComponent(String(s.path).split("/").pop());
+      listed.add(file);
       const c = credits?.[file];
       rows.push(`<tr><td>${esc(K.KITS[kit].name)}</td><td>${esc(p.name)}</td><td>${esc(file)}</td><td>${c ? esc(c.source ?? "") : "<em>No credit recorded</em>"}</td><td>${esc(c?.license ?? "")}</td><td>${esc(c?.credit ?? "")}</td></tr>`);
+    }
+    // Files the kit credits but no playlist holds: music heard in the scene, placed on maps, and spare loops
+    for ( const [file, c] of Object.entries(credits ?? {}) ) {
+      if ( listed.has(file) || !c || typeof c !== "object" ) continue;
+      rows.push(`<tr><td>${esc(K.KITS[kit].name)}</td><td><em>In the kit folder</em></td><td>${esc(file)}</td><td>${esc(c.source ?? "")}</td><td>${esc(c.license ?? "")}</td><td>${esc(c.credit ?? "")}</td></tr>`);
     }
   }
   const html = `<p>Every sound and picture an era kit uses, with where it came from. Add a credits.json to a kit folder to fill in a row.</p>
@@ -781,7 +788,10 @@ export async function writeCredits() {
     <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source.</p>
     <p>The fonts and their licences are listed in WoDX Chronicle's fonts/licenses folder.</p>`;
   let j = all(game.journal).find(x => x.flags?.[MOD]?.credits);
-  j ??= await JournalEntry.create({name: "WoDX · Asset credits", flags: {[MOD]: {credits: true}}});
+  // Everyone at the table may read the credits (Ben, B2432); the Storyteller alone edits them
+  const observer = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
+  j ??= await JournalEntry.create({name: "WoDX · Asset credits", ownership: {default: observer}, flags: {[MOD]: {credits: true}}});
+  if ( (j.ownership?.default ?? 0) < observer ) await j.update({"ownership.default": observer});
   const page = all(j.pages).find(p => p.name === "Era kits");
   if ( page ) await page.update({"text.content": html});
   else await j.createEmbeddedDocuments("JournalEntryPage", [{name: "Era kits", type: "text", text: {content: html, format: 1}}]);
@@ -922,7 +932,8 @@ async function buildDialog() {
       content: `<p>There is no folder <code>${esc(r.folder)}</code> in the Data folder yet.</p>
         <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code>, <code>music/wonder</code> and <code>music/frenzy</code>
         for the moods, <code>ambience</code> for loops named after a kind of place or weather (tavern.ogg, street.ogg, rain.ogg), and
-        <code>sounds</code> for dawn.ogg, dusk.ogg, notice.ogg, birds.ogg and cock.ogg. A credits.json there records each file's source and licence.</p>
+        <code>sounds</code> for dawn.ogg, dusk.ogg, notice.ogg, birds.ogg and cock.ogg. A credits.json there records each file's source and licence.
+        Music heard in the scene, such as a ballroom band, goes in <code>scene</code>, to place on the map as an ambient sound. The sorter in tools/atmosphere files downloads into these folders and writes the credits.</p>
         <p class="wodx-quiet">Or pick the world's own playlists for each mood in the Atmosphere window. The folder setting is "${esc(root)}".</p>`,
       buttons: [{action: "ok", label: "Close", default: true}]});
   }
