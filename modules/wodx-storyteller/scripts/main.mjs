@@ -30,6 +30,7 @@ import * as Moves from "./market-moves.mjs";
 import * as Caravans from "./caravans.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
+import * as PassTime from "./pass-time.mjs";
 import * as SpendRules from "./spend-rules.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
@@ -130,6 +131,7 @@ Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); L
 
 Hooks.once("ready", () => {
   if ( !active ) return;
+  PassTime.installPassTime();
   if ( !C.chron() ) console.warn("WoDX | WoDX Storyteller needs WoDX Chronicle; it stays idle.");
   C.onChange(() => A.TrackerClass().refresh());
   C.onChange(() => { try { C.chron()?.refreshClock?.(); } catch (e) { /* older Chronicle */ } });
@@ -181,6 +183,7 @@ Hooks.once("ready", () => {
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
+    passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
       clockRow: Spend.clockRow, bindClockRow: el => Spend.bindClockRow(el, () => A.conveneDialog()), rules: SpendRules},
     tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
@@ -272,6 +275,8 @@ Hooks.on("getSceneControlButtons", controls => {
   if ( !tokens?.tools ) return;
   tokens.tools.wodxOnYourOwn = {name: "wodxOnYourOwn", title: "Out on your own (travel, or act alone)", icon: "fa-solid fa-person-walking-luggage", order: 106,
     button: true, visible: true, onChange: () => A.openOnYourOwn()};
+  tokens.tools.wodxPassTime = {name: "wodxPassTime", title: "Let time pass (wait, rest or sleep the day; the table agrees)", icon: "fa-solid fa-bed-pulse", order: 107,
+    button: true, visible: true, onChange: () => PassTime.passTimeDialog()};
   tokens.tools.wodxLetters = {name: "wodxLetters", title: "Send a letter or message (it travels as the era allows)", icon: "fa-solid fa-envelope", order: 108,
     button: true, visible: true, onChange: () => Letters.openLetters()};
   tokens.tools.wodxTasks = {name: "wodxTasks", title: "Long tasks (work that takes days or weeks: making things, research, training)", icon: "fa-solid fa-hourglass-half", order: 109,
@@ -316,6 +321,8 @@ async function onSocket(message) {
   if ( type === "req.call" ) { await Hand.answerAsk(payload); return; }
   if ( type === "req.letter" ) { await Letters.send(payload); return; }
   if ( type === "req.time" ) { await Spend.onAsk(payload); return; }
+  if ( type === "req.passTime" ) { await PassTime.open(payload); return; }
+  if ( type === "req.passVote" ) { await PassTime.vote(payload); return; }
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own

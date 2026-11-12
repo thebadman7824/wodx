@@ -10,6 +10,12 @@ export const MAX_ASK = 90 * 86400;
 const DAY = 86400, HOUR = 3600;
 
 /** Seconds kept whole and in range: 0 for nothing, at most MAX_ASK. */
+/** A span small enough to pass the queue on its own (Chronicle 0.46.0, B2453): one night or one day, and no fight. */
+export function smallSpan(seconds, {inFight = false} = {}) {
+  const s = cleanSeconds(seconds);
+  return !!s && s <= 24 * 3600 && !inFight;
+}
+
 export function cleanSeconds(s, max = MAX_ASK) {
   const n = Math.round(Number(s));
   return Number.isFinite(n) && n > 0 ? Math.min(n, max) : 0;
@@ -65,3 +71,24 @@ export function noteFor(r, names = "") {
     default: return "";
   }
 }
+
+/* ---- Players ask for time to pass (Storyteller 0.52.0, B2457) ---- */
+
+/** What a player may ask for from the toolbar. */
+export const PASS_CHOICES = {
+  hour: {label: "Wait an hour", seconds: 3600},
+  watch: {label: "Wait four hours", seconds: 4 * 3600},
+  rest: {label: "Rest eight hours", seconds: 8 * 3600},
+  day: {label: "Sleep the day through (twelve hours)", seconds: 12 * 3600}
+};
+
+/**
+ * Who must agree: every player who is here tonight and plays a present character. needed: [userIds]; agreed: [userIds];
+ * refused: one "not now" ends it. Returns "pass", "wait" or "refused".
+ */
+export function voteState({needed = [], agreed = [], refused = []} = {}) {
+  if ( (refused ?? []).length ) return "refused";
+  const yes = new Set(agreed ?? []);
+  return (needed ?? []).every(id => yes.has(id)) ? "pass" : "wait";
+}
+

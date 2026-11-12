@@ -37,6 +37,7 @@ export class ClockApp extends ApplicationV2 {
       firstNight: () => (game.modules.get("wodx-creation")?.api?.firstNight?.() ?? ui.notifications.warn("Before the First Night needs WoDX Creation 0.12.0 or later.")),
       ask: () => approvals.askStoryteller(),
       approvals: () => approvals.ApprovalsApp.open(),
+      waitingTray: () => game.modules.get("wodx-chronicle")?.api?.waiting?.open?.(),
       rules: ClockApp.#onRules,
       houseRules: () => HouseRulesApp.open(),
       eraTest: () => runEraTest(),
@@ -65,6 +66,8 @@ export class ClockApp extends ApplicationV2 {
     const target = eras.targetEra();
     const p = a.profile;
     const waiting = approvals.pending().length;
+    let waitingAll = 0;
+    try { waitingAll = gm ? (game.modules.get("wodx-chronicle")?.api?.waiting?.count?.() ?? 0) : 0; } catch (e) { waitingAll = 0; }
     const lockId = setting("eraLock");
     const held = !!setting("hold");
     let here = null;
@@ -134,6 +137,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="tour" title="A short guided tour of the WoDX tools"><i class="fa-solid fa-circle-question"></i> Tour</button>
           ${gm ? `
           <button type="button" data-action="approvals"><i class="fa-solid fa-inbox"></i> Approvals${waiting ? ` (${waiting})` : ""}</button>
+          <button type="button" data-action="waitingTray"><i class="fa-solid fa-hourglass-half"></i> Waiting${waitingAll ? ` (${waitingAll})` : ""}</button>
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
           <button type="button" data-action="manageLinesVeils"><i class="fa-solid fa-eraser"></i> Remove a line or veil</button>
           <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>

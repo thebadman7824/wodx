@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.51.0";
+export const VERSION = "0.52.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -548,7 +548,9 @@ export async function checkBeats(ev) {
 export function registerHandlers() {
   const c = chron();
   if ( !c?.registerApprovalHandler ) return;
-  c.registerApprovalHandler(T.travel, {label: "Travel",
+  // Small (B2453): never. A trip on the year's roads already goes by itself; only a place marked "ask first" or a
+  // trip into the daylight for one the sun burns reaches the queue, and neither is small
+  c.registerApprovalHandler(T.travel, {label: "Travel", small: () => false,
     approve: async e => { const r = await travel({...e.data, approved: true}); if ( !r.ok ) ui.notifications.warn(r.why); },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The Storyteller turned down a trip."}); }});
   c.registerApprovalHandler(T.encounter, {label: "Encounter",

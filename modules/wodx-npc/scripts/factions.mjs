@@ -244,6 +244,8 @@ export function build(ctx) {
   function registerHandler() {
     chron()?.registerApprovalHandler?.(TYPE, {
       label: "Factions",
+      // Small (Chronicle 0.46.0, B2453): what the Auto mode already lets through (F.sizeOf, B86)
+      small: entry => { const ch = entry.data?.changes ?? []; return ch.length > 0 && F.sizeOf(ch, {pcActors: pcActors(), state: state()}) === "small"; },
       approve: async entry => {
         const changes = entry.data?.changes ?? [];
         await applyNow(changes);

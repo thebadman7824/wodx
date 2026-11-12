@@ -124,7 +124,9 @@ export async function prompt(actors, on, {at = "", where = ""} = {}) {
   return n;
 }
 function registerPromptHandler() {
-  registerHandler(PROMPT_TYPE, {label: "A merit or flaw comes into play", approve: async entry => {
+  registerHandler(PROMPT_TYPE, {label: "A merit or flaw comes into play",
+    small: entry => { const l = entry.data?.list ?? []; return l.length > 0 && l.every(x => T.isMechanical(x.key)); },
+    approve: async entry => {
     const d = entry.data ?? {}, a = game.actors.get(d.actor);
     const items = (d.list ?? []).map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.text)}.</li>`).join("");
     await ChatMessage.create({content: `<div class="wodx-card"><h3>${esc(a?.name ?? "A character")}: ${esc(MOMENTS[d.on] ?? "now")}</h3><ul>${items}</ul></div>`,

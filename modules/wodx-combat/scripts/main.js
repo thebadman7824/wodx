@@ -25,6 +25,7 @@ import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
 import * as CR from "./conductor-rules.js";
 import * as ST from "./start.js";
+import * as FEnd from "./fight-end.js";
 import * as AM from "./ambush-rules.js";
 import * as MVJ from "./movement.js";
 import * as BD from "./body.js";
@@ -1458,6 +1459,7 @@ Hooks.once("init", () => {
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
+    FEnd.registerFightEndSettings();
     AA.registerAftermathSettings();
     FTime.registerFightTimeSettings();
     P.register();
@@ -1466,7 +1468,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.20.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.21.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1481,6 +1483,7 @@ Hooks.once("ready", async () => {
     game.socket.on(SOCKET, p => { if (!p?.conductor && p?.action !== "startFight") onSocket(p); });
     CD.installConductor();
     ST.installStarter();
+    FEnd.installFightEnd();
     await createMacros();
     console.log(`${MOD} | ready`);
 });
