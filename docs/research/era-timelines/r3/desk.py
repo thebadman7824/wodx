@@ -8,6 +8,12 @@ old = json.load(open('../desk-data-2026-11-12h2.json'))
 STOP = {'the','of','a','and','in','at','to','on','is','first','great','war','battle'}
 def words(t): return {w for w in re.findall(r"[a-z]+", t.lower()) if w not in STOP and len(w) > 2}
 eras, dropped = [], 0
+PRO = [('living-gods', 'Age of the Living Gods', '10,000 BCE to 801 BCE, prologue'), ('classical', 'Classical Age', '800 BCE to 1196 CE, prologue')]
+def card(x): return {'id': x['id'], 'y': x['year'], 'm': x['month'], 'k': x['kind'], 'ln': ', '.join(x['lines']), 'rg': x['region'], 'pl': x['place'],
+                     'tg': x['tags'], 't': x['title'], 'x': x['text'], 'lk': [l['title'] for l in x['links']], 'src': 'r3'}
+for pid, name, span in PRO:
+    mine = sorted([card(x) for x in r3 if x['era'] == pid], key=lambda i: (i['y'], i['m'] or 13))
+    if mine: eras.append({'id': pid, 'name': name, 'span': span, 'items': mine, 'appr': []})
 for e in old:
     mine = [x for x in r3 if x['era'] == e['id']]
     items = [{'id': x['id'], 'y': x['year'], 'm': x['month'], 'k': x['kind'], 'ln': ', '.join(x['lines']), 'rg': x['region'], 'pl': x['place'],
