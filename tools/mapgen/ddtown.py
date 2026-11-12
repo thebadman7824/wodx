@@ -491,7 +491,8 @@ class Town:
         whole = (0, 0, self.cols, self.rows)
         for rid, r in self.roads:
             rc = clip(clip_whole(r, whole), win)
-            if rc: regions.append({"id": f"street-{rid}", "label": {"main": "Main road", "lane": "Lane"}.get(rid, "Back street"), "rect": rc, "place": {"kind": "street"}})
+            if rc: regions.append({"id": f"street-{rid}", "label": {"main": "Main road", "lane": "Lane"}.get(rid, "Back street"), "rect": rc,
+                                 "place": {"kind": "street" if rid in ("main", "lane") else "alley"}})
         # where each road leaves the whole place, and where this part meets the next
         for end in self.road_ends():
             side, rid, rect = end
@@ -505,6 +506,7 @@ class Town:
             regions.append({"id": f"edge-{side}", "label": f"To {self.name} {other}", "rect": rect,
                             "behaviors": [{"type": "trigger", "system": {"label": f"the way into {self.name} {other} ({side})", "does": "note", "who": "pcs"}}]})
         out = {"format": "wodx-map", "version": 1, "name": f"{self.name} {pt['id']}".strip(), "map": map_name, "cells": [int(win[2]), int(win[3])], "seed": self.seed,
+               "place": {"kind": "yard" if self.size == "village" else "street"},
                "kind": self.size, "era": "dark-ages", "population": self.population(keys),
                "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys]}
         if pt["id"]:

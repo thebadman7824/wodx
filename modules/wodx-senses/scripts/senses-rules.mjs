@@ -116,7 +116,7 @@ export function difficulty(sense, ctx = {}, powers = {}) {
 
 /**
  * What a character's powers do to the senses. traits: {auspex, heightened (Gift), form, eyesOfCat, senseWyrm,
- * senseUnnatural, trueForm, awareness, kenning, primalUrge, spheres: {life, spirit, entropy, prime}, kind, layer,
+ * senseUnnatural, trueForm, body (the body plan's senses: wolf, bat), awareness, kenning, primalUrge, spheres: {life, spirit, entropy, prime}, kind, layer,
  * secondSight, fae}. Returns {mods: [{label, n, senses?}], darkSight, channels: [ids], smellFirst, reach: {sound, smell}}.
  */
 export function powersFor(t = {}) {
@@ -125,7 +125,10 @@ export function powersFor(t = {}) {
   const reach = {sound: 0, smell: 0};
   const auspex = Number(t.auspex) || 0;
   if ( auspex > 0 && t.useAuspex !== false ) { mods.push({label: "Heightened Senses (Auspex)", n: auspex}); reach.sound += 1; reach.smell += 1; }
-  const wolf = ["hispo", "lupus"].includes(t.form), wolfish = wolf || t.form === "crinos";
+  const wolf = ["hispo", "lupus"].includes(t.form), wolfish = wolf || t.form === "crinos" || t.body === "wolf";
+  // A vampire's beast shape (Shape of the Beast): wolf Perception -2 difficulty, bat hearing -3 (V20 p. 200; VtDA20 p. 241)
+  if ( t.body === "wolf" && !wolf ) mods.push({label: "Wolf's senses (Shape of the Beast)", n: 2});
+  if ( t.body === "bat" ) mods.push({label: "Bat's hearing (Shape of the Beast)", n: 3, senses: ["sound"]});
   if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: wolf ? 3 : 2});
   if ( t.eyesOfCat ) darkSight = "Eyes of the Cat";
   if ( wolfish ) { smellFirst = true; reach.smell += 1; }

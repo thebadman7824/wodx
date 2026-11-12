@@ -92,3 +92,18 @@
 .wodx-sheet-history .wodx-hist-undo { flex: 0 0 auto; width: auto; }
 .wodx-sheet-history .window-content { max-height: 70vh; overflow-y: auto; }
 @media print { .wodx-print .wodx-poss-tools, .wodx-print .wodx-search { display: none !important; } }
+
+/* Body tab (0.10.0) */
+.wodx-body { padding: 4px 6px; overflow-y: auto; }
+.wodx-body h3 { margin: 4px 0 6px; }
+.wodx-body h4 { margin: 8px 0 4px; }
+.wodx-body-cols { display: flex; flex-wrap: wrap; gap: 12px; }
+.wodx-body-cols > div { flex: 1 1 220px; min-width: 0; }
+.wodx-body ul { list-style: none; margin: 0; padding: 0; }
+.wodx-body-part.lost .wodx-body-name { text-decoration: line-through; opacity: .7; }
+.wodx-body-can li.ok::before { content: "✓ "; }
+.wodx-body-can li.no::before { content: "✗ "; }
+.wodx-body .wodx-tag { font-size: .8em; padding: 0 4px; border: 1px solid currentColor; border-radius: 3px; }
+.wodx-body .wodx-tag.bad { color: #a33; }
+.wodx-body-weapon { font-style: italic; }
+.wodx-body-notes li { font-size: .9em; margin-bottom: 2px; }

@@ -153,6 +153,9 @@ class Site:
         people = sum(len(h["people"]) for h in self.households)
         sc = {"format": "wodx-map", "version": 1, "name": self.name, "map": f"{base}.dungeondraft_map", "cells": [self.cols, self.rows],
               "seed": self.seed, "kind": kind, "layout": "site", "era": era, "population": people,
+              # the whole map's kind of place (WoDX NPC place tag), for passers-by, sounds and the Masquerade
+              "place": {"kind": {"castle": "castle", "mine": "workplace", "arcology": "street"}.get(kind) or next(
+                  (r["place"]["kind"] for r in self.regions if (r.get("place") or {}).get("kind")), "home" if kind in ("building", "floors") else "other")},
               "openings": self.openings, "features": self.features, "regions": self.regions, "households": self.households}
         json.dump(sc, open(f"{out}/{base}.wodx.json", "w"), indent=1)
         o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.cols * S}" height="{self.rows * S}" font-family="DejaVu Sans" font-size="7">',

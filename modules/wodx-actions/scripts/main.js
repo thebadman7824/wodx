@@ -1232,7 +1232,8 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
     if (!actor) return;
     const vessel = targetActor(t);
     const tokDoc = vessel ? vesselTokenDoc(t, vessel) : null;
-    const vType = vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : vessel && P.detectProfile(vessel) === "beast" ? "dog" : "human";
+    const pbVessel = tokDoc?.flags?.["wodx-npc"]?.passerby?.vessel;
+    const vType = pbVessel && R.VESSELS[pbVessel] ? pbVessel : vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : vessel && P.detectProfile(vessel) === "beast" ? "dog" : "human";
     const vb = vessel ? vesselBlood(vessel, vType) : null;
     const rule = feedingRule(actor);
     const vtags = vessel ? vesselTagsOf(vessel, tokDoc) : [];
@@ -1288,6 +1289,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const v = virtues(actor), b = blood(actor);
     const vessel = R.VESSELS[vesselType] ?? R.VESSELS.human;
     const vKind = vesselActor ? P.detectProfile(vesselActor) : null;
+    // A passer-by animal stands on a mortal sheet: no human vessel rolls for it (B971)
+    const pbAnimal = !!vesselActor?.token?.flags?.["wodx-npc"]?.passerby?.animal;
     const vampireVessel = vesselType === "vampire" || (vesselActor && isVampire(vesselActor));
     // The vessel's blood: a living vessel has the lower of its blood and (full - damage) (V20 printed p. 269, both ways)
     const vb = vesselActor ? vesselBlood(vesselActor, vesselType) : { living: !vampireVessel, value: vessel.pool, full: vessel.pool, system: false };
@@ -1404,7 +1407,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const lost = vb.full - bloodLeft;
         const out = KF.vesselOutcome(Math.max(lost, vb.full - vRemaining), vb.full);
         let state = null;
-        if (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal")) {
+        if (!pbAnimal && (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal"))) {
             const risk = R.vesselRisk(vesselActor ? attr(vesselActor, "stamina") : 2, drunk);
             if (risk) {
                 const r = await rollPool(risk.dice, risk.difficulty);
@@ -1455,7 +1458,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const myTok = actor.getActiveTokens?.()[0];
     if (myTok && drunk > 0) {
         // Who sees it by kind and place (3.42.0): mortals breach, other kinds are startled, Kindred and ghouls are calm
-        const o = kx().observersOf(myTok, { secret: "kindred", exclude: [actor.id, vesselActor?.id].filter(Boolean) });
+        const o = kx().observersOf(myTok, { secret: "kindred", exclude: [actor.id, vesselActor?.isToken ? vesselActor.token?.id : vesselActor?.id].filter(Boolean) });
         const ws = o.breach;
         if (ws.length) {
             html += `<div class="vta-warn">Masquerade: ${ws.map(t => esc(t.name)).join(", ")} can see this.</div>`;
@@ -2525,7 +2528,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.42.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.42.2", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

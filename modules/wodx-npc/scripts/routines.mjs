@@ -119,7 +119,8 @@ export function build(ctx) {
   const routineOf = actor => flag(actor, "routine") ?? null;
   const whereOf = actor => flag(actor, "where") ?? null;
   const blocksFor = actor => R.blocksOf(routineOf(actor), profileFor(actor).template, yearNow());
-  const allActors = () => game.actors?.contents ?? [...(game.actors?.values?.() ?? [])];
+  // The hidden passer-by actors (0.27.0) keep no routine and join no household or faction
+  const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
   const domitorOf = actor => { const id = actor.flags?.["wodx-creation"]?.lineage?.domitor?.id; return id ? game.actors.get(id) : null; };
   const placeCtx = (actor, places, computed) => {
@@ -601,7 +602,8 @@ export function build(ctx) {
   async function onRegionEvent(system, event, trigger) {
     if ( !isActiveGM() || skipping() ) return;
     const doc = event?.data?.token, behavior = system.parent, region = behavior?.parent ?? event?.region;
-    if ( !doc || !region || behavior?.disabled ) return;
+    // Passers-by (0.27.0) set off no reactions
+    if ( !doc || !region || behavior?.disabled || doc.flags?.[MOD]?.passerby ) return;
     const k = `${region.id}:${doc.id}`;
     if ( trigger === "enter" ) entered.set(k, game.time.worldTime);
     if ( trigger === "leave" ) entered.delete(k);
@@ -816,7 +818,7 @@ export function build(ctx) {
   async function onTrigger(system, event) {
     if ( !isActiveGM() || skipping() ) return null;
     const doc = event?.data?.token, behavior = system.parent, region = behavior?.parent ?? event?.region;
-    if ( !doc || !region || behavior?.disabled ) return null;
+    if ( !doc || !region || behavior?.disabled || doc.flags?.[MOD]?.passerby ) return null;
     const actor = doc.actor;
     if ( !AR.triggerFires(system, {pc: !!actor?.hasPlayerOwner}) ) return null;
     const k = `${behavior.id ?? region.id}:${doc.id}`, t = Date.now();
@@ -1374,7 +1376,7 @@ export function build(ctx) {
   }
   /** A token's move ends after its animation: wait a moment, once per token. */
   function onTokenMoved(doc, changes) {
-    if ( !isActiveGM() || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return;
+    if ( !isActiveGM() || !("x" in (changes ?? {}) || "y" in (changes ?? {})) || doc?.flags?.[MOD]?.passerby ) return;
     clearTimeout(moveWait.get(doc.id));
     moveWait.set(doc.id, setTimeout(() => { moveWait.delete(doc.id); track(watchFoes(doc)).catch(e => console.error(`${MOD} | fight on sight`, e)); }, 900));
   }

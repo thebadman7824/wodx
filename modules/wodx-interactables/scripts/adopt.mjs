@@ -41,7 +41,7 @@ export async function planFor(scene, text) {
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf)}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 
@@ -69,7 +69,10 @@ export async function applyPlan(scene, p) {
   const rec = A.record(made, p, Date.now());
   // A second adoption on the same scene adds to the first, so one Undo takes back both
   const merged = prev ? {at: rec.at, made: Object.fromEntries(Object.keys(made).map(k => [k, [...(prev.made?.[k] ?? []), ...made[k]]])), walls: [...(prev.walls ?? []), ...rec.walls]} : rec;
-  await scene.update({[`flags.${MOD}.adopted`]: merged});
+  if ( prev?.placeSet ) merged.placeSet = true;
+  const up = {[`flags.${MOD}.adopted`]: merged};
+  if ( p.scenePlace?.kind ) { up["flags.wodx-npc.place.kind"] = p.scenePlace.kind; merged.placeSet = true; }
+  await scene.update(up);
   return merged;
 }
 
@@ -87,6 +90,7 @@ export async function undoAdoption(scene) {
     await doc.update({door: w.door, ...unsetKey(`flags.${MOD}`)});
     if ( w.flags ) await doc.update({[`flags.${MOD}`]: w.flags});
   }
+  if ( rec.placeSet ) await scene.update(unsetKey("flags.wodx-npc.place.kind"));
   await scene.update(unsetKey(`flags.${MOD}.adopted`));
   return true;
 }

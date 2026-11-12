@@ -1139,6 +1139,35 @@ Reverse: make breaksPeace return false.
 Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
 
 Reverse: set witnessAsk off; drop the knows button.
+## B970. Passers-by: who walks the street, by year and hour (2026-11-11)
+Ben asked whether WoDX can spawn simple NPCs for flavour, such as a crowd a vampire can hunt in. WoDX NPC 0.27.0 fills a scene the Storyteller turns on with people of the year: six ages of the street (medieval to 1499, early modern, industrial from 1800, twentieth century from 1914, modern from 1980, the Future Darkness from 2025), each with its own kinds of people and clothes. Crowd sizes by part of the day are house readings: medieval nights are nearly empty under the curfew, gaslight and then late bars fill the night more and more, and the Future Darkness street is a little thinner and warier than the modern one. The scene's hunting ground (V20 p. 334, through WoDX Storyteller) sets how busy it is, from slums to patrolled streets.
+
+Reverse: CROWD, PEOPLE and AREA_CROWD in wodx-npc/scripts/passerby-rules.mjs.
+
+## B971. Passers-by are mortal vessels and witnesses (2026-11-11)
+Each passer-by is an ordinary adult mortal of ten blood points, so WoDX Actions' Feed works on them as on anyone. Some are drunk or high after dark, and some carry the outbreak when one is on in town, using the vessel states Feed already reads (V20 pp. 295, 301-302). No children are among them. Everyone else in the crowd in sight counts as a Masquerade witness.
+
+Reverse: makePasserby in passerby-rules.mjs.
+
+## B972. Simple routines (2026-11-11)
+In from one edge, out by another; three in ten stop a while inside first. People stop when a character comes within about a square and a half. The Storyteller can tell one to follow a character (into an alley, say), hold one in place, let one go, or keep one for good as an NPC of its own. When a fight starts or the Masquerade is breached, everyone runs for the nearest edge, except someone already fed on. Passers-by never start fights and set off no WoDX Reaction or Trigger regions, effect areas or Interactables noise.
+
+Reverse: tick and scatter in wodx-npc/scripts/passersby.mjs.
+
+## B973. Animals (Ben 2026-11-11)
+Animals join the crowd: strays, cats, rats and pigeons in every age, plus pigs, goats, geese, cattle and horses where the age had them in town (pigs to the 1800s slums, cab horses to 1913, dray horses to 1960). Their blood follows the vessel table WoDX Actions uses: rat a quarter point, bird a half, cat 1, dog 2, cow or horse 5. Pigs and cattle count as a cow and a goat as a dog (house reading). Towns had more animals before the motor car, so the share of animals to people falls from 0.6 in the Middle Ages to 0.15 in the modern age. Draining an animal is not the killing of a person, and an animal is never a Masquerade witness.
+
+Reverse: ANIMALS and ANIMAL_SHARE in passerby-rules.mjs; pbAnimal in wodx-actions/scripts/main.js.
+
+## B974. Kinds of place (Ben 2026-11-11)
+The crowd reads the scene's own place tag (flags.wodx-npc.place.kind, PLACE_KINDS in routine-rules.mjs, the tag Interactables, Atmosphere and the Masquerade read), which gains four kinds: back alley or courtyard, farmyard or village, docks or riverside, park or churchyard. Each kind draws its own crowd: a market is a busy square, a castle or court is a great house indoors, woods and caerns a country road, a sewer mostly rats and the desperate, a hospital its nuns, staff and patients, a station a busy crowd with pigeons, and a haven draws nobody. Each sets how busy it is and which people and animals are found there. No livestock or poultry in a back alley; only cats and the odd rat inside a palace or church; servants and gentry, not beggars or lamplighters, in a great house; livestock thick in a farmyard.
+
+Reverse: PLACES in passerby-rules.mjs. Elysium draws a thin, well-dressed crowd of guests and servants; a chantry draws nobody, like a haven.
+
+## B975. Light on the world and on Live (2026-11-11)
+Every passer-by is an unlinked token of one of two hidden actors (a person, an animal) in the folder "WoDX passers-by", so no actor is made per passer-by. They live only on the scene the Storyteller is viewing; they are deleted when they walk off, after fifteen minutes, when the scene is turned off or left, and at startup. One fed on, hurt or led away is kept until let go, and startup clears even those after a day. At most 8 a scene by default (16 at most), one batched update every 5 seconds, nothing while paused, during a time skip or (except those running away) during a fight. Every scene starts off, so nothing changes on Live until the Storyteller turns a scene on.
+
+Reverse: settings passersby, passersbyMax, passersbyEvery.
 
 ## B947. Recipes for food, drink, medicine and drugs (2026-11-12)
 Ben asked for recipes and crafting for consumables after the way Cataclysm: Dark Days Ahead runs them, and approved the design (doc "Recipes and crafting for food, drink, medicine and drugs") with all four recommendations. Mechanics only, WoDX's own methods and words.
@@ -1202,6 +1231,72 @@ A member's standing inside a polity is kept on the faction (0 to 5) and starts f
 
 Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
 
+## B1200. The body plan (2026-11-12)
+
+Ben approved a light body plan, modelled as a small tree of parts after Caves of Qud's bodies (review desk, 12 November 2026). WoDX Combat body-rules.js keeps the trees (person, four-legged beast, winged, bird, serpent, fish, spider, winged person, formless) and the shapes that pick them. Gear slots, natural weapons, moves and senses come from the parts. Parts have no health of their own; the health track stays as the books have it. House rule in its details.
+
+Reverse: remove body.js and body-rules.js and the calls to them in main.js and movement.js.
+
+## B1201. Which shape a body is in (2026-11-12)
+
+The Storyteller's flag wodx-combat.shape wins, then a shape power's effect (Shape of the Beast is a wolf unless the effect names a bat or a rat; Mist Form, Earth Meld, Horrid Form, Chiropteran Marauder, a Shape keyword effect), then a shapechanger's form. Only shape powers count, so a Gift that names a wolf changes nothing. Corax, Camazotz, Nagah, Rokea and Ananasi take their animal's tree in Lupus and Hispo. House rule.
+
+Reverse: shapeOf in body-rules.js.
+
+## B1202. Claws need growing (2026-11-12)
+
+Protean 2 no longer means claws at all times: picking "Claws (grow them)" in the attack dialog spends 1 blood and makes a Feral Claws effect for the scene (V20 p. 199; VtDA20 p. 240). Vicissitude needs bone talons on the lasting changes record (Bonecraft, V20 p. 242). The automatic attack never grows claws, since that costs blood.
+
+Reverse: the claw branch of weaponList and attackUsable in wodx-combat main.js.
+
+## B1203. Hit locations (2026-11-12)
+
+Ben chose hit locations on every attack. A hit lands on a part: the one aimed at (Aim at, which sets the book's targeting size: limbs +1, head and hands +2, eyes and heart +3, V20 p. 274; VtDA20 p. 346), a random part of the size picked, or at random by weight (body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5). The card says where it landed. Setting "Hit locations", on by default. House rule.
+
+Reverse: turn the setting off, or change HIT_WEIGHTS.
+
+## B1204. Maiming is offered, never automatic (2026-11-12)
+
+A hit of 3 or more lethal or aggravated levels after soak on a limb, hand, eye, wing, tail or fin whispers the Storyteller a card: crippled until those levels heal (+2 difficulty on actions with it, VtDA20 p. 348) or lost for good, which adds a lasting change in WoDX Storyteller. Three matches the stake (V20 Dark Ages p. 347). House rule for the threshold.
+
+Reverse: maimOffer in body-rules.js.
+
+## B1205. Gear in a shape that cannot use it (2026-11-12)
+
+When the shape changes, weapons in hand come off in a shape with no hands, and armor in a shape that cannot wear it (a vampire's shapes carry it along instead, B1210) (Crinos, Hispo, Lupus and the animal shapes, Mist, Earth Meld, the Zulo and Chiropteran shapes). Dedicated items stay (W20 p. 211; DA:W p. 149). W20 p. 286 has undedicated clothes shred in the bigger forms; no book says what Shape of the Beast or Earth Meld does to gear, so for those this is a house rule. An Undo card puts everything back. Setting "Gear comes off", on by default.
+
+Reverse: turn the setting off.
+
+## B1206. Features on lasting changes (2026-11-12)
+
+A lasting change in WoDX Storyteller can say what it does: bone talons, spikes or armor, an extra pair of arms, wings, gills, a tail, fangs, changed looks, a false limb, or a part lost. The Storyteller can still write anything as free text. Numbers from the books where they exist (talons Strength + 1 lethal, V20 p. 242; bone plates +1 soak each for 1 Dexterity or 1 health level, VtDA20 p. 268); the rest the Storyteller sets.
+
+Reverse: drop feature and lostPart in normChange.
+
+## B1207. What a lost part stops (2026-11-12)
+
+A lost leg halves speed (W20 p. 260); with no legs, only crawling (house rule). A lost eye: +3 difficulty on depth, shooting and throwing, +2 on sight Perception (W20 p. 259). A lost hand holds nothing. Lost wings ground a flier. Regrowth follows each line's book (Kindred VtDA20 p. 340, ghouls V20 p. 501, Garou W20 p. 259) and is done by removing the change.
+
+Reverse: LOSS_TEXT and the mobility count in body-rules.js.
+
+## B1208. Garou teeth and claws by form, W20 (2026-11-12)
+
+The book check moved three W20 forms: Glabro bites at difficulty 8 for Strength - 1 lethal and claws for Strength + 1 bashing (W20 p. 296); Crinos bites at difficulty 5. W20 gives Lupus claws as lethal in the form text (p. 287) and bashing in the maneuver list (p. 296): the form text wins. Dark Ages: Werewolf is unchanged.
+
+Reverse: naturalWeapons in wodx-actions garou.js.
+
+## B1209. The Body tab (2026-11-12)
+
+Every WoDX sheet gets a Body tab after Ties: the shape and why, the parts as a tree with what each hand holds and the natural weapons, added and lost parts, what the body can do, where blows land, and the lasting changes. The Storyteller can set the shape by hand and add a lasting change from it. Players see only the changes that show.
+
+Reverse: the Body tab block in wodx-sheets extras.mjs.
+
+## B1210. What goes along into a vampire's shape (2026-11-12)
+
+Ben approved the light helper's recommendation after the book check found no rule: in Shape of the Beast, Mist Form and Earth Meld, worn clothes, armor, jewellery and what is in pockets and pouches go with the vampire and come back with the change back; held things, and anything bigger than a small pack, drop. Armor that goes along gives no soak in the shape. WoDX does not know item sizes, so a large pack is left for the Storyteller to drop by hand.
+
+Reverse: carries in SHAPES (body-rules.js) and the shaped check in armor() (wodx-combat main.js).
+
 ## B1110. Garou, Changeling and Wraith polities (2026-11-12)
 
 Politics inside factions now covers three more lines. A Garou faction of three or more keeps a sept: a sept leader, a Truthcatcher who judges, a Warder and Master of the Challenge won or kept by challenge, the rest appointed; Rank from the sheet (system.renown.rank), tribes as blocs, the Litany as law (W20 pdf 52-53, 253-254). A Fae faction keeps the court of its age: a noble court before the Shattering (to 1349), a commoner freehold whose keeper is chosen by backing from 1350 to 1968, and a noble fief again from the Resurgence of 1969, with Title from the sheet, houses (or courts, for commoners) as blocs and the Escheat as law (C20 pdf 51-52, 58-59, 65-66, 74-76, 169-172). A Wraith necropolis (Anacreon, Regents, a Marshal, Centurions, legions as blocs; Wraith 20th pdf 126-136) is never a default, because "Spirits or the dead" also covers Umbral spirits; the Storyteller picks it. A sect picked out of its years runs as the polity of its kind and age.
@@ -1240,6 +1335,31 @@ After a study of how Cataclysm DDA links its items (Ben approved all seven recom
 - Later: parts fitted to guns (scopes, silencers), only where a V20 book gives a rule, after a PC book check. Taking things apart goes to the recipes work.
 
 Reverse: drop the whatIsMissing check and supply buttons in use.mjs; the kits through RENAMED in goods.mjs.
+
+## B1120. Signature features live in one table per line (2026-11-12)
+Ben approved the Splat Features Desk (https://claude.ai/artifact/Wy4A2X3qjJ88t5QTddhsk5). Each clan, tribe, kith and the like gets one feature of its own. The table is modules/wodx-chronicle/data/signatures.mjs, the pure rules scripts/signature-rules.mjs, the Foundry side scripts/signatures.mjs. Each line gets its own world setting, off by default. Vampire comes first: Toreador, Followers of Set, Brujah and Gangrel in Chronicle 0.25.0.
+
+Reverse: turn off "Clan features (Vampire)".
+
+## B1121. A Muse's Obsession (2026-11-12)
+V20 pdf 75 gives the Toreador a scene-long trance when beauty strikes. House rule: a Muse they pick keeps a pull between scenes. Obsession rises a point for each week unseen, to 5, and adds to the difficulty of the next roll to resist beauty. Seeing the Muse lowers it by 1, owning it or making something for it by 2. Harm to a Muse who is a person raises it by 2 and calls for a frenzy check.
+
+Reverse: museTick and museSeen in signature-rules.mjs.
+
+## B1122. The Corruption ledger (2026-11-12)
+The Followers of Set work on their victims through the acts WoDX already has (V20 pdf 61, Path of Typhon pdf 346). A won charm, persuasion, deceit, fast-talk or bribe moves the victim's track up 1 and a botch moves it down 1; a gift that feeds the victim's named vice moves it up 1. The track adds to the difficulty of the victim's own resistance. At 3 the victim does small wrongs for the Setite; at 5 the victim is theirs, as a retainer or ghoul bought with experience, or as leverage. A move made on a player's client goes to the approval queue.
+
+Reverse: CORRUPTING_ACTS, stepFromTrade.
+
+## B1123. Brujah causes and the Rant (2026-11-12)
+Ben's note: a list to pick from, the player's own cause allowed with the Storyteller's approval, and NPCs draw from the list. Causes carry the year they can first be held. A temper kept against the Cause (the clan's +2 frenzy difficulty, V20 pdf 59) gives a Rant point, and three make a Rant, a gathering that can turn a crowd into a mob.
+
+Reverse: CAUSES, RANT_POINTS.
+
+## B1124. Gangrel marks heal after a month (2026-11-12)
+Each frenzy leaves an animal mark (V20 pdf 63). Ben's note: not permanent, a month and then it heals as a wound would, and worth having. Each mark has an edge and a cost on rolls. Claws from a mark do Strength + 1 lethal, a house rule. Wild animals treat a Gangrel as one of their own, which comes in the next step.
+
+Reverse: MARK_LASTS, MARKS.
 
 ## B953. Taking things apart for parts (2026-11-12)
 Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.

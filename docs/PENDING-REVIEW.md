@@ -296,6 +296,13 @@ Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact
 |---|---|---|---|
 | 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
 
+## Approved by Ben, 12 November 2026, 02:24 UTC (body plan book check gaps)
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | Gear in Shape of the Beast, Mist Form and Earth Meld (no book says) | Worn clothes, armor, jewellery and pocket or pouch contents go along and come back; held things and anything bigger than a small pack drop; no soak from armor in the shape (B1210) | carries in SHAPES, the shaped check in armor() |
+| 2026-11-12 | W20 Lupus claws: lethal (form text, p. 287) or bashing (maneuver, p. 296)? | Lethal (B1208) | lupus claw in garou.js naturalWeapons |
+
 ## Approved by Ben, 12 November 2026, 01:33 UTC (faction politics desk)
 
 Ben approved the build (all four PRs, Kindred first) and every recommendation on the review desk in the design doc (https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp).
@@ -547,10 +554,30 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | Blood in animals V20 does not list (NPC 0.24.1)? | Cattle 5 (between the large horse at 4 and the camel at 6), sheep and goats 3 (as a small pig), geese and hens 1/2 (as a large bird). The rest follow the V20 core animals appendix, pdf 396-399 (printed 388-391): horse 4, pigs and boar 4, crows 1/2. | Change the numbers in animal-rules.mjs. |
 | 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
 | 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |
+| 2026-11-11 | Passers-by: how many people walk the street at each hour, in each age (B970)? | House figures: medieval nights nearly empty under the curfew, gaslight and late bars filling the night more and more; Future Darkness streets a little thinner and warier than modern. Slums busier, patrolled streets quieter. | Change CROWD and AREA_CROWD in wodx-npc/scripts/passerby-rules.mjs. |
+| 2026-11-11 | Passers-by: children among them? (B971) | None: every passer-by is an adult of ten blood points. | Add a child kind to PEOPLE with vessel "child" (5). |
+| 2026-11-11 | Passers-by: how much blood is in a pig, a goat, a goose? (B973) | Pigs and cattle count as a cow or horse (5), a goat as a dog (2), geese as birds (a half). The book check should confirm the vessel table's page in V20. | VESSEL_POOL and ANIMALS in passerby-rules.mjs. |
+| 2026-11-11 | Passers-by: what does each kind of place draw (B974)? | Back alleys: no livestock or poultry. Palace, church: only cats and the odd rat, and in a great house servants and gentry rather than beggars. Farmyards full of livestock. A haven draws nobody. Map files now tag the whole scene (farmstead and village: yard; town: street; castle site: castle) and a town's back streets are alleys. | PLACES and CROWD_OF_KIND in passerby-rules.mjs; the "place" key in tools/mapgen sidecars. |
+| 2026-11-11 | Passers-by: what can one say? | Only stock News, Work and Directions lines: no rumours, no Storyteller sheet, no household or faction, and no memory of a visit, since one hidden actor stands for them all. "Keep for good" makes one a real NPC who can have all of that. | isPasserby in wodx-npc/scripts/talk.mjs. |
+| 2026-11-11 | Passers-by: when do they go? (B975) | When they walk off, after fifteen minutes, when the scene is off or no longer the one the Storyteller views, and at startup. Fed on, hurt, led or held: kept until let go, cleared at startup after a day. | KEPT_FOR and shouldRemove in passerby-rules.mjs. |
 | 2026-11-12 | Goals, times and dots for 60 recipes (B947) | House figures by family: cooking 2 successes an hour, brewing 3 a day, distilling 4 a day, laboratory 6 to 10 a day; dots 1 to 5 by difficulty of the work. Book check of Crafts, Science, Medicine, Herbalism and Hearth Wisdom ranges queued for the PC. | FAMILIES and METHODS in wodx-library/data/recipes.mjs |
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
 | 2026-11-12 | Kindred cooking by taste (B951) | Ben 2026-11-12: vampires can taste, they just cannot eat. No penalty. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
+
+## Approved by Ben, 12 November 2026, 02:42 UTC (Splat Features Desk)
+
+Ben picked "Build as written" on every item of the Splat Features Desk (https://claude.ai/artifact/Wy4A2X3qjJ88t5QTddhsk5), with notes on five. Each feature is built line by line, Vampire first.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Where the features live | One table per line, data/signatures.mjs in WoDX Chronicle, read by signature-rules.mjs (B1120) | None |
+| 2026-11-12 | Who sees the new tracks | The owner sees their own; a victim's Corruption is the Storyteller's only | open() in signatures.mjs |
+| 2026-11-12 | Switching it on | One world setting per line, off by default; Vampire is "Clan features (Vampire)" | Turn the setting off |
+| 2026-11-12 | A Toreador's Obsession between visits (B1121) | A point a week unseen, to 5; it adds to the difficulty of resisting beauty; seeing the Muse -1, owning or making for it -2; harm to a Muse who is a person +2 and a frenzy check. House rule: the books give only the scene-long trance | WEEK and museSeen in signature-rules.mjs |
+| 2026-11-12 | What moves a Setite victim's Corruption (B1122) | A won charm, persuasion, deceit, fast-talk or bribe +1, a botch -1, a gift that feeds the named vice +1; at 3 small wrongs, at 5 the victim is owned. Moves from a player's client wait in the approval queue | CORRUPTING_ACTS and stepFromTrade |
+| 2026-11-12 | Brujah causes (Ben's note) | A list to pick from by era, or the player's own with the Storyteller's approval; NPCs draw from the same list; three kept tempers make a Rant (B1123) | CAUSES in data/signatures.mjs |
+| 2026-11-12 | Gangrel marks (Ben's note) | Each frenzy leaves a mark with an edge and a cost; it heals after a month. Claws from a mark do Strength + 1 lethal, a house rule (B1124) | MARK_LASTS and MARKS |
 
 ## Waiting for review
 
@@ -560,6 +587,11 @@ Ben approved every entry that was waiting for review at 01:36 UTC on 12 November
 | 2026-11-12 | How often a court meets | Elysium and the esbat every second faction turn, the feudal court and the gangs every fourth (B1104) | POLITIES[...].gathering.every |
 | 2026-11-12 | What a challenge for a seat rolls between NPCs | Strength + Dexterity, opposed, difficulty 6; the loser drops a dot of standing (B1103) | innerTurn "bid" branch |
 | 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |
+| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
+| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
+| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
+| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
+| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
 | 2026-11-12 | Where a good no longer names its container, what does it become (B1012)? | The thing alone: "a fiddle", "an arrow" (stacks 3-20), "a shotgun shell" (2-25), "a consecrated host" (1-12), "a blank CD", "a cold pizza slice", "a set of lockpicks", "a gas mask", "a microscope", "lager" (from the six-pack). A quiver, gun belt or pyx is no longer part of any good. "a passport in a plastic sleeve" stays, since a plain "a passport" is already a different good. | Old names in RENAMED in goods.mjs. |
 | 2026-11-12 | What needs what when a thing is used (B1014)? | Smoking: a light, plus a pipe for loose tobacco, opium, hashish, marijuana and crack. Heroin and morphine: a syringe (laudanum and pills need nothing). Candles, oil lamps and torches: a flame. Writing, drawing and marking on paper: a pen, pencil, chalk or stylus. A quill: ink. Never a hard stop: the Use window warns, and a player who goes ahead is reported to the Storyteller. | needsOf in link-rules.mjs. |
 | 2026-11-12 | Which things are full or empty (B1014)? | Oil lamps and the storm lantern (lamp oil, kerosene, camphine), the petrol lighter (petrol, gasoline, butane), the disposable lighter (cannot be refilled), the fountain pen (ink), the needle case (thread), flashlights, headlamps and LED lanterns (batteries), phones, laptops, tablets, cameras and smart glasses (a power bank, solar charger, power cell or car battery, not spent). | SUPPLIES in link-rules.mjs. |
