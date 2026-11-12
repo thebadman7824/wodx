@@ -251,7 +251,9 @@ export function knownSides(watcher = {}, other = {}) {
   const met = !!watcher.metThem;
   const line = sides.find(s => s.startsWith("line:"))?.slice(5);
   const lineKnown = !!other.obvious || (line && shown.has(line));
-  return sides.filter(s => {
+  // NPC 0.32.0: a side worn openly shows whether or not it is the wearer's own (a borrowed habit reads as the Church)
+  const worn = [...open].filter(s => !sides.includes(s));
+  return [...worn, ...sides.filter(s => {
     if ( open.has(s) ) return true;
     const k = s.slice(0, s.indexOf(":"));
     if ( k === "line" || k === "variant" ) return lineKnown || (k === "line" && s === "line:mortal" && met);
@@ -259,7 +261,7 @@ export function knownSides(watcher = {}, other = {}) {
     if ( OPEN_KEYS.has(k) ) return met || lineKnown;
     // clan, sect, tribe and the rest: what the other is among its own kind
     return met || (lineKnown && (!!other.obvious || (!!line && lc(watcher.line) === line)));
-  });
+  })];
 }
 
 /* ------------------------------------------------------------------ */

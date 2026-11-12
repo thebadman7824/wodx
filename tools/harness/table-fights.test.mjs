@@ -254,7 +254,7 @@ test("untagged powers: every shipped power has a table tag, and every aimed wind
   assert.deepEqual(bare, ["hunter.js"], "only the Blessing window, whose Blessings are the actor's own items, reads the words alone");
 });
 
-/* ---- testbed fixes (Actions 3.44.1, Combat 3.15.1) ---- */
+/* ---- testbed fixes (Actions 3.45.1, Combat 3.15.1) ---- */
 
 test("the fight's start is kept as pairs, so an actor id's dot is not split; the odds box goes beside its field", async () => {
   const AA = await import(new URL("../../modules/wodx-combat/scripts/aftermath.js", import.meta.url));

@@ -304,10 +304,14 @@ export function voiceFor({voice = null, factions = [], household = null, year = 
 }
 
 /** What a mortal notices first about a character, from "Only when" tests (check(text) -> true or false). */
-export const NOTICE_ORDER = ["frenzy", "wounded", "kindred", "ghoul", "lupine", "mage", "fae", "wraith", "hunter", "demon", "mummy"];
+export const NOTICE_ORDER = ["frenzy", "bloody", "wounded", "kindred", "ghoul", "lupine", "mage", "fae", "wraith", "hunter", "demon", "mummy", "seen", "strange", "fine", "poor"];
+/** The "Only when" test each notice reads (NPC 0.32.0 adds the look's: blood, a failed disguise, strange or rich or poor dress). */
+export const NOTICE_TEST = {frenzy: "frenzy", wounded: "wounded", bloody: "bloody", seen: "seen through", strange: "out of time", fine: "dressed fine", poor: "dressed poor"};
+/** Notices said every time rather than now and then. */
+export const NOTICE_ALWAYS = new Set(["frenzy", "wounded", "bloody", "seen"]);
 export function noticeFor(check) {
   if ( typeof check !== "function" ) return null;
-  for ( const k of NOTICE_ORDER ) { try { if ( check(k === "frenzy" || k === "wounded" ? k : `kind ${k}`) ) return k; } catch (e) { /* a test it cannot read */ } }
+  for ( const k of NOTICE_ORDER ) { try { if ( check(NOTICE_TEST[k] ?? `kind ${k}`) ) return k; } catch (e) { /* a test it cannot read */ } }
   return null;
 }
 
