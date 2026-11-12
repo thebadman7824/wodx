@@ -192,6 +192,67 @@ export async function run() {
         && typeof game.actors.get(kid.id).flags?.[MOD]?.talked?.[actors[1].id] === "number",
         {first: first.menu?.greet, second: second.menu?.greet, bye: bye.said, trade, cry});
     });
+    await step("talk generator (NPC 0.45.0): stock lines from the grammar, children keep their own, rumours carried, off as before", async () => {
+      const L = talk().lines;
+      const gen = await Actor.create({name: "WoDX gate: Talk generated", type: "Mortal"});
+      const kid2 = await Actor.create({name: "WoDX gate: Talk generated child", type: "Mortal", flags: {[MOD]: {behavior: {voice: "child"}}}});
+      actors.push(gen, kid2);
+      await scene.createEmbeddedDocuments("Token", [{name: "gen", actorId: gen.id, x: G * 8, y: G * 6}, {name: "kid2", actorId: kid2.id, x: G * 8, y: G * 4}]);
+      const gTok = scene.tokens.find(t => t.actorId === gen.id), cTok = scene.tokens.find(t => t.actorId === kid2.id);
+      const greq = {sceneId: scene.id, npcTokenId: gTok.id, meTokenId: meTok.id}, creq = {sceneId: scene.id, npcTokenId: cTok.id, meTokenId: meTok.id};
+      const stockBefore = game.settings.get(MOD, "stockTalk"), genBefore = game.settings.get(MOD, "talkGrammar");
+      await game.settings.set(MOD, "stockTalk", true);
+      await game.settings.set(MOD, "talkGrammar", true);
+      const said = [];
+      const m = await talk().serve("menu", greq, asUser);
+      said.push(m.menu?.greet ?? "");
+      for ( const topic of ["work", "news", "directions", "work", "news", "directions", "work", "news"] ) said.push((await talk().serve("ask", {...greq, topic}, asUser)).said ?? "");
+      const k = await talk().serve("menu", creq, asUser);
+      const st = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
+      let rum = null, r = null;
+      if ( st?.rumours?.start ) {
+        rum = await st.rumours.start({text: "WoDX gate rumour: the bridge toll is lifted.", tellers: [gen.id]});
+        r = await talk().serve("ask", {...greq, topic: "rumours"}, asUser);
+      }
+      await game.settings.set(MOD, "talkGrammar", false);
+      const off = await talk().serve("ask", {...greq, topic: "work"}, asUser);
+      const S0 = talk().stockLines ?? {}, pool = Object.values(S0.WORK ?? {}).flat().concat(Object.values(S0.NONE ?? {}).flat());
+      await game.settings.set(MOD, "talkGrammar", genBefore);
+      await game.settings.set(MOD, "stockTalk", stockBefore);
+      if ( rum ) await st.rumours.remove(rum.id);
+      const kidLines = Object.values(L.VOICES.child.greet).flat();
+      const clean = said.every(l => /^".+"/.test(l) && !/#\w|\{\w+\}/.test(l));
+      ok("talk generator (NPC 0.45.0): stock lines from the grammar, children keep their own, rumours carried, off as before",
+        clean && kidLines.some(l => (k.menu?.greet ?? "").startsWith(l)) && (!st || /bridge toll is lifted/.test(r?.said ?? ""))
+        && off.ok && (!pool.length || pool.includes(off.said)),
+        {said, kid: k.menu?.greet, rumour: r?.said, off: off.said});
+    });
+    await step("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet", async () => {
+      const gen = await Actor.create({name: "WoDX gate: Talk grammar", type: "Mortal"});
+      actors.push(gen);
+      await scene.createEmbeddedDocuments("Token", [{name: "gram", actorId: gen.id, x: G * 9, y: G * 6}]);
+      const gTok = scene.tokens.find(t => t.actorId === gen.id);
+      const greq = {sceneId: scene.id, npcTokenId: gTok.id, meTokenId: meTok.id};
+      const stockBefore = game.settings.get(MOD, "stockTalk"), genBefore = game.settings.get(MOD, "talkGrammar");
+      const hadJournal = !!game.journal.find(j => j.flags?.[MOD]?.talkGrammar);
+      await game.settings.set(MOD, "stockTalk", true);
+      await game.settings.set(MOD, "talkGrammar", true);
+      const j = await talk().openGrammar();
+      j?.sheet?.close?.();
+      const [pg] = await j.createEmbeddedDocuments("JournalEntryPage", [{name: "WoDX gate lines", type: "text", text: {content: "<p>work [boost: 9] =&gt; \"WoDX gate grammar line.\"</p>", format: 1}}]);
+      const problems = talk().loadGrammar();
+      const w = await talk().serve("ask", {...greq, topic: "work"}, asUser);
+      const msg = game.messages.contents.filter(m => m.flags?.[MOD]?.talk?.gen).at(-1);
+      await talk().keepLine(msg);
+      const kept = game.actors.get(gen.id)?.flags?.[MOD]?.behavior?.talk ?? "";
+      await pg.delete();
+      if ( !hadJournal ) await j.delete(); else talk().loadGrammar();
+      await game.settings.set(MOD, "talkGrammar", genBefore);
+      await game.settings.set(MOD, "stockTalk", stockBefore);
+      ok("talk grammar journal (NPC 0.45.0): a Storyteller line wins, Keep writes it to the talk sheet",
+        !problems.length && w.said === "\"WoDX gate grammar line.\"" && !!msg?.flags?.[MOD]?.talk?.gen && /\[work\] "WoDX gate grammar line\."/.test(kept),
+        {problems, said: w.said, kept});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
