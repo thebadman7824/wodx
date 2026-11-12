@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.29.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.40.3 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatepolitics.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four Kindred NPCs and deletes them, and puts back the factions record, the
  * faction settings, the Ledger, the approval queue and its chat cards.
@@ -58,7 +58,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, sv = game.modules.get("wodx-storyteller")?.version;
-      ok("1. WoDX NPC 0.29.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.29.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
+      ok("1. WoDX NPC 0.40.3+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.40.3") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
         && game.settings.settings.has(`${MOD}.factionPolitics`) && typeof FX().politicsInfo === "function", {v, sv});
     });
 
@@ -121,13 +121,13 @@ export async function run() {
     await step("7. other lines", async () => {
       const g = {kind: "garou", members: ["a", "b", "c"]}, fae = {kind: "fae", members: ["a", "b", "c"]};
       const keys = [PO().polityFor(g, 1300), PO().polityFor(fae, 1300), PO().polityFor(fae, 1500), PO().polityFor(fae, 1990), PO().polityFor({kind: "spirits", members: ["a", "b", "c"]}, 1600),
-        PO().polityFor({kind: "mages", members: ["a", "b", "c"]}, 1600), PO().polityFor({kind: "mages", name: "Iteration X", members: ["a", "b", "c"]}, 1990), PO().polityFor({kind: "hunters", members: ["a", "b", "c"]}, 2001)];
+        PO().polityFor({kind: "mages", members: ["a", "b", "c"]}, 1600), PO().polityFor({kind: "mages", name: "Iteration X", members: ["a", "b", "c"]}, 1990), PO().polityFor({kind: "hunters", members: ["a", "b", "c"]}, 2001), PO().polityFor({kind: "hunters", members: ["a", "b", "c"]}, 1240), PO().topOffice("inquisition")?.title];
       const before = game.messages.size;
       await FX().stageFight({op: "pol-fight", faction: "gateCourt", challenger: made[2].id, holder: made[0].id, office: "prince", title: "Prince", how: "a challenge"});
       await sleep(300);
       const card = game.messages.contents.at(-1);
       ok("7. a sept, the fae courts of each age, no default for spirits; a staged challenge with no tokens comes as a card",
-        JSON.stringify(keys) === JSON.stringify(["garou-sept", "fae-court", "commoner-freehold", "noble-fief", null, "tradition-chantry", "technocracy-construct", "imbued-cell"]) && game.messages.size > before && /challenges/.test(card?.content ?? ""), {keys});
+        JSON.stringify(keys) === JSON.stringify(["garou-sept", "fae-court", "commoner-freehold", "noble-fief", null, "tradition-chantry", "technocracy-construct", "imbued-cell", "inquisition", "Rector"]) && game.messages.size > before && /challenges/.test(card?.content ?? ""), {keys});
     });
 
     await step("8. politics off", async () => {
