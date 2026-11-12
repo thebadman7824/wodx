@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are house rules, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward. Two bridge eras cover the years no era book does: the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989). Their rules copy the era before; 'like' names the era whose content a module borrows where it has none of its own.",
+  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are house rules, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward. Two bridge eras cover the years no era book does: the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989). Their rules copy the era before; 'like' names the era whose content a module borrows where it has none of its own. The two prologues are split into seven eras; each carries 'group' (living-gods or classical), and 'legacy' maps the old ids to the era a saved setting now opens.",
   "profiles": [
     {
       "id": "dark-ages",
-      "name": "Dark Ages",
+      "name": "The Dark Medieval",
       "start": 1197,
       "end": 1346,
       "basis": "V20 Dark Ages, Dark Ages: Werewolf, Mage: The Dark Ages, Dark Ages: Fae, Dark Ages: Inquisitor",
@@ -27,7 +27,7 @@
     },
     {
       "id": "long-night",
-      "name": "Plague and Long Night",
+      "name": "The Long Night",
       "start": 1347,
       "end": 1449,
       "basis": "Same as the Dark Ages",
@@ -50,7 +50,7 @@
     },
     {
       "id": "renaissance",
-      "name": "Renaissance",
+      "name": "The Burning Times",
       "start": 1450,
       "end": 1600,
       "basis": "V20 Dark Ages rules with period setting; The Sorcerers Crusade",
@@ -73,7 +73,7 @@
     },
     {
       "id": "age-of-reason",
-      "name": "Age of Reason",
+      "name": "The Age of Revolutions",
       "start": 1601,
       "end": 1836,
       "basis": "No era book: the Renaissance's rules carry on (V20 Dark Ages rules with period setting), with W20's Gauntlet",
@@ -99,7 +99,7 @@
     },
     {
       "id": "victorian",
-      "name": "Victorian",
+      "name": "The Age of Steam and Shadow",
       "start": 1837,
       "end": 1901,
       "basis": "V20 with Victorian Age setting, W20, M20, C20, Wraith 20th",
@@ -119,13 +119,13 @@
     },
     {
       "id": "wild-west",
-      "name": "Wild West",
+      "name": "The Wyld West",
       "start": 1860,
       "end": 1899,
       "regions": [
         "americas"
       ],
-      "basis": "V20 The Wild West, W20 Wyld West Expansion Pack",
+      "basis": "V20 The Wyld West, W20 Wyld West Expansion Pack",
       "switches": "Railroads thicken the Gauntlet; Storm Umbra; revolvers and rifles",
       "system": {
         "mortal": "victorian",
@@ -142,7 +142,7 @@
     },
     {
       "id": "great-war",
-      "name": "Great War",
+      "name": "The Iron Harvest",
       "start": 1914,
       "end": 1918,
       "basis": "Wraith: The Great War, plus each line's 20th book",
@@ -165,7 +165,7 @@
     },
     {
       "id": "mid-century",
-      "name": "Mid-century",
+      "name": "The Age of Ashes",
       "start": 1919,
       "end": 1989,
       "basis": "No era book: the Great War's rules carry on (each line's 20th book)",
@@ -189,7 +189,7 @@
     },
     {
       "id": "modern",
-      "name": "Modern",
+      "name": "The Final Nights",
       "start": 1990,
       "end": 2003,
       "basis": "Every 20th book; Hunter, Demon, Mummy, Kindred of the East, Orpheus in their basis editions",
@@ -209,7 +209,7 @@
     },
     {
       "id": "time-of-judgment",
-      "name": "Time of Judgment",
+      "name": "The Time of Judgment",
       "start": 2004,
       "end": 2004,
       "requiresRule": "timeOfJudgment",
@@ -231,7 +231,7 @@
     },
     {
       "id": "future-darkness",
-      "name": "Future Darkness",
+      "name": "The Age of Future Darkness",
       "start": 2010,
       "end": 2098,
       "requiresRule": "futureBranch",
@@ -280,32 +280,14 @@
       "kit": "future-darkness"
     },
     {
-      "id": "classical",
-      "name": "Classical (prologue)",
+      "id": "mythic-age",
+      "name": "Before the Flood (prologue)",
       "prologue": true,
-      "basis": "Upstream's Classical era",
-      "switches": "For prologues only: chosen with the era lock, never by date",
-      "system": {
-        "mortal": "classical",
-        "vampire": "classical",
-        "werewolf": "darkages",
-        "mage": "victorian"
-      },
-      "ourCall": [
-        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them"
-      ],
-      "rules": {
-        "firearms": false,
-        "gauntletChart": "dark-ages"
-      },
-      "kit": "dark-ages"
-    },
-    {
-      "id": "living-gods",
-      "name": "Living Gods (prologue)",
-      "prologue": true,
+      "group": "living-gods",
+      "start": -10000,
+      "end": -3101,
       "basis": "Upstream's Living Gods era",
-      "switches": "For prologues only: chosen with the era lock, never by date",
+      "switches": "For prologues only: chosen with the era lock, never by date. The first cities, Enoch and the Second City, the Impergium, the Concord and the War of Rage; farming spreads; no writing until the very end",
       "system": {
         "mortal": "livinggods",
         "vampire": "livinggods",
@@ -313,13 +295,168 @@
         "mage": "victorian"
       },
       "ourCall": [
-        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them"
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them",
+        "House rule: the Living Gods prologue split into smaller eras; the system set is the Living Gods one throughout"
       ],
       "rules": {
         "firearms": false,
         "gauntletChart": "dark-ages"
       },
-      "kit": "dark-ages"
+      "kit": "living-gods"
+    },
+    {
+      "id": "bronze-kings",
+      "name": "The Age of Living Gods (prologue)",
+      "prologue": true,
+      "group": "living-gods",
+      "start": -3100,
+      "end": -1178,
+      "basis": "Upstream's Living Gods era",
+      "switches": "For prologues only: chosen with the era lock, never by date. Narmer to the Bronze Age collapse: god-kings of Egypt and Sumer, Hammurabi, the Hittites, Mycenae; Set rules in Egypt, the Reborn are made",
+      "system": {
+        "mortal": "livinggods",
+        "vampire": "livinggods",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them",
+        "House rule: the Living Gods prologue split into smaller eras; the system set is the Living Gods one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "living-gods"
+    },
+    {
+      "id": "iron-dawn",
+      "name": "The Age of Cold Iron (prologue)",
+      "prologue": true,
+      "group": "living-gods",
+      "start": -1177,
+      "end": -801,
+      "basis": "Upstream's Living Gods era",
+      "switches": "For prologues only: chosen with the era lock, never by date. After the collapse: iron spreads, Assyria rises, Israel and the Phoenicians, the Zhou; the Sundering of the fae begins",
+      "system": {
+        "mortal": "livinggods",
+        "vampire": "livinggods",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them",
+        "House rule: the Living Gods prologue split into smaller eras; the system set is the Living Gods one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "living-gods"
+    },
+    {
+      "id": "greece-republic",
+      "name": "The Classical Age (prologue)",
+      "prologue": true,
+      "group": "classical",
+      "start": -800,
+      "end": -28,
+      "basis": "Upstream's Classical era",
+      "switches": "For prologues only: chosen with the era lock, never by date. Rome founded to Augustus: Greek cities, Persia, Alexander, Carthage and the Punic Wars, the Celtic Boii in Moravia",
+      "system": {
+        "mortal": "classical",
+        "vampire": "classical",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them",
+        "House rule: the Classical prologue split into smaller eras; the system set is the Classical one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "classical"
+    },
+    {
+      "id": "roman-empire",
+      "name": "The Age of Silk and Eagles (prologue)",
+      "prologue": true,
+      "group": "classical",
+      "start": -27,
+      "end": 476,
+      "basis": "Upstream's Classical era",
+      "switches": "For prologues only: chosen with the era lock, never by date. Augustus to the end of the western empire: the Marcomannic Wars on the Moravian frontier, Christ, Constantinople and the Dream, the First Great Maelstrom",
+      "system": {
+        "mortal": "classical",
+        "vampire": "classical",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them",
+        "House rule: the Classical prologue split into smaller eras; the system set is the Classical one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "classical"
+    },
+    {
+      "id": "migration-age",
+      "name": "The Age of Fallen Thrones (prologue)",
+      "prologue": true,
+      "group": "classical",
+      "start": 477,
+      "end": 907,
+      "basis": "Upstream's Classical era",
+      "switches": "For prologues only: chosen with the era lock, never by date. The migrations, the Slavs, the Avars, Samo, Islam, Charlemagne, the Order of Hermes, Great Moravia and its fall",
+      "system": {
+        "mortal": "classical",
+        "vampire": "classical",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them",
+        "House rule: the Classical prologue split into smaller eras; the system set is the Classical one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "classical"
+    },
+    {
+      "id": "premyslid-duchy",
+      "name": "The Age of Gathering Darkness (prologue)",
+      "prologue": true,
+      "group": "classical",
+      "start": 908,
+      "end": 1196,
+      "basis": "Upstream's Classical era",
+      "switches": "For prologues only: chosen with the era lock, never by date. Bohemia takes Moravia, the Holy Roman Empire, the Tremere, the crusades, the Margraviate of Moravia in 1182",
+      "system": {
+        "mortal": "classical",
+        "vampire": "classical",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them",
+        "House rule: the Classical prologue split into smaller eras; the system set is the Classical one throughout"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
+      "kit": "classical"
     }
-  ]
+  ],
+  "legacy": {
+    "living-gods": "bronze-kings",
+    "classical": "roman-empire"
+  }
 }

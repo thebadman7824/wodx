@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 /*
- * The world's regions (WoDX Chronicle 0.47.0, B2530 to B2534): every region is whole (a climate, a money and people
+ * The world's regions (WoDX Chronicle 0.48.0, B2530 to B2534): every region is whole (a climate, a money and people
  * WoDX can name), a scene abroad takes its region's sun, and the people generator names people the way their own
  * people do.
  */

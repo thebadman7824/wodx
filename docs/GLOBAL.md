@@ -12,7 +12,7 @@ Ben, 2026-11-12: the whole world is within WoDX's scope. No built, in-developmen
 
 ## The world's regions
 
-37 regions (Chronicle 0.47.0). Each has a typical city for the sun, a climate, a money region, and the peoples who live there by age. The Homeland setting picks the chronicle's own; a scene far from home can be given a region from the Clock (Where this scene stands), and the people generator and the weather follow it on that scene.
+37 regions (Chronicle 0.48.0). Each has a typical city for the sun, a climate, a money region, and the peoples who live there by age. The Homeland setting picks the chronicle's own; a scene far from home can be given a region from the Clock (Where this scene stands), and the people generator and the weather follow it on that scene.
 
 Europe: Moravia and Bohemia, the German lands, the British Isles, France, Iberia, Italy, the Low Countries, Scandinavia, Poland and the Baltic, Hungary with Transylvania and the Balkans, the Rus and Russia, Greece and Constantinople.
 The Middle East and inner Asia: Anatolia, the Levant and Mesopotamia, Egypt, Arabia, the Maghreb, Persia, the steppe and the Silk Road.

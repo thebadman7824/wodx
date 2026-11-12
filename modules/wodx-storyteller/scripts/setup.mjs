@@ -76,7 +76,7 @@ export async function runSetup(opts = {}) {
   const plan = S.plan(have());
   if ( opts.dry ) return {plan, profile, done: []};
   const done = [];
-  // The homeland (Chronicle 0.47.0) sets the part of the world, the people's names and, unless one was typed, the latitude
+  // The homeland (Chronicle 0.48.0) sets the part of the world, the people's names and, unless one was typed, the latitude
   const world = game.modules.get("wodx-chronicle")?.api?.world;
   const land = world?.regionOf?.(opts.homeland);
   if ( land && world.setHomeland && land.id !== world.homeland() ) {

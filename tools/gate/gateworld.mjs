@@ -1,5 +1,5 @@
 /**
- * The world's regions gate (Chronicle 0.47.0, Creation 0.16.0, Storyteller 0.53.0, Atmosphere 0.14.0), in
+ * The world's regions gate (Chronicle 0.48.0, Creation 0.16.0, Storyteller 0.54.0, Atmosphere 0.14.0), in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateworld.mjs?${Date.now()}`)).run()
  * Holds the world while it runs. Makes its own scene "WoDX gate: World" and deletes it after; puts the homeland,

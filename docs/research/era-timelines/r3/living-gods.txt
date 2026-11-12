@@ -333,3 +333,15 @@
 -850|W|cha|MO|Moravia|science,occult|Iron comes to the fae of Moravia|Deduced from the card above: iron reaches Moravia about 850 BCE, and the trods of the Moravian hills begin to close.
 -2500|M|dem|ME|Sumer|faith,occult|Sorcerers free the first Earthbound|Deduced: Earthbound says mortal sorcerers freed them thousands of years ago (pdf 13-18), and the oldest priest-kings are Sumer's, so the first are taken to wake about 2500 BCE.
 -1550|M|mum|AF|Egypt|faith,occult|The Shemsu-heru grow in number|Deduced: Mummy's sample Reborn are born about 2600 and 1273 BCE (Mummy 1st pdf 12, 69-77), so the Reborn are many by the New Kingdom.
+# Wider world (Ben 2026-11-12 23:00Z: WoDX is global, not only Moravia)
+-8000|H|mor|AM|Oaxaca|founding|Squash in Oaxaca|People in the Oaxaca valley of Mexico grow the first tamed squash.
+-7000|H|mor|AS|Jiahu|art,faith|The Jiahu flutes|Villagers on the Huai river carve flutes from crane bone and scratch signs on tortoise shells.
+-7000|H|mor|AS|New Guinea|founding|Gardens of Kuk|Highlanders in New Guinea drain swamps to grow taro and bananas, among the first farmers anywhere.
+-6000|H|mor|AF|Tassili n'Ajjer|art,weather|The green Sahara|The rains make the Sahara a grassland; herders paint cattle, giraffes and dancers on the rocks of Tassili.
+-5000|H|mor|AS|Hemudu|founding|Rice on the Yangtze|Hemudu villagers grow rice in wet fields and build their houses on stilts.
+-4000|H|mor|AM|Andes|founding|Llamas tamed|Herders in the high Andes tame the llama and the alpaca.
+-1650|H|mor|AM|Poverty Point|building|The rings of Poverty Point|Hunters of the lower Mississippi raise great curved earth ridges in what is now Louisiana.
+-1500|H|mor|AS|Bismarck Islands|sea,migration|The Lapita sail|Lapita potters from the Bismarck islands begin settling the open Pacific.
+-900|H|mor|AM|La Venta|building|La Venta|Olmec power moves to La Venta, with its clay pyramid and offerings of buried jade.
+-900|H|mor|AF|Lake Victoria|industry,migration|Iron by the great lakes|Smiths around Lake Victoria smelt iron, and Bantu-speaking farmers carry it south and west.
+-850|H|mor|AS|Tonga|sea,exploration|Tonga and Samoa settled|Lapita sailors reach Tonga and Samoa, the far edge of the Pacific for a thousand years.

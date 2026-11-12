@@ -7,7 +7,7 @@
  * on the Clock, routines and every timed rule keep home time (B1969). Before standard time zones the offset is the
  * difference in sun time; a whole number of hours is close enough at the table.
  *
- * 0.47.0: the flag may also name the region the scene stands in (world-rules.mjs). The scene then takes that
+ * 0.48.0: the flag may also name the region the scene stands in (world-rules.mjs). The scene then takes that
  * region's latitude unless one is typed, and the people generator and the weather follow the region there.
  */
 

@@ -327,7 +327,7 @@ Hooks.on("updateSetting", s => {
 });
 
 /**
- * A new homeland (0.47.0): the active GM's client sets what follows from it (the part of the world, the latitude and
+ * A new homeland (0.48.0): the active GM's client sets what follows from it (the part of the world, the latitude and
  * the people's culture) and says what it left alone. Money stays as it is: purses hold sums in the old money.
  */
 let homelandQuiet = false;

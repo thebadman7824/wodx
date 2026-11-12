@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2510
+Next free block: B2520
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -103,6 +103,7 @@ Next free block: B2510
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
+| B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3045,8 +3046,28 @@ WoDX Storyteller 0.52.2. The party is every present character on the asker's sce
 
 Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.
 
+## B2510. The two prologues become seven eras (2026-11-12, Ben picked seven real eras)
+WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Cold Iron (1177 to 801 BCE), The Classical Age (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
+
+Reverse: put the two old profiles back in data/eras.json and drop the seven.
+
+## B2511. Old prologue ids open the era that replaced them (2026-11-12)
+WoDX Chronicle 0.47.0. eras.json "legacy" maps living-gods to The Age of Living Gods and classical to The Age of Silk and Eagles; getProfile reads it, so a saved lock or active era still works. Modules that key on era ids list both the old and the new ids.
+
+Reverse: remove "legacy" and the fallback in getProfile.
+
+## B2512. Every era takes a World of Darkness name (2026-11-12, Ben asked; naming desk https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV)
+WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (2026-11-12 23:26Z; The Age of Cold Iron, The Age of Silk and Eagles and The Wyld West are new proposals waiting on Ben): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
+
+Reverse: put the old names back in data/eras.json and the kits.
+
+## B2513. The prologue looks at the whole world (2026-11-12, Ben: WoDX is global, not only Moravia)
+WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
+
+Reverse: restore the old primer lines in setup-rules.mjs.
+
 ## B2530. A global World of Darkness: the world's regions (2026-11-12, Ben's rule)
-Ben: the whole world is within WoDX's scope, and no work may look only at Moravia, Germany or Europe. WoDX Chronicle 0.47.0 adds world-rules.mjs: 37 regions on every inhabited continent, each with a typical city (latitude and longitude), a climate, a money region and the peoples who live there by age. A Homeland setting picks the chronicle's region and sets the latitude, the part of the world and the people's culture; money is left alone because purses hold sums in the old money. A scene's place flag may name a region; the scene then takes its latitude, and the people generator and the weather follow it there. The rule, the audit and what is still open are in docs/GLOBAL.md.
+Ben: the whole world is within WoDX's scope, and no work may look only at Moravia, Germany or Europe. WoDX Chronicle 0.48.0 adds world-rules.mjs: 37 regions on every inhabited continent, each with a typical city (latitude and longitude), a climate, a money region and the peoples who live there by age. A Homeland setting picks the chronicle's region and sets the latitude, the part of the world and the people's culture; money is left alone because purses hold sums in the old money. A scene's place flag may name a region; the scene then takes its latitude, and the people generator and the weather follow it there. The rule, the audit and what is still open are in docs/GLOBAL.md.
 
 Reverse: set the Homeland back to Moravia and clear the regions on scenes; the older settings (latitude, chronicle region, where the people come from) still work by themselves.
 
@@ -3056,7 +3077,7 @@ WoDX Creation 0.16.0, data/people-world.mjs: 38 peoples with given and family na
 Reverse: remove WORLD_PEOPLE_TABLES from PEOPLE_TABLES; edit any list in the WoDX tables folder in the world.
 
 ## B2532. Money of the world (2026-11-12, house figures)
-WoDX Storyteller 0.53.0: 20 more money regions (France, Italy, Spain and Portugal, the Low Countries, Scandinavia, Poland, Russia, the Ottoman lands, Egypt with the Levant and Arabia, Persia, India, China, Japan, West, East and Southern Africa, Spanish America, Brazil, Australia, the Pacific). Units and their worth follow the coins of each land; wages are rounded house figures on the same footing as the older four (a one-dot worker's month). Lands without coin reckon in goods (cacao beans and cotton cloaks in Mexico, cattle, hoes and beads in southern Africa, plain trade goods elsewhere). North America has no coin before 1607. The books give none of this.
+WoDX Storyteller 0.54.0: 20 more money regions (France, Italy, Spain and Portugal, the Low Countries, Scandinavia, Poland, Russia, the Ottoman lands, Egypt with the Levant and Arabia, Persia, India, China, Japan, West, East and Southern Africa, Spanish America, Brazil, Australia, the Pacific). Units and their worth follow the coins of each land; wages are rounded house figures on the same footing as the older four (a one-dot worker's month). Lands without coin reckon in goods (cacao beans and cotton cloaks in Mexico, cattle, hoes and beads in southern Africa, plain trade goods elsewhere). North America has no coin before 1607. The books give none of this.
 
 Reverse: change MONIES and COINS in money-rules.mjs.
 

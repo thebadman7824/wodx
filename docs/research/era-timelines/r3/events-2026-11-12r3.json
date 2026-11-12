@@ -7315,6 +7315,231 @@
 ]
 },
 {
+"id": "r3-living-gods-331",
+"era": "living-gods",
+"year": -8000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Oaxaca",
+"tags": [
+"founding"
+],
+"title": "Squash in Oaxaca",
+"text": "People in the Oaxaca valley of Mexico grow the first tamed squash.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-332",
+"era": "living-gods",
+"year": -7000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jiahu",
+"tags": [
+"art",
+"faith"
+],
+"title": "The Jiahu flutes",
+"text": "Villagers on the Huai river carve flutes from crane bone and scratch signs on tortoise shells.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-333",
+"era": "living-gods",
+"year": -7000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "New Guinea",
+"tags": [
+"founding"
+],
+"title": "Gardens of Kuk",
+"text": "Highlanders in New Guinea drain swamps to grow taro and bananas, among the first farmers anywhere.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-334",
+"era": "living-gods",
+"year": -6000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Tassili n'Ajjer",
+"tags": [
+"art",
+"weather"
+],
+"title": "The green Sahara",
+"text": "The rains make the Sahara a grassland; herders paint cattle, giraffes and dancers on the rocks of Tassili.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-335",
+"era": "living-gods",
+"year": -5000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hemudu",
+"tags": [
+"founding"
+],
+"title": "Rice on the Yangtze",
+"text": "Hemudu villagers grow rice in wet fields and build their houses on stilts.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-336",
+"era": "living-gods",
+"year": -4000,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Andes",
+"tags": [
+"founding"
+],
+"title": "Llamas tamed",
+"text": "Herders in the high Andes tame the llama and the alpaca.",
+"ref": "Real history",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-337",
+"era": "living-gods",
+"year": -1650,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Poverty Point",
+"tags": [
+"building"
+],
+"title": "The rings of Poverty Point",
+"text": "Hunters of the lower Mississippi raise great curved earth ridges in what is now Louisiana.",
+"ref": "Real history",
+"period": "bronze-kings",
+"links": []
+},
+{
+"id": "r3-living-gods-338",
+"era": "living-gods",
+"year": -1500,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bismarck Islands",
+"tags": [
+"sea",
+"migration"
+],
+"title": "The Lapita sail",
+"text": "Lapita potters from the Bismarck islands begin settling the open Pacific.",
+"ref": "Real history",
+"period": "bronze-kings",
+"links": []
+},
+{
+"id": "r3-living-gods-339",
+"era": "living-gods",
+"year": -900,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "La Venta",
+"tags": [
+"building"
+],
+"title": "La Venta",
+"text": "Olmec power moves to La Venta, with its clay pyramid and offerings of buried jade.",
+"ref": "Real history",
+"period": "iron-dawn",
+"links": []
+},
+{
+"id": "r3-living-gods-340",
+"era": "living-gods",
+"year": -900,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Lake Victoria",
+"tags": [
+"industry",
+"migration"
+],
+"title": "Iron by the great lakes",
+"text": "Smiths around Lake Victoria smelt iron, and Bantu-speaking farmers carry it south and west.",
+"ref": "Real history",
+"period": "iron-dawn",
+"links": []
+},
+{
+"id": "r3-living-gods-341",
+"era": "living-gods",
+"year": -850,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tonga",
+"tags": [
+"sea",
+"exploration"
+],
+"title": "Tonga and Samoa settled",
+"text": "Lapita sailors reach Tonga and Samoa, the far edge of the Pacific for a thousand years.",
+"ref": "Real history",
+"period": "iron-dawn",
+"links": []
+},
+{
 "id": "r3-classical-001",
 "era": "classical",
 "year": -776,
@@ -12282,7 +12507,7 @@
 "title": "The Lombards in Moravia",
 "text": "The Lombards move into the lands north of the Danube, Moravia among them.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12302,7 +12527,7 @@
 "title": "Theodoric in Italy",
 "text": "Theodoric the Ostrogoth kills Odoacer and rules Italy from Ravenna.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12323,7 +12548,7 @@
 "title": "Clovis baptised",
 "text": "Clovis, king of the Franks, is baptised.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12343,7 +12568,7 @@
 "title": "Justinian",
 "text": "Justinian becomes emperor in the east.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12364,7 +12589,7 @@
 "title": "Benedict's monastery",
 "text": "Benedict founds Monte Cassino and writes his Rule.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12385,7 +12610,7 @@
 "title": "The Nika riots",
 "text": "Circus factions riot and nearly topple Justinian; thousands die in the Hippodrome.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12406,7 +12631,7 @@
 "title": "Hagia Sophia",
 "text": "Justinian dedicates the great church of Hagia Sophia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12426,7 +12651,7 @@
 "title": "Justinian's plague",
 "text": "Bubonic plague reaches Constantinople and spreads across the Mediterranean.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12447,7 +12672,7 @@
 "title": "The Baali in the plague",
 "text": "Clanbook Baali places the clan in Egypt during the sixth-century plague (pdf 25).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -12480,7 +12705,7 @@
 "title": "The Slavs arrive",
 "text": "Slavic peoples settle Moravia and Bohemia, coming in through the Moravian Gate (Transylvania by Night pdf 11).",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12501,7 +12726,7 @@
 "title": "Tzimisce and the Slavs",
 "text": "The Tzimisce of the east watch the Slavs come through the Moravian Gate and take the new villages as their herds.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12522,7 +12747,7 @@
 "title": "The Lombards go to Italy",
 "text": "The Lombards leave Pannonia and Moravia for Italy; the Avars take the plain.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12542,7 +12767,7 @@
 "title": "The Avar khaganate",
 "text": "The Avars rule the Carpathian basin and the Slavs around it.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12562,7 +12787,7 @@
 "title": "Muhammad born",
 "text": "Muhammad is born at Mecca.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12582,7 +12807,7 @@
 "title": "Wars under the Visigoths",
 "text": "The Encyclopaedia places Cainite wars under the Visigothic kings.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "dab-iberian-ferals",
@@ -12616,7 +12841,7 @@
 "title": "Gregory the Great",
 "text": "Gregory I becomes pope and sends missions to the English.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -12650,7 +12875,7 @@
 "title": "The Last Devil King",
 "text": "The Encyclopaedia places the last of the Devil Kings here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -12676,7 +12901,7 @@
 "title": "The Tang",
 "text": "The Tang dynasty rules China from Chang'an, the largest city on earth.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12697,7 +12922,7 @@
 "title": "The Hijra",
 "text": "Muhammad leaves Mecca for Medina; the Muslim calendar begins.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12718,7 +12943,7 @@
 "title": "Samo's realm",
 "text": "The Frankish merchant Samo leads the Slavs in revolt against the Avars and becomes their king.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12738,7 +12963,7 @@
 "title": "Wogastisburg",
 "text": "Samo's Slavs defeat the Frankish king Dagobert at Wogastisburg.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12759,7 +12984,7 @@
 "title": "Muhammad dies",
 "text": "Muhammad dies; Abu Bakr becomes the first caliph.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12779,7 +13004,7 @@
 "title": "Yarmouk",
 "text": "The Arab armies beat the eastern Romans at Yarmouk and take Syria.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12800,7 +13025,7 @@
 "title": "Umar takes Jerusalem",
 "text": "The caliph Umar takes Jerusalem.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12821,7 +13046,7 @@
 "title": "The Arabs take Egypt",
 "text": "Arab armies conquer Egypt by 642.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -12851,7 +13076,7 @@
 "title": "The old stones reused",
 "text": "The Reborn watch the conquest and later see temple stones carried off for mosques (Mummy: The Resurrection pdf 9, 151).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -12884,7 +13109,7 @@
 "title": "The Taftani",
 "text": "The Taftani weathermages emerge, by M20's reckoning (pdf 126).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -12909,7 +13134,7 @@
 "title": "The Sasanians fall",
 "text": "The last Sasanian shah dies; Persia joins the caliphate.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12930,7 +13155,7 @@
 "title": "Samo dies",
 "text": "Samo dies after 35 years; his realm breaks up.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12950,7 +13175,7 @@
 "title": "The Umayyads",
 "text": "The Umayyad caliphs rule from Damascus.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12971,7 +13196,7 @@
 "title": "Greek fire",
 "text": "Constantinople burns an Arab fleet with Greek fire.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -12992,7 +13217,7 @@
 "title": "Karbala",
 "text": "Husayn, grandson of Muhammad, is killed at Karbala.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13012,7 +13237,7 @@
 "title": "The first fort at Mikulcice",
 "text": "Slavs build a fortified settlement on an island of the Morava at Mikulcice.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13033,7 +13258,7 @@
 "title": "The Muslims enter Spain",
 "text": "Tariq crosses to Spain and the Visigothic kingdom falls.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13053,7 +13278,7 @@
 "title": "The great siege",
 "text": "Constantinople holds through a year-long Arab siege.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13074,7 +13299,7 @@
 "title": "The Web of Faith",
 "text": "The Batini weave the Web of Faith (Sorcerers Crusade pdf 70).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -13100,7 +13325,7 @@
 "title": "Iconoclasm",
 "text": "Emperor Leo III begins the war on holy images.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13121,7 +13346,7 @@
 "title": "The Dream divided",
 "text": "Iconoclasm tears at the Dream; Michael's Toreador love the images the emperor smashes.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "ndan1-dracon-face",
@@ -13154,7 +13379,7 @@
 "title": "Tours",
 "text": "Charles Martel stops a Muslim army between Tours and Poitiers.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13174,7 +13399,7 @@
 "title": "The Abbasids",
 "text": "The Abbasids overthrow the Umayyads; Baghdad is founded in 762.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13195,7 +13420,7 @@
 "title": "Talas",
 "text": "Arab armies defeat the Tang at Talas; papermaking spreads west.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13216,7 +13441,7 @@
 "title": "The Heresy revealed at Ostia",
 "text": "The Cainite Heresy shows itself openly at Ostia (The Cainite Heresy pdf 31).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13236,7 +13461,7 @@
 "title": "The end of the Devil-King Age",
 "text": "M20 marks 756 as the end of the Devil-King Age (pdf 126).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13257,7 +13482,7 @@
 "title": "The Order of Hermes founded",
 "text": "On Midwinter Night Trianoma and Bonisagus bring twelve founders together at Durenmar; they accept the Code of Hermes and found the Order and its Houses (M20 pdf 126; Sorcerers Crusade pdf 70; Mage: The Dark Ages pdf 58; Order of Hermes Revised pdf 27).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13277,7 +13502,7 @@
 "title": "Charlemagne",
 "text": "Charlemagne becomes king of the Franks.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13298,7 +13523,7 @@
 "title": "Harun al-Rashid",
 "text": "Harun al-Rashid's Baghdad becomes a centre of learning and trade.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13318,7 +13543,7 @@
 "title": "Charlemagne against the Avars",
 "text": "The Franks attack the Avars along the Danube.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13339,7 +13564,7 @@
 "title": "Vikings at Lindisfarne",
 "text": "Norse raiders sack the monastery of Lindisfarne.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13360,7 +13585,7 @@
 "title": "The Avar Ring taken",
 "text": "The Franks take the Avars' great Ring and its treasure; the khaganate falls.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13381,7 +13606,7 @@
 "title": "Charlemagne crowned",
 "text": "Pope Leo III crowns Charlemagne emperor on Christmas Day.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -13414,7 +13639,7 @@
 "title": "The great schism and the Paladins",
 "text": "The Encyclopaedia places a mages' schism and the Paladins here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13434,7 +13659,7 @@
 "title": "Franks on the Moravian border",
 "text": "Frankish armies campaign against the Slavs of Bohemia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13454,7 +13679,7 @@
 "title": "The Moravians named",
 "text": "Envoys of the Moravians appear at the Frankish court for the first time.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13475,7 +13700,7 @@
 "title": "Mojmir I",
 "text": "Mojmir I unites the Moravian Slavs and drives Pribina out of Nitra; Great Moravia begins.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13496,7 +13721,7 @@
 "title": "Great Moravia in the night",
 "text": "Transylvania by Night says Great Moravia grew strong across Moravia, Bohemia and western Slovakia (pdf 11); the Tzimisce count its princes among their herds.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13516,7 +13741,7 @@
 "title": "Rastislav",
 "text": "Louis the German replaces Mojmir with his nephew Rastislav.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13537,7 +13762,7 @@
 "title": "Rastislav holds the Franks",
 "text": "Rastislav beats back a Frankish army from his fortress.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13557,7 +13782,7 @@
 "title": "Rastislav asks Constantinople",
 "text": "Rastislav asks the emperor for teachers who can preach in the Slavs' own tongue.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13578,7 +13803,7 @@
 "title": "Cyril and Methodius",
 "text": "The brothers Constantine, later Cyril, and Methodius arrive in Moravia with the Glagolitic letters.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13599,7 +13824,7 @@
 "title": "Envoys of the Dream",
 "text": "Some Cainites of Constantinople see the mission to Moravia as a way to carry the Dream north.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13619,7 +13844,7 @@
 "title": "The brothers in Rome",
 "text": "Pope Adrian II approves the Slavonic liturgy.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -13653,7 +13878,7 @@
 "title": "Cyril dies",
 "text": "Cyril dies in Rome; Methodius returns as archbishop of Pannonia and Moravia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -13687,7 +13912,7 @@
 "title": "Svatopluk takes the throne",
 "text": "Svatopluk hands his uncle Rastislav to the Franks, who blind him.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13708,7 +13933,7 @@
 "title": "Svatopluk turns on the Franks",
 "text": "Svatopluk drives the Franks out and rules Great Moravia alone.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13728,7 +13953,7 @@
 "title": "The peace of Forchheim",
 "text": "Svatopluk makes peace with the Franks and pays a token tribute.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13749,7 +13974,7 @@
 "title": "Taking of the Necromancer's Hold",
 "text": "The Encyclopaedia places the taking of the Necromancer's Hold here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -13782,7 +14007,7 @@
 "title": "Industriae tuae",
 "text": "Pope John VIII allows the Slavonic liturgy in Moravia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13802,7 +14027,7 @@
 "title": "Great Moravia at its height",
 "text": "Svatopluk rules Bohemia, Nitra, the Vistula lands and part of Pannonia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13823,7 +14048,7 @@
 "title": "Methodius dies",
 "text": "Methodius dies; his pupils are driven out and flee to Bulgaria.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13844,7 +14069,7 @@
 "title": "The churches of Mikulcice",
 "text": "Mikulcice has a dozen stone churches; its graves and relics draw Cainite and wraith alike.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13865,7 +14090,7 @@
 "title": "Svatopluk dies",
 "text": "Svatopluk dies; his sons quarrel and Great Moravia weakens.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13885,7 +14110,7 @@
 "title": "Bohemia breaks away",
 "text": "The Bohemian dukes swear to the East Franks and leave Great Moravia.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13905,7 +14130,7 @@
 "title": "The Magyars arrive",
 "text": "The Magyars cross the Carpathians into the Danube basin.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13925,7 +14150,7 @@
 "title": "Axe-shaped iron bars",
 "text": "Great Moravians trade in iron bars shaped like axe heads as well as silver.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13946,7 +14171,7 @@
 "title": "Great Moravia falls",
 "text": "The Magyars destroy Great Moravia; Mikulcice is burned and abandoned within years.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13967,7 +14192,7 @@
 "title": "The burned island",
 "text": "The dead of Mikulcice linger in the Shadowlands of the island churches long after the living leave.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -13987,7 +14212,7 @@
 "title": "Pressburg",
 "text": "The Magyars destroy a Bavarian army at Pressburg.",
 "ref": "Real history",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -14008,7 +14233,7 @@
 "title": "Cluny founded",
 "text": "The abbey of Cluny is founded in Burgundy.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14028,7 +14253,7 @@
 "title": "Wenceslas",
 "text": "Wenceslas becomes duke of Bohemia.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14049,7 +14274,7 @@
 "title": "Wenceslas swears to Henry",
 "text": "Wenceslas submits to the German king Henry I (Transylvania by Night pdf 11).",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14070,7 +14295,7 @@
 "title": "Wenceslas murdered",
 "text": "Wenceslas is killed by his brother Boleslaus at Stara Boleslav, about 935.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14091,7 +14316,7 @@
 "title": "Boleslav rules",
 "text": "Transylvania by Night says Boleslav took Bohemia and Moravia after the murder (pdf 11).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14112,7 +14337,7 @@
 "title": "The Bogomils",
 "text": "The Cainite Heresy works among the Bogomils of the Balkans from about 950 (The Cainite Heresy pdf 20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "dacults-calomena",
@@ -14137,7 +14362,7 @@
 "title": "Lechfeld",
 "text": "Otto I crushes the Magyars at the Lechfeld; their raids end.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14158,7 +14383,7 @@
 "title": "Otto crowned emperor",
 "text": "Otto I is crowned emperor; the Holy Roman Empire begins.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -14192,7 +14417,7 @@
 "title": "Mieszko and Dubravka",
 "text": "Mieszko of Poland marries the Bohemian princess Dubravka and takes baptism in 966.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14213,7 +14438,7 @@
 "title": "The bishopric of Prague",
 "text": "A bishopric is founded at Prague (Transylvania by Night pdf 11).",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14233,7 +14458,7 @@
 "title": "A Ventrue prince of Prague",
 "text": "Transylvania by Night tells that a Ventrue takes the princedom of Prague (pdf 11).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "cotr-jaromir-cerny",
@@ -14266,7 +14491,7 @@
 "title": "The Babenbergs in Austria",
 "text": "The Babenbergs take the march that becomes Austria.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14286,7 +14511,7 @@
 "title": "Kiev baptised",
 "text": "Vladimir of Kiev takes Christianity from Constantinople.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14306,7 +14531,7 @@
 "title": "The Slavnik massacre",
 "text": "Boleslaus II kills the rival Slavnik family at Libice.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14326,7 +14551,7 @@
 "title": "The congress of Gniezno",
 "text": "Emperor Otto III visits Gniezno at the tomb of Adalbert.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14347,7 +14572,7 @@
 "title": "Stephen of Hungary",
 "text": "Stephen is crowned the first king of Hungary.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14367,7 +14592,7 @@
 "title": "The Tremere-Tzimisce war",
 "text": "The Encyclopaedia places the start of the war between the Tremere and the Tzimisce here.",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "coti-lambach",
@@ -14400,7 +14625,7 @@
 "title": "The Questing Years",
 "text": "House Tremere's Questing Years run from 1000 to 1021 (House of Tremere pdf 21).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14420,7 +14645,7 @@
 "title": "The first medieval schisms",
 "text": "The Encyclopaedia's schisms among the mages begin about now.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -14454,7 +14679,7 @@
 "title": "Bohemia takes Moravia",
 "text": "Oldrich of Bohemia, through his son Bretislav, takes Moravia from Poland, between 1019 and 1029.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14475,7 +14700,7 @@
 "title": "The Becoming",
 "text": "Tremere and the inner circle become Cainites in 1022 (House of Tremere pdf 23; V20 Dark Ages pdf 63).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14495,7 +14720,7 @@
 "title": "Bretislav in Moravia",
 "text": "Bretislav rules Moravia for his father.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14515,7 +14740,7 @@
 "title": "Bretislav duke",
 "text": "Bretislav I becomes duke of Bohemia and Moravia.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14535,7 +14760,7 @@
 "title": "Goratrix rules",
 "text": "Goratrix rules the Tremere seat from 1037 to 1133 (House of Tremere pdf 26-28).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14556,7 +14781,7 @@
 "title": "Bretislav raids Gniezno",
 "text": "Bretislav sacks Gniezno and carries off the relics of Adalbert.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14577,7 +14802,7 @@
 "title": "The schism of East and West",
 "text": "The legates of Rome and the patriarch of Constantinople excommunicate each other.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -14611,7 +14836,7 @@
 "title": "Seniority",
 "text": "Bretislav's rule of succession gives Bohemia to the eldest, Moravia's parts to younger sons.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14631,7 +14856,7 @@
 "title": "The Moravian appanages",
 "text": "Moravia is shared among Premyslid princes at Olomouc, Brno and Znojmo.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14652,7 +14877,7 @@
 "title": "The bishopric of Olomouc",
 "text": "The bishopric of Olomouc is restored.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14673,7 +14898,7 @@
 "title": "Hastings",
 "text": "William of Normandy wins England at Hastings.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14693,7 +14918,7 @@
 "title": "Manzikert",
 "text": "The Seljuks defeat the eastern Romans at Manzikert.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14714,7 +14939,7 @@
 "title": "Canossa",
 "text": "Henry IV kneels in the snow at Canossa before Pope Gregory VII.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14734,7 +14959,7 @@
 "title": "Vratislaus king",
 "text": "Vratislaus II is crowned king of Bohemia for his lifetime.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14754,7 +14979,7 @@
 "title": "Cainites among the taifas",
 "text": "The Encyclopaedia places Cainites among the taifa kingdoms of Spain.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "dab-iberian-ferals",
@@ -14788,7 +15013,7 @@
 "title": "The crusade preached",
 "text": "Pope Urban II calls the First Crusade.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14809,7 +15034,7 @@
 "title": "Crusaders in Prague",
 "text": "Crusaders passing through Prague attack its Jews.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14829,7 +15054,7 @@
 "title": "The fae swear a truce",
 "text": "About a century before the 1230 setting of Dark Ages: Fae, the fae swear the Oath-Truce, which is near its end by that year (Dark Ages: Fae pdf 8, 25, 40).",
 "ref": "Legend; the year is a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -14859,7 +15084,7 @@
 "title": "The First Crusade takes Jerusalem",
 "text": "The crusaders take Jerusalem and kill much of its people.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14879,7 +15104,7 @@
 "title": "The Weeks of Blood",
 "text": "The Encyclopaedia's Weeks of Blood follow the fall of Jerusalem.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -14912,7 +15137,7 @@
 "title": "Cainites under the Kingdom of Jerusalem",
 "text": "The Encyclopaedia places Cainites in the new crusader kingdom.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -14946,7 +15171,7 @@
 "title": "The first gargoyles",
 "text": "The Tremere make the first gargoyles for their war with the Tzimisce (V20 Dark Ages pdf 83).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14966,7 +15191,7 @@
 "title": "Chlumec",
 "text": "Sobeslav I of Bohemia defeats the German king Lothar at Chlumec.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -14987,7 +15212,7 @@
 "title": "Saulot's end",
 "text": "Tremere drinks the soul of Saulot in 1133 (V20 Dark Ages pdf 41).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "encv-erciyes",
@@ -15016,7 +15241,7 @@
 "title": "Ardan of the Golden Lane",
 "text": "Ardan, of the Tremere chantry in Prague, is Embraced (House of Tremere pdf 82).",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "cotr-jaromir-cerny",
@@ -15050,7 +15275,7 @@
 "title": "The Moravian princes besiege Prague",
 "text": "The Moravian princes rise against Duke Vladislaus II and besiege Prague.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15071,7 +15296,7 @@
 "title": "Edessa falls",
 "text": "Zengi takes Edessa; the Second Crusade follows.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15091,7 +15316,7 @@
 "title": "Vladislaus king",
 "text": "Frederick Barbarossa makes Vladislaus II king of Bohemia.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15111,7 +15336,7 @@
 "title": "Saladin",
 "text": "Saladin takes power in Egypt.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15131,7 +15356,7 @@
 "title": "Legnano",
 "text": "The Lombard cities beat Barbarossa at Legnano.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15152,7 +15377,7 @@
 "title": "The Margraviate of Moravia",
 "text": "Barbarossa makes Moravia a margraviate under the emperor, held by Conrad Otto.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15172,7 +15397,7 @@
 "title": "Loditz",
 "text": "Bohemians and Moravians fight at Loditz; Moravia returns to Bohemia's rule.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15193,7 +15418,7 @@
 "title": "Hattin",
 "text": "Saladin destroys the crusader army at Hattin and takes Jerusalem.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15213,7 +15438,7 @@
 "title": "The Third Crusade",
 "text": "Barbarossa, Richard I and Philip II set out for the Holy Land.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -15238,7 +15463,7 @@
 "title": "Barbarossa drowns",
 "text": "Barbarossa drowns crossing the Saleph in Anatolia.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15258,7 +15483,7 @@
 "title": "Premysl Ottokar returns",
 "text": "Premysl Ottokar takes the Bohemian throne, losing it again in 1193.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15278,7 +15503,7 @@
 "title": "The massacre at Orvieto",
 "text": "The Encyclopaedia's massacre at Orvieto falls here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "dapillars-orvieto",
@@ -15303,7 +15528,7 @@
 "title": "Henry VI's last year",
 "text": "Henry VI plans to make the empire hereditary; he dies at Messina the next year.",
 "ref": "Real history",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": []
 },
 {
@@ -15472,7 +15697,7 @@
 "title": "The Prophet's helpers",
 "text": "Some Batini later claim the Prophet had magical help (Mage: The Dark Ages pdf 40).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -15493,7 +15718,7 @@
 "title": "The covenants",
 "text": "By 700 the mages of Europe have gathered into covenants (Order of Hermes Revised pdf 26).",
 "ref": "Real history; the World of Darkness reading is a house rule",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -15644,7 +15869,7 @@
 "title": "The Ferrymen rebel",
 "text": "Deduced: in Wraith 20th's order the Ferrymen rebel after the First Great Maelstrom (pdf 68); the house dates it about 490.",
 "ref": "Legend; the year is a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "gw-other-deadlands",
@@ -15678,7 +15903,7 @@
 "title": "The Treaty of Paradise",
 "text": "Deduced from Wraith 20th's order (pdf 68): the treaty that ends the Ferrymen's revolt, about 500.",
 "ref": "Legend; the year is a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "gw-other-deadlands",
@@ -15712,7 +15937,7 @@
 "title": "The Hierarchy",
 "text": "Deduced from Wraith 20th's order (pdf 68): Charon orders Stygia into the Hierarchy, about 510.",
 "ref": "Legend; the year is a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "gw-other-deadlands",
@@ -15746,7 +15971,7 @@
 "title": "The Guilds",
 "text": "Deduced from Wraith 20th's order (pdf 68): the arts of the dead gather into Guilds, about 525.",
 "ref": "Legend; the year is a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": [
 {
 "id": "gw-other-deadlands",
@@ -15780,7 +16005,7 @@
 "title": "The Second Great Maelstrom",
 "text": "Deduced: Renegades ties the Second Great Maelstrom to a great plague (pdf 32), and the next after Rome's fall is Justinian's plague of 541.",
 "ref": "Legend; the year is a house reading",
-"period": "migrations",
+"period": "migration-age",
 "links": []
 },
 {
@@ -15821,7 +16046,7 @@
 "title": "The Sundering deepens",
 "text": "Deduced: between the Battle of Stone and the Oath-Truce the fae lose ground with every new church and iron mill, as Dark Ages: Fae describes the world of 1230.",
 "ref": "Legend; the year is a house reading",
-"period": "premyslid",
+"period": "premyslid-duchy",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -15832,6 +16057,1192 @@
 "title": "Changeling Realms Abroad"
 }
 ]
+},
+{
+"id": "r3-classical-367",
+"era": "classical",
+"year": -700,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Nakbe",
+"tags": [
+"founding",
+"building"
+],
+"title": "The first Maya cities",
+"text": "Maya at Nakbe and El Mirador raise stone platforms in the Peten forest.",
+"ref": "Real history",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-368",
+"era": "classical",
+"year": -500,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Nok",
+"tags": [
+"art"
+],
+"title": "The Nok heads",
+"text": "The Nok people of the Jos plateau work iron and model life-sized heads in fired clay.",
+"ref": "Real history",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-369",
+"era": "classical",
+"year": -500,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Monte Alban",
+"tags": [
+"founding"
+],
+"title": "Monte Alban",
+"text": "The Zapotecs level a mountaintop above the Oaxaca valley and build a capital on it.",
+"ref": "Real history",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-370",
+"era": "classical",
+"year": -300,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "El Mirador",
+"tags": [
+"building"
+],
+"title": "La Danta",
+"text": "El Mirador raises La Danta, one of the largest pyramids ever built.",
+"ref": "Real history",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-371",
+"era": "classical",
+"year": -100,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Nazca",
+"tags": [
+"art",
+"faith"
+],
+"title": "The Nazca lines",
+"text": "The Nazca begin scraping giant lines and figures into the desert of southern Peru.",
+"ref": "Real history",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-372",
+"era": "classical",
+"year": 9,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Chang'an",
+"tags": [
+"crown"
+],
+"title": "Wang Mang's Xin",
+"text": "Wang Mang takes the Han throne and proclaims his own dynasty.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-373",
+"era": "classical",
+"year": 25,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Luoyang",
+"tags": [
+"crown"
+],
+"title": "The Han restored",
+"text": "The Han return under Emperor Guangwu, with a new capital at Luoyang.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-374",
+"era": "classical",
+"year": 57,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Luoyang",
+"tags": [
+"travel"
+],
+"title": "Envoys from Wa",
+"text": "An envoy from Wa in Japan reaches the Han court and is given a gold seal.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-375",
+"era": "classical",
+"year": 100,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Aksum",
+"tags": [
+"trade",
+"crown"
+],
+"title": "Aksum rises",
+"text": "Aksum in the Ethiopian highlands trades ivory and gold through the Red Sea port of Adulis.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-376",
+"era": "classical",
+"year": 100,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Moche valley",
+"tags": [
+"crown",
+"art"
+],
+"title": "The Moche",
+"text": "The Moche rule the river valleys of northern Peru and build pyramids of mud brick.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-377",
+"era": "classical",
+"year": 127,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Purushapura",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Kanishka",
+"text": "The Kushan king Kanishka rules from Bactria to the Ganges and favours the Buddhists.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-378",
+"era": "classical",
+"year": 166,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Luoyang",
+"tags": [
+"travel",
+"trade"
+],
+"title": "Romans at the Han court",
+"text": "Men claiming to come from the emperor of Daqin, Rome, reach the Han court by sea.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-379",
+"era": "classical",
+"year": 184,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "China",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "The Yellow Turbans",
+"text": "A faith-healing sect rises against the Han across eastern China.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-380",
+"era": "classical",
+"year": 200,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Teotihuacan",
+"tags": [
+"building"
+],
+"title": "The Pyramid of the Sun",
+"text": "Teotihuacan builds the Pyramid of the Sun on the Avenue of the Dead.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-381",
+"era": "classical",
+"year": 250,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Peten",
+"tags": [
+"crown"
+],
+"title": "Maya kings",
+"text": "Maya cities set up dated stone monuments to their kings.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-382",
+"era": "classical",
+"year": 250,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Yamato",
+"tags": [
+"building",
+"death"
+],
+"title": "The great tombs",
+"text": "Yamato rulers in Japan are buried in huge keyhole-shaped mounds.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-383",
+"era": "classical",
+"year": 320,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Pataliputra",
+"tags": [
+"crown",
+"empire"
+],
+"title": "The Gupta empire",
+"text": "Chandragupta I founds the Gupta empire, a golden age of Indian learning.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-384",
+"era": "classical",
+"year": 330,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Aksum",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Ezana turns Christian",
+"text": "King Ezana of Aksum takes up Christianity and puts the cross on his coins.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-385",
+"era": "classical",
+"year": 378,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Tikal",
+"tags": [
+"war",
+"crown"
+],
+"title": "Teotihuacan takes Tikal",
+"text": "A war leader from Teotihuacan arrives at Tikal and a new line of kings begins.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-386",
+"era": "classical",
+"year": 562,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Tikal",
+"tags": [
+"war"
+],
+"title": "Caracol defeats Tikal",
+"text": "Caracol and its allies defeat Tikal, which falls silent for a century.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-387",
+"era": "classical",
+"year": 550,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Teotihuacan",
+"tags": [
+"fire",
+"uprising"
+],
+"title": "Teotihuacan burns",
+"text": "The palaces of Teotihuacan are burned, perhaps by its own people.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-388",
+"era": "classical",
+"year": 589,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Daxing",
+"tags": [
+"crown"
+],
+"title": "The Sui unite China",
+"text": "The Sui reunite China after nearly three centuries of division.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-389",
+"era": "classical",
+"year": 600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Lake Titicaca",
+"tags": [
+"founding",
+"faith"
+],
+"title": "Tiwanaku",
+"text": "Tiwanaku by Lake Titicaca rules the southern Andes from its stone temples.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-390",
+"era": "classical",
+"year": 600,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Ayacucho",
+"tags": [
+"empire"
+],
+"title": "The Wari",
+"text": "The Wari build the first empire of the Andes, linked by roads.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-391",
+"era": "classical",
+"year": 606,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kannauj",
+"tags": [
+"crown"
+],
+"title": "Harsha",
+"text": "Harsha rules north India from Kannauj.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-392",
+"era": "classical",
+"year": 615,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Palenque",
+"tags": [
+"crown"
+],
+"title": "Pakal",
+"text": "K'inich Janaab Pakal takes the throne of Palenque at twelve and rules for 68 years.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-393",
+"era": "classical",
+"year": 629,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Chang'an",
+"tags": [
+"travel",
+"faith"
+],
+"title": "Xuanzang goes west",
+"text": "The monk Xuanzang leaves Chang'an for India to fetch the Buddhist texts.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-394",
+"era": "classical",
+"year": 645,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Asuka",
+"tags": [
+"law"
+],
+"title": "The Taika reforms",
+"text": "The Japanese court takes the land into the throne's hands on the Chinese model.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-395",
+"era": "classical",
+"year": 652,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Dongola",
+"tags": [
+"treaty"
+],
+"title": "The Baqt",
+"text": "Christian Makuria and the Arab rulers of Egypt agree the Baqt, a treaty that lasts six centuries.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-396",
+"era": "classical",
+"year": 695,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Tikal",
+"tags": [
+"war"
+],
+"title": "Tikal defeats Calakmul",
+"text": "Tikal defeats Calakmul and recovers its power.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-397",
+"era": "classical",
+"year": 710,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nara",
+"tags": [
+"founding"
+],
+"title": "Nara",
+"text": "Japan's court settles at Nara, laid out like Chang'an.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-398",
+"era": "classical",
+"year": 755,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Fanyang",
+"tags": [
+"uprising",
+"war"
+],
+"title": "An Lushan rebels",
+"text": "The general An Lushan rises against the Tang; millions die before it ends.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-399",
+"era": "classical",
+"year": 794,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Heian-kyo",
+"tags": [
+"founding"
+],
+"title": "Heian-kyo",
+"text": "The Japanese court moves to Heian-kyo, later Kyoto.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-400",
+"era": "classical",
+"year": 800,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Shanga",
+"tags": [
+"trade",
+"building"
+],
+"title": "The Swahili towns",
+"text": "Swahili traders build towns of coral stone along the east African coast.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-401",
+"era": "classical",
+"year": 802,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mount Kulen",
+"tags": [
+"crown"
+],
+"title": "The Khmer god-king",
+"text": "Jayavarman II proclaims himself universal king of the Khmer.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-402",
+"era": "classical",
+"year": 825,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Java",
+"tags": [
+"building",
+"faith"
+],
+"title": "Borobudur",
+"text": "The Buddhist monument of Borobudur is finished in central Java.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-403",
+"era": "classical",
+"year": 850,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Igbo-Ukwu",
+"tags": [
+"art"
+],
+"title": "The Igbo-Ukwu bronzes",
+"text": "Smiths at Igbo-Ukwu cast bronzes of a fineness unmatched in their time.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-404",
+"era": "classical",
+"year": 869,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Tikal",
+"tags": [
+"death",
+"migration"
+],
+"title": "The last date at Tikal",
+"text": "Tikal raises its last dated monument; the southern Maya cities empty.",
+"ref": "Real history",
+"period": "migration-age",
+"links": []
+},
+{
+"id": "r3-classical-405",
+"era": "classical",
+"year": 950,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Tula",
+"tags": [
+"founding"
+],
+"title": "Tula",
+"text": "The Toltecs rule central Mexico from Tula.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-406",
+"era": "classical",
+"year": 960,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kaifeng",
+"tags": [
+"crown"
+],
+"title": "The Song",
+"text": "The Song dynasty reunites China from Kaifeng.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-407",
+"era": "classical",
+"year": 1001,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Peshawar",
+"tags": [
+"war"
+],
+"title": "Mahmud of Ghazni",
+"text": "Mahmud of Ghazni begins his raids into India.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-408",
+"era": "classical",
+"year": 1004,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Chanyuan",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Chanyuan",
+"text": "The Song buy peace from the Liao with yearly silver and silk.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-409",
+"era": "classical",
+"year": 1008,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Heian-kyo",
+"tags": [
+"art"
+],
+"title": "The Tale of Genji",
+"text": "Murasaki Shikibu is writing the Tale of Genji at the Heian court.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-410",
+"era": "classical",
+"year": 1025,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kadaram",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Chola raid Srivijaya",
+"text": "The Chola fleet of south India sacks the ports of Srivijaya.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-411",
+"era": "classical",
+"year": 1030,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Chaco Canyon",
+"tags": [
+"building"
+],
+"title": "The great houses of Chaco",
+"text": "The Ancestral Puebloans build great stone houses and roads in Chaco Canyon.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-412",
+"era": "classical",
+"year": 1044,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kaifeng",
+"tags": [
+"science",
+"war"
+],
+"title": "Gunpowder written down",
+"text": "A Song military manual gives the first written recipes for gunpowder.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-413",
+"era": "classical",
+"year": 1050,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Cahokia",
+"tags": [
+"founding",
+"building"
+],
+"title": "Cahokia",
+"text": "Cahokia on the Mississippi grows into a city round Monks Mound.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-414",
+"era": "classical",
+"year": 1062,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Marrakesh",
+"tags": [
+"founding"
+],
+"title": "Marrakesh",
+"text": "The Almoravids found Marrakesh.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-415",
+"era": "classical",
+"year": 1075,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Mapungubwe",
+"tags": [
+"crown",
+"trade"
+],
+"title": "Mapungubwe",
+"text": "Mapungubwe on the Limpopo trades gold and ivory to the coast.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-416",
+"era": "classical",
+"year": 1076,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Koumbi Saleh",
+"tags": [
+"war",
+"faith"
+],
+"title": "The Almoravids and Ghana",
+"text": "Tradition says the Almoravids took Koumbi Saleh, the capital of Ghana.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-417",
+"era": "classical",
+"year": 1085,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Njimi",
+"tags": [
+"faith",
+"crown"
+],
+"title": "Kanem turns Muslim",
+"text": "King Hummay of Kanem by Lake Chad takes up Islam.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-418",
+"era": "classical",
+"year": 1113,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Angkor",
+"tags": [
+"building",
+"faith"
+],
+"title": "Angkor Wat",
+"text": "Suryavarman II takes the Khmer throne and begins Angkor Wat.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-419",
+"era": "classical",
+"year": 1127,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kaifeng",
+"tags": [
+"war"
+],
+"title": "The Jurchen take Kaifeng",
+"text": "The Jurchen take Kaifeng and two Song emperors; the Song flee south.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-420",
+"era": "classical",
+"year": 1137,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Lalibela",
+"tags": [
+"crown"
+],
+"title": "The Zagwe kings",
+"text": "The Zagwe dynasty takes the Ethiopian throne.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-421",
+"era": "classical",
+"year": 1162,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mongolia",
+"tags": [
+"crown"
+],
+"title": "Temujin born",
+"text": "Temujin, later Chinggis Khan, is born on the steppe.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-422",
+"era": "classical",
+"year": 1185,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dan-no-ura",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Dan-no-ura",
+"text": "The Minamoto destroy the Taira at sea.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-423",
+"era": "classical",
+"year": 1192,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tarain",
+"tags": [
+"battle"
+],
+"title": "The second battle of Tarain",
+"text": "Muhammad of Ghor defeats Prithviraj Chauhan and opens north India.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
+},
+{
+"id": "r3-classical-424",
+"era": "classical",
+"year": 1192,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kamakura",
+"tags": [
+"crown"
+],
+"title": "The first shogun",
+"text": "Minamoto Yoritomo is named shogun and rules Japan from Kamakura.",
+"ref": "Real history",
+"period": "premyslid-duchy",
+"links": []
 },
 {
 "id": "r3-dark-ages-001",
