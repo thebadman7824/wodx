@@ -107,3 +107,61 @@ test("Malkavian: derangements from the sheet, varied lines, and riddles that hid
   assert.equal(S.mayGlimpse(50000, 60000), false);
   assert.equal(S.mayGlimpse(50000, 50000 + 86400), true);
 });
+
+/* Chronicle 0.27.0: Tzimisce, Lasombra, Ravnos, Caitiff (B1126 to B1129) */
+
+test("the new clans find their rows", () => {
+  assert.equal(S.vampireRow("Tzimisce")?.feature, "soil");
+  assert.equal(S.vampireRow("Lasombra antitribu")?.feature, "camera");
+  assert.equal(S.vampireRow("wod.bio.vampire.ravnos")?.feature, "vice");
+  assert.equal(S.vampireRow("Caitiff")?.feature, "oddity");
+  assert.equal(S.vampireRow("Clanless")?.key, "caitiff");
+});
+
+test("native soil: carrying it is a rest, a night without it halves pools until the next rest", () => {
+  const D = S.DAY, noon = 43200;
+  let r = S.soilNight({}, D + noon, true);
+  assert.equal(r.halved, false); assert.equal(r.changed, true);
+  assert.equal(S.soilNight(r.soil, D + noon + 3600, false).changed, false, "same night is not counted twice");
+  r = S.soilNight(r.soil, 2 * D + noon, false); assert.equal(r.halved, true); assert.equal(r.soil.short, 1);
+  r = S.soilNight(r.soil, 3 * D + noon, false); assert.equal(r.soil.short, 2);
+  r = S.soilNight(r.soil, 4 * D + noon, true); assert.equal(r.halved, false); assert.equal(r.soil.short, 0);
+  assert.ok(S.isSoil({name: "Native soil (Rothenstein)"}));
+  assert.ok(S.isSoil({name: "a pouch", soil: true}));
+  assert.ok(!S.isSoil({name: "Earthenware jug"}));
+});
+
+test("cameras by year, and the scene's own mark wins", () => {
+  assert.equal(S.cameraAt(1838), null);
+  assert.match(S.cameraAt(1840).label, /photograph/);
+  assert.match(S.cameraAt(1980).label, /video/);
+  assert.equal(S.watched(1500, true), false, "no camera before 1839 whatever the mark");
+  assert.equal(S.watched(1900, undefined), false);
+  assert.equal(S.watched(1900, true), true);
+  assert.equal(S.watched(2030, undefined), true);
+  assert.equal(S.watched(2030, false), false);
+});
+
+test("the Ravnos vice: feeding acts, a growing pull, one prompt a night", () => {
+  assert.ok(S.feedsRavnos("lying", "con"));
+  assert.ok(S.feedsRavnos("theft", "lift"));
+  assert.ok(!S.feedsRavnos("theft", "con"));
+  const r = {vice: "lying", fedAt: 0, arrivedAt: 0};
+  assert.equal(S.ravnosDifficulty(r, 0), 6);
+  assert.equal(S.ravnosDifficulty(r, 2 * W), 8);
+  assert.equal(S.ravnosDifficulty(r, 40 * S.DAY), 9);
+  assert.equal(S.ravnosDifficulty({...r, arrivedAt: 40 * S.DAY}, 40 * S.DAY), 8);
+  assert.ok(S.mayAskRavnos({askedAt: null}, 0));
+  assert.ok(!S.mayAskRavnos({askedAt: S.DAY + 50000}, S.DAY + 60000));
+  assert.ok(S.mayAskRavnos({askedAt: S.DAY + 50000}, 2 * S.DAY + 50000));
+});
+
+test("a thin-blooded Caitiff rolls once a year for an odd gift", () => {
+  let r = S.oddGift({}, 1999, () => 0.05);
+  assert.ok(r.gift); assert.equal(r.odd.year, 1999);
+  assert.equal(S.oddGift(r.odd, 1999, () => 0).checked, false, "once a year");
+  r = S.oddGift({}, 2000, () => 0.5); assert.equal(r.gift, null); assert.equal(r.checked, true);
+  const all = {gifts: S.ODD_GIFTS.map(g => g.key), year: 1};
+  assert.equal(S.oddGift(all, 2, () => 0).gift, null, "no gift left to give");
+  assert.ok(S.thinBlooded(["Thin Blood"])); assert.ok(!S.thinBlooded(["Thick skin"]));
+});

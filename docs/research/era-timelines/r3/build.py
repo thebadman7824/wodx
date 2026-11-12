@@ -3,7 +3,8 @@ tied to World of Darkness canon where possible, and tagged so other WoDX systems
 
 Each era file <era>.txt holds one event per line:
     year[-month]|kind|lines|region|place|tags|title|text
-kind:   H real history; W real history with a World of Darkness reading in the text (a house reading);
+kind:   F (future-darkness only) the branch's own mundane history, a house reading built on the approved Future Darkness timeline;
+        H real history; W real history with a World of Darkness reading in the text (a house reading);
         N a named canon character placed in a real event (the book gives what happened, the year is WoDX's).
 lines:  comma list of all mor vam wer mag wra cha hun mum kue dem
 region: MO Moravia, EU Europe, ME Middle East, AS Asia
@@ -13,11 +14,11 @@ Lines starting with # are comments. Writes events-2026-11-12r3.json (all events,
 import json, glob, os, re, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 ERAS = [('dark-ages', 1197, 1346), ('long-night', 1347, 1449), ('renaissance', 1450, 1600), ('age-of-reason', 1601, 1836),
-        ('victorian', 1837, 1913), ('great-war', 1914, 1918), ('mid-century', 1919, 1989), ('modern', 1990, 2009)]
+        ('victorian', 1837, 1913), ('great-war', 1914, 1918), ('mid-century', 1919, 1989), ('modern', 1990, 2009), ('future-darkness', 1990, 2099)]
 LINES = {'all': 'All lines', 'mor': 'Mortals', 'vam': 'Vampire', 'wer': 'Werewolf', 'mag': 'Mage', 'wra': 'Wraith', 'cha': 'Changeling',
          'hun': 'Hunter', 'mum': 'Mummy', 'kue': 'Kindred of the East', 'dem': 'Demon'}
 REGIONS = {'MO': 'Moravia', 'EU': 'Europe', 'ME': 'Middle East', 'AS': 'Asia'}
-KINDS = {'H': 'history', 'W': 'tied', 'N': 'named'}
+KINDS = {'H': 'history', 'W': 'tied', 'N': 'named', 'F': 'branch'}
 TAGS = {'war', 'battle', 'siege', 'massacre', 'plague', 'famine', 'disaster', 'quake', 'flood', 'fire', 'storm', 'faith', 'heresy', 'persecution',
         'trade', 'money', 'science', 'learning', 'art', 'crown', 'death', 'uprising', 'law', 'travel', 'crusade', 'exploration', 'industry',
         'migration', 'treaty', 'occult', 'crime', 'sport', 'media', 'empire', 'revolution', 'terror', 'weather', 'founding', 'building', 'sea'}
@@ -77,8 +78,9 @@ def main():
             n += 1
             ev = {'id': f'r3-{era}-{n:03d}', 'era': era, 'year': y, 'month': m, 'kind': KINDS.get(kind, kind), 'lines': [LINES.get(x, x) for x in ls],
                   'region': REGIONS.get(region, region), 'place': place, 'tags': tg, 'title': title, 'text': text,
-                  'ref': 'Real history' + ('' if kind == 'H' else '; the World of Darkness reading is a house rule' if kind == 'W' else '; character from the Encyclopaedia entry linked, year a house reading')}
-            if y >= 1990: ev['branch'] = 'classic'
+                  'ref': ('Future Darkness branch history, a house reading' if kind == 'F' else 'Real history') + ('' if kind in 'HF' else '; the World of Darkness reading is a house rule' if kind == 'W' else '; character from the Encyclopaedia entry linked, year a house reading')}
+            if era == 'future-darkness': ev['branch'] = 'future'
+            elif y >= 1990: ev['branch'] = 'classic'
             ev['links'] = links(ev, ency)
             out.append(ev)
     json.dump(out, open('events-2026-11-12r3.json', 'w'), ensure_ascii=False, indent=0)

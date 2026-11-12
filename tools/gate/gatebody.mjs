@@ -6,7 +6,8 @@
  * and deletes everything it made, messages included.
  *   1. the api and the two settings (both on by default)
  *   2. a person: two hands, armor, no claws
- *   3. Shape of the Beast: the body becomes a wolf; the sword in hand and the armor come off, with an Undo card
+ *   3. Shape of the Beast: the body becomes a wolf; the sword in hand comes off, with an Undo card; the worn armor
+ *      stays on (it goes along with the vampire, no soak in the shape, B1210)
  *   4. Undo puts the sword and armor back on
  *   5. Feral Claws: the attack list has natural aggravated claws
  *   6. Mist Form: nothing to strike (no hit table), and the movement code reads flight from the body
@@ -64,11 +65,11 @@ export async function run() {
       ok("a person: two hands, armor, no claws", body.shape === "person" && body.hands === 2 && body.armor && !body.weapons.claw, {shape: body.shape, hands: body.hands});
     });
     let shapeFx = null;
-    await step("Shape of the Beast takes the gear off", async () => {
+    await step("Shape of the Beast drops the sword, keeps the armor", async () => {
       [shapeFx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Shape of the Beast", img: "icons/svg/pawprint.svg"}]);
       await until(() => !A.items.get(sword.id)?.system?.isequipped, 4000);
       const card = newMsgs().find(m => m.flags?.["wodx-combat"]?.bodyGear);
-      ok("Shape of the Beast takes the gear off", B().of(A).shape === "wolf" && !A.items.get(sword.id).system.isequipped && !A.items.get(mail.id).system.isequipped && !!card,
+      ok("Shape of the Beast drops the sword, keeps the armor", B().of(A).shape === "wolf" && B().of(A).carries === true && !A.items.get(sword.id).system.isequipped && A.items.get(mail.id).system.isequipped && !!card,
         {sword: A.items.get(sword.id).system.isequipped, mail: A.items.get(mail.id).system.isequipped, card: !!card});
     });
     await step("Undo puts it back", async () => {

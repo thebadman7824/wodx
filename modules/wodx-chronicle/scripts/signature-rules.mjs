@@ -7,10 +7,15 @@
  *   corruption {by (actor id), byName, vice, step 0..5, log: [{at, delta, why}]}
  *   cause {key, label, custom, approved, rant 0..3}
  *   mark {key, at, until}
+ *   soil {where, restedAt, short (nights in a row without it)}
+ *   ravnos {vice, fedAt, arrivedAt, askedAt}
+ *   odd {year (last year checked), gifts: [key]}
  */
-import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES} from "../data/signatures.mjs";
+import {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE} from "../data/signatures.mjs";
 
-export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES};
+export {VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -217,3 +222,64 @@ export function glimpseFor(ev, days, seed = 0) {
 
 /** One glimpse a night: true if the last one was taken on an earlier night (night = whole days of world time, at noon). */
 export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43200) / 86400) > Math.floor((n(last) - 43200) / 86400);
+
+/* ---------------- Tzimisce: native soil ---------------- */
+
+const night = t => Math.floor((n(t) - 43200) / DAY);
+/** Is an item native soil? Its flag, or a name that says so. */
+export const isSoil = item => !!item && (item.soil === true || /\b(native|grave|home)?\s*(soil|earth)\b/i.test(String(item.name ?? "")));
+
+/**
+ * The night's rest: carrying soil counts as resting on it. Returns {soil, halved, changed}; halved: dice pools are halved
+ * tonight (V20 pdf 447), until a rest on the soil.
+ */
+export function soilNight(soil = {}, now, carrying) {
+  const s = {where: "", restedAt: null, short: 0, checked: null, ...soil};
+  const tonight = night(now);
+  if ( s.checked != null && night(s.checked) >= tonight ) return {soil: s, halved: s.short > 0, changed: false};
+  if ( carrying ) return {soil: {...s, restedAt: n(now), short: 0, checked: n(now)}, halved: false, changed: s.short > 0 || s.checked == null};
+  return {soil: {...s, short: s.short + 1, checked: n(now)}, halved: true, changed: true};
+}
+
+/* ---------------- Lasombra: cameras ---------------- */
+
+/** The camera of a year, or null before 1839. */
+export const cameraAt = year => [...CAMERAS].reverse().find(c => n(year) >= c.from) ?? null;
+/** Is a scene watched? mark: the scene's own setting (true, false or unset). */
+export function watched(year, mark) {
+  if ( !cameraAt(year) ) return false;
+  if ( mark === true || mark === false ) return mark;
+  return n(year) >= CAMERAS_EVERYWHERE;
+}
+
+/* ---------------- Ravnos: the vice that calls ---------------- */
+
+export const ravnosVice = key => RAVNOS_VICES.find(v => v.key === key) ?? null;
+/** Does an act (a social act key or a trade mode) feed the vice? */
+export const feedsRavnos = (vice, act) => !!ravnosVice(vice)?.acts.includes(act);
+
+/**
+ * The Self-Control difficulty to resist (house reading of V20: base 6, +1 a week unfed, up to +2, and +1 after a month
+ * in one domain; never above 9).
+ */
+export function ravnosDifficulty(r = {}, now = 0) {
+  const unfed = Math.min(2, Math.floor((n(now) - n(r.fedAt ?? now)) / WEEK));
+  const stay = n(now) - n(r.arrivedAt ?? now) >= 30 * DAY ? 1 : 0;
+  return clamp(6 + Math.max(0, unfed) + stay, 6, 9);
+}
+/** One prompt a night at most. */
+export const mayAskRavnos = (r = {}, now = 0) => r.askedAt == null || night(r.askedAt) < night(now);
+
+/* ---------------- Caitiff: odd gifts ---------------- */
+
+/** The yearly roll: rand 0..1 under the chance gives a gift not yet held, or null. Once a year. */
+export function oddGift(odd = {}, year, rand = Math.random) {
+  if ( n(odd.year) >= n(year) ) return {odd, gift: null, checked: false};
+  const next = {gifts: [], ...odd, year: n(year)};
+  const open = ODD_GIFTS.filter(g => !(next.gifts ?? []).includes(g.key));
+  if ( !open.length || rand() >= ODD_GIFT_CHANCE ) return {odd: next, gift: null, checked: true};
+  const gift = open[Math.floor(rand() * open.length) % open.length];
+  return {odd: next, gift, checked: true};
+}
+/** Does an actor's trait list name the Thin Blood flaw? */
+export const thinBlooded = names => names.some(x => /thin[- ]?blood/i.test(String(x)));

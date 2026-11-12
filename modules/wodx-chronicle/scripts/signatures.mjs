@@ -6,7 +6,7 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 
 /**
- * WoDX Chronicle 0.25.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
+ * WoDX Chronicle 0.27.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
  * signature-rules.mjs, table in data/signatures.mjs.
  *
  *   Actor flag wodx-chronicle.sig = {muses: [], cause, marks: []}: the character's own tracks (owner and Storyteller see them).
@@ -31,7 +31,7 @@ const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-act
 
 export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigVampire", {
-    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks. Off by default.",
+    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice and the Caitiff's odd gifts. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
 }
@@ -91,6 +91,7 @@ export async function tick({force = false} = {}) {
   const t = now(), day = Math.floor(t / 86400);
   if ( day === lastTick && !force ) return;
   lastTick = day;
+  for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); }
   for ( const a of game.actors ) {
     const sig = a.flags?.[MODULE_ID]?.[FLAG];
     if ( !sig ) continue;
@@ -209,6 +210,7 @@ export async function setVice(npc, setite, vice) {
 }
 function onSocial(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
+  if ( a && on() && isActiveGM() && isFeature(a, "vice") ) ravnosChance(a, p.act, npc);
   if ( !a || !npc || !isFeature(a, "corruption") ) return;
   const d = S.stepFromSocial(p.act, p.result);
   if ( d ) work(npc, a, d, `${p.act}, ${p.result}`);
@@ -224,6 +226,7 @@ function goodNamed(name) {
 }
 function onTrade(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
+  if ( a && on() && isActiveGM() && isFeature(a, "vice") ) ravnosChance(a, p.mode, npc);
   if ( !a || !npc || !isFeature(a, "corruption") ) return;
   const rec = corruption(npc)[a.id];
   const good = goodNamed(p.give);
@@ -275,6 +278,101 @@ export function hearAs(actorOrId, {topic = "", name = "", npcId = ""} = {}) {
   return S.hearLine(keys, {name: name || "they", topic: topic || "it", seed: S.seedOf(a.id, npcId, topic, Math.floor(now() / 86400))});
 }
 
+/* ---------------- Tzimisce ---------------- */
+
+const carriesSoil = a => (a?.items ?? []).some(i => S.isSoil({name: i.name, soil: i.flags?.[MODULE_ID]?.soil}));
+async function soilTick(a, t) {
+  if ( !isFeature(a, "soil") ) return;
+  const sig = sigOf(a), r = S.soilNight(sig.soil, t, carriesSoil(a));
+  if ( !r.changed ) return;
+  const before = foundry.utils.deepClone(sig);
+  sig.soil = r.soil;
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  if ( r.halved ) await card(`${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved tonight (rounded down) until they rest on it again.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+}
+/** Put two handfuls of native soil in a Tzimisce's pack. */
+export async function giveSoil(actorOrId, where = "") {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const name = `Native soil${where ? ` (${where})` : ""}`;
+  const [item] = await a.createEmbeddedDocuments("Item", [{name, type: "Item", system: {description: "Two handfuls of earth from the place this Kindred was born or Embraced."}, flags: {[MODULE_ID]: {soil: true}}}]);
+  return item ?? null;
+}
+
+/* ---------------- Lasombra ---------------- */
+
+/** Mark a scene as watched by a camera (true), not watched (false) or left to the era (null). Storyteller only. */
+export async function setCamera(scene = canvas?.scene, mark = true) {
+  if ( !scene || !game.user.isGM ) return null;
+  await scene.update({[`flags.${MODULE_ID}.camera`]: mark === true || mark === false ? mark : null});
+  return mark;
+}
+/** A Lasombra in a watched scene: one card a night for each scene. */
+export async function emptyFrame(actorOrId, scene = canvas?.scene) {
+  const a = toActor(actorOrId);
+  if ( !a || !scene || !isFeature(a, "camera") || !isActiveGM() ) return null;
+  const year = currentYear(), cam = S.cameraAt(year);
+  if ( !S.watched(year, scene.flags?.[MODULE_ID]?.camera) ) return null;
+  const sig = sigOf(a), seen = sig.frames ?? {}, tonight = Math.floor((now() - 43200) / 86400);
+  if ( seen[scene.id] === tonight ) return null;
+  sig.frames = {...seen, [scene.id]: tonight};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name}: an empty frame`, `<p>${esc(cam.label)} watches ${esc(scene.name)}, and holds no image of ${esc(a.name)}. Whoever studies it later sees a person who is not there: a breach of the Masquerade, found later.</p>`);
+  return cam;
+}
+function onToken(token, change) {
+  if ( !on() || !isActiveGM() || !token?.actor || (change && !("x" in change) && !("y" in change)) ) return;
+  if ( isFeature(token.actor, "camera") ) emptyFrame(token.actor, token.parent);
+}
+
+/* ---------------- Ravnos ---------------- */
+
+export async function setRavnosVice(actorOrId, vice) {
+  const a = toActor(actorOrId);
+  if ( !a || !S.ravnosVice(vice) ) return null;
+  const sig = sigOf(a);
+  sig.ravnos = {fedAt: now(), arrivedAt: now(), askedAt: null, ...(sig.ravnos ?? {}), vice};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return sig.ravnos;
+}
+/** The vice was fed (an act, or a dare the Storyteller marks), or the Ravnos moved on to a new domain. */
+export async function ravnosFed(actorOrId) { return ravnosSet(actorOrId, {fedAt: now()}); }
+export async function movedOn(actorOrId) { return ravnosSet(actorOrId, {arrivedAt: now()}); }
+async function ravnosSet(actorOrId, part) {
+  const a = toActor(actorOrId), sig = sigOf(a);
+  if ( !a || !sig.ravnos ) return null;
+  sig.ravnos = {...sig.ravnos, ...part};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return sig.ravnos;
+}
+/** A chance in talk or trade: feeding acts feed the vice, others call for a Self-Control roll (one a night). */
+async function ravnosChance(a, act, npc) {
+  const r = sigOf(a).ravnos;
+  if ( !r?.vice ) return;
+  if ( S.feedsRavnos(r.vice, act) ) return ravnosFed(a);
+  if ( !S.mayAskRavnos(r, now()) ) return;
+  const v = S.ravnosVice(r.vice), dc = S.ravnosDifficulty(r, now());
+  await ravnosSet(a, {askedAt: now()});
+  await card(`${a.name}: the vice calls`, `<p>${esc(npc?.name ?? "This one")} is a chance for ${esc(v.label.toLowerCase())}. Roll Self-Control, difficulty ${dc}. On a failure, ${esc(a.name)} gives in before the scene ends.</p>`, {whisper: ownerIds(a)});
+}
+function onTaken(p) {
+  const a = toActor(p?.actor);
+  if ( a && on() && isFeature(a, "vice") && sigOf(a).ravnos?.vice === "theft" ) ravnosFed(a);
+}
+
+/* ---------------- Caitiff ---------------- */
+
+async function oddTick(a) {
+  if ( !isFeature(a, "oddity") ) return;
+  if ( !S.thinBlooded([...(a.items ?? [])].map(i => i.name)) ) return;
+  const sig = sigOf(a), r = S.oddGift(sig.odd, currentYear());
+  if ( !r.checked ) return;
+  const before = foundry.utils.deepClone(sig);
+  sig.odd = r.gift ? {...r.odd, gifts: [...(r.odd.gifts ?? []), r.gift.key]} : r.odd;
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  if ( r.gift ) await card(`${a.name}: an odd gift`, `<p>This year ${esc(a.name)} may wake with a gift of thin blood: <b>${esc(r.gift.label)}</b>. ${esc(r.gift.text)} Keep it or take it back.</p>`, {undo: {uuid: a.uuid, path: FLAG, before}});
+}
+
 /* ---------------- the window ---------------- */
 
 /** The roll effects a character's signature tracks give now, in the trait effect shape. */
@@ -284,6 +382,7 @@ export function effects(actorOrId) {
   const out = S.markEffects(sig.marks ?? [], now());
   const pen = S.beautyPenalty(sig.muses ?? []);
   if ( pen ) out.push({tags: ["beauty"], difficulty: pen, why: "Obsession with a Muse"});
+  if ( sig.soil?.short > 0 && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
   return out;
 }
 
@@ -297,6 +396,10 @@ export async function open(actorOrId) {
   if ( sig.cause ) body += `<h4>Cause</h4><p>${esc(sig.cause.label)}${sig.cause.custom && !sig.cause.approved ? " (waiting for the Storyteller)" : ""}. Rant ${sig.cause.rant} of ${S.RANT_POINTS}.</p>`;
   const marks = S.activeMarks(sig.marks ?? [], t);
   if ( marks.length ) body += `<h4>Marks</h4><ul>${marks.map(m => { const r = S.markByKey(m.key); return `<li>${esc(r.label)}: ${esc(r.edge)}; ${esc(r.cost)}. Heals in ${Math.ceil((m.until - t) / 86400)} days.</li>`; }).join("")}</ul>`;
+  if ( sig.soil ) body += `<h4>Native soil</h4><p>${carriesSoil(a) ? "Carried." : "Not carried."}${sig.soil.short ? ` Dice pools halved (${sig.soil.short} night${sig.soil.short === 1 ? "" : "s"} without it).` : ""}</p>`;
+  if ( sig.ravnos?.vice ) body += `<h4>Vice</h4><p>${esc(S.ravnosVice(sig.ravnos.vice)?.label)}. Self-Control difficulty to resist now: ${S.ravnosDifficulty(sig.ravnos, t)}.</p>`;
+  if ( row?.feature === "camera" ) { const y = currentYear(), c = S.cameraAt(y); body += `<h4>Cameras</h4><p>${c ? `${esc(c.label)} is the camera of the year. This scene is ${S.watched(y, canvas?.scene?.flags?.[MODULE_ID]?.camera) ? "watched" : "not watched"}.` : "No camera exists yet."}</p>`; }
+  if ( sig.odd?.gifts?.length ) body += `<h4>Odd gifts</h4><ul>${sig.odd.gifts.map(k => `<li>${esc(S.ODD_GIFTS.find(g => g.key === k)?.label ?? k)}</li>`).join("")}</ul>`;
   if ( game.user.isGM ) {
     const victims = game.actors.filter(x => x.flags?.[MODULE_ID]?.[CFLAG]?.[a.id]);
     if ( victims.length ) body += `<h4>Corruption ledger</h4><ul>${victims.map(v => { const r = v.flags[MODULE_ID][CFLAG][a.id]; return `<li>${esc(v.name)}: ${r.step} (${esc(r.vice || "no vice set")})</li>`; }).join("")}</ul>`;
@@ -304,9 +407,20 @@ export async function open(actorOrId) {
   const buttons = [{action: "close", label: "Close", default: true}];
   if ( row?.feature === "glimpse" && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
   if ( row?.feature === "cause" && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
+  if ( row?.feature === "soil" && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
+  if ( row?.feature === "vice" && on() ) {
+    if ( !sig.ravnos?.vice ) S.RAVNOS_VICES.forEach(v => buttons.unshift({action: `vice:${v.key}`, label: `Vice: ${v.label}`}));
+    else buttons.unshift({action: "fed", label: "The vice was fed"}, {action: "moved", label: "Moved on to a new domain"});
+  }
+  if ( row?.feature === "camera" && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: clan feature`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "rant" ) return spendRant(a);
+  if ( pick === "soil" ) return giveSoil(a);
+  if ( pick === "fed" ) return ravnosFed(a);
+  if ( pick === "moved" ) return movedOn(a);
+  if ( pick === "cam" ) return setCamera(canvas.scene, !S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera));
+  if ( String(pick).startsWith("vice:") ) return setRavnosVice(a, String(pick).slice(5));
   return null;
 }
 
@@ -322,6 +436,9 @@ export function registerSignatureHooks() {
   Hooks.on("wodxDamageApplied", actor => onDamage(actor));
   Hooks.on("updateActor", onActorUpdate);
   Hooks.on("wodxEventFired", ev => onEventFired(ev));
+  Hooks.on("wodxItemsTaken", onTaken);
+  Hooks.on("createToken", token => onToken(token, null));
+  Hooks.on("updateToken", onToken);
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick());
   Hooks.on("renderChatMessageHTML", (message, el) => {
@@ -344,4 +461,5 @@ export function registerSignatureHooks() {
   });
 }
 
-export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work, effects, tick, rules: S};
+export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+  giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, effects, tick, year: () => currentYear(), rules: S};

@@ -1,0 +1,311 @@
+# World of Future Darkness, 1990 to 2099 (future branch only). year[-month]|kind|lines|region|place|tags|title|text
+# Kind F is the branch's own history, a house reading that fills in the world around the approved Future Darkness timeline
+# (modules/wodx-chronicle/data/future-events.mjs). It never contradicts that timeline; W cards add a line's view.
+1990|F|mor|EU|Moscow|crown,law|The Union holds|Moscow loosens its grip on eastern Europe but keeps the Soviet Union itself together as a looser federation; in this branch it never dissolves.
+1990|F|mor|MO|Brno|money,law|The Velvet republic's first year|Czechoslovakia leaves the bloc and opens to Western money faster than anyone planned; Brno's trade fair fills with corporate stands.
+1990|F|mor|EU|Brussels|money,trade|The Community looks east|The European Economic Community offers trade deals to the freed states of the east, and its bankers draw up plans for a single currency.
+1990|W|vam|EU|Prague|founding,occult|Prague's boardroom elders|The house reading has Prague's Ventrue buy the first privatised factories through Swiss fronts, years before the classic nights' princes think of it.
+1991|F|mor|AS|Tokyo|money,industry|Japan's corporations go abroad|Japanese corporations buy factories and banks across Asia and Europe as the yen climbs; Arasaka opens its first European office in Frankfurt.
+1991|F|mor|ME|Kuwait|war,trade|The Gulf war in this branch|An American-led coalition drives Iraq from Kuwait; the oil wells burn, and the region's bitterness is left to ripen for six years.
+1991|F|mor|MO|Ostrava|industry,money|Ostrava's steel sold east|A Soviet-German consortium buys the Vitkovice works, and Ostrava's mills keep running on Soviet ore.
+1991|F|mor|EU|Berlin|founding,money|Germany reunited|East and West Germany unite, and Berlin becomes the banking capital of the freed east.
+1992|F|mor|EU|Maastricht|treaty,money|The Community becomes a bloc|The European states bind their economies together at Maastricht and plan the eurodollar as a rival to the faltering American currency.
+1992|F|mor|EU|Sarajevo|war,siege|The Yugoslav wars|Yugoslavia breaks apart in war, as in the classic world; mercenary firms from three continents hire out to every side.
+1992|F|mor|AS|Seoul|industry,money|The chip boom|Korean and Japanese chip makers race for the first biologic interface designs, buying patents from bankrupt American labs.
+1992|W|vam|EU|Berlin|money,occult|The Ventrue cross the Wall|The house reading has Hamburg's Ventrue move into the old East German combines as fast as the Treuhand can sell them.
+1993|F|mor|EU|London|terror,media|New York burns on every screen|The drug lords' bomb in New York is watched live across Europe; markets close for a week and every capital puts troops at its airports.
+1993|F|mor|EU|Munich|science,industry|The Munich chips|The first biologic interface chips come out of a Munich laboratory, and German firms take the lead in neural hardware.
+1993|F|mor|MO|Brno|founding,law|The peaceful split|Czechoslovakia divides into the Czech and Slovak republics; the Czech government courts German and Japanese investment for Moravia.
+1993|W|mag|EU|Munich|science,occult|Iteration X's lab|The house reading follows the approved timeline: the Munich chips are an Iteration X project, and Hermetics in Vienna see the Net's paradigm being laid.
+1994|F|mor|EU|Frankfurt|money|The crash reaches Europe|The world stock crash wipes out a third of Europe's private savings; banks fail in Italy and Spain and the Bundesbank props up the rest.
+1994|F|mor|AS|Tokyo|money|Tokyo buys the wreckage|Japanese and Hong Kong investors buy failed European and American firms for a fraction of their worth.
+1994|F|mor|MO|Brno|money,crime|The voucher funds vanish|Czech privatisation funds collapse in the crash; their managers flee abroad and Moravian factories pass to foreign owners.
+1994|W|vam|MO|Brno|money,occult|The prince buys Brno|The house reading has the prince of Brno buy the city's textile mills and breweries through the crash, as the approved timeline's Ventrue and Giovanni do in the West.
+1994|F|mor|ME|Jerusalem|treaty,faith|The peace that fails|A peace between Israel and its neighbours is signed and falls apart within three years as the region slides toward war.
+1995|F|mor|EU|Moscow|crown,war|Moscow's hard men|After the crash, Soviet generals and oil men take control of the federation and promise order and bread.
+1995|F|mor|AS|Kobe|quake,industry|Kobe rebuilt by the corps|The Kobe earthquake strikes as in the classic world, and the city is rebuilt by corporations as a company port.
+1995|F|mor|ME|Riyadh|trade,money|Oil at any price|With American power slipping, Gulf oil states sell to whoever pays, and Japanese and European tankers crowd the Strait of Hormuz.
+1995|W|wer|EU|Ardennes|weather,occult|The forests thin|The house reading has the Fianna and Black Furies of Europe watch the old forests sold for timber to pay the crash debts.
+1996|F|mor|EU|London|empire,money|The American collapse seen from Europe|When the United States government fails, European banks call in their loans and the eurodollar becomes the world's reserve currency.
+1996|F|mor|EU|Brussels|law,founding|The Eurobusiness Community|The European bloc reorganises itself around its corporations; seats on its councils go to firms as well as states.
+1996|F|mor|AS|Beijing|empire,trade|China fills the gap|China moves into markets the Americans have abandoned in Africa and south-east Asia.
+1996|F|mor|MO|Olomouc|travel,law|The American students go home|Hundreds of American students and teachers in Olomouc and Brno are stranded when their banks fail; many never leave.
+1996|W|wra|EU|London|money,occult|The Collapse in Stygia|The house reading has Europe's Hierarchy hear of the Collapse from the American dead and prepare for refugees on both sides of the Shroud.
+1996|F|mor|AS|Seoul|money,industry|Korea's chaebol go global|Korean conglomerates buy American factories at auction as the Collapse empties them.
+1997|F|mor|ME|Tehran|war,disaster|The Mideast Meltdown|A regional war ends in nuclear exchanges that glass much of Iran, Iraq and Libya and reach Chad; millions die in a day.
+1997|F|mor|ME|Cairo|migration,disaster|Egypt spared|Egypt escapes the fire, and millions of refugees pour toward the Nile from the glassed lands to the west and east.
+1997|F|mor|ME|Ankara|migration,war|Turkey closes its border|Turkey shuts its eastern border to the fleeing millions and builds camps along it; the camps become cities.
+1997|F|mor|EU|Rome|faith,migration|The Vatican's appeal|The pope calls Europe to take in the survivors of the Meltdown; Italy and Spain take hundreds of thousands, and resentment grows.
+1997|F|mor|AS|Karachi|migration,plague|The eastern flight|Refugees from eastern Iran cross into Pakistan and Afghanistan, and radiation sickness follows them.
+1997|F|mor|EU|London|death,art|Manson killed in England|The rockerboy Manson is murdered in England, and a generation of British youth mourns in the streets.
+1997|W|dem|ME|Tehran|disaster,occult|The breach under the glass|The house reading follows the approved timeline: Fallen escape the Abyss into the dying of Iran, Iraq and Libya, and wander toward the camps.
+1997|W|mum|ME|Cairo|disaster,occult|The Reborn count the dead|The house reading has the mummies of Cairo walk the refugee camps by night, marking the dead the glass left without names.
+1997|W|wer|ME|Zagros|disaster,occult|The Wyrm's new desert|The house reading has the Silent Striders' caerns of the Zagros fall silent at once, and the Umbra above the glass turn to a burned waste.
+1998|F|mor|EU|Berlin|weather,famine|The grain shortfall|The American Midwest drought sends grain prices soaring in Europe; bread riots break out in Naples and Marseille.
+1998|F|mor|MO|Brno|trade,money|Moravian grain sold abroad|Moravian farms sell their harvests to German and Dutch buyers, and Brno's markets go short.
+1998|F|mor|AS|Jakarta|money,uprising|The Asian squeeze|Indonesia's government falls in riots as food and fuel prices rise; corporations buy its oil fields from the new rulers.
+1998|F|mor|ME|Damascus|migration,law|Syria's camps|Syria fills its southern deserts with camps for the Iraqi survivors and seals them with soldiers.
+1998|W|wra|ME|Ankara|migration,occult|The dead cross with the living|The house reading has the Meltdown's wraiths follow the living into the Turkish camps, and the Shadowlands of Anatolia fill.
+1999|F|mor|EU|Rome|faith,terror|The millennium cults of Europe|End-of-days cults spread through Italy and Spain; the Church condemns them and some bishops quietly bless them.
+1999|F|mor|EU|Moscow|war|The Caucasus front|The Soviet federation fights rebels in the Caucasus who are armed from the Meltdown's looted arsenals.
+1999|F|mor|AS|Hong Kong|empire,trade|Hong Kong's handover delayed|With the old powers in chaos, Hong Kong becomes a free corporate port under joint British, Chinese and Japanese bank control.
+1999|W|hun|EU|Rome|faith,occult|Leopold in the parishes|The house reading has the Society of Leopold use the cults to recruit in Italian parishes, as the approved timeline says.
+1999|F|mor|MO|Brno|trade,building|The Brno trade fair reborn|Brno's exhibition grounds are rebuilt by a Japanese firm as the showroom of central Europe.
+2000|F|mor|EU|Rome|death,faith|The New Year's Day deaths|Thousands of cult members die by their own hand on New Year's Day across Italy, Spain and Portugal.
+2000|F|mor|ME|Cairo|plague|The wasting plague reaches Egypt|The wasting plague spreads through the Nile camps and into Cairo; Egypt closes its borders.
+2000|F|mor|EU|Marseille|plague,law|Europe's quarantine|The Eurobusiness Community closes its southern ports to ships from Africa and the Levant to stop the plague; smugglers flourish.
+2000|F|mor|AS|Shanghai|building,industry|The first Asian arcologies|Shanghai, Tokyo and Singapore begin arcology towers, cities in a single building for corporate workers.
+2000|F|mor|MO|Brno|plague,law|Plague cordon in Moravia|The Czech army cordons off a Brno suburb where the wasting plague appears among Ukrainian workers.
+2000|W|kue|AS|Shanghai|building,occult|Nests under the towers|The house reading follows the approved timeline: Kuei-jin geomancers find dragon nests sealed beneath the new Shanghai towers.
+2001|F|mor|EU|Toulouse|science,media|The Worldsat network|The European space agency and Soviet partners finish the Worldsat network, and the Net becomes worldwide.
+2001|F|mor|AS|Bangalore|industry,media|India's data cities|India's southern cities become the world's back offices, running the Net's switches for European and Japanese firms.
+2001|F|mor|MO|Brno|media,industry|Brno's server halls|A German telecom builds a great switching centre in Brno, and Moravia is wired to the Net years before much of Europe.
+2001|W|cha|EU|London|media,occult|Glamour on the wire|The house reading has young Kithain in London find a little Glamour in the first worldwide Net, and the elders call it a fad.
+2002|F|mor|EU|Kiev|famine|The Soviet food crash|Blights strike the Soviet and Canadian harvests; famine returns to Ukraine and Kazakhstan.
+2002|F|mor|EU|Berlin|famine,trade|Food rationing in Europe|Germany and France ration meat and grain, and the corporate farms of the Netherlands grow rich.
+2002|F|mor|AS|Delhi|famine,science|India's engineered crops|India plants engineered grains from European labs and avoids the worst of the famine at the cost of its seed banks.
+2002|W|wer|EU|Ukraine|famine,occult|The blight's makers|The house reading has the Shadow Lords of Kiev trace the blight to a Pentex lab in the Netherlands, as the approved timeline's Garou suspect.
+2003|F|mor|EU|Brussels|media,crime|The Johanneson files in Europe|Tesla Johanneson's leaked NSA files are republished by European papers, and Brussels opens hearings on American spying.
+2003|F|mor|AS|Taipei|war,sea|Taiwan Strait tensions|Chinese and Japanese warships shadow each other in the Taiwan Strait as both court the island's chip makers.
+2003|F|mor|ME|Cairo|plague,law|The Nile quarantine|Egypt seals the Nile camps for a year; the Setites run the smuggling through the cordon.
+2004|F|mor|EU|Paris|war,money|The First Corporate War|Two airlines fight over the failing Trans-World Air with sabotage, bombings and private soldiers in European airports.
+2004|F|mor|EU|Frankfurt|terror,war|The airport bombings|Car bombs at Frankfurt and Paris airports kill hundreds during the corporate war; no government dares name the firms responsible.
+2004|F|mor|ME|Dubai|trade,war|Mercenary markets|Gulf ports become markets for corporate armies, selling arms and men to every side.
+2004|W|mag|EU|Vienna|war,occult|The Hermetic and Tremere quarrel|The house reading follows the approved timeline: Vienna's Tremere and the Order's corporate houses fight part of the airline war through proxies.
+2005|F|mor|EU|Geneva|science,media|The cybermodem|The cybermodem lets users enter the Net directly through a neural plug; European firms sell it within a year.
+2005|F|mor|MO|Brno|science,learning|Brno's netrunners|Brno's technical university becomes a training ground for netrunners, and Moravian hackers find work across Europe.
+2005|W|dem|EU|Geneva|science,occult|Fallen in the wires|The house reading follows the approved timeline: a second wave of Fallen slips through into the Net, and some nest in Geneva's banks.
+2006|F|mor|EU|Moscow|science,travel|The Soviet orbital push|The Soviets launch heavy lifters from Baikonur and promise a station that will rival the Europeans'.
+2006|F|mor|ME|Ankara|founding,law|The camp cities|Turkey grants the eastern refugee camps their own councils; some grow into cities of a million.
+2006|F|mor|AS|Tokyo|law,crown|The corporate diet|Japan lets its largest corporations nominate members to the Diet.
+2006|W|mag|AS|Tokyo|law,occult|The Syndicate's diet|The house reading has the Syndicate's agents behind Japan's corporate seats in the Diet.
+2007|F|mor|AS|Spratly Islands|war,sea|The Second Corporate War|Corporations fight a naval war over South China Sea oil platforms with their own fleets.
+2007|F|mor|AS|Manila|war,disaster|Manila bombed|Corporate air strikes miss an oil terminal and hit a Manila district; thousands die.
+2007|F|mor|EU|London|art,media|Braindance reaches Europe|Braindance, recorded experience played into the brain, arrives in European clubs and is banned in France within a month.
+2007|W|kue|AS|Spratly Islands|war,occult|The Yama Kings at sea|The house reading follows the approved timeline: the Yama Kings' servants ride in both fleets, and the Kuei-jin of Manila hunt them.
+2008|F|mor|EU|Toulouse|war,science|The orbital war|A war in orbit between corporations and states ends with stations shattered and rocks dropped on the earth.
+2008|F|mor|AS|Hong Kong|war,disaster|A rock falls near Hong Kong|A mass driver strike meant for a launch site lands in the sea near Hong Kong; the wave floods the harbour.
+2008|F|mor|EU|Moscow|war|Soviet lifters grounded|The Soviet orbital programme loses half its craft in the war and turns to partnership with Europe.
+2008|W|wra|EU|Toulouse|war,occult|The orbital dead|The house reading has the orbital war's dead fall into Shadowlands that have no ground, and drift.
+2009|F|mor|EU|Toulouse|science,travel|The Euro-Soviet Mars mission|A joint European and Soviet crew leaves for Mars, the first people to go.
+2009|F|mor|AS|Beijing|treaty,war|The US-China treaty|The remnant American government signs a mutual defence treaty with China; Japan reads it as a threat.
+2009|F|mor|EU|Venice|money,art|Venice's corporate year|Venice is restored by a European conglomerate and becomes a private city of conferences and festivals.
+2009|W|vam|EU|Venice|law,occult|The Venice Conclave|The house reading follows the approved timeline: the Camarilla meets in the restored Venice, and the young are told to stay off camera.
+2010|F|mor|EU|Hamburg|building,industry|Hamburg's harbour towers|Hamburg starts building arcology towers on its harbour and grows into Europe's great megacity.
+2010|F|mor|MO|Brno|building,industry|The Brno corridor|A Japanese electronics firm builds plants between Brno and Vienna, and the corridor fills with commuter towns.
+2010|F|mor|ME|Istanbul|trade,building|Istanbul the gateway|Istanbul grows rich as the gateway between Europe and the surviving east, and its population passes twenty million.
+2011|F|mor|EU|Toulouse|science,building|The Crystal Palace|The European orbital station called the Crystal Palace is completed and becomes a city in the sky.
+2011|F|mor|AS|Singapore|law,money|Singapore's charter|Singapore sells citizenship to corporations and becomes the first charter state.
+2011|W|mag|EU|Toulouse|science,occult|The Void Engineers' station|The house reading has the Void Engineers run part of the Crystal Palace as a Technocratic Construct.
+2012|F|mor|EU|Paris|plague,law|The bioplague panic|News of the Chicago bioplague closes Europe's airports to American flights for a year.
+2012|F|mor|AS|Shanghai|crime,industry|Shanghai's corporate police|Shanghai's arcologies hire their own police, and the city's government becomes a corporate board.
+2012|W|kue|AS|Shanghai|crime,occult|Akuma in the boardrooms|The house reading follows the approved timeline: akuma rise in Shanghai and Hong Kong corps, and the old courts lose ground.
+2012|F|mor|MO|Brno|plague,law|Moravia closes its airports|The Czech government closes Brno and Ostrava airports to American flights during the bioplague panic, and Moravian firms lose their transatlantic trade.
+2013|F|mor|EU|Brussels|law,media|Netwatch in Europe|Netwatch opens European offices, and the Eurobusiness Community lets it police European nets.
+2013|F|mor|MO|Brno|media,crime|The Brno raids|Netwatch agents raid Brno netrunner dens, and Moravian hackers go underground.
+2013|W|mag|MO|Brno|media,occult|Adepts in Moravia|The house reading has Virtual Adepts hide in Brno's old server halls when Netwatch shuts their European nodes.
+2014|F|mor|EU|Geneva|media,law|The Net redesigned|The Net is rebuilt on new rules; whole regions of the old net vanish, and European archives are lost.
+2014|F|mor|AS|Seoul|media,industry|Korea's own net|Korea builds a national net walled from the rest, and other Asian states follow.
+2014|W|dem|EU|Geneva|media,occult|Fallen in the old net|The house reading follows the approved timeline: when the Net is rebuilt, Fallen nest in the abandoned structures beneath Geneva's banks.
+2015|F|mor|EU|Bratislava|founding,money|Slovakia sold|Slovakia, bankrupt, sells its rail and power to a Soviet-German consortium.
+2015|F|mor|ME|Dubai|building,money|Dubai's towers|Dubai builds a ring of arcologies and becomes the Middle East's corporate capital.
+2015|F|mor|AS|Delhi|uprising,industry|The Delhi data strike|Data workers in Delhi strike for a month, and European banks lose billions.
+2016|F|mor|EU|London|war,media|The Third Corporate War|Corporations fight in the Net; netrunners die in their chairs, and European markets freeze.
+2016|F|mor|EU|London|crime,media|Netrunners dead in London|Dozens of London netrunners are found dead at their decks in a single night of the Net war.
+2016|F|mor|MO|Brno|war,media|Brno's switch hit|The Brno switching centre is burned out in the Net war, and Moravia goes dark for a week.
+2016|W|vam|EU|London|war,occult|Proxy war in London|The house reading follows the approved timeline: the Net war in London is partly a Ventrue and Giovanni proxy fight.
+2017|F|mor|EU|Zurich|science,law|The clone ban|Switzerland bans the new self-aware clones; corporations move their clone labs to charter states.
+2017|F|mor|AS|Singapore|science,industry|Singapore's clone labs|Singapore licenses the clone labs other states ban, and its clinics sell copies of the dying to anyone who can pay.
+2017|W|mum|AS|Singapore|science,occult|The clone question|The house reading has mummies visit Singapore's clone labs and leave unsettled by bodies that come back with no Ba.
+2018|F|mor|ME|Ankara|founding,war|The Anatolian League|Turkey, the camp cities and Azerbaijan form a league to keep order on the edge of the glass.
+2018|F|mor|EU|Kiev|uprising|Ukraine's corporate strike|Ukrainian miners and farmers strike against Soviet corporate owners, and Moscow sends troops.
+2018|W|wer|ME|Ankara|war,occult|The League's wolves|The house reading has Silent Striders scout the Anatolian League's eastern marches for the waste septs that will come.
+2019|F|mor|AS|Hong Kong|building|Neo-Kowloon|Hong Kong's old walled districts are rebuilt as the arcology city called Neo-Kowloon.
+2019|F|mor|EU|Milan|industry,art|Milan's chrome|Milan's fashion houses sell cyberware as fashion, and chrome becomes the style of European youth.
+2019|F|mor|MO|Brno|industry,money|The Brno chrome plants|Cyberware makers open plants in Moravia, and Brno's workers take discounted implants.
+2019|W|kue|AS|Hong Kong|building,occult|Neo-Kowloon's nests|The house reading has Neo-Kowloon built over three dragon nests, and the courts that hold them become rich.
+2020|F|mor|EU|Hamburg|industry,crime|Hamburg's undercity|Hamburg's arcologies leave an undercity of gangs and refugees beneath them.
+2020|F|mor|AS|Tokyo|building,law|Tokyo's arcology wards|Tokyo's wards become arcology districts run by their corporations, with company police, company schools and company shrines.
+2020|F|mor|ME|Cairo|plague,migration|Cairo's camps|Cairo's camps hold four million, and the plague still burns in them.
+2020|W|mum|ME|Cairo|plague,occult|Healers in the camps|The house reading follows the approved timeline: Amenti healers work in Cairo's camps, and the Setites run the trade around them.
+2021|F|mor|EU|Rome|faith|The pope of the purge|A new pope from Poland preaches that Europe must guard itself against what walks in the dark.
+2021|F|mor|MO|Olomouc|faith|Olomouc's archbishop|The archbishop of Olomouc refuses to preach the new pope's call against unseen enemies.
+2021|W|hun|EU|Warsaw|faith,occult|Leopold's new patron|The house reading has the Society of Leopold win the new pope's ear and prepare its proof.
+2022|F|mor|EU|Warsaw|law,faith|Poland's faith laws|Poland passes laws that put the Church back into schools and courts.
+2022|F|mor|AS|Taipei|science,learning|Taipei's schools|Taipei's net schools reach students across Asia, and Taiwan becomes the classroom of the Pacific Rim.
+2022|W|vam|EU|Warsaw|faith,occult|Warsaw's Kindred nervous|The house reading has Warsaw's Kindred watch Poland's faith laws and quietly move havens to Moravia.
+2023|F|mor|EU|Rome|faith,occult|The Roman visions|Strange visions are reported in Rome; the Church calls them miracles, and a few people begin to see what others cannot.
+2023|W|hun|EU|Rome|faith,occult|The first imbued of Rome|The house reading follows the approved timeline: the first imbued wake in Rome, and the Society of Leopold seeks them out.
+2023|F|mor|EU|Hamburg|industry,crime|Hamburg's corp farms|Hamburg's food arcologies grow most of north Germany's protein, and Garou raids on them begin to make the news as vandalism.
+2024|F|mor|EU|London|media,crime|The Vaulderie braindance|A braindance of a strange blood rite sells in London clubs as a horror fake.
+2024|F|mor|MO|Brno|media,occult|Rumours in Brno|Brno's netrunners trade rumours of files that show people without body heat.
+2024|W|wer|EU|Hamburg|media,occult|The deniable raids|The house reading follows the approved timeline: Garou raids on corp farms around Hamburg stay deniable, but the footage is kept.
+2025|F|mor|EU|Rome|media,terror|The Elysium raid|A Society of Leopold raid on a Roman Elysium goes out live, and the Vatican confirms its purpose.
+2025|F|mor|EU|Brussels|law,media|Europe in shock|The flood of files about the hidden world brings Europe's councils into emergency session.
+2025|F|mor|MO|Brno|media,law|The Czech reply|The Czech government refuses to pass purge laws and calls for calm, and Moravia becomes a refuge.
+2025|W|vam|MO|Brno|media,occult|Brno's Kindred hold their breath|The house reading has Brno's prince order every Kindred in Moravia to stay off the Net and wait.
+2026|F|mor|EU|Rome|law,persecution|The purge laws|Italy, Spain and Poland pass purge laws, and thermographic gates go up at every station; anyone without body heat is shot on sight.
+2026|F|mor|EU|Milan|crime,persecution|The first gate killings|Gate guards in Milan shoot a woman with a cooling implant; the courts rule the shooting lawful.
+2026|F|mor|MO|Brno|migration,law|Refugees in Moravia|People fleeing the purge states, living and otherwise, arrive in Brno and Olomouc; the Czech police are told not to ask.
+2026|F|mor|ME|Dubai|trade,law|Dubai's quiet trade|Gulf charter cities sell discreet residence to anyone who can pay and promise not to show up on cameras.
+2026|W|vam|MO|Brno|migration,occult|Brno's Elysium overflows|The house reading has the prince of Brno take in Kindred fleeing Italy and Poland, at a price in boons that will be called in for decades.
+2026|W|mum|ME|Cairo|science,occult|Biotechnica in Cairo|The house reading follows the approved timeline: a Biotechnica team arrives in Cairo to copy the rebirth seen in the 2025 footage.
+2026|F|mor|EU|Madrid|persecution,crime|The Madrid gates|Madrid's metro gates shoot a dozen people in the first week, most of them with medical implants that run cold.
+2027|F|mor|EU|Lisbon|law,persecution|Portugal joins the purge|Portugal passes its own purge law after riots in Lisbon.
+2027|F|mor|AS|Tokyo|law|Japan's registry debate|Japan's Diet debates a registry for the newly revealed beings, following the Free States' lead.
+2027|F|mor|EU|Berlin|law,uprising|Germany refuses|Germany refuses purge laws but allows thermographic checks at airports; Catholic Bavaria protests.
+2027|W|hun|EU|Krakow|persecution,occult|The Krakow deputies|The house reading has Polish imbued sworn in as purge deputies in Krakow, and the Merciful among them leave within a year.
+2027|F|mor|AS|Taipei|law,faith|Taiwan's open courts|Taiwan's courts rule that the revealed have the rights of persons, and Taipei becomes a refuge in the east.
+2028|F|mor|EU|Rome|faith,war|The parish militias|The Society of Leopold's parish militias march openly in Rome, Madrid and Warsaw with blessed rounds and optics.
+2028|F|mor|MO|Olomouc|faith,uprising|The Olomouc sermon|A priest in Olomouc preaches against the purge militias and is shot by an unknown gunman; thousands march at the funeral.
+2028|F|mor|AS|Hong Kong|crime,war|The Pacific Rim street war|The San Francisco war between Kindred and Kuei-jin spreads to Neo-Kowloon, and whole arcology levels change hands.
+2028|W|mag|EU|Vienna|occult,law|Vienna's Hermetics openly|The house reading has the Order's Vienna house hold open lectures, and Paradox stays quiet in the lecture hall.
+2029|F|mor|EU|Vienna|weather,occult|Storms from the east|Strange storms roll out of the Mideast glass across the Balkans and into central Europe; people report voices in the wind.
+2029|W|wra|EU|Vienna|storm,occult|Storms of the dead|The house reading follows the approved timeline: the storms are the dead of the glass blowing into Europe's Shadowlands, and Vienna's Hierarchy is swamped.
+2029|W|wer|ME|Iraq|occult,migration|Septs on the glass|The house reading follows the approved timeline: Silent Striders lead packs to the middle ring of the Mideast glass and found waste septs there.
+2029|F|mor|AS|Taipei|learning,media|The Taipei lessons|A teacher in Taipei gives lessons on balance over the Net, and thousands across Asia watch.
+2029|F|mor|MO|Brno|weather,occult|The voices in the wind reach Moravia|The storms from the east reach Moravia; Brno's people stay indoors, and the Olomouc churches ring their bells against the wind.
+2030|F|mor|EU|Hamburg|building,industry|Hamburg passes thirty million|Hamburg's arcology sprawl passes thirty million people, the largest city in Europe.
+2030|F|mor|AS|Tokyo|building|Tokyo's nest abandoned|A Tokyo arcology's basement levels are sealed after power failures no engineer can explain.
+2030|F|mor|ME|Istanbul|migration,law|Istanbul's walls|Istanbul builds a wall around its old city to keep out the camp cities.
+2030|W|wer|EU|Hamburg|building,occult|The Gauntlet over Hamburg|The house reading follows the approved timeline: Glass Walkers find the Gauntlet over Hamburg nearly impossible to cross indoors.
+2030|F|mor|MO|Olomouc|migration,law|Olomouc's refuge camp|Olomouc's old barracks become a camp for people fleeing the purge states, run by the archdiocese against Rome's wishes.
+2031|F|mor|EU|Madrid|war,persecution|The Sabbat's war in Spain|Packs of the revealed fight back in Madrid's undercity; the purge militias burn whole blocks.
+2031|F|mor|MO|Brno|law|The Czech asylum law|The Czech parliament passes an asylum law that does not ask whether a refugee has a pulse.
+2031|W|vam|EU|Madrid|war,occult|The Sabbat fights|The house reading follows the approved timeline: the Sabbat becomes the only sect still fighting, and Camarilla neonates in Madrid go over to it.
+2032|F|mor|EU|Budapest|law,persecution|Hungary's half measure|Hungary passes a registry law, not a purge, and becomes a crossing point between the crusade's Europe and Moravia.
+2032|F|mor|AS|Delhi|faith,law|India's temple councils|Indian temples demand a voice in laws about the revealed, and the courts agree.
+2032|W|wer|EU|Budapest|migration,occult|The crossing at Budapest|The house reading has Garou Kinfolk families cross through Budapest to the Moravian hills, guided by Silent Striders.
+2032|F|mor|ME|Alexandria|learning,trade|Gulf money in Egypt|Gulf banks pay to rebuild Egypt's ports, betting that the Nile will outlast their oil.
+2033|F|mor|ME|Alexandria|building,learning|Alexandria rebuilt|Alexandria is rebuilt as a free port and university city with Gulf money.
+2033|F|mor|EU|Kiev|war,uprising|Ukraine's secession|Ukraine breaks from the Soviet federation after a short war.
+2033|W|mum|ME|Alexandria|building,occult|The tombs under Alexandria|The house reading has the rebuilding of Alexandria open old tombs, and the mummies claim them first.
+2034|F|mor|EU|Paris|law,persecution|France's thermal checks|France puts thermal gates in its metro but stops short of purge law.
+2034|F|mor|AS|Tokyo|money,law|Bottled blood in Japan|Biotechnica's licensed blood goes on sale in Japan's registry wards.
+2034|F|mor|MO|Brno|law,money|The Brno blood clinics|Brno licenses donor clinics where the revealed may feed by contract, the first in central Europe.
+2034|W|vam|MO|Brno|law,occult|The prince's clinics|The house reading has the prince of Brno own the clinics through a Viennese front, and take a tithe of every pint.
+2035|F|mor|EU|Moscow|crown,war|The Soviet split|The Soviet federation splits into a Russian core and a Central Asian league.
+2035|F|mor|AS|Almaty|founding|The Central Asian League|Kazakhstan, Uzbekistan and their neighbours form a league with Chinese backing.
+2035|W|kue|AS|Almaty|founding,occult|The steppe courts|The house reading has Kuei-jin courts from western China follow the money to Almaty.
+2035|F|mor|EU|Kiev|founding,war|Free Ukraine|Ukraine's new republic opens its borders to the revealed, and Kiev's Shadow Lords are its unseen guard.
+2036|F|mor|AS|Singapore|crime,law|Hunter contracts|Singapore's corporations hire imbued teams for site security, and the first hunter contracts are signed under Singapore law.
+2036|F|mor|MO|Ostrava|industry|Ostrava's last mine|Ostrava's last coal mine closes; the shafts are sold as data vaults.
+2036|W|wer|MO|Ostrava|industry,occult|The vaults below Ostrava|The house reading has the Glass Walkers find Weaver spirits nesting in Ostrava's new data vaults.
+2036|F|mor|EU|Kiev|science,disaster|Chernobyl's new tomb|The sealed Chernobyl reactor is covered again, and Ukrainian guides lead tours of the zone's wolves.
+2037|F|mor|EU|Krakow|faith,persecution|The Krakow trials|Polish courts try families accused of hiding vampires; dozens are jailed.
+2037|F|mor|ME|Baku|trade,war|Baku's oil war|Corporate armies fight over the Caspian oil fields near Baku.
+2037|W|hun|EU|Krakow|persecution,occult|The Krakow imbued split|The house reading has Krakow's imbued divide over the trials; the Merciful hide the families, the Zealots testify.
+2038|F|mor|EU|Vienna|law|Austria's registry|Austria passes a registry law, and Vienna's Tremere become respectable citizens on paper.
+2038|W|vam|EU|Vienna|law,occult|The Tremere register|The house reading has the Tremere of Vienna register a handful of their number and hide the rest behind them.
+2038|F|mor|AS|Seoul|uprising,media|The Seoul reveal riots|Riots break out in Seoul when a famous singer is revealed as Kindred; the singer goes on singing.
+2039|F|mor|EU|Lyon|fire,persecution|The Lyon burning|Crusaders burn a house in Lyon said to shelter fae; children die, and Europe is horrified.
+2039|F|mor|EU|Paris|uprising|The Lyon protests|Millions march in Paris against the crusade after Lyon, and France refuses to pass a purge law for another generation.
+2039|W|cha|EU|Lyon|fire,occult|The freehold that burned|The house reading follows the approved timeline: the Lyon house was a changeling freehold, and the Merciful imbued walk out of the crusade.
+2039|F|mor|AS|Tokyo|science,law|Japan's clone law|Japan forbids clones from holding property, and the first clone strike follows in Osaka.
+2040|F|mor|AS|Delhi|science,plague|The Delhi cure|An Indian lab sells a cure for the wasting plague.
+2040|F|mor|EU|Prague|founding,law|Prague's free quarter|Prague's old town becomes a free quarter where the revealed may live openly, and tourists come to look at them.
+2040|W|cha|EU|Prague|founding,occult|Prague's open freehold|The house reading has the Kithain of Prague open a freehold in the free quarter, and Glamour runs strong there for a generation.
+2041|F|mor|EU|Warsaw|war,persecution|The Warsaw undercity raids|The Polish army clears Warsaw's undercity with flamethrowers and drones, and thousands of the poor die with the hunted.
+2041|F|mor|ME|Riyadh|money,trade|The oil runs low|The great Gulf fields begin to run dry, and the charter cities turn from oil to banking and water.
+2042|F|mor|AS|Tokyo|law,faith|Japan registers the Kuei-jin|Japan's registry extends to the Kuei-jin courts, which sign contracts and rebuild openly.
+2042|F|mor|ME|Iraq|exploration,occult|Ghost caerns on the glass|Explorers on the glass report places where wolves and the dead gather together under a burned sky.
+2043|F|mor|ME|Alexandria|learning,faith|The Alexandria school|A school opens in Alexandria for mortals who would learn Ma'at; corps send spies as students.
+2043|W|mum|ME|Alexandria|learning,occult|The Shemsu-heru teach|The house reading follows the approved timeline: the Shemsu-heru found the school, and the Setites mark it.
+2043|F|mor|EU|Lyon|founding,faith|Lyon's chapels|Merciful imbued open chapels in Lyon for anyone the crusade has hurt.
+2044|W|wra|MO|Rothenstein|occult,war|The last fortress|The house reading follows the approved timeline: the heirs of the Dark Kingdom of Iron fortify the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress.
+2044|F|mor|MO|Rothenstein|occult,faith|Rothenstein's walking dead|Visitors to Rothenstein report the dead walking its old walls at night, and pilgrims come to see.
+2044|F|mor|AS|Tokyo|learning,occult|Students of chi|Tokyo universities offer courses in feeling chi, and Visionary imbued sit at the back.
+2045|F|mor|ME|Mosul|war,persecution|Kindred on the glass rim|Kindred driven out of the crusade's Europe settle on the rim of the Mideast glass, where no drone flies.
+2045|F|mor|EU|Rome|war,persecution|Sabbat raids on Rome|Sabbat packs from the glass rim raid Rome and Naples for blood like a border war.
+2046|F|mor|MO|Brno|money,industry|Brno's data boom|Brno's data vaults and chrome plants make it the richest city in central Europe for a decade.
+2046|F|mor|AS|Beijing|war,building|China's arcology feuds|China's arcologies fight each other with hired armies, and Beijing's government cannot stop them.
+2047|F|mor|EU|Madrid|fire,persecution|The Madrid fires|The crusade burns Madrid's undercity, and the smoke hangs over the city for a week.
+2047|F|mor|ME|Cairo|plague,faith|The free clinics|A medical firm opens free clinics in the dead zones and in Cairo's camps, and no one knows who pays for them.
+2047|W|dem|ME|Cairo|faith,occult|The Reconcilers' clinics|The house reading follows the approved timeline: the Reconcilers run the clinics, and the Alexandria school becomes their uneasy ally.
+2048|F|mor|AS|Tokyo|industry,law|Contract Embraces in Japan|Japanese firms begin hiring registered Kindred for night work in the orbital docks, and a generation is Embraced by contract, owing a firm before a sire.
+2048|F|mor|EU|Amsterdam|flood,weather|The dykes fail|A North Sea storm surge breaks the outer dykes of Holland; the Dutch abandon the lowest polders and move inland to corporate towns.
+2048|F|mor|MO|Mikulov|weather,trade|The vineyards die|Years of drought kill the old vineyards of the Palava hills, and Moravian wine becomes a luxury grown under glass.
+2049|F|mor|EU|Hamburg|crime,occult|Sleepers who do not wake|Hamburg's hospitals fill with people who fall asleep and cannot be woken; the papers call it the long sleep.
+2049|W|wra|EU|Hamburg|death,occult|The sleepers in the Shadowlands|The house reading follows the approved timeline: the long sleepers have fallen into the Shadowlands, and Hamburg's wraiths do not know what to do with the living among them.
+2049|F|mor|AS|Dhaka|flood,migration|Bengal under water|The sea and the failing monsoon drive thirty million people out of the Bengal delta toward India's walled cities.
+2050|F|mor|MO|Brno|crown,law|The Czech crusader party|A party calling for Czech purge laws wins its first seats in Brno and Olomouc, promising order after a decade of refugees.
+2050|F|mor|AS|Delhi|faith,law|India's open temples|India's temple councils win a court ruling that the revealed may worship and live openly, and Delhi becomes a refuge in the east.
+2050|F|mor|EU|Moscow|science,travel|The Moon base|A Russian and European base opens at the lunar south pole to mine ice for the orbital yards.
+2051|F|mor|EU|Bratislava|war,persecution|Slovakia's purge|Slovakia passes a purge law after a crusader government takes power, and Moravia's eastern border fills with people fleeing the gates.
+2051|W|cha|EU|Bratislava|persecution,occult|The fae on the Morava|The house reading has Slovak changelings cross the Morava by night into the Moravian hills, carrying a freehold's Balefire in a lantern.
+2052|F|mor|EU|Rome|faith,law|The hollowed deputies|The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.
+2052|F|mor|AS|Jakarta|flood,building|Jakarta moves|Indonesia finishes moving its capital inland as the sea takes north Jakarta.
+2052|F|mor|MO|Olomouc|faith,persecution|The archdiocese defies Prague|The archbishop of Olomouc refuses to bless the crusade's gates and is placed under house arrest.
+2053|F|mor|ME|Istanbul|war,siege|The Bosphorus war|The camp cities of Anatolia rise against Istanbul's wall, and the city holds them off for a year with corporate artillery.
+2053|F|mor|EU|Vienna|trade,law|Vienna the neutral city|Vienna declares itself open to every line and every faith, and its cafes fill with Kindred diplomats, crusader spies and corporate brokers.
+2054|F|mor|AS|Seoul|law|Korea's registry|Korea passes its own registry law, and the Korean courts of the Kuei-jin sign contracts with the great firms.
+2054|F|mor|ME|Mosul|war,persecution|The rim war|Crusader air strikes hit Kindred havens on the rim of the Mideast glass; the strikes miss most and kill refugees.
+2055|F|mor|EU|London|money,crown|London's fall|London's banks fail when Gulf money leaves for Asia, and the city sells its parks and palaces to pay its debts.
+2055|F|mor|AS|Singapore|money,trade|Singapore's century|Singapore takes London's place as the world's banker, and its charter citizenship is the most costly passport on earth.
+2056|F|mor|ME|Baghdad|faith,occult|Faith on the glass|Cults on the edge of the Mideast glass worship the Fallen openly, and pilgrims walk in from three continents.
+2056|W|dem|ME|Baghdad|faith,occult|The glass gorges|The house reading follows the approved timeline: faith flows to the Fallen so freely that some remember why they fell, and others grow worse.
+2057|F|mor|EU|Prague|crown,persecution|The crusade wins Prague|A crusader coalition wins the Czech election on a promise of purge law, and the gates go up in Prague's stations within a month.
+2057|F|mor|EU|Hamburg|occult,death|The thinning walls|Hamburg's people see the dead in the streets after dark, and the city stops pretending it does not.
+2057|F|mor|MO|Brno|crown,persecution|Brno's gates|Thermal gates go up in Brno's stations a month after Prague's, and the Brno Elysium goes dark.
+2058|F|mor|MO|Rothenstein|law,persecution|The Rothenstein trials|The crusade reaches Moravia, and Rothenstein's old families are tried in public for hiding Kindred for centuries.
+2058|F|mor|MO|Brno|migration,persecution|The flight from Brno|Brno's revealed and those who sheltered them flee south to Vienna, east to the glass and north into the mountains.
+2058|W|vam|MO|Rothenstein|persecution,occult|The old families' price|The house reading has the elders the old families hid let them hang to keep their own havens secret, and the families' heirs never forgive them.
+2058|W|hun|MO|Olomouc|persecution,occult|The Merciful of Olomouc|The house reading has Merciful imbued in Olomouc smuggle Rothenstein's children out before the trials end.
+2059|F|mor|EU|Berlin|crime,science|Thin-blood alchemy|Thin-blood alchemy is sold on Berlin's streets like any drug, and the purge states cannot stop it at the border.
+2059|F|mor|AS|Beijing|science,travel|China on Mars|A Chinese colony ship lands on Mars beside the old Euro-Soviet base.
+2060|F|mor|AS|Tokyo|occult,building|District reality|Tokyo's arcologies find that warding charms sold to tenants work in one tower and fail in the next.
+2060|F|mor|EU|Venice|flood|Venice drowned|The sea barrier at Venice fails for good, and the restored city is left to the tides; its owners move the festivals to the Alps.
+2061|F|mor|EU|Hamburg|occult,building|Hamburg's caerns dark|The last spirit places inside Hamburg go dark, and the city's Garou take Weaver patrons or leave.
+2061|F|mor|ME|Riyadh|money,weather|The heat wall|Summer heat in the Gulf passes what people can survive outdoors, and the charter cities seal their streets under glass.
+2062|F|mor|AS|Seoul|crime,media|The suicide virus|A program loose on a Seoul corporate grid drives hundreds of workers to suicide in one night; Netwatch blames a rival, and no one believes it.
+2062|W|wra|AS|Seoul|media,occult|Spectres in the code|The house reading follows the approved timeline: the virus is Spectral, and Seoul's dead are its first victims.
+2063|F|mor|ME|Iraq|treaty,occult|The shifters' Concord|Shapechangers who hid for centuries meet on the glass and swear a new Concord with the Garou of the waste septs.
+2063|F|mor|AS|Tokyo|law,crime|The Accord comes to Tokyo|Japan adopts the Night City Accord, and registered Kindred, Garou and imbued sign it as a condition of their contracts.
+2063|F|mor|EU|Vienna|treaty,law|Vienna's refugees|Vienna takes in Moravian refugees and gives them papers that do not ask about pulses.
+2064|F|mor|ME|Alexandria|terror,learning|The school attacked|Gunmen strike the Alexandria school and kill teachers and students; the attackers are found dead in the desert a week later.
+2064|W|mum|ME|Alexandria|terror,occult|Set's answer|The house reading follows the approved timeline: Set's followers strike the school and every adviser they can find, and the mummies prepare their reply.
+2065|F|mor|AS|Taipei|learning,faith|The teachers' followers|Millions across Asia follow the Taipei teachers' lessons in balance, and the old courts call them traitors.
+2065|F|mor|EU|Moscow|war,crown|The Russian core falls|Moscow's government collapses into rival corporate fiefs, and Russia is ruled from company towns.
+2066|F|mor|EU|Rome|treaty,money|The elders' ceasefire|The corps buy peace from the elders the crusade could not reach, in exchange for what the old blood knows; the young call it betrayal.
+2066|F|mor|AS|Hong Kong|trade,occult|Chi for sale|Wan Kuei in Neo-Kowloon sell chi to the corps and to Western Kindred, and the old courts call it selling the Dragon.
+2067|F|mor|MO|Brno|crown,uprising|The Brno rising|Brno's workers rise against the crusader government; the army retakes the city in three days.
+2067|F|mor|EU|Lyon|faith,uprising|The Lyon heresy|Lyon's people break with the crusade and declare a free commune; the crusade surrounds it.
+2068|F|mor|ME|Iraq|occult,faith|Voices under the glass|Cults on the glass hear voices calling from beneath it, and pilgrims dig.
+2068|W|dem|ME|Iraq|occult,faith|The Earthbound call|The house reading follows the approved timeline: the Earthbound beneath the glass begin calling their old servants home.
+2069|F|mor|AS|Delhi|building,migration|Delhi's walls|Delhi walls itself against the delta refugees and becomes a city of eighty million.
+2070|F|mor|EU|Hamburg|death,occult|The dead come back|In Hamburg the dead begin returning to their own bodies in the morgues, and the city's undertakers hire armed guards.
+2070|F|mor|MO|Ostrava|industry,crime|The vault city|Ostrava's old mine shafts become a city of data vaults, run by a firm no one has seen.
+2071|F|mor|AS|Tokyo|law,money|The registry bought|Japan's registry is bought, share by share, by its oldest members, and the list of every haven is sold to the highest bidder.
+2072|F|mor|EU|Barcelona|weather,famine|The Spanish dust|Southern Spain turns to dust, and its people move north into France and the Alps.
+2073|F|mor|ME|Cairo|weather,faith|The Nile fails|The Nile runs low for three years, and Cairo's people turn to the mummies for help.
+2074|F|mor|EU|Lyon|faith,occult|The born imbued|Children born to imbued parents in the Lyon commune see what others cannot from their first year.
+2075|F|mor|AS|Shanghai|war|The arcology wars|China's arcologies fight open wars for water and power through hired armies.
+2075|F|mor|MO|Mikulov|weather,trade|The Moravian dust bowl|South Moravia's fields turn to dust, and Mikulov's last farmers sell to a water firm.
+2076|F|mor|EU|Vienna|treaty|The Vienna Concord|Vienna hosts a meeting of every line, and they agree on almost nothing but meeting again.
+2077|F|mor|MO|Rothenstein|occult,war|The citadel in the Shadowlands|Rothenstein's people see the dead manning the walls at night, and the crusade's priests refuse to go near.
+2078|F|mor|ME|Riyadh|money,trade|The Gulf's end|The last Gulf oil field closes, and the charter cities live on finance and water rights.
+2079|F|mor|EU|Marseille|fire,terror|The clinic fires|Free clinics burn on one night in Marseille, Cairo, Istanbul and Delhi.
+2079|W|dem|EU|Marseille|fire,occult|The Earthbound strike|The house reading follows the approved timeline: the clinics belonged to the Reconcilers, and the Earthbound burned them.
+2080|F|mor|MO|Brno|money,crown|Brno's long decline|Brno is half empty, its data vaults sold, its trade fair a market for scrap and stolen chrome.
+2081|F|mor|EU|Rome|faith,persecution|The heresy courts|With few monsters left to try, the crusade's courts start calling ordinary dissenters heretics.
+2081|W|wra|MO|Rothenstein|war,occult|Moravia holds|The house reading follows the approved timeline: the Hierarchy's legions break everywhere but Moravia.
+2082|F|mor|AS|Seoul|faith,occult|The Seoul vote|Korea's voters are asked whether magic is real; the result is a tie.
+2083|F|mor|AS|Tokyo|money,art|The dream market bottled|Tokyo's corporations bottle dreams and sell them, and the street dream markets close.
+2084|F|mor|EU|Hamburg|crime|The Hamburg dead count|Hamburg's census counts more ghosts than living in some districts.
+2085|F|mor|EU|Hamburg|occult,building|Spirits in the walls|Glass Walkers on arcology security find wild spirits sealed in Hamburg's walls, still calling.
+2086|F|mor|EU|Lyon|crime,terror|The Accord murders|A string of murders in Lyon, Tokyo and Seoul breaks the Accord in three cities at once.
+2087|F|mor|ME|Iraq|war,occult|The deep glass stirs|Things climb out of the deep glass at the Meltdown's heart, and the waste septs fall back.
+2087|F|mor|ME|Alexandria|faith,occult|The Duat darkens|The Alexandria school's priests report that the Underworld darkens at its western edge.
+2088|F|mor|EU|Marseille|art,faith|Stories in the wastes|Wandering storytellers in the southern wastes keep the old tales alive for children no one else visits.
+2089|F|mor|AS|Hong Kong|occult,faith|Heralds in the markets|Strangers walk the night markets of Neo-Kowloon and the Kuei-jin flee them.
+2089|W|kue|AS|Hong Kong|occult,faith|The Demon Emperor's heralds|The house reading follows the approved timeline: the heralds are the Demon Emperor's, and the Sixth Age is at its height.
+2090|F|mor|AS|Shanghai|war,occult|The last nest|Three Kuei-jin courts and a corporate army fight over the last untapped nest in Asia.
+2091|F|mor|EU|Vienna|faith|The Reconcilers pray|In Vienna a circle of the Fallen prays in a ruined church, and the city hears singing at midnight.
+2092|F|mor|EU|Hamburg|death,occult|Holes in the wall|Projectors map the wall between life and death and find holes the size of cities, Hamburg the largest.
+2093|F|mor|AS|Tokyo|death,occult|The Hungry Dead|Starving Kuei-jin lose themselves, and Hungry Dead hunt Tokyo's arcologies by night.
+2094|F|mor|EU|Rome|persecution,faith|The empty cities|The crusade's cities are nearly empty of the revealed; the wastes are full of them.
+2095|F|mor|EU|Hamburg|faith,crown|The crusade belt|The crusade rules a belt of cities from Rome to Hamburg, and its inquisitors whisper that its leaders cast no reflection.
+2096|F|mor|MO|Brno|occult|Brno's wards|The last people of Brno ward their doors with salt and iron.
+2097|F|mor|ME|Cairo|faith,occult|Apophis turns|The mummies of Cairo dream of the serpent Apophis turning in its sleep.
+2098|F|mor|MO|Rothenstein|occult,war|The last night of Rothenstein|Rothenstein's walls are full of the dead, and its people wait for the end.
+2099|F|mor|EU|Vienna|faith,occult|The last Concord|The lines meet in Vienna one last time and choose their sides for the Time of Future Judgement.

@@ -19,7 +19,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
-| wodxItemsTaken | interactables | storyteller (marks things taken from someone else's container as stolen) |
+| wodxItemsTaken | interactables | chronicle (feeds a Ravnos vice of theft), storyteller (marks things taken from someone else's container as stolen) |
 | wodxMapEvent | chronicle, interactables, npc | npc, otherworlds, storyteller |
 | wodxNpcTurnDone | combat, npc | combat |
 | wodxPlaceAlarm | npc | npc (remarks and cries) |
@@ -27,8 +27,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSensesGather | senses | senses |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
-| wodxSocial | actions | chronicle (flaws that bite on a social act; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
-| wodxTrade | actions | chronicle (a Setite's gift that feeds the victim's vice moves their Corruption) |
+| wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
+| wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
 

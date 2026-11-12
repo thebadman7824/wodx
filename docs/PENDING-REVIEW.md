@@ -579,6 +579,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Brujah causes (Ben's note) | A list to pick from by era, or the player's own with the Storyteller's approval; NPCs draw from the same list; three kept tempers make a Rant (B1123) | CAUSES in data/signatures.mjs |
 | 2026-11-12 | Gangrel marks (Ben's note) | Each frenzy leaves a mark with an edge and a cost; it heals after a month. Claws from a mark do Strength + 1 lethal, a house rule (B1124) | MARK_LASTS and MARKS |
 | 2026-11-12 | Malkavian glimpses and the derangement's ear (B1125) | A riddle a night about the next dated event, only a rough when; the Storyteller may give back a Willpower point when it comes true; one extra heard line on NPC talk cards per derangement, eight to ten lines each, the true reply always shown | GLIMPSE_THEMES, DERANGEMENTS |
+| 2026-11-12 | Tzimisce native soil (B1126) | Carrying the soil counts as resting on it; a night without halves every pool until the next rest | soilNight in signature-rules.mjs |
+| 2026-11-12 | Lasombra and cameras (B1127) | House rule: no image on photographs (1839), film (1895), video (1970) or digital (2000); a watched scene gives a breach found later; every scene watched from 2023 unless marked | CAMERAS in data/signatures.mjs |
+| 2026-11-12 | The Ravnos vice (B1128) | Lying, theft, cheating or a dare; one Self-Control prompt a night, difficulty 6 rising with weeks unfed and a long stay, to 9 | ravnosDifficulty |
+| 2026-11-12 | Caitiff odd gifts (B1129) | A thin-blooded Caitiff rolls once a year, one in ten, for one of four gifts; Storyteller card with Undo | ODD_GIFTS |
 
 ## Waiting for review
 
@@ -601,6 +605,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | How a challenge with a player's character runs (B1111) | Never rolled: approval, then a fight through WoDX Combat when both are on the scene and the contest is physical, else a card; the Storyteller sets the winner | pol-fight in politics-rules.mjs, stageFight in factions.mjs |
 | 2026-11-12 | How a Garou rises in Rank at a moot (B1111) | One with 2+ favour challenges the nearest higher Rank; the challenged picks strength, riddles or a staring contest; a win is +1 Rank inside the sept | gather riseByChallenge |
 | 2026-11-12 | What a Great Maelstrom does to a necropolis (B1112) | Each seat but the Anacreon's lost on 1-5 on a die, with Undo | maelstromChanges |
+| 2026-11-12 | What holy water does to demons, Baali and Followers of Set (B1131)? | Baali and Followers of Set: one aggravated level on contact (Dark Ages: Vampire pdf 293). Demons: lethal damage each turn on the skin (one level, up to five if strongly blessed), and nothing at Torment 3 or less without the Cannot Enter Holy Ground Flaw (Demon: the Fallen pdf 256). All three get +1 difficulty for the scene (house rule). Other vampires take nothing, as Ben picked, though Dark Ages: Vampire burns every vampire. | HOLY_HARM, HOLY_DEMON and HOLY_CALM in use-rules.mjs. |
+| 2026-11-12 | What did the food marked Fix on the desk need (B1131)? | Read as: they should also be cookable now that recipes exist, and the milky ones are drunk. Anything a recipe uses gets Cook with it; milk, shakes and nectar are drunk (they feed and quench thirst); sauces, honey and grapes can be eaten. | DRUNK_FOOD and INGREDIENT in use-rules.mjs; the usesOf step in use.mjs. |
+| 2026-11-12 | Medicine for a mummy, left blank on the desk (B1130)? | As for a mortal, like Ben's other mummy picks. | PICKS.remedy.mummy in use-rules.mjs. |
 | 2026-11-12 | How a Mage faction finds its side (B1113) | By name or notes: Order of Reason, Technocracy, Union, Construct or a Convention's name means Reason; anything else, the Traditions | REASON in politics-rules.mjs |
 | 2026-11-12 | What stands in for standing among mages (B1113) | Arete for the Traditions, the Rank Background for the Order and the Technocracy | rankFrom |
 | 2026-11-12 | The Inquisition's tribunal seats (B1114) | Inquisitor, notary, confessor and three familiars, a house rule until the Dark Ages Inquisitor book is read | POLITIES.inquisition |

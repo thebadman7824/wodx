@@ -1384,3 +1384,39 @@ V20 pdf 69 gives one derangement that never heals. House rule from the desk: onc
 
 Reverse: DERANGEMENTS and GLIMPSE_THEMES in data/signatures.mjs; the hearAs call in wodx-npc talk.mjs.
 
+
+## B1126. Tzimisce native soil (2026-11-12)
+V20 pdf 79 and V20 Dark Ages pdf 66: a Tzimisce must rest with two handfuls of native soil, or every dice pool is halved (pdf 447) until they do. Built: carrying an item flagged as soil (or named native soil or earth) counts as resting on it; each night without it posts a card and the trait effects show pools halved. "Take native soil" in the clan feature window makes the item. A thief who lifts it makes the next night hard.
+
+Reverse: soilNight and isSoil in signature-rules.mjs; soilTick in signatures.mjs.
+
+## B1127. The Lasombra's empty frame (2026-11-12)
+V20 pdf 67 names mirrors only, so cameras are a house rule (book check flag). The camera of the year: a photograph from 1839, film from 1895, video and closed-circuit television from 1970, digital from 2000. A scene the Storyteller marks as watched gives one card a night for each Lasombra token in it: a breach found later by whoever studies the picture. From 2023 (the Future Darkness) every scene counts as watched unless marked otherwise.
+
+Reverse: CAMERAS and CAMERAS_EVERYWHERE in data/signatures.mjs; setCamera in signatures.mjs.
+
+## B1128. The Ravnos vice (2026-11-12)
+V20 pdf 73: a Ravnos must roll Self-Control to resist the vice when the chance comes. The sheet keeps one: lying (fed by deceit and fast-talk), theft (a lift, or taking from someone else's container), cheating (any trade) or a dare (marked by hand). Any other talk or trade is a chance, with one prompt a night. House reading of the difficulty: 6, +1 for each week unfed to +2, and +1 after a month in one domain, never above 9. "Moved on to a new domain" resets the stay.
+
+Reverse: RAVNOS_VICES in data/signatures.mjs; ravnosDifficulty in signature-rules.mjs.
+
+## B1129. Caitiff odd gifts (2026-11-12)
+V20 pdf 40: Caitiff have no clan weakness. House rule from the desk: a Caitiff with the Thin Blood flaw rolls once a year, one chance in ten, for an odd gift (walks at dusk and dawn, keeps down a little food, passes for mortal for a scene, one less die from sunlight). The card goes to the Storyteller with an Undo. Status that needs a sponsor in Camarilla courts waits for faction politics.
+
+Reverse: ODD_GIFTS and ODD_GIFT_CHANCE in data/signatures.mjs.
+## B1130. Ben's Item Uses desk picks applied (2026-11-12)
+The 53 cells Ben decided on the Item Uses desk are rulings (PICKS and RULINGS in wodx-library/scripts/use-rules.mjs), and no cell asks the Storyteller any more:
+- "As for a mortal": demons and mummies eat, drink, sleep, take drugs and get first aid as mortals do.
+- "Weaker": werewolves feel alcohol and drugs at half the dice and half the time; ghouls and revenants feel an unknown drug the same way.
+- "Stronger": hallucinogens and unknown drugs hit changelings one die harder and last twice as long.
+- "None": bagged blood does nothing for demons, mummies or werewolves; first aid does nothing for vampires; an unknown drug does nothing to a vampire.
+- "Cannot": a wraith cannot take an unknown drug.
+Medicine for a mummy was left blank and follows the other mummy picks (as for a mortal). Library 0.12.0.
+
+Reverse: empty PICKS.
+
+## B1131. Holy water burns the damned; Ben's item notes (2026-11-12)
+Holy water harms demons and vampires of the Baali and the Followers of Set (read from the sheet's clan). The book check (item-uses/holy-water-book-check.md) set the numbers. Baali and Followers of Set take one aggravated level on contact, soaked only with Fortitude, from Dark Ages: Vampire pdf 293; V20 pdf 403 has the Baali burned on touch with no amount, and no book gives Setites anything special, so for them it is Ben's house rule. Demons take lethal damage each turn it stays on the skin, one level for ordinary holy water and up to five for strongly blessed water, and nothing at Torment 3 or less unless they have the Cannot Enter Holy Ground Flaw (Demon: the Fallen pdf 256, Demon Players Guide pdf 86). All three also get +1 difficulty for the scene, which is a house rule. Other vampires and mummies take it as water, as Ben picked, even though Dark Ages: Vampire burns all the unliving (V20 has no such rule).
+From Ben's notes on the desk: a patch is put on the skin and its drug is taken (a dermal patch of street stims is a stimulant); the syringe's Inject picks something held (heroin, morphine, ketamine, penicillin and the like) and takes it; heroin needs a spoon and a flame as well as the syringe. From the food marked Fix: milk and shakes are drunk, so they feed and quench thirst; sauces, honey and grapes can be eaten as they are; anything a recipe uses also gets Cook with it.
+
+Reverse: HOLY_HARM and DAMNED_CLANS in use-rules.mjs; the inject case in use.mjs.
