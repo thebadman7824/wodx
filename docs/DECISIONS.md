@@ -1456,8 +1456,55 @@ A ledger of bound wraiths, each held by a fetter. Calling one sends a card to th
 
 Reverse: giovanniName in signature-rules.mjs.
 
+## B1155. Bloodlines come before clans in the table (2026-11-12)
+The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
+- roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
+- a Masquerade sign card when a mortal deals with them (Gargoyles, Samedi, Harbingers, Salubri, Lhiannan, Xi Dundu)
+- engines borrowed from a clan: a vizier's Muse; contracts for Assamite sorcerers, a Baali pact and an Ahrimane spirit pact; bound dead for Harbingers and Nagaraja; the Ishtarri vice; soil for the Old Clan and the Naglopers
+
+Reverse: BLOODLINES in data/signatures.mjs; rowHas in signatures.mjs.
+
+## B1156. The Old Clan holds out a night longer without soil (2026-11-12)
+House reading from the desk: an Old Clan Tzimisce's pools halve only after a second night without native soil.
+
+Reverse: grace on the koldun row.
+
+## B1157. Laibon legacies (2026-11-12)
+Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
+
+Reverse: the Laibon rows in BLOODLINES.
+
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
+Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
+
+Reverse: remove the Lifepath button (apps.mjs, registerSheetButton) and lifepathPart in wodx-storyteller/scripts/prelude.mjs.
+
+## B1311. The chain follows Princes of Darkness's event chains, nothing else of it (2026-11-12)
+The CK3 mod runs a childe's education as an opening choice (strict, lenient, free) whose result weights a pool of follow-up events, rules some out (factor 0) and sometimes names the next one, ending in a closing event. WoDX's lifepath does the same with flags, weight factors (more) and named next scenes (n). The mod's V5 material (blood potency, resonance, predator types) is not used.
+
+Reverse: drop more and n from the tables; draws are then plain weighted picks.
+
+## B1312. Lifepath era windows (2026-11-12)
+Fourteen era bands from 1197 to the World of Future Darkness. Lines open by year: the Fallen from 1999, projectors from 1848 (the spiritualist mediums); every other line every era. Splats open by year where the setting fixes it: Cappadocians to 1444 and Giovanni from 1444, the Council's Traditions from 1466 with the Dark Ages Fellowships before, the Order of Reason's Conventions 1325 to 1896 and the Technocratic Union's from 1897, Sons of Ether from 1904, Virtual Adepts from 1961, Sidhe to 1400 and from 1969, imbued creeds from 1999 with mortal hunters 1500 to 1998, Amenti from 1999 with the old Immortals before. Rows the books give no clear year for are marked house: true and listed in PENDING-REVIEW.
+
+Reverse: the spans on each row in data/lifepaths-splats.mjs.
+
+## B1313. People from the past (2026-11-12)
+Up to three named people are ticked by default. Anyone more than 70 years before the chronicle's year is a name only, as most are long dead, unless the scene marks them lasting (a ghost, someone who shares the night). NPCs come from the People generator for the chronicle's own era, with a note of who they were to the character.
+
+Reverse: PEOPLE_DEFAULT and PEOPLE_ALIVE_SPAN in lifepath-rules.mjs.
+
 ## B1300. The Legends book (2026-11-12)
-Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.29.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
+Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.31.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
 Players see a new line of each kind as follows (a house rule, line by line in the window): dated events, deaths, seats, holdings and boons are shown; Embraces, ghoulings, oaths and debts, and the seats of a secret faction, wait for the Storyteller. Lines dated after today's date are the Storyteller's only.
 Reverse: SHOWN_BY_DEFAULT in legends-rules.mjs.
 ## B1301. When the book is written (2026-11-12)

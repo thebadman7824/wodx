@@ -32,3 +32,8 @@
 .application.wodx-people .wodx-people-form .wodx-search { margin: 0; }
 .application.wodx-people .wodx-people-list td { vertical-align: top; }
 .application.wodx-people .wodx-people-list td:first-child, .application.wodx-people .wodx-people-list td:last-child { width: 2.2em; text-align: center; }
+/* Lifepaths (0.11.0) */
+.application.wodx-lifepath .wodx-lp-options { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.5rem 0; }
+.application.wodx-lifepath .wodx-lp-option { text-align: left; white-space: normal; height: auto; line-height: 1.35; padding: 0.4rem 0.6rem; }
+.application.wodx-lifepath .wodx-warn { color: #d8a24a; }
+.application.wodx-lifepath .wodx-list li { margin: 0.15rem 0; }

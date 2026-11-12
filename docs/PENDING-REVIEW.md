@@ -1,5 +1,7 @@
 # Pending review
 
+Each Monday, approved sections more than a week old move to docs/archive/pending-review-<year>-<month>.md (stale design review, item m11, 12 November 2026). The Waiting for review table stays last in this file.
+
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
 New entries go at the end of the "Waiting for review" table, which is last in this file.
@@ -588,6 +590,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Ventrue influence (B1152) | Once a month, a minor boon from an institution of the age in place of holdings income | INSTITUTIONS |
 | 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
 | 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
+| 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
+| 2026-11-12 | Ghouls (B1158) | A blood point lost for each month without vitae, by card with Undo; a ghoul never takes the domitor's clan row | GHOUL |
+| 2026-11-12 | Revenant families (B1159, Ben's question) | The four book families by trait; new ones founded in play with a founder, a trait, two or three Disciplines, a flaw and a year, approved by the Storyteller | FAMILY_TRAITS |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
 ## Waiting for review
@@ -621,6 +626,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
 | 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
 | 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |
+| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
+| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
+| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
+| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 | 2026-11-12 | Which lines of the Legends book players see at first (B1300) | Dated events, deaths, court seats, holdings and boons shown; Embraces, ghoulings, oaths, debts and a secret faction's seats wait for the Storyteller | SHOWN_BY_DEFAULT in wodx-chronicle legends-rules.mjs |
 | 2026-11-12 | When a seat or a holding changed hands in the Legends book (B1301) | Dated to the build that first sees the change (session end, around each time skip, or on demand) | officeLines/holdingLines in legends-rules.mjs |
 | 2026-11-12 | Who sees a progress clock at first (B1311) | Every clock starts as the Storyteller's only; shown to everyone or chosen characters by hand | normClock in wodx-storyteller clock-rules.mjs |
