@@ -1,0 +1,309 @@
+# Plague and Long Night, 1347 to 1449. year[-month]|kind|lines|region|place|tags|title|text
+1347-8|H|mor|EU|Calais|siege|Calais surrenders|Calais yields to Edward III after eleven months; the burghers offer their lives and are spared.
+1347-10|W|wra|EU|Messina|plague|Plague ships at Messina|Genoese galleys bring the plague to Sicily; the Second Great Maelstrom gathers as the dead cross in numbers no one has seen.
+1347|H|all|ME|Constantinople|plague|Plague in Constantinople|The pestilence reaches Constantinople; the emperor's son is among the dead.
+1347|H|mor|EU|Rome|uprising,crown|Cola di Rienzo|The notary Cola di Rienzo takes power in Rome as tribune of the people.
+1347|H|mor|AS|Deccan|founding,empire|The Bahmani sultanate|The Deccan nobles found the Bahmani sultanate at Gulbarga.
+1348-1|H|all|EU|Marseille|plague|Plague in Marseille|The plague comes ashore in Provence and moves up the Rhone.
+1348-3|H|all|EU|Florence|plague,death|Plague in Florence|Perhaps half of Florence dies; Boccaccio sets the Decameron among young people fleeing it.
+1348-4|H|mor|EU|Prague|learning,founding|Charles University|Charles IV founds the first university north of the Alps in Prague.
+1348-6|H|all|EU|Weymouth|plague|Plague in England|The plague lands at a Dorset port and reaches London by autumn.
+1348|H|all|ME|Cairo|plague,death|Plague in Cairo|The plague reaches Cairo; at its height thousands die a day.
+1348|H|all|ME|Damascus|plague,faith|Plague in Damascus|The people of Damascus fast and pray together, Muslims, Christians and Jews.
+1348|H|mor|EU|Avignon|plague,faith|The pope sits between fires|Clement VI's physician keeps the pope between two great fires; the pope survives and buys Avignon outright.
+1348|W|wra|EU|Avignon|plague,death|The Stygian ferries overflow|The Hierarchy cannot ferry the dead fast enough; whole towns' worth of wraiths wander the Shadowlands unclaimed.
+1348|W|vam|EU|Europe|plague|The Kindred in the plague|Kindred who feed on the sick sicken their herds and sometimes the Masquerade; some princes forbid feeding in plague houses.
+1348|H|mor|EU|Carinthia|quake,disaster|The Friuli earthquake|An earthquake shakes the eastern Alps; preachers say it opened the earth for the plague.
+1349|H|hun|EU|Strasbourg|massacre,persecution|The Strasbourg massacre|Hundreds of Jews are burned in Strasbourg on the charge of poisoning wells, before the plague even arrives.
+1349|H|hun|EU|Germany|persecution,faith,plague|The flagellants march|Processions of flagellants cross Germany; the pope condemns them in October.
+1349|H|hun|EU|Mainz|massacre|Mainz and Cologne|The Jewish communities of the Rhineland are destroyed.
+1349|H|all|EU|Norway|plague|Plague in Norway|A ship brings the plague to Bergen; Norway loses perhaps half its people.
+1349|H|all|EU|Moravia|plague|Plague in Moravia|The plague reaches Moravia, lighter than in the west but bad in the towns.
+1349|H|mor|EU|England|law|The Ordinance of Labourers|Edward III forbids wages above the old rates; there are too few hands left to obey.
+1349|W|mag|EU|Europe|plague,occult|Physicians and pestilence|Hermetic healers and Chorus monks die tending the sick; the young Order of Reason studies the plague's spread.
+1350|W|cha|EU|Europe|faith|The Shattering|Banality closes the trods to Arcadia; fae who stay must hide in mortal bodies.
+1350|H|mor|EU|Castile|crown,plague,death|Alfonso XI dies of plague|The king of Castile dies of plague at the siege of Gibraltar.
+1350|H|mor|EU|Rome|faith,travel|The second Jubilee|Pilgrims crowd Rome despite the plague.
+1350|H|mor|AS|Ayutthaya|founding,empire|Ayutthaya founded|King Ramathibodi founds Ayutthaya in Siam.
+1350|H|mor|EU|Winchelsea|battle,sea|Les Espagnols sur Mer|The English beat a Castilian fleet in the Channel.
+1351|H|mor|AS|China|uprising|The Red Turbans|The Red Turban rebellion against the Yuan begins in the Huai valley.
+1351|H|mor|EU|England|law|The Statute of Treasons|Parliament defines high treason.
+1351|H|all|AS|Delhi|crown,death|Muhammad bin Tughluq dies|The Delhi sultan who moved his capital and made copper coins worth silver dies on campaign.
+1352|H|mor|ME|Tzympe|founding,war|The Ottomans in Europe|The Ottomans take the fortress of Tzympe on the Gallipoli peninsula, their first foothold in Europe.
+1353|H|mor|EU|Florence|art|The Decameron|Boccaccio finishes the Decameron.
+1354|H|mor|ME|Gallipoli|quake,war|Gallipoli after the earthquake|An earthquake shatters Gallipoli's walls; the Ottomans move in and settle the town.
+1354|W|vam|ME|Cairo|plague|Roderigo al-Dakhil|In the plague years Cairo's Kindred shift and shuffle; newcomers find room where the dead left gaps.
+1354|H|mor|EU|Rome|death,uprising|Cola di Rienzo killed|The returned tribune is killed by a Roman mob.
+1355|H|mor|EU|Rome|crown|Charles IV crowned emperor|Charles IV is crowned in Rome and leaves the same day, as promised.
+1355|H|mor|EU|Oxford|uprising,massacre|St. Scholastica's Day riot|A tavern brawl at Oxford becomes a two-day battle; dozens of students die.
+1355|H|mor|EU|Venice|death,crown|Doge Faliero beheaded|The doge of Venice is beheaded for plotting to make himself lord of the city.
+1356-1|H|mor|EU|Nuremberg|law,crown|The Golden Bull of 1356|Charles IV fixes the seven electors and the rules for choosing a king.
+1356-9|H|mor|EU|Poitiers|battle,crown|Poitiers|The Black Prince captures King John II of France.
+1356|W|mag|AS|Tibet|war,occult|The Screaming Ghost Purge|The war between Dalou'laoshi, the Wu Lung and the Akashics begins; it will drive the Brotherhood back into Tibet by 1360.
+1356|H|mor|EU|Basel|quake,disaster|The Basel earthquake|The strongest recorded earthquake in central Europe wrecks Basel.
+1357|H|mor|EU|Paris|uprising|Etienne Marcel|The provost of Paris merchants forces reforms on the dauphin.
+1358-5|H|mor|EU|Beauvaisis|uprising,massacre|The Jacquerie|The peasants of northern France rise against the nobles and are crushed within weeks.
+1358-7|H|mor|EU|Paris|death,uprising|Etienne Marcel killed|The Paris leader is killed as he tries to open the city to Charles of Navarre.
+1359|H|mor|EU|Prague|building|Charles Bridge planned|Charles IV plans a new stone bridge across the Vltava; it is begun in 1357.
+1360|H|mor|EU|Bretigny|treaty|The Treaty of Bretigny|England gives up its claim to France in return for Aquitaine and Calais.
+1360|W|mag|AS|Tibet|war|The Brotherhood withdraws|The Screaming Ghost Purge ends; the Akashics withdraw into Tibet.
+1361|H|all|EU|England|plague|The second pestilence|The plague returns, killing many children born since 1348.
+1361|H|mor|ME|Adrianople|founding|Adrianople taken|Murad I takes Adrianople; as Edirne it becomes the Ottoman capital.
+1363|H|mor|AS|Lake Poyang|battle|Lake Poyang|Zhu Yuanzhang destroys his chief rival's fleet in one of the largest naval battles ever fought.
+1364|H|mor|EU|Krakow|learning,founding|Krakow university|Casimir the Great founds a university at Krakow.
+1365|H|mor|EU|Vienna|learning,founding|Vienna university|Rudolf IV founds a university at Vienna.
+1365|H|mor|ME|Alexandria|crusade,massacre|Alexandria sacked|Peter I of Cyprus sacks Alexandria for a week.
+1366|H|mor|EU|Kilkenny|law|The Statutes of Kilkenny|The English lords of Ireland are forbidden to marry, speak or dress as the Irish do.
+1367|H|mor|EU|Najera|battle|Najera|The Black Prince wins for Pedro the Cruel in Castile.
+1368|H|all|AS|Khanbaliq|crown,founding|The Ming|Zhu Yuanzhang founds the Ming and drives the Mongols out of Khanbaliq.
+1368|W|kue|AS|Nanjing|crown|The courts and the Ming|The courts of the Middle Kingdom hold that the Quincunx kept their quarrels from spoiling the change of dynasty.
+1369|H|mor|EU|Montiel|crown,death|Pedro the Cruel killed|Pedro of Castile is stabbed by his half-brother Henry, who takes the throne.
+1370|H|all|AS|Samarkand|crown|Timur|Timur becomes master of Transoxiana.
+1370|H|mor|EU|Limoges|massacre,siege|Limoges sacked|The Black Prince storms Limoges; chroniclers tell of thousands killed.
+1370|H|mor|EU|Stralsund|treaty,trade|The Peace of Stralsund|The Hanseatic towns force Denmark to yield; the League is at its height.
+1371|H|mor|EU|Maritsa|battle|The Maritsa|The Ottomans destroy the Serbian lords of Macedonia.
+1371|H|mor|EU|Scotland|crown|The Stewarts|Robert II, the first Stewart, becomes King of Scots.
+1372|H|mor|EU|La Rochelle|battle,sea|La Rochelle|A Castilian fleet destroys the English off La Rochelle.
+1374|H|mor|EU|Arqua|art,death|Petrarch dies|The poet who first called the past ages dark dies near Padua.
+1374|W|hun|EU|Aachen|faith,occult|The dancing plague|Crowds dance in the streets of Aachen and along the Rhine for days; priests try to cast out what moves them.
+1375|H|mor|EU|Florence|art,death|Boccaccio dies|The author of the Decameron dies at Certaldo.
+1376|H|mor|EU|London|crown,death|The Black Prince dies|Edward III's heir dies of a long sickness.
+1376|H|mor|EU|London|law|The Good Parliament|The Commons impeach the king's ministers for the first time.
+1377|H|mor|EU|Rome|faith|The pope returns to Rome|Gregory XI leaves Avignon for Rome.
+1377|H|mor|EU|London|crown,death|Edward III dies|Richard II, ten years old, becomes king.
+1377|H|mor|AS|Korea|science,learning|Jikji printed|A Korean Buddhist text is printed with movable metal type at Cheongju.
+1378|H|mor|EU|Rome|faith|The Great Schism|Rival popes in Rome and Avignon divide Western Christendom for forty years.
+1378|H|mor|EU|Florence|uprising|The Ciompi|The wool workers of Florence rise and briefly take power.
+1378|H|mor|EU|Prague|crown,death|Charles IV dies|The emperor dies in Prague; Wenceslas IV becomes king.
+1379|W|mag|EU|Oxford|heresy,learning|Wycliffe attacks the Church|John Wycliffe denies that the bread of the mass changes; the Messianic Voices and the Order of Reason both read him closely.
+1380|H|mor|EU|Kulikovo|battle|Kulikovo|Dmitry Donskoy of Moscow beats the Horde's general Mamai on the Don.
+1380|H|mor|EU|Chioggia|siege,sea|Chioggia|Venice breaks a Genoese siege of the lagoon and wins its long war.
+1380|H|mor|EU|France|crown,death|Charles V dies|The wise king of France dies; Charles VI, eleven, follows.
+1381-6|W|vam|EU|London|uprising,revolution|The Peasants' Revolt|Wat Tyler's rebels take London; that same year young Kindred across the west rise against their elders, and the Anarch Revolt begins.
+1381|H|mor|EU|London|uprising,death|Wat Tyler killed|The rebel leader is killed at Smithfield in front of the king.
+1382|H|mor|EU|Moscow|siege,fire|Tokhtamysh burns Moscow|The khan of the Horde sacks and burns Moscow.
+1382|H|mor|EU|Roosebeke|battle|Roosebeke|The French crush the Flemish towns.
+1384|H|mor|EU|Lutterworth|heresy,death|Wycliffe dies|Wycliffe dies of a stroke; his followers, the Lollards, carry on.
+1385|H|mor|EU|Aljubarrota|battle|Aljubarrota|Portugal beats Castile and keeps its independence.
+1385|H|mor|EU|Krewo|treaty,crown|The Union of Krewo|Grand Duke Jogaila of Lithuania agrees to marry Queen Jadwiga of Poland and be baptised.
+1386|H|mor|EU|Sempach|battle|Sempach|The Swiss destroy an Austrian army and kill its duke.
+1386|H|mor|EU|Heidelberg|learning,founding|Heidelberg university|The Elector Palatine founds a university at Heidelberg.
+1386|H|mor|EU|Krakow|crown,faith|Jogaila crowned|Jogaila is baptised as Wladyslaw and crowned King of Poland; Lithuania is baptised.
+1387|H|mor|EU|Canterbury|art|The Canterbury Tales|Geoffrey Chaucer begins the Canterbury Tales.
+1387|W|vam|EU|Lithuania|faith|The last pagan state baptised|Lithuania's baptism closes the last great pagan country in Europe; Kindred who kept the old gods' shrines go deeper into the forests.
+1388|H|mor|EU|Otterburn|battle|Otterburn|The Scots beat the English in the borders; Douglas dies winning.
+1389-6|H|all|EU|Kosovo|battle,death|Kosovo Field|Serbs and Ottomans fight at Kosovo; both Prince Lazar and Sultan Murad die.
+1389|H|hun|EU|Prague|massacre,persecution|The Prague pogrom|A mob kills hundreds of Jews in Prague's Jewish town at Easter.
+1390|H|mor|EU|Seville|persecution,massacre|Sermons against the Jews|Preaching at Seville stirs the hatred that will explode in 1391.
+1391|H|hun|EU|Seville|massacre,persecution|The pogroms of 1391|Massacres spread from Seville across Castile and Aragon; thousands of Jews are killed or forced to convert.
+1392|H|mor|AS|Kaesong|crown,founding|The Joseon dynasty|Yi Seong-gye overthrows Goryeo and founds Joseon.
+1392|H|mor|AS|Kyoto|crown,treaty|The courts reunited|The Northern and Southern courts of Japan are joined under the Ashikaga.
+1392|H|mor|EU|Le Mans|crown|Charles VI goes mad|The French king attacks his own escort in a forest near Le Mans; his madness returns for the rest of his life.
+1393|H|mor|EU|Paris|fire,crown|The Ball of the Burning Men|Courtiers dressed as wild men catch fire at a masked ball; the king barely escapes.
+1393|H|mor|EU|Tarnovo|siege,crown|Tarnovo falls|The Ottomans take the Bulgarian capital.
+1394|H|mor|AS|Seoul|founding|Hanyang the new capital|The Joseon king moves the capital to Hanyang (Seoul).
+1394|H|mor|EU|France|persecution|The Jews expelled from France again|Charles VI expels the Jews from France.
+1395|H|mor|EU|Terek River|battle|The Terek|Timur breaks Tokhtamysh and the Golden Horde.
+1395|H|mor|EU|Rovine|battle|Rovine|Mircea the Elder of Wallachia fights the Ottomans to a standstill.
+1396|H|mor|EU|Nicopolis|battle,crusade|Nicopolis|The Ottomans destroy a great crusader army on the Danube.
+1397|H|mor|EU|Kalmar|treaty,crown|The Kalmar Union|Denmark, Norway and Sweden are joined under Queen Margaret's heir.
+1397|H|mor|EU|Florence|money,founding|The Medici bank|Giovanni di Bicci de' Medici founds the Medici bank in Florence.
+1398-12|H|all|AS|Delhi|massacre,siege|Timur sacks Delhi|Timur takes Delhi and kills tens of thousands; the city is empty for months.
+1398|H|mor|AS|Nanjing|crown,death|The Hongwu emperor dies|The founder of the Ming dies; his grandson takes the throne.
+1399|H|mor|EU|London|crown,revolution|Richard II deposed|Henry Bolingbroke takes the throne as Henry IV.
+1399|H|mor|EU|Vorskla River|battle|The Vorskla|The Horde crushes Lithuania's Grand Duke Vytautas.
+1399|H|mor|AS|Nanjing|war,crown|The Jingnan campaign|The Prince of Yan rebels against his nephew the emperor.
+1400|H|mor|EU|Pontefract|crown,death|Richard II dies|The deposed king dies in prison, probably starved.
+1400|H|mor|EU|Wales|uprising|Owain Glyndwr|Owain Glyndwr is proclaimed Prince of Wales and rises against the English.
+1400|H|mor|EU|Germany|crown|Wenceslas deposed|The electors depose Wenceslas IV as King of the Romans for doing nothing.
+1400|H|mor|EU|London|art,death|Chaucer dies|Geoffrey Chaucer dies in London.
+1400|W|vam|EU|Europe|war|The revolt spreads|By 1400 the Anarch Revolt has reached much of Europe; elders die in their havens, and the Assamites sell their blades to the young.
+1401|H|all|ME|Baghdad|massacre,siege|Timur at Baghdad|Timur takes Baghdad and builds towers of skulls.
+1401|H|mor|ME|Damascus|siege,fire|Timur burns Damascus|Timur takes Damascus and carries its craftsmen to Samarkand; Ibn Khaldun meets him outside the walls.
+1402-7|H|mor|ME|Ankara|battle,crown|Ankara|Timur beats and captures Sultan Bayezid; the Ottoman state falls into civil war.
+1402|H|mor|AS|Nanjing|crown|The Yongle emperor|The Prince of Yan takes Nanjing and becomes the Yongle emperor.
+1402|H|mor|ME|Smyrna|siege,massacre|Smyrna taken|Timur takes Smyrna from the Hospitallers.
+1403|H|mor|EU|Prague|heresy,learning|Hus preaches at Bethlehem Chapel|Jan Hus begins preaching reform in Czech at Prague.
+1404|H|mor|AS|Samarkand|building|The Bibi-Khanym mosque|Timur builds a vast mosque at Samarkand.
+1405-2|H|mor|AS|Otrar|crown,death|Timur dies|Timur dies at Otrar on his way to conquer China.
+1405|H|mor|AS|Nanjing|exploration,sea|The treasure fleets|Zheng He sails with the first of seven great fleets.
+1406|W|vam|ME|Cairo|crown|Mukhtar Bey claims Cairo|Mukhtar Bey takes the domain of Cairo.
+1406|H|mor|AS|Hanoi|war|The Ming invade Vietnam|The Yongle emperor's armies invade Dai Viet.
+1406|H|mor|ME|Cairo|learning,death|Ibn Khaldun dies|The historian who wrote of the rise and fall of dynasties dies in Cairo.
+1407|H|mor|EU|Paris|death,crown|Louis of Orleans murdered|The Duke of Burgundy has the king's brother killed in a Paris street; civil war follows.
+1409|H|mor|EU|Pisa|faith|Three popes|The Council of Pisa elects a third pope to end the schism; none of the others steps down.
+1409|H|mor|EU|Kutna Hora|law,learning|The decree of Kutna Hora|King Wenceslas gives the Czechs control of Prague university; the German masters walk out and found Leipzig.
+1410-7|H|all|EU|Grunwald|battle|Grunwald|Poland and Lithuania break the Teutonic Order.
+1410|H|mor|AS|Mongolia|war|Yongle against the Mongols|The Yongle emperor leads the first of five campaigns into Mongolia.
+1411|H|mor|EU|Harlaw|battle|Harlaw|The Highland Lord of the Isles and the Earl of Mar fight a bloody draw.
+1412|H|mor|EU|Domremy|crown|Joan born|Joan of Arc is born at Domremy.
+1413|H|mor|ME|Edirne|crown|Mehmed I reunites the Ottomans|Mehmed I ends the Ottoman civil war.
+1413|H|mor|EU|London|crown,death|Henry IV dies|Henry V becomes king.
+1414|H|mor|EU|Constance|faith|The Council of Constance|The great council meets to end the schism and judge Hus.
+1414|H|mor|EU|London|heresy,uprising|The Oldcastle rising|Lollards rise under Sir John Oldcastle and are crushed.
+1415-7|W|hun|EU|Constance|heresy,fire,death|Jan Hus burned|Hus is burned at Constance under a broken safe-conduct; the Church's hunters learn nothing from it.
+1415-8|H|mor|ME|Ceuta|war,exploration|Ceuta taken|Portugal takes Ceuta in North Africa, the start of its empire.
+1415-10|H|mor|EU|Agincourt|battle|Agincourt|Henry V's archers destroy the French nobility.
+1416|H|mor|EU|Constance|heresy,fire|Jerome of Prague burned|Hus's friend Jerome is burned at Constance.
+1417|H|mor|EU|Constance|faith|The schism ends|Martin V is elected; the Great Schism is over.
+1419-7|H|all|EU|Prague|uprising,revolution|The first defenestration|Hussites throw the councillors of Prague New Town from the windows; the Hussite Wars begin.
+1419-9|H|mor|EU|Montereau|death,crown|John the Fearless murdered|The Duke of Burgundy is killed meeting the dauphin; Burgundy joins England.
+1419|H|mor|AS|Seoul|crown|Sejong|Sejong the Great becomes King of Joseon.
+1420|H|mor|EU|Troyes|treaty,crown|The Treaty of Troyes|Henry V is made heir to France and marries Charles VI's daughter.
+1420|H|mor|EU|Vitkov Hill|battle|Vitkov|Jan Zizka's Hussites beat the first crusade against them outside Prague.
+1420|H|mor|AS|Beijing|founding,building|The Forbidden City|The Ming capital moves to Beijing and the palace is finished.
+1420|H|mor|EU|Tabor|founding,faith|Tabor founded|Radical Hussites build a town on a hill and call it Tabor.
+1421|H|mor|EU|Kutna Hora|battle|Kutna Hora|Zizka's war wagons break out of a crusader trap.
+1422|H|mor|EU|France|crown,death|Two kings die|Henry V and Charles VI die within weeks; the infant Henry VI is king of both realms on paper.
+1422|H|mor|ME|Constantinople|siege|The siege of 1422|Murad II besieges Constantinople and fails.
+1423|H|mor|ME|Thessalonica|trade|Venice buys Thessalonica|The Byzantine governor sells Thessalonica to Venice.
+1424|H|mor|EU|Verneuil|battle|Verneuil|The English destroy a Franco-Scottish army.
+1424|H|mor|EU|Bohemia|death,war|Zizka dies|The blind Hussite general dies of plague; Prokop the Bald leads after him.
+1426|H|mor|EU|Usti|battle|Usti nad Labem|The Hussites destroy a German army.
+1427|H|mor|EU|Tachov|battle,crusade|Tachov|A crusading army runs at the sound of the Hussite hymn.
+1428|H|mor|AS|Hanoi|war,crown|Le Loi drives out the Ming|Le Loi wins Vietnam's independence and founds the Le dynasty.
+1429-5|W|hun|EU|Orleans|siege,faith|Orleans relieved|Joan of Arc lifts the siege of Orleans; the Church's hunters argue for years over what spoke to her.
+1429-7|H|mor|EU|Reims|crown|Charles VII crowned|Joan brings the dauphin to be crowned at Reims.
+1430|H|mor|ME|Thessalonica|siege|Thessalonica falls|Murad II takes Thessalonica from Venice.
+1430|H|mor|EU|Bruges|founding|The Golden Fleece|Philip the Good founds the Order of the Golden Fleece.
+1431-5|H|mor|EU|Rouen|death,heresy|Joan of Arc burned|Joan is burned at Rouen.
+1431|H|mor|EU|Domazlice|battle,crusade|Domazlice|The last crusade against the Hussites flees without a fight.
+1431|H|mor|EU|Basel|faith|The Council of Basel|A church council meets that will bargain with the Hussites.
+1432|H|mor|EU|Ghent|art|The Ghent Altarpiece|Jan van Eyck finishes the altarpiece begun by his brother.
+1433|H|mor|AS|Calicut|exploration,death|The last treasure voyage|Zheng He dies on the seventh voyage; the Ming never send the fleets again.
+1434-5|H|mor|EU|Lipany|battle|Lipany|Moderate Hussites destroy the radicals; Prokop dies.
+1434|H|mor|EU|Florence|money,crown|Cosimo de' Medici returns|Cosimo comes back from exile and rules Florence in fact.
+1434|H|mor|EU|Cape Bojador|exploration,sea|Cape Bojador|Gil Eanes sails past the cape the Portuguese feared.
+1435|W|vam|EU|Europe|founding|The Camarilla founded|Elders form the Camarilla to save themselves from the revolt and the Inquisition.
+1435|H|mor|EU|Arras|treaty|The Congress of Arras|Burgundy makes peace with France; the English are alone.
+1436|H|mor|EU|Jihlava|treaty,faith|The Basel Compacts|The Hussites and the Church make peace at Jihlava; the Czechs keep the cup.
+1436|H|mor|EU|Florence|building|Brunelleschi's dome|Florence cathedral's dome is finished.
+1436|H|mor|EU|Paris|war|Paris taken back|The French retake Paris from the English.
+1437|H|mor|EU|Prague|crown,death|Sigismund dies|The last Luxembourg emperor dies; Albert of Habsburg follows.
+1438|H|mor|EU|Ferrara|faith|The council of union|Greek and Latin churchmen meet at Ferrara and then Florence.
+1438|H|mor|AS|Cuzco|crown|Pachacuti|Pachacuti takes the Inca throne.
+1439|H|mor|EU|Florence|faith,treaty|Union of the churches|The Greeks accept union with Rome at Florence; at home they reject it.
+1439|H|mor|EU|Mainz|science|The press is tried|Johannes Gutenberg works on printing with movable type in Strasbourg and Mainz.
+1440|H|mor|EU|Brittany|crime,death|Gilles de Rais tried|Joan's comrade Gilles de Rais is tried for murdering children and hanged at Nantes.
+1440|W|mag|EU|Mistridge|founding,occult|Three mages in the ruins|Baldric, Lady Nightshade and Master Valorian meet in the ruins of Mistridge and agree to found an order.
+1441|H|mor|EU|Lisbon|trade,persecution|The Portuguese slave trade|Portuguese ships bring the first enslaved Africans to Lisbon.
+1443|H|mor|AS|Seoul|learning|Hangul made|King Sejong's scholars complete a new alphabet.
+1443|H|mor|EU|Albania|uprising|Skanderbeg|Skanderbeg leaves the Ottoman army and raises Albania against the sultan.
+1444-11|H|mor|EU|Varna|battle,crusade,death|Varna|The Ottomans destroy a crusade and kill the young King Wladyslaw of Poland and Hungary.
+1444|W|vam|EU|Venice|death,crown|Cappadocius falls|Augustus Giovanni diablerises the founder of the Cappadocians.
+1445|H|mor|ME|Cairo|plague|Plague again in Egypt|The plague returns to Cairo, as it has every generation since 1347.
+1446|H|mor|AS|Seoul|learning|Hangul published|Sejong publishes the new alphabet for the common people.
+1448|H|mor|EU|Kosovo|battle|The second Kosovo|The Ottomans beat John Hunyadi.
+1449|H|mor|AS|Tumu|battle,crown|The Tumu crisis|The Mongol Oirats capture the Ming emperor at Tumu.
+1449|H|mor|AS|Samarkand|science,death|Ulugh Beg murdered|The astronomer-prince of Samarkand is killed on his son's orders.
+1449|H|mor|EU|Milan|crown|The Ambrosian Republic|Milan briefly governs itself after the last Visconti dies.
+1449|W|mag|EU|Horizon|founding,occult|The making of Horizon|Mages gather to build Horizon; the Grand Convocation is coming.
+1347|H|mor|EU|Bohemia|crown|Charles crowned in Prague|Charles IV is crowned King of Bohemia with the new crown of St. Wenceslas.
+1347|H|mor|EU|Prague|founding,building|The New Town of Prague|Charles IV founds Prague New Town, one of the largest town plans in Europe.
+1348|W|vam|EU|Prague|founding|A capital for the Empire|Prague becomes the emperor's city; Kindred from the west come to court it.
+1348|H|mor|EU|Karlstejn|building|Karlstejn begun|Charles IV begins Karlstejn castle to keep the crown jewels and relics.
+1349|H|mor|EU|Basel|massacre,persecution|Basel's Jews burned|The Jews of Basel are burned on an island in the Rhine.
+1350|H|mor|EU|Florence|plague|Too few to farm|With half the people dead, landlords in Tuscany cannot find tenants; wages climb.
+1351|W|wra|EU|Europe|plague|The Maelstrom ebbs|The Second Great Maelstrom begins to ease; Stygia counts its lost Legions.
+1352|W|wra|EU|Europe|plague,death|The Hierarchy rebuilds|The Hierarchy gathers the plague dead into new Legions as the storm passes.
+1353|H|mor|ME|Constantinople|crown|John VI abdicates|John Kantakouzenos gives up the throne and becomes a monk.
+1355|H|mor|EU|Serbia|crown,death|Dusan dies|Stefan Dusan dies on the way to attack Constantinople; his empire breaks up.
+1356|H|mor|ME|Constantinople|plague|The plague returns to Constantinople|Another wave of plague strikes the city.
+1357|H|mor|EU|Prague|building|Charles Bridge begun|The foundation stone of the stone bridge over the Vltava is laid.
+1359|H|mor|EU|Venice|trade|Venice's galleys to Alexandria|Venice runs convoys of galleys to Alexandria and Beirut each year for spices.
+1360|H|mor|AS|Japan|war|Pirates of the coasts|Japanese pirates raid Korea and China throughout the 1360s.
+1362|H|mor|EU|Blue Waters|battle|Blue Waters|Lithuania beats the Golden Horde and takes Kiev.
+1363|H|mor|EU|Burgundy|crown|Philip the Bold|John II gives Burgundy to his son Philip; the Valois dukes of Burgundy begin.
+1364|H|mor|EU|London|crown,death|John II dies a prisoner|The French king dies in London, having returned to captivity.
+1366|H|mor|EU|Prague|building|The Prague astronomers|Astronomy is taught at Prague's new university.
+1368|W|wer|AS|Mongolia|war|The Mongols ride home|The Yuan court flees north to the steppe; Garou of Mongolia see the old horde come back broken.
+1369|H|mor|EU|France|war|The war resumes|Charles V of France restarts the war and slowly takes back Aquitaine.
+1372|H|mor|AS|Mongolia|war|Ming defeat on the steppe|A Ming army is badly beaten in Mongolia.
+1375|H|mor|EU|Majorca|exploration,learning|The Catalan Atlas|Jewish mapmakers of Majorca draw the Catalan Atlas, showing Mansa Musa on his throne.
+1375|H|mor|ME|Sis|crown,war|The Armenian kingdom falls|The Mamluks take Sis, ending the Armenian kingdom of Cilicia.
+1377|H|mor|AS|Korea|war,science|Korean gunpowder|Choe Mu-seon begins making gunpowder weapons against the pirates.
+1378|H|mor|EU|Prague|crown|Wenceslas IV|Charles's son Wenceslas takes the throne of Bohemia.
+1380|W|vam|EU|Moscow|war|The Horde's grip slips|After Kulikovo the Shadow Lords' Mongol kin are less sure of their hold on the Rus princes.
+1381|H|mor|EU|Kent|uprising|The Kentish rebels|John Ball preaches: when Adam delved and Eve span, who was then the gentleman?
+1382|H|mor|EU|Ghent|uprising|Ghent against the count|Philip van Artevelde leads Ghent against the Count of Flanders.
+1383|H|mor|EU|Portugal|crown,war|The Portuguese crisis|The last Burgundian king of Portugal dies and Castile claims the throne.
+1385|H|mor|EU|Lisbon|crown|John of Aviz|The Cortes chooses John of Aviz as king.
+1386|H|mor|EU|Windsor|treaty|The Treaty of Windsor|England and Portugal swear an alliance that still stands.
+1387|H|mor|EU|Hungary|crown|Sigismund king of Hungary|Sigismund of Luxembourg is crowned King of Hungary.
+1388|H|mor|EU|Kosovo|war|The Ottomans in Bulgaria|Ottoman armies overrun northern Bulgaria.
+1390|H|mor|EU|Prague|heresy|Reformers in Prague|Preachers in Prague call for the Church to give up its wealth.
+1391|W|hun|EU|Spain|persecution,faith|The conversos|Thousands of Spanish Jews are baptised under threat; the Church will hunt their descendants for centuries.
+1392|W|mag|EU|Paris|occult,crown|Sorcerers summoned for the king|Healers and sorcerers are brought to cure Charles VI's madness; two are burned when they fail.
+1394|H|mor|EU|Paris|heresy|Paris university and the schism|The Paris masters demand both popes resign.
+1395|H|mor|EU|Prague|building|The Prague painters|Bohemian painting and book art reach their height under Wenceslas.
+1396|H|mor|EU|Prague|crown|Wenceslas imprisoned|The Bohemian lords lock up their king.
+1397|H|mor|ME|Constantinople|siege|Bayezid besieges Constantinople|The Ottoman siege of the city lasts until Ankara saves it.
+1399|H|mor|AS|Delhi|plague,famine|Delhi after Timur|Famine and plague empty Delhi after the sack.
+1400|H|mor|ME|Sivas|massacre|Sivas|Timur takes Sivas and buries thousands of its defenders alive.
+1401|H|mor|EU|Florence|art|The baptistery doors|Ghiberti wins the contest for the bronze doors of the Florence baptistery.
+1402|H|mor|EU|Bohemia|crown|Sigismund holds Wenceslas|Sigismund imprisons his brother Wenceslas in Vienna.
+1403|H|mor|EU|Shrewsbury|battle|Shrewsbury|Henry IV kills Harry Hotspur.
+1404|H|mor|EU|Burgundy|crown,death|Philip the Bold dies|John the Fearless becomes Duke of Burgundy.
+1405|H|mor|AS|Samarkand|crown|Shah Rukh|Timur's son Shah Rukh takes Herat and holds the empire's heart.
+1406|H|mor|EU|Scotland|crown|James I captured|The heir to Scotland is taken at sea by the English and kept eighteen years.
+1407|H|mor|AS|Beijing|learning|The Yongle Encyclopedia|Scholars finish a vast encyclopedia of Chinese learning.
+1408|W|vam|EU|France|war|Armagnacs and Burgundians|France splits between two noble parties; Kindred of the Grand Court back both.
+1409|H|mor|EU|Leipzig|learning,founding|Leipzig university|The German masters who left Prague found a university at Leipzig.
+1410|H|mor|EU|Prague|science,building|The Prague astronomical clock|The astronomical clock is set in the Old Town hall.
+1411|H|mor|EU|Torun|treaty|The First Peace of Torun|The Teutonic Order pays heavily after Grunwald.
+1411|H|mor|ME|Edirne|war,crown|The Ottoman brothers' war|Bayezid's sons fight for the throne.
+1412|H|mor|EU|Prague|heresy,uprising|The indulgence riots|Hus preaches against papal indulgences; three young men are beheaded for protesting.
+1414|H|mor|AS|Bengal|trade|A giraffe for the emperor|Zheng He's fleet brings a giraffe from Bengal to Beijing; the court calls it a qilin.
+1415|H|mor|EU|Prague|uprising|The Bohemian lords protest|Four hundred Czech nobles seal a protest against Hus's burning.
+1416|H|mor|ME|Gallipoli|battle,sea|Gallipoli sea battle|Venice destroys an Ottoman fleet.
+1417|H|mor|EU|Rouen|siege,famine|The siege of Rouen|Henry V starves Rouen into surrender.
+1418|H|mor|EU|Paris|massacre|Paris massacres|The Burgundians take Paris and kill Armagnacs in the streets.
+1419|W|vam|EU|Prague|uprising,war|The Hussite wars|Kindred of Prague watch the townsmen take the city; some find the Hussite fervour poor ground for the Masquerade.
+1420|H|mor|EU|Prague|faith|The Four Articles of Prague|The Hussites demand the cup for all, free preaching, a poor clergy and punishment of sin.
+1421|H|mor|EU|Bohemia|crown|Sigismund deposed in Bohemia|The Czech diet declares Sigismund unfit to rule.
+1421|W|hun|EU|Bohemia|heresy,persecution|The Adamites destroyed|Zizka exterminates the Adamites, a radical sect said to go naked and hold all things common.
+1422|H|mor|EU|Bohemia|war|The Hussite raids begin|Hussite armies raid into Hungary, Silesia and Saxony.
+1423|H|mor|EU|Bohemia|war|Hussite against Hussite|Zizka beats the Prague Hussites at Horice.
+1424|H|mor|EU|Moravia|war|The Hussites in Moravia|Hussite armies campaign through Moravia; Catholic lords and towns hold out.
+1425|H|mor|AS|Beijing|crown,death|Yongle dies|The Yongle emperor dies on campaign in Mongolia.
+1425|H|mor|EU|Leuven|learning,founding|Leuven university|A university is founded at Leuven.
+1426|H|mor|EU|Florence|art|Masaccio's frescoes|Masaccio paints the Brancacci chapel.
+1428|H|mor|EU|Orleans|siege|Orleans besieged|The English begin the siege of Orleans.
+1429|H|mor|EU|Silesia|war|Hussites in Silesia|The Hussite armies take Silesian towns.
+1430|H|mor|EU|Saxony|war|The great raid|The Hussites raid deep into Saxony, Franconia and Bavaria.
+1431|H|mor|AS|Angkor|crown|Angkor abandoned|Siam sacks Angkor; the Khmer court moves south.
+1432|H|mor|EU|Bruges|money|Bruges at its height|Bruges is the market of northern Europe, home to the Medici and Italian banks.
+1433|H|mor|EU|Rome|crown|Sigismund crowned emperor|Sigismund is crowned emperor in Rome.
+1434|W|vam|EU|Florence|money|The Medici rise|Cosimo de' Medici takes Florence in hand; Toreador and Ventrue of the city both court the bank.
+1435|H|mor|EU|Basel|faith|Basel and the pope|The council quarrels with the pope over who rules the Church.
+1436|H|mor|EU|Prague|crown|Sigismund back in Prague|Sigismund is accepted as King of Bohemia after the Compacts.
+1437|H|mor|EU|Transylvania|uprising|The Budai Nagy Antal revolt|Transylvanian peasants rise; the nobles, Saxons and Szekelys league against them.
+1438|H|mor|AS|Cuzco|empire|The Inca expand|Pachacuti begins the Inca empire.
+1439|H|mor|EU|Basel|faith|The antipope Felix|The council deposes Eugenius IV and elects the Duke of Savoy as Felix V.
+1440|H|mor|EU|Florence|art|Fra Angelico at San Marco|Fra Angelico paints the cells of San Marco.
+1440|H|mor|EU|Germany|crown|Frederick III|Frederick of Habsburg becomes King of the Romans; he will reign 53 years.
+1441|H|mor|ME|Cairo|trade|The spice monopoly|The Mamluk sultan takes control of the pepper trade.
+1442|H|mor|EU|Naples|crown,war|Alfonso takes Naples|Alfonso V of Aragon conquers Naples.
+1442|H|mor|EU|Transylvania|battle|Hunyadi's victories|John Hunyadi beats the Ottomans twice in Transylvania.
+1443|H|mor|EU|Nis|battle,crusade|The Long Campaign|Hunyadi and Wladyslaw push deep into the Balkans.
+1444|H|mor|EU|Szeged|treaty|The Peace of Szeged|Hungary makes a ten-year peace with the Ottomans, broken within weeks.
+1444|H|mor|ME|Edirne|crown|Mehmed II's first reign|The twelve-year-old Mehmed becomes sultan when his father steps aside.
+1445|H|mor|EU|Cape Verde|exploration|Cape Verde|Portuguese sailors round Cape Verde.
+1446|H|mor|EU|Hungary|crown|Hunyadi regent|John Hunyadi is made regent of Hungary.
+1447|H|mor|EU|Rome|faith,learning|The Vatican library|Pope Nicholas V begins collecting the books of the Vatican library.
+1447|H|mor|EU|Milan|crown,death|The last Visconti|Filippo Maria Visconti dies; Milan becomes a republic for three years.
+1448|H|mor|EU|Prague|war|George of Podebrady takes Prague|The Hussite lord George of Podebrady takes Prague by surprise.
+1448|H|mor|ME|Constantinople|crown|The last emperor|Constantine XI becomes emperor of a city and little else.
+1448|W|mag|EU|Europe|war|The founding wars|The war over the founding of the Council of Nine begins.
+1449|H|mor|AS|Beijing|siege|The defence of Beijing|Minister Yu Qian holds Beijing against the Oirats after the emperor's capture.
+1449|H|mor|EU|Normandy|war|France retakes Normandy|Charles VII begins the reconquest of Normandy.
+1348|H|mor|EU|Bergen|plague,sea|The ghost ship of Bergen|A ship drifts into Bergen with its crew dead of plague; the town soon follows.
+1350|W|wer|EU|Europe|plague|The wolves grow bold|With villages emptied, wolves come into the fields; Garou Kinfolk families are among the few still farming.
+1363|W|vam|EU|Avignon|plague,faith|The papal court in the plague years|The Avignon popes' court thrives as plague returns; Lasombra in the Curia grow richer with each death.
+1371|H|mor|AS|Nanjing|trade,law|The sea ban|The Hongwu emperor forbids private sea trade; smuggling grows on the coasts.
+1383|H|mor|AS|Herat|siege|Timur at Herat|Timur takes Herat and razes its walls.
+1386|H|mor|ME|Tbilisi|siege|Timur in Georgia|Timur sacks Tbilisi and captures the Georgian king.
+1388|W|wra|ME|Isfahan|massacre|Isfahan's towers|After a revolt Timur has Isfahan's people killed and their heads piled in towers; the Shadowlands of Persia overflow.
+1407|W|vam|EU|Paris|death,crown|Kindred and the murder in the rue Vieille-du-Temple|Parisian Kindred whisper that the Duke of Orleans's killers had help; no one names whose.
+1413|H|mor|EU|Paris|uprising|The Cabochiens|Paris butchers and skinners rise and terrorise the court.
+1432|W|mag|EU|Ghent|art,occult|The painter's light|Van Eyck's oils catch the light so truly that Ecstatics and the craftsmen of the Order of Reason both claim the method.
