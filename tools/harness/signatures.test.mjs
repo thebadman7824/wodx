@@ -261,3 +261,54 @@ test("a ghoul counts whole months without vitae", () => {
   assert.equal(S.monthsUnfed(0, 61 * S.DAY), 2);
   assert.equal(S.GHOUL.feature, "ghoul");
 });
+
+/* Chronicle 0.31.0: Werewolf tribes, auspices, breeds, Kinfolk and the other Changing Breeds (B1160 to B1164) */
+
+test("a Garou stacks tribe, auspice and breed; other Fera get their own row", () => {
+  assert.deepEqual(S.garouRows({tribe: ["get-of-fenris"], auspice: ["ahroun"], breed: ["metis"]}).map(r => r.key), ["fenris", "ahroun", "metis"]);
+  assert.deepEqual(S.garouRows({tribe: "Glass Walkers", auspice: "", breed: "homid", fera: "Garou"}).map(r => r.key), ["glasswalkers", "homid"]);
+  assert.equal(S.garouRows({tribe: "Warders of Men"})[0].key, "glasswalkers", "the Dark Ages name");
+  const k = S.garouRows({fera: "Kitsune", breed: "lupus", tribe: "Black Furies"});
+  assert.deepEqual(k.map(r => r.key), ["kitsune", "lupus"], "a Fera has no Garou tribe row");
+  assert.ok(k[0].text.includes(S.COURTS_TEXT));
+  assert.ok(!S.rowIn(S.FERA, "Kitsune").text.includes(S.COURTS_TEXT), "the table itself is not changed");
+  assert.equal(S.garouRows({fera: "Bastet"})[0].also[0], "secrets");
+});
+
+test("every tribe, auspice, breed and Changing Breed on the desk has a row", () => {
+  const want = ["blackfuries", "bonegnawers", "childrengaia", "fianna", "fenris", "glasswalkers", "redtalons", "shadowlords", "silentstriders", "silverfangs",
+    "stargazers", "uktena", "wendigo", "croatan", "bunyip", "whitehowlers", "bsd"];
+  assert.deepEqual(S.TRIBES.map(r => r.key), want);
+  assert.equal(S.AUSPICES.length, 5); assert.equal(S.BREEDS.length, 3);
+  for ( const k of ["ajaba", "ananasi", "bastet", "corax", "gurahl", "kitsune", "mokole", "nagah", "nuwisha", "ratkin", "rokea", "hakken", "khan", "nezumi",
+    "samebito", "zhonglung", "tengu", "kumo", "okuma", "apis", "camazotz", "grondr"] ) assert.ok(S.FERA.some(r => r.key === k), k);
+  for ( const r of [...S.TRIBES, ...S.AUSPICES, ...S.BREEDS, ...S.FERA, S.KINFOLK] ) {
+    assert.ok(r.title && r.text && r.page && r.feature, r.key);
+    assert.ok(!/—/.test(r.text), `${r.key}: no em-dash`);
+  }
+});
+
+test("lost tribes and lost Fera are gone by their year", () => {
+  const cro = S.rowIn(S.TRIBES, "Croatan"), apis = S.rowIn(S.FERA, "Apis");
+  assert.equal(S.goneBy(cro, 1500), false); assert.equal(S.goneBy(cro, 1600), true);
+  assert.equal(S.goneBy(apis, 1197), true);
+  assert.equal(S.goneBy(S.rowIn(S.TRIBES, "Fianna"), 2026), false);
+});
+
+test("creatures of the Wyrm, first into battle, and the Stargazer's sky", () => {
+  assert.ok(S.isWyrm("Black Spiral Dancers")); assert.ok(S.isWyrm("a fomor of Pentex")); assert.ok(!S.isWyrm("Hans the miller"));
+  assert.equal(S.firstInit([3, 14, null]), 15);
+  assert.ok(S.mayReadSky(null, 0)); assert.ok(!S.mayReadSky(0, 20 * S.DAY)); assert.ok(S.mayReadSky(0, 30 * S.DAY));
+  assert.ok(S.skyClear({sky: "clear", precip: "none", fog: "none"})); assert.ok(!S.skyClear({sky: "overcast"})); assert.ok(!S.skyClear({sky: "clear", precip: "rain"}));
+  assert.ok(S.skyClear(null), "no weather module: the Storyteller decides");
+});
+
+test("signature effects in the trait shape, with tag aliases", () => {
+  const fx = [{tags: ["resist-frenzy"], difficulty: 1, why: "Osebo"}, {tags: ["survival"], dice: 1, why: "Red Talons"}, {tags: ["resist-dominate"], difficulty: 2, why: "Gargoyles"},
+    {tags: ["animal ken"], dice: 1, why: "Bratovitch"}, {tags: ["all"], halve: true, why: "soil"}];
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["frenzy"]}).map(e => [e.name, e.diff]), [["Osebo", 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["survival"]}).map(e => [e.name, e.dice]), [["Red Talons", 1]]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "resist", tags: ["mind"]}).map(e => e.name), ["Gargoyles"]);
+  assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).map(e => e.name), ["Bratovitch"]);
+  assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
+});

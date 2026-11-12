@@ -12,10 +12,10 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
@@ -23,11 +23,13 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.vampire\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
 
 /** The signature row for a clan or bloodline name, or null. Whole words only, so "Settler" is not a Setite. */
-export function vampireRow(...names) {
+export function vampireRow(...names) { return rowIn(VAMPIRE, ...names); }
+/** The first row of a table whose match words name one of the names (whole words). */
+export function rowIn(table, ...names) {
   for ( const name of names.flat() ) {
     const w = words(name), text = ` ${w.join(" ")} `;
     if ( !w.length ) continue;
-    for ( const row of VAMPIRE ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
+    for ( const row of table ) if ( row.match.some(m => text.includes(` ${m} `)) ) return row;
   }
   return null;
 }
@@ -355,3 +357,41 @@ export function newFamily({name = "", founder = "", trait = "craft", disciplines
 }
 /** Whole months a ghoul has gone without vitae (30-day months). */
 export const monthsUnfed = (fedAt, now) => Math.max(0, Math.floor((n(now) - n(fedAt ?? now)) / (30 * DAY)));
+
+/* ---------------- Werewolf (Chronicle 0.31.0) ---------------- */
+
+/** A shapechanger's rows, stacked: tribe, auspice and breed for a Garou; the breed's own row first for the other Fera. */
+export function garouRows({tribe = "", auspice = "", breed = "", fera = ""} = {}) {
+  const f = fera && !/^garou$/i.test(String(fera)) ? rowIn(FERA, fera) : null;
+  const out = f ? [f, rowIn(BREEDS, breed)] : [rowIn(TRIBES, tribe), rowIn(AUSPICES, auspice), rowIn(BREEDS, breed)];
+  if ( f?.courts && !f.text.includes(COURTS_TEXT) ) out[0] = {...f, text: `${f.text} ${COURTS_TEXT}`};
+  return out.filter(Boolean);
+}
+/** Is the tribe or breed gone by this year (a lost tribe after its end, a lost Fera always)? */
+export const goneBy = (row, year) => row?.until != null && n(year) > n(row.until);
+/** Does a name or kind mark a creature of the Wyrm? */
+export const isWyrm = (...names) => names.flat().some(x => { const w = words(x); return w.some(t => WYRM_WORDS.includes(t)) || !!rowIn(TRIBES, x)?.wyrm; });
+/** The initiative that puts someone ahead of everyone else in the fight. */
+export const firstInit = (inits = []) => Math.max(0, ...inits.map(n)) + 1;
+/** The Stargazer's reading: once a lunar month, under a sky without cloud or rain. */
+export const mayReadSky = (last, now) => last == null || n(now) - n(last) >= LUNAR_MONTH * DAY;
+export const skyClear = wx => !wx || (!["overcast", "storm"].includes(wx.sky) && (!wx.precip || wx.precip === "none") && wx.fog !== "thick");
+/** A metis deformity's effects. */
+export const deformityByKey = key => DEFORMITIES.find(d => d.key === key) ?? null;
+
+/** Signature effects in the trait-effect shape for one roll: {key, name, dice, diff}. "all" fits every roll; halving is a note only. */
+const tagKey = t => String(t ?? "").toLowerCase().replace(/[^a-z]/g, "");
+const ALIAS = {resistfrenzy: {ch: "roll", tags: ["frenzy"]}, resistdominate: {ch: "resist", tags: ["mind"]}, deceit: {ch: "roll", tags: ["subterfuge", "con", "fasttalk"]}};
+export function sigRollEffects(list = [], ctx = {}) {
+  const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
+  for ( const e of list ) {
+    if ( e.halve ) continue;
+    let hit = false;
+    for ( const t of e.tags ?? [] ) {
+      const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
+      if ( tc === ch && (tt.includes("all") || tt.some(x => want.has(x))) ) hit = true;
+    }
+    if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
+  }
+  return out;
+}

@@ -176,3 +176,10 @@ test("the Actions api version matches module.json", async () => {
   const v = JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version;
   assert.match(readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8"), new RegExp(`profiles: P, version: "${v.replace(/\./g, "\\.")}"`));
 });
+
+test("ability keys the signature features read are tags of their own (Chronicle 0.31.0)", () => {
+  assert.deepEqual(T.rollTags("survival"), ["survival"]);
+  assert.ok(T.rollTags("social-lift").includes("lift"));
+  assert.ok(T.rollTags("social-con").includes("con"));
+  assert.deepEqual(T.rollTags("charisma", "leadership").sort(), ["leadership", "social"]);
+});
