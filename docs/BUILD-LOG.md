@@ -1627,3 +1627,6 @@ Ben asked for recipes after Cataclysm: Dark Days Ahead and approved the design w
 ## 2026-11-12: clan features, Vampire first
 Ben approved the Splat Features Desk: a feature of its own for every clan, tribe, auspice, Tradition, kith, guild, Amenti, House, Dharma and shade. Chronicle 0.25.0 adds the table (data/signatures.mjs), the pure rules (signature-rules.mjs) and the Foundry side (signatures.mjs) for four clans: the Toreador Muse, the Setite Corruption ledger, the Brujah Cause and the Gangrel marks. Cards carry an Undo for the Storyteller; a player's move on someone else's sheet waits in the approval queue. Harness test signatures.test.mjs. Decisions B1120 to B1124. The other clans and lines follow.
 
+
+## 2026-11-12: four more clans
+Chronicle 0.27.0 adds the Tzimisce's native soil (a night without it halves every pool), the Lasombra's empty frame (cameras of the era, a house rule), the Ravnos vice (one Self-Control prompt a night, the pull rising with weeks unfed and a long stay) and the Caitiff's odd gifts (a thin-blooded Caitiff rolls once a year). Decisions B1126 to B1129. Harness signatures.test.mjs 12 tests; gate gatesigs adds steps 10 to 13.

@@ -23,7 +23,46 @@ export const VAMPIRE = [
   {key: "gangrel", label: "Gangrel", match: ["gangrel"], feature: "marks",
     title: "Marks of the Beast", page: "V20 pdf 63 (p. 55); V20 Dark Ages pdf 50 (p. 49)", house: true,
     text: "Each frenzy leaves an animal mark with an edge and a cost. House rule: a mark lasts a month and then heals as a wound would. Wild animals treat a Gangrel as one of their own, and out of town Survival rolls to find earth to sleep in or to read tracks are one easier."},
+  {key: "tzimisce", label: "Tzimisce", match: ["tzimisce"], feature: "soil",
+    title: "Native soil", page: "V20 pdf 79 (p. 71), halving pdf 447; V20 Dark Ages pdf 66 (p. 65)",
+    text: "Two handfuls of earth from the place the Tzimisce was born or Embraced. A night's rest without it halves every dice pool until the vampire rests on it again. Carrying the soil as an item counts as resting on it; lose it to a thief or leave it behind and the next night is hard. A Tzimisce's domain is a holding whose tenants answer to the lord."},
+  {key: "lasombra", label: "Lasombra", match: ["lasombra"], feature: "camera",
+    title: "No image, living darkness", page: "V20 pdf 67 (p. 59); V20 Dark Ages pdf 52 (p. 51)", house: true,
+    text: "A Lasombra casts no reflection. House rule: no photograph, film or camera holds their image either. Where a scene is marked as watched by a camera of the era, an empty frame where a person stood is a breach of the Masquerade found later by whoever studies the picture. From the World of Future Darkness every scene counts as watched unless the Storyteller says otherwise."},
+  {key: "ravnos", label: "Ravnos", match: ["ravnos"], feature: "vice",
+    title: "The vice that calls", page: "V20 pdf 73 (p. 65); V20 Dark Ages pdf 58 (p. 57)",
+    text: "The Ravnos holds one vice: lying, theft, cheating or a dare. When a chance for it comes up in talk or trade, the player rolls Self-Control; failing means the act happens. The pull grows with each week the vice goes unfed and with a long stay in one domain. Moving on resets the stay."},
+  {key: "caitiff", label: "Caitiff", match: ["caitiff", "clanless"], feature: "oddity", house: true,
+    title: "Nobody's child", page: "V20 pdf 40; Thin Blood V20 pdf 491 (p. 483)",
+    text: "No clan weakness and no clan to speak for them: in a Camarilla court their Status needs a sponsor, while Anarch and Sabbat company takes them as they are. House rule: a thin-blooded Caitiff has a one in ten chance each year to wake with an odd gift (walking at dusk, keeping down a little food, passing for mortal at a glance), offered to the Storyteller as a card."},
 ];
+
+/** Ravnos vices (V20 Ravnos weakness, own words). acts: social or trade acts that feed it. */
+export const RAVNOS_VICES = [
+  {key: "lying", label: "Lying", acts: ["con", "fasttalk"]},
+  {key: "theft", label: "Theft", acts: ["lift"]},
+  {key: "cheating", label: "Cheating", acts: ["barter", "buy", "sell"]},
+  {key: "dare", label: "A dare taken", acts: []},
+];
+
+/** Camera kinds by year (house rule: the books name mirrors only). */
+export const CAMERAS = [
+  {from: 1839, label: "a photograph"},
+  {from: 1895, label: "a film camera"},
+  {from: 1970, label: "a video camera or closed-circuit television"},
+  {from: 2000, label: "a digital camera"},
+];
+/** From this year every scene counts as watched unless marked otherwise (house rule, World of Future Darkness). */
+export const CAMERAS_EVERYWHERE = 2023;
+
+/** Odd gifts a thin-blooded Caitiff may wake with (house rule). */
+export const ODD_GIFTS = [
+  {key: "dusk", label: "Walks at dusk and dawn", text: "The half-light no longer burns; full sun still does."},
+  {key: "food", label: "Keeps down a little food", text: "Can eat a small meal without vomiting it up, enough to pass at a table."},
+  {key: "mortal", label: "Passes for mortal at a glance", text: "Warm skin and a heartbeat when spending a blood point, for a scene."},
+  {key: "sun", label: "Shrugs off a little sun", text: "One less die of damage from sunlight."},
+];
+export const ODD_GIFT_CHANCE = 0.1;
 
 /** Brujah causes (Ben 2026-11-12: a list to pick from, NPCs draw from it too). from/to: years the cause makes sense. */
 export const CAUSES = [
