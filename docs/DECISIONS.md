@@ -84,7 +84,7 @@ Next free block: B2320
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
 | B2100-B2105 | NPC voices | Voices |
-| B2200-B2209 | Battles and sieges | Storyteller |
+| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
@@ -2235,6 +2235,11 @@ Reverse: passTime in battles.mjs; warEvents in battle-rules.mjs.
 A battle can be set in the Umbra (Garou, Fera and spirits against the Wyrm's hosts) or the Underworld (Legions against Spectres or Renegades). Those ignore the year: a phase is an hour, no guns breach walls, and the counterattack is 5 dice. The damage type of "The battle hits" stays lethal; the Storyteller changes it by hand where a realm calls for it.
 
 Reverse: REALM_AGES in battle-rules.mjs.
+
+## B2210. The book's army when both sides list units (2026-11-12, Spoils of War pp. 44-45 printed)
+The Troop Types table of Spoils of War (p. 44 printed, pdf 45) was read from the page images (/mnt/project-files/book-checks-2026-11-12b.md, item 2); its figures give the book's example army exactly (Maneuver 19, Melee 20, Ranged 5, Defense 20). When both sides list units, a battle is fought with the book's Right of Command in place of the house weight of B2200 and B2203: the commanders' opposed Perception + Leadership (difficulty 6, a botch gives the other side 2) adds the net successes to the winner's four pools and takes them from the loser's; then each army takes one action, Close and fight (Melee against the foe's Defense, the winner takes a unit a net success either way), Shoot (Ranged against half the foe's Defense, only the shooters do harm) or Withdraw (Maneuver against Maneuver; a win keeps the foe's melee off and leaves the field, a loss adds the net successes to the foe's blow). Losing 3 or more units in a turn makes an army waver at that many; losses past the commander's Charisma + Leadership cost a die a unit (demoralised); an army with no units left is beaten. WoDX readings: the army is one line, so Flank, the wings, the Reserve and the turned flank are not used; units fall from the type with the most units, mortal troops before the supernatural ones; a defender adds its position's bonus to Defense; a character's deed adds its successes to its side's action; a book army drawing off leaves a tenth of its units; in a siege a book army's hunger and disease wear its resolve, not its men. Without units on both sides, and in every age the book's troop types do not fit, the house frame of B2200 stays.
+
+Reverse: clear the units on both sides (the battle then uses men and quality), or drop the isBook branch in fight() in wodx-storyteller/scripts/battles.mjs.
 
 ## B2220. The crowd as a resource (2026-11-12, house rule)
 The passers-by leftovers of the Master Plan (Passers-by and animals, priority 2) are built in WoDX NPC 0.40.0 and Actions 3.52.0. Each person in the street now carries a feeling and a spark (crowd-rules.mjs), kept on the token's passer-by flag. WoDX Actions reads them through api.passersby.mindOf and offers the mortals in sight to a wraith's Passion roll and a changeling's Epiphany. What a supernatural takes from a mortal is written on the mortal's token actor as flags.wodx-actions.crowdUse, by the Storyteller's client.
