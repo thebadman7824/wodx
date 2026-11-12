@@ -26,7 +26,7 @@ const TYPE_MAP = {
 /** The line of an actor: the profile WoDX Combat keeps (flags.world.wodx.profile), else its sheet type and variant. */
 export function profileOf(actor) {
   if ( !actor ) return "mortal";
-  const flag = actor.flags?.world?.wodx?.profile ?? actor.flags?.world?.vtda20?.profile;
+  const flag = actor.flags?.world?.wodx?.profile;
   if ( flag && LINES[flag] ) return flag;
   let t = String(actor.type ?? "").toLowerCase();
   if ( t === "pc" ) t = String(actor.system?.settings?.splat ?? "mortal").toLowerCase();

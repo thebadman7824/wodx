@@ -22,14 +22,14 @@
 .vtc-dialog fieldset { margin-bottom: 6px; }
 .vtc-dialog .form-group label { flex: 2; }
 .vtc-dialog .vtc-head { text-align: center; }
-.vtda20-dialog fieldset { margin-bottom: 6px; }
-.vtda20-dialog .form-group { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
-.vtda20-dialog .form-group label { flex: 2; }
-.vtda20-dialog select, .vtda20-dialog input[type=number] { flex: 1; }
+.wodx-form-dialog fieldset { margin-bottom: 6px; }
+.wodx-form-dialog .form-group { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.wodx-form-dialog .form-group label { flex: 2; }
+.wodx-form-dialog select, .wodx-form-dialog input[type=number] { flex: 1; }
 
 /* ---- v2.0.1: dialogs never taller than the screen; content scrolls; compact type menu ---- */
-.vtda20-dialog .window-content, .vta-dialog .window-content, .vtc-dialog .window-content { overflow-y: auto; min-height: 0; }
-.vtda20-dialog .dialog-content, .vta-dialog .dialog-content, .vtc-dialog .dialog-content { overflow-y: auto; min-height: 0; }
+.wodx-form-dialog .window-content, .vta-dialog .window-content, .vtc-dialog .window-content { overflow-y: auto; min-height: 0; }
+.wodx-form-dialog .dialog-content, .vta-dialog .dialog-content, .vtc-dialog .dialog-content { overflow-y: auto; min-height: 0; }
 .vta-grp-wrap { font-size: 0.92em; }
 .vta-grp-wrap .vta-menu-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin: 0 0 4px; }
 .vta-grp-wrap fieldset.vta-grp { margin: 0 0 4px; padding: 2px 6px 6px; border-radius: 4px; }

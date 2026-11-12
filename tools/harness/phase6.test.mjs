@@ -185,10 +185,10 @@ test("the WoDX modules start; the VtDA20 bridge is gone (no old API names, no ol
   assert.ok(game.macros.find(m => m.name === "WoDX: Hunt"));
 });
 
-test("profiles read the WoDX flag first, then VtDA20's; 'Automatic' is stored, not deleted", async () => {
+test("profiles read the WoDX flag only; 'Automatic' is stored, not deleted", async () => {
   const P = game.wodx.profiles;
   const a = makeActor("Thrall", "Mortal", {flags: {world: {vtda20: {profile: "ghoul", form: "crinos"}}}});
-  assert.equal(P.detectProfile(a), "ghoul", "an old VtDA20 flag is still read");
+  assert.equal(P.detectProfile(a), "mortal", "an old VtDA20 flag is no longer read");
   await P.setProfile(a, "mortal");
   assert.equal(a.flags.world.wodx.profile, "mortal");
   assert.equal(P.detectProfile(a), "mortal", "the WoDX flag wins");
@@ -196,7 +196,7 @@ test("profiles read the WoDX flag first, then VtDA20's; 'Automatic' is stored, n
   assert.equal(a.flags.world.wodx.profile, "auto");
   assert.equal(P.detectProfile(a), "mortal", "automatic detection, not the old ghoul flag");
   assert.equal(a.flags.world.vtda20.profile, "ghoul", "nothing deleted");
-  assert.equal(P.worldFlag(a, "form"), "crinos");
+  assert.equal(P.worldFlag(a, "form"), undefined, "the old form flag is not read either");
 });
 
 test("WoDX Combat reads the conditions, and a heavy hit dazes (V20 Dark Ages p. 348)", async () => {

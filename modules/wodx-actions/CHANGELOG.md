@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.53.0 (the last VtDA20 pieces are gone: the manifest no longer lists vtda20-actions as a conflict, the actor type no longer falls back to the old vtda20 flags, and the dialog class is wodx-form-dialog)
 - 3.52.0 (the crowd as a resource: a wraith's Passion can draw Pathos at second hand from a passer-by in sight who feels it, once a scene each; a changeling's Ravaging and Reverie can pick a mortal from the crowd, once a night each for Ravaging and only a Dreamer for Reverie)
 - 3.51.0 (Summon a spirit, Perform a rite and Chiminage take the spirit's court and its standing)
 - 3.50.0 (Game time: Move the clock on long rolls, rites, prayer, downtime and mending works for players too (it asks the Storyteller) and goes on the character's own time when apart; sunlight follows a scene's own latitude and hour)
