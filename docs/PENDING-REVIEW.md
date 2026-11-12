@@ -846,4 +846,4 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | What counts as a big swing (B2375) | Only a kind going from normal toward want; it waits in the queue only where a player character stands, else it goes through quietly | Suggest mode queues everything |
 | 2026-11-12 | Market news meets the weekly turn | A preset applied from a news card (famine, siege) fades over a few weeks like any other shortage; tick Cut off on a market to hold it as it is | Tick Cut off, or re-apply the news card |
 | 2026-11-12 | Broke traders and faction moves on markets | Not built in this release; the turn leaves tills alone (restocking already pays from them) | Later build |
-
+| 2026-11-12 | Battles, the book's army: a third of its units a turn at most (B2210, amended) | An army loses no more than a third of the units it began with in one turn, deeds included. Faction armies are five to nine units, and a supernatural war ended in its first hour two times in three; now wars run three phases or more | turnCap in wodx-storyteller battle-rules.mjs |

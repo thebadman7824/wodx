@@ -99,3 +99,29 @@ test("the leaders' powers come from the battle deeds table when it is there", ()
   assert.match(src, /seen: !!pick\.seen/);
   assert.equal(W.COMBAT_KIND.garou, "lupine");
 });
+
+test("a book army loses at most a third of its starting units in a turn, so faction wars run more than one phase", () => {
+  const roll = (k, d) => { let s = 0, o = 0; for ( let i = 0; i < k; i++ ) { const f = 1 + Math.floor(Math.random() * 10); if ( f >= d ) s++; if ( f === 1 ) o++; } return {successes: Math.max(0, s - o), botch: s === 0 && o > 0, faces: []}; };
+  const A = F.normFaction({id: "a", name: "Court", kind: "kindred", assets: {status: 3, retainers: 2, herd: 2}});
+  const D = F.normFaction({id: "b", name: "Sept", kind: "garou", assets: {status: 3, retainers: 2, domain: 1}});
+  let one = 0;
+  for ( let t = 0; t < 200; t++ ) {
+    let b = B.normBattle({year: 1230, sides: [W.forcesFor(A, "supernatural", {year: 1200}), W.forcesFor(D, "supernatural", {year: 1200, defends: true})]});
+    const age = B.ageFor(1230); let k = 0;
+    while ( !b.over && k < 30 ) {
+      const set = B.bookSetup(b, age); const cr = [roll(set[0].pool, 6), roll(set[1].pool, 6)];
+      const plan = {...B.bookPools(b, age, cr), commandRolls: cr};
+      plan.contests = B.bookContests(b, age, plan.pools, B.chooseActions(b, age));
+      for ( const c of plan.contests ) c.rolls = {attack: roll(c.attack.pool, 6), resist: roll(c.resist.pool, 6)};
+      const st = B.settleBookTurn(b, age, plan, [[{name: "x", successes: 6}], [{name: "y", successes: 6}]]);
+      for ( const i of [0, 1] ) assert.ok(st.phase.units[i] <= B.turnCap(b.sides[i]), "no more than the cap in one turn");
+      b = B.applyStep(b, st);
+      if ( st.waver ) b = B.applyWaver(b, st.waver.side, roll(b.sides[st.waver.side].commander.morale, st.waver.difficulty));
+      k++;
+    }
+    if ( k === 1 ) one++;
+  }
+  assert.ok(one < 20, `one-phase wars: ${one} of 200`);
+  assert.equal(B.turnCap({startUnits: {peasants: 5}}), 2);
+  assert.equal(B.turnCap({units: {peasants: 1}}), 1);
+});
