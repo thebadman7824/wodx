@@ -91,7 +91,7 @@ test("the mounted charge: a die for each 10 yards ridden this turn, five at most
   assert.equal(MV.chargeDice({role: "reins", hooves: false, saddle: true}, 40), 0, "a motorcycle is no lance charge");
   assert.equal(MV.chargeDice({role: "reins", hooves: true, saddle: false}, 40), 0, "nor a cart");
   assert.equal(MV.chargeDice(null, 40), 0);
-  assert.equal(MV.CHARGE_MAX, 5, "V20 Dark Ages p. 398: five at most");
+  assert.equal(MV.CHARGE_MAX, 5, "V20 Dark Ages p. 399: five at most");
 });
 
 /* ---------------- a load in the water ---------------- */
@@ -208,7 +208,7 @@ test("the wiring: Interactables tells the ride, Combat reads it for moves, stanc
   assert.match(mv, /api\?\.rideOf\?\.\(doc\)/);
   assert.match(mv, /ride: rideOf\(doc\)/, "the stance reads the ride");
   assert.match(mv, /mode: "ride"/);
-  assert.match(mv, /rideOf, loadOf, chargeOf, setBurden, burdenDialog/);
+  assert.match(mv, /rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog/);
   assert.match(main, /add\("Mounted charge", charge\)/);
   assert.match(main, /export function armorPenalty/);
   assert.match(main, /armorPenalty, ask: P\.ask/);
@@ -222,4 +222,15 @@ test("the wiring: Interactables tells the ride, Combat reads it for moves, stanc
 test("the three runtime files still load without Foundry's globals in their top level imports", async () => {
   for ( const f of ["modules/wodx-combat/scripts/movement-rules.js", "modules/wodx-interactables/scripts/chase-rules.mjs", "modules/wodx-senses/scripts/senses-rules.mjs"] )
     assert.ok(await load(f), f);
+});
+
+test("in the saddle an Ability is held to Ride; not on foot, in a cart or at a wheel", () => {
+  const horse = {role: "reins", hooves: true, saddle: true, skill: "ride"};
+  assert.deepEqual(MV.rideCap(horse, 4, 2), {value: 2, lost: 2});
+  assert.deepEqual(MV.rideCap(horse, 2, 4), {value: 2, lost: 0});
+  assert.deepEqual(MV.rideCap(horse, 3, 0), {value: 0, lost: 3});
+  assert.deepEqual(MV.rideCap({...horse, role: "passenger"}, 4, 1), {value: 1, lost: 3}, "anyone astride");
+  assert.deepEqual(MV.rideCap({...horse, saddle: false}, 4, 1), {value: 4, lost: 0}, "a cart");
+  assert.deepEqual(MV.rideCap({role: "reins", motor: true, skill: "drive"}, 4, 0), {value: 4, lost: 0});
+  assert.deepEqual(MV.rideCap(null, 4, 0), {value: 4, lost: 0});
 });

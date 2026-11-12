@@ -10,7 +10,7 @@
  * breath lasts, and which powers grant which way of moving.
  *
  * 3.20.0: riding and driving in a fight (the mount's own speed for the one at the reins, the saddle and the vehicle
- * as stances, the mounted charge of V20 Dark Ages p. 398 read for a map), and a load that slows a swimmer (worn
+ * as stances, the mounted charge of V20 Dark Ages p. 399 read for a map), and a load that slows a swimmer (worn
  * armor and what is carried; house rules B2440-B2444).
  */
 
@@ -300,11 +300,23 @@ export function rideMove(ride, {skill = 0} = {}) {
 }
 
 /**
- * The mounted charge. V20 Dark Ages p. 398 gives a rider who catches someone at speed +1 damage die for each turn spent
+ * The mounted charge. V20 Dark Ages p. 399 gives a rider who catches someone at speed +1 damage die for each turn spent
  * building speed, five at most. On a map there are no turns of building speed to count, so WoDX reads it by ground
  * covered (house rule B2442): a rider on hooves, at the reins, gets +1 die on a hand-to-hand blow for each full
  * 10 yards ridden this turn before it, five at most. A passenger, a cart and a motor car give none.
  */
+/**
+ * In the saddle, no Ability counts for more dots than the rider has in Ride (V20 Dark Ages p. 399). The Ability asked
+ * for is the one the chase uses for this mount (ride.skill). Hooves and a saddle only: a cart's passenger and a
+ * motor car's driver are not held to it. -> {value, lost}
+ */
+export function rideCap(ride, dots = 0, rideDots = 0) {
+  const d = Math.max(0, Number(dots) || 0);
+  if ( !ride || !ride.hooves || !ride.saddle ) return {value: d, lost: 0};
+  const value = Math.min(d, Math.max(0, Number(rideDots) || 0));
+  return {value, lost: d - value};
+}
+
 export const CHARGE_PER = 10;
 export const CHARGE_MAX = 5;
 export function chargeDice(ride, yardsThisTurn = 0, {ranged = false} = {}) {

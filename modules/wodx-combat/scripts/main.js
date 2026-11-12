@@ -901,9 +901,12 @@ function attackBasics(attacker, w) {
 function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
     const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
     const cel = discipline(attacker, "Celerity");
+    // 3.20.1: in the saddle no Ability counts past the rider's Ride (V20 Dark Ages p. 399)
+    let held = { value: ab.value, label: ab.name };
+    try { held = MVJ.rideCapOf(attacker, ab.value, ab.name); } catch (e) { /* on foot */ }
     return R.attackPool({
         attribute: attr(attacker, attrKey), attributeLabel: cap(attrKey),
-        ability: ab.value, abilityLabel: ab.name,
+        ability: held.value, abilityLabel: held.label,
         accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
         celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
         flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice, woundPenalty: woundPenalty(attacker),
@@ -1094,7 +1097,7 @@ async function rollDefense(target, fd, w, maneuver) {
 function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     const parts = [];
     let dice = 0, auto = 0;
-    // 3.20.0: a rider's charge (V20 Dark Ages p. 398, read for a map)
+    // 3.20.0: a rider's charge (V20 Dark Ages p. 399, read for a map)
     let charge = 0;
     try { charge = MVJ.chargeOf(attacker, { ranged: !!w.ranged }).dice; } catch (e) { charge = 0; }
     const add = (l, n) => { if (n) { dice += n; parts.push(`${l} ${n}`); } };
@@ -1463,7 +1466,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.20.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.20.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

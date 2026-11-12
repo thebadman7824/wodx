@@ -339,7 +339,17 @@ export function chargeOf(attacker, {ranged = false, attackerTok = null} = {}) {
   const tag = c?.started ? `${c.id}:${c.round}` : null;
   const yards = tag && moved?.tag === tag ? Number(moved.yards) || 0 : 0;
   const dice = MV.chargeDice(ride, yards, {ranged});
-  return {dice, yards, note: dice ? `Mounted charge: ${Math.round(yards)} yards ridden this turn, +${dice} damage ${dice === 1 ? "die" : "dice"} (V20 Dark Ages p. 398, read for a map: house rule)` : ""};
+  return {dice, yards, note: dice ? `Mounted charge: ${Math.round(yards)} yards ridden this turn, +${dice} damage ${dice === 1 ? "die" : "dice"} (V20 Dark Ages p. 399, read for a map: house rule)` : ""};
+}
+/** The Ability dots a rider may use in the saddle (movement-rules rideCap): {value, lost, label}. */
+export function rideCapOf(attacker, dots = 0, name = "", {attackerTok = null} = {}) {
+  const plain = {value: Number(dots) || 0, lost: 0, label: name};
+  if ( !on() || !attacker ) return plain;
+  const ride = rideOf((attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker));
+  const skill = ride?.skill ?? "ride";
+  if ( !ride || String(name).toLowerCase() === skill ) return plain;
+  const r = MV.rideCap(ride, dots, D.ability(attacker, skill));
+  return r.lost ? {...r, label: `${name}, held to ${skill === "ride" ? "Ride" : skill[0].toUpperCase() + skill.slice(1)} in the saddle`} : plain;
 }
 /** The defender's own stance on a dodge: a difficulty change and its note. */
 export function defenseMods(target) {
@@ -411,5 +421,5 @@ export function setupMovement(deps) {
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
   return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod,
-    rideOf, loadOf, chargeOf, setBurden, burdenDialog, rules: MV};
+    rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog, rules: MV};
 }

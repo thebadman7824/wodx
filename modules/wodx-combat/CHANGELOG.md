@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.20.1 (after the book check: in the saddle no Ability counts for more dots than the rider has in Ride, V20 Dark Ages p. 399, and the attack line says so; the mounted charge's page is 399)
 - 3.20.0 (the last of the ways of moving: at the reins of a horse, cart, car or boat the mount's own pace is the limit in a fight, half with no dot in Ride or Drive, and a passenger is carried without spending a move; In the saddle and Aboard a vehicle are stances with their own changes to rolls; a rider's charge adds a damage die for each 10 yards ridden this turn, five at most; worn armor and a burden set from the token HUD slow a swimmer by quarters and take them under at four steps)
 - 3.19.0 (the last VtDA20 pieces are gone: the manifest no longer lists vtda20-combat as a conflict, the actor type no longer falls back to the old vtda20 flags, and the dialog class is wodx-form-dialog)
 - 3.18.0 (Game time: when a fight ends the clock moves by its turns times the seconds a turn takes (world setting Seconds a turn takes, 3; 0 keeps fights timeless), or the fighters' own time when they are apart; the after-action card names the length)
