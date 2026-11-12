@@ -126,7 +126,7 @@ export function menuFor(chain = [], known = {}) {
 export const canAsk = (topic, menu) => { const t = normTopic(topic); return !!t && (menu.local.includes(t) || menu.ask.includes(t)); };
 
 /**
- * NPC 0.33.0 (B1507): a line that needs a trait. The tests in its "Only when" list that ask about the character's own
+ * NPC 0.35.0 (B1507): a line that needs a trait. The tests in its "Only when" list that ask about the character's own
  * traits (a rated trait such as Dominate 2 or Etiquette 3, a merit, flaw or background, a power, a clan, tribe,
  * Tradition, kith or other sheet field, Generation, Arete or True Faith), as the Storyteller wrote them. A group's
  * choices are joined with "or". Empty for a line anyone may get.
@@ -343,6 +343,31 @@ export function noticeFor(check) {
   if ( typeof check !== "function" ) return null;
   for ( const k of NOTICE_ORDER ) { try { if ( check(NOTICE_TEST[k] ?? `kind ${k}`) ) return k; } catch (e) { /* a test it cannot read */ } }
   return null;
+}
+
+/** Notices that tell what a character is: these have to be noticed (B1381). Wounds, blood and frenzy anyone sees. */
+export const KIND_NOTICES = ["kindred", "ghoul", "lupine", "mage", "fae", "wraith", "hunter", "demon", "mummy"];
+/** An NPC with no sheet numbers looks with three dice (Perception 2, Alertness 1). */
+export const NOTICE_POOL_FLOOR = 3;
+
+/** Successes on n dice at a difficulty, seeded (the same day gives the same answer); 1s take successes away. */
+export function seededSuccesses(n, diff, seed) {
+  let x = (Number(seed) >>> 0) || 1, hits = 0;
+  for ( let i = 0; i < Math.max(0, Math.min(20, Math.floor(Number(n) || 0))); i++ ) {
+    x = (Math.imul(x ^ (x >>> 15), 2246822519) + 0x9e3779b9) >>> 0;
+    const d = 1 + (x % 10);
+    if ( d >= diff ) hits++; else if ( d === 1 ) hits--;
+  }
+  return hits;
+}
+
+/**
+ * Does a mortal NPC pick up an odd tell of what a character is (0.33.0, B1381)? Yes when it can already tell (plainly
+ * inhuman, a sense, or it saw); else a Perception + Alertness roll at difficulty 7 needs one success (a house rule).
+ */
+export function noticesTell({tells = false, pool = 0, seed = 0, diff = 7} = {}) {
+  if ( tells ) return true;
+  return seededSuccesses(Math.max(NOTICE_POOL_FLOOR, Number(pool) || 0), diff, seed) > 0;
 }
 
 /** The month (1 to 12) of a Julian day number, in the Gregorian reckoning the weather uses. */

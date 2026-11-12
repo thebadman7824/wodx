@@ -169,7 +169,7 @@ export function build(ctx) {
     try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return []; }
     return entries.filter(e => e?.kind === "boon" && (e.status ?? "open") === "open" && e.from?.id && e.to?.id).map(e => ({id: e.id, size: e.size, from: e.from.id, to: e.to.id}));
   }
-  /** NPC 0.33.0 (B1505): hooks held on secrets, as {holder, finder, secret, entry}, for the Accuse move. */
+  /** NPC 0.35.0 (B1505): hooks held on secrets, as {holder, finder, secret, entry}, for the Accuse move. */
   function openHooks() {
     let open = null;
     try { open = new Set((game.settings.get("wodx-storyteller", "ledger")?.entries ?? []).filter(e => (e?.status ?? "open") === "open").map(e => e.id)); } catch (e) { open = null; }

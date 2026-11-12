@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.33.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)
+- 0.34.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)
+- 0.33.0 (Mage features: every Tradition, Craft and Convention with the old names of each age, the Order of Reason, the Hermetic Houses, the mad and the fallen; world setting Tradition, Craft and Convention features (Mage), off by default)
 - 0.32.0 ("Only when" tests on the look: dressed fine or poor, wears, station, out of time, bloody, disguised, seen through)
 - 0.31.0 (Werewolf features: tribe, auspice and breed stacked, Kinfolk, the lost tribes, the eleven other Changing Breeds and the Beast Courts; signature roll effects now reach the dice; world setting Tribe, auspice and breed features (Werewolf), off by default)
 - 0.30.0 (ghouls and their monthly fix; revenant families, the four of the books and new ones founded in play with the Storyteller's approval)

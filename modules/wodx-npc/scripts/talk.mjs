@@ -146,13 +146,18 @@ export function build(ctx) {
   const storyteller = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
   /** Does an "Only when" test hold for this actor? */
   const holds = (actor, text) => { try { return !!chron()?.when?.check?.(text, {actor}).ok; } catch (e) { return false; } };
+  /** Can the NPC already tell what the character is (WoDX NPC's rivalry senses)? */
+  const tellsOf = r => { try { return !!ctx.tells?.(r.npcTok, r.me)?.tells; } catch (e) { return false; } };
+  /** Perception + Alertness off the NPC's sheet. */
+  const lookPool = a => (Number(a?.system?.attributes?.perception?.value) || 0) + (Number(a?.system?.abilities?.alertness?.value) || 0);
   /** What comes after the greeting: one aside (what they notice, a debt, talk of the character, small talk). */
   function asidesOf(r, c) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me), w = TK.warmthOf(c.regard), out = {};
     if ( holds(npc, "kind mortal") ) {
       // NPC 0.32.0: tests against this NPC too (dress against their station, a disguise seen through)
       const seen = TK.noticeFor(t => { try { return !!chron()?.when?.check?.(t, {actor: pc, npc}).ok; } catch (e) { return false; } });
-      if ( seen && (TK.NOTICE_ALWAYS.has(seen) || c.seed % 3 === 0) ) out.notice = TK.pickLine(MORE.NOTICE[seen], c.seed);
+      // 0.33.0 (B1381): a tell of what the character is needs noticing as well
+      if ( seen && (TK.NOTICE_ALWAYS.has(seen) || (c.seed % 3 === 0 && (!TK.KIND_NOTICES.includes(seen) || TK.noticesTell({tells: tellsOf(r), pool: lookPool(npc), seed: c.seed})))) ) out.notice = TK.pickLine(MORE.NOTICE[seen], c.seed);
     }
     try {
       const L = storyteller()?.ledger?.state?.();
@@ -277,7 +282,7 @@ export function build(ctx) {
     // WoDX Chronicle's clan features: what a deranged Malkavian hears beyond the true reply (Chronicle 0.26.0)
     let heard = null;
     try { heard = say ? chron()?.signatures?.hearAs?.(actor, {topic: TK.topicLabel(topic), name, npcId: r.npcTok.actor?.id ?? ""}) ?? null : null; } catch (e) { heard = null; }
-    // NPC 0.33.0 (B1507): a line that needs a trait is marked with what unlocked it
+    // NPC 0.35.0 (B1507): a line that needs a trait is marked with what unlocked it
     const gate = line?.when ? TK.gateLabel(line.when) : "";
     const extra = [taught.length ? `Now you can ask about ${taught.map(TK.topicLabel).join(", ")}.` : "", ...notes].filter(Boolean);
     const content = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} asks about ${esc(TK.topicLabel(topic).toLowerCase())}.</p>`

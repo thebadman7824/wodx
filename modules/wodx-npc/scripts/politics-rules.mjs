@@ -482,7 +482,7 @@ export function applyPolitics(f, c) {
       return [{op: "pol-inner", faction: f.id, set: was}];
     }
     case "pol-boon": return []; // a report: the creditor calls in a boon; the Storyteller marks the ledger
-    case "pol-expose": return []; // NPC 0.33.0 (B1505): a secret laid bare; WoDX NPC makes it known and spends the hook
+    case "pol-expose": return []; // NPC 0.35.0 (B1505): a secret laid bare; WoDX NPC makes it known and spends the hook
     case "pol-fight": return []; // a report: a challenge with a player's character, staged as a fight (B1111)
     default: return null;
   }
@@ -648,7 +648,7 @@ export function innerTurn(f, ctx = {}) {
       case "accuse": {
         // The top seat is beyond a charge, save among the Anarchs
         const rivals = members.filter(m => m !== id && (key === "anarch" || !officesOf(view, m).includes(top?.key)));
-        // NPC 0.33.0 (B1505): a secret found on a member is the charge, and the proof makes it stick
+        // NPC 0.35.0 (B1505): a secret found on a member is the charge, and the proof makes it stick
         const hook = hooksFor(id, ctx.hooks ?? [], rivals, {polity: key, year: ctx.year ?? null})[0] ?? null;
         const against = hook?.holder ?? rivals.sort((a, b) => rankOf(view, b, info, key) - rankOf(view, a, info, key))[0] ?? null;
         if ( !against ) { say(`${name(id)} finds nobody worth accusing.`); break; }

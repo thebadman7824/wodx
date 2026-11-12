@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.33.0 gate (relationships, the lineage tree, secrets and hooks, why an NPC feels as they do, talk lines
+ * WoDX NPC 0.35.0 gate (relationships, the lineage tree, secrets and hooks, why an NPC feels as they do, talk lines
  * that need a trait), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatepeople.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four actors and deletes them, and puts back the Ledger and its chat cards.
- *   1. NPC 0.33.0+, Chronicle 0.33.0+, Sheets 0.11.0+, the APIs
+ *   1. NPC 0.35.0+, Chronicle 0.34.0+, Sheets 0.11.0+, the APIs
  *   2. ties from the lineage show at both ends: sire and childe, domitor and ghoul
  *   3. the family and lineage tree opens and climbs to an unknown sire
  *   4. a secret hides the childe link from players
@@ -51,7 +51,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, cv = game.modules.get("wodx-chronicle").version, sv = game.modules.get("wodx-sheets")?.version;
-      ok("1. NPC 0.33.0+, Chronicle 0.33.0+, Sheets 0.11.0+, the APIs", newer(v, "0.33.0") && newer(cv, "0.33.0") && newer(sv, "0.11.0")
+      ok("1. NPC 0.35.0+, Chronicle 0.34.0+, Sheets 0.11.0+, the APIs", newer(v, "0.35.0") && newer(cv, "0.34.0") && newer(sv, "0.11.0")
         && typeof npc().ties?.of === "function" && typeof npc().openTree === "function" && typeof npc().secrets?.reveal === "function" && typeof npc().opinion?.reasons === "function", {v, cv, sv});
     });
 

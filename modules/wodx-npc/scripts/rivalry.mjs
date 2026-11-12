@@ -74,6 +74,26 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     return out;
   }
   const metBy = (watcher, other) => Faces.metList(baseOf(other)?.flags?.[MOD] ?? {}).includes(baseOf(watcher)?.id);
+  /** Was the watcher recorded seeing the other for what it is (WoDX Actions' Masquerade records)? */
+  const idsOf = a => [...new Set([a?.uuid, baseOf(a)?.uuid].filter(Boolean))];
+  function sawIt(wTok, oTok) {
+    if ( RV.hasSeen(baseOf(wTok?.actor)?.flags?.[MOD]?.seenAs, baseOf(oTok?.actor)?.id) ) return true;
+    try {
+      if ( !game.modules.get("wodx-actions")?.active ) return false;
+      const j = game.journal?.find?.(x => x.getFlag?.("wodx-actions", "kind") === "masquerade");
+      return RV.sawSecret(j?.getFlag?.("wodx-actions", "entries") ?? [], idsOf(wTok?.actor), idsOf(oTok?.actor));
+    } catch (e) { return false; }
+  }
+  /**
+   * Can this watcher tell what the other is (0.33.0, B1380)? Works for any two tokens, player characters too: it is
+   * plainly inhuman, a sense shows it, or the watcher saw it and has not been made to forget. Returns {tells, how}.
+   */
+  function tells(wTok, oTok) {
+    if ( !wTok?.actor || !oTok?.actor ) return {tells: false, how: null};
+    let senses = [];
+    try { senses = sensesFor(wTok, oTok); } catch (e) { senses = []; }
+    return RV.tellsLine({senses, sawIt: sawIt(wTok, oTok)}, {line: kindOf(oTok.actor), obvious: !!obvious?.(oTok.actor)});
+  }
   /** The other's sides this watcher can tell. */
   function knownTo(wTok, oTok) {
     const st = factionState();
@@ -81,7 +101,7 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     // a faction knows the members of the factions it has a standing with (friend or foe)
     const knows = st ? st.factions.filter(f => mine.some(m => m.id !== f.id && F.standingOf(m, f.id) !== 0)).map(f => f.name) : [];
     const {own} = sidesOf(oTok.actor);
-    return RV.knownSides({line: kindOf(wTok.actor), senses: sensesFor(wTok, oTok), knowsFactions: knows, metThem: metBy(wTok.actor, oTok.actor)},
+    return RV.knownSides({line: kindOf(wTok.actor), senses: sensesFor(wTok, oTok), knowsFactions: knows, metThem: metBy(wTok.actor, oTok.actor), sawIt: sawIt(wTok, oTok)},
       {sides: own, obvious: !!obvious?.(oTok.actor), openSides: openSides(oTok.actor)});
   }
   /** The Storyteller's standing between the two NPCs' factions, lowest first; null when none is set. */
@@ -224,7 +244,22 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     return next;
   }
 
-  function hooks() { Hooks.on("updateToken", onTokenMoved); }
+  /** 0.33.0 (B1383): a creature of another kind saw what someone is (WoDX Actions); the active Storyteller keeps it on the witness. */
+  async function onSecretSeen({by, secret, seen} = {}) {
+    if ( !isActiveGM() || !by?.uuid ) return;
+    const other = baseOf(fromUuidSync(by.uuid));
+    if ( !other?.id ) return;
+    for ( const s of seen ?? [] ) {
+      const w = baseOf(fromUuidSync(s?.uuid));
+      if ( !w?.update || w.id === other.id || w.hasPlayerOwner ) continue;
+      const next = RV.noteSeen(w.flags?.[MOD]?.seenAs ?? {}, other.id, secret, game.time?.worldTime ?? 0);
+      await w.update({[`flags.${MOD}.seenAs`]: next}, {render: false}).catch(e => console.warn(`${MOD} | seenAs`, e));
+    }
+  }
+  function hooks() {
+    Hooks.on("updateToken", onTokenMoved);
+    Hooks.on("wodxSecretSeen", p => { onSecretSeen(p).catch(e => console.warn(`${MOD} | secret seen`, e)); });
+  }
 
-  return {registerSettings, hooks, sidesOf, knownTo, regardOf, seedFor, checkPair, watchRivals, editRows, rules: RV};
+  return {registerSettings, hooks, sidesOf, knownTo, tells, regardOf, seedFor, checkPair, watchRivals, editRows, rules: RV};
 }

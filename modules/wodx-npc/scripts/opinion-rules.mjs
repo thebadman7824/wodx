@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.33.0: why an NPC feels as they do (B1508). The pure part, so the harness can test it.
+ * WoDX NPC 0.35.0: why an NPC feels as they do (B1508). The pure part, so the harness can test it.
  *
  * An NPC's attitude toward a character is one step (attitude-rules.mjs), set at the first meeting and moved by how
  * they were treated since. This lays out what is behind it, for the Storyteller only:

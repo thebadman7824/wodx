@@ -2,7 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.33.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
+- 0.35.0 (relationships from every tie WoDX keeps, read from both ends; the family and lineage tree; secrets found by Investigation, Auspex, spies or a clue, each find a hook in the Ledger and a charge with proof in the faction politics turn; why an NPC feels as they do on talk cards and NPC sheets, for the Storyteller; talk lines that need a trait go first and say what unlocked them)
+- 0.34.0 (the stranger line: with Faces on, an unmet NPC's nameplate shows how they are dressed, a side they wear, blood or a drawn weapon, what they are doing and how they seem toward you; the Storyteller's own text still wins)
+- 0.33.0 (NPCs know what a character is only when it shows, a sense shows it, or they saw it: hunters go for the monster first only once they can tell, and mortals' remarks on a character's oddness need a Perception + Alertness roll; with "Faces you have met" on, chat and the combat tracker show players the stranger's words for NPCs they have not met)
 - 0.32.0 (first meetings read the look: dress against the NPC's station by era, dress out of its time, blood, Appearance, Status, fine work; blood sours a later meeting for the scene; guards mind blood and let a worn livery pass; worn habits and uniforms show their side; stock lines on dress and a disguise seen through)
 - 0.29.0 (players see the politics of their own factions: who holds each seat, the next gathering, the law, and their own characters' standing, seats, favour, claims and charges)
 - 0.28.0 (politics for mages, on the Traditions' side and Reason's, hunters by era from the Inquisition to the imbued, the Shemsu-heru, the Fallen and Kuei-jin courts)
