@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.27.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.28.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatepolitics.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four Kindred NPCs and deletes them, and puts back the factions record, the
  * faction settings, the Ledger, the approval queue and its chat cards.
@@ -57,7 +57,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, sv = game.modules.get("wodx-storyteller")?.version;
-      ok("1. WoDX NPC 0.27.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.27.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
+      ok("1. WoDX NPC 0.28.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.28.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
         && game.settings.settings.has(`${MOD}.factionPolitics`) && typeof FX().politicsInfo === "function", {v, sv});
     });
 

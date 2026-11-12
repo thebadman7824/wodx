@@ -266,7 +266,7 @@ test("turn lines speak of the polity's own blocs and body", () => {
   assert.doesNotMatch(all, /Get Of Fenris/);
 });
 
-// WoDX NPC 0.27.0: mages, hunters, mummies, demons and the Kuei-jin.
+// WoDX NPC 0.28.0: mages, hunters, mummies, demons and the Kuei-jin.
 test("mages and hunters keep the polity of their side and age", () => {
   const m = (name, extra = {}) => F.normFaction({id: "m", name, kind: "mages", members: ["a", "b", "c"], ...extra});
   assert.equal(PO.polityFor(m("A Verbena circle"), 1300), "mage-fellowship");

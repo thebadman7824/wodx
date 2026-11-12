@@ -30,7 +30,8 @@ export function build(ctx) {
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
   const opt = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${esc(k)}"${String(k) === String(cur ?? "") ? " selected" : ""}>${esc(v)}</option>`).join("");
-  const allActors = () => game.actors?.contents ?? [...(game.actors?.values?.() ?? [])];
+  // The hidden passer-by actors (0.27.0) join no faction or household
+  const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
 
   /* ------------------------------------------------------------------ */
   /*  Settings and the state                                             */
