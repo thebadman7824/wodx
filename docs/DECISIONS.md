@@ -2664,3 +2664,38 @@ A skip plays twelve weekly turns, with each turn's own month for the season; the
 
 Reverse: turn off Rumours spread between people, or raise RUMOUR_GAP.
 
+
+## B2400. Playing alone: who holds the Storyteller's seat (2026-11-12, Ben's pick)
+WoDX works things out on the active Storyteller's browser, so one person playing alone needs something in that seat. A hidden browser on the PC signs in as the Storyteller (tools/solo/seat.mjs) and the person logs in as a player, so Foundry's own permissions keep whispers, sheets and hidden rolls from them. A curtain over a Gamemaster login was turned down: it hides nothing that a click cannot show. In the game the mode is called The Lone Chronicle. Study and picks: https://claude.ai/artifact/GDP2Z5nHQ9ZbDjyJbnQtFy.
+
+Reverse: do not start the seat; the module is off everywhere but where it is switched on.
+
+## B2401. Its own module, and never the Live world (2026-11-12, Ben's pick)
+The mode lives in wodx-solo, enabled only in a world played alone (a new world, rothenstein-solo, made from wodx-template; the testbed for tests). The module refuses to act in rothenstein-live whatever its setting says, and in any world that is not a WoDX world. The release bundle carries its files like any other module; it stays off in the Live world's module list.
+
+Reverse: leave the module off.
+
+## B2402. One switch for the automation (2026-11-12, Ben's pick)
+The setting The Lone Chronicle sets NPCs in combat, routines and factions to Auto, turns to end for everyone, fights to start by themselves, New Night at dusk, sunlight rolled and applied, the night drawn at dusk, light-touch mode off and no cap on NPC proposals, and gives every kind of approval but a player's request a standing rule. The values it replaced are kept and put back when the switch goes off; a setting changed by hand in the meantime is left as it is.
+
+Reverse: turn the setting off.
+
+## B2403. A choice nobody is there to make (2026-11-12, Ben's pick; the picking rule is a house rule)
+After a short wait (4 seconds; a setting) the seat answers a card whispered to the Storyteller or a window opened there. It presses the button that goes ahead (Accept, Approve, Start the fight, Apply, a "Let ... pass", New Night, Yes, Continue, Roll, OK), or the only button that is not a way back. It never presses Undo, Reject, Delete, Cancel, "Do this instead" or the like, and with several unknown choices it presses nothing. Everything that waited goes in a log the player is not shown. A player's request stays in the queue until the oracle is built.
+
+Reverse: turn off "The seat makes the choice"; the seat then only writes down what waited.
+
+## B2404. The seat follows the player (2026-11-12, Ben's pick)
+The seat views whichever scene the player views, because who an NPC can see and reach is read from the Storyteller's map.
+
+Reverse: none needed; it only changes what the hidden browser looks at.
+
+## B2405. Order of the rest (2026-11-12, recommendation taken; Ben left these three unanswered)
+Step 2: the solo world, the player's panel (time, travel, stuck, the curtain), fights that end by themselves. Step 3: the oracle, leads, encounters on the map, card scenes. Step 4: the director, experience, the recap. Step 5: frenzy, torpor, death and heirs, sleeping through the years. A copy of the solo world is kept each time it closes; none is deleted without Ben's word. West Marches stays on hold; the seat is noted there as the missing piece for downtime. Priority: step 1 now as a test tool, the rest as priority 3 after Interactables.
+
+Reverse: reorder in the Master Plan.
+
+## B2406. The solo world is updated with Live (2026-11-12, Ben)
+Once The Lone Chronicle is complete, the solo world gets each release at the same time as the Live world, from the same bundle, and nothing in between. Every world in the PC's Foundry data folder shares one set of modules, which are the testbed's builds, so the solo world gets a Foundry user-data folder of its own with its own modules, on another port, under the same license. It never runs while the testbed runs. Until the mode is complete it is built and tested on the testbed like everything else.
+
+Reverse: point the solo world back at the shared data folder.

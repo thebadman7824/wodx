@@ -847,3 +847,9 @@ Ben picked the recommended option on all eight items of the desk (https://claude
 | 2026-11-12 | Market news meets the weekly turn | A preset applied from a news card (famine, siege) fades over a few weeks like any other shortage; tick Cut off on a market to hold it as it is | Tick Cut off, or re-apply the news card |
 | 2026-11-12 | Broke traders and faction moves on markets | Not built in this release; the turn leaves tills alone (restocking already pays from them) | Later build |
 
+| 2026-11-12 | The Lone Chronicle: order of the later steps (B2405; left unanswered on the desk) | Panel and solo world, then oracle and leads, then the director, then the character's fate | Say another order |
+| 2026-11-12 | The Lone Chronicle: saves (B2405; left unanswered) | A copy of the solo world each time it closes; all copies kept, since deleting needs your word | Say how many to keep |
+| 2026-11-12 | The Lone Chronicle: West Marches (B2405; left unanswered) | Noted only; West Marches stays on hold | Say to fold it in |
+| 2026-11-12 | Which buttons the seat presses by itself (B2403) | Go-ahead words only (Accept, Approve, Start the fight, Apply, Let ... pass, New Night, Yes, Continue, Roll, OK) or a lone choice; never a way back; 4 seconds' wait | Edit PREFER and AVOID in solo-rules.mjs, or turn off "The seat makes the choice" |
+| 2026-11-12 | The first gate does not move the clock | With every automation on, a day passing would let the testbed's factions act for good; talk, travel and dawn are played in the solo world in step 2 | Say to run a night on the testbed anyway |
+| 2026-11-12 | How the solo world gets Live's releases (B2406) | Its own Foundry user-data folder and port on the PC, same license, never open while the testbed is; each Live release is copied into it in the same step | Say to keep it in the shared data folder (it would then run testbed builds) |
