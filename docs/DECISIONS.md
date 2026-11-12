@@ -1129,7 +1129,7 @@ Reverse: set witnessAsk off; drop the knows button.
 ## B947. Recipes for food, drink, medicine and drugs (2026-11-12)
 Ben asked for recipes and crafting for consumables after the way Cataclysm: Dark Days Ahead runs them, and approved the design (doc "Recipes and crafting for food, drink, medicine and drugs") with all four recommendations. Mechanics only, WoDX's own methods and words.
 Library data/recipes.mjs holds 60 methods. Each names what it makes by a pattern on the goods' names, the ingredients by group (any grain, any fruit, a strong spirit), the kit by what it does (a fire, a kitchen, a brewhouse, a still, a herbalist's table, a laboratory from 1660, a pharmaceutical laboratory from 1900, a food printer from 2040), the roll, the time, the batch and any time the result must stand. A catch-all dish method reads the dish's name for its ingredients ("fish soup" needs any fish). Goods that are grown, gathered or caught, and goods made in a factory, are not made by hand. Every method carries its years.
-Rolls on V20: Dexterity + Crafts for cooking and baking, Intelligence + Crafts for brewing and distilling, Intelligence + Medicine, Herbalism or Hearth Wisdom for remedies, Intelligence + Science or Medicine for the laboratory. Goals, times and dots are house rules. Eleven raw goods and middle products added to goods.mjs (raw meat, a plucked fowl, grapes, malt, rennet, lard, sugar, juniper berries, tobacco leaves, coca paste, wash).
+Rolls on V20: Dexterity + Crafts or the secondary Skill Cooking (V20 pdf 115, printed 107) for cooking and baking, Intelligence + Crafts for brewing and distilling, Intelligence + Medicine, Herbalism or Hearth Wisdom for remedies, Intelligence + Science or Medicine for the laboratory. Goals, times and dots are house rules. Eleven raw goods and middle products added to goods.mjs (raw meat, a plucked fowl, grapes, malt, rennet, lard, sugar, juniper berries, tobacco leaves, coca paste, wash).
 Reverse: delete data/recipes.mjs and scripts/recipe-rules.mjs, the cookery.mjs file in Storyteller and its calls; the old category recipes in craft-rules.mjs still work.
 
 ## B948. Everyday food needs no roll (2026-11-12)
@@ -1145,7 +1145,7 @@ Successes past the goal set a made drug's or medicine's strength: none weak, 1-2
 Reverse: STRENGTHS in recipe-rules.mjs; tasks.mjs sets impure on a botch.
 
 ## B951. Kindred cannot taste (2026-11-12)
-A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; no book rule found.
+A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; the PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
 Reverse: KINDRED_TASTE in recipe-rules.mjs.
 
 ## B952. Batches and things that stand (2026-11-12)

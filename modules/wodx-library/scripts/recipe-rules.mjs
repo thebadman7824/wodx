@@ -126,7 +126,7 @@ export function knows(method, {abilities = {}, known = [], carried = []} = {}) {
   if ( book ) return {ok: true, how: "book"};
   return {ok: false, why: `needs ${f.dots} dot${f.dots === 1 ? "" : "s"} in ${f.ab.map(abLabel).join(" or ")}, a book that teaches it, or a teacher`};
 }
-const AB_LABELS = {crafts: "Crafts", medicine: "Medicine", herbalism: "Herbalism", hearthwisdom: "Hearth Wisdom", science: "Science", survival: "Survival",
+const AB_LABELS = {crafts: "Crafts", cooking: "Cooking", medicine: "Medicine", herbalism: "Herbalism", hearthwisdom: "Hearth Wisdom", science: "Science", survival: "Survival",
   technology: "Technology", computer: "Computer"};
 export const abLabel = k => AB_LABELS[k] ?? cap(k);
 

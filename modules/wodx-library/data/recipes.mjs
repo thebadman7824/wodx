@@ -11,7 +11,7 @@
  *   WORDS    for a catch-all method, the ingredients a dish's name asks for ("fish soup" needs any fish).
  *   RAW, FACTORY  goods that are gathered, grown or bought, not made by hand.
  *
- * The rolls follow V20: Crafts for cooking and brewing, Medicine (or Herbalism, Hearth Wisdom) for remedies, Science
+ * The rolls follow V20: Crafts, or the secondary Skill Cooking (V20 pdf 115, printed 107), for cooking and brewing, Medicine (or Herbalism, Hearth Wisdom) for remedies, Science
  * for the laboratory. Goals, times, dots, waits and batches are house rules (B947).
  */
 
@@ -117,13 +117,13 @@ export const KIT_WORKSHOP = {none: "", fire: "", kitchen: "kitchen", oven: "kitc
 const HERB = ["medicine", "herbalism", "hearthwisdom"];
 /** Defaults for each family of methods. ab: the Abilities that serve, best first; the character uses its best. */
 export const FAMILIES = {
-  cook: {label: "Cooking", attr: "dexterity", ab: ["crafts"], kit: "kitchen", dots: 1, diff: 6, goal: 2, interval: "hour", batch: 8, everyday: true, taste: true},
-  bake: {label: "Baking", attr: "dexterity", ab: ["crafts"], kit: "oven", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 12, everyday: true, taste: true},
-  preserve: {label: "Salting, smoking and pickling", attr: "intelligence", ab: ["crafts", "survival"], kit: "kitchen", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 10, taste: true},
-  dairy: {label: "Dairy work", attr: "dexterity", ab: ["crafts"], kit: "kitchen", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 6, taste: true},
+  cook: {label: "Cooking", attr: "dexterity", ab: ["crafts", "cooking"], kit: "kitchen", dots: 1, diff: 6, goal: 2, interval: "hour", batch: 8, everyday: true, taste: true},
+  bake: {label: "Baking", attr: "dexterity", ab: ["crafts", "cooking"], kit: "oven", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 12, everyday: true, taste: true},
+  preserve: {label: "Salting, smoking and pickling", attr: "intelligence", ab: ["crafts", "cooking", "survival"], kit: "kitchen", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 10, taste: true},
+  dairy: {label: "Dairy work", attr: "dexterity", ab: ["crafts", "cooking"], kit: "kitchen", dots: 1, diff: 6, goal: 3, interval: "hour", batch: 6, taste: true},
   brew: {label: "Brewing", attr: "intelligence", ab: ["crafts"], kit: "brewhouse", dots: 1, diff: 6, goal: 3, interval: "day", batch: 20, taste: true},
   still: {label: "Distilling", attr: "intelligence", ab: ["crafts", "science"], kit: "still", dots: 2, diff: 6, goal: 4, interval: "day", batch: 10, taste: true},
-  mix: {label: "Mixing drinks", attr: "dexterity", ab: ["crafts"], kit: "none", dots: 1, diff: 5, goal: 1, interval: "hour", batch: 6, everyday: true, taste: true},
+  mix: {label: "Mixing drinks", attr: "dexterity", ab: ["crafts", "cooking"], kit: "none", dots: 1, diff: 5, goal: 1, interval: "hour", batch: 6, everyday: true, taste: true},
   herbal: {label: "Herb lore", attr: "intelligence", ab: HERB, kit: "herbal", dots: 2, diff: 6, goal: 3, interval: "day", batch: 6, strength: true},
   lab: {label: "Chemistry", attr: "intelligence", ab: ["science", "medicine"], kit: "laboratory", dots: 4, diff: 7, goal: 6, interval: "day", batch: 10, strength: true},
   pharma: {label: "Pharmacy", attr: "intelligence", ab: ["science", "medicine"], kit: "pharma", dots: 4, diff: 7, goal: 8, interval: "day", batch: 20, strength: true},

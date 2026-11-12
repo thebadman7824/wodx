@@ -50,7 +50,7 @@ export function abilitiesMap(a) {
   // Secondary Abilities kept as items (Hearth Wisdom, Herbalism) count by their name
   for ( const i of all(a?.items) ) {
     const key = String(i.name ?? "").toLowerCase().replace(/[^a-z]/g, "");
-    if ( ["herbalism", "hearthwisdom", "science", "survival"].includes(key) && i.system?.value !== undefined ) out[key] = Math.max(out[key] ?? 0, num(i.system.value));
+    if ( ["herbalism", "hearthwisdom", "science", "survival", "cooking"].includes(key) && i.system?.value !== undefined ) out[key] = Math.max(out[key] ?? 0, num(i.system.value));
   }
   return out;
 }
@@ -220,8 +220,9 @@ export async function ripen() {
     for ( const a of game.actors ) {
       const due = all(a.items).filter(i => i.flags?.[MOD]?.ripens && num(i.flags[MOD].ripens.at) <= t0);
       if ( !due.length ) continue;
-      await a.updateEmbeddedDocuments("Item", due.map(i => ({_id: i.id, name: i.flags[MOD].ripens.name || i.name.replace(/\s*\([^)]*\)$/, ""), ...unset(`flags.${MOD}.ripens`)})));
-      const names = due.map(i => i.flags[MOD].ripens.name || i.name);
+      // The names first: the update clears the ripens flag on these same documents
+      const names = due.map(i => i.flags[MOD].ripens.name || i.name.replace(/\s*\([^)]*\)$/, ""));
+      await a.updateEmbeddedDocuments("Item", due.map((i, k) => ({_id: i.id, name: names[k], ...unset(`flags.${MOD}.ripens`)})));
       await ChatMessage.create({content: `<div class="wodx-card wst-cook"><h3>${esc(a.name)}: ready</h3><ul data-fixed>${names.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>`,
         whisper: [...new Set([...gmIds(), ...ownerIds(a)])], speaker: {alias: "Ready"}});
       out.push({actor: a.id, names});
