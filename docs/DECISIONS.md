@@ -1024,3 +1024,39 @@ Reverse: animalOf() in main.mjs.
 
 ## B1004. The other lines wait (2026-11-12)
 Ben approved the whole brainstorm and asked for animals first. Criminals, combatants, townsfolk and the supernatural lines follow in later versions. Ben's rulings for them: Orpheus travellers only in the World of Future Darkness; Kuei-jin travellers only in Asia.
+
+## B960. Feeding harms the vessel (2026-11-12)
+
+Each blood point a living vessel loses is one lethal level (V20 printed p. 57: a Giovanni Kiss does twice the damage of another vampire's, one point costing two levels; the Nagaraja entry on p. 407 reads the other way, and Ben chose this reading). A living vessel has the lower of its blood and (full blood less damage), the wounds rule of p. 269 read both ways, so the same loss is never counted twice. A mortal's blood is kept on the vessel (flag wodx-actions.vesselBlood, as the sheet's own pool is 0 on mortals) and comes back one point a day (p. 270); the damage heals by the healing chart. Passing out sets Unconscious, a botch on the vessel's roll also sets a "dying" flag, a vessel drained dry is marked dead, and a card button undoes the harm. The drink or drugs in a vessel's blood go when the blood does. Kindred vessels lose blood, not health. WoDX Actions 3.41.0.
+
+Reverse: kissDamage returns 0 in feeding-rules.js and feedResolve reads the sheet's pool again.
+
+## B961. Clan and bloodline feeding rules (2026-11-12)
+
+One table (CLAN_FEEDING in feeding-rules.js) for Ventrue, Nagaraja, Giovanni, Salubri (healers and warriors), Salubri antitribu, Noiad, Danava, Lamia, Assamite antitribu and Dark Ages Tremere, with the V20 Dark Ages version in the Dark Ages and Long Night eras or before 1450, and V20's after. The clan is read from the sheet (a custom clan's words, or a flag wodx-actions.bloodline). Feed and Hunt apply each rule: no nourishment (Ventrue miss, animals for Noiad and Danava, blood not taken by force), half without the Danava offering, a Willpower point or a Willpower roll and -2 dice for the night (a timed effect until dawn), two lethal levels a point for the Giovanni, the Seed of Lilith, the Assamite antitribu addiction roll, and the Dark Ages Tremere first drink counted twice toward the Blood Oath (WoDX Creation 0.10.2 giveVitae firstDouble). Readings: Dark Ages Giovanni take V20's two levels a point; Salubri warriors in modern nights follow the antitribu; the Lamia resist is 7 when the vessel's sex isn't known.
+
+Reverse: remove the clan's entry from CLAN_FEEDING.
+
+## B962. Ventrue palates and vessel tags (2026-11-12)
+
+A Ventrue's palate is saved on the character (flag wodx-actions.palate: words, tags, broad or narrow), set in the Feed or Hunt window. A vessel's tags come from its own flag wodx-actions.vesselTags (editable in the Feed window) and a passer-by's flags["wodx-npc"].passerby.tags. Matching tags tick "fits the palate"; with no tags on either side the Storyteller ticks it. Hunting with a palate is +1 difficulty for a broad one and +2 for a narrow one (house rule); Herd is taken to fit. Prey Exclusion reads the same tags: a match calls the frenzy at once.
+
+Reverse: palateHuntDifficulty returns 0; drop the palate fields from feedingFields.
+
+## B963. Nagaraja flesh (2026-11-12)
+
+The Feed window takes flesh points as well as blood (V20 printed p. 407): each gives a blood point and does one unsoakable lethal level; a human body has 10, a child 5, an animal its blood points (house reading). New Night adds a point of flesh debt for a night without flesh, shown as one less on Strength, Dexterity and Stamina per point (their bonus, as Quickening uses), and flesh eaten pays it back.
+
+Reverse: drop the flesh lines in feedResolve and newNight; nagarajaPenalty(actor, 0) clears the bonus.
+
+## B964. Feeding habits (2026-11-12)
+
+V20's argot for how a vampire feeds (printed pp. 35-36) becomes a saved "usual hunt" in the Hunt window: Alleycat or Slummer, Banker (from 1937, cold blood), Butterfly, Casanova or Tease, Farmer, Head, Headhunter, Rake, Sandman. Each fills in the hunting ground, prey, pool and what is in the blood, and warns when it clashes with the clan's rule. The pools, grounds and years are house readings; V20 gives none.
+
+Reverse: remove HUNT_STYLES entries.
+
+## B965. A fight on record (2026-11-12)
+
+When WoDX Combat applies a vampire's blow, the target gets flags wodx-actions.fought.<vampire id> = the clock time, and Feed ticks "fought and beaten first" for an hour after. Seduction that leads to Feed passes the vessel as willing.
+
+Reverse: remove the second wodxDamageApplied hook in main.js.

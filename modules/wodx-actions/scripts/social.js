@@ -92,7 +92,7 @@ export function build(ctx) {
                     // The Siren's way (V20 pp. 259-260): a seduction won is a hunt done; the feeding is the player's choice
                     if (res === "win" && feed && kindOf?.(actor) === "kindred") {
                         const go = await dialog("Feed?", `<p>${esc(name)} goes somewhere private with ${esc(actor.name)}. Feed now?</p><p class="vta-note">Seduction is how the Siren hunts (V20 pp. 259-260). Feeding opens the usual window.</p>`, "Feed", () => true);
-                        if (go) await feed({ actor, vessel: npc });
+                        if (go) await feed({ actor, vessel: npcTok ?? npc, willing: true });
                     }
                 } });
             }

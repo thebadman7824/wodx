@@ -29,11 +29,11 @@ test("vessels: a blood-borne disease is spotted, resisted, or carried", () => {
 
 test("vessels: the Hunt and Feed windows ask, and a plague year starts on disease", () => {
   const s = src("modules/wodx-actions/scripts/main.js");
-  assert.match(s, /stateFields\(here\?\.outbreak \? "disease" : "clean"\)/);
+  assert.match(s, /stateFields\(here\?\.outbreak \? "disease" : style\?\.state \?\? "clean"\)/);
   assert.match(s, /state: fd\.vstate, drinks: fd\.drinks/);
   assert.match(s, /Intelligence \+ Medicine \(7\)/);
   assert.match(s, /flags\.\$\{MOD\}\.carrier/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.40.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.41.0");
 });
 
 test("vessels: fae blood is a drug to Kindred, with hallucinations and waking dreams", () => {

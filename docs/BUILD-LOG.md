@@ -1601,3 +1601,10 @@ Ben saw chairs facing random ways and the hearth facing its wall. ddcore.orient(
 ## 2026-11-12: animals with their own ways (WoDX NPC 0.21.0)
 Ben approved the NPC behaviour archetypes brainstorm and asked for animals first. animal-rules.mjs holds 16 animals, each with a temperament, a ready routine by day, night and season, the kinds of place it belongs in and the years it is found there in Moravia. The fight scorer and the reactions read three new traits (herd, territory, hunger) and four new tactics (swarm, scatter, scavenge, stalk). Animals shy from wraiths but not from Kindred, by Ben's ruling. Passers-by animals pick up their archetype from the token flag; other beasts from a flag or their name. PLACE_KINDS gains alley, yard, docks, park, sewer, hospital and station; routine blocks can name months. Decisions B1000 to B1004.
 - Tests: animals.test.mjs (13).
+
+## 2026-11-12: feeding harms the vessel; clan and bloodline feeding rules (Actions 3.41.0, Creation 0.10.2, B960-B965)
+- New feeding-rules.js: bloodNow, available, kissDamage, vesselOutcome, parseTags, matchTags, preyExclusionTags, CLAN_FEEDING, clanKey, ruleFor, isDarkAgesFeeding, nourishment, lamiaDifficulty, addictionDifficulty, fleshPoints, nightPassed, fleshEaten, PALATE_BREADTH, HUNT_STYLES, styleAllowed, styleClash.
+- main.js: feed and feedResolve rewritten around the vessel's own blood (flag vesselBlood), damage, states and Undo (feedUndo, on the api); feedingRule, vesselTagsOf, feedingFields, savePalate, nagarajaPenalty; Hunt's usual hunt and palate difficulty; New Night flesh debt; a vampire's blow marks the target as fought; oathStep firstDouble.
+- social.js: Seduction's Feed passes the vessel as willing. Creation: recordDrink step, giveVitae firstDouble.
+- Fixed: mortal vessels read the sheet's blood pool, which starts at 0 on mortal sheets and nothing fills in, so a targeted mortal gave no blood unless it was set by hand; effects.test pinned the api version to 3.38.0.
+- Tests: feeding.test.mjs (20).
