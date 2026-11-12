@@ -14,7 +14,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.16.0";
+export const VERSION = "0.17.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -153,6 +153,7 @@ Hooks.once("ready", async () => {
   // 0.14.0: the look of a character, for NPC first meetings, talk lines and guards
   try { const Lk = await import("./look.mjs"); await Lk.setupLook(); game.modules.get(MOD).api.look = Lk.api(); } catch (err) { console.warn("WoDX Library | the look could not start", err); }
   // 0.10.0: recipes for food, drink, medicine and drugs (the window is Storyteller's Cook, brew or mix)
+  try { const Kn = await import("./know.mjs"); game.modules.get(MOD).api.know = Kn.setupKnow(); } catch (err) { console.warn("WoDX Library | What they could know could not start", err); }
   try { game.modules.get(MOD).api.recipes = await import("./recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();

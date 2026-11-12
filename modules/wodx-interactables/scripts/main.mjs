@@ -62,10 +62,11 @@ import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
 import {setupChase} from "./chase.mjs";
+import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.31.0";
+const VERSION = "0.32.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -740,6 +741,8 @@ export async function applyAsk(msg) {
     if ( (op.id === "examine" || op.id === "look") && o.clue ) {
       whisper = await clueReport(o, out, author, actor);
       await clueCodex(o, doc, out, actor).catch(e => console.error(`${MOD} | clue codex`, e));
+      // 0.32.0: what was found goes on the open case board
+      if ( out.examine === undefined || out.examine >= 0 ) await pinClue({label: R.nameOf(o)}, doc, R.clueTexts(o, Math.max(0, out.examine ?? 0, Number(o.seen?.[actor.id]) || 0)), actor).catch(e => console.error(`${MOD} | case board`, e));
     }
     if ( o.watch ) {
       const w = await watchReport(o, doc, out, op, author, actor, tokDoc);
@@ -1853,6 +1856,7 @@ function installDoorClick() {
 Hooks.once("init", () => {
   registerSettings();
   registerStateSettings();
+  registerCaseSettings();
   game.keybindings?.register?.(MOD, "interact", {
     name: "Interact", hint: "The Interact window for the selected token: doors, windows and walls within reach.",
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
@@ -1866,6 +1870,7 @@ Hooks.once("init", () => {
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
+  game.modules.get(MOD).api.caseBoard = setupCase();
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
