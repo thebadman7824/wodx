@@ -190,7 +190,9 @@ async function goodsData() {
 export async function makeable(year = yearNow()) {
   const G = await goodsData();
   const known = G.GOODS.filter(g => year >= g.from && year <= g.to).map(g => g.name);
-  return G.GOODS.map(g => ({good: g, r: CR.recipeFor(g, year, {valueAt: G.valueAt, known})})).filter(x => x.r.ok);
+  // 0.31.0: food, drink, medicine and drugs go through Cook, brew or mix (Library recipes) instead
+  const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
+  return G.GOODS.filter(g => !RR?.inScope?.(g)).map(g => ({good: g, r: CR.recipeFor(g, year, {valueAt: G.valueAt, known})})).filter(x => x.r.ok);
 }
 
 /** Start making a good: materials come out of the character's things, or are bought when buy is set. */
@@ -198,6 +200,9 @@ export async function startCraft(a, goodId, {buy = false} = {}) {
   if ( !a || !(game.user.isGM || a.isOwner) ) return {ok: false, why: "Only the character's owner or the Storyteller can do that."};
   const G = await goodsData(), y = yearNow();
   const good = G.GOODS.find(g => g.id === goodId);
+  // 0.31.0: a written recipe (food, drink, medicine, drugs) runs through Cook, brew or mix
+  const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
+  if ( good && RR?.inScope?.(good) ) { const ck = game.modules.get(MOD)?.api?.cookery; if ( ck ) return ck.start(a, goodId, {buy}); }
   const known = G.GOODS.filter(g => y >= g.from && y <= g.to).map(g => g.name);
   const r = CR.recipeFor(good, y, {valueAt: G.valueAt, known});
   if ( !r.ok ) return r;
@@ -430,9 +435,10 @@ export async function propertyDialog() {
     });
   };
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 700}, window: {title: "Property and building", resizable: true}, classes: ["wodx-dialog", "wst-own-dlg"],
-    content, buttons: [{action: "make", label: "Make something"}, {action: "build", label: "Put up a building"},
+    content, buttons: [{action: "make", label: "Make something"}, {action: "cook", label: "Cook, brew or mix"}, {action: "build", label: "Put up a building"},
       ...(game.user.isGM ? [{action: "tag", label: "Tag a place on this scene"}] : []), {action: "close", label: "Close", default: true}]});
   if ( res === "make" ) return craftDialog();
+  if ( res === "cook" ) return game.modules.get(MOD)?.api?.cookery?.open?.();
   if ( res === "build" ) return buildDialog();
   if ( res === "tag" && canvas?.scene ) { const d = await pickPlace(canvas.scene); if ( d ) await editHolding(d); return propertyDialog(); }
 }

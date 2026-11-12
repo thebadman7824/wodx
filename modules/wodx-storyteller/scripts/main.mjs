@@ -44,6 +44,7 @@ import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
 import * as Teleport from "./teleport.mjs";
 import * as Own from "./owners.mjs";
+import * as Cook from "./cookery.mjs";
 import * as OwnRules from "./owner-rules.mjs";
 import * as CraftRules from "./craft-rules.mjs";
 import * as BuildRules from "./build-rules.mjs";
@@ -74,6 +75,7 @@ Hooks.once("init", () => {
   Markets.registerMarketSettings();
   Tasks.registerTaskSettings();
   Tasks.registerTaskHooks();
+  Cook.registerCookHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
   Hard.registerHardshipHooks();
@@ -146,6 +148,7 @@ Hooks.once("ready", () => {
       holdings: Own.holdings, holdingsOf: Own.holdingsOf, saveHolding: Own.saveHolding, editHolding: Own.editHolding, payHoldings: Own.payHoldings,
       craft: Own.craftDialog, startCraft: Own.startCraft, makeable: Own.makeable, build: Own.buildDialog, startBuild: Own.startBuild,
       workshops: Own.workshopsMonth, factionBuilds: Own.factionBuildsMonth, rules: {owner: OwnRules, craft: CraftRules, build: BuildRules}},
+    cookery: Cook.cookApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };
