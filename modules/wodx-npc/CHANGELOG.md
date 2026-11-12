@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.40.1 (the passers-by street can no longer stall: a tick that never finished is given up after 30 seconds, each tick stops after 20, errors are kept for the Storyteller's console, and api.passersby.state() tells a gate whether a tick is running)
 - 0.40.0 (the crowd as a resource: each passer-by feels something and keeps a spark of dreaming, by the kind of place, the hour, the kind of person and the age; a Ravaged or inspired passer-by stays on the map; on a large map passers-by come and go by regions the Storyteller ticks in the Passers-by window or names "Passers-by")
 - 0.39.0 (an ended battle between factions proposes Status, Retainers and standing changes (wodxBattle))
 - 0.38.0 (followers: an NPC serves its domitor, the character whose background made it and its patron as well as anyone the Storyteller marks; WoDX spots hard orders and suggests the refusal roll; Keep watch warns the master and Guard challenges strangers; in a fight a follower minds its orders: Attack the one I point at, Hold back, Guard and Wait, and guards every character it serves; followers on errands: buy, carry, find, ask around, bring someone to feed on, watch a rival, worked as long tasks; help on a master's long task; deal with a witness; join a chase with the master or cut the quarry off; a follower's breach is traced to its master; loyalty drifts with vitae, neglect, feeding and hard orders)

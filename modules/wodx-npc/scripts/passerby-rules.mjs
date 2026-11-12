@@ -276,6 +276,16 @@ export function followSpot(me, leader, gap) {
 /** Real-time milliseconds a kept passer-by (fed on, hurt, led away) waits before startup clears it anyway. */
 export const KEPT_FOR = 24 * 60 * 60 * 1000;
 
+/** A street tick that runs past STALE_MS is taken as lost; one gives up after TICK_MS (NPC 0.40.1). */
+export const TICK_MS = 20 * 1000;
+export const STALE_MS = 30 * 1000;
+export const tickStale = (since, now = Date.now()) => !since || now - since > STALE_MS;
+/** A promise that rejects after ms if p has not settled. */
+export function withTimeout(p, ms) {
+  let t;
+  return Promise.race([p, new Promise((_, rej) => { t = setTimeout(() => rej(new Error(`passers-by tick took over ${ms} ms`)), ms); })]).finally(() => clearTimeout(t));
+}
+
 /**
  * Should a passer-by token go now? flag: its flags.wodx-npc.passerby; live: is its scene on and in view;
  * now: Date.now(). A kept one stays on its own scene until let go, and startup clears it after a day.

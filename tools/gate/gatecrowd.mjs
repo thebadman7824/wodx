@@ -4,7 +4,7 @@
  *   await (await import(`/wodx-gate/gatecrowd.mjs?${Date.now()}`)).run()
  * Turns passers-by on for the viewed scene, adds a "Passers-by" door region, steps the street, and makes a test wraith
  * and a test mage. Everything it made is deleted and the scene's crowd setting and the pause are put back. The clock is not moved.
- *   1. versions: NPC 0.40.0 or later, Actions 3.52.0 or later, the crowd rules on both apis
+ *   1. versions: NPC 0.40.1 or later, Actions 3.52.0 or later, the crowd rules on both apis
  *   2. passers-by made on the scene (api.passersby.spawnOne, any hour); people carry a feeling and a spark (0 to 3), animals carry neither
  *   3. with a region named "Passers-by" on the scene, new passers-by walk in from inside it
  *   4. the crowd near a wraith lists a passer-by in sight with its feeling
@@ -38,12 +38,13 @@ export async function run() {
   const isPB = t => !!t.flags?.["wodx-npc"]?.passerby;
   const g = scene.grid.size;
   const clearPB = async () => { const ids = scene.tokens.filter(isPB).map(t => t.id); if ( ids.length ) await scene.deleteEmbeddedDocuments("Token", ids, {wodxPasserby: true}); };
-  const stepStreet = async n => { for ( let i = 0; i < n; i++ ) { await pb.tick(); await wait(150); } };
+  // A tick from the module's own timer may be running: wait for ours to go ahead (NPC 0.40.1 gives up on a lost one after 30 s)
+  const stepStreet = async n => { for ( let i = 0; i < n; i++ ) { let r = await pb.tick(), tries = 0; while ( r === "busy" && tries++ < 140 ) { await wait(250); r = await pb.tick(); } R.notes.push({tick: r, state: pb.state?.()}); await wait(150); } };
   // Make them whatever the hour, so the gate never moves the clock
   const spawnSome = async (people, animals) => { for ( let i = 0; i < people; i++ ) await pb.spawnOne(scene); for ( let i = 0; i < animals; i++ ) await pb.spawnOne(scene, {animal: true}); };
   try {
     await step("versions", async () => {
-      ok("versions", ver(npc?.version, "0.40.0") && ver(act?.version, "3.52.0") && !!pb?.rules?.feelingFor && typeof act?.crowdNear === "function",
+      ok("versions", ver(npc?.version, "0.40.1") && ver(act?.version, "3.52.0") && !!pb?.rules?.feelingFor && typeof act?.crowdNear === "function",
         {npc: npc?.version, actions: act?.version});
     });
     if ( paused ) game.togglePause(false, {broadcast: true});
@@ -92,7 +93,7 @@ export async function run() {
       await victim.actor.setFlag("wodx-actions", "crowdUse", pb.rules.markRavaged({}, pb.rules.nightOf(game.time.worldTime)));
       await stepStreet(1);
       const f = scene.tokens.get(victim.id)?.flags?.["wodx-npc"]?.passerby;
-      ok("ravaged stays", !!f?.kept && f.why === "ravaged", {kept: f?.kept, why: f?.why});
+      ok("ravaged stays", !!f?.kept && f.why === "ravaged", {kept: f?.kept, why: f?.why, state: pb.state?.()});
     });
     await step("mage witnesses", async () => {
       if ( !victim ) throw new Error("no passer-by");

@@ -130,3 +130,17 @@ test("the wiring: passers-by carry a feeling and a spark; Actions offers the cro
   const m20 = read("../../modules/wodx-actions/scripts/m20.js");
   assert.match(m20, /sg\.kind = "witnessed"/);
 });
+
+test("0.40.1: a lost street tick is given up, so passers-by never stall", async () => {
+  assert.equal(PR.tickStale(0), true, "no tick running");
+  assert.equal(PR.tickStale(1000, 1000 + PR.STALE_MS - 1), false);
+  assert.equal(PR.tickStale(1000, 1000 + PR.STALE_MS + 1), true);
+  assert.ok(PR.TICK_MS < PR.STALE_MS);
+  assert.equal(await PR.withTimeout(Promise.resolve(7), 50), 7);
+  await assert.rejects(PR.withTimeout(new Promise(() => {}), 20), /took over 20 ms/);
+  const pb = read("../../modules/wodx-npc/scripts/passersby.mjs");
+  assert.match(pb, /if \( busy && !PR\.tickStale\(busySince, Date\.now\(\)\) \) return "busy";/);
+  assert.match(pb, /await PR\.withTimeout\(tickBody\(\), PR\.TICK_MS\)/);
+  assert.match(pb, /finally \{ if \( busySince === mine \) busy = false; \}/);
+  assert.match(pb, /state, rules: CR/);
+});
