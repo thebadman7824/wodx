@@ -25,6 +25,7 @@ async function save(R, name) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
 export async function run() {
@@ -45,8 +46,7 @@ export async function run() {
     await game.settings.set(C, "podChains", true);
     await game.settings.set(C, "podState", {cities: {}, chains: []});
     const own = player ? {default: 0, [player.id]: 3} : {default: 0};
-    const both = await Actor.create([{name: "WoDX gate: Host", type: "Vampire", ownership: own}, {name: "WoDX gate: Guest", type: "Vampire", ownership: own}]);
-    host = both.find(a => a.name === "WoDX gate: Host"); guest = both.find(a => a.name === "WoDX gate: Guest");
+    [host, guest] = await createActors([{name: "WoDX gate: Host", type: "Vampire", ownership: own}, {name: "WoDX gate: Guest", type: "Vampire", ownership: own}]);
     made.push(host, guest);
     group = game.actors.find(x => /group/i.test(String(x.type)));
     if ( !group && game.system.documentTypes?.Actor && Object.keys(game.system.documentTypes.Actor).some(t => /group/i.test(t)) ) {
