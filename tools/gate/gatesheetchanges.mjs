@@ -1,5 +1,5 @@
 /**
- * Features card and "changed since last session" gate (WoDX Sheets 0.12.0, Chronicle 0.43.0), in Foundry
+ * Features card and "changed since last session" gate (WoDX Sheets 0.13.0, Chronicle 0.43.0), in Foundry
  * (rothenstein-wodx) as a Gamemaster:
  *   await (await import(`/wodx-gate/gatesheetchanges.mjs?${Date.now()}`)).run()
  * On a WoDX character sheet: a fresh starting point shows no strip; a Willpower change and a new item show with
@@ -27,7 +27,7 @@ export async function run() {
   const open = async () => { await a.sheet.render(true); await until(() => a.sheet.rendered && a.sheet.element?.[0]?.querySelector(".wodx-strip")); await sleep(300); el = a.sheet.element[0]; };
 
   try {
-    await step("version and api", async () => ok("version and api", !foundry.utils.isNewerVersion("0.12.0", game.modules.get(MOD)?.version ?? "0") && !foundry.utils.isNewerVersion("0.43.0", game.modules.get(CH)?.version ?? "0")
+    await step("version and api", async () => ok("version and api", !foundry.utils.isNewerVersion("0.13.0", game.modules.get(MOD)?.version ?? "0") && !foundry.utils.isNewerVersion("0.43.0", game.modules.get(CH)?.version ?? "0")
       && !!X?.takeSnapshot && !!X?.changesOf && !!SIG?.summary && !!SIG?.setOff && !!a, { sheets: game.modules.get(MOD)?.version, chronicle: game.modules.get(CH)?.version, actor: a?.name }));
 
     await step("a character a player owns is tracked (an owner lent for the gate when none)", async () => {
