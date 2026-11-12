@@ -1002,3 +1002,17 @@ House rules, shown on the attack card and the check card; minus is easier:
 - In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
 
 Reverse: STANCES and attackStance in movement-rules.js.
+
+## B947. Ways of moving after the book check (2026-11-12)
+The book check (project files movement-book-check.md) replaces these house rules in B941, B942 and B946:
+- Breath: by Stamina at rest, 30 seconds up to an hour (W20 pdf 261, M20 pdf 441-442); in a fight, 2 x Stamina turns. Out of breath, one level a turn, not rolled or soaked: lethal (W20, M20), bashing for changelings (C20 pdf 294).
+- Swimming: 12 + Dexterity yards a turn with Athletics (M20 pdf 402), the jog; a swimming power doubles it to the run.
+- Flying: bat form 20 mph, about 29 yards a turn, and +2 to hit it (V20 pdf 208); Chiropteran Marauder and Dark Ages wings 25 mph (V20 pdf 250, V20 Dark Ages pdf 271); Wings of Pegasus 50 mph (W20 pdf 176); Spirit of the Bird 20 mph with its own maneuvers +1 (W20 pdf 200); Phantom Wings up to jogging speed (Wraith 20th pdf 217); Demon wings glide at up to three times the run; any other flight 15 yards (M20 pdf 402 gives 10 to 20). Wings of Rage is not flight (Wraith 20th pdf 266).
+- Prone: light cover, +1 to be shot (V20 pdf 286), and no change to fire from prone.
+- Climbing: 10 feet a success on an average climb, 15 easy, 5 hard (V20 pdf 266).
+- Jumping: 2 feet up or 3 feet across a success (V20 pdf 268).
+Still house rules, with no book rule found: an easier close attack on someone prone, the Stealth bonus for crawling, higher ground, fighting in water or while climbing, and the leaping strike.
+
+A flight power now sets the token's way of moving to Fly before it rises, and a fall sets it back to Walk; the token lookup finds unlinked tokens too.
+
+Reverse: FLY_SPEEDS, BREATH_SECONDS, drownType and STANCES in wodx-combat movement-rules.js; jumpReach in wodx-actions checks-rules.js.

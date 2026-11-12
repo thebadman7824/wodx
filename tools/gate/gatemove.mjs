@@ -1,5 +1,5 @@
 /**
- * Ways of moving gate (WoDX Combat 3.12.0, Actions 3.40.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Ways of moving gate (WoDX Combat 3.12.1, Actions 3.40.1), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatemove.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Moving" (gridless, 100 px), a deep-water region, two actors and two tokens; views
  * the scene, then goes back to the scene it started on and deletes everything it made.
@@ -42,7 +42,9 @@ export async function run() {
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     await scene.createEmbeddedDocuments("Region", [{name: "WoDX: Deep water", shapes: [{type: "rectangle", x: G * 10, y: G * 2, width: G * 6, height: G * 6}]}]);
     actors = await createActors([{name: "WoDX gate: Mover", type: "Mortal"}, {name: "WoDX gate: Watcher", type: "Mortal"}]);
-    await scene.createEmbeddedDocuments("Token", [{name: "mover", actorId: actors[0].id, x: G * 2, y: G * 2}, {name: "watcher", actorId: actors[1].id, x: G * 3, y: G * 2}]);
+    // 3.12.1: the mover is linked like a player character; the watcher is unlinked like most NPCs
+    await actors[0].update({"prototypeToken.actorLink": true});
+    await scene.createEmbeddedDocuments("Token", [{name: "mover", actorId: actors[0].id, actorLink: true, x: G * 2, y: G * 2}, {name: "watcher", actorId: actors[1].id, actorLink: false, x: G * 3, y: G * 2}]);
     a = scene.tokens.find(t => t.actorId === actors[0].id); b = scene.tokens.find(t => t.actorId === actors[1].id);
     await until(() => a.object && b.object);
     const cards = () => game.messages.filter(m => !startMsgs.has(m.id) && m.getFlag("wodx-combat", "movement"));
@@ -55,17 +57,22 @@ export async function run() {
     let rise = null;
     await step("Rise gives flight", async () => {
       rise = await T().applyTimed(actors[0], {name: "Risen", key: "wodx-effect-rise", duration: {kind: "scene"}});
-      await a.update({elevation: 20, movementAction: "fly"});
-      ok("Rise gives flight", M().abilitiesOf(actors[0]).fly === true && M().stanceOf(actors[0]) === "flying", {stance: M().stanceOf(actors[0])});
+      await until(() => a.movementAction === "fly");
+      const action = a.movementAction;
+      await a.update({elevation: 20});
+      await until(() => a.elevation === 20);
+      ok("Rise gives flight", M().abilitiesOf(actors[0]).fly === true && M().stanceOf(actors[0]) === "flying" && action === "fly",
+        {stance: M().stanceOf(actors[0]), action, elevation: a.elevation, tokens: M().tokensOf?.(actors[0])?.length});
     });
     await step("flight ends: a fall", async () => {
       const before = cards().length;
       await rise.delete();
       await until(() => a.elevation === 0 && cards().length > before);
-      ok("flight ends: a fall", a.elevation === 0 && cards().some(m => /falls 20 feet/.test(m.content)), {elevation: a.elevation});
+      ok("flight ends: a fall", a.elevation === 0 && cards().some(m => /falls 20 feet/.test(m.content)) && a.movementAction === "walk",
+        {elevation: a.elevation, action: a.movementAction, cards: cards().map(m => m.content.replace(/<[^>]+>/g, " ").slice(0, 80))});
     });
     await step("Undo is not a fall", async () => {
-      await a.update({elevation: 15});
+      await a.update({movementAction: "fly"}); await a.update({elevation: 15});
       const e = await T().applyTimed(actors[0], {name: "Risen", key: "wodx-effect-rise", duration: {kind: "scene"}});
       await e.delete({wodxUndo: true});
       await sleep(500);
@@ -82,10 +89,11 @@ export async function run() {
       await combat.createEmbeddedDocuments("Combatant", [{tokenId: a.id, sceneId: scene.id, actorId: actors[0].id}]);
       await combat.startCombat();
       await a.setFlag("wodx-combat", "water", {...a.getFlag("wodx-combat", "water"), breath: 1, max: 10});
-      const was = Number(actors[0].system?.health?.damage?.lethal) || 0;
+      const hurt = () => { const d = a.actor?.system?.health?.damage ?? {}; return (Number(d.lethal) || 0) + (Number(d.bashing) || 0); };
+      const was = hurt();
       await combat.nextRound();
-      await until(() => (Number(actors[0].system?.health?.damage?.lethal) || 0) > was, 6000);
-      ok("drowning in a fight", (Number(actors[0].system?.health?.damage?.lethal) || 0) === was + 1, {lethal: actors[0].system?.health?.damage?.lethal});
+      await until(() => hurt() > was, 6000);
+      ok("drowning in a fight", hurt() === was + 1, {damage: a.actor?.system?.health?.damage, water: a.getFlag("wodx-combat", "water"), round: combat.round});
       await combat.delete(); combat = null;
       await a.update({x: G * 2, y: G * 2}, {animate: false});
     });
@@ -93,10 +101,11 @@ export async function run() {
       await a.update({movementAction: "crawl"});
       const sneak = M().rollMods(actors[0], ["stealth"]);
       const hit = M().attackMods(actors[1], actors[0]);
-      await b.update({elevation: 30});
-      const far = M().heightBetween(a, b);
-      await b.update({elevation: 0}); await a.update({movementAction: "walk"});
-      ok("stances", sneak.diff === -2 && hit.diff === -2 && far === 30, {sneak, hit, far});
+      await b.update({movementAction: "fly"}); await b.update({elevation: 30});
+      await until(() => b.elevation === 30);
+      const far = M().heightBetween(a, b), bStance = M().stanceOf(b.actor, b);
+      await b.update({elevation: 0, movementAction: "walk"}); await a.update({movementAction: "walk"});
+      ok("stances", sneak.diff === -2 && hit.diff === -2 && far === 30, {sneak, hit, far, bElevation: b.elevation, bStance, unlinkedFound: M().tokensOf?.(b.actor)?.length});
     });
     await step("Earth Meld", async () => {
       const e = await T().applyTimed(actors[0], {name: "Earth Meld", duration: {kind: "scene"}});

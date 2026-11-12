@@ -375,10 +375,14 @@ async function applyCore(item, casterName = "the caster") {
       if ( !T?.applyTimed || !o.timed ) return {note: "WoDX Chronicle is off: note the effect by hand"};
       const changes = [];
       const tok = tokenOf(d);
-      const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
+      const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, movementAction: tok.movementAction ?? null, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       const effect = await T.applyTimed(a, {name: o.name ?? o.label, description: `${o.text} (cast by ${casterName})`, duration: o.timed, condition: o.condition,
         changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504", data: o.difficulty ? {difficulty: o.difficulty} : null});
-      if ( tok && o.feet ) await tok.update({elevation: n(tok.elevation) + o.feet});
+      // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.40.1: Foundry 14 lifts a flier)
+      if ( tok && o.feet ) {
+        if ( "movementAction" in tok && tok.movementAction !== "fly" ) await tok.update({movementAction: "fly"});
+        await tok.update({elevation: n(tok.elevation) + o.feet});
+      }
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
     }
@@ -598,6 +602,7 @@ export async function undo(records = []) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
         for ( const k of ["elevation", "x", "y"] ) if ( k in r.token ) back[k] = r.token[k];
+        if ( r.token.movementAction ) back.movementAction = r.token.movementAction;
         if ( r.token.sight ) back.sight = r.token.sight;
         if ( r.token.light ) back.light = r.token.light;
         if ( tok ) {
