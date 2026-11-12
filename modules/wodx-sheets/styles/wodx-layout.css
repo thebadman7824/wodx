@@ -7,6 +7,8 @@
 .wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) { flex: 0 0 auto; font-size: 0; line-height: 30px; margin: 0 0 0 9px; white-space: nowrap; overflow: visible; }
 .wod20.window-app .window-header :is(a.header-button, a.alter-ego-config) > i { font-size: 14px; margin: 0; min-width: 18px; text-align: center; overflow: visible; }
 .wod20.window-app .window-header a.alter-ego-config > span { display: none; }
+/* A button whose class is also a window's own class (Paperdoll) keeps the title bar's shape, not that window's */
+.wod20.window-app .window-header a.header-button.wodx-paperdoll { display: revert-layer; flex-direction: revert-layer; gap: revert-layer; min-height: revert-layer; }
 .wod20.window-app.minimized .window-header :is(a.header-button, a.alter-ego-config):not(.close, .minimize, .maximize) { display: none; }
 
 /* ---- 2. WoDX's own tabs and sections sit in the same panels as the system's ---- */
