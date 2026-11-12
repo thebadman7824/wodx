@@ -50,6 +50,9 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxCaravan | storyteller | a caravan between linked markets: {phase (left, arrived or lost), caravan, changes} |
+| wodxMarketMove | storyteller | a faction's move on a market was carried out: {move (type tax, monopoly, smuggle or raid; faction; goods; rate), market} |
+| wodxTraderBroke | storyteller | a trader's shop shut: {market, actor} |
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |

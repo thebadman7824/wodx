@@ -19,6 +19,11 @@
  * After a long skip, twelve weeks are played and the rest settle at once: supply back to normal (or what the
  * workshops keep up) and prices where the season puts them. A cut-off market is left as it is.
  * Every number here is a house rule (B2370 to B2376).
+ *
+ * Storyteller 0.49.0: the turn takes three things from the runner. shift(market, kind) is what taxes and monopolies add
+ * to a price's goal; blocked(a, b) is a road a raid has closed, along which nothing trades; and defer leaves the goods
+ * bound for a market in want on the road (shipments) for a caravan to bring in, with the kinds whose prices are meeting
+ * (trades) as the rest of its load. onWay(market id, kind) says a caravan already carries that kind there, so no more is sent.
  */
 import {SUPPLY, INDEX} from "./market-rules.mjs";
 
@@ -85,7 +90,7 @@ function setSup(m, k, l) { if ( l === "normal" ) delete m.supply[k]; else m.supp
  * Returns {state (a new copy), changes: [{id, name, kind, from: {index, supply}, to: {index, supply}, why: [], big, queue}]}.
  * Queued changes are left out of the returned state: they land only when the Storyteller approves them.
  */
-export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {}, pcMarkets = []} = {}) {
+export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {}, pcMarkets = [], shift = () => 0, blocked = () => false, defer = false, onWay = () => false} = {}) {
   const next = deep(state ?? {markets: []});
   next.markets ??= [];
   const pcs = new Set(pcMarkets);
@@ -109,6 +114,7 @@ export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {},
 
   // Trade along links (each pair once, both open)
   const share = tradeShare(year);
+  const shipments = [], trades = [];
   const byId = new Map(open.map(m => [m.id, m]));
   const done = new Set();
   for ( const a of open ) for ( const bid of a.links ?? [] ) {
@@ -116,15 +122,18 @@ export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {},
     const pair = [a.id, bid].sort().join("|");
     if ( !b || done.has(pair) ) continue;
     done.add(pair);
+    if ( blocked(a, b) ) continue;
     for ( const k of kinds ) {
       const sa = step(supOf(a, k)), sb = step(supOf(b, k));
-      if ( Math.abs(sa - sb) >= 2 ) {
-        const [rich, poor] = sa > sb ? [a, b] : [b, a];
+      const [rich, poor] = sa > sb ? [a, b] : [b, a];
+      if ( Math.abs(sa - sb) >= 2 && !(defer && onWay(poor.id, k)) ) {
         setSup(rich, k, level(step(supOf(rich, k)) - 1)); say(rich.id, k, `goods go to ${poor.name}`);
-        setSup(poor, k, level(step(supOf(poor, k)) + 1)); say(poor.id, k, `goods come from ${rich.name}`);
+        if ( defer ) shipments.push({from: rich.id, to: poor.id, kind: k});
+        else { setSup(poor, k, level(step(supOf(poor, k)) + 1)); say(poor.id, k, `goods come from ${rich.name}`); }
       }
       const ia = idxOf(a, k), ib = idxOf(b, k), gap = ib - ia;
       if ( Math.abs(gap) > 0.1 ) {
+        trades.push({cheap: gap > 0 ? a.id : b.id, dear: gap > 0 ? b.id : a.id, kind: k, gap: round2(Math.abs(gap))});
         const mv = clamp(gap * share / 2, -SMALL, SMALL);
         setIdx(a, k, ia + mv); setIdx(b, k, ib - mv);
         say(a.id, k, `trade with ${b.name}`); say(b.id, k, `trade with ${a.name}`);
@@ -134,9 +143,11 @@ export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {},
 
   // Prices toward supply and season
   for ( const m of open ) for ( const k of kinds ) {
-    const was = idxOf(m, k), goal = targetIndex(supOf(m, k), k, month, year), gap = goal - was;
+    const extra = Number(shift(m, k)) || 0;
+    const was = idxOf(m, k), goal = clampIndex(targetIndex(supOf(m, k), k, month, year) + extra), gap = goal - was;
     if ( Math.abs(gap) < 0.02 ) continue;
     setIdx(m, k, was + clamp(gap * DRIFT, -SMALL, SMALL));
+    if ( extra > 0 && gap > 0 ) say(m.id, k, "taxes and those who hold the trade");
     say(m.id, k, seasonShift(k, month, year) !== 0 && Math.abs(goal - (SUPPLY_PRICE[supOf(m, k)] ?? 1)) > 0.01 ? "the season" : "prices follow the stalls");
   }
 
@@ -163,11 +174,11 @@ export function weekTurn(state, {kinds = [], month = 1, year = 1197, works = {},
     }
     m.seen = seen;
   }
-  return {state: next, changes};
+  return {state: next, changes, shipments, trades};
 }
 
 /** Weeks past the cap settle at once: supply to normal or the workshops' level, prices to the season's. */
-export function settle(state, {kinds = [], month = 1, year = 1197, works = {}} = {}) {
+export function settle(state, {kinds = [], month = 1, year = 1197, works = {}, shift = () => 0} = {}) {
   const next = deep(state ?? {markets: []});
   const changes = [];
   for ( const m of next.markets ?? [] ) {
@@ -176,7 +187,7 @@ export function settle(state, {kinds = [], month = 1, year = 1197, works = {}} =
     for ( const k of kinds ) {
       const from = {index: idxOf(m, k), supply: supOf(m, k)};
       const lvl = floorOf(works[m.id]?.[k] ?? 0) === "plenty" ? "plenty" : "normal";
-      setSup(m, k, lvl); setIdx(m, k, targetIndex(lvl, k, month, year));
+      setSup(m, k, lvl); setIdx(m, k, targetIndex(lvl, k, month, year) + (Number(shift(m, k)) || 0));
       const to = {index: idxOf(m, k), supply: supOf(m, k)};
       if ( from.index !== to.index || from.supply !== to.supply ) changes.push({id: m.id, name: m.name, kind: k, from, to, why: ["the long quiet"], big: false, queue: false});
     }
@@ -196,7 +207,7 @@ export function turnsDue(last, now, {cap = TURN_CAP} = {}) {
  * Several turns in a row. dates: [{month, year}] for each turn; settleAt: {month, year} when weeks were skipped.
  * Changes are merged per market and kind (first from, last to); queued ones are kept apart, the latest of each.
  */
-export function runTurns(state, {dates = [], skipped = 0, settleAt = null, kinds = [], works = {}, pcMarkets = []} = {}) {
+export function runTurns(state, {dates = [], skipped = 0, settleAt = null, kinds = [], works = {}, pcMarkets = [], shift, blocked, defer = false, onWay} = {}) {
   let st = state;
   const merged = new Map(), queued = new Map();
   const add = c => {
@@ -205,16 +216,20 @@ export function runTurns(state, {dates = [], skipped = 0, settleAt = null, kinds
     const was = merged.get(key);
     merged.set(key, was ? {...was, to: c.to, why: [...new Set([...was.why, ...c.why])]} : c);
   };
+  // Goods wait on the road only when a single week is played: over a longer span the caravans have come in already.
+  const wait = !!defer && dates.length === 1 && !skipped;
+  let shipments = [], trades = [];
   for ( const d of dates ) {
-    const r = weekTurn(st, {kinds, works, pcMarkets, month: d.month, year: d.year});
+    const r = weekTurn(st, {kinds, works, pcMarkets, month: d.month, year: d.year, shift, blocked, defer: wait, onWay});
     st = r.state; r.changes.forEach(add);
+    shipments = r.shipments; trades = r.trades;
   }
   if ( skipped > 0 && settleAt ) {
-    const r = settle(st, {kinds, works, ...settleAt});
+    const r = settle(st, {kinds, works, shift, ...settleAt});
     st = r.state; r.changes.forEach(add);
   }
   const changes = [...merged.values()].filter(c => c.from.index !== c.to.index || c.from.supply !== c.to.supply);
-  return {state: st, changes, queued: [...queued.values()]};
+  return {state: st, changes, queued: [...queued.values()], shipments: wait ? shipments : [], trades: wait ? trades : []};
 }
 
 /**

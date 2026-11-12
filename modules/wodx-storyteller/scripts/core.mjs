@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.48.2";
+export const VERSION = "0.49.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -371,6 +371,9 @@ export async function travel({actorId, destId, userId = null, approved = false, 
     text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.${way}${halts}${paid}`,
     ...(sched?.toll ? {attention: `Forced pace: a Stamina roll (difficulty 7) for each of ${sched.toll} ${sched.toll === 1 ? "day" : "days"}, or a level of bashing harm each, for mounts too`} : {})});
   pull(user, plan.dest.id);
+  // 0.49.0: a caravan out on the same road is noted for the Storyteller
+  try { await game.modules.get(MOD)?.api?.upkeep?.caravans?.onTrip?.({actor, fromScene: plan.from?.id ?? null, destScene: plan.dest.id, start: plan.start, arrive: plan.arrive}); }
+  catch (e) { console.error(`${MOD} | caravans`, e); }
   // The road
   if ( setting("encounters") !== false && plan.minutes > 0 ) {
     const base = setting("encounterChance") ?? 10;

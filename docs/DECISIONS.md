@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2380
+Next free block: B2390
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -93,6 +93,7 @@ Next free block: B2380
 | B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
 | B2350-B2359 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
 | B2370-B2379 | The weekly market turn: making, recovery, trade links, seasons by era, skip catch-up, the queue and talk of dear goods | Storyteller |
+| B2380-B2389 | The rest of the living economy: faction moves on markets (taxes, monopolies, smuggling, raids), traders going broke, caravans | Storyteller, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2666,3 +2667,52 @@ A skip plays twelve weekly turns, with each turn's own month for the season; the
 
 Reverse: turn off Rumours spread between people, or raise RUMOUR_GAP.
 
+## B2380. Factions act on markets (2026-11-12, house rule)
+The living economy study, approved on 2026-11-11, left faction moves on markets, traders going broke and caravans after the weekly turn. The books give no rules for any of them; the nearest is Influence standing in for an Ability on a roll to sway the mortal world (V20 p. 115, printed). Four moves are built. Tax: a faction that holds a place in the market, or rules the domain, with 2 dots of Influence over the law (crown, political, bureaucracy, legal or the Church). Monopoly: a faction that holds a place there, with 3 dots over trade (guild, finance, industry or transport) and Resources 3, on one kind of goods. Smuggling: a faction with 2 dots in the underworld or the street, where another faction's tax or monopoly stands. Raid: a faction with 2 dots of Retainers, or of military or police Influence, against a market held by a faction it stands badly with. The moves go by the words of the year, from a market toll and robber knights in 1197 to a corporate levy and road gangs in the World of Future Darkness. The market code reads factions from WoDX NPC and never changes them: no dots and no standing move by themselves.
+
+Reverse: set Factions act on markets to Off.
+
+## B2381. What a tax and a monopoly do (2026-11-12, house rule)
+A tax is light, heavy or crushing: it adds 0.1, 0.2 or 0.3 to the price index its goods would otherwise settle at. A tax on every sale leaves money itself alone. A monopoly adds 0.3 to its kind. Smuggling by another faction halves what they add. Together they add no more than 0.6. The weekly turn drifts each price toward that goal at its usual pace, so a new tax takes some weeks to be felt in full.
+
+Reverse: edit MONOPOLY_SHIFT and SHIFT_CAP in market-moves-rules.mjs, TAX_RATES in market-rules.mjs.
+
+## B2382. Raids (2026-11-12, house rule)
+The raiders roll their force (the better of Retainers and armed Influence, 1 to 10 dice) at difficulty 6; ones take successes away. The guard takes more: the caravan's own guard, or the best Domain security among the factions that hold the market. With a success left, a caravan on the road to or from the market is taken. With no caravan out, a kind of goods on the stalls drops a step, one open trader loses a quarter of the carried till for each success (three quarters at most) and one road is closed a week for each success (four at most). Nothing trades along a closed road, and no caravan leaves on it.
+
+Reverse: edit RAID_DIFF and UNSAFE_MAX in market-moves-rules.mjs.
+
+## B2383. When factions move, and when they wait (2026-11-12, house rule)
+With the weekly turn, each active faction that runs itself has one chance in six to make one move, in this order: tax a market it holds (heavy when its Resources are 2 or less, else light), corner the dearest kind it can, raid a rival's market, smuggle past a rival's tax. No market takes more than one new move a week. A move waits in the approval queue when a player character stands in the market or belongs to the faction; in Suggest every move waits. Other moves apply with one card and an Undo. Factions the players run make no market moves by themselves. A standing move lapses when its faction is gone or idle or has lost the place or the dots it needed. A move the Storyteller sets by hand stands whatever the dots, until the Storyteller ends it or the faction is gone. A heavy or crushing tax that has stood eight weeks starts talk in the rumour network, once.
+
+Reverse: set Factions act on markets to Suggest or Off; edit CHANCE in market-moves-rules.mjs.
+
+## B2384. A shop's week (2026-11-12, house rule)
+Each week a trader's shop costs a quarter of the month's plain wage to keep, and in a normal week takes three tenths more than that. Takings follow the supply of the kinds the shop's stock list sells (none 0.2, short 0.7, normal 1, plenty 1.1), less the taxes on them, and less 15% under a monopoly held by a faction the trader does not belong to. So a heavy tax can be borne in good times, and a crushing tax or a lean season cannot. A gain goes into the till, up to six months' wages; a loss comes out of it.
+
+Reverse: turn off Traders can go broke; edit KEEP_SHARE, MARGIN and SUPPLY_TAKE in market-moves-rules.mjs.
+
+## B2385. Going broke and opening again (2026-11-12, house rule)
+A week the till cannot cover puts the shop a week behind; a good week pays off a week of arrears before it fills the till. At four weeks behind the shop shuts and draws no new stock. Where a player character stands in that market the shop stops a week short and waits for the Storyteller in the approval queue. A shut shop opens again once it has stood shut eight weeks and trade is good (a factor of 0.95 or better), with its arrears cleared; a faction there with 2 dots over trade is named as its backer, a hook the Storyteller may use. The Storyteller can shut or open any shop by hand in the Markets window.
+
+Reverse: edit BROKE_AT, REOPEN_AFTER and GOOD_TRADE.
+
+## B2386. Caravans (2026-11-12, house rule)
+With one week played as it happens, the goods linked markets trade leave as a caravan, one for each direction of a link. It ships the kinds that will lift a supply where it is two steps short, and carries up to three kinds that are dear at the far end. The sender gives up its goods at once; the market in want gets them when the caravan arrives, and no more of a kind is sent there while one is on the way. Over a longer span (a skip, several weeks at once) goods arrive at once as before, since the caravans have come and gone. Off, the turn is as it was in 0.48.
+
+Reverse: turn off Caravans carry the trade between markets.
+
+## B2387. Freight by era (2026-11-12, house rule)
+A pack train makes 25 km a day until 1499, a wagon train 30 km until 1839, a goods train 250 km until 1919 (wagons under 20 km), a lorry convoy 500 km until 2019, an automated freight convoy 700 km after that and in the Future Darkness branch. The distance is the way across the country map when both markets have a place on it, else the place's own distance, else 40 km. A caravan is on the road at least a day and at most twelve. It hires one guard, two when its sender is held by a faction with 3 dots of armed followers.
+
+Reverse: edit FREIGHT, DEFAULT_KM and MAX_DAYS in caravan-rules.mjs.
+
+## B2388. Lost caravans (2026-11-12, house rule)
+A caravan a raid takes, or one the Storyteller marks lost, delivers nothing. Every kind it carried grows dearer by 0.1 where it was bound, and the traders there start talk of it. It stays on the Caravans list for a week.
+
+Reverse: edit LOSS_SHIFT in caravan-rules.mjs.
+
+## B2389. Caravans on the map (2026-11-12, house rule)
+A caravan has a place on the road at every hour: the ground it is crossing where the road runs over the country map, else how far along it is. A character who travels between two markets while a caravan is on that road gets a line in the Storyteller's log, with which way it is going and its guard; what happens when they meet is play at the table. A caravan stands in its market of arrival for two days, and WoDX Interactables 0.33.0 gives living tiles the condition "a caravan in town" for the scenes of that market.
+
+Reverse: clear the condition on the tile; the log line goes with the Caravans setting.
