@@ -1,4 +1,6 @@
 import * as PR from "./passerby-rules.mjs";
+import * as CR from "./crowd-rules.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PLACE_KINDS} from "./routine-rules.mjs";
 
 /**
@@ -14,6 +16,9 @@ import {PLACE_KINDS} from "./routine-rules.mjs";
  * Simple routines: walk in from the edge, cross or stand a while, walk off; stop when a character comes close (people
  * only); follow a character when the Storyteller says so (into an alley, say); run off when a fight starts or the
  * Masquerade is breached. One that loses blood, is hurt or is led away is kept, and stays until let go.
+ *
+ * 0.40.0 (B2220 to B2226, crowd-rules.mjs): each person carries a feeling and a spark that wraiths and changelings
+ * draw on through WoDX Actions, and on a large map they come and go by regions the Storyteller marks as doors.
  */
 export function build({MOD, esc, isActiveGM, chron}) {
   const FOLDER = "WoDX passers-by";
@@ -43,8 +48,29 @@ export function build({MOD, esc, isActiveGM, chron}) {
   const crowdOf = scene => {
     const c = scene?.getFlag?.(MOD, "crowd") ?? {};
     const kind = scene?.flags?.[MOD]?.place?.kind;
-    return {on: !!c.on, density: c.density ?? "normal", animals: c.animals ?? true, place: PLACE_KINDS[kind] ? kind : "street"};
+    return {on: !!c.on, density: c.density ?? "normal", animals: c.animals ?? true, place: PLACE_KINDS[kind] ? kind : "street", doors: Array.isArray(c.doors) ? c.doors : []};
   };
+
+  /**
+   * The doors passers-by use on this scene: regions ticked in the Passers-by window, and any region named for them
+   * ("Passers-by", "Crowd door"). None: they use the edge of the map, as before.
+   */
+  function doorsOf(scene) {
+    const ticked = new Set(crowdOf(scene).doors);
+    const out = [];
+    for ( const r of scene?.regions ?? [] ) {
+      if ( !ticked.has(r.id) && !CR.DOOR_NAME.test(r.name ?? "") ) continue;
+      const rects = (r.shapes ?? []).map(sh => CR.shapeBounds(sh?.toObject?.() ?? sh)).filter(Boolean);
+      if ( !rects.length ) continue;
+      const el = Number(r.elevation?.bottom);
+      const test = p => { try { return !!r.testPoint({x: p.x, y: p.y, elevation: Number.isFinite(el) ? el : 0}); } catch (e) { return true; } };
+      out.push({id: r.id, name: r.name, rects, test});
+    }
+    return out;
+  }
+  /** Where someone leaves from p: the nearest door when the scene has doors, else the nearest edge. */
+  const exitFor = (scene, rect, p, g) => (doorsOf(scene).length ? CR.nearestDoor(doorsOf(scene), p) : null) ?? PR.nearestExit(rect, p, g / 2);
+  const walkFor = (scene, rect, g) => CR.planDoorWalk(rect, doorsOf(scene)) ?? PR.planWalk(rect, {pad: g / 2});
 
   /* ---------------- The two hidden actors ---------------- */
 
@@ -89,11 +115,15 @@ export function build({MOD, esc, isActiveGM, chron}) {
     if ( !who ) return null;
     const base = await baseActor(animal ? "animal" : "person");
     const g = gridPx(scene), rect = rectOf();
-    const walk = PR.planWalk(rect, {pad: g / 2});
+    const walk = walkFor(scene, rect, g);
     const pool = PR.VESSEL_POOL[animal ? who.vessel : "human"] ?? 10;
     const small = animal && ["rat", "bird", "cat"].includes(who.vessel);
     const size = small ? 0.5 : 1;
-    const flag = {kind: who.kind, tags: who.tags ?? [], animal, vessel: animal ? who.vessel : "human", pool, waypoints: walk.waypoints, at: 0, wait: 0,
+    // What they feel and how much dreaming is left in them, for wraiths and changelings (crowd-rules.mjs)
+    const age = PR.ageOf(time.year || year()), crowdKey = PR.CROWD_OF_KIND[place] ?? place;
+    const mind = animal ? {} : {feeling: CR.feelingFor({place: PR.PLACES[crowdKey] ? crowdKey : "street", cat: who.cat, band: PR.bandOf(time.hour), age, vesselState: who.vesselState}),
+      spark: CR.sparkFor({age, cat: who.cat})};
+    const flag = {kind: who.kind, tags: who.tags ?? [], animal, ...mind, vessel: animal ? who.vessel : "human", pool, waypoints: walk.waypoints, at: 0, wait: 0,
       blocked: 0, expires: Date.now() + 15 * 60 * 1000, made: Date.now()};
     const td = await base.getTokenDocument({name: who.name, x: walk.start.x - size * g / 2, y: walk.start.y - size * g / 2, width: size, height: size,
       actorLink: false, texture: {src: animal ? setting("passersbyAnimalArt") : setting("passersbyArt")},
@@ -127,7 +157,9 @@ export function build({MOD, esc, isActiveGM, chron}) {
         let f = foundry.utils.deepClone(flagOf(doc));
         const me = centerOf(doc, g), half = (doc.width ?? 1) * g / 2;
         const bloodNow = Number(doc.actor?.system?.advantages?.bloodpool?.temporary);
-        f = PR.keepIf(f, {bloodLost: Number.isFinite(bloodNow) && bloodNow < Math.max(1, Math.ceil(f.pool)), following: !!f.follow});
+        const used = doc.actor?.flags?.["wodx-actions"]?.crowdUse;
+        f = PR.keepIf(f, {bloodLost: Number.isFinite(bloodNow) && bloodNow < Math.max(1, Math.ceil(f.pool)), following: !!f.follow,
+          touched: used?.ravaged !== undefined && used?.ravaged !== null ? "ravaged" : used?.reverie ? "dreamer" : null});
         if ( PR.shouldRemove(f, {now: nowMs}) ) { deletes.push(doc.id); continue; }
         if ( fight && !f.fleeing ) continue;
         let dest = null, speed = (f.animal ? 1.2 : 1.5) * g;
@@ -153,7 +185,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
             f.blocked = (f.blocked ?? 0) + 1;
             if ( f.blocked >= 6 && !f.kept ) { deletes.push(doc.id); continue; }
             // Round the corner: a fresh way out from where it stands
-            if ( !f.follow ) { const w = PR.planWalk(rect, {pad: g / 2}); f.waypoints = [PR.nearestExit(rect, me, g / 2), ...w.waypoints].slice(f.blocked % 2 ? 1 : 0); f.at = 0; }
+            if ( !f.follow ) { const w = walkFor(scene, rect, g); f.waypoints = [exitFor(scene, rect, me, g), ...w.waypoints].slice(f.blocked % 2 ? 1 : 0); f.at = 0; }
           } else {
             f.blocked = 0;
             updates.push({_id: doc.id, x: Math.round(step.x - half), y: Math.round(step.y - half)});
@@ -216,7 +248,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
     if ( !isActiveGM() || !scene ) return 0;
     const g = gridPx(scene), rect = scene.id === canvas.scene?.id ? rectOf() : {x: 0, y: 0, width: scene.width, height: scene.height};
     const ups = scene.tokens.filter(t => isPB(t) && !except.includes(t.id) && !(flagOf(t).kept && flagOf(t).why === "fed"))
-      .map(t => ({_id: t.id, [`flags.${MOD}.passerby`]: {...flagOf(t), fleeing: true, follow: null, kept: false, waypoints: [PR.nearestExit(rect, centerOf(t, g), g / 2)], at: 0, wait: 0}}));
+      .map(t => ({_id: t.id, [`flags.${MOD}.passerby`]: {...flagOf(t), fleeing: true, follow: null, kept: false, waypoints: [exitFor(scene, rect, centerOf(t, g), g)], at: 0, wait: 0}}));
     if ( ups.length ) await scene.updateEmbeddedDocuments("Token", ups, {wodxPasserby: true});
     return ups.length;
   }
@@ -239,7 +271,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
   const hold = doc => setFlag(doc, {kept: true, keptAt: Date.now(), why: "held", follow: null});
   async function letGo(doc) {
     const rect = rectOf(), g = gridPx(doc.parent);
-    return setFlag(doc, {kept: false, follow: null, fleeing: false, why: null, waypoints: [PR.nearestExit(rect, centerOf(doc, g), g / 2)], at: 0, wait: 0, expires: Date.now() + 5 * 60 * 1000});
+    return setFlag(doc, {kept: false, follow: null, fleeing: false, why: null, waypoints: [exitFor(doc.parent, rect, centerOf(doc, g), g)], at: 0, wait: 0, expires: Date.now() + 5 * 60 * 1000});
   }
   /** Keep for good: a real NPC of its own, out of the passers-by. */
   async function keepForGood(doc) {
@@ -262,18 +294,24 @@ export function build({MOD, esc, isActiveGM, chron}) {
     const max = num(setting("passersbyMax"));
     const people = PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: c.density, max, place: c.place});
     const opt = (v, l, s) => `<option value="${v}"${s ? " selected" : ""}>${esc(l)}</option>`;
+    const regions = [...(scene.regions ?? [])];
+    const doorRows = regions.map(r => `<label class="wnpc-door"><input type="checkbox" name="door-${r.id}"${c.doors.includes(r.id) || CR.DOOR_NAME.test(r.name ?? "") ? " checked" : ""}${CR.DOOR_NAME.test(r.name ?? "") ? " disabled" : ""}> ${esc(r.name || "Unnamed region")}</label>`).join("");
     const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 460}, window: {title: `Passers-by: ${scene.navName || scene.name}`}, classes: ["wodx-dialog", "wnpc-crowd"],
       content: `<div class="form-group"><label>People and animals on this scene</label><input type="checkbox" name="on"${c.on ? " checked" : ""}></div>
         <div class="form-group"><label>Kind of place (the scene's place tag)</label><select name="place" data-fixed>${Object.keys(PLACE_KINDS).map(k => opt(k, PLACE_KINDS[k], k === c.place)).join("")}</select></div>
         <div class="form-group"><label>How busy</label><select name="density" data-fixed>${Object.entries(PR.DENSITY).map(([k, d]) => opt(k, d.label, k === c.density)).join("")}</select></div>
         <div class="form-group"><label>Animals too</label><input type="checkbox" name="animals"${c.animals ? " checked" : ""}></div>
+        <fieldset><legend>Doors on a large map</legend><p class="hint">Regions they walk in from and out by, instead of the edge of the map. A region named "Passers-by" or "Crowd door" always counts. None ticked: the edge of the map.</p>
+          ${regions.length > 6 ? searchBox(".wnpc-door-list", "Search regions…", "Search regions") : ""}<div class="wnpc-door-list">${doorRows || "<p>No regions on this scene.</p>"}</div></fieldset>
         <p class="hint">${esc(PR.AGES[PR.ageOf(time.year || year())].label)}, ${esc(time.timeLabel ?? "")}: about ${people} ${people === 1 ? "person" : "people"} in this ${esc(PR.placeOf(c.place).label.toLowerCase())} (${esc(street.area)} hunting ground) at this hour, at most ${max} with the animals. Set the hunting ground in WoDX Storyteller's hunting grounds.${setting("passersby") ? "" : " Passers-by are off in the module settings."}</p>`,
-      buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => ({...Object.fromEntries(new FormData(b.form)), action: "save"})},
+      buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => ({...Object.fromEntries(new FormData(b.form)), action: "save",
+        doors: [...b.form.querySelectorAll("input[name^='door-']:checked:not(:disabled)")].map(i => i.name.slice(5))})},
         {action: "clear", label: "Clear them now", callback: () => ({action: "clear"})}, {action: "cancel", label: "Cancel"}]});
     if ( !res || res.action === "cancel" ) return null;
     if ( res.action === "clear" ) return scene.deleteEmbeddedDocuments("Token", scene.tokens.filter(isPB).map(t => t.id), {wodxPasserby: true});
     const kind = PLACE_KINDS[res.place] ? res.place : "street";
-    return scene.update({[`flags.${MOD}.crowd`]: {on: !!res.on, density: PR.DENSITY[res.density] ? res.density : "normal", animals: !!res.animals},
+    return scene.update({[`flags.${MOD}.crowd`]: {on: !!res.on, density: PR.DENSITY[res.density] ? res.density : "normal", animals: !!res.animals,
+      doors: (res.doors ?? []).filter(id => scene.regions?.get?.(id))},
       [`flags.${MOD}.place.kind`]: kind});
   }
 
@@ -308,5 +346,17 @@ export function build({MOD, esc, isActiveGM, chron}) {
     });
   }
 
-  return {registerSettings, hooks, tick, sweep, clearAll, scatter, follow, hold, letGo, keepForGood, openCrowd, hudButtons, crowdOf, isPasserby: isPB, baseActor};
+  /** One passer-by (or animal) on the scene now, whatever the hour: for gates and the Storyteller's macros. */
+  async function spawnOne(scene = canvas.scene, {animal = false} = {}) {
+    if ( !game.user.isGM || !scene ) return null;
+    const td = await spawn(scene, {animal, time: await now(), street: streetOf(scene), place: crowdOf(scene).place});
+    if ( !td ) return null;
+    const [doc] = await scene.createEmbeddedDocuments("Token", [td], {wodxPasserby: true});
+    return doc ?? null;
+  }
+
+  /** What a passer-by token carries for the crowd rules: {feeling, spark, kind} or null for anyone else. */
+  const mindOf = doc => { const f = flagOf(doc?.document ?? doc); return f && !f.animal ? {feeling: f.feeling ?? null, spark: Number.isFinite(f.spark) ? f.spark : null, kind: f.kind} : null; };
+
+  return {registerSettings, hooks, tick, sweep, clearAll, scatter, follow, hold, letGo, keepForGood, openCrowd, hudButtons, crowdOf, doorsOf, mindOf, spawnOne, rules: CR, isPasserby: isPB, baseActor};
 }
