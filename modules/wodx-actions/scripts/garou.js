@@ -5,6 +5,7 @@
  * chiminage. Rules basis by era (B41): Dark Ages: Werewolf in the Dark Ages profiles, W20 elsewhere.
  * Every card carries its page reference. Nothing here copies book text.
  */
+import { spendTime } from "./spend-time.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -376,14 +377,14 @@ export function build(ctx) {
         const diff = G.meditationDifficulty(earlier);
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${i.gnosis.temp}/${i.gnosis.perm}. Wits + Enigmas at ${diff}${earlier ? ` (+${earlier} for earlier days this week)` : ""}; up to one point an hour (DA:W p. 92; W20 p. 146).</p>
           <div class="form-group"><label>Hours of meditation</label><input type="number" name="hours" value="1" min="1"/></div>
-          <div class="form-group"><label>Advance the clock by the hours (Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
+          <div class="form-group"><label>Move the clock by the hours (a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
         return dialog(`Meditate: ${actor.name}`, content, "Roll", async fd => {
             const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
             const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(fd.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
             if (gain) await P.adjust(actor, "gnosis", gain);
             await actor.setFlag?.(MOD, "meditation", { day: today, week, count: earlier + 1 });
-            if (fd.advance && game.user.isGM) await game.time.advance(3600 * Math.max(1, n(fd.hours)));
-            return post(actor, `${actor.name} meditates`, rollBlock("Wits + Enigmas", rr, []) + `<div class="vta-big ${gain ? "good" : ""}">+${gain} Gnosis</div>`, [rr.roll].filter(Boolean));
+            const tnote = fd.advance ? await spendTime(actor, 3600 * Math.max(1, n(fd.hours)), "meditation") : "";
+            return post(actor, `${actor.name} meditates`, rollBlock("Wits + Enigmas", rr, []) + `<div class="vta-big ${gain ? "good" : ""}">+${gain} Gnosis</div>` + tnote, [rr.roll].filter(Boolean));
         });
     }
 
@@ -480,6 +481,7 @@ export function build(ctx) {
           ${searchBox("ul.wodx-gift-list", "Search Gifts…", "Search Gifts")}
           <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}): ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
           <div class="form-group"><label>Spend experience through the log</label><input type="checkbox" name="xp" checked/></div>
+          ${spiritApi() ? `<p class="vta-note">The spirits: ${esc((spiritApi().rules.summary(spiritApi().of(actor)).join("; ")) || "no court knows this one yet")}. Standing changes the difficulty to summon the teacher; a scorned court may refuse to teach.</p>` : ""}
           <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = gifts().find(x => x.id === fd.gift); if (!g) return null;
@@ -511,37 +513,47 @@ export function build(ctx) {
           <div class="form-group"><label>Level</label><input type="number" name="level" value="1" min="0" max="5"/></div>
           <div class="form-group"><label>Garou taking part (ritemaster included)</label><input type="number" name="people" value="1" min="1"/></div>
           <div class="form-group"><label>Caern level (seasonal rites)</label><input type="number" name="caern" value="0" min="0" max="5"/></div>
-          <div class="form-group"><label>Advance the clock (10 minutes a level)</label><input type="checkbox" name="advance"/></div>
+          <div class="form-group"><label>Move the clock (10 minutes a level; a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div>
+          ${courtField().replace("The spirit's court", "A spirit's court (a binding or a summoning rite)")}
           <p class="vta-note">DA:W pp. 144–145: −1 difficulty per five taking part; at least 10 minutes a level (minor rites a few minutes). Rites are taught, not bought with experience, in the Dark Ages.</p></form>`;
         return dialog(`Perform a rite: ${actor.name}`, content, "Perform", async fd => {
             const it = fd.rite ? actor.items.get(fd.rite) : null;
             const lvl = it ? n(it.system?.level) : n(fd.level);
             if (lvl > abilityDots(actor, "rituals") && fd.type !== "minor") ctx.notify("A rite's level can't exceed Rituals (DA:W p. 144).");
             const rr0 = G.riteRoll(fd.type, { rank: i.rank, caern: fd.caern, participants: fd.people, table: D.rites });
+            const ce = courtEffect(actor, fd.court);
             let body = "", rolls = [];
             if (rr0?.pool && rr0.pool !== "var") {
                 const pool = poolOf(actor, rr0.pool, i);
-                const rr = await rollPool(pool.dice, rr0.diff);
+                const diff = clampDiff(rr0.diff + ce.diff);
+                const rr = await rollPool(pool.dice, diff);
                 rolls.push(rr.roll);
-                body += rollBlock(pool.label, rr, [`${rr0.label} rite`, `difficulty ${rr0.diff}`]);
+                body += rollBlock(pool.label, rr, [`${rr0.label} rite`, `difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]);
                 body += rr.successes > 0 ? `<div class="vta-big good">The rite takes.</div>` : `<div class="vta-note">The rite fails${rr.botch ? ", badly" : ""}.</div>`;
             } else body += `<div class="vta-note">${rr0?.pool === "var" ? "Caern rites roll as each rite says (capped by Gnosis)." : "Minor rites need no roll."}</div>`;
-            if (fd.advance && game.user.isGM) await game.time.advance(600 * Math.max(1, lvl));
+            if (fd.advance) body += await spendTime(actor, 600 * Math.max(1, lvl), "a rite");
             return post(actor, `${actor.name}: ${esc(it?.name ?? `${rr0?.label ?? ""} rite`)}`, body, rolls.filter(Boolean));
         });
     }
+
+    /* ---------------- Standing with the spirit courts (WoDX Otherworlds 0.16.0, B1722) ---------------- */
+    const spiritApi = () => game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds")?.api?.spirits : null;
+    const courtField = () => spiritApi() ? `<div class="form-group"><label>The spirit's court</label><select name="court" data-fixed>${spiritApi().courtOptions()}</select></div>` : "";
+    const courtEffect = (actor, court) => spiritApi()?.effect?.(actor, court) ?? { diff: 0, refuses: false, note: "" };
+    const clampDiff = d => Math.max(2, Math.min(10, d));
 
     async function summonSpirit(actor) {
         const D = DATA.garou ?? {};
         const types = Object.keys(D.summoning?.diff ?? {});
         const content = `<form><p><b>${esc(actor.name)}</b>: Rite of Summoning (DA:W p. 150).</p>
           <div class="form-group"><label>Spirit</label><select name="type" data-fixed>${types.map(t => `<option value="${t}">${esc(t)} (${D.summoning.diff[t]})</option>`).join("")}</select></div>
-          <div class="form-group"><label>Hours spent summoning</label><input type="number" name="hours" value="0" min="0"/></div></form>`;
+          <div class="form-group"><label>Hours spent summoning</label><input type="number" name="hours" value="0" min="0"/></div>${courtField()}</form>`;
         return dialog(`Summon a spirit: ${actor.name}`, content, "Summon", async fd => {
-            const diff = G.summonDifficulty(fd.type, fd.hours, D.summoning);
+            const ce = courtEffect(actor, fd.court);
+            const diff = clampDiff(G.summonDifficulty(fd.type, fd.hours, D.summoning) + ce.diff);
             const pool = poolOf(actor, "wits+rituals", info(actor));
             const rr = await rollPool(pool.dice, diff);
-            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`]), rolls = [rr.roll];
+            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll];
             if (rr.successes > 0) {
                 const gr = await rollPool(info(actor).gnosis.perm, 6);
                 rolls.push(gr.roll);
@@ -743,13 +755,15 @@ export function build(ctx) {
           <div class="form-group"><label>To</label><input type="text" name="to" placeholder="the spirit or caern"/></div>
           <div class="form-group"><label>For</label><input type="text" name="for" placeholder="teaching a Gift, a bridge, a binding…"/></div>
           <div class="form-group"><label>Owed</label><input type="text" name="owed" placeholder="the task or gift"/></div>
-          <div class="form-group"><label>Paid</label><input type="checkbox" name="paid"/></div></form>`;
+          <div class="form-group"><label>Paid</label><input type="checkbox" name="paid"/></div>${courtField()}</form>`;
         return dialog(`Chiminage: ${actor.name}`, content, "Record", async fd => {
             const line = `${actor.name} ${fd.paid ? "paid" : "owes"} ${fd.to || "a spirit"}: ${fd.owed || "?"}${fd.for ? ` (for ${fd.for})` : ""}.`;
             let j = game.journal.find(x => x.getFlag?.(MOD, "kind") === "chiminage");
             const row = `<li>${esc(line)}</li>`;
             if (!j) j = await JournalEntry.create({ name: "WoDX Chiminage", flags: { [MOD]: { kind: "chiminage" } }, pages: [{ name: "Debts", type: "text", text: { content: `<ul>${row}</ul>` } }] });
             else { const p = j.pages.getName("Debts"); if (p) await p.update({ "text.content": (p.text?.content ?? "<ul></ul>").replace(/<\/ul>\s*$/, `${row}</ul>`) }); }
+            // The court's regard moves when the Storyteller records it (Otherworlds 0.16.0): paid +1; owed and not paid is recorded there
+            if (fd.paid && fd.court && game.user.isGM) await spiritApi()?.move?.(actor, "paid", { court: fd.court, why: line });
             return post(actor, "Chiminage", `<div class="vta-note">${esc(line)}</div>`);
         });
     }

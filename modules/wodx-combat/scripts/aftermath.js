@@ -7,6 +7,7 @@
  * the Masquerade ledger (WoDX Actions) and starts a rumour (WoDX Storyteller). Nothing reaches the players.
  */
 import * as AR from "./aftermath-rules.js";
+import {lengthOf} from "./fight-time.js";
 
 const MOD = "wodx-combat";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -93,7 +94,7 @@ export function setupAftermath({corpusTrack}) {
     const rumour = AR.rumourText({place: sceneName, kinds: [...kinds], ev});
     const rowsHtml = list.map(r => `<li><b>${esc(r.name)}</b>: ${esc(AR.rowText(r))}${r.powers.length ? `<br><small>Seen: ${r.powers.map(esc).join(", ")}</small>` : ""}</li>`).join("");
     let html = `<div class="vtc-card wodx-aar"><h3>After the fight${sceneName ? `: ${esc(sceneName)}` : ""}</h3>
-      <p>${combat.round ? `${combat.round} turn${combat.round === 1 ? "" : "s"}.` : ""}</p><ul class="wodx-aar-rows">${rowsHtml || "<li>No fighter on record.</li>"}</ul>`;
+      <p>${lengthOf(combat) ? `${lengthOf(combat)}; the time has moved on.` : combat.round ? `${combat.round} turn${combat.round === 1 ? "" : "s"}.` : ""}</p><ul class="wodx-aar-rows">${rowsHtml || "<li>No fighter on record.</li>"}</ul>`;
     if ( breach.size ) {
       html += `<p class="vtc-note"><b>Witnesses:</b> ${[...breach.values()].map(esc).join(", ")} saw what should stay hidden. Severity ${sev}; they carry ${esc(ev.label)}.</p>
         <p class="vtc-note"><i>Rumour:</i> ${esc(rumour)}</p>

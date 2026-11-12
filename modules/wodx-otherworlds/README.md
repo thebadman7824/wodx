@@ -44,3 +44,7 @@ Every realm past the Penumbra, the Shadowlands and the Near Dreaming can have a 
 `game.modules.get("wodx-otherworlds").api` (also `game.wodx.otherworlds`): `stepSideways()`, `peek()`, `clearCrossing()`, `openRatings()`, `writeReport()`, `writeChartsPage()`, `buildPenumbraPrototype(scene)`, `placeOf(tokenDocument)`, `rules`, `STATUS`, `crossShroud()`, `openTwins()`, `twins` (`buildTwins`, `removeTwins`, `planTwins`, `relinkTravel`, `makeUmbralPath`, `layersOf`), `disconnectionOf(actor)`, `worldOf(actor)`, `checkYearAndDay()`, `readTheSoul({reader, target})`, `editAura(actor)`, `senses`.
 
 Hooks: `wodxCrossing({mode, inUmbra, outcome, result, place, travelers})` after each roll; `wodxShroudCrossing({back, means, tokens, place})`.
+
+## Standing with the spirit courts (0.16.0)
+
+Each character who deals with spirits keeps a standing from -5 to +5 with the Bird, Beast, Elemental, Wyld, Weaver and Wyrm courts and their totem (a house rule, B1720 to B1724). The Storyteller records what moves it in the Spirits window (the feather button with the token tools): chiminage paid or refused, a Bane destroyed, a spirit forced, a Ban kept or broken. Standing changes the difficulty to summon, learn a Gift from, or bind a spirit of that court in WoDX Actions; at -5 the court may refuse. Players see their own standing in words. API: `api.spirits.of(actor)`, `standing(actor, court)`, `effect(actor, court)`, `move(actor, key, {court, by, why})`, `dialog(actor)`.

@@ -1899,3 +1899,98 @@ Reverse: not built yet.
 Three PRs: (1) this one, the browser speech fallback, voice profiles and the talk-card hook; (2) Kokoro, a cache in a Data folder outside every world (size cap, Clear button) and playback from the token; (3) the effects and the Storyteller's voice picker with Preview. Priority 2, after the talk generator's first PR. On in the testbed, off on Live until Ben says.
 
 Reverse: n/a.
+
+## B1960. Game time: one world clock for every scene (2026-11-12)
+Ben approved every recommendation on the Game Time Desk. Foundry's one world time stays the only clock; scenes get no clocks of their own. Every timed part of WoDX (about thirty) reads it, and separate clocks would make dated events, eras and routines disagree between maps. Groups that are apart use personal time instead (B1961).
+
+Reverse: nothing to undo; per-scene clocks were not built.
+
+## B1961. Work done apart goes on the character's own time (2026-11-12)
+WoDX Storyteller 0.40.0, api.time.spend. The main group is the scene holding more than half of the player characters present tonight (players marked away are left out). A long roll, an interaction, a fight or a journey by characters who share a scene that is not the main group's, while someone else is elsewhere, moves their personal time instead of the world clock. With no main group (a party split two and two) every half is apart. Convene lines them up as before. World setting timeApart, on.
+
+Reverse: set timeApart off; everything moves the world clock.
+
+## B1962. A player's long roll asks for its time (2026-11-12)
+Move the clock on an extended roll, a Garou meditation or rite, a Hunter's prayer, Kindred downtime and Wraith mending works for players: the player's client sends the seconds to the Storyteller's client by socket, which makes a "Time for a long action" proposal itself (B12 still holds: players send no typed proposals). Approving spends it under B1961 and tells the player. Capped at 90 days a request.
+
+Reverse: spendTime in wodx-actions spend-time.js back to the GM-only game.time.advance.
+
+## B1963. The Time row on the Clock (2026-11-12)
+The Storyteller's Chronicle Clock lists each player character's own time against the clock (with the clock, so long ahead, so long behind) and the scene they are on, with a Convene button. Drawn by WoDX Storyteller (api.time.clockRow) when it is on.
+
+Reverse: drop the clockRow call in clock-app.mjs.
+
+## B1964. Otherworld journeys let their time pass (2026-11-12)
+The approved journey card says how much time passes outside and, on the Storyteller's copy, has "Let the journey's time pass", which spends it once for the travellers under B1961. The journey itself never moves the clock on its own.
+
+Reverse: drop the button in journey.mjs approveJourney.
+
+## B1965. Realms where time runs differently (2026-11-12)
+Otherworlds journey-rules REALM_TIME: the Tempest, the Labyrinth, the Umbral roads and Moon Paths keep the world's time; a Moon Bridge takes a thousandth (W20 pdf 209 / p. 207); a trod slips (C20 pdf 53 / p. 52, house figures). After the book check (Otherworlds 0.15.1): the Labyrinth is the Storyteller's call (WR20 pdf 307); the Far Dreaming and Arcadia are the Storyteller's call, time running at random against the world (C20 pdf 53, W20 pdf 331); the Deep Umbra is the Storyteller's call, with no M20 or W20 rate (the Computer Web runs faster than the CyberRealm, W20 pdf 332; Horizon's double speed in 1456, Horizon pdf 43, was a spell, not the realm). The trod slip stays a house figure: C20 pdf 53 gives no table. The Shadowlands and the Tempest keep the world's time as a house rule, since WR20 gives no rate. A Storyteller's-call realm keeps the plain clock and the card says so.
+
+Reverse: remove REALM_TIME and timeOutside.
+
+## B1966. A fight takes time when it ends (2026-11-12)
+WoDX Combat 3.18.0. Foundry adds no seconds for a round unless a system sets it, and none did, so fights took no time. When a started fight is ended, the time moves once by its turns times the world setting turnSeconds (3 seconds, the books' own figure: V20 pdf 262 and 277, V20 Dark Ages pdf 344, W20 pdf 241 and 290; V20 lets a slow scene stretch a turn up to 3 minutes, so a Storyteller can raise it, up to 60 here; 0 turns it off): the clock, or the fighters' own time when they are apart. One step at the end wakes the timed parts once instead of every round. The after-action card names the length.
+
+Reverse: set turnSeconds to 0.
+
+## B1967. The clock that runs with the table (2026-11-12)
+WoDX Chronicle 0.39.0, off by default. World settings paceMinutes (game minutes a step, 0 off) and paceEvery (real minutes, 10). The Storyteller's client checks every 30 seconds; it waits while the game is paused, during a fight, while the world is held or a skip runs, and when no player is connected. Moving the clock by hand starts the count again. The same for every scene.
+
+Reverse: leave paceMinutes at 0.
+
+## B1968. Off-screen NPCs settle when their scene opens (2026-11-12)
+Kept as built: NPCs on scenes nobody is viewing are placed by their routine when the scene opens. The result is the same as moving them all the time, at no cost while nobody watches.
+
+Reverse: nothing to undo.
+
+## B1969. A scene's own place for the sun (2026-11-12)
+WoDX Chronicle 0.39.0: scene flag wodx-chronicle.place {latitude, offset in hours from home}, set from the Clock's "The sun on this scene". Sunlight (WoDX Actions), the sky (WoDX Atmosphere) and day and night for the senses (WoDX Senses) read it for the scene being viewed; the Clock shows the scene's hour, sunrise and sunset under home time. The world clock, the Clock's dusk and dawn buttons, routines, healing and every timed rule keep home time. Before standard time zones the offset is the sun-time difference, rounded to the half hour.
+
+Reverse: unset the scene flags; describeAt falls back to the chronicle latitude.
+
+## B1970. The guides say how time passes (2026-11-12)
+The Storyteller guide's clock section now covers personal time, Convene, time apart, fights, journeys, a scene's own place and the table's clock.
+
+Reverse: nothing to undo.
+## B1700. The Legends book (2026-11-12)
+Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.40.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
+Players see a new line of each kind as follows (a house rule, line by line in the window): dated events, deaths, seats, holdings and boons are shown; Embraces, ghoulings, oaths and debts, and the seats of a secret faction, wait for the Storyteller. Lines dated after today's date are the Storyteller's only.
+Reverse: SHOWN_BY_DEFAULT in legends-rules.mjs.
+## B1701. When the book is written (2026-11-12)
+The book is brought up to date when a session ends in WoDX Storyteller (its session setting changes), just before each time skip moves the clock and again when it ends, the first time the world loads, and when the Storyteller presses Bring it up to date. Seats and holdings have no history of their own, so each build compares them with the last build and dates a change to the day of the build; the first build records who holds each seat and place "when this book began", dated by the owner record's own year where it has one.
+Reverse: the hooks in Chronicle main.mjs (updateSetting, wodxSkipStart, wodxSkipEnd, ready).
+## B1702. The book across the eras (2026-11-12)
+One chapter (journal page) per century that has lines, oldest first, from 1197 to the World of Future Darkness, dated on the Chronicle Clock's calendar. Setting the clock back takes a dated event out again, as the dated events do; other lines stay but count as after today's date, so players stop seeing them until the clock passes them again. The book keeps 5000 lines, dropping the oldest.
+Reverse: LEGENDS_CAP and merge() in legends-rules.mjs.
+## B1710. Progress clocks (2026-11-12)
+Ben approved the Improvement Desk item "Progress clocks" as described. WoDX Storyteller 0.41.0 shows long work and slow threats as segmented clocks (after Blades in the Dark). Clocks read from records WoDX keeps: long tasks (successes of the goal), heat on a hunting ground (of 10), ties that need tending (shown once half the time has gone), Ledger objectives (steps done) and open Ledger entries with a due date (time gone between made and due). The Storyteller makes clocks of their own (4, 6, 8, 10 or 12 segments) for a faction's plan or a hunter closing in. Rules in clock-rules.mjs; stored in the world setting wodx-storyteller.clocks.
+Reverse: remove the Clocks tool and the dashboard section.
+## B1711. Who sees a clock (2026-11-12)
+Every clock starts as the Storyteller's only. The Storyteller shows a clock to everyone or to the players of chosen characters, read clocks included. A house rule.
+Reverse: normClock's shown default in clock-rules.mjs.
+## B1712. Clocks that fill by themselves (2026-11-12)
+An own clock can fill by hand only (the default), one segment each faction turn, one each session's end, or one each full week of game time (counted from when the setting is chosen; setting the clock back starts the count again). When a clock fills, the Storyteller gets a whispered card; what happens is theirs to decide.
+Reverse: TICKS and tickAll in clock-rules.mjs.
+## B1713. A fight goes in the Storyteller's log (2026-11-12)
+When WoDX Combat starts a fight (wodxFightStarted), the Storyteller's log gets a note "A fight began on <scene>." It feeds the pacing note and the session report.
+Reverse: the wodxFightStarted listener in night.mjs registerNight.
+## B1714. The pacing note on the night's draw (2026-11-12)
+Ben chose the lighter version of the pacing dial: a note for the Storyteller only, on the night's draw window and its queue entry, that never changes what the draw picks. It reads the last seven nights of the log (a night runs noon to noon): a night is hard when it had a fight, a frenzy, a death or torpor, a Masquerade breach, Diablerie or a road encounter. The note says, first that matches: three or more hard nights of the last four; a hard night just past; three or more quiet nights in a row. Rules in pacing-rules.mjs.
+Reverse: pacingNow in night.mjs.
+## B1720. Standing with the spirit courts (2026-11-12)
+Ben approved the Improvement Desk item "Standing with the spirit courts" as described. WoDX Otherworlds 0.16.0 keeps, on each character who deals with spirits (Garou and the other Changing Breeds, Kinfolk, mages, mortal shamans), a standing from -5 to +5 with seven courts: Bird, Beast, Elementals, Wyld, Weaver, Wyrm and the character's totem. The books give chiminage, Bans and spirits who remember; the number is a house rule. Stored on flags.wodx-otherworlds.spirits; rules in spirit-rules.mjs.
+Reverse: remove the Spirits tool; the flag can stay.
+## B1721. What moves standing (2026-11-12)
+House rule: chiminage paid +1 with the spirit's court; chiminage owed and not paid -2; a Bane destroyed +1 with the Wyld and the totem and -1 with the Wyrm; a spirit bound or slain against its will -2 with its court; the totem's Ban kept through a hard test +1; the Ban broken -3; a favour +1 and a slight -1 with a chosen court; or the Storyteller moves a court by hand. WoDX Actions' Chiminage, when the Storyteller records a debt paid with a court picked, moves it by itself.
+Reverse: MOVES in spirit-rules.mjs.
+## B1722. What standing does (2026-11-12)
+House rule: +3 or more is -1 difficulty to summon a spirit of the court, to be taught a Gift by one, or to bind one into a fetish or talen; +5 is -2. -3 or less is +1 difficulty, -5 is +2 and the court may refuse outright. WoDX Actions applies it to Summon a spirit and Perform a rite when a court is picked, and shows the standing when learning a Gift.
+Reverse: effect() in spirit-rules.mjs; courtField in Actions garou.js.
+## B1723. What players see of standing (2026-11-12)
+Players see their own characters' standing in words (honoured, well regarded, known kindly, unknown, mistrusted, resented, scorned), not the number or what moved it.
+Reverse: spiritsDialog in Otherworlds spirits.mjs.
+## B1724. The courts across the eras (2026-11-12)
+The Storyteller's window gives a house note for the era from the clock's year: the Weaver's spirits gather where people build before 1800, spread with mills, rail and wire after, and take the Net from 1990; the Wyrm's feed on war and plague, then on industry; the Wyld's draw back from the cities. In the World of Future Darkness the courts of the machines and the Net are the Storyteller's to name, kept under Weaver spirits.
+Reverse: eraNotes in spirit-rules.mjs.

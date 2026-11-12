@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx), like the Garou engine. Pure rules: kindred-rules.js.
  */
 
+import { spendTime } from "./spend-time.js";
 import * as K from "./kindred-rules.js";
 import * as P from "./profiles.js";
 import * as GX from "./garou.js";
@@ -345,7 +346,7 @@ export function build(ctx) {
           <div class="form-group"><label>Dots from</label><select name="from"><option value="own">Own sheet</option>${groups.map(g => `<option value="${g.id}">${esc(g.name)}'s pool</option>`).join("")}</select></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
           <div class="form-group"><label>Weeks</label><input type="number" name="weeks" value="1" min="1" max="12"/></div>
-          <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock by the weeks (GM)</label></div>
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock by the weeks (a player asks the Storyteller)</label></div>
           <p class="vta-note wodx-dt-note"></p></form>`;
         const sync = root => {
             const r = rows.find(x => x.k === root.querySelector("[name=kind]").value);
@@ -373,7 +374,7 @@ export function build(ctx) {
                 const ch = await ctx.changeBlood(actor, total);
                 body += `<div class="vta-res good">Blood ${ch.before} → ${ch.after}</div>`;
             }
-            if (fd.advance && game.user.isGM) await game.time.advance(7 * 86400 * Math.max(1, n(fd.weeks)));
+            if (fd.advance) body += await spendTime(actor, 7 * 86400 * Math.max(1, n(fd.weeks)), "downtime");
             await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()}, ${total} success${total === 1 ? "" : "es"}.`, "downtime");
             return post(actor, `${actor.name}: ${esc(r.d.label)}`, body, rolls);
         }, { render: root => { sync(root); root.querySelector("[name=kind]").addEventListener("change", () => sync(root)); } });

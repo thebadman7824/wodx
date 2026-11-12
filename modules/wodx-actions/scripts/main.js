@@ -21,6 +21,7 @@
  *   profileMenu({actor})           the launcher shows a different menu for each actor type (v2.0)
  */
 
+import { spendTime } from "./spend-time.js";
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as PM from "./profile-menus.js";
@@ -578,7 +579,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <p class="vta-note vta-suggest-note"></p>
       <div class="form-group vta-ext"><label>Successes needed (extended)</label><input type="number" name="goal" value="5" min="1"/></div>
       <div class="form-group vta-ext"><label><input type="checkbox" name="untilDone"/> Roll until done; each roll takes (minutes)</label><input type="number" name="interval" value="10" min="0" style="width:5em"/></div>
-      <div class="form-group vta-ext"><label><input type="checkbox" name="advance"/> Advance the clock by the time taken (GM)</label></div>
+      <div class="form-group vta-ext"><label><input type="checkbox" name="advance"/> Move the clock by the time taken (a player asks the Storyteller)</label></div>
       <div class="form-group vta-team"><label>Helpers' successes (e.g. 2,1,0) / helper limit</label><input type="text" name="helpers" value=""/> <input type="number" name="helperLimit" value="3" style="width:4em"/></div>
       <div class="form-group vta-team"><label><input type="checkbox" name="rollHelpers" checked/> Roll for the other selected tokens (${Math.max(0, (canvas.tokens?.controlled ?? []).filter(t => t.actor && t.actor.id !== actor.id).length)}), the same pool from their sheets</label></div>
       <fieldset class="vta-opp"><legend>Opponent ${target ? `(${esc(target.name)})` : "(no target: enter dice)"}</legend>
@@ -922,8 +923,7 @@ async function resolveAction(actor, target, fd) {
             }
             const minutes = num(fd.interval) * data.state.rolls;
             if (minutes) body += `<div class="vta-note">Time taken: ${minutes >= 120 ? `${Math.round(minutes / 6) / 10} hours` : `${minutes} minutes`} (${data.state.rolls} roll${data.state.rolls === 1 ? "" : "s"}).</div>`;
-            if (fd.advance && minutes && game.user.isGM) await game.time.advance(minutes * 60);
-            else if (fd.advance && minutes) body += `<div class="vta-note">Ask the GM to advance the clock.</div>`;
+            if (fd.advance && minutes) body += await spendTime(actor, minutes * 60, data.label);
         }
         body += extendedStatus(data);
         return post(actor, title, body, rolls, data);
@@ -2632,7 +2632,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.48.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.51.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.7.0";
+const VERSION = "0.7.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -134,6 +134,8 @@ const guessKind = name => { try { return guessPlace?.(name) || ""; } catch (e) {
 
 function timeNow() {
   try {
+    const d = game.modules.get("wodx-chronicle")?.api?.place?.describeAt?.(globalThis.canvas?.scene ?? null, game.time.worldTime);
+    if ( d ) return d;
     const lat = game.settings.get("wodx-chronicle", "latitude");
     return CAL.describeTime(game.time.worldTime, lat);
   } catch (e) { return null; }
