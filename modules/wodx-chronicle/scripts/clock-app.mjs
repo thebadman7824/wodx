@@ -34,6 +34,7 @@ export class ClockApp extends ApplicationV2 {
       linesVeils: () => safety.submitLineOrVeil(),
       manageLinesVeils: () => safety.manageLinesVeils(),
       sessionZero: () => safety.openSessionZero(),
+      firstNight: () => (game.modules.get("wodx-creation")?.api?.firstNight?.() ?? ui.notifications.warn("Before the First Night needs WoDX Creation 0.12.0 or later.")),
       ask: () => approvals.askStoryteller(),
       approvals: () => approvals.ApprovalsApp.open(),
       rules: ClockApp.#onRules,
@@ -127,6 +128,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" class="wodx-xcard-button" data-action="xcard" title="Anonymous: nobody is told who pressed it"><strong>X</strong> X-card</button>
           <button type="button" data-action="linesVeils"><i class="fa-solid fa-eye-slash"></i> Lines and veils</button>
           <button type="button" data-action="sessionZero"><i class="fa-solid fa-list-check"></i> Session Zero</button>
+          ${game.modules.get("wodx-creation")?.api?.firstNight ? `<button type="button" data-action="firstNight"><i class="fa-solid fa-moon"></i> Before the First Night</button>` : ""}
           <button type="button" data-action="rules"><i class="fa-solid fa-book"></i> Chronicle Rules</button>
           <button type="button" data-action="languages"><i class="fa-solid fa-language"></i> Languages</button>
           <button type="button" data-action="tour" title="A short guided tour of the WoDX tools"><i class="fa-solid fa-circle-question"></i> Tour</button>

@@ -113,7 +113,7 @@ export const NET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height
   + `</filter></svg>`;
 
 /**
- * 0.15.0: how much time passes outside while travellers make a journey (B1604, B1605). Most roads keep the world's
+ * 0.15.0: how much time passes outside while travellers make a journey (B1704, B1705). Most roads keep the world's
  * time: the hours planned. A Moon Bridge takes a thousandth of it (W20, above). A trod runs fast, slow or loses days
  * (C20, above; house figures). Realms whose books may say time runs differently there are listed in REALM_TIME with
  * check: true until the book check fixes their pages; until then they keep the plain clock and the card says it is the

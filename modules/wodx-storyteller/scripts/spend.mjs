@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.38.0: time spent on long actions, the Foundry part (the rules are in spend-rules.mjs).
+ * WoDX Storyteller 0.40.0: time spent on long actions, the Foundry part (the rules are in spend-rules.mjs).
  *
  *   api.time.spend({actorIds, seconds, label})  Storyteller: the clock moves, or, for characters apart from the main
  *                                               group, their own personal time does (setting "timeApart", on).

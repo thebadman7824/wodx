@@ -1,5 +1,5 @@
 /**
- * WoDX Combat 3.16.0: how long a fight took, the Foundry part (the rules are in fight-time-rules.js).
+ * WoDX Combat 3.18.0: how long a fight took, the Foundry part (the rules are in fight-time-rules.js).
  * When a started fight is ended, the active Storyteller moves the time once: the clock, or the fighters' own time when
  * they are apart from the main group (WoDX Storyteller's api.time). The after-action card names the length.
  */

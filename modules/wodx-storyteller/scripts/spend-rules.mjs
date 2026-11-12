@@ -1,8 +1,8 @@
 /**
- * WoDX Storyteller 0.38.0: time spent on long actions, the rules (no Foundry).
+ * WoDX Storyteller 0.40.0: time spent on long actions, the rules (no Foundry).
  *
- * One world clock serves every scene (B1600). Work done by characters who are apart from the main group goes on their
- * own personal time instead, and Convene lines everyone up later (B1601). The main group is the scene that holds more
+ * One world clock serves every scene (B1700). Work done by characters who are apart from the main group goes on their
+ * own personal time instead, and Convene lines everyone up later (B1701). The main group is the scene that holds more
  * than half of the player characters present tonight; with no such scene (a party split two and two), everyone is apart.
  */
 

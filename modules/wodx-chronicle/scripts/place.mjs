@@ -2,7 +2,7 @@ import {MODULE_ID, esc, setting} from "./util.mjs";
 import {describeTime} from "./calendar.mjs";
 import * as PR from "./place-rules.mjs";
 
-/** WoDX Chronicle 0.35.0: a scene's own place for the sun (the rules are in place-rules.mjs). */
+/** WoDX Chronicle 0.37.0: a scene's own place for the sun (the rules are in place-rules.mjs). */
 
 const {DialogV2} = foundry.applications.api;
 export const placeOf = scene => PR.cleanPlace(scene?.flags?.[MODULE_ID]?.place ?? {});

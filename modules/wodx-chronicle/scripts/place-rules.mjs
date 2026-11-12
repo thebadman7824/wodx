@@ -1,10 +1,10 @@
 /**
- * WoDX Chronicle 0.35.0: a scene's own place for the sun, the rules (no Foundry).
+ * WoDX Chronicle 0.37.0: a scene's own place for the sun, the rules (no Foundry).
  *
  * The world clock tells the time at home (the chronicle's latitude). A scene far from home (Cairo, London, the Wild
  * West Americas) can carry its own latitude and an offset in hours from home, kept in the scene flag
  * wodx-chronicle.place {latitude, offset}. Sun, sky and the scene's own hour read it; the world clock, dusk and dawn
- * on the Clock, routines and every timed rule keep home time (B1609). Before standard time zones the offset is the
+ * on the Clock, routines and every timed rule keep home time (B1709). Before standard time zones the offset is the
  * difference in sun time; a whole number of hours is close enough at the table.
  */
 

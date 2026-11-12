@@ -64,7 +64,7 @@ export function build(ctx) {
             const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
             const cm = await import("../../wodx-chronicle/scripts/calendar-math.mjs");
             let lat = game.settings.get("wodx-chronicle", "latitude");
-            // 3.48.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.35.0, B1609)
+            // 3.50.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.37.0, B1709)
             try {
                 const PR = await import("../../wodx-chronicle/scripts/place-rules.mjs");
                 const pt = PR.placeTime(scene?.flags?.["wodx-chronicle"]?.place ?? {}, time, lat);

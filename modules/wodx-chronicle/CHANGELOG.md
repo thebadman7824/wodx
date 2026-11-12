@@ -2,7 +2,10 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.35.0 (Game time: the Clock's Time row (each character's own time, with Convene, from WoDX Storyteller); The sun on this scene (a scene's own latitude and hours from home for sun and sky); the clock that runs with the table, off by default (world settings paceMinutes, paceEvery); api.place, api.pace, api.refreshClock)
+- 0.37.0 (Game time: the Clock's Time row (each character's own time, with Convene, from WoDX Storyteller); The sun on this scene (a scene's own latitude and hours from home for sun and sky); the clock that runs with the table, off by default (world settings paceMinutes, paceEvery); api.place, api.pace, api.refreshClock)
+- 0.35.0 (Wraith features: the sixteen Guilds, eight legions with the one the manner of death suggests, and the factions of the dead, picked in the feature window; world setting Guild and legion features (Wraith), off by default)
+- 0.34.1 (a Before the First Night button on the Clock when WoDX Creation 0.12.0 is on)
+- 0.34.0 (Changeling features: kith, seeming, court and sidhe House stacked, revels, the Pooka lie, the Selkie coat, oaths, the court in power by the season, the Thallain, Inanimae, Nunnehi, Dark-Kin, Dauntain and Hsien; world setting Kith, seeming and court features (Changeling), off by default; a Fianna Galliard now gains Wisdom for a tale)
 - 0.33.0 (Mage features: every Tradition, Craft and Convention with the old names of each age, the Order of Reason, the Hermetic Houses, the mad and the fallen; world setting Tradition, Craft and Convention features (Mage), off by default)
 - 0.32.0 ("Only when" tests on the look: dressed fine or poor, wears, station, out of time, bloody, disguised, seen through)
 - 0.31.0 (Werewolf features: tribe, auspice and breed stacked, Kinfolk, the lost tribes, the eleven other Changing Breeds and the Beast Courts; signature roll effects now reach the dice; world setting Tribe, auspice and breed features (Werewolf), off by default)

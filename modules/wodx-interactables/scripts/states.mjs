@@ -222,9 +222,10 @@ export function onCard(msg) {
  * Active Storyteller: an event a result sends by itself (a look out of a window, a call, getting on a horse, a crash),
  * in the same shape as a card's. extra: fields of its own (target, seen, how, atReins), which never replace the shape's.
  */
-export function publish(kind, {scene, doc, tokDoc, noise = "silent", heard = [], supernatural = false, objectName = null, objectKind = null, message = null, extra = {}} = {}) {
+export function publish(kind, {scene, doc, tokDoc, noise = "silent", heard = [], supernatural = false, objectName = null, objectKind = null, message = null, extra = {}, at = null} = {}) {
   const sc = scene ?? doc?.parent ?? null;
-  const p = doc ? centreOf(doc) : null, place = sc ? placeAt(sc, p ?? {x: 0, y: 0}) : {};
+  // at (0.28.0): a spot on the map for an event with no object (a fight, a chase)
+  const p = doc ? centreOf(doc) : (at && Number.isFinite(Number(at.x)) ? {x: Number(at.x), y: Number(at.y)} : null), place = sc ? placeAt(sc, p ?? {x: 0, y: 0}) : {};
   const ev = {...extra, ...S.mapEvent({kind, scene: sc?.id, place: place.id, at: game.time?.worldTime, noise, who: tokDoc?.uuid, whoName: tokDoc?.name ?? tokDoc?.actor?.name,
     object: doc?.id ?? null, objectName, objectKind, objectType: doc?.documentName, x: p?.x, y: p?.y, owner: place.owner ?? null, placeKind: place.kind,
     heard, supernatural: supernatural || S.isSupernatural(kind), message})};

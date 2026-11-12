@@ -1,7 +1,7 @@
 /**
- * WoDX Chronicle 0.35.0: the clock that runs with the table, the rules (no Foundry).
+ * WoDX Chronicle 0.37.0: the clock that runs with the table, the rules (no Foundry).
  *
- * Off by default (B1607). With it on, while the game runs the clock moves a set number of game minutes every so many
+ * Off by default (B1707). With it on, while the game runs the clock moves a set number of game minutes every so many
  * real minutes, the same for every scene. It waits while the game is paused, during a fight, while the world is held or
  * a time skip runs, and when no player is connected.
  */
