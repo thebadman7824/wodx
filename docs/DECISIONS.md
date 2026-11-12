@@ -1202,6 +1202,24 @@ A member's standing inside a polity is kept on the faction (0 to 5) and starts f
 
 Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
 
+## B1110. Garou, Changeling and Wraith polities (2026-11-12)
+
+Politics inside factions now covers three more lines. A Garou faction of three or more keeps a sept: a sept leader, a Truthcatcher who judges, a Warder and Master of the Challenge won or kept by challenge, the rest appointed; Rank from the sheet (system.renown.rank), tribes as blocs, the Litany as law (W20 pdf 52-53, 253-254). A Fae faction keeps the court of its age: a noble court before the Shattering (to 1349), a commoner freehold whose keeper is chosen by backing from 1350 to 1968, and a noble fief again from the Resurgence of 1969, with Title from the sheet, houses (or courts, for commoners) as blocs and the Escheat as law (C20 pdf 51-52, 58-59, 65-66, 74-76, 169-172). A Wraith necropolis (Anacreon, Regents, a Marshal, Centurions, legions as blocs; Wraith 20th pdf 126-136) is never a default, because "Spirits or the dead" also covers Umbral spirits; the Storyteller picks it. A sect picked out of its years runs as the polity of its kind and age.
+
+Reverse: drop the four new keys from DEFAULTS and the five templates from POLITIES.
+
+## B1111. Challenges with a player's character are staged, not rolled (2026-11-12)
+
+When a challenge for a seat or for Rank involves a player's character, nothing is rolled: the turn proposes a challenge (big, through the approval queue), and on approval WoDX Combat's fight starter brings both tokens into a fight if both are on the scene and the contest is physical; otherwise a card tells the Storyteller who challenges whom. The Storyteller records the winner in the Factions window. Garou challenges end at submission, never a killing blow. Between NPCs a challenge is still rolled; in a sept the challenged Garou picks the contest they are best at (strength, riddles or a staring contest; W20 pdf 253-254). At each moot one Garou with 2 or more favour challenges the nearest Garou of higher Rank and rises a dot on a win (favour spent). House rule for the exact pools.
+
+Reverse: remove the pol-fight branches in innerTurn and gather, and the riseByChallenge block.
+
+## B1112. A Great Maelstrom empties necropolis seats (2026-11-12)
+
+When one of the Chronicle's Great Maelstrom events fires, each seat but the Anacreon's in a faction run as a necropolis is lost on a die of 1 to 5, with an Undo card. House rule.
+
+Reverse: drop the isMaelstrom call in onEventFired.
+
 ## B1012. Nothing starts in a container (2026-11-12)
 Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
 

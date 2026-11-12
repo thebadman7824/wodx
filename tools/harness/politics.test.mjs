@@ -176,3 +176,92 @@ test("every polity has a top seat, a judge, a law and a gathering, and no prose 
     assert.ok(!JSON.stringify(p).includes("—"), k);
   }
 });
+
+// WoDX NPC 0.26.0: Garou septs, fae courts by era, a Wraith necropolis, challenges staged as fights.
+const ginfo = {
+  e: {name: "Elder", tribe: "Silver Fangs", rank: 4, attrs: {strength: 4, dexterity: 3, wits: 2, perception: 2, charisma: 3, manipulation: 2}},
+  w: {name: "Warder", tribe: "Get of Fenris", rank: 3, attrs: {strength: 3, dexterity: 3}},
+  y: {name: "Cub", tribe: "Fianna", rank: 1, attrs: {wits: 4, perception: 4}},
+  z: {name: "Pup", tribe: "Uktena", rank: 1},
+  pc: {name: "Player", tribe: "Fianna", rank: 2, pc: true}
+};
+const sept = (extra = {}) => F.normFaction({id: "sept", name: "The sept", kind: "garou", leader: "e", members: ["e", "w", "y", "z", "pc"], ...extra});
+
+test("Garou, fae and Wraith factions keep the polity of their kind and age", () => {
+  assert.equal(PO.polityFor(sept(), 1197), "garou-sept");
+  const fae = F.normFaction({id: "f", name: "Fae", kind: "fae", members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(fae, 1300), "fae-court");
+  assert.equal(PO.polityFor(fae, 1350), "commoner-freehold");
+  assert.equal(PO.polityFor(fae, 1968), "commoner-freehold");
+  assert.equal(PO.polityFor(fae, 1969), "noble-fief");
+  // A noble fief picked for 1500 runs as the commoner freehold of its age
+  assert.equal(PO.polityFor({...fae, polity: "noble-fief"}, 1500), "commoner-freehold");
+  const dead = F.normFaction({id: "n", name: "Necropolis", kind: "spirits", members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(dead, 1600), null, "spirits keep no polity unless picked");
+  assert.equal(PO.polityFor({...dead, polity: "wraith-legion"}, 1600), "wraith-legion");
+  assert.equal(PO.baseRank(ginfo, "e", "garou-sept"), 4, "Garou Rank comes from the sheet");
+  assert.equal(PO.baseRank({x: {title: 3, status: 1}}, "x", "noble-fief"), 3, "a noble's Title");
+});
+
+test("the challenged Garou picks the contest they are best at", () => {
+  assert.equal(PO.contestFor("garou-sept", ginfo, "y").how, "a riddle contest");
+  assert.equal(PO.contestFor("garou-sept", ginfo, "w").how, "a contest of strength");
+  assert.equal(PO.contestFor("camarilla", ginfo, "y").how, "a challenge");
+});
+
+test("a challenge with a player's character is staged, never rolled, and needs the Storyteller", () => {
+  // Every seat full and the player's character in the Warder's seat: a bid becomes a challenge for it
+  const offices = Object.fromEntries(PO.POLITIES["garou-sept"].offices.map(o => [o.key, [o.top ? "e" : o.key === "warder" ? "pc" : "w"]]));
+  const f = sept({politics: {offices, favour: {y: 1}}});
+  let saw = null;
+  for ( let seed = 1; seed < 200 && !saw; seed++ ) {
+    const out = PO.innerTurn(f, {polity: "garou-sept", info: ginfo, rand: stream(seed), turn: 1});
+    saw = out.changes.find(c => c.op === "pol-fight") ?? null;
+    if ( saw ) {
+      assert.equal(saw.holder, "pc");
+      assert.equal(saw.noKill, true);
+      assert.ok(!out.changes.some(c => c.op === "pol-office" && c.actor === "pc"), "nothing rolled for the seat");
+      assert.equal(F.sizeOf([{...saw, faction: "sept"}], {pcActors: new Set(["pc"])}), "big");
+      assert.match(F.describeChange({...saw, faction: "sept"}, {actor: id => ginfo[id]?.name ?? id, faction: () => "The sept"}), /stage it as a fight, ended at submission/);
+    }
+  }
+  assert.ok(saw, "some seed brings a challenge");
+});
+
+test("at the moot one with favour challenges a Garou of higher Rank and may rise", () => {
+  const offices = Object.fromEntries(PO.POLITIES["garou-sept"].offices.map(o => [o.key, [o.top ? "e" : "w"]]));
+  let rose = false, staged = false;
+  for ( let seed = 1; seed < 80; seed++ ) {
+    const f = sept({members: ["e", "w", "y", "z"], politics: {offices, favour: {y: 2}, inner: 3}});
+    const out = PO.innerTurn(f, {polity: "garou-sept", info: ginfo, rand: stream(seed), turn: 4});
+    assert.equal(out.gathering, true);
+    if ( out.changes.some(c => c.op === "pol-rank" && c.actor === "y" && c.delta === 1) ) rose = true;
+    const g = sept({politics: {offices, favour: {pc: 2}, inner: 3}});
+    if ( PO.innerTurn(g, {polity: "garou-sept", info: ginfo, rand: stream(seed), turn: 4}).changes.some(c => c.op === "pol-fight" && c.rise) ) staged = true;
+  }
+  assert.ok(rose, "a cub wins Rank at some moot");
+  assert.ok(staged, "a player's challenge for Rank is staged");
+});
+
+test("a Great Maelstrom empties necropolis seats but the Anacreon's", () => {
+  const offices = {anacreon: ["a"], regent: ["b", "c"], centurion: ["d"]};
+  const st = F.normState({factions: [F.normFaction({id: "n", name: "Necropolis", kind: "spirits", polity: "wraith-legion", members: ["a", "b", "c", "d"], politics: {offices}}),
+    F.normFaction({id: "k", name: "Court", kind: "kindred", polity: "camarilla", members: ["a", "b", "c"], politics: {offices: {sheriff: ["b"]}}})]});
+  assert.equal(PO.isMaelstrom("fourth-great-maelstrom"), true);
+  assert.equal(PO.isMaelstrom("convention-of-thorns"), false);
+  const ch = PO.maelstromChanges(st, {year: 1916, rand: () => 0});
+  assert.deepEqual(ch.map(c => c.actor).sort(), ["b", "c", "d"]);
+  assert.ok(ch.every(c => c.faction === "n" && c.remove));
+  const r = F.applyChanges(st, ch, {ids: () => "x", now: 0});
+  assert.deepEqual(r.state.factions[0].politics.offices.anacreon, ["a"]);
+  assert.equal((r.state.factions[0].politics.offices.regent ?? []).length, 0);
+  assert.equal(PO.maelstromChanges(st, {year: 1916, rand: () => 0.99}).length, 0, "a 10 spares them all");
+});
+
+test("turn lines speak of the polity's own blocs and body", () => {
+  const lines = [];
+  for ( let seed = 1; seed < 30; seed++ ) lines.push(...PO.innerTurn(sept(), {polity: "garou-sept", info: ginfo, rand: stream(seed), turn: seed}).lines);
+  const all = lines.join(" ");
+  assert.doesNotMatch(all, /other clans|petitions the court/);
+  assert.doesNotMatch(all, /Get Of Fenris/);
+});
