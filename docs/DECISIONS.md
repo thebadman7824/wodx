@@ -1508,6 +1508,21 @@ Reverse: AUSPICES, BREEDS and DEFORMITIES in data/signatures.mjs; ruling, setDef
 Each of the eleven Fera of W20 Changing Breeds has a row. Bastet borrow the Nosferatu's pages of secrets, without the true face. A Nagah verdict goes to the Storyteller alone. The Hengeyokai breeds (Hakken, Khan, Nezumi, Same-Bito, Zhong Lung, Tengu, Kumo, Okuma, with the Kitsune and Nagah) also say that rank in the Beast Courts is a faction standing of its own. Apis, Camazotz and Grondr are gone before 1197 and are met only as relics. Their extinction is a house reading, because no book in the store dates it. Harm to Kinfolk sends a card for each player's Garou of that tribe, once a day.
 
 Reverse: FERA and COURTS_TEXT in data/signatures.mjs; kinHarmed in signatures.mjs.
+
+## B1165. Mage features: the group and the House (2026-11-12)
+Splat Features Desk, approved by Ben. A mage's row comes from the sheet's sect (the system keys: akashic, speakers, ether, adepts, batin, iterationx, engineers and the rest) or its custom sect. A Hermetic House named in the custom sect, or in the house flag, adds a second row. Each row carries the older names of its age: the Dark Ages fellowships to 1465 (Old Faith, Messianic Voices, Spirit-Talkers, the Batini, the Ecstatics), and the Order of Reason's conventions to 1896 (the Artificers, the Cabal of Pure Thought, the Hippocratic Circle, the High Guild, the Void Seekers). Some groups have their own years: the Sons of Ether from 1904, the Virtual Adepts from 1961 (a house reading), the Hollow Ones from 1890 (a house reading), and the Celestial Masters and Craftmasons from 1325 to 1896 (a house reading). The new world setting "Tradition, Craft and Convention features (Mage)" is off by default.
+
+Reverse: MAGE and HOUSES in data/signatures.mjs; mageRows, nameAt and notYet in signature-rules.mjs; the sigMage setting.
+
+## B1166. The Mage engines (2026-11-12)
+The Akashic Brotherhood meditate at dawn for a Willpower point, once a day. The Euthanatos gain a Willpower point for a Good Death and a point of Jhor for a death in anger. The Order of Hermes and House Flambeau call a certámen: a public card whose button logs the stake as a minor favour. The Sisters of Hippolyta keep oaths, and breaking one costs a Willpower point. The New World Order hear of every breach of the Masquerade first, through the records of the age. Some groups borrow an engine: the Taftani bind djinn in the Giovanni's servant ledger, the Syndicate use the Shadow Lords' leverage, the Celestial Masters use the Stargazers' reading of the sky, House Quaesitor posts rulings, and the Nephandi use the Followers of Set's Corruption ledger. Science became a roll tag, for the Sons of Ether.
+
+Reverse: meditate, death, certamen, oath, breakOath and onBreach in signatures.mjs.
+
+## B1167. The Houses (2026-11-12)
+Bonisagus, Flambeau, Quaesitor, Shaea, Ex Miscellanea, Janissary, Diedne and Tremere have rows. Janissary ends in 1700 (a house reading). Diedne were gone before 1197. House Tremere leaves the Order in 1199 (a house reading) and is the clan from then on. The other Houses (Tytalus, Verditius, Criamon, Merinita, Jerbiton, Bjornaer, Guernicus, Mercere, Fortunae) share one row until Houses of Hermes is in the store.
+
+Reverse: HOUSES in data/signatures.mjs.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
