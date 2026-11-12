@@ -16,7 +16,7 @@ import * as W from "./wanted-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export function build(ctx) {
-  const {MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude, servesOf, isPasserby} = ctx;
+  const {MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude, servesOf, isPasserby, isAnimal = () => false} = ctx;
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const on = () => setting("culpritDescriptions") !== false;
   const now = () => game.time?.worldTime ?? 0;
@@ -156,36 +156,45 @@ export function build(ctx) {
 
   const lastTest = new Map();
   const TEST_EVERY = 60 * 1000;
-  /** Active Storyteller: a player character moved. NPCs here who have heard a description of them, and see them, may know them. */
-  async function test(doc) {
+  /**
+   * Active Storyteller: a player character moved. NPCs here who have heard a description of them, and see them, may
+   * know them. Returns one entry per NPC looked at: {npc, level, desc} for a card posted, {npc, skip} for why not, or a
+   * single {skip} when nobody was looked at (NPC 0.41.1, so a gate can tell which check stopped it).
+   */
+  async function test(doc, {force = false} = {}) {
     const scene = doc?.parent;
-    if ( !isActiveGM() || !on() || scene?.id !== canvas?.scene?.id || !doc.actor?.hasPlayerOwner ) return [];
+    if ( !isActiveGM() ) return [{skip: "not the active Storyteller"}];
+    if ( !on() ) return [{skip: "descriptions are off"}];
+    if ( scene?.id !== canvas?.scene?.id ) return [{skip: "not the scene in view"}];
+    if ( !doc.actor?.hasPlayerOwner ) return [{skip: "not a player character"}];
     const culprit = worldActor(doc.actor), t0 = now();
     const mine = W.of(list(), culprit.id, t0).filter(d => W.heardAt(d, scene.uuid, t0, {realm: isRealm(scene)}) !== null);
-    if ( !mine.length ) return [];
+    if ( !mine.length ) return [{skip: "no description of them heard here"}];
     const iTok = canvas.tokens.get(doc.id);
-    if ( !iTok ) return [];
+    if ( !iTok ) return [{skip: "no token on the canvas"}];
     const L = lookApi(), out = [];
+    let posted = 0;
     for ( const t of canvas.tokens.placeables ) {
-      if ( out.length >= 4 ) break;
+      if ( posted >= 4 ) break;
       const a = t.actor;
       if ( !a || a.hasPlayerOwner || t.document.hidden || t.id === doc.id || routines?.downState?.(a) ) continue;
-      if ( (servesOf?.(a) ?? []).includes(culprit.id) ) continue;
+      if ( (servesOf?.(a) ?? []).includes(culprit.id) ) { out.push({npc: t.id, skip: "serves them"}); continue; }
       let tpl = null;
       try { tpl = profileFor?.(a, {phases: false})?.template ?? null; } catch (e) { tpl = null; }
-      if ( !W.tests(tpl) && !isPasserby?.(t.document) ) continue;
+      if ( !W.tests(tpl, {animal: !!isAnimal(tpl)}) && !isPasserby?.(t.document) ) { out.push({npc: t.id, skip: `a ${tpl ?? "creature"} pays no heed to talk`}); continue; }
       const k = `${t.id}:${doc.id}`;
-      if ( (lastTest.get(k) ?? 0) > Date.now() - TEST_EVERY ) continue;
+      if ( !force && (lastTest.get(k) ?? 0) > Date.now() - TEST_EVERY ) { out.push({npc: t.id, skip: "tested in the last minute"}); continue; }
       lastTest.set(k, Date.now());
       const held = !!culprit.flags?.["wodx-actions"]?.disguise?.[worldActor(a)?.id]?.held;
       const nowMarks = L?.describe?.(doc.actor, {token: doc})?.marks ?? {};
       const best = mine.map(d => ({d, m: W.matchOf(d, nowMarks, {held}), s: W.strength(d, t0)})).filter(x => x.m.level !== "none")
         .sort((x, y) => (x.m.level === y.m.level ? y.s - x.s : x.m.level === "strong" ? -1 : 1))[0];
-      if ( !best ) continue;
+      if ( !best ) { out.push({npc: t.id, skip: "no match: they look different now"}); continue; }
       const seen = await routines?.noticeBy?.(t, iTok) ?? {noticed: false};
-      if ( !seen.noticed ) continue;
+      if ( !seen.noticed ) { out.push({npc: t.id, skip: `did not notice them (${seen.why ?? "no roll"})`}); continue; }
       const roll = W.recogniseRoll(best.m.level, best.s);
       out.push({npc: t.id, level: best.m.level, desc: best.d.id});
+      posted++;
       await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {wantedTest: {scene: scene.uuid, culprit: culprit.id, npc: a.name}}},
         content: `<div class="wodx-card wnpc-wanted"><p><b>${esc(t.name)}</b> may know <b>${esc(culprit.name)}</b> from word going round ${esc(W.summary(best.d, t0))}.</p>
           <p><i>${esc(best.d.text.charAt(0).toUpperCase() + best.d.text.slice(1))}.</i></p>
