@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.30.1 (the Chantry background points to M20 printed page 301, from the book check of 12 November)
 - 0.30.0 (ghouls and their monthly fix; revenant families, the four of the books and new ones founded in play with the Storyteller's approval)
 - 0.29.0 (bloodlines, castes and Laibon legacies: 27 rows of their own, with roll effects, Masquerade sign cards and engines borrowed from the clans)
 - 0.28.0 (five more clans: the Nosferatu's trade in secrets, the Tremere Pyramid and its orders, the Ventrue's influence from the institutions of the age, Assamite contracts and the tithe, the Giovanni's bound dead)

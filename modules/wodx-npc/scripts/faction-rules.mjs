@@ -867,7 +867,7 @@ export const PLEDGE_KEYS = ["herd", "resources", "status", "retainers", "contact
 /**
  * A new faction from its founders' own Backgrounds. Each founder pledges up to the dots they hold; the faction's rating
  * in each Background is the sum of the pledges, to 5. Pooling follows the books' shared Backgrounds (a pack's Totem in
- * W20, a cabal's Chantry in M20); a faction has no shared pool rule of its own, so this is a house rule (B831). The
+ * W20 pdf 142, a cabal's Chantry in M20 pdf 302); a faction has no shared pool rule of its own, so this is a house rule (B831). The
  * founders' sheets are not changed: the founding card lists the pledges for the Storyteller to mark.
  *   spec: {id, name, kind, leader, members, places, secret, owners, run, sphere (where pledged Influence goes), notes, year}
  *   founders: [{id, has: {herd, ..., influence}, pledge: {herd, ..., influence}}]
