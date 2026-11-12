@@ -62,6 +62,8 @@ import * as BattleDeeds from "./battle-deeds.mjs";
 import * as BattleAftermath from "./battle-aftermath.mjs";
 import * as BattleExtras from "./battle-extras.mjs";
 import * as BattleRules from "./battle-rules.mjs";
+import * as SiegeWorks from "./siege-works.mjs";
+import * as SiegeWorksRules from "./siege-works-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -158,6 +160,8 @@ Hooks.once("ready", () => {
     battleDeeds: {rules: BattleDeeds, offer: BattleExtras.offer, roll: BattleExtras.rollDeed, swap: BattleExtras.swap, skip: BattleExtras.skip,
       leaderDeed: BattleDeeds.leaderDeed, deedSuccessesFor: BattleDeeds.deedSuccessesFor},
     battleAftermath: {rules: BattleAftermath, send: BattleExtras.send, undo: BattleExtras.unsend},
+    siegeWorks: {rules: SiegeWorksRules, setup: SiegeWorks.setupDialog, mine: SiegeWorks.mineDialog, addEngine: SiegeWorks.addEngine, readyEngine: SiegeWorks.readyEngine,
+      removeEngine: SiegeWorks.removeEngine, endMine: SiegeWorks.endMine, draw: SiegeWorks.draw},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
