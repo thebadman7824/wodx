@@ -412,7 +412,8 @@ export function bookContests(battle, age, pools, actions = ["melee", "melee"]) {
  * Settle a book turn. `plan` = {total, net, pools, contests} with each contest's `rolls` = {attack, resist}; `deeds`
  * as for settlePhase. A character's deed adds its successes to its side's attack this turn (a WoDX reading of the
  * Dark Ages Companion's one foe a success, in the book army's units).
- *   Close and fight: the winner takes a unit off the other for each net success, either way.
+ *   Close and fight: the winner takes a unit off the other for each net success, either way; when both armies
+ *   close, each counts only the units its own blow takes (a WoDX reading: otherwise each clash is counted twice).
  *   Shoot: only the shooters do harm.
  *   Withdraw: a win keeps the foe's Close and fight off it this turn and takes the army off the field; a loss gives
  *   the foe's attack on it the net successes (the book: they count against its Defense and Maneuver).
@@ -433,7 +434,8 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
     if ( c[1 - i].action === "withdraw" && net[1 - i] < 0 ) k += -net[1 - i];
     if ( c[i].action === "melee" && away[1 - i] ) continue;
     if ( k > 0 ) loss[1 - i] += k;
-    else if ( k < 0 && c[i].action === "melee" ) loss[i] += -k;
+    // a beaten attack costs the attackers only when the foe stood to receive it; when both close, each side's blow is its own count
+    else if ( k < 0 && c[i].action === "melee" && c[1 - i].action !== "melee" ) loss[i] += -k;
   }
   const sides = battle.sides.map(s => ({...s, commander: {...s.commander}, units: {...s.units}, penalty: 0}));
   const lostUnits = [{}, {}];
