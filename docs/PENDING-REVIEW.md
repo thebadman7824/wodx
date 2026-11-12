@@ -747,6 +747,7 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | The Inquisition's seats, after the book check (B1114, NPC 0.40.3) | A cell: rector appointed from above; sub-rector, treasurer, archivist and cellarer elected by backing; chapter every faction turn; orders as blocs; Rank Background as standing (DA:I Companion pr 72-75, DA:I pr 157). A Council of Faith (head, Procurator Fiscalis, a councillor per order) picked by hand. Sicae Dei noted, not run. Replaces the tribunal approved earlier | POLITIES.inquisition and ["council-of-faith"] in politics-rules.mjs |
 | 2026-11-12 | Followers window (desk fo1): show players the reason for a follower's last loyalty change? | Yes, for their own followers: drift reasons come from their own acts (B1822) | Hide r.last for players in wodx-npc followers.mjs |
 | 2026-11-12 | Followers window: a player only sees followers Foundry lets them see (actor permission) | Kept as Foundry has it; the Storyteller grants Observer to show one | Ask for a Storyteller-side list by socket instead |
 | 2026-11-12 | Culprit descriptions (desk cw1): how word gets round and how long it lasts in each age | Hue and cry 24 h / 14 days to face matching 1 h / 365 days (B1824) | MEANS in wodx-npc wanted-rules.mjs |
