@@ -334,17 +334,25 @@ export function shapeLabel(sh) {
 export function inShape(sh, at, p, radius = 0) {
   if ( !sh || !at?.origin || !p ) return false;
   const dx = p.x - at.origin.x, dy = p.y - at.origin.y;
-  const d = Math.hypot(dx, dy);
+  // Height (0.3.0): a flyer or climber above or below the shape's origin, in yards; 0 when no one has a height
+  const dz = (Number(p.z) || 0) - (Number(at.origin.z) || 0);
+  const d = Math.hypot(dx, dy, dz);
   const r = Math.max(0, Number(radius) || 0);
   if ( sh.s === "b" || sh.s === "c" ) return d <= sh.size + r + 1e-9;
   const dir = Number(at.dir) || 0;
   const ux = Math.cos(dir), uy = Math.sin(dir);
-  const along = dx * ux + dy * uy, across = Math.abs(-dx * uy + dy * ux);
+  const along = dx * ux + dy * uy, across = Math.hypot(-dx * uy + dy * ux, dz);
   if ( sh.s === "l" ) return along >= -r && along <= sh.size + r && across <= LINE_WIDTH / 2 + r;
   if ( d <= r ) return true;
   if ( d > sh.size + r ) return false;
   const ang = Math.acos(Math.max(-1, Math.min(1, along / d)));
   return ang <= (CONE_DEGREES / 2) * Math.PI / 180 + Math.atan2(r, d);
+}
+
+/** Straight-line distance counting height: flat distance and both heights in the same unit. */
+export function withHeight(flat, elevA = 0, elevB = 0) {
+  if ( flat === null || flat === undefined || !Number.isFinite(Number(flat)) ) return null;
+  return Math.hypot(Number(flat), (Number(elevB) || 0) - (Number(elevA) || 0));
 }
 
 /** The outline of a shape as points in yards (for drawing on the map): a circle as 32 points, a cone as a fan. */

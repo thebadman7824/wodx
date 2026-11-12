@@ -598,7 +598,26 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Small lines (B1507) | Own table and setting each; sheet fields where they exist, a pick for Kuei-jin and Orpheus | SMALL_LINES |
+| 2026-11-12 | Hunters by era (B1508) | Inquisition every era, mortal hunters 1500 to 1998, imbued from 1999, agencies from 1900 (a house reading); monster-only fight dice | HUNTER |
+| 2026-11-12 | Borrowed engines (B1509) | Guard, rulings, riddles, stars, bound dead, secrets, corruption and leverage reused across the small lines | data/signatures.mjs |
+| 2026-11-12 | NPC-only rows (B1510) | Bane mummies, Earthbound, Wan Xian, Cabiri | data/signatures.mjs |
+| 2026-11-12 | Wraith picks (B1504) | Guild, legion and faction picked in the window and kept on the actor; a legion suggested by the manner of death (a house reading) | GUILDS, LEGIONS |
+| 2026-11-12 | Wraith engines (B1505) | Borrowed riddle, leverage and mad ear; the Emerald luck once a week (a house reading of once a story) | luck |
+| 2026-11-12 | Factions of the dead (B1506) | Heretics, Renegades, Ferrymen, Spectres and the Risen, one per wraith | WRAITH_FACTIONS |
+| 2026-11-12 | Changeling rows (B1500) | Kith, seeming, court and House stacked; Thallain, Inanimae, Nunnehi and Dark-Kin kiths grouped; the Dark-Kin feature is a house reading | KITHS |
+| 2026-11-12 | Changeling engines (B1501) | Revel Glamour by card, Pooka truth costs Willpower, the seal coat item, troll and sidhe oaths | signatures.mjs |
+| 2026-11-12 | Courts and seemings (B1502) | Unseelie hold power Samhain to Beltaine, Seelie the rest; a die to the court's own social rolls in its half | COURTS |
+| 2026-11-12 | Sidhe Houses (B1503) | Fourteen Houses with a theme and a seat; boons and flaws from the book by the Storyteller | FAE_HOUSES |
+| 2026-11-12 | Mage rows (B1165) | Group row plus a House row; old names by year; Virtual Adepts from 1961, Hollow Ones from 1890, Celestial Masters and Craftmasons 1325 to 1896 are house readings | MAGE, HOUSES |
+| 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
+| 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
 | 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
+| 2026-11-12 | City exposure (B1511) | Bands Quiet 0, Whispers 3, Talk 6, Watched 10, Hunted 15; a point a breach plus witnesses, print from 1605 and cameras; a point off a quiet week (house numbers) | EXPOSURE_BANDS, breachPoints |
+| 2026-11-12 | Sect law (B1512) | Camarilla and the Church of Caine act at Watched, the others at Hunted; bringing to heel takes 3 off | SECT_LAW, HEEL_DROP |
+| 2026-11-12 | Great cities (B1514) | Nine cities with dated states from history; Senses adds the city's smell and sound | CITIES |
+| 2026-11-12 | Golconda road (B1516) | Ten steps; killing costs 2, frenzy, theft and harmful feeding 1; a mentor a step a month (house numbers) | GOLCONDA_SETBACKS |
+| 2026-11-12 | Story chains and goals (B1517, B1518) | Six chains in play, separate from the lifepath chains; three goals a line for each of two ages | CHAINS, GOALS |
 
 ## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
 
@@ -615,18 +634,18 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
-| 2026-11-12 | How does WoDX know who a follower serves? | Read all four ties (orders flag, Make them real, a ghoul's domitor, a Creation ally's patron); nothing migrated (B1600). | `servesFrom` in wodx-npc/scripts/order-rules.mjs: drop a tie from it. |
+| 2026-11-12 | How does WoDX know who a follower serves? | Read all four ties (orders flag, Make them real, a ghoul's domitor, a Creation ally's patron); nothing migrated (B1800). | `servesFrom` in wodx-npc/scripts/order-rules.mjs: drop a tie from it. |
 | 2026-11-12 | Ties tab misses ghouls | Fixed: the domitor is read as {id, name} or a bare id (Sheets 0.10.1). | `domitorId` in wodx-sheets/scripts/extras-rules.mjs. |
-| 2026-11-12 | Who decides hard orders? | WoDX counts an order as hard in a fight, or when sent toward someone hostile or plainly not human, and the Storyteller sees a suggested refusal roll: blood bound obeys (Willpower 8 only against near-certain death), else Willpower at 6 + attitude step + bond stage, 4 to 9. House rule (B1601, B1602). | `hardReasons` and `loyaltyCheck` in order-rules.mjs. |
-| 2026-11-12 | What do Keep watch and Guard do? | A follower on watch who notices a stranger (the reaction regions' notice roll) warns its master's player; a guard within 10 yards steps into their way and challenges them, farther off it warns. Players' characters, passers-by and fellow followers are never challenged (B1603). | `sentryAct`, `isIntruder` in order-rules.mjs; `sentries` in orders.mjs. |
-| 2026-11-12 | Do orders count in fights? | Yes: new Attack the one I point at and Hold back; Guard and Wait make running less likely; every follower guards its masters as a ghoul its domitor. In a fight only a Go-to order, or an attack on something plainly not human, is hard (B1604). | `fightShift` in order-rules.mjs; `OR.fightShift` in npc main.mjs. |
-| 2026-11-12 | Errands | Go and do this: six errands worked as a long task on the follower's own dice, its tokens hidden while away; a card when it ends (B1610). | `ERRANDS`, `errandTask` in order-rules.mjs. |
-| 2026-11-12 | Followers helping on long tasks | Each helper adds its dots in the task's Ability, at least one die (B1611). | `helperDice` in wodx-storyteller tasks-rules.mjs. |
-| 2026-11-12 | Shopping | A buying errand pays its price from the master's purse when it ends; if the purse is short nothing is bought (B1612). | `onTaskDone` in orders.mjs. |
-| 2026-11-12 | Masquerade | Deal with that witness: Manipulation + Subterfuge at 6 marks the witness talked round, a botch marks they told others; a follower's breach posts a card naming its masters (B1613). | `cleanupOutcome`, `onBreach`. |
-| 2026-11-12 | Chases | Followers on Follow behind a pursuing master, and those told to Cut them off, join a chase level with the slowest pursuer (B1614). | `joinChase` in wodx-interactables chase-rules.mjs. |
-| 2026-11-12 | Politics | Watch a rival is an errand; followers hold no seats (B1615). | `ERRANDS.spy`. |
-| 2026-11-12 | Loyalty drift | One step up or down on the attitude track for vitae, neglect, being fed on and hard orders; never below Distrusted by drift (B1616). | `drift` in order-rules.mjs. |
+| 2026-11-12 | Who decides hard orders? | WoDX counts an order as hard in a fight, or when sent toward someone hostile or plainly not human, and the Storyteller sees a suggested refusal roll: blood bound obeys (Willpower 8 only against near-certain death), else Willpower at 6 + attitude step + bond stage, 4 to 9. House rule (B1801, B1802). | `hardReasons` and `loyaltyCheck` in order-rules.mjs. |
+| 2026-11-12 | What do Keep watch and Guard do? | A follower on watch who notices a stranger (the reaction regions' notice roll) warns its master's player; a guard within 10 yards steps into their way and challenges them, farther off it warns. Players' characters, passers-by and fellow followers are never challenged (B1803). | `sentryAct`, `isIntruder` in order-rules.mjs; `sentries` in orders.mjs. |
+| 2026-11-12 | Do orders count in fights? | Yes: new Attack the one I point at and Hold back; Guard and Wait make running less likely; every follower guards its masters as a ghoul its domitor. In a fight only a Go-to order, or an attack on something plainly not human, is hard (B1804). | `fightShift` in order-rules.mjs; `OR.fightShift` in npc main.mjs. |
+| 2026-11-12 | Errands | Go and do this: six errands worked as a long task on the follower's own dice, its tokens hidden while away; a card when it ends (B1810). | `ERRANDS`, `errandTask` in order-rules.mjs. |
+| 2026-11-12 | Followers helping on long tasks | Each helper adds its dots in the task's Ability, at least one die (B1811). | `helperDice` in wodx-storyteller tasks-rules.mjs. |
+| 2026-11-12 | Shopping | A buying errand pays its price from the master's purse when it ends; if the purse is short nothing is bought (B1812). | `onTaskDone` in orders.mjs. |
+| 2026-11-12 | Masquerade | Deal with that witness: Manipulation + Subterfuge at 6 marks the witness talked round, a botch marks they told others; a follower's breach posts a card naming its masters (B1813). | `cleanupOutcome`, `onBreach`. |
+| 2026-11-12 | Chases | Followers on Follow behind a pursuing master, and those told to Cut them off, join a chase level with the slowest pursuer (B1814). | `joinChase` in wodx-interactables chase-rules.mjs. |
+| 2026-11-12 | Politics | Watch a rival is an errand; followers hold no seats (B1815). | `ERRANDS.spy`. |
+| 2026-11-12 | Loyalty drift | One step up or down on the attitude track for vitae, neglect, being fed on and hard orders; never below Distrusted by drift (B1816). | `drift` in order-rules.mjs. |
 
 ## Waiting for review
 
@@ -667,8 +686,28 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 | 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
 | 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
 | 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
-| 2026-11-12 | Disguises set by the Storyteller only (B1405) | A disguise is set on a worn item in its Examine notes, which only the Storyteller opens; players ask the Storyteller | Add a Dress as... use to Library's Use roster |
+| 2026-11-12 | Disguises set by the Storyteller only (B1405) | Superseded 2026-11-12 by B1411: players set their own with Dress as someone else | B1411 |
 | 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
 | 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
 | 2026-11-12 | Which worn names show a side (B1407) | habit, cassock, surplice, vestments, cowl, clerical collar: kind:church; police, constable, gendarme: kind:watch; military, soldier's, regimental, army: military; livery; pilgrim's badge; corporate | SIDE_WORDS in look-rules.mjs |
 | 2026-11-12 | Worn dress always shows for era fit (B1403) | The design said conceal T or N; worn clothing now always counts and carried things only at N, so a hidden phone stays hidden | seen in look-rules.mjs |
+| 2026-11-12 | What an NPC can tell of a character (B1380) | Only when plainly inhuman, shown by a sense, or seen and not forgotten; the same for player characters; hunter NPCs go for the monster only then | canTell in wodx-npc main.mjs |
+| 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
+| 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
+| 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
+| 2026-11-12 | What the stranger line shows (B1408) | Dress by station, side worn, blood or wounds, a drawn weapon, what they are doing, manner toward the viewer; no kind, clan or trade | autoStranger in faces-rules.mjs |
+| 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
+| 2026-11-12 | What a fed-on NPC remembers (B1384) | A mortal: a swoon and a lost hour; who fed only if it fought, is Kindred or a ghoul, or already knew; a willing vessel nothing new | fedMemory in rivalry-rules.mjs |
+| 2026-11-12 | One name lookup for unmet NPCs (B1385) | api.nameFor; chat and tracker masked per viewer, windows ask nameFor, cards keep the name for the Storyteller | viewName in social.js |
+| 2026-11-12 | Before the First Night: steps and sign-off (B1600, B1601) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
+| 2026-11-12 | Trouble forecast sources and who sees what (B1603) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
+| 2026-11-12 | Trouble dial and story hook numbers (B1604) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
+| 2026-11-12 | Starting standing (B1606) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |
+| 2026-11-12 | How loud is a fight? (missed connections x2) | Firearms and explosives loud (30 yards open, 10 through a wall), silenced guns, blades, fists and bows quiet (5 yards); one noise a round per fight; combatants don't count as hearers | fightNoise() in wodx-combat rules.js; the createChatMessage listener in wodx-combat main.js |
+| 2026-11-12 | Chase noise and hard feelings (x3) | Hooves, motors and carts loud, feet, oars and bicycles quiet; after a chase the Storyteller's card offers one step down on the attitude track: a chased NPC toward each PC who chased them, an NPC pursuer toward a PC who got away | chaseNoise(), chaseGrudges() in wodx-interactables chase-rules.mjs |
+| 2026-11-12 | Which dated events move markets (x4) | Black Death (plague), the Great War's Maelstrom (war), the 1994 crash, the 1996 Collapse, the 2000 wasting plague and the 2012 bioplague; an event with its own market field picks a preset; always a card, never automatic | EVENT_NEWS, PRESETS in wodx-storyteller market-news-rules.mjs |
+| 2026-11-12 | Player trade and markets (x5) | 10 lots of one kind sold to (or bought from) one market in a week: plenty and price x0.8 (or short and x1.25), suggested on a card | TRADE_THRESHOLD, TRADE_STEP in market-news-rules.mjs |
+| 2026-11-12 | The night's nudge on a hunt (x6) | +2 when the street is all but empty for the era and hour, +1 when few are out, +1 for a storm, downpour, gale, sleet or heavy snow outdoors; at most +3; shown in the hunt window, editable | huntNudge() in wodx-actions hunt-night-rules.js |
+| 2026-11-12 | Height in targeting (x7) | Range and areas measured in three dimensions from token elevation; a cone or line aims level, so a flyer must be within its spread | inShape(), withHeight() in wodx-targeting target-rules.mjs |
+| 2026-11-12 | Prelude runner rolls and stakes (B1611, B1612) | Difficulty 6 by default, ones cancel; failed stakes add 0-point Flaws (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie; gains capped at 3 freebie points | first-night-prelude-rules.mjs |
+| 2026-11-12 | Troupe tie questions (B1613) | Six questions, a ring by name, answers on the Group actor | TIE_QUESTIONS |

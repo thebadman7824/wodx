@@ -1359,7 +1359,7 @@ export function build(ctx) {
   }
 
   /**
-   * NPC 0.34.0: does this NPC token notice that token now? The same sight range, walls and notice roll as the
+   * NPC 0.37.0: does this NPC token notice that token now? The same sight range, walls and notice roll as the
    * reaction regions. Returns {noticed, why, yards}. Used by followers on Keep watch or Guard (orders.mjs).
    */
   async function noticeBy(wTok, iTok) {

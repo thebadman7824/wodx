@@ -55,11 +55,11 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(m, /orders\.registerSettings\(\)/);
   assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
-  assert.equal(j.version, "0.35.0");
+  assert.equal(j.version, "0.37.0");
   assert.equal(j.socket, true);
 });
 
-/* NPC 0.34.0: one tie, hard orders, sentries */
+/* NPC 0.37.0: one tie, hard orders, sentries */
 
 test("orders: an NPC serves whoever any of the four ties names, once each", () => {
   assert.deepEqual(O.servesFrom({}), []);
@@ -147,7 +147,7 @@ test("orders: the fight AI reads the order and guards every master", () => {
   assert.match(m, /masters\.includes\(t\.actor\?\.id\)/);
 });
 
-/* NPC 0.35.0: errands, help, clean-up, chases, loyalty */
+/* NPC 0.37.0: errands, help, clean-up, chases, loyalty */
 
 test("orders: errands become long tasks on the follower's own dice", () => {
   const t = O.errandTask("buy", {sheet: {commerce: {value: 2}}, master: "pc1", masterName: "Ilse", note: "a lantern", cost: 12});

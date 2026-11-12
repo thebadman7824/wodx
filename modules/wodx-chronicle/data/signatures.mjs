@@ -529,3 +529,340 @@ export const COURTS_TEXT = "A Hengeyokai of the Beast Courts: rank in the Courts
 export const WYRM_WORDS = ["wyrm", "spiral", "fomor", "fomori", "bane", "banes", "pentex"];
 /** Days in a lunar month, for the Stargazer's sky reading. */
 export const LUNAR_MONTH = 29.53;
+
+/* ================= Mage (Chronicle 0.33.0) ================= */
+
+/**
+ * Traditions, Crafts, Conventions, the Order of Reason and the mad and fallen. match: words of the sheet's sect field
+ * (the system's keys: akashic, speakers, ether, adepts, batin, iterationx, engineers and the rest) or its custom sect.
+ * names: older names by year ({until, label}); from and until: the years the group is played. servant: what a borrowed
+ * "family" engine binds. Dates the books do not pin are house readings (house: true). Dark Ages fellowships from
+ * Dark Ages Mage pdf 15-36; the Order of Reason from Sorcerers Crusade pdf 29, 63.
+ */
+export const MAGE = [
+  {key: "akashic", label: "Akashic Brotherhood", match: ["akashic", "akashic brotherhood", "akashayana"], feature: "dawn", title: "Do and the still mind", page: "M20, the Tradition's pages",
+    text: "Meditation at dawn gives back a Willpower point once a day. Do lets an Akashic trade soak for dice or defence each turn when fighting unarmed, and body magick that looks like skill passes as coincidence. Brawl gains a die.", effects: [{tags: ["brawl"], dice: 1}]},
+  {key: "chorus", label: "Celestial Chorus", match: ["chorus", "celestial chorus", "messianic voices"], feature: "line", names: [{until: 1465, label: "Messianic Voices"}], title: "The choir", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "When three or more of the faithful sing together in a church, magick there is one easier (the Storyteller counts the voices). Faithful passers-by notice the Chorus and help. Churches and monasteries are their sites."},
+  {key: "ecstasy", label: "Cult of Ecstasy", match: ["ecstasy", "cult of ecstasy", "ecstatics", "ecstatic"], feature: "line", names: [{until: 1465, label: "the Ecstatics"}], title: "Sacred highs", page: "M20, the Tradition's pages",
+    text: "Drink and drugs made as recipes or used from the pack can be foci: the substance works as it always does, and its strength makes the effect one easier. Time magick lets them glimpse a few minutes ahead."},
+  {key: "dreamspeakers", label: "Dreamspeakers", match: ["speakers", "dreamspeakers", "dreamspeaker", "spirit talkers"], feature: "line", names: [{until: 1465, label: "Spirit-Talkers"}], title: "Spirit allies", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "Animals are spirit messengers: an animal in the scene can carry a message. Stepping into the Umbra is one easier for them.", effects: [{tags: ["animalken"], dice: 1}]},
+  {key: "euthanatos", label: "Euthanatos", match: ["euthanatos", "chakravanti"], feature: "mercy", title: "Seeing death", page: "M20, the Tradition's pages",
+    text: "They see who is dying and how long is left. A death given in mercy, a Good Death, gives back a Willpower point; a death given in anger adds a point of Jhor, the stain of death, kept on the sheet's feature window."},
+  {key: "hermes", label: "Order of Hermes", match: ["hermes", "order of hermes", "hermetic"], feature: "certamen", title: "Certámen and Tribunal", page: "M20 and Dark Ages Mage, the Order's pages",
+    text: "A Hermetic can call a certámen: a magical duel, not to the death, fought for a stake that the loser owes as a favour in the Ledger. Rotes are made as recipes with time and kit. The Houses each add a feature of their own."},
+  {key: "sonsofether", label: "Sons of Ether", match: ["ether", "sons of ether", "electrodyne engineers", "natural philosophers"], feature: "line", from: 1904, names: [{until: 1903, label: "the Electrodyne Engineers of the Order of Reason"}], title: "Inventions", page: "M20; Sorcerers Crusade pdf 29, 63",
+    text: "Devices are built with the crafting rules, each with a quality and a quirk. They run on Ether, so before believers in the old science a vulgar effect passes as coincidence. Science gains a die.", effects: [{tags: ["science"], dice: 1}]},
+  {key: "verbena", label: "Verbena", match: ["verbena", "old faith"], feature: "line", names: [{until: 1465, label: "the Old Faith"}], title: "Herb lore", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
+    text: "Remedies, poisons and medicines are made as recipes with an herbalist's kit, stronger in their right season. Their own blood is a focus: a health level spent makes an effect one easier. Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "va", label: "Virtual Adepts", match: ["adepts", "virtual adepts", "virtual adept", "difference engineers"], feature: "line", from: 1961, house: true, names: [{until: 1960, label: "the Difference Engineers"}], title: "The Digital Web", page: "M20; the 1961 date is a house reading",
+    text: "The Digital Web is a realm of their own, where avatars take the shape of the old screen portraits. Before 1961 their forerunners are the Difference Engineers. Computer gains a die.", effects: [{tags: ["computer"], dice: 1}]},
+  {key: "hollow", label: "Hollow Ones", match: ["hollow", "hollow ones", "hollow one"], feature: "line", from: 1890, house: true, title: "Among the lost", page: "M20, the Crafts; the 1890 date is a house reading",
+    text: "They move in the same clubs, salons and squats as the Kindred and the fae. Meeting another line there starts no suspicion, and a Hollow One can vouch for a stranger."},
+  {key: "ahl", label: "Ahl-i-Batin", match: ["batin", "ahl i batin", "batini", "subtle ones"], feature: "line", names: [{until: 1465, label: "the Batini"}], title: "Hidden hands", page: "M20 and Dark Ages Mage",
+    text: "In faction politics they may act without a name on it: the move works, and no rival can answer it. Effects to find a person are one easier in a place they have worked."},
+  {key: "bataa", label: "Bata'a", match: ["bataa", "bata a"], feature: "line", title: "The loa ride them", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A loa can ride a Bata'a: for the scene the spirit gives a die to its own field and asks a price, which the Storyteller names."},
+  {key: "childrenKnowledge", label: "Children of Knowledge", match: ["children", "children of knowledge", "solificati"], feature: "line", title: "The great work", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Alchemy: their rotes are recipes with real ingredients and hours of work. Their dual nature lets one of them hold two minds about any matter."},
+  {key: "kopaLoei", label: "Kopa Loei", match: ["kopa", "kopa loei"], feature: "line", title: "The islands", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Magick is easier on their own islands and in the sea: one easier there (the Storyteller says where)."},
+  {key: "ngoma", label: "Ngoma", match: ["ngoma"], feature: "line", title: "Ancestors and the high ways", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Ancestor spirits answer them in the Umbra, and the old ways of the high courts open to them."},
+  {key: "orphans", label: "Orphans", match: ["orphans", "orphan"], feature: "line", house: true, title: "Self-taught", page: "M20, Orphans; the Paradox change is a house reading",
+    text: "No Tradition taught them: an Orphan writes their own focus list. With no rote to forget, a botch gives one point less Paradox."},
+  {key: "hippolyta", label: "Sisters of Hippolyta", match: ["hippolyta", "sisters of hippolyta"], feature: "oath", title: "The sisterhood", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A sister's oath is kept as a promise in the Ledger; breaking it costs a Willpower point."},
+  {key: "taftani", label: "Taftani", match: ["taftani"], feature: "line", also: ["family"], servant: "a djinn", title: "Bargains with djinn", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "A djinn they bind is kept in a ledger of servants, each held by a vessel. Their magick is always vulgar, and they take pride in it."},
+  {key: "templar", label: "Templar Knights", match: ["templar", "templar knights", "templars"], feature: "line", title: "Faith and the sword", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Fighting for the Order's cause, their faith guards them as True Faith would. Melee gains a die.", effects: [{tags: ["melee"], dice: 1}]},
+  {key: "wulung", label: "Wu Lung", match: ["wulung", "wu lung"], feature: "line", title: "The dragon court", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Rank in the dragon court is a faction standing of its own, and weather magick comes easier to them."},
+  {key: "hemKaSobk", label: "Hem-Ka Sobk", match: ["hem ka sobk", "sobk"], feature: "line", title: "The crocodile cult", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Guardians of the Nile who ward mummies and tombs: they meet the Undying as old allies through the crossover referee."},
+  {key: "wuKeng", label: "Wu-Keng", match: ["wu keng"], feature: "line", title: "The spirit courts", page: "M20 pdf 5, 25; Book of Crafts pdf 4, 12",
+    text: "Shamans of the old spirit courts: bargains with spirits are struck on the Umbra realm map."},
+  {key: "valdaermen", label: "Valdaermen", match: ["valdaermen"], feature: "line", title: "Runes carved", page: "Dark Ages Mage pdf 15-36",
+    text: "A rune carved on an item is a talisman with one effect; carving is a recipe. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "itx", label: "Iteration X", match: ["iterationx", "iteration x", "artificers", "artificer"], feature: "line", names: [{until: 1896, label: "the Artificers of the Order of Reason"}], title: "Cybernetics", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Cybernetic parts go on the body plan as prosthetics do: an arm with a weapon, eyes that see heat, legs for running. Used where people would see them as impossible, they risk Paradox. Before 1897 they are the Artificers, whose inventions use workshops and recipes."},
+  {key: "nwo", label: "New World Order", match: ["nwo", "new world order", "cabal of pure thought"], feature: "watchers", names: [{until: 1896, label: "the Cabal of Pure Thought"}], title: "The Watchers", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Every record of the age reports to them: parish books and tax rolls, then police files, cameras and the net. A breach of the Masquerade sends the Storyteller a card that the Watchers heard of it first. Before 1897 the Cabal of Pure Thought speaks for the Order's reason."},
+  {key: "progenitors", label: "Progenitors", match: ["progenitors", "progenitor", "hippocratic circle"], feature: "line", names: [{until: 1896, label: "the Hippocratic Circle"}], title: "The lab", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Medicines and drugs from the laboratory kits come out a quality step better. Clones and vat-grown servants are NPCs; surgery changes the body plan. Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
+  {key: "syndicate", label: "Syndicate", match: ["syndicate", "high guild"], feature: "line", also: ["leverage"], names: [{until: 1896, label: "the High Guild"}], title: "Moving the market", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "A debt they learn of becomes leverage, spent as a favour owed in the Ledger. They can push a town's prices for a month, and their money counts double for bribes. Finance gains a die.", effects: [{tags: ["finance"], dice: 1}]},
+  {key: "void", label: "Void Engineers", match: ["engineers", "void engineers", "void seekers"], feature: "line", names: [{until: 1896, label: "the Void Seekers"}], title: "Navigators", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
+    text: "Travel between realms is cheaper and safer: they keep the charts. They hunt what comes from beyond the Gauntlet. Before 1897, as the Void Seekers, they make sea voyages faster."},
+  {key: "celestialMasters", label: "Celestial Masters", match: ["celestial masters"], feature: "line", also: ["sky"], from: 1325, until: 1896, house: true, title: "Masters of the heavens", page: "Sorcerers Crusade pdf 29, 63; the end date is not pinned",
+    text: "Their charts of the heavens give a riddle about the next dated event, once a lunar month under a clear sky."},
+  {key: "craftmasons", label: "Craftmasons", match: ["craftmasons", "craftmason"], feature: "line", from: 1325, until: 1896, house: true, title: "Builders", page: "Sorcerers Crusade pdf 29, 63; the end date is not pinned",
+    text: "A building they raise goes up a stage faster. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "ksirafai", label: "Ksirafai", match: ["ksirafai", "ksirafa"], feature: "line", title: "Spies", page: "Sorcerers Crusade pdf 29",
+    text: "NPC agents of the Order: what they learn reaches the Order at the speed news travels in the age."},
+  {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], title: "The inverted Avatar", page: "M20, the Nephandi",
+    text: "NPCs. A Nephandus corrupts as a Follower of Set does, with the same hidden ledger on the victim. Their magick is not vulgar to their own kind; a lore page reveals the cabal."},
+  {key: "marauder", label: "Marauders", match: ["marauder", "marauders"], feature: "line", title: "Living madness", page: "M20, the Marauders",
+    text: "NPCs. Paradox spirits shy from a Marauder, and reality bends near one: the Storyteller can change a region's look and rules for the scene."},
+  {key: "sorcerer", label: "Sorcerers and psychics", match: ["sorcerer", "sorcerers", "psychic", "psychics", "hedge"], feature: "line", title: "The path and its cost", page: "Sorcerer (Revised); M20, the sorcerer rules",
+    text: "A sorcerer's path (Alchemy, Conjuration, Divination and the rest) works as recipes with hours and components. A psychic's numina cost Willpower."},
+];
+
+/** Houses of the Order of Hermes (the custom sect field or the house flag). Stack with the Order's row. */
+export const HOUSES = [
+  {key: "bonisagus", label: "House Bonisagus", match: ["bonisagus"], feature: "line", title: "Keepers of research", page: "M20 pdf 127",
+    text: "A research ledger: new rotes are made as recipes over weeks. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
+  {key: "flambeau", label: "House Flambeau", match: ["flambeau"], feature: "certamen", title: "Fire and honour", page: "Book of Secrets pdf 65-66",
+    text: "A die on fire effects of Forces (the Storyteller adds it). An insult to the House calls for a certámen."},
+  {key: "quaesitor", label: "House Quaesitor", match: ["quaesitor"], feature: "ruling", title: "Judges of the Order", page: "Book of Secrets pdf 65-66",
+    text: "A Quaesitor can call a Tribunal and post its ruling for all to see."},
+  {key: "shaea", label: "House Shaea", match: ["shaea"], feature: "line", title: "The House of the far lands", page: "M20 pdf 160",
+    text: "Its own temper from the book: travellers who bring foreign lore into the Order. Linguistics gains a die.", effects: [{tags: ["linguistics"], dice: 1}]},
+  {key: "exmisc", label: "House Ex Miscellanea", match: ["ex miscellanea", "miscellanea"], feature: "line", title: "A home for strange traditions", page: "M20 pdf 160",
+    text: "A member takes one feature from any other House, as the Storyteller agrees."},
+  {key: "janissary", label: "House Janissary", match: ["janissary"], feature: "line", until: 1700, house: true, title: "The Order's soldiers", page: "M20 pdf 160; the end year is a house reading",
+    text: "The Order's soldiers, gone after the purge (1700 here). Melee gains a die.", effects: [{tags: ["melee"], dice: 1}]},
+  {key: "diedne", label: "House Diedne", match: ["diedne"], feature: "line", until: 0, title: "The lost House", page: "M20 pdf 127",
+    text: "Destroyed in the Schism War long before 1197: only ghosts, relics and rumours remain. A Diedne relic is a talisman."},
+  {key: "housetremere", label: "House Tremere", match: ["house tremere"], feature: "line", until: 1199, house: true, title: "The House that turned", page: "M20 pdf 127; the year is a house reading",
+    text: "The House that turned to vampires. Its old chantries are Tremere clan chantries, and Hermetic NPCs hate its name on sight."},
+  {key: "hOthers", label: "The other Houses", match: ["tytalus", "verditius", "criamon", "merinita", "jerbiton", "bjornaer", "guernicus", "mercere", "fortunae", "solificati house"], feature: "line", title: "The other Houses", page: "Houses of Hermes is not in the store",
+    text: "Each takes a row of its own once Houses of Hermes is in the store; until then, the Order's row."},
+];
+
+/** What the Watchers read in each age (New World Order), by year. */
+export const RECORDS = [{from: 1197, label: "parish books and tax rolls"}, {from: 1800, label: "police files and the census"},
+  {from: 1895, label: "photographs and newspapers"}, {from: 1970, label: "cameras and computer files"}, {from: 1995, label: "the net"}];
+
+/* ================= Changeling (Chronicle 0.34.0) ================= */
+
+/**
+ * Kiths (the sheet's kith field: the system keys, or the custom kith), then the seeming, the court and a sidhe House,
+ * stacked. Groups of the system's kith list share a row (the Thallain, the Inanimae, the Nunnehi, the Dark-Kin).
+ * Page refs: C20 pdf pages; the Hsien from Land of Eight Million Dreams.
+ */
+export const KITHS = [
+  {key: "boggan", label: "Boggans", match: ["boggan", "boggans"], feature: "line", title: "Many hands", page: "C20, the kith's pages",
+    text: "A Boggan at work in a household speeds crafting and building there by a step, and the household's goods come out a quality step better. Frailty: they cannot turn down a plea for help with work. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "clurichaun", label: "Clurichaun", match: ["clurichaun", "clurichauns"], feature: "revel", title: "Spirits in the cellar", page: "C20, the kith's pages",
+    text: "They brew stronger drink as recipes and hold it better than other fae. A tavern brawl they start counts as a revel: the Storyteller gives Glamour on the card."},
+  {key: "eshu", label: "Eshu", match: ["eshu"], feature: "line", title: "The road provides", page: "C20, the kith's pages",
+    text: "Travelling with no set goal, an Eshu meets what the road holds: the Storyteller pulls a dated event or an encounter along the way. Frailty: a chance at adventure must be taken, or a Willpower point is lost. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+  {key: "nocker", label: "Nockers", match: ["nocker", "nockers"], feature: "line", title: "The flaw in every work", page: "C20, the kith's pages",
+    text: "Everything a Nocker makes is a quality step better and carries one written flaw, which shows on a botched use. The machines of each age are their trade: clockwork, steam, then electronics. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
+  {key: "piskies", label: "Piskies", match: ["piskie", "piskies", "pixie", "pixies"], feature: "line", title: "Little kindnesses", page: "C20 pdf 98",
+    text: "A gift left in trade gives a Piskie a point of Glamour (the Storyteller's call). Keeping something lifted gnaws at them: a Willpower roll. Lifting gains a die.", effects: [{tags: ["lift"], dice: 1}]},
+  {key: "pooka", label: "Pooka", match: ["pooka", "pookas"], feature: "truth", title: "The liar's tongue", page: "C20, the kith's pages",
+    text: "Their animal shape is a body shape of its own. Frailty: they lie. When a Pooka answers a question, the player picks the lie; telling the plain truth costs a Willpower point."},
+  {key: "redcap", label: "Redcaps", match: ["redcap", "redcaps"], feature: "line", title: "Dark appetite", page: "C20, the kith's pages",
+    text: "A Redcap can eat anything, even what no one else can, and gain from it. Frailty: animals bolt and children cry around them. Intimidation gains a die.", effects: [{tags: ["intimidation"], dice: 1}, {tags: ["animalken"], difficulty: 2}]},
+  {key: "satyr", label: "Satyrs", match: ["satyr", "satyrs"], feature: "revel", title: "The revel", page: "C20, the kith's pages",
+    text: "A revel with drink, music and dancing raises Glamour for every changeling there, and the Satyr gains one more. Passers-by can be drawn in."},
+  {key: "selkie", label: "Selkies", match: ["selkie", "selkies"], feature: "coat", title: "The coat", page: "C20, the kith's pages",
+    text: "The seal coat is an item. Wearing it gives the seal shape and the sea's ways of moving. Without it the Selkie cannot change, and a stolen coat must be won back."},
+  {key: "sidhe", label: "Sidhe", match: ["sidhe"], feature: "oath", title: "Oaths and Houses", page: "C20, the kith and House pages",
+    text: "The noble Houses are a faction of their own, and a sidhe's oaths are kept as promises: breaking one costs a Willpower point and brings the Storyteller a curse to name. Banality bites them harder. Etiquette gains a die.", effects: [{tags: ["etiquette"], dice: 1}]},
+  {key: "sluagh", label: "Sluagh", match: ["sluagh"], feature: "line", title: "In the cracks", page: "C20, the kith's pages",
+    text: "They squeeze through narrow gaps and hear whispers clearly. They speak only in whispers. Hearing is one easier and Stealth gains a die.", effects: [{tags: ["hearing"], difficulty: -1}, {tags: ["stealth"], dice: 1}]},
+  {key: "troll", label: "Trolls", match: ["troll", "trolls"], feature: "oath", title: "Bound by their word", page: "C20, the kith's pages",
+    text: "A troll's oath is written down. While it holds, the troll soaks one more die fighting for its cause (the Storyteller adds it); broken, the strength goes and a Willpower point with it."},
+  {key: "ghilledhu", label: "Ghille Dhu", match: ["ghille dhu", "ghilledhu"], feature: "line", title: "Rooted in the green", page: "C20 pdf 12, 449-450",
+    text: "Glamour returns faster to them in wild places; in a city they wilt, and Banality there is one harder to resist."},
+  {key: "merfolk", label: "Merfolk", match: ["merfolk", "merrow", "merrows"], feature: "line", title: "The sea's call", page: "C20 pdf 12, 449-450",
+    text: "They swim freely, and Banality on dry land wears at them harder."},
+  {key: "inanimae", label: "Inanimae", match: ["inanimae", "glomes", "kuberas", "ondines", "parosemes", "solimonds", "mannikins"], feature: "line", title: "Bound to a thing", page: "Inanimae pdf 14, 16",
+    text: "An Inanimae's anchor is a thing or a place: harm to it harms them, and they rest best beside it."},
+  {key: "nunnehi", label: "Nunnehi", match: ["nunnehi", "canotili", "inuas", "kachinas", "maymaygwyashi", "nanehi", "numuzoho", "pugwis", "rockgiants", "surems", "tunghat", "waterbabies", "yunwitsunsdi"], feature: "line", title: "The tribes of the Nunnehi", page: "C20 pdf 12, 449-450",
+    text: "Each Nunnehi tribe keeps its own land in the Americas; a holding there needs their leave."},
+  {key: "thallain", label: "Thallain", match: ["thallain", "aithu", "beasties", "bodachs", "boggarts", "bogies", "ghasts", "goblins", "huakai", "kelpies", "lurks", "mandragoras", "nasties", "nighthags", "ogres", "sevartal", "skinwalkers", "spriggan", "weepingwights"], feature: "line", title: "Born of fear", page: "C20 pdf 12, 449-450",
+    text: "NPCs as a rule. They draw Glamour from fear and gather near the gateways to the Dreaming."},
+  {key: "darkkin", label: "Dark-Kin", match: ["darkkin", "dark kin", "acheri", "aonides", "firbholg", "fuath", "keremet", "moire", "naraka"], feature: "line", house: true, title: "The shadow kin", page: "C20 appendices; the feature is a house reading",
+    text: "Fae of the old shadow courts and far lands. Their Glamour comes from what the Seelie shun; Seelie fae treat them warily at first meeting."},
+  {key: "dauntain", label: "Dauntain", match: ["dauntain"], feature: "line", title: "The fae who hunt their own", page: "C20, the Dauntain",
+    text: "NPCs. Changelings in the grip of Banality who hunt the fae. Near one, other changelings feel their Glamour thin."},
+  {key: "kamuii", label: "Hsien nobles", match: ["kamuii"], feature: "line", title: "Rank in heaven", page: "Land of Eight Million Dreams pdf 13",
+    text: "A seat in the politics of the Shinma court, a faction standing of its own."},
+  {key: "komuko", label: "Komuko", match: ["komuko"], feature: "line", title: "The hearth", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "A house with a komuko in it is a safer haven: those who break in face one harder rolls."},
+  {key: "suijen", label: "Suijen", match: ["suijen"], feature: "line", title: "Water", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "They swim freely, and rain brings back their Glamour."},
+  {key: "hanumen", label: "Hanumen", match: ["hanumen"], feature: "line", title: "The monkey's tricks", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Tricks and climbing are one easier.", effects: [{tags: ["athletics", "lift"], difficulty: -1}]},
+  {key: "nyan", label: "Nyan", match: ["nyan"], feature: "line", title: "The cat's ease", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "They see at night and sleep anywhere. Sight in the dark is one easier.", effects: [{tags: ["sight"], difficulty: -1, when: "dark"}]},
+  {key: "chuihyu", label: "Chu-ih-yu", match: ["chu ih yu", "chuihyu"], feature: "line", title: "War", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Fight rolls are one easier; peace scenes one harder.", effects: [{tags: ["brawl", "melee"], difficulty: -1}, {tags: ["etiquette"], difficulty: 1}]},
+  {key: "tanuki", label: "Tanuki", match: ["tanuki"], feature: "line", title: "The shape of a thing", page: "Land of Eight Million Dreams pdf 55-65",
+    text: "Shapeshifting tricksters: a Tanuki can pass as a thing in the scene, a jar, a lantern or a stone."},
+  {key: "hirayanu", label: "Hsien commoners", match: ["hirayanu", "hsien"], feature: "line", title: "Animal nature", page: "Land of Eight Million Dreams pdf 13, 55-65",
+    text: "Animals answer them as kin. Animal Ken gains a die.", effects: [{tags: ["animalken"], dice: 1}]},
+];
+
+/** Seemings: the mortal age the clock moves through. */
+export const SEEMINGS = [
+  {key: "childling", label: "Childling", match: ["childling", "childlings"], feature: "line", title: "The child's wonder", page: "C20, the seemings",
+    text: "Banality touches them least. As the years on the clock pass, a childling grows into a wilder. Rolls to resist Banality are one easier.", effects: [{tags: ["banality"], difficulty: -1}]},
+  {key: "wilder", label: "Wilder", match: ["wilder", "wilders"], feature: "line", title: "The fire of youth", page: "C20, the seemings",
+    text: "Passion runs hot: Glamour comes and goes fast. With the years, a wilder grows into a grump."},
+  {key: "grump", label: "Grump", match: ["grump", "grumps"], feature: "line", title: "The weight of years", page: "C20, the seemings",
+    text: "Wisdom and the long view, and Banality closer: rolls to resist it are one harder. Lore of the fae gains a die.", effects: [{tags: ["banality"], difficulty: 1}, {tags: ["occult"], dice: 1}]},
+];
+
+/** Courts. season: which half of the year the court holds power (Samhain to Beltaine is the Unseelie half). */
+export const COURTS = [
+  {key: "seelie", label: "Seelie Court", match: ["seelie"], feature: "court", season: "summer", title: "Season of the court", page: "C20, the courts; Dark Ages Fae pdf 19-20, 25-26",
+    text: "From Beltaine to Samhain the Seelie hold power: in that half of the year their Etiquette and Leadership gain a die. In the Dark Ages the courts are the seasonal Courts, and the season on the clock favours its own.", effects: [{tags: ["etiquette", "leadership"], dice: 1, when: "court"}]},
+  {key: "unseelie", label: "Unseelie Court", match: ["unseelie"], feature: "court", season: "winter", title: "Season of the court", page: "C20, the courts; Dark Ages Fae pdf 19-20, 25-26",
+    text: "From Samhain to Beltaine the Unseelie hold power: in that half of the year their Intimidation and Subterfuge gain a die. In the Dark Ages the courts are the seasonal Courts, and the season on the clock favours its own.", effects: [{tags: ["intimidation", "subterfuge"], dice: 1, when: "court"}]},
+];
+
+/** Sidhe Houses (C20 pdf 10, 51): a seat in the courts; boon and flaw as the book gives them, applied by the Storyteller. */
+const house = (key, label, theme, effects = []) => ({key, label: `House ${label}`, match: [key, `house ${key}`], feature: "line", title: "The House's seat", page: "C20 pdf 10, 51",
+  text: `${theme} The House holds a seat in the fae courts; its boon and flaw are applied from the book.`, ...(effects.length ? {effects} : {})});
+export const FAE_HOUSES = [
+  house("aesin", "Aesin", "A House of the Courts."), house("ailil", "Ailil", "Masters of intrigue.", [{tags: ["subterfuge"], dice: 1}]),
+  house("balor", "Balor", "A House marked by the old Fomorian blood."), house("beaumayn", "Beaumayn", "Seers of dreams."),
+  house("danaan", "Danaan", "A House of the old Tuatha."), house("daireann", "Daireann", "A House of the Courts."),
+  house("dougal", "Dougal", "Smiths and makers.", [{tags: ["crafts"], dice: 1}]), house("eiluned", "Eiluned", "Sorcerers and keepers of secrets.", [{tags: ["occult"], dice: 1}]),
+  house("fiona", "Fiona", "Passion and love, and courage to match."), house("gwydion", "Gwydion", "Judges who seek the truth.", [{tags: ["empathy"], dice: 1}]),
+  house("leanhaun", "Leanhaun", "Muses who feed on those they inspire."), house("liam", "Liam", "The disgraced House, kind to commoners."),
+  house("scathach", "Scathach", "Warriors who take commoners in.", [{tags: ["melee", "brawl"], dice: 1}]), house("varich", "Varich", "The House of the far east of Europe."),
+];
+
+/** The court that holds power by month: Samhain (1 November) to Beltaine (1 May) is the Unseelie half. */
+export const UNSEELIE_MONTHS = [11, 12, 1, 2, 3, 4];
+
+/* ================= Wraith (Chronicle 0.35.0) ================= */
+
+/**
+ * Guilds, legions and the factions of the dead. The wraith sheet has no guild or legion field, so they are kept in the
+ * actor flag wodx-chronicle.wraith = {guild, legion, faction}, picked in the feature window. A legion is suggested from
+ * the sheet's death field by the manner of death (death: words). Page refs: Wraith 20th.
+ */
+const guild = (key, label, art, title, text, effects = [], also = []) => ({key, label, match: [key, label.toLowerCase(), art.toLowerCase()], feature: "line", title,
+  page: "Wraith 20th, the Guild's pages", text, ...(effects.length ? {effects} : {}), ...(also.length ? {also} : {})});
+export const GUILDS = [
+  guild("alchemists", "Alchemists", "Flux", "The soulforge", "Flux works the decay of things: relics and soulsteel are made as recipes at a forge. Crafts gains a die.", [{tags: ["crafts"], dice: 1}]),
+  guild("artificers", "Artificers", "Inhabit", "Inside the thing", "An Artificer can inhabit a door, a lock, a lamp or a machine of the age and work it from inside. Living witnesses see it move by itself."),
+  guild("chanteurs", "Chanteurs", "Keening", "Songs that cross the Shroud", "Keening sways the feelings of a scene, heard by the living as a sound with no source. Performance gains a die.", [{tags: ["performance"], dice: 1}]),
+  guild("harbingers", "Harbingers", "Argos", "Tempest roads", "Argos carries them across the Tempest quickly, and others with them for a fee in oboli."),
+  guild("haunters", "Haunters", "Pandemonium", "Strange happenings", "Pandemonium brings cold spots, failing lights and blood on the walls; mortals who see it may flee. Intimidation gains a die.", [{tags: ["intimidation"], dice: 1}]),
+  guild("masquers", "Masquers", "Moliate", "Shaped corpus", "Moliate reshapes a wraith's body (claws, wings, a new face), their own or another's, and a disguise made with it is a false face to the crossover referee."),
+  guild("mnemoi", "Mnemoi", "Mnemosynis", "Written in the mind", "A Mnemoi can add, take or change a memory: a witness to a breach can be made to forget it before the rumour spreads."),
+  guild("monitors", "Monitors", "Lifeweb", "The web of ties", "A Monitor knows when a Fetter they watch is touched or harmed, and senses the ties of other wraiths. Awareness gains a die.", [{tags: ["awareness"], dice: 1}]),
+  guild("oracles", "Oracles", "Fatalism", "Strands of fate", "Once a night an Oracle can read a riddle about the next dated event, and can tell when a living person will die.", [], ["glimpse"]),
+  guild("pardoners", "Pardoners", "Castigate", "Castigate", "A Pardoner can ease another wraith's Angst and the Shadow's hold. Confessions heard become leverage, spent as favours in the Ledger.", [], ["leverage"]),
+  guild("proctors", "Proctors", "Embody", "Seen by the living", "Embody makes a wraith visible and solid: a mortal who sees it has seen a ghost, a breach, and animals shy."),
+  guild("puppeteers", "Puppeteers", "Puppetry", "Skinriding", "A Puppeteer rides a living body for the scene, with its own traits; those who know the person may notice the change in manner."),
+  guild("sandmen", "Sandmen", "Phantasm", "Dream work", "Phantasm shapes the dreams of sleepers, which sets their mood toward a person the next day."),
+  guild("solicitors", "Solicitors", "Intimation", "Whispered wants", "Intimation reads and pushes desires: the next social roll against that person is easier, and they learn what someone would trade. Subterfuge gains a die.", [{tags: ["subterfuge"], dice: 1}]),
+  guild("spooks", "Spooks", "Outrage", "Outrage", "Outrage moves and breaks things: doors burst, glass breaks, and thrown things hit as attacks."),
+  guild("usurers", "Usurers", "Usury", "The soul's bank", "Usury moves Corpus and Pathos between wraiths; it is bought and sold for oboli and kept as debts in the Ledger. Finance gains a die.", [{tags: ["finance"], dice: 1}]),
+];
+
+/** The legions (Wraith 20th pdf 136-137) and the manner of death each claims. */
+const legion = (key, label, lord, death, title, text, effects = [], also = []) => ({key, label, match: [key, label.toLowerCase()], death, feature: "line", title,
+  page: "Wraith 20th pdf 136-137; joining by the manner of death is a house reading", house: true, text: `Ruled by ${lord}. ${text}`, ...(effects.length ? {effects} : {}), ...(also.length ? {also} : {})});
+export const LEGIONS = [
+  legion("emerald", "Emerald Legion", "the Emerald Lord", ["accident", "chance", "drowned", "fell", "happenstance"], "Luck", "Once a week (a house reading of once a story), a reroll on a roll of chance.", [], ["luck"]),
+  legion("fate", "Fate Legion", "the Ladies of Fate", ["fate", "marked", "unknown cause", "destined"], "Outside politics", "They hear the riddle of the next dated event, as the Oracles do.", [], ["glimpse"]),
+  legion("grim", "Grim Legion", "the Smiling Lord", ["violence", "murder", "murdered", "killed", "war", "battle", "stabbed", "shot", "hanged", "executed"], "A die in fights", "Brawl and Melee gain a die.", [{tags: ["brawl", "melee"], dice: 1}]),
+  legion("iron", "Iron Legion", "the Ashen Lady", ["old age", "age", "natural", "in sleep", "peacefully"], "Patience", "Long tasks over the clock go a stage faster (the Storyteller counts it).", [{tags: ["crafts", "academics"], dice: 1}]),
+  legion("paupers", "Paupers Legion", "the Beggar Lord", ["mystery", "vanished", "lost", "never found"], "Hidden ways", "Stealth and the search for secrets gain a die.", [{tags: ["stealth", "investigation"], dice: 1}]),
+  legion("penitent", "Penitent Legion", "the Laughing Lady", ["madness", "insane", "mad", "asylum"], "The mad ear", "They hear the living through a derangement, as the Malkavians do.", [], ["hear"]),
+  legion("silent", "Silent Legion", "the Quiet Lord", ["despair", "suicide", "grief", "hopeless"], "Quiet against the Shadow", "Rolls against Angst and the Harrowing are one easier.", [{tags: ["angst", "harrowing"], difficulty: -1}]),
+  legion("skeletal", "Skeletal Legion", "the Skeletal Lord", ["disease", "plague", "illness", "sickness", "fever", "consumption", "cancer"], "Proof against decay", "Rolls against disease and the Withering are one easier.", [{tags: ["disease", "withering"], difficulty: -1}]),
+];
+
+/** Factions of the dead outside the Hierarchy, and what a wraith can become. */
+export const WRAITH_FACTIONS = [
+  {key: "heretics", label: "Heretics", match: ["heretic", "heretics", "fishers"], feature: "line", title: "The heretic cult", page: "Wraith 20th pdf 68",
+    text: "A faction of their own seeking Transcendence outside Stygia: Hierarchy NPCs hunt them, and their rites can restore Pathos."},
+  {key: "renegades", label: "Renegades", match: ["renegade", "renegades"], feature: "line", title: "Outlaws of the Shadowlands", page: "Wraith 20th, the Renegades",
+    text: "At war with the Hierarchy: its patrols attack on sight, and Renegade traders sell relics cheaper."},
+  {key: "ferrymen", label: "Ferrymen", match: ["ferryman", "ferrymen"], feature: "line", title: "The Tempest crossing", page: "Wraith 20th pdf 68",
+    text: "Boatmen of the Tempest who answer to no one: a crossing with them is safe and fast, for a price in oboli."},
+  {key: "spectres", label: "Spectres", match: ["spectre", "spectres", "doppelganger"], feature: "line", wyrm: false, title: "Shadow risen", page: "Wraith 20th, the Spectres",
+    text: "NPCs. A wraith whose Shadow wins too often becomes one; doppelgangers walk among wraiths wearing a friend's face."},
+  {key: "risen", label: "The Risen", match: ["risen"], feature: "line", title: "Walking dead", page: "Wraith 20th, the Risen",
+    text: "A Risen walks in their own body, which rots by the clock unless they spend Pathos on it."},
+];
+/** Days between uses of the Emerald luck (a house reading of "once a story"). */
+export const LUCK_DAYS = 7;
+
+/* ================= Hunter, Mummy, Demon, Kuei-jin and Orpheus (Chronicle 0.36.0) ================= */
+
+/**
+ * The smaller lines, one table each. match: words of the sheet's own field (a Hunter's creed, a Mummy's Amenti, a Demon's
+ * house and faction) or of the pick kept in the actor flag wodx-chronicle.splat (Kuei-jin and Orpheus, whose sheets have
+ * no field for it). The years follow standing rule 12: inquisitors in the Dark Ages, mortal hunters to 1998, the imbued
+ * from 1999 (from 2023 in the World of Future Darkness).
+ */
+const row = (key, label, match, title, page, text, more = {}) => ({key, label, match, feature: "line", title, page, text, ...more});
+export const HUNTER = [
+  row("avenger", "Avengers", ["avenger", "avengers"], "The righteous blow", "Hunter: the Reckoning, the creeds", "Against a monster that hurt an innocent, fight rolls gain a die (the Storyteller says when). Walking away from one costs Conviction.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
+  row("defender", "Defenders", ["defender", "defenders"], "The shield", "Hunter: the Reckoning, the creeds", "A Defender guards a place: harm or theft there reaches them wherever they are. Standing between a monster and its prey gives soak dice, which the Storyteller adds.", {from: 1999, feature: "guard"}),
+  row("judge", "Judges", ["judge", "judges"], "The verdict", "Hunter: the Reckoning, the creeds", "A Judge may give a verdict on a monster, which goes to the Storyteller alone, who answers whether it is guilty.", {from: 1999, feature: "ruling", secret: true}),
+  row("innocent", "Innocents", ["innocent", "innocents"], "Open eyes", "Hunter: the Reckoning, the creeds", "A monster spoken to kindly by an Innocent thinks better of them. Empathy gains a die.", {from: 1999, effects: [{tags: ["empathy"], dice: 1}]}),
+  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them, as the Storyteller moves it.", {from: 1999}),
+  row("redeemer", "Redeemers", ["redeemer", "redeemers"], "The second chance", "Hunter: the Reckoning, the creeds", "A Redeemer's long work with a monster can help its Humanity or Path, a task over weeks on the clock.", {from: 1999}),
+  row("visionary", "Visionaries", ["visionary", "visionaries"], "The bigger picture", "Hunter: the Reckoning, the creeds", "Lore pages open for them sooner. Occult and Investigation gain a die.", {from: 1999, effects: [{tags: ["occult", "investigation"], dice: 1}]}),
+  row("hermit", "Hermits", ["hermit", "hermits"], "The messages", "Hunter: the Reckoning, the creeds", "Once a night a Hermit can hear the Messengers: a riddle about the next dated event.", {from: 1999, also: ["glimpse"]}),
+  row("wayward", "Waywards", ["wayward", "waywards"], "Single minded", "Hunter: the Reckoning, the creeds", "Fight rolls to destroy monsters gain a die; a Wayward never takes a monster's side, even when it is right.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
+  row("hh2", "Mortal hunters", ["hunters hunted", "mortal hunter", "mortal hunters", "hunter"], "Faith and preparation", "Hunters Hunted II", "A hunter's kit (stakes, holy water, a crucifix carried with True Faith) is used from the pack, and preparing a hunt is a recipe. Investigation gains a die.", {from: 1500, until: 1998, effects: [{tags: ["investigation"], dice: 1}]}),
+  row("inquisition", "Inquisitors", ["inquisitor", "inquisitors", "inquisition", "society of leopold", "leopold"], "Faith and the files", "V20 Dark Ages, the Inquisition; Hunters Hunted II", "True Faith wards make monsters recoil and burn the wicked, and the faithful help them. Every breach of the Masquerade reaches the Inquisition: the Storyteller gets a card.", {feature: "watchers"}),
+  row("arcanum", "Arcanum", ["arcanum"], "The library", "Hunters Hunted II, the Arcanum", "Research on any monster with the Library's files gains a die, and a breach of the Masquerade becomes a file they can read.", {effects: [{tags: ["academics", "occult"], dice: 1}]}),
+  row("agencies", "Government hunters", ["project twilight", "twilight", "agency", "agencies", "fbi", "nsa"], "Case files", "Hunters Hunted II; Project Twilight", "They read police files and camera records as the New World Order does: a breach reaches them, and they send a team.", {from: 1900, house: true, feature: "watchers"}),
+  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground their Faith counts one higher (the Storyteller marks the place)."),
+];
+export const MUMMY = [
+  row("kherminu", "Kher-minu", ["kher minu", "tomb watchers"], "The guarded place", "Mummy: the Resurrection, the Amenti", "Amulets made as charms are used from the pack. A place a Kher-minu takes as a charge (a tomb, a museum wing, a temple) is guarded: harm or theft there reaches them.", {feature: "guard"}),
+  row("khrihabi", "Khri-habi", ["khri habi", "scroll bearers"], "Alchemy", "Mummy: the Resurrection, the Amenti", "Elixirs that heal, poison or change are recipes at a laboratory kit, a quality step stronger. Old texts in the Library read easier for them. Science gains a die.", {effects: [{tags: ["science"], dice: 1}]}),
+  row("mesektet", "Mesektet", ["mesektet", "night suns"], "Celestial", "Mummy: the Resurrection, the Amenti", "Once a lunar month, under a clear sky, the stars give a riddle about the next dated event.", {also: ["sky"]}),
+  row("sakhmu", "Sakhmu", ["sakhmu", "spirit scepters"], "Effigy", "Mummy: the Resurrection, the Amenti", "Effigies are crafted items that hold a spirit, a curse or a likeness, used from the pack. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
+  row("sefekhi", "Sefekhi", ["sefekhi", "unbandaged"], "Necromancy", "Mummy: the Resurrection, the Amenti", "Their hekau reach the Shadowlands; the dead of Egypt answer them, kept in a ledger of the bound.", {also: ["family"], servant: "one of the dead"}),
+  row("udjasen", "Udja-sen", ["udja sen", "judged ones"], "The judged", "Mummy: the Resurrection, the Amenti", "One feature of another Amenti, picked by the Storyteller, and a mark of the judgement on the body."),
+  row("ishmaelites", "Ishmaelites", ["ishmaelite", "ishmaelites"], "Outcasts of the Amenti", "Mummy: the Resurrection", "The Amenti hunt them; an Ishmaelite trades secrets for safety, written as pages of secrets.", {also: ["secrets"]}),
+  row("cabiri", "Cabiri", ["cabiri"], "The last ones", "Mummy: the Resurrection pdf 13, 29", "Few remain: one is met once in a chronicle, and a lore page opens with them."),
+  row("banemummy", "Bane mummies", ["bane mummy", "bane mummies"], "The cursed spell", "Mummy: the Resurrection", "NPCs. They curse as they die, and rise again."),
+];
+export const DEMON = [
+  row("devils", "Devils", ["devil", "devils", "namaru"], "A following", "Demon: the Fallen, the Houses", "The demon draws passers-by into a following that grows with each scene of worship. Leadership gains a die.", {effects: [{tags: ["leadership"], dice: 1}]}),
+  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds can change the scene's weather (the Storyteller sets it); the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
+  row("malefactors", "Malefactors", ["malefactor", "malefactors", "annunaki"], "The Forge", "Demon: the Fallen, the Houses", "The Lore of the Forge enchants things they craft; the Lore of Paths finds the way through any place. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
+  row("fiends", "Fiends", ["fiend", "fiends", "neberu"], "Patterns and portals", "Demon: the Fallen, the Houses", "The Lore of Patterns gives a riddle about the next dated event once a night; the Lore of Portals opens a door between two places.", {also: ["glimpse"]}),
+  row("defilers", "Defilers", ["defiler", "defilers", "lammasu"], "Longing", "Demon: the Fallen, the Houses", "The Lore of Longing works on desire with the hidden Corruption ledger the Followers of Set use; the Lore of Storms works sea and rain.", {also: ["corruption"]}),
+  row("devourers", "Devourers", ["devourer", "devourers", "rabisu"], "Flesh and beast", "Demon: the Fallen, the Houses", "The Lore of Flesh changes the body; the Lore of the Beast commands animals. Animal Ken gains a die.", {effects: [{tags: ["animalken"], dice: 1}]}),
+  row("slayers", "Slayers", ["slayer", "slayers", "halaku"], "Death and realms", "Demon: the Fallen, the Houses", "They see who is dying and how long is left, and cross into the Shadowlands."),
+  row("luciferans", "Luciferans", ["luciferan", "luciferans"], "The army of Lucifer", "Demon: the Fallen, the factions", "A faction that builds a following for the war to come."),
+  row("faustians", "Faustians", ["faustian", "faustians"], "The pact", "Demon: the Fallen, the factions", "They trade in pacts: what a mortal owes is leverage, spent as a favour in the Ledger.", {also: ["leverage"]}),
+  row("cryptics", "Cryptics", ["cryptic", "cryptics"], "The question", "Demon: the Fallen, the factions", "They search old records for why the Fall happened. Investigation gains a die.", {effects: [{tags: ["investigation"], dice: 1}]}),
+  row("reconcilers", "Reconcilers", ["reconciler", "reconcilers"], "The way home", "Demon: the Fallen, the factions", "They seek to mend the world and find a way home; they deal gently with mortals."),
+  row("raveners", "Raveners", ["ravener", "raveners"], "Ruin", "Demon: the Fallen, the factions", "They want an end to everything; other factions treat them as foes on sight."),
+  row("earthbound", "Earthbound", ["earthbound"], "The idol", "Demon: the Fallen, the Earthbound", "NPCs. An Earthbound's reliquary is a thing or a building, and its cult is a faction with an income of faith."),
+];
+export const KUEIJIN = [
+  row("devilTiger", "Howl of the Devil-Tiger", ["devil tiger", "devil-tiger"], "Hunting the servants of the Yama Kings", "Kindred of the East, the Dharmas", "They track demons and corrupt spirits, and a fight against one restores Chi (the Storyteller's call). Their P'o is stronger: rolls to resist it are one harder.", {effects: [{tags: ["frenzy"], difficulty: 1}]}),
+  row("crane", "Way of the Resplendent Crane", ["crane", "resplendent crane"], "Duty", "Kindred of the East, the Dharmas", "A Crane may rule on a matter of law, posted for all; upholding the law earns face, breaking it costs face. Etiquette gains a die.", {feature: "ruling", effects: [{tags: ["etiquette"], dice: 1}]}),
+  row("shadow", "Song of the Shadow", ["song of the shadow", "shadow"], "Shadow and death", "Kindred of the East, the Dharmas", "Yin Chi from graves and the Yin realms; ghosts come to them."),
+  row("whispers", "Path of a Thousand Whispers", ["thousand whispers", "whispers"], "Many lives", "Kindred of the East, the Dharmas", "They hold several lives at once, each known to NPCs by its own name. Subterfuge gains a die.", {effects: [{tags: ["subterfuge"], dice: 1}]}),
+  row("dragon", "Dance of the Thrashing Dragon", ["thrashing dragon", "dragon"], "Joy and life", "Kindred of the East, the Dharmas", "They feed on the yang Chi of life and passion (revels, crowds), and plants grow where they linger. Performance gains a die.", {effects: [{tags: ["performance"], dice: 1}]}),
+  row("wanxian", "Wan Xian", ["wan xian", "fallen"], "The fallen line", "Land of Eight Million Dreams pdf 6", "NPCs in stories of the East: meeting one opens a lore page and sends the Storyteller a card."),
+];
+export const ORPHEUS = [
+  row("skimmer", "Skimmers", ["skimmer", "skimmers"], "The breath held", "Orpheus core", "A Skimmer goes out by holding the breath: the body left behind is defenceless while they are out.", {from: 2023}),
+  row("sleeper", "Sleepers", ["sleeper", "sleepers"], "The long sleep", "Orpheus core", "A Sleeper goes out in drugged sleep: a dose is an item used from the pack, and too many is an overdose.", {from: 2023}),
+  row("spirit", "Spirits", ["spirit", "spirits"], "Bound to the work", "Orpheus pdf 20, 36", "A ghost in Orpheus' service: the tie to the living world is a Fetter-like item.", {from: 2023}),
+  row("hue", "Hues", ["hue", "hues"], "The stain of the pigment", "Orpheus pdf 20, 36", "Ghosts made by the spectral drug, free of any body: near the pigment a hue loses a die.", {from: 2023}),
+  row("banshee", "Banshee", ["banshee"], "The wail", "Orpheus, the Shades", "The wail is a scream the living hear with no source, and the Banshee hears riddles about deaths to come, once a night.", {from: 2023, also: ["glimpse"]}),
+  row("haunter", "Haunter", ["haunter"], "Inhabit", "Orpheus, the Shades", "They live inside things (doors, lamps, machines) and work them from inside, as the Artificers do.", {from: 2023}),
+  row("poltergeist", "Poltergeist", ["poltergeist"], "Helter-skelter", "Orpheus, the Shades", "They throw and break things; thrown things hit as attacks.", {from: 2023}),
+  row("skinrider", "Skinrider", ["skinrider"], "Puppetry", "Orpheus, the Shades", "They ride living bodies for the scene, as the Puppeteers do.", {from: 2023}),
+  row("wisp", "Wisp", ["wisp"], "Unearthly repose", "Orpheus, the Shades", "Calm and charm: social rolls gain a die.", {from: 2023, effects: [{tags: ["social"], dice: 1}]}),
+  row("phantasm", "Phantasm", ["phantasm"], "Seeming real", "Shadows of the Grave pdf 16, 26", "Their illusions answer as real until touched.", {from: 2023}),
+];
+/** Which table a line uses, and the world setting that turns it on. */
+export const SMALL_LINES = {hunter: {table: HUNTER, setting: "sigHunter", label: "Hunter"}, mummy: {table: MUMMY, setting: "sigMummy", label: "Mummy"},
+  demon: {table: DEMON, setting: "sigDemon", label: "Demon"}, kueijin: {table: KUEIJIN, setting: "sigKueijin", label: "Kuei-jin"}, orpheus: {table: ORPHEUS, setting: "sigOrpheus", label: "Orpheus"}};

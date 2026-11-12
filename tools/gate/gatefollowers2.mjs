@@ -1,5 +1,5 @@
 /**
- * Followers, part 2 (WoDX NPC 0.35.0, Storyteller 0.37.0, Interactables 0.28.0, Actions 3.46.0, Chronicle 0.34.0),
+ * Followers, part 2 (WoDX NPC 0.37.0, Storyteller 0.39.0, Interactables 0.29.0, Actions 3.47.0, Chronicle 0.38.0),
  * in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefollowers2.mjs?${Date.now()}`)).run()
  * It makes a scratch scene and actors and deletes them; it does not move the clock. The scene in view is put back.
@@ -36,7 +36,7 @@ export async function run() {
   const actors = [];
   const cards = () => game.messages.contents.filter(m => m.timestamp >= msgStart);
   try {
-    ok("1. modules", atLeast("wodx-npc", "0.35.0") && atLeast("wodx-storyteller", "0.37.0") && atLeast("wodx-interactables", "0.28.0") && atLeast("wodx-actions", "3.46.0") && atLeast("wodx-chronicle", "0.34.0")
+    ok("1. modules", atLeast("wodx-npc", "0.37.0") && atLeast("wodx-storyteller", "0.39.0") && atLeast("wodx-interactables", "0.29.0") && atLeast("wodx-actions", "3.47.0") && atLeast("wodx-chronicle", "0.38.0")
       && !!NPC?.orders?.onTaskDone && !!ST?.tasks?.save && !!IA?.chase?.join && !!NPC?.orders?.rules?.ERRANDS,
       {versions: ["wodx-npc", "wodx-storyteller", "wodx-interactables", "wodx-actions", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
     await game.settings.set("wodx-npc", "followerOrders", true);

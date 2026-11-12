@@ -34,7 +34,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.35.0";
+const VERSION = "0.37.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -137,6 +137,11 @@ const cardsNow = () => (game.messages?.contents ?? []).slice(-400).map(m => m.ge
 const hiddenByObfuscate = tok => !!tok.actor?.statuses?.has?.("wodx-obfuscated") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
 const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || hiddenByObfuscate(tok);
 const supernatural = actor => (C()?.getKind?.(actor) ?? "mortal") !== "mortal";
+/**
+ * 0.33.0 (B1380): a fighter goes for "the monster" only once it can tell one: plainly inhuman, shown by a sense, or
+ * seen for what it is. Without the rivalry senses (a load error) it falls back to the sheet's kind.
+ */
+const canTell = (tok, t) => { try { return !!rivalry.tells(tok, t).tells; } catch (e) { return supernatural(t.actor); } };
 /** Plainly inhuman to a mortal eye: a spirit or ghost that shows itself, a war form, or a body twisted by a power. */
 const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
 const obvious = actor => ["spirit", "wraith"].includes(C()?.getKind?.(actor)) || [...(actor?.effects ?? [])].some(e => OBVIOUS_EFFECT.test(e.name ?? ""))
@@ -216,7 +221,7 @@ export function readFight(tok, combat = game.combat) {
   const myHarm = harm.get(actor.uuid) ?? new Map();
   const lineage = actor.flags?.["wodx-creation"]?.lineage;
   const domitorId = lineage?.domitor?.id ?? null;
-  // NPC 0.34.0: a follower guards every character it serves (B1600), as a ghoul guards its domitor
+  // NPC 0.37.0: a follower guards every character it serves (B1800), as a ghoul guards its domitor
   const masters = OR.servesFrom(actor.flags);
   const plans = new Map();
   const E = enemies.map(t => {
@@ -226,7 +231,7 @@ export function readFight(tok, combat = game.combat) {
     const best = plan?.best;
     return {id: t.id, name: t.name, visible: !hidden(t), distance: yardsBetween(tok, t),
       reach: !!best && !plan.ignoredDistance && !best.w?.ranged, ranged: !!best?.w?.ranged && !plan.ignoredDistance,
-      hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor), obvious: obvious(t.actor),
+      hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: canTell(tok, t), obvious: obvious(t.actor),
       fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0,
       hurtByAllies: [...(harm.get(t.actor?.uuid)?.keys?.() ?? [])].some(u => allies.some(a => a.actor?.uuid === u)),
       alone: !enemies.some(o => o.id !== t.id && (yardsBetween(t, o) ?? 99) <= 5)};
@@ -271,7 +276,7 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
-  // NPC 0.34.0 (B1604): a follower's standing order (attack that one, hold back, guard, wait)
+  // NPC 0.37.0 (B1804): a follower's standing order (attack that one, hold back, guard, wait)
   options = OR.fightShift(options, actor.flags?.[MOD]?.order);
   // NPC 0.24.0: a Marauder's Quiet picks among what it could do
   if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
@@ -799,7 +804,7 @@ const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf
 orders.hooks();
 Faces.registerFaceHooks();
 /* 0.10.0: the topic menu */
-const talk = buildTalk({MOD, esc, isActiveGM, chron, savedProfile});
+const talk = buildTalk({MOD, esc, isActiveGM, chron, savedProfile, tells: (a, b) => rivalry.tells(a, b)});
 talk.hooks();
 /* 0.12.0: each NPC's attitude toward each character */
 /* 0.18.0: natural rivalries between kinds of NPC */
@@ -821,10 +826,10 @@ Hooks.once("init", () => {
   rivalry.registerSettings();
   passersby.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor}};
   game.modules.get(MOD).api = api;
 });

@@ -75,7 +75,7 @@ async function save(scene, st) {
   await scene.setFlag(MOD, FLAG, st);
 }
 
-/** 0.28.0: a token joins the running chase on the scene as a pursuer (WoDX NPC: a follower with its master). */
+/** 0.29.0: a token joins the running chase on the scene as a pursuer (WoDX NPC: a follower with its master). */
 export async function join(scene, tokenId, {why = ""} = {}) {
   const st = stateOf(scene), d = scene?.tokens?.get(tokenId);
   if ( !game.user.isGM || !st || !d ) return null;
@@ -219,14 +219,21 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
   const hurt = events.filter(e => e.kind === "crash" || e.kind === "thrown");
   const buttons = [`<button type="button" class="wix-chase-undo">Undo this turn</button>`]
     .concat(hurt.map(e => `<button type="button" class="wix-chase-hurt" data-who="${esc(e.who)}" data-dice="${e.dice}" data-type="${esc(e.type ?? "bashing")}">Damage for ${esc(nameOf(state, e.who))}</button>`))
-    .concat(state.status === "caught" ? [`<button type="button" class="wix-chase-fight">Start a fight</button>`] : []);
+    .concat(state.status === "caught" ? [`<button type="button" class="wix-chase-fight">Start a fight</button>`] : [])
+    .concat(C.chaseGrudges(state).length && game.modules.get("wodx-npc")?.api?.attitude?.apply ? [`<button type="button" class="wix-chase-grudge">Hard feelings: ${esc(C.chaseGrudges(state).map(g => `${scene.tokens.get(g.npc)?.name ?? "someone"} toward ${scene.tokens.get(g.pc)?.name ?? "someone"}`).join(", "))}</button>`] : []);
   const charge = state.status === "caught" ? state.pursuers.filter(p => (state.caughtBy ?? []).includes(p.id) && C.chargeDice(state, p))
     .map(p => `<p>${esc(p.name)} rides in at speed: +${C.chargeDice(state, p)} damage dice on the first blow (mounted combat, V20 Dark Ages p. 398).</p>`).join("") : "";
   const totals = charge + `<p class="wodx-quiet">Totals: ${esc(state.quarry.name)} ${state.quarry.total}; ${state.pursuers.map(p => `${esc(p.name)} ${p.total}${p.out ? ` (${esc(p.out)})` : ""}`).join("; ")}.</p>`;
   await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), rolls: all, sound: all.length ? CONFIG.sounds?.dice : undefined,
     content: card(`The chase, turn ${state.turn} (Storyteller)`, lines.join("") + words + totals + `<div class="wodx-buttons">${buttons.join("")}</div>`),
-    flags: {[MOD]: {chaseTurn: {scene: scene.id, turn: state.turn, prev: st}}}});
+    flags: {[MOD]: {chaseTurn: {scene: scene.id, turn: state.turn, prev: st, end: state.status !== "running" ? state : null}}}});
   Hooks.callAll("wodxChase", {kind: "turn", scene: scene.id, state, events});
+  // A chase is heard (0.28.0): hooves and motors loud, feet quiet, from where the quarry is; the racers don't count
+  try {
+    const qt = scene.tokens.get(state.quarry.id);
+    if ( qt?.object ) deps.noiseAt?.({token: qt.object, noise: C.chaseNoise(state), kind: "chase", objectName: "a chase",
+      except: [state.quarry, ...state.pursuers].map(r => scene.tokens.get(r.id)?.uuid).filter(Boolean)});
+  } catch (e) { console.warn(`${MOD} | chase noise`, e); }
   if ( state.status !== "running" ) {
     Hooks.callAll("wodxChase", {kind: state.status, scene: scene.id, state});
     return state;
@@ -262,6 +269,23 @@ async function hurt(msg, who, dice, type) {
   if ( !tok?.actor ) return;
   if ( !game.wodxCombat?.soakAndApply ) { ui.notifications.warn(`WoDX Combat is off: ${dice} dice of ${type}, roll soak and apply it by hand.`); return; }
   await game.wodxCombat.soakAndApply(tok.object ?? tok.actor, {mode: "pool", amount: num(dice), type, fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
+}
+
+/** The Storyteller's button: each NPC's attitude toward the character moves one step down (NPC attitude track). */
+async function grudges(msg) {
+  const f = msg.flags?.[MOD]?.chaseTurn, scene = game.scenes.get(f?.scene);
+  const att = game.modules.get("wodx-npc")?.api?.attitude;
+  const st = f?.end ?? stateOf(scene);
+  if ( !scene || !st || !att?.apply ) return;
+  const done = [];
+  for ( const g of C.chaseGrudges(st) ) {
+    const n = scene.tokens.get(g.npc)?.actor, p = scene.tokens.get(g.pc)?.actor;
+    if ( !n || !p ) continue;
+    const e = await att.apply(n, p, {delta: -1, why: `${p.name} ${g.why}`});
+    if ( e ) done.push(`${n.name} toward ${p.name}: now ${att.of?.(n, p)?.word ?? "one step worse"}`);
+  }
+  await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: card("Hard feelings after the chase",
+    done.length ? `<ul>${done.map(d => `<li>${esc(d)}</li>`).join("")}</ul><p class="wodx-quiet">Change it on the NPC's attitude track if it doesn't fit (house rule).</p>` : "<p>Nobody's attitude changed.</p>")});
 }
 
 async function fight(msg) {
@@ -301,6 +325,7 @@ export function setupChase(d = {}) {
     wire("button.wix-chase-undo", () => undoTurn(msg));
     wire("button.wix-chase-hurt", b => hurt(msg, b.dataset.who, b.dataset.dice, b.dataset.type));
     wire("button.wix-chase-fight", () => fight(msg));
+    wire("button.wix-chase-grudge", () => grudges(msg));
   });
   return {open, start, rollTurn, end, undoTurn, join, state: stateOf, rules: C};
 }

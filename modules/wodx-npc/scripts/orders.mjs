@@ -2,7 +2,7 @@
  * WoDX NPC 0.8.0: followers who take orders. The rules are in order-rules.mjs.
  *
  *   flags.wodx-npc.serves  [actor ids]  the player characters this NPC serves (set by the Storyteller)
- *   NPC 0.34.0: an NPC also serves its domitor (a ghoul), the character whose background made it (Make them real)
+ *   NPC 0.37.0: an NPC also serves its domitor (a ghoul), the character whose background made it (Make them real)
  *   and its patron (a Creation ally); order-rules servesFrom reads all four. Keep watch and Guard now notice
  *   whoever comes and warn the master or step into the way; WoDX spots a hard order itself and suggests the roll.
  *   flags.wodx-npc.order   {kind, by, leader, target, at, hard, note, stage}
@@ -37,7 +37,7 @@ export function build(ctx) {
   async function note(html, whisper, alias = "An order") {
     return ChatMessage.create({content: `<div class="wodx-card wnpc-order">${html}</div>`, whisper, speaker: {alias}});
   }
-  /** Loyalty drift (B1616): move the follower's attitude toward one master a step, never below Distrusted by drift. */
+  /** Loyalty drift (B1816): move the follower's attitude toward one master a step, never below Distrusted by drift. */
   async function driftFor(npc, masterId, kind, extra = {}) {
     const AT = attitude?.();
     const master = game.actors.get(masterId);
@@ -92,7 +92,7 @@ export function build(ctx) {
     if ( req.kind === "follow" && !leader ) return {ok: false, why: "Pick the character it should follow."};
     const order = O.normOrder({kind: req.kind, by: user.id, leader, target: req.target ?? null, at: game.time?.worldTime ?? 0, hard: !!req.hard, note: req.note,
       errand: req.errand, task: req.task, cost: req.cost});
-    // NPC 0.35.0: errands and help need a master, a kind of errand, a task of the master's, and WoDX Storyteller's long tasks
+    // NPC 0.37.0: errands and help need a master, a kind of errand, a task of the master's, and WoDX Storyteller's long tasks
     if ( (order.kind === "errand" || order.kind === "help") && !leader ) return {ok: false, why: "Pick the character it works for."};
     if ( order.kind === "errand" && !order.errand ) return {ok: false, why: "Pick an errand."};
     if ( (order.kind === "errand" || order.kind === "help") && !ST()?.tasks?.save ) return {ok: false, why: "Errands and help need WoDX Storyteller's long tasks."};
@@ -130,9 +130,9 @@ export function build(ctx) {
     if ( order.kind === "cleanup" ) await doCleanup(npc, order, scene);
   }
 
-  /* ---------------- Errands, help, clean-up (NPC 0.35.0) ---------------- */
+  /* ---------------- Errands, help, clean-up (NPC 0.37.0) ---------------- */
 
-  /** The follower leaves the scene and works the errand as a long task on its own sheet (B1610). */
+  /** The follower leaves the scene and works the errand as a long task on its own sheet (B1810). */
   async function startErrand(npc, order, scene) {
     const w = worldActor(npc), master = game.actors.get(order.leader);
     const data = O.errandTask(order.errand, {sheet: w.system?.abilities ?? {}, master: order.leader, masterName: master?.name, note: order.note, cost: order.cost});
@@ -170,7 +170,7 @@ export function build(ctx) {
     await clear(w, {quiet: true});
     await note(`<p><b>${esc(w.name)}</b> ${esc(said)}${o.note ? ` <i>${esc(o.note)}</i>` : ""}${esc(paid)}</p>`, tellMaster(o.leader), "An errand");
   }
-  /** Add or take away a follower as a helper on one of its master's long tasks (B1611). */
+  /** Add or take away a follower as a helper on one of its master's long tasks (B1811). */
   async function setHelper(masterId, taskId, npc, on) {
     const master = game.actors.get(masterId), w = worldActor(npc);
     const t = master && ST()?.tasks?.of?.(master)?.find(x => x.id === taskId);
@@ -178,7 +178,7 @@ export function build(ctx) {
     const helpers = on ? [...new Set([...t.helpers, w.id])] : t.helpers.filter(id => id !== w.id);
     return ST().tasks.save(master, {...t, helpers});
   }
-  /** Deal with a witness (B1613): Manipulation + Subterfuge at 6; the witness's state follows in the Masquerade records. */
+  /** Deal with a witness (B1813): Manipulation + Subterfuge at 6; the witness's state follows in the Masquerade records. */
   async function doCleanup(npc, order, scene) {
     const wit = scene?.tokens?.get(order.target)?.actor;
     const w = worldActor(npc);
@@ -197,7 +197,7 @@ export function build(ctx) {
 
   async function clear(npc, {by = game.user, quiet = false} = {}) {
     if ( !flag(npc, "order") ) return {ok: true};
-    // NPC 0.35.0: a follower called back from an errand returns now; one that was helping stops
+    // NPC 0.37.0: a follower called back from an errand returns now; one that was helping stops
     const was = orderOf(npc);
     if ( was?.kind === "errand" && !quiet ) await endErrand(npc, {drop: true});
     if ( was?.kind === "help" ) await setHelper(was.leader, was.task, npc, false);
@@ -270,9 +270,9 @@ export function build(ctx) {
     await message.update({content: message.content.replace(/<button type="button" data-action="wnpc-order-cancel"[^>]*>[^<]*<\/button>/, "<p><i>Cancelled.</i></p>")});
   }
 
-  /* ---------------- Chases and breaches (NPC 0.35.0) ---------------- */
+  /* ---------------- Chases and breaches (NPC 0.37.0) ---------------- */
 
-  /** A chase starts: followers on Follow behind a pursuing master, and those told to cut off the quarry, join (B1614). */
+  /** A chase starts: followers on Follow behind a pursuing master, and those told to cut off the quarry, join (B1814). */
   async function onChase({kind, scene: sceneId, state} = {}) {
     if ( kind !== "start" || !isActiveGM() || !IA()?.chase?.join ) return [];
     const scene = game.scenes.get(sceneId);
@@ -289,7 +289,7 @@ export function build(ctx) {
     }
     return joined;
   }
-  /** A breach by a follower: the Storyteller is told whose name it may come back to (B1613). */
+  /** A breach by a follower: the Storyteller is told whose name it may come back to (B1813). */
   async function onBreach({by} = {}) {
     if ( !isActiveGM() || !by?.uuid ) return null;
     const a = worldActor(fromUuidSync?.(by.uuid));
@@ -298,7 +298,7 @@ export function build(ctx) {
     return note(`<p><b>${esc(a.name)}</b> serves ${esc(masters.map(m => m.name).join(" and "))}. Word of this breach may be laid at ${masters.length === 1 ? "that master's" : "their"} door: weigh it against their standing.</p>`, gmIds(), "Masquerade");
   }
 
-  /* ---------------- Sentries (NPC 0.34.0) ---------------- */
+  /* ---------------- Sentries (NPC 0.37.0) ---------------- */
 
   const lastLook = new Map();
   const LOOK_EVERY = 30 * 1000;
@@ -403,10 +403,10 @@ export function build(ctx) {
       if ( chron()?.approvals?.registerHandler ) registerHandler();
     });
     Hooks.on("wodxChronicleReady", () => registerHandler());
-    // NPC 0.35.0: errands come back, followers join chases, loyalty drifts, breaches are traced to masters
+    // NPC 0.37.0: errands come back, followers join chases, loyalty drifts, breaches are traced to masters
     Hooks.on("wodxTaskDone", e => onTaskDone(e).catch(err => console.error(`${MOD} | errand`, err)));
     Hooks.on("wodxChase", e => onChase(e).catch(err => console.error(`${MOD} | chase`, err)));
-    Hooks.on("wodxFed", e => { if ( !isActiveGM() ) return; const v = worldActor(e?.vessel), m = worldActor(e?.actor);
+    Hooks.on("wodxFed", e => { if ( !isActiveGM() ) return; const v = worldActor(fromUuidSync?.(e?.vessel?.uuid)), m = worldActor(fromUuidSync?.(e?.by?.uuid));
       if ( v && m && servesOf(v).includes(m.id) ) driftFor(v, m.id, "fedOn").catch(err => console.error(`${MOD} | loyalty`, err)); });
     Hooks.on("wodxGhoulFix", e => { if ( !isActiveGM() ) return; const g = worldActor(e?.actor);
       const dom = O.servesFrom({"wodx-creation": {lineage: g?.flags?.["wodx-creation"]?.lineage}})[0];

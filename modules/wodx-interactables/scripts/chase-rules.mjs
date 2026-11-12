@@ -180,7 +180,7 @@ export function newChase({quarry, pursuers = [], ground = "streets", night = fal
 }
 
 /**
- * 0.28.0 (B1614): one more pursuer joins a running chase (a follower with its master). It starts level with the
+ * 0.29.0 (B1814): one more pursuer joins a running chase (a follower with its master). It starts level with the
  * slowest pursuer still in it, so it neither gains nor loses by coming late. Returns a new state; a racer already
  * in the chase, or a chase that has ended, is left as it is.
  */
@@ -311,3 +311,26 @@ export function standing(st, p) {
 
 /** Rough yards between the quarry and a pursuer, from the lead in successes (2 a success on foot, 10 mounted). */
 export const yardsBehind = (st, p) => Math.max(0, leadOver(st, p)) * (WAYS[st.quarry.way]?.mounted ? 10 : 2);
+
+/* ---- What a chase leaves behind (0.28.0) ---- */
+
+/** How loud a turn of the chase is: hooves and motors are loud, feet, oars and bicycles quiet. */
+export function chaseNoise(st = {}) {
+  const racers = [st.quarry, ...(st.pursuers ?? []).filter(p => !p?.out)].filter(Boolean);
+  return racers.some(r => WAYS[r.way]?.hooves || WAYS[r.way]?.motor || (WAYS[r.way]?.wheels && !WAYS[r.way]?.light)) ? "loud" : "quiet";
+}
+
+/**
+ * Hard feelings once a chase is over (house rule): an NPC who was chased thinks worse of each player character who
+ * chased them, caught or not; an NPC who chased a player character and lost them thinks worse of that character.
+ * Returns [{npc: token id, pc: token id, why}]; nothing for a chase the Storyteller called off.
+ */
+export function chaseGrudges(st = {}) {
+  const q = st.quarry, out = [];
+  if ( !q || !["caught", "away"].includes(st.status) ) return out;
+  for ( const p of st.pursuers ?? [] ) {
+    if ( q.npc && !p.npc ) out.push({npc: q.id, pc: p.id, why: st.status === "caught" ? "chased them down" : "chased them"});
+    else if ( !q.npc && p.npc && st.status === "away" ) out.push({npc: p.id, pc: q.id, why: "got away from them"});
+  }
+  return out;
+}

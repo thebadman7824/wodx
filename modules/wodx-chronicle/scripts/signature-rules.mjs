@@ -12,15 +12,15 @@
  *   odd {year (last year checked), gifts: [key]}
  */
 import {mediaFor} from "./media-rules.mjs";
-import {TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+import {SMALL_LINES, GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
-export {TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
+export {SMALL_LINES, GUILDS, LEGIONS, WRAITH_FACTIONS, LUCK_DAYS, KITHS, SEEMINGS, COURTS, FAE_HOUSES, UNSEELIE_MONTHS, MAGE, HOUSES, RECORDS, TRIBES, AUSPICES, BREEDS, FERA, DEFORMITIES, KINFOLK, COURTS_TEXT, WYRM_WORDS, LUNAR_MONTH, BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
   RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.vampire\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
+const words = s => String(s ?? "").toLowerCase().replace(/^wod\.bio\.[a-z]+\./, "").replace(/[_-]+/g, " ").replace(/[^a-z ]/g, " ").split(/\s+/).filter(Boolean);
 
 /** The signature row for a clan or bloodline name, or null. Whole words only, so "Settler" is not a Setite. */
 export function vampireRow(...names) { return rowIn(VAMPIRE, ...names); }
@@ -386,6 +386,8 @@ export function sigRollEffects(list = [], ctx = {}) {
   const want = new Set((ctx.tags ?? []).map(tagKey)), ch = ctx.channel ?? "roll", out = [];
   for ( const e of list ) {
     if ( e.halve ) continue;
+    // "monster": only against a target that is not mortal (the roll's other side, when Actions knows it)
+    if ( e.when === "monster" && !(ctx.against && !/mortal|human|kinfolk|ghoul/.test(String(ctx.against))) ) continue;
     let hit = false;
     for ( const t of e.tags ?? [] ) {
       const a = ALIAS[tagKey(t)], tc = a?.ch ?? "roll", tt = (a?.tags ?? [t]).map(tagKey);
@@ -393,5 +395,54 @@ export function sigRollEffects(list = [], ctx = {}) {
     }
     if ( hit ) out.push({key: "signature", name: e.why ?? "Signature", dice: n(e.dice), diff: n(e.difficulty), note: ""});
   }
+  return out;
+}
+
+/* ---------------- Mage (Chronicle 0.33.0) ---------------- */
+
+/** A mage's rows: the Tradition, Craft or Convention, then a Hermetic House when one is named. */
+export const mageRows = ({sect = [], house = []} = {}) => [rowIn(MAGE, sect), rowIn(HOUSES, house)].filter(Boolean);
+/** The name a group goes by in a year (the Dark Ages fellowships, the Order of Reason's conventions). */
+export const nameAt = (row, year) => (row?.names ?? []).find(x => n(year) <= n(x.until))?.label ?? row?.label ?? "";
+/** Is the group not founded yet in this year? */
+export const notYet = (row, year) => row?.from != null && n(year) < n(row.from);
+/** What records the Watchers read in a year. */
+export const recordsAt = year => [...RECORDS].reverse().find(r => n(year) >= r.from)?.label ?? RECORDS[0].label;
+/** A once-a-day Willpower point (the Akashic dawn): a day is counted from dawn, 06:00. */
+export const mayMeditate = (last, now) => last == null || Math.floor((n(now) - 21600) / DAY) > Math.floor((n(last) - 21600) / DAY);
+/** Willpower plus or minus one, kept between 0 and the permanent rating. */
+export const willpowerStep = (wp = {}, d = 1) => clamp(n(wp.temporary) + d, 0, Math.max(0, n(wp.permanent) || 10));
+
+/* ---------------- Changeling (Chronicle 0.34.0) ---------------- */
+
+/** A changeling's rows, stacked: kith, seeming, court and a sidhe House. */
+export const faeRows = ({kith = [], seeming = [], court = [], house = []} = {}) =>
+  [rowIn(KITHS, kith), rowIn(SEEMINGS, seeming), rowIn(COURTS, court), rowIn(FAE_HOUSES, house)].filter(Boolean);
+/** Which court holds power in a month (1 to 12). */
+export const courtInPower = month => UNSEELIE_MONTHS.includes(n(month)) ? "unseelie" : "seelie";
+/** Glamour from a revel: one for each changeling there, one more for a Satyr. */
+export const revelGlamour = (row, glamour = {}) => clamp(n(glamour.temporary) + (row?.key === "satyr" ? 2 : 1), 0, Math.max(n(glamour.permanent) || 10, 10));
+export const isCoat = item => !!item && (item.coat === true || /\bseal\s*(skin|coat)\b/i.test(String(item.name ?? "")));
+
+/* ---------------- Wraith (Chronicle 0.35.0) ---------------- */
+
+/** A wraith's rows from the picks kept on the actor: guild, legion and faction. */
+export const wraithRows = ({guild = "", legion = "", faction = ""} = {}) =>
+  [rowIn(GUILDS, guild), rowIn(LEGIONS, legion), rowIn(WRAITH_FACTIONS, faction)].filter(Boolean);
+/** The legion the manner of death points to (the sheet's death field), or null. */
+export function legionFor(death = "") {
+  const text = ` ${words(death).join(" ")} `;
+  if ( text.trim() === "" ) return null;
+  return LEGIONS.find(l => l.death.some(w => text.includes(` ${w} `))) ?? null;
+}
+export const mayLuck = (last, now) => last == null || n(now) - n(last) >= LUCK_DAYS * DAY;
+
+/* ---------------- Hunter, Mummy, Demon, Kuei-jin, Orpheus (Chronicle 0.36.0) ---------------- */
+
+/** A small line's rows: each name (field or pick) finds its own row, so a Demon's House and faction stack. */
+export function smallRows(line, names = []) {
+  const t = SMALL_LINES[line]?.table ?? [];
+  const out = [];
+  for ( const nm of names.flat() ) { const r = rowIn(t, nm); if ( r && !out.includes(r) ) out.push(r); }
   return out;
 }

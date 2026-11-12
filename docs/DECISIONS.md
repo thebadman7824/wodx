@@ -1508,6 +1508,116 @@ Reverse: AUSPICES, BREEDS and DEFORMITIES in data/signatures.mjs; ruling, setDef
 Each of the eleven Fera of W20 Changing Breeds has a row. Bastet borrow the Nosferatu's pages of secrets, without the true face. A Nagah verdict goes to the Storyteller alone. The Hengeyokai breeds (Hakken, Khan, Nezumi, Same-Bito, Zhong Lung, Tengu, Kumo, Okuma, with the Kitsune and Nagah) also say that rank in the Beast Courts is a faction standing of its own. Apis, Camazotz and Grondr are gone before 1197 and are met only as relics. Their extinction is a house reading, because no book in the store dates it. Harm to Kinfolk sends a card for each player's Garou of that tribe, once a day.
 
 Reverse: FERA and COURTS_TEXT in data/signatures.mjs; kinHarmed in signatures.mjs.
+
+## B1165. Mage features: the group and the House (2026-11-12)
+Splat Features Desk, approved by Ben. A mage's row comes from the sheet's sect (the system keys: akashic, speakers, ether, adepts, batin, iterationx, engineers and the rest) or its custom sect. A Hermetic House named in the custom sect, or in the house flag, adds a second row. Each row carries the older names of its age: the Dark Ages fellowships to 1465 (Old Faith, Messianic Voices, Spirit-Talkers, the Batini, the Ecstatics), and the Order of Reason's conventions to 1896 (the Artificers, the Cabal of Pure Thought, the Hippocratic Circle, the High Guild, the Void Seekers). Some groups have their own years: the Sons of Ether from 1904, the Virtual Adepts from 1961 (a house reading), the Hollow Ones from 1890 (a house reading), and the Celestial Masters and Craftmasons from 1325 to 1896 (a house reading). The new world setting "Tradition, Craft and Convention features (Mage)" is off by default.
+
+Reverse: MAGE and HOUSES in data/signatures.mjs; mageRows, nameAt and notYet in signature-rules.mjs; the sigMage setting.
+
+## B1166. The Mage engines (2026-11-12)
+The Akashic Brotherhood meditate at dawn for a Willpower point, once a day. The Euthanatos gain a Willpower point for a Good Death and a point of Jhor for a death in anger. The Order of Hermes and House Flambeau call a certámen: a public card whose button logs the stake as a minor favour. The Sisters of Hippolyta keep oaths, and breaking one costs a Willpower point. The New World Order hear of every breach of the Masquerade first, through the records of the age. Some groups borrow an engine: the Taftani bind djinn in the Giovanni's servant ledger, the Syndicate use the Shadow Lords' leverage, the Celestial Masters use the Stargazers' reading of the sky, House Quaesitor posts rulings, and the Nephandi use the Followers of Set's Corruption ledger. Science became a roll tag, for the Sons of Ether.
+
+Reverse: meditate, death, certamen, oath, breakOath and onBreach in signatures.mjs.
+
+## B1167. The Houses (2026-11-12)
+Bonisagus, Flambeau, Quaesitor, Shaea, Ex Miscellanea, Janissary, Diedne and Tremere have rows. Janissary ends in 1700 (a house reading). Diedne were gone before 1197. House Tremere leaves the Order in 1199 (a house reading) and is the clan from then on. The other Houses (Tytalus, Verditius, Criamon, Merinita, Jerbiton, Bjornaer, Guernicus, Mercere, Fortunae) share one row until Houses of Hermes is in the store.
+
+Reverse: HOUSES in data/signatures.mjs.
+
+## B1500. Changeling features stack: kith, seeming, court and House (2026-11-12)
+Splat Features Desk, approved by Ben. A changeling's rows come from the sheet's kith (the system's keys or the custom kith), seeming, court and House, all at once. The system's longer kith list is grouped: every Thallain kith reads as the Thallain row, the Inanimae kinds as the Inanimae, the Nunnehi tribes as the Nunnehi, and the Dark-Kin as one row (its feature is a house reading). The Dauntain and the Hsien have rows, the Hsien by their shinma. The new world setting "Kith, seeming and court features (Changeling)" is off by default.
+
+Reverse: KITHS, SEEMINGS, COURTS and FAE_HOUSES in data/signatures.mjs; faeRows in signature-rules.mjs; the sigChangeling setting.
+
+## B1501. The Changeling engines (2026-11-12)
+A Satyr or Clurichaun holds a revel: a public card whose button gives a point of Glamour to each changeling on the scene, and two to a Satyr. A Pooka who tells the plain truth loses a Willpower point. A Selkie's seal coat is an item, and the Storyteller hears when it leaves the pack. Trolls and sidhe keep oaths with the Hippolyta engine, and breaking one costs a Willpower point. The extra soak die for a troll's cause is the Storyteller's to add.
+
+Reverse: revel, toldTruth, giveCoat and onItemGone in signatures.mjs.
+
+## B1502. Courts by the season, seemings by the years (2026-11-12)
+From Samhain (1 November) to Beltaine (1 May) the Unseelie Court holds power, and the Seelie Court holds it for the rest of the year. The court in power gains a die on its own social rolls (Etiquette and Leadership for the Seelie, Intimidation and Subterfuge for the Unseelie). In the Dark Ages the text reads the courts as the seasonal Courts. A childling resists Banality one easier and a grump one harder, and a grump gains a die to lore. Banality became a roll tag, and an effect can name dark (a scene at half darkness or more) as its condition.
+
+Reverse: COURTS, SEEMINGS and UNSEELIE_MONTHS in data/signatures.mjs; whenNow in signatures.mjs.
+
+## B1503. The sidhe Houses (2026-11-12)
+Each of the fourteen Houses has a row with a seat in the fae courts and a one-line theme. Ailil, Dougal, Eiluned, Gwydion and Scathach gain a die to the field of their theme. The Storyteller applies each House's boon and flaw from the book (C20 pdf 10, 51), because they are not written out here. A Fianna Galliard now gains Wisdom for a tale, as any Galliard does: the gate found that the tribe's row hid the auspice's.
+
+Reverse: FAE_HOUSES in data/signatures.mjs; isScarOnly and tale in signatures.mjs.
+
+## B1504. Wraith features: Guild, legion and faction, picked on the actor (2026-11-12)
+Splat Features Desk, approved by Ben. The wraith sheet has no field for a Guild or a legion, so the feature window picks them, and the picks are kept in the actor flag wodx-chronicle.wraith. Rows stack in the order Guild, legion, faction. A legion is suggested from the sheet's death field by the manner of death: violence for the Grim Legion, illness for the Skeletal, old age for the Iron, despair for the Silent, madness for the Penitent, mystery for the Paupers, chance for the Emerald and fate for the Fate Legion. Joining by the manner of death is a house reading, because the books do not say it outright. The new world setting "Guild and legion features (Wraith)" is off by default.
+
+Reverse: GUILDS, LEGIONS and WRAITH_FACTIONS in data/signatures.mjs; wraithRows and legionFor in signature-rules.mjs; the sigWraith setting.
+
+## B1505. The Wraith engines (2026-11-12)
+Several rows borrow engines already built. The Oracles and the Fate Legion read the Malkavian riddle of the next event, once a night. The Pardoners keep confessions as Shadow Lord leverage. The Penitent Legion hear through a derangement. The Emerald Legion's luck allows a reroll on a roll of chance once a week, a house reading of "once a story". The Guilds' Arcanoi name their rows too, so "Keening" finds the Chanteurs. Investigation, Angst and the Harrowing became roll tags.
+
+Reverse: setWraith and luck in signatures.mjs.
+
+## B1506. Factions of the dead (2026-11-12)
+Heretics, Renegades, Ferrymen, Spectres (NPCs) and the Risen have rows. A wraith takes at most one, as the faction pick.
+
+Reverse: WRAITH_FACTIONS in data/signatures.mjs.
+
+## B1507. Signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus (2026-11-12)
+Splat Features Desk, approved by Ben. Each line has its own table and its own world setting, all off by default. The rows come from the sheet's own field where it has one: the Hunter's creed, the Mummy's Amenti, and the Demon's House and faction, which stack. Kuei-jin and Orpheus sheets have no field, so the group is picked in the feature window and kept in the actor flag wodx-chronicle.splat. A Kuei-jin is a Vampire whose variant or profile names kuei-jin; an Orpheus character is one whose profile names Orpheus, a projector or a Shade.
+
+Reverse: SMALL_LINES and its tables in data/signatures.mjs; smallRows in signature-rules.mjs; smallLineOf and setSplat in signatures.mjs.
+
+## B1508. The hunters by era (2026-11-12)
+Standing rule 12 sets the eras. Inquisitors and the Society of Leopold play in every era. Mortal hunters (Hunters Hunted II) run from 1500 to 1998, and the imbued creeds from 1999. Government agencies run from 1900, a house reading. The Avengers' and Waywards' fight die counts only against a target that is not mortal, when the roll knows its target; with no target it gives nothing. The Inquisition and the agencies hear of breaches as the New World Order does, and the Watchers card now names whichever groups heard.
+
+Reverse: HUNTER in data/signatures.mjs; the "monster" condition in sigRollEffects.
+
+## B1509. Borrowed engines across the small lines (2026-11-12)
+Defenders and the Kher-minu guard a place, with the Black Fury engine. Judges give a hidden verdict, and the Crane posts a ruling. Hermits, Fiends and the Banshee read the riddle of the next event, and the Mesektet read the stars. The Sefekhi bind the dead. Ishmaelites trade pages of secrets. Defilers use the Corruption ledger. Faustian pacts are leverage.
+
+Reverse: the also and feature fields on each row.
+
+## B1510. Lines with NPCs only (2026-11-12)
+Bane mummies, the Earthbound, the Wan Xian and the Cabiri have rows for the Storyteller's NPCs, with a lore page or a card where the desk asked for one.
+
+Reverse: those rows in data/signatures.mjs.
+## B1511. City Masquerade exposure (2026-11-12)
+Each city keeps one exposure track. A breach recorded by the witness rules adds 1, plus 1 for each witness past the first (2 more at most), plus 1 from 1605 when printed news carries it, plus 2 when the scene is marked watched by a camera. A breach kept in a closed place (spread off) gets no print point. Each 7 quiet days take 1 off. The bands are Quiet 0, Whispers 3, Talk 6, Watched 10 and Hunted 15. A Storyteller card comes when a band is crossed upward. Hunted starts a big rumour through the Storyteller module. Idea from the Princes of Darkness mod; numbers are a house rule.
+
+Reverse: setting podExposure off; EXPOSURE_BANDS and breachPoints in pod-rules.mjs.
+
+## B1512. Each sect's law and bringing a culprit to heel (2026-11-12)
+A Camarilla court (and the Church of Caine before 1435) acts at Watched; Sabbat, Anarch and sectless cities act only at Hunted. The court card names the culprit and the V20 means of enforcement (Dominate or Presence against Willpower, or an accusation before the court). Its button lowers the city's exposure by 3. The Storyteller sets each city's law in the window.
+
+Reverse: SECT_LAW and HEEL_DROP in data/pod.mjs.
+
+## B1513. The city of a scene (2026-11-12)
+A scene's flag wodx-chronicle.city names its city; otherwise the world setting podCity (Rothenstein by default).
+
+Reverse: cityOf in pod.mjs.
+
+## B1514. Great cities that change with history (2026-11-12)
+Constantinople, Rome, Paris, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc have dated states taken from history (sackings, occupations, rebuildings, changes of ruler). Each state has tags, a smell and a sound. Senses adds the smell and sound to every answer in that city through wodxSensesGather. Map generation reads api.pod.cityState(scene or name, year).
+
+Reverse: setting podCities off; CITIES in data/pod.mjs.
+
+## B1515. Raising or restoring a building (2026-11-12)
+The window's Raise or restore posts a card. Its button logs a minor boon in the Storyteller's Ledger, owed by the faction that gains to the patron. Money and holdings stay with the Storyteller's holdings window.
+
+Reverse: raiseBuilding in pod.mjs.
+
+## B1516. Golconda as a long road (2026-11-12)
+A Kindred seeker has a road of 10 steps, kept on the actor. Taking a life (lethal and aggravated damage reaching seven levels from the seeker's attack) costs 2 steps. Frenzy, a won pickpocket lift, and feeding of 3 or more blood points or by force each cost 1 step. A mentor teaches one step for each 30 days on the clock, through the approval queue. The Storyteller adds a step for a test passed. At 10 a card offers Grant Golconda, which sets WoDX Actions' own golconda flag. V20 p. 30 (pdf 38); the road's steps and costs are a house rule.
+
+Reverse: setting podGolconda off; GOLCONDA_SETBACKS and MENTOR_DAYS in data/pod.mjs.
+
+## B1517. Story chains (2026-11-12)
+Six dated chains: a Setite corrupting a faith, the Anarch Revolt (1381 to 1493), the Black Death (1347 to 1353), the Inquisition coming to town (1231 to 1834), a hunt for an Antediluvian (1493 to 1999) and the Week of Nightmares (1999). The Storyteller starts one in the window, at a place. The clock deals each step as a Storyteller card after its gap in days. These are different from the lifepath chains of B1311: they run in play, not in creation.
+
+Reverse: setting podChains off; CHAINS in data/pod.mjs.
+
+## B1518. Opening goals (2026-11-12)
+Each line has three opening goals for before 1800 and three from 1800, and mortals and other kinds use the mortal list. A character with a player owner and no goal gets the goals as buttons in the feature window. Signing off before the first night posts the list to the owner.
+
+Reverse: GOALS in data/pod.mjs; section in pod.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1608,62 +1718,170 @@ Blood on an intruder adds "blood on them" to the alarm and makes a challenge or 
 
 Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
 
-## B1600. One tie for followers (2026-11-12)
+## B1380. What an NPC can tell of a character (2026-11-12)
+An NPC can tell what someone is only when it is plainly inhuman (a war form, Horrid Form, a spirit or wraith that shows itself, or the Storyteller's "obvious" tick), when one of its senses shows that line (Auspex 2 and up, Second Sight, Kenning; Garou scent, Sense Wyrm and mage Awareness by roll, as for rivalries), or when the Masquerade records list it as a witness who saw that character and was not made to forget. The same check now runs for player characters as for NPCs. A hunter NPC's "goes for the monster first" and "take them alive" use it, not the sheet's kind.
+
+Reverse: canTell in wodx-npc/scripts/main.mjs back to supernatural(t.actor).
+
+## B1381. Mortals noticing a tell (2026-11-12)
+A mortal NPC's greeting remark on a character's oddness ("Your hands are like ice") needs the NPC to tell what the character is (B1380), or one success on Perception + Alertness at difficulty 7, seeded by the day so it stays the same all day. An NPC with no sheet numbers rolls three dice. Wounds and frenzy anyone sees. House rule.
+
+Reverse: noticesTell in talk-rules.mjs returns true.
+
+## B1382. Strangers in chat and the combat tracker (2026-11-12)
+With "Faces you have met" on, each player's chat and combat tracker show the stranger's words in place of the name of any NPC on the scene or in the fight whose face that player has not met. Names of the player's own characters are never swapped. Sheets are not changed.
+
+Reverse: remove the renderChatMessageHTML and renderCombatTracker hooks in faces.mjs.
+
+## B1383. Creatures of another kind remember what they saw (2026-11-12)
+When WoDX Actions reports that a creature of another kind saw someone for what they are (the "Seen by another kind" card), the active Storyteller's WoDX NPC keeps it on that witness (flags.wodx-npc.seenAs). From then on that NPC can tell what the other is (B1380). Mortal witnesses are already kept in the Masquerade records. Player characters are not marked. At most 200 sightings are kept per NPC. Missed Connections Desk item x9, first half; the fed-on vessel waits on Actions adding the vessel to the hunt hook.
+
+Reverse: remove the wodxSecretSeen hook in wodx-npc rivalry.mjs.
+## B1408. The stranger line (2026-11-12)
+With Faces on, an unmet NPC's nameplate reads what a character can see before they meet: dress by station ("a well dressed stranger"), a side worn openly ("in livery"), blood or wounds, a weapon drawn, what their routine has them doing, and their manner toward the viewer's character as words ("wary of you"). Animals read as their kind. The Storyteller's own stranger text wins. House rule.
+
+Reverse: autoStranger and the auto argument of nameFor in faces-rules.mjs; autoFor in faces.mjs.
+
+## B1409. Look them over (2026-11-12)
+A roll in With this person: Perception + Empathy (or Etiquette, or Awareness), difficulty 6. One success gives their mood and condition, two their station and trade, three who they belong with, four what they hide (a concealed weapon, or a disguise that doesn't fit). Only a mortal's trade shows. A botch misreads them. The result goes to the player and the Storyteller only. House rule.
+
+Reverse: LOOKOVER and lookOverFacts in social-rules.js; lookOver in social.js.
+
+## B1410. Ask around about them (2026-11-12)
+Wits + Streetwise (or Charisma or Manipulation + Streetwise), difficulty 6, with a die for each dot of Contacts. One success: what people say of them; two: their name. Learning a name does not introduce the face: the Storyteller still does that from the token HUD. House rule.
+
+Reverse: askFacts in social-rules.js.
+
+## B1411. Players dress as someone else (2026-11-12)
+Worn clothes have a Dress as someone else use: the player sets the station and sides it passes for, and puts it on. The Storyteller can still set one in the Examine notes.
+
+Reverse: the dressas ability in use-rules.mjs; dressAs in use.mjs.
+
+## B1384. A fed-on NPC remembers (2026-11-12)
+When a Kindred feeds on a named NPC through WoDX Actions (drinking at least one point), the NPC keeps it (flags.wodx-npc.fedOn). A mortal vessel keeps a swoon and a lost hour, not who or what: the Kiss leaves little more (V20 core, the Kiss). One who fought it, a Kindred or ghoul vessel, or one already marked as knowing the Kindred saw what fed, and from then on can tell that one (B1380). A willing vessel learns nothing new. House reading. Missed Connections Desk x9, second half.
+
+Reverse: remove the wodxFed hook in wodx-npc rivalry.mjs (Actions may keep sending it).
+
+## B1385. One name lookup (2026-11-12)
+WoDX NPC's api.nameFor(actor, viewer) answers what a viewer calls an NPC: the name for the Storyteller and when "Faces you have met" is off, else the stranger's words until one of the viewer's characters has met them. Chat and the combat tracker are masked per viewer at render (B1382), so cards keep the real name for the Storyteller; windows a player opens (With this person, Trade) ask nameFor. Missed Connections Desk x1.
+
+Reverse: viewName in wodx-actions social.js back to nameFor.
+
+## B1600. Before the First Night lives in WoDX Creation (2026-11-12)
+The guided start for player characters is a hub inside WoDX Creation (first-night.mjs, first-night-rules.mjs), with buttons on the character sheet header, the Creation window and the Chronicle Clock, and the Storyteller's setup wizard opens it when done. No new module. Chronicle Start Desk items c1 to c6, approved by Ben 2026-11-12 04:46Z.
+
+Reverse: remove first-night*.mjs and their lines in main.mjs, apps.mjs, clock-app.mjs and setup.mjs.
+
+## B1601. Steps, approval and sign-off (2026-11-12)
+Ten steps in any order, sign-off last; the lifepath is optional. A player marks a step done through the approval queue (type wodx-first-night-step); the Storyteller ticks or unticks directly. Concept, lifepath, build (the creation check matches the book's totals) and Merits and Flaws tick themselves from the sheet. Kept on flags.wodx-creation.firstNight, and carried through a change of state with the lifepath.
+
+Reverse: STEPS and autoDone in first-night-rules.mjs.
+
+## B1602. Flaw cap (2026-11-12)
+Flaw points are counted against V20's cap of 7 freebies; over the cap the step stays open. Each flaw shows a one-line cost from the trait effect tables while building.
+
+Reverse: FLAW_CAP in first-night-rules.mjs.
+
+## B1603. The trouble forecast (2026-11-12)
+Read from the systems WoDX has: trait effect tables (PULLS, LEDGER, PROMPTS, TRIGGERS, BG_WORLD), the splat feature row (even when that line's features are off), Generation 14 or more (thin blood) and 8 or less (envied blood, Storyteller only), Humanity or Road 4 or less, lifepath people whose role reads as hostile, flaws kept from the lifepath but not bought, faction standing below 0, rivalries at Hostile or worse toward the character's sides, dated events for the line up to five years ahead or the first year of the next era, no language shared with the troupe, and gear out of its time. A secret's clock, envied blood and coming events are for the Storyteller only; the rest the player sees. House rule.
+
+Reverse: forecast in first-night-rules.mjs.
+
+## B1604. The trouble dial and the story hook (2026-11-12)
+Each character's dial (Quiet 0.5, Normal 1, Often 1.5) scales the chance that their own flaws turn up in WoDX Storyteller's night draw (capped at 0.9). One story hook per character; once the Storyteller agrees (approval type wodx-first-night-hook), a reminder comes after four ended sessions if it has not been marked as brought in. House rules after Hero System's frequency and Ars Magica's story flaws.
+
+Reverse: DIAL and HOOK_SESSIONS in first-night-rules.mjs; dialOf in Storyteller night.mjs.
+
+## B1605. Seed cards at sign-off (2026-11-12)
+Sign-off posts the forecast (the player's view to the owners, all of it to the Storyteller) and one Storyteller card per seed: a living enemy from the lifepath made as an NPC at Hostile, the flaws' Ledger entries (one card), the Backgrounds made real (one card), a Ledger consequence dated to each coming event, and a starting faction standing. Make it, Skip, and Undo once made (Undo removes what the card made).
+
+Reverse: first-night-seed.mjs.
+
+## B1606. Starting faction standing (2026-11-12)
+A faction whose name carries one of the character's own sides starts at Tolerated, one step more per two dots of Status, up to Honoured; one named for a side that hates the character's kind starts at Distrusted, or Hostile when the enmity hunts on sight. Standing already set is left alone. House rule.
+
+Reverse: suggestStanding in first-night-rules.mjs.
+
+## B1610. The guided builder (2026-11-12)
+Creation 0.13.0's Build window sets Attributes (1 to 5), Abilities (0 to 5) and the Virtues in use (1 to 5) on the sheet and shows the creation check's count live, for every line with creation totals. Backgrounds, powers, Merits and Flaws are added on the sheet and counted. Chronicle Start Desk b1.
+
+Reverse: first-night-build.mjs, first-night-build-rules.mjs.
+
+## B1611. The prelude runner (2026-11-12)
+Scenes: the lifepath's life-before scenes, then the line's Before, The turn and After from WoDX Storyteller's templates; a short prelude keeps the turn and after. A roll with stakes is the Storyteller's pool against a difficulty (6 by default), ones cancel (V20); on no successes the stake is paid. House rule.
+
+Reverse: buildScenes, STAKES in first-night-prelude-rules.mjs.
+
+## B1612. What a prelude may change (2026-11-12)
+Flaws earned in play are added at 0 points, so they give no freebies and do not count against the cap: Enemy (with a Hostile NPC), Dark Secret, Nightmares, Hunted. Gains: up to 3 freebie points, priced by the book's costs (an Ability, a Background or Willpower dot). Each change has Undo in the runner's log. House rule until the book check finds V20's own advice. Desk p3.
+
+Reverse: PRELUDE_BUDGET, REWARDS in first-night-prelude-rules.mjs.
+
+## B1613. Troupe ties (2026-11-12)
+Six questions in any era's words; each character asks about the next in a ring of the player characters by name. Answers go on the Group actor (flags.wodx-creation.ties) and tick the ties step; a player's answer reaches the Storyteller by socket. How they met makes an observer journal of the answers. Desk t1.
+
+Reverse: TIE_QUESTIONS, ring; sendTies, saveTie in first-night-prelude.mjs.
+
+## B1614. Late joiners (2026-11-12)
+Once any character in the world is signed off, a new character's hub says the chronicle is under way, and the prelude runner starts in short mode. The forecast reads the current year as for everyone. Desk t2.
+
+Reverse: underWay in first-night-prelude-rules.mjs.
+## B1800. One tie for followers (2026-11-12)
 An NPC serves every character named by any of four ties: flags.wodx-npc.serves, flags.wodx-chronicle.bound.actor (a background made real), flags.wodx-creation.lineage.domitor (a ghoul, {id, name}) and flags.wodx-creation.ally.patron. Each tie stays with the module that keeps it; the orders tool reads all four.
 
 Reverse: servesFrom in wodx-npc/scripts/order-rules.mjs.
 
-## B1601. Hard orders WoDX spots (2026-11-12)
+## B1801. Hard orders WoDX spots (2026-11-12)
 Any order but Wait given while a fight is on the scene, and a Go-to order toward a hostile token or one plainly not human, counts as hard even unticked, and goes to the approval queue with the reasons.
 
 Reverse: hardReasons in order-rules.mjs.
 
-## B1602. The suggested refusal roll (2026-11-12, house rule)
+## B1802. The suggested refusal roll (2026-11-12, house rule)
 A ghoul blood bound to the leader obeys; only an order that means near-certain death lets it try to refuse, Willpower difficulty 8. Anyone else refuses on any success of Willpower at 6, plus its attitude step toward the leader and its bond stage, held to 4-9. The Storyteller still decides.
 
 Reverse: loyaltyCheck in order-rules.mjs; loyaltyFor in orders.mjs.
 
-## B1603. Sentries (2026-11-12)
+## B1803. Sentries (2026-11-12)
 A follower on Keep watch or Guard rolls to notice anyone who moves on the scene who is not a player's character, a passer-by or a follower of the same master, at most once every 30 seconds for each pair, with the reaction regions' sight range, walls and notice roll. Watch whispers a warning to the master's players and the Storyteller. Guard, within 10 yards, steps beside the stranger and challenges them; farther off it warns.
 
 Reverse: sentryAct, isIntruder, GUARD_YARDS in order-rules.mjs; sentries in orders.mjs; noticeBy in routines.mjs.
 
-## B1604. Orders in a fight (2026-11-12)
-Two new orders, Attack the one I point at and Hold back. The fight AI lays the standing order over its choices: +5 on striking the ordered target; Hold back takes 6 off every blow and adds a full defence; Guard and Wait take 2 off running. Fear, frenzy and Rötschreck still win. Every follower also counts its masters (B1600) as a ghoul counts its domitor when choosing whom to strike. Attack is a hard order outside a fight or against something plainly not human; the other orders in a fight are not hard (B1601 narrowed to sending a follower across a fight).
+## B1804. Orders in a fight (2026-11-12)
+Two new orders, Attack the one I point at and Hold back. The fight AI lays the standing order over its choices: +5 on striking the ordered target; Hold back takes 6 off every blow and adds a full defence; Guard and Wait take 2 off running. Fear, frenzy and Rötschreck still win. Every follower also counts its masters (B1800) as a ghoul counts its domitor when choosing whom to strike. Attack is a hard order outside a fight or against something plainly not human; the other orders in a fight are not hard (B1801 narrowed to sending a follower across a fight).
 
 Reverse: fightShift in order-rules.mjs; masters and OR.fightShift in main.mjs readFight and planTurn.
 
-## B1610. Errands (2026-11-12, house rule)
+## B1810. Errands (2026-11-12, house rule)
 A new order, Go and do this, sends a follower on one of six errands (buy, carry a message, find, ask around, bring someone to feed on, watch a rival). It leaves the scene (its tokens hidden) and works the errand as a long task on its own sheet: the named Attribute and the first of the named Abilities its sheet carries, difficulty 6, 2 to 4 successes, by the hour (watching a rival: by the day). When the task ends the follower comes back and a card tells its master's players and the Storyteller how it went. Calling it back drops the task.
 
 Reverse: ERRANDS, errandTask, errandResult in wodx-npc/scripts/order-rules.mjs; startErrand, endErrand, onTaskDone in orders.mjs; the wodxTaskDone hook in wodx-storyteller/scripts/tasks.mjs.
 
-## B1611. Helpers on long tasks (2026-11-12, house rule)
+## B1811. Helpers on long tasks (2026-11-12, house rule)
 Help me with a long task adds the follower to one open long task of its master's. Each helper adds its own dots in the task's Ability, at least one die, as workers do. V20 teamwork pools successes instead; dice keep one roll per interval.
 
 Reverse: helperDice and helpers in wodx-storyteller/scripts/tasks-rules.mjs; poolFor in tasks.mjs; setHelper in orders.mjs.
 
-## B1612. Shopping with the master's purse (2026-11-12)
+## B1812. Shopping with the master's purse (2026-11-12)
 A buying errand carries a price in the smallest coin. When the errand ends, done or botched, the price comes from the master's purse through WoDX Storyteller's money; a purse that cannot pay means nothing was bought.
 
 Reverse: onTaskDone in orders.mjs.
 
-## B1613. Witnesses and breaches (2026-11-12)
+## B1813. Witnesses and breaches (2026-11-12)
 Deal with that witness rolls the follower's Manipulation + Subterfuge at 6 on the targeted witness: a success marks them talked round in the Masquerade records, a botch marks that they told others. A breach recorded against a follower posts a card to the Storyteller naming its masters, for their standing; nothing changes on its own.
 
 Reverse: cleanupOutcome in order-rules.mjs; doCleanup and onBreach in orders.mjs.
 
-## B1614. Chases (2026-11-12)
+## B1814. Chases (2026-11-12)
 When a chase starts, a follower on Follow whose master is a pursuer, and one told to Cut them off the quarry, join as pursuers, level with the slowest pursuer still in it.
 
 Reverse: joinChase in wodx-interactables/scripts/chase-rules.mjs; join in chase.mjs; onChase in orders.mjs.
 
-## B1615. Spying for politics (2026-11-12)
-Watching a rival is an errand (B1610): on success the Storyteller tells the master the rival's comings and goings and what it plans at the next faction turn. Followers hold no seat or office.
+## B1815. Spying for politics (2026-11-12)
+Watching a rival is an errand (B1810): on success the Storyteller tells the master the rival's comings and goings and what it plans at the next faction turn. Followers hold no seat or office.
 
 Reverse: ERRANDS.spy in order-rules.mjs.
 
-## B1616. Loyalty drift (2026-11-12, house rule)
+## B1816. Loyalty drift (2026-11-12, house rule)
 A follower's attitude toward its master moves one step through WoDX NPC's attitude track: up when a ghoul drinks from its domitor, down for each month a ghoul goes without, when its master feeds on it, and when it is made to carry out a hard order. Drift never takes it below Distrusted, so it never starts a fight; at Distrusted the Storyteller is told it may refuse, leave or turn.
 
-Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs and the wodxFed hook in wodx-actions/scripts/main.js.
+Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs; WoDX Actions' wodxFed hook (by, vessel).

@@ -1,5 +1,5 @@
 /**
- * Followers, part 1 (WoDX NPC 0.34.0, Sheets 0.10.1), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * Followers, part 1 (WoDX NPC 0.37.0, Sheets 0.10.1), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefollowers.mjs?${Date.now()}`)).run()
  * It makes a scratch scene and actors and deletes them; it does not move the clock. The scene in view is put back.
  *   1. the modules, versions and APIs
@@ -36,7 +36,7 @@ export async function run() {
   const actors = [];
   const cards = () => game.messages.contents.filter(m => m.timestamp >= msgStart);
   try {
-    ok("1. modules", atLeast("wodx-npc", "0.34.0") && atLeast("wodx-sheets", "0.10.1") && !!NPC?.orders?.give && !!NPC?.orders?.sentries && !!O?.servesFrom && !!O?.fightShift,
+    ok("1. modules", atLeast("wodx-npc", "0.37.0") && atLeast("wodx-sheets", "0.10.1") && !!NPC?.orders?.give && !!NPC?.orders?.sentries && !!O?.servesFrom && !!O?.fightShift,
       {versions: ["wodx-npc", "wodx-sheets", "wodx-creation", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
     await game.settings.set("wodx-npc", "followerOrders", true);
 
