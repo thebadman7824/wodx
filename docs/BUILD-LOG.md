@@ -1683,6 +1683,6 @@ Chronicle 0.37.0 builds the four ideas taken from the Princes of Darkness mod, w
 
 Ben approved the Followers Review Desk. Part 1: the orders tool now reads every tie (B1800), so ghouls, backgrounds made real and Creation allies take orders without a macro. WoDX spots hard orders (B1801) and puts a suggested refusal roll on the approval (B1802). Keep watch and Guard notice strangers with routines.mjs noticeBy and warn or challenge (B1803). Fight orders: Attack the one I point at and Hold back, laid over the fight AI's choices with fightShift (B1804). The Ties tab fix landed on main first (Sheets 0.11.0), so it is not in this build. Harness tests in tools/harness/orders.test.mjs.
 
-## 2026-11-12: followers, part 2 (NPC 0.38.0, Storyteller 0.41.0, Chronicle 0.40.0, Interactables 0.31.0)
+## 2026-11-12: followers, part 2 (NPC 0.38.0, Storyteller 0.42.0, Chronicle 0.41.0, Interactables 0.31.0)
 
 The rest of the Followers Review Desk. Errands as long tasks on the follower's own sheet, with a wodxTaskDone hook from Storyteller (B1810); helpers on long tasks (B1811); buying from the master's purse (B1812); dealing with a witness and breaches traced to masters (B1813); followers join chases through a new Interactables chase.join (B1814); watching a rival (B1815); loyalty drift through Actions' wodxFed and a new wodxGhoulFix (Chronicle) hook (B1816).

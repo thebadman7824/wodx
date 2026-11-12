@@ -614,7 +614,7 @@ export async function ghoulFed(actorOrId) {
   if ( !a ) return null;
   const sig = sigOf(a); sig.ghoul = {fedAt: now(), warned: 0};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  // 0.40.0: WoDX NPC's loyalty drift
+  // 0.41.0: WoDX NPC's loyalty drift
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: true, months: 0});
   return sig.ghoul;
 }

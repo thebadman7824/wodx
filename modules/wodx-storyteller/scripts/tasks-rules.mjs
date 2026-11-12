@@ -73,7 +73,7 @@ export function normTask(t = {}) {
     recipe: String(t.recipe ?? "").slice(0, 40), batch: Math.max(1, Math.min(100, Math.round(n(t.batch) || 1))),
     wait: Math.max(0, Math.min(3650, Math.round(n(t.wait)))), waitWord: String(t.waitWord ?? "").slice(0, 40),
     strength: !!t.strength, impure: !!t.impure, leaves: strs(t.leaves), teaches: String(t.teaches ?? "").slice(0, 40),
-    // 0.41.0: followers who help (WoDX NPC), and an errand a follower runs for its master
+    // 0.42.0: followers who help (WoDX NPC), and an errand a follower runs for its master
     helpers: strs(t.helpers).slice(0, 6), errand: String(t.errand ?? "").slice(0, 20), master: String(t.master ?? "").slice(0, 40)
   };
 }
@@ -196,7 +196,7 @@ export function newId(existing = {}, rand = Math.random) {
 }
 
 /**
- * 0.41.0 (B1810, house rule): followers helping on a long task. Each helper adds its own dots in the task's
+ * 0.42.0 (B1810, house rule): followers helping on a long task. Each helper adds its own dots in the task's
  * Ability, at least one die, as workers do; V20 teamwork pools helpers' successes; WoDX adds dice instead. The
  * caller passes [{dots}] for the helpers still in the world.
  */

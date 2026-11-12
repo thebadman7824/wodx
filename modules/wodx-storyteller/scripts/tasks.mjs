@@ -50,7 +50,7 @@ export function poolFor(a, task) {
   const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
   // 0.27.0: a faction's building rolls its Resources + Retainers; workers add a die each
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
-  // 0.41.0: followers helping add their own dots in the Ability
+  // 0.42.0: followers helping add their own dots in the Ability
   const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: t.ability ? num(h.system?.abilities?.[t.ability]?.value) : 0})));
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
 }
@@ -161,7 +161,7 @@ export async function tick({force = false} = {}) {
       }
       if ( !lines.length ) continue;
       await a.update(Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])));
-      // 0.41.0: a task that has just ended, for WoDX NPC's errands
+      // 0.42.0: a task that has just ended, for WoDX NPC's errands
       for ( const [id, t] of Object.entries(after) ) if ( ["done", "ruined"].includes(t.status) && !["done", "ruined"].includes(before[id]?.status) ) Hooks.callAll("wodxTaskDone", {actor: a, task: t});
       await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined});
       for ( const l of lines ) {
