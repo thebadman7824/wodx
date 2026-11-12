@@ -1232,7 +1232,8 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
     if (!actor) return;
     const vessel = targetActor(t);
     const tokDoc = vessel ? vesselTokenDoc(t, vessel) : null;
-    const vType = vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : vessel && P.detectProfile(vessel) === "beast" ? "dog" : "human";
+    const pbVessel = tokDoc?.flags?.["wodx-npc"]?.passerby?.vessel;
+    const vType = pbVessel && R.VESSELS[pbVessel] ? pbVessel : vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : vessel && P.detectProfile(vessel) === "beast" ? "dog" : "human";
     const vb = vessel ? vesselBlood(vessel, vType) : null;
     const rule = feedingRule(actor);
     const vtags = vessel ? vesselTagsOf(vessel, tokDoc) : [];
@@ -1288,6 +1289,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const v = virtues(actor), b = blood(actor);
     const vessel = R.VESSELS[vesselType] ?? R.VESSELS.human;
     const vKind = vesselActor ? P.detectProfile(vesselActor) : null;
+    // A passer-by animal stands on a mortal sheet: no human vessel rolls for it (B971)
+    const pbAnimal = !!vesselActor?.token?.flags?.["wodx-npc"]?.passerby?.animal;
     const vampireVessel = vesselType === "vampire" || (vesselActor && isVampire(vesselActor));
     // The vessel's blood: a living vessel has the lower of its blood and (full - damage) (V20 printed p. 269, both ways)
     const vb = vesselActor ? vesselBlood(vesselActor, vesselType) : { living: !vampireVessel, value: vessel.pool, full: vessel.pool, system: false };
@@ -1404,7 +1407,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const lost = vb.full - bloodLeft;
         const out = KF.vesselOutcome(Math.max(lost, vb.full - vRemaining), vb.full);
         let state = null;
-        if (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal")) {
+        if (!pbAnimal && (["human", "child"].includes(vesselType) || (vesselActor && profile(vesselActor) === "mortal"))) {
             const risk = R.vesselRisk(vesselActor ? attr(vesselActor, "stamina") : 2, drunk);
             if (risk) {
                 const r = await rollPool(risk.dice, risk.difficulty);
