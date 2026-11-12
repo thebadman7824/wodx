@@ -2,6 +2,93 @@
 
 Decisions taken while building. The master plan's review table holds the design decisions; this file holds the build ones.
 
+## Index of decision blocks
+
+Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
+
+Next free block: B2230
+
+<!-- decision-index:start -->
+| Block | Feature | Modules |
+|---|---|---|
+| B1-B99 | Phases 0 to 7c: the fork, eras and the clock, lineage, the Embrace, experience costs, search boxes, the turn conductor | System fork, Chronicle, Creation, Actions, Combat, NPC |
+| B100-B107 | Phase 7d factions and 7e the open world | NPC, Storyteller |
+| B108-B112 | Doors, locks and forcing | Interactables |
+| B113-B115 | Targeting and common checks | Targeting, Actions |
+| B116-B119 | Containers, traps, clues and light sources | Interactables |
+| B120-B133 | Master Plan gap items: dated events, data versions, the archive of the dead, the Ledger, gear by era, death into a wraith, the Awakening | Chronicle, Creation, Storyteller, Library, Actions, Sheets |
+| B150-B159 | Hiding places | Interactables |
+| B160-B169 | Responsive maps | Interactables, NPC, Storyteller |
+| B170-B179 | WoDX Senses | Senses |
+| B200-B212 | Phase 8: weather, era kits, handouts, the night's draw, story aids, journeys, token frames | Atmosphere, Storyteller, Otherworlds |
+| B240-B249 | Dark Ages: Mage Grimoire | Actions |
+| B250-B287 | Phase 6 leftovers and the 9 November batch: feast days, living maps, state changes, the Near Dreaming, ageing, the codex, rumours, the Encyclopaedia | Chronicle, Interactables, Senses, Creation, Otherworlds, Atmosphere, Storyteller, Library |
+| B310-B315 | Player immersion | Interactables, Senses, Chronicle, Storyteller, Atmosphere, NPC |
+| B320-B331 | Between nights, money by era, consensus | Storyteller, Otherworlds, Actions |
+| B340-B351 | Paperdoll tokens; moves out of turn (B351) | Paperdoll, Combat |
+| B360-B363 | Serious faces | Paperdoll |
+| B370-B387 | Long tasks, followers, hardship, lasting changes | Storyteller, Interactables, Actions, Paperdoll |
+| B396-B401 | Paperdoll mouths, lips and grounds | Paperdoll |
+| B402-B405 | Watch points, release checks, map adoption, container fill | Interactables, Chronicle |
+| B430-B437 | The Storyteller's hand | Storyteller |
+| B500-B509 | Rules that clash between lines; the Future Darkness branch | Chronicle, Actions |
+| B520-B525 | Bites, the Delirium and blood of other lines | Actions |
+| B570-B589 | Everyday goods and the town generator | Library, Interactables |
+| B590-B599 | Era item lists, money and markets (B593 is used twice: item behaviour, Encyclopaedia dates) | Library, Interactables, Storyteller |
+| B600-B610 | Sheet extras, containers, money by era, descriptions and Examine | Sheets, Library |
+| B620-B632 | Only when, trigger regions, households, stock, mood regions, talk sheets | Interactables, NPC, Storyteller, Atmosphere |
+| B650-B659 | Map generation: parts, era layers, landforms, building designs | Interactables |
+| B660-B669 | Teleport, NPC topics and present-day layouts | Interactables, NPC |
+| B670-B676 | NPC attitude and With this person | NPC, Actions, Chronicle |
+| B700-B711 | Travel, routines by age, word and rumours | Storyteller, NPC |
+| B730-B739 | Realm maps and Umbral twins | Otherworlds, Storyteller |
+| B740-B746 | Stock talk; realm map keywords and layouts | NPC, Otherworlds |
+| B760-B769 | The crossover referee, the anachronism check, Mage effect keywords | Chronicle, Sheets, Actions |
+| B780-B799 | Lines and eras that meet, effect keywords for every line (block given to that thread) | Actions |
+| B800-B810 | Trait effects; fights that start by themselves | Chronicle, Actions, Combat |
+| B820-B826 | NPC rivalries | NPC, Combat |
+| B830-B836 | Factions by age, founding, splitting; the ambush | NPC, Combat |
+| B840-B844 | Hardship weather, standing, bodies left behind | Storyteller, NPC |
+| B850-B856 | Owning things and places | Storyteller |
+| B860-B861 | Hardship thresholds; clashing dated events | Storyteller, Chronicle |
+| B880-B898 | Merits and flaws on the senses and in the world; trade and haggling | Senses, Actions, Chronicle, Storyteller |
+| B905-B906 | Goods naming and the New Items Desk | Library |
+| B910-B918 | Chases; things can be used | Interactables, Library, Sheets |
+| B940-B947 | Ways of moving (B947 is used twice: ways of moving after the book check, recipes) | Combat, Actions |
+| B948-B953 | Recipes and taking things apart | Library |
+| B960-B965 | Feeding harm and clan feeding laws | Actions, Creation |
+| B970-B975 | Passers-by | NPC |
+| B980-B984 | Who an act startles | NPC, Actions |
+| B1000-B1014 | Animal archetypes, mortal and supernatural NPC archetypes, how things work together | NPC, Library, Interactables |
+| B1100-B1105 | Politics inside factions | NPC |
+| B1110-B1116 | Polities for the other lines | NPC |
+| B1120-B1131 | Signature features (vampire clans); item uses | Chronicle, Library |
+| B1150-B1169 | Signature features: clans, bloodlines, Werewolf and Mage (block given to the splat features thread) | Chronicle |
+| B1200-B1210 | The body plan | Combat, Sheets |
+| B1300-B1302 | Area shapes, odds, pinned actions | Targeting, Actions |
+| B1310-B1313 | Lifepaths | Storyteller |
+| B1320-B1324 | Using the room in a fight | Interactables |
+| B1330 | Colour-blind safe colours | Senses |
+| B1340 | The after-action card | Combat |
+| B1380-B1385 | What an NPC can tell of a character | NPC |
+| B1400-B1411 | Made things' quality and the look | Library, NPC |
+| B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
+| B1600-B1606 | Before the First Night | Creation |
+| B1610-B1614 | The guided builder and the prelude runner | Creation |
+| B1700-B1702 | The Legends book | Chronicle |
+| B1710-B1714 | Progress clocks | Storyteller |
+| B1720-B1724 | Standing with the spirit courts | Otherworlds |
+| B1800-B1804 | Followers taking orders | NPC |
+| B1810-B1816 | Errands and helpers | NPC, Storyteller |
+| B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
+| B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
+| B2100-B2105 | NPC voices | Voices |
+| B2200-B2209 | Battles and sieges | Storyteller |
+| B2220-B2226 | The crowd as a resource | Actions, NPC |
+<!-- decision-index:end -->
+
+## The decisions
+
 | # | Date | Decision | Why |
 |---|------|----------|-----|
 | B1 | 2026-11-06 | Pre-launch review accepted: a minimal template world and the Rothenstein rebuild move into Phase 0. Phase 8 only finishes the template. | Gives every later phase a real world to test against. |
