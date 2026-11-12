@@ -1,0 +1,325 @@
+# Victorian and Edwardian, 1837 to 1913. year[-month]|kind|lines|region|place|tags|title|text
+1837|H|mor|EU|London|crown|Victoria crowned|Victoria becomes queen of Britain at eighteen and gives the coming age its name.
+1837|H|mor|EU|London|science,media|The electric telegraph|Cooke and Wheatstone patent an electric telegraph; within a generation news crosses a continent in minutes.
+1837|H|mor|EU|Hanover|crown,law|Hanover parts from Britain|Salic law bars a queen in Hanover, so the crown passes to Ernest Augustus and the union with Britain ends.
+1837|W|vam|EU|London|crown,occult|The Ventrue and the new reign|London's Ventrue court marks the new queen as an omen of stability; the house reading puts Mithras's influence at its height.
+1838|H|mor|EU|Bristol|travel,sea|The Great Western crosses|Brunel's steamship crosses the Atlantic in fifteen days, and the sailing packets begin to lose the mails.
+1838|H|mor|AS|Kabul|war,empire|The First Afghan War|A British army marches on Kabul to put a friendly emir on the throne, beginning a war that ends in catastrophe.
+1838|H|mor|MO|Brno|travel,industry|The Northern Railway reaches Brno|The Emperor Ferdinand Northern Railway opens its branch to Brno, and the wool town is tied to Vienna by rail.
+1839|H|mor|AS|Canton|war,trade|The First Opium War|China's commissioner Lin Zexu destroys British opium at Canton, and Britain sends gunboats to force the trade open.
+1839|H|mor|ME|Istanbul|law,empire|The Tanzimat begins|The Rose Chamber edict promises Ottoman subjects of every faith security of life, honour and property.
+1839|H|mor|EU|Paris|science,art|The daguerreotype|Daguerre's photographic process is given to the world, and faces can be fixed on silvered plates.
+1839|H|mor|MO|Ostrava|industry|Coal at Ostrava|The Rothschilds' Vitkovice ironworks and the new pits turn the Ostrava basin into the black country of the empire.
+1840|H|mor|EU|London|money,media|The Penny Black|Britain's penny post starts with the first adhesive stamp, and letter writing becomes ordinary.
+1840|W|vam,hun|EU|London|science,occult|Faces that will not fix|Photographers in London whisper about sitters who leave no image; the house reading makes the camera a quiet hunter's tool.
+1841|H|mor|AS|Hong Kong|empire,sea|Hong Kong taken|British marines land on Hong Kong island, which China cedes the next year.
+1841|H|mor|MO|Olomouc|travel,building|The railway reaches Olomouc|The northern line reaches Olomouc, and the fortress town begins to grow beyond its walls.
+1842|H|mor|AS|Khyber Pass|war,massacre|The retreat from Kabul|The British army leaving Kabul in winter is cut down in the passes; almost none of the sixteen thousand reach Jalalabad.
+1842|H|mor|AS|Nanjing|treaty,trade|The Treaty of Nanjing|China opens five ports, pays an indemnity and gives up Hong Kong, the first of the unequal treaties.
+1842|H|mor|EU|Hamburg|fire|The great fire of Hamburg|A fire burns for four days and destroys a third of the old city.
+1842|H|mor|AS|Kabul|war,crime|The Army of Retribution|A British army returns to Kabul, blows up its great bazaar and leaves again.
+1843|H|mor|EU|London|art|A Christmas Carol|Dickens publishes A Christmas Carol, three spirits and a miser's change of heart.
+1843|H|mor|AS|Sindh|war,empire|Sindh conquered|Charles Napier defeats the emirs of Sindh at Miani and takes the province for the Company.
+1844|H|mor|ME|Shiraz|faith|The Bab declares|A young merchant of Shiraz declares the gate to a coming prophet, and the Babi movement spreads across Persia.
+1844|H|mor|EU|Silesia|uprising,industry|The weavers' revolt|Starving handloom weavers in Silesia smash the houses of the merchants, and Prussian troops shoot them down.
+1844|H|mor|EU|Ireland|uprising,law|O'Connell jailed|Daniel O'Connell is jailed for conspiracy after the monster meetings for repeal of the union with Britain.
+1845|H|mor|EU|Ireland|famine,plague|The potato blight|Blight rots Ireland's potato crop; over the next five years a million die and another million leave.
+1845|W|wer,wra|EU|Ireland|famine,occult|The Hunger's dead|The house reading has Fianna caerns in the west cry out as the famine dead crowd the Shadowlands of Ireland.
+1845|H|mor|EU|Arctic|exploration,death|Franklin's expedition lost|Two Royal Navy ships seek the Northwest Passage and vanish; searches over decades find bones and tales of cannibalism.
+1846|H|mor|EU|London|law,trade|The Corn Laws repealed|Peel ends the tariffs on grain and splits his party; cheap bread wins over the landlords.
+1846|H|mor|EU|Krakow|uprising|The Galician slaughter|A Polish noble rising in Galicia is turned when peasants kill hundreds of their lords, and Austria swallows Krakow.
+1846|H|mor|EU|Berlin|science|Neptune found|Galle finds the planet Neptune where mathematics said it would be.
+1846|H|mor|AS|Lahore|war,empire|The First Anglo-Sikh War|The Company fights the Sikh kingdom of the Punjab and takes its eastern lands.
+1846|W|wer|AS|Punjab|war,occult|Garou of the Five Rivers|The house reading has Silent Striders carry word west that the Company's wars have broken caerns along the Indus.
+1847|H|mor|EU|London|art|Jane Eyre and Wuthering Heights|The Bronte sisters publish Jane Eyre, Wuthering Heights and Agnes Grey within months.
+1847|H|mor|EU|Vienna|science,plague|Semmelweis and childbed fever|Semmelweis shows that doctors washing their hands save mothers, and the profession mocks the idea.
+1847|H|mor|ME|Algeria|war,empire|Abd al-Qadir surrenders|The emir of Algeria surrenders to France after fifteen years of war.
+1848|H|mor|EU|Paris|revolution|February in Paris|Paris overthrows Louis Philippe and declares a republic; revolution spreads across Europe within weeks.
+1848|H|mor|EU|Vienna|revolution|Metternich falls|Vienna rises in March, and the old chancellor flees to England in a laundry cart.
+1848|H|mor,all|MO|Kromeriz|law,revolution|The Kromeriz parliament|The Austrian imperial parliament meets in the archbishop's palace at Kromeriz and drafts a liberal constitution.
+1848|H|mor|EU|Prague|revolution,uprising|The Prague Whitsun rising|Czech students and workers rise in Prague; Windischgratz shells the city and ends the Slav Congress.
+1848|H|mor|EU|Budapest|revolution,war|Hungary rises|Hungary declares its laws its own under Kossuth and fights Vienna for a year.
+1848|H|mor|EU|London|learning|The Communist Manifesto|Marx and Engels publish their manifesto: a spectre is haunting Europe.
+1848|W|wra,mag|EU|London|occult,faith|Spiritualists open the door|The house reading has mediums across London drawing real ghosts to their tables, and the Hierarchy watches every seance.
+1848|W|vam|EU|Paris|revolution,occult|The Brujah in the barricades|The house reading puts young Brujah at the Paris barricades, hoping the republic of 1848 can be the one that lasts.
+1848|H|mor|MO|Kromeriz|law,revolution|Serfdom ended|The imperial parliament abolishes the labour dues of the peasants, and Moravian villages are free of the robot.
+1849|H|mor,all|MO|Kromeriz|law,crown|Kromeriz dissolved|Soldiers close the Kromeriz parliament and the young emperor imposes a constitution from above.
+1849|H|mor|EU|Vilagos|war|Hungary surrenders|With Russian help, Austria crushes Hungary; the Hungarian army lays down its arms at Vilagos and thirteen generals are hanged.
+1849|H|mor|EU|Rome|revolution,war|The Roman Republic falls|French troops end Mazzini's Roman Republic and restore the pope; Garibaldi escapes.
+1849|H|mor|AS|Lahore|war,empire|The Punjab annexed|The second Sikh war ends with the Punjab annexed and the Koh-i-Noor sent to the queen.
+1850|H|mor|AS|Guangxi|uprising,faith|The Taiping rising|Hong Xiuquan, who believes himself Christ's younger brother, raises the Taiping; the war kills twenty million or more.
+1850|W|kue|AS|Nanjing|war,occult|The Taiping and the Middle Kingdom|The house reading has the Kuei-jin courts of the south shaken as the Taiping burn temples and shrines across their lands.
+1850|H|mor|ME|Tabriz|faith,death|The Bab shot|The Bab is executed by firing squad at Tabriz; the first volley leaves the prisoner unhurt, and the faith grows.
+1850|H|mor|MO|Brno|law,founding|Brno a free city|Brno is made a statutory city and swallows its suburbs.
+1851|H|mor|EU|London|industry,building|The Great Exhibition|The Crystal Palace in Hyde Park shows the world's machines, and six million people come to see.
+1851|H|mor|EU|Paris|crown|The coup of December|Louis Napoleon closes the assembly and makes himself master of France; within a year he is emperor.
+1852|H|mor|EU|London|occult,media|Spiritualism reaches London|An American medium holds paid seances in London, and table rapping becomes the fashion of the drawing rooms.
+1852|H|mor|EU|Paris|crown|The Second Empire|Napoleon III is proclaimed emperor of the French.
+1853|H|mor|AS|Edo Bay|sea,empire|The black ships|Commodore Perry's steamships anchor off Edo and demand that Japan open its ports.
+1853|H|mor|EU|Sinope|war,sea|Sinope|Russia destroys an Ottoman squadron at Sinope with shell guns, and Britain and France move toward war.
+1853|W|all,vam|MO|Brno|occult,building|The Spilberk dungeons closed|The house reading has the Kindred who held the Spilberk prison as a feeding ground leave when it closes as a jail.
+1854|H|mor|EU|Crimea|war|The Crimean War|Britain and France land in the Crimea to besiege Sevastopol.
+1854|H|mor|EU|Balaclava|battle|The Light Brigade|A misread order sends British light cavalry into the Russian guns at Balaclava.
+1854|H|mor|EU|Scutari|war,plague|Nightingale at Scutari|Florence Nightingale's nurses reach the barracks hospital, where disease kills far more than Russian shot.
+1854|H|mor|EU|London|plague,science|The Broad Street pump|John Snow maps cholera deaths in Soho to a single pump and has its handle taken off.
+1854|H|mor|EU|London|founding,learning|The Working Men's College|Christian socialists open a college in London for working men.
+1855|H|mor|EU|Sevastopol|siege,war|Sevastopol falls|After eleven months the Russians leave Sevastopol in flames.
+1855|H|mor|EU|St Petersburg|crown|Alexander II|Nicholas I dies; the new tsar Alexander II will free the serfs.
+1855|H|mor|EU|Paris|building,art|The first Paris fair|Paris answers London with its own Universal Exposition.
+1856|H|mor|EU|Paris|treaty|The Peace of Paris|The Crimean War ends; the Black Sea is closed to warships.
+1856|H|mor|AS|Canton|war,trade|The Arrow War|Britain and France fight China again over a seized ship, the Second Opium War.
+1856|H|mor|ME|Istanbul|law|The Reform Edict|The sultan promises full equality to Christians and Jews, and the Muslim notables resent it.
+1857|H|mor|AS|Meerut|uprising,war|The Indian rising|Sepoys at Meerut mutiny over cartridges and march on Delhi; north India rises against Company rule.
+1857|H|mor|AS|Kanpur|massacre|The Bibighar|British women and children held at Kanpur are killed; British vengeance across the north is terrible.
+1857|W|vam,kue|AS|Delhi|war,occult|The Ganges red|The house reading has the Ventrue of Calcutta and the Kuei-jin of the Ganges both feeding on the war while blaming each other.
+1857|H|mor|EU|Paris|art,law|Madame Bovary on trial|Flaubert is tried for offending public morals with Madame Bovary and acquitted.
+1857|H|mor|EU|Vienna|building|The Ringstrasse|The emperor orders the old walls of Vienna pulled down for a grand boulevard.
+1858|H|mor|AS|Delhi|empire,crown|The Mughal empire ends|The last Mughal emperor is tried and exiled to Rangoon, and the crown takes India from the Company.
+1858|H|mor|EU|Lourdes|faith|Bernadette's visions|A miller's daughter sees a lady in a grotto at Lourdes; the spring becomes a place of pilgrimage.
+1858|H|mor|EU|London|plague,weather|The Great Stink|A hot summer makes the sewage in the Thames unbearable, and Parliament funds Bazalgette's sewers.
+1859|H|mor|EU|London|science,faith|On the Origin of Species|Darwin publishes the theory of natural selection and sets science against Genesis.
+1859|W|mag|EU|London|science,occult|The Electrodyne and evolution|The house reading has the Union's men of science seize on Darwin as proof that the world runs by law, not spirit.
+1859|H|mor|EU|Solferino|battle|Solferino|France and Piedmont beat Austria in a bloody day; a Swiss witness, Henri Dunant, will found the Red Cross.
+1859|H|mor|EU|London|science,storm|The Carrington Event|A great solar storm sets telegraph lines sparking and lights auroras as far south as the Caribbean.
+1859|H|mor|ME|Suez|building,trade|The Suez Canal begun|Ferdinand de Lesseps breaks ground on a canal between the Mediterranean and the Red Sea.
+1860|H|mor|EU|Sicily|war,revolution|The Thousand|Garibaldi lands in Sicily with a thousand volunteers and conquers the Kingdom of the Two Sicilies.
+1860|H|mor|ME|Damascus|massacre,faith|The Damascus massacre|Druze and Christian fighting in Mount Lebanon spreads to Damascus, where thousands of Christians die.
+1860|H|mor|AS|Beijing|war,fire|The Summer Palace burned|British and French troops loot and burn the Qing emperor's Summer Palace.
+1860|W|hun|EU|Rome|faith,occult|The Society of Leopold quiet|The house reading has the Inquisition's Society of Leopold shrunk to a few priests in Rome, keeping files no bishop reads.
+1861|H|mor|EU|Turin|crown|The Kingdom of Italy|Victor Emmanuel becomes king of Italy.
+1861|H|mor|EU|St Petersburg|law|The serfs freed|Alexander II frees twenty-three million serfs, though they must buy their land in debt.
+1861|H|mor|EU|London|death,crown|Prince Albert dies|The prince consort dies of typhoid, and the queen wears black for the rest of her life.
+1862|H|mor|EU|Berlin|crown|Bismarck|Bismarck becomes minister-president of Prussia and promises iron and blood.
+1862|H|mor|EU|Paris|art|Les Miserables|Victor Hugo publishes Les Miserables from exile.
+1862|H|mor|MO|Prague|founding,sport|The Sokol|Tyrs and Fugner found the Sokol gymnastic movement, and halls rise in every Czech and Moravian town.
+1863|H|mor|EU|Warsaw|uprising|The January Uprising|Poland rises against Russia again and fights for over a year in the forests.
+1863|H|mor|EU|London|travel,building|The Underground|The first underground railway opens between Paddington and Farringdon.
+1863|W|vam|EU|London|building,occult|The Nosferatu and the tunnels|The house reading has London's Nosferatu furious as the Underground cuts through warrens they have held since the Romans.
+1863|H|mor|AS|Kagoshima|war,sea|The bombardment of Kagoshima|A British squadron shells Kagoshima after a Satsuma samurai kills an English merchant.
+1864|H|mor|EU|Schleswig|war|The Danish war|Prussia and Austria take Schleswig and Holstein from Denmark.
+1864|H|mor|EU|Geneva|treaty,law|The Geneva Convention|Twelve states agree to protect the wounded and those who care for them.
+1864|H|mor|EU|London|learning|The First International|Workers' leaders found the International Workingmen's Association in London.
+1864|H|mor|AS|Nanjing|siege,war|Nanjing falls|Qing armies take the Taiping capital and kill over a hundred thousand; Hong Xiuquan is already dead.
+1864|H|mor|EU|Caucasus|massacre,migration|The Circassian expulsion|Russia ends its war in the Caucasus by driving hundreds of thousands of Circassians to Ottoman lands; many die on the shore.
+1865|H|mor|EU|Brno|science|Mendel's peas|Gregor Mendel reads the laws of heredity to the Brno natural history society; no one understands them for thirty-five years.
+1865|W|all,mag|MO|Brno|science,occult|The abbot's garden|The house reading has a Technocrat visitor to the Brno monastery mark Mendel's work as a future paradigm and leave it unknown.
+1865|H|mor|AS|Tashkent|war,empire|Russia takes Tashkent|Russian troops take Tashkent and the conquest of Central Asia begins.
+1866|H|mor|MO|Hradec Kralove|battle,war|Koniggratz|Prussia crushes Austria in Bohemia in a single day, and the German question is settled.
+1866|H|mor|MO|Brno|war|Prussians in Brno|Prussian troops occupy Brno after the Bohemian defeat; cholera follows the armies.
+1866|H|mor|MO|Mikulov|treaty|The Peace of Nikolsburg|Austria and Prussia sign the preliminary peace at Mikulov castle; Austria is shut out of Germany.
+1866|H|mor|EU|Lissa|battle,sea|Lissa|The Austrian fleet rams and sinks Italian ironclads off Lissa in the Adriatic.
+1866|H|mor|EU|Crete|uprising|The Cretan revolt|Crete rises against the Ottomans; the monks of Arkadi blow up their monastery rather than surrender.
+1867|H|mor|EU|Vienna|law,empire|Austria-Hungary|The compromise makes the Habsburg lands a dual monarchy; Hungary rules itself and the Czechs get nothing.
+1867|H|mor|EU|Hamburg|learning,money|Das Kapital|The first volume of Marx's Capital is published.
+1867|H|mor|AS|Edo|crown,revolution|The last shogun|The last Tokugawa shogun returns power to the emperor.
+1867|H|mor|EU|Paris|building,art|The 1867 Exposition|Paris holds another world fair, with Japanese prints that change European art.
+1867|W|cha|EU|Ireland|occult,uprising|The Fenian rising|The house reading has Irish Kithain hoping the Fenians win; a few eshu carry their letters across the sea.
+1868|H|mor|AS|Kyoto|revolution,crown|The Meiji Restoration|The emperor's government defeats the shogun's last loyalists and moves to Edo, renamed Tokyo.
+1868|W|kue|AS|Tokyo|revolution,occult|Japan's courts uneasy|The house reading has the Kuei-jin of Japan split over the Meiji reforms; some court the new ministries, others retreat to the mountains.
+1868|H|mor|MO|Prague|building,learning|The National Theatre stone|Foundation stones from Czech mountains, Radhost among them, are laid for the National Theatre in Prague.
+1868|H|mor|AS|Hakodate|war|The Boshin War ends|The last shogunate loyalists hold out at Hakodate under their Republic of Ezo and surrender the next spring.
+1869|H|mor|ME|Suez|trade,sea|The Suez Canal opens|The canal opens to shipping and the route to India is shortened by weeks.
+1869|H|mor|EU|Rome|faith|The First Vatican Council|The bishops meet in Rome and declare the pope infallible on faith and morals.
+1869|H|mor|EU|St Petersburg|science|The periodic table|Mendeleev arranges the elements in a table that predicts ones not yet found.
+1869|H|mor|AS|Bukhara|empire|Bukhara made a protectorate|The emir of Bukhara accepts Russian protection after defeat.
+1870|H|mor|EU|Sedan|battle,war|Sedan|The French emperor surrenders at Sedan with his army, and the Second Empire falls.
+1870|H|mor|EU|Paris|siege,famine|The siege of Paris|The Prussians ring Paris; the city eats its horses, its rats and the zoo animals.
+1870|W|vam|EU|Paris|siege,occult|The Toreador starve with the city|The house reading has the Toreador of Paris feeding thin as the siege drags on and blood grows as scarce as bread.
+1870|H|mor|EU|Rome|war|The breach of Porta Pia|Italian troops break into Rome through the Porta Pia, and the Papal States end.
+1871|H|mor|EU|Versailles|crown,empire|The German Empire|The king of Prussia is proclaimed German emperor in the Hall of Mirrors at Versailles.
+1871|H|mor|EU|Paris|revolution,massacre|The Paris Commune|Paris rules itself for ten weeks; in the bloody week of May the army kills thousands of Communards.
+1871|W|vam|EU|Paris|revolution,occult|The Commune's Brujah|The house reading has the Camarilla let the Commune burn to purge Brujah radicals, then blame the Sabbat for the fires.
+1871|H|mor|EU|Rome|crown|Rome the capital|Italy makes Rome its capital, and the pope shuts himself in the Vatican as a prisoner.
+1871|H|mor|EU|Berlin|faith,law|The Kulturkampf|Bismarck fights the Catholic Church over schools and priests.
+1872|H|mor|EU|Ireland|art,occult|Carmilla|Sheridan Le Fanu publishes Carmilla, a vampire tale of a countess and a lonely girl in Styria.
+1872|H|mor|ME|Damascus|death,faith|Abd al-Qadir in Damascus|The exiled Algerian emir, who saved thousands of Christians in 1860, lives on as a scholar in Damascus.
+1873|H|mor|EU|Vienna|money,trade|The crash of 1873|The Vienna stock exchange collapses days after the World's Fair opens, and a long depression follows.
+1873|H|mor|EU|Vienna|plague|Cholera at the World's Fair|Cholera kills thousands in Vienna during the exhibition, and visitors stay away.
+1873|H|mor|AS|Khiva|war,empire|Khiva falls|Russia takes the khanate of Khiva and frees its slaves.
+1874|H|mor|EU|Paris|art|The first Impressionist show|Painters refused by the Salon show their work together, and a critic mocks it as impressions.
+1875|H|mor|EU|London|occult,founding|The Theosophical Society|Blavatsky and Olcott found the Theosophical Society, and Eastern wisdom becomes a fashion in Europe.
+1875|W|mag|EU|London|occult,founding|The Theosophists and the Traditions|The house reading has the Cult of Ecstasy and the Chakravanti watching the Theosophists closely, for some of what they teach is true.
+1875|H|mor|EU|Herzegovina|uprising|The Herzegovina rising|Christian peasants rise against Ottoman tax collectors, and the Great Eastern Crisis begins.
+1876|H|mor|EU|Bulgaria|massacre,uprising|The April Uprising|Ottoman irregulars crush a Bulgarian rising and kill thousands at Batak; Gladstone writes of Bulgarian horrors.
+1876|H|mor|ME|Istanbul|law|The Ottoman constitution|The Ottomans proclaim a constitution and a parliament, which the sultan suspends within two years.
+1876|H|mor|EU|Bayreuth|art|The Ring at Bayreuth|Wagner's whole Ring cycle opens in a theatre built to stage it.
+1876|H|mor|MO|Brno|science,art|Janacek in Brno|Leos Janacek becomes a teacher and choirmaster in Brno; the town's music will carry Moravian folk song to the world.
+1877|H|mor|EU|Plevna|siege,war|Plevna|The Ottomans hold Plevna against the Russians for five months before hunger breaks them.
+1877|H|mor|AS|Delhi|crown,empire|Empress of India|Victoria is proclaimed Empress of India at a great durbar while famine kills millions in the south.
+1877|H|mor|AS|Kagoshima|uprising|The Satsuma Rebellion|Saigo Takamori leads the last samurai rising against the new Japan and dies at Shiroyama.
+1877|H|mor|AS|Madras|famine|The great famine|Drought and grain exports kill five million or more in south and west India.
+1877|W|wra|EU|Plevna|siege,occult|The dead of Plevna|The house reading has the Stygian Hierarchy struggle to collect the souls from Plevna, and Renegades take many.
+1878|H|mor|EU|Berlin|treaty|The Congress of Berlin|The powers redraw the Balkans: Serbia, Montenegro and Romania are free and Austria takes Bosnia to govern.
+1878|H|mor|EU|Bosnia|war,empire|Austria in Bosnia|Austro-Hungarian troops occupy Bosnia and Herzegovina against fierce resistance.
+1878|H|mor|AS|Shanxi|famine|The north China famine|Drought across north China kills nine million or more.
+1878|W|vam|EU|Bosnia|empire,occult|Sabbat in the Balkans|The house reading has Tzimisce of the Balkans see the Austrian occupation as a chance to push Camarilla influence south.
+1879|H|mor|EU|London|science|The electric lamp|Swan and Edison light carbon filament lamps; the night changes.
+1879|W|vam,wer|EU|London|science,occult|The light comes on|The house reading has the night shrinking for the Kindred as electric light spreads, and the Weaver grows stronger in every lit street.
+1879|H|mor|AS|Kabul|war|The Second Afghan War|The British envoy at Kabul is murdered, and British troops occupy the city again.
+1880|H|mor|AS|Kandahar|battle,war|Maiwand and Kandahar|An Afghan army wins at Maiwand, and Roberts marches three hundred miles to relieve Kandahar.
+1880|H|mor|EU|Brno|travel,building|Trams in Brno|Brno opens horse trams, among the first in the Czech lands.
+1881|H|mor|EU|St Petersburg|terror,death|Alexander II killed|Revolutionaries of the People's Will kill the tsar with bombs on the Catherine Canal.
+1881|H|mor|EU|Kiev|persecution,massacre|The pogroms|After the tsar's murder, mobs attack Jewish towns across the south of the empire, and emigration to America begins.
+1881|H|mor|MO|Prague|fire,building|The National Theatre burns|The new National Theatre in Prague burns before its formal opening; the nation pays to rebuild it in two years.
+1881|H|mor|ME|Tunis|empire|Tunisia taken|France occupies Tunisia.
+1882|H|mor|ME|Alexandria|war,empire|Britain takes Egypt|The Royal Navy shells Alexandria, and a British army defeats Urabi at Tel el-Kebir.
+1882|W|mum|ME|Cairo|empire,occult|The Reborn under British rule|The house reading has Egypt's mummies watching as British collectors empty tombs, and some go to London after their own bodies.
+1882|H|mor|EU|Prague|learning|The Czech university|Prague's university is split into Czech and German halves.
+1882|H|mor|EU|London|occult,learning|The Society for Psychical Research|Scholars found a society to test mediums, ghosts and thought transference.
+1883|H|mor|AS|Krakatoa|disaster|Krakatoa|The volcano blows apart, the sound is heard across the Indian Ocean, and sunsets turn red worldwide.
+1883|H|mor|EU|Vienna|art,crime|The Ringtheater fire|Some four hundred people die when the Ringtheater burns in Vienna during an opera.
+1883|H|mor|AS|Tonkin|war,empire|The Tonkin campaign|France fights China and the Black Flags for northern Vietnam.
+1884|H|mor|EU|Berlin|treaty,empire|The Berlin Conference|The European powers meet to share out Africa among themselves.
+1884|H|mor|EU|Greenwich|science,travel|The Greenwich meridian|An international conference fixes the prime meridian at Greenwich and the world's time zones follow.
+1885|H|mor|AS|Burma|war,empire|The Third Burmese War|Britain takes Mandalay in weeks and annexes Upper Burma.
+1885|H|mor|EU|Paris|science,plague|Pasteur's rabies vaccine|Pasteur saves a boy bitten by a rabid dog with a new vaccine.
+1885|W|hun|EU|London|founding,occult|The Arcanum founded|The house reading places the founding of the Arcanum in London, scholars sworn to study the hidden world without becoming part of it.
+1885|H|mor|EU|Slivnitsa|war,battle|The Serbo-Bulgarian War|Serbia attacks Bulgaria and is beaten at Slivnitsa within two weeks.
+1885|H|mor|ME|Khartoum|siege,war|Khartoum falls|The Mahdi's army storms Khartoum after a ten-month siege, and Gordon is killed two days before relief.
+1886|H|mor|EU|London|art|Jekyll and Hyde|Stevenson publishes The Strange Case of Dr Jekyll and Mr Hyde.
+1886|H|mor|EU|Bavaria|death,crown|The mad king drowns|Ludwig II of Bavaria is declared insane and found dead in Lake Starnberg with the doctor who certified him.
+1886|H|mor|MO|Prague|crime,learning|The forged manuscripts|Masaryk and others show that the medieval Czech manuscripts of Dvur Kralove and Zelena Hora are forgeries.
+1887|H|mor|EU|London|crown|The Golden Jubilee|Victoria marks fifty years on the throne, and kings come to London.
+1887|H|mor|AS|Yellow River|flood|The Yellow River flood|The Yellow River breaks its dykes and floods the plain; perhaps a million die.
+1887|W|mum|EU|London|occult,crime|A mummy unwrapped|The house reading has a mummy unwrapped before a London audience wake that night; the house rule notes the Reborn remember such things.
+1888|H|mor|EU|London|founding,occult|The Golden Dawn|Three Freemasons found the Hermetic Order of the Golden Dawn in London.
+1888|W|mag|EU|London|occult,founding|The Golden Dawn and the Order|The house reading has the Order of Hermes recruit from the Golden Dawn, and a few of its members Awaken.
+1888|H|mor|EU|London|crime,terror|The Whitechapel murders|An unknown killer murders at least five women in Whitechapel, and the press calls the killer Jack the Ripper.
+1888|W|vam,hun|EU|London|crime,occult|The Ripper and the Kindred|The house reading has London's Kindred fear a Masquerade breach in Whitechapel; the prince sends hounds after the killer.
+1888|H|mor|EU|Berlin|crown|The year of three emperors|Wilhelm I dies, Frederick III reigns ninety-nine days, and Wilhelm II takes the German throne.
+1888|W|vam,hun|EU|London|crime,occult|A hunter's diary|The house reading has an Arcanum scholar keep notes on the Ripper that point away from the Kindred and toward a mortal doctor.
+1889|H|mor|EU|Mayerling|death,crown|Mayerling|Crown Prince Rudolf of Austria and Mary Vetsera are found dead at the hunting lodge of Mayerling.
+1889|H|mor|EU|Paris|building,industry|The Eiffel Tower|The tower is finished for the World's Fair, the tallest structure on earth.
+1889|H|mor|AS|Tokyo|law|The Meiji constitution|Japan becomes a constitutional monarchy with a parliament on the Prussian model.
+1889|H|mor|EU|Europe|plague|The Russian flu|An influenza pandemic spreads by rail from Russia and kills about a million.
+1890|H|mor|EU|Berlin|crown|Bismarck dismissed|The young emperor drops the old chancellor.
+1890|H|mor|EU|London|art|The Picture of Dorian Gray|Oscar Wilde publishes the tale of a portrait that ages while its sitter does not.
+1890|H|mor|AS|Tokyo|law,learning|The Imperial Rescript on Education|Japan's schools are bound to loyalty to the emperor.
+1891|H|mor|EU|Prague|building,trade|The Jubilee Exhibition|Prague holds a great exhibition and builds the Petrin lookout tower and a funicular.
+1891|H|mor|AS|Vladivostok|travel,building|The Trans-Siberian Railway|Work begins on a railway across Siberia to the Pacific.
+1891|H|mor|AS|Mino|quake|The Mino-Owari earthquake|A great earthquake in central Japan kills seven thousand.
+1891|H|mor|ME|Tehran|uprising,trade|The tobacco protest|Persians stop smoking when the shah sells the tobacco trade to a British company; the shah backs down.
+1892|H|mor|EU|Hamburg|plague|Cholera in Hamburg|Unfiltered water spreads cholera through Hamburg and kills eight thousand, while Altona next door is spared.
+1892|W|mor,all|MO|Brno|crime,occult|A doctor's case|The house reading has a Brno doctor's notes on a patient with no pulse who walks at night; the Arcanum buys them.
+1892|H|mor|AS|Bombay|founding,law|Indian members|The Indian Councils Act lets Indians sit on the legislative councils.
+1893|H|mor|EU|Corinth|building,sea|The Corinth Canal|A canal cut through rock opens across the isthmus of Corinth.
+1893|H|mor|MO|Prague|uprising,law|The Omladina trial|Young Czech radicals are tried and jailed, and Prague is placed under emergency law.
+1893|H|mor|EU|Prague|art|Dvorak's New World|Dvorak writes his symphony From the New World far from home.
+1894|H|mor|EU|Paris|law,persecution|The Dreyfus affair|A Jewish army captain is falsely convicted of spying and sent to Devil's Island; France splits for twelve years.
+1894|H|mor|AS|Korea|war|The First Sino-Japanese War|Japan defeats China in Korea and at sea, and takes Taiwan.
+1894|H|mor|ME|Sasun|massacre|The Hamidian massacres|The sultan's irregulars kill Armenians in eastern Anatolia; over two years perhaps two hundred thousand die.
+1894|H|mor|AS|Hong Kong|plague|The third plague|Bubonic plague reaches Hong Kong; Yersin finds its bacillus, and the disease spreads by ship to every continent.
+1894|W|cha|EU|Brittany|occult,art|The Celtic revival|The house reading has the fae of Brittany and Ireland feed on the poets of the Celtic revival, and the Dreaming grows brighter there.
+1895|H|mor|EU|Paris|art,science|The first films|The Lumiere brothers show moving pictures to a paying audience in a Paris cafe.
+1895|H|mor|EU|Wurzburg|science|X-rays|Rontgen finds rays that pass through flesh and show the bones.
+1895|H|mor|EU|London|law,crime|Wilde convicted|Oscar Wilde is sentenced to two years' hard labour for gross indecency.
+1895|H|mor|MO|Prague|art,learning|The Czechoslavic Ethnographic Exhibition|Prague shows peasant life from every Czech land, Moravian Wallachia and Slovacko among them.
+1895|H|mor|AS|Seoul|crown,terror|The queen of Korea killed|Japanese agents murder Queen Min in the palace at Seoul and burn the body.
+1896|H|mor|EU|Athens|sport|The first modern Olympics|The Olympic Games return in Athens.
+1896|H|mor|EU|Paris|science|Radioactivity|Becquerel finds that uranium salts fog photographic plates in the dark.
+1896|H|mor|AS|Sanriku|disaster,sea|The Sanriku tsunami|A tsunami strikes the coast of northern Japan and kills over twenty thousand.
+1896|H|mor|AS|Bombay|plague|Plague in Bombay|Plague reaches Bombay and kills millions across India over the next two decades.
+1896|W|mag|AS|Tibet|occult,travel|The Akashic Brotherhood shut the doors|The house reading has the Akashics close Tibetan monasteries to Western seekers after Theosophists come asking.
+1897|H|mor|EU|London|crown|The Diamond Jubilee|Victoria celebrates sixty years with troops from every corner of the empire.
+1897|H|mor|EU|Westminster|art,occult|Dracula|Bram Stoker publishes Dracula: a Transylvanian count, his voyage to Whitby and the hunters who stop him.
+1897|W|vam,hun|EU|London|art,occult|The Tremere and Dracula|The house reading has the Tzimisce furious at the book, the Tremere amused, and every hunter in England reading it twice.
+1897|W|mag|EU|London|founding,science|The Technocracy named|The house reading follows Mage canon: the Order of Reason takes the name Technocratic Union at its 1897 convocation.
+1897|H|mor|EU|Basel|founding,faith|The Zionist Congress|Herzl gathers the first Zionist Congress in Basel.
+1897|H|mor|MO|Brno|law,uprising|The Badeni language ordinance|Vienna orders officials in Bohemia and Moravia to know Czech; German riots force the minister out.
+1897|H|mor|AS|Assam|quake|The great Assam earthquake|One of the strongest earthquakes recorded strikes Assam and Shillong.
+1897|H|mor|ME|Crete|war|The Thirty Days' War|Greece fights the Ottomans over Crete and loses in a month.
+1898|H|mor|EU|Geneva|terror,death|Empress Elisabeth killed|An anarchist stabs the empress of Austria with a file by the lake at Geneva.
+1898|H|mor|AS|Beijing|law,revolution|The Hundred Days|The Guangxu emperor orders sweeping reforms; the empress dowager stops them and holds the emperor prisoner.
+1898|H|mor|ME|Omdurman|battle,empire|Omdurman|Kitchener's machine guns destroy the Mahdist army outside Omdurman.
+1898|H|mor|ME|Jerusalem|travel,crown|The Kaiser in Jerusalem|Wilhelm II rides into Jerusalem through a gap cut in the wall.
+1898|H|mor|MO|Ivancice|art|Mucha's posters|Alfons Mucha of Ivancice, in Moravia, is the rage of Paris for his posters of Sarah Bernhardt.
+1899|H|mor|MO|Polna|persecution,law|The Hilsner affair|A Jewish vagrant is convicted of ritual murder at Polna; Masaryk defends Hilsner and is called a traitor.
+1899|H|mor|AS|Shandong|uprising|The Boxers rise|The Society of Righteous and Harmonious Fists attacks missionaries and Chinese Christians in Shandong.
+1899|H|mor|EU|The Hague|treaty,law|The Hague Conference|The powers agree rules of war and found a court of arbitration.
+1899|H|mor|EU|Vienna|learning,science|The Interpretation of Dreams|Freud publishes the book that founds psychoanalysis.
+1899|W|mag,cha|EU|Vienna|learning,occult|Dreams on the couch|The house reading has the Dreamspeakers and the fae both uneasy as Freud teaches the waking world to pick dreams apart.
+1899|W|vam|EU|Vienna|art,occult|Klimt's patrons|The house reading has the Toreador of Vienna patron the Secession painters while the Ventrue fund their critics.
+1900|H|mor|AS|Beijing|siege,war|The siege of the legations|The Boxers and Qing troops besiege the foreign legations in Beijing for fifty-five days until an eight-nation army arrives.
+1900|H|mor|AS|Beijing|war,massacre|The Eight-Nation sack|The relief armies loot Beijing and punish the north China countryside; the court flees to Xi'an.
+1900|W|kue|AS|Beijing|war,occult|The Boxers and the Kuei-jin|The house reading has some Kuei-jin courts feed the Boxer fury against foreign Kindred, and pay when the foreign armies arrive.
+1900|H|mor|EU|Paris|building,industry|The Paris Exposition|Paris holds the century's greatest fair, with moving walkways and the first Metro line.
+1900|H|mor|EU|Vienna|science|Mendel rediscovered|Three botanists find Mendel's forgotten paper from Brno within months of each other.
+1900|H|mor|EU|London|founding,law|The Labour Party|Trade unions and socialists form a committee to send workers to Parliament.
+1900|H|mor|EU|Berlin|science|Planck's quanta|Max Planck proposes that energy comes in small packets, and physics begins to change.
+1900|H|mor|EU|Paris|occult,crime|The Golden Dawn splits|The Golden Dawn tears itself apart over Mathers and Crowley, and rival temples form.
+1900|W|all,mag|MO|Brno|science,occult|The paradigm comes home|The house reading has a Technocrat in Brno quietly delighted as Mendel's laws return; the Progenitors claim them.
+1901|H|mor|EU|London|crown,death|Victoria dies|The queen dies at Osborne after sixty-three years, and Edward VII takes the throne.
+1901|H|mor|EU|Cornwall|science,media|The wireless crosses|Marconi receives a radio signal sent from Cornwall across the Atlantic.
+1901|H|mor|ME|Masjed Soleyman|trade,industry|The D'Arcy oil concession|Persia grants a British prospector the right to drill for oil across most of the country.
+1901|H|mor|MO|Brno|learning|The Brno technical college|The Czech technical university opens in Brno.
+1902|H|mor|AS|London|treaty,empire|The Anglo-Japanese Alliance|Britain ends its splendid isolation in an alliance with Japan.
+1902|H|mor|EU|Venice|disaster,building|The campanile falls|The bell tower of St Mark's in Venice collapses into a heap of rubble.
+1902|H|mor|AS|Bangkok|law,empire|Siam modernises|King Chulalongkorn's reforms keep Siam independent between British and French empires.
+1903|H|mor|EU|London|founding,law|The suffragettes|Emmeline Pankhurst founds the Women's Social and Political Union: deeds, not words.
+1903|H|mor|EU|Belgrade|crown,terror|The May coup|Officers murder King Alexander and Queen Draga of Serbia and throw their bodies from a window.
+1903|H|mor|EU|Kishinev|massacre,persecution|The Kishinev pogrom|A mob kills forty-nine Jews over two days in Bessarabia while police watch.
+1903|H|mor|EU|Macedonia|uprising|The Ilinden rising|Macedonian revolutionaries rise against the Ottomans and are crushed with village burnings.
+1903|H|mor|EU|London|founding,revolution|Bolsheviks and Mensheviks|Russian socialists split at their London congress, and Lenin's faction calls itself the majority.
+1904|W|mag|EU|London|science,occult|The Sons of Ether part|The house reading follows canon: the Electrodyne Engineers' break with the Technocracy hardens, and they will join the Traditions.
+1904|H|mor|AS|Port Arthur|war,siege|The Russo-Japanese War|Japan attacks the Russian fleet at Port Arthur without warning and lays siege to the port.
+1904|H|mor|EU|London|treaty|The Entente Cordiale|Britain and France settle their colonial quarrels and draw together against Germany.
+1904|H|mor|ME|Hejaz|travel,building|The Hejaz Railway|Work presses on the railway from Damascus to Medina, built for the hajj.
+1905|H|mor|EU|St Petersburg|massacre,revolution|Bloody Sunday|Troops fire on workers marching to petition the tsar, and revolution spreads across Russia.
+1905|H|mor|AS|Tsushima|battle,sea|Tsushima|Japan destroys the Russian Baltic fleet after its voyage around the world.
+1905|H|mor|AS|Mukden|battle|Mukden|Over half a million men fight for three weeks outside Mukden, the largest battle the world has yet seen.
+1905|H|mor|EU|Odessa|uprising,sea|The Potemkin mutiny|Sailors on the battleship Potemkin mutiny over rotten meat and sail to Odessa.
+1905|H|mor|EU|St Petersburg|law|The October Manifesto|The tsar promises a parliament and civil rights to end the general strike.
+1905|H|mor|EU|Bern|science|The miracle year|A patent clerk named Einstein publishes on light, atoms and special relativity in one year.
+1905|H|mor|MO|Brno|uprising,learning|The Brno university riots|Germans and Czechs clash over a Czech university in Brno; a joiner, Frantisek Pavlik, is killed by troops on the steps of the House of Artists.
+1905|H|mor|ME|Tehran|revolution,law|The Persian constitutional revolution|Merchants and clerics take sanctuary and force the shah to grant a parliament.
+1905|H|mor|AS|Kangra|quake|The Kangra earthquake|An earthquake in the Himalayan foothills kills twenty thousand.
+1906|H|mor|EU|London|sea,war|Dreadnought|Britain launches an all big-gun battleship that makes every other warship obsolete.
+1906|H|mor|EU|Courrieres|disaster,industry|The Courrieres mine disaster|A coal dust explosion in northern France kills over a thousand miners.
+1906|H|mor|EU|Naples|disaster|Vesuvius erupts|Vesuvius erupts, kills over a hundred, and sends Rome's Olympics to London.
+1906|H|mor|ME|Tehran|law,revolution|The Persian parliament|The first Majlis meets in Tehran.
+1906|H|mor|AS|Calcutta|uprising,law|Bengal partitioned|Lord Curzon divides Bengal, and the boycott of British goods begins.
+1907|H|mor|EU|Vienna|law|Universal male suffrage|Austria gives every man the vote for the Reichsrat, and Czech and socialist members flood in.
+1907|H|mor|EU|London|treaty,empire|The Anglo-Russian Convention|Britain and Russia divide Persia into spheres and settle Afghanistan and Tibet.
+1907|H|mor|EU|Paris|art|Les Demoiselles d'Avignon|Picasso paints the canvas that opens the way to cubism.
+1907|H|mor|EU|Tiflis|crime,revolution|The Tiflis bank robbery|Bolsheviks led by Kamo and organised by a young Stalin rob a bank convoy with bombs.
+1908|H|mor|EU|Bosnia|empire,crown|Bosnia annexed|Austria-Hungary annexes Bosnia and Herzegovina outright, and Serbia and Russia are humiliated.
+1908|H|mor|ME|Thessaloniki|revolution|The Young Turks|Ottoman officers in Macedonia force the sultan to bring back the constitution.
+1908|H|mor|AS|Tunguska|disaster|Tunguska|Something explodes over the Siberian forest and flattens eighty million trees.
+1908|W|mag,wer|AS|Tunguska|disaster,occult|Tunguska and the Umbra|The house reading has the blast felt across the Umbra; Garou of Siberia and Mages argue over whether it was a falling star or a failed working.
+1908|H|mor|EU|Messina|quake,disaster|The Messina earthquake|An earthquake and tsunami destroy Messina and Reggio and kill some eighty thousand.
+1908|H|mor|MO|Prague|uprising,law|Martial law in Prague|Riots between Czechs and Germans bring martial law to Prague during the emperor's jubilee.
+1908|H|mor|ME|Masjed Soleyman|trade,industry|Oil struck in Persia|D'Arcy's drillers strike oil at Masjed Soleyman, and the Anglo-Persian Oil Company follows.
+1909|H|mor|EU|Dover|travel,science|Bleriot crosses|Louis Bleriot flies across the English Channel.
+1909|H|mor|ME|Istanbul|crown,revolution|Abdulhamid deposed|A counter-coup fails and the Young Turks depose Sultan Abdulhamid II.
+1909|H|mor|ME|Adana|massacre|The Adana massacre|Mobs and soldiers kill some twenty thousand Armenians in Adana.
+1909|W|wra|EU|Messina|quake,occult|Messina's dead|The house reading has the Shadowlands of Messina flooded with the earthquake dead, and Spectres gather.
+1910|H|mor|EU|London|crown,death|Edward VII dies|Edward VII dies and George V becomes king; nine kings ride in the funeral.
+1910|H|mor|AS|Seoul|empire|Korea annexed|Japan annexes Korea.
+1910|H|mor|EU|Lisbon|revolution|The Portuguese Republic|A revolution ends the monarchy in Portugal.
+1910|H|mor|AS|Manchuria|plague|The Manchurian plague|Pneumonic plague kills sixty thousand in Manchuria until a Malayan doctor's masks and quarantines stop it.
+1910|H|mor|EU|London|science,occult|Halley's comet|The earth passes through the comet's tail, and people buy comet pills against poison gas.
+1910|W|hun|MO|Olomouc|faith,occult|A priest's warning|The house reading has an Olomouc priest send the archbishop a report of a parish where the dead do not stay buried.
+1911|H|mor|AS|Wuchang|revolution|The Xinhai Revolution|Army units rise at Wuchang, the provinces follow, and the Qing dynasty falls within months.
+1911|H|mor|AS|Delhi|crown,empire|The Delhi durbar|George V and Queen Mary are crowned emperor and empress of India in Delhi, and the capital moves from Calcutta.
+1911|H|mor|ME|Tripoli|war,empire|Italy invades Libya|Italy attacks the Ottoman provinces of Libya; aircraft drop bombs in war for the first time.
+1911|H|mor|EU|Paris|crime,art|The Mona Lisa stolen|The Mona Lisa vanishes from the Louvre; it turns up two years later in Florence.
+1911|H|mor|EU|Agadir|war,empire|The Agadir crisis|A German gunboat at Agadir nearly brings war with France over Morocco.
+1911|H|mor|ME|Istanbul|fire|The fires of Istanbul|Great fires burn thousands of wooden houses in Istanbul.
+1912|H|mor|EU|Atlantic|sea,disaster|The Titanic sinks|The liner strikes an iceberg on its first voyage; over fifteen hundred die.
+1912|H|mor|EU|Balkans|war|The First Balkan War|Serbia, Bulgaria, Greece and Montenegro drive the Ottomans almost out of Europe.
+1912|H|mor|AS|Tokyo|crown,death|The Meiji emperor dies|The Meiji emperor dies and General Nogi and his wife follow in ritual suicide.
+1912|H|mor|AS|Beijing|crown|The last emperor abdicates|The six-year-old Puyi gives up the throne, and China becomes a republic.
+1912|H|mor|EU|Stockholm|sport|The Stockholm Olympics|The Stockholm Games bring electric timing and a photo finish.
+1912|H|mor|MO|Brno|art|Expressionism in Brno|Brno's Czech and German artists hold rival shows, and the town's cafes argue about modern art.
+1912|H|mor|EU|Vlore|war,founding|Albania declares independence|Ismail Qemali proclaims an independent Albania at Vlore.
+1913|H|mor|EU|Balkans|war|The Second Balkan War|Bulgaria attacks its allies over Macedonia and loses.
+1913|H|mor|EU|Vienna|crime,war|The Redl affair|Colonel Redl, chief of Austrian counter-intelligence, is found to be a Russian spy and shoots himself.
+1913|H|mor|EU|Paris|art|The Rite of Spring|Stravinsky's ballet starts a riot in the theatre.
+1913|H|mor|EU|London|crime,law|Emily Davison at the Derby|A suffragette runs onto the course at the Derby and is killed by the king's horse.
+1913|H|mor|EU|Vienna|crime|Hitler and Stalin in Vienna|A failed painter and a Georgian revolutionary live in Vienna the same winter; Trotsky and Tito pass through too.
+1913|W|vam|EU|Vienna|occult,crown|The Tremere at home|The house reading has the Tremere of Vienna advising the court; their chantry is among the oldest in the empire, and they sense the war coming.
+1913|H|mor|EU|Hamburg|sea,industry|The Imperator|Germany launches the largest ship in the world.
+1913|H|mor|EU|Dublin|uprising,industry|The Dublin lockout|Employers lock out twenty thousand workers in Dublin for over seven months.
+1913|H|mor|ME|Istanbul|terror,revolution|The raid on the Sublime Porte|Enver Pasha storms the government offices, the war minister is shot, and the Committee of Union and Progress takes power.
+1913|H|mor|MO|Vitkovice|industry|The Vitkovice works|The ironworks at Vitkovice by Ostrava become one of the great steel and coal works of the empire.
+1913|W|wer|EU|Ruhr|industry,occult|Pentex's forerunners|The house reading has Glass Walkers watching a German chemical firm whose board answers to something in the Wyrm's service.
