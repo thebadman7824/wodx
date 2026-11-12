@@ -17,6 +17,7 @@
 "title": "The Natufian villages",
 "text": "Hunter-gatherers in the Levant settle in round stone houses and harvest wild grain with flint sickles.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -37,6 +38,7 @@
 "title": "The first murder",
 "text": "Caine kills Abel in the fields, is cursed, and goes into the wilderness east of Eden.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -56,6 +58,7 @@
 "title": "Hunters in the karst caves",
 "text": "Late Ice Age hunters shelter in the caves of the Moravian Karst and follow reindeer and horse across the plain.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -75,6 +78,7 @@
 "title": "The Ice Age ends",
 "text": "The cold snap called the Younger Dryas breaks; forests spread north and the great herds thin.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -94,6 +98,7 @@
 "title": "Jericho's first settlers",
 "text": "People settle by the spring at Jericho, one of the oldest continuously lived-in places.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -114,6 +119,7 @@
 "title": "The pillars of Gobekli Tepe",
 "text": "Hunters raise carved stone pillars on a hill in Anatolia, a sacred place built before farming.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -134,6 +140,7 @@
 "title": "The carved beasts on the hill",
 "text": "The foxes, vultures and boars carved at Gobekli Tepe are read by Garou lorekeepers as a caern raised in honour of the Fera.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -154,6 +161,7 @@
 "title": "Caine meets Lilith",
 "text": "In the wilderness Caine finds Lilith, who teaches the first powers of the blood and is later betrayed.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -174,6 +182,7 @@
 "title": "Farming begins",
 "text": "Wheat, barley and lentils are first sown on purpose in the hills of the Fertile Crescent.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -194,6 +203,7 @@
 "title": "The Impergium begins",
 "text": "As farming begins, the Garou start to cull the growing human herds; the Impergium lasts about three thousand years (W20 pdf 71).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -222,6 +232,7 @@
 "title": "Goats tamed",
 "text": "Herders in the Zagros keep the first tame goats.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -241,6 +252,7 @@
 "title": "Cattle and sheep tamed",
 "text": "Wild aurochs and mouflon are bred into cattle and sheep in Anatolia and the upper Euphrates.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -261,6 +273,7 @@
 "title": "The wall and tower of Jericho",
 "text": "Jericho's people build a stone wall and round tower, among the first public works anywhere.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -281,6 +294,7 @@
 "title": "The First City",
 "text": "Caine founds Enoch and Embraces the Second Generation; mortals and the childer live under one ruler.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "sthr-enoch-aralu",
@@ -313,6 +327,7 @@
 "title": "Rice farming",
 "text": "Rice is first farmed along the middle Yangtze in China.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -333,6 +348,7 @@
 "title": "Squash and gourds in the Americas",
 "text": "People in the Americas begin to grow squash and gourds.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -353,6 +369,7 @@
 "title": "Catalhoyuk",
 "text": "A town of mud-brick houses entered through the roofs grows on the Konya plain, home to several thousand.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -373,6 +390,7 @@
 "title": "The houses of bulls",
 "text": "Some Noddists claim the bull horns and vulture paintings of Catalhoyuk mark a town that fed the First City.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -393,6 +411,7 @@
 "title": "Farmers reach Europe",
 "text": "Farming families cross from Anatolia into Greece and the Balkans.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -412,6 +431,7 @@
 "title": "Mehrgarh",
 "text": "A farming village rises at Mehrgarh below the Bolan Pass, ancestor of the Indus cities.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -432,6 +452,7 @@
 "title": "The bone flutes of Jiahu",
 "text": "Villagers at Jiahu in China play flutes of crane bone and scratch signs on tortoise shell.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -452,6 +473,7 @@
 "title": "Doggerland drowns",
 "text": "The rising sea covers the low land between Britain and the continent.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -472,6 +494,7 @@
 "title": "The cold event",
 "text": "A sudden cooling lasting two centuries strains the first farms of Europe and the Near East.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -491,6 +514,7 @@
 "title": "The Concord",
 "text": "Sixteen tribes meet and agree to end the Impergium, nearly nine thousand years before the modern nights (W20 pdf 40-41, 71).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -520,6 +544,7 @@
 "title": "The first canals",
 "text": "Farmers in southern Mesopotamia dig canals from the rivers to water their fields.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -540,6 +565,7 @@
 "title": "The Flood",
 "text": "A great flood destroys Enoch; the Second Generation die or vanish, and their childer rule the ruins.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "sthr-enoch-aralu",
@@ -573,6 +599,7 @@
 "title": "Lepenski Vir",
 "text": "Fishers by the Danube's Iron Gates carve river-stone heads with fish faces.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -592,6 +619,7 @@
 "title": "The Black Sea rises",
 "text": "Some scholars hold that the Black Sea filled quickly from the Mediterranean about now, drowning its shore villages.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -612,6 +640,7 @@
 "title": "The first farmers in Moravia",
 "text": "Linear Pottery farmers settle the loess plains of southern Moravia in long timber houses.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -632,6 +661,7 @@
 "title": "The forest and the plough",
 "text": "The first fields cut into the Moravian woods; Garou of the region mark where the farmers may go and where they may not.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -651,6 +681,7 @@
 "title": "The Talheim grave",
 "text": "At Talheim in Germany a whole farming community is killed and buried in one pit.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -671,6 +702,7 @@
 "title": "The Second City",
 "text": "The Third Generation raise a new city after the Flood, each ruling a quarter with their own childer.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -700,6 +732,7 @@
 "title": "Eridu",
 "text": "Eridu, held by later Sumerians to be the first city of kings, builds its first temple to the water god Enki.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -719,6 +752,7 @@
 "title": "The Yangshao villages",
 "text": "Painted-pottery villages spread along the Yellow River.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -738,6 +772,7 @@
 "title": "Maize",
 "text": "Farmers in Mexico breed maize from the wild grass teosinte.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -758,6 +793,7 @@
 "title": "The roundels",
 "text": "Farmers of central Europe build great round ditched enclosures, some of them in Moravia, perhaps for gatherings and rites.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -778,6 +814,7 @@
 "title": "The first megaliths",
 "text": "Stone tombs and standing stones rise in Brittany.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -798,6 +835,7 @@
 "title": "The gold of Varna",
 "text": "A grave at Varna on the Black Sea holds the oldest worked gold yet found.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -818,6 +856,7 @@
 "title": "Stones the fae remember",
 "text": "The tales of the Kithain place the Mythic Age in the time when the long stone rows of Carnac were raised.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -837,6 +876,7 @@
 "title": "Copper worked",
 "text": "Smiths in the Balkans smelt copper; the Copper Age begins.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -857,6 +897,7 @@
 "title": "The quarrels of the Third Generation",
 "text": "The rulers of the Second City feud over power and their childer, and the city's peace frays.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -885,6 +926,7 @@
 "title": "The Ubaid traders",
 "text": "Ubaid culture spreads from southern Mesopotamia up the rivers and along the Gulf.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -904,6 +946,7 @@
 "title": "The wheel",
 "text": "The first wheels turn in Mesopotamia and on the steppe.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -924,6 +967,7 @@
 "title": "Horses tamed",
 "text": "Steppe people north of the Black Sea begin to keep and ride horses.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -944,6 +988,7 @@
 "title": "The fall of the Second City",
 "text": "The Second City falls to war and the childer's revolt; the Antediluvians scatter across the world.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -973,6 +1018,7 @@
 "title": "The War of Rage begins",
 "text": "After the Impergium the Fera rise against the Garou, and the Garou turn on the changing breeds; many lines are hunted near to their end (Tribebook Silent Striders pdf 16).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -993,6 +1039,7 @@
 "title": "The Antediluvians scatter",
 "text": "After the Second City, the Third Generation go their ways: some to the mountains, some to the rivers, some into the sea of mortal peoples.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1012,6 +1059,7 @@
 "title": "The hill folk of the Alps",
 "text": "Herders cross the high passes of the Alps with copper axes and flint.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1031,6 +1079,7 @@
 "title": "Uruk grows",
 "text": "Uruk becomes the largest city in the world, with tens of thousands living inside its walls.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1051,6 +1100,7 @@
 "title": "The temples of Malta",
 "text": "Islanders on Malta build great stone temples.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1070,6 +1120,7 @@
 "title": "The potter's wheel and the plough",
 "text": "Sumerians use the fast potter's wheel and the ox-drawn plough.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -1094,6 +1145,7 @@
 "title": "Naqada",
 "text": "The towns of Upper Egypt grow rich under chiefs buried with painted pots.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1114,6 +1166,7 @@
 "title": "Osiris rules",
 "text": "In the legend of the Reborn, Osiris rules the Two Lands as a god-king, with Isis beside the throne.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -1139,6 +1192,7 @@
 "title": "The striders by the river",
 "text": "The Silent Striders keep their oldest home among the shrines of the Nile.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": [
 {
 "id": "raeg-cats-of-khem",
@@ -1167,6 +1221,7 @@
 "title": "Corded Ware ancestors",
 "text": "Herders from the steppe begin to push west into central Europe.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1187,6 +1242,7 @@
 "title": "The iceman",
 "text": "A man is shot with an arrow and dies on a pass in the Alps; the ice keeps the body for five thousand years.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1207,6 +1263,7 @@
 "title": "Writing",
 "text": "Scribes at Uruk press signs into clay tablets to keep the temple's accounts, the start of writing.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1227,6 +1284,7 @@
 "title": "Hieroglyphs",
 "text": "The first hieroglyphs are written in Upper Egypt.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -1247,6 +1305,7 @@
 "title": "Set murders Osiris",
 "text": "Set kills Osiris and scatters the body across Egypt, and takes the throne.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -1272,6 +1331,7 @@
 "title": "The Spell of Life",
 "text": "Isis gathers the pieces of Osiris and, with the help of the gods, works the Spell of Life; Osiris rises.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -1297,6 +1357,7 @@
 "title": "Sutekh in the Two Lands",
 "text": "The Followers of Set tell that their founder walked among the first kings of Egypt and was worshipped as a god.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": [
 {
 "id": "cbs-egypt",
@@ -1322,6 +1383,7 @@
 "title": "Narmer unites Egypt",
 "text": "The king of Upper Egypt takes the Delta; the Narmer Palette shows the first king of a single Egypt.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1342,6 +1404,7 @@
 "title": "Horus against Set",
 "text": "Horus, son of Osiris and Isis, wars with Set for the throne of Egypt.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -1367,6 +1430,7 @@
 "title": "Skara Brae",
 "text": "Farmers on Orkney build the stone village of Skara Brae, with stone beds and dressers.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1387,6 +1451,7 @@
 "title": "Stonehenge's first ditch",
 "text": "A circular bank and ditch is dug on Salisbury Plain; the stones come later.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1406,6 +1471,7 @@
 "title": "The Sumerian city-states",
 "text": "Ur, Uruk, Lagash, Kish and Nippur grow into rival city-states, each with its own god.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -1431,6 +1497,7 @@
 "title": "The first Shemsu-heru",
 "text": "Osiris shares the Spell of Life with chosen followers, the first of the Reborn who serve Horus.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -1456,6 +1523,7 @@
 "title": "The old gods remembered",
 "text": "In the reckoning of the Fallen, the gods the Sumerians worship are half-remembered faces of angels from before the Fall.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1475,6 +1543,7 @@
 "title": "The early Indus towns",
 "text": "Towns of the Indus valley begin building with baked brick.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1495,6 +1564,7 @@
 "title": "Monks of the high passes",
 "text": "The Akashic Brotherhood counts its oldest roots among hermits in the mountains above the Indus.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1515,6 +1585,7 @@
 "title": "The flood layer at Shuruppak",
 "text": "A deep layer of river silt at Shuruppak marks a great flood, the kind later remembered in the flood stories.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1534,6 +1605,7 @@
 "title": "Corded Ware in Moravia",
 "text": "Herders who bury their dead with corded beakers and stone battle-axes settle across Moravia.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1553,6 +1625,7 @@
 "title": "The Longshan towns",
 "text": "Walled towns of black polished pottery rise along the Yellow River.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1572,6 +1645,7 @@
 "title": "Gilgamesh of Uruk",
 "text": "Gilgamesh, later the hero of the oldest written epic, rules Uruk about now.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1591,6 +1665,7 @@
 "title": "The Old Kingdom",
 "text": "Egypt's Old Kingdom begins, the age of the great pyramids.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1611,6 +1686,7 @@
 "title": "Djoser's step pyramid",
 "text": "Imhotep builds the step pyramid for King Djoser at Saqqara, the first great stone building.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1631,6 +1707,7 @@
 "title": "Imhotep the builder",
 "text": "Later Hermetic masters honour Imhotep as a founder of the arts of building, healing and writing.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1651,6 +1728,7 @@
 "title": "The royal graves of Ur",
 "text": "The kings and queens of Ur are buried with gold, lyres and dozens of attendants.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1671,6 +1749,7 @@
 "title": "Harappa and Mohenjo-daro",
 "text": "The great Indus cities lay out straight streets, drains and granaries.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1691,6 +1770,7 @@
 "title": "The Great Pyramid",
 "text": "The Great Pyramid of Khufu is finished at Giza, the tallest building on earth for nearly four thousand years.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1711,6 +1791,7 @@
 "title": "Tombs that the Reborn know",
 "text": "The Shemsu-heru know the pyramid fields as places where the walls between the living and the dead are thin.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1731,6 +1812,7 @@
 "title": "The Great Sphinx",
 "text": "The Sphinx is carved from the bedrock at Giza.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1751,6 +1833,7 @@
 "title": "The sarsens of Stonehenge",
 "text": "The great sarsen circle and the trilithons are raised at Stonehenge.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1771,6 +1854,7 @@
 "title": "The stone ring caern",
 "text": "The Fianna sing that the stone circles of Britain were raised over caerns, and that the rings still answer the moon.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1790,6 +1874,7 @@
 "title": "The Bell Beaker folk",
 "text": "Bell Beaker pottery and copper daggers spread from Iberia to Britain and central Europe.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1810,6 +1895,7 @@
 "title": "The Sacred Peace of Lagash",
 "text": "Garou and Fera keep a truce at Lagash in Sumer for a time, before the War of Rage returns.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -1835,6 +1921,7 @@
 "title": "The Stele of the Vultures",
 "text": "Eannatum of Lagash defeats Umma and sets up a stone showing vultures over the dead.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -1859,6 +1946,7 @@
 "title": "Urukagina's reforms",
 "text": "Urukagina of Lagash curbs the greed of priests and officials, the first known law reform.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -1884,6 +1972,7 @@
 "title": "The archives of Ebla",
 "text": "Thousands of clay tablets at Ebla in Syria record a trading city's business.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1904,6 +1993,7 @@
 "title": "Sargon of Akkad",
 "text": "Sargon founds the Akkadian empire, the first to rule all Mesopotamia.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1924,6 +2014,7 @@
 "title": "A Methuselah behind the throne",
 "text": "Some Ventrue claim that their line advised the first kings of Akkad; the Brujah call it a boast.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1944,6 +2035,7 @@
 "title": "Enheduanna's hymns",
 "text": "Sargon's daughter Enheduanna, high priestess at Ur, writes hymns to Inanna, the first author known by name.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1964,6 +2056,7 @@
 "title": "Unetice bronze",
 "text": "The Unetice culture works bronze in Bohemia and Moravia and trades tin and amber across central Europe.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -1983,6 +2076,7 @@
 "title": "Pepi II's long reign",
 "text": "Pepi II rules Egypt for perhaps ninety years; the Old Kingdom weakens.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2003,6 +2097,7 @@
 "title": "The great drought",
 "text": "A drought lasting decades strikes from Egypt to the Indus; Akkad collapses.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2023,6 +2118,7 @@
 "title": "The First Intermediate Period",
 "text": "The Old Kingdom breaks apart into rival provinces after low Nile floods.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2042,6 +2138,7 @@
 "title": "The Gutians",
 "text": "Mountain raiders called the Gutians overrun Akkad.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2062,6 +2159,7 @@
 "title": "The Third Dynasty of Ur",
 "text": "Ur-Nammu rebuilds Sumer, raises the great ziggurat of Ur and issues a law code.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2081,6 +2179,7 @@
 "title": "The laws of Ur-Nammu",
 "text": "The oldest surviving law code sets fines in silver for injuries.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2101,6 +2200,7 @@
 "title": "The Xia",
 "text": "Chinese tradition places the first dynasty, the Xia, and the flood-tamer Yu the Great about now.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2121,6 +2221,7 @@
 "title": "Yu and the waters",
 "text": "The Kuei-jin say the first dynasty was founded when the dragons of the rivers were bargained with, not beaten.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2140,6 +2241,7 @@
 "title": "The Middle Kingdom",
 "text": "Mentuhotep II reunites Egypt from Thebes.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2160,6 +2262,7 @@
 "title": "The palaces of Crete",
 "text": "The Minoans build the first palaces at Knossos and Phaistos.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2180,6 +2283,7 @@
 "title": "The bull and the labyrinth",
 "text": "Garou tales of the War of Rage place a hidden lair of the changing breeds under the palace hills of Crete.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2200,6 +2304,7 @@
 "title": "The chariot",
 "text": "Chariots with spoked wheels appear on the steppe east of the Urals.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2219,6 +2324,7 @@
 "title": "Greek speakers in Greece",
 "text": "Peoples speaking an early Greek settle the Greek mainland.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2238,6 +2344,7 @@
 "title": "Assyrian traders in Anatolia",
 "text": "Merchants from Assur keep a trading colony at Kanesh in Anatolia, sending tin and cloth.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2258,6 +2365,7 @@
 "title": "The Indus cities decline",
 "text": "The great Indus cities shrink as rivers shift and trade fails.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2278,6 +2386,7 @@
 "title": "The Wessex graves",
 "text": "Chiefs on the chalk downs of Wessex are buried with gold and amber.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2298,6 +2407,7 @@
 "title": "Babylon's first dynasty",
 "text": "An Amorite dynasty takes Babylon, then a small town.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2318,6 +2428,7 @@
 "title": "The first Baali",
 "text": "The Baali tell that their first sire drew power from things older than Caine in the swamps of southern Mesopotamia.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2338,6 +2449,7 @@
 "title": "Egyptian mathematics",
 "text": "Egyptian scribes copy problems of fractions and areas, later gathered in the Rhind papyrus.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2358,6 +2470,7 @@
 "title": "The Setites in ancient Egypt",
 "text": "The Followers of Set grow strong in the cult centres of the Delta, as the Encyclopaedia records.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": [
 {
 "id": "cbs-egypt",
@@ -2382,6 +2495,7 @@
 "title": "Hammurabi becomes king",
 "text": "Hammurabi takes the throne of Babylon and spends thirty years making it an empire.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2401,6 +2515,7 @@
 "title": "The code of Hammurabi",
 "text": "Hammurabi has his laws carved on a basalt stele: an eye for an eye, set by rank.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2421,6 +2536,7 @@
 "title": "Bronze hoards",
 "text": "Bronze axes, rings and ingots are buried in hoards across Moravia, as offerings or savings.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2441,6 +2557,7 @@
 "title": "Hoards the dead guard",
 "text": "Wraiths of the Unetice dead are said to linger over the hoards buried with their names.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2461,6 +2578,7 @@
 "title": "The Nebra sky disc",
 "text": "A bronze disc inlaid with gold sun, moon and stars is buried on a hill in Germany.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2481,6 +2599,7 @@
 "title": "The Hyksos",
 "text": "Foreign kings called the Hyksos rule the Nile Delta, bringing the horse and chariot to Egypt.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2501,6 +2620,7 @@
 "title": "Set worshipped at Avaris",
 "text": "The Hyksos kings honour Set at Avaris; the Followers of Set count this a high time of their cult.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2521,6 +2641,7 @@
 "title": "Thera erupts",
 "text": "The volcano of Thera blows apart, burying the town of Akrotiri in ash and sending waves across the Aegean.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2541,6 +2662,7 @@
 "title": "A dream drowned",
 "text": "Kithain tales speak of a shining island of the Mythic Age lost to fire and sea; scholars point to Thera.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2561,6 +2683,7 @@
 "title": "The Shang",
 "text": "The Shang dynasty rules the Yellow River plain from walled capitals.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2581,6 +2704,7 @@
 "title": "The shaft graves of Mycenae",
 "text": "Mycenae's kings are buried with gold masks.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2601,6 +2725,7 @@
 "title": "The Hittites sack Babylon",
 "text": "The Hittite king Mursili I raids down the Euphrates and sacks Babylon.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2621,6 +2746,7 @@
 "title": "The New Kingdom",
 "text": "Ahmose I drives out the Hyksos; Egypt's New Kingdom begins.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2641,6 +2767,7 @@
 "title": "The Reborn and the expulsion",
 "text": "The Shemsu-heru are said to have fought beside Ahmose's army against the Followers of Set in the Delta.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2661,6 +2788,7 @@
 "title": "The Vedic peoples",
 "text": "Peoples speaking an Indo-Aryan tongue settle north India; the hymns of the Rigveda take shape.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2681,6 +2809,7 @@
 "title": "The Valley of the Kings",
 "text": "Egypt's kings begin to be buried in hidden tombs in the Valley of the Kings.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2700,6 +2829,7 @@
 "title": "The Tumulus culture",
 "text": "Central Europeans bury their dead under earth mounds, the barrows of the Bronze Age.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2720,6 +2850,7 @@
 "title": "Barrows on the ridges",
 "text": "Bronze Age barrows crown the ridges of Moravia; the Garou of the land take some for caerns and leave others well alone.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2739,6 +2870,7 @@
 "title": "Hatshepsut rules",
 "text": "Hatshepsut takes the throne of Egypt as king and rules for about twenty years.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2759,6 +2891,7 @@
 "title": "The voyage to Punt",
 "text": "Hatshepsut's ships sail down the Red Sea to Punt and bring back incense trees and ebony.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2778,6 +2911,7 @@
 "title": "Megiddo",
 "text": "Thutmose III defeats a league of Canaanite kings at Megiddo, the first battle recorded in detail.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2798,6 +2932,7 @@
 "title": "Mycenaeans at Knossos",
 "text": "Mycenaean Greeks take over the palace of Knossos and its Linear B scribes.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2818,6 +2953,7 @@
 "title": "The minotaur's court",
 "text": "Some Cainite legends place an elder of the beast-blooded clans in the halls under Knossos.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2837,6 +2973,7 @@
 "title": "Mitanni",
 "text": "The kingdom of Mitanni rules northern Mesopotamia with chariot lords.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2857,6 +2994,7 @@
 "title": "The Amarna age of letters",
 "text": "Kings of Egypt, Babylon, Mitanni and the Hittites write to each other as brothers and trade gold for horses.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2877,6 +3015,7 @@
 "title": "Akhenaten's new faith",
 "text": "Akhenaten puts the sun disc Aten above all other gods and builds a new capital at Amarna.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2897,6 +3036,7 @@
 "title": "The Aten heresy",
 "text": "The Reborn remember Akhenaten's reign, which the books put at 1364 to 1347 BCE, as a time when the old rites of the dead were shut away and the Shemsu-heru hid.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2916,6 +3056,7 @@
 "title": "Nefertiti's bust",
 "text": "The sculptor Thutmose carves the painted bust of Queen Nefertiti.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2936,6 +3077,7 @@
 "title": "Tutankhamun restores the gods",
 "text": "The boy king Tutankhamun abandons Amarna and restores the old gods.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2955,6 +3097,7 @@
 "title": "Tutankhamun buried",
 "text": "Tutankhamun dies young and is buried with a small but rich tomb that robbers miss.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2975,6 +3118,7 @@
 "title": "The Urnfield culture",
 "text": "Central Europeans begin to burn their dead and bury the ashes in urns in large cemeteries.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -2995,6 +3139,7 @@
 "title": "Urnfield hillforts",
 "text": "Hillforts ringed with earth and timber are built on the heights of Moravia.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3015,6 +3160,7 @@
 "title": "The urnfields",
 "text": "Burning the dead changes nothing for the wraiths of Moravia's urnfields, who gather in the shadow of the cemeteries.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3035,6 +3181,7 @@
 "title": "Ramesses II",
 "text": "Ramesses II begins a reign of sixty-six years and carves his temples at Abu Simbel.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3054,6 +3201,7 @@
 "title": "Kadesh",
 "text": "Egyptians and Hittites fight the largest chariot battle known at Kadesh; both claim victory.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3073,6 +3221,7 @@
 "title": "The first peace treaty",
 "text": "Ramesses II and the Hittite king Hattusili III sign a peace treaty, copies of which survive in both tongues.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3093,6 +3242,7 @@
 "title": "Troy VII burns",
 "text": "The citadel of Troy is sacked about now, the event that may lie behind the Iliad.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3112,6 +3262,7 @@
 "title": "The Tollense battle",
 "text": "Thousands fight at a river crossing in northern Germany, the oldest large battle known in Europe.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3132,6 +3283,7 @@
 "title": "Israel in Canaan",
 "text": "A people called Israel is first named in Canaan, on a stone of Pharaoh Merneptah in 1208.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3151,6 +3303,7 @@
 "title": "Prophets and judges",
 "text": "In later hunter lore the judges and prophets of Israel are the first mortals remembered for standing against the night's creatures by faith alone.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3171,6 +3324,7 @@
 "title": "The Hittite empire falls",
 "text": "Hattusa is abandoned and burned; the Hittite empire breaks up.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3190,6 +3344,7 @@
 "title": "The Olmec",
 "text": "The Olmec build their first ceremonial centre at San Lorenzo and carve colossal stone heads.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3210,6 +3365,7 @@
 "title": "The First Comers",
 "text": "The Pure Ones tell that their tribes held the lands across the ocean long before the Garou of Europe came, with their own peace among the breeds.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "bbnag-americas",
@@ -3239,6 +3395,7 @@
 "title": "Ramesses III fights the Sea Peoples",
 "text": "Ramesses III turns back the Sea Peoples in a battle on the Nile Delta, carved on the walls of Medinet Habu.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -3259,6 +3416,7 @@
 "title": "The Bronze Age collapse",
 "text": "Ugarit, Mycenae, Pylos and many other cities fall to raiders, drought and quakes; trade and writing vanish across the region.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3279,6 +3437,7 @@
 "title": "Elders go to ground",
 "text": "The fall of the Bronze Age cities sends old Cainites into long sleep; some claim the collapse was a war among them.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3298,6 +3457,7 @@
 "title": "Elam takes Babylon's gods",
 "text": "The Elamites sack Babylon and carry off the Code of Hammurabi and the statue of Marduk.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3317,6 +3477,7 @@
 "title": "The Greek dark age",
 "text": "Greece loses its palaces and writing; people live in small villages for three centuries.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3337,6 +3498,7 @@
 "title": "The Phoenician cities",
 "text": "Tyre, Sidon and Byblos rise as sea-trading cities.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3356,6 +3518,7 @@
 "title": "Iron spreads",
 "text": "Iron tools and weapons spread through the Levant and Anatolia.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3375,6 +3538,7 @@
 "title": "The Third Intermediate Period",
 "text": "Egypt splits between the priest-kings of Thebes and kings in the Delta.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3395,6 +3559,7 @@
 "title": "The Zhou overthrow the Shang",
 "text": "King Wu of Zhou defeats the last Shang king at Muye; the Zhou claim the Mandate of Heaven.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3415,6 +3580,7 @@
 "title": "The Mandate of Heaven",
 "text": "The Kuei-jin date their weakness to sunlight from the Chou, and tell that the Japanese spirit Mikaboshi advised the new dynasty (KotE pdf 12).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3434,6 +3600,7 @@
 "title": "David in Jerusalem",
 "text": "David makes Jerusalem the capital of Israel.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3453,6 +3620,7 @@
 "title": "The Phoenician alphabet",
 "text": "The Phoenicians write with an alphabet of 22 letters, the ancestor of Greek and Latin writing.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3473,6 +3641,7 @@
 "title": "The later Vedas",
 "text": "The Vedic hymns are gathered and the kingdoms of the Ganges plain grow.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3493,6 +3662,7 @@
 "title": "Fires on the plateau",
 "text": "The first fire-priests of the Iranian plateau tend their altars, later honoured as a root of the Celestial Chorus and the Ahl-i-Batin.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -3518,6 +3688,7 @@
 "title": "Late Urnfield hillforts",
 "text": "Hillforts multiply in central Europe as chiefs compete.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3538,6 +3709,7 @@
 "title": "The Tuatha and the Fomorians",
 "text": "Kithain legend sets the great war of the Tuatha against the Fomorians in this age, long before the Sundering.",
 "ref": "Legend; the year is a house reading",
+"period": "iron-dawn",
 "links": [
 {
 "id": "clurichaun",
@@ -3563,6 +3735,7 @@
 "title": "Solomon's temple",
 "text": "Solomon builds the first temple in Jerusalem.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3583,6 +3756,7 @@
 "title": "The seal of Solomon",
 "text": "Fallen and Earthbound alike tell stories of the king who bound spirits with a ring and a name.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3603,6 +3777,7 @@
 "title": "The Himalayan War begins",
 "text": "Akashic and Euthanatos masters begin a war in the mountains that runs, by one count, to 300 BCE (M20 pdf 123; Sorcerers Crusade pdf 68).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3622,6 +3797,7 @@
 "title": "Libyan pharaohs",
 "text": "Shoshenq I, of Libyan descent, takes Egypt's throne and raids Judah.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3641,6 +3817,7 @@
 "title": "The kingdom divides",
 "text": "After Solomon the kingdom splits into Israel in the north and Judah in the south.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3661,6 +3838,7 @@
 "title": "The kingdom of Kush",
 "text": "Kushite kings at Napata on the upper Nile build their own kingdom.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3681,6 +3859,7 @@
 "title": "Chavin de Huantar",
 "text": "The temple centre of Chavin draws pilgrims in the high Andes.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3700,6 +3879,7 @@
 "title": "The Villanovan villages",
 "text": "Iron-using villages of central Italy grow into the Etruscan cities.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3720,6 +3900,7 @@
 "title": "Ashurnasirpal II",
 "text": "Ashurnasirpal II makes Assyria the terror of the Near East and builds a palace at Nimrud.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3739,6 +3920,7 @@
 "title": "The great feast at Nimrud",
 "text": "Ashurnasirpal feeds nearly seventy thousand guests for ten days to open his capital.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3758,6 +3940,7 @@
 "title": "Qarqar",
 "text": "Shalmaneser III fights a league of kings including Ahab of Israel at Qarqar.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3778,6 +3961,7 @@
 "title": "The salt mines of Hallstatt",
 "text": "Miners dig salt deep into the mountain at Hallstatt in the Alps, giving the Iron Age culture its name.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3797,6 +3981,7 @@
 "title": "The Gonghe regency",
 "text": "Nobles drive out King Li of Zhou; from 841 Chinese history has a year-by-year record.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3817,6 +4002,7 @@
 "title": "Carthage founded",
 "text": "Phoenicians from Tyre found Carthage, in legend led by the princess Elissa, called Dido.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3837,6 +4023,7 @@
 "title": "A new city by the sea",
 "text": "The Brujah tell that their elders came to Carthage soon after its founding and saw in it the chance of a city where Cainite and mortal could live side by side.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": [
 {
 "id": "v20c-pyre-of-moloch",
@@ -3869,6 +4056,7 @@
 "title": "Sammu-ramat",
 "text": "Queen Sammu-ramat, later the legendary Semiramis, rules Assyria for her young son.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -3889,6 +4077,7 @@
 "title": "The Fall",
 "text": "In the reckoning of the Fallen, the angels who loved humanity rebel against Heaven at the dawn of the human race and are cast down.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -3909,6 +4098,7 @@
 "title": "The Age of Wrath",
 "text": "The Fallen walk the young world openly and war with the loyal hosts; humans worship and fear them.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -3929,6 +4119,7 @@
 "title": "The Fallen cast into the Abyss",
 "text": "The rebel angels are locked away in the Abyss; a few escape the binding as the Earthbound.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "dtf-the-fallen",
@@ -3962,6 +4153,7 @@
 "title": "The first dead",
 "text": "The dead of the first villages linger in the Shadowlands, with no city or ferryman to guide them.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "wghau-dantes",
@@ -3995,6 +4187,7 @@
 "title": "The laws of the First City",
 "text": "Caine forbids the Second Generation to make more childer; the command is broken.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "sthr-enoch-aralu",
@@ -4027,6 +4220,7 @@
 "title": "The Third Generation made",
 "text": "The Second Generation Embrace the thirteen who will be remembered as the Antediluvians.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "sthr-enoch-aralu",
@@ -4060,6 +4254,7 @@
 "title": "The childer slay their sires",
 "text": "In some tellings the Third Generation kill their own sires after the Flood; in others the Second simply vanish.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "sthr-enoch-aralu",
@@ -4092,6 +4287,7 @@
 "title": "The Triat",
 "text": "Garou lorekeepers tell that the Wyld, the Weaver and the Wyrm once kept the balance, before the Weaver went mad and bound the Wyrm.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4121,6 +4317,7 @@
 "title": "Magic open to all",
 "text": "Mages remember the Mythic Age as a time before consensus, when gods and spirits answered common people.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4141,6 +4338,7 @@
 "title": "Dreaming and waking as one",
 "text": "In Kithain legend the fae live beside mortals, and the Dreaming touches every field.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "ckslu-interregnum",
@@ -4174,6 +4372,7 @@
 "title": "The first August Personages",
 "text": "The Kuei-jin speak of the oldest age, when the courts of Heaven and the Yomi kept the Great Cycle turning.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4193,6 +4392,7 @@
 "title": "The Ratkin under the cities",
 "text": "The Ratkin say they were made to keep the human herds small, and took to the first cities when the Impergium ended.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4221,6 +4421,7 @@
 "title": "The Siberian War",
 "text": "The Encyclopaedia records a War of Rage fought across Siberia.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4240,6 +4441,7 @@
 "title": "Saraam and the Cat Kings",
 "text": "The Bastet keep courts among the city kings of Sumer, as their tales hold.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4260,6 +4462,7 @@
 "title": "Saulot the wise",
 "text": "Saulot, founder of the Salubri, studies in the Second City and travels east to seek the end of the Beast.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -4289,6 +4492,7 @@
 "title": "Troile and the city",
 "text": "The Brujah say their founder Troile prized the Second City above all and fought its fall.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -4317,6 +4521,7 @@
 "title": "The Tzimisce go north",
 "text": "The founder of the Tzimisce leaves the ruins for the mountains to the north, toward the Carpathians.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4336,6 +4541,7 @@
 "title": "The Nosferatu's curse",
 "text": "Nosferatu tales tell how their founder was made monstrous by Caine's anger for the deeds of the Second City.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4356,6 +4562,7 @@
 "title": "The Striders and Sutekh",
 "text": "The Silent Striders are cursed by Sutekh and can no longer rest in Egypt, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "raeg-cats-of-khem",
@@ -4384,6 +4591,7 @@
 "title": "The Judges of the Breeds",
 "text": "The Encyclopaedia records a council that judged quarrels among the changing breeds.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "raeg-cats-of-khem",
@@ -4412,6 +4620,7 @@
 "title": "The Fall of Heimhalla",
 "text": "The Get of Fenris and their kin lose a great northern hold, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4432,6 +4641,7 @@
 "title": "The Gurahl Refusal",
 "text": "The bear-changers refuse to fight the Garou or to teach them; the Encyclopaedia keeps the tale.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "bbmok-makara",
@@ -4460,6 +4670,7 @@
 "title": "Klaital's Shame",
 "text": "A dishonour of the War of Rage the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "bbrat-plagues-abroad",
@@ -4485,6 +4696,7 @@
 "title": "The Binders of Great Banes",
 "text": "Garou and Fera together bind great Banes in this age, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4513,6 +4725,7 @@
 "title": "The First Comers to the Amazon",
 "text": "The changing breeds of the great forest settle the Amazon long before the Garou, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "raam-first-comers",
@@ -4545,6 +4758,7 @@
 "title": "The Corax burned black",
 "text": "The ravens tell how they were scorched black in the War of Rage; the Encyclopaedia keeps the tale.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4573,6 +4787,7 @@
 "title": "The War of Rage seen by ravens",
 "text": "The Corax's own telling of the War of Rage, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -4592,6 +4807,7 @@
 "title": "The Spider's War of Rage",
 "text": "The Ananasi tell of their own losses in the War of Rage.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "wawor-black-tooth",
@@ -4620,6 +4836,7 @@
 "title": "The Bunyip",
 "text": "The Garou wipe out the Bunyip of the far south, a crime the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "raau-bunyip",
@@ -4652,6 +4869,7 @@
 "title": "The Refugees Among Humans",
 "text": "Fera who flee the War of Rage hide among human peoples, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4680,6 +4898,7 @@
 "title": "The Uncounted Vote",
 "text": "A Garou moot whose vote was never counted, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4708,6 +4927,7 @@
 "title": "The Last and Lowliest",
 "text": "The Encyclopaedia records the Bone Gnawers' tale of being the last and lowliest tribe.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4736,6 +4956,7 @@
 "title": "The Field of Nettles",
 "text": "An old battle site of the Garou, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4764,6 +4985,7 @@
 "title": "The Caern of the Fallen Star",
 "text": "A caern raised where a star fell, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4792,6 +5014,7 @@
 "title": "Oversea's Wound",
 "text": "An old wound to the Garou, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "iron-dawn",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -4820,6 +5043,7 @@
 "title": "Ordained by Sun and Moon",
 "text": "The Encyclopaedia's tale of a breed ordained by both sun and moon.",
 "ref": "Legend; the year is a house reading",
+"period": "iron-dawn",
 "links": [
 {
 "id": "bbrat-plagues-abroad",
@@ -4844,6 +5068,7 @@
 "title": "Krapina and Ananasa's Web",
 "text": "An old lair at Krapina tied to the spider queen, as the Encyclopaedia records.",
 "ref": "Legend; the year is a house reading",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -4864,6 +5089,7 @@
 "title": "Hemudu",
 "text": "Villagers at Hemudu near the Yangtze mouth build timber houses on stilts and grow rice.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4884,6 +5110,7 @@
 "title": "The Venus of Hluboke Masovky",
 "text": "Farmers of southern Moravia make clay figurines of women for their homes and shrines.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4903,6 +5130,7 @@
 "title": "The Carnac rows",
 "text": "Thousands of standing stones are set in rows at Carnac.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4923,6 +5151,7 @@
 "title": "The Sahara dries",
 "text": "The green Sahara turns to desert; herders move toward the Nile and the south.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4942,6 +5171,7 @@
 "title": "The copper axe in Moravia",
 "text": "Copper tools reach Moravian farmers through trade from the Balkans.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4962,6 +5192,7 @@
 "title": "The passage tombs of Ireland",
 "text": "Farmers in Ireland raise passage tombs in the Boyne valley.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -4982,6 +5213,7 @@
 "title": "Newgrange",
 "text": "The passage tomb at Newgrange is built so the midwinter sunrise lights its inner chamber.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5002,6 +5234,7 @@
 "title": "The hollow hills",
 "text": "Kithain call the Boyne tombs the first hollow hills, doors of the sidhe long before the Sundering.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5021,6 +5254,7 @@
 "title": "Proto-Elamite writing",
 "text": "Scribes at Susa write in their own signs.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5041,6 +5275,7 @@
 "title": "The first dynasty tombs",
 "text": "The early kings of Egypt are buried at Abydos with their servants.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5060,6 +5295,7 @@
 "title": "Kish and the first kings",
 "text": "The Sumerian king list names Kish as the first city to hold kingship after the flood.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5080,6 +5316,7 @@
 "title": "The fall of Liangzhu",
 "text": "The jade-working city of Liangzhu near the Yangtze mouth is abandoned, perhaps after floods.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5100,6 +5337,7 @@
 "title": "Caral",
 "text": "The city of Caral in the Peruvian desert raises platform mounds, the oldest city of the Americas.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5120,6 +5358,7 @@
 "title": "The Ness of Brodgar",
 "text": "The great stone halls of the Ness of Brodgar stand between two stone rings on Orkney.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5139,6 +5378,7 @@
 "title": "The Pyramid Texts",
 "text": "Spells for the dead king's rise to the stars are carved inside the pyramid of Unas.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5159,6 +5399,7 @@
 "title": "The spells on the walls",
 "text": "The Reborn read the Pyramid Texts as a clumsy echo of the true Spell of Life.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5179,6 +5420,7 @@
 "title": "Indus ships at Ur",
 "text": "Indus traders sail to Sumer with carnelian beads; Sumerians call the land Meluhha.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5199,6 +5441,7 @@
 "title": "Shimao",
 "text": "A great stone-walled town rises on the loess at Shimao in northern China.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5218,6 +5461,7 @@
 "title": "Shulgi",
 "text": "King Shulgi of Ur sets up a road network with rest houses and standard weights.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5237,6 +5481,7 @@
 "title": "Amber from the north",
 "text": "Baltic amber passes through Moravia toward the south.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5257,6 +5502,7 @@
 "title": "The palace of Mari",
 "text": "The palace archive of King Zimri-Lim at Mari records spies, prophets and diplomacy.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5277,6 +5523,7 @@
 "title": "The prophets of Mari",
 "text": "Mari's letters record ecstatic prophets who carry messages from the gods to the king.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5297,6 +5544,7 @@
 "title": "Crete's palaces rebuilt",
 "text": "Earthquakes wreck the Cretan palaces; they are rebuilt grander than before.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5317,6 +5565,7 @@
 "title": "Oracle bones",
 "text": "Shang diviners crack ox bones and turtle shells with heat and write the questions on them, China's oldest writing.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5337,6 +5586,7 @@
 "title": "The ancestors answer",
 "text": "The Kuei-jin say the Shang kings spoke with true ancestors through the cracks, and the spirits answered.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5357,6 +5607,7 @@
 "title": "The Book of the Dead",
 "text": "Egyptians begin to bury spells for the afterlife on papyrus, later called the Book of the Dead.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5376,6 +5627,7 @@
 "title": "Ugarit's alphabet",
 "text": "Scribes at Ugarit write an alphabet in cuneiform signs.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5395,6 +5647,7 @@
 "title": "Assyria rises",
 "text": "Ashur-uballit I makes Assyria a great power.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5414,6 +5667,7 @@
 "title": "Lady Fu Hao",
 "text": "The Shang queen and general Fu Hao leads armies and is buried with hundreds of bronzes.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5433,6 +5687,7 @@
 "title": "The Epic of Gilgamesh",
 "text": "The standard version of the Epic of Gilgamesh is written down.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5452,6 +5707,7 @@
 "title": "The Rigveda completed",
 "text": "The hymns of the Rigveda reach their final form, though still learned by heart.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5471,6 +5727,7 @@
 "title": "The tomb robbery trials",
 "text": "Tomb robbers in the Valley of the Kings are tried and confess.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5491,6 +5748,7 @@
 "title": "Tiglath-Pileser I",
 "text": "Tiglath-Pileser I campaigns to the Mediterranean and hunts lions and wild bulls.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5510,6 +5768,7 @@
 "title": "The Philistines",
 "text": "The Philistine cities of the coast fight Israel's tribes.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5530,6 +5789,7 @@
 "title": "The urnfields at Klentnice",
 "text": "Large urnfield cemeteries spread across southern Moravia below the Palava hills.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5549,6 +5809,7 @@
 "title": "The incense road",
 "text": "Camels carry frankincense and myrrh from south Arabia north to the Levant.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5569,6 +5830,7 @@
 "title": "Saba",
 "text": "The kingdom of Saba grows rich on incense in south Arabia.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5588,6 +5850,7 @@
 "title": "Geometric pottery",
 "text": "Greek potters paint vases with bands of zigzags and meanders.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5608,6 +5871,7 @@
 "title": "Urartu",
 "text": "The kingdom of Urartu rises around Lake Van.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5628,6 +5892,7 @@
 "title": "Iron reaches Moravia",
 "text": "The first iron tools reach Moravia; the Hallstatt age begins there.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5647,6 +5912,7 @@
 "title": "Tyre's queen flees",
 "text": "Elissa of Tyre flees a brother king and sails west, in the tale that ends with Carthage.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5666,6 +5932,7 @@
 "title": "Jomon pottery",
 "text": "Hunter-gatherers in Japan make some of the world's oldest pottery.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5685,6 +5952,7 @@
 "title": "Hunters across the Americas",
 "text": "Hunters with fluted spear points have spread through both Americas.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5704,6 +5972,7 @@
 "title": "The rock paintings of the Sahara",
 "text": "Herders paint cattle, giraffes and dancers on the rocks of a green Sahara.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5723,6 +5992,7 @@
 "title": "The last hunters of Moravia",
 "text": "Bands of hunters and fishers still live by the rivers of Moravia before the farmers come.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5742,6 +6012,7 @@
 "title": "Lengyel villages",
 "text": "Farmers of the Lengyel culture build fortified villages in southern Moravia.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5761,6 +6032,7 @@
 "title": "The Baden villages",
 "text": "The Baden culture's villages spread through Moravia, with wheeled carts and copper.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5780,6 +6052,7 @@
 "title": "The Moravian cave burials",
 "text": "People of the Copper Age bury some of their dead in the caves of the Moravian Karst.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5799,6 +6072,7 @@
 "title": "Bell Beakers in Moravia",
 "text": "Bell Beaker people settle in Moravia beside the Corded Ware herders.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5818,6 +6092,7 @@
 "title": "Unetice graves",
 "text": "The Unetice dead are buried crouched on their sides with bronze pins and rings.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5837,6 +6112,7 @@
 "title": "Fortified Bronze Age towns",
 "text": "Bronze Age settlements in Moravia gain ditches and palisades.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5856,6 +6132,7 @@
 "title": "Bronze hoards of the Urnfield age",
 "text": "Moravian smiths bury hoards of sickles, axes and scrap bronze.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -5875,6 +6152,7 @@
 "title": "The hillfort at Hostyn",
 "text": "An Urnfield hillfort stands on Hostyn hill, a height later held sacred.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5895,6 +6173,7 @@
 "title": "The hill of Hostyn",
 "text": "The Garou of Moravia keep a caern on the wooded height of Hostyn, and the hillfort's builders leave offerings there.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -5915,6 +6194,7 @@
 "title": "The antler masks of Star Carr",
 "text": "Hunters by a lake in Yorkshire wear red-deer antler headdresses, perhaps for rites.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5935,6 +6215,7 @@
 "title": "The statues of Ain Ghazal",
 "text": "Villagers near Amman shape tall plaster figures with staring eyes.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5955,6 +6236,7 @@
 "title": "The plastered skulls",
 "text": "The people of Jericho keep their dead's skulls, rebuilt in plaster with shell eyes.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5975,6 +6257,7 @@
 "title": "Skulls kept at home",
 "text": "Wraith lore holds that the plastered skulls of Jericho were Fetters, keeping the first dead close to the living.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -5994,6 +6277,7 @@
 "title": "The long houses and their dead",
 "text": "The Linear Pottery farmers of Moravia bury their dead beside the villages, crouched with pots and adzes.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6013,6 +6297,7 @@
 "title": "Vinca signs",
 "text": "Potters of the Vinca culture scratch signs on clay that some take for an early script.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6033,6 +6318,7 @@
 "title": "The temples of Eridu grow",
 "text": "Each rebuilding raises Eridu's temple higher, toward the later ziggurat.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6052,6 +6338,7 @@
 "title": "Horses milked and ridden",
 "text": "The Botai people of the Kazakh steppe keep herds of horses.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6072,6 +6359,7 @@
 "title": "The kurgans",
 "text": "Steppe herders bury their chiefs under earth mounds called kurgans.",
 "ref": "Real history",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6092,6 +6380,7 @@
 "title": "The first Gangrel run with the herds",
 "text": "The Gangrel tell that their founder ran with the horse peoples of the steppe, far from any city.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6111,6 +6400,7 @@
 "title": "The Warka vase",
 "text": "A carved alabaster vase from Uruk shows a procession bringing offerings to Inanna.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6130,6 +6420,7 @@
 "title": "The walls of Uruk",
 "text": "Uruk's walls reach nine kilometres, later credited to Gilgamesh.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6150,6 +6441,7 @@
 "title": "The Egyptian calendar",
 "text": "Egypt keeps a calendar of 365 days in three seasons tied to the Nile flood.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6169,6 +6461,7 @@
 "title": "The Great Bath",
 "text": "Mohenjo-daro's builders make a large waterproof brick bath, perhaps for rites.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6188,6 +6481,7 @@
 "title": "Kubaba of Kish",
 "text": "The Sumerian king list names Kubaba, a tavern keeper, as the only woman to rule Kish.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6208,6 +6502,7 @@
 "title": "Sintashta",
 "text": "The fortified towns of Sintashta on the steppe bury warriors with chariots.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6227,6 +6522,7 @@
 "title": "Abraham's age",
 "text": "Hebrew tradition places the patriarch Abraham's journey from Ur to Canaan about now.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6247,6 +6543,7 @@
 "title": "Babylonian mathematics",
 "text": "Babylonian scribes work in base sixty and know Pythagoras' rule a thousand years early.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6267,6 +6564,7 @@
 "title": "Kerma",
 "text": "The Nubian city of Kerma rules the middle Nile and rivals Egypt.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6286,6 +6584,7 @@
 "title": "Cyclopean walls",
 "text": "Mycenaean builders raise walls of stones so large later Greeks thought giants had moved them.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6305,6 +6604,7 @@
 "title": "The Upanishads take root",
 "text": "Thinkers of the Ganges plain begin the speculation later written in the Upanishads.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6324,6 +6624,7 @@
 "title": "The fall of Pylos",
 "text": "The palace of Pylos burns, baking its clay records hard.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6344,6 +6645,7 @@
 "title": "The oracle at Dodona",
 "text": "Hermetic historians trace the first Greek oracles to the oak of Dodona, older than Delphi.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": [
 {
 "id": "mrdm-delphi",
@@ -6369,6 +6671,7 @@
 "title": "The Book of Changes",
 "text": "The Zhou begin the divination system later written down as the Yijing.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6388,6 +6691,7 @@
 "title": "Zarathustra's age",
 "text": "Many scholars place the prophet Zarathustra between 1500 and 1000 BCE on the steppe.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6408,6 +6712,7 @@
 "title": "Zarathustra and the first Adversary",
 "text": "The Encyclopaedia's account of Zarathustra and the first Adversary belongs here.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6427,6 +6732,7 @@
 "title": "Assyrian siege craft",
 "text": "Assyrian armies bring battering rams and siege towers to the walls of their enemies.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6446,6 +6752,7 @@
 "title": "Aram-Damascus",
 "text": "The Aramean kingdom of Damascus fights both Israel and Assyria.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6465,6 +6772,7 @@
 "title": "The Mesha stele",
 "text": "King Mesha of Moab sets up a stone telling of his war with Israel.",
 "ref": "Real history",
+"period": "iron-dawn",
 "links": []
 },
 {
@@ -6485,6 +6793,7 @@
 "title": "Baal the Destroyer is beaten",
 "text": "The Baali begin in the Second City; their leader leads them against it and is beaten back (V20 pdf 402).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -6513,6 +6822,7 @@
 "title": "Troile Embraced",
 "text": "After the Flood, Brujah Embraces Troile, who will later destroy the sire (V20 Dark Ages pdf 45).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "nbon-fall-second-city",
@@ -6542,6 +6852,7 @@
 "title": "Mashkan-shapir abandoned",
 "text": "The Babylonian city of Mashkan-shapir is emptied, perhaps after a change in the river.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6562,6 +6873,7 @@
 "title": "Nergal goes to Ashur",
 "text": "In Baali lore their city of Mashkan-shapir falls and the elder Nergal moves to Ashur (Clanbook Baali pdf 23-24).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6582,6 +6894,7 @@
 "title": "Kindred crowd into Egypt",
 "text": "As more Cainites come to Egypt, Set's rule of the land weakens (Mummy 1st pdf 64).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": [
 {
 "id": "cbs-egypt",
@@ -6608,6 +6921,7 @@
 "title": "Horus drives out Set",
 "text": "Horus, with allies from the west, drives Set out of Egypt (Mummy 1st pdf 65).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
 "links": [
 {
 "id": "mum-code-of-horus",
@@ -6636,6 +6950,7 @@
 "title": "The Ainu of the north",
 "text": "The Ainu people's ancestors live in the northern islands of Japan.",
 "ref": "Real history",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6656,6 +6971,7 @@
 "title": "The Ainu and the spirits",
 "text": "Kindred of the East places the Ainu in the islands by this age, with their own bond to the spirits (Kindred of the Thousand Hells pdf 44).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6676,6 +6992,7 @@
 "title": "The Time of Babel",
 "text": "After the Time of Atrocities and the Long March, the war of Heaven and the Fallen calms into the Time of Babel (Houses of the Fallen pdf 19, 73).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "dtf-earthbound",
@@ -6701,6 +7018,7 @@
 "title": "Lilith cast out",
 "text": "In the lore of Ur and Babylon, Lilith is the first woman, Adam's equal, and is cast out of Eden into the unformed world (Revelations of the Dark Mother pdf 4).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6720,6 +7038,7 @@
 "title": "Caine weds Zillah",
 "text": "Bound to a crone by her blood, Caine in turn gives Zillah his blood for three nights and marries her (Book of Nod pdf 12-13).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6740,6 +7059,7 @@
 "title": "The Bahari",
 "text": "Lilith's cult, the Bahari, keep her teaching; in their telling Caine's line turns on her for thirteen generations (Revelations of the Dark Mother pdf 4-5).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": []
 },
 {
@@ -6759,6 +7079,7 @@
 "title": "The Wyrm splits",
 "text": "Caught in the Weaver's web, the Wyrm goes mad and splits into Beast-of-War, Eater-of-Souls and the Defiler (W20 Book of the Wyrm pdf 12-14).",
 "ref": "Legend; the year is a house reading",
+"period": "mythic-age",
 "links": [
 {
 "id": "umbra",
@@ -6788,6 +7109,7 @@
 "title": "The oldest leaf of the Book of Nod",
 "text": "By the reckoning of the book's own scholar, its oldest fragment was written just before Sumer (Book of Nod pdf 19).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "mythic-age",
 "links": [
 {
 "id": "tbcog-lagash",
@@ -6813,6 +7135,7 @@
 "title": "The Reed of Thoth and the Cupbearers of Isis",
 "text": "Hatshepsut and Thutmose III call a gathering that founds two lodges of magicians (Order of Hermes Revised pdf 20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": []
 },
 {
@@ -6833,10 +7156,161 @@
 "title": "A hundred sects",
 "text": "Within a century the two Egyptian lodges split into more than a hundred rival sects (Order of Hermes Revised pdf 20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "bronze-kings",
 "links": [
 {
 "id": "scinf-gatekeepers",
 "title": "The Gatekeepers"
+}
+]
+},
+{
+"id": "r3-living-gods-325",
+"era": "living-gods",
+"year": -3200,
+"month": null,
+"kind": "myth",
+"lines": [
+"Werewolf"
+],
+"region": "Africa",
+"place": "Egypt",
+"tags": [
+"war",
+"treaty"
+],
+"title": "The War of Rage ends in Egypt",
+"text": "Deduced: Rage Across Egypt has Egypt united only after the War of Rage (pdf 25), so the killing is over along the Nile before Narmer, about 3200 BCE.",
+"ref": "Legend; the year is a house reading",
+"period": "mythic-age",
+"links": [
+{
+"id": "raeg-cats-of-khem",
+"title": "The Werecats of Egypt"
+},
+{
+"id": "tbss-immortals",
+"title": "The Striders and the Immortals"
+}
+]
+},
+{
+"id": "r3-living-gods-326",
+"era": "living-gods",
+"year": -3300,
+"month": null,
+"kind": "myth",
+"lines": [
+"Vampire"
+],
+"region": "Middle East",
+"place": "Mesopotamia",
+"tags": [
+"migration",
+"crown"
+],
+"title": "The scattered childer reach the rivers",
+"text": "Deduced: Set is ruling in Egypt by about 3000 BCE (Mummy 1st pdf 64) and the Baali hold Sumerian cities, so the Antediluvians' scattering after the Second City has reached the river kingdoms by 3300 BCE.",
+"ref": "Legend; the year is a house reading",
+"period": "mythic-age",
+"links": []
+},
+{
+"id": "r3-living-gods-327",
+"era": "living-gods",
+"year": -1100,
+"month": null,
+"kind": "myth",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"science",
+"occult"
+],
+"title": "Cold iron and the first Sundering",
+"text": "Deduced: cold iron is the fae's bane and the Sundering parts dream from flesh (C20 pdf 34-36), so the Sundering is taken to begin as iron spreads, about 1100 BCE in the Levant.",
+"ref": "Legend; the year is a house reading",
+"period": "iron-dawn",
+"links": [
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
+}
+]
+},
+{
+"id": "r3-living-gods-328",
+"era": "living-gods",
+"year": -850,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Moravia",
+"place": "Moravia",
+"tags": [
+"science",
+"occult"
+],
+"title": "Iron comes to the fae of Moravia",
+"text": "Deduced from the card above: iron reaches Moravia about 850 BCE, and the trods of the Moravian hills begin to close.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"period": "iron-dawn",
+"links": []
+},
+{
+"id": "r3-living-gods-329",
+"era": "living-gods",
+"year": -2500,
+"month": null,
+"kind": "myth",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Sumer",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Sorcerers free the first Earthbound",
+"text": "Deduced: Earthbound says mortal sorcerers freed them thousands of years ago (pdf 13-18), and the oldest priest-kings are Sumer's, so the first are taken to wake about 2500 BCE.",
+"ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
+"links": [
+{
+"id": "tbcog-lagash",
+"title": "The Sacred Peace of Lagash"
+}
+]
+},
+{
+"id": "r3-living-gods-330",
+"era": "living-gods",
+"year": -1550,
+"month": null,
+"kind": "myth",
+"lines": [
+"Mummy"
+],
+"region": "Africa",
+"place": "Egypt",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Shemsu-heru grow in number",
+"text": "Deduced: Mummy's sample Reborn are born about 2600 and 1273 BCE (Mummy 1st pdf 12, 69-77), so the Reborn are many by the New Kingdom.",
+"ref": "Legend; the year is a house reading",
+"period": "bronze-kings",
+"links": [
+{
+"id": "mum-code-of-horus",
+"title": "The Code of Horus"
 }
 ]
 },
@@ -6858,6 +7332,7 @@
 "title": "The first Olympic Games",
 "text": "By Greek reckoning the first games are held at Olympia in honour of Zeus.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -6877,6 +7352,7 @@
 "title": "Rome founded",
 "text": "By Roman tradition Romulus founds Rome on the Palatine on 21 April.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -6910,6 +7386,7 @@
 "title": "Homer",
 "text": "The Iliad and the Odyssey take shape in the Greek world about now.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -6930,6 +7407,7 @@
 "title": "Greeks settle in Italy",
 "text": "Greek traders found Pithekoussai on Ischia, the first Greek settlement in the west.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -6949,6 +7427,7 @@
 "title": "Tiglath-Pileser III",
 "text": "Assyria becomes a standing empire that moves whole peoples to break revolts.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -6969,6 +7448,7 @@
 "title": "Israel falls to Assyria",
 "text": "Assyria takes Samaria and carries off the northern tribes of Israel.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -6989,6 +7469,7 @@
 "title": "Hallstatt princes",
 "text": "Chiefs of the Hallstatt culture are buried in wagon graves with gold and Greek bronzes.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7009,6 +7490,7 @@
 "title": "The Germanic tribes move south",
 "text": "The Get of Fenris tell of their kin tribes moving south into Europe about now (Tribebook Fenris pdf 21).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7028,6 +7510,7 @@
 "title": "Sennacherib at Jerusalem",
 "text": "Sennacherib besieges Jerusalem; Hezekiah pays tribute and the city stands.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7048,6 +7531,7 @@
 "title": "Sennacherib destroys Babylon",
 "text": "Sennacherib floods and razes Babylon.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7068,6 +7552,7 @@
 "title": "Assyria takes Egypt",
 "text": "Esarhaddon takes Memphis and drives the Kushite pharaoh south.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7087,6 +7572,7 @@
 "title": "Ashurbanipal's library",
 "text": "Ashurbanipal gathers tens of thousands of tablets at Nineveh, the Gilgamesh epic among them.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7107,6 +7593,7 @@
 "title": "Jimmu's court",
 "text": "Japanese tradition dates the first emperor, Jimmu, to 660 BCE.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7127,6 +7614,7 @@
 "title": "The first Yamato court",
 "text": "Kindred of the East keeps the traditional date for the first imperial court (KotE pdf 145).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7147,6 +7635,7 @@
 "title": "The first coins",
 "text": "The kings of Lydia strike coins of electrum, the first true coinage.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7166,6 +7655,7 @@
 "title": "Cyrene founded",
 "text": "Greeks from Thera found Cyrene on the Libyan coast.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7185,6 +7675,7 @@
 "title": "Draco's laws",
 "text": "Draco writes down the laws of Athens, harsh enough to give their name to harshness.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7205,6 +7696,7 @@
 "title": "Nineveh falls",
 "text": "Babylonians and Medes sack Nineveh; Assyria is finished within a few years.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7224,6 +7716,7 @@
 "title": "Carchemish",
 "text": "Nebuchadnezzar of Babylon defeats Egypt at Carchemish.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7244,6 +7737,7 @@
 "title": "Massalia founded",
 "text": "Greeks from Phocaea found Massalia, later Marseille.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7264,6 +7758,7 @@
 "title": "Carthage, capital of the Phoenician world",
 "text": "By now Carthage leads the Phoenician cities of the west, and its Brujah court is the pride of the clan (Clanbook Brujah pdf 18).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "cbb-carthage",
@@ -7296,6 +7791,7 @@
 "title": "Azure Dragons cross to Japan",
 "text": "Kuei-jin of the Azure Dragon follow Korean migrants to Japan (KotE pdf 145).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7315,6 +7811,7 @@
 "title": "Solon's reforms",
 "text": "Solon cancels debts and ends debt slavery in Athens.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7335,6 +7832,7 @@
 "title": "Jerusalem destroyed",
 "text": "Nebuchadnezzar destroys Jerusalem and the first temple; the people of Judah go into exile in Babylon.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7355,6 +7853,7 @@
 "title": "The eclipse battle",
 "text": "An eclipse halts a battle between Lydia and the Medes; Thales of Miletus is said to have predicted it.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7374,6 +7873,7 @@
 "title": "The Buddha born",
 "text": "Tradition places the birth of Siddhartha Gautama about now, though many date it later.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7394,6 +7894,7 @@
 "title": "Croesus",
 "text": "Croesus of Lydia becomes a byword for wealth.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7413,6 +7914,7 @@
 "title": "Confucius born",
 "text": "Kong Qiu, later called Confucius, is born in the state of Lu.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7433,6 +7935,7 @@
 "title": "Cyrus the Great",
 "text": "Cyrus of Persia overthrows the Medes and founds the Persian empire.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7453,6 +7956,7 @@
 "title": "The Byci skala burial",
 "text": "In a cave of the Moravian Karst a Hallstatt chief is buried with a wagon, bronzes and dozens of others, some of them killed for the rite.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7473,6 +7977,7 @@
 "title": "The dead of the bull cave",
 "text": "The cave of Byci skala holds a crowd of Hallstatt wraiths bound to their lord and to the bronzes left with them.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7493,6 +7998,7 @@
 "title": "Cyrus takes Babylon",
 "text": "Babylon opens its gates to Cyrus; the exiles of Judah may go home.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7513,6 +8019,7 @@
 "title": "Persia takes Egypt",
 "text": "Cambyses defeats Egypt at Pelusium.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7533,6 +8040,7 @@
 "title": "Persian Egypt",
 "text": "The Reborn see Egypt pass to foreign kings for the first of many times.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -7565,6 +8073,7 @@
 "title": "Darius I",
 "text": "Darius I takes the Persian throne and orders the empire into satrapies with a royal road.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7585,6 +8094,7 @@
 "title": "The Roman Republic",
 "text": "Rome drives out its last king and becomes a republic under two consuls.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -7618,6 +8128,7 @@
 "title": "A republic of the dead",
 "text": "Wraith histories say the dead of Rome set up a republic of their own, the pattern for Stygia (Wraith: Renegades pdf 26-28).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -7650,6 +8161,7 @@
 "title": "Athenian democracy",
 "text": "Cleisthenes reforms Athens into a democracy of citizens.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7670,6 +8182,7 @@
 "title": "The Night of Fana",
 "text": "The Ahl-i-Batin date their beginning to the Night of Fana (Sorcerers Crusade pdf 69).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -7694,6 +8207,7 @@
 "title": "The Ionian revolt",
 "text": "The Greek cities of Ionia revolt against Persia.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7714,6 +8228,7 @@
 "title": "The Dragon River War",
 "text": "Mages fight the Dragon River War from 496 to 480 BCE (Sorcerers Crusade pdf 69).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "mrab-asia-today",
@@ -7746,6 +8261,7 @@
 "title": "Marathon",
 "text": "Athenians beat the Persian landing at Marathon.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7765,6 +8281,7 @@
 "title": "Thermopylae",
 "text": "Leonidas and his Spartans hold the pass at Thermopylae before they are overwhelmed.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7785,6 +8302,7 @@
 "title": "Salamis",
 "text": "The Greek fleet destroys the Persian fleet in the strait of Salamis.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7804,6 +8322,7 @@
 "title": "Himera",
 "text": "The Greeks of Sicily defeat a Carthaginian army at Himera.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7823,6 +8342,7 @@
 "title": "Plataea",
 "text": "The Greeks end the Persian invasion at Plataea.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7842,6 +8362,7 @@
 "title": "The Warring States",
 "text": "Chinese states begin two and a half centuries of war.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7861,6 +8382,7 @@
 "title": "The Twelve Tables",
 "text": "Rome's laws are written on twelve bronze tablets in the Forum.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -7894,6 +8416,7 @@
 "title": "La Tene",
 "text": "The La Tene style of Celtic art spreads from the upper Rhine and Danube.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -7919,6 +8442,7 @@
 "title": "The Parthenon",
 "text": "Athens begins the Parthenon under Pericles.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7938,6 +8462,7 @@
 "title": "The Peloponnesian War",
 "text": "Athens and Sparta begin a war that lasts until 404.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7957,6 +8482,7 @@
 "title": "The plague of Athens",
 "text": "Plague kills perhaps a third of Athens, Pericles with them.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7977,6 +8503,7 @@
 "title": "The Brujah mourn Athens",
 "text": "The Brujah, lovers of the Greek city, watch the plague and the war break Athens.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -7996,6 +8523,7 @@
 "title": "Athens surrenders",
 "text": "Athens yields to Sparta.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8016,6 +8544,7 @@
 "title": "Socrates dies",
 "text": "Athens condemns Socrates, who drinks hemlock.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8036,6 +8565,7 @@
 "title": "The Gauls sack Rome",
 "text": "Gauls under Brennus defeat Rome at the Allia and sack the city.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -8068,6 +8598,7 @@
 "title": "Wolves and the Gauls",
 "text": "The Fianna sing that their Kinfolk rode with the Gauls who sacked Rome.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -8100,6 +8631,7 @@
 "title": "Plato's Academy",
 "text": "Plato opens his school at the Academy.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8119,6 +8651,7 @@
 "title": "Leuctra",
 "text": "Thebes breaks Spartan power at Leuctra.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8138,6 +8671,7 @@
 "title": "Philip II of Macedon",
 "text": "Philip II takes the throne of Macedon and builds a new army.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8157,6 +8691,7 @@
 "title": "Chaeronea",
 "text": "Philip beats Athens and Thebes; Greece falls under Macedon.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8177,6 +8712,7 @@
 "title": "Alexander's accession",
 "text": "Philip is murdered and Alexander takes the throne at twenty.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8196,6 +8732,7 @@
 "title": "Granicus",
 "text": "Alexander crosses into Asia and defeats the Persian satraps.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8215,6 +8752,7 @@
 "title": "Issus",
 "text": "Alexander routs Darius III at Issus.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8234,6 +8772,7 @@
 "title": "The siege of Tyre",
 "text": "Alexander builds a mole to the island city of Tyre and takes it after seven months.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8254,6 +8793,7 @@
 "title": "Alexandria founded",
 "text": "Alexander takes Egypt and founds Alexandria.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8274,6 +8814,7 @@
 "title": "The Macedonian in Egypt",
 "text": "The Reborn's own histories mark Alexander's taking of Egypt and the founding of Alexandria (Mummy 2nd pdf 24).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8293,6 +8834,7 @@
 "title": "Gaugamela",
 "text": "Alexander destroys the Persian army at Gaugamela.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8312,6 +8854,7 @@
 "title": "Persepolis burns",
 "text": "Alexander's army burns the palace at Persepolis.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8331,6 +8874,7 @@
 "title": "Hydaspes",
 "text": "Alexander beats King Porus at the Hydaspes; his army refuses to go further.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8351,6 +8895,7 @@
 "title": "Alexander dies",
 "text": "Alexander dies at Babylon at thirty-two; his generals divide the empire.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8371,6 +8916,7 @@
 "title": "The Maurya empire",
 "text": "Chandragupta Maurya founds an empire across north India.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8390,6 +8936,7 @@
 "title": "The Ptolemies",
 "text": "Ptolemy I takes the title of king of Egypt.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8410,6 +8957,7 @@
 "title": "Set and the Ptolemies",
 "text": "The Reborn hold that Set corrupts the Ptolemaic kings and that Horus passes into the Underworld (Mummy 2nd pdf 24, 27).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8429,6 +8977,7 @@
 "title": "The Library of Alexandria",
 "text": "The Ptolemies found the Museum and the Library of Alexandria.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8449,6 +8998,7 @@
 "title": "Masters at the Library",
 "text": "Hermetic tradition counts the scholars of Alexandria among its founders in spirit.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8468,6 +9018,7 @@
 "title": "Euclid",
 "text": "Euclid writes the Elements of geometry at Alexandria.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8487,6 +9038,7 @@
 "title": "The First Punic War",
 "text": "Rome and Carthage go to war over Sicily.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8507,6 +9059,7 @@
 "title": "The Ventrue light the fuse",
 "text": "Clanbook Ventrue says the clan stirred the First Punic War by way of Syracuse (pdf 19-20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8527,6 +9080,7 @@
 "title": "Mylae",
 "text": "Rome's new fleet wins its first sea battle with boarding bridges.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8547,6 +9101,7 @@
 "title": "Ashoka turns to the Buddha",
 "text": "After the slaughter at Kalinga the Maurya emperor Ashoka turns to Buddhism.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8567,6 +9122,7 @@
 "title": "Carthage loses Sicily",
 "text": "Rome wins at the Aegates Islands and takes Sicily.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8587,6 +9143,7 @@
 "title": "The First Emperor",
 "text": "Qin Shi Huang unites China and calls himself the First Emperor.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8607,6 +9164,7 @@
 "title": "Fu Xia and the First Emperor",
 "text": "The Encyclopaedia places Fu Xia at the First Emperor's court.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8627,6 +9185,7 @@
 "title": "Hannibal crosses the Alps",
 "text": "Hannibal leads an army with elephants over the Alps into Italy.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8647,6 +9206,7 @@
 "title": "Cannae",
 "text": "Hannibal surrounds and destroys a Roman army at Cannae.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8666,6 +9226,7 @@
 "title": "The Great Wall joined",
 "text": "The First Emperor links the northern walls into one line.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8686,6 +9247,7 @@
 "title": "The terracotta army",
 "text": "Qin Shi Huang is buried with thousands of clay soldiers.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8706,6 +9268,7 @@
 "title": "A Lord of the Dead",
 "text": "Kindred of the East tells that Qin Shi Huang became a Lord of the Dead (KotE pdf 142-145; Dark Kingdom of Jade pdf 34-35).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8725,6 +9288,7 @@
 "title": "The Han",
 "text": "The Han dynasty takes power fifteen years after the Qin unification.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8744,6 +9308,7 @@
 "title": "Zama",
 "text": "Scipio defeats Hannibal at Zama; Carthage sues for peace.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8763,6 +9328,7 @@
 "title": "Cynoscephalae",
 "text": "The Roman legion beats the Macedonian phalanx.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8782,6 +9348,7 @@
 "title": "The Memphis decree",
 "text": "Priests at Memphis write a decree in hieroglyphs, demotic and Greek.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8801,6 +9368,7 @@
 "title": "Pydna",
 "text": "Rome ends the kingdom of Macedon.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8821,6 +9389,7 @@
 "title": "The Maccabees",
 "text": "The Maccabees revolt against the Seleucid king.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8841,6 +9410,7 @@
 "title": "War is declared again",
 "text": "Rome declares war on Carthage fifty years after the last; Clanbook Ventrue puts the clan behind it (pdf 19-20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -8874,6 +9444,7 @@
 "title": "Carthage destroyed",
 "text": "Rome takes Carthage after a three-year siege, sells its people and razes the city.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "cbb-carthage",
@@ -8899,6 +9470,7 @@
 "title": "The fall of Brujah Carthage",
 "text": "Ventrue treachery ends Brujah Carthage; Malkavians help ruin it, and the Brujah never forgive Rome (V20 pdf 58; V20 Dark Ages pdf 54).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "cbb-carthage",
@@ -8932,6 +9504,7 @@
 "title": "The Baali at Carthage",
 "text": "Clanbook Baali says the Brujah of Carthage dealt with the Baali, the charge Rome used against them (pdf 23-24).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "cbb-carthage",
@@ -8964,6 +9537,7 @@
 "title": "Corinth sacked",
 "text": "Rome sacks Corinth the same year.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -8984,6 +9558,7 @@
 "title": "Tiberius Gracchus",
 "text": "The tribune Tiberius Gracchus is killed by senators for his land law.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9017,6 +9592,7 @@
 "title": "The Silk Road opens",
 "text": "Han envoys reach Central Asia; silk begins to travel west.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9037,6 +9613,7 @@
 "title": "The Cimbri and Teutones",
 "text": "Germanic peoples beat a Roman army at Noreia.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9057,6 +9634,7 @@
 "title": "The oppidum of Stare Hradisko",
 "text": "The Celtic Boii hold a great walled town at Stare Hradisko in Moravia, with mints and workshops.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9077,6 +9655,7 @@
 "title": "Kinfolk of the Boii",
 "text": "The Fianna count Kinfolk among the Boii of Moravia, and their caerns lie in the hills above the oppida.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9096,6 +9675,7 @@
 "title": "Arausio",
 "text": "The Cimbri destroy two Roman armies at Arausio.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9115,6 +9695,7 @@
 "title": "Boian coins",
 "text": "The Boii strike gold and silver coins, the first money made in the Czech lands.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9134,6 +9715,7 @@
 "title": "Spartacus",
 "text": "Gladiators break out at Capua; Spartacus leads a slave army for two years.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9154,6 +9736,7 @@
 "title": "Pompey takes Jerusalem",
 "text": "Pompey takes Jerusalem and makes Judea a client of Rome.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9174,6 +9757,7 @@
 "title": "The Dacians and the Boii",
 "text": "Burebista of Dacia defeats the Boii on the middle Danube.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9193,6 +9777,7 @@
 "title": "Caesar in Gaul",
 "text": "Julius Caesar begins the conquest of Gaul.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9213,6 +9798,7 @@
 "title": "Caesar in Britain",
 "text": "Caesar crosses to Britain for the first time.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9232,6 +9818,7 @@
 "title": "Alesia",
 "text": "Caesar besieges Vercingetorix at Alesia and ends the Gallic revolt.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9251,6 +9838,7 @@
 "title": "Caesar crosses the Rubicon",
 "text": "Caesar takes his army into Italy and starts a civil war.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9271,6 +9859,7 @@
 "title": "Fire at Alexandria",
 "text": "Part of Alexandria burns in Caesar's war; tradition says some of the Library's books are lost.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9291,6 +9880,7 @@
 "title": "Caesar murdered",
 "text": "Senators stab Caesar on the Ides of March.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9324,6 +9914,7 @@
 "title": "Actium",
 "text": "Octavian defeats Antony and Cleopatra at sea.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9344,6 +9935,7 @@
 "title": "Egypt becomes Roman",
 "text": "Antony and Cleopatra die; Egypt becomes Rome's province and its Hellenistic age ends.",
 "ref": "Real history",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9364,6 +9956,7 @@
 "title": "Roman Egypt",
 "text": "Egypt is a vassal of Rome, and the Reborn count the Roman Ventrue among their enemies (Mummy 2nd pdf 30).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -9384,6 +9977,7 @@
 "title": "Augustus",
 "text": "Octavian takes the name Augustus; the Roman Empire begins.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9417,6 +10011,7 @@
 "title": "Maroboduus and the Marcomanni",
 "text": "Maroboduus leads the Marcomanni into Bohemia and builds a kingdom that worries Rome.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9436,6 +10031,7 @@
 "title": "Tiberius marches on Maroboduus",
 "text": "Rome gathers twelve legions at Carnuntum to attack the Marcomanni; a revolt in Pannonia calls them back.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9456,6 +10052,7 @@
 "title": "A plan for the Marcomanni",
 "text": "Dark Ages Europe tells of a Roman plan to move the Marcomanni deeper into Bohemia (pdf 69).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9476,6 +10073,7 @@
 "title": "Teutoburg",
 "text": "Arminius of the Cherusci destroys three Roman legions under Varus in the Teutoburg Forest.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9495,6 +10093,7 @@
 "title": "A Fenrir with the Cherusci",
 "text": "Tribebook Fenris tells of a Fenrir who fought beside the Cherusci against Varus (pdf 24).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9515,6 +10114,7 @@
 "title": "Augustus dies",
 "text": "Augustus dies; Tiberius takes the empire.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9547,6 +10147,7 @@
 "title": "Maroboduus falls",
 "text": "Maroboduus is overthrown and flees to Roman protection; Vannius rules the Quadi on the Moravian side.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9567,6 +10168,7 @@
 "title": "The kingdom of Vannius",
 "text": "Rome sets up Vannius as client king of the Quadi north of the Danube, in what is now Moravia and Slovakia.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9587,6 +10189,7 @@
 "title": "Jesus crucified",
 "text": "Jesus of Nazareth is crucified in Jerusalem under Pontius Pilate, about 30 or 33.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9607,6 +10210,7 @@
 "title": "The Messianic Voices",
 "text": "After Jesus, the Messianic Voices gather, an ancestor of the Celestial Chorus (M20 pdf 124).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9627,6 +10231,7 @@
 "title": "Seeds of the Heresy",
 "text": "Some Lasombra priests later teach that Caine was the dark mirror of Christ, the root of the Cainite Heresy (V20 Dark Ages pdf 51).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -9659,6 +10264,7 @@
 "title": "Caligula",
 "text": "Caligula becomes emperor.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9692,6 +10298,7 @@
 "title": "Rome invades Britain",
 "text": "Claudius sends four legions to Britain.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9712,6 +10319,7 @@
 "title": "Vannius driven out",
 "text": "The Quadi and their neighbours drive out Vannius.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9731,6 +10339,7 @@
 "title": "Londinium founded",
 "text": "The Romans found Londinium on the Thames.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9751,6 +10360,7 @@
 "title": "Mithras comes to Britain",
 "text": "Some Ventrue say their elder Mithras took Londinium as a domain soon after the Romans founded it.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9770,6 +10380,7 @@
 "title": "Boudica's revolt",
 "text": "Boudica of the Iceni burns Camulodunum, Londinium and Verulamium.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9790,6 +10401,7 @@
 "title": "The great fire of Rome",
 "text": "Fire burns much of Rome; Nero blames the Christians.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9823,6 +10435,7 @@
 "title": "Cainites in the flames",
 "text": "The Ventrue of Rome weather the fire; the Christians it blames will one day shape the Cainite world.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9855,6 +10468,7 @@
 "title": "The Jewish revolt",
 "text": "Judea revolts against Rome.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9875,6 +10489,7 @@
 "title": "The temple destroyed",
 "text": "Titus takes Jerusalem and destroys the second temple.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9894,6 +10509,7 @@
 "title": "Masada",
 "text": "The last rebels at Masada die rather than surrender.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9913,6 +10529,7 @@
 "title": "Pompeii buried",
 "text": "Vesuvius buries Pompeii and Herculaneum.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9933,6 +10550,7 @@
 "title": "The ash dead",
 "text": "The dead of Pompeii linger in a city frozen as it fell.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -9953,6 +10571,7 @@
 "title": "The Colosseum opens",
 "text": "The Flavian amphitheatre opens with a hundred days of games.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -9985,6 +10604,7 @@
 "title": "Mons Graupius",
 "text": "Agricola defeats the Caledonians.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "wh-caledonia",
@@ -10009,6 +10629,7 @@
 "title": "The White Howlers against Rome",
 "text": "The White Howlers fight the Roman advance in Caledonia (Tribebook White Howlers pdf 49-50).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "wh-caledonia",
@@ -10033,6 +10654,7 @@
 "title": "Trajan",
 "text": "Trajan becomes emperor; the empire reaches its widest under him.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10066,6 +10688,7 @@
 "title": "The Kushan empire",
 "text": "The Kushan kings rule from Bactria to the Ganges and carry Buddhism along the Silk Road.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10085,6 +10708,7 @@
 "title": "Paper",
 "text": "Cai Lun is credited with making paper from bark and rags at the Han court in 105.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10104,6 +10728,7 @@
 "title": "Trajan's Dacian wars",
 "text": "Trajan fights two wars against Dacia and makes it a province in 106.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10124,6 +10749,7 @@
 "title": "The gold of Dacia",
 "text": "Trajan takes the Dacian king's gold and opens the Carpathian mines.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10144,6 +10770,7 @@
 "title": "Romans beyond the Danube",
 "text": "The Tzimisce of the Carpathians first meet Roman Cainites when the legions cross into Dacia.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10163,6 +10790,7 @@
 "title": "Tacitus' Germania",
 "text": "Tacitus describes the Germanic peoples, the Quadi and Marcomanni among them.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10182,6 +10810,7 @@
 "title": "Hadrian's Wall",
 "text": "Hadrian begins his wall across northern Britain, finished by 128.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10202,6 +10831,7 @@
 "title": "The White Howlers fall",
 "text": "The White Howlers back the Picts whose raids raise Hadrian's Wall, then cross into the Empire while Rome's fomori slip north; between 200 BCE and 200 CE they fall to the Wyrm and become the Black Spiral Dancers (Tribebook White Howlers pdf 15, 49-50; W20 pdf 41-42; W20 Book of the Wyrm pdf 88-89).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "wh-caledonia",
@@ -10226,6 +10856,7 @@
 "title": "Bar Kokhba",
 "text": "Bar Kokhba leads the last great Jewish revolt.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10245,6 +10876,7 @@
 "title": "Ptolemy's Almagest",
 "text": "Claudius Ptolemy sets out the earth-centred heavens that Europe will follow for 1,400 years.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10264,6 +10896,7 @@
 "title": "Marcus Aurelius",
 "text": "Marcus Aurelius becomes emperor.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10296,6 +10929,7 @@
 "title": "The Antonine plague",
 "text": "Plague, perhaps smallpox, comes back with the army from the east and kills millions.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10328,6 +10962,7 @@
 "title": "The Marcomannic Wars",
 "text": "The Marcomanni, Quadi and others cross the Danube; Rome fights them until 180.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10347,6 +10982,7 @@
 "title": "Aquileia besieged",
 "text": "The Marcomanni and Quadi reach Italy and besiege Aquileia.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10367,6 +11003,7 @@
 "title": "The Roman camp at Musov",
 "text": "Roman legions camp at Musov in southern Moravia, the furthest Roman base north of the Danube.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10387,6 +11024,7 @@
 "title": "Marcomanni stirred",
 "text": "Dark Ages Europe tells that the Marcomanni were stirred against a Roman camp (pdf 69); WoDX places that camp at Musov.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10407,6 +11045,7 @@
 "title": "The rain miracle",
 "text": "A sudden storm saves a Roman army trapped by the Quadi; pagans and Christians both claim it.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10426,6 +11065,7 @@
 "title": "Meditations on the frontier",
 "text": "Marcus Aurelius writes part of his Meditations among the Quadi by the river Granua.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10445,6 +11085,7 @@
 "title": "The Laugaricio inscription",
 "text": "Soldiers of the Second Legion carve their winter quarters on a rock at Trencin, the furthest Roman inscription north.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10465,6 +11106,7 @@
 "title": "Marcus Aurelius dies",
 "text": "Marcus Aurelius dies on the Danube, perhaps at Vindobona; Commodus makes peace.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10484,6 +11126,7 @@
 "title": "The legion's dead",
 "text": "Roman dead of the Marcomannic Wars gather by the Musov camp, far from Rome's own necropolis.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10504,6 +11147,7 @@
 "title": "The empire auctioned",
 "text": "The Praetorian Guard kills Pertinax and sells the throne.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10536,6 +11180,7 @@
 "title": "Caracalla's edict",
 "text": "All free people of the empire become Roman citizens.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10569,6 +11214,7 @@
 "title": "The fall of the Han",
 "text": "The Han dynasty ends; China splits into the Three Kingdoms.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10589,6 +11235,7 @@
 "title": "The Sasanians",
 "text": "Ardashir I founds the Sasanian empire.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10609,6 +11256,7 @@
 "title": "The crisis of the third century",
 "text": "Fifty years of usurpers, plague and invasions begin.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10641,6 +11289,7 @@
 "title": "Abritus",
 "text": "The Goths kill Emperor Decius in battle.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10661,6 +11310,7 @@
 "title": "Valerian captured",
 "text": "Shapur I captures Emperor Valerian.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10680,6 +11330,7 @@
 "title": "The Aurelian walls",
 "text": "Aurelian rings Rome with new walls.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10713,6 +11364,7 @@
 "title": "Zenobia defeated",
 "text": "Aurelian ends the Palmyrene empire of Queen Zenobia.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10732,6 +11384,7 @@
 "title": "Diocletian",
 "text": "Diocletian takes power and splits the empire's rule among four.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10765,6 +11418,7 @@
 "title": "Axum",
 "text": "The kingdom of Axum trades from the Red Sea to India.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10785,6 +11439,7 @@
 "title": "The Great Persecution",
 "text": "Diocletian orders the last great persecution of Christians.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10818,6 +11473,7 @@
 "title": "The Milvian Bridge",
 "text": "Constantine wins at the Milvian Bridge under a Christian sign.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10838,6 +11494,7 @@
 "title": "The Edict of Milan",
 "text": "Constantine and Licinius allow Christian worship.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10858,6 +11515,7 @@
 "title": "Voices against Singers",
 "text": "From 313 to 320 the Messianic Voices clash with the Mithraic Singers in Rome (Sorcerers Crusade pdf 69).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -10890,6 +11548,7 @@
 "title": "The Council of Nicaea",
 "text": "The first general council of the Church sets the creed.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10909,6 +11568,7 @@
 "title": "Caius Embraced",
 "text": "Antonius Embraces Caius, a future member of Constantinople's Triumvirate (Constantinople by Night pdf 20).",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "roman-empire",
 "links": [
 {
 "id": "daeu-latin-empire",
@@ -10934,6 +11594,7 @@
 "title": "Constantinople",
 "text": "Constantine makes Byzantium his New Rome.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -10954,6 +11615,7 @@
 "title": "Michael's Dream",
 "text": "The Toreador Methuselah Michael begins the Dream of Constantinople with the Dracon and Antonius (Constantinople by Night pdf 17-19).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "ndan1-dracon-face",
@@ -10987,6 +11649,7 @@
 "title": "Constantine dies",
 "text": "Constantine is baptised and dies.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11007,6 +11670,7 @@
 "title": "The Triumvirate's first council",
 "text": "Michael, Antonius and the Dracon hold the Triumvirate's first council (Constantinople by Night pdf 20).",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "roman-empire",
 "links": [
 {
 "id": "ndan1-dracon-face",
@@ -11040,6 +11704,7 @@
 "title": "The Battle of Stone",
 "text": "The Battle of Stone, in Constantine's century, closes the Mythic Age as the Sundering parts dream from flesh (Dark Ages: Fae pdf 25, 29, 49; C20 pdf 34-36).",
 "ref": "Legend; the year is a house reading",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -11068,6 +11733,7 @@
 "title": "The Huns move west",
 "text": "The Huns cross the Volga and break the Gothic kingdoms.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -11092,6 +11758,7 @@
 "title": "Adrianople",
 "text": "The Goths destroy a Roman army and kill Emperor Valens.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11111,6 +11778,7 @@
 "title": "The Fenrir and Valens",
 "text": "Tribebook Fenris counts the Garou among the Goths' allies against Valens (pdf 24-26).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11131,6 +11799,7 @@
 "title": "Christianity the state faith",
 "text": "Theodosius makes Nicene Christianity the empire's religion.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11151,6 +11820,7 @@
 "title": "The Serapeum destroyed",
 "text": "Christians destroy the Serapeum of Alexandria.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11171,6 +11841,7 @@
 "title": "The empire divided",
 "text": "At Theodosius' death the empire splits for good into east and west.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11203,6 +11874,7 @@
 "title": "The Quadi leave",
 "text": "Many Quadi move west with the great migrations; Germanic peoples hold Moravia loosely.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11222,6 +11894,7 @@
 "title": "The Rhine crossing",
 "text": "Vandals, Alans and Suebi cross the frozen Rhine into Gaul.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11242,6 +11915,7 @@
 "title": "Alaric sacks Rome",
 "text": "Alaric's Visigoths sack Rome for three days.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11274,6 +11948,7 @@
 "title": "The sack and the Fenrir",
 "text": "Tribebook Fenris counts the sack of Rome among the tribe's old victories (pdf 24-26).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11307,6 +11982,7 @@
 "title": "Hypatia killed",
 "text": "A Christian mob kills the philosopher Hypatia.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11327,6 +12003,7 @@
 "title": "Augustine dies",
 "text": "Augustine of Hippo dies as the Vandals besiege the city.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11347,6 +12024,7 @@
 "title": "The Vandals take Carthage",
 "text": "Geiseric takes Carthage and makes it his capital.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "cbb-carthage",
@@ -11371,6 +12049,7 @@
 "title": "Attila",
 "text": "Attila rules the Huns alone, from the plains of Pannonia beside Moravia.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11390,6 +12069,7 @@
 "title": "The Catalaunian Plains",
 "text": "Romans and Visigoths turn back Attila in Gaul.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11409,6 +12089,7 @@
 "title": "Attila in Italy",
 "text": "Attila razes Aquileia; refugees settle in the lagoons where Venice will rise.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11429,6 +12110,7 @@
 "title": "Attila dies",
 "text": "Attila dies on his wedding night; his empire breaks apart.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11448,6 +12130,7 @@
 "title": "The Vandals sack Rome",
 "text": "The Vandals plunder Rome for two weeks.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11481,6 +12164,7 @@
 "title": "The western empire ends",
 "text": "Odoacer deposes the boy emperor Romulus Augustulus.",
 "ref": "Real history",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -11501,6 +12185,7 @@
 "title": "Rome does not fall",
 "text": "Clanbook Ventrue holds that Rome did not truly fall in 476: its Cainite rulers simply changed their masks (pdf 19-23).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11534,6 +12219,7 @@
 "title": "The First Great Maelstrom",
 "text": "The First Great Maelstrom of the dead comes with the fall of Rome (Wraith: Renegades pdf 28; Wraith 20th pdf 97).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11567,6 +12253,7 @@
 "title": "The Battle of Ice",
 "text": "About three centuries before the Battle of Stone the fae fight the Battle of Ice (Dark Ages: Fae pdf 49).",
 "ref": "Legend; the year is a house reading",
+"period": "roman-empire",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -11595,6 +12282,7 @@
 "title": "The Lombards in Moravia",
 "text": "The Lombards move into the lands north of the Danube, Moravia among them.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11614,6 +12302,7 @@
 "title": "Theodoric in Italy",
 "text": "Theodoric the Ostrogoth kills Odoacer and rules Italy from Ravenna.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11634,6 +12323,7 @@
 "title": "Clovis baptised",
 "text": "Clovis, king of the Franks, is baptised.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11653,6 +12343,7 @@
 "title": "Justinian",
 "text": "Justinian becomes emperor in the east.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11673,6 +12364,7 @@
 "title": "Benedict's monastery",
 "text": "Benedict founds Monte Cassino and writes his Rule.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11693,6 +12385,7 @@
 "title": "The Nika riots",
 "text": "Circus factions riot and nearly topple Justinian; thousands die in the Hippodrome.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11713,6 +12406,7 @@
 "title": "Hagia Sophia",
 "text": "Justinian dedicates the great church of Hagia Sophia.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11732,6 +12426,7 @@
 "title": "Justinian's plague",
 "text": "Bubonic plague reaches Constantinople and spreads across the Mediterranean.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11752,6 +12447,7 @@
 "title": "The Baali in the plague",
 "text": "Clanbook Baali places the clan in Egypt during the sixth-century plague (pdf 25).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -11784,6 +12480,7 @@
 "title": "The Slavs arrive",
 "text": "Slavic peoples settle Moravia and Bohemia, coming in through the Moravian Gate (Transylvania by Night pdf 11).",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11804,6 +12501,7 @@
 "title": "Tzimisce and the Slavs",
 "text": "The Tzimisce of the east watch the Slavs come through the Moravian Gate and take the new villages as their herds.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -11824,6 +12522,7 @@
 "title": "The Lombards go to Italy",
 "text": "The Lombards leave Pannonia and Moravia for Italy; the Avars take the plain.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11843,6 +12542,7 @@
 "title": "The Avar khaganate",
 "text": "The Avars rule the Carpathian basin and the Slavs around it.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11862,6 +12562,7 @@
 "title": "Muhammad born",
 "text": "Muhammad is born at Mecca.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11881,6 +12582,7 @@
 "title": "Wars under the Visigoths",
 "text": "The Encyclopaedia places Cainite wars under the Visigothic kings.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "migrations",
 "links": [
 {
 "id": "dab-iberian-ferals",
@@ -11914,6 +12616,7 @@
 "title": "Gregory the Great",
 "text": "Gregory I becomes pope and sends missions to the English.",
 "ref": "Real history",
+"period": "migrations",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -11947,6 +12650,7 @@
 "title": "The Last Devil King",
 "text": "The Encyclopaedia places the last of the Devil Kings here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "migrations",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -11972,6 +12676,7 @@
 "title": "The Tang",
 "text": "The Tang dynasty rules China from Chang'an, the largest city on earth.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -11992,6 +12697,7 @@
 "title": "The Hijra",
 "text": "Muhammad leaves Mecca for Medina; the Muslim calendar begins.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12012,6 +12718,7 @@
 "title": "Samo's realm",
 "text": "The Frankish merchant Samo leads the Slavs in revolt against the Avars and becomes their king.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12031,6 +12738,7 @@
 "title": "Wogastisburg",
 "text": "Samo's Slavs defeat the Frankish king Dagobert at Wogastisburg.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12051,6 +12759,7 @@
 "title": "Muhammad dies",
 "text": "Muhammad dies; Abu Bakr becomes the first caliph.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12070,6 +12779,7 @@
 "title": "Yarmouk",
 "text": "The Arab armies beat the eastern Romans at Yarmouk and take Syria.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12090,6 +12800,7 @@
 "title": "Umar takes Jerusalem",
 "text": "The caliph Umar takes Jerusalem.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12110,6 +12821,7 @@
 "title": "The Arabs take Egypt",
 "text": "Arab armies conquer Egypt by 642.",
 "ref": "Real history",
+"period": "migrations",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -12139,6 +12851,7 @@
 "title": "The old stones reused",
 "text": "The Reborn watch the conquest and later see temple stones carried off for mosques (Mummy: The Resurrection pdf 9, 151).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "scinf-gatekeepers",
@@ -12171,6 +12884,7 @@
 "title": "The Taftani",
 "text": "The Taftani weathermages emerge, by M20's reckoning (pdf 126).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -12195,6 +12909,7 @@
 "title": "The Sasanians fall",
 "text": "The last Sasanian shah dies; Persia joins the caliphate.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12215,6 +12930,7 @@
 "title": "Samo dies",
 "text": "Samo dies after 35 years; his realm breaks up.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12234,6 +12950,7 @@
 "title": "The Umayyads",
 "text": "The Umayyad caliphs rule from Damascus.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12254,6 +12971,7 @@
 "title": "Greek fire",
 "text": "Constantinople burns an Arab fleet with Greek fire.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12274,6 +12992,7 @@
 "title": "Karbala",
 "text": "Husayn, grandson of Muhammad, is killed at Karbala.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12293,6 +13012,7 @@
 "title": "The first fort at Mikulcice",
 "text": "Slavs build a fortified settlement on an island of the Morava at Mikulcice.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12313,6 +13033,7 @@
 "title": "The Muslims enter Spain",
 "text": "Tariq crosses to Spain and the Visigothic kingdom falls.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12332,6 +13053,7 @@
 "title": "The great siege",
 "text": "Constantinople holds through a year-long Arab siege.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12352,6 +13074,7 @@
 "title": "The Web of Faith",
 "text": "The Batini weave the Web of Faith (Sorcerers Crusade pdf 70).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -12377,6 +13100,7 @@
 "title": "Iconoclasm",
 "text": "Emperor Leo III begins the war on holy images.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12397,6 +13121,7 @@
 "title": "The Dream divided",
 "text": "Iconoclasm tears at the Dream; Michael's Toreador love the images the emperor smashes.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "ndan1-dracon-face",
@@ -12429,6 +13154,7 @@
 "title": "Tours",
 "text": "Charles Martel stops a Muslim army between Tours and Poitiers.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12448,6 +13174,7 @@
 "title": "The Abbasids",
 "text": "The Abbasids overthrow the Umayyads; Baghdad is founded in 762.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12468,6 +13195,7 @@
 "title": "Talas",
 "text": "Arab armies defeat the Tang at Talas; papermaking spreads west.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12488,6 +13216,7 @@
 "title": "The Heresy revealed at Ostia",
 "text": "The Cainite Heresy shows itself openly at Ostia (The Cainite Heresy pdf 31).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -12507,6 +13236,7 @@
 "title": "The end of the Devil-King Age",
 "text": "M20 marks 756 as the end of the Devil-King Age (pdf 126).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -12527,6 +13257,7 @@
 "title": "The Order of Hermes founded",
 "text": "On Midwinter Night Trianoma and Bonisagus bring twelve founders together at Durenmar; they accept the Code of Hermes and found the Order and its Houses (M20 pdf 126; Sorcerers Crusade pdf 70; Mage: The Dark Ages pdf 58; Order of Hermes Revised pdf 27).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -12546,6 +13277,7 @@
 "title": "Charlemagne",
 "text": "Charlemagne becomes king of the Franks.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12566,6 +13298,7 @@
 "title": "Harun al-Rashid",
 "text": "Harun al-Rashid's Baghdad becomes a centre of learning and trade.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12585,6 +13318,7 @@
 "title": "Charlemagne against the Avars",
 "text": "The Franks attack the Avars along the Danube.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12605,6 +13339,7 @@
 "title": "Vikings at Lindisfarne",
 "text": "Norse raiders sack the monastery of Lindisfarne.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12625,6 +13360,7 @@
 "title": "The Avar Ring taken",
 "text": "The Franks take the Avars' great Ring and its treasure; the khaganate falls.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12645,6 +13381,7 @@
 "title": "Charlemagne crowned",
 "text": "Pope Leo III crowns Charlemagne emperor on Christmas Day.",
 "ref": "Real history",
+"period": "migrations",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -12677,6 +13414,7 @@
 "title": "The great schism and the Paladins",
 "text": "The Encyclopaedia places a mages' schism and the Paladins here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "migrations",
 "links": []
 },
 {
@@ -12696,6 +13434,7 @@
 "title": "Franks on the Moravian border",
 "text": "Frankish armies campaign against the Slavs of Bohemia.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12715,6 +13454,7 @@
 "title": "The Moravians named",
 "text": "Envoys of the Moravians appear at the Frankish court for the first time.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12735,6 +13475,7 @@
 "title": "Mojmir I",
 "text": "Mojmir I unites the Moravian Slavs and drives Pribina out of Nitra; Great Moravia begins.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12755,6 +13496,7 @@
 "title": "Great Moravia in the night",
 "text": "Transylvania by Night says Great Moravia grew strong across Moravia, Bohemia and western Slovakia (pdf 11); the Tzimisce count its princes among their herds.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -12774,6 +13516,7 @@
 "title": "Rastislav",
 "text": "Louis the German replaces Mojmir with his nephew Rastislav.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12794,6 +13537,7 @@
 "title": "Rastislav holds the Franks",
 "text": "Rastislav beats back a Frankish army from his fortress.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12813,6 +13557,7 @@
 "title": "Rastislav asks Constantinople",
 "text": "Rastislav asks the emperor for teachers who can preach in the Slavs' own tongue.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12833,6 +13578,7 @@
 "title": "Cyril and Methodius",
 "text": "The brothers Constantine, later Cyril, and Methodius arrive in Moravia with the Glagolitic letters.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12853,6 +13599,7 @@
 "title": "Envoys of the Dream",
 "text": "Some Cainites of Constantinople see the mission to Moravia as a way to carry the Dream north.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -12872,6 +13619,7 @@
 "title": "The brothers in Rome",
 "text": "Pope Adrian II approves the Slavonic liturgy.",
 "ref": "Real history",
+"period": "migrations",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -12905,6 +13653,7 @@
 "title": "Cyril dies",
 "text": "Cyril dies in Rome; Methodius returns as archbishop of Pannonia and Moravia.",
 "ref": "Real history",
+"period": "migrations",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -12938,6 +13687,7 @@
 "title": "Svatopluk takes the throne",
 "text": "Svatopluk hands his uncle Rastislav to the Franks, who blind him.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12958,6 +13708,7 @@
 "title": "Svatopluk turns on the Franks",
 "text": "Svatopluk drives the Franks out and rules Great Moravia alone.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12977,6 +13728,7 @@
 "title": "The peace of Forchheim",
 "text": "Svatopluk makes peace with the Franks and pays a token tribute.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -12997,6 +13749,7 @@
 "title": "Taking of the Necromancer's Hold",
 "text": "The Encyclopaedia places the taking of the Necromancer's Hold here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "migrations",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -13029,6 +13782,7 @@
 "title": "Industriae tuae",
 "text": "Pope John VIII allows the Slavonic liturgy in Moravia.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13048,6 +13802,7 @@
 "title": "Great Moravia at its height",
 "text": "Svatopluk rules Bohemia, Nitra, the Vistula lands and part of Pannonia.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13068,6 +13823,7 @@
 "title": "Methodius dies",
 "text": "Methodius dies; his pupils are driven out and flee to Bulgaria.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13088,6 +13844,7 @@
 "title": "The churches of Mikulcice",
 "text": "Mikulcice has a dozen stone churches; its graves and relics draw Cainite and wraith alike.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -13108,6 +13865,7 @@
 "title": "Svatopluk dies",
 "text": "Svatopluk dies; his sons quarrel and Great Moravia weakens.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13127,6 +13885,7 @@
 "title": "Bohemia breaks away",
 "text": "The Bohemian dukes swear to the East Franks and leave Great Moravia.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13146,6 +13905,7 @@
 "title": "The Magyars arrive",
 "text": "The Magyars cross the Carpathians into the Danube basin.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13165,6 +13925,7 @@
 "title": "Axe-shaped iron bars",
 "text": "Great Moravians trade in iron bars shaped like axe heads as well as silver.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13185,6 +13946,7 @@
 "title": "Great Moravia falls",
 "text": "The Magyars destroy Great Moravia; Mikulcice is burned and abandoned within years.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13205,6 +13967,7 @@
 "title": "The burned island",
 "text": "The dead of Mikulcice linger in the Shadowlands of the island churches long after the living leave.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -13224,6 +13987,7 @@
 "title": "Pressburg",
 "text": "The Magyars destroy a Bavarian army at Pressburg.",
 "ref": "Real history",
+"period": "migrations",
 "links": []
 },
 {
@@ -13244,6 +14008,7 @@
 "title": "Cluny founded",
 "text": "The abbey of Cluny is founded in Burgundy.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13263,6 +14028,7 @@
 "title": "Wenceslas",
 "text": "Wenceslas becomes duke of Bohemia.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13283,6 +14049,7 @@
 "title": "Wenceslas swears to Henry",
 "text": "Wenceslas submits to the German king Henry I (Transylvania by Night pdf 11).",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13303,6 +14070,7 @@
 "title": "Wenceslas murdered",
 "text": "Wenceslas is killed by his brother Boleslaus at Stara Boleslav, about 935.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13323,6 +14091,7 @@
 "title": "Boleslav rules",
 "text": "Transylvania by Night says Boleslav took Bohemia and Moravia after the murder (pdf 11).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13343,6 +14112,7 @@
 "title": "The Bogomils",
 "text": "The Cainite Heresy works among the Bogomils of the Balkans from about 950 (The Cainite Heresy pdf 20).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": [
 {
 "id": "dacults-calomena",
@@ -13367,6 +14137,7 @@
 "title": "Lechfeld",
 "text": "Otto I crushes the Magyars at the Lechfeld; their raids end.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13387,6 +14158,7 @@
 "title": "Otto crowned emperor",
 "text": "Otto I is crowned emperor; the Holy Roman Empire begins.",
 "ref": "Real history",
+"period": "premyslid",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -13420,6 +14192,7 @@
 "title": "Mieszko and Dubravka",
 "text": "Mieszko of Poland marries the Bohemian princess Dubravka and takes baptism in 966.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13440,6 +14213,7 @@
 "title": "The bishopric of Prague",
 "text": "A bishopric is founded at Prague (Transylvania by Night pdf 11).",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13459,6 +14233,7 @@
 "title": "A Ventrue prince of Prague",
 "text": "Transylvania by Night tells that a Ventrue takes the princedom of Prague (pdf 11).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": [
 {
 "id": "cotr-jaromir-cerny",
@@ -13491,6 +14266,7 @@
 "title": "The Babenbergs in Austria",
 "text": "The Babenbergs take the march that becomes Austria.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13510,6 +14286,7 @@
 "title": "Kiev baptised",
 "text": "Vladimir of Kiev takes Christianity from Constantinople.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13529,6 +14306,7 @@
 "title": "The Slavnik massacre",
 "text": "Boleslaus II kills the rival Slavnik family at Libice.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13548,6 +14326,7 @@
 "title": "The congress of Gniezno",
 "text": "Emperor Otto III visits Gniezno at the tomb of Adalbert.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13568,6 +14347,7 @@
 "title": "Stephen of Hungary",
 "text": "Stephen is crowned the first king of Hungary.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13587,6 +14367,7 @@
 "title": "The Tremere-Tzimisce war",
 "text": "The Encyclopaedia places the start of the war between the Tremere and the Tzimisce here.",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": [
 {
 "id": "coti-lambach",
@@ -13619,6 +14400,7 @@
 "title": "The Questing Years",
 "text": "House Tremere's Questing Years run from 1000 to 1021 (House of Tremere pdf 21).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13638,6 +14420,7 @@
 "title": "The first medieval schisms",
 "text": "The Encyclopaedia's schisms among the mages begin about now.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -13671,6 +14454,7 @@
 "title": "Bohemia takes Moravia",
 "text": "Oldrich of Bohemia, through his son Bretislav, takes Moravia from Poland, between 1019 and 1029.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13691,6 +14475,7 @@
 "title": "The Becoming",
 "text": "Tremere and the inner circle become Cainites in 1022 (House of Tremere pdf 23; V20 Dark Ages pdf 63).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13710,6 +14495,7 @@
 "title": "Bretislav in Moravia",
 "text": "Bretislav rules Moravia for his father.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13729,6 +14515,7 @@
 "title": "Bretislav duke",
 "text": "Bretislav I becomes duke of Bohemia and Moravia.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13748,6 +14535,7 @@
 "title": "Goratrix rules",
 "text": "Goratrix rules the Tremere seat from 1037 to 1133 (House of Tremere pdf 26-28).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13768,6 +14556,7 @@
 "title": "Bretislav raids Gniezno",
 "text": "Bretislav sacks Gniezno and carries off the relics of Adalbert.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13788,6 +14577,7 @@
 "title": "The schism of East and West",
 "text": "The legates of Rome and the patriarch of Constantinople excommunicate each other.",
 "ref": "Real history",
+"period": "premyslid",
 "links": [
 {
 "id": "tbgn-seventh-hill",
@@ -13821,6 +14611,7 @@
 "title": "Seniority",
 "text": "Bretislav's rule of succession gives Bohemia to the eldest, Moravia's parts to younger sons.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13840,6 +14631,7 @@
 "title": "The Moravian appanages",
 "text": "Moravia is shared among Premyslid princes at Olomouc, Brno and Znojmo.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13860,6 +14652,7 @@
 "title": "The bishopric of Olomouc",
 "text": "The bishopric of Olomouc is restored.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13880,6 +14673,7 @@
 "title": "Hastings",
 "text": "William of Normandy wins England at Hastings.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13899,6 +14693,7 @@
 "title": "Manzikert",
 "text": "The Seljuks defeat the eastern Romans at Manzikert.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13919,6 +14714,7 @@
 "title": "Canossa",
 "text": "Henry IV kneels in the snow at Canossa before Pope Gregory VII.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13938,6 +14734,7 @@
 "title": "Vratislaus king",
 "text": "Vratislaus II is crowned king of Bohemia for his lifetime.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -13957,6 +14754,7 @@
 "title": "Cainites among the taifas",
 "text": "The Encyclopaedia places Cainites among the taifa kingdoms of Spain.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "dab-iberian-ferals",
@@ -13990,6 +14788,7 @@
 "title": "The crusade preached",
 "text": "Pope Urban II calls the First Crusade.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14010,6 +14809,7 @@
 "title": "Crusaders in Prague",
 "text": "Crusaders passing through Prague attack its Jews.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14029,6 +14829,7 @@
 "title": "The fae swear a truce",
 "text": "About a century before the 1230 setting of Dark Ages: Fae, the fae swear the Oath-Truce, which is near its end by that year (Dark Ages: Fae pdf 8, 25, 40).",
 "ref": "Legend; the year is a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -14058,6 +14859,7 @@
 "title": "The First Crusade takes Jerusalem",
 "text": "The crusaders take Jerusalem and kill much of its people.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14077,6 +14879,7 @@
 "title": "The Weeks of Blood",
 "text": "The Encyclopaedia's Weeks of Blood follow the fall of Jerusalem.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -14109,6 +14912,7 @@
 "title": "Cainites under the Kingdom of Jerusalem",
 "text": "The Encyclopaedia places Cainites in the new crusader kingdom.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -14142,6 +14946,7 @@
 "title": "The first gargoyles",
 "text": "The Tremere make the first gargoyles for their war with the Tzimisce (V20 Dark Ages pdf 83).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14161,6 +14966,7 @@
 "title": "Chlumec",
 "text": "Sobeslav I of Bohemia defeats the German king Lothar at Chlumec.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14181,6 +14987,7 @@
 "title": "Saulot's end",
 "text": "Tremere drinks the soul of Saulot in 1133 (V20 Dark Ages pdf 41).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "premyslid",
 "links": [
 {
 "id": "encv-erciyes",
@@ -14209,6 +15016,7 @@
 "title": "Ardan of the Golden Lane",
 "text": "Ardan, of the Tremere chantry in Prague, is Embraced (House of Tremere pdf 82).",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "cotr-jaromir-cerny",
@@ -14242,6 +15050,7 @@
 "title": "The Moravian princes besiege Prague",
 "text": "The Moravian princes rise against Duke Vladislaus II and besiege Prague.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14262,6 +15071,7 @@
 "title": "Edessa falls",
 "text": "Zengi takes Edessa; the Second Crusade follows.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14281,6 +15091,7 @@
 "title": "Vladislaus king",
 "text": "Frederick Barbarossa makes Vladislaus II king of Bohemia.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14300,6 +15111,7 @@
 "title": "Saladin",
 "text": "Saladin takes power in Egypt.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14319,6 +15131,7 @@
 "title": "Legnano",
 "text": "The Lombard cities beat Barbarossa at Legnano.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14339,6 +15152,7 @@
 "title": "The Margraviate of Moravia",
 "text": "Barbarossa makes Moravia a margraviate under the emperor, held by Conrad Otto.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14358,6 +15172,7 @@
 "title": "Loditz",
 "text": "Bohemians and Moravians fight at Loditz; Moravia returns to Bohemia's rule.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14378,6 +15193,7 @@
 "title": "Hattin",
 "text": "Saladin destroys the crusader army at Hattin and takes Jerusalem.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14397,6 +15213,7 @@
 "title": "The Third Crusade",
 "text": "Barbarossa, Richard I and Philip II set out for the Holy Land.",
 "ref": "Real history",
+"period": "premyslid",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -14421,6 +15238,7 @@
 "title": "Barbarossa drowns",
 "text": "Barbarossa drowns crossing the Saleph in Anatolia.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14440,6 +15258,7 @@
 "title": "Premysl Ottokar returns",
 "text": "Premysl Ottokar takes the Bohemian throne, losing it again in 1193.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14459,6 +15278,7 @@
 "title": "The massacre at Orvieto",
 "text": "The Encyclopaedia's massacre at Orvieto falls here.",
 "ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "premyslid",
 "links": [
 {
 "id": "dapillars-orvieto",
@@ -14483,6 +15303,7 @@
 "title": "Henry VI's last year",
 "text": "Henry VI plans to make the empire hereditary; he dies at Messina the next year.",
 "ref": "Real history",
+"period": "premyslid",
 "links": []
 },
 {
@@ -14503,6 +15324,7 @@
 "title": "Pythagoras carries Thoth's lore west",
 "text": "Hermetic history says Pythagoras brought the lore of Thoth to the Greeks (Order of Hermes Revised pdf 20-21).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -14523,6 +15345,7 @@
 "title": "The Hermes cults at war",
 "text": "For three centuries rival cults of Hermes murder and riot against each other in Greece and Egypt (Order of Hermes Revised pdf 22).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": [
 {
 "id": "mrdm-delphi",
@@ -14548,6 +15371,7 @@
 "title": "The council of twenty",
 "text": "About a century before Christ, twenty mystics meet to end the feuds of the Hermes cults (Order of Hermes Revised pdf 22).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
 "links": []
 },
 {
@@ -14568,6 +15392,7 @@
 "title": "A fragment smuggled out",
 "text": "One fragment of Lilith's lore survives in writings smuggled out of the Roman siege of Jerusalem; the book prints the year as 64 (Revelations of the Dark Mother pdf 18).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "darh-diet-of-jerusalem",
@@ -14601,6 +15426,7 @@
 "title": "The Devil Kings",
 "text": "A dynasty of Infernalist mages takes hold of Arabia and Persia, and keeps it until 756 (Mage: The Dark Ages pdf 164).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": [
 {
 "id": "dam-devil-kings",
@@ -14625,6 +15451,7 @@
 "title": "The first Hollow Men",
 "text": "Fianna songs of Roman Britain first name the Hollow Men, the oldest breed of fomori (W20 Book of the Wyrm pdf 135).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "roman-empire",
 "links": []
 },
 {
@@ -14645,6 +15472,7 @@
 "title": "The Prophet's helpers",
 "text": "Some Batini later claim the Prophet had magical help (Mage: The Dark Ages pdf 40).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": []
 },
 {
@@ -14665,6 +15493,7 @@
 "title": "The covenants",
 "text": "By 700 the mages of Europe have gathered into covenants (Order of Hermes Revised pdf 26).",
 "ref": "Real history; the World of Darkness reading is a house rule",
+"period": "migrations",
 "links": [
 {
 "id": "tbfia-clans-of-stag",
@@ -14677,6 +15506,330 @@
 {
 "id": "dagrim-northern-shamans",
 "title": "Shamans beyond the north"
+}
+]
+},
+{
+"id": "r3-classical-356",
+"era": "classical",
+"year": -27,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"crown",
+"empire"
+],
+"title": "The dead's republic falls",
+"text": "Deduced: Wraith 20th runs the Republic, a Golden Age and the Republic's fall in order (pdf 68), and Stygia copies Rome (Renegades pdf 26-28), so the dead's republic falls as Rome's does, when Augustus takes power.",
+"ref": "Legend; the year is a house reading",
+"period": "roman-empire",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-357",
+"era": "classical",
+"year": -27,
+"month": null,
+"kind": "named",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"crown"
+],
+"title": "Charon rules Stygia",
+"text": "Deduced from the fall of the dead's republic: Charon takes sole rule of Stygia as Augustus does of Rome.",
+"ref": "Real history; character from the Encyclopaedia entry linked, year a house reading",
+"period": "roman-empire",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-358",
+"era": "classical",
+"year": 166,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Asia",
+"place": "The Dark Kingdom of Jade",
+"tags": [
+"travel",
+"war"
+],
+"title": "Stygia meets the Jade Kingdom",
+"text": "Deduced: Stygia's war with the Jade Kingdom (Dark Kingdom of Jade pdf 41-44) needs contact first; the house places it in 166, when a Roman embassy reaches the Han court.",
+"ref": "Legend; the year is a house reading",
+"period": "roman-empire",
+"links": [
+{
+"id": "wdkj-militia",
+"title": "The Jade militia"
+},
+{
+"id": "wspg-jade-po",
+"title": "The p’o in the Yellow Springs"
+}
+]
+},
+{
+"id": "r3-classical-359",
+"era": "classical",
+"year": 166,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Luoyang",
+"tags": [
+"travel",
+"trade"
+],
+"title": "A Roman embassy to the Han",
+"text": "Chinese annals record envoys from the ruler of Da Qin, taken to be Marcus Aurelius, arriving by sea in 166.",
+"ref": "Real history",
+"period": "roman-empire",
+"links": []
+},
+{
+"id": "r3-classical-360",
+"era": "classical",
+"year": 490,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"uprising"
+],
+"title": "The Ferrymen rebel",
+"text": "Deduced: in Wraith 20th's order the Ferrymen rebel after the First Great Maelstrom (pdf 68); the house dates it about 490.",
+"ref": "Legend; the year is a house reading",
+"period": "migrations",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-361",
+"era": "classical",
+"year": 500,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"treaty",
+"law"
+],
+"title": "The Treaty of Paradise",
+"text": "Deduced from Wraith 20th's order (pdf 68): the treaty that ends the Ferrymen's revolt, about 500.",
+"ref": "Legend; the year is a house reading",
+"period": "migrations",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-362",
+"era": "classical",
+"year": 510,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"law",
+"founding"
+],
+"title": "The Hierarchy",
+"text": "Deduced from Wraith 20th's order (pdf 68): Charon orders Stygia into the Hierarchy, about 510.",
+"ref": "Legend; the year is a house reading",
+"period": "migrations",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-363",
+"era": "classical",
+"year": 525,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Stygia",
+"tags": [
+"founding",
+"law"
+],
+"title": "The Guilds",
+"text": "Deduced from Wraith 20th's order (pdf 68): the arts of the dead gather into Guilds, about 525.",
+"ref": "Legend; the year is a house reading",
+"period": "migrations",
+"links": [
+{
+"id": "gw-other-deadlands",
+"title": "Other Deadlands"
+},
+{
+"id": "wche-covenant-of-the-millions",
+"title": "The Covenant of the Millions"
+},
+{
+"id": "wr20hrd-dark-kingdoms",
+"title": "Stygia and the other Dark Kingdoms"
+}
+]
+},
+{
+"id": "r3-classical-364",
+"era": "classical",
+"year": 541,
+"month": null,
+"kind": "myth",
+"lines": [
+"Wraith"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"plague",
+"disaster"
+],
+"title": "The Second Great Maelstrom",
+"text": "Deduced: Renegades ties the Second Great Maelstrom to a great plague (pdf 32), and the next after Rome's fall is Justinian's plague of 541.",
+"ref": "Legend; the year is a house reading",
+"period": "migrations",
+"links": []
+},
+{
+"id": "r3-classical-365",
+"era": "classical",
+"year": -300,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Himalayas",
+"tags": [
+"war",
+"treaty"
+],
+"title": "The Himalayan War ends",
+"text": "The Himalayan War, begun about 900 BCE, runs to about 300 BCE by one count (Sorcerers Crusade pdf 68).",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"period": "greece-republic",
+"links": []
+},
+{
+"id": "r3-classical-366",
+"era": "classical",
+"year": 1000,
+"month": null,
+"kind": "myth",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The Sundering deepens",
+"text": "Deduced: between the Battle of Stone and the Oath-Truce the fae lose ground with every new church and iron mill, as Dark Ages: Fae describes the world of 1230.",
+"ref": "Legend; the year is a house reading",
+"period": "premyslid",
+"links": [
+{
+"id": "tbfia-clans-of-stag",
+"title": "The Clans of Stag"
+},
+{
+"id": "kingdoms-beyond-concordia",
+"title": "Changeling Realms Abroad"
 }
 ]
 },

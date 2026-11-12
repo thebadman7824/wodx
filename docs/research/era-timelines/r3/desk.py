@@ -8,11 +8,14 @@ old = json.load(open('../desk-data-2026-11-12h2.json'))
 STOP = {'the','of','a','and','in','at','to','on','is','first','great','war','battle'}
 def words(t): return {w for w in re.findall(r"[a-z]+", t.lower()) if w not in STOP and len(w) > 2}
 eras, dropped = [], 0
-PRO = [('living-gods', 'Age of the Living Gods', '10,000 BCE to 801 BCE, prologue'), ('classical', 'Classical Age', '800 BCE to 1196 CE, prologue')]
+import importlib.util
+_b = importlib.util.spec_from_file_location('r3build', 'build.py'); _m = importlib.util.module_from_spec(_b); _b.loader.exec_module(_m)
+def _yr(y): return f'{-y:,} BCE' if y < 0 else f'{y} CE'
+PRO = [(pid, name, f'{_yr(lo)} to {_yr(hi)}, prologue ({"Living Gods" if hi < -800 else "Classical"})') for pid, name, lo, hi in _m.PERIODS]
 def card(x): return {'id': x['id'], 'y': x['year'], 'm': x['month'], 'k': x['kind'], 'ln': ', '.join(x['lines']), 'rg': x['region'], 'pl': x['place'],
                      'tg': x['tags'], 't': x['title'], 'x': x['text'], 'lk': [l['title'] for l in x['links']], 'src': 'r3'}
 for pid, name, span in PRO:
-    mine = sorted([card(x) for x in r3 if x['era'] == pid], key=lambda i: (i['y'], i['m'] or 13))
+    mine = sorted([card(x) for x in r3 if x.get('period') == pid], key=lambda i: (i['y'], i['m'] or 13))
     if mine: eras.append({'id': pid, 'name': name, 'span': span, 'items': mine, 'appr': []})
 for e in old:
     mine = [x for x in r3 if x['era'] == e['id']]

@@ -356,3 +356,15 @@
 130|W|wer|EU|Britannia|occult|The first Hollow Men|Fianna songs of Roman Britain first name the Hollow Men, the oldest breed of fomori (W20 Book of the Wyrm pdf 135).
 615|W|mag|ME|Mecca|faith,occult|The Prophet's helpers|Some Batini later claim the Prophet had magical help (Mage: The Dark Ages pdf 40).
 700|W|mag|EU|Europe|founding,occult|The covenants|By 700 the mages of Europe have gathered into covenants (Order of Hermes Revised pdf 26).
+# Deduced cards (Ben 2026-11-12 22:48Z: reason from the other lines where a book gives no year). Each says what it is deduced from.
+-27|M|wra|EU|Stygia|crown,empire|The dead's republic falls|Deduced: Wraith 20th runs the Republic, a Golden Age and the Republic's fall in order (pdf 68), and Stygia copies Rome (Renegades pdf 26-28), so the dead's republic falls as Rome's does, when Augustus takes power.
+-27|N|wra|EU|Stygia|crown|Charon rules Stygia|Deduced from the fall of the dead's republic: Charon takes sole rule of Stygia as Augustus does of Rome.
+166|M|wra|AS|The Dark Kingdom of Jade|travel,war|Stygia meets the Jade Kingdom|Deduced: Stygia's war with the Jade Kingdom (Dark Kingdom of Jade pdf 41-44) needs contact first; the house places it in 166, when a Roman embassy reaches the Han court.
+166|H|mor|AS|Luoyang|travel,trade|A Roman embassy to the Han|Chinese annals record envoys from the ruler of Da Qin, taken to be Marcus Aurelius, arriving by sea in 166.
+490|M|wra|EU|Stygia|uprising|The Ferrymen rebel|Deduced: in Wraith 20th's order the Ferrymen rebel after the First Great Maelstrom (pdf 68); the house dates it about 490.
+500|M|wra|EU|Stygia|treaty,law|The Treaty of Paradise|Deduced from Wraith 20th's order (pdf 68): the treaty that ends the Ferrymen's revolt, about 500.
+510|M|wra|EU|Stygia|law,founding|The Hierarchy|Deduced from Wraith 20th's order (pdf 68): Charon orders Stygia into the Hierarchy, about 510.
+525|M|wra|EU|Stygia|founding,law|The Guilds|Deduced from Wraith 20th's order (pdf 68): the arts of the dead gather into Guilds, about 525.
+541|M|wra|ME|Constantinople|plague,disaster|The Second Great Maelstrom|Deduced: Renegades ties the Second Great Maelstrom to a great plague (pdf 32), and the next after Rome's fall is Justinian's plague of 541.
+-300|W|mag|AS|Himalayas|war,treaty|The Himalayan War ends|The Himalayan War, begun about 900 BCE, runs to about 300 BCE by one count (Sorcerers Crusade pdf 68).
+1000|M|cha|EU|Europe|occult|The Sundering deepens|Deduced: between the Battle of Stone and the Oath-Truce the fae lose ground with every new church and iron mill, as Dark Ages: Fae describes the world of 1230.

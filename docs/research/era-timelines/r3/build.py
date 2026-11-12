@@ -22,6 +22,11 @@ LINES = {'all': 'All lines', 'mor': 'Mortals', 'vam': 'Vampire', 'wer': 'Werewol
 REGIONS = {'MO': 'Moravia', 'EU': 'Europe', 'ME': 'Middle East', 'AS': 'Asia', 'AF': 'Africa', 'AM': 'Americas'}
 KINDS = {'H': 'history', 'W': 'tied', 'N': 'named', 'F': 'branch', 'M': 'myth'}
 PROLOGUES = {'living-gods', 'classical'}
+# Smaller periods inside the two prologues (Ben 2026-11-12 22:48Z asked whether to split them; the card is with Ben).
+PERIODS = [('mythic-age', 'Mythic Age', -10000, -3101), ('bronze-kings', 'Bronze Age kings', -3100, -1178), ('iron-dawn', 'Iron dawn', -1177, -801),
+           ('greece-republic', 'Greece and the Republic', -800, -28), ('roman-empire', 'The Roman Empire', -27, 476),
+           ('migrations', 'Migrations and Great Moravia', 477, 907), ('premyslid', 'The Premyslid duchy', 908, 1196)]
+def period_of(y): return next((p for p, _, lo, hi in PERIODS if lo <= y <= hi), None)
 YEAR = re.compile(r'^(-?\d+)(?:-(\d{1,2}))?$')
 TAGS = {'war', 'battle', 'siege', 'massacre', 'plague', 'famine', 'disaster', 'quake', 'flood', 'fire', 'storm', 'faith', 'heresy', 'persecution',
         'trade', 'money', 'science', 'learning', 'art', 'crown', 'death', 'uprising', 'law', 'travel', 'crusade', 'exploration', 'industry',
@@ -86,6 +91,7 @@ def main():
             ev = {'id': f'r3-{era}-{n:03d}', 'era': era, 'year': y, 'month': m, 'kind': KINDS.get(kind, kind), 'lines': [LINES.get(x, x) for x in ls],
                   'region': REGIONS.get(region, region), 'place': place, 'tags': tg, 'title': title, 'text': text,
                   'ref': ('Legend; the year is a house reading' if kind == 'M' else 'Future Darkness branch history, a house reading' if kind == 'F' else 'Real history') + ('' if kind in 'HFM' else '; the World of Darkness reading is a house rule' if kind == 'W' else '; character from the Encyclopaedia entry linked, year a house reading')}
+            if era in PROLOGUES: ev['period'] = period_of(y)
             if era == 'future-darkness': ev['branch'] = 'future'
             elif y >= 1990: ev['branch'] = 'classic'
             ev['links'] = links(ev, ency)
