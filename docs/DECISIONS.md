@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2310
+Next free block: B2320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -87,6 +87,7 @@ Next free block: B2310
 | B2200-B2209 | Battles and sieges | Storyteller |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
+| B2310-B2313 | The case board and what a character could know | Interactables, Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2310,22 +2311,22 @@ The beat is story only. It spends none of the host's 3 prelude freebie points an
 
 Reverse: none needed; give a reward from the runner by hand.
 
-## B2340. The case board (2026-11-12)
+## B2310. The case board (2026-11-12)
 From the improvement desk (item i1, approved by Ben 2026-11-12). Each case board is a journal in the "WoDX case boards" folder, owned by every player so anyone can pin, move and join cards. Cards are clues, people, places, Encyclopaedia entries or journal pages, items, and notes; lines between two cards carry a few words. The Storyteller starts boards, picks the open case, and can hide a card until it is earned. Players do not see hidden cards or the lines to them, but the card is in the journal's data, so this only hides; real secrets stay in the Storyteller's own notes. Anyone opens a board from the token tools; the Storyteller also has it in the Storyteller's hand.
 
 Reverse: case.mjs and case-rules.mjs in wodx-interactables; setupCase and registerCaseSettings in main.mjs.
 
-## B2341. Found clues go on the open case (2026-11-12)
+## B2311. Found clues go on the open case (2026-11-12)
 A clue looked at or examined through Interact is pinned to the open case board on the Storyteller's client, with the texts the finder's best successes reached. Examining it again with more successes adds the new words to the same card. A botched examine pins nothing. World setting "Found clues go on the case board", on by default.
 
 Reverse: the pinClue call after clueCodex in wodx-interactables main.mjs; setting caseClues.
 
-## B2342. The case board by era (2026-11-12, house rule)
+## B2312. The case board by era (2026-11-12, house rule)
 The board keeps its era's look and name: parchment and red thread to 1449 ("The findings"), a commonplace board of pinned leaves to 1799, the detective's pinboard and string to 1945, the corkboard to 2022, and a lit case display in the World of Future Darkness from 2023.
 
 Reverse: LOOKS and lookFor in case-rules.mjs.
 
-## B2343. What they could know (2026-11-12, house rule)
+## B2313. What they could know (2026-11-12, house rule)
 From the improvement desk (item l1, lighter version: a Storyteller-only view). The books give no general table for what a character knows, so WoDX Library suggests from the Encyclopaedia: an entry that has not happened by the clock's year (its date, or the first year of its earliest era) is never suggested; the character's own line's terms, rules, powers and factions are known; its people and factions need Intelligence + Politics 4, events Intelligence + Academics 4, places and lore Intelligence + Occult 4; another line's entries need Intelligence + Occult 6; a ghoul or revenant reads vampire entries as its own at 2 more. Ticked entries go into the character's codex (WoDX Storyteller), which only that character's players read. The Storyteller's call always wins.
 
 Reverse: know.mjs and know-rules.mjs in wodx-library (ERA_FROM, OWN, OWN_NEED, OTHER_NEED).
