@@ -84,7 +84,7 @@ Next free block: B2330
 | B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
-| B2100-B2105 | NPC voices | Voices |
+| B2100-B2111 | NPC voices: browser speech, Kokoro, shared files from the token, plot NPCs and prewritten lines | Voices |
 | B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War; B2211-B2216 factions at war by themselves) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
@@ -2424,3 +2424,32 @@ Reverse: remove changesHtml from decorate and installChanges from setup in extra
 Each line names its causes, up to four: "a card: <its title>" when a chat card button was pressed in the four seconds before, "the time skip" while Chronicle's time skip runs, "Undo", "the Storyteller" for the Storyteller's own edits, or "<player>, by hand". The client that makes a change tags it and the active Storyteller's client keeps the causes by kind of change, saving at most once for each new cause, so play costs almost no extra saves.
 
 Reverse: drop the tag hooks; lines then show without causes.
+## B2106. Kokoro runs offline from the Data folder (2026-11-12)
+WoDX Voices loads kokoro-js 1.2.1 (its web build), the ONNX runtime wasm and the Kokoro-82M model (quantized) from Data/wodx-voices-engine, which tools/voices/fetch-engine.mjs fills once on the PC. The library asks for its files at their online home; a narrow fetch shim on the Storyteller's client answers only those requests from the folder. Nothing goes in the module bundle. Licences in the folder's NOTICE.txt (Apache 2.0; the phonemizer is espeak-ng, GPL 3, fine for private use).
+
+Reverse: set Voice engine to the browser's own speech.
+
+## B2107. One render, shared by file (2026-11-12)
+Only the active Storyteller's client renders. It saves the line as a WAV in Data/wodx-voices-cache/g<n>/ (a name from the voice, speed and words, so a line said twice is rendered once) and sends the path over the module socket to the people who see the line. Players play the file. With no Storyteller online, players fall back to their own speech.
+
+Reverse: engine setting.
+
+## B2108. A Kokoro voice per NPC (2026-11-12)
+Two of Kokoro's 27 English voices of one accent (American or British, by seed), matched to a known sex, blended 50:50 to 80:20 by seed, with the speed from the profile. The Storyteller can name one voice or a blend in flags.wodx-voices.override.kokoro ("bm_george" or "bm_george*0.6+bm_lewis").
+
+Reverse: kokoroVoiceFor in voice-rules.mjs.
+
+## B2109. The Storyteller's own lines (2026-11-12)
+Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, can be read in that NPC's voice to the people who see it. Off by default since B2111: Ben asked the same day that only prewritten lines be voiced.
+
+Reverse: the "Read the Storyteller's lines" setting.
+
+## B2110. Sound from the token (2026-11-12)
+When the NPC's scene is in view, the line plays at the token through Foundry's positional sound, fading over the set range (30 grid units by default) and muffled by walls; the Storyteller always hears. Otherwise it plays plainly.
+
+Reverse: the "Sound from the token" setting.
+
+## B2111. Plot NPCs and prewritten lines only (2026-11-12)
+Ben (12 November 2026), after Fallout 1 and 2 and Baldur's Gate 1 and 2: an NPC is voiced only when the Storyteller marks it as a plot NPC (Voiced (plot NPC) on the right-click menu in the Actors list, flags.wodx-voices.plot), and only the lines written beforehand on its WoDX NPC talk sheet are read. Stock lines, generated lines, barks and every unmarked NPC stay text. The world setting "Who speaks aloud" can open it to every NPC.
+
+Reverse: the "Who speaks aloud" setting; prewritten and voiced in voice-rules.mjs.
