@@ -91,6 +91,7 @@ Next free block: B2380
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
 | B2320-B2323 | The features card and what changed since last session | Sheets, Chronicle |
 | B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
+| B2350-B2359 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
 | B2370-B2379 | The weekly market turn: making, recovery, trade links, seasons by era, skip catch-up, the queue and talk of dear goods | Storyteller |
 <!-- decision-index:end -->
 
@@ -2268,7 +2269,7 @@ Reverse: call api.factions.warTurn by hand only, with the setting off.
 Both kinds begin for the same reasons. A war is supernatural when both sides are of a hidden kind (Kindred, Garou, mages, fae, spirits or the dead), or when hunters fight one of them; otherwise it is mortal, and a hidden faction fighting a mortal one does it through its mortal followers, as the Masquerade (and its like) demands, with no powers and no breach. In a supernatural war the hidden side fields its own (Kindred: ghoul knights and Cainite cavalry; Garou: a pack and Kinfolk wolves, Spoils of War p. 44), the supernatural in its ranks counts in later ages, and its leader's powers add to each phase (B2214).
 
 ## B2214. The leaders' powers in a phase (2026-11-12, house rule until the battle deeds table)
-In a supernatural war, each phase the leader of each hidden side (and hunters) rolls Status + 3 dice (3 to 10) at 6, and the successes count as that side's deed for the phase (one foe out of the fight a success, or extra successes on its action with the book's army). The battle deeds thread's table by post, age and line will replace this roll when it lands.
+In a supernatural war, each phase the leader of each hidden side (and hunters) rolls Status + 3 dice (3 to 10) at 6, and the successes count as that side's deed for the phase (one foe out of the fight a success, or extra successes on its action with the book's army). Since NPC 0.45.2 the deed comes from WoDX Storyteller's battle deeds table (B2350s): leaderDeed picks a command deed for the leader's kind of being (from the leader's sheet, else from the faction's kind) and age, with Status + 3 dice, and its `seen` goes with the deed so the aftermath counts it against the Masquerade. The plain Status + 3 roll is kept for when the table is not there.
 
 ## B2215. What a war changes (2026-11-12, house rule)
 Beside a battle's Status, Retainers and standing (B2206): when the attacker wins, the place it fought for goes to it (a big change, so it always waits for the Storyteller); a supernatural war in the living world starts a rumour of what was seen at the place (a breach of severity 1, 2 after more than six phases), on the beaten hidden side, whose flight is what people saw. No breach in the Umbra or the Underworld.
@@ -2518,6 +2519,8 @@ Reverse: LODGINGS and schedule() in country-rules.mjs.
 ## B2336. Day shelter for those the sun burns (2026-11-12)
 On the map, a Kindred or Kuei-jin moves only between dusk and dawn. The trip is cut at the towns it passes; before each stretch, if it could not be finished half an hour before dawn, the traveller waits out the day in that town and leaves at dusk. The dark slows such a trip in the years before roads were lit. A trip planned this way no longer goes to the Storyteller for arriving after dawn. A stretch between two towns that is longer than a whole night cannot be sheltered, and that trip still asks the Storyteller. Off the map the older dawn check stands.
 
+Amended 2026-11-12 (Storyteller 0.47.1, after the testbed gate): along a road there is a village within reach wherever dawn comes, so a ride on a road breaks for the day wherever the night runs out (a village on the way to the next town). Only a stretch off the roads, or a paid ride, must be finished in one night, and only such a stretch longer than a whole night leaves the travellers with no shelter. Before this a road stretch between two towns that was longer than a short summer night was wrongly called shelterless.
+
 Reverse: schedule() in country-rules.mjs; the plan branch of travelNeedsAsk in world-rules.mjs.
 
 ## B2337. Paying for the trip (2026-11-12)
@@ -2577,6 +2580,54 @@ Ben changed the realm-maps pick on the study desk at 13:55 UTC to add endless se
 In Foundry (realm-maps.mjs): Realm maps has a Wild land section. Draw wild land makes the piece at a place, or finds it if it is already drawn; Walk on draws or finds the piece beside the open one and sets the selected tokens down where they walk in. Tokens keep the record of where they first came from, so Bring them back still returns them to the living world. A piece of wild land cannot be redrawn with another seed. Travel time is still the journey card's, in hours; the pieces are for the scenes on the way.
 
 Reverse: remove wild-rules.mjs, the wild block in realm-maps.mjs and the Wild land section of realmMapsDialog.
+
+## B2350. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
+Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.47.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
+
+Reverse: DEEDS, POSTS and pickDeed in wodx-storyteller battle-deeds.mjs; the offers on a battle are dropped by setting offers to null.
+
+## B2351. The post a character stands at (2026-11-12, house rule)
+With no post picked, a character in command is with the commander, one at the rear is scouting, and one in the thick of it is in the line; in a siege that has been breached or stormed the defenders are on the walls and the attackers at the breach. No deeds are offered during the weeks of a siege, only when it is fought.
+
+Reverse: postFor in battle-deeds.mjs.
+
+## B2352. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
+A supernatural character (by WoDX Combat's kind of being) is offered a deed of their own kind about one time in three: a vampire commanding the enemy captain, showing what they are, or feeding in the press; a Garou in war form; a mage's vulgar or coincidental Effect; a changeling waking dreams of glory; a wraith reaching through the Shroud; a hunter finding the monster in the ranks; spirits of war called. Deeds that the living can see as more than human are marked seen; in a battle in the living world each seen deed that succeeded is counted by the aftermath, and sending the feeding line to the Ledger lets the Veil slip one point for each (at most 3), with an Undo.
+
+Reverse: the kinds and seen fields in DEEDS; seenDeeds in battle-aftermath.mjs.
+
+## B2353. Off-screen deeds for faction wars (2026-11-12, house rule)
+For battles fought with no window (factions at war), leaderDeed() picks a command deed for a side's leader, or a deed of the leader's kind when the side has supernatural help of 2 or more, with the commander's Perception + Leadership as the pool; deedSuccessesFor() rolls it with any random source (V20: successes at the difficulty less 1s, a botch when nothing succeeded and a 1 came up). Exposed as api.battleDeeds.leaderDeed and deedSuccessesFor.
+
+Reverse: leaderDeed, deedSuccessesFor in battle-deeds.mjs.
+
+## B2354. Deeds roll from the sheet, by the Storyteller (2026-11-12)
+The Storyteller rolls each deed from the window (the dice go to the Storyteller's card; the player gets a card with the deed when it is offered). A botched deed adds nothing. Rolling again replaces the roll. Offers belong to one phase: fighting the phase uses them and clears them; Undo of the phase does not bring them back.
+
+Reverse: rollDeed and offer in battle-extras.mjs.
+
+## B2355. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
+Ben approved desk item bt2 on 12 November 2026. When a battle ends, the Battles window lists the field's harvest by line: spoils, prisoners (a tenth of a routed side) and the wounded (twice the dead) by age; feeding among the dying for 3 nights (7 after 1,000 dead), 2 easier on the field; new wraiths among the fallen (one in a hundred of the dead, at least one from 20 dead) and a thinner Shroud; Banes and Wyrm taint from 100 dead; Entropy in the Resonance and nightmares from 50 dead; the Yin rising for the Kindred of the East; and the name the place keeps. All of it is a house rule; the counts are not from a book.
+
+Reverse: aftermathFor in wodx-storyteller battle-aftermath.mjs.
+
+## B2356. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
+A line with a lasting effect can go to the Ledger as a consequence that comes due (the feeding ends, the Shroud heals after a year and a day, the Resonance fades), to the Legends book (Chronicle 0.42.2 adds the sent lines to the battle's entry), or to a place picked as a scene (WoDX Otherworlds drift). Each sent line is kept on the battle with an Undo that removes the Ledger entry, takes the drift back, or drops the Legends text.
+
+Reverse: send and unsend in battle-extras.mjs.
+
+## B2357. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
+The desk wording said "a stronger Shroud"; Wraith 20th puts the Shroud lowest where death and grief are, so a battle thins it instead (logged in PENDING-REVIEW). WoDX Otherworlds 0.18.0 adds a Shroud track to drift: massdeath -1, shroudheals +1, inside -3 to +3, and a place with a Shroud rating reads it with the drift inside 4 to 10. A battle thins it 1, or 2 after 10,000 dead.
+
+Reverse: the massdeath and shroudheals kinds and shroudWithDrift in wodx-otherworlds drift-rules.mjs.
+
+## B2358. Old fields are felt in later years (2026-11-12, house rule)
+A field of 10 or more dead in the living world appears under Old fields in the Battles list in later years: fresh graves in its first year, the survivors' memory for 40 years, then by the clock's year a chapel or a cross before 1800, a monument and walks from 1800, battlefield tourists by rail from 1860, a memorial and museum from 1914, a visitor centre, re-enactors and detectorists from 1960, and on the Future Darkness branch from 2026 a memorial seen through the lens. Fields of 1,000 dead (or 100 within 200 years) are still haunted; 10,000 dead keep the Shroud thin. The Legends book's battle entry carries any lines sent to it.
+
+Reverse: fieldEcho and oldFields in battle-aftermath.mjs.
+
+## B2359. Decision numbers kept for this work
+B2350 to B2359 are this work's block, all used.
 
 ## B2370. The weekly market turn (2026-11-12, house rule)
 The living economy study's step 3, which Ben approved on 2026-11-11. Once a week of world time every market that is not cut off takes one turn: making, recovery, trade along its links, then prices. It runs on the active Storyteller's client when the clock passes a week by itself (checked at most once a game hour, never during a skip) and when a time skip ends. World setting Markets move each week: Auto (the default), Suggest or Off. With no market set up nothing runs, so the Live world is untouched until a market exists there.

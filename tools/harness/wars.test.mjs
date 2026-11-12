@@ -92,3 +92,10 @@ test("an army fought off the screen closes, shoots or withdraws by its pools", (
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/factions.mjs"), "utf8");
   assert.match(src, /api\.rules\.chooseActions\(x/);
 });
+
+test("the leaders' powers come from the battle deeds table when it is there", () => {
+  const src = readFileSync(join(root, "modules/wodx-npc/scripts/factions.mjs"), "utf8");
+  assert.match(src, /D\.leaderDeed\(battle\.sides\[sideIdx\], age\.id/);
+  assert.match(src, /seen: !!pick\.seen/);
+  assert.equal(W.COMBAT_KIND.garou, "lupine");
+});

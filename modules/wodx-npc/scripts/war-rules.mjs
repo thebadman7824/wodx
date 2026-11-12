@@ -118,6 +118,8 @@ export function forcesFor(f, kind, {year = 1197, realm = "world", defends = fals
   return side;
 }
 
+/** A faction's kind as WoDX Combat names a kind of being, for the battle deeds table when the leader has no sheet. */
+export const COMBAT_KIND = {kindred: "kindred", garou: "lupine", mages: "mage", fae: "fae", spirits: "wraith", hunters: "hunter"};
 /** The dice a hidden side's leader throws into each phase with their powers (a house rule until the deeds table): Status + 3, at 6, to 10. */
 export const powerPool = f => clamp(n(f?.assets?.status) + 3, 3, 10);
 /** Which sides of a supernatural war use powers: the hidden ones, and hunters. */

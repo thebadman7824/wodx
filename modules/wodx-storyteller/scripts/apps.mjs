@@ -293,7 +293,10 @@ export async function placesDialog() {
   const scenes = all(game.scenes).slice().sort((a, b) => C.sceneName(a).localeCompare(C.sceneName(b)));
   const anyMarked = scenes.some(s => s.flags?.[C.MOD]?.travel);
   const townList = Country.towns();
-  const atOf = (town, off) => (town ? Country.normAt({town, ...(Country.parseOffset(off) ?? {})}) : null);
+  // The town is typed and picked from one shared list (0.47.1): its name, with or without the marks over letters, or its id
+  const plainName = v => String(v ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+  const townId = v => { const k = plainName(v); return k ? (townList.find(o => plainName(o.name) === k || o.id === k)?.id ?? null) : null; };
+  const atOf = (typed, off) => { const town = townId(typed); return town ? Country.normAt({town, ...(Country.parseOffset(off) ?? {})}) : null; };
   const sameAt = (a, b) => (a?.town ?? null) === (b?.town ?? null) && (a?.km ?? 0) === (b?.km ?? 0) && (a ? a.dir : null) === (b ? b.dir : null);
   const rows = scenes.map(s => {
     const t = C.travelOf(s), marked = !!s.flags?.[C.MOD]?.travel;
@@ -304,11 +307,12 @@ export async function placesDialog() {
       <td><input type="number" name="min.${esc(s.id)}" min="0" max="1440" value="${t.minutes ?? ""}" placeholder="${C.setting("travelMinutes") ?? 30}" aria-label="Minutes"></td>
       <td><input type="number" name="km.${esc(s.id)}" min="0" max="2000" step="0.1" value="${t.km ?? ""}" aria-label="Distance in km"></td>
       <td><select name="road.${esc(s.id)}" data-fixed aria-label="Road"><option value="">Country road</option>${Object.entries(Road.ROADS).filter(([k]) => k !== "road").map(([k, v]) => `<option value="${k}"${t.road === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></td>
-      <td><select name="near.${esc(s.id)}" aria-label="Nearest town on the country map"><option value="">Not on the map</option>${townList.map(o => `<option value="${o.id}"${t.at?.town === o.id ? " selected" : ""}>${esc(o.name)}</option>`).join("")}</select></td>
+      <td><input type="text" name="near.${esc(s.id)}" list="wstory-towns" maxlength="40" value="${esc(townList.find(o => o.id === t.at?.town)?.name ?? "")}" placeholder="not on the map" aria-label="Nearest town on the country map: type to search"></td>
       <td><input type="text" name="off.${esc(s.id)}" maxlength="12" value="${esc(Country.offsetWords(t.at))}" placeholder="in town" aria-label="Distance and direction from that town, such as 12 NE"></td>
       <td><input type="text" name="tab.${esc(s.id)}" maxlength="120" value="${esc(t.table ?? "")}" placeholder="world's table" aria-label="Encounter table"></td></tr>`;
   }).join("");
   const content = `<p>Where players may travel. While no place is marked here, every scene that is not a battle map or a test is open. "Asks first" sends the trip to the approval queue. Minutes: how long it takes to get there; filled in, they win. Left blank with a distance, the time comes from the distance, the road and the way of travelling the year allows, slowed by the weather and the dark (blank with no distance: ${C.setting("travelMinutes") ?? 30}). The table is a roll table's name for encounters on the way. Near and From there put a place on the country map: pick the nearest town and, if the place lies outside it, how far and which way (12 NE is 12 km to the north-east). When both ends of a trip are on the map, the trip finds its own way across the country by the roads, railways and rides of the year, and the Km and Road columns are not used for it.</p>
+    <datalist id="wstory-towns">${townList.map(o => `<option value="${esc(o.name)}"></option>`).join("")}</datalist>
     ${searchBox("table.wstory-places", "Search scenes…", "Search scenes")}
     <div class="wodx-table-wrap wstory-places-wrap"><table class="wodx-table wstory-places"><thead><tr><th>Scene</th><th>Open</th><th>Asks first</th><th>Minutes</th><th>Km</th><th>Road</th><th>Near</th><th>From there</th><th>Encounter table</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   const data = await wait({window: {title: "Travel places", resizable: true}, position: {width: 1180, height: "auto"}, content,

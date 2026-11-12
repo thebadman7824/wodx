@@ -34,6 +34,9 @@
  * Stored in the world setting wodx-storyteller.battles: {v, list: [battle]}.
  */
 
+import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
+import {normAftermath} from "./battle-aftermath.mjs";
+
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
 
@@ -251,7 +254,8 @@ export function normBattle(b = {}) {
     eventId: str(b.eventId, 80),
     sides: [normSide(b.sides?.[0], "The attackers"), normSide(b.sides?.[1], "The defenders")],
     chars: (Array.isArray(b.chars) ? b.chars : []).filter(c => c?.actorId).map(c => ({
-      actorId: str(c.actorId, 40), name: str(c.name), side: c.side === 1 ? 1 : 0, stance: ["thick", "rear", "command"].includes(c.stance) ? c.stance : "thick"
+      actorId: str(c.actorId, 40), name: str(c.name), side: c.side === 1 ? 1 : 0, stance: ["thick", "rear", "command"].includes(c.stance) ? c.stance : "thick",
+      ...(DEED_POSTS[c.post] ? {post: c.post} : {})
     })).slice(0, 20),
     phases: (Array.isArray(b.phases) ? b.phases : []).slice(-200),
     weeks: Math.max(0, Math.round(n(b.weeks))),
@@ -263,7 +267,10 @@ export function normBattle(b = {}) {
     legend: b.legend !== false,
     // a war between factions fought off the screen (WoDX NPC, B2211): who, for what place, and whether it runs by itself
     war: b.war && typeof b.war === "object" ? {attacker: str(b.war.attacker, 40), defender: str(b.war.defender, 40), place: str(b.war.place, 200),
-      kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null
+      kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null,
+    // Storyteller 0.47.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
+    offers: normOffers(b.offers),
+    aftermath: normAftermath(b.aftermath)
   };
   out.book = b.book === undefined || b.book === null ? out.sides.every(x => unitCount(x.units) > 0) : !!b.book;
   // Field battles: the defender is side 1. A siege: side 1 holds the walls.
@@ -330,7 +337,7 @@ export function settlePhase(battle, age, rolls, deeds = [[], []]) {
   const phase = {
     n: battle.phases.length + 1, kind: "phase", total, net, winner, lost, resolveLost,
     rolls: rolls.map(r => ({successes: Math.max(0, n(r?.successes)), botch: !!r?.botch, faces: Array.isArray(r?.faces) ? r.faces.slice(0, 30) : []})),
-    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes))}))),
+    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes)), ...(d.seen ? {seen: true} : {})}))),
     before: battle.sides.map(s => ({men: s.men, resolve: s.resolve, lostUnits: s.lostUnits, penalty: s.penalty, sick: s.sick}))
   };
   let over = null;
@@ -455,7 +462,7 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
     contests: c.map((x, i) => ({action: x.action, attack: x.attack, resist: x.resist, net: net[i],
       rolls: {attack: rollOut(x.rolls?.attack), resist: rollOut(x.rolls?.resist)}})),
     rolls: (plan.commandRolls ?? [null, null]).map(rollOut),
-    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes))}))),
+    deeds: [0, 1].map(i => (deeds[i] ?? []).map(d => ({name: str(d.name), successes: Math.max(0, n(d.successes)), ...(d.seen ? {seen: true} : {})}))),
     before: battle.sides.map(s => ({men: s.men, resolve: s.resolve, lostUnits: s.lostUnits, penalty: s.penalty, sick: s.sick, units: {...s.units}}))
   };
   const gone = [0, 1].filter(i => !unitCount(sides[i].units));

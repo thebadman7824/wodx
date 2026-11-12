@@ -415,8 +415,9 @@ const HOUR = 3600;
  * Lay a trip over the clock. trip: from countryTrip. opts: start (seconds), nextDawn(t), nextDusk(t) (seconds),
  * sunBurns, pace, lodging, wage, heads (how many pay).
  * The living travel their day's hours and then rest; where the road has no bed they camp. Those the sun burns move
- * only in the dark, and wait out the day at the last town before a stretch they could not finish by dawn. A stretch
- * between two shelters that is longer than a whole night leaves them exposed: that trip is the Storyteller's call.
+ * only in the dark. Along a road they stop for the day at a village wherever dawn finds them near; a stretch off the
+ * roads or a paid ride must be finished in one night, and one longer than a whole night leaves them exposed: that
+ * trip is the Storyteller's call.
  * Returns {arrive, minutes, travel, nights, stops: [{at, why, from, to}], cost, fare, exposed, toll, enc}.
  */
 export function schedule(trip, {start = 0, nextDawn = null, nextDusk = null, sunBurns = false, pace = "steady", lodging = "inn", wage = 0, heads = 1} = {}) {
@@ -425,20 +426,38 @@ export function schedule(trip, {start = 0, nextDawn = null, nextDusk = null, sun
   const stops = [];
   let t = start, nights = 0, cost = 0, exposed = false, travel = 0, days = 0;
   if ( sunBurns && nextDawn && nextDusk ) {
-    // Runs between shelters: each must fit before dawn, with half an hour in hand.
+    // On a road there is always a village within reach, so a ride along one can break anywhere for the day. A stretch
+    // off the roads, or a paid ride, has to be finished before dawn with half an hour in hand (0.47.1).
     const wait = (at, until) => { stops.push({at, why: "day shelter", from: t, to: until}); if ( L.cost ) cost += Math.round(wage * L.cost) * heads; t = until; nights++; };
-    let k = 0;
-    while ( k < legs.length ) {
-      let end = k, run = 0;
-      do { run += legs[end].secs; end++; } while ( end < legs.length && !legs[end - 1].shelter );
-      const at = legs[k].from;
-      if ( nextDusk(t) < nextDawn(t) ) wait(at, nextDusk(t));
-      if ( t + run > nextDawn(t) - 1800 ) {
-        const dusk = nextDusk(t);
-        if ( run > (nextDawn(dusk + 1) - dusk) - 1800 ) exposed = true;
-        else wait(at, dusk);
+    const open = l => !l.hired && l.road !== "path";
+    const room = () => nextDawn(t) - 1800 - t;
+    let here = legs[0]?.from ?? "the road";
+    for ( let k = 0; k < legs.length; k++ ) {
+      const l = legs[k];
+      if ( nextDusk(t) < nextDawn(t) ) wait(here, nextDusk(t));
+      if ( open(l) ) {
+        let left = l.secs;
+        while ( left > 0 ) {
+          const can = Math.max(0, room());
+          if ( left <= can ) { t += left; travel += left; left = 0; break; }
+          t += can; travel += can; left -= can;
+          wait(`a village on the way to ${l.to}`, nextDusk(t));
+        }
+      } else {
+        // The whole stretch to the next shelter or road, taken in one night
+        const sheltered = k === 0 || open(legs[k - 1]) || legs[k - 1].shelter;
+        if ( sheltered ) {
+          let run = 0;
+          for ( let e = k; e < legs.length && !open(legs[e]); e++ ) { run += legs[e].secs; if ( legs[e].shelter ) break; }
+          if ( run > room() ) {
+            const dusk = nextDusk(t);
+            if ( run > (nextDawn(dusk + 1) - dusk) - 1800 ) exposed = true;
+            else wait(here, dusk);
+          }
+        }
+        t += l.secs; travel += l.secs;
       }
-      t += run; travel += run; k = end;
+      here = l.to;
     }
   } else {
     const budget = P.hours * HOUR;

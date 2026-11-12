@@ -21,13 +21,13 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.45.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
-| wodx-otherworlds | 0.17.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
+| wodx-chronicle | 0.45.1 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
+| wodx-otherworlds | 0.18.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.14.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.55.0 | The Actions menu for every line: powers, feeding, social actions, trade and effect keywords. [Changelog](../modules/wodx-actions/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-combat | 3.19.0 | Fights: dice and health, the turn conductor, ways of moving and the body plan. [Changelog](../modules/wodx-combat/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-sheets | 0.13.0 | WoDX tabs and fixes on the line sheets, the anachronism check, the Body tab, the Relationships tab with Followers, the features card and what changed since last session. [Changelog](../modules/wodx-sheets/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-actions) |
-| wodx-npc | 0.45.1 | NPC profiles, routines, talk (with a talk generator), factions, politics, rivalries, passers-by, relationships, lineage and secrets, followers and descriptions that spread. [Changelog](../modules/wodx-npc/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-combat, wodx-actions) |
+| wodx-npc | 0.45.2 | NPC profiles, routines, talk (with a talk generator), factions, politics, rivalries, passers-by, relationships, lineage and secrets, followers and descriptions that spread. [Changelog](../modules/wodx-npc/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-combat, wodx-actions) |
 | wodx-storyteller | 0.48.0 | The Storyteller's tools: the open world, the country map behind a trip, the night's draw, upkeep, ledgers, money, holdings, crafts, and battles and sieges. [Changelog](../modules/wodx-storyteller/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle; reads wodx-npc and wodx-otherworlds when on) |
 | wodx-interactables | 0.32.1 | Doors, locks, containers, clues, carried light, chases and the case board. [Changelog](../modules/wodx-interactables/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-actions; uses wodx-combat and wodx-npc when on) |
 | wodx-targeting | 0.3.0 | Target suggestions for powers and attacks. [Changelog](../modules/wodx-targeting/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-combat, wodx-actions) |

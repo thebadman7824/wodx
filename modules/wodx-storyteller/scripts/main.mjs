@@ -56,6 +56,9 @@ import * as BuildRules from "./build-rules.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as ClockRules from "./clock-rules.mjs";
 import * as Battles from "./battles.mjs";
+import * as BattleDeeds from "./battle-deeds.mjs";
+import * as BattleAftermath from "./battle-aftermath.mjs";
+import * as BattleExtras from "./battle-extras.mjs";
 import * as BattleRules from "./battle-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -146,6 +149,9 @@ Hooks.once("ready", () => {
     battles: {open: id => Battles.BattlesApp.open(id), list: Battles.list, get: Battles.get, start: Battles.start, setup: Battles.setupDialog, fight: Battles.fight,
       week: Battles.week, storm: Battles.storm, withdraw: Battles.withdrawSide, draw: Battles.callDraw, undo: Battles.undo, passTime: Battles.passTime,
       hazard: Battles.hazard, remove: Battles.remove, commandPool: Battles.commandPool, commandPools: Battles.commandPools, rules: BattleRules},
+    battleDeeds: {rules: BattleDeeds, offer: BattleExtras.offer, roll: BattleExtras.rollDeed, swap: BattleExtras.swap, skip: BattleExtras.skip,
+      leaderDeed: BattleDeeds.leaderDeed, deedSuccessesFor: BattleDeeds.deedSuccessesFor},
+    battleAftermath: {rules: BattleAftermath, send: BattleExtras.send, undo: BattleExtras.unsend},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
