@@ -1,5 +1,5 @@
 /**
- * Feeding gate (WoDX Actions 3.41.0, Creation 0.10.2), in rothenstein-wodx, as Gamemaster Test:
+ * Feeding gate (WoDX Actions 3.41.0 or later, Creation 0.10.2), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefeed.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Feeding", vampires and mortals with tokens (the mortals unlinked, as NPCs are);
  * views the scene, then goes back and deletes everything it made (scene, tokens, actors, chat cards). The clock is
@@ -18,6 +18,7 @@
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const G = 100;
+const atLeast = (v, min) => { const a = String(v ?? "").split(/[.-]/).map(Number), b = min.split(".").map(Number); for (let i = 0; i < b.length; i++) { if ((a[i] || 0) !== b[i]) return (a[i] || 0) > b[i]; } return true; };
 async function save(R, name) {
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
@@ -78,7 +79,7 @@ export async function run() {
     const lastMsg = () => game.messages.contents.filter(m => m.timestamp >= t0).at(-1);
 
     await step("1 the api", async () => {
-      ok("1 the api", A()?.version === "3.41.0" && typeof A()?.feedUndo === "function" && !!A()?.feedingRules?.CLAN_FEEDING?.ventrue, {version: A()?.version});
+      ok("1 the api", atLeast(A()?.version, "3.41.0") && typeof A()?.feedUndo === "function" && !!A()?.feedingRules?.CLAN_FEEDING?.ventrue, {version: A()?.version});
     });
     await step("2 feed on an unlinked mortal", async () => {
       const k = by("Toreador"), before = bp(k);
