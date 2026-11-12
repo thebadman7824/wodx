@@ -28,11 +28,12 @@ import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
 import * as RV from "./rivalry-rules.mjs";
+import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.25.0";
+const VERSION = "0.26.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -799,7 +800,7 @@ talk.hooks();
 /* 0.18.0: natural rivalries between kinds of NPC */
 const rivalry = buildRivalry({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile, factions, routines, yardsBetween, obvious, hiddenByObfuscate});
 rivalry.hooks();
-/* 0.25.0: passers-by and animals */
+/* 0.26.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry});
@@ -818,7 +819,8 @@ Hooks.once("init", () => {
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
+    politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor}};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */

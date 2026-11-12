@@ -1002,6 +1002,20 @@ House rules, shown on the attack card and the check card; minus is easier:
 - In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
 
 Reverse: STANCES and attackStance in movement-rules.js.
+
+## B947. Ways of moving after the book check (2026-11-12)
+The book check (project files movement-book-check.md) replaces these house rules in B941, B942 and B946:
+- Breath: by Stamina at rest, 30 seconds up to an hour (W20 pdf 261, M20 pdf 441-442); in a fight, 2 x Stamina turns. Out of breath, one level a turn, not rolled or soaked: lethal (W20, M20), bashing for changelings (C20 pdf 294).
+- Swimming: 12 + Dexterity yards a turn with Athletics (M20 pdf 402), the jog; a swimming power doubles it to the run.
+- Flying: bat form 20 mph, about 29 yards a turn, and +2 to hit it (V20 pdf 208); Chiropteran Marauder and Dark Ages wings 25 mph (V20 pdf 250, V20 Dark Ages pdf 271); Wings of Pegasus 50 mph (W20 pdf 176); Spirit of the Bird 20 mph with its own maneuvers +1 (W20 pdf 200); Phantom Wings up to jogging speed (Wraith 20th pdf 217); Demon wings glide at up to three times the run; any other flight 15 yards (M20 pdf 402 gives 10 to 20). Wings of Rage is not flight (Wraith 20th pdf 266).
+- Prone: light cover, +1 to be shot (V20 pdf 286), and no change to fire from prone.
+- Climbing: 10 feet a success on an average climb, 15 easy, 5 hard (V20 pdf 266).
+- Jumping: 2 feet up or 3 feet across a success (V20 pdf 268).
+Still house rules, with no book rule found: an easier close attack on someone prone, the Stealth bonus for crawling, higher ground, fighting in water or while climbing, and the leaping strike.
+
+A flight power now sets the token's way of moving to Fly before it rises, and a fall sets it back to Walk; the token lookup finds unlinked tokens too.
+
+Reverse: FLY_SPEEDS, BREATH_SECONDS, drownType and STANCES in wodx-combat movement-rules.js; jumpReach in wodx-actions checks-rules.js.
 ## B1000. Animal archetypes (2026-11-12)
 Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
 
@@ -1126,7 +1140,7 @@ Not every Discipline shows, so after one is used where breach witnesses or other
 
 Reverse: set witnessAsk off; drop the knows button.
 ## B970. Passers-by: who walks the street, by year and hour (2026-11-11)
-Ben asked whether WoDX can spawn simple NPCs for flavour, such as a crowd a vampire can hunt in. WoDX NPC 0.25.0 fills a scene the Storyteller turns on with people of the year: six ages of the street (medieval to 1499, early modern, industrial from 1800, twentieth century from 1914, modern from 1980, the Future Darkness from 2025), each with its own kinds of people and clothes. Crowd sizes by part of the day are house readings: medieval nights are nearly empty under the curfew, gaslight and then late bars fill the night more and more, and the Future Darkness street is a little thinner and warier than the modern one. The scene's hunting ground (V20 p. 334, through WoDX Storyteller) sets how busy it is, from slums to patrolled streets.
+Ben asked whether WoDX can spawn simple NPCs for flavour, such as a crowd a vampire can hunt in. WoDX NPC 0.26.0 fills a scene the Storyteller turns on with people of the year: six ages of the street (medieval to 1499, early modern, industrial from 1800, twentieth century from 1914, modern from 1980, the Future Darkness from 2025), each with its own kinds of people and clothes. Crowd sizes by part of the day are house readings: medieval nights are nearly empty under the curfew, gaslight and then late bars fill the night more and more, and the Future Darkness street is a little thinner and warier than the modern one. The scene's hunting ground (V20 p. 334, through WoDX Storyteller) sets how busy it is, from slums to patrolled streets.
 
 Reverse: CROWD, PEOPLE and AREA_CROWD in wodx-npc/scripts/passerby-rules.mjs.
 
@@ -1180,3 +1194,60 @@ Reverse: KINDRED_TASTE in recipe-rules.mjs.
 ## B952. Batches and things that stand (2026-11-12)
 A batch's goal grows by half the base for each one past the first, up to the method's batch size, after Cataclysm's batch savings. A method with a wait (ale a week, wine three months, cheese a month, whiskey a year in the cask) makes the thing under a standing name ("ale (fermenting)"), which takes its own name when the clock passes the ready time (Storyteller ripen on world time). House rules on historical times.
 Reverse: batchGoal in recipe-rules.mjs; wait values in data/recipes.mjs.
+
+## B1100. Politics inside factions: one engine, a polity per line and era (2026-11-12)
+
+Ben asked for politics inside every faction built around one game line, with the Camarilla and Sabbat given their own (design: https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp; Ben approved the build and every review-desk recommendation on 2026-11-12). modules/wodx-npc/scripts/politics-rules.mjs holds the polities: offices, a rank for each member, blocs, law, favours and a gathering. NPC 0.25.0 ships the four Kindred polities (Dark Ages court, Camarilla from 1435, Sabbat from 1493, Anarchs from 1381); Garou, Changeling, Wraith, Mage, hunters, mummies, demons and Kuei-jin follow in later PRs. Setting "Politics inside factions", off by default.
+
+Reverse: turn the setting off; nothing else runs.
+
+## B1101. Which factions keep a polity (2026-11-12)
+
+The Storyteller picks one in the faction window. Left on the default, a Kindred faction of three or more members keeps a court of its age: the feudal court before 1435, the Camarilla court after. A sect picked before its founding year (the Sabbat before 1493) runs as the court of its age until then. House rule.
+
+Reverse: polityFor returns f.polity only.
+
+## B1102. The inner turn (2026-11-12)
+
+Each faction turn, up to three NPC members of a faction with a polity act, highest standing first, each picking one move by weight: Petition (Charisma + standing, difficulty 6, gains favour), Court a bloc (Manipulation + standing, difficulty 7, a clan leans their way), Accuse (Manipulation + standing against the target's Wits + standing; a charge for the next gathering), Call in a favour (an open Ledger boon owed to them by another member), Bid for office, Lie in wait (+1 difficulty to moves against them next turn). Player characters never act on their own. House rule.
+
+Reverse: set ACTORS_PER_TURN to 0.
+
+## B1103. Seats and how they are won (2026-11-12)
+
+Appointed seats are claimed and given at the gathering by the judge (the top seat). Primogen seats go one per clan present, to that clan's highest standing. Challenged seats (Prince, Archbishop, Bishop, Ductus) are won by an opposed Strength + Dexterity roll between NPCs (monomacy in the Sabbat, V20 pdf 517); the loser drops a dot of standing. Anarch seats go to whoever has more favour plus standing than the holder (V20 pdf 53). A Vinculum of 7 or more toward the holder makes a Sabbat challenge 1 harder. The top seat changing, and anything that touches a player character, waits in the approval queue. House rule. Staging a challenge as a fight through WoDX Combat's fight starter comes with the Garou challenges (PR 2).
+
+Reverse: drop the "challenge" and "backing" branches in innerTurn.
+
+## B1104. The gathering and standing (2026-11-12)
+
+Elysium and the esbat meet every second inner turn, the feudal court and the gangs every fourth. A gathering hears the charges (favour + standing + a die each, the judge's own charge leaning 3; guilty costs a dot of standing), fills empty seats, and grants a dot of standing to the member with 3 or more favour (favour spent). A Sabbat esbat shares the Vaulderie: a die per packmate the first time, then +1 when a die beats the rating, to 10 (V20 pdf 297). A boon marked broken in the Ledger costs the debtor a dot in every court they belong to (Guide to the Camarilla pdf 148-150); a major, blood or life boon marked kept earns one (house rule).
+
+Reverse: set every gathering's "every" very high, and PAID_GAINS to an empty set.
+
+## B1105. Standing kept beside the sheet (2026-11-12)
+
+A member's standing inside a polity is kept on the faction (0 to 5) and starts from the Status Background on the sheet. The sheet itself is never changed by politics; the Storyteller copies a change across when it should stick. House rule.
+
+Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
+
+## B1012. Nothing starts in a container (2026-11-12)
+Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
+
+Reverse: put the "(in ...)" branch back in stackLine and goodsLine, and the old names back from RENAMED.
+
+## B1013. Item words match whole words (2026-11-12)
+The word lists that sort goods into substances and abilities match whole words, with an optional plural. Crackers and cracklins are food, not a stimulant, and a speed loader, cracked screens, methanol and methylated spirits are no longer drugs.
+
+Reverse: the R() helper in wodx-library/scripts/use-rules.mjs.
+
+## B1014. How things work together (2026-11-12)
+After a study of how Cataclysm DDA links its items (Ben approved all seven recommendations), Library 0.11.0 adds scripts/link-rules.mjs:
+- Qualities read from a thing's name (cuts, hammers, pries, sews, thread, boils, cooks, lights a fire, writes, ink, holds a liquid, picks locks, digs, injects, pipe), for goods and Gear alike. The recipes work can ask for a quality instead of a named tool.
+- Needs: smoking needs a light, and loose tobacco, opium, hashish or crack also need a pipe; heroin and morphine need a syringe; a candle, lamp or torch needs a flame; writing, drawing and marking need something to write with; a quill needs ink. When nothing in Possessions meets a need, the Use window says so and the user may go ahead; a player's go-ahead is whispered to the Storyteller, who has the last word.
+- Liquids: a liquid coming into Possessions with nothing to carry it in (bottle, flask, skin, canteen, jug, cup) gets a private note that the Storyteller decides whether it can be carried. Nothing is blocked.
+- Full or empty: lamps, petrol lighters, disposable lighters, fountain pens, needle cases, flashlights and phones carry flags.wodx-library.empty. "It has run out" marks one empty; "Refill it" spends one matching good (lamp oil, petrol, ink, thread, a battery) and "Charge it" uses a power bank or charger without spending it. No amounts. An empty lighter does not count as a light.
+- The five kits are separate goods: a glass syringe and a bent spoon; a needle case and a hank of thread; a toothbrush and toothpaste; a quill pen, a penknife and ink; a sling and sling stones. Old ids stay on the first part.
+- Later: parts fitted to guns (scopes, silencers), only where a V20 book gives a rule, after a PC book check. Taking things apart goes to the recipes work.
+
+Reverse: drop the whatIsMissing check and supply buttons in use.mjs; the kits through RENAMED in goods.mjs.

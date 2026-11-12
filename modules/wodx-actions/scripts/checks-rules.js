@@ -139,10 +139,10 @@ export function asPresets() {
 }
 
 /**
- * How far a Jumping roll reaches (VtDA20, the Jumping check): each success is 1 yard across or 20 inches up.
- * {yards, upFeet} with the height rounded down to the foot.
+ * How far a Jumping roll reaches (V20 pdf 268): each success is 3 feet (1 yard) across or 2 feet up.
+ * {yards, upFeet}
  */
 export function jumpReach(successes) {
   const s = Math.max(0, Number(successes) || 0);
-  return { yards: s, upFeet: Math.floor(s * 20 / 12) };
+  return { yards: s, upFeet: 2 * s };
 }

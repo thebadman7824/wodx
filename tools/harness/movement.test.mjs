@@ -45,11 +45,17 @@ test("who may choose each way of moving", () => {
 
 test("speeds for each way of moving", () => {
   const base = {walk: 7, jog: 15, run: 29};
-  assert.equal(MV.speedFor("fly", base, {fly: true}), 29);
+  assert.equal(MV.speedFor("fly", base, {fly: true}), 15, "M20 pdf 402: 10 to 20 yards");
   assert.equal(MV.speedFor("fly", base, {fly: true, flySpeed: 50}), 50);
-  assert.equal(MV.speedFor("swim", base, {}, {athletics: 2}), 7);
+  const bat = MV.abilities([{name: "Shape of the Beast", description: "takes the shape of a bat"}]);
+  assert.equal(MV.speedFor("fly", base, bat), 29, "20 mph (V20 pdf 208)");
+  assert.equal(MV.speedFor("fly", base, MV.abilities([{name: "Wings of Pegasus"}])), 73, "50 mph (W20 pdf 176)");
+  assert.equal(MV.speedFor("fly", base, MV.abilities([{name: "Chiropteran Marauder"}])), 37, "25 mph (V20 pdf 250)");
+  assert.equal(MV.speedFor("fly", base, MV.abilities([{name: "Phantom Wings"}])), 15, "up to the jog (Wraith 20th pdf 217)");
+  assert.equal(MV.abilities([{name: "Wings of Rage"}]).fly, false, "Athletics and running, not flight (Wraith 20th pdf 266)");
+  assert.equal(MV.speedFor("swim", base, {}, {athletics: 2}), 15, "12 + Dexterity (M20 pdf 402)");
   assert.equal(MV.speedFor("swim", base, {}, {athletics: 0}), 1);
-  assert.equal(MV.speedFor("swim", base, {swimfast: true}), 15);
+  assert.equal(MV.speedFor("swim", base, {swimfast: true}), 29);
   assert.equal(MV.speedFor("climb", base, {}), 3);
   assert.equal(MV.speedFor("climb", base, {wallwalk: true}), 7);
   assert.equal(MV.speedFor("crawl", base, {}), 3);
@@ -86,8 +92,14 @@ test("water: region names, breath and drowning", () => {
   assert.equal(MV.breathes("mortal"), true);
   assert.equal(MV.breathes("lupine"), true);
   assert.equal(MV.breathes("mortal", "Kuei-jin"), false);
-  assert.equal(MV.breathTurns(2), 20);
-  assert.equal(MV.breathTurns(2, {exerting: true}), 10);
+  assert.equal(MV.breathTurns(1), 10, "30 seconds (W20 pdf 261)");
+  assert.equal(MV.breathTurns(2), 20, "a minute");
+  assert.equal(MV.breathTurns(5), 160, "8 minutes");
+  assert.equal(MV.breathTurns(10), 1200, "an hour (M20 pdf 442)");
+  assert.equal(MV.breathTurns(2, {exerting: true}), 4, "2 x Stamina turns in a fight");
+  assert.equal(MV.breathTurns(2, {exerting: true, willpower: 1}), 5);
+  assert.equal(MV.drownType("mortal"), "lethal");
+  assert.equal(MV.drownType("fae"), "bashing", "C20 pdf 294");
   assert.equal(MV.underWater({athletics: 2}), false);
   assert.equal(MV.underWater({athletics: 0}), true);
   assert.equal(MV.underWater({athletics: 2, dived: true}), true);
@@ -101,10 +113,10 @@ test("water: region names, breath and drowning", () => {
   assert.equal(MV.waterTurn({breath: 0, max: 10}, {under: true, waterbreath: true}).damage, 0);
 });
 
-test("Jumping reach: a yard across or 20 inches up a success", () => {
+test("Jumping reach: 3 feet across or 2 feet up a success (V20 pdf 268)", () => {
   assert.deepEqual(CK.jumpReach(0), {yards: 0, upFeet: 0});
-  assert.deepEqual(CK.jumpReach(3), {yards: 3, upFeet: 5});
-  assert.deepEqual(CK.jumpReach(6), {yards: 6, upFeet: 10});
+  assert.deepEqual(CK.jumpReach(3), {yards: 3, upFeet: 6});
+  assert.deepEqual(CK.jumpReach(6), {yards: 6, upFeet: 12});
 });
 
 test("the Foundry side is wired in", () => {
@@ -138,6 +150,7 @@ test("stances from how a character moves", () => {
 });
 
 test("each stance changes rolls, not only speed", () => {
+  const bat = MV.abilities([{name: "Shape of the Beast", description: "takes the shape of a bat"}]);
   for ( const [k, s] of Object.entries(MV.STANCES) ) if ( k !== "standing" ) {
     assert.ok(Object.keys(s.own).length || Object.keys(s.vs).length || s.cannot, `${k} changes something`);
     assert.ok(s.note, `${k} says why`);
@@ -150,8 +163,10 @@ test("each stance changes rolls, not only speed", () => {
   assert.equal(MV.rollStance("standing", ["stealth"]).diff, 0);
   // Attacks
   assert.equal(MV.attackStance("standing", "prone", {close: true}).diff, -2);
-  assert.equal(MV.attackStance("standing", "prone", {close: false}).diff, 2);
-  assert.equal(MV.attackStance("prone", "standing", {close: false}).diff, -1, "a braced shot");
+  assert.equal(MV.attackStance("standing", "prone", {close: false}).diff, 1, "light cover (V20 pdf 286)");
+  assert.equal(MV.attackStance("prone", "standing", {close: false}).diff, 0, "no change to fire from prone");
+  assert.equal(MV.attackStance("standing", "flying", {close: false, targetFly: bat.flyBook}).diff, 2, "a bat is +2 to hit (V20 pdf 208)");
+  assert.equal(MV.attackStance("flying", "standing", {close: true, attackerFly: MV.abilities([{name: "Spirit of the Bird"}]).flyBook}).diff, 1, "W20 pdf 200");
   assert.equal(MV.attackStance("standing", "flying", {close: false}).diff, 1);
   assert.equal(MV.attackStance("flying", "flying", {close: true, sameStance: true}).diff, 0, "two fliers meet on even terms");
   assert.equal(MV.attackStance("swimming", "standing", {close: true}).diff, 2);

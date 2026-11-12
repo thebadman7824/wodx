@@ -2,7 +2,7 @@ import * as PR from "./passerby-rules.mjs";
 import {PLACE_KINDS} from "./routine-rules.mjs";
 
 /**
- * WoDX NPC 0.25.0 (B970 to B975): passers-by and animals on the map. passerby-rules.mjs has the rules.
+ * WoDX NPC 0.26.0 (B970 to B975): passers-by and animals on the map. passerby-rules.mjs has the rules.
  *
  * The Storyteller turns a scene on (token tools, "Passers-by"). The active Storyteller's client then keeps the street
  * filled to the size the year, the hour and the hunting ground call for. Every passer-by is an unlinked token of one

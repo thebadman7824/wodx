@@ -78,7 +78,7 @@ export function build(ctx) {
       return (st?.factions ?? []).filter(f => (f.members ?? []).includes(actor.id) || f.leader === actor.id).map(f => String(f.key ?? f.name ?? "").toLowerCase()).filter(Boolean);
     } catch (e) { return []; }
   }
-  /** NPC 0.25.0: a passer-by talks only in generic stock lines (news, work, the way), with no sheet, household or faction. */
+  /** NPC 0.26.0: a passer-by talks only in generic stock lines (news, work, the way), with no sheet, household or faction. */
   const isPasserby = npc => !!(npc?.token?.flags?.[MOD]?.passerby ?? npc?.document?.flags?.[MOD]?.passerby ?? npc?.flags?.[MOD]?.passerby);
   const PASSERBY_LOCAL = ["news", "work", "directions"];
   function chainOf(npc, scene) {

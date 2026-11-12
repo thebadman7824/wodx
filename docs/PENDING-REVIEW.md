@@ -296,6 +296,21 @@ Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact
 |---|---|---|---|
 | 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
 
+## Approved by Ben, 12 November 2026, 01:33 UTC (faction politics desk)
+
+Ben approved the build (all four PRs, Kindred first) and every recommendation on the review desk in the design doc (https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Do NPC members play court politics on their own each week? | Yes, each faction turn, with the top seat changing and anything touching a player character waiting for the Storyteller (B1102) | Turn off "Politics inside factions" |
+| 2026-11-12 | Can a player character's standing change without the Storyteller? | No: the change waits in the approval queue | politicsBig in politics-rules.mjs |
+| 2026-11-12 | Rank for lines with no rank trait on the sheet | A standing 0 to 5 kept by WoDX, a house rule (B1105) | Read a sheet trait instead in rankOf |
+| 2026-11-12 | The title of a Moravian domain's ruler before the Camarilla | Chosen per court, Prince by default, with Voivode, Margrave and Lord offered | Clear "The top seat is called" |
+| 2026-11-12 | Gangrel and the Camarilla in the late 1990s | Follow the V20 core's account once read; until then they stay in | None needed yet |
+| 2026-11-12 | Sabbat monomacy and Garou combat challenges | Fights through WoDX Combat's fight starter, no killing blow for Garou; other challenges as opposed rolls. NPC 0.25.0 rolls NPC-against-NPC challenges; the fight-starter link comes with the Garou PR | B1103 |
+| 2026-11-12 | The Time of Judgment (2004, classic branch) | Polities keep running; the Storyteller's event says what ends | None |
+| 2026-11-12 | Build order | All four PRs, Kindred first | None |
+
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
 Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
@@ -319,6 +334,13 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | Experience for a trait from another line (a Kinfolk's Gift, a mortal's Numina)? | The teaching book's price for an outsider; else the buyer's chart for its nearest trait (B504). | Change the xp-costs row and the purchase cost in actor-data.mjs. |
 | 2026-11-10 | Two possessors in one body? | The one inside holds; a newcomer must win a resisted Willpower roll at 6; a tie keeps the first (B506). | Drop B506 and the possession row. |
 | 2026-11-10 | Bite and fire for creatures the books may not cover (a mortal's bite, fire on a mortal or a Garou)? | Left as the code has them (aggravated) until the PC reads the pages; rows bite and fire are marked check. | Nothing to reverse yet. |
+
+## Approved by Ben, 12 November 2026, 01:36 UTC
+
+Ben approved every entry that was waiting for review at 01:36 UTC on 12 November 2026 (210 rows), so each choice already made stands. Each still lists how to reverse it.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
 | 2026-11-10 | Which Cascade fires in 2099 when the Storyteller has not picked one? | None (B508): the Storyteller picks in Dated events. | Set a default in the futureCascade setting in scripts/events.mjs. |
 | 2026-11-10 | Do the Future Darkness timeline events start on? | Yes, on the branch; each can be switched off in Dated events. | Mark them metaplot in tools/wofd/build-future-events.mjs and rebuild. |
 | 2026-11-10 | Demons and mummies in a fight: the Garou soak or their own? | Their own, from the page checks: a demon soaks bashing with Stamina, lethal only in the apocalyptic form, aggravated only through a power (DtF pp. 171, 247); a mummy soaks bashing and lethal, aggravated only through Hekau (MtR p. 136). | Set demon and mummy back to soak: "lupine" in both profiles.js. |
@@ -450,7 +472,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | Should fights start by themselves, and how far (Ben asked whether combat can begin automatically)? | Ben chose all seven triggers on Suggest (13:37Z). Built: setting "Start fights by themselves" on Suggest by default (a card with Start the fight), Auto with Undo; Light touch holds it at Suggest; off on Live until Ben says (B807-B810). | Set the world setting to Off, or revert the PR. |
 | 2026-11-11 | Who starts a fight on sight. | Hostile or Hunted NPCs with Aggression 0.5 or more; guards on alarm against anyone at Unknown or worse; 30 yards by day, a third at night; bystanders never (B808). | FR.wantsFight and FR.sightRange in wodx-npc fight-rules.mjs; the range is a world setting. |
 | 2026-11-11 | What surprise gives when a fight opens with an attack. | Only the opening blow (it is already rolled); no free turn or lost defence until the V20 p. 274 ambush rule is checked in the book (B809). | afterAttack in wodx-combat start.js. |
-
 | 2026-11-11 | How strong can the Storyteller's effect be, and does it go to the approval queue? | Strength 1 to 10, read as successes on each keyword's chart; it applies at once with Undo, since the Storyteller is the one deciding (B782). | ST_STRENGTH_MAX in effects-rules.js; stItems routes in effects.js. |
 | 2026-11-11 | Which buildings get cellars and what upper floors hold (B669). | Cellars under all but barns, coops, huts, sheds, granaries, warehouses; crypt, vault or morgue by kind; upper floors as bedrooms, guest rooms or offices; stair in the biggest closed room's corner. | NO_CELLAR, upper(), cellar(), stair_spot() in tools/mapgen/floors.py. |
 | 2026-11-11 | The hospital on town maps (B669). | Pull down up to 30 houses outside the old town; else an entrance block whose region names the hospital's own map. Lock-ups left out. | clearing() and CIVIC in tools/mapgen/eras.py; hospital-entrance in firstgroup.py. |
@@ -485,7 +506,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | How do workshops feed the markets (B855)? | Once a month, one working place that supplies a category lifts that market's short or empty supply to normal; three or more make it plenty. Private workshops stop 1948-1989; faction (state) ones go on. Card with Undo. | workshopsMonth in owners.mjs. |
 | 2026-11-11 | How often does an NPC faction want to build (B856)? | A faction with Resources 3 or more, a leader and nothing under way proposes a building 1 month in 6, through the approval queue; Resources 3 can afford up to 120 months' wage, 4 up to 600, 5 anything. Its build rolls Resources + Retainers. | factionBuildsMonth and factionPool in owners.mjs. |
 | 2026-11-11 | What counts as lying in wait for the ambush, and a Dark Ages tie. | Sneaking, Obfuscated or a token hidden by the Storyteller; an open attack is never an ambush. A Dark Ages tie strikes first with a defence, as V20 does (B836). | isAmbush and ambushOutcome in wodx-combat ambush-rules.js. |
-
 | 2026-11-11 | Rivalry dates the books did not confirm (B826): Anarch Revolt from 1394, Inquisition from 1231, Arcanum from 1885, Giovanni from 1444. | Kept as house readings (1231 is the real papal Inquisition), marked "not found" in docs/RIVALRIES.md; Shadow Lords against Tzimisce removed, Ascension War moved to 1210. | Approved by Ben, 11 November 2026, 16:14 UTC. Change from/to on the row in modules/wodx-npc/scripts/rivalry-rules.mjs. |
 | 2026-11-11 | How a Dungeondraft export becomes a Foundry scene. | Universal VTT export (walls, doors, lights and picture in one file), a new scene per export in "Generated maps", nothing overwritten, then Adopt; 100 px and 5 ft a square. | tools/ddmod/, tools/gate/mapimport.mjs. |
 | 2026-11-11 | What do Medium and Deathsight show in WoDX Senses? | Medium: the restless dead are heard nearby, and graveyards and churches whisper. Deathsight: decay seen on anyone hurt. House readings (B880). | channels restless and deathsight in wodx-senses/data/world.json. |
@@ -514,6 +534,7 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | How long breath lasts, and drowning (B962) | Drowning is one lethal level a turn (Hunter pdf 208). Breath lasts Stamina x 10 turns, halved in a fight (house rule; no V20 rule found yet). Book check queued. | breathTurns in movement-rules.js |
 | 2026-11-11 | Which regions are water (B963) | Named by the region ("WoDX: Deep water", a river, a lake) or a flag; shallow water costs double movement; a fall into deep water does no damage. | waterOf in movement-rules.js |
 | 2026-11-11 | What each way of moving does to rolls (B946) | Prone: Stealth -2, hard to see and to shoot from afar, easy to strike up close. Flying, swimming, under the water, wading, climbing and a jump each have their own changes (DECISIONS B946). | STANCES in movement-rules.js |
+| 2026-11-12 | Ways of moving after the book check (B947) | Breath, swim speed, flight speeds, prone against shots, climbing and jumping now follow the books (W20, M20, C20, V20). Still house rules: an easier close hit on someone prone, crawling Stealth, higher ground, fighting in water or while climbing, the leaping strike. | FLY_SPEEDS, BREATH_SECONDS and STANCES in movement-rules.js |
 | 2026-11-12 | Animal years and places in Moravia (B1000)? | Wolves gone from the lowlands about 1850 and back in the Beskydy from 1995; bears to 1800; hunting hounds to 1914; horses in town streets to 1950; cattle at town markets to 1900; pigs rooting in the lanes to 1850; poultry in town yards to 1900; strays at 0.4 as common after 1900 (licensing). House readings of Moravian history. | Change from/to, years, townUntil or thinFrom in animal-rules.mjs. |
 | 2026-11-12 | Blood in animals not named by the crowd numbers (B1000)? | Wolves 2 like dogs, bears 5 like livestock, boar 3, birds and bats a quarter point like rats. A book check of the V20 animal vessel numbers is queued for the PC. | blood in animal-rules.mjs. |
 | 2026-11-12 | How herd, territory and hunger weigh (B1001)? | Herd adds 1.5 a point to fleeing when outnumbered and 2 when the others run, and takes 0.5 off attacking alone; territory adds its value to attacks and one wound to what it bears on its own patch, 1.5 a point to fighting a trespasser; hunger adds 1.5 a point to attacks December to March and to fighting someone alone. | The NPC 0.21.0 lines in npc-rules scoreOptions and routine-rules pickReaction. |
@@ -536,3 +557,15 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-12 | How strong a made drug is (B950) | None past the goal weak, 1-2 usual, 3+ strong; a botch leaves it impure, told to the Storyteller only. | STRENGTHS in recipe-rules.mjs |
 | 2026-11-12 | Kindred cooking by taste (B951) | One more difficulty unless the Ability is 3+. | KINDRED_TASTE in recipe-rules.mjs |
 | 2026-11-12 | Batches and standing times (B952) | Goal x (1 + half per extra); ale a week, wine three months, cheese a month, whiskey a year, laudanum two weeks. | batchGoal, METHODS wait |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Which factions keep a polity by default? | A Kindred faction of three or more members keeps the court of its age; a sect picked before it exists runs as the court of its age (B1101) | polityFor returns f.polity only |
+| 2026-11-12 | How often a court meets | Elysium and the esbat every second faction turn, the feudal court and the gangs every fourth (B1104) | POLITIES[...].gathering.every |
+| 2026-11-12 | What a challenge for a seat rolls between NPCs | Strength + Dexterity, opposed, difficulty 6; the loser drops a dot of standing (B1103) | innerTurn "bid" branch |
+| 2026-11-12 | Is politics on in a world by default? | Off; the Storyteller turns it on (B1100) | Setting default |
+| 2026-11-12 | Where a good no longer names its container, what does it become (B1012)? | The thing alone: "a fiddle", "an arrow" (stacks 3-20), "a shotgun shell" (2-25), "a consecrated host" (1-12), "a blank CD", "a cold pizza slice", "a set of lockpicks", "a gas mask", "a microscope", "lager" (from the six-pack). A quiver, gun belt or pyx is no longer part of any good. "a passport in a plastic sleeve" stays, since a plain "a passport" is already a different good. | Old names in RENAMED in goods.mjs. |
+| 2026-11-12 | What needs what when a thing is used (B1014)? | Smoking: a light, plus a pipe for loose tobacco, opium, hashish, marijuana and crack. Heroin and morphine: a syringe (laudanum and pills need nothing). Candles, oil lamps and torches: a flame. Writing, drawing and marking on paper: a pen, pencil, chalk or stylus. A quill: ink. Never a hard stop: the Use window warns, and a player who goes ahead is reported to the Storyteller. | needsOf in link-rules.mjs. |
+| 2026-11-12 | Which things are full or empty (B1014)? | Oil lamps and the storm lantern (lamp oil, kerosene, camphine), the petrol lighter (petrol, gasoline, butane), the disposable lighter (cannot be refilled), the fountain pen (ink), the needle case (thread), flashlights, headlamps and LED lanterns (batteries), phones, laptops, tablets, cameras and smart glasses (a power bank, solar charger, power cell or car battery, not spent). | SUPPLIES in link-rules.mjs. |

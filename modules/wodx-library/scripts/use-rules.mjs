@@ -64,7 +64,7 @@ export const ABILITIES = {
   seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true}
 };
 
-const R = (...parts) => new RegExp(`\\b(${parts.join("|")})`, "i");
+const R = (...parts) => new RegExp(`\\b(?:${parts.join("|")})(?:e?s)?\\b`, "i");
 
 /* What is in a thing that is eaten, drunk or taken. */
 const ALCOHOL = R("ale", "beer", "cider", "wine", "mead", "claret", "port\\b", "champagne", "brandy", "vodka", "gin\\b", "rum\\b", "whiskey", "liquor",
@@ -74,7 +74,7 @@ const ALCOHOL = R("ale", "beer", "cider", "wine", "mead", "claret", "port\\b", "
 const CAFFEINE = R("coffee", "tea\\b", "cola", "energy drink", "espresso", "cocoa", "chocolate drink", "mate\\b");
 const SUBSTANCES = [
   ["opiate", R("opium", "poppy", "laudanum", "soothing syrup", "morphine", "heroin", "fentanyl", "oxycodone", "codeine", "tramadol")],
-  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed")],
+  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "methamphetamine", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed(?! loader)")],
   ["cannabis", R("hashish", "marijuana", "joint", "cannabis")],
   ["hallucinogen", R("mushroom", "henbane", "peyote", "lsd", "belladonna", "dream gas", "ketamine")],
   ["sedative", R("chloral", "ether for", "sleeping pill", "sedatives", "chloroform", "anesthetic", "rocuronium")],
@@ -85,7 +85,7 @@ const SUBSTANCES = [
   ["blood", /^(a bag of )?blood$/i],
   ["holywater", R("holy water")]
 ];
-const PARAPHERNALIA = R("syringe", "opium pipe", "hookah", "clay pipe", "dermal patch", "lighter");
+const PARAPHERNALIA = R("syringe", "bent spoon", "opium pipe", "hookah", "clay pipe", "dermal patch", "lighter");
 
 /** What is in a thing: food, water, alcohol, caffeine, a drug class, a remedy, blood, holy water, or null. */
 export function substanceOf(good) {
@@ -137,7 +137,7 @@ const READABLE = R("book", "letter", "report", "file\\b", "psalter", "broadsheet
 const BEDS = R("mattress", "feather bed", "hammock", "bedroll", "rollmat", "cot\\b", "sleeping bag", "cradle", "bunk");
 const INSTRUMENTS = R("flute", "hurdy-gurdy", "lute", "fiddle", "guitar", "harmonica", "concertina", "banjo", "clarinet", "kantele", "ukulele",
   "violin", "krar", "bagpipes", "tuba", "saxophone", "drum\\b", "trumpet", "horn\\b", "whistle", "recorder\\b", "accordion", "piano", "harp");
-const GAMES = R("knucklebones", "dice", "die\\b", "nine men", "tables and counters", "chess", "cards", "jigsaw", "board game", "checker", "tangram",
+const GAMES = R("knucklebones", "dice", "die\\b", "nine men", "tables and counters", "chess", "cards", "jigsaw", "board game", "checker", "checkerboard", "tangram",
   "mancala", "rummy", "reversi", "senet", "mahjong", "backgammon", "latrunculi", "go set", "shogi", "hnefatafl", "alquerque", "dominoes",
   "jackstraws", "ludo", "tic-tac-toe", "video game", "game console", "game system", "virtual reality", "ball\\b", "football", "basketball",
   "volleyball", "puck", "shuttlecock", "spinning top", "yo-?yo", "marble", "skateboard", "fidget", "kickboard", "golf");
@@ -188,7 +188,8 @@ export function abilitiesOf(good) {
   if ( ["papers", "manuals", "faith", "occult", "keepsake", "vice", "toys", "travel"].includes(k) && READABLE.test(n) ) out.add("read");
   if ( (k === "papers" || k === "manuals") && !out.has("read") && !out.has("write") && /\b(book|letter|novel)\b/i.test(n) ) out.add("read");
   if ( out.has("write") || out.has("draw") ) out.add("read");
-  if ( ["cloth", "valuables"].includes(k) || (k === "accessories" && /holster|sling/i.test(n)) ) out.add("wear");
+  if ( k === "cloth" && /needle case|hank of thread/i.test(n) ) out.add("fix");
+  else if ( ["cloth", "valuables"].includes(k) || (k === "accessories" && /holster|sling/i.test(n)) ) out.add("wear");
   if ( (k === "toys" || k === "faith") && INSTRUMENTS.test(n) ) out.add("play");
   if ( k === "toys" && PLAYERS.test(n) ) out.add("switchon");
   if ( (k === "toys" || k === "vice") && GAMES.test(n) && !out.has("play") ) out.add(k === "vice" ? "gamble" : "game");
