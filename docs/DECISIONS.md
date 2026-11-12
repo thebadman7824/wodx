@@ -1473,3 +1473,18 @@ Reverse: grace on the koldun row.
 Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
 
 Reverse: the Laibon rows in BLOODLINES.
+
+## B1320. A talk generator with no AI model (2026-11-12)
+When the Storyteller has written no line that fits, WoDX NPC makes one from a grammar (scripts/talk-grammar.mjs, data/grammar/house.mjs). Rules say what they need ({era, regard}, {voice, warmth}, {clan: "ventrue"}, {traits: {Dominate: 2}}, {year: [1300, 1526]}); of the rules that fit, those with the most tests speak, their lines pooled. #symbols# expand from an era lexicon (address, greetings, oaths, coin, who keeps order, light, drink, landmarks), so one template speaks in every century. Pronoun slots follow a gender the Storyteller set, else they. House writing, not from any book. Ben approved the desk 2026-11-12.
+
+Reverse: turn the world setting "Talk generator" off.
+
+## B1321. Where generated lines sit (2026-11-12)
+Storyteller talk sheet lines (trait-gated ones first) always come first. The generator answers only after them. The hand-written stock pools are now grammar rules, with the same pools for the same era, regard and voice; children, beggars and drunks keep to their own lines; someone who hates the character shares no gossip. A line is steady for one NPC, character and day, and a line just said is passed over while another fits.
+
+Reverse: setting off, which goes back to the old stock picker.
+
+## B1322. Era words by year (2026-11-12)
+Lexicon entries carry an era band or exact years: coin follows WoDX Storyteller's Moravian money rows (denars to 1299, groschen and heller 1300-1526, kreuzer 1527-1891, heller and kronen 1892-1918, korun 1919-2019, eurobucks and credits from 2020); gendarmes from 1849; no railway station before 1839; coffee from 1700.
+
+Reverse: edit SYMBOLS in data/grammar/house.mjs.

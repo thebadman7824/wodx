@@ -591,6 +591,23 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Bloodlines (B1155 to B1157) | 27 bloodline, caste and Laibon rows, each with roll effects, a Masquerade sign card or a borrowed clan engine; the Old Clan gets a night's grace without soil | BLOODLINES |
 | 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
+## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
+
+All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1320) | setting "Talk generator" off; scripts/talk-grammar.mjs |
+| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1321) | setting off restores the old stock picker |
+| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
+| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
+| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1322) | data/grammar/house.mjs |
+| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1321; Reroll in PR 3) | |
+| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
+| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
+| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
+| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
