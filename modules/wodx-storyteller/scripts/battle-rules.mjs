@@ -474,6 +474,21 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
   for ( const i of [0, 1] ) if ( !sides[i].men ) sides[i].men = 0;
   return {phase, sides, over, waver};
 }
+/**
+ * What an army fought off the screen does this turn (a WoDX reading, B2210): it closes when its Melee outweighs the
+ * foe's Defense, shoots when its Ranged does better against half that Defense, and otherwise closes anyway, unless it
+ * has lost half its units, when it withdraws in what order it can. Returns ["melee" | "ranged" | "withdraw", ...].
+ */
+export function chooseActions(battle, age) {
+  const {pools} = bookPools(battle, age);
+  return [0, 1].map(i => {
+    const me = pools[i], foe = pools[1 - i], s = battle.sides[i];
+    const melee = me.melee - foe.defense, ranged = me.ranged - Math.ceil(foe.defense / 2);
+    const start = unitCount(s.startUnits) || unitCount(s.units);
+    if ( melee < 0 && ranged < 0 && unitCount(s.units) * 2 <= start ) return "withdraw";
+    return ranged > melee && ranged > 0 ? "ranged" : "melee";
+  });
+}
 const rollOut = r => ({successes: Math.max(0, n(r?.successes)), botch: !!r?.botch, faces: Array.isArray(r?.faces) ? r.faces.slice(0, 40) : []});
 
 /** Disease in a camp (Spoils of War p. 41): the difficulty of the week's Wits + Medicine roll for a side. */
