@@ -664,7 +664,8 @@ function oddsPanel(root, actor, target, toFd) {
     box.className = "vta-odds";
     box.setAttribute("aria-live", "polite");
     const anchor = form.querySelector("[name=desc]")?.closest(".form-group");
-    if (anchor) form.insertBefore(box, anchor); else form.append(box);
+    // The field sits inside the window's content box, not the form itself (3.45.1)
+    if (anchor?.parentNode) anchor.parentNode.insertBefore(box, anchor); else (form.querySelector(".dialog-content") ?? form).append(box);
     const draw = () => {
         try {
             const fd = toFd(P.readForm(root));
