@@ -109,13 +109,13 @@ export function parseSidecar(input) {
     if ( !people.length ) { errors.push(`${h.id}: nobody lives in it, so it was left out.`); continue; }
     const hh = {id: h.id, label: String(h.label ?? h.id).slice(0, 80), trade: String(h.trade ?? "").slice(0, 40), people};
     reg.household = hh;
-    (reg.households ??= []).push(hh);                         // 0.35.1: a block of flats keeps every flat's household
+    (reg.households ??= []).push(hh);                         // 0.35.2: a block of flats keeps every flat's household
     households.push(hh);
   }
   // 0.26.2: the kind of place the whole map is (WoDX NPC's place tag on the scene: what passers-by, sounds and the Masquerade read)
   const place = plain(d.place) && PLACE_KINDS.has(d.place.kind) ? {kind: d.place.kind} : null;
   if ( d.place !== undefined && !place ) errors.push("The map's kind of place is not one WoDX knows, so it was left out.");
-  // 0.35.1: the settlement the map is part of (the town generator's --settle), for the plan to say where its record goes
+  // 0.35.2: the settlement the map is part of (the town generator's --settle), for the plan to say where its record goes
   const settlement = plain(d.settlement) && idOk(d.settlement.id) ? {id: d.settlement.id, name: String(d.settlement.name ?? d.name ?? "").slice(0, 120), year: Math.round(Number(d.settlement.year)) || 0} : null;
   return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place, settlement}};
 }

@@ -38,7 +38,7 @@ export function residentRecord(before, householdId, actorIds, {ownerSet = false,
 export function householdsOn(regions = []) {
   const out = [];
   for ( const r of regions ) {
-    // 0.48.0: a block of flats keeps every flat's household (Interactables 0.35.1); other buildings keep one
+    // 0.48.0: a block of flats keeps every flat's household (Interactables 0.35.2); other buildings keep one
     const many = Array.isArray(r?.flags?.[IX]?.households) && r.flags[IX].households.length > 1 ? r.flags[IX].households : null;
     const all = (many ?? [r?.flags?.[IX]?.household]).filter(hh => hh && Array.isArray(hh.people) && hh.people.length);
     const place = r?.flags?.[NPC]?.place ?? {};

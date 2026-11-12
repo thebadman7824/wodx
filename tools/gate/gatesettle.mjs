@@ -1,5 +1,5 @@
 /**
- * The settlement generator (WoDX NPC 0.48.0, WoDX Interactables 0.35.1, B2510 to B2519), in Foundry, in
+ * The settlement generator (WoDX NPC 0.48.0, WoDX Interactables 0.35.2, B2520 to B2529), in Foundry, in
  * rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesettle.mjs?${Date.now()}`)).run()
  * Needs in Data/wodx-gate/ the copies of tools/mapgen/samples/steinfeld-1995.settlement.json and
@@ -7,7 +7,7 @@
  * It makes a scene of its own the map's size, adopts the map's sidecar onto it, enters the settlement with a review
  * of its own, seeds a handful of households (not the whole village), checks what the review wrote, removes the
  * residents, and deletes its scene and journal at the end. It does not switch the Storyteller's view or the clock.
- *   1. the modules: NPC 0.48.0 or later with api.settlements, Interactables 0.35.1 or later, the People generator
+ *   1. the modules: NPC 0.48.0 or later with api.settlements, Interactables 0.35.2 or later, the People generator
  *   2. the record reads: steinfeld-1995-7, 113 households, 288 people; a broken record is refused in plain words
  *   3. adopted: every household of the record stands on the scene, a block of flats carrying all of its households
  *   4. entered: a journal of four pages no player can read, found again by the settlement's id
@@ -41,7 +41,7 @@ export async function run() {
   let scene = null, journal = null;
   const hadFolder = !!game.folders.find(f => f.type === "JournalEntry" && f.name === "WoDX settlements" && !f.folder);
   try {
-    ok("1. modules", M?.active && I?.active && !foundry.utils.isNewerVersion("0.48.0", M.version) && !foundry.utils.isNewerVersion("0.35.1", I.version)
+    ok("1. modules", M?.active && I?.active && !foundry.utils.isNewerVersion("0.48.0", M.version) && !foundry.utils.isNewerVersion("0.35.2", I.version)
       && typeof S?.enter === "function" && typeof S?.read === "function" && typeof X?.seed === "function" && typeof A?.apply === "function" && typeof ppl?.generate === "function",
       {npc: M?.version, interactables: I?.version});
     if ( S.entryFor(SID) ) { ok("2. record", false, {error: `${SID} is already entered in this world; remove it under Settlements first`}); return save(R); }

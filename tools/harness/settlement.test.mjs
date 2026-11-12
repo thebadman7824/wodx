@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
-/* WoDX NPC 0.48.0: settlements, the record of a whole generated place (B2510 to B2519) */
+/* WoDX NPC 0.48.0: settlements, the record of a whole generated place (B2520 to B2529) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SR = await import(join(root, "modules/wodx-npc/scripts/settlement-rules.mjs"));

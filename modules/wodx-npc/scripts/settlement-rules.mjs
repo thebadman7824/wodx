@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.48.0 (B2510 to B2519): settlements, the pure part. No Foundry here, so the harness can test it.
+ * WoDX NPC 0.48.0 (B2520 to B2529): settlements, the pure part. No Foundry here, so the harness can test it.
  *
  * The town generator (tools/mapgen/ddtown.py --settle) writes one record of a whole place beside its maps:
  * <name>.settlement.json, format "wodx-settlement". It holds every household with its trade, standing and people

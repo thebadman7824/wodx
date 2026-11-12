@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.48.0 (B2510 to B2519): settlements. The town generator writes one record of a whole place beside its
+ * WoDX NPC 0.48.0 (B2520 to B2529): settlements. The town generator writes one record of a whole place beside its
  * maps (tools/mapgen/ddtown.py --settle, or ddsettle.py). "Settlements" in the Storyteller's hand brings a record
  * in, shows it for review (households to strike, hidden folk by game line to keep or draw again, ties to keep) and
  * enters it into the world as a journal no player can read. Nothing else is made until a map of the place is
