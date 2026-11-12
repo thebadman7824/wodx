@@ -1,5 +1,5 @@
 """Tests for sort-downloads.py. Run from the repo root: python3 -m unittest tools/atmosphere/test_sort_downloads.py"""
-import importlib.util, json, os, re, subprocess, tempfile, unittest
+import importlib.util, json, os, re, shutil, subprocess, tempfile, unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("sorter", os.path.join(HERE, "sort-downloads.py"))
@@ -77,7 +77,7 @@ class Sorter(unittest.TestCase):
             self.assertEqual(S.run(plan, d, os.path.join(d, "kits"), dry=True), 0)
             self.assertFalse(os.path.exists(os.path.join(d, "kits")))
 
-    @unittest.skipUnless(subprocess.run(["which", "ffmpeg"], capture_output=True).returncode == 0, "no ffmpeg")
+    @unittest.skipUnless(shutil.which("ffmpeg"), "no ffmpeg")
     def test_converts_to_ogg(self):
         with tempfile.TemporaryDirectory() as d:
             wav = os.path.join(d, "a.wav")
