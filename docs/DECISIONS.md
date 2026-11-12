@@ -2258,6 +2258,8 @@ Reverse: turn the setting off, or remove the warTurn call in runTurns (wodx-npc/
 ## B2212. Off the screen, and where the characters are (2026-11-12, house rule)
 A war is a WoDX Storyteller battle that remembers its war (who, for what place, mortal or supernatural). A battle in the field is fought to its end in the turn it starts, up to 30 phases and then a draw; a siege goes one week each faction turn (about seven days of game time) and is stormed once its walls are breached. No cards go to the players; the Storyteller gets one card when a war starts and one when it ends, and the Storyteller's log has the outcome. What it changes waits in the approval queue (B2206 and B2215). A war at a place where a player character's token stands is made but not fought: it waits in Battles and sieges for the Storyteller to fight with the players, or to remove.
 
+An army fought off the screen picks its action each turn (Storyteller 0.45.2, chooseActions): it closes when its Melee is above the foe's Defense, shoots when its Ranged does better against half that Defense, and withdraws once it has lost half its units and neither blow can tell. A much weaker army still loses; it is no longer made to close every turn.
+
 Reverse: call api.factions.warTurn by hand only, with the setting off.
 
 ## B2213. Mortal wars and supernatural wars (2026-11-12, house rule on Ben's two kinds)
