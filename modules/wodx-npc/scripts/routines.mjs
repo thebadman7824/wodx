@@ -23,6 +23,7 @@ import * as R from "./routine-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as FR from "./fight-rules.mjs";
+import * as AN from "./animal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -629,6 +630,13 @@ export function build(ctx) {
   /** Who lives or works at a place (their routine's home, work, haven or post points there). */
   const residentsOf = placeIds => routineNpcs().filter(a => Object.values(routineOf(a)?.roles ?? {}).some(v => placeIds.includes(v)));
 
+  /** NPC 0.21.0: no one else of the intruder's side within 5 yards of them (a stalker's chance). */
+  const aloneNow = doc => {
+    const t = canvas.tokens.get(doc.id);
+    if ( !t ) return false;
+    return !canvas.tokens.placeables.some(o => o.id !== t.id && o.actor && !o.document.hidden && o.document.disposition === t.document.disposition
+      && (ctx.yardsBetween(t, o) ?? 99) <= 5);
+  };
   /** Everything about one event in a Reaction region, then the card. Returns the card's message, or null. */
   async function react(system, region, doc, trigger) {
     const scene = region.parent, intruder = doc.actor;
@@ -640,7 +648,8 @@ export function build(ctx) {
     const placeIds = [region.uuid, scene.uuid];
     const allowed = names(system.allowed);
     const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder);
-    const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder)};
+    const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder),
+      wraith: ctx.C?.()?.getKind?.(intruder) === "wraith", alone: aloneNow(doc), month: d.month};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
     if ( !cond.met ) return null;
     // The watchers in view
@@ -659,7 +668,7 @@ export function build(ctx) {
       const yards = ctx.yardsBetween(w, tokNow);
       const inSight = (yards === null || yards <= range) && !sightBlocked(w.center, tokNow.center);
       const res = R.notice({perception: at(w.actor, "perception"), alertness: ab(w.actor, "alertness"), awareness: ab(w.actor, "awareness"),
-        auspex: disc(w.actor, "auspex") || (profileFor(w.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book, diff: AR.NOTICE_DIFF[alertLevel(scene)]});
+        auspex: disc(w.actor, "auspex") || (AN.isAnimal(profileFor(w.actor).template) ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book, diff: AR.NOTICE_DIFF[alertLevel(scene)]});
       return {tok: w, actor: wa, yards, ...res};
     });
     const seen = looks.filter(l => l.noticed).sort((a, b) => (a.yards ?? 0) - (b.yards ?? 0));
@@ -680,7 +689,8 @@ export function build(ctx) {
 
   /** The reaction card for one watcher, in the NPC's mode: a suggestion, or done at once in Auto with Undo. */
   async function reactionCard({wTok, wActor, sit, near = 0, home = false, forced = null, forcedWhy = "", head, why = "", lines = [], scene, intruder, region = null, trigger, event = null}) {
-    let options = R.pickReaction(profileFor(wTok.actor), {...sit, alliesNear: near, homeGround: home});
+    const prof = profileFor(wTok.actor);
+    let options = R.pickReaction(prof, {...sit, alliesNear: near, homeGround: home, hungry: AN.isHungry(prof, sit.month)});
     if ( forced && forced !== "profile" ) {
       const f0 = options.find(o => o.action === forced) ?? {action: forced, score: 99, why: forcedWhy};
       options = [{...f0, why: `${forcedWhy}; ${f0.why}`}, ...options.filter(o => o !== f0)];
@@ -1305,7 +1315,7 @@ export function build(ctx) {
     const wa = base(nTok.actor), act = whereOf(wa)?.activity, intruder = pTok.actor;
     const ob = ctx.hiddenByObfuscate(pTok) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
     const res = R.notice({perception: at(nTok.actor, "perception"), alertness: ab(nTok.actor, "alertness"), awareness: ab(nTok.actor, "awareness"),
-      auspex: disc(nTok.actor, "auspex") || (profileFor(nTok.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight: true},
+      auspex: disc(nTok.actor, "auspex") || (AN.isAnimal(profileFor(nTok.actor).template) ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight: true},
       {dexterity: at(intruder, "dexterity"), stealth: ab(intruder, "stealth"), manipulation: at(intruder, "manipulation"), subterfuge: ab(intruder, "subterfuge"), sneaking: sneaking(pTok.document), obfuscate: ob},
       {book, diff: AR.NOTICE_DIFF[alarm] ?? 6});
     if ( !res.noticed ) return {skip: `does not notice (${res.why})`};
