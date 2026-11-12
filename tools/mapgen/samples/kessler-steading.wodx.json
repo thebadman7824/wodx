@@ -8,6 +8,9 @@
   36
  ],
  "seed": 1197,
+ "place": {
+  "kind": "yard"
+ },
  "openings": [
   {
    "id": "house-door-0",

@@ -119,7 +119,7 @@ export function makeGroupSheet() {
           <td>${canEdit ? `<button type="button" data-action="removeMember" data-actor="${m.actorId}" title="Leaves the group; kept in the history">Leaves</button>` : ""}</td>
         </tr>`).join("");
       const inRoster = new Set(current.map(m => m.actorId));
-      const candidates = [...game.actors].filter(a => a.type !== "Group" && !inRoster.has(a.id)).sort((a, b) => a.name.localeCompare(b.name));
+      const candidates = [...game.actors].filter(a => a.type !== "Group" && !inRoster.has(a.id) && !a.flags?.["wodx-npc"]?.passerbyBase).sort((a, b) => a.name.localeCompare(b.name));
       const pool = poolableFor(sys.kind);
       const bgs = (sys.backgrounds ?? []).map(b => {
         const cells = current.map(m => `<td><input type="number" min="0" max="10" step="1" data-contrib="${b.id}" data-actor="${m.actorId}" value="${Number(b.contributions?.[m.actorId]) || 0}" ${canEdit ? "" : "disabled"} aria-label="${esc(m.actor?.name ?? "")}"></td>`).join("");

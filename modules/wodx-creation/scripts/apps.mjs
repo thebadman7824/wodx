@@ -75,7 +75,7 @@ export class CreationApp extends ApplicationV2 {
   showNPCs = false;
 
   roster() {
-    const all = game.actors.filter(a => lineOf(a) && !lineage(a).became);
+    const all = game.actors.filter(a => lineOf(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase);
     const pcs = all.filter(isPC).sort(byName);
     const allies = all.filter(a => !isPC(a) && allyOf(a)).sort(byName);
     const others = this.showNPCs ? all.filter(a => !isPC(a) && !allyOf(a)).sort(byName) : [];
@@ -365,7 +365,7 @@ export class SpendApp extends ApplicationV2 {
 export async function awardDialog() {
   if ( !game.user.isGM ) return null;
   const {DialogV2} = foundry.applications.api;
-  const actors = game.actors.filter(a => lineOf(a) && !lineage(a).became).sort((a, b) =>
+  const actors = game.actors.filter(a => lineOf(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase).sort((a, b) =>
     (Number(isPC(b)) - Number(isPC(a))) || (Number(!!allyOf(b)) - Number(!!allyOf(a))) || a.name.localeCompare(b.name));
   if ( !actors.length ) return ui.notifications.warn("There is no character to award.");
   const note = a => isPC(a) ? "" : (allyOf(a) ? ` <span class="wodx-quiet">(ally of ${esc(allyOf(a).patron?.name ?? "?")})</span>` : ' <span class="wodx-quiet">(NPC)</span>');

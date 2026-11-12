@@ -25,7 +25,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.11.2";
+const VERSION = "0.11.3";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -37,7 +37,7 @@ const opt = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${
 const wait = cfg => foundry.applications.api.DialogV2.wait({rejectClose: false, ...cfg, classes: ["wodx-dialog", "watmo-dialog", ...(cfg.classes ?? [])]});
 const formData = (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object;
 const SHIPPED = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "future-darkness"];
-const OUTDOOR_KINDS = ["gate", "market", "street", "wilds", "caern"];
+const OUTDOOR_KINDS = ["gate", "market", "street", "wilds", "caern", "alley", "yard", "docks", "park"];
 let CAL = null;
 let active = false;
 

@@ -8,6 +8,9 @@
   190
  ],
  "seed": 1350,
+ "place": {
+  "kind": "street"
+ },
  "kind": "town",
  "layout": "organic",
  "walled": false,
@@ -4756,7 +4759,7 @@
   },
   {
    "id": "bata-house-1-door-0",
-   "label": "Ba\u0165a house door",
+   "label": "Baťa house door",
    "c": [
     83.274,
     158.071,
@@ -4776,7 +4779,7 @@
   },
   {
    "id": "bata-house-1-door-1",
-   "label": "Ba\u0165a house door",
+   "label": "Baťa house door",
    "c": [
     89.07,
     159.624,
@@ -4796,7 +4799,7 @@
   },
   {
    "id": "bata-house-1-window-2",
-   "label": "Ba\u0165a house window",
+   "label": "Baťa house window",
    "c": [
     85.013,
     158.537,
@@ -4816,7 +4819,7 @@
   },
   {
    "id": "bata-house-1-window-3",
-   "label": "Ba\u0165a house window",
+   "label": "Baťa house window",
    "c": [
     87.331,
     159.159,
@@ -4836,7 +4839,7 @@
   },
   {
    "id": "bata-house-1-window-4",
-   "label": "Ba\u0165a house window",
+   "label": "Baťa house window",
    "c": [
     85.534,
     153.501,
@@ -4856,7 +4859,7 @@
   },
   {
    "id": "bata-house-1-window-5",
-   "label": "Ba\u0165a house window",
+   "label": "Baťa house window",
    "c": [
     89.398,
     154.536,
@@ -13004,7 +13007,7 @@
   },
   {
    "id": "bata-house-1",
-   "label": "Ba\u0165a house",
+   "label": "Baťa house",
    "rect": [
     82.791,
     153.112,
@@ -16495,7 +16498,7 @@
   {
    "id": "bata-house-1-household",
    "building": "bata-house-1",
-   "label": "Ba\u0165a house household",
+   "label": "Baťa house household",
    "trade": "potter",
    "people": [
     {
@@ -16516,7 +16519,7 @@
   {
    "id": "bata-house-1-household-2",
    "building": "bata-house-1",
-   "label": "Ba\u0165a house household",
+   "label": "Baťa house household",
    "trade": "driver",
    "people": [
     {

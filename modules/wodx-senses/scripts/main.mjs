@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.6.0";
+const VERSION = "0.6.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
