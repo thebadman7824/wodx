@@ -35,17 +35,18 @@ export const canReward = (kind, spent = 0, costs = {}) => !!REWARDS[kind] && rew
 export function buildScenes({story = [], parts = [], short = false, name = ""} = {}) {
   const out = [];
   const part = h => parts.find(p => p.heading === h)?.items ?? [];
+  const turn = story.find(s => s.stage === "turning");
+  const after = story.filter(s => ["splat", "after", "after2"].includes(s.stage));
   if ( !short ) {
     const before = story.filter(s => !["turning", "splat", "after", "after2"].includes(s.stage));
-    for ( const s of before ) out.push({key: `life:${s.stage}:${s.year}`, title: `${s.year}: ${s.title}`, from: "lifepath",
+    for ( const s of before ) out.push({key: `life:${s.stage}:${s.year}`, title: `${s.year}: ${s.title}`, from: "lifepath", year: s.year,
       beats: [`${s.choice}${s.text ? `: ${s.text}` : ""}`, "Play it short: where, who is there, and what the character wants from it."]});
-    out.push({key: "before", title: "Before", from: "template", beats: part("Before")});
+    out.push({key: "before", title: "Before", from: "template", year: turn?.year ?? null, beats: part("Before")});
   }
-  const turn = story.find(s => s.stage === "turning");
-  out.push({key: "turn", title: turn ? `The turn (${turn.year}): ${turn.title}` : "The turn", from: "template",
+  out.push({key: "turn", title: turn ? `The turn (${turn.year}): ${turn.title}` : "The turn", from: "template", year: turn?.year ?? null,
     beats: [...(turn ? [`${turn.choice}${turn.text ? `: ${turn.text}` : ""}`] : []), ...part("The turn")]});
-  const after = story.filter(s => ["splat", "after", "after2"].includes(s.stage));
-  out.push({key: "after", title: "After", from: "template", beats: [...after.map(s => `${s.year}, ${s.title}: ${s.choice}`), ...part("After")]});
+  out.push({key: "after", title: "After", from: "template", year: after[0]?.year ?? turn?.year ?? null,
+    beats: [...after.map(s => `${s.year}, ${s.title}: ${s.choice}`), ...part("After")]});
   return out.map(s => ({...s, beats: s.beats.filter(Boolean).map(b => b.replaceAll("{{name}}", name || "the character"))}));
 }
 
@@ -85,3 +86,59 @@ export const tieQuestion = (i, other) => TIE_QUESTIONS[((Number(i) || 0) % TIE_Q
 
 /** Has a late joiner's chronicle already begun? Any character signed off. */
 export const underWay = (records = []) => records.some(r => r?.signed);
+
+/* ------------------------------------------------------------------ */
+/*  A guest in another character's prelude (Improvement Desk bf1)      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Lines whose people do not die of age once turned (B2305): the Kindred, the dead, mummies, Kuei-jin, the fallen.
+ * Others live a long mortal span: ghouls and revenants fed or bred to outlast it, mages who can stretch theirs.
+ */
+export const UNDYING_LINES = new Set(["vampire", "wraith", "mummy", "kueijin", "demon"]);
+export const SPAN = {ghoul: 200, revenant: 200, mage: 150};
+export const SPAN_MORTAL = 100;
+/** Youngest age to play a beat in someone's past, and years turned before a guest counts as an elder. */
+export const GUEST_MIN_AGE = 8;
+export const ELDER_YEARS = 100;
+
+/**
+ * Can a guest have been there in a year? guest = {line, birthYear, turnYear} from their lifepath, or null when they
+ * have none. Returns {ok, as, why}: as is "mortal", "turned", "elder", "ghost" or "unknown".
+ */
+export function guestFit(year, guest = null) {
+  const y = year === null || year === undefined || year === "" ? NaN : Number(year);
+  if ( !guest || !Number.isFinite(Number(guest.birthYear)) || !Number.isFinite(y) ) return {ok: true, as: "unknown", why: "Years not set; the Storyteller's call."};
+  const born = Number(guest.birthYear), turned = guest.turnYear !== null && guest.turnYear !== undefined && y >= Number(guest.turnYear);
+  const age = y - born, line = guest.line || "mortal";
+  if ( age < GUEST_MIN_AGE ) return {ok: false, as: null, why: age < 0 ? `Not yet born in ${y}.` : `Only a small child in ${y}.`};
+  if ( turned && UNDYING_LINES.has(line) ) {
+    if ( line === "wraith" ) return {ok: true, as: "ghost", why: "Only as a ghost, from beyond the Shroud."};
+    return y - Number(guest.turnYear) >= ELDER_YEARS ? {ok: true, as: "elder", why: "Only as an elder, already old in the blood or the grave."} : {ok: true, as: "turned", why: ""};
+  }
+  const span = turned ? (SPAN[line] ?? SPAN_MORTAL) : SPAN_MORTAL;
+  if ( age > span ) return {ok: false, as: null, why: `Would be long dead by ${y}.`};
+  return {ok: true, as: turned ? "turned" : "mortal", why: turned ? "" : "Before their own turn."};
+}
+
+/** The beat a guest plays, by how they were there. {{guest}} and {{host}} are the two characters. */
+export const GUEST_BEATS = {
+  mortal: ["What did {{guest}} do in this scene that {{host}} still remembers?", "What did {{guest}} see here that nobody else did?",
+    "What did {{guest}} want from {{host}} here, and did they get it?"],
+  turned: ["What did {{guest}} do in this scene that {{host}} still remembers?", "What did {{guest}} hide from {{host}} here?",
+    "What did {{guest}} want from {{host}} here, and did they get it?"],
+  elder: ["{{guest}} watched this, already old. Why did they take an interest in {{host}}?", "What did {{guest}} quietly arrange here, and does {{host}} know?"],
+  ghost: ["{{guest}} was there unseen. What did they do, or fail to do?", "What did {{guest}} whisper that {{host}} half heard?"]
+};
+GUEST_BEATS.unknown = GUEST_BEATS.mortal;
+export function guestBeat(as, i, guest, host) {
+  const list = GUEST_BEATS[as] ?? GUEST_BEATS.mortal;
+  const k = ((Number(i) || 0) % list.length + list.length) % list.length;
+  return list[k].replaceAll("{{guest}}", guest || "the guest").replaceAll("{{host}}", host || "the character");
+}
+
+/** The tie a guest beat writes: guest about host, kind "guest", one per scene. */
+export const guestTie = ({from, about, scene, year = null, title = "", beat = "", text = ""}) =>
+  ({from, about, kind: "guest", scene: String(scene ?? ""), year, q: `${year ? `In ${year}, ` : ""}${title}: ${beat}`.trim(), text: String(text).slice(0, 1000)});
+/** Same tie? Question ties match on the pair; guest ties also on the scene. */
+export const sameTie = (a, b) => a.from === b.from && a.about === b.about && (a.kind ?? "q") === (b.kind ?? "q") && (a.scene ?? "") === (b.scene ?? "");
