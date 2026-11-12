@@ -20237,5 +20237,6722 @@
 "text": "Tycho Brahe becomes imperial mathematician to Rudolf.",
 "ref": "Real history",
 "links": []
+},
+{
+"id": "r3-age-of-reason-001",
+"era": "age-of-reason",
+"year": 1601,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"science",
+"death"
+],
+"title": "Tycho dies",
+"text": "Tycho Brahe dies in Prague; Kepler inherits his observations.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-002",
+"era": "age-of-reason",
+"year": 1601,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kinsale",
+"tags": [
+"battle"
+],
+"title": "Kinsale",
+"text": "The English break the Irish and Spanish at Kinsale.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-003",
+"era": "age-of-reason",
+"year": 1601,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"famine",
+"weather"
+],
+"title": "The Russian famine",
+"text": "Three years of failed harvests kill perhaps a third of Russia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-004",
+"era": "age-of-reason",
+"year": 1602,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amsterdam",
+"tags": [
+"trade",
+"founding",
+"money"
+],
+"title": "The Dutch East India Company",
+"text": "The VOC is founded and sells shares to the public.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-005",
+"era": "age-of-reason",
+"year": 1603,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown",
+"death"
+],
+"title": "Elizabeth dies",
+"text": "James VI of Scotland becomes James I of England.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-006",
+"era": "age-of-reason",
+"year": 1603,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Edo",
+"tags": [
+"crown"
+],
+"title": "The Tokugawa shogunate",
+"text": "Tokugawa Ieyasu becomes shogun and rules from Edo.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-007",
+"era": "age-of-reason",
+"year": 1603,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kyoto",
+"tags": [
+"art"
+],
+"title": "Kabuki begins",
+"text": "Izumo no Okuni performs the first kabuki in Kyoto.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-008",
+"era": "age-of-reason",
+"year": 1605,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror"
+],
+"title": "The Gunpowder Plot",
+"text": "Guy Fawkes is caught under Parliament with barrels of powder.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-009",
+"era": "age-of-reason",
+"year": 1605,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"uprising"
+],
+"title": "The False Dmitry",
+"text": "A pretender claiming to be Ivan's son takes Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-010",
+"era": "age-of-reason",
+"year": 1605,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"art"
+],
+"title": "Don Quixote",
+"text": "Cervantes publishes the first part of Don Quixote.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-011",
+"era": "age-of-reason",
+"year": 1605,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Agra",
+"tags": [
+"crown",
+"death"
+],
+"title": "Akbar dies",
+"text": "Akbar dies; Jahangir takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-012",
+"era": "age-of-reason",
+"year": 1606,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zsitvatorok",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Zsitvatorok",
+"text": "The Long Turkish War ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-013",
+"era": "age-of-reason",
+"year": 1607,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ulster",
+"tags": [
+"migration"
+],
+"title": "The Flight of the Earls",
+"text": "The Gaelic lords of Ulster flee to the continent.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-014",
+"era": "age-of-reason",
+"year": 1608,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Middelburg",
+"tags": [
+"science"
+],
+"title": "The telescope",
+"text": "A spectacle-maker asks for a patent on a looking glass that sees far.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-015",
+"era": "age-of-reason",
+"year": 1609,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"law",
+"faith"
+],
+"title": "The Letter of Majesty",
+"text": "Rudolf II grants Bohemia religious freedom.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-016",
+"era": "age-of-reason",
+"year": 1609,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"science"
+],
+"title": "Kepler's new astronomy",
+"text": "Kepler publishes the elliptical orbit of Mars.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-017",
+"era": "age-of-reason",
+"year": 1609,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Spain",
+"tags": [
+"persecution",
+"migration"
+],
+"title": "The Moriscos expelled",
+"text": "Spain expels the descendants of its Muslims.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-018",
+"era": "age-of-reason",
+"year": 1610,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"death",
+"crown"
+],
+"title": "Henry IV murdered",
+"text": "Ravaillac stabs the French king in his carriage.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-019",
+"era": "age-of-reason",
+"year": 1610,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"war"
+],
+"title": "The Poles in Moscow",
+"text": "A Polish army takes Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-020",
+"era": "age-of-reason",
+"year": 1610,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Padua",
+"tags": [
+"science"
+],
+"title": "The moons of Jupiter",
+"text": "Galileo publishes the moons of Jupiter; the Order of Reason calls it proof, the Celestial Chorus a trespass.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-021",
+"era": "age-of-reason",
+"year": 1611,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"faith",
+"media"
+],
+"title": "The King James Bible",
+"text": "The authorised English Bible is printed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-022",
+"era": "age-of-reason",
+"year": 1611,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "Rudolf deposed",
+"text": "Matthias forces his brother out of Bohemia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-023",
+"era": "age-of-reason",
+"year": 1612,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown",
+"death"
+],
+"title": "Rudolf II dies",
+"text": "Rudolf dies; his collections begin to scatter.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-024",
+"era": "age-of-reason",
+"year": 1612,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"war"
+],
+"title": "Minin and Pozharsky",
+"text": "A Russian militia drives the Poles out of Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-025",
+"era": "age-of-reason",
+"year": 1612,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Lancashire",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Pendle witches",
+"text": "Ten people are hanged as witches at Lancaster.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-026",
+"era": "age-of-reason",
+"year": 1613,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "The Romanovs",
+"text": "Michael Romanov is chosen tsar.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-027",
+"era": "age-of-reason",
+"year": 1613,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"fire"
+],
+"title": "The Globe burns",
+"text": "A cannon shot during Henry VIII sets the Globe alight.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-028",
+"era": "age-of-reason",
+"year": 1614,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Japan",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "Christianity banned in Japan",
+"text": "The shogun orders all missionaries out.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-029",
+"era": "age-of-reason",
+"year": 1614,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"law"
+],
+"title": "The last Estates-General",
+"text": "The French Estates meet for the last time until 1789.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-030",
+"era": "age-of-reason",
+"year": 1615,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Osaka",
+"tags": [
+"siege",
+"war"
+],
+"title": "Osaka falls",
+"text": "The Tokugawa destroy the Toyotomi at Osaka.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-031",
+"era": "age-of-reason",
+"year": 1616,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art",
+"death"
+],
+"title": "Shakespeare dies",
+"text": "Shakespeare and Cervantes die in the same spring.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-032",
+"era": "age-of-reason",
+"year": 1616,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"science",
+"faith"
+],
+"title": "Copernicus banned",
+"text": "The Church orders Copernicus's book corrected.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-033",
+"era": "age-of-reason",
+"year": 1616,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Manchuria",
+"tags": [
+"crown"
+],
+"title": "The Later Jin",
+"text": "Nurhaci proclaims the Later Jin, the start of the Qing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-034",
+"era": "age-of-reason",
+"year": 1618,
+"month": 5,
+"kind": "history",
+"lines": [
+"All lines"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"uprising",
+"war"
+],
+"title": "The defenestration of 1618",
+"text": "The emperor's regents are thrown from a window of Prague castle; the Thirty Years War begins.",
+"ref": "Real history",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-age-of-reason-035",
+"era": "age-of-reason",
+"year": 1618,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"war"
+],
+"title": "The Bohemian revolt",
+"text": "The Bohemian estates raise an army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-036",
+"era": "age-of-reason",
+"year": 1619,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown"
+],
+"title": "The Winter King",
+"text": "The Bohemians choose Frederick of the Palatinate as king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-037",
+"era": "age-of-reason",
+"year": 1619,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jakarta",
+"tags": [
+"empire"
+],
+"title": "Batavia",
+"text": "The Dutch take Jakarta and name it Batavia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-038",
+"era": "age-of-reason",
+"year": 1620,
+"month": 11,
+"kind": "history",
+"lines": [
+"All lines"
+],
+"region": "Europe",
+"place": "White Mountain",
+"tags": [
+"battle"
+],
+"title": "White Mountain",
+"text": "The Bohemian army is routed outside Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-039",
+"era": "age-of-reason",
+"year": 1620,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Plymouth",
+"tags": [
+"migration"
+],
+"title": "The Mayflower sails",
+"text": "English separatists sail for America.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-040",
+"era": "age-of-reason",
+"year": 1621,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"death",
+"persecution"
+],
+"title": "The Old Town Square executions",
+"text": "Twenty-seven leaders of the revolt are executed in Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-041",
+"era": "age-of-reason",
+"year": 1621,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Netherlands",
+"tags": [
+"war"
+],
+"title": "The truce ends",
+"text": "The war between Spain and the Dutch resumes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-042",
+"era": "age-of-reason",
+"year": 1622,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"persecution",
+"migration"
+],
+"title": "The Anabaptists expelled",
+"text": "The Hutterites are driven out of Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-043",
+"era": "age-of-reason",
+"year": 1623,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Ambon",
+"tags": [
+"massacre",
+"trade"
+],
+"title": "The Amboyna massacre",
+"text": "The Dutch torture and kill English traders on Ambon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-044",
+"era": "age-of-reason",
+"year": 1623,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"war"
+],
+"title": "Shah Abbas takes Baghdad",
+"text": "Persia takes Baghdad from the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-045",
+"era": "age-of-reason",
+"year": 1624,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown"
+],
+"title": "Richelieu",
+"text": "Cardinal Richelieu becomes chief minister of France.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-046",
+"era": "age-of-reason",
+"year": 1625,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Charles I",
+"text": "Charles I becomes king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-047",
+"era": "age-of-reason",
+"year": 1626,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dessau",
+"tags": [
+"battle"
+],
+"title": "Dessau Bridge",
+"text": "Wallenstein beats Mansfeld.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-048",
+"era": "age-of-reason",
+"year": 1627,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bohemia",
+"tags": [
+"law",
+"faith"
+],
+"title": "The Renewed Land Ordinance",
+"text": "Bohemia becomes Catholic by law; Protestants must convert or leave.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-049",
+"era": "age-of-reason",
+"year": 1627,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "La Rochelle",
+"tags": [
+"siege"
+],
+"title": "La Rochelle",
+"text": "Richelieu besieges the Huguenot port; it starves into surrender.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-050",
+"era": "age-of-reason",
+"year": 1628,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"law",
+"faith"
+],
+"title": "Moravia made Catholic",
+"text": "The Renewed Land Ordinance comes to Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-051",
+"era": "age-of-reason",
+"year": 1628,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leszno",
+"tags": [
+"migration"
+],
+"title": "Comenius leaves",
+"text": "Jan Amos Comenius leaves Bohemia for Poland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-052",
+"era": "age-of-reason",
+"year": 1629,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Germany",
+"tags": [
+"law",
+"faith"
+],
+"title": "The Edict of Restitution",
+"text": "The emperor orders Church lands returned.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-053",
+"era": "age-of-reason",
+"year": 1629,
+"month": null,
+"kind": "history",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Bamberg",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Bamberg trials",
+"text": "The prince-bishop of Bamberg burns hundreds as witches.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-054",
+"era": "age-of-reason",
+"year": 1630,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pomerania",
+"tags": [
+"war"
+],
+"title": "Gustavus Adolphus lands",
+"text": "Sweden enters the war.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-055",
+"era": "age-of-reason",
+"year": 1630,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"plague"
+],
+"title": "The Milan plague",
+"text": "Plague kills perhaps half of Milan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-056",
+"era": "age-of-reason",
+"year": 1631,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Magdeburg",
+"tags": [
+"massacre",
+"fire"
+],
+"title": "The sack of Magdeburg",
+"text": "Tilly's army storms Magdeburg; twenty thousand die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-057",
+"era": "age-of-reason",
+"year": 1631,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Breitenfeld",
+"tags": [
+"battle"
+],
+"title": "Breitenfeld",
+"text": "Gustavus Adolphus destroys Tilly's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-058",
+"era": "age-of-reason",
+"year": 1631,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Agra",
+"tags": [
+"death",
+"building"
+],
+"title": "Mumtaz Mahal dies",
+"text": "Shah Jahan's wife dies; he begins the Taj Mahal.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-059",
+"era": "age-of-reason",
+"year": 1631,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"disaster"
+],
+"title": "Vesuvius erupts",
+"text": "Vesuvius kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-060",
+"era": "age-of-reason",
+"year": 1632,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lutzen",
+"tags": [
+"battle",
+"death"
+],
+"title": "Lutzen",
+"text": "Gustavus Adolphus dies winning.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-061",
+"era": "age-of-reason",
+"year": 1632,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Florence",
+"tags": [
+"science"
+],
+"title": "Galileo's Dialogue",
+"text": "Galileo publishes his Dialogue on the two world systems.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-062",
+"era": "age-of-reason",
+"year": 1633,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"science",
+"faith",
+"law"
+],
+"title": "Galileo tried",
+"text": "The Inquisition forces Galileo to recant.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-063",
+"era": "age-of-reason",
+"year": 1634,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Cheb",
+"tags": [
+"death"
+],
+"title": "Wallenstein murdered",
+"text": "The emperor's general is killed at Cheb.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-064",
+"era": "age-of-reason",
+"year": 1634,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Nordlingen",
+"tags": [
+"battle"
+],
+"title": "Nordlingen",
+"text": "The Swedes are beaten.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-065",
+"era": "age-of-reason",
+"year": 1635,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Prague",
+"text": "The emperor makes peace with Saxony.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-066",
+"era": "age-of-reason",
+"year": 1635,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"learning",
+"founding"
+],
+"title": "The French Academy",
+"text": "Richelieu founds the Academie francaise.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-067",
+"era": "age-of-reason",
+"year": 1636,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Mukden",
+"tags": [
+"crown",
+"founding"
+],
+"title": "The Qing",
+"text": "Hong Taiji renames his state Qing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-068",
+"era": "age-of-reason",
+"year": 1637,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leiden",
+"tags": [
+"science",
+"learning"
+],
+"title": "Descartes's Discourse",
+"text": "Descartes publishes the Discourse on Method.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-069",
+"era": "age-of-reason",
+"year": 1637,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amsterdam",
+"tags": [
+"money",
+"trade"
+],
+"title": "Tulip mania",
+"text": "The price of tulip bulbs collapses.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-070",
+"era": "age-of-reason",
+"year": 1637,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shimabara",
+"tags": [
+"uprising",
+"faith"
+],
+"title": "The Shimabara rising",
+"text": "Christian peasants rise in Kyushu.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-071",
+"era": "age-of-reason",
+"year": 1638,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"siege"
+],
+"title": "Baghdad retaken",
+"text": "Murad IV takes back Baghdad.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-072",
+"era": "age-of-reason",
+"year": 1638,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shimabara",
+"tags": [
+"massacre"
+],
+"title": "Hara castle",
+"text": "The Shimabara rebels are killed to the last.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-073",
+"era": "age-of-reason",
+"year": 1639,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Japan",
+"tags": [
+"law",
+"trade"
+],
+"title": "Japan closed",
+"text": "Japan expels the Portuguese and closes its ports.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-074",
+"era": "age-of-reason",
+"year": 1639,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Zuhab",
+"tags": [
+"treaty"
+],
+"title": "The Treaty of Zuhab",
+"text": "The Ottoman-Persian border is fixed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-075",
+"era": "age-of-reason",
+"year": 1640,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"uprising",
+"crown"
+],
+"title": "Portugal free",
+"text": "Portugal breaks from Spain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-076",
+"era": "age-of-reason",
+"year": 1640,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Barcelona",
+"tags": [
+"uprising"
+],
+"title": "The Reapers' War",
+"text": "Catalonia rises against Madrid.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-077",
+"era": "age-of-reason",
+"year": 1641,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ulster",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "The Irish rising",
+"text": "Irish Catholics rise; thousands of settlers die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-078",
+"era": "age-of-reason",
+"year": 1642,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Edgehill",
+"tags": [
+"battle",
+"war"
+],
+"title": "The English Civil War",
+"text": "King and Parliament fight at Edgehill.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-079",
+"era": "age-of-reason",
+"year": 1642,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Olomouc",
+"tags": [
+"war",
+"siege"
+],
+"title": "The Swedes take Olomouc",
+"text": "Swedish troops occupy Olomouc until 1650.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-080",
+"era": "age-of-reason",
+"year": 1642,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown",
+"death"
+],
+"title": "Richelieu dies",
+"text": "Mazarin follows Richelieu.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-081",
+"era": "age-of-reason",
+"year": 1643,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rocroi",
+"tags": [
+"battle"
+],
+"title": "Rocroi",
+"text": "The French destroy the Spanish infantry.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-082",
+"era": "age-of-reason",
+"year": 1643,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown"
+],
+"title": "Louis XIV",
+"text": "The four-year-old Louis XIV becomes king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-083",
+"era": "age-of-reason",
+"year": 1644,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"crown",
+"death"
+],
+"title": "The Ming fall",
+"text": "Li Zicheng takes Beijing; the last Ming emperor hangs himself.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-084",
+"era": "age-of-reason",
+"year": 1644,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanhai Pass",
+"tags": [
+"war",
+"crown"
+],
+"title": "The Qing take Beijing",
+"text": "Wu Sangui opens the pass; the Manchus take China.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-085",
+"era": "age-of-reason",
+"year": 1644,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marston Moor",
+"tags": [
+"battle"
+],
+"title": "Marston Moor",
+"text": "Cromwell's cavalry win the north.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-086",
+"era": "age-of-reason",
+"year": 1645,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brno",
+"tags": [
+"siege"
+],
+"title": "Brno holds",
+"text": "The Swedes besiege Brno and fail.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-087",
+"era": "age-of-reason",
+"year": 1645,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naseby",
+"tags": [
+"battle"
+],
+"title": "Naseby",
+"text": "Parliament's New Model Army destroys the king's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-088",
+"era": "age-of-reason",
+"year": 1645,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Yangzhou",
+"tags": [
+"massacre"
+],
+"title": "The Yangzhou massacre",
+"text": "Qing troops kill much of Yangzhou.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-089",
+"era": "age-of-reason",
+"year": 1645,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Essex",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Witchfinder General",
+"text": "Matthew Hopkins hangs about a hundred people as witches in East Anglia.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-090",
+"era": "age-of-reason",
+"year": 1645,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Crete",
+"tags": [
+"war"
+],
+"title": "The war for Crete",
+"text": "The Ottomans invade Venetian Crete.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-091",
+"era": "age-of-reason",
+"year": 1647,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"uprising"
+],
+"title": "Masaniello",
+"text": "The fisherman Masaniello leads Naples against Spanish taxes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-092",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munster",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Westphalia",
+"text": "The Thirty Years War ends; the Dutch are free.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-093",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"siege"
+],
+"title": "The Swedes at Prague",
+"text": "Swedish troops take Prague castle and loot Rudolf's collections.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-094",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ukraine",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "Khmelnytsky",
+"text": "The Cossacks rise against Poland; tens of thousands of Jews are killed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-095",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising"
+],
+"title": "The Fronde",
+"text": "Paris rises against Mazarin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-096",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"crown",
+"death"
+],
+"title": "Sultan Ibrahim deposed",
+"text": "The mad sultan is deposed and strangled.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-097",
+"era": "age-of-reason",
+"year": 1649,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown",
+"death",
+"revolution"
+],
+"title": "Charles I beheaded",
+"text": "The king is executed outside Whitehall.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-098",
+"era": "age-of-reason",
+"year": 1649,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Drogheda",
+"tags": [
+"massacre"
+],
+"title": "Drogheda",
+"text": "Cromwell's army storms Drogheda.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-099",
+"era": "age-of-reason",
+"year": 1649,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"law"
+],
+"title": "The Ulozhenie",
+"text": "Russia's law code binds peasants to the land.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-100",
+"era": "age-of-reason",
+"year": 1650,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Olomouc",
+"tags": [
+"war"
+],
+"title": "The Swedes leave Olomouc",
+"text": "The Swedish garrison marches out.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-101",
+"era": "age-of-reason",
+"year": 1651,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"learning"
+],
+"title": "Leviathan",
+"text": "Thomas Hobbes publishes Leviathan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-102",
+"era": "age-of-reason",
+"year": 1651,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Worcester",
+"tags": [
+"battle"
+],
+"title": "Worcester",
+"text": "Cromwell beats Charles II, who escapes by hiding in an oak.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-103",
+"era": "age-of-reason",
+"year": 1652,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"faith"
+],
+"title": "Patriarch Nikon",
+"text": "Nikon's reforms split the Russian church.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-104",
+"era": "age-of-reason",
+"year": 1652,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Channel",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Anglo-Dutch War",
+"text": "England and the Dutch fight at sea.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-105",
+"era": "age-of-reason",
+"year": 1653,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Agra",
+"tags": [
+"building"
+],
+"title": "The Taj Mahal finished",
+"text": "The tomb is complete.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-106",
+"era": "age-of-reason",
+"year": 1653,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "Lord Protector",
+"text": "Cromwell becomes Lord Protector.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-107",
+"era": "age-of-reason",
+"year": 1654,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pereyaslav",
+"tags": [
+"treaty"
+],
+"title": "Pereyaslav",
+"text": "The Cossacks swear to the tsar.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-108",
+"era": "age-of-reason",
+"year": 1655,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"war"
+],
+"title": "The Deluge",
+"text": "Sweden invades Poland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-109",
+"era": "age-of-reason",
+"year": 1656,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"plague"
+],
+"title": "The Naples plague",
+"text": "Plague kills half of Naples.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-110",
+"era": "age-of-reason",
+"year": 1656,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"crown"
+],
+"title": "The Koprulu viziers",
+"text": "Mehmed Koprulu becomes grand vizier and saves the empire.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-111",
+"era": "age-of-reason",
+"year": 1658,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"death"
+],
+"title": "Cromwell dies",
+"text": "Oliver Cromwell dies; his son cannot hold power.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-112",
+"era": "age-of-reason",
+"year": 1658,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown"
+],
+"title": "Aurangzeb",
+"text": "Aurangzeb imprisons his father and takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-113",
+"era": "age-of-reason",
+"year": 1659,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pyrenees",
+"tags": [
+"treaty"
+],
+"title": "The Peace of the Pyrenees",
+"text": "France and Spain make peace.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-114",
+"era": "age-of-reason",
+"year": 1660,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "The Restoration",
+"text": "Charles II returns.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-115",
+"era": "age-of-reason",
+"year": 1660,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"founding"
+],
+"title": "The Royal Society",
+"text": "The Royal Society is founded.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-116",
+"era": "age-of-reason",
+"year": 1661,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown"
+],
+"title": "Louis rules himself",
+"text": "Louis XIV takes power on Mazarin's death.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-117",
+"era": "age-of-reason",
+"year": 1661,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"crown"
+],
+"title": "Kangxi",
+"text": "The Kangxi emperor takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-118",
+"era": "age-of-reason",
+"year": 1662,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taiwan",
+"tags": [
+"war"
+],
+"title": "Koxinga takes Taiwan",
+"text": "Zheng Chenggong drives the Dutch from Taiwan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-119",
+"era": "age-of-reason",
+"year": 1663,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"war"
+],
+"title": "The Tatar raid",
+"text": "Ottoman Tatars raid Moravia and carry off thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-120",
+"era": "age-of-reason",
+"year": 1664,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Szentgotthard",
+"tags": [
+"battle"
+],
+"title": "Szentgotthard",
+"text": "Imperial troops beat the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-121",
+"era": "age-of-reason",
+"year": 1665,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague"
+],
+"title": "The Great Plague",
+"text": "Plague kills a quarter of London.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-122",
+"era": "age-of-reason",
+"year": 1665,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"plague"
+],
+"title": "Kindred of the plague city",
+"text": "Prince Mithras's Kindred hunt among the dying while the court flees to Oxford.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+},
+{
+"id": "dbi-lothian",
+"title": "The Fief of Lothian"
+}
+]
+},
+{
+"id": "r3-age-of-reason-123",
+"era": "age-of-reason",
+"year": 1666,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"fire"
+],
+"title": "The Great Fire",
+"text": "London burns for four days; Kindred lose havens in the City, and some say a few of them lit the fire.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+},
+{
+"id": "dbi-lothian",
+"title": "The Fief of Lothian"
+}
+]
+},
+{
+"id": "r3-age-of-reason-124",
+"era": "age-of-reason",
+"year": 1666,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Smyrna",
+"tags": [
+"faith"
+],
+"title": "Sabbatai Zevi",
+"text": "The messianic claimant Sabbatai Zevi converts to Islam before the sultan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-125",
+"era": "age-of-reason",
+"year": 1667,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Medway",
+"tags": [
+"war",
+"sea"
+],
+"title": "The raid on the Medway",
+"text": "The Dutch burn the English fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-126",
+"era": "age-of-reason",
+"year": 1669,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Candia",
+"tags": [
+"siege"
+],
+"title": "Candia falls",
+"text": "Venice gives up Crete after 21 years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-127",
+"era": "age-of-reason",
+"year": 1670,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"uprising"
+],
+"title": "Stenka Razin",
+"text": "A Cossack revolt sweeps the Volga.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-128",
+"era": "age-of-reason",
+"year": 1672,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Netherlands",
+"tags": [
+"war"
+],
+"title": "The disaster year",
+"text": "France invades the Dutch Republic; the Dutch open the dikes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-129",
+"era": "age-of-reason",
+"year": 1672,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "The Hague",
+"tags": [
+"death"
+],
+"title": "The De Witt brothers lynched",
+"text": "A mob kills the Dutch leaders.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-130",
+"era": "age-of-reason",
+"year": 1673,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "China",
+"tags": [
+"uprising"
+],
+"title": "The Three Feudatories",
+"text": "Southern generals rebel against the Qing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-131",
+"era": "age-of-reason",
+"year": 1675,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Fehrbellin",
+"tags": [
+"battle"
+],
+"title": "Fehrbellin",
+"text": "Brandenburg beats Sweden.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-132",
+"era": "age-of-reason",
+"year": 1675,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"building"
+],
+"title": "Greenwich observatory",
+"text": "The Royal Observatory is founded.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-133",
+"era": "age-of-reason",
+"year": 1677,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "The Hague",
+"tags": [
+"learning",
+"death"
+],
+"title": "Spinoza dies",
+"text": "Spinoza's Ethics appears after his death.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-134",
+"era": "age-of-reason",
+"year": 1678,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Velke Losiny",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Losiny trials",
+"text": "Witch trials in northern Moravia begin; about a hundred people burn before 1696.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-135",
+"era": "age-of-reason",
+"year": 1679,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"plague"
+],
+"title": "The Vienna plague",
+"text": "Plague kills tens of thousands in Vienna.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-136",
+"era": "age-of-reason",
+"year": 1680,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bohemia",
+"tags": [
+"uprising"
+],
+"title": "The Bohemian peasant revolt",
+"text": "Peasants rise against forced labour.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-137",
+"era": "age-of-reason",
+"year": 1680,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crime",
+"occult"
+],
+"title": "The Affair of the Poisons",
+"text": "Fortune-tellers and poisoners at court are burned; the king's mistress is implicated.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-138",
+"era": "age-of-reason",
+"year": 1681,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Strasbourg",
+"tags": [
+"war"
+],
+"title": "Strasbourg taken",
+"text": "Louis XIV seizes Strasbourg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-139",
+"era": "age-of-reason",
+"year": 1682,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Versailles",
+"tags": [
+"building",
+"crown"
+],
+"title": "Versailles",
+"text": "Louis XIV moves the court to Versailles.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-140",
+"era": "age-of-reason",
+"year": 1682,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown"
+],
+"title": "Peter and Ivan",
+"text": "Peter and his brother Ivan are crowned joint tsars.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-141",
+"era": "age-of-reason",
+"year": 1683,
+"month": null,
+"kind": "history",
+"lines": [
+"All lines"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"siege",
+"battle"
+],
+"title": "Kahlenberg",
+"text": "Jan Sobieski breaks the Ottoman siege of Vienna.",
+"ref": "Real history",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-age-of-reason-142",
+"era": "age-of-reason",
+"year": 1684,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Linz",
+"tags": [
+"treaty"
+],
+"title": "The Holy League",
+"text": "The emperor, Poland and Venice ally against the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-143",
+"era": "age-of-reason",
+"year": 1685,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Fontainebleau",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "The Edict of Nantes revoked",
+"text": "Louis XIV outlaws Protestantism; Huguenots flee.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-144",
+"era": "age-of-reason",
+"year": 1686,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Buda",
+"tags": [
+"siege"
+],
+"title": "Buda retaken",
+"text": "Imperial troops take Buda after 145 years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-145",
+"era": "age-of-reason",
+"year": 1687,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science"
+],
+"title": "Newton's Principia",
+"text": "Newton publishes the laws of motion and gravity.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-146",
+"era": "age-of-reason",
+"year": 1687,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Athens",
+"tags": [
+"war"
+],
+"title": "The Parthenon blown up",
+"text": "A Venetian shell ignites the Ottoman powder store in the Parthenon.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-147",
+"era": "age-of-reason",
+"year": 1688,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"revolution",
+"crown"
+],
+"title": "The Glorious Revolution",
+"text": "William of Orange lands; James II flees.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-148",
+"era": "age-of-reason",
+"year": 1689,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law"
+],
+"title": "The Bill of Rights",
+"text": "Parliament limits the crown.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-149",
+"era": "age-of-reason",
+"year": 1689,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Nerchinsk",
+"tags": [
+"treaty"
+],
+"title": "Nerchinsk",
+"text": "Russia and China fix their border.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-150",
+"era": "age-of-reason",
+"year": 1690,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Boyne",
+"tags": [
+"battle"
+],
+"title": "The Boyne",
+"text": "William beats James in Ireland.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-151",
+"era": "age-of-reason",
+"year": 1690,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"migration"
+],
+"title": "The Great Serb Migration",
+"text": "Serbs flee north into Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-152",
+"era": "age-of-reason",
+"year": 1691,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"occult"
+],
+"title": "The eclipse of 1691",
+"text": "An eclipse on 23 August is marked by Lasombra across Europe.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "dav-midnight-crescent",
+"title": "The Midnight Crescent"
+},
+{
+"id": "dc1-laibon",
+"title": "The Laibon"
+},
+{
+"id": "vac-royal-web",
+"title": "Victoria's Royal Web"
+}
+]
+},
+{
+"id": "r3-age-of-reason-153",
+"era": "age-of-reason",
+"year": 1693,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sicily",
+"tags": [
+"quake",
+"disaster"
+],
+"title": "The Sicilian earthquake",
+"text": "An earthquake kills sixty thousand in Sicily.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-154",
+"era": "age-of-reason",
+"year": 1694,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money",
+"founding"
+],
+"title": "The Bank of England",
+"text": "The Bank of England is founded.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-155",
+"era": "age-of-reason",
+"year": 1696,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Azov",
+"tags": [
+"siege"
+],
+"title": "Azov taken",
+"text": "Peter takes Azov.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-156",
+"era": "age-of-reason",
+"year": 1697,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zenta",
+"tags": [
+"battle"
+],
+"title": "Zenta",
+"text": "Eugene of Savoy destroys the Ottoman army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-157",
+"era": "age-of-reason",
+"year": 1697,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amsterdam",
+"tags": [
+"travel"
+],
+"title": "Peter's Grand Embassy",
+"text": "Tsar Peter travels west in disguise and works in Dutch shipyards.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-158",
+"era": "age-of-reason",
+"year": 1698,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"uprising",
+"death"
+],
+"title": "The streltsy executed",
+"text": "Peter executes over a thousand rebel musketeers.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-159",
+"era": "age-of-reason",
+"year": 1699,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Karlowitz",
+"tags": [
+"treaty"
+],
+"title": "Karlowitz",
+"text": "The Ottomans give up Hungary.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-160",
+"era": "age-of-reason",
+"year": 1700,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Narva",
+"tags": [
+"battle"
+],
+"title": "Narva",
+"text": "Charles XII crushes the Russians.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-161",
+"era": "age-of-reason",
+"year": 1700,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"crown",
+"death"
+],
+"title": "Charles II of Spain dies",
+"text": "The last Spanish Habsburg dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-162",
+"era": "age-of-reason",
+"year": 1701,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"crown"
+],
+"title": "The King in Prussia",
+"text": "Frederick I crowns himself in Konigsberg.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-163",
+"era": "age-of-reason",
+"year": 1702,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Edo",
+"tags": [
+"death"
+],
+"title": "The forty-seven ronin",
+"text": "Masterless samurai avenge their lord and are ordered to kill themselves.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-164",
+"era": "age-of-reason",
+"year": 1703,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"founding"
+],
+"title": "St Petersburg founded",
+"text": "Peter founds a city on the Neva marshes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-165",
+"era": "age-of-reason",
+"year": 1703,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hungary",
+"tags": [
+"uprising"
+],
+"title": "Rakoczi's war",
+"text": "Hungary rises against the Habsburgs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-166",
+"era": "age-of-reason",
+"year": 1704,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Blenheim",
+"tags": [
+"battle"
+],
+"title": "Blenheim",
+"text": "Marlborough and Eugene beat the French.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-167",
+"era": "age-of-reason",
+"year": 1704,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Gibraltar",
+"tags": [
+"war"
+],
+"title": "Gibraltar taken",
+"text": "An English and Dutch fleet takes Gibraltar.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-168",
+"era": "age-of-reason",
+"year": 1707,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law"
+],
+"title": "The Acts of Union",
+"text": "England and Scotland become Great Britain.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-169",
+"era": "age-of-reason",
+"year": 1707,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"crown",
+"death"
+],
+"title": "Aurangzeb dies",
+"text": "Mughal power begins to break up.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-170",
+"era": "age-of-reason",
+"year": 1707,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Fuji",
+"tags": [
+"disaster"
+],
+"title": "Mount Fuji erupts",
+"text": "The last eruption of Fuji covers Edo in ash.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-171",
+"era": "age-of-reason",
+"year": 1709,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poltava",
+"tags": [
+"battle"
+],
+"title": "Poltava",
+"text": "Peter destroys Charles XII's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-172",
+"era": "age-of-reason",
+"year": 1709,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"weather",
+"famine"
+],
+"title": "The Great Frost",
+"text": "The coldest winter in five centuries kills crops and people.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-173",
+"era": "age-of-reason",
+"year": 1710,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Meissen",
+"tags": [
+"industry",
+"founding"
+],
+"title": "Meissen porcelain",
+"text": "Europe's first hard porcelain works opens.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-174",
+"era": "age-of-reason",
+"year": 1711,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Pruth",
+"tags": [
+"war"
+],
+"title": "The Pruth",
+"text": "The Ottomans trap Peter's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-175",
+"era": "age-of-reason",
+"year": 1712,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moravia",
+"tags": [
+"plague"
+],
+"title": "Plague in Moravia",
+"text": "Plague returns to Moravia; columns of thanks follow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-176",
+"era": "age-of-reason",
+"year": 1713,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Utrecht",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Utrecht",
+"text": "The War of the Spanish Succession ends.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-177",
+"era": "age-of-reason",
+"year": 1713,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law",
+"crown"
+],
+"title": "The Pragmatic Sanction",
+"text": "Charles VI lets his daughter inherit.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-178",
+"era": "age-of-reason",
+"year": 1714,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "George I",
+"text": "The Elector of Hanover becomes king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-179",
+"era": "age-of-reason",
+"year": 1715,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Versailles",
+"tags": [
+"crown",
+"death"
+],
+"title": "Louis XIV dies",
+"text": "The Sun King dies after 72 years.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-180",
+"era": "age-of-reason",
+"year": 1715,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Scotland",
+"tags": [
+"uprising"
+],
+"title": "The Fifteen",
+"text": "A Jacobite rising fails.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-181",
+"era": "age-of-reason",
+"year": 1716,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Petrovaradin",
+"tags": [
+"battle"
+],
+"title": "Petrovaradin",
+"text": "Eugene beats the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-182",
+"era": "age-of-reason",
+"year": 1717,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"siege"
+],
+"title": "Belgrade taken",
+"text": "Eugene takes Belgrade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-183",
+"era": "age-of-reason",
+"year": 1717,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"occult",
+"founding"
+],
+"title": "The Grand Lodge",
+"text": "London's Freemasons found a grand lodge.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-184",
+"era": "age-of-reason",
+"year": 1720,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marseille",
+"tags": [
+"plague"
+],
+"title": "The Marseille plague",
+"text": "Plague kills half of Marseille.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-185",
+"era": "age-of-reason",
+"year": 1720,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money"
+],
+"title": "The South Sea Bubble",
+"text": "Shares collapse.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-186",
+"era": "age-of-reason",
+"year": 1721,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"crown",
+"empire"
+],
+"title": "Peter emperor",
+"text": "Russia becomes an empire.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-187",
+"era": "age-of-reason",
+"year": 1722,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Isfahan",
+"tags": [
+"siege"
+],
+"title": "Isfahan falls",
+"text": "Afghans take Isfahan.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-188",
+"era": "age-of-reason",
+"year": 1725,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"crown",
+"death"
+],
+"title": "Peter dies",
+"text": "Peter the Great dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-189",
+"era": "age-of-reason",
+"year": 1726,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art"
+],
+"title": "Gulliver's Travels",
+"text": "Swift publishes Gulliver's Travels.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-190",
+"era": "age-of-reason",
+"year": 1727,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"death"
+],
+"title": "Newton dies",
+"text": "Newton is buried in Westminster Abbey.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-191",
+"era": "age-of-reason",
+"year": 1725,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kisiljevo",
+"tags": [
+"occult"
+],
+"title": "Petar Blagojevich",
+"text": "An imperial official reports that a dead peasant of Kisiljevo in Serbia rose to drink the blood of his neighbours.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-192",
+"era": "age-of-reason",
+"year": 1732,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Medvedja",
+"tags": [
+"occult",
+"media"
+],
+"title": "The Medvedja vampires",
+"text": "An Austrian army surgeon's report on vampires in Serbia is printed across Europe; the Masquerade strains.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-193",
+"era": "age-of-reason",
+"year": 1733,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"war"
+],
+"title": "The Polish Succession",
+"text": "War over the Polish throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-194",
+"era": "age-of-reason",
+"year": 1735,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"crown"
+],
+"title": "Qianlong",
+"text": "The Qianlong emperor takes the throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-195",
+"era": "age-of-reason",
+"year": 1736,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Persia",
+"tags": [
+"crown"
+],
+"title": "Nader Shah",
+"text": "Nader is crowned shah.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-196",
+"era": "age-of-reason",
+"year": 1737,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"building"
+],
+"title": "The San Carlo",
+"text": "The opera house of Naples opens.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-197",
+"era": "age-of-reason",
+"year": 1739,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"massacre",
+"war"
+],
+"title": "Nader sacks Delhi",
+"text": "Nader takes the Peacock Throne.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-198",
+"era": "age-of-reason",
+"year": 1739,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Belgrade",
+"tags": [
+"treaty"
+],
+"title": "Belgrade returned",
+"text": "The Ottomans take back Belgrade.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-199",
+"era": "age-of-reason",
+"year": 1740,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Silesia",
+"tags": [
+"war"
+],
+"title": "The Silesian War",
+"text": "Frederick II seizes Silesia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-200",
+"era": "age-of-reason",
+"year": 1740,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown"
+],
+"title": "Maria Theresa",
+"text": "Maria Theresa inherits.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-201",
+"era": "age-of-reason",
+"year": 1741,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"war"
+],
+"title": "The French take Prague",
+"text": "French and Bavarian troops take Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-202",
+"era": "age-of-reason",
+"year": 1742,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brno",
+"tags": [
+"siege"
+],
+"title": "Frederick besieges Brno",
+"text": "Prussians invade Moravia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-203",
+"era": "age-of-reason",
+"year": 1742,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Dublin",
+"tags": [
+"art"
+],
+"title": "The Messiah",
+"text": "Handel's Messiah opens in Dublin.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-204",
+"era": "age-of-reason",
+"year": 1745,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Scotland",
+"tags": [
+"uprising"
+],
+"title": "The Forty-Five",
+"text": "Bonnie Prince Charlie lands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-205",
+"era": "age-of-reason",
+"year": 1746,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Culloden",
+"tags": [
+"battle"
+],
+"title": "Culloden",
+"text": "The Jacobites are destroyed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-206",
+"era": "age-of-reason",
+"year": 1746,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"learning",
+"occult"
+],
+"title": "Calmet's treatise",
+"text": "Dom Calmet publishes his treatise on vampires.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-207",
+"era": "age-of-reason",
+"year": 1748,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Aachen",
+"tags": [
+"treaty"
+],
+"title": "Aix-la-Chapelle",
+"text": "Peace leaves Silesia to Prussia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-208",
+"era": "age-of-reason",
+"year": 1748,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Naples",
+"tags": [
+"science"
+],
+"title": "Pompeii dug",
+"text": "Excavations begin at Pompeii.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-209",
+"era": "age-of-reason",
+"year": 1751,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"learning",
+"media"
+],
+"title": "The Encyclopedie",
+"text": "Diderot's Encyclopedie begins.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-210",
+"era": "age-of-reason",
+"year": 1755,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law",
+"occult"
+],
+"title": "Maria Theresa against vampire hunts",
+"text": "The empress forbids digging up the dead.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-211",
+"era": "age-of-reason",
+"year": 1755,
+"month": null,
+"kind": "history",
+"lines": [
+"All lines"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"quake",
+"fire",
+"disaster"
+],
+"title": "Lisbon",
+"text": "An earthquake, fire and sea wave destroy Lisbon.",
+"ref": "Real history",
+"links": [
+{
+"id": "vav-lisbon",
+"title": "Lisbon"
+}
+]
+},
+{
+"id": "r3-age-of-reason-212",
+"era": "age-of-reason",
+"year": 1756,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Saxony",
+"tags": [
+"war"
+],
+"title": "The Seven Years War",
+"text": "Frederick invades Saxony.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-213",
+"era": "age-of-reason",
+"year": 1757,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kolin",
+"tags": [
+"battle"
+],
+"title": "Kolin",
+"text": "Austria beats Frederick in Bohemia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-214",
+"era": "age-of-reason",
+"year": 1757,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Plassey",
+"tags": [
+"battle"
+],
+"title": "Plassey",
+"text": "The East India Company wins Bengal.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-215",
+"era": "age-of-reason",
+"year": 1757,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rossbach",
+"tags": [
+"battle"
+],
+"title": "Rossbach and Leuthen",
+"text": "Frederick crushes the French and Austrians.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-216",
+"era": "age-of-reason",
+"year": 1758,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Olomouc",
+"tags": [
+"siege"
+],
+"title": "Olomouc holds",
+"text": "Frederick's siege fails.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-217",
+"era": "age-of-reason",
+"year": 1759,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kunersdorf",
+"tags": [
+"battle"
+],
+"title": "Kunersdorf",
+"text": "Russians and Austrians destroy Frederick's army.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-218",
+"era": "age-of-reason",
+"year": 1760,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crown"
+],
+"title": "George III",
+"text": "George III becomes king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-219",
+"era": "age-of-reason",
+"year": 1761,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Panipat",
+"tags": [
+"battle"
+],
+"title": "The third Panipat",
+"text": "The Afghans destroy the Marathas.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-220",
+"era": "age-of-reason",
+"year": 1762,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"crown",
+"death"
+],
+"title": "Catherine the Great",
+"text": "Catherine takes the throne; Peter III is killed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-221",
+"era": "age-of-reason",
+"year": 1762,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"learning"
+],
+"title": "The Social Contract",
+"text": "Rousseau publishes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-222",
+"era": "age-of-reason",
+"year": 1763,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"treaty"
+],
+"title": "The Peace of Paris",
+"text": "Britain wins Canada and India.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-223",
+"era": "age-of-reason",
+"year": 1764,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lancashire",
+"tags": [
+"industry"
+],
+"title": "The spinning jenny",
+"text": "Hargreaves invents the jenny.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-224",
+"era": "age-of-reason",
+"year": 1764,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Buxar",
+"tags": [
+"battle"
+],
+"title": "Buxar",
+"text": "The Company beats the Mughal emperor.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-225",
+"era": "age-of-reason",
+"year": 1765,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Glasgow",
+"tags": [
+"industry",
+"science"
+],
+"title": "Watt's engine",
+"text": "Watt improves the steam engine.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-226",
+"era": "age-of-reason",
+"year": 1768,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"war"
+],
+"title": "Russo-Turkish war",
+"text": "Catherine fights the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-227",
+"era": "age-of-reason",
+"year": 1769,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bengal",
+"tags": [
+"famine"
+],
+"title": "The Bengal famine",
+"text": "Ten million may die.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-228",
+"era": "age-of-reason",
+"year": 1770,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Chesma",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Chesma",
+"text": "Russia burns the Ottoman fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-229",
+"era": "age-of-reason",
+"year": 1771,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"plague",
+"uprising"
+],
+"title": "The Moscow plague riot",
+"text": "Plague and riot strike Moscow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-230",
+"era": "age-of-reason",
+"year": 1772,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"empire"
+],
+"title": "The first partition",
+"text": "Russia, Prussia and Austria take Polish lands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-231",
+"era": "age-of-reason",
+"year": 1773,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"uprising"
+],
+"title": "Pugachev",
+"text": "A Cossack claiming to be Peter III rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-232",
+"era": "age-of-reason",
+"year": 1773,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "The Jesuits suppressed",
+"text": "The pope dissolves the Jesuits.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-233",
+"era": "age-of-reason",
+"year": 1774,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kuchuk Kainarji",
+"tags": [
+"treaty"
+],
+"title": "Kuchuk Kainarji",
+"text": "Russia gains the Black Sea.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-234",
+"era": "age-of-reason",
+"year": 1774,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Versailles",
+"tags": [
+"crown"
+],
+"title": "Louis XVI",
+"text": "Louis XVI becomes king.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-235",
+"era": "age-of-reason",
+"year": 1775,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bohemia",
+"tags": [
+"uprising"
+],
+"title": "The Bohemian peasant revolt",
+"text": "Peasants march on Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-236",
+"era": "age-of-reason",
+"year": 1776,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bavaria",
+"tags": [
+"occult",
+"founding"
+],
+"title": "The Illuminati",
+"text": "Adam Weishaupt founds the Illuminati.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-237",
+"era": "age-of-reason",
+"year": 1776,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"learning",
+"money"
+],
+"title": "The Wealth of Nations",
+"text": "Adam Smith publishes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-238",
+"era": "age-of-reason",
+"year": 1778,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bohemia",
+"tags": [
+"war"
+],
+"title": "The Potato War",
+"text": "Austria and Prussia face off without battle.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-239",
+"era": "age-of-reason",
+"year": 1780,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"uprising"
+],
+"title": "The Gordon Riots",
+"text": "Anti-Catholic riots burn London.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-240",
+"era": "age-of-reason",
+"year": 1781,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law",
+"faith"
+],
+"title": "Joseph's patents",
+"text": "Serfdom ends; Protestants are tolerated.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-241",
+"era": "age-of-reason",
+"year": 1781,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Konigsberg",
+"tags": [
+"learning"
+],
+"title": "Kant's Critique",
+"text": "Kant publishes the Critique of Pure Reason.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-242",
+"era": "age-of-reason",
+"year": 1781,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bath",
+"tags": [
+"science"
+],
+"title": "Uranus",
+"text": "Herschel finds a new planet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-243",
+"era": "age-of-reason",
+"year": 1783,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"science"
+],
+"title": "Balloons",
+"text": "The Montgolfiers fly.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-244",
+"era": "age-of-reason",
+"year": 1783,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Iceland",
+"tags": [
+"disaster",
+"weather"
+],
+"title": "Laki",
+"text": "The Laki eruption poisons Europe's air.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-245",
+"era": "age-of-reason",
+"year": 1783,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Crimea",
+"tags": [
+"empire"
+],
+"title": "Russia takes the Crimea",
+"text": "Catherine annexes the khanate.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-246",
+"era": "age-of-reason",
+"year": 1784,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Transylvania",
+"tags": [
+"uprising"
+],
+"title": "Horea's revolt",
+"text": "Romanian peasants rise.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-247",
+"era": "age-of-reason",
+"year": 1786,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art"
+],
+"title": "Figaro in Prague",
+"text": "Mozart's Figaro is a hit in Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-248",
+"era": "age-of-reason",
+"year": 1787,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"art"
+],
+"title": "Don Giovanni",
+"text": "Mozart's Don Giovanni opens in Prague.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-249",
+"era": "age-of-reason",
+"year": 1788,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"weather"
+],
+"title": "The hailstorm of 1788",
+"text": "Hail destroys the harvests.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-250",
+"era": "age-of-reason",
+"year": 1789,
+"month": 7,
+"kind": "history",
+"lines": [
+"All lines"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"revolution"
+],
+"title": "The Bastille",
+"text": "Paris takes the Bastille.",
+"ref": "Real history",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "m2tt-mercer",
+"title": "Dr. Paulinus Mercer"
+}
+]
+},
+{
+"id": "r3-age-of-reason-251",
+"era": "age-of-reason",
+"year": 1789,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Versailles",
+"tags": [
+"law"
+],
+"title": "The Rights of Man",
+"text": "The Assembly declares the rights of man.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-252",
+"era": "age-of-reason",
+"year": 1790,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"death"
+],
+"title": "Joseph II dies",
+"text": "Joseph dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-253",
+"era": "age-of-reason",
+"year": 1791,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Varennes",
+"tags": [
+"crown"
+],
+"title": "The flight to Varennes",
+"text": "The French king is caught fleeing.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-254",
+"era": "age-of-reason",
+"year": 1791,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"art",
+"death"
+],
+"title": "Mozart dies",
+"text": "Mozart dies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-255",
+"era": "age-of-reason",
+"year": 1792,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Valmy",
+"tags": [
+"battle"
+],
+"title": "Valmy",
+"text": "The French Revolution's army holds.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-256",
+"era": "age-of-reason",
+"year": 1792,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"massacre"
+],
+"title": "The September massacres",
+"text": "Prisoners are killed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-257",
+"era": "age-of-reason",
+"year": 1793,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"death",
+"revolution"
+],
+"title": "Louis XVI guillotined",
+"text": "The king is executed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-258",
+"era": "age-of-reason",
+"year": 1793,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"terror"
+],
+"title": "The Terror",
+"text": "The Committee kills thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-259",
+"era": "age-of-reason",
+"year": 1793,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vendee",
+"tags": [
+"uprising",
+"massacre"
+],
+"title": "The Vendee",
+"text": "Western France rises and is crushed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-260",
+"era": "age-of-reason",
+"year": 1793,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"revolution"
+],
+"title": "Germaine is Embraced",
+"text": "In the Revolution the Brujah Critias Embraces Germaine.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-age-of-reason-261",
+"era": "age-of-reason",
+"year": 1794,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"death"
+],
+"title": "Robespierre falls",
+"text": "Robespierre is guillotined.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-262",
+"era": "age-of-reason",
+"year": 1794,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Krakow",
+"tags": [
+"uprising"
+],
+"title": "Kosciuszko",
+"text": "Poland rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-263",
+"era": "age-of-reason",
+"year": 1795,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Poland",
+"tags": [
+"empire"
+],
+"title": "The third partition",
+"text": "Poland disappears.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-264",
+"era": "age-of-reason",
+"year": 1796,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science"
+],
+"title": "Vaccination",
+"text": "Jenner tries cowpox.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-265",
+"era": "age-of-reason",
+"year": 1796,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Italy",
+"tags": [
+"war"
+],
+"title": "Bonaparte in Italy",
+"text": "Bonaparte conquers Italy.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-266",
+"era": "age-of-reason",
+"year": 1797,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"empire"
+],
+"title": "Venice ends",
+"text": "Bonaparte ends the republic.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-267",
+"era": "age-of-reason",
+"year": 1798,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Pyramids",
+"tags": [
+"battle"
+],
+"title": "Napoleon in Egypt",
+"text": "The French take Egypt.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-268",
+"era": "age-of-reason",
+"year": 1798,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Aboukir",
+"tags": [
+"battle",
+"sea"
+],
+"title": "The Nile",
+"text": "Nelson destroys the French fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-269",
+"era": "age-of-reason",
+"year": 1798,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Ireland",
+"tags": [
+"uprising"
+],
+"title": "The 1798 rising",
+"text": "Ireland rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-270",
+"era": "age-of-reason",
+"year": 1799,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Rosetta",
+"tags": [
+"learning"
+],
+"title": "The Rosetta Stone",
+"text": "French soldiers find the stone.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-271",
+"era": "age-of-reason",
+"year": 1799,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown",
+"revolution"
+],
+"title": "Brumaire",
+"text": "Bonaparte takes power.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-272",
+"era": "age-of-reason",
+"year": 1800,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marengo",
+"tags": [
+"battle"
+],
+"title": "Marengo",
+"text": "Bonaparte beats Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-273",
+"era": "age-of-reason",
+"year": 1801,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law"
+],
+"title": "The Union with Ireland",
+"text": "Ireland joins the United Kingdom.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-274",
+"era": "age-of-reason",
+"year": 1801,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"death",
+"crown"
+],
+"title": "Paul I murdered",
+"text": "Alexander I becomes tsar.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-275",
+"era": "age-of-reason",
+"year": 1804,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"crown"
+],
+"title": "Napoleon emperor",
+"text": "Napoleon crowns himself.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-276",
+"era": "age-of-reason",
+"year": 1804,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Serbia",
+"tags": [
+"uprising"
+],
+"title": "The Serbian revolt",
+"text": "Serbia rises against the Ottomans.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-277",
+"era": "age-of-reason",
+"year": 1805,
+"month": 10,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Trafalgar",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Trafalgar",
+"text": "Nelson dies winning.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-278",
+"era": "age-of-reason",
+"year": 1805,
+"month": 12,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Austerlitz",
+"tags": [
+"battle"
+],
+"title": "Austerlitz",
+"text": "Napoleon wins near Brno; the dead flood the Moravian Shadowlands.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-279",
+"era": "age-of-reason",
+"year": 1806,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"empire"
+],
+"title": "The Holy Roman Empire ends",
+"text": "Francis II gives up the crown.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-280",
+"era": "age-of-reason",
+"year": 1806,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Jena",
+"tags": [
+"battle"
+],
+"title": "Jena",
+"text": "Napoleon crushes Prussia.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-281",
+"era": "age-of-reason",
+"year": 1807,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Tilsit",
+"tags": [
+"treaty"
+],
+"title": "Tilsit",
+"text": "Napoleon and Alexander divide Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-282",
+"era": "age-of-reason",
+"year": 1808,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"uprising"
+],
+"title": "The Dos de Mayo",
+"text": "Madrid rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-283",
+"era": "age-of-reason",
+"year": 1809,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Wagram",
+"tags": [
+"battle"
+],
+"title": "Wagram",
+"text": "Napoleon beats Austria.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-284",
+"era": "age-of-reason",
+"year": 1810,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leipzig",
+"tags": [
+"science"
+],
+"title": "Hahnemann's homeopathy",
+"text": "Hahnemann publishes.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-285",
+"era": "age-of-reason",
+"year": 1812,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Borodino",
+"tags": [
+"battle"
+],
+"title": "Borodino",
+"text": "The bloodiest day.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-286",
+"era": "age-of-reason",
+"year": 1812,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"fire"
+],
+"title": "Moscow burns",
+"text": "Napoleon finds Moscow burning.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-287",
+"era": "age-of-reason",
+"year": 1812,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berezina",
+"tags": [
+"war",
+"death"
+],
+"title": "The retreat",
+"text": "The Grande Armee dies in the snow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-288",
+"era": "age-of-reason",
+"year": 1813,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Leipzig",
+"tags": [
+"battle"
+],
+"title": "Leipzig",
+"text": "The Battle of the Nations.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-289",
+"era": "age-of-reason",
+"year": 1814,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty"
+],
+"title": "The Congress of Vienna",
+"text": "The powers redraw Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-290",
+"era": "age-of-reason",
+"year": 1815,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Waterloo",
+"tags": [
+"battle"
+],
+"title": "Waterloo",
+"text": "Napoleon falls.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-291",
+"era": "age-of-reason",
+"year": 1815,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tambora",
+"tags": [
+"disaster"
+],
+"title": "Tambora",
+"text": "The greatest eruption in history.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-292",
+"era": "age-of-reason",
+"year": 1816,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"weather",
+"art"
+],
+"title": "The year without a summer",
+"text": "Mary Shelley conceives Frankenstein.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-293",
+"era": "age-of-reason",
+"year": 1817,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bengal",
+"tags": [
+"plague"
+],
+"title": "Cholera",
+"text": "Cholera spreads from Bengal.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-294",
+"era": "age-of-reason",
+"year": 1818,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art"
+],
+"title": "Frankenstein",
+"text": "Frankenstein is published.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-295",
+"era": "age-of-reason",
+"year": 1819,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art",
+"occult"
+],
+"title": "The Vampyre",
+"text": "Polidori's tale.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-296",
+"era": "age-of-reason",
+"year": 1819,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Manchester",
+"tags": [
+"massacre"
+],
+"title": "Peterloo",
+"text": "Cavalry charge a crowd.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-297",
+"era": "age-of-reason",
+"year": 1821,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Greece",
+"tags": [
+"uprising"
+],
+"title": "The Greek revolt",
+"text": "Greece rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-298",
+"era": "age-of-reason",
+"year": 1822,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Chios",
+"tags": [
+"massacre"
+],
+"title": "Chios",
+"text": "The Ottomans kill tens of thousands.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-299",
+"era": "age-of-reason",
+"year": 1822,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"learning"
+],
+"title": "Champollion",
+"text": "Champollion reads hieroglyphs.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-300",
+"era": "age-of-reason",
+"year": 1824,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Missolonghi",
+"tags": [
+"death"
+],
+"title": "Byron dies",
+"text": "Byron dies of fever.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-301",
+"era": "age-of-reason",
+"year": 1825,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Stockton",
+"tags": [
+"industry",
+"travel"
+],
+"title": "The first railway",
+"text": "The Stockton and Darlington opens.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-302",
+"era": "age-of-reason",
+"year": 1825,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "St Petersburg",
+"tags": [
+"uprising"
+],
+"title": "The Decembrists",
+"text": "Officers rise and are crushed.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-303",
+"era": "age-of-reason",
+"year": 1826,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Constantinople",
+"tags": [
+"massacre"
+],
+"title": "The Janissaries destroyed",
+"text": "The sultan kills the Janissaries.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-304",
+"era": "age-of-reason",
+"year": 1827,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Navarino",
+"tags": [
+"battle",
+"sea"
+],
+"title": "Navarino",
+"text": "The allies sink the Ottoman fleet.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-305",
+"era": "age-of-reason",
+"year": 1829,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Adrianople",
+"tags": [
+"treaty"
+],
+"title": "Greece free",
+"text": "The Ottomans accept a free Greece.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-306",
+"era": "age-of-reason",
+"year": 1830,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"revolution"
+],
+"title": "The July Revolution",
+"text": "Charles X falls.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-307",
+"era": "age-of-reason",
+"year": 1830,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"uprising"
+],
+"title": "The November Uprising",
+"text": "Poland rises.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-308",
+"era": "age-of-reason",
+"year": 1830,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"revolution"
+],
+"title": "Belgium",
+"text": "Belgium breaks away.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-309",
+"era": "age-of-reason",
+"year": 1831,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"plague"
+],
+"title": "Cholera in Europe",
+"text": "Cholera reaches Europe.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-310",
+"era": "age-of-reason",
+"year": 1832,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law"
+],
+"title": "The Reform Act",
+"text": "Britain widens the vote.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-311",
+"era": "age-of-reason",
+"year": 1832,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising",
+"plague"
+],
+"title": "The June rebellion",
+"text": "Paris rises in the cholera year.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-312",
+"era": "age-of-reason",
+"year": 1833,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"law"
+],
+"title": "Slavery abolished",
+"text": "Britain abolishes slavery.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-313",
+"era": "age-of-reason",
+"year": 1835,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"crown",
+"death"
+],
+"title": "Francis I dies",
+"text": "Ferdinand becomes emperor.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-314",
+"era": "age-of-reason",
+"year": 1836,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brno",
+"tags": [
+"industry"
+],
+"title": "Brno's mills",
+"text": "Brno's woollen mills grow.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-315",
+"era": "age-of-reason",
+"year": 1604,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"occult"
+],
+"title": "Tremere at the alchemists' court",
+"text": "The alchemists' lane of Prague castle hides more than mortal adepts; the Tremere keep a close eye on Rudolf's circle.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-age-of-reason-316",
+"era": "age-of-reason",
+"year": 1618,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"war"
+],
+"title": "The Kindred and the long war",
+"text": "The Thirty Years War opens; princes of the Camarilla and Sabbat both fatten on the armies.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-age-of-reason-317",
+"era": "age-of-reason",
+"year": 1626,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Germany",
+"tags": [
+"war",
+"famine"
+],
+"title": "The wolves of the war",
+"text": "Packs of wolves, and worse, return to the empty villages of Germany; the Get of Fenris hunt the Wyrm's creatures in the ruins.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-318",
+"era": "age-of-reason",
+"year": 1631,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Magdeburg",
+"tags": [
+"massacre"
+],
+"title": "The Magdeburg dead",
+"text": "The twenty thousand dead of Magdeburg cross in a night; the Hierarchy names the place a Haunt.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-319",
+"era": "age-of-reason",
+"year": 1648,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Munster",
+"tags": [
+"treaty"
+],
+"title": "A peace for the living",
+"text": "The Peace of Westphalia settles the mortal borders; elders of both sects redraw their own.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-320",
+"era": "age-of-reason",
+"year": 1690,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"faith"
+],
+"title": "Justicars named",
+"text": "The title of justicar comes into use in the Camarilla in the late 1600s.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "dav-midnight-crescent",
+"title": "The Midnight Crescent"
+},
+{
+"id": "dc1-laibon",
+"title": "The Laibon"
+},
+{
+"id": "vac-royal-web",
+"title": "Victoria's Royal Web"
+}
+]
+},
+{
+"id": "r3-age-of-reason-321",
+"era": "age-of-reason",
+"year": 1666,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science"
+],
+"title": "The Royal Society and the Order",
+"text": "The Order of Reason sends members into the new Royal Society.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-322",
+"era": "age-of-reason",
+"year": 1683,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"siege"
+],
+"title": "The Kindred of Vienna hold",
+"text": "The Ottoman siege brings Assamite and Setite agents to the walls; Vienna's Tremere hold their chantry.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-age-of-reason-323",
+"era": "age-of-reason",
+"year": 1727,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"science",
+"death"
+],
+"title": "The Order mourns Newton",
+"text": "Newton's death leaves the Order of Reason without its greatest Sleeper ally; some of its members think Newton was more than a Sleeper.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-324",
+"era": "age-of-reason",
+"year": 1732,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"media",
+"occult"
+],
+"title": "Vampire reports in the newspapers",
+"text": "The Medvedja report is reprinted across Europe; learned men argue over vampires.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-325",
+"era": "age-of-reason",
+"year": 1740,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Silesia",
+"tags": [
+"war"
+],
+"title": "The Ventrue of Berlin",
+"text": "Frederick's Prussia rises; the Ventrue of Berlin grow with it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-326",
+"era": "age-of-reason",
+"year": 1755,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"quake"
+],
+"title": "The Lisbon dead",
+"text": "Tens of thousands die in a morning; the Shadowlands of Lisbon shake with a small storm.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-327",
+"era": "age-of-reason",
+"year": 1770,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"industry"
+],
+"title": "The Order of Reason and the machines",
+"text": "The craftsmen's guilds of the Order of Reason back the new engines of Britain.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-328",
+"era": "age-of-reason",
+"year": 1776,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Bavaria",
+"tags": [
+"occult",
+"founding"
+],
+"title": "The Illuminati and the Order",
+"text": "The Bavarian Illuminati draw on Freemasonry; the Order of Reason watches a secret society it did not found.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-329",
+"era": "age-of-reason",
+"year": 1785,
+"month": null,
+"kind": "history",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bavaria",
+"tags": [
+"law",
+"occult"
+],
+"title": "The Illuminati banned",
+"text": "Bavaria bans the secret societies.",
+"ref": "Real history",
+"links": []
+},
+{
+"id": "r3-age-of-reason-330",
+"era": "age-of-reason",
+"year": 1789,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"revolution"
+],
+"title": "The Brujah and the Revolution",
+"text": "Brujah idealists back the Revolution; Toreador of the court flee or die.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-age-of-reason-331",
+"era": "age-of-reason",
+"year": 1794,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"terror"
+],
+"title": "The Terror and the Kindred",
+"text": "Kindred use the Terror to settle debts; the guillotine kills a few ghouls.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-age-of-reason-332",
+"era": "age-of-reason",
+"year": 1798,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Egypt",
+"tags": [
+"war"
+],
+"title": "The mummies and the French",
+"text": "Napoleon's scholars dig in Egypt; the mummies watch strangers dig.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mum-code-of-horus",
+"title": "The Code of Horus"
+}
+]
+},
+{
+"id": "r3-age-of-reason-333",
+"era": "age-of-reason",
+"year": 1812,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Russia",
+"tags": [
+"war",
+"death"
+],
+"title": "The Grande Armee's dead",
+"text": "Half a million die in Russia; Stygia takes the dead of the retreat.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-334",
+"era": "age-of-reason",
+"year": 1815,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty"
+],
+"title": "The Congress of the Kindred",
+"text": "Kindred of Vienna host the Congress's diplomats and take their share.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-age-of-reason-335",
+"era": "age-of-reason",
+"year": 1816,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"art",
+"occult"
+],
+"title": "The Villa Diodati",
+"text": "Byron, the Shelleys and Polidori write ghost stories by a lake; Toreador take note of the Vampyre.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
+},
+{
+"id": "r3-age-of-reason-336",
+"era": "age-of-reason",
+"year": 1822,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Egypt",
+"tags": [
+"learning"
+],
+"title": "The names can be read",
+"text": "Champollion reads the hieroglyphs; the mummies' names can be read again.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "mum-code-of-horus",
+"title": "The Code of Horus"
+}
+]
+},
+{
+"id": "r3-age-of-reason-337",
+"era": "age-of-reason",
+"year": 1830,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"revolution"
+],
+"title": "The Kindred of the July Revolution",
+"text": "Barricades go up in Paris; anarchs join the crowds.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": [
+{
+"id": "v20c-catacombes",
+"title": "Catacombes de Paris"
+},
+{
+"id": "daeu-france",
+"title": "France in 1230"
+},
+{
+"id": "frbn-hegemony",
+"title": "The Toreador Hegemony"
+}
+]
+},
+{
+"id": "r3-age-of-reason-338",
+"era": "age-of-reason",
+"year": 1831,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Europe",
+"tags": [
+"plague"
+],
+"title": "The cholera dead",
+"text": "Cholera kills hundreds of thousands; the Shadowlands of Europe's cities fill.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"links": []
 }
 ]

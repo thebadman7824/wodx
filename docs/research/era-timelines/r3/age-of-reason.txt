@@ -1,0 +1,339 @@
+# Age of Reason, 1601 to 1836. year[-month]|kind|lines|region|place|tags|title|text
+1601|H|mor|EU|Prague|science,death|Tycho dies|Tycho Brahe dies in Prague; Kepler inherits his observations.
+1601|H|mor|EU|Kinsale|battle|Kinsale|The English break the Irish and Spanish at Kinsale.
+1601|H|mor|EU|Russia|famine,weather|The Russian famine|Three years of failed harvests kill perhaps a third of Russia.
+1602|H|mor|EU|Amsterdam|trade,founding,money|The Dutch East India Company|The VOC is founded and sells shares to the public.
+1603|H|mor|EU|London|crown,death|Elizabeth dies|James VI of Scotland becomes James I of England.
+1603|H|mor|AS|Edo|crown|The Tokugawa shogunate|Tokugawa Ieyasu becomes shogun and rules from Edo.
+1603|H|mor|AS|Kyoto|art|Kabuki begins|Izumo no Okuni performs the first kabuki in Kyoto.
+1605|H|mor|EU|London|terror|The Gunpowder Plot|Guy Fawkes is caught under Parliament with barrels of powder.
+1605|H|mor|EU|Moscow|crown,uprising|The False Dmitry|A pretender claiming to be Ivan's son takes Moscow.
+1605|H|mor|EU|Madrid|art|Don Quixote|Cervantes publishes the first part of Don Quixote.
+1605|H|mor|AS|Agra|crown,death|Akbar dies|Akbar dies; Jahangir takes the throne.
+1606|H|mor|EU|Zsitvatorok|treaty|The Peace of Zsitvatorok|The Long Turkish War ends.
+1607|H|mor|EU|Ulster|migration|The Flight of the Earls|The Gaelic lords of Ulster flee to the continent.
+1608|H|mor|EU|Middelburg|science|The telescope|A spectacle-maker asks for a patent on a looking glass that sees far.
+1609|H|mor|EU|Prague|law,faith|The Letter of Majesty|Rudolf II grants Bohemia religious freedom.
+1609|H|mor|EU|Prague|science|Kepler's new astronomy|Kepler publishes the elliptical orbit of Mars.
+1609|H|mor|EU|Spain|persecution,migration|The Moriscos expelled|Spain expels the descendants of its Muslims.
+1610|H|mor|EU|Paris|death,crown|Henry IV murdered|Ravaillac stabs the French king in his carriage.
+1610|H|mor|EU|Moscow|war|The Poles in Moscow|A Polish army takes Moscow.
+1610|W|mag|EU|Padua|science|The moons of Jupiter|Galileo publishes the moons of Jupiter; the Order of Reason calls it proof, the Celestial Chorus a trespass.
+1611|H|mor|EU|London|faith,media|The King James Bible|The authorised English Bible is printed.
+1611|H|mor|EU|Prague|crown|Rudolf deposed|Matthias forces his brother out of Bohemia.
+1612|H|mor|EU|Prague|crown,death|Rudolf II dies|Rudolf dies; his collections begin to scatter.
+1612|H|mor|EU|Moscow|war|Minin and Pozharsky|A Russian militia drives the Poles out of Moscow.
+1612|W|hun|EU|Lancashire|persecution,occult|The Pendle witches|Ten people are hanged as witches at Lancaster.
+1613|H|mor|EU|Moscow|crown|The Romanovs|Michael Romanov is chosen tsar.
+1613|H|mor|EU|London|fire|The Globe burns|A cannon shot during Henry VIII sets the Globe alight.
+1614|H|mor|AS|Japan|persecution,faith|Christianity banned in Japan|The shogun orders all missionaries out.
+1614|H|mor|EU|Paris|law|The last Estates-General|The French Estates meet for the last time until 1789.
+1615|H|mor|AS|Osaka|siege,war|Osaka falls|The Tokugawa destroy the Toyotomi at Osaka.
+1616|H|mor|EU|London|art,death|Shakespeare dies|Shakespeare and Cervantes die in the same spring.
+1616|H|mor|EU|Rome|science,faith|Copernicus banned|The Church orders Copernicus's book corrected.
+1616|H|mor|AS|Manchuria|crown|The Later Jin|Nurhaci proclaims the Later Jin, the start of the Qing.
+1618-5|H|all|EU|Prague|uprising,war|The defenestration of 1618|The emperor's regents are thrown from a window of Prague castle; the Thirty Years War begins.
+1618|H|mor|EU|Prague|war|The Bohemian revolt|The Bohemian estates raise an army.
+1619|H|mor|EU|Prague|crown|The Winter King|The Bohemians choose Frederick of the Palatinate as king.
+1619|H|mor|AS|Jakarta|empire|Batavia|The Dutch take Jakarta and name it Batavia.
+1620-11|H|all|EU|White Mountain|battle|White Mountain|The Bohemian army is routed outside Prague.
+1620|H|mor|EU|Plymouth|migration|The Mayflower sails|English separatists sail for America.
+1621|H|mor|EU|Prague|death,persecution|The Old Town Square executions|Twenty-seven leaders of the revolt are executed in Prague.
+1621|H|mor|EU|Netherlands|war|The truce ends|The war between Spain and the Dutch resumes.
+1622|H|mor|EU|Moravia|persecution,migration|The Anabaptists expelled|The Hutterites are driven out of Moravia.
+1623|H|mor|AS|Ambon|massacre,trade|The Amboyna massacre|The Dutch torture and kill English traders on Ambon.
+1623|H|mor|ME|Baghdad|war|Shah Abbas takes Baghdad|Persia takes Baghdad from the Ottomans.
+1624|H|mor|EU|Paris|crown|Richelieu|Cardinal Richelieu becomes chief minister of France.
+1625|H|mor|EU|London|crown|Charles I|Charles I becomes king.
+1626|H|mor|EU|Dessau|battle|Dessau Bridge|Wallenstein beats Mansfeld.
+1627|H|mor|EU|Bohemia|law,faith|The Renewed Land Ordinance|Bohemia becomes Catholic by law; Protestants must convert or leave.
+1627|H|mor|EU|La Rochelle|siege|La Rochelle|Richelieu besieges the Huguenot port; it starves into surrender.
+1628|H|mor|EU|Moravia|law,faith|Moravia made Catholic|The Renewed Land Ordinance comes to Moravia.
+1628|H|mor|EU|Leszno|migration|Comenius leaves|Jan Amos Comenius leaves Bohemia for Poland.
+1629|H|mor|EU|Germany|law,faith|The Edict of Restitution|The emperor orders Church lands returned.
+1629|H|hun|EU|Bamberg|persecution,occult|The Bamberg trials|The prince-bishop of Bamberg burns hundreds as witches.
+1630|H|mor|EU|Pomerania|war|Gustavus Adolphus lands|Sweden enters the war.
+1630|H|mor|EU|Milan|plague|The Milan plague|Plague kills perhaps half of Milan.
+1631|H|mor|EU|Magdeburg|massacre,fire|The sack of Magdeburg|Tilly's army storms Magdeburg; twenty thousand die.
+1631|H|mor|EU|Breitenfeld|battle|Breitenfeld|Gustavus Adolphus destroys Tilly's army.
+1631|H|mor|AS|Agra|death,building|Mumtaz Mahal dies|Shah Jahan's wife dies; he begins the Taj Mahal.
+1631|H|mor|EU|Naples|disaster|Vesuvius erupts|Vesuvius kills thousands.
+1632|H|mor|EU|Lutzen|battle,death|Lutzen|Gustavus Adolphus dies winning.
+1632|H|mor|EU|Florence|science|Galileo's Dialogue|Galileo publishes his Dialogue on the two world systems.
+1633|H|mor|EU|Rome|science,faith,law|Galileo tried|The Inquisition forces Galileo to recant.
+1634|H|mor|EU|Cheb|death|Wallenstein murdered|The emperor's general is killed at Cheb.
+1634|H|mor|EU|Nordlingen|battle|Nordlingen|The Swedes are beaten.
+1635|H|mor|EU|Prague|treaty|The Peace of Prague|The emperor makes peace with Saxony.
+1635|H|mor|EU|Paris|learning,founding|The French Academy|Richelieu founds the Academie francaise.
+1636|H|mor|AS|Mukden|crown,founding|The Qing|Hong Taiji renames his state Qing.
+1637|H|mor|EU|Leiden|science,learning|Descartes's Discourse|Descartes publishes the Discourse on Method.
+1637|H|mor|EU|Amsterdam|money,trade|Tulip mania|The price of tulip bulbs collapses.
+1637|H|mor|AS|Shimabara|uprising,faith|The Shimabara rising|Christian peasants rise in Kyushu.
+1638|H|mor|ME|Baghdad|siege|Baghdad retaken|Murad IV takes back Baghdad.
+1638|H|mor|AS|Shimabara|massacre|Hara castle|The Shimabara rebels are killed to the last.
+1639|H|mor|AS|Japan|law,trade|Japan closed|Japan expels the Portuguese and closes its ports.
+1639|H|mor|ME|Zuhab|treaty|The Treaty of Zuhab|The Ottoman-Persian border is fixed.
+1640|H|mor|EU|Lisbon|uprising,crown|Portugal free|Portugal breaks from Spain.
+1640|H|mor|EU|Barcelona|uprising|The Reapers' War|Catalonia rises against Madrid.
+1641|H|mor|EU|Ulster|uprising,massacre|The Irish rising|Irish Catholics rise; thousands of settlers die.
+1642|H|mor|EU|Edgehill|battle,war|The English Civil War|King and Parliament fight at Edgehill.
+1642|H|mor|EU|Olomouc|war,siege|The Swedes take Olomouc|Swedish troops occupy Olomouc until 1650.
+1642|H|mor|EU|Paris|crown,death|Richelieu dies|Mazarin follows Richelieu.
+1643|H|mor|EU|Rocroi|battle|Rocroi|The French destroy the Spanish infantry.
+1643|H|mor|EU|Paris|crown|Louis XIV|The four-year-old Louis XIV becomes king.
+1644|H|mor|AS|Beijing|crown,death|The Ming fall|Li Zicheng takes Beijing; the last Ming emperor hangs himself.
+1644|H|mor|AS|Shanhai Pass|war,crown|The Qing take Beijing|Wu Sangui opens the pass; the Manchus take China.
+1644|H|mor|EU|Marston Moor|battle|Marston Moor|Cromwell's cavalry win the north.
+1645|H|mor|EU|Brno|siege|Brno holds|The Swedes besiege Brno and fail.
+1645|H|mor|EU|Naseby|battle|Naseby|Parliament's New Model Army destroys the king's army.
+1645|H|mor|AS|Yangzhou|massacre|The Yangzhou massacre|Qing troops kill much of Yangzhou.
+1645|W|hun|EU|Essex|persecution,occult|The Witchfinder General|Matthew Hopkins hangs about a hundred people as witches in East Anglia.
+1645|H|mor|ME|Crete|war|The war for Crete|The Ottomans invade Venetian Crete.
+1647|H|mor|EU|Naples|uprising|Masaniello|The fisherman Masaniello leads Naples against Spanish taxes.
+1648|H|mor|EU|Munster|treaty|The Peace of Westphalia|The Thirty Years War ends; the Dutch are free.
+1648|H|mor|EU|Prague|siege|The Swedes at Prague|Swedish troops take Prague castle and loot Rudolf's collections.
+1648|H|mor|EU|Ukraine|uprising,massacre|Khmelnytsky|The Cossacks rise against Poland; tens of thousands of Jews are killed.
+1648|H|mor|EU|Paris|uprising|The Fronde|Paris rises against Mazarin.
+1648|H|mor|ME|Constantinople|crown,death|Sultan Ibrahim deposed|The mad sultan is deposed and strangled.
+1649|H|mor|EU|London|crown,death,revolution|Charles I beheaded|The king is executed outside Whitehall.
+1649|H|mor|EU|Drogheda|massacre|Drogheda|Cromwell's army storms Drogheda.
+1649|H|mor|EU|Russia|law|The Ulozhenie|Russia's law code binds peasants to the land.
+1650|H|mor|EU|Olomouc|war|The Swedes leave Olomouc|The Swedish garrison marches out.
+1651|H|mor|EU|London|learning|Leviathan|Thomas Hobbes publishes Leviathan.
+1651|H|mor|EU|Worcester|battle|Worcester|Cromwell beats Charles II, who escapes by hiding in an oak.
+1652|H|mor|EU|Moscow|faith|Patriarch Nikon|Nikon's reforms split the Russian church.
+1652|H|mor|EU|Channel|war,sea|The Anglo-Dutch War|England and the Dutch fight at sea.
+1653|H|mor|AS|Agra|building|The Taj Mahal finished|The tomb is complete.
+1653|H|mor|EU|London|crown|Lord Protector|Cromwell becomes Lord Protector.
+1654|H|mor|EU|Pereyaslav|treaty|Pereyaslav|The Cossacks swear to the tsar.
+1655|H|mor|EU|Poland|war|The Deluge|Sweden invades Poland.
+1656|H|mor|EU|Naples|plague|The Naples plague|Plague kills half of Naples.
+1656|H|mor|ME|Constantinople|crown|The Koprulu viziers|Mehmed Koprulu becomes grand vizier and saves the empire.
+1658|H|mor|EU|London|death|Cromwell dies|Oliver Cromwell dies; his son cannot hold power.
+1658|H|mor|AS|Delhi|crown|Aurangzeb|Aurangzeb imprisons his father and takes the throne.
+1659|H|mor|EU|Pyrenees|treaty|The Peace of the Pyrenees|France and Spain make peace.
+1660|H|mor|EU|London|crown|The Restoration|Charles II returns.
+1660|H|mor|EU|London|science,founding|The Royal Society|The Royal Society is founded.
+1661|H|mor|EU|Paris|crown|Louis rules himself|Louis XIV takes power on Mazarin's death.
+1661|H|mor|AS|Beijing|crown|Kangxi|The Kangxi emperor takes the throne.
+1662|H|mor|AS|Taiwan|war|Koxinga takes Taiwan|Zheng Chenggong drives the Dutch from Taiwan.
+1663|H|mor|EU|Moravia|war|The Tatar raid|Ottoman Tatars raid Moravia and carry off thousands.
+1664|H|mor|EU|Szentgotthard|battle|Szentgotthard|Imperial troops beat the Ottomans.
+1665|H|mor|EU|London|plague|The Great Plague|Plague kills a quarter of London.
+1665|W|vam|EU|London|plague|Kindred of the plague city|Prince Mithras's Kindred hunt among the dying while the court flees to Oxford.
+1666|W|vam|EU|London|fire|The Great Fire|London burns for four days; Kindred lose havens in the City, and some say a few of them lit the fire.
+1666|H|mor|ME|Smyrna|faith|Sabbatai Zevi|The messianic claimant Sabbatai Zevi converts to Islam before the sultan.
+1667|H|mor|EU|Medway|war,sea|The raid on the Medway|The Dutch burn the English fleet.
+1669|H|mor|ME|Candia|siege|Candia falls|Venice gives up Crete after 21 years.
+1670|H|mor|EU|Russia|uprising|Stenka Razin|A Cossack revolt sweeps the Volga.
+1672|H|mor|EU|Netherlands|war|The disaster year|France invades the Dutch Republic; the Dutch open the dikes.
+1672|H|mor|EU|The Hague|death|The De Witt brothers lynched|A mob kills the Dutch leaders.
+1673|H|mor|AS|China|uprising|The Three Feudatories|Southern generals rebel against the Qing.
+1675|H|mor|EU|Fehrbellin|battle|Fehrbellin|Brandenburg beats Sweden.
+1675|H|mor|EU|London|science,building|Greenwich observatory|The Royal Observatory is founded.
+1677|H|mor|EU|The Hague|learning,death|Spinoza dies|Spinoza's Ethics appears after his death.
+1678|W|hun|EU|Velke Losiny|persecution,occult|The Losiny trials|Witch trials in northern Moravia begin; about a hundred people burn before 1696.
+1679|H|mor|EU|Vienna|plague|The Vienna plague|Plague kills tens of thousands in Vienna.
+1680|H|mor|EU|Bohemia|uprising|The Bohemian peasant revolt|Peasants rise against forced labour.
+1680|H|mor|EU|Paris|crime,occult|The Affair of the Poisons|Fortune-tellers and poisoners at court are burned; the king's mistress is implicated.
+1681|H|mor|EU|Strasbourg|war|Strasbourg taken|Louis XIV seizes Strasbourg.
+1682|H|mor|EU|Versailles|building,crown|Versailles|Louis XIV moves the court to Versailles.
+1682|H|mor|EU|Moscow|crown|Peter and Ivan|Peter and his brother Ivan are crowned joint tsars.
+1683|H|all|EU|Vienna|siege,battle|Kahlenberg|Jan Sobieski breaks the Ottoman siege of Vienna.
+1684|H|mor|EU|Linz|treaty|The Holy League|The emperor, Poland and Venice ally against the Ottomans.
+1685|H|mor|EU|Fontainebleau|persecution,faith|The Edict of Nantes revoked|Louis XIV outlaws Protestantism; Huguenots flee.
+1686|H|mor|EU|Buda|siege|Buda retaken|Imperial troops take Buda after 145 years.
+1687|H|mor|EU|London|science|Newton's Principia|Newton publishes the laws of motion and gravity.
+1687|H|mor|ME|Athens|war|The Parthenon blown up|A Venetian shell ignites the Ottoman powder store in the Parthenon.
+1688|H|mor|EU|London|revolution,crown|The Glorious Revolution|William of Orange lands; James II flees.
+1689|H|mor|EU|London|law|The Bill of Rights|Parliament limits the crown.
+1689|H|mor|AS|Nerchinsk|treaty|Nerchinsk|Russia and China fix their border.
+1690|H|mor|EU|Boyne|battle|The Boyne|William beats James in Ireland.
+1690|H|mor|EU|Belgrade|migration|The Great Serb Migration|Serbs flee north into Hungary.
+1691|W|vam|EU|Europe|occult|The eclipse of 1691|An eclipse on 23 August is marked by Lasombra across Europe.
+1693|H|mor|EU|Sicily|quake,disaster|The Sicilian earthquake|An earthquake kills sixty thousand in Sicily.
+1694|H|mor|EU|London|money,founding|The Bank of England|The Bank of England is founded.
+1696|H|mor|EU|Azov|siege|Azov taken|Peter takes Azov.
+1697|H|mor|EU|Zenta|battle|Zenta|Eugene of Savoy destroys the Ottoman army.
+1697|H|mor|EU|Amsterdam|travel|Peter's Grand Embassy|Tsar Peter travels west in disguise and works in Dutch shipyards.
+1698|H|mor|EU|Moscow|uprising,death|The streltsy executed|Peter executes over a thousand rebel musketeers.
+1699|H|mor|EU|Karlowitz|treaty|Karlowitz|The Ottomans give up Hungary.
+1700|H|mor|EU|Narva|battle|Narva|Charles XII crushes the Russians.
+1700|H|mor|EU|Madrid|crown,death|Charles II of Spain dies|The last Spanish Habsburg dies.
+1701|H|mor|EU|Berlin|crown|The King in Prussia|Frederick I crowns himself in Konigsberg.
+1702|H|mor|AS|Edo|death|The forty-seven ronin|Masterless samurai avenge their lord and are ordered to kill themselves.
+1703|H|mor|EU|St Petersburg|founding|St Petersburg founded|Peter founds a city on the Neva marshes.
+1703|H|mor|EU|Hungary|uprising|Rakoczi's war|Hungary rises against the Habsburgs.
+1704|H|mor|EU|Blenheim|battle|Blenheim|Marlborough and Eugene beat the French.
+1704|H|mor|EU|Gibraltar|war|Gibraltar taken|An English and Dutch fleet takes Gibraltar.
+1707|H|mor|EU|London|law|The Acts of Union|England and Scotland become Great Britain.
+1707|H|mor|AS|Delhi|crown,death|Aurangzeb dies|Mughal power begins to break up.
+1707|H|mor|AS|Fuji|disaster|Mount Fuji erupts|The last eruption of Fuji covers Edo in ash.
+1709|H|mor|EU|Poltava|battle|Poltava|Peter destroys Charles XII's army.
+1709|H|mor|EU|Europe|weather,famine|The Great Frost|The coldest winter in five centuries kills crops and people.
+1710|H|mor|EU|Meissen|industry,founding|Meissen porcelain|Europe's first hard porcelain works opens.
+1711|H|mor|EU|Pruth|war|The Pruth|The Ottomans trap Peter's army.
+1712|H|mor|EU|Moravia|plague|Plague in Moravia|Plague returns to Moravia; columns of thanks follow.
+1713|H|mor|EU|Utrecht|treaty|The Peace of Utrecht|The War of the Spanish Succession ends.
+1713|H|mor|EU|Vienna|law,crown|The Pragmatic Sanction|Charles VI lets his daughter inherit.
+1714|H|mor|EU|London|crown|George I|The Elector of Hanover becomes king.
+1715|H|mor|EU|Versailles|crown,death|Louis XIV dies|The Sun King dies after 72 years.
+1715|H|mor|EU|Scotland|uprising|The Fifteen|A Jacobite rising fails.
+1716|H|mor|EU|Petrovaradin|battle|Petrovaradin|Eugene beats the Ottomans.
+1717|H|mor|EU|Belgrade|siege|Belgrade taken|Eugene takes Belgrade.
+1717|H|mor|EU|London|occult,founding|The Grand Lodge|London's Freemasons found a grand lodge.
+1720|H|mor|EU|Marseille|plague|The Marseille plague|Plague kills half of Marseille.
+1720|H|mor|EU|London|money|The South Sea Bubble|Shares collapse.
+1721|H|mor|EU|St Petersburg|crown,empire|Peter emperor|Russia becomes an empire.
+1722|H|mor|ME|Isfahan|siege|Isfahan falls|Afghans take Isfahan.
+1725|H|mor|EU|St Petersburg|crown,death|Peter dies|Peter the Great dies.
+1726|H|mor|EU|London|art|Gulliver's Travels|Swift publishes Gulliver's Travels.
+1727|H|mor|EU|London|science,death|Newton dies|Newton is buried in Westminster Abbey.
+1725|H|mor|EU|Kisiljevo|occult|Petar Blagojevich|An imperial official reports that a dead peasant of Kisiljevo in Serbia rose to drink the blood of his neighbours.
+1732|W|vam|EU|Medvedja|occult,media|The Medvedja vampires|An Austrian army surgeon's report on vampires in Serbia is printed across Europe; the Masquerade strains.
+1733|H|mor|EU|Poland|war|The Polish Succession|War over the Polish throne.
+1735|H|mor|AS|Beijing|crown|Qianlong|The Qianlong emperor takes the throne.
+1736|H|mor|ME|Persia|crown|Nader Shah|Nader is crowned shah.
+1737|H|mor|EU|Naples|building|The San Carlo|The opera house of Naples opens.
+1739|H|mor|AS|Delhi|massacre,war|Nader sacks Delhi|Nader takes the Peacock Throne.
+1739|H|mor|EU|Belgrade|treaty|Belgrade returned|The Ottomans take back Belgrade.
+1740|H|mor|EU|Silesia|war|The Silesian War|Frederick II seizes Silesia.
+1740|H|mor|EU|Vienna|crown|Maria Theresa|Maria Theresa inherits.
+1741|H|mor|EU|Prague|war|The French take Prague|French and Bavarian troops take Prague.
+1742|H|mor|EU|Brno|siege|Frederick besieges Brno|Prussians invade Moravia.
+1742|H|mor|EU|Dublin|art|The Messiah|Handel's Messiah opens in Dublin.
+1745|H|mor|EU|Scotland|uprising|The Forty-Five|Bonnie Prince Charlie lands.
+1746|H|mor|EU|Culloden|battle|Culloden|The Jacobites are destroyed.
+1746|H|mor|EU|Paris|learning,occult|Calmet's treatise|Dom Calmet publishes his treatise on vampires.
+1748|H|mor|EU|Aachen|treaty|Aix-la-Chapelle|Peace leaves Silesia to Prussia.
+1748|H|mor|EU|Naples|science|Pompeii dug|Excavations begin at Pompeii.
+1751|H|mor|EU|Paris|learning,media|The Encyclopedie|Diderot's Encyclopedie begins.
+1755|H|mor|EU|Vienna|law,occult|Maria Theresa against vampire hunts|The empress forbids digging up the dead.
+1755|H|all|EU|Lisbon|quake,fire,disaster|Lisbon|An earthquake, fire and sea wave destroy Lisbon.
+1756|H|mor|EU|Saxony|war|The Seven Years War|Frederick invades Saxony.
+1757|H|mor|EU|Kolin|battle|Kolin|Austria beats Frederick in Bohemia.
+1757|H|mor|AS|Plassey|battle|Plassey|The East India Company wins Bengal.
+1757|H|mor|EU|Rossbach|battle|Rossbach and Leuthen|Frederick crushes the French and Austrians.
+1758|H|mor|EU|Olomouc|siege|Olomouc holds|Frederick's siege fails.
+1759|H|mor|EU|Kunersdorf|battle|Kunersdorf|Russians and Austrians destroy Frederick's army.
+1760|H|mor|EU|London|crown|George III|George III becomes king.
+1761|H|mor|AS|Panipat|battle|The third Panipat|The Afghans destroy the Marathas.
+1762|H|mor|EU|St Petersburg|crown,death|Catherine the Great|Catherine takes the throne; Peter III is killed.
+1762|H|mor|EU|Geneva|learning|The Social Contract|Rousseau publishes.
+1763|H|mor|EU|Paris|treaty|The Peace of Paris|Britain wins Canada and India.
+1764|H|mor|EU|Lancashire|industry|The spinning jenny|Hargreaves invents the jenny.
+1764|H|mor|AS|Buxar|battle|Buxar|The Company beats the Mughal emperor.
+1765|H|mor|EU|Glasgow|industry,science|Watt's engine|Watt improves the steam engine.
+1768|H|mor|EU|Russia|war|Russo-Turkish war|Catherine fights the Ottomans.
+1769|H|mor|AS|Bengal|famine|The Bengal famine|Ten million may die.
+1770|H|mor|ME|Chesma|battle,sea|Chesma|Russia burns the Ottoman fleet.
+1771|H|mor|EU|Moscow|plague,uprising|The Moscow plague riot|Plague and riot strike Moscow.
+1772|H|mor|EU|Poland|empire|The first partition|Russia, Prussia and Austria take Polish lands.
+1773|H|mor|EU|Russia|uprising|Pugachev|A Cossack claiming to be Peter III rises.
+1773|H|mor|EU|Rome|faith|The Jesuits suppressed|The pope dissolves the Jesuits.
+1774|H|mor|EU|Kuchuk Kainarji|treaty|Kuchuk Kainarji|Russia gains the Black Sea.
+1774|H|mor|EU|Versailles|crown|Louis XVI|Louis XVI becomes king.
+1775|H|mor|EU|Bohemia|uprising|The Bohemian peasant revolt|Peasants march on Prague.
+1776|H|mor|EU|Bavaria|occult,founding|The Illuminati|Adam Weishaupt founds the Illuminati.
+1776|H|mor|EU|London|learning,money|The Wealth of Nations|Adam Smith publishes.
+1778|H|mor|EU|Bohemia|war|The Potato War|Austria and Prussia face off without battle.
+1780|H|mor|EU|London|uprising|The Gordon Riots|Anti-Catholic riots burn London.
+1781|H|mor|EU|Vienna|law,faith|Joseph's patents|Serfdom ends; Protestants are tolerated.
+1781|H|mor|EU|Konigsberg|learning|Kant's Critique|Kant publishes the Critique of Pure Reason.
+1781|H|mor|EU|Bath|science|Uranus|Herschel finds a new planet.
+1783|H|mor|EU|Paris|science|Balloons|The Montgolfiers fly.
+1783|H|mor|EU|Iceland|disaster,weather|Laki|The Laki eruption poisons Europe's air.
+1783|H|mor|EU|Crimea|empire|Russia takes the Crimea|Catherine annexes the khanate.
+1784|H|mor|EU|Transylvania|uprising|Horea's revolt|Romanian peasants rise.
+1786|H|mor|EU|Prague|art|Figaro in Prague|Mozart's Figaro is a hit in Prague.
+1787|H|mor|EU|Prague|art|Don Giovanni|Mozart's Don Giovanni opens in Prague.
+1788|H|mor|EU|Paris|weather|The hailstorm of 1788|Hail destroys the harvests.
+1789-7|H|all|EU|Paris|revolution|The Bastille|Paris takes the Bastille.
+1789|H|mor|EU|Versailles|law|The Rights of Man|The Assembly declares the rights of man.
+1790|H|mor|EU|Vienna|crown,death|Joseph II dies|Joseph dies.
+1791|H|mor|EU|Varennes|crown|The flight to Varennes|The French king is caught fleeing.
+1791|H|mor|EU|Vienna|art,death|Mozart dies|Mozart dies.
+1792|H|mor|EU|Valmy|battle|Valmy|The French Revolution's army holds.
+1792|H|mor|EU|Paris|massacre|The September massacres|Prisoners are killed.
+1793|H|mor|EU|Paris|death,revolution|Louis XVI guillotined|The king is executed.
+1793|H|mor|EU|Paris|terror|The Terror|The Committee kills thousands.
+1793|H|mor|EU|Vendee|uprising,massacre|The Vendee|Western France rises and is crushed.
+1793|W|vam|EU|Paris|revolution|Germaine is Embraced|In the Revolution the Brujah Critias Embraces Germaine.
+1794|H|mor|EU|Paris|death|Robespierre falls|Robespierre is guillotined.
+1794|H|mor|EU|Krakow|uprising|Kosciuszko|Poland rises.
+1795|H|mor|EU|Poland|empire|The third partition|Poland disappears.
+1796|H|mor|EU|London|science|Vaccination|Jenner tries cowpox.
+1796|H|mor|EU|Italy|war|Bonaparte in Italy|Bonaparte conquers Italy.
+1797|H|mor|EU|Venice|empire|Venice ends|Bonaparte ends the republic.
+1798|H|mor|ME|Pyramids|battle|Napoleon in Egypt|The French take Egypt.
+1798|H|mor|ME|Aboukir|battle,sea|The Nile|Nelson destroys the French fleet.
+1798|H|mor|EU|Ireland|uprising|The 1798 rising|Ireland rises.
+1799|H|mor|ME|Rosetta|learning|The Rosetta Stone|French soldiers find the stone.
+1799|H|mor|EU|Paris|crown,revolution|Brumaire|Bonaparte takes power.
+1800|H|mor|EU|Marengo|battle|Marengo|Bonaparte beats Austria.
+1801|H|mor|EU|London|law|The Union with Ireland|Ireland joins the United Kingdom.
+1801|H|mor|EU|St Petersburg|death,crown|Paul I murdered|Alexander I becomes tsar.
+1804|H|mor|EU|Paris|crown|Napoleon emperor|Napoleon crowns himself.
+1804|H|mor|EU|Serbia|uprising|The Serbian revolt|Serbia rises against the Ottomans.
+1805-10|H|mor|EU|Trafalgar|battle,sea|Trafalgar|Nelson dies winning.
+1805-12|W|wra|EU|Austerlitz|battle|Austerlitz|Napoleon wins near Brno; the dead flood the Moravian Shadowlands.
+1806|H|mor|EU|Vienna|empire|The Holy Roman Empire ends|Francis II gives up the crown.
+1806|H|mor|EU|Jena|battle|Jena|Napoleon crushes Prussia.
+1807|H|mor|EU|Tilsit|treaty|Tilsit|Napoleon and Alexander divide Europe.
+1808|H|mor|EU|Madrid|uprising|The Dos de Mayo|Madrid rises.
+1809|H|mor|EU|Wagram|battle|Wagram|Napoleon beats Austria.
+1810|H|mor|EU|Leipzig|science|Hahnemann's homeopathy|Hahnemann publishes.
+1812|H|mor|EU|Borodino|battle|Borodino|The bloodiest day.
+1812|H|mor|EU|Moscow|fire|Moscow burns|Napoleon finds Moscow burning.
+1812|H|mor|EU|Berezina|war,death|The retreat|The Grande Armee dies in the snow.
+1813|H|mor|EU|Leipzig|battle|Leipzig|The Battle of the Nations.
+1814|H|mor|EU|Vienna|treaty|The Congress of Vienna|The powers redraw Europe.
+1815|H|mor|EU|Waterloo|battle|Waterloo|Napoleon falls.
+1815|H|mor|AS|Tambora|disaster|Tambora|The greatest eruption in history.
+1816|H|mor|EU|Geneva|weather,art|The year without a summer|Mary Shelley conceives Frankenstein.
+1817|H|mor|AS|Bengal|plague|Cholera|Cholera spreads from Bengal.
+1818|H|mor|EU|London|art|Frankenstein|Frankenstein is published.
+1819|H|mor|EU|London|art,occult|The Vampyre|Polidori's tale.
+1819|H|mor|EU|Manchester|massacre|Peterloo|Cavalry charge a crowd.
+1821|H|mor|ME|Greece|uprising|The Greek revolt|Greece rises.
+1822|H|mor|ME|Chios|massacre|Chios|The Ottomans kill tens of thousands.
+1822|H|mor|EU|Paris|learning|Champollion|Champollion reads hieroglyphs.
+1824|H|mor|ME|Missolonghi|death|Byron dies|Byron dies of fever.
+1825|H|mor|EU|Stockton|industry,travel|The first railway|The Stockton and Darlington opens.
+1825|H|mor|EU|St Petersburg|uprising|The Decembrists|Officers rise and are crushed.
+1826|H|mor|ME|Constantinople|massacre|The Janissaries destroyed|The sultan kills the Janissaries.
+1827|H|mor|ME|Navarino|battle,sea|Navarino|The allies sink the Ottoman fleet.
+1829|H|mor|ME|Adrianople|treaty|Greece free|The Ottomans accept a free Greece.
+1830|H|mor|EU|Paris|revolution|The July Revolution|Charles X falls.
+1830|H|mor|EU|Warsaw|uprising|The November Uprising|Poland rises.
+1830|H|mor|EU|Brussels|revolution|Belgium|Belgium breaks away.
+1831|H|mor|EU|Europe|plague|Cholera in Europe|Cholera reaches Europe.
+1832|H|mor|EU|London|law|The Reform Act|Britain widens the vote.
+1832|H|mor|EU|Paris|uprising,plague|The June rebellion|Paris rises in the cholera year.
+1833|H|mor|EU|London|law|Slavery abolished|Britain abolishes slavery.
+1835|H|mor|EU|Vienna|crown,death|Francis I dies|Ferdinand becomes emperor.
+1836|H|mor|EU|Brno|industry|Brno's mills|Brno's woollen mills grow.
+1604|W|vam|EU|Prague|occult|Tremere at the alchemists' court|The alchemists' lane of Prague castle hides more than mortal adepts; the Tremere keep a close eye on Rudolf's circle.
+1618|W|vam|EU|Prague|war|The Kindred and the long war|The Thirty Years War opens; princes of the Camarilla and Sabbat both fatten on the armies.
+1626|W|wer|EU|Germany|war,famine|The wolves of the war|Packs of wolves, and worse, return to the empty villages of Germany; the Get of Fenris hunt the Wyrm's creatures in the ruins.
+1631|W|wra|EU|Magdeburg|massacre|The Magdeburg dead|The twenty thousand dead of Magdeburg cross in a night; the Hierarchy names the place a Haunt.
+1648|W|vam|EU|Munster|treaty|A peace for the living|The Peace of Westphalia settles the mortal borders; elders of both sects redraw their own.
+1690|W|vam|EU|Europe|faith|Justicars named|The title of justicar comes into use in the Camarilla in the late 1600s.
+1666|W|mag|EU|London|science|The Royal Society and the Order|The Order of Reason sends members into the new Royal Society.
+1683|W|vam|EU|Vienna|siege|The Kindred of Vienna hold|The Ottoman siege brings Assamite and Setite agents to the walls; Vienna's Tremere hold their chantry.
+1727|W|mag|EU|London|science,death|The Order mourns Newton|Newton's death leaves the Order of Reason without its greatest Sleeper ally; some of its members think Newton was more than a Sleeper.
+1732|H|mor|EU|Vienna|media,occult|Vampire reports in the newspapers|The Medvedja report is reprinted across Europe; learned men argue over vampires.
+1740|W|vam|EU|Silesia|war|The Ventrue of Berlin|Frederick's Prussia rises; the Ventrue of Berlin grow with it.
+1755|W|wra|EU|Lisbon|quake|The Lisbon dead|Tens of thousands die in a morning; the Shadowlands of Lisbon shake with a small storm.
+1770|W|mag|EU|London|industry|The Order of Reason and the machines|The craftsmen's guilds of the Order of Reason back the new engines of Britain.
+1776|W|mag|EU|Bavaria|occult,founding|The Illuminati and the Order|The Bavarian Illuminati draw on Freemasonry; the Order of Reason watches a secret society it did not found.
+1785|H|mor|EU|Bavaria|law,occult|The Illuminati banned|Bavaria bans the secret societies.
+1789|W|vam|EU|Paris|revolution|The Brujah and the Revolution|Brujah idealists back the Revolution; Toreador of the court flee or die.
+1794|W|vam|EU|Paris|terror|The Terror and the Kindred|Kindred use the Terror to settle debts; the guillotine kills a few ghouls.
+1798|W|mum|ME|Egypt|war|The mummies and the French|Napoleon's scholars dig in Egypt; the mummies watch strangers dig.
+1812|W|wra|EU|Russia|war,death|The Grande Armee's dead|Half a million die in Russia; Stygia takes the dead of the retreat.
+1815|W|vam|EU|Vienna|treaty|The Congress of the Kindred|Kindred of Vienna host the Congress's diplomats and take their share.
+1816|W|vam|EU|Geneva|art,occult|The Villa Diodati|Byron, the Shelleys and Polidori write ghost stories by a lake; Toreador take note of the Vampyre.
+1822|W|mum|ME|Egypt|learning|The names can be read|Champollion reads the hieroglyphs; the mummies' names can be read again.
+1830|W|vam|EU|Paris|revolution|The Kindred of the July Revolution|Barricades go up in Paris; anarchs join the crowds.
+1831|W|wra|EU|Europe|plague|The cholera dead|Cholera kills hundreds of thousands; the Shadowlands of Europe's cities fill.
