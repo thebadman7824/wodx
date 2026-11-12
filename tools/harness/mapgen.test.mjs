@@ -357,3 +357,82 @@ assert any(r["id"] == "road" for r in h["regions"]) and any(r["id"] == "cdda-hos
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
 });
+
+/* The later ages' building types (latertypes.py) and the settlement record (settle.py, ddsettle.py), 2026-11-12 */
+
+test("mapgen: the later ages' sixteen building types furnish in every facing, with every door and window on a wall", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, eratypes as E, latertypes
+keys = list(latertypes.types(E.M, E.SF, E.MODERN, E.FUTURE))
+assert len(keys) == 16 and all(k in B.TYPES for k in keys), keys
+for seed in (1, 2, 3):
+    C.init(seed, ${JSON.stringify(ERA_ASSETS)})
+    for key in keys:
+        for facing in "SWNE":
+            b = B.place(f"{key}-{facing}", key, 1 + seed * .5, 1 + seed * 1.5, facing).furnish()
+            for r in b.rooms: assert r.x >= b.x - 1e-6 and r.y >= b.y - 1e-6 and r.x + r.w <= b.x + b.w + 1e-6 and r.y + r.h <= b.y + b.h + 1e-6, (key, facing, r.name)
+            for kind, ox, oy, along in b.openings:
+                assert any(abs(ox - r.x) < .01 or abs(ox - r.x - r.w) < .01 or abs(oy - r.y) < .01 or abs(oy - r.y - r.h) < .01 for r in b.rooms), (key, facing, kind)
+# every age from 1650 has a house, a shop and an inn of its own being built
+import eras
+for year in (1700, 1800, 1880, 1930, 1970, 1995, 2050):
+    for role in ("home", "shop", "inn"):
+        assert [k for k, v in E.ERA_TYPES.items() if v["role"] == role and v["built"][0] <= year <= v["built"][1]], (year, role)
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});
+
+test("mapgen: one command makes a settlement for a year; the same seed gives the same record and map", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  for ( const year of [1197, 1995] ) {
+    const dir = mkdtempSync(join(tmpdir(), "wodx-settle-"));
+    const out = execFileSync(py, [join(gen, "ddsettle.py"), "--size", "village", "--seed", "7", "--year", String(year), "--part", "0", "--out", dir],
+      {encoding: "utf8", timeout: 600000, env: {...process.env, WODX_FA_ASSETS: ASSETS, WODX_NEW_ASSETS: NEW_ASSETS}});
+    assert.match(out, /settlement: steinfeld-\d+-7/);
+    const rec = JSON.parse(readFileSync(join(dir, "steinfeld.settlement.json"), "utf8"));
+    assert.deepEqual(rec, JSON.parse(readFileSync(join(gen, `samples/steinfeld-${year}.settlement.json`), "utf8")), `steinfeld ${year} changed: run ddsettle.py and copy the new sample if it is meant`);
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, "steinfeld.wodx.json"), "utf8")), JSON.parse(readFileSync(join(gen, `samples/steinfeld-${year}.wodx.json`), "utf8")));
+    // every household stands in a building on the map, and every tie joins two households of the record
+    const ids = new Set(rec.households.map(h => h.id));
+    assert.ok(rec.ties.every(t => ids.has(t.a) && (t.kind === "works-at" ? typeof t.place === "string" : ids.has(t.b))));
+    assert.equal(rec.population, rec.households.reduce((s, h) => s + h.people.length, 0));
+  }
+});
+
+test("mapgen: from 1781 the households follow the year, in every age, and a year out of range is refused", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, re
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, organic as O, buildings as B, settle as S
+assert [S.age_of(y) for y in (1197, 1449, 1450, 1780, 1781, 1850, 1851, 1918, 1919, 1947, 1948, 1989, 1990, 2029, 2030, 2099)] == \\
+    ["medieval", "medieval", "early", "early", "reform", "reform", "industrial", "industrial", "republic", "republic", "socialist", "socialist", "modern", "modern", "future", "future"]
+OLD = re.compile(r"^(herder|cottager|alehouse keeper|cooper|wheelwright|chandler|spicer|mercer|salter|glover|cutler|fishmonger|turner|dyer)$")
+NEW = re.compile(r"programmer|office worker|contract worker|television|computer|car mechanic|phone|drone")
+sizes = {}
+for year in (1790, 1880, 1930, 1970, 2000, 2050):
+    C.init(3, ${JSON.stringify(ERA_ASSETS)})
+    t = O.OrganicTown(3, "town", None, True, None, None, year, 0, None).make()
+    age = S.age_of(year)
+    trades = [h["trade"] for h in t.households]
+    assert trades and all(tr and len(tr) <= 40 for tr in trades), year
+    if year >= 1851: assert not [tr for tr in trades if OLD.match(tr)], (year, [tr for tr in trades if OLD.match(tr)])
+    if year < 1948: assert not [tr for tr in trades if NEW.search(tr)], (year, [tr for tr in trades if NEW.search(tr)])
+    assert all(1 <= len(h["people"]) <= 20 and h["people"][0]["role"] == h["trade"] for h in t.households), year
+    assert all(len(p["role"]) <= 40 for h in t.households for p in h["people"]), year
+    homes = [h for h in t.households if "staff" not in [p["role"] for p in h["people"]]]
+    sizes[year] = sum(len(h["people"]) for h in homes) / len(homes)
+    offices = {n["role"] for n in t.notables}
+    assert offices, year
+    assert ("mayor" in offices) == (age in ("industrial", "republic", "modern")), (year, offices)
+    assert ("national committee chairman" in offices) == (age == "socialist"), (year, offices)
+    ties = S.ties(t, B.TYPES)
+    ids = {h["id"] for h in t.households}
+    keys = {b.key for b in t.blds}
+    assert ties and all(x["a"] in ids and (x["place"] in keys if x["kind"] == "works-at" else x["b"] in ids and x["a"] != x["b"]) for x in ties), year
+    assert S.ties(t, B.TYPES) == ties, "the ties are the same each time"
+assert sizes[1880] > sizes[2000] > sizes[2050], sizes
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 900000}), /ok/);
+  assert.throws(() => execFileSync(py, [join(gen, "ddsettle.py"), "--year", "1100"], {encoding: "utf8", stdio: "pipe"}));
+});

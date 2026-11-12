@@ -487,6 +487,24 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// NPC 0.48.0: a settlement's review (a village of 1995: 113 households, hidden folk, ties) and the Settlements window
+{
+  const S = game.modules.get("wodx-npc").api.settlements;
+  const {readFileSync} = await import("node:fs");
+  const rec = S.rules.readRecord(readFileSync(join(root, "tools/mapgen/samples/steinfeld-1995.settlement.json"), "utf8")).data;
+  const wait = api.DialogV2.wait, hadJournal = game.journal;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const entry = {record: rec, review: S.rules.normReview(rec, {folk: S.rules.proposeFolk(rec, {nonce: 0})}), at: 0};
+  const journals = Array.from({length: 12}, (_, k) => ({id: `set${k}`, flags: {"wodx-npc": {settlement: {...entry, record: {...rec, id: `steinfeld-1995-${k}`, name: `Steinfeld an der Schwarzach ${k}`}}}}}));
+  game.journal = {filter: f => journals.filter(f)};
+  for ( const [label, fn] of [["Settlement review", () => S.review(rec)], ["Settlements", () => S.open()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  game.journal = hadJournal;
+  api.DialogV2.wait = wait;
+}
 // NPC 0.10.0: the topic menu (24 topics of long names, a long answer log) and the shared talk sheets
 {
   const npcApi = game.modules.get("wodx-npc").api;

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2520
+Next free block: B2530
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -104,6 +104,7 @@ Next free block: B2520
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
 | B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
+| B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3065,3 +3066,50 @@ Reverse: put the old names back in data/eras.json and the kits.
 WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
+## B2520. Building types for the later ages (2026-11-12, Master Plan leftover of maps and a town generator)
+tools/mapgen/latertypes.py adds sixteen building types so that every age from 1650 to World of Future Darkness has a house, a shop and an inn of its own being built, with the public buildings a town of the age needs: the passage house, the tolerance prayer house, the workers' colony house, the shop house, the pub with its hall, the bus station, the co-operative store, the family house built to one plan, the corner shop, the distribution shed, and for the future the vending hall, counter bar, street clinic, security post, pod station and data hall. Each is modelled on a kind of building that stood in Moravia in its years, drawn from general knowledge of the type, not from any one plan. The era layers place the public ones from their first year.
+
+Reverse: drop the import of latertypes in eratypes.py.
+
+## B2521. One command makes a settlement for a year (2026-11-12)
+tools/mapgen/ddsettle.py runs the town generator for a name, seed, size and year from 1197 to 2099 and writes the maps, their sidecars, the plan and a settlement record beside them: every household with its trade, standing and people, the offices of the age, and the ties between households. The same seed gives the same place. The map side stays in Python because the Dungeondraft maps are made there; Foundry only reads the record.
+
+Reverse: nothing to undo; the older ddtown.py call works as before.
+
+## B2522. Households follow the year from 1781 (2026-11-12, house rule)
+Up to 1780 the households stay as the medieval generator made them. From 1781 each household's trade, size and make-up are drawn for the age the year falls in: reform (1781), industrial (1851), republic (1919), socialist (1948), modern (1990), future (2030). The boundaries follow the turns in Moravian life (the patents of 1781, the end of the guilds and the railway age, the republic, February 1948, November 1989). Trades by standing, the size of a household and who lives in it (servants and apprentices early, lodgers in the industrial age, small families late) are a house rule from general history, not from a book.
+
+Reverse: remove the repeople call in organic.py.
+
+## B2523. Public buildings have keepers, not families (2026-11-12, house rule)
+A school, station, clinic, post or hall is held by its keeper and staff (a teacher, a station master, a clerk), not by a family with children. A railway station keeps the household the era layer gave it.
+
+Reverse: empty KEEPER in settle.py.
+
+## B2524. Ties between households (2026-11-12, house rule)
+The record gives about one tie for every four households: kin in another house, a grown child's house, friends, rivals, debts, and who goes out to work at which building. The draw favours neighbours and like standing. Once residents are seeded, a tie is written on the first household head's sheet as a hand-made relationship (WoDX Sheets' ties), only when both heads exist; a worker's routine takes the workplace when it stands on the same map.
+
+Reverse: untick the kinds of tie at review; they are then never written.
+
+## B2525. Hidden folk are drawn at review, by game line (2026-11-12, house rule)
+The record holds only mortals. At review WoDX NPC proposes who is more than they seem, from the number of people: a household of ghouls for about every 300, a vampire's haven for 800 (none under 150 people), Kinfolk for 200 (twice as likely in a village), a hunter for 600, a mage for 1000, a haunted building for 250, a changeling for 700, one of the Fallen for 1500 and only from 1999. The numbers are a house rule, set so that a village has one or two and a city a handful; no book gives them. The Storyteller unticks any or draws again. Nothing is built from them: a seeded sheet or building carries a note only the Storyteller sees, and the splat, tribe or Tradition is the Storyteller's to make.
+
+Reverse: untick them all at review.
+
+## B2526. A block of flats keeps every household (2026-11-12, fix)
+Adopting a map kept one household on each building, so a panel block of 48 flats seeded one family. WoDX Interactables 0.35.2 keeps the list on the region and WoDX NPC 0.48.0 seeds each flat's household; such a building gets no one owner.
+
+Reverse: nothing to undo.
+
+## B2527. Household ids carry the settlement (2026-11-12)
+With --settle each household id starts with the settlement's id and a full stop (steinfeld-1995-7.cottage-3-household), so a map adopted later is matched to its entered settlement without any setting. A map made without --settle seeds as before.
+
+Reverse: nothing to undo.
+
+## B2528. A settlement enters the world as a journal (2026-11-12)
+Entering a reviewed record makes one journal in the folder "WoDX settlements" that no player can read: the place, its households, its ties and its hidden folk. No sheets or tokens are made until a map is adopted and its residents seeded. Removing a settlement deletes only that journal, after asking.
+
+Reverse: remove the settlement under Settlements.
+
+## B2529. Left open (2026-11-12)
+The generator's building types, ages, trades and offices are those of Moravia and the Bohemian crown lands; the record says so (region) and the review tells the Storyteller. WoDX covers the whole world (Ben, 2026-11-12), so other regions are open work: each needs its own building types, ages and trade tables in tools/mapgen, chosen with --region. Also not built: the generator's markets and factions for a new settlement (WoDX Storyteller's markets read hand-set scenes), sheets for the hidden folk themselves, and ties inside one block of flats beyond those the record gives. The population the generator reaches still falls short of the figure it aims at for small places; that is the older layout's behaviour and is left as it is.
