@@ -16,7 +16,7 @@ Licence: Chatterbox is MIT (Resemble AI). Each reference voice keeps its own lic
 import argparse, io, json, os, re, secrets, sys, threading, time, wave
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-ORIGINS = {"http://localhost:30000", "http://127.0.0.1:30000", "https://wodx.online"}
+ORIGINS = {"http://localhost:30000", "http://127.0.0.1:30000", "https://localhost:30000", "https://127.0.0.1:30000", "https://wodx.online"}
 MAX_TEXT = 600
 SR_FALLBACK = 24000
 

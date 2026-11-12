@@ -2487,7 +2487,7 @@ Each NPC keeps one server voice, picked from its seed among the voices the serve
 Reverse: serverVoiceFor in voice-rules.mjs.
 
 ## B2116. The server's address and key stay in the Storyteller's browser (2026-11-12)
-The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and wodx.online by default).
+The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and 127.0.0.1:30000 over http or https, and wodx.online, by default).
 
 Reverse: --origin on the server; the two client settings.
 

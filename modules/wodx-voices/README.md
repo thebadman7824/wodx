@@ -11,7 +11,7 @@ Chatterbox runs on the Storyteller's PC and uses its graphics card. It sounds th
     python tools/voices/fetch_voices.py "<voices folder>"
     python tools/voices/chatterbox_server.py --voices "<voices folder>"
 
-The first gathers about 48 human reference voices (LibriTTS-R, CC BY 4.0; credits in voices.json). The second serves on http://127.0.0.1:7861 and prints its key on start. In Foundry, on the Storyteller's browser: Configure Settings, WoDX Voices, set "Voice server key" (and the address if it changed). Players need nothing. When the server is not running, Kokoro reads the line.
+The first gathers human reference voices (LibriTTS-R, CC BY 4.0; credits in voices.json): about 21 from one Parquet file per split, more with `--files 2`. It needs `pip install "pyarrow<18"` in that venv (newer pyarrow wants NumPy 2, which Chatterbox does not use). The second serves on http://127.0.0.1:7861 and prints its key on start. In Foundry, on the Storyteller's browser: Configure Settings, WoDX Voices, set "Voice server key" (and the address if it changed). Players need nothing. When the server is not running, Kokoro reads the line.
 
 `--samples <folder>` renders a set of sample lines in different voices and moods, then stops.
 
