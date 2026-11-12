@@ -79,10 +79,17 @@ export async function run() {
     await game.settings.set(MOD, "turnConductor", "everyone");
     await toTurn(T.hero);
     const id = combat.combatant?.id;
-    await C().quickAttack({attacker: T.hero, target: T.fighter});
-    const counting = await waitFor(() => !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 5000);
-    const ended = await waitFor(() => combat.combatant?.id !== id, 12000);
-    ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+    // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
+    await game.settings.set(MOD, "conductorGrace", 4);
+    let sawCount = false;
+    const hk = Hooks.on("updateCombat", c => { if ( c.id === combat.id && c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true; });
+    try {
+      await C().quickAttack({attacker: T.hero, target: T.fighter});
+      const counting = await waitFor(() => sawCount || !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 8000);
+      const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
+      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+    } finally { Hooks.off("updateCombat", hk); }
+    await game.settings.set(MOD, "conductorGrace", 2);
     await game.settings.set(MOD, "turnConductor", "npc"); await sleep(600);
     for ( const t of Object.values(T) ) await C().setDamage(t.actor, zero);
   });
@@ -92,11 +99,18 @@ export async function run() {
     // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
     const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
     await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
-    await toTurn(T.hero);
+    // The time limit and the conductor go on first, then the turn moves to the hero, so the limit starts with the turn
+    await toTurn(T.fighter);
     await game.settings.set(MOD, "conductorTimer", 3);
-    await game.settings.set(MOD, "turnConductor", "everyone");
-    const heroC = combat.combatant;
-    const held = await waitFor(() => !!heroC.getFlag(MOD, "held") && combat.combatant?.id !== heroC.id, 9000);
+    await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(300);
+    const heroC = combat.combatants.find(c => c.tokenId === T.hero.id);
+    let sawHeld = false;
+    const hk = Hooks.on("updateCombatant", c => { if ( c.id === heroC.id && c.getFlag(MOD, "held") ) sawHeld = true; });
+    let held;
+    try {
+      await toTurn(T.hero);
+      held = await waitFor(() => (sawHeld || !!heroC.getFlag(MOD, "held")) && combat.combatant?.id !== heroC.id, 20000);
+    } finally { Hooks.off("updateCombatant", hk); }
     const why4 = {heldFlag: !!heroC.getFlag(MOD, "held"), turnNow: curName(), why: CD().state().why ?? null};
     await game.settings.set(MOD, "turnConductor", "off"); await sleep(500);
     const curC = combat.combatant;
