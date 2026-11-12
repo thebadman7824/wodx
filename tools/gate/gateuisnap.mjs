@@ -6,6 +6,8 @@
  * outside Foundry. It only opens and closes sheets: no document is created, changed or deleted.
  * If the page has a function wodxShot(name) (a Playwright runner can expose one that calls page.screenshot),
  * it is called for every sheet and tab.
+ * With fit-audit.mjs beside it in Data/wodx-gate, it also runs the layout checks on every sheet and tab and
+ * passes only when they find nothing.
  * Result: Data/wodx-gate/gateuisnap-result.json and gateuisnap-part-N.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -58,6 +60,8 @@ async function capture(doc, kind, label) {
       catch (e) { entry.tabs.push({ tab, error: e.message }); }
     }
     if (first) { navs.find(n => n.dataset.tab === first)?.click(); await sleep(150); }
+    if (auditFn) { try { entry.findings = auditFn(el); for (const t of entry.tabs) if (t.tab !== first && !t.error) { navs.find(n => n.dataset.tab === t.tab)?.click(); await sleep(200); t.findings = auditFn(el); }
+      if (first) { navs.find(n => n.dataset.tab === first)?.click(); await sleep(150); } } catch (e) { entry.auditError = e.message; } }
     freeze(el);
     entry.html = el.outerHTML;
   } catch (e) { entry.error = e.message; R.errors.push(`${label}: ${e.message}`); }
@@ -71,7 +75,10 @@ async function save(name, data) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
 }
 
+let auditFn = null;
 export async function run({ maxItems = 90 } = {}) {
+  try { auditFn = (await import(`/wodx-gate/fit-audit.mjs?${Date.now()}`)).audit; } catch (e) { R.errors.push(`fit-audit.mjs is not beside the gate: ${e.message}`); }
+  const openBefore = new Set(Object.keys(ui.windows ?? {}));
   const api = game.modules.get("wodx-sheets")?.api;
   const keyOf = a => { try { return api?.sheetFor?.(a) ?? ""; } catch (e) { return ""; } };
   R.versions = Object.fromEntries([...game.modules].filter(m => m.active && m.id.startsWith("wodx")).map(m => [m.id, m.version]));
@@ -84,6 +91,8 @@ export async function run({ maxItems = 90 } = {}) {
   const groups = new Map();
   for (const a of game.actors) {
     const k = [a.type, a.sheet?.constructor?.name, keyOf(a), a.system?.settings?.variant ?? ""].join("|");
+    // A character with no sheet type picked yet opens the system's "Set sheet type" window instead of a sheet
+    if (a.type !== "Group" && a.system?.settings && !a.system.settings.variant && a.system.settings.variant !== undefined) continue;
     const cur = groups.get(k);
     if (!cur || a.items.size > cur.items.size) groups.set(k, a);
   }
@@ -108,8 +117,12 @@ export async function run({ maxItems = 90 } = {}) {
   let n = 0;
   for (const [k, i] of [...items].sort()) { if (n++ >= maxItems) break; await add(await capture(i, "item", `item-${k}`)); }
   await flush();
+  // Close anything the run left open (a system window that came with a sheet)
+  for (const [id, w] of Object.entries(ui.windows ?? {})) if (!openBefore.has(id)) { try { await w.close(); } catch (e) { /* gone */ } }
+  const all = R.sheets.flatMap(s => [...(s.findings ?? []), ...s.tabs.flatMap(t => t.findings ?? [])]);
+  R.findings = all.length; R.byKind = all.reduce((o, f) => { o[f.kind] = (o[f.kind] ?? 0) + 1; return o; }, {});
   R.finished = new Date().toISOString();
-  R.pass = R.sheets.length > 0 && !R.errors.length;
+  R.pass = R.sheets.length > 0 && !R.errors.length && R.findings === 0;
   await save("gateuisnap-result.json", R);
-  return { pass: R.pass, sheets: R.sheets.length, parts: R.parts, errors: R.errors.length };
+  return { pass: R.pass, sheets: R.sheets.length, parts: R.parts, errors: R.errors.length, findings: R.findings, byKind: R.byKind };
 }

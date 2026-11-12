@@ -438,6 +438,21 @@ const LABELS = {
 // The line skins (B91 to B94): WoDX's own fonts, papers and rules on every sheet, or the system's look as it ships
 const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
+// The title bar (layout pass): the buttons show as icons so the name always fits; each keeps its words as a tooltip
+function nameHeaderButtons(app, html) {
+  const el = html?.[0] ?? html ?? app?.element?.[0];
+  const win = el?.closest?.(".window-app") ?? app?.element?.[0];
+  if (!win?.classList?.contains("wod20")) return;
+  for (const b of win.querySelectorAll(".window-header a.header-button, .window-header a.alter-ego-config")) {
+    const words = (b.textContent ?? "").replace(/\s+/g, " ").trim() || b.getAttribute("title") || "";
+    if (!words) continue;
+    if (!b.dataset.tooltip) b.dataset.tooltip = words;
+    if (!b.getAttribute("aria-label")) b.setAttribute("aria-label", words);
+  }
+}
+Hooks.on("renderActorSheet", nameHeaderButtons);
+Hooks.on("renderItemSheet", nameHeaderButtons);
+
 Hooks.once("init", async () => {
   X.setup();
   AN.setup();
@@ -458,6 +473,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.14.0", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.15.0", extras: X, rules: SR, sheetFor, viewFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything } };
 });

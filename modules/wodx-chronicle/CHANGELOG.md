@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.45.2 (the layout pass: a pick in any WoDX window is as wide as its entries need and drops under its label when the two do not fit, so the chosen entry is not cut off)
 - 0.45.1 (the Legends book adds what a battle's field left behind, when the Storyteller sends it there from WoDX Storyteller's Battles window)
 - 0.45.0 (the features summary for the sheet: api.signatures.summary gives each feature with what it does, when it fires and when it last fired; every feature card notes the time it fired; the Storyteller can set a feature aside for a story with api.signatures.setOff, and a set-aside feature stops working until put back)
 - 0.44.1 (an Anda's frenzy leaves the Gangrel's animal marks, which heal in a month the same way)
