@@ -6,7 +6,7 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 
 /**
- * WoDX Chronicle 0.29.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
+ * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
  * signature-rules.mjs, table in data/signatures.mjs.
  *
  *   Actor flag wodx-chronicle.sig = {muses: [], cause, marks: []}: the character's own tracks (owner and Storyteller see them).
@@ -20,6 +20,7 @@ import * as S from "./signature-rules.mjs";
  */
 
 const FLAG = "sig", CFLAG = "corruption";
+const T_FAMILY = `${MODULE_ID}.sigFamily`;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const on = () => !!game.settings.get(MODULE_ID, "sigVampire");
 const now = () => game.time?.worldTime ?? 0;
@@ -31,15 +32,18 @@ const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-act
 
 export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigVampire", {
-    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts the Giovanni's bound dead, and the bloodlines and Laibon legacies. Off by default.",
+    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts, the Giovanni's bound dead, the bloodlines and Laibon legacies, ghouls and revenant families. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
+  game.settings.register(MODULE_ID, "sigFamilies", {scope: "world", config: false, type: Array, default: []});
 }
+const foundedFamilies = () => { try { return (game.settings.get(MODULE_ID, "sigFamilies") ?? []).filter(f => !f.founded || f.founded <= currentYear()); } catch (e) { return []; } };
 
 /** The signature row for an actor (a vampire whose clan or bloodline has one), or null. */
 export function rowOf(actor) {
   if ( !actor ) return null;
   const kind = String(actorsApi("wodx-combat")?.getKind?.(actor) ?? actor.type ?? "").toLowerCase();
+  if ( /ghoul|revenant/.test(kind) ) return S.familyRow([actor.flags?.[MODULE_ID]?.family, ...clanNames(actor), actor.system?.custom?.family].filter(Boolean), foundedFamilies()) ?? S.GHOUL;
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return null;
   return S.vampireRow(clanNames(actor));
 }
@@ -105,7 +109,7 @@ export async function tick({force = false} = {}) {
   const t = now(), day = Math.floor(t / 86400);
   if ( day === lastTick && !force ) return;
   lastTick = day;
-  for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); await contractTick(a, t); }
+  for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); await contractTick(a, t); await ghoulTick(a, t); }
   for ( const a of game.actors ) {
     const sig = a.flags?.[MODULE_ID]?.[FLAG];
     if ( !sig ) continue;
@@ -526,6 +530,42 @@ export async function releaseWraith(actorOrId, id) {
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
 }
 
+/* ---------------- Ghouls and revenant families ---------------- */
+
+/** A ghoul drank from the domitor: the month starts again. */
+export async function ghoulFed(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const sig = sigOf(a); sig.ghoul = {fedAt: now(), warned: 0};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return sig.ghoul;
+}
+async function ghoulTick(a, t) {
+  const row = rowOf(a);
+  if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
+  const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
+  if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
+  const m = S.monthsUnfed(g.fedAt, t);
+  if ( m <= (g.warned ?? 0) ) return;
+  const before = foundry.utils.deepClone(sig);
+  sig.ghoul = {...g, warned: m};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+}
+/** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */
+export async function foundFamily(data = {}) {
+  const f = S.newFamily(data);
+  if ( !f ) return null;
+  if ( !game.user.isGM ) return propose({type: T_FAMILY, key: `family:${f.key}`, title: `A new revenant family: ${f.label}`, detail: `${S.FAMILY_TRAITS[f.trait].label}; ${f.disciplines.join(", ")}; flaw: ${f.flaw || "none"}; founded ${f.founded}`, data: f});
+  return saveFamily(f);
+}
+async function saveFamily(f) {
+  const list = (game.settings.get(MODULE_ID, "sigFamilies") ?? []).filter(x => x.key !== f.key);
+  list.push({...f, approved: true});
+  await game.settings.set(MODULE_ID, "sigFamilies", list);
+  return {...f, approved: true};
+}
+
 /** A small form; returns the fields or null. */
 async function ask(title, fields) {
   return foundry.applications.api.DialogV2.prompt({classes: ["wodx", "wodx-dialog"], window: {title},
@@ -578,6 +618,8 @@ export async function open(actorOrId) {
   if ( rowHas(row, "secrets") && on() ) buttons.unshift({action: "secret", label: "Write a page of secrets"});
   if ( rowHas(row, "pyramid") && on() && game.user.isGM ) buttons.unshift({action: "rank", label: "Set rank"});
   if ( rowHas(row, "domain") && on() ) buttons.unshift({action: "influence", label: "Influence in place of income"});
+  if ( rowHas(row, "ghoul") && on() && !row.revenant ) buttons.unshift({action: "drank", label: "Drank from the domitor"});
+  if ( rowHas(row, "ghoul") && on() ) buttons.unshift({action: "family", label: "Found a revenant family"});
   if ( rowHas(row, "contracts") && on() ) {
     buttons.unshift({action: "contract", label: "Take a contract"});
     const open = (sig.contracts ?? []).find(c => c.status === "open");
@@ -604,6 +646,8 @@ export async function open(actorOrId) {
   if ( String(pick).startsWith("kept:") ) return settle(a, String(pick).slice(5), true);
   if ( String(pick).startsWith("call:") ) return callWraith(a, String(pick).slice(5));
   if ( pick === "fed" ) return ravnosFed(a);
+  if ( pick === "drank" ) return ghoulFed(a);
+  if ( pick === "family" ) { const f = await ask("A new revenant family", [{name: "name", label: "Family name"}, {name: "founder", label: "Founder"}, {name: "trait", label: `Trait (${Object.keys(S.FAMILY_TRAITS).join(", ")})`, value: "craft"}, {name: "disciplines", label: "Two or three Disciplines, with commas"}, {name: "flaw", label: "Family flaw"}, {name: "year", label: "Year founded", type: "number", value: currentYear()}]); return f?.name ? foundFamily(f) : null; }
   if ( pick === "moved" ) return movedOn(a);
   if ( pick === "cam" ) return setCamera(canvas.scene, !S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera));
   if ( String(pick).startsWith("vice:") ) return setRavnosVice(a, String(pick).slice(5));
@@ -616,6 +660,7 @@ export function registerSignatureHooks() {
     const a = game.actors.get(e.data?.actor), sig = sigOf(a);
     if ( a && sig.cause ) { sig.cause.approved = true; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); }
   }});
+  registerHandler(T_FAMILY, {label: "A new revenant family", approve: e => saveFamily(e.data ?? {})});
   registerHandler(T_VICE, {label: "Name a Setite victim's vice", approve: e => setVice(e.data?.npc, e.data?.by, e.data?.vice)});
   Hooks.on("wodxSocial", onSocial);
   Hooks.on("wodxTrade", onTrade);
@@ -651,4 +696,4 @@ export function registerSignatureHooks() {
 
 export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
-  bindWraith, callWraith, releaseWraith, effects, tick, year: () => currentYear(), rules: S};
+  bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, tick, year: () => currentYear(), rules: S};

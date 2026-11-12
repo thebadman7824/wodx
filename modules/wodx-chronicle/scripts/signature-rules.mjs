@@ -13,10 +13,10 @@
  */
 import {mediaFor} from "./media-rules.mjs";
 import {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE} from "../data/signatures.mjs";
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES} from "../data/signatures.mjs";
 
 export {BLOODLINES, VAMPIRE, CAUSES, VICES, CORRUPTION_STEPS, MARKS, DAY, WEEK, MARK_LASTS, RANT_POINTS, OBSESSION_MAX, CORRUPTION_MAX, DERANGEMENTS, GLIMPSE_THEMES,
-  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE};
+  RAVNOS_VICES, CAMERAS, CAMERAS_EVERYWHERE, ODD_GIFTS, ODD_GIFT_CHANCE, TREMERE_RANKS, INSTITUTIONS, SECRET_FRESH, STANDING_MAX, TITHE, GHOUL, FAMILY_TRAITS, REVENANT_FAMILIES};
 
 const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -326,3 +326,32 @@ export const overdue = (list = [], now = 0) => list.filter(c => c.status === "op
 export const newServant = ({id, name = "a wraith", fetter = "", now = 0} = {}) => ({id: id || `w-${Math.floor(n(now))}`, name: String(name), fetter: String(fetter), at: n(now)});
 /** The line's name in a year: Cappadocian before 1444 (house reading of the date). */
 export const giovanniName = year => n(year) < 1444 ? "Cappadocian" : "Giovanni";
+
+/* ---------------- Ghouls and revenant families ---------------- */
+
+/** A family as a feature row: the ghoul engine, the family trait's effects and borrowed engine. */
+export function familyAsRow(f) {
+  const t = FAMILY_TRAITS[f.trait] ?? FAMILY_TRAITS.craft;
+  return {key: `family-${f.key}`, label: `${f.label} (revenant family)`, feature: "ghoul", also: [...(t.also ?? [])], effects: t.effects,
+    title: `The ${f.label} family`, page: f.page ?? "Guide to the Sabbat pdf 219; V20 Dark Ages pdf 454",
+    text: `${f.text ?? ""} Family trait: ${t.label.toLowerCase()}.${f.disciplines?.length ? ` Family Disciplines: ${f.disciplines.join(", ")}.` : ""}${f.flaw ? ` Family flaw: ${f.flaw}.` : ""} Revenants are born ghouls and need no domitor's drink to stay as they are.`.trim(), revenant: true};
+}
+/** The family a ghoul's names point at (the books' families first, then those founded in play), or null. */
+export function familyRow(names = [], founded = []) {
+  const all = [...REVENANT_FAMILIES, ...founded.filter(f => f.approved !== false)];
+  for ( const name of names.flat() ) {
+    const t = ` ${words(name).join(" ")} `;
+    const f = all.find(x => t.includes(` ${words(x.label).join(" ")} `));
+    if ( f ) return familyAsRow(f);
+  }
+  return null;
+}
+/** A family founded in play (Ben's answer on the desk): a founder, one trait, two or three Disciplines, a flaw, a year. */
+export function newFamily({name = "", founder = "", trait = "craft", disciplines = [], flaw = "", year = 1197, text = ""} = {}) {
+  const label = String(name).trim();
+  if ( !label || !FAMILY_TRAITS[trait] ) return null;
+  const ds = (Array.isArray(disciplines) ? disciplines : String(disciplines).split(",")).map(x => String(x).trim()).filter(Boolean).slice(0, 3);
+  return {key: words(label).join("-"), label, founder: String(founder), trait, disciplines: ds, flaw: String(flaw), founded: n(year), text: String(text), approved: false};
+}
+/** Whole months a ghoul has gone without vitae (30-day months). */
+export const monthsUnfed = (fedAt, now) => Math.max(0, Math.floor((n(now) - n(fedAt ?? now)) / (30 * DAY)));

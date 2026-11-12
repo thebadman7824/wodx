@@ -1473,3 +1473,13 @@ Reverse: grace on the koldun row.
 Eight legacies from Kindred of the Ebony Kingdom (pdf 48-64) have rows: Akunanse, Guruhi, Ishtarri, Kinyonyi, Naglopers, Osebo, Shango and Xi Dundu. The Vipers are the Followers of Set and use their row. Weaknesses come from the book check; the features are our own.
 
 Reverse: the Laibon rows in BLOODLINES.
+
+## B1158. Ghouls (2026-11-12)
+Ghouls follow the V20 Dark Ages rules in every era (standing rule 12; V20 DA pdf 38). A ghoul's feature is the fix. Each whole month without a drink from the domitor posts a card that takes away a blood point; with none left, the years held off start to come back. "Drank from the domitor" in the clan feature window starts the month again. A ghoul now gets the ghoul row, never the row of the domitor's clan.
+
+Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
+
+## B1159. Revenant families, old and new (2026-11-12)
+The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
+
+Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.

@@ -1646,3 +1646,6 @@ Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A 
 
 ## 2026-11-12: bloodlines and Laibon legacies
 Chronicle 0.29.0 gives 27 bloodlines, castes and Laibon legacies a feature of their own. Each one uses roll effects, a Masquerade sign card, or a clan engine borrowed through the row's "also" list. Decisions B1155 to B1157. Harness signatures.test.mjs: 19 tests. gatesigs: 19 steps.
+
+## 2026-11-12: ghouls and revenant families
+Chronicle 0.30.0 adds ghouls and revenant families. A ghoul loses a blood point for each month without vitae. The Bratovitch, Grimaldi, Obertus and Zantosa families have rows, and new families can be founded in play: the Storyteller approves them, and they are kept in the sigFamilies setting. Decisions B1158 and B1159. Harness signatures.test.mjs: 21 tests. gatesigs: 20 steps.
