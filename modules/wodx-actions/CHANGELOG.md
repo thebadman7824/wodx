@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 3.48.0 (Summon a spirit, Perform a rite and Chiminage take the spirit's court and its standing)
+- 3.49.0 (Summon a spirit, Perform a rite and Chiminage take the spirit's court and its standing)
+- 3.48.0 (missed connections, 12 November 2026: the hunt window suggests extra difficulty from the hour, the era, the crowd and the weather (house rule); a completed trade sends wodxTradeDone for WoDX Storyteller's market count)
 - 3.47.0 (feeding on a named NPC tells WoDX NPC who fed, so the vessel can remember it; the With this person and Trade windows call an NPC by the stranger's words until the character has met them)
 - 3.46.0 (Look them over and Ask around about them in With this person: a fact per success about a stranger, to the player and the Storyteller only)
 - 3.45.1 (the odds line shows in the roll windows again: it went inside the form, not the window's content box)

@@ -64,6 +64,7 @@ import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
 import * as KF from "./feeding-rules.js";
+import * as HN from "./hunt-night-rules.js";
 import * as OD from "./odds-rules.js";
 
 const MOD = "wodx-actions";
@@ -1161,6 +1162,8 @@ export async function hunt({ actor: a } = {}) {
     const styles = Object.entries(KF.HUNT_STYLES).filter(([k]) => KF.styleAllowed(k, year));
     const styleData = Object.fromEntries(styles.map(([k, x]) => [k, { area: x.area, prey: x.prey, attr: x.attr, ability: abId(x.ability), state: x.state ?? "clean", clash: KF.styleClash(k, rule), note: x.note ?? "" }]));
     const palDiff = rule?.palate ? KF.palateHuntDifficulty((flag(actor, "palate") ?? {}).breadth ?? "broad") : 0;
+    // 3.45.0: the hour, the era, the crowd and the weather (WoDX NPC passers-by and WoDX Atmosphere), as a suggestion
+    const night = await huntNight(scene, area, year);
     const content = `<form>
       <p>${esc(actor.name)}: blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
       <div class="form-group"><label>Usual hunt</label><select name="style" data-fixed>${opts([["", "— none —"], ...styles.map(([k, x]) => [k, x.label])], styleKey)}</select></div>
@@ -1172,6 +1175,7 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label>Fame / Domain / Herd</label>
         <input type="number" name="fame" value="${background(actor, "Fame")}" style="width:3.5em"/> <input type="number" name="domain" value="${background(actor, "Domain")}" style="width:3.5em"/> <input type="number" name="herd" value="${background(actor, "Herd")}" style="width:3.5em"/></div>
       <div class="form-group"><label>Inhumanity / other difficulty</label><input type="number" name="inhuman" value="0"/></div>
+      ${night.n ? `<div class="form-group"><label>The night (house rule)</label><input type="number" name="nightDiff" value="${night.n}" min="0"/></div><p class="vta-note">${esc(HN.nudgeText(night))}. Set it to 0 if it doesn't fit.</p>` : ""}
       ${palDiff ? `<div class="form-group"><label>Palate (+${palDiff}, house rule; Herd is taken to fit)</label><input type="number" name="palateDiff" value="${palDiff}" min="0"/></div>` : ""}
       <div class="form-group"><label>Hours available</label><input type="number" name="hours" value="3" min="1"/></div>
       <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), style?.prey ?? "human")}</select></div>
@@ -1202,9 +1206,23 @@ export async function hunt({ actor: a } = {}) {
     }, { width: 500, render });
 }
 
+/** The night's nudge for a hunt here: {n, reasons}. Nothing when the clock can't be read. */
+async function huntNight(scene, area, year) {
+    try {
+        const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+        const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
+        const t = cal.describeTime(game.time.worldTime, lat);
+        const crowd = scene?.getFlag?.("wodx-npc", "crowd") ?? {};
+        const atm = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere")?.api?.weather : null;
+        let weather = null, indoor = false;
+        try { weather = atm?.now?.() ?? null; indoor = atm?.isOutdoor ? !atm.isOutdoor(scene) : false; } catch (e) { weather = null; }
+        return HN.huntNudge({ year: t?.year || year, hour: t?.hour ?? 22, area, density: crowd.density ?? "normal", weather, indoor });
+    } catch (e) { return { n: 0, reasons: [] }; }
+}
+
 async function resolveHunt(actor, fd) {
     const pool = readPool(actor, fd.attr, fd.ability);
-    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) + (Number(fd.palateDiff) || 0) });
+    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) + (Number(fd.palateDiff) || 0) + (Number(fd.nightDiff) || 0) });
     const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: hp.bonusDice, baseDifficulty: hp.difficulty,
         woundPenalty: woundPenalty(actor) });
@@ -2614,7 +2632,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.48.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.49.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

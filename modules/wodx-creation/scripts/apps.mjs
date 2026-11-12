@@ -47,6 +47,7 @@ export class CreationApp extends ApplicationV2 {
       secondBreath: () => secondBreathDialog().then(() => CreationApp.refresh()),
       check: () => CreationCheckApp.open(),
       lifepath: CreationApp.#onLifepath,
+      firstNight: () => game.wodx?.creation?.firstNight?.(),
       award: () => awardDialog(),
       spend: CreationApp.#onSpend,
       ally: CreationApp.#onAlly,
@@ -126,6 +127,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="fallen"><i class="fa-solid fa-fire"></i> A Fallen takes a host</button>
           <button type="button" data-action="possess"><i class="fa-solid fa-person-rays"></i> A new host</button>
           <button type="button" data-action="secondBreath"><i class="fa-solid fa-wind"></i> The Second Breath</button>
+          <button type="button" data-action="firstNight" title="Each player character's steps before the first night, the trouble ahead, and sign-off"><i class="fa-solid fa-moon"></i> Before the First Night</button>
           <button type="button" data-action="lifepath" title="A chain of scenes from a character's life before play, for every line and era"><i class="fa-solid fa-route"></i> Lifepath</button>
           <button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>

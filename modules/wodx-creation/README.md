@@ -19,3 +19,20 @@ Needs WoDX Chronicle 0.1.7 or later. Werewolf, Mage and the other lines get thei
 
 - **Lifepath** (character sheet header, or the Creation window). An optional chain of scenes before points are spent: where and when the character was born, a youth, an adult life, the turn into the line (the Embrace, the First Change, the Awakening, a death, the Chrysalis, the calling, the Fall...), a scene for the clan, tribe, Tradition, kith, guild or creed, and the first years after. Every scene fits its year, 1197 to the World of Future Darkness. Choices suggest Backgrounds, Abilities, Merits and Flaws and name people from the past; the player keeps what fits and ticks who becomes an NPC. Nothing is spent. Back, Another scene and Start over are always there.
 - The lifepath stays with the character through a change of state, and the Storyteller's prelude journal shows it.
+
+## 0.12.0: Before the First Night
+
+- **The hub** (character sheet header, the Creation window, the Chronicle Clock, or the end of the Storyteller's setup wizard). One card for each step before play: Session Zero, troupe ties, concept, lifepath, build, Merits and Flaws, fit with the year and place, prelude, trouble ahead, sign-off. Steps go in any order. A player marks a step done and the Storyteller approves it; concept, lifepath, build and Merits and Flaws tick themselves when the sheet shows them. The Storyteller sees the whole troupe's progress and signs each character off.
+- **Merits and Flaws.** Flaw points are counted against the cap of 7, and each flaw shows what it will bring later.
+- **Trouble ahead.** What the character's choices will cost: flaws that come up in the night's draw, open Ledger entries or bite at given moments, the clan or splat feature, Generation and the Road, enemies from the lifepath, Backgrounds still to be made, factions that distrust the character, rivalries in force this year, dated events coming for the line within five years or before the next era, no language shared with the troupe, and gear out of its time. The player sees what the character would know; the Storyteller sees the rest too.
+- **The trouble dial.** Quiet, Normal or Often: how often the character's own flaws turn up in the night's draw.
+- **The story hook.** The player names one flaw or tie for the story to come back to; the Storyteller agrees, and is reminded after four sessions if it has not come up.
+- **Sign-off** sends the forecast to chat, and then one card per thing the world can be given: an enemy from the past made as a Hostile NPC, the Ledger entries, the Backgrounds made real, a dated hook, a starting standing with each faction. Each card has Make it and Skip, and Undo once made.
+- World setting "Before the First Night": automatic (on everywhere except the Live world), on, or off.
+
+## 0.13.0: building, the prelude and the troupe
+
+- **Build** (the Build step's button). The book's creation points spent on the sheet with a live count: Attributes, Abilities and Virtues dot by dot; Backgrounds, the line's powers, Merits and Flaws counted from the sheet, each Merit, Flaw and Background with what it will bring later. The count is the creation check's, so the primary, secondary and tertiary groups fall where they cost least.
+- **Run the prelude** (Storyteller). The lifepath's scenes, then the line's prelude (before, the turn, after), one scene at a time. A roll with stakes on any beat: a failure costs the stake, a Flaw earned in play at 0 points (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie, and an enemy is made as a Hostile NPC. Up to 3 freebie points of gains (a dot of an Ability, a Background or Willpower). Every change is in the log with Undo. A character joining a chronicle already under way starts with the short prelude (the turn and after).
+- **Write my prelude** (player). A journal page of the prelude's questions, the player's own, which the Storyteller reads; the Storyteller's prelude journal links it.
+- **Troupe ties.** Each player gets one question about the next character in a ring; the answers go on the Group actor and tick the step. How they met gathers them into a journal for a shared scene.

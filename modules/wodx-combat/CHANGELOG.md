@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.16.0 (missed connections, 12 November 2026: fights make noise: firearms and explosives loud, blades, fists, bows and silenced guns quiet; NPCs nearby who hear it react through WoDX Interactables, once a round)
 - 3.15.1 (the after-action card names each fighter and their numbers: the start of the fight is stored so the actor's id is not split; it is written only when a fighter is new)
 - 3.15.0 (the VtDA20 bridge is gone: no game.vtda20combat alias, no settings read from vtda20-combat, and the module no longer switches itself off beside vtda20-combat; the manifest still lists vtda20-combat as a conflict)
 - 3.14.0 (the after-action card for the Storyteller when a fight ends, with a breach button for the Masquerade ledger and the rumour mill; Use the room on the token HUD in a fight)

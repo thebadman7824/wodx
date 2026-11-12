@@ -48,6 +48,8 @@ export async function run() {
       mage("WoDX gate: Sister", "wod.bio.mage.hippolyta"), mage("WoDX gate: Taftani", "wod.bio.mage.taftani"), mage("WoDX gate: Watcher", "wod.bio.mage.nwo"),
       mage("WoDX gate: Nephandus", "wod.bio.mage.nephandi"), {name: "WoDX gate: Mark", type: "Mortal"}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
+    // the system drops a permanent Willpower given on create (testbed probe, step 12): set it after
+    for ( const a of actors.filter(x => x.type === "Mage") ) await a.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 3});
     await step("1 api", async () => {
       ok("1 api", atLeast(game.modules.get(C).version, "0.33.0") && typeof api()?.meditate === "function" && game.settings.get(C, "sigMage") === true, {version: game.modules.get(C).version});
     });

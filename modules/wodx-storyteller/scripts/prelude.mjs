@@ -33,6 +33,17 @@ function lifepathPart(actor) {
   return `<h2>Lifepath</h2>${R.summaryHtml(sum, {name: actor.name, keptKeys: rec.kept, splatLabel: R.splatByKey(rec.path.line, rec.path.splat)?.label ?? ""})}`;
 }
 
+/**
+ * Before the First Night (WoDX Creation 0.13.0): the player's written prelude, and what the prelude runner logged.
+ */
+function firstNightPart(actor) {
+  const p = actor?.flags?.["wodx-creation"]?.firstNight?.prelude;
+  if ( !p ) return "";
+  const j = p.written ? game.journal?.get(p.written) : null;
+  const log = (p.log ?? []).filter(e => !e.undone).map(e => `<li>${esc(e.text)}</li>`).join("");
+  return `<h2>Before the First Night</h2>${j ? `<p>The player's own prelude: @UUID[${j.uuid}]{${esc(j.name)}}</p>` : ""}${log ? `<ol>${log}</ol>` : ""}`;
+}
+
 /** Make the prelude: the journal, and the scene if asked. Returns {journal, scene}. */
 export async function makePrelude({actorId = null, line = null, scene = false} = {}) {
   if ( !game.user.isGM ) return null;
@@ -41,7 +52,7 @@ export async function makePrelude({actorId = null, line = null, scene = false} =
   const p = P.composePrelude({line: key, name: actor?.name ?? "", year: yearNow(), futureBranch: futureOn()});
   const jf = await folder("JournalEntry");
   const journal = await JournalEntry.create({name: p.title, folder: jf?.id ?? null, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE},
-    pages: [{name: p.title, type: "text", text: {content: P.preludeHtml(p) + lifepathPart(actor), format: 1}}],
+    pages: [{name: p.title, type: "text", text: {content: P.preludeHtml(p) + lifepathPart(actor) + firstNightPart(actor), format: 1}}],
     flags: {[MOD]: {prelude: p.line, actorId: actor?.id ?? null}}});
   let made = null;
   if ( scene ) {

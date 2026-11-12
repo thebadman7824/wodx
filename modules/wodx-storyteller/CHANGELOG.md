@@ -2,7 +2,10 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.37.0 (progress clocks from long tasks, heat, ties and the Ledger, and the Storyteller's own; a pacing note on the night's draw; a fight goes in the log)
+- 0.39.0 (progress clocks from long tasks, heat, ties and the Ledger, and the Storyteller's own; a pacing note on the night's draw; a fight goes in the log)
+- 0.38.1 (the prelude journal shows the player's written prelude and what the prelude runner logged)
+- 0.38.0 (missed connections, 12 November 2026: market news: dated events (plague, war, crash, collapse) and a week of player trade suggest price, supply and crowd changes on a card, applied and undone by the Storyteller; Dreaming crossings go in the crossing log)
+- 0.37.0 (the setup wizard opens Before the First Night when it is done; the night's draw follows each character's trouble dial; ending a session calls wodxSessionEnded; ledger.remove in the API)
 - 0.36.0 (prices find made things by name with their quality tag; made things record their maker)
 - 0.34.1 (the prelude journal shows the character's lifepath)
 - 0.34.0 (taking things apart for parts)

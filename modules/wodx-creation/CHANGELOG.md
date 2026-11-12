@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.13.0 (Before the First Night: the guided builder with a live count for every line's creation totals, the prelude runner with rolls with stakes and up to 3 freebie points of gains, each with Undo, the written prelude, troupe ties in a ring onto the Group actor, How they met, and the short prelude for a late joiner)
+- 0.12.0 (Before the First Night: a hub of steps for each player character with Storyteller approval and sign-off, the trouble forecast from flaws, blood, people, factions, rivals, coming events, language and gear, the trouble dial, the story hook, and seed cards with Undo at sign-off)
 - 0.11.0 (lifepaths: a step-by-step chain of scenes for every line and splat, 1197 to the World of Future Darkness; the lifepath goes along through a change of state)
 - 0.10.2 (giveVitae firstDouble: a Dark Ages Tremere's first drink counts as two)
 - 0.10.1 (townsfolk spread over thirty years of age in Pass the Years; heirs ticked for them, so the town stays staffed)

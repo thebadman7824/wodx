@@ -109,7 +109,7 @@ export const EVENT_KINDS = {
   fireOut: "Put out", light: "A light lit", dark: "A light out", desecrate: "Desecrated", trap: "A trap sprung", disarm: "A trap disarmed",
   hazard: "Hurt by a hazard", holy: "Holy ground", found: "Found", use: "Used",
   watch: "A look out", call: "A call", mount: "Got on", dismount: "Got off", crash: "A crash or a fall", ride: "Flat out",
-  climb: "Climbed", jump: "Jumped", fall: "A fall"
+  climb: "Climbed", jump: "Jumped", fall: "A fall", fight: "A fight", chase: "A chase"
 };
 
 const OPEN_OPS = new Set(["open", "openQuiet", "pick", "key", "unlock", "unbar", "hack", "heave", "unstick"]);
@@ -175,7 +175,7 @@ export function mapEvent(e = {}) {
 export const EVENT_WORDS = {
   open: "Opened", force: "Forced", break: "Smashed", alarm: "Alarm!", theft: "Taken", fire: "Alight", fireOut: "Put out",
   light: "", dark: "", desecrate: "Desecrated", trap: "Sprung!", disarm: "Disarmed", hazard: "", holy: "", found: "Found", use: "", noise: "",
-  watch: "", call: "", mount: "", dismount: "", crash: "Crash!", ride: ""
+  watch: "", call: "", mount: "", dismount: "", crash: "Crash!", ride: "", fight: "", chase: ""
 };
 /** How far a one-shot sound carries, in yards, by the noise rating (the same earshot as hearing). */
 export const SOUND_YARDS = {silent: 3, quiet: 5, loud: 30};
