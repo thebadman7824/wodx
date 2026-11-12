@@ -36,6 +36,7 @@
 
 import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
 import {normAftermath} from "./battle-aftermath.mjs";
+import {normCampaign} from "./siege-works-rules.mjs";
 
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
@@ -217,6 +218,8 @@ export function normSide(s = {}, fallbackName = "A side") {
     lostUnits: Math.max(0, Math.round(n(s.lostUnits))),
     penalty: clamp(Math.round(n(s.penalty)), 0, 10),
     sick: clamp(Math.round(n(s.sick)), 0, 6),
+    // Storyteller 0.50.0: order lost in the ranks (Spoils of War p. 40), +1 to every army roll per point for a week
+    unrest: clamp(Math.round(n(s.unrest)), 0, 4),
     resolve: s.resolve === undefined || s.resolve === null ? null : clamp(Math.round(n(s.resolve)), 0, 20),
     stores: Math.max(0, Math.round(n(s.stores))),
     defends: !!s.defends
@@ -235,7 +238,7 @@ export function startResolve(side) {
 
 /** The difficulty of a commander's roll: 6 (Spoils of War p. 44), plus the side's disease penalty (p. 41), to 10. */
 export function difficultyFor(side) {
-  return clamp(6 + n(side?.sick), 3, 10);
+  return clamp(6 + n(side?.sick) + n(side?.unrest), 3, 10);
 }
 /** Demoralised (Spoils of War p. 45): a die less for each unit lost past the commander's Charisma + Leadership. */
 export const demoralised = side => Math.max(0, n(side?.lostUnits) - n(side?.commander?.morale));
@@ -270,7 +273,9 @@ export function normBattle(b = {}) {
       kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null,
     // Storyteller 0.47.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
     offers: normOffers(b.offers),
-    aftermath: normAftermath(b.aftermath)
+    aftermath: normAftermath(b.aftermath),
+    // Storyteller 0.50.0: the campaign around a siege (siege-works-rules.mjs, B2470-B2477)
+    campaign: kind === "siege" || b.campaign ? normCampaign(b.campaign) : null
   };
   out.book = b.book === undefined || b.book === null ? out.sides.every(x => unitCount(x.units) > 0) : !!b.book;
   // Field battles: the defender is side 1. A siege: side 1 holds the walls.
@@ -517,12 +522,12 @@ export const BREACH_SEGMENTS = 8;
 /**
  * The besieging commander's Intelligence + Leadership for the siege works (Spoils of War p. 41, the roll for
  * planning a mine and for siege engines), at 6 plus the walls' bonus (a house rule), less 1 with a strong
- * supernatural force, plus the camp's disease penalty; 3 to 10.
+ * supernatural force, plus the camp's disease penalty and its unrest; 3 to 10.
  */
 export function siegeSetup(battle, age) {
   const walls = positionBonus(battle.sides[1].position, age);
   const s0 = battle.sides[0];
-  return {pool: Math.max(1, s0.commander.works - demoralised(s0)), difficulty: clamp(6 + walls - (s0.supernatural >= 3 ? 1 : 0) + s0.sick, 3, 10), walls};
+  return {pool: Math.max(1, s0.commander.works - demoralised(s0)), difficulty: clamp(6 + walls - (s0.supernatural >= 3 ? 1 : 0) + s0.sick + n(s0.unrest), 3, 10), walls};
 }
 /**
  * `roll` = the works roll; `sickRolls` = the week's Wits + Medicine roll for each side (disease). Guns breach twice
@@ -563,6 +568,7 @@ export function settleWeek(battle, age, roll, sickRolls = [null, null]) {
 export function applyStep(battle, step, at = null) {
   const b = {...battle, sides: step.sides, phases: [...battle.phases, step.phase]};
   if ( step.weeks !== undefined ) { b.weeks = step.weeks; b.breach = step.breach; b.breached = step.breached; }
+  if ( step.campaign !== undefined ) b.campaign = step.campaign;
   if ( step.over ) b.over = {...step.over, at, text: outcomeText({...b, over: step.over})};
   return b;
 }
@@ -573,11 +579,12 @@ export function undoStep(battle) {
   if ( !last ) return battle;
   const sides = battle.sides.map((s, i) => {
     const o = {...s, commander: {...s.commander}};
-    for ( const k of ["men", "resolve", "stores", "lostUnits", "penalty", "sick", "units"] ) if ( last.before[i][k] !== undefined ) o[k] = last.before[i][k];
+    for ( const k of ["men", "resolve", "stores", "lostUnits", "penalty", "sick", "units", "unrest"] ) if ( last.before[i][k] !== undefined ) o[k] = last.before[i][k];
     return o;
   });
   const b = {...battle, sides, phases: battle.phases.slice(0, -1), over: null};
   if ( last.kind === "week" ) { b.weeks = Math.max(0, battle.weeks - 1); b.breach = last.breachBefore; b.breached = last.breachedBefore; }
+  if ( last.campBefore !== undefined ) b.campaign = last.campBefore;
   return b;
 }
 
