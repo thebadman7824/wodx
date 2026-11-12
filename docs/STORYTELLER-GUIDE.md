@@ -395,6 +395,10 @@ The rolls and the book's army come from Spoils of War and the Dark Ages Companio
 - The board takes its era's look: parchment and thread before 1450, a commonplace board to 1800, pinboard and string to 1945, cork to 2022, a lit display in the World of Future Darkness.
 - **What they could know** (Storyteller's hand): pick a player character and see the Encyclopaedia entries that fit their line and the year, with a suggestion and the reason (Intelligence + Occult, Academics or Politics; a house rule). Tick what they know and press "Put the ticked in the codex"; their players read it there. Entries that have not happened yet are never offered.
 
+### Wars between factions
+
+With WoDX NPC's setting "Factions go to war by themselves" on (it is on by default), a faction that is Hostile or worse toward a rival may take up arms at a faction turn for a place the rival holds. You get a card when it starts and when it ends; the battle is fought off the screen (a siege a week each turn), and what it changes, the place included, waits in the approval queue. Tell the players as news when word would reach them. If a player character is at the place, the war waits in Battles and sieges for you to fight it with them. A war between Kindred, Garou, mages, fae or the dead (or hunters against them) is a supernatural war: their own kind fight, the leaders' powers count each phase, and people may see something. A hidden faction against a mortal one fights through its mortal followers (docs/DECISIONS.md B2211 to B2216).
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

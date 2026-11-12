@@ -260,7 +260,10 @@ export function normBattle(b = {}) {
     over: b.over ? {winner: b.over.winner === 1 ? 1 : b.over.winner === 0 ? 0 : null, how: str(b.over.how, 40), at: Math.round(n(b.over.at)) || null, text: str(b.over.text, 400)} : null,
     started: Math.round(n(b.started)) || null,
     timePassed: Math.max(0, Math.round(n(b.timePassed))),
-    legend: b.legend !== false
+    legend: b.legend !== false,
+    // a war between factions fought off the screen (WoDX NPC, B2211): who, for what place, and whether it runs by itself
+    war: b.war && typeof b.war === "object" ? {attacker: str(b.war.attacker, 40), defender: str(b.war.defender, 40), place: str(b.war.place, 200),
+      kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null
   };
   out.book = b.book === undefined || b.book === null ? out.sides.every(x => unitCount(x.units) > 0) : !!b.book;
   // Field battles: the defender is side 1. A siege: side 1 holds the walls.
