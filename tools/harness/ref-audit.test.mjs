@@ -24,7 +24,7 @@ test("pages split on form feeds or page markers", () => {
 });
 
 test("a claim scores against the right page, and a bare ref is read as printed or pdf", () => {
-  const pages = new Map([[1, "front matter"], [10, "werewolves shapeshift between forms with difficulty"], [20, "nothing about it"], [21, ""], [19, ""]]);
+  const pages = new Map([[1, "front matter"], [10, "werewolves shapeshift between forms with difficulty"], [20, "nothing about it here, only the rules for something else entirely. ".repeat(5)], [21, ""], [19, ""]]);
   const words = R.keywords("Werewolves shapeshift between their forms.");
   assert.ok(words.includes("werewo") && words.includes("shapes"));
   // printed 8 = pdf 10 with offset 2
@@ -44,4 +44,37 @@ test("offsets come from the most common pdf-minus-printed gap", () => {
 test("the audit lists the repo's refs", () => {
   const out = execFileSync("node", [fileURLToPath(new URL("../audit/ref-audit.mjs", import.meta.url)), "--list"], {encoding: "utf8"});
   assert.match(out, /v20 +\d+ refs {2}offset 8/);
+});
+
+/* The 2026-11-12 sample of 60 low scores: about half came from short book names read as another book, and two from
+ * cited pages with blank OCR (stale design desk 2026-11-12b-d2). */
+test("short book names resolve to their own book, not the last book named", () => {
+  const book = line => R.refsInLine(line, "v20").refs[0].book;
+  assert.equal(book("the first arcology (CP2020 p. 176)"), "cp2020");
+  assert.equal(book("Kelvin vanishes (WoFD p. 19)"), "wofd");
+  assert.equal(book("Major Bond of Fate, Mummy: The Resurrection p. 111"), "mtr");
+  assert.equal(book("Time of Judgment p. 69"), "toj");
+  assert.equal(book("KotE Companion p. 9"), "kotecomp");
+  assert.equal(book("Kindred of the East p. 9"), "kote");
+});
+
+test("books.json aliases join the built-in names, and the list can be put back", () => {
+  const list = R.withAliases({ndb: {file: "x.txt", aliases: ["Night City Sourcebook", ""]}});
+  assert.ok(list.some(a => a[0] === "Night City Sourcebook" && a[1] === "ndb"));
+  assert.ok(list.some(a => a[0] === "CP2020"));
+  R.useAliases(list);
+  assert.equal(R.refsInLine("Night City Sourcebook p. 12").refs[0].book, "ndb");
+  R.useAliases(R.ALIASES);
+  assert.equal(R.refsInLine("Night City Sourcebook p. 12").refs[0].book, null);
+});
+
+test("a cited page with blank OCR is marked blank, not scored low", () => {
+  const pages = new Map([[20, ""], [21, "  12  "], [22, ""], [30, "werewolves shapeshift between forms ".repeat(10)]]);
+  const words = R.keywords("Werewolves shapeshift between their forms.");
+  assert.equal(R.blankPages(pages, 21), true);
+  assert.equal(R.blankPages(pages, 30), false);
+  assert.equal(R.blankPages(pages, 99), false, "a page not in the text is missing, not blank");
+  const j = R.judge({page: 21, to: 21, pdf: 21}, words, pages, 0);
+  assert.equal(j.blank, true); assert.equal(j.reading, "blank"); assert.equal(j.score, null);
+  assert.equal(R.judge({page: 30, to: 30, pdf: 30}, words, pages, 0).blank, undefined);
 });

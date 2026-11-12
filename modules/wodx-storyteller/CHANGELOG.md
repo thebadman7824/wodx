@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.43.3 (book check: the hardship weather roll cites M20 p. 435 only; Sorcerers Crusade p. 208 has no weather rule)
 - 0.43.2 (the before-the-players check says plainly that vtda20-actions or vtda20-combat left on would answer every button beside WoDX)
 - 0.43.1 (fix: the Battles window took ApplicationV2 from the window instead of foundry.applications.api, which stopped the module loading)
 - 0.43.0 (battles and sieges: the Battles window in the Storyteller's hand (api.battles); two forces by the age of war of the year, 1197 to Future Darkness and the Umbra and Underworld; phases with deeds, sieges by the week with a progress clock for the walls, storming, drawing off, Undo, Let the time pass, the battle's dice against a character; the hook wodxBattle; house figures until the book search)

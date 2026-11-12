@@ -32,7 +32,7 @@ export default {
       books: "Kindred, Garou, wraiths and mummies soak lethal with Stamina (Mummy: the Resurrection pdf 130 / p. 136). Mortals, mages (M20 p. 334), hunters and C20 changelings soak it only with armor. A demon soaks lethal only in the apocalyptic form (DtF pdf 172 / p. 171).",
       settled: "Each target by its own line's book. Demons and mummies now have their own soak models instead of the Garou one.",
       basis: "line", status: "fixed", code: "wodx-combat profiles.js PROFILES.soak, rules.js soakPool (demon, mummy)",
-      refs: ["B524", "VtDA20 p. 345", "M20 p. 334", "DtF p. 171", "MtR p. 136", "Ghouls and Revenants p. 262"]
+      refs: ["B524", "VtDA20 p. 345", "M20 p. 334", "DtF p. 171", "MtR p. 136", "Ghouls and Revenants, page to find"]
     },
     {
       id: "soak-aggravated", topic: "Who soaks aggravated damage",

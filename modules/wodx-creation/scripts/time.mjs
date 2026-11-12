@@ -159,7 +159,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       notes.push("Does not age");
       const road = Math.max(0, Math.min(10, Number(actor.system?.advantages?.path?.permanent) || 0));
       const enough = years >= TORPOR.years[road];
-      add("torpor", "Sleeps the years away in torpor", `Road ${road}: the sleep lasts at least ${TORPOR.labels[road]} (V20 Dark Ages p. 350)${enough ? "" : "; longer than this skip"}`, false, {road});
+      add("torpor", "Sleeps the years away in torpor", `Road ${road}: the sleep lasts at least ${TORPOR.labels[road]} (V20 Dark Ages p. 351)${enough ? "" : "; longer than this skip"}`, false, {road});
     }
 
     // Wounds heal over the skip: WoDX Actions heals with the clock when the skip ends (the same code as any clock advance)

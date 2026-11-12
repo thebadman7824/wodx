@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.14.1 (book check: voluntary torpor by Road is V20 Dark Ages p. 351, not p. 350)
 - 0.14.0 (lifepath threads: the open threads of a kept lifepath, a rival, a debt, someone lost, an enemy, for WoDX Chronicle to deal out as story chains; a guest in another character's prelude scene, where their years allow, with the beat written to troupe ties)
 - 0.13.1 (a Family tree button in the People window, beside the Lineage journal)
 - 0.13.0 (Before the First Night: the guided builder with a live count for every line's creation totals, the prelude runner with rolls with stakes and up to 3 freebie points of gains, each with Undo, the written prelude, troupe ties in a ring onto the Group actor, How they met, and the short prelude for a late joiner)
