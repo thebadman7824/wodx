@@ -27,7 +27,7 @@ export async function run() {
   try {
     await step("api", async () => {
       const animals = Object.values(api.rules.TEMPLATES).filter(t => t.animal).length;
-      ok("api", api.version === "0.21.0" && animals === 16 && !!api.routineRules.PLACE_KINDS.sewer && !!api.routineRules.PLACE_KINDS.alley, {version: api.version, animals});
+      ok("api", api.version.startsWith("0.21") && animals === 16 && !!api.routineRules.PLACE_KINDS.sewer && !!api.routineRules.PLACE_KINDS.alley, {version: api.version, animals});
     });
     actor = await Actor.create({name: "WoDX gate grey wolf", type: "Creature"});
     await step("wolf by name", async () => {

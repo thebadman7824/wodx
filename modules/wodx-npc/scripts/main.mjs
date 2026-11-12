@@ -29,7 +29,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.21.0";
+const VERSION = "0.21.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -80,7 +80,9 @@ function animalOf(actor) {
   try {
     const pb = actor?.token?.getFlag?.(MOD, "passerby");
     if ( pb?.archetype && AN.ANIMALS[pb.archetype] ) return pb.archetype;
-    if ( pb?.animal ) return AN.forCrowd(pb.animal, {year: yearNow(), kind: canvas?.scene?.getFlag?.(MOD, "place")?.kind ?? null});
+    // passerby.animal is true for an animal and passerby.kind names it (dog, cat, rat, bird, pig, goat, geese, horse, cattle)
+    const crowdKind = pb?.animal === true ? pb.kind : typeof pb?.animal === "string" ? pb.animal : null;
+    if ( crowdKind ) return AN.forCrowd(crowdKind, {year: yearNow(), kind: canvas?.scene?.getFlag?.(MOD, "place")?.kind ?? null});
     const own = actor?.getFlag?.(MOD, "animal");
     if ( AN.ANIMALS[own] ) return own;
     return AN.guessAnimal(actor?.token?.name ?? actor?.name);
