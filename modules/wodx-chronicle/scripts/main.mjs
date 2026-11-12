@@ -29,6 +29,7 @@ import * as referee from "./referee.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
+import * as pod from "./pod.mjs";
 import * as legends from "./legends.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
@@ -81,6 +82,8 @@ Hooks.once("init", () => {
   // Splat Features Desk: each clan's own feature (Vampire first)
   signatures.registerSignatureSettings();
   signatures.registerSignatureHooks();
+  pod.registerPodSettings();
+  pod.registerPodHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -171,6 +174,7 @@ Hooks.once("ready", async () => {
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
+    pod: pod.podApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
@@ -286,7 +290,7 @@ async function onSocket(message) {
 }
 
 // A new session begun in WoDX Storyteller starts the count of NPC proposals again
-// It also brings the Legends book up to date (WoDX Chronicle 0.37.0)
+// It also brings the Legends book up to date (WoDX Chronicle 0.39.0)
 Hooks.on("updateSetting", s => {
   if ( s?.key !== "wodx-storyteller.session" ) return;
   approvals.resetSession();

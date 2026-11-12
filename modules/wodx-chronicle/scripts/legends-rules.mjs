@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.37.0: the Legends book, the pure part. No Foundry calls here.
+ * WoDX Chronicle 0.39.0: the Legends book, the pure part. No Foundry calls here.
  *
  * The book lists what has really happened in this chronicle, gathered from records WoDX already keeps:
  *   event    a dated event that fired (Chronicle's dated events)

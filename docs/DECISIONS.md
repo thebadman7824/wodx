@@ -1456,6 +1456,50 @@ A ledger of bound wraiths, each held by a fetter. Calling one sends a card to th
 
 Reverse: giovanniName in signature-rules.mjs.
 
+## B1900. One list of relationships, read from both ends (2026-11-12)
+Ben picked "Build it as described" for Relationships on the sheet and the family tree on the Improvement Desk. WoDX NPC's ties-rules.mjs reads every place WoDX keeps a tie: the lineage (sire, domitor, blood bonds, formerly and became, heirs from Pass the Years), Allies and Retainers bought as Backgrounds, a vampire sheet's Sire box matched by name, the hand-made list on the sheet, and open debts, boons and oaths in the Ledger. Each tie is drawn at both ends, so a sire's record makes a childe on the other sheet. A tie made in two places is kept once, with the hand-made note. WoDX Sheets' Ties tab becomes Relationships, grouped by kind. The old roles still read.
+
+Reverse: relationsOf in wodx-sheets extras.mjs (null falls back to the old Ties tab); edges in ties-rules.mjs.
+
+## B1901. What players see of a tie (2026-11-12)
+Players see the ties of characters they own and of sheets they can open, except a hand-made tie the Storyteller marked hidden (Storyteller only, at both ends) and a tie a secret hides. A tie a secret hides shows to the owners of either end, who know it, and to anyone whose character found the secret out. House rule.
+
+Reverse: visibleTo in ties-rules.mjs.
+
+## B1902. The family and lineage tree (2026-11-12)
+A window from the sheet's Relationships tab and the People window. For one person it draws each line that has someone in it: sires and childer, domitors and ghouls, family, heirs, mentors and students, patrons and retainers, plus bonds, kin and changes of state on the side. Up to 13 steps up and 6 generations down. Going up, a tie the viewer may not see shows as Unknown; going down it is left out, so a hidden childe is not given away. A vampire with no sire recorded shows an Unknown sire. Any name can redraw the tree from there.
+
+Reverse: treeFor in ties-rules.mjs, openTree in people.mjs.
+
+## B1903. Secrets, and the hook a find makes (2026-11-12)
+Any actor can hold secrets (flags["wodx-npc"].secrets): a kind, the words, how much it matters (It matters, Grave), and a tie it hides. When someone finds one out, WoDX Storyteller's Ledger gets a major boon owed by the holder to the finder (a "hook"), spent like any boon. The Storyteller writes secrets in a Secrets window from the sheet; players never see it, but the Relationships tab shows a character's own secrets and those they found. House rule: CK3's hooks put into V20's prestation.
+
+Reverse: hookEntry in secrets-rules.mjs; reveal in people.mjs.
+
+## B1904. How a secret is found (2026-11-12)
+The Storyteller lets someone dig in the Secrets window, or tells them outright. Investigation: Perception + Investigation at 7. Auspex 4 Telepathy: Intelligence + Subterfuge against the holder's Willpower (the V20 Telepathy roll). Spies or Contacts: Manipulation + Streetwise at 7. Auspex 2 Aura Perception: Perception + Empathy at 8, and it only sees diablerie, infernal and Wyrm marks on the soul. One success finds a secret that matters, three a grave one, one fewer for Telepathy and Aura Perception. A botch tells the holder someone is asking. The oldest secret still hidden is found first. A clue's "secret <words>" outcome (WoDX Chronicle) hands over the best match. The dice, difficulties (except Telepathy) and successes are house rules.
+
+Reverse: METHODS and successesNeeded in secrets-rules.mjs.
+
+## B1905. Who cares about a secret, and the charge it makes (2026-11-12)
+Each kind of secret has the courts that care, by age: heresy to the Inquisition, and to any court up to 1650; infernalism always; diablerie to the Camarilla and Dark Ages courts, less to the Anarchs, not to the Sabbat; a tie to the other side from 1493 for the Camarilla; a Technocracy defection from 1897. In the faction politics turn an NPC who holds a hook on another member accuses them of that secret, with proof, when the court cares. At the gathering the proof adds 3 a point the court cares, and the secret is laid bare whatever the verdict: everyone knows it, and the hook in the Ledger is cancelled. Laying a player's character's secret bare waits for the Storyteller. House rules.
+
+Reverse: SECRET_KINDS and hooksFor in secrets-rules.mjs; the accuse move and the charges in politics-rules.mjs; pol-expose.
+
+## B1906. "Only when" reads any rated trait (2026-11-12)
+WoDX Chronicle's "Only when" lists take a trait name and dots: "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2", "not Occult 1". A bare number means at least that. The trait is found among Attributes, Abilities, Virtues, Spheres and rated items (Disciplines and other powers, Spheres, Realms, Backgrounds); a name that starts the item's name counts.
+
+Reverse: the rating test in when-rules.mjs.
+
+## B1907. Talk lines that need a trait (2026-11-12)
+Ben picked "Build it as described". A talk line whose "Only when" asks about the character's own traits (a rated trait, a merit, flaw or background, a power, a clan, tribe, Tradition, kith or other sheet field, Generation, Arete, True Faith) is tried before the plain lines on the same sheet, the way Bloodlines offers its clan and Discipline lines. The talk card and the Storyteller's "ask me first" card mark it with what unlocked it, in brackets. A not-test unlocks nothing; being Kindred is not a trait line.
+
+Reverse: fitting and gateOf in talk-rules.mjs.
+
+## B1908. Why an NPC feels as they do (2026-11-12)
+Ben picked "Build it as described". For the Storyteller only, under each talk card and on an NPC's Relationships tab: the first meeting and each change since, summed by cause, so the steps add up to the attitude; then what else is on the NPC's mind: boons kept or broken between them, debts still open, a fight between them (WoDX NPC now notes on the NPC who fought them when a combat ends), a tie (sire, childe, bond, kin, rival), a secret one found on the other, the same clan, tribe or Tradition, and a rival side. These do not move the attitude by themselves.
+
+Reverse: reasonsFor in opinion-rules.mjs; onRenderMessage and onCombatEnd in people.mjs.
 ## B1155. Bloodlines come before clans in the table (2026-11-12)
 The bloodlines, castes and Laibon legacies have rows of their own, placed before the clans so that "True Brujah", "Salubri antitribu", "Old Clan Tzimisce" and "Assamite vizier" each find their own row first. Each is a "line" feature with three possible parts:
 - roll effects (for example True Brujah Empathy -1 die, Daughters of Cacophony Perception +1 difficulty, Gargoyles resisting Dominate +2 difficulty, Osebo and Akunanse resisting frenzy +1 difficulty, Guruhi deceit +1 difficulty)
@@ -1578,6 +1622,46 @@ Reverse: the also and feature fields on each row.
 Bane mummies, the Earthbound, the Wan Xian and the Cabiri have rows for the Storyteller's NPCs, with a lore page or a card where the desk asked for one.
 
 Reverse: those rows in data/signatures.mjs.
+## B1511. City Masquerade exposure (2026-11-12)
+Each city keeps one exposure track. A breach recorded by the witness rules adds 1, plus 1 for each witness past the first (2 more at most), plus 1 from 1605 when printed news carries it, plus 2 when the scene is marked watched by a camera. A breach kept in a closed place (spread off) gets no print point. Each 7 quiet days take 1 off. The bands are Quiet 0, Whispers 3, Talk 6, Watched 10 and Hunted 15. A Storyteller card comes when a band is crossed upward. Hunted starts a big rumour through the Storyteller module. Idea from the Princes of Darkness mod; numbers are a house rule.
+
+Reverse: setting podExposure off; EXPOSURE_BANDS and breachPoints in pod-rules.mjs.
+
+## B1512. Each sect's law and bringing a culprit to heel (2026-11-12)
+A Camarilla court (and the Church of Caine before 1435) acts at Watched; Sabbat, Anarch and sectless cities act only at Hunted. The court card names the culprit and the V20 means of enforcement (Dominate or Presence against Willpower, or an accusation before the court). Its button lowers the city's exposure by 3. The Storyteller sets each city's law in the window.
+
+Reverse: SECT_LAW and HEEL_DROP in data/pod.mjs.
+
+## B1513. The city of a scene (2026-11-12)
+A scene's flag wodx-chronicle.city names its city; otherwise the world setting podCity (Rothenstein by default).
+
+Reverse: cityOf in pod.mjs.
+
+## B1514. Great cities that change with history (2026-11-12)
+Constantinople, Rome, Paris, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc have dated states taken from history (sackings, occupations, rebuildings, changes of ruler). Each state has tags, a smell and a sound. Senses adds the smell and sound to every answer in that city through wodxSensesGather. Map generation reads api.pod.cityState(scene or name, year).
+
+Reverse: setting podCities off; CITIES in data/pod.mjs.
+
+## B1515. Raising or restoring a building (2026-11-12)
+The window's Raise or restore posts a card. Its button logs a minor boon in the Storyteller's Ledger, owed by the faction that gains to the patron. Money and holdings stay with the Storyteller's holdings window.
+
+Reverse: raiseBuilding in pod.mjs.
+
+## B1516. Golconda as a long road (2026-11-12)
+A Kindred seeker has a road of 10 steps, kept on the actor. Taking a life (lethal and aggravated damage reaching seven levels from the seeker's attack) costs 2 steps. Frenzy, a won pickpocket lift, and feeding of 3 or more blood points or by force each cost 1 step. A mentor teaches one step for each 30 days on the clock, through the approval queue. The Storyteller adds a step for a test passed. At 10 a card offers Grant Golconda, which sets WoDX Actions' own golconda flag. V20 p. 30 (pdf 38); the road's steps and costs are a house rule.
+
+Reverse: setting podGolconda off; GOLCONDA_SETBACKS and MENTOR_DAYS in data/pod.mjs.
+
+## B1517. Story chains (2026-11-12)
+Six dated chains: a Setite corrupting a faith, the Anarch Revolt (1381 to 1493), the Black Death (1347 to 1353), the Inquisition coming to town (1231 to 1834), a hunt for an Antediluvian (1493 to 1999) and the Week of Nightmares (1999). The Storyteller starts one in the window, at a place. The clock deals each step as a Storyteller card after its gap in days. These are different from the lifepath chains of B1311: they run in play, not in creation.
+
+Reverse: setting podChains off; CHAINS in data/pod.mjs.
+
+## B1518. Opening goals (2026-11-12)
+Each line has three opening goals for before 1800 and three from 1800, and mortals and other kinds use the mortal list. A character with a player owner and no goal gets the goals as buttons in the feature window. Signing off before the first night posts the list to the owner.
+
+Reverse: GOALS in data/pod.mjs; section in pod.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1787,7 +1871,7 @@ Once any character in the world is signed off, a new character's hub says the ch
 
 Reverse: underWay in first-night-prelude-rules.mjs.
 ## B1700. The Legends book (2026-11-12)
-Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.37.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
+Ben approved the Improvement Desk item "A Legends book for this chronicle" as described. WoDX Chronicle 0.39.0 keeps a book of what has really happened, in the world setting wodx-chronicle.legends, written from records WoDX already keeps and never changing them: dated events that fired, deaths on actors' chronologies and in Creation's archive, Embraces and ghoulings with the sire or domitor, seats in WoDX NPC courts won and lost, havens and holdings (WoDX Storyteller owner records, and the older NPC place tags) that changed hands, and boons, oaths and debts the Ledger marked kept or broken. Rules in legends-rules.mjs.
 Players see a new line of each kind as follows (a house rule, line by line in the window): dated events, deaths, seats, holdings and boons are shown; Embraces, ghoulings, oaths and debts, and the seats of a secret faction, wait for the Storyteller. Lines dated after today's date are the Storyteller's only.
 Reverse: SHOWN_BY_DEFAULT in legends-rules.mjs.
 ## B1701. When the book is written (2026-11-12)

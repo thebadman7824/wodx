@@ -66,7 +66,8 @@ export async function run() {
       vamp("WoDX gate: Nagaraja", "custom", "Nagaraja", 7),
       {name: "WoDX gate: Vessel", type: "Mortal"}, {name: "WoDX gate: Merchant", type: "Mortal"}, {name: "WoDX gate: Carter", type: "Mortal"}, {name: "WoDX gate: Body", type: "Mortal"}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
-    const pb = tags => ({"wodx-npc": {passerby: {kind: tags[0], tags}}});
+    // kept, so WoDX NPC's street (0.27.0) does not clear them from a scene with no crowd while the gate runs
+    const pb = tags => ({"wodx-npc": {passerby: {kind: tags[0], tags, kept: true, keptAt: Date.now(), why: "held"}}});
     await scene.createEmbeddedDocuments("Token", [
       {name: "vessel", actorId: by("Vessel").id, x: G * 5, y: G * 5},
       {name: "merchant", actorId: by("Merchant").id, x: G * 7, y: G * 5, flags: pb(["merchant", "tradesperson", "man", "adult"])},
