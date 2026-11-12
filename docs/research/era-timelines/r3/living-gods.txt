@@ -319,3 +319,17 @@
 -2000|H|mor|AS|Hokkaido|migration|The Ainu of the north|The Ainu people's ancestors live in the northern islands of Japan.
 -2000|W|kue|AS|Hokkaido|faith,occult|The Ainu and the spirits|Kindred of the East places the Ainu in the islands by this age, with their own bond to the spirits (Kindred of the Thousand Hells pdf 44).
 -8500|M|dem|ME|The world|faith,occult|The Time of Babel|After the Time of Atrocities and the Long March, the war of Heaven and the Fallen calms into the Time of Babel (Houses of the Fallen pdf 19, 73).
+-10000|M|vam|ME|Eden|faith,occult|Lilith cast out|In the lore of Ur and Babylon, Lilith is the first woman, Adam's equal, and is cast out of Eden into the unformed world (Revelations of the Dark Mother pdf 4).
+-9300|M|vam|ME|Land of Nod|crown|Caine weds Zillah|Bound to a crone by her blood, Caine in turn gives Zillah his blood for three nights and marries her (Book of Nod pdf 12-13).
+-9300|M|vam|ME|Land of Nod|faith,occult|The Bahari|Lilith's cult, the Bahari, keep her teaching; in their telling Caine's line turns on her for thirteen generations (Revelations of the Dark Mother pdf 4-5).
+-6900|M|wer|EU|The Umbra|occult|The Wyrm splits|Caught in the Weaver's web, the Wyrm goes mad and splits into Beast-of-War, Eater-of-Souls and the Defiler (W20 Book of the Wyrm pdf 12-14).
+-4500|W|vam|ME|Sumer|learning,occult|The oldest leaf of the Book of Nod|By the reckoning of the book's own scholar, its oldest fragment was written just before Sumer (Book of Nod pdf 19).
+-1479|W|mag|AF|Thebes|occult,founding|The Reed of Thoth and the Cupbearers of Isis|Hatshepsut and Thutmose III call a gathering that founds two lodges of magicians (Order of Hermes Revised pdf 20).
+-1400|W|mag|AF|Egypt|occult,heresy|A hundred sects|Within a century the two Egyptian lodges split into more than a hundred rival sects (Order of Hermes Revised pdf 20).
+# Deduced cards (Ben 2026-11-12 22:48Z: reason from the other lines where a book gives no year). Each says what it is deduced from.
+-3200|M|wer|AF|Egypt|war,treaty|The War of Rage ends in Egypt|Deduced: Rage Across Egypt has Egypt united only after the War of Rage (pdf 25), so the killing is over along the Nile before Narmer, about 3200 BCE.
+-3300|M|vam|ME|Mesopotamia|migration,crown|The scattered childer reach the rivers|Deduced: Set is ruling in Egypt by about 3000 BCE (Mummy 1st pdf 64) and the Baali hold Sumerian cities, so the Antediluvians' scattering after the Second City has reached the river kingdoms by 3300 BCE.
+-1100|M|cha|EU|Europe|science,occult|Cold iron and the first Sundering|Deduced: cold iron is the fae's bane and the Sundering parts dream from flesh (C20 pdf 34-36), so the Sundering is taken to begin as iron spreads, about 1100 BCE in the Levant.
+-850|W|cha|MO|Moravia|science,occult|Iron comes to the fae of Moravia|Deduced from the card above: iron reaches Moravia about 850 BCE, and the trods of the Moravian hills begin to close.
+-2500|M|dem|ME|Sumer|faith,occult|Sorcerers free the first Earthbound|Deduced: Earthbound says mortal sorcerers freed them thousands of years ago (pdf 13-18), and the oldest priest-kings are Sumer's, so the first are taken to wake about 2500 BCE.
+-1550|M|mum|AF|Egypt|faith,occult|The Shemsu-heru grow in number|Deduced: Mummy's sample Reborn are born about 2600 and 1273 BCE (Mummy 1st pdf 12, 69-77), so the Reborn are many by the New Kingdom.
