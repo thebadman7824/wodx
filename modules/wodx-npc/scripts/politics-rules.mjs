@@ -171,25 +171,149 @@ export const POLITIES = {
     law: ["meddling with the living against the Dictum Mortuum", "dealings with Renegades", "practising a banned guild's art", "disobeying a superior officer", "losing a soul in one's charge to the Tempest"],
     notes: "The Anacreon rules a necropolis for Stygia; Regents and Centurions serve under each legion's Deathlord, and the Centurion is the lowest officer, judged on results (Wraith 20th pdf 126-136). A Great Maelstrom empties seats.",
     eras: {}
+  },
+  "mage-fellowship": {
+    label: "A fellowship of the Arts (before the Council)", line: "mage", kinds: ["mages"], from: null, to: 1465,
+    body: "The fellowship", rank: "Arete", rankFrom: "arete", blocs: "sect", gathering: {name: "council", every: 4, meets: "The fellowship meets in council."},
+    offices: [
+      {key: "master", title: "Master of the chantry", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "keeper", title: "Keeper of the node", seats: 1, fill: "appoint"},
+      {key: "librarian", title: "Librarian", seats: 1, fill: "appoint"},
+      {key: "sentinel", title: "Sentinel", seats: 2, fill: "appoint"}
+    ],
+    law: ["stealing another's lore", "drawing the Church's eye to the chantry", "taking Quintessence from the node unbidden", "slaying a fellow of the Arts", "dealings with the Order of Reason"],
+    notes: "Before the Grand Convocation, willworkers gather in fellowships and chantries round a node (M20 pdf 25, 78-80; Sorcerers Crusade pdf 116). Arete stands in for standing (house rule)."
+  },
+  "tradition-chantry": {
+    label: "A chantry of the Traditions", line: "mage", kinds: ["mages"], from: 1466, to: null,
+    body: "The chantry", rank: "Arete", rankFrom: "arete", blocs: "sect", gathering: {name: "chantry council", every: 4, meets: "The chantry's council sits."},
+    offices: [
+      {key: "master", title: "Master of the chantry", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "voice", title: "Voice of a Tradition", seats: 9, fill: "clan"},
+      {key: "keeper", title: "Keeper of the node", seats: 1, fill: "appoint"},
+      {key: "librarian", title: "Librarian", seats: 1, fill: "appoint"},
+      {key: "sentinel", title: "Sentinel", seats: 2, fill: "appoint"}
+    ],
+    law: ["breaking the Protocols of the Council", "betraying the chantry to the Technocracy", "slaying a mage of the Council", "taking Quintessence from the node unbidden", "drawing Paradox on the chantry"],
+    notes: "The Council of Nine meets from 1466 and keeps the Protocols (M20 pdf 30, 42, 128, 141-143). Each Tradition present has a voice in the chantry, as its Deacon or Primus would (M20 pdf 127-128, 142). Arete stands in for standing (house rule)."
+  },
+  "order-of-reason": {
+    label: "A guildhouse of the Order of Reason", line: "mage", kinds: ["mages"], reason: true, from: 1325, to: 1896,
+    body: "The guildhouse", rank: "Rank", rankFrom: "rankbg", blocs: "sect", gathering: {name: "assembly", every: 4, meets: "The guildhouse holds its assembly."},
+    offices: [
+      {key: "grandmaster", title: "Grand master of the guildhouse", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "master", title: "Master of a Convention", seats: 7, fill: "clan"},
+      {key: "warden", title: "Warden of the house", seats: 1, fill: "appoint"},
+      {key: "secretary", title: "Secretary", seats: 1, fill: "appoint"}
+    ],
+    law: ["sharing the Order's secrets with the unenlightened", "consorting with sorcerers", "squandering the Order's means", "defying a master's order", "working wonders before the masses"],
+    notes: "The Order of Reason, its Conventions answering to the guild masters (M20 pdf 128-131). Its Rank Background is the member's standing (house rule)."
+  },
+  "technocracy-construct": {
+    label: "A Technocratic Construct", line: "mage", kinds: ["mages"], reason: true, from: 1897, to: null,
+    body: "The Construct", rank: "Rank", rankFrom: "rankbg", blocs: "sect", gathering: {name: "review", every: 4, meets: "The Construct holds its quarterly review."},
+    offices: [
+      {key: "supervisor", title: "Supervisor", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "manager", title: "Manager for a Convention", seats: 5, fill: "clan"},
+      {key: "security", title: "Head of security", seats: 1, fill: "appoint"},
+      {key: "research", title: "Head of research", seats: 1, fill: "appoint"}
+    ],
+    law: ["breaching security protocols", "Reality Deviance", "contact with Reality Deviants", "failing to meet quota", "insubordination"],
+    notes: "The Technocratic Union from 1897: Conventions, Constructs and amalgams (M20 pdf 128-131, 174-180). Its Rank Background is the member's standing (house rule).",
+    eras: {future: "In the Future Darkness the Construct runs on contracts and metrics."}
+  },
+  inquisition: {
+    label: "A tribunal of the Inquisition", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
+    body: "The tribunal", rank: "Status", blocs: "creed", gathering: {name: "tribunal", every: 4, meets: "The tribunal sits."},
+    offices: [
+      {key: "inquisitor", title: "Inquisitor", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "notary", title: "Notary", seats: 1, fill: "appoint"},
+      {key: "confessor", title: "Confessor", seats: 1, fill: "appoint"},
+      {key: "familiar", title: "Familiar", seats: 3, fill: "appoint"}
+    ],
+    law: ["heresy", "consorting with the Devil's creatures", "hiding a witch", "revealing the tribunal's work", "disobeying the Inquisitor"],
+    notes: "Inquisitors of the Dark Ages hunt the Devil's own; the Inquisitor names the tribunal's officers. A house rule, since the Dark Ages Inquisitor book is not yet read."
+  },
+  "hunter-society": {
+    label: "A society of hunters", line: "hunter", kinds: ["hunters"], from: 1500, to: 1998,
+    body: "The society", rank: "Status", blocs: "creed", gathering: {name: "chapter meeting", every: 4, meets: "The chapter meets in private."},
+    offices: [
+      {key: "head", title: "Head of the chapter", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "archivist", title: "Archivist", seats: 1, fill: "appoint"},
+      {key: "cellleader", title: "Cell leader", seats: 3, fill: "backing"}
+    ],
+    law: ["revealing the society", "letting a monster go", "losing the society's records", "acting without the chapter's word"],
+    notes: "The Society of Leopold and the Arcanum keep chapters and cells (Hunters Hunted 2 pdf 118-124, 137-141)."
+  },
+  "imbued-cell": {
+    label: "A cell of the imbued", line: "hunter", kinds: ["hunters"], from: 1999, to: null,
+    body: "The cell", rank: "Standing", blocs: "creed", backers: "The cell", gathering: {name: "cell meeting", every: 2, meets: "The cell gets together."},
+    offices: [
+      {key: "voice", title: "The one the cell listens to", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "lookout", title: "Lookout", seats: 1, fill: "backing"}
+    ],
+    law: ["leaving a hunter behind", "telling the authorities", "sparing a monster the cell marked", "acting against the cell's word"],
+    notes: "The imbued have no hierarchy: a cell follows whoever it trusts, and creeds pull it apart (HtR pdf 35-36, 64, 89-91, 130)."
+  },
+  "shemsu-heru": {
+    label: "The Shemsu-heru of a city", line: "mummy", kinds: ["other"], from: null, to: null,
+    body: "The Shemsu-heru", rank: "Status", blocs: "amenti", gathering: {name: "gathering", every: 4, meets: "The Undying meet in the light of Ra."},
+    offices: [
+      {key: "eldest", title: "Eldest of the Shemsu-heru", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "priest", title: "Priest to the Cult of Isis", seats: 1, fill: "appoint"},
+      {key: "guardian", title: "Guardian of the tombs", seats: 2, fill: "appoint"}
+    ],
+    law: ["serving Set", "betraying the Cult of Isis", "neglecting the Great Rite", "harming another of the Shemsu-heru"],
+    notes: "The Followers of Horus and their mortal allies of the Cult of Isis (Mummy 2nd pdf 27-29, 35-46, 136-140). The Storyteller picks this polity."
+  },
+  "fallen-congregation": {
+    label: "A congregation of the Fallen", line: "demon", kinds: ["other"], from: 1999, to: null,
+    body: "The congregation", rank: "Standing", blocs: "faction", gathering: {name: "gathering", every: 4, meets: "The Fallen gather in secret."},
+    offices: [
+      {key: "first", title: "First among the Fallen", seats: 1, fill: "challenge", top: true, judge: true},
+      {key: "lieutenant", title: "Lieutenant", seats: 2, fill: "backing"},
+      {key: "speaker", title: "Speaker for a faction", seats: 5, fill: "clan"}
+    ],
+    law: ["serving an Earthbound", "betraying a fellow's true name", "drawing the hunters", "breaking a pact sworn before the congregation"],
+    notes: "The Fallen escape the Abyss in 1999 and split into factions: Faustians, Cryptics, Luciferans, Raveners and Reconcilers (Demon: The Fallen pdf 25, 109-118). The Storyteller picks this polity."
+  },
+  "kuei-jin-court": {
+    label: "A court of the Kuei-jin", line: "vampire", kinds: ["kindred"], from: null, to: null,
+    body: "The court", rank: "Status", blocs: "wu", gathering: {name: "court", every: 4, meets: "The court gathers before the Ancestor."},
+    offices: [
+      {key: "ancestor", title: "Ancestor", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "mandarin", title: "Mandarin", seats: 3, fill: "appoint"},
+      {key: "wu", title: "Voice of a wu", seats: 5, fill: "clan"}
+    ],
+    law: ["straying from one's Dharma before the court", "harming the court's mortals", "dealing with the Kin-jin", "shaming the Ancestor"],
+    notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). The Storyteller picks this polity, for Asia."
   }
 };
 export const POLITY_LIST = Object.keys(POLITIES);
 
+/** A mages' faction whose name or notes say it serves Reason keeps the Order's polity, else the Traditions'. */
+const REASON = /technocra|order of reason|union|construct|daedalean|craftmason|cosian|high guild|celestial master|void seeker|artificer|ksirafai|iteration x|progenitor|syndicate|void engineer|new world order/i;
 /** The polity a kind of faction keeps by default in a year, when it has three or more members (B1101, B1110). */
 export const DEFAULTS = {
   kindred: y => (y !== null && y < 1435 ? "dark-ages-court" : "camarilla"),
   garou: () => "garou-sept",
-  fae: y => (y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court")
+  fae: y => (y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court"),
+  mages: (y, f) => (REASON.test(`${f?.name ?? ""} ${f?.notes ?? ""}`)
+    ? (y === null || y >= 1897 ? "technocracy-construct" : y >= 1325 ? "order-of-reason" : "mage-fellowship")
+    : (y !== null && y < 1466 ? "mage-fellowship" : "tradition-chantry")),
+  hunters: y => (y !== null && y < 1500 ? "inquisition" : y !== null && y < 1999 ? "hunter-society" : "imbued-cell")
 };
 const inYears = (p, y) => y === null || ((p.from === null || y >= p.from) && (p.to === null || y <= p.to));
 /** The polity a faction follows in a year: its own pick when that exists then, else the default for its kind. */
 export function polityFor(f, year = null, {memberCount = null} = {}) {
   const y = Number.isFinite(Number(year)) && year !== null ? Number(year) : null;
-  const byKind = () => { const k = DEFAULTS[f?.kind]?.(y); return k && inYears(POLITIES[k], y) ? k : null; };
+  const byKind = () => { const k = DEFAULTS[f?.kind]?.(y, f); return k && inYears(POLITIES[k], y) ? k : null; };
   if ( f?.polity === "none" ) return null;
   if ( f?.polity && POLITIES[f.polity] ) {
     if ( inYears(POLITIES[f.polity], y) ) return f.polity;
-    // A body before (or after) its time: the polity of its age for that kind stands in (B1101)
+    // A body before (or after) its time: the polity of its age for that kind stands in (B1101); a Reason body
+    // keeps to Reason's side (B1113)
+    if ( POLITIES[f.polity].reason ) return DEFAULTS.mages(y, {name: "order of reason"});
     return byKind();
   }
   // The default: a faction of three or more members of a kind with a polity keeps the one of its age
@@ -646,7 +770,7 @@ function gather(f, key, ctx, add, lines, step, sofar) {
         if ( room <= 0 ) break;
         const eldest = members.filter(id => bloc(info, id, key) === k).sort((a, b) => rankOf(f, b, info, key) - rankOf(f, a, info, key) || name(a).localeCompare(name(b)))[0];
         step(); add({op: "pol-office", office: o.key, actor: eldest}); room--;
-        lines(`${name(eldest)} takes the ${cap(k)} seat among the ${o.title}.`);
+        lines(o.key === "primogen" ? `${name(eldest)} takes the ${cap(k)} seat among the ${o.title}.` : `${name(eldest)} becomes ${o.title.replace(/ a \w+$/, " the " + cap(k))}.`);
       }
       continue;
     }

@@ -1315,6 +1315,24 @@ When one of the Chronicle's Great Maelstrom events fires, each seat but the Anac
 
 Reverse: drop the isMaelstrom call in onEventFired.
 
+## B1113. Mage polities (2026-11-12)
+
+A Mage faction of three or more keeps the polity of its side and age. On the Traditions' side: a fellowship of the Arts before 1466, then a chantry of the Traditions with a master chosen by backing, a voice for each Tradition present (filled like the Primogen), a keeper of the node, a librarian and sentinels; Arete stands in for standing (M20 pdf 25, 30, 42, 78-80, 127-128, 141-143). On Reason's side (the faction's name or notes name the Order, the Union or a Convention): the Order of Reason's guildhouse from 1325 to 1896, then a Technocratic Construct from 1897, both with a head who appoints and a master or manager for each Convention present, standing from the Rank Background (M20 pdf 128-131, 174-180). A Reason polity picked out of its years runs as the other Reason polity. Seat names and standing are house rules.
+
+Reverse: drop mages from DEFAULTS and the four templates.
+
+## B1114. Hunter polities (2026-11-12)
+
+A Hunter faction of three or more keeps a tribunal of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130). The tribunal's seats are a house rule until the Dark Ages Inquisitor book is read. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+
+Reverse: drop hunters from DEFAULTS and the three templates.
+
+## B1115. Mummies, demons and the Kuei-jin, picked by hand (2026-11-12)
+
+Three polities are never a default and the Storyteller picks them: the Shemsu-heru of a city with a priest to the Cult of Isis (Mummy 2nd pdf 27-29, 35-46, 136-140); a congregation of the Fallen from 1999, its first seat won by challenge and a speaker for each faction (Demon: The Fallen pdf 25, 109-118); and a Kuei-jin court with an Ancestor, mandarins and a voice for each wu (KotE pdf 24, 28-30, 39-41, 88-89). WoDX has no faction kind for mummies or demons, so those two fit factions of the kind Other.
+
+Reverse: drop the three templates.
+
 ## B1012. Nothing starts in a container (2026-11-12)
 Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
 
