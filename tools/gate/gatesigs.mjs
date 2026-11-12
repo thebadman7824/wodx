@@ -18,7 +18,7 @@
  *  12. a Ravnos with a vice of lying: a persuasion is a chance (prompt), a deceit feeds the vice
  *  13. a thin-blooded Caitiff is rolled for this year's odd gift
  *  14. a Nosferatu talks to a mortal: a true face card with a breach button; a page of secrets is made
- *  15. a Tremere order from a Regent to an apprentice: Refuse costs a Willpower point
+ *  15. a Tremere order from a Regent to an apprentice (seven ranks apart): Refuse costs two Willpower
  *  16. a Ventrue's influence: a boon card once a month (the second is refused)
  *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
  *  18. a Giovanni binds and calls a wraith
@@ -169,15 +169,15 @@ export async function run() {
     await step("15 Tremere order", async () => {
       const ap = by("Tremere"), rg = by("Tremere Regent");
       await api().setRank(rg, 7); await api().setRank(ap, 0);
-      await ap.update({"system.advantages.willpower.temporary": 5});
+      await ap.update({"system.advantages.willpower.permanent": 10, "system.advantages.willpower.temporary": 5});
       await api().order(rg, ap, "Fetch the folio");
       await until(() => lastCard()?.flags?.[C]?.sigAct?.key === "refuse");
       const msg = lastCard(), el = document.createElement("div"); el.innerHTML = msg.content;
       Hooks.callAll("renderChatMessageHTML", msg, el);
       el.querySelector("[data-wct-sig-act]")?.click();
-      await until(() => Number(game.actors.get(ap.id)?.system?.advantages?.willpower?.temporary) === 4);
+      await until(() => Number(game.actors.get(ap.id)?.system?.advantages?.willpower?.temporary) === 3);
       const wp = Number(game.actors.get(ap.id)?.system?.advantages?.willpower?.temporary);
-      ok("15 Tremere order", wp === 4 && (await api().order(ap, rg, "no")) === null, {wp});
+      ok("15 Tremere order", wp === 3 && (await api().order(ap, rg, "no")) === null, {wp});
     });
     await step("16 Ventrue influence", async () => {
       const v = by("Ventrue");
