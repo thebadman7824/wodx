@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.47.1 (those the sun burns stop for the day at a village anywhere along a road, so a short summer night no longer leaves a road trip with no shelter; only a stretch off the roads or a paid ride must fit one night. Travel places: the Near column is typed and searched from one list of towns)
 - 0.47.0 (battle deeds: each character is offered a deed each phase by post, age of war, realm and kind of being, with Swap, Skip and Roll; leaderDeed and deedSuccessesFor for off-screen battles; what the field leaves behind, by line, sent to the Ledger, the Legends book or the place with Undo; Old fields in later years)
 - 0.46.0 (the country map behind a trip: Moravia and its neighbours on 5 km squares, with ground, rivers, towns, and the roads, railways, motorways, river routes and airfields of each year; a place is put on the map from the Travel places window (nearest town, distance and direction); a trip between two places on the map finds its own way, in legs split at the towns it passes; paid rides run only between their stops and cost a fare; pace and lodging on Out on your own; the living rest each day, those the sun burns shelter in towns by day; an encounter says what ground it is on; api.country)
 - 0.45.2 (rules.chooseActions: what an army fought off the screen does each turn, close, shoot or withdraw once half its units are gone)

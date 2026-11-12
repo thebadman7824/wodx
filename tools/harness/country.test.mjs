@@ -154,9 +154,17 @@ test("schedule: those the sun burns move by night and shelter in towns by day", 
   assert.equal(day.stops[0].why, "day shelter"); assert.equal(day.stops[0].to, 18 * 3600);
   // a stretch with no town for longer than a night is the Storyteller's call
   const wild = C.countryTrip(at("cheb", 10, "S"), at("budejovice", 10, "S"), {year: 1300, want: "foot", night: true});
-  const far = wild.legs.some(l => l.minutes > 11.5 * 60);
+  const far = wild.legs.some(l => l.road === "path" && l.minutes > 11.5 * 60);
   const sw = C.schedule(wild, {start: 19 * 3600, nextDawn, nextDusk, sunBurns: true});
   if ( far ) assert.ok(sw.exposed);
+  // off the roads a stretch longer than a night has no shelter; the same stretch along a road breaks at a village
+  const one = road => ({legs: [{from: "A", to: "B", minutes: 900, road}]});
+  assert.equal(C.schedule(one("path"), {start: 19 * 3600, nextDawn, nextDusk, sunBurns: true}).exposed, true);
+  const byRoad = C.schedule(one("road"), {start: 19 * 3600, nextDawn, nextDusk, sunBurns: true});
+  assert.equal(byRoad.exposed, false); assert.equal(byRoad.stops[0].at, "a village on the way to B");
+  // a stretch off the roads that fits a night, begun too late, waits for the next dusk where it starts
+  const late = C.schedule({legs: [{from: "A", to: "B", minutes: 300, road: "path"}]}, {start: 3 * 3600, nextDawn, nextDusk, sunBurns: true});
+  assert.equal(late.exposed, false); assert.equal(late.stops[0].at, "A"); assert.equal(late.stops[0].to % DAY, 18 * 3600);
   assert.equal(W.travelNeedsAsk({place: {travel: {}}, sunBurns: true, plan: {exposed: true}}), "A stretch of this trip is longer than a night, with no shelter on it.");
   assert.equal(W.travelNeedsAsk({place: {travel: {}}, sunBurns: true, plan: {exposed: false}, arrive: 99, dawnAt: 1}), null, "a planned trip with shelter needs no asking");
   assert.equal(W.travelNeedsAsk({place: {travel: {}}, sunBurns: true, arrive: 99, dawnAt: 1}), "The trip would end after dawn.", "the older check stands off the map");
@@ -196,4 +204,29 @@ test("map tools: country.json is up to date, and Python reads the same ground", 
     assert.equal(py[i].land, js.land, `${town} land`); assert.equal(py[i].landName, js.landName, `${town} name`);
     assert.deepEqual(py[i].river, js.river, `${town} river`); assert.equal(py[i].woods, js.woods, `${town} woods`);
   });
+});
+
+test("0.47.1: on a short summer night a ride along the road breaks at a village, never left with no shelter", () => {
+  const DAYS = 86400, dawnH = 4, duskH = 21;                    // seven hours of dark
+  const nd = t => { const d = Math.floor(t / DAYS) * DAYS + dawnH * 3600; return d > t ? d : d + DAYS; };
+  const nk = t => { const d = Math.floor(t / DAYS) * DAYS + duskH * 3600; return d > t ? d : d + DAYS; };
+  for ( const [a, b, want] of [["brno", "olomouc", "horse"], ["brno", "krakow", "foot"], ["znojmo", "ostrava", "horse"]] ) {
+    const t = trip(a, b, 1300, {want, night: true});
+    const s = C.schedule(t, {start: 12 * 3600, nextDawn: nd, nextDusk: nk, sunBurns: true, wage: 600});
+    assert.ok(!s.exposed, `${a} to ${b}: shelter all the way`);
+    assert.ok(s.stops.length >= 1 && s.stops.every(x => x.why === "day shelter"));
+    assert.equal(s.stops[0].at, t.legs[0].from, "the day is waited out before setting off");
+    for ( const x of s.stops ) { const h = (x.from % DAYS) / 3600, to = (x.to % DAYS) / 3600; assert.ok(to === duskH && (h <= dawnH || h >= duskH || x === s.stops[0]), `${x.at}: in by dawn, out at dusk`); }
+    const h = (s.arrive % DAYS) / 3600;
+    assert.ok(h <= dawnH || h >= duskH, `${a} to ${b}: arrival in the dark`);
+    assert.equal(s.travel, Math.round(t.legs.reduce((n, l) => n + Math.round(l.minutes * 60), 0) / 60), "every minute of the way is travelled");
+  }
+});
+
+test("0.47.1: the Near column is one typed, searchable list, not a long list on every row", async () => {
+  const {readFileSync} = await import("node:fs");
+  const ui = readFileSync(new URL("../../modules/wodx-storyteller/scripts/apps.mjs", import.meta.url), "utf8");
+  assert.match(ui, /<input type="text" name="near\.\$\{esc\(s\.id\)\}" list="wstory-towns"/);
+  assert.match(ui, /<datalist id="wstory-towns">/);
+  assert.doesNotMatch(ui, /<select name="near\./);
 });
