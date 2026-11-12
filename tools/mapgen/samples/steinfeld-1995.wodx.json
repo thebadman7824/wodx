@@ -1,0 +1,8878 @@
+{
+ "format": "wodx-map",
+ "version": 1,
+ "name": "Steinfeld",
+ "map": "steinfeld.dungeondraft_map",
+ "cells": [
+  132,
+  139
+ ],
+ "seed": 7,
+ "place": {
+  "kind": "yard"
+ },
+ "kind": "village",
+ "layout": "organic",
+ "walled": false,
+ "era": "modern",
+ "population": 288,
+ "openings": [
+  {
+   "id": "chapel-1-double-0",
+   "label": "Chapel double",
+   "c": [
+    51.09,
+    78.098,
+    50.573,
+    76.166
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-2",
+   "label": "Chapel window",
+   "c": [
+    45.329,
+    81.712,
+    46.295,
+    81.454
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-3",
+   "label": "Chapel window",
+   "c": [
+    48.227,
+    80.936,
+    49.193,
+    80.677
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-4",
+   "label": "Chapel window",
+   "c": [
+    43.776,
+    75.917,
+    44.742,
+    75.658
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-5",
+   "label": "Chapel window",
+   "c": [
+    46.674,
+    75.14,
+    47.64,
+    74.882
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-7",
+   "label": "Chapel window",
+   "c": [
+    37.567,
+    81.722,
+    37.308,
+    80.756
+   ],
+   "inside": [
+    44.07,
+    78.944
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-door-0",
+   "label": "House and shop (draper) door",
+   "c": [
+    81.995,
+    69.159,
+    82.495,
+    70.025
+   ],
+   "inside": [
+    86.209,
+    68.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-1",
+   "label": "House and shop (draper) window",
+   "c": [
+    83.245,
+    71.325,
+    83.745,
+    72.191
+   ],
+   "inside": [
+    86.209,
+    68.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-3",
+   "label": "House and shop (draper) window",
+   "c": [
+    87.307,
+    64.36,
+    86.441,
+    64.86
+   ],
+   "inside": [
+    86.209,
+    68.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-4",
+   "label": "House and shop (draper) window",
+   "c": [
+    87.276,
+    71.307,
+    86.41,
+    71.807
+   ],
+   "inside": [
+    86.209,
+    68.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-5",
+   "label": "House and shop (draper) window",
+   "c": [
+    88.923,
+    65.159,
+    89.423,
+    66.025
+   ],
+   "inside": [
+    86.209,
+    68.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-door-0",
+   "label": "Cottage door",
+   "c": [
+    70.795,
+    53.689,
+    71.295,
+    54.555
+   ],
+   "inside": [
+    73.46,
+    53.305
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-1",
+   "label": "Cottage window",
+   "c": [
+    71.795,
+    55.421,
+    72.295,
+    56.287
+   ],
+   "inside": [
+    73.46,
+    53.305
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-2",
+   "label": "Cottage window",
+   "c": [
+    72.393,
+    50.457,
+    71.527,
+    50.957
+   ],
+   "inside": [
+    73.46,
+    53.305
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-3",
+   "label": "Cottage window",
+   "c": [
+    75.375,
+    51.622,
+    75.875,
+    52.488
+   ],
+   "inside": [
+    73.46,
+    53.305
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-door-0",
+   "label": "Cottage door",
+   "c": [
+    60.478,
+    53.574,
+    61.345,
+    53.074
+   ],
+   "inside": [
+    58.978,
+    50.975
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-1",
+   "label": "Cottage window",
+   "c": [
+    62.211,
+    52.574,
+    63.077,
+    52.074
+   ],
+   "inside": [
+    58.978,
+    50.975
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-2",
+   "label": "Cottage window",
+   "c": [
+    57.911,
+    48.127,
+    58.778,
+    47.627
+   ],
+   "inside": [
+    58.978,
+    50.975
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-4",
+   "label": "Cottage window",
+   "c": [
+    53.898,
+    52.176,
+    54.398,
+    53.042
+   ],
+   "inside": [
+    58.978,
+    50.975
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-door-0",
+   "label": "Cottage door",
+   "c": [
+    35.413,
+    58.792,
+    36.413,
+    58.792
+   ],
+   "inside": [
+    37.413,
+    54.792
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-1",
+   "label": "Cottage window",
+   "c": [
+    37.413,
+    58.792,
+    38.413,
+    58.792
+   ],
+   "inside": [
+    37.413,
+    54.792
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-2",
+   "label": "Cottage window",
+   "c": [
+    33.413,
+    55.792,
+    33.413,
+    56.792
+   ],
+   "inside": [
+    37.413,
+    54.792
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-4",
+   "label": "Cottage window",
+   "c": [
+    37.413,
+    50.792,
+    38.413,
+    50.792
+   ],
+   "inside": [
+    37.413,
+    54.792
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "ghetto-house-1-door-0",
+   "label": "House in the Jewish quarter door",
+   "c": [
+    50.211,
+    58.839,
+    51.077,
+    58.339
+   ],
+   "inside": [
+    47.778,
+    55.625
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "ghetto-house-1-window-1",
+   "label": "House in the Jewish quarter window",
+   "c": [
+    48.046,
+    60.089,
+    48.912,
+    59.589
+   ],
+   "inside": [
+    47.778,
+    55.625
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "ghetto-house-1-window-4",
+   "label": "House in the Jewish quarter window",
+   "c": [
+    45.345,
+    52.41,
+    46.211,
+    51.91
+   ],
+   "inside": [
+    47.778,
+    55.625
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-double-0",
+   "label": "Post inn double",
+   "c": [
+    78.578,
+    65.1,
+    79.578,
+    66.832
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-double-1",
+   "label": "Post inn double",
+   "c": [
+    75.578,
+    59.903,
+    76.578,
+    61.636
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-window-2",
+   "label": "Post inn window",
+   "c": [
+    74.578,
+    58.171,
+    75.078,
+    59.037
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-window-3",
+   "label": "Post inn window",
+   "c": [
+    77.078,
+    62.502,
+    77.578,
+    63.368
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-door-5",
+   "label": "Post inn door",
+   "c": [
+    80.292,
+    60.069,
+    80.792,
+    60.935
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-door-6",
+   "label": "Post inn door",
+   "c": [
+    81.707,
+    57.52,
+    80.841,
+    58.02
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-double-7",
+   "label": "Post inn double",
+   "c": [
+    84.506,
+    59.368,
+    85.506,
+    61.1
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "post-inn-2-window-8",
+   "label": "Post inn window",
+   "c": [
+    89.171,
+    62.448,
+    88.305,
+    62.948
+   ],
+   "inside": [
+    82.274,
+    59.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "colony-house-1-door-0",
+   "label": "Colony house door",
+   "c": [
+    39.277,
+    93.479,
+    40.243,
+    93.221
+   ],
+   "inside": [
+    39.69,
+    89.227
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "colony-house-1-window-1",
+   "label": "Colony house window",
+   "c": [
+    41.209,
+    92.962,
+    42.174,
+    92.703
+   ],
+   "inside": [
+    39.69,
+    89.227
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "colony-house-1-window-3",
+   "label": "Colony house window",
+   "c": [
+    38.172,
+    85.493,
+    39.138,
+    85.234
+   ],
+   "inside": [
+    39.69,
+    89.227
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-double-0",
+   "label": "School double",
+   "c": [
+    71.516,
+    86.417,
+    69.784,
+    87.417
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-1",
+   "label": "School window",
+   "c": [
+    78.011,
+    82.667,
+    77.145,
+    83.167
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-2",
+   "label": "School window",
+   "c": [
+    65.02,
+    90.167,
+    64.154,
+    90.667
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-door-3",
+   "label": "School door",
+   "c": [
+    78.212,
+    86.015,
+    77.346,
+    86.515
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-door-4",
+   "label": "School door",
+   "c": [
+    72.583,
+    89.265,
+    71.717,
+    89.765
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-door-5",
+   "label": "School door",
+   "c": [
+    66.953,
+    92.515,
+    66.087,
+    93.015
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-6",
+   "label": "School window",
+   "c": [
+    83.011,
+    91.327,
+    82.145,
+    91.827
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-7",
+   "label": "School window",
+   "c": [
+    80.413,
+    92.827,
+    79.547,
+    93.327
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-8",
+   "label": "School window",
+   "c": [
+    76.083,
+    95.327,
+    75.217,
+    95.827
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-9",
+   "label": "School window",
+   "c": [
+    71.752,
+    97.827,
+    70.886,
+    98.327
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "school-1-window-10",
+   "label": "School window",
+   "c": [
+    69.154,
+    99.327,
+    68.288,
+    99.827
+   ],
+   "inside": [
+    73.15,
+    91.247
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-door-0",
+   "label": "Functionalist villa door",
+   "c": [
+    65.021,
+    113.825,
+    64.762,
+    112.859
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-window-1",
+   "label": "Functionalist villa window",
+   "c": [
+    67.479,
+    123.002,
+    67.221,
+    122.036
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-window-2",
+   "label": "Functionalist villa window",
+   "c": [
+    66.444,
+    119.138,
+    66.185,
+    118.172
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-window-3",
+   "label": "Functionalist villa window",
+   "c": [
+    58.786,
+    125.331,
+    58.527,
+    124.365
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-window-4",
+   "label": "Functionalist villa window",
+   "c": [
+    57.751,
+    121.467,
+    57.492,
+    120.501
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-window-5",
+   "label": "Functionalist villa window",
+   "c": [
+    63.167,
+    126.228,
+    64.133,
+    125.969
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-door-7",
+   "label": "Functionalist villa door",
+   "c": [
+    61.157,
+    114.861,
+    60.898,
+    113.895
+   ],
+   "inside": [
+    61.839,
+    119.337
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-double-0",
+   "label": "Shop house double",
+   "c": [
+    48.071,
+    70.076,
+    47.553,
+    68.145
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-window-1",
+   "label": "Shop house window",
+   "c": [
+    48.394,
+    71.284,
+    48.135,
+    70.318
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-window-2",
+   "label": "Shop house window",
+   "c": [
+    47.488,
+    67.903,
+    47.23,
+    66.937
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-door-3",
+   "label": "Shop house door",
+   "c": [
+    47.035,
+    66.213,
+    46.777,
+    65.247
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-door-4",
+   "label": "Shop house door",
+   "c": [
+    44.75,
+    67.343,
+    45.716,
+    67.084
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-door-6",
+   "label": "Shop house door",
+   "c": [
+    43.172,
+    67.248,
+    42.913,
+    66.282
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-door-8",
+   "label": "Shop house door",
+   "c": [
+    40.533,
+    68.99,
+    40.274,
+    68.024
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-window-9",
+   "label": "Shop house window",
+   "c": [
+    37.575,
+    73.406,
+    37.316,
+    72.44
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "shop-house-1-window-10",
+   "label": "Shop house window",
+   "c": [
+    36.669,
+    70.026,
+    36.41,
+    69.06
+   ],
+   "inside": [
+    42.241,
+    69.568
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-0",
+   "label": "Panel block door",
+   "c": [
+    96.0,
+    78.0,
+    96.0,
+    79.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-1",
+   "label": "Panel block door",
+   "c": [
+    96.0,
+    91.0,
+    96.0,
+    92.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-2",
+   "label": "Panel block door",
+   "c": [
+    97.7,
+    77.0,
+    96.7,
+    77.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-3",
+   "label": "Panel block door",
+   "c": [
+    97.7,
+    80.0,
+    96.7,
+    80.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-4",
+   "label": "Panel block door",
+   "c": [
+    97.7,
+    90.0,
+    96.7,
+    90.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-door-5",
+   "label": "Panel block door",
+   "c": [
+    97.7,
+    93.0,
+    96.7,
+    93.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-6",
+   "label": "Panel block window",
+   "c": [
+    96.0,
+    73.0,
+    96.0,
+    74.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-7",
+   "label": "Panel block window",
+   "c": [
+    96.0,
+    82.0,
+    96.0,
+    83.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-8",
+   "label": "Panel block window",
+   "c": [
+    96.0,
+    87.0,
+    96.0,
+    88.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-9",
+   "label": "Panel block window",
+   "c": [
+    96.0,
+    96.0,
+    96.0,
+    97.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-10",
+   "label": "Panel block window",
+   "c": [
+    104.0,
+    73.0,
+    104.0,
+    74.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-11",
+   "label": "Panel block window",
+   "c": [
+    104.0,
+    82.0,
+    104.0,
+    83.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-12",
+   "label": "Panel block window",
+   "c": [
+    104.0,
+    87.0,
+    104.0,
+    88.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-1-window-13",
+   "label": "Panel block window",
+   "c": [
+    104.0,
+    96.0,
+    104.0,
+    97.0
+   ],
+   "inside": [
+    100,
+    85
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-0",
+   "label": "Panel block door",
+   "c": [
+    36.0,
+    107.0,
+    37.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-1",
+   "label": "Panel block door",
+   "c": [
+    49.0,
+    107.0,
+    50.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-2",
+   "label": "Panel block door",
+   "c": [
+    35.0,
+    105.3,
+    35.0,
+    106.3
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-3",
+   "label": "Panel block door",
+   "c": [
+    38.0,
+    105.3,
+    38.0,
+    106.3
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-4",
+   "label": "Panel block door",
+   "c": [
+    48.0,
+    105.3,
+    48.0,
+    106.3
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-door-5",
+   "label": "Panel block door",
+   "c": [
+    51.0,
+    105.3,
+    51.0,
+    106.3
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-6",
+   "label": "Panel block window",
+   "c": [
+    31.0,
+    107.0,
+    32.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-7",
+   "label": "Panel block window",
+   "c": [
+    40.0,
+    107.0,
+    41.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-8",
+   "label": "Panel block window",
+   "c": [
+    45.0,
+    107.0,
+    46.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-9",
+   "label": "Panel block window",
+   "c": [
+    54.0,
+    107.0,
+    55.0,
+    107.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-10",
+   "label": "Panel block window",
+   "c": [
+    31.0,
+    99.0,
+    32.0,
+    99.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-11",
+   "label": "Panel block window",
+   "c": [
+    40.0,
+    99.0,
+    41.0,
+    99.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-12",
+   "label": "Panel block window",
+   "c": [
+    45.0,
+    99.0,
+    46.0,
+    99.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "panel-block-2-window-13",
+   "label": "Panel block window",
+   "c": [
+    54.0,
+    99.0,
+    55.0,
+    99.0
+   ],
+   "inside": [
+    43,
+    103
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-door-0",
+   "label": "Suburban house door",
+   "c": [
+    116.905,
+    26.454,
+    117.871,
+    26.196
+   ],
+   "inside": [
+    117.224,
+    23.781
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-1",
+   "label": "Suburban house window",
+   "c": [
+    118.837,
+    25.937,
+    119.803,
+    25.678
+   ],
+   "inside": [
+    117.224,
+    23.781
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-2",
+   "label": "Suburban house window",
+   "c": [
+    114.196,
+    24.074,
+    114.455,
+    25.04
+   ],
+   "inside": [
+    117.224,
+    23.781
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-3",
+   "label": "Suburban house window",
+   "c": [
+    116.094,
+    21.495,
+    117.06,
+    21.237
+   ],
+   "inside": [
+    117.224,
+    23.781
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-door-0",
+   "label": "Suburban house door",
+   "c": [
+    117.869,
+    31.911,
+    116.904,
+    32.17
+   ],
+   "inside": [
+    117.551,
+    34.585
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-1",
+   "label": "Suburban house window",
+   "c": [
+    115.938,
+    32.429,
+    114.972,
+    32.688
+   ],
+   "inside": [
+    117.551,
+    34.585
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-2",
+   "label": "Suburban house window",
+   "c": [
+    120.578,
+    34.291,
+    120.319,
+    33.326
+   ],
+   "inside": [
+    117.551,
+    34.585
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-3",
+   "label": "Suburban house window",
+   "c": [
+    118.681,
+    36.87,
+    117.715,
+    37.129
+   ],
+   "inside": [
+    117.551,
+    34.585
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-door-0",
+   "label": "Suburban house door",
+   "c": [
+    104.59,
+    28.029,
+    105.59,
+    28.029
+   ],
+   "inside": [
+    105.59,
+    25.529
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-1",
+   "label": "Suburban house window",
+   "c": [
+    106.59,
+    28.029,
+    107.59,
+    28.029
+   ],
+   "inside": [
+    105.59,
+    25.529
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-2",
+   "label": "Suburban house window",
+   "c": [
+    102.59,
+    25.029,
+    102.59,
+    26.029
+   ],
+   "inside": [
+    105.59,
+    25.529
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-3",
+   "label": "Suburban house window",
+   "c": [
+    105.09,
+    23.029,
+    106.09,
+    23.029
+   ],
+   "inside": [
+    105.59,
+    25.529
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-door-0",
+   "label": "Suburban house door",
+   "c": [
+    95.626,
+    28.828,
+    96.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    26.328
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-1",
+   "label": "Suburban house window",
+   "c": [
+    97.626,
+    28.828,
+    98.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    26.328
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-2",
+   "label": "Suburban house window",
+   "c": [
+    93.626,
+    25.828,
+    93.626,
+    26.828
+   ],
+   "inside": [
+    96.626,
+    26.328
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-3",
+   "label": "Suburban house window",
+   "c": [
+    96.126,
+    23.828,
+    97.126,
+    23.828
+   ],
+   "inside": [
+    96.626,
+    26.328
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-door-0",
+   "label": "Suburban house door",
+   "c": [
+    107.099,
+    33.739,
+    106.099,
+    33.739
+   ],
+   "inside": [
+    106.099,
+    36.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-1",
+   "label": "Suburban house window",
+   "c": [
+    105.099,
+    33.739,
+    104.099,
+    33.739
+   ],
+   "inside": [
+    106.099,
+    36.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-2",
+   "label": "Suburban house window",
+   "c": [
+    109.099,
+    36.739,
+    109.099,
+    35.739
+   ],
+   "inside": [
+    106.099,
+    36.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-3",
+   "label": "Suburban house window",
+   "c": [
+    106.599,
+    38.739,
+    105.599,
+    38.739
+   ],
+   "inside": [
+    106.099,
+    36.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-door-0",
+   "label": "Suburban house door",
+   "c": [
+    98.134,
+    34.537,
+    97.134,
+    34.537
+   ],
+   "inside": [
+    97.134,
+    37.037
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-1",
+   "label": "Suburban house window",
+   "c": [
+    96.134,
+    34.537,
+    95.134,
+    34.537
+   ],
+   "inside": [
+    97.134,
+    37.037
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-2",
+   "label": "Suburban house window",
+   "c": [
+    100.134,
+    37.537,
+    100.134,
+    36.537
+   ],
+   "inside": [
+    97.134,
+    37.037
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-3",
+   "label": "Suburban house window",
+   "c": [
+    97.634,
+    39.537,
+    96.634,
+    39.537
+   ],
+   "inside": [
+    97.134,
+    37.037
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-double-0",
+   "label": "Family house double",
+   "c": [
+    47.408,
+    90.823,
+    49.339,
+    90.305
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-door-1",
+   "label": "Family house door",
+   "c": [
+    50.788,
+    89.917,
+    51.754,
+    89.658
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-2",
+   "label": "Family house window",
+   "c": [
+    52.962,
+    89.335,
+    53.928,
+    89.076
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-door-3",
+   "label": "Family house door",
+   "c": [
+    49.175,
+    87.761,
+    49.434,
+    88.727
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-door-5",
+   "label": "Family house door",
+   "c": [
+    51.685,
+    85.536,
+    52.651,
+    85.277
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-7",
+   "label": "Family house window",
+   "c": [
+    46.527,
+    81.741,
+    47.493,
+    81.483
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-8",
+   "label": "Family house window",
+   "c": [
+    50.391,
+    80.706,
+    51.357,
+    80.447
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-9",
+   "label": "Family house window",
+   "c": [
+    45.113,
+    84.191,
+    45.372,
+    85.157
+   ],
+   "inside": [
+    49.624,
+    85.571
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  }
+ ],
+ "features": [
+  {
+   "id": "chapel-1-chancel-3",
+   "label": "Chest (Chancel)",
+   "rect": [
+    42.659,
+    81.205,
+    0.9,
+    0.9
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "chapel-1-vestry-0",
+   "label": "Chest (Vestry)",
+   "rect": [
+    37.822,
+    81.466,
+    0.9,
+    0.9
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "townhouse-1-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    88.561,
+    67.625,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "townhouse-1-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    88.744,
+    66.576,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "townhouse-1-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    87.424,
+    64.289,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "townhouse-1-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    81.674,
+    67.609,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "townhouse-1-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    84.826,
+    65.789,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-6-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    73.376,
+    49.886,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-6-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    72.977,
+    54.975,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-6-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    75.263,
+    53.655,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-6-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    75.196,
+    53.039,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-9-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    56.175,
+    49.126,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-9-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    61.71,
+    46.932,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-9-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    63.13,
+    49.392,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-9-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    62.514,
+    50.825,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-11-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    33.593,
+    53.972,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-11-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    40.233,
+    56.612,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-11-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    40.233,
+    53.972,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-11-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    39.233,
+    53.972,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "ghetto-house-1-living-room-0",
+   "label": "Bed (Living room)",
+   "rect": [
+    46.512,
+    51.522,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "ghetto-house-1-kitchen-0",
+   "label": "Hearth (Kitchen)",
+   "rect": [
+    46.042,
+    56.623,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "ghetto-house-1-shop-0",
+   "label": "Crates (Shop)",
+   "rect": [
+    50.869,
+    57.295,
+    0.7,
+    0.7
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "post-inn-2-kitchen-0",
+   "label": "Oven (Kitchen)",
+   "rect": [
+    79.574,
+    53.917,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "colony-house-1-kitchen-0",
+   "label": "Hearth (Kitchen)",
+   "rect": [
+    41.808,
+    91.463,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "colony-house-1-room-0",
+   "label": "Bed (Room)",
+   "rect": [
+    36.685,
+    85.845,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "colony-house-1-room-1",
+   "label": "Box bed (Room)",
+   "rect": [
+    40.218,
+    85.032,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "colony-house-1-room-2",
+   "label": "Chest (Room)",
+   "rect": [
+    37.256,
+    88.542,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "shop-house-1-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    47.126,
+    70.544,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "shop-house-1-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    46.184,
+    67.028,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "shop-house-1-store-room-0",
+   "label": "Crates (Store room)",
+   "rect": [
+    40.902,
+    69.106,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "shop-house-1-kitchen-0",
+   "label": "Hearth (Kitchen)",
+   "rect": [
+    37.815,
+    73.039,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "shop-house-1-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    36.467,
+    67.445,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "shop-house-1-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    38.287,
+    67.074,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-12-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    114.012,
+    22.123,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-12-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    119.306,
+    23.455,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-12-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    118.789,
+    21.523,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-12-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    118.45,
+    24.702,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-13-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    119.763,
+    35.242,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-13-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    114.468,
+    32.91,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 165.0
+  },
+  {
+   "id": "cottage-13-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    115.151,
+    35.46,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 165.0
+  },
+  {
+   "id": "cottage-13-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    115.305,
+    32.669,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-14-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    102.77,
+    23.209,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-14-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    107.41,
+    25.849,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-14-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    107.41,
+    23.209,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-14-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    106.41,
+    23.209,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "cottage-15-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    93.806,
+    24.008,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-15-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    98.446,
+    26.628,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-15-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    98.446,
+    24.008,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-15-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    97.446,
+    27.648,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-16-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    107.919,
+    37.559,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-16-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    103.279,
+    33.939,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-16-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    103.279,
+    36.559,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-16-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    104.279,
+    37.559,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-17-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    98.954,
+    38.357,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-17-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    94.314,
+    34.717,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-17-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    94.314,
+    36.717,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-17-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    95.314,
+    34.717,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-garage-1",
+   "label": "Crates (Garage)",
+   "rect": [
+    46.671,
+    86.984,
+    0.7,
+    0.7
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "well",
+   "label": "Well",
+   "rect": [
+    64.57,
+    71.224,
+    1,
+    1
+   ],
+   "flags": {
+    "climb": true,
+    "climbKind": "rope",
+    "height": 30,
+    "depth": 30,
+    "title": "Down the well on the bucket rope"
+   }
+  }
+ ],
+ "regions": [
+  {
+   "id": "chapel-1",
+   "label": "Chapel",
+   "rect": [
+    37.05,
+    74.235,
+    14.558,
+    8.643
+   ],
+   "points": [
+    40.983,
+    82.877,
+    40.724,
+    81.911,
+    37.826,
+    82.688,
+    37.05,
+    79.79,
+    39.947,
+    79.013,
+    39.43,
+    77.082,
+    50.055,
+    74.235,
+    51.608,
+    80.03
+   ],
+   "place": {
+    "kind": "church"
+   }
+  },
+  {
+   "id": "townhouse-1",
+   "label": "House and shop (draper)",
+   "rect": [
+    81.245,
+    63.86,
+    9.928,
+    9.196
+   ],
+   "points": [
+    88.173,
+    63.86,
+    91.173,
+    69.057,
+    84.245,
+    73.057,
+    81.245,
+    67.86
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-6",
+   "label": "Cottage",
+   "rect": [
+    69.795,
+    49.457,
+    7.33,
+    7.696
+   ],
+   "points": [
+    74.125,
+    49.457,
+    77.125,
+    54.653,
+    72.795,
+    57.153,
+    69.795,
+    51.957
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-9",
+   "label": "Cottage",
+   "rect": [
+    53.148,
+    45.877,
+    11.66,
+    8.696
+   ],
+   "points": [
+    53.148,
+    50.877,
+    61.809,
+    45.877,
+    64.809,
+    51.074,
+    58.746,
+    54.574,
+    57.746,
+    52.841,
+    55.148,
+    54.341
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-11",
+   "label": "Cottage",
+   "rect": [
+    33.413,
+    50.792,
+    8.0,
+    8.0
+   ],
+   "points": [
+    33.413,
+    53.792,
+    36.413,
+    53.792,
+    36.413,
+    50.792,
+    39.413,
+    50.792,
+    39.413,
+    53.792,
+    41.413,
+    53.792,
+    41.413,
+    58.792,
+    33.413,
+    58.792
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "ghetto-house-1",
+   "label": "House in the Jewish quarter",
+   "rect": [
+    43.613,
+    50.91,
+    8.33,
+    9.428
+   ],
+   "points": [
+    43.613,
+    53.41,
+    47.943,
+    50.91,
+    51.943,
+    57.839,
+    47.613,
+    60.339
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "post-inn-2",
+   "label": "Post inn",
+   "rect": [
+    74.078,
+    51.305,
+    16.392,
+    16.392
+   ],
+   "points": [
+    84.47,
+    51.305,
+    90.47,
+    61.698,
+    80.078,
+    67.698,
+    74.078,
+    57.305
+   ],
+   "place": {
+    "kind": "tavern"
+   }
+  },
+  {
+   "id": "colony-house-1",
+   "label": "Colony house",
+   "rect": [
+    36.24,
+    84.717,
+    6.9,
+    9.022
+   ],
+   "points": [
+    36.24,
+    86.011,
+    41.07,
+    84.717,
+    43.14,
+    92.444,
+    38.311,
+    93.738
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "school-1",
+   "label": "School",
+   "rect": [
+    61.989,
+    81.917,
+    22.321,
+    18.66
+   ],
+   "points": [
+    84.31,
+    90.577,
+    66.989,
+    100.577,
+    61.989,
+    91.917,
+    79.31,
+    81.917
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "func-villa-1",
+   "label": "Functionalist villa",
+   "rect": [
+    55.68,
+    111.411,
+    12.317,
+    15.852
+   ],
+   "points": [
+    59.304,
+    127.263,
+    55.68,
+    113.74,
+    64.374,
+    111.411,
+    67.997,
+    124.934
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "shop-house-1",
+   "label": "Shop house",
+   "rect": [
+    36.022,
+    64.764,
+    12.437,
+    9.608
+   ],
+   "points": [
+    37.834,
+    74.372,
+    36.022,
+    67.611,
+    46.647,
+    64.764,
+    48.459,
+    71.525
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "panel-block-1",
+   "label": "Panel block",
+   "rect": [
+    96.0,
+    70.0,
+    8.0,
+    30.0
+   ],
+   "points": [
+    104.0,
+    70.0,
+    104.0,
+    100.0,
+    96.0,
+    100.0,
+    96.0,
+    70.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "panel-block-2",
+   "label": "Panel block",
+   "rect": [
+    28.0,
+    99.0,
+    30.0,
+    8.0
+   ],
+   "points": [
+    28.0,
+    99.0,
+    58.0,
+    99.0,
+    58.0,
+    107.0,
+    28.0,
+    107.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-12",
+   "label": "Suburban house",
+   "rect": [
+    113.679,
+    20.589,
+    7.09,
+    6.383
+   ],
+   "points": [
+    113.679,
+    22.142,
+    119.474,
+    20.589,
+    120.768,
+    25.419,
+    114.973,
+    26.972
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "cottage-13",
+   "label": "Suburban house",
+   "rect": [
+    114.006,
+    31.394,
+    7.09,
+    6.383
+   ],
+   "points": [
+    121.095,
+    36.223,
+    115.3,
+    37.776,
+    114.006,
+    32.947,
+    119.801,
+    31.394
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "cottage-14",
+   "label": "Suburban house",
+   "rect": [
+    102.59,
+    23.029,
+    6.0,
+    5.0
+   ],
+   "points": [
+    102.59,
+    23.029,
+    108.59,
+    23.029,
+    108.59,
+    28.029,
+    102.59,
+    28.029
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "cottage-15",
+   "label": "Suburban house",
+   "rect": [
+    93.626,
+    23.828,
+    6.0,
+    5.0
+   ],
+   "points": [
+    93.626,
+    23.828,
+    99.626,
+    23.828,
+    99.626,
+    28.828,
+    93.626,
+    28.828
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "cottage-16",
+   "label": "Suburban house",
+   "rect": [
+    103.099,
+    33.739,
+    6.0,
+    5.0
+   ],
+   "points": [
+    109.099,
+    38.739,
+    103.099,
+    38.739,
+    103.099,
+    33.739,
+    109.099,
+    33.739
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "cottage-17",
+   "label": "Suburban house",
+   "rect": [
+    94.134,
+    34.537,
+    6.0,
+    5.0
+   ],
+   "points": [
+    100.134,
+    39.537,
+    94.134,
+    39.537,
+    94.134,
+    34.537,
+    100.134,
+    34.537
+   ],
+   "place": {
+    "kind": "home"
+   },
+   "area": "suburb"
+  },
+  {
+   "id": "family-house-1",
+   "label": "Family house",
+   "rect": [
+    44.595,
+    80.189,
+    10.057,
+    10.764
+   ],
+   "points": [
+    44.595,
+    82.259,
+    52.323,
+    80.189,
+    54.652,
+    88.882,
+    46.925,
+    90.952
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "brook-1-1",
+   "label": "Brook",
+   "rect": [
+    27.447,
+    3.899,
+    13.548,
+    20.836
+   ],
+   "points": [
+    28.553,
+    24.735,
+    28.731,
+    24.601,
+    29.115,
+    24.312,
+    29.45,
+    24.017,
+    29.663,
+    23.78,
+    29.913,
+    23.504,
+    30.254,
+    23.132,
+    30.63,
+    22.701,
+    31.026,
+    22.225,
+    31.436,
+    21.722,
+    31.861,
+    21.189,
+    32.292,
+    20.646,
+    32.731,
+    20.092,
+    33.161,
+    19.55,
+    33.586,
+    19.018,
+    33.997,
+    18.499,
+    34.397,
+    17.989,
+    34.778,
+    17.486,
+    35.142,
+    16.985,
+    35.476,
+    16.48,
+    35.772,
+    15.981,
+    36.038,
+    15.485,
+    36.271,
+    15.0,
+    36.489,
+    14.519,
+    36.691,
+    14.047,
+    36.897,
+    13.583,
+    37.105,
+    13.129,
+    37.338,
+    12.687,
+    37.605,
+    12.24,
+    37.904,
+    11.789,
+    38.247,
+    11.322,
+    38.607,
+    10.839,
+    38.986,
+    10.342,
+    39.356,
+    9.829,
+    39.717,
+    9.299,
+    40.044,
+    8.75,
+    40.331,
+    8.189,
+    40.564,
+    7.623,
+    40.734,
+    7.07,
+    40.858,
+    6.548,
+    40.938,
+    6.051,
+    40.983,
+    5.593,
+    40.993,
+    5.195,
+    40.995,
+    4.902,
+    40.99,
+    4.675,
+    40.968,
+    4.383,
+    40.932,
+    4.056,
+    40.914,
+    3.899,
+    39.086,
+    4.101,
+    39.103,
+    4.257,
+    39.136,
+    4.554,
+    39.152,
+    4.764,
+    39.155,
+    4.915,
+    39.153,
+    5.167,
+    39.146,
+    5.482,
+    39.113,
+    5.815,
+    39.053,
+    6.189,
+    38.959,
+    6.587,
+    38.832,
+    7.002,
+    38.659,
+    7.419,
+    38.434,
+    7.86,
+    38.166,
+    8.309,
+    37.849,
+    8.772,
+    37.507,
+    9.247,
+    37.138,
+    9.732,
+    36.768,
+    10.227,
+    36.395,
+    10.735,
+    36.047,
+    11.26,
+    35.733,
+    11.787,
+    35.455,
+    12.315,
+    35.22,
+    12.826,
+    35.004,
+    13.312,
+    34.805,
+    13.777,
+    34.603,
+    14.223,
+    34.397,
+    14.653,
+    34.17,
+    15.077,
+    33.917,
+    15.503,
+    33.63,
+    15.937,
+    33.301,
+    16.389,
+    32.94,
+    16.865,
+    32.552,
+    17.359,
+    32.145,
+    17.873,
+    31.722,
+    18.404,
+    31.29,
+    18.948,
+    30.85,
+    19.502,
+    30.421,
+    20.043,
+    30.003,
+    20.567,
+    29.605,
+    21.056,
+    29.229,
+    21.508,
+    28.883,
+    21.905,
+    28.554,
+    22.263,
+    28.293,
+    22.551,
+    28.153,
+    22.711,
+    27.955,
+    22.883,
+    27.625,
+    23.131,
+    27.447,
+    23.265
+   ],
+   "place": {
+    "kind": "other"
+   },
+   "area": "brook"
+  },
+  {
+   "id": "brook-2-1",
+   "label": "Brook",
+   "rect": [
+    122.989,
+    3.9,
+    2.46,
+    28.144
+   ],
+   "points": [
+    124.919,
+    32.044,
+    124.942,
+    31.553,
+    124.942,
+    31.088,
+    124.935,
+    30.461,
+    124.919,
+    29.647,
+    124.907,
+    28.734,
+    124.911,
+    27.765,
+    124.939,
+    26.788,
+    124.991,
+    25.812,
+    125.071,
+    24.834,
+    125.171,
+    23.843,
+    125.274,
+    22.835,
+    125.36,
+    21.816,
+    125.42,
+    20.789,
+    125.448,
+    19.76,
+    125.442,
+    18.73,
+    125.404,
+    17.703,
+    125.337,
+    16.678,
+    125.244,
+    15.659,
+    125.135,
+    14.652,
+    125.029,
+    13.662,
+    124.945,
+    12.684,
+    124.889,
+    11.71,
+    124.86,
+    10.731,
+    124.849,
+    9.742,
+    124.844,
+    8.745,
+    124.837,
+    7.744,
+    124.831,
+    6.783,
+    124.829,
+    5.919,
+    124.84,
+    5.192,
+    124.848,
+    4.771,
+    124.898,
+    4.25,
+    124.915,
+    4.1,
+    123.085,
+    3.9,
+    123.068,
+    4.063,
+    123.011,
+    4.666,
+    123.001,
+    5.158,
+    122.989,
+    5.906,
+    122.991,
+    6.792,
+    122.998,
+    7.756,
+    123.004,
+    8.755,
+    123.009,
+    9.758,
+    123.021,
+    10.769,
+    123.051,
+    11.79,
+    123.11,
+    12.816,
+    123.198,
+    13.838,
+    123.306,
+    14.848,
+    123.414,
+    15.841,
+    123.503,
+    16.822,
+    123.566,
+    17.797,
+    123.603,
+    18.77,
+    123.608,
+    19.74,
+    123.582,
+    20.711,
+    123.525,
+    21.684,
+    123.442,
+    22.665,
+    123.341,
+    23.657,
+    123.239,
+    24.666,
+    123.156,
+    25.688,
+    123.1,
+    26.712,
+    123.072,
+    27.735,
+    123.067,
+    28.741,
+    123.079,
+    29.678,
+    123.096,
+    30.489,
+    123.102,
+    31.099,
+    123.103,
+    31.51,
+    123.081,
+    31.956
+   ],
+   "place": {
+    "kind": "other"
+   },
+   "area": "brook"
+  },
+  {
+   "id": "brook-3-1",
+   "label": "Brook",
+   "rect": [
+    107.441,
+    94.948,
+    20.698,
+    2.558
+   ],
+   "points": [
+    107.441,
+    96.73,
+    107.597,
+    96.85,
+    107.982,
+    97.14,
+    108.487,
+    97.374,
+    108.834,
+    97.409,
+    109.06,
+    97.434,
+    109.443,
+    97.488,
+    109.919,
+    97.506,
+    110.386,
+    97.483,
+    110.838,
+    97.459,
+    111.315,
+    97.432,
+    111.802,
+    97.404,
+    112.301,
+    97.375,
+    112.799,
+    97.348,
+    113.295,
+    97.323,
+    113.79,
+    97.3,
+    114.285,
+    97.279,
+    114.779,
+    97.262,
+    115.275,
+    97.248,
+    115.774,
+    97.235,
+    116.275,
+    97.223,
+    116.779,
+    97.208,
+    117.284,
+    97.191,
+    117.791,
+    97.17,
+    118.297,
+    97.146,
+    118.803,
+    97.118,
+    119.308,
+    97.087,
+    119.812,
+    97.054,
+    120.314,
+    97.019,
+    120.814,
+    96.985,
+    121.311,
+    96.95,
+    121.806,
+    96.918,
+    122.301,
+    96.889,
+    122.794,
+    96.864,
+    123.287,
+    96.842,
+    123.78,
+    96.824,
+    124.274,
+    96.81,
+    124.755,
+    96.799,
+    125.224,
+    96.792,
+    125.666,
+    96.788,
+    126.08,
+    96.788,
+    126.451,
+    96.794,
+    126.793,
+    96.807,
+    127.065,
+    96.816,
+    127.219,
+    96.82,
+    127.413,
+    96.841,
+    127.705,
+    96.886,
+    127.861,
+    96.909,
+    128.139,
+    95.091,
+    127.983,
+    95.067,
+    127.649,
+    95.016,
+    127.343,
+    94.984,
+    127.122,
+    94.977,
+    126.857,
+    94.968,
+    126.499,
+    94.955,
+    126.095,
+    94.948,
+    125.659,
+    94.948,
+    125.201,
+    94.952,
+    124.72,
+    94.96,
+    124.226,
+    94.971,
+    123.72,
+    94.985,
+    123.213,
+    95.004,
+    122.706,
+    95.026,
+    122.199,
+    95.052,
+    121.694,
+    95.082,
+    121.189,
+    95.114,
+    120.686,
+    95.149,
+    120.186,
+    95.184,
+    119.688,
+    95.218,
+    119.192,
+    95.251,
+    118.697,
+    95.281,
+    118.203,
+    95.308,
+    117.709,
+    95.332,
+    117.216,
+    95.352,
+    116.721,
+    95.369,
+    116.225,
+    95.383,
+    115.726,
+    95.396,
+    115.225,
+    95.409,
+    114.721,
+    95.423,
+    114.215,
+    95.441,
+    113.71,
+    95.461,
+    113.205,
+    95.485,
+    112.701,
+    95.511,
+    112.199,
+    95.538,
+    111.698,
+    95.567,
+    111.21,
+    95.595,
+    110.737,
+    95.621,
+    110.289,
+    95.645,
+    109.906,
+    95.666,
+    109.607,
+    95.655,
+    109.29,
+    95.609,
+    108.978,
+    95.575,
+    108.95,
+    95.593,
+    108.955,
+    95.578,
+    108.716,
+    95.389,
+    108.559,
+    95.27
+   ],
+   "place": {
+    "kind": "other"
+   },
+   "area": "brook"
+  },
+  {
+   "id": "brook-4-1",
+   "label": "Brook",
+   "rect": [
+    3.723,
+    110.698,
+    20.736,
+    2.414
+   ],
+   "points": [
+    24.458,
+    111.202,
+    24.302,
+    111.113,
+    23.916,
+    110.895,
+    23.432,
+    110.734,
+    23.102,
+    110.724,
+    22.863,
+    110.717,
+    22.482,
+    110.698,
+    22.02,
+    110.714,
+    21.561,
+    110.764,
+    21.109,
+    110.815,
+    20.636,
+    110.869,
+    20.154,
+    110.921,
+    19.662,
+    110.972,
+    19.172,
+    111.016,
+    18.685,
+    111.054,
+    18.2,
+    111.085,
+    17.714,
+    111.107,
+    17.227,
+    111.123,
+    16.736,
+    111.132,
+    16.242,
+    111.138,
+    15.746,
+    111.141,
+    15.246,
+    111.143,
+    14.748,
+    111.145,
+    14.252,
+    111.145,
+    13.756,
+    111.143,
+    13.261,
+    111.138,
+    12.766,
+    111.131,
+    12.271,
+    111.12,
+    11.775,
+    111.108,
+    11.276,
+    111.094,
+    10.774,
+    111.079,
+    10.267,
+    111.068,
+    9.756,
+    111.06,
+    9.241,
+    111.061,
+    8.726,
+    111.071,
+    8.21,
+    111.089,
+    7.698,
+    111.115,
+    7.2,
+    111.146,
+    6.718,
+    111.182,
+    6.264,
+    111.217,
+    5.855,
+    111.251,
+    5.507,
+    111.266,
+    5.172,
+    111.264,
+    4.884,
+    111.267,
+    4.785,
+    111.277,
+    4.691,
+    111.256,
+    4.434,
+    111.172,
+    4.277,
+    111.123,
+    3.723,
+    112.877,
+    3.879,
+    112.927,
+    4.247,
+    113.041,
+    4.653,
+    113.112,
+    4.928,
+    113.107,
+    5.178,
+    113.104,
+    5.543,
+    113.105,
+    5.97,
+    113.087,
+    6.411,
+    113.051,
+    6.857,
+    113.016,
+    7.325,
+    112.982,
+    7.802,
+    112.952,
+    8.29,
+    112.927,
+    8.774,
+    112.91,
+    9.259,
+    112.901,
+    9.744,
+    112.9,
+    10.233,
+    112.907,
+    10.726,
+    112.918,
+    11.224,
+    112.933,
+    11.725,
+    112.947,
+    12.229,
+    112.96,
+    12.734,
+    112.97,
+    13.239,
+    112.978,
+    13.744,
+    112.983,
+    14.248,
+    112.985,
+    14.752,
+    112.985,
+    15.254,
+    112.983,
+    15.754,
+    112.981,
+    16.258,
+    112.978,
+    16.764,
+    112.972,
+    17.273,
+    112.963,
+    17.786,
+    112.946,
+    18.3,
+    112.922,
+    18.815,
+    112.89,
+    19.328,
+    112.849,
+    19.838,
+    112.803,
+    20.346,
+    112.751,
+    20.839,
+    112.698,
+    21.316,
+    112.643,
+    21.764,
+    112.593,
+    22.155,
+    112.549,
+    22.468,
+    112.538,
+    22.787,
+    112.555,
+    23.085,
+    112.564,
+    23.131,
+    112.55,
+    23.147,
+    112.566,
+    23.385,
+    112.708,
+    23.542,
+    112.798
+   ],
+   "place": {
+    "kind": "other"
+   },
+   "area": "brook"
+  },
+  {
+   "id": "cemetery-1",
+   "label": "Cemetery",
+   "rect": [
+    91.393,
+    73.39,
+    10.0,
+    8.0
+   ],
+   "points": [
+    91.393,
+    73.39,
+    101.393,
+    73.39,
+    101.393,
+    81.39,
+    91.393,
+    81.39
+   ],
+   "place": {
+    "kind": "other"
+   },
+   "area": "cemetery"
+  },
+  {
+   "id": "townhouse-1-plot",
+   "label": "Yard of the house and shop (draper)",
+   "rect": [
+    79.656,
+    63.022,
+    12.37,
+    10.525
+   ],
+   "points": [
+    79.656,
+    68.316,
+    83.396,
+    73.547,
+    92.026,
+    68.564,
+    88.826,
+    63.022
+   ],
+   "place": {
+    "kind": "home",
+    "owner": "townhouse-1",
+    "private": true
+   }
+  },
+  {
+   "id": "cottage-6-plot",
+   "label": "Yard of the cottage",
+   "rect": [
+    69.036,
+    46.168,
+    16.445,
+    11.77
+   ],
+   "points": [
+    79.822,
+    46.168,
+    69.608,
+    52.065,
+    69.036,
+    53.462,
+    72.236,
+    57.938,
+    85.48,
+    50.291,
+    85.42,
+    50.187
+   ],
+   "place": {
+    "kind": "home",
+    "owner": "cottage-6",
+    "private": true
+   }
+  },
+  {
+   "id": "cottage-9-plot",
+   "label": "Yard of the cottage",
+   "rect": [
+    44.162,
+    34.142,
+    21.617,
+    23.218
+   ],
+   "points": [
+    56.429,
+    57.36,
+    65.779,
+    52.754,
+    56.419,
+    36.543,
+    47.576,
+    34.142,
+    44.162,
+    36.113
+   ],
+   "place": {
+    "kind": "home",
+    "owner": "cottage-9",
+    "private": true
+   }
+  },
+  {
+   "id": "market-cross",
+   "label": "The market cross",
+   "rect": [
+    67.57,
+    70.724,
+    2,
+    2
+   ],
+   "place": {
+    "kind": "market"
+   }
+  },
+  {
+   "id": "market",
+   "label": "Village green",
+   "rect": [
+    48.839,
+    53.66,
+    35.638,
+    36.296
+   ],
+   "points": [
+    48.839,
+    62.771,
+    67.334,
+    53.66,
+    84.477,
+    77.638,
+    57.977,
+    89.956
+   ],
+   "place": {
+    "kind": "market"
+   }
+  },
+  {
+   "id": "street-1-1",
+   "label": "Main street",
+   "rect": [
+    66.131,
+    25.606,
+    65.869,
+    28.547
+   ],
+   "points": [
+    132,
+    26.961,
+    132,
+    25.661,
+    130.092,
+    25.606,
+    109.657,
+    29.241,
+    83.399,
+    31.617,
+    71.952,
+    39.116,
+    66.131,
+    53.168,
+    68.537,
+    54.153,
+    73.956,
+    40.772,
+    84.251,
+    34.074,
+    110.001,
+    31.818,
+    130.279,
+    28.199,
+    131.958,
+    28.26
+   ],
+   "place": {
+    "kind": "street"
+   }
+  },
+  {
+   "id": "street-2-1",
+   "label": "Main street",
+   "rect": [
+    56.792,
+    89.423,
+    29.722,
+    49.577
+   ],
+   "points": [
+    85.421,
+    139,
+    86.514,
+    138.295,
+    86.093,
+    137.649,
+    73.587,
+    123.047,
+    67.322,
+    107.571,
+    59.163,
+    89.423,
+    56.792,
+    90.489,
+    64.931,
+    108.593,
+    71.366,
+    124.399,
+    83.836,
+    139
+   ],
+   "place": {
+    "kind": "street"
+   }
+  },
+  {
+   "id": "road-east-1",
+   "label": "Road in from the east",
+   "rect": [
+    129,
+    25.461,
+    3,
+    3.0
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the road into Steinfeld from the east",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  },
+  {
+   "id": "road-south-2",
+   "label": "Road in from the south",
+   "rect": [
+    83.921,
+    136,
+    3.0,
+    3
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the road into Steinfeld from the south",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  }
+ ],
+ "households": [
+  {
+   "id": "steinfeld-1995-7.townhouse-1-household",
+   "building": "townhouse-1",
+   "label": "House and shop (draper) household",
+   "trade": "shopkeeper",
+   "people": [
+    {
+     "role": "shopkeeper"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-6-household",
+   "building": "cottage-6",
+   "label": "Cottage household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-9-household",
+   "building": "cottage-9",
+   "label": "Cottage household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-11-household",
+   "building": "cottage-11",
+   "label": "Cottage household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.ghetto-house-1-household",
+   "building": "ghetto-house-1",
+   "label": "House in the Jewish quarter household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.post-inn-2-household",
+   "building": "post-inn-2",
+   "label": "Post inn household",
+   "trade": "publican",
+   "people": [
+    {
+     "role": "publican"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.colony-house-1-household",
+   "building": "colony-house-1",
+   "label": "Colony house household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.school-1-household",
+   "building": "school-1",
+   "label": "School household",
+   "trade": "school caretaker",
+   "people": [
+    {
+     "role": "school caretaker"
+    },
+    {
+     "role": "staff"
+    },
+    {
+     "role": "staff"
+    },
+    {
+     "role": "staff"
+    },
+    {
+     "role": "staff"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.func-villa-1-household",
+   "building": "func-villa-1",
+   "label": "Functionalist villa household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "poor"
+  },
+  {
+   "id": "steinfeld-1995-7.shop-house-1-household",
+   "building": "shop-house-1",
+   "label": "Shop house household",
+   "trade": "butcher",
+   "people": [
+    {
+     "role": "butcher"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-1",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-2",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-3",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-4",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-5",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-6",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-7",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-8",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "programmer",
+   "people": [
+    {
+     "role": "programmer"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-9",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-10",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-11",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-12",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-13",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-14",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-15",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-16",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-17",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-18",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-19",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-20",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-21",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-22",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-23",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-24",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "programmer",
+   "people": [
+    {
+     "role": "programmer"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-25",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-26",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-27",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-28",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-29",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-30",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-31",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-32",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-33",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-34",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-35",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-36",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-37",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-38",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-39",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-40",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-41",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-42",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-43",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-44",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-45",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-46",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-47",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-48",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-1",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-2",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-3",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-4",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-5",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-6",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "programmer",
+   "people": [
+    {
+     "role": "programmer"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-7",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-8",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-9",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-10",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-11",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-12",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-13",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-14",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-15",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-16",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-17",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-18",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-19",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-20",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-21",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-22",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-23",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-24",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-25",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-26",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-27",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-28",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "programmer",
+   "people": [
+    {
+     "role": "programmer"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-29",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-30",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-31",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-32",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-33",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-34",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-35",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-36",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-37",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-38",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-39",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-40",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-41",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-42",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-43",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-44",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-45",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-46",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-47",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-48",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-12-household",
+   "building": "cottage-12",
+   "label": "Suburban house household",
+   "trade": "schoolteacher",
+   "people": [
+    {
+     "role": "schoolteacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-13-household",
+   "building": "cottage-13",
+   "label": "Suburban house household",
+   "trade": "mayor",
+   "people": [
+    {
+     "role": "mayor"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-14-household",
+   "building": "cottage-14",
+   "label": "Suburban house household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-15-household",
+   "building": "cottage-15",
+   "label": "Suburban house household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-16-household",
+   "building": "cottage-16",
+   "label": "Suburban house household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-17-household",
+   "building": "cottage-17",
+   "label": "Suburban house household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.family-house-1-household",
+   "building": "family-house-1",
+   "label": "Family house household",
+   "trade": "priest",
+   "people": [
+    {
+     "role": "priest"
+    },
+    {
+     "role": "housekeeper"
+    }
+   ],
+   "wealth": "middling"
+  }
+ ],
+ "umbral": {
+  "year": 1995,
+  "places": {
+   "chapel-1": {
+    "type": "chapel",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "townhouse-1": {
+    "type": "townhouse",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-6": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-9": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-11": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "ghetto-house-1": {
+    "type": "ghetto-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "post-inn-2": {
+    "type": "post-inn",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "colony-house-1": {
+    "type": "colony-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "school-1": {
+    "type": "school",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "func-villa-1": {
+    "type": "func-villa",
+    "wealth": "poor",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "shop-house-1": {
+    "type": "shop-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "panel-block-1": {
+    "type": "panel-block",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "panel-block-2": {
+    "type": "panel-block",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-12": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-13": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-14": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-15": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-16": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-17": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "family-house-1": {
+    "type": "family-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   }
+  },
+  "gone": [
+   {
+    "id": "gone-workshop-1",
+    "label": "Workshop (carpenter)",
+    "type": "workshop",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     38.79,
+     64.281,
+     9.798,
+     9.022
+    ],
+    "points": [
+     43.759,
+     73.302,
+     42.723,
+     69.439,
+     39.826,
+     70.215,
+     38.79,
+     66.351,
+     46.518,
+     64.281,
+     48.588,
+     72.008
+    ]
+   },
+   {
+    "id": "gone-cottage-7",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     87.643,
+     57.333,
+     10.607,
+     9.192
+    ],
+    "points": [
+     89.057,
+     62.99,
+     89.764,
+     62.283,
+     87.643,
+     60.162,
+     89.764,
+     58.04,
+     91.886,
+     60.162,
+     94.714,
+     57.333,
+     98.25,
+     60.869,
+     92.593,
+     66.526
+    ]
+   },
+   {
+    "id": "gone-cottage-10",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     43.381,
+     52.509,
+     10.294,
+     7.531
+    ],
+    "points": [
+     43.381,
+     57.009,
+     51.176,
+     52.509,
+     53.676,
+     56.839,
+     48.479,
+     59.839,
+     47.729,
+     58.54,
+     45.131,
+     60.04
+    ]
+   },
+   {
+    "id": "gone-cottage-2",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     61.052,
+     88.043,
+     9.062,
+     8.696
+    ],
+    "points": [
+     70.114,
+     93.239,
+     64.052,
+     96.739,
+     61.052,
+     91.543,
+     67.114,
+     88.043
+    ]
+   },
+   {
+    "id": "gone-cottage-5",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     64.336,
+     96.438,
+     9.428,
+     8.562
+    ],
+    "points": [
+     68.666,
+     96.438,
+     69.666,
+     98.17,
+     72.264,
+     96.67,
+     73.764,
+     99.268,
+     71.166,
+     100.768,
+     72.166,
+     102.5,
+     67.836,
+     105.0,
+     64.336,
+     98.938
+    ]
+   },
+   {
+    "id": "gone-tavern-1",
+    "label": "Tavern",
+    "type": "tavern",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     74.578,
+     54.171,
+     11.928,
+     12.66
+    ],
+    "points": [
+     81.506,
+     54.171,
+     86.506,
+     62.832,
+     79.578,
+     66.832,
+     74.578,
+     58.171
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-1",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     86.229,
+     54.505,
+     11.314,
+     11.314
+    ],
+    "points": [
+     86.229,
+     58.747,
+     90.472,
+     54.505,
+     97.543,
+     61.576,
+     93.3,
+     65.819
+    ]
+   },
+   {
+    "id": "gone-cottage-6",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     69.795,
+     49.457,
+     7.33,
+     7.696
+    ],
+    "points": [
+     74.125,
+     49.457,
+     77.125,
+     54.653,
+     72.795,
+     57.153,
+     69.795,
+     51.957
+    ]
+   },
+   {
+    "id": "gone-post-inn-1",
+    "label": "Post inn",
+    "type": "post-inn",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     74.078,
+     51.305,
+     16.392,
+     16.392
+    ],
+    "points": [
+     84.47,
+     51.305,
+     90.47,
+     61.698,
+     80.078,
+     67.698,
+     74.078,
+     57.305
+    ]
+   },
+   {
+    "id": "gone-cottage-8",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     35.309,
+     86.26,
+     9.28,
+     7.866
+    ],
+    "points": [
+     35.309,
+     88.331,
+     43.036,
+     86.26,
+     44.589,
+     92.056,
+     36.862,
+     94.126
+    ]
+   },
+   {
+    "id": "gone-post-inn-1",
+    "label": "Post inn",
+    "type": "post-inn",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     74.078,
+     51.305,
+     16.392,
+     16.392
+    ],
+    "points": [
+     84.47,
+     51.305,
+     90.47,
+     61.698,
+     80.078,
+     67.698,
+     74.078,
+     57.305
+    ]
+   },
+   {
+    "id": "gone-cottage-1",
+    "label": "Priest's house",
+    "type": "cottage",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     45.148,
+     83.923,
+     9.987,
+     6.383
+    ],
+    "points": [
+     45.148,
+     86.252,
+     53.841,
+     83.923,
+     55.135,
+     88.752,
+     49.339,
+     90.305,
+     48.951,
+     88.857,
+     46.053,
+     89.633
+    ]
+   },
+   {
+    "id": "gone-cottage-11",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     33.413,
+     50.792,
+     8.0,
+     8.0
+    ],
+    "points": [
+     33.413,
+     53.792,
+     36.413,
+     53.792,
+     36.413,
+     50.792,
+     39.413,
+     50.792,
+     39.413,
+     53.792,
+     41.413,
+     53.792,
+     41.413,
+     58.792,
+     33.413,
+     58.792
+    ]
+   },
+   {
+    "id": "gone-cottage-3",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     68.051,
+     85.417,
+     7.696,
+     7.33
+    ],
+    "points": [
+     75.748,
+     89.747,
+     70.551,
+     92.747,
+     68.051,
+     88.417,
+     73.248,
+     85.417
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-2",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     61.485,
+     88.293,
+     10.196,
+     11.66
+    ],
+    "points": [
+     71.681,
+     96.953,
+     66.485,
+     99.953,
+     61.485,
+     91.293,
+     66.681,
+     88.293
+    ]
+   },
+   {
+    "id": "gone-cottage-8",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     35.309,
+     86.26,
+     9.28,
+     7.866
+    ],
+    "points": [
+     35.309,
+     88.331,
+     43.036,
+     86.26,
+     44.589,
+     92.056,
+     36.862,
+     94.126
+    ]
+   },
+   {
+    "id": "gone-cottage-11",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     33.413,
+     50.792,
+     8.0,
+     8.0
+    ],
+    "points": [
+     33.413,
+     53.792,
+     36.413,
+     53.792,
+     36.413,
+     50.792,
+     39.413,
+     50.792,
+     39.413,
+     53.792,
+     41.413,
+     53.792,
+     41.413,
+     58.792,
+     33.413,
+     58.792
+    ]
+   },
+   {
+    "id": "gone-cottage-3",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     68.051,
+     85.417,
+     7.696,
+     7.33
+    ],
+    "points": [
+     75.748,
+     89.747,
+     70.551,
+     92.747,
+     68.051,
+     88.417,
+     73.248,
+     85.417
+    ]
+   },
+   {
+    "id": "gone-cottage-4",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     74.007,
+     81.785,
+     9.428,
+     8.33
+    ],
+    "points": [
+     83.435,
+     86.116,
+     76.507,
+     90.116,
+     74.007,
+     85.785,
+     80.935,
+     81.785
+    ]
+   },
+   {
+    "id": "gone-storehouse-1",
+    "label": "Storehouse",
+    "type": "storehouse",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     82.149,
+     84.982,
+     8.196,
+     8.196
+    ],
+    "points": [
+     85.149,
+     93.178,
+     82.149,
+     87.982,
+     87.345,
+     84.982,
+     90.345,
+     90.178
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-2",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     61.485,
+     88.293,
+     10.196,
+     11.66
+    ],
+    "points": [
+     71.681,
+     96.953,
+     66.485,
+     99.953,
+     61.485,
+     91.293,
+     66.681,
+     88.293
+    ]
+   },
+   {
+    "id": "gone-byre-house-3",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     59.803,
+     112.377,
+     7.935,
+     12.885
+    ],
+    "points": [
+     62.909,
+     125.262,
+     59.803,
+     113.671,
+     64.632,
+     112.377,
+     67.738,
+     123.968
+    ]
+   },
+   {
+    "id": "gone-arcade-house-1",
+    "label": "Arcaded house",
+    "type": "arcade-house",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     35.056,
+     64.764,
+     13.403,
+     9.867
+    ],
+    "points": [
+     36.868,
+     74.631,
+     35.056,
+     67.87,
+     46.647,
+     64.764,
+     48.459,
+     71.525
+    ]
+   },
+   {
+    "id": "gone-byre-house-1",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1920,
+    "why": "suburbs",
+    "rect": [
+     77.802,
+     121.799,
+     12.021,
+     12.021
+    ],
+    "points": [
+     81.338,
+     121.799,
+     89.823,
+     130.284,
+     86.287,
+     133.819,
+     77.802,
+     125.334
+    ]
+   },
+   {
+    "id": "gone-byre-house-2",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1920,
+    "why": "suburbs",
+    "rect": [
+     85.524,
+     35.706,
+     12.0,
+     5.0
+    ],
+    "points": [
+     97.524,
+     40.706,
+     85.524,
+     40.706,
+     85.524,
+     35.706,
+     97.524,
+     35.706
+    ]
+   },
+   {
+    "id": "gone-byre-house-4",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1920,
+    "why": "suburbs",
+    "rect": [
+     95.814,
+     22.697,
+     12.0,
+     5.0
+    ],
+    "points": [
+     95.814,
+     22.697,
+     107.814,
+     22.697,
+     107.814,
+     27.697,
+     95.814,
+     27.697
+    ]
+   },
+   {
+    "id": "gone-passage-house-1",
+    "label": "Gate-passage house",
+    "type": "passage-house",
+    "year": 1990,
+    "why": "rebuild-modern",
+    "rect": [
+     44.371,
+     81.025,
+     10.764,
+     10.057
+    ],
+    "points": [
+     44.371,
+     83.354,
+     53.064,
+     81.025,
+     55.135,
+     88.752,
+     46.442,
+     91.082
+    ]
+   },
+   {
+    "id": "gone-townhouse-1",
+    "label": "House and shop (draper)",
+    "type": "townhouse",
+    "year": 1990,
+    "why": "rebuild-modern",
+    "rect": [
+     81.245,
+     63.86,
+     9.928,
+     9.196
+    ],
+    "points": [
+     88.173,
+     63.86,
+     91.173,
+     69.057,
+     84.245,
+     73.057,
+     81.245,
+     67.86
+    ]
+   },
+   {
+    "id": "gone-post-inn-2",
+    "label": "Post inn",
+    "type": "post-inn",
+    "year": 1990,
+    "why": "rebuild-modern",
+    "rect": [
+     74.078,
+     51.305,
+     16.392,
+     16.392
+    ],
+    "points": [
+     84.47,
+     51.305,
+     90.47,
+     61.698,
+     80.078,
+     67.698,
+     74.078,
+     57.305
+    ]
+   }
+  ]
+ },
+ "plan": {
+  "streets": [
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     67.33,
+     53.66,
+     48.84,
+     62.77
+    ]
+   },
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     67.33,
+     53.66,
+     84.48,
+     77.64
+    ]
+   },
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     57.98,
+     89.96,
+     84.48,
+     77.64
+    ]
+   },
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     57.98,
+     89.96,
+     48.84,
+     62.77
+    ]
+   },
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     67.33,
+     53.66,
+     72.95,
+     39.94
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     72.95,
+     39.94,
+     101.57,
+     60.49
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     84.48,
+     77.64,
+     101.57,
+     60.49
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     84.48,
+     77.64,
+     93.66,
+     90.37
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     66.13,
+     108.08,
+     93.66,
+     90.37
+    ]
+   },
+   {
+    "kind": "main",
+    "half": 1.3,
+    "line": [
+     57.98,
+     89.96,
+     66.13,
+     108.08
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     48.84,
+     62.77,
+     30.0,
+     60.48
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     57.98,
+     89.96,
+     34.78,
+     97.79
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     34.78,
+     97.79,
+     30.0,
+     60.48
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     72.95,
+     39.94,
+     36.33,
+     30.0
+    ]
+   },
+   {
+    "kind": "street",
+    "half": 0.85,
+    "line": [
+     30.0,
+     60.48,
+     36.33,
+     30.0
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     72.48,
+     123.72,
+     85.05,
+     138.43
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     66.13,
+     108.08,
+     72.48,
+     123.72
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     72.95,
+     39.94,
+     83.82,
+     32.85
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     109.83,
+     30.53,
+     83.82,
+     32.85
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     130.19,
+     26.9,
+     109.83,
+     30.53
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     130.19,
+     26.9,
+     132.0,
+     26.96
+    ]
+   },
+   {
+    "kind": "road",
+    "half": 1.1,
+    "line": [
+     85.42,
+     139.0,
+     85.05,
+     138.43
+    ]
+   }
+  ],
+  "river": [],
+  "riverHalf": 0,
+  "brooks": [
+   [
+    [
+     28.0,
+     24.0
+    ],
+    [
+     28.18,
+     23.87
+    ],
+    [
+     28.53,
+     23.6
+    ],
+    [
+     28.8,
+     23.36
+    ],
+    [
+     28.98,
+     23.17
+    ],
+    [
+     29.23,
+     22.88
+    ],
+    [
+     29.57,
+     22.52
+    ],
+    [
+     29.93,
+     22.1
+    ],
+    [
+     30.32,
+     21.64
+    ],
+    [
+     30.72,
+     21.14
+    ],
+    [
+     31.14,
+     20.62
+    ],
+    [
+     31.57,
+     20.07
+    ],
+    [
+     32.01,
+     19.52
+    ],
+    [
+     32.44,
+     18.98
+    ],
+    [
+     32.87,
+     18.45
+    ],
+    [
+     33.27,
+     17.93
+    ],
+    [
+     33.67,
+     17.43
+    ],
+    [
+     34.04,
+     16.94
+    ],
+    [
+     34.39,
+     16.46
+    ],
+    [
+     34.7,
+     15.99
+    ],
+    [
+     34.97,
+     15.53
+    ],
+    [
+     35.22,
+     15.07
+    ],
+    [
+     35.44,
+     14.61
+    ],
+    [
+     35.65,
+     14.15
+    ],
+    [
+     35.85,
+     13.68
+    ],
+    [
+     36.06,
+     13.2
+    ],
+    [
+     36.28,
+     12.72
+    ],
+    [
+     36.54,
+     12.24
+    ],
+    [
+     36.83,
+     11.75
+    ],
+    [
+     37.15,
+     11.26
+    ],
+    [
+     37.51,
+     10.77
+    ],
+    [
+     37.87,
+     10.29
+    ],
+    [
+     38.25,
+     9.79
+    ],
+    [
+     38.6,
+     9.3
+    ],
+    [
+     38.94,
+     8.8
+    ],
+    [
+     39.24,
+     8.3
+    ],
+    [
+     39.5,
+     7.8
+    ],
+    [
+     39.7,
+     7.31
+    ],
+    [
+     39.85,
+     6.83
+    ],
+    [
+     39.96,
+     6.37
+    ],
+    [
+     40.03,
+     5.93
+    ],
+    [
+     40.06,
+     5.54
+    ],
+    [
+     40.07,
+     5.18
+    ],
+    [
+     40.07,
+     4.91
+    ],
+    [
+     40.07,
+     4.72
+    ],
+    [
+     40.05,
+     4.47
+    ],
+    [
+     40.02,
+     4.16
+    ],
+    [
+     40.0,
+     4.0
+    ]
+   ],
+   [
+    [
+     124.0,
+     32.0
+    ],
+    [
+     124.01,
+     31.84
+    ],
+    [
+     124.02,
+     31.53
+    ],
+    [
+     124.03,
+     31.28
+    ],
+    [
+     124.02,
+     31.09
+    ],
+    [
+     124.02,
+     30.82
+    ],
+    [
+     124.02,
+     30.48
+    ],
+    [
+     124.01,
+     30.09
+    ],
+    [
+     124.0,
+     29.66
+    ],
+    [
+     123.99,
+     29.21
+    ],
+    [
+     123.99,
+     28.74
+    ],
+    [
+     123.99,
+     28.25
+    ],
+    [
+     123.99,
+     27.75
+    ],
+    [
+     124.0,
+     27.25
+    ],
+    [
+     124.02,
+     26.75
+    ],
+    [
+     124.04,
+     26.25
+    ],
+    [
+     124.07,
+     25.75
+    ],
+    [
+     124.11,
+     25.25
+    ],
+    [
+     124.15,
+     24.75
+    ],
+    [
+     124.2,
+     24.25
+    ],
+    [
+     124.26,
+     23.75
+    ],
+    [
+     124.31,
+     23.25
+    ],
+    [
+     124.36,
+     22.75
+    ],
+    [
+     124.4,
+     22.25
+    ],
+    [
+     124.44,
+     21.75
+    ],
+    [
+     124.48,
+     21.25
+    ],
+    [
+     124.5,
+     20.75
+    ],
+    [
+     124.52,
+     20.25
+    ],
+    [
+     124.53,
+     19.75
+    ],
+    [
+     124.53,
+     19.25
+    ],
+    [
+     124.52,
+     18.75
+    ],
+    [
+     124.51,
+     18.25
+    ],
+    [
+     124.49,
+     17.75
+    ],
+    [
+     124.46,
+     17.25
+    ],
+    [
+     124.42,
+     16.75
+    ],
+    [
+     124.38,
+     16.25
+    ],
+    [
+     124.33,
+     15.75
+    ],
+    [
+     124.28,
+     15.25
+    ],
+    [
+     124.22,
+     14.75
+    ],
+    [
+     124.17,
+     14.25
+    ],
+    [
+     124.11,
+     13.75
+    ],
+    [
+     124.07,
+     13.25
+    ],
+    [
+     124.03,
+     12.75
+    ],
+    [
+     123.99,
+     12.25
+    ],
+    [
+     123.97,
+     11.75
+    ],
+    [
+     123.95,
+     11.25
+    ],
+    [
+     123.94,
+     10.75
+    ],
+    [
+     123.93,
+     10.25
+    ],
+    [
+     123.93,
+     9.75
+    ],
+    [
+     123.93,
+     9.25
+    ],
+    [
+     123.92,
+     8.75
+    ],
+    [
+     123.92,
+     8.25
+    ],
+    [
+     123.92,
+     7.75
+    ],
+    [
+     123.91,
+     7.26
+    ],
+    [
+     123.91,
+     6.79
+    ],
+    [
+     123.91,
+     6.34
+    ],
+    [
+     123.91,
+     5.91
+    ],
+    [
+     123.91,
+     5.53
+    ],
+    [
+     123.92,
+     5.17
+    ],
+    [
+     123.93,
+     4.91
+    ],
+    [
+     123.93,
+     4.72
+    ],
+    [
+     123.95,
+     4.47
+    ],
+    [
+     123.98,
+     4.16
+    ],
+    [
+     124.0,
+     4.0
+    ]
+   ],
+   [
+    [
+     108.0,
+     96.0
+    ],
+    [
+     108.16,
+     96.12
+    ],
+    [
+     108.47,
+     96.36
+    ],
+    [
+     108.72,
+     96.48
+    ],
+    [
+     108.91,
+     96.49
+    ],
+    [
+     109.17,
+     96.52
+    ],
+    [
+     109.53,
+     96.57
+    ],
+    [
+     109.91,
+     96.59
+    ],
+    [
+     110.34,
+     96.56
+    ],
+    [
+     110.79,
+     96.54
+    ],
+    [
+     111.26,
+     96.51
+    ],
+    [
+     111.75,
+     96.49
+    ],
+    [
+     112.25,
+     96.46
+    ],
+    [
+     112.75,
+     96.43
+    ],
+    [
+     113.25,
+     96.4
+    ],
+    [
+     113.75,
+     96.38
+    ],
+    [
+     114.25,
+     96.36
+    ],
+    [
+     114.75,
+     96.34
+    ],
+    [
+     115.25,
+     96.33
+    ],
+    [
+     115.75,
+     96.32
+    ],
+    [
+     116.25,
+     96.3
+    ],
+    [
+     116.75,
+     96.29
+    ],
+    [
+     117.25,
+     96.27
+    ],
+    [
+     117.75,
+     96.25
+    ],
+    [
+     118.25,
+     96.23
+    ],
+    [
+     118.75,
+     96.2
+    ],
+    [
+     119.25,
+     96.17
+    ],
+    [
+     119.75,
+     96.14
+    ],
+    [
+     120.25,
+     96.1
+    ],
+    [
+     120.75,
+     96.07
+    ],
+    [
+     121.25,
+     96.03
+    ],
+    [
+     121.75,
+     96.0
+    ],
+    [
+     122.25,
+     95.97
+    ],
+    [
+     122.75,
+     95.95
+    ],
+    [
+     123.25,
+     95.92
+    ],
+    [
+     123.75,
+     95.9
+    ],
+    [
+     124.25,
+     95.89
+    ],
+    [
+     124.74,
+     95.88
+    ],
+    [
+     125.21,
+     95.87
+    ],
+    [
+     125.66,
+     95.87
+    ],
+    [
+     126.09,
+     95.87
+    ],
+    [
+     126.47,
+     95.87
+    ],
+    [
+     126.83,
+     95.89
+    ],
+    [
+     127.09,
+     95.9
+    ],
+    [
+     127.28,
+     95.9
+    ],
+    [
+     127.53,
+     95.93
+    ],
+    [
+     127.84,
+     95.98
+    ],
+    [
+     128.0,
+     96.0
+    ]
+   ],
+   [
+    [
+     24.0,
+     112.0
+    ],
+    [
+     23.84,
+     111.91
+    ],
+    [
+     23.53,
+     111.73
+    ],
+    [
+     23.28,
+     111.64
+    ],
+    [
+     23.09,
+     111.64
+    ],
+    [
+     22.82,
+     111.64
+    ],
+    [
+     22.48,
+     111.62
+    ],
+    [
+     22.09,
+     111.63
+    ],
+    [
+     21.66,
+     111.68
+    ],
+    [
+     21.21,
+     111.73
+    ],
+    [
+     20.74,
+     111.78
+    ],
+    [
+     20.25,
+     111.84
+    ],
+    [
+     19.75,
+     111.89
+    ],
+    [
+     19.25,
+     111.93
+    ],
+    [
+     18.75,
+     111.97
+    ],
+    [
+     18.25,
+     112.0
+    ],
+    [
+     17.75,
+     112.03
+    ],
+    [
+     17.25,
+     112.04
+    ],
+    [
+     16.75,
+     112.05
+    ],
+    [
+     16.25,
+     112.06
+    ],
+    [
+     15.75,
+     112.06
+    ],
+    [
+     15.25,
+     112.06
+    ],
+    [
+     14.75,
+     112.06
+    ],
+    [
+     14.25,
+     112.06
+    ],
+    [
+     13.75,
+     112.06
+    ],
+    [
+     13.25,
+     112.06
+    ],
+    [
+     12.75,
+     112.05
+    ],
+    [
+     12.25,
+     112.04
+    ],
+    [
+     11.75,
+     112.03
+    ],
+    [
+     11.25,
+     112.01
+    ],
+    [
+     10.75,
+     112.0
+    ],
+    [
+     10.25,
+     111.99
+    ],
+    [
+     9.75,
+     111.98
+    ],
+    [
+     9.25,
+     111.98
+    ],
+    [
+     8.75,
+     111.99
+    ],
+    [
+     8.25,
+     112.01
+    ],
+    [
+     7.75,
+     112.03
+    ],
+    [
+     7.26,
+     112.06
+    ],
+    [
+     6.79,
+     112.1
+    ],
+    [
+     6.34,
+     112.13
+    ],
+    [
+     5.91,
+     112.17
+    ],
+    [
+     5.53,
+     112.19
+    ],
+    [
+     5.17,
+     112.18
+    ],
+    [
+     4.91,
+     112.19
+    ],
+    [
+     4.72,
+     112.19
+    ],
+    [
+     4.47,
+     112.15
+    ],
+    [
+     4.16,
+     112.05
+    ],
+    [
+     4.0,
+     112.0
+    ]
+   ]
+  ]
+ },
+ "settlement": {
+  "id": "steinfeld-1995-7",
+  "name": "Steinfeld",
+  "year": 1995
+ }
+}

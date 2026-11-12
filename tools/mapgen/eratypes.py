@@ -487,6 +487,8 @@ FULLER = {
         "Packing hall": [(SF["pallet"], "wall", 2), (SF["crate"], "wall", 2), (SF["box"], "wall", 3), (SF["csmall"], "corner", 1), (SF["table2"], "wall", 1)],
         "Water plant": [(SF["cwide"], "wall:E", 1, .6), (SF["locker"], "wall", 1), (SF["csmall"], "corner", 1)]},
 }
+import latertypes
+ERA_TYPES.update(latertypes.types(M, SF, MODERN, FUTURE))      # the later ages' gaps (2026-11-12)
 for _k, _f in FULLER.items():
     assert set(_f) == {r[0] for r in ERA_TYPES[_k]["rooms"]}, (_k, set(_f) ^ {r[0] for r in ERA_TYPES[_k]["rooms"]})
     ERA_TYPES[_k]["furnish"] = _f

@@ -326,6 +326,20 @@ What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar
 
 Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, whether NPCs hear noise, and whether traps go off. You can Shift-click a locked door yourself to use Interact for the selected token.
 
+### Settlements: a whole town from the generator
+
+The town generator can make a whole place for any year from 1197 to 2099 in one command (tools/mapgen/ddsettle.py: a name, a seed, a size and a year). Beside the Dungeondraft maps it writes a settlement record, a file ending in .settlement.json: every household with its trade, its standing and its people, the offices of the age, and the ties between households.
+
+1. Open **Settlements** in the Storyteller's hand and choose **Bring in a record**. Pick the .settlement.json file.
+2. Read the review. Untick any household to leave its building empty. Under **Hidden folk** the review proposes who is more than they seem, by game line; untick any, or choose **Draw the hidden folk again**. Untick a kind of tie to leave it out.
+3. Choose **Enter it into the world**. The settlement becomes a journal in the folder "WoDX settlements" that no player can read. No sheets are made yet.
+4. Export each map from Dungeondraft, import it, and adopt it (right-click the scene, **Adopt a generated map**).
+5. Right-click the scene and choose **Seed the residents**. Struck households are unticked, and the hidden folk are marked in the list. A block of flats lists every flat; seed a few now and the rest later if wished.
+
+After seeding, a hidden one's sheet carries a note only the Storyteller sees, and making them a ghoul, Kinfolk or mage in full is done by hand. Those who go out to work have their workplace in their routine when it stands on the same map. Ties between household heads appear as relationships on their sheets once both are seeded.
+
+To change the review later, open Settlements, pick the settlement and choose **Review**. Residents already seeded stay as they are. **Remove** deletes only the journal; residents are removed on their scenes.
+
 ## Responsive maps: the map shows what happened, and the world answers
 
 *Interactables 0.12.0, NPC 0.4.0 and Storyteller 0.3.0 onward, on in the testing world (rothenstein-wodx) only. Deployed there 2026-11-09 (gate-maps 9/9).*

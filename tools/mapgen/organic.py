@@ -734,6 +734,24 @@ class OrganicTown(T.Town):
                 t += .5
         return best[1] if best else None
 
+    def put_first(self, type_key, label, edge_lists):
+        """One special building at the nearest spot to the market that will take it, when the best spot would not: the
+        plain type, each spot in turn. A spot on a part line, or one whose rooms will not furnish, is passed over."""
+        tdef = B.TYPES[type_key]
+        for edges in edge_lists:
+            cands = []
+            for e, blk, ward in edges or []:
+                sb, gap = SPACING.get(ward, (.6, .8))
+                t = .3
+                while t < e["len"] - 2:
+                    s = self.try_at(type_key, e["A"], e["u"], e["in"], t, sb, gap, blk, tdef)
+                    if s: cands.append((math.hypot(s[0] - self.xc, s[1] - self.yc), s))
+                    t += .5
+            for _, s in sorted(cands, key=lambda c: c[0])[:40]:
+                b = self.put(type_key, label, s)
+                if b: return b
+        return None
+
     def lay_out(self):
         R = self.R
         blocks = {}
@@ -748,6 +766,8 @@ class OrganicTown(T.Town):
         s = self.best_spot("tavern", facing, None)
         if not s: raise SystemExit("no room for the tavern on the market")
         tavern = self.put("tavern", "Tavern", s) or self.put("tavern", "Tavern", self.best_spot("tavern", facing, None, plain=True))
+        if not tavern: tavern = self.put_first("tavern", "Tavern", [facing])
+        if not tavern: raise SystemExit("no room for the tavern on the market")
         church = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["ward"] == "church" for e in self.edges_of(blk, kinds)]
         s = self.best_spot("chapel", church, None) or self.best_spot("chapel", facing, None)
         if not s:
@@ -755,6 +775,10 @@ class OrganicTown(T.Town):
             s = self.best_spot("chapel", any_e, None)
         if not s: raise SystemExit("no room for the chapel")
         chapel = self.put("chapel", "Chapel", s) or self.put("chapel", "Chapel", self.best_spot("chapel", church or facing, None, plain=True))
+        if not chapel:                                        # the best spot lay on a part line or would not furnish
+            inner = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)]
+            chapel = self.put_first("chapel", "Chapel", [church, facing, inner])
+        if not chapel: raise SystemExit("no room for the chapel")
         near = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)
                 if math.dist(e["mid"], chapel.centre) < 30]
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
@@ -1589,6 +1613,8 @@ class OrganicTown(T.Town):
         if self.year:
             import eras
             eras.grow(self, self.year)
+            import settle
+            settle.repeople(self, B.TYPES)                    # from 1781 the households follow the year (settle.py)
         self.washing = self.washing_spot() if self.river_line and (self.year or 0) < 1900 else None
         self.well = self.well_spot()
         self.cross = self.cross_spot()
