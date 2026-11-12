@@ -124,6 +124,10 @@ const P = {
   tamil: {
     m: "Murugan, Kumaran, Senthil, Arumugam, Raman, Selvam, Karthik, Ganesan, Velu, Rajan, Mani, Kannan, Sundaram, Perumal, Anand, Suresh",
     f: "Meenakshi, Lakshmi, Valli, Kamakshi, Parvathi, Selvi, Devi, Kala, Malar, Revathi, Saraswathi, Vasanthi, Kavitha, Priya, Andal, Thenmozhi"},
+  // Two given names and no family name
+  tibetan: {
+    m: "Tenzin, Dorje, Tashi, Sonam, Lobsang, Karma, Ngawang, Jigme, Thubten, Dawa, Nyima, Pasang, Tsering, Phuntsok, Namgyal, Rinchen, Wangchuk, Gyaltsen, Kelsang, Jamyang",
+    f: "Dolma, Lhamo, Yangchen, Dekyi, Choden, Drolkar, Tsomo, Pema, Diki, Yeshe, Lhakpa, Dechen, Yangzom, Tseten, Kunsang, Palmo, Chime, Sangmo"},
   chinese: {
     m: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Wenming, Zhiyuan, Dewei, Tianyou, Yongkang",
     f: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Na, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying",

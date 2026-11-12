@@ -12,28 +12,32 @@ Ben, 2026-11-12: the whole world is within WoDX's scope. No built, in-developmen
 
 ## The world's regions
 
-37 regions (Chronicle 0.48.0). Each has a typical city for the sun, a climate, a money region, and the peoples who live there by age. The Homeland setting picks the chronicle's own; a scene far from home can be given a region from the Clock (Where this scene stands), and the people generator and the weather follow it on that scene.
+44 regions (Chronicle 0.48.0). Each has a typical city for the sun, a climate, a money region, and the peoples who live there by age. The Homeland setting picks the chronicle's own; a scene far from home can be given a region from the Clock (Where this scene stands), and the people generator and the weather follow it on that scene.
 
 Europe: Moravia and Bohemia, the German lands, the British Isles, France, Iberia, Italy, the Low Countries, Scandinavia, Poland and the Baltic, Hungary with Transylvania and the Balkans, the Rus and Russia, Greece and Constantinople.
-The Middle East and inner Asia: Anatolia, the Levant and Mesopotamia, Egypt, Arabia, the Maghreb, Persia, the steppe and the Silk Road.
-South and East Asia: India, China, Japan, Korea, mainland Southeast Asia, the Malay world.
-Africa south of the Sahara: West Africa, East Africa, Southern Africa.
-The Americas: eastern North America, the American West, Mexico and Central America, the Caribbean, the Andes, Brazil.
+The Middle East and inner Asia: Anatolia, the Levant and Mesopotamia, Egypt, Arabia, the Maghreb, Persia, the steppe and the Silk Road, Siberia.
+South and East Asia: India, China, Japan, Korea, mainland Southeast Asia, the Malay world, Tibet and the Himalaya.
+Africa south of the Sahara: West Africa, Central Africa, East Africa, Southern Africa.
+The Americas: Canada, eastern North America, the American West, Mexico and Central America, the Caribbean, the Andes, Brazil, the southern cone.
 Oceania: Australia, Aotearoa New Zealand, the Pacific islands.
+The poles: the Arctic, Antarctica.
+
+Where a finer place has no region of its own, use the one around it: Central America under Mexico, Indochina under mainland Southeast Asia, the Philippines under the Malay world, Madagascar and the Horn under East Africa, the Sahara under the Maghreb (north) and West Africa (the Sahel), Mongolia under the steppe, the Caucasus under Anatolia, Ireland under the British Isles, Iceland under Scandinavia, Alaska under the American West. The world map (maps thread) assigns its squares to these ids and keeps the borders; the regions carry one typical city each and no borders.
 
 ## Audit of 2026-11-12: what looked only at Europe
 
 | Part | What was found | State |
 | --- | --- | --- |
-| People generator (Creation) | Two cultures only: Bohemia (Czech, German, Jewish names) and the English-speaking Americas | Widened: 37 cultures, 38 peoples with their own names and name order |
+| People generator (Creation) | Two cultures only: Bohemia (Czech, German, Jewish names) and the English-speaking Americas | Widened: 44 cultures, 39 peoples with their own names and name order |
 | Money (Storyteller) | Moravia, the German lands, England and the United States; France borrowed German money | Widened: 24 money regions, France with its own |
-| Weather (Atmosphere) | Seven climates, four European and three North American | Widened: 25 climates, both sides of the equator |
+| Weather (Atmosphere) | Seven climates, four European and three North American | Widened: 29 climates, both sides of the equator |
 | A scene far from home (Chronicle) | Latitude and hour only | Widened: the scene's region too |
 | Languages (Chronicle), voices | 30 tongues, few from outside Europe and the Near East; made-up speech had five sound sets | Widened: 71 tongues, 21 sound sets, 37 voice languages |
 | Households (NPC) | Feminine family names for Czech and German only; "son of" names for Hebrew only | Widened: any people's listed feminine form; ibn and bint, bin and binti |
 | Era timelines, 1197 to 2099 | 2,859 events: Europe 2,089, Middle East 571, Asia 561, Moravia 238; the Americas 8 and Africa 88, all in the prologues; Oceania none | Open, next in this thread |
 | Prologue timelines | Being widened in the prologue thread | In hand elsewhere |
 | Country map and town generator (Storyteller, tools/mapgen) | The country map's bounds are 12 to 20 east and 47.4 to 51.2 north; towns, roads, rails and airfields are Moravia's | In hand in the maps thread, with a rough world map asked for by Ben |
+| Settlement generator (NPC settlement, tools/mapgen ddsettle) | Towns, buildings and street names follow Moravia only | Open in the maps thread: other regions are listed in its decision B2529 |
 | Church year (Chronicle church-rules) | The Western church year only: feasts, fasts and nights of revel | Open: other calendars of faith by region |
 | How fast word travels (Chronicle media-rules) | Printing, papers, radio, television and the internet dated for the Czech lands | Open: dates by region |
 | Travel (Storyteller road-rules) | Railway, tram and motorway years follow Moravia | Open: dates by region |

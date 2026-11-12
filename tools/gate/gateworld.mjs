@@ -4,7 +4,7 @@
  *   await (await import(`/wodx-gate/gateworld.mjs?${Date.now()}`)).run()
  * Holds the world while it runs. Makes its own scene "WoDX gate: World" and deletes it after; puts the homeland,
  * the latitude, the part of the world, the people's culture and the climate back as they were. Makes no actors.
- *   1. the api and settings are there (api.world, the Homeland setting, 37 regions, each whole)
+ *   1. the api and settings are there (api.world, the Homeland setting, 44 regions, each whole)
  *   2. at home nothing has changed: the homeland is Moravia, people are Bohemia's, the climate Central Europe's
  *   3. a scene given Egypt: region, latitude, an hour ahead, Arabic names, the hot desert's weather
  *   4. a scene given Japan: the family name comes first; a scene given Mexico: no family name in 1197
@@ -54,7 +54,7 @@ export async function run() {
       const ids = Object.keys(W?.regions ?? {});
       const climates = atmo?.rules?.W?.CLIMATES ?? null;
       const whole = ids.filter(id => { const r = W.regionOf(id); return r && Number.isFinite(r.lat) && Number.isFinite(r.lon) && (!climates || climates[r.climate]); });
-      ok("api and settings", !!W?.here && !!W.homeland && !!W.setHomeland && ids.length >= 37 && whole.length === ids.length && game.settings.settings.has(`${C}.homeland`),
+      ok("api and settings", !!W?.here && !!W.homeland && !!W.setHomeland && ids.length >= 44 && whole.length === ids.length && game.settings.settings.has(`${C}.homeland`),
         {regions: ids.length, whole: whole.length, homeland: was.homeland});
     });
 

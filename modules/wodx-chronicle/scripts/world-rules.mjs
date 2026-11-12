@@ -61,6 +61,10 @@ export const WORLD_REGIONS = {
   "central-asia": R("The steppe and the Silk Road (Samarkand, Karakorum, Kashgar)", "other", 39.7, 67.0, "inner-asia", "persian", {
     medieval: "steppe 45, persian 35, turkish 20", "early-modern": "turkish 45, persian 35, steppe 20",
     industrial: "turkish 50, persian 25, russian 15, steppe 10", modern: "turkish 45, russian 30, persian 25"}),
+  "siberia": R("Siberia (the taiga, Lake Baikal, the road to the Pacific)", "other", 52.3, 104.3, "boreal", "russian", {
+    medieval: "steppe 100", "early-modern": "russian 55, steppe 45", industrial: "russian 80, steppe 15, polish 5", modern: "russian 88, steppe 12"}),
+  "tibet-himalaya": R("Tibet and the Himalaya (Lhasa, Kathmandu, Ladakh)", "other", 29.7, 91.1, "high-plateau", "chinese", {
+    medieval: "tibetan 100", industrial: "tibetan 92, hindi 8", modern: "tibetan 80, chinese 14, hindi 6"}),
   // South and East Asia
   "india": R("India (Delhi, Bengal, the Deccan, the Tamil south)", "other", 28.6, 77.2, "monsoon", "indian", {
     medieval: "hindi 70, tamil 12, persian 10, arabic 8", "early-modern": "hindi 62, tamil 12, persian 14, arabic 12",
@@ -82,7 +86,11 @@ export const WORLD_REGIONS = {
     medieval: "swahili 55, amharic 30, arabic 15", industrial: "swahili 55, amharic 30, arabic 10, hindi 5"}),
   "southern-africa": R("Southern Africa (the Cape, the Highveld, Great Zimbabwe's heirs)", "other", -26.2, 28.0, "southern-africa", "southern-african", {
     medieval: "zulu 100", "early-modern": "zulu 90, dutch 10", industrial: "zulu 65, dutch 18, english 14, hindi 3"}),
+  "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "west-african", {
+    industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
   // The Americas
+  "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "american", {
+    "early-modern": "french 100", industrial: "english 55, french 35, irish 10", modern: "english 60, french 28, chinese 6, hindi 6"}, {from: 1608}),
   "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", null, {culture: "american", from: 1607}),
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
     "early-modern": "spanish 100", industrial: "anglo 68, hispanic 22, chinese 5, irish 5", modern: "anglo 70, hispanic 30"}, {...AM, from: 1598}),
@@ -94,13 +102,20 @@ export const WORLD_REGIONS = {
     medieval: "quechua 100", "early-modern": "quechua 65, spanish 35", industrial: "spanish 60, quechua 40"}),
   "brazil": R("Brazil (Salvador, Rio de Janeiro, the Amazon)", "americas", -13.0, -38.5, "brazil-coast", "brazilian", {
     "early-modern": "portuguese 100", modern: "portuguese 92, italian 5, japanese 3"}, {from: 1500}),
+  "southern-cone": R("The southern cone (Buenos Aires, Santiago, Patagonia)", "americas", -34.6, -58.4, "australia-southeast", "mexican", {
+    "early-modern": "spanish 100", industrial: "spanish 65, italian 35", modern: "spanish 68, italian 32"}, {from: 1536}),
   // Oceania
   "australia": R("Australia (Sydney, Melbourne, the outback)", "other", -33.9, 151.2, "australia-southeast", "australian", {
     industrial: "english 75, irish 25", modern: "english 78, irish 12, italian 4, greek 3, chinese 3"}, {from: 1788}),
   "aotearoa": R("Aotearoa New Zealand", "other", -41.3, 174.8, "aotearoa", "australian", {
     medieval: "maori 100", industrial: "english 55, maori 30, irish 15", modern: "english 70, maori 18, irish 12"}),
   "pacific-islands": R("The Pacific islands (Hawaiʻi, Tahiti, Samoa)", "other", 21.3, -157.9, "pacific-islands", "pacific", {
-    medieval: "hawaiian 100", industrial: "hawaiian 60, english 15, japanese 15, chinese 10", modern: "hawaiian 30, english 30, japanese 25, chinese 15"})
+    medieval: "hawaiian 100", industrial: "hawaiian 60, english 15, japanese 15, chinese 10", modern: "hawaiian 30, english 30, japanese 25, chinese 15"}),
+  // The poles
+  "arctic": R("The Arctic (Greenland, Svalbard, the northern ice)", "other", 64.2, -51.7, "polar", "nordic", {
+    medieval: "norse 100"}),
+  "antarctica": R("Antarctica and the southern ice", "other", -77.8, 166.7, "antarctic", "australian", {
+    industrial: "english 55, norse 45", modern: "english 45, russian 30, spanish 25"}, {from: 1899})
 };
 
 export const DEFAULT_REGION = "moravia";
