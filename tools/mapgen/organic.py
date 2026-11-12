@@ -1246,7 +1246,7 @@ class OrganicTown(T.Town):
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
                 objects.extend(b.dressing_world(r, True))
-                for it, cx, cy, rot in b.items_world(r):
+                for it, cx, cy, rot in b.items_world(r, picture=True):
                     objects.append(obj(it["asset"], cx, cy, rot, it["scale"], 100))
                 objects.extend(b.dressing_world(r, False))
         for pl in self.plots:                                  # plot fences: the sides and back, open to the street
@@ -1371,7 +1371,8 @@ class OrganicTown(T.Town):
                     w, h = it["w"], it["h"]
                     if it["rot"]: w, h = h, w                    # the picture's own size, before its quarter turn
                     f["rect"] = [round(cx - w / 2 - ox, 3), round(cy - h / 2 - oy, 3), round(w, 3), round(h, 3)]
-                    f["rotation"] = round(math.degrees(rot) % 360, 2)
+                    # the footprint's turn (the WoDX file marks the spot; which way the picture faces does not matter)
+                    f["rotation"] = round(math.degrees(b.theta + (math.pi / 2 if it["rot"] else 0.0)) % 360, 2)
                     features.append(f)
             if b.t["place"]:
                 rs = region_shape(b.outline)

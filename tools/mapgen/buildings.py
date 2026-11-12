@@ -316,11 +316,12 @@ class Angled:
 
     def room_poly(self, r): return [self.world(r.x, r.y), self.world(r.x + r.w, r.y), self.world(r.x + r.w, r.y + r.h), self.world(r.x, r.y + r.h)]
 
-    def items_world(self, r):
-        """(item, cx, cy, rotation) for each item in a room, on the map."""
+    def items_world(self, r, picture=False):
+        """(item, cx, cy, rotation) for each item in a room, on the map. picture=True: where its picture goes
+        (moved to its wall when the picture is shallower than its square, see ddcore.centre)."""
         for it in r.items:
-            cx, cy = self.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)
-            yield it, cx, cy, self.theta + (_m.pi / 2 if it["rot"] else 0.0)
+            cx, cy = self.world(*(C.centre(it) if picture else (it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)))
+            yield it, cx, cy, self.theta + it.get("angle", _m.pi / 2 if it["rot"] else 0.0)
 
     def dressing_world(self, r, under):
         """Dungeondraft objects for a room's dressing (see ddcore.dress), on the map."""
@@ -329,7 +330,7 @@ class Angled:
             lay = it.get("layer", 100)
             if (lay < 100) != under: continue
             cx, cy = self.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)
-            rot = it.get("spin", self.theta + (_m.pi / 2 if it["rot"] else 0.0))
+            rot = it.get("spin", self.theta + it.get("angle", _m.pi / 2 if it["rot"] else 0.0))
             out.append(C.obj(it["asset"], cx, cy, rot, it["scale"], {50: 100, 150: 300}.get(lay, lay), shadow=100 <= lay < 400))
         if not under:
             for x, y, rng in getattr(r, "lights", []): C.light(*self.world(x, y), rng)
