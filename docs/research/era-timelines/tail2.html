@@ -1,4 +1,4 @@
-const RUN="2026-11-12h1";let showBook=false;
+const RUN="2026-11-12h2";let showBook=false;
 const V={};let filter='all',coll=null,cur=null;const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const TIER={stated:'Stated in the book',implied:'Implied',rumour:'Might be true'};
@@ -10,19 +10,19 @@ function wire(c,id){const ta=c.querySelector('textarea');ta.value=(V[id]||{}).no
  ta.onchange=()=>{if(V[id]?.verdict||ta.value)save(id,V[id]?.verdict||'fix',ta.value);};}
 function render(){
  const nav=$('#eras');nav.textContent='';
- for(const e of ERAS){const done=e.items.filter(i=>V[i.id]?.verdict).length;const b=document.createElement('button');b.setAttribute('aria-pressed',e.id===cur);b.innerHTML=`${esc(e.name)}<small>${done}/${e.items.length}</small>`;b.onclick=()=>{location.hash=e.id;};nav.append(b);}
- const e=ERAS.find(x=>x.id===cur);let n={ok:0,fix:0,cut:0};e.items.forEach(i=>{const v=V[i.id]?.verdict;if(n[v]!==undefined)n[v]++;});
+ for(const e0 of ERAS){const e={...e0,items:e0.items.filter(i=>i.round===2)};const done=e.items.filter(i=>V[i.id]?.verdict).length;const b=document.createElement('button');b.setAttribute('aria-pressed',e.id===cur);b.innerHTML=`${esc(e.name)}<small>${done}/${e.items.length}</small>`;b.onclick=()=>{location.hash=e.id;};nav.append(b);}
+ const e0=ERAS.find(x=>x.id===cur);const e={...e0,items:e0.items.filter(i=>i.round===2),r1:e0.items.filter(i=>i.round===1)};let n={ok:0,fix:0,cut:0};e.items.forEach(i=>{const v=V[i.id]?.verdict;if(n[v]!==undefined)n[v]++;});
  $('#tally').innerHTML=`<span><b>${e.items.length}</b> events</span><span><b>${n.ok}</b> OK</span><span><b>${n.fix}</b> Fix</span><span><b>${n.cut}</b> Cut</span><span><b>${e.items.length-n.ok-n.fix-n.cut}</b> not reviewed</span>`;
  const host=$('#era');host.textContent='';
- const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.filter(i=>i.kind==='history').length} from history, ${e.items.filter(i=>i.kind==='house').length} WoDX's own; ${e.book.length} approved book events.</p>`;host.append(h);
+ const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.length} new events for Europe, the Middle East and Asia: ${e.items.filter(i=>i.kind==='history').length} from history, ${e.items.filter(i=>i.kind==='named').length} with the books' named characters, ${e.items.filter(i=>i.kind==='house').length} WoDX's own. Already approved: ${e.r1.length} Moravian events and ${e.book.length} book events.</p>`;host.append(h);
  const gid='era-'+e.id;const g=document.createElement('div');g.className='eranote';const k=controls(gid);g.innerHTML=`<p class="txt"><b>This era as a whole.</b> What is missing, what the valley should live through, anything to change before the house-only Encyclopaedia entries are written.</p>`+k.html;host.append(g);wire(g,gid);
  const years=new Map();for(const i of e.items){const st=V[i.id]?.verdict||'';if(filter==='todo'&&st)continue;if(['ok','fix','cut'].includes(filter)&&st!==filter)continue;if(!years.has(i.year))years.set(i.year,[]);years.get(i.year).push(i);}
- if(showBook){for(const b of e.book){if(!years.has(b.year))years.set(b.year,[]);years.get(b.year).push(b);}}
+ if(showBook){for(const b of [...e.book,...e.r1.map(x=>({...x,src:'r1'}))]){if(!years.has(b.year))years.set(b.year,[]);years.get(b.year).push(b);}}
  const sorted=[...years.entries()].sort((a,b)=>a[0]-b[0]);years.clear();for(const [k,v] of sorted)years.set(k,v);
  if(!years.size){const p=document.createElement('p');p.className='empty';p.textContent='Nothing to show with this filter.';host.append(p);}
  for(const [y,list] of years){const row=document.createElement('div');row.className='yearrow';row.innerHTML=`<div class="yr">${y}</div>`;const cards=document.createElement('div');cards.className='cards';
-  for(const i of list){if(i.src==='book'){const p=document.createElement('p');p.className='bookline';p.innerHTML=`<b>Book:</b> ${esc(i.title)}${i.line?' ('+esc(i.line)+')':''}. ${esc(i.text)}`;cards.append(p);continue;}const {st,html}=controls(i.id);const c=document.createElement('article');c.className='card '+st;
-   const tags=[i.kind==='history'?'<span class="tag chron">History</span>':'<span class="tag">House</span>',i.line?`<span class="tag">${esc(i.line)}</span>`:''].join('');
+  for(const i of list){if(i.src==='book'||i.src==='r1'){const p=document.createElement('p');p.className='bookline';p.innerHTML=`<b>${i.src==='r1'?'Approved, Moravia':'Book'}:</b> ${esc(i.title)}${i.line?' ('+esc(i.line)+')':''}. ${esc(i.text)}`;cards.append(p);continue;}const {st,html}=controls(i.id);const c=document.createElement('article');c.className='card '+st;
+   const tags=[i.kind==='history'?'<span class="tag chron">History</span>':i.kind==='named'?'<span class="tag chron">Named character</span>':'<span class="tag">House</span>',`<span class="tag">${esc(i.region)}</span>`,i.line?`<span class="tag">${esc(i.line)}</span>`:''].join('');
    c.innerHTML=`<div class="head"><h3>${esc(i.title)}</h3><span class="state">${LBL[st]||'Not reviewed'}</span></div><div class="tags">${tags}</div><p class="txt">${esc(i.text)}</p><p class="fits"><b>Fits:</b> ${esc(i.fits)}</p><p class="refs">${esc(i.ref)}</p>`+html;cards.append(c);wire(c,i.id);}
   row.append(cards);host.append(row);}
 }

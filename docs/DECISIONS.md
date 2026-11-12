@@ -1166,6 +1166,63 @@ Reverse: KINDRED_TASTE in recipe-rules.mjs.
 A batch's goal grows by half the base for each one past the first, up to the method's batch size, after Cataclysm's batch savings. A method with a wait (ale a week, wine three months, cheese a month, whiskey a year in the cask) makes the thing under a standing name ("ale (fermenting)"), which takes its own name when the clock passes the ready time (Storyteller ripen on world time). House rules on historical times.
 Reverse: batchGoal in recipe-rules.mjs; wait values in data/recipes.mjs.
 
+## B1100. Politics inside factions: one engine, a polity per line and era (2026-11-12)
+
+Ben asked for politics inside every faction built around one game line, with the Camarilla and Sabbat given their own (design: https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp; Ben approved the build and every review-desk recommendation on 2026-11-12). modules/wodx-npc/scripts/politics-rules.mjs holds the polities: offices, a rank for each member, blocs, law, favours and a gathering. NPC 0.25.0 ships the four Kindred polities (Dark Ages court, Camarilla from 1435, Sabbat from 1493, Anarchs from 1381); Garou, Changeling, Wraith, Mage, hunters, mummies, demons and Kuei-jin follow in later PRs. Setting "Politics inside factions", off by default.
+
+Reverse: turn the setting off; nothing else runs.
+
+## B1101. Which factions keep a polity (2026-11-12)
+
+The Storyteller picks one in the faction window. Left on the default, a Kindred faction of three or more members keeps a court of its age: the feudal court before 1435, the Camarilla court after. A sect picked before its founding year (the Sabbat before 1493) runs as the court of its age until then. House rule.
+
+Reverse: polityFor returns f.polity only.
+
+## B1102. The inner turn (2026-11-12)
+
+Each faction turn, up to three NPC members of a faction with a polity act, highest standing first, each picking one move by weight: Petition (Charisma + standing, difficulty 6, gains favour), Court a bloc (Manipulation + standing, difficulty 7, a clan leans their way), Accuse (Manipulation + standing against the target's Wits + standing; a charge for the next gathering), Call in a favour (an open Ledger boon owed to them by another member), Bid for office, Lie in wait (+1 difficulty to moves against them next turn). Player characters never act on their own. House rule.
+
+Reverse: set ACTORS_PER_TURN to 0.
+
+## B1103. Seats and how they are won (2026-11-12)
+
+Appointed seats are claimed and given at the gathering by the judge (the top seat). Primogen seats go one per clan present, to that clan's highest standing. Challenged seats (Prince, Archbishop, Bishop, Ductus) are won by an opposed Strength + Dexterity roll between NPCs (monomacy in the Sabbat, V20 pdf 517); the loser drops a dot of standing. Anarch seats go to whoever has more favour plus standing than the holder (V20 pdf 53). A Vinculum of 7 or more toward the holder makes a Sabbat challenge 1 harder. The top seat changing, and anything that touches a player character, waits in the approval queue. House rule. Staging a challenge as a fight through WoDX Combat's fight starter comes with the Garou challenges (PR 2).
+
+Reverse: drop the "challenge" and "backing" branches in innerTurn.
+
+## B1104. The gathering and standing (2026-11-12)
+
+Elysium and the esbat meet every second inner turn, the feudal court and the gangs every fourth. A gathering hears the charges (favour + standing + a die each, the judge's own charge leaning 3; guilty costs a dot of standing), fills empty seats, and grants a dot of standing to the member with 3 or more favour (favour spent). A Sabbat esbat shares the Vaulderie: a die per packmate the first time, then +1 when a die beats the rating, to 10 (V20 pdf 297). A boon marked broken in the Ledger costs the debtor a dot in every court they belong to (Guide to the Camarilla pdf 148-150); a major, blood or life boon marked kept earns one (house rule).
+
+Reverse: set every gathering's "every" very high, and PAID_GAINS to an empty set.
+
+## B1105. Standing kept beside the sheet (2026-11-12)
+
+A member's standing inside a polity is kept on the faction (0 to 5) and starts from the Status Background on the sheet. The sheet itself is never changed by politics; the Storyteller copies a change across when it should stick. House rule.
+
+Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
+
+## B1012. Nothing starts in a container (2026-11-12)
+Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
+
+Reverse: put the "(in ...)" branch back in stackLine and goodsLine, and the old names back from RENAMED.
+
+## B1013. Item words match whole words (2026-11-12)
+The word lists that sort goods into substances and abilities match whole words, with an optional plural. Crackers and cracklins are food, not a stimulant, and a speed loader, cracked screens, methanol and methylated spirits are no longer drugs.
+
+Reverse: the R() helper in wodx-library/scripts/use-rules.mjs.
+
+## B1014. How things work together (2026-11-12)
+After a study of how Cataclysm DDA links its items (Ben approved all seven recommendations), Library 0.11.0 adds scripts/link-rules.mjs:
+- Qualities read from a thing's name (cuts, hammers, pries, sews, thread, boils, cooks, lights a fire, writes, ink, holds a liquid, picks locks, digs, injects, pipe), for goods and Gear alike. The recipes work can ask for a quality instead of a named tool.
+- Needs: smoking needs a light, and loose tobacco, opium, hashish or crack also need a pipe; heroin and morphine need a syringe; a candle, lamp or torch needs a flame; writing, drawing and marking need something to write with; a quill needs ink. When nothing in Possessions meets a need, the Use window says so and the user may go ahead; a player's go-ahead is whispered to the Storyteller, who has the last word.
+- Liquids: a liquid coming into Possessions with nothing to carry it in (bottle, flask, skin, canteen, jug, cup) gets a private note that the Storyteller decides whether it can be carried. Nothing is blocked.
+- Full or empty: lamps, petrol lighters, disposable lighters, fountain pens, needle cases, flashlights and phones carry flags.wodx-library.empty. "It has run out" marks one empty; "Refill it" spends one matching good (lamp oil, petrol, ink, thread, a battery) and "Charge it" uses a power bank or charger without spending it. No amounts. An empty lighter does not count as a light.
+- The five kits are separate goods: a glass syringe and a bent spoon; a needle case and a hank of thread; a toothbrush and toothpaste; a quill pen, a penknife and ink; a sling and sling stones. Old ids stay on the first part.
+- Later: parts fitted to guns (scopes, silencers), only where a V20 book gives a rule, after a PC book check. Taking things apart goes to the recipes work.
+
+Reverse: drop the whatIsMissing check and supply buttons in use.mjs; the kits through RENAMED in goods.mjs.
+
 ## B953. Taking things apart for parts (2026-11-12)
 Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.
 It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.

@@ -333,4 +333,4 @@ export const APART_TOOLS = {
   technology: /screwdriver|multitool|soldering iron|pliers|tool ?kit/i
 };
 /** The qualities from Library's link-rules (qualitiesOf) that serve instead of a named tool. */
-export const APART_QUALITIES = {any: ["cuts", "pries", "hammers"], technology: ["screws", "solders"]};
+export const APART_QUALITIES = {any: ["cuts", "pries", "hammers"], technology: []};

@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.31.0: cook, brew or mix. Recipes for food, drink, medicine and drugs come from WoDX Library
+ * WoDX Storyteller 0.31.0: cook, brew or mix (0.33.0: taking things apart). Recipes for food, drink, medicine and drugs come from WoDX Library
  * (data/recipes.mjs, scripts/recipe-rules.mjs); this file is the window, the work and the waiting.
  *
  *   Actor flag wodx-storyteller.recipes   method keys the character has been taught (beyond dots and books).
@@ -306,7 +306,7 @@ export async function cookDialog(actor = null, {using = ""} = {}) {
   return r;
 }
 
-/* ---------------------------------------------------------------- taking things apart (0.32.0) */
+/* ---------------------------------------------------------------- taking things apart (0.33.0) */
 
 /** What an item gives when taken apart now: the Library rule for its good. */
 export async function salvageOfItem(item) {

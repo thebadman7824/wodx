@@ -15,6 +15,8 @@
  * The world's state is one object: {v, factions: [Faction], breaches: [Breach], lastTurn, turns, log}.
  */
 
+import {normPolitics, applyPolitics, POL_OPS, politicsBig, describePolitics, polityFor, innerTurn, POLITIES} from "./politics-rules.mjs";
+
 export const STATE_VERSION = 1;
 export const MAX_DOTS = 5;
 export const STANDING = {min: -3, max: 3};
@@ -147,7 +149,9 @@ export function normFaction(f = {}) {
     owners: uniq(f.owners), run: f.run === "orders" ? "orders" : "auto", orders: normOrders(f.orders),
     founded: yearOrNull(f.founded), ended: yearOrNull(f.ended), dormantBy: ["year", "event", "ended"].includes(f.dormantBy) ? f.dormantBy : null,
     risesOn: f.risesOn ? String(f.risesOn).slice(0, 60) : null, endsOn: f.endsOn ? String(f.endsOn).slice(0, 60) : null,
-    fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null
+    fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null,
+    // NPC 0.25.0: politics inside the faction (politics-rules.mjs)
+    polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics)
   };
 }
 const yearOrNull = v => (v === null || v === undefined || String(v).trim() === "" || !Number.isFinite(Number(v)) ? null : Math.round(Number(v)));
@@ -479,6 +483,7 @@ export const BIG_OPS = new Set(["place", "found", "member", "stage", "faction-ad
 export function sizeOf(changes, {pcActors = new Set(), state = null} = {}) {
   for ( const c of changes ) {
     if ( BIG_OPS.has(c.op) ) return "big";
+    if ( POL_OPS.has(c.op) ) { if ( politicsBig(c, pcActors) ) return "big"; continue; }
     if ( c.actor && pcActors.has(c.actor) ) return "big";
     if ( state && c.faction ) {
       const f = state.factions.find(x => x.id === c.faction);
@@ -645,6 +650,12 @@ export function applyChanges(state, changes, {ids = () => Math.random().toString
         b.stage = c.stage; applied.push(c);
         break;
       }
+      default: {
+        // NPC 0.25.0: a change inside a faction's politics
+        if ( !POL_OPS.has(c.op) ) break;
+        const inv = applyPolitics(fac(c.faction), c);
+        if ( inv ) { inverse.unshift(...inv); applied.push(c); }
+      }
     }
   }
   return {state: s, inverse, applied};
@@ -671,7 +682,7 @@ export function turnsDue(last, now, {days = TURN_DAYS, cap = TURN_CAP} = {}) {
  *   streamFor(key): a seeded random stream (WoDX Chronicle's gen.random)
  */
 export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], pcActors = new Set(), spheres = SPHERES.roads, turn = 0, now = 0, ids,
-  year = null, gone = new Set(), alive = null, splits = false, name = null} = {}) {
+  year = null, gone = new Set(), alive = null, splits = false, name = null, politics = null} = {}) {
   let work = clone(state);
   const results = [];
   const order = work.factions.filter(f => activeIn(f, year)).sort((a, b) => b.assets.status - a.assets.status || a.name.localeCompare(b.name));
@@ -704,6 +715,27 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
         q.changes = ch; q.size = "big"; results.push(q);
       }
     }
+  }
+  // NPC 0.25.0: politics inside each faction that keeps a polity. Small moves land together; each big one is its own card.
+  if ( politics ) for ( const f0 of order ) {
+    const f = work.factions.find(x => x.id === f0.id);
+    if ( !f || f.dormant ) continue;
+    const key = polityFor(f, year);
+    if ( !key ) continue;
+    const res = innerTurn(f, {rand: streamFor(`${seedKey}:${f.id}:politics`), polity: key, info: politics.info ?? {}, boons: politics.boons ?? [], turn, year});
+    if ( !res.groups.length ) continue;
+    const small = {changes: [], lines: []};
+    const bigs = [];
+    for ( const g of res.groups ) {
+      if ( g.changes.length && sizeOf(g.changes, {pcActors, state: work}) === "big" ) bigs.push(g);
+      else { small.changes.push(...g.changes); small.lines.push(...g.lines); }
+    }
+    const title = `${f.name} (${POLITIES[key].label.replace(/^an? /i, "")})`;
+    const mk = (g, size) => ({faction: f.id, move: "politics", target: null, sphere: null, place: null, pool: 0, difficulty: 0, dice: [], net: 0, botch: false, defence: null,
+      won: false, changes: g.changes, lines: g.lines, size, gathering: res.gathering, polity: key, text: `${title}: ${g.lines.join(" ")}`});
+    results.push(mk(small, "small"));
+    if ( small.changes.length ) work = applyChanges(work, small.changes, {ids, now}).state;
+    for ( const g of bigs ) results.push(mk(g, "big"));
   }
   return results;
 }
@@ -1014,6 +1046,6 @@ export function describeChange(c, names = {}) {
     case "breach-sev": return `A rumour ${c.delta < 0 ? "quietens" : "grows"} (${c.delta > 0 ? "+" : ""}${c.delta})`;
     case "heard": return c.places?.length ? `The rumour reaches ${c.places.map(pn).join(", ")}` : (c.known?.length ? "More people hear the rumour" : "The rumour lingers");
     case "stage": return `The rumour reaches ${c.stage === 1 ? `the Prince (${fn(c.faction)})` : `the hunters (${fn(c.faction)})`}`;
-    default: return c.op;
+    default: return POL_OPS.has(c.op) ? describePolitics(c, names, names.state ?? null) : c.op;
   }
 }
