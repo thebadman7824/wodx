@@ -31,6 +31,10 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
+| wodxTaskDone | storyteller | npc |
+| wodxChase | interactables | npc (followers join a chase with their master) |
+| wodxFed | actions | npc |
+| wodxGhoulFix | chronicle | npc |
 
 ## Extension points (sent, nobody listens yet)
 
@@ -38,7 +42,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
-| wodxChase | interactables | a chase starts, a turn is rolled, or it ends (caught, away, called off), with the chase state |
 | wodxSecretSeen | actions | a creature of another kind saw what someone is: {by, secret, seen: [{uuid, name, profile}], event} |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
