@@ -17,11 +17,14 @@ const items = actor => [...(actor?.items ?? [])];
 /** "vampire", "ghoul", "mortal", or null for lines WoDX Creation does not handle yet. */
 /**
  * A change of state (the Embrace, the First Change, the Awakening...) drops the old sheet's Creation flags, but the
- * lifepath goes with the character: it is the life before. src: the old actor's data; flags: the new actor's flags.
+ * lifepath goes with the character: it is the life before. So do the steps before the first night. src: the old actor's data; flags: the new actor's flags.
  */
 export function keepLifepath(flags, src) {
   const lp = src?.flags?.[MODULE_ID]?.lifepath;
   if ( lp ) flags[MODULE_ID] = {...(flags[MODULE_ID] ?? {}), lifepath: lp};
+  // Before the First Night's steps go with the character too (Creation 0.12.0)
+  const fn = src?.flags?.[MODULE_ID]?.firstNight;
+  if ( fn ) flags[MODULE_ID] = {...(flags[MODULE_ID] ?? {}), firstNight: fn};
   return flags;
 }
 

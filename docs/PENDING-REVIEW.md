@@ -660,3 +660,7 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
 | 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
 | 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
+| 2026-11-12 | Before the First Night: steps and sign-off (B1500, B1501) | Hub in Creation, ten steps in any order, players' ticks go through the approval queue (Chronicle Start Desk, Ben approved all 04:46Z) | first-night-rules.mjs STEPS |
+| 2026-11-12 | Trouble forecast sources and who sees what (B1503) | Everything the desk listed; secret clocks, envied blood and coming events Storyteller only; Generation 8 or less counts as envied blood (house reading) | forecast in first-night-rules.mjs |
+| 2026-11-12 | Trouble dial and story hook numbers (B1504) | Quiet 0.5, Normal 1, Often 1.5; hook reminder after 4 sessions | DIAL, HOOK_SESSIONS |
+| 2026-11-12 | Starting standing (B1506) | +1 for own side, +1 per 2 Status, -1 or -2 for old enemies | suggestStanding |
