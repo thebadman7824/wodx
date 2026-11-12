@@ -1,0 +1,67 @@
+<title>Era Timelines Desk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* layout: era tabs across the top; each era a run of years, every event a card with its source and a verdict */
+:root{--bg:#eceef1;--card:#fafbfc;--fg:#1c2026;--muted:#5b636e;--line:#cdd3da;--accent:#7a2331;--year:#2f4e6e;--ok:#2b6b3d;--okbg:#d9eedf;--fix:#9a5b00;--fixbg:#f6e7cc;--cut:#7a2331;--cutbg:#f3d9dd;
+ --display:'Alegreya SC',Georgia,serif;--body:'Source Sans 3',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161b;--card:#1a2028;--fg:#e3e7ec;--muted:#98a2ad;--line:#2d3742;--accent:#e58a98;--year:#8fb6dd;--ok:#8fd4a2;--okbg:#1c3a27;--fix:#f0b65a;--fixbg:#3d2d12;--cut:#ef8a97;--cutbg:#45202a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161b;--card:#1a2028;--fg:#e3e7ec;--muted:#98a2ad;--line:#2d3742;--accent:#e58a98;--year:#8fb6dd;--ok:#8fd4a2;--okbg:#1c3a27;--fix:#f0b65a;--fixbg:#3d2d12;--cut:#ef8a97;--cutbg:#45202a;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
+h1{font:700 2rem/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:700 1.35rem/1.2 var(--display);margin:0;color:var(--accent)}
+.sub{color:var(--muted);margin:6px 0 0;max-width:72ch}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+button{font:600 .92rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;padding:6px 11px;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+nav button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+nav button small{color:var(--muted);font-weight:400;margin-left:4px;font-variant-numeric:tabular-nums}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tally{display:flex;gap:14px;flex-wrap:wrap;font-variant-numeric:tabular-nums;color:var(--muted)}
+.tally b{color:var(--fg)}
+.filters{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.filters button[aria-pressed="true"]{border-color:var(--accent);font-weight:700}
+.notice{color:var(--muted);font-size:.92rem;margin:0}
+.eranote{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:8px;max-width:760px}
+.yearrow{display:grid;grid-template-columns:5.2rem 1fr;gap:12px;align-items:start}
+.yr{font:500 1rem var(--mono);color:var(--year);font-variant-numeric:tabular-nums;padding-top:12px;position:sticky;top:env(safe-area-inset-top,0px)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:8px;align-content:start;min-width:0}
+.card.ok{border-color:var(--ok)}.card.fix{border-color:var(--fix)}.card.cut{border-color:var(--cut);opacity:.8}
+.head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.head h3{font:600 1rem/1.3 var(--body);margin:0;min-width:0}
+.state{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex:none}
+.card.ok .state{color:var(--ok)}.card.fix .state{color:var(--fix)}.card.cut .state{color:var(--cut)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;font-size:.78rem}
+.tag{border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--muted)}
+.tag.chron{border-color:var(--year);color:var(--year)}
+.tag.soft{border-style:dashed}
+.txt{margin:0;font-size:.95rem}
+.refs{margin:0;font-size:.8rem;color:var(--muted)}
+.vb{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.vb .okb[aria-pressed="true"]{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.vb .fixb[aria-pressed="true"]{background:var(--fixbg);border-color:var(--fix);color:var(--fix)}
+.vb .cutb[aria-pressed="true"]{background:var(--cutbg);border-color:var(--cut);color:var(--cut)}
+textarea{width:100%;box-sizing:border-box;min-height:52px;font:inherit;font-size:.92rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px}
+.empty{color:var(--muted)}
+@media (max-width:560px){.yearrow{grid-template-columns:1fr}.yr{position:static;padding-top:0}}
+.bookline{font-size:13px;color:var(--muted,#888);margin:0;padding:6px 10px;border-left:3px solid var(--line);min-width:0}
+.fits{font-size:13px;margin:0}
+</style>
+<div class="wrap">
+ <header>
+  <h1>House Events Desk</h1>
+  <p class="sub">Stage two: events the books do not give, for Rothenstein, Moravia and the crown lands, from 1197 to 2009. Real history is marked History; WoDX's own events are marked House. Each card says how it sits beside the approved book events, which you can show with the Book events button. Mark each OK, Fix (say what to change) or Cut.</p>
+ </header>
+ <nav id="eras" aria-label="Eras"></nav>
+ <div class="bar">
+  <div class="tally" id="tally"></div>
+  <div class="filters" role="group" aria-label="Show">
+   <button data-f="all" aria-pressed="true">All</button><button data-f="todo" aria-pressed="false">Not reviewed</button><button data-f="fix" aria-pressed="false">Fix</button><button data-f="cut" aria-pressed="false">Cut</button><button data-f="ok" aria-pressed="false">OK</button><button id="bk" aria-pressed="false">Book events</button>
+  </div>
+ </div>
+ <p class="notice" id="notice">Connecting to saved notes…</p>
+ <section id="era" style="display:grid;gap:16px"></section>
+</div>
+<script>
