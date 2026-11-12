@@ -8,7 +8,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
-| wodxBreach | actions | npc, storyteller |
+| wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk), npc |

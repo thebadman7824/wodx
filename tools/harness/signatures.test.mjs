@@ -312,3 +312,37 @@ test("signature effects in the trait shape, with tag aliases", () => {
   assert.deepEqual(S.sigRollEffects(fx, {channel: "roll", tags: ["animalken"]}).map(e => e.name), ["Bratovitch"]);
   assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
 });
+
+/* Chronicle 0.32.0: Mage Traditions, Crafts, Conventions and Houses (B1165 to B1167) */
+
+test("a mage finds the group row by the system's sect keys, and a House stacks", () => {
+  for ( const [k, want] of [["wod.bio.mage.akashic", "akashic"], ["wod.bio.mage.speakers", "dreamspeakers"], ["wod.bio.mage.ether", "sonsofether"], ["wod.bio.mage.adepts", "va"],
+    ["wod.bio.mage.batin", "ahl"], ["wod.bio.mage.iterationx", "itx"], ["wod.bio.mage.engineers", "void"], ["wod.bio.mage.children", "childrenKnowledge"],
+    ["wod.bio.mage.kopa", "kopaLoei"], ["wod.bio.mage.templar", "templar"], ["wod.bio.mage.wulung", "wulung"], ["wod.bio.mage.marauder", "marauder"],
+    ["wod.bio.mage.nephandi", "nephandi"], ["wod.bio.mage.hollow", "hollow"], ["wod.bio.mage.orphans", "orphans"], ["wod.bio.mage.bataa", "bataa"]] )
+    assert.equal(S.mageRows({sect: [k]})[0]?.key, want, k);
+  assert.deepEqual(S.mageRows({sect: ["Order of Hermes"], house: ["Flambeau"]}).map(r => r.key), ["hermes", "flambeau"]);
+  assert.equal(S.mageRows({sect: ["Order of Hermes"], house: ["Tytalus"]})[1].key, "hOthers");
+  assert.ok(S.rowIn(S.MAGE, "Nephandi").also.includes("corruption"));
+  assert.equal(S.rowIn(S.MAGE, "Taftani").servant, "a djinn");
+  for ( const r of [...S.MAGE, ...S.HOUSES] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("old names, founding years and the Watchers' records follow the year", () => {
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "verbena"), 1300), "the Old Faith");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "verbena"), 1500), "Verbena");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "syndicate"), 1600), "the High Guild");
+  assert.equal(S.nameAt(S.rowIn(S.MAGE, "syndicate"), 1897), "Syndicate");
+  assert.ok(S.notYet(S.rowIn(S.MAGE, "ether"), 1900)); assert.ok(!S.notYet(S.rowIn(S.MAGE, "ether"), 1904));
+  assert.ok(S.goneBy(S.rowIn(S.MAGE, "craftmasons"), 1900));
+  assert.equal(S.recordsAt(1300), "parish books and tax rolls"); assert.equal(S.recordsAt(2010), "the net");
+});
+
+test("dawn meditation once a day, and Willpower kept in bounds", () => {
+  assert.ok(S.mayMeditate(null, 0));
+  assert.ok(!S.mayMeditate(7 * 3600, 20 * 3600), "same day");
+  assert.ok(S.mayMeditate(7 * 3600, S.DAY + 7 * 3600));
+  assert.equal(S.willpowerStep({temporary: 5, permanent: 5}, 1), 5);
+  assert.equal(S.willpowerStep({temporary: 3, permanent: 6}, 1), 4);
+  assert.equal(S.willpowerStep({temporary: 0, permanent: 6}, -1), 0);
+});
