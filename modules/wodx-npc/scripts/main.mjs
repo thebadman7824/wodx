@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs); passers-by and animals of the year who walk through a scene (0.25.0, passersby.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs); passers-by and animals of the year who walk through a scene (0.25.0, passersby.mjs); relationships, the lineage tree, secrets and why an NPC feels as they do (0.37.0, people.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -28,13 +28,14 @@ import {VOICES} from "../data/stock-talk-more.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
+import {build as buildPeople} from "./people.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.37.0";
+const VERSION = "0.38.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -221,7 +222,7 @@ export function readFight(tok, combat = game.combat) {
   const myHarm = harm.get(actor.uuid) ?? new Map();
   const lineage = actor.flags?.["wodx-creation"]?.lineage;
   const domitorId = lineage?.domitor?.id ?? null;
-  // NPC 0.37.0: a follower guards every character it serves (B1800), as a ghoul guards its domitor
+  // NPC 0.38.0: a follower guards every character it serves (B1800), as a ghoul guards its domitor
   const masters = OR.servesFrom(actor.flags);
   const plans = new Map();
   const E = enemies.map(t => {
@@ -276,7 +277,7 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
-  // NPC 0.37.0 (B1804): a follower's standing order (attack that one, hold back, guard, wait)
+  // NPC 0.38.0 (B1804): a follower's standing order (attack that one, hold back, guard, wait)
   options = OR.fightShift(options, actor.flags?.[MOD]?.order);
   // NPC 0.24.0: a Marauder's Quiet picks among what it could do
   if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
@@ -815,6 +816,9 @@ const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
+/* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
+const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
+people.hooks();
 
 Hooks.once("init", () => {
   registerSettings();
@@ -830,7 +834,8 @@ Hooks.once("init", () => {
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
-    politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor}};
+    politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
+    ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */

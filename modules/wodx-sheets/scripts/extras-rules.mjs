@@ -326,10 +326,3 @@ export function pushEntry(list, e) {
   if ( !e ) return list;
   return [e, ...list].slice(0, HISTORY_MAX);
 }
-
-/** Sheets 0.10.1: a ghoul's domitor id from its lineage. WoDX Creation stores {id, name}; an older sheet may hold the bare id. */
-export function domitorId(lineage) {
-  const d = lineage?.domitor;
-  const id = d && typeof d === "object" ? d.id : d;
-  return id ? String(id) : null;
-}

@@ -49,6 +49,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
+| wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
+| wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
 | wodxInteractablesHazard | interactables | a hazard went off |

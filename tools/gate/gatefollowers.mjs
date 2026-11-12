@@ -1,5 +1,5 @@
 /**
- * Followers, part 1 (WoDX NPC 0.37.0, Sheets 0.10.1), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * Followers, part 1 (WoDX NPC 0.38.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefollowers.mjs?${Date.now()}`)).run()
  * It makes a scratch scene and actors and deletes them; it does not move the clock. The scene in view is put back.
  *   1. the modules, versions and APIs
@@ -9,12 +9,11 @@
  *   5. Keep watch: a stranger walks into plain sight and the master is warned
  *   6. Guard: a stranger close by is challenged and the guard steps beside them
  *   7. fight orders: Attack the one I point at and Hold back move the choices (rules)
- *   8. the Ties tab lists the ghoul for its domitor
- *   9. clean up
+ *   8. clean up
  * Result: Data/wodx-gate/gatefollowers-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 9;
+const STEPS = 8;
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -36,8 +35,8 @@ export async function run() {
   const actors = [];
   const cards = () => game.messages.contents.filter(m => m.timestamp >= msgStart);
   try {
-    ok("1. modules", atLeast("wodx-npc", "0.37.0") && atLeast("wodx-sheets", "0.10.1") && !!NPC?.orders?.give && !!NPC?.orders?.sentries && !!O?.servesFrom && !!O?.fightShift,
-      {versions: ["wodx-npc", "wodx-sheets", "wodx-creation", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
+    ok("1. modules", atLeast("wodx-npc", "0.38.0") && !!NPC?.orders?.give && !!NPC?.orders?.sentries && !!O?.servesFrom && !!O?.fightShift,
+      {versions: ["wodx-npc", "wodx-creation", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
     await game.settings.set("wodx-npc", "followerOrders", true);
 
     // 2. One tie
@@ -102,9 +101,6 @@ export async function run() {
     const atk = O.fightShift(opts, {kind: "attack", target: "b"}), hold = O.fightShift(opts, {kind: "holdback"});
     ok("7. fight orders", atk[0].target === "b" && hold[0].action === "defend" && !!O.ORDERS.attack && !!O.ORDERS.holdback, {atk: atk[0], hold: hold[0]});
 
-    // 8. The Ties tab
-    const XR = await import(`/modules/wodx-sheets/scripts/extras-rules.mjs?${Date.now()}`);
-    ok("8. ties tab", XR.domitorId(game.actors.get(ghoul.id).flags["wodx-creation"].lineage) === pc.id, {});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
     await game.settings.set("wodx-npc", "followerOrders", ordersBefore);
@@ -113,7 +109,7 @@ export async function run() {
     if ( viewed && viewed.id !== scene?.id ) await viewed.view();
     if ( scene ) await scene.delete();
     for ( const a of actors ) await a.delete();
-    ok("9. clean up", !game.scenes.getName("WoDX gate: the courtyard") && !game.actors.getName("WoDX gate: the ghoul"), {});
-  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("9. clean up", false); }
+    ok("8. clean up", !game.scenes.getName("WoDX gate: the courtyard") && !game.actors.getName("WoDX gate: the ghoul"), {});
+  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("8. clean up", false); }
   return save(R);
 }

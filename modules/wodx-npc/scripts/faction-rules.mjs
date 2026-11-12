@@ -722,7 +722,7 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
     if ( !f || f.dormant ) continue;
     const key = polityFor(f, year);
     if ( !key ) continue;
-    const res = innerTurn(f, {rand: streamFor(`${seedKey}:${f.id}:politics`), polity: key, info: politics.info ?? {}, boons: politics.boons ?? [], turn, year});
+    const res = innerTurn(f, {rand: streamFor(`${seedKey}:${f.id}:politics`), polity: key, info: politics.info ?? {}, boons: politics.boons ?? [], hooks: politics.hooks ?? [], turn, year});
     if ( !res.groups.length ) continue;
     const small = {changes: [], lines: []};
     const bigs = [];

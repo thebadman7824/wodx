@@ -74,6 +74,17 @@ The Clock's buttons:
 - **X-card**, **Lines and veils**, **Session Zero**, **Chronicle Rules**, **Approval queue** and **House rules**.
 - Players see **Ask the Storyteller**, which sends a request to your queue.
 
+**How game time passes.** There is one clock for the whole world, and every scene and realm reads it. It never runs by itself: it moves when you press a button, or when something you approve moves it. About thirty parts of WoDX follow it (effects, healing, sunlight, routines, faction turns, long tasks, letters, money, dated events, era changes).
+
+- **Long rolls.** Tick Move the clock on an extended roll, a rite, a meditation, a prayer, downtime or mending. Your roll moves the time at once; a player's roll sends it to your queue as "Time for a long action".
+- **Long tasks** (days or weeks of work) never move the clock. They roll by themselves as it passes.
+- **A character's own time.** Travel and solo play move only that character's time. So does anything done apart from the main group (the scene with more than half of tonight's characters): a long roll, an interaction, a fight or a journey. With the party split two and two, both halves keep their own time. The Clock's **Time** row shows who is ahead or behind; **Convene** brings them together, moving the clock up to whoever is furthest ahead. Dawn pulls everyone who is behind up to the clock. Turn this off with the world setting "Work done apart goes on the character's own time".
+- **Fights.** When you end a fight, the time moves by its turns times 3 seconds (world setting "Seconds a turn takes"; 0 turns it off). The after-action card says how long it lasted.
+- **Otherworld journeys.** The journey card says how much time passes outside (a Moon Bridge takes a thousandth, a trod can run fast or slow or lose days). Press **Let the journey's time pass** on your copy when they arrive. The Far Dreaming and Deep Umbra realms are your call for now.
+- **The sun on this scene.** For a scene far from home, set its latitude and its hours from home from the Clock. Sun, sky and the hour shown for that scene follow it; the clock itself keeps home time.
+- **The clock that runs with the table.** Off by default. Set "Clock runs with the table" to a number of game minutes and it moves that much every so many real minutes, the same on every scene. It waits while the game is paused, during a fight, while the world is held and when no player is connected.
+- NPCs keep no time of their own. They follow their routines on the world clock; on scenes nobody is viewing they are placed when the scene opens.
+
 **Eras.** The date picks an era profile: Dark Ages (1197 to 1346), Plague and Long Night (1347 to 1449), Renaissance (1450 to 1600), Victorian (1837 to 1901), Wild West (1860 to 1899, the Americas only), Great War (1914 to 1918), Modern (1990 to 2003), and two optional branches: Time of Judgment (2004) and Future Darkness (2010 onward). The profile sets which ability list each line gets when a character is made, which Gauntlet chart Otherworlds uses, which menus WoDX Actions shows (Dark Ages mages and fae have their own), which sheet WoDX Sheets draws, and the look of WoDX windows. When the clock crosses into another era, a proposal goes to the queue. You can lock an era from the Clock so it never changes by itself.
 
 **The approval queue.** Anything WoDX wants to change that you should see first waits here: era changes, a player's experience spend, a player's request, generated people, faction results, rumours rising, the year and a day in the Umbra, one-off data fixes. Each entry has **Approve** and **Reject**; a rejection can carry a note back to the player who asked. Decided entries move to a history list below. Both lists have a search box. The same proposal is never queued twice.
@@ -261,6 +272,17 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 - Deal with that witness rolls Manipulation + Subterfuge to talk a breach witness round in the Masquerade records.
 - When the master gives chase, a follower on Follow joins in. Cut them off joins the chase after the one pointed at.
 - Loyalty moves one step at a time on the attitude track: up when a ghoul drinks from its domitor, down for a month without vitae, for being fed on, and for hard orders. Drift alone stops at Distrusted, and then you are told it may refuse, leave or turn.
+### People: relationships, lineage, secrets and why an NPC feels as they do
+
+**Relationships.** Each sheet's Relationships tab (the old Ties tab) lists every tie WoDX keeps, grouped: sire and childer, blood bonds, domitor and ghouls, family, heirs and Kinfolk, mentors and students, Allies and Retainers, friends, lovers and rivals, and open debts and boons from the Ledger. Ties come from the lineage, the Sire box, Backgrounds made real, the Ledger and the hand-made list, and each shows at both ends. Drag a character, scene or journal entry in to add one by hand, pick its role and write a note. The eye button hides a hand-made tie from players; a tie a secret hides stays hidden until it is found out.
+
+**Family and lineage.** **Family and lineage** on the tab (or **Family tree** in the People window) draws one person's lines: sires back to the oldest known, childer, ghouls, family and heirs, mentors and students, patrons and retainers. Click a name to open the sheet, or the small tree button beside it to draw from there. Players see only what their characters know: a hidden sire shows as Unknown, a hidden childe is left out.
+
+**Secrets and hooks.** **Secrets** on the tab (Storyteller only) holds what a character hides, its kind, how grave it is, and the tie it hides. **Save and dig** lets someone dig: Investigation, Auspex Telepathy, Spies or Contacts, or Aura Perception for marks on the soul; or tell them which one. A clue or door can hand one over with `secret <words>` in its Then list. Whoever finds a secret holds a hook: a major boon in the Ledger, owed by the holder. With faction politics on, an NPC holding a hook accuses the holder at court, with proof; at the gathering the secret is laid bare and the hook is spent. Which secrets a court cares about follows the line and the age (heresy in the Church's centuries, infernalism always, a Sabbat tie for the Camarilla from 1493, a Technocracy defection from 1897).
+
+**Why an NPC feels as they do.** Under each talk card you get a fold, seen only by you, with the reasons behind the NPC's attitude: the first meeting, each change since, then boons kept or broken, debts, a fight, ties, secrets, the same clan or tribe. An NPC's Relationships tab lists the same for every character they have met.
+
+**Talk lines that need a trait.** A talk line's "Only when" can ask for any rated trait: `[the abbot] Etiquette 3 => ...`, `[the vault] Dominate 2 => ...`, or a clan, Tradition or kith. When the character qualifies, that line is tried before the plain ones and the card shows what unlocked it, such as [Etiquette 3].
 
 ## WoDX Interactables: doors, locks, windows, containers, traps, clues, lights, hiding places, hazards, holy places, watch points, vehicles and climbs
 

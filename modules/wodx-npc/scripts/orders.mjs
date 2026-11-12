@@ -2,7 +2,7 @@
  * WoDX NPC 0.8.0: followers who take orders. The rules are in order-rules.mjs.
  *
  *   flags.wodx-npc.serves  [actor ids]  the player characters this NPC serves (set by the Storyteller)
- *   NPC 0.37.0: an NPC also serves its domitor (a ghoul), the character whose background made it (Make them real)
+ *   NPC 0.38.0: an NPC also serves its domitor (a ghoul), the character whose background made it (Make them real)
  *   and its patron (a Creation ally); order-rules servesFrom reads all four. Keep watch and Guard now notice
  *   whoever comes and warn the master or step into the way; WoDX spots a hard order itself and suggests the roll.
  *   flags.wodx-npc.order   {kind, by, leader, target, at, hard, note, stage}
@@ -92,7 +92,7 @@ export function build(ctx) {
     if ( req.kind === "follow" && !leader ) return {ok: false, why: "Pick the character it should follow."};
     const order = O.normOrder({kind: req.kind, by: user.id, leader, target: req.target ?? null, at: game.time?.worldTime ?? 0, hard: !!req.hard, note: req.note,
       errand: req.errand, task: req.task, cost: req.cost});
-    // NPC 0.37.0: errands and help need a master, a kind of errand, a task of the master's, and WoDX Storyteller's long tasks
+    // NPC 0.38.0: errands and help need a master, a kind of errand, a task of the master's, and WoDX Storyteller's long tasks
     if ( (order.kind === "errand" || order.kind === "help") && !leader ) return {ok: false, why: "Pick the character it works for."};
     if ( order.kind === "errand" && !order.errand ) return {ok: false, why: "Pick an errand."};
     if ( (order.kind === "errand" || order.kind === "help") && !ST()?.tasks?.save ) return {ok: false, why: "Errands and help need WoDX Storyteller's long tasks."};
@@ -130,7 +130,7 @@ export function build(ctx) {
     if ( order.kind === "cleanup" ) await doCleanup(npc, order, scene);
   }
 
-  /* ---------------- Errands, help, clean-up (NPC 0.37.0) ---------------- */
+  /* ---------------- Errands, help, clean-up (NPC 0.38.0) ---------------- */
 
   /** The follower leaves the scene and works the errand as a long task on its own sheet (B1810). */
   async function startErrand(npc, order, scene) {
@@ -197,7 +197,7 @@ export function build(ctx) {
 
   async function clear(npc, {by = game.user, quiet = false} = {}) {
     if ( !flag(npc, "order") ) return {ok: true};
-    // NPC 0.37.0: a follower called back from an errand returns now; one that was helping stops
+    // NPC 0.38.0: a follower called back from an errand returns now; one that was helping stops
     const was = orderOf(npc);
     if ( was?.kind === "errand" && !quiet ) await endErrand(npc, {drop: true});
     if ( was?.kind === "help" ) await setHelper(was.leader, was.task, npc, false);
@@ -270,7 +270,7 @@ export function build(ctx) {
     await message.update({content: message.content.replace(/<button type="button" data-action="wnpc-order-cancel"[^>]*>[^<]*<\/button>/, "<p><i>Cancelled.</i></p>")});
   }
 
-  /* ---------------- Chases and breaches (NPC 0.37.0) ---------------- */
+  /* ---------------- Chases and breaches (NPC 0.38.0) ---------------- */
 
   /** A chase starts: followers on Follow behind a pursuing master, and those told to cut off the quarry, join (B1814). */
   async function onChase({kind, scene: sceneId, state} = {}) {
@@ -298,7 +298,7 @@ export function build(ctx) {
     return note(`<p><b>${esc(a.name)}</b> serves ${esc(masters.map(m => m.name).join(" and "))}. Word of this breach may be laid at ${masters.length === 1 ? "that master's" : "their"} door: weigh it against their standing.</p>`, gmIds(), "Masquerade");
   }
 
-  /* ---------------- Sentries (NPC 0.37.0) ---------------- */
+  /* ---------------- Sentries (NPC 0.38.0) ---------------- */
 
   const lastLook = new Map();
   const LOOK_EVERY = 30 * 1000;
@@ -403,7 +403,7 @@ export function build(ctx) {
       if ( chron()?.approvals?.registerHandler ) registerHandler();
     });
     Hooks.on("wodxChronicleReady", () => registerHandler());
-    // NPC 0.37.0: errands come back, followers join chases, loyalty drifts, breaches are traced to masters
+    // NPC 0.38.0: errands come back, followers join chases, loyalty drifts, breaches are traced to masters
     Hooks.on("wodxTaskDone", e => onTaskDone(e).catch(err => console.error(`${MOD} | errand`, err)));
     Hooks.on("wodxChase", e => onChase(e).catch(err => console.error(`${MOD} | chase`, err)));
     Hooks.on("wodxFed", e => { if ( !isActiveGM() ) return; const v = worldActor(fromUuidSync?.(e?.vessel?.uuid)), m = worldActor(fromUuidSync?.(e?.by?.uuid));

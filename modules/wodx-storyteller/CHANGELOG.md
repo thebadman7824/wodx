@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.39.0 (followers helping on a long task add their own dots in its Ability; a long task that ends tells WoDX NPC, for errands)
+- 0.41.0 (followers helping on a long task add their own dots in its Ability; a long task that ends tells WoDX NPC, for errands)
+- 0.40.0 (Game time: api.time. Work done apart from the main group goes on the character's own time (world setting Work done apart goes on the character's own time, on); a player's long roll sends its time to the approval queue; the Time row on the Clock)
 - 0.38.1 (the prelude journal shows the player's written prelude and what the prelude runner logged)
 - 0.38.0 (missed connections, 12 November 2026: market news: dated events (plague, war, crash, collapse) and a week of player trade suggest price, supply and crowd changes on a card, applied and undone by the Storyteller; Dreaming crossings go in the crossing log)
 - 0.37.0 (the setup wizard opens Before the First Night when it is done; the night's draw follows each character's trouble dial; ending a session calls wodxSessionEnded; ledger.remove in the API)

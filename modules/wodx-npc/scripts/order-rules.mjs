@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.8.0: followers who take orders. No Foundry calls here. NPC 0.37.0 adds one tie read from four places,
+ * WoDX NPC 0.8.0: followers who take orders. No Foundry calls here. NPC 0.38.0 adds one tie read from four places,
  * hard orders WoDX spots itself, a suggested loyalty roll, and sentries (the end of this file).
  *
  * A follower is an NPC with no player owner who serves one or more player characters (flags.wodx-npc.serves, set by
@@ -14,10 +14,10 @@ export const ORDERS = {
   guard: {label: "Guard this place", hint: "Stays here and stands in the way of anyone who comes."},
   watch: {label: "Keep watch", hint: "Stays here and raises the alarm when it notices someone."},
   fetch: {label: "Go to the one I point at", hint: "Walks to the targeted token, then comes back and follows. What it brings or says is the Storyteller's."},
-  // NPC 0.37.0 (B1804): orders for a fight
+  // NPC 0.38.0 (B1804): orders for a fight
   attack: {label: "Attack the one I point at", hint: "In a fight it goes for the targeted token first, unless fear or its wounds drive it off."},
   holdback: {label: "Hold back", hint: "In a fight it keeps out of the blows: it dodges and blocks, and strikes no one."},
-  // NPC 0.37.0 (B1810-B1815): orders away from the map and beside it
+  // NPC 0.38.0 (B1810-B1815): orders away from the map and beside it
   errand: {label: "Go and do this (an errand)", hint: "It leaves the scene and works at it over the clock as a long task with its own dice; the result comes back on a card."},
   help: {label: "Help me with a long task", hint: "It adds its own dots in the task's Ability to the dice of one of your long tasks until told otherwise."},
   cleanup: {label: "Deal with that witness", hint: "It talks round the targeted witness of a breach: Manipulation + Subterfuge, difficulty 6."},
@@ -72,7 +72,7 @@ export function describeOrder(o, names = {}) {
     fetch: n.stage === "back" ? `Coming back to ${who}` : `Going to ${names[n.target] ?? "the one pointed at"}`}[n.kind] + (n.hard ? " (a hard order)" : "");
 }
 
-/* ---------------- NPC 0.37.0: one tie, hard orders, sentries (B1800-B1804) ---------------- */
+/* ---------------- NPC 0.38.0: one tie, hard orders, sentries (B1800-B1804) ---------------- */
 
 const idOf = v => (v && typeof v === "object" ? v.id : v) ? String(v && typeof v === "object" ? v.id : v) : null;
 
@@ -107,7 +107,7 @@ export function hardReasons({kind = "", inFight = false, target = null} = {}) {
 }
 
 /**
- * NPC 0.37.0 (B1804): the fight AI's options with the follower's standing order laid over them. options: from
+ * NPC 0.38.0 (B1804): the fight AI's options with the follower's standing order laid over them. options: from
  * npc-rules scoreOptions (best first). Attack the one I point at: +5 on striking that token. Hold back: no blows,
  * a full defence instead. Guard and Wait: less ready to run. Fear, frenzy and Rötschreck, which the caller adds
  * after, still win. Returns a new list, best first.
@@ -154,7 +154,7 @@ export function sentryAct(kind, {noticed = false, yards = null} = {}) {
   return null;
 }
 
-/* ---------------- NPC 0.37.0: errands, clean-up, chases, loyalty (B1810-B1816) ---------------- */
+/* ---------------- NPC 0.38.0: errands, clean-up, chases, loyalty (B1810-B1816) ---------------- */
 
 /**
  * Errands a follower runs for its master as a long task on its own sheet (B1810, house rule: the pools follow the

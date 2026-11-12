@@ -75,7 +75,7 @@ async function save(scene, st) {
   await scene.setFlag(MOD, FLAG, st);
 }
 
-/** 0.29.0: a token joins the running chase on the scene as a pursuer (WoDX NPC: a follower with its master). */
+/** 0.31.0: a token joins the running chase on the scene as a pursuer (WoDX NPC: a follower with its master). */
 export async function join(scene, tokenId, {why = ""} = {}) {
   const st = stateOf(scene), d = scene?.tokens?.get(tokenId);
   if ( !game.user.isGM || !st || !d ) return null;

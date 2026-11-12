@@ -55,11 +55,11 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(m, /orders\.registerSettings\(\)/);
   assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
-  assert.equal(j.version, "0.37.0");
+  assert.equal(j.version, "0.38.0");
   assert.equal(j.socket, true);
 });
 
-/* NPC 0.37.0: one tie, hard orders, sentries */
+/* NPC 0.38.0: one tie, hard orders, sentries */
 
 test("orders: an NPC serves whoever any of the four ties names, once each", () => {
   assert.deepEqual(O.servesFrom({}), []);
@@ -115,14 +115,6 @@ test("orders: the orders tool reads every tie, and sentries are wired to token m
   assert.match(src("modules/wodx-npc/scripts/routines.mjs"), /bookNow, noticeBy\}/);
 });
 
-test("sheets: the Ties tab finds ghouls whose domitor is stored as {id, name}", async () => {
-  const XR = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs")));
-  assert.equal(XR.domitorId({domitor: {id: "v1", name: "Ilse"}}), "v1");
-  assert.equal(XR.domitorId({domitor: "v1"}), "v1");
-  assert.equal(XR.domitorId({}), null);
-  assert.equal(XR.domitorId(null), null);
-  assert.match(src("modules/wodx-sheets/scripts/extras.mjs"), /XR\.domitorId\(x\.flags/);
-});
 
 test("orders: in a fight a follower's order moves its choices", () => {
   const opts = [{action: "attack", target: "t1", score: 6, why: "the nearest foe"}, {action: "attack", target: "t2", score: 4, why: "x"},
@@ -147,7 +139,7 @@ test("orders: the fight AI reads the order and guards every master", () => {
   assert.match(m, /masters\.includes\(t\.actor\?\.id\)/);
 });
 
-/* NPC 0.37.0: errands, help, clean-up, chases, loyalty */
+/* NPC 0.38.0: errands, help, clean-up, chases, loyalty */
 
 test("orders: errands become long tasks on the follower's own dice", () => {
   const t = O.errandTask("buy", {sheet: {commerce: {value: 2}}, master: "pc1", masterName: "Ilse", note: "a lantern", cost: 12});

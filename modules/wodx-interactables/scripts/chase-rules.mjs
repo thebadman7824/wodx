@@ -180,7 +180,7 @@ export function newChase({quarry, pursuers = [], ground = "streets", night = fal
 }
 
 /**
- * 0.29.0 (B1814): one more pursuer joins a running chase (a follower with its master). It starts level with the
+ * 0.31.0 (B1814): one more pursuer joins a running chase (a follower with its master). It starts level with the
  * slowest pursuer still in it, so it neither gains nor loses by coming late. Returns a new state; a racer already
  * in the chase, or a chase that has ended, is left as it is.
  */
