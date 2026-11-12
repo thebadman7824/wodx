@@ -153,7 +153,7 @@ export function powersFor(t = {}) {
  * under the water, wading, climbing, in the saddle, aboard a vehicle, in the earth). mods: difficulty changes by
  * sense (the sight numbers are WoDX Combat's own, so a look and a Perception check agree); cannot: senses that give
  * nothing there, with the line said in their place; sightFar: how far the eye reaches, times the usual; sightCap:
- * the most yards it reaches at all; lines: one authored line a sense, said first. House rules (B2434); the books
+ * the most yards it reaches at all; lines: one authored line a sense, said first. House rules (B2444); the books
  * give no figures for any of it.
  */
 export const STANCE_SENSES = {

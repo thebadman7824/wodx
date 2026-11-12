@@ -11,7 +11,7 @@
  *
  * 3.20.0: riding and driving in a fight (the mount's own speed for the one at the reins, the saddle and the vehicle
  * as stances, the mounted charge of V20 Dark Ages p. 398 read for a map), and a load that slows a swimmer (worn
- * armor and what is carried; house rules B2430-B2434).
+ * armor and what is carried; house rules B2440-B2444).
  */
 
 /** The ways a token moves. Foundry's own movement actions where they exist; "phase" is WoDX's. */
@@ -246,7 +246,7 @@ export function waterTurn(state = {}, {under = false, breathes: br = true, water
 }
 
 /**
- * What a swimmer carries (3.20.0, house rule B2433). The books give Strength a carrying limit and nothing on swimming
+ * What a swimmer carries (3.20.0, house rule B2443). The books give Strength a carrying limit and nothing on swimming
  * under a load, so WoDX counts steps: one for each point of Dexterity penalty on worn armor, plus the burden the player
  * or the Storyteller sets on the character (BURDENS). Strength and Potence together of 4 or more shrug off one step,
  * 7 or more two. Each step takes a quarter off the swimming speed and adds 1 to the difficulty of rolls made in the
@@ -278,7 +278,7 @@ export function swimLoad({armorPenalty = 0, burden = 0, strength = 2, potence = 
 }
 
 /* ------------------------------------------------------------------ */
-/*  Riding and driving in a fight (3.20.0, house rules B2430-B2432)    */
+/*  Riding and driving in a fight (3.20.0, house rules B2440-B2442)    */
 /* ------------------------------------------------------------------ */
 
 /**
@@ -302,7 +302,7 @@ export function rideMove(ride, {skill = 0} = {}) {
 /**
  * The mounted charge. V20 Dark Ages p. 398 gives a rider who catches someone at speed +1 damage die for each turn spent
  * building speed, five at most. On a map there are no turns of building speed to count, so WoDX reads it by ground
- * covered (house rule B2432): a rider on hooves, at the reins, gets +1 die on a hand-to-hand blow for each full
+ * covered (house rule B2442): a rider on hooves, at the reins, gets +1 die on a hand-to-hand blow for each full
  * 10 yards ridden this turn before it, five at most. A passenger, a cart and a motor car give none.
  */
 export const CHARGE_PER = 10;
@@ -388,7 +388,7 @@ export function attackStance(attacker = "standing", target = "standing", {close 
   const vsFly = target === "flying" && targetFly?.vsDiff ? targetFly.vsDiff : null;
   if ( !(sameStance && ["flying", "swimming", "under", "aboard"].includes(target)) ) add(vsFly ?? T.vs[key] ?? 0, `Target ${T.label.toLowerCase()}${vsFly ? ` (${targetFly.ref})` : ""}`);
   if ( attacker === "flying" && attackerFly?.ownDiff ) add(attackerFly.ownDiff, `Flying maneuvers (${attackerFly.ref})`);
-  // From the saddle down at someone on foot, and up at a rider from the ground (house rule B2431); never on top of
+  // From the saddle down at someone on foot, and up at a rider from the ground (house rule B2441); never on top of
   // higher ground, which is the same advantage
   const afoot = st => !["mounted", "aboard", "flying", "melded", "phasing"].includes(st);
   const saddle = close && attacker === "mounted" && afoot(target);
