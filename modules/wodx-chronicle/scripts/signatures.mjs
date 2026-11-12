@@ -4,6 +4,7 @@ import {currentYear} from "./eras.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
+import * as POD from "./pod.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -970,7 +971,7 @@ export async function open(actorOrId) {
   if ( !a ) return;
   const has = f => rows.some(r => rowHas(r, f));
   const sig = a.flags?.[MODULE_ID]?.[FLAG] ?? {}, t = now();
-  let body = rows.length ? rows.map(r => `<p><b>${rows.length > 1 ? `${esc(r.label)}: ` : ""}${esc(r.title)}.</b> ${esc(r.text)}</p>${S.goneBy(r, yr) ? `<p class="vta-note">By ${yr} the ${esc(r.label)} are gone: met only in stories, dreams and relics.</p>` : ""}${S.notYet(r, yr) ? `<p class="vta-note">In ${yr} the ${esc(r.label)} are not founded yet.</p>` : ""}${S.nameAt(r, yr) !== r.label ? `<p class="vta-note">In ${yr} they are ${esc(S.nameAt(r, yr))}.</p>` : ""}<p class="vta-note">${esc(r.page)}</p>`).join("") : `<p>No clan feature for this character.</p>`;
+  let body = rows.length ? rows.map(r => `<p><b>${rows.length > 1 ? `${esc(r.label)}: ` : ""}${esc(r.title)}.</b> ${esc(r.text)}</p>${S.goneBy(r, yr) ? `<p class="vta-note">By ${yr} the ${esc(r.label)} are gone: met only in stories, dreams and relics.</p>` : ""}${S.notYet(r, yr) ? `<p class="vta-note">In ${yr} the ${esc(r.label)} are not founded yet.</p>` : ""}${S.nameAt(r, yr) !== r.label ? `<p class="vta-note">In ${yr} they are ${esc(S.nameAt(r, yr))}.</p>` : ""}<p class="vta-note">${esc(r.page)}</p>`).join("") : (on() ? `<p>No clan feature for this character.</p>` : "");
   if ( sig.muses?.length ) body += `<h4>Muses</h4><ul>${sig.muses.map(m => `<li>${esc(m.name)} (${esc(S.MUSE_KINDS[m.kind])}): Obsession ${m.obsession}</li>`).join("")}</ul>`;
   if ( sig.cause ) body += `<h4>Cause</h4><p>${esc(sig.cause.label)}${sig.cause.custom && !sig.cause.approved ? " (waiting for the Storyteller)" : ""}. Rant ${sig.cause.rant} of ${S.RANT_POINTS}.</p>`;
   const marks = S.activeMarks(sig.marks ?? [], t);
@@ -1002,6 +1003,9 @@ export async function open(actorOrId) {
     if ( victims.length ) body += `<h4>Corruption ledger</h4><ul>${victims.map(v => { const r = v.flags[MODULE_ID][CFLAG][a.id]; return `<li>${esc(v.name)}: ${r.step} (${esc(r.vice || "no vice set")})</li>`; }).join("")}</ul>`;
   }
   const buttons = [{action: "close", label: "Close", default: true}];
+  const pod = POD.section(a);
+  body += pod.body;
+  buttons.unshift(...pod.buttons);
   if ( has("glimpse") && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
   if ( has("cause") && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
   if ( has("soil") && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
@@ -1048,6 +1052,7 @@ export async function open(actorOrId) {
   if ( has("deformity") && on() && (!sig.deformity || game.user.isGM) ) S.DEFORMITIES.forEach(d => buttons.unshift({action: `dfm:${d.key}`, label: `Deformity: ${d.label}`}));
   if ( has("camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${isWraith(a) ? "Guild and legion" : rows.some(r => FAE_LIKE.has(r)) ? "kith, seeming and court" : rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
+  if ( String(pick).startsWith("pod:") ) return POD.handle(a, pick, ask);
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "splat" ) { const t = S.SMALL_LINES[small].table; const f = await ask("The group", [{name: "g", label: t.map(r => r.label).join(", "), value: rows[0]?.label ?? ""}]); return f ? setSplat(a, f.g) : null; }
   if ( pick === "guild" || pick === "wraith" ) { const w = wraithOf(a); const f = await ask("Guild, legion and faction", [
@@ -1123,7 +1128,7 @@ export function registerSignatureHooks() {
     if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.sigUndo ) { b.remove(); return; }
     b.addEventListener("click", () => runUndo(message));
   });
-  const can = a => !!a && on() && (!!rowOf(a) || (isWraith(a) && lineOn("sigWraith")) || (!!smallLineOf(a) && lineOn(S.SMALL_LINES[smallLineOf(a)].setting))) && (game.user.isGM || a.isOwner);
+  const can = a => !!a && (POD.wants(a) || on()) && (POD.wants(a) || !!rowOf(a) || (isWraith(a) && lineOn("sigWraith")) || (!!smallLineOf(a) && lineOn(S.SMALL_LINES[smallLineOf(a)].setting))) && (game.user.isGM || a.isOwner);
   Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
     const a = app.document;
     if ( !can(a) || controls.some(c => c.action === "wctSig") ) return;

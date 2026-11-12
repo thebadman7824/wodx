@@ -29,6 +29,7 @@ import * as referee from "./referee.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
+import * as pod from "./pod.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -80,6 +81,8 @@ Hooks.once("init", () => {
   // Splat Features Desk: each clan's own feature (Vampire first)
   signatures.registerSignatureSettings();
   signatures.registerSignatureHooks();
+  pod.registerPodSettings();
+  pod.registerPodHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -169,6 +172,7 @@ Hooks.once("ready", async () => {
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
+    pod: pod.podApi,
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
