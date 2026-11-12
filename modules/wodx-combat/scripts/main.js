@@ -21,7 +21,6 @@
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as F from "./flavor.js";
-import * as L from "./legacy.js";
 import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
 import * as CR from "./conductor-rules.js";
@@ -32,7 +31,8 @@ import * as BD from "./body.js";
 import * as BodyRules from "./body-rules.js";
 import * as AA from "./aftermath.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-const esc = L.esc;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
 const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;
@@ -43,9 +43,8 @@ const GEN = () => game.release?.generation ?? 11;
 /* ------------------------------------------------------------------ */
 
 function registerSettings() {
-    // A new setting starts from the choice made in vtda20-combat, if there was one (nothing is written)
     const s = (key, name, hint, type, def, extra = {}) =>
-        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: L.oldSetting("vtda20-combat", key, def), ...extra });
+        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def, ...extra });
     s("autoApply", "Apply damage automatically",
         "Write damage to the target's health track as soon as the attack resolves. Off: the chat card shows an Apply button.",
         Boolean, true);
@@ -512,7 +511,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     // WoDX conditions on both sides (blinded, held, immobilized, staked, knocked down...)
     const cm = conditionMods(attacker, target);
     // The Blinded condition already puts +2 difficulty in "extra difficulty"; the box would count it twice
-    const blindCounted = !!L.chronicle()?.conditions?.hasCondition?.(attacker, "blinded");
+    const blindCounted = !!chronicle()?.conditions?.hasCondition?.(attacker, "blinded");
     const condNotes = cm.notes.length ? `<div class="vtc-note wodx-conditions"><b>Conditions:</b><ul>${cm.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
     const kinds = setting("showKindMenus");
     const boosts = R.BOOSTS.map(bo => {
@@ -1434,30 +1433,27 @@ async function createMacros() {
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
 
-let OFF = false;
 Hooks.once("init", () => {
-    // Never run beside the module this one replaces: both would answer every button
-    if (L.oldActive("vtda20-combat")) { OFF = true; return; }
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
     AA.registerAftermathSettings();
     P.register();
     const body = BD.setupBody();
-    const movement = MVJ.setupMovement({ MOD, off: () => OFF, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
+    const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
     const aftermath = AA.setupAftermath({ corpusTrack });
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.14.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.15.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
-    L.alias("combat", "vtda20combat", api, "vtda20-combat");
+    game.wodx ??= {};
+    game.wodx.combat = api;
     const mod = game.modules.get(MOD);
     if (mod) mod.api = api;
 });
 
 Hooks.once("ready", async () => {
-    if (OFF) return L.warnOld("WoDX Combat", "vtda20-combat");
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, p => { if (!p?.conductor && p?.action !== "startFight") onSocket(p); });
     CD.installConductor();
@@ -1501,7 +1497,7 @@ function fightOf(doc) {
 }
 // Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
 Hooks.on("preUpdateToken", (doc, changes, options) => {
-    if (OFF || game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
     let mode;
     try { mode = setting("turnMoves"); } catch (e) { return; }
     if (mode !== "block") return;
@@ -1514,7 +1510,7 @@ Hooks.on("preUpdateToken", (doc, changes, options) => {
     return false;
 });
 Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
-    if (OFF || !("x" in changes || "y" in changes || "elevation" in changes) || options?.wodxMove === false) return;
+    if (!("x" in changes || "y" in changes || "elevation" in changes) || options?.wodxMove === false) return;
     let mode;
     try { mode = setting("movementLimit"); } catch (e) { return; }
     const tag = roundTag();
@@ -1551,19 +1547,18 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
 
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
 Hooks.on("combatStart", combat => {
-    if (OFF || !isActiveGM() || setting("autoInitiative") === "off") return;
+    if (!isActiveGM() || setting("autoInitiative") === "off") return;
     autoInitiative(combat).catch(e => console.error("WoDX |", e));
 });
 const lastInitRound = new Map();
 Hooks.on("updateCombat", (combat, changed) => {
-    if (OFF || !isActiveGM() || setting("autoInitiative") !== "round" || !("round" in (changed ?? {})) || !combat.started) return;
+    if (!isActiveGM() || setting("autoInitiative") !== "round" || !("round" in (changed ?? {})) || !combat.started) return;
     if (combat.round <= 1 || combat.round <= (lastInitRound.get(combat.id) ?? 0)) return;
     lastInitRound.set(combat.id, combat.round);
     autoInitiative(combat).catch(e => console.error("WoDX |", e));
 });
 
 Hooks.once("init", () => {
-    if (OFF) return;
     Hooks.on("renderChatMessageHTML", (msg, el) => { if (msg.getFlag(MOD, "data")) bindCard(msg, el); });
 });
 
@@ -1741,7 +1736,7 @@ function bindHints(root, { attacker, target, attackerTok, targetTok }) {
 /* ---- Shots and reloading (3.8.0) ---- */
 
 function darkAgesNow() {
-    try { const y = Number(L.chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) && y > 0 && y < 1450; } catch (e) { return false; }
+    try { const y = Number(chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) && y > 0 && y < 1450; } catch (e) { return false; }
 }
 function archeryOf(actor) {
     try { return Math.max(num(ability(actor, "archery").value), num(secondaryAbility(actor, null, "Archery")?.value)); } catch (e) { return 0; }
@@ -1817,7 +1812,6 @@ async function autoInitiative(combat) {
 
 /** Token HUD shortcut: right-click a token and press the sword to attack your current target with it. */
 Hooks.on("renderTokenHUD", (hud, html) => {
-    if (OFF) return;
     const root = html instanceof HTMLElement ? html : html[0];
     const tok = hud.object;
     if (!tok?.actor?.isOwner || !root) return;
@@ -1852,7 +1846,7 @@ export function useRoom(tok) { return game.modules.get("wodx-interactables")?.ap
 
 /** What the conditions on attacker and defender change: {attackerDice, attackerDiff, notes}. */
 export function conditionMods(attacker, target) {
-    const c = L.chronicle()?.conditions;
+    const c = chronicle()?.conditions;
     if (!attacker) return { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
     const out = c ? c.attackModifiers(attacker, target ?? null) : { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
     // 3.12.0: prone, flying, swimming, climbing... on both sides (house rules B946)
@@ -1865,7 +1859,7 @@ export function conditionMods(attacker, target) {
 }
 /** The defence difficulty: the defender's conditions and, on a dodge, their stance (3.12.0). */
 function defenseDiffOf(target) {
-    let d = L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0;
+    let d = chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0;
     try { d += MVJ.defenseMods(target).diff; } catch (e) { /* movement off */ }
     return d;
 }
@@ -1879,7 +1873,7 @@ export function dazedThreshold(target, kind = getKind(target)) {
 }
 
 async function markDazed(actor) {
-    const api = L.chronicle();
+    const api = chronicle();
     if (!api?.applyTimed) return;
     if (!actor.isOwner) return requestGM({ action: "dazed", uuid: actor.uuid });
     // In a fight Dazed lasts the next turn; outside one there are no turns, so it lasts until the scene ends

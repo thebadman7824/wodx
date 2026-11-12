@@ -25,9 +25,7 @@ import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as PM from "./profile-menus.js";
 import * as F from "./flavor.js";
-import * as L from "./legacy.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-import * as MIG from "./migrate.js";
 import * as GX from "./garou.js";
 import * as KR from "./kindred-rules.js";
 import * as KX from "./kindred.js";
@@ -73,6 +71,7 @@ const SOCKET = `module.${MOD}`;
 const GEN = () => game.release?.generation ?? 11;
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 /* ================================================================== */
@@ -86,12 +85,11 @@ function registerSettings() {
         scope: "world", config: true, type: Boolean, default: true
     });
     TH.registerTraitSetting();
-    // A new setting starts from the choice made in vtda20-actions, if there was one (nothing is written)
     const s = (key, name, hint, type, def) =>
-        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: L.oldSetting("vtda20-actions", key, def) });
+        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def });
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
         hint: "Add one short line of description under the result of each action card, picked to fit what was attempted and how it went. Edit the lines in scripts/flavor.js.",
-        scope: "world", config: true, type: String, default: L.oldSetting("vtda20-actions", "flavorText", "all"), choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+        scope: "world", config: true, type: String, default: "all", choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
     game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "Before 1450 there is no coincidental or vulgar split; from 1450 to 1699 magick is casual or vain, with Fortune Dice (Sorcerers Crusade); from 1700 Mage 20th. The years are a house rule.",
         scope: "world", config: true, type: Boolean, default: true });
     game.settings.register(MOD, "realityZones", { name: "Reality Zones (Mage 20th)", hint: "Zone: a place's accepted styles decide what is coincidental. One world: one Consensus everywhere. Free: the Storyteller rules each time.",
@@ -1386,7 +1384,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
-        try { await L.chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
+        try { await chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
             description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page }); } catch (e) { console.warn("WoDX | feed penalty", e); }
     }
     let gorge = false;
@@ -1920,7 +1918,7 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
     for (const actor of list) {
         if (!actor?.isOwner) continue;
         // WoDX timed effects of the scene end first (Quickening takes itself back through its reverter)
-        if (!fromChronicle) await L.chronicle()?.timed?.endFor?.(actor, { kind: "scene", why: "End of scene" });
+        if (!fromChronicle) await chronicle()?.timed?.endFor?.(actor, { kind: "scene", why: "End of scene" });
         const upd = {}, bits = [];
         const q = flag(actor, "quickening");
         if (q) {
@@ -1944,7 +1942,7 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
 
 /** Quickening as a WoDX timed effect: it lasts the scene and takes itself back when the scene ends (p. 340). */
 async function quickeningEffect(actor, added) {
-    const api = L.chronicle();
+    const api = chronicle();
     if (!api?.applyTimed || !actor.isOwner) return null;
     const parts = Object.entries(added).filter(([, n]) => n).map(([k, n]) => `${cap(k)} +${n}`);
     if (!parts.length) return null;
@@ -1973,7 +1971,7 @@ async function revertQuickening(actor, { added = {} } = {}) {
 
 /** Frenzy, Rötschreck and torpor show as WoDX condition statuses too. */
 async function condition(actor, id, active) {
-    try { if (actor?.isOwner) await L.chronicle()?.conditions?.setCondition?.(actor, id, active); }
+    try { if (actor?.isOwner) await chronicle()?.conditions?.setCondition?.(actor, id, active); }
     catch (e) { console.warn("WoDX | condition", e); }
 }
 
@@ -2607,16 +2605,13 @@ async function createMacros() {
     if (!game.user.isGM || !setting("createMacros")) return;
     for (const [name, img, command] of MACROS) {
         if (game.macros.find(m => m.name === name)) continue;
-        // The VtDA20 macro of the same name is renamed by the migration, not duplicated
-        if (game.macros.find(m => m.name === name.replace(/^WoDX: /, "VtDA20: "))) continue;
         await Macro.create({ name, type: "script", img, command, ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER } });
     }
 }
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.43.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
-    migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.44.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -2692,17 +2687,14 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
     trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
-let OFF = false;
 Hooks.once("init", () => {
-    // Never run beside the module this one replaces: both would answer every button
-    if (L.oldActive("vtda20-actions")) { OFF = true; return; }
     registerSettings();
     EFX.setup();
     SX.registerBehavior();
-    MIG.registerSettings();
     P.register();
     game.wodxActions = API;
-    L.alias("actions", "vtda20actions", API, "vtda20-actions");
+    game.wodx ??= {};
+    game.wodx.actions = API;
     const mod = game.modules.get(MOD);
     if (mod) mod.api = API;
     // 6e: every WoDX card shown in the one layout, the ones written before 3.6 and the notices too (before the buttons are bound)
@@ -2713,20 +2705,17 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-    if (OFF) return L.warnOld("WoDX Actions", "vtda20-actions");
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
     const withChronicle = () => {
-        L.chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
-        MIG.registerHandler();
-        MIG.offerMigration().catch(e => console.error("WoDX |", e));
+        chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
         // The inner voice's proposals (6d): approved in the queue, answered from a card
-        (L.chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
+        (chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
         // Mage keyword results that wait for a yes (3.22.0)
-        EFX.registerHandler(L.chronicle() ?? game.modules.get("wodx-chronicle")?.api);
+        EFX.registerHandler(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
-    if (L.chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
+    if (chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
     Hooks.on("wodxEndScene", () => {
         if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
     });
@@ -2744,7 +2733,7 @@ Hooks.once("ready", async () => {
 function garouHooks() {
     let moonBusy = false;
     Hooks.on("updateWorldTime", () => {
-        if (moonBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        if (moonBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         moonBusy = true;
         gx().moonRise().catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
     });
@@ -2770,19 +2759,19 @@ function garouHooks() {
 function kindredHooks() {
     let busy = false;
     const tick = () => {
-        if (busy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        if (busy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         busy = true;
         kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; });
     };
     Hooks.on("updateWorldTime", tick);
     Hooks.on("updateWorldTime", (wt, dt) => {
-        if (!game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
         sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));
     });
     // Dark Ages mages: Twilight and Brandings fade with abstinence (3.7.0)
     let fadeBusy = false;
     Hooks.on("updateWorldTime", () => {
-        if (fadeBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        if (fadeBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         fadeBusy = true;
         mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
@@ -2849,7 +2838,6 @@ function kindredHooks() {
 }
 
 Hooks.on("renderTokenHUD", (hud, html) => {
-    if (OFF) return;
     const root = rootOf(html);
     const tok = hud.object;
     if (!tok?.actor?.isOwner || !root) return;
