@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.45.0 (battle deeds: each character is offered a deed each phase by post, age of war, realm and kind of being, with Swap, Skip and Roll; leaderDeed and deedSuccessesFor for off-screen battles; what the field leaves behind, by line, sent to the Ledger, the Legends book or the place with Undo; Old fields in later years)
+- 0.46.0 (battle deeds: each character is offered a deed each phase by post, age of war, realm and kind of being, with Swap, Skip and Roll; leaderDeed and deedSuccessesFor for off-screen battles; what the field leaves behind, by line, sent to the Ledger, the Legends book or the place with Undo; Old fields in later years)
+- 0.45.0 (the battle's counterattack on a character says how many levels got through soak; battles that WoDX NPC fights off the screen for factions at war: fight, a week, storming and a draw take quiet (no cards); a battle keeps its war (who, for what place, mortal or supernatural, off the screen or waiting) and the window says so)
 - 0.44.0 (battles: the book's army from Spoils of War. Fill in both sides' units (peasants to a Garou pack) and the battle is fought with Right of Command: the units' Maneuver, Melee, Ranged and Defense pools, the commanders' roll moving them, and each turn Close and fight, Shoot or Withdraw; units lost, wavering at the units lost, an army with no units beaten. Without units the house frame stays)
 - 0.43.2 (the before-the-players check says plainly that vtda20-actions or vtda20-combat left on would answer every button beside WoDX)
 - 0.43.1 (fix: the Battles window took ApplicationV2 from the window instead of foundry.applications.api, which stopped the module loading)

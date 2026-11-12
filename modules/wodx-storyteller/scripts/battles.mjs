@@ -110,7 +110,7 @@ async function syncClock(b) {
 }
 
 /** Fight one phase. `deeds` = [[{name, successes}], [...]]; `extra` = dice added to each side's commander. */
-export async function fight(id, {deeds = [[], []], extra = [0, 0], actions = ["melee", "melee"]} = {}) {
+export async function fight(id, {deeds = [[], []], extra = [0, 0], actions = ["melee", "melee"], quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || !game.user.isGM ) return null;
   const {age} = contextOf(b0);
@@ -132,13 +132,13 @@ export async function fight(id, {deeds = [[], []], extra = [0, 0], actions = ["m
     b.phases.at(-1).waver.difficulty = w.difficulty;
   }
   b = await put(b);
-  await cards(b, b.phases.at(-1), setup);
+  if ( !quiet ) await cards(b, b.phases.at(-1), setup);
   await afterStep(b, step.phase);
   return b;
 }
 
-/** One week of a siege. */
-export async function week(id) {
+/** One week of a siege. `quiet`: no cards (a war fought off the screen). */
+export async function week(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || b0.kind !== "siege" || !game.user.isGM ) return null;
   const {age} = contextOf(b0);
@@ -148,16 +148,16 @@ export async function week(id) {
   const step = B.settleWeek(b0, age, r, sick);
   const b = await put(B.applyStep(b0, step, now()));
   await syncClock(b);
-  await cards(b, step.phase, [setup]);
+  if ( !quiet ) await cards(b, step.phase, [setup]);
   await afterStep(b, step.phase);
   return b;
 }
 
-export async function storm(id) {
+export async function storm(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || b0.kind !== "siege" ) return null;
   const b = await put(B.assault(b0));
-  await say(b, `<p>${esc(b.sides[0].name)} storm the walls of ${esc(b.place || b.sides[1].name)}.</p>`);
+  if ( !quiet ) await say(b, `<p>${esc(b.sides[0].name)} storm the walls of ${esc(b.place || b.sides[1].name)}.</p>`);
   return b;
 }
 export async function withdrawSide(id, side) {
@@ -168,12 +168,12 @@ export async function withdrawSide(id, side) {
   await say(b, `<p>${esc(b.over.text)}</p>`);
   return b;
 }
-export async function callDraw(id) {
+export async function callDraw(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over ) return null;
   const b = await put(B.stalemate(b0, now()));
   await afterStep(b, null);
-  await say(b, `<p>${esc(b.over.text)}</p>`);
+  if ( !quiet ) await say(b, `<p>${esc(b.over.text)}</p>`);
   return b;
 }
 export async function undo(id) {
@@ -216,8 +216,9 @@ export async function hazard(id, actorId, {attention = false} = {}) {
   if ( !res.dice ) return res;
   if ( !game.wodxCombat?.soakAndApply ) { ui.notifications.warn(`WoDX Combat is off: ${res.dice} dice of ${res.type} damage to ${a.name}; roll soak and apply it by hand.`); return res; }
   const tok = a.getActiveTokens?.()?.[0];
-  await game.wodxCombat.soakAndApply(tok ?? a, {mode: "pool", amount: res.dice, type: res.type, fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
-  return res;
+  const done = await game.wodxCombat.soakAndApply(tok ?? a, {mode: "pool", amount: res.dice, type: res.type, fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
+  // the levels left after soak (0 when it was all soaked)
+  return {...res, levels: Number(done?.levels ?? res.dice) || 0};
 }
 
 /* ---- Cards, log and hooks ---- */
@@ -408,6 +409,7 @@ export class BattlesApp extends ApplicationV2 {
     return `<p><button type="button" data-action="back"><i class="fa-solid fa-arrow-left"></i> All battles</button></p>
       <h3>${esc(b.name)}${b.place ? ` <span class="wodx-quiet">at ${esc(b.place)}</span>` : ""}</h3>
       <p class="wodx-quiet">${esc(String(year))}, ${esc(B.REALMS[b.realm])}: ${esc(age.label)}. ${esc(age.note)}</p>
+      ${b.war ? `<p class="wodx-quiet">A war between factions${b.war.kind === "supernatural" ? " of the hidden world, fought with their powers" : ", fought by mortal hands"}${b.war.auto ? "; it is fought off the screen at each faction turn" : "; it waits for you because a player character is there"}.</p>` : ""}
       ${b.over ? `<p><strong>${esc(b.over.text)}</strong></p>` : ""}
       <div class="wst-battle-sides">${b.sides.map(side).join("")}</div>
       ${b.kind === "siege" ? `<p>Week ${b.weeks} of the siege. The breach: ${b.breach} of ${B.BREACH_SEGMENTS}${b.breached ? ", the walls are open" : ""}. The progress clock "${esc(B.clockFor(b).name)}" follows it.</p>` : ""}
@@ -441,5 +443,5 @@ export class BattlesApp extends ApplicationV2 {
   }
 }
 
-// Storyteller 0.45.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
+// Storyteller 0.46.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
 X.bind({get, save: put, open: id => BattlesApp.open(id), ageId: b => contextOf(b).age.id});

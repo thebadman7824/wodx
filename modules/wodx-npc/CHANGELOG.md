@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.44.0 (factions go to war by themselves (world setting Factions go to war by themselves, on): at a faction turn a faction Hostile or worse toward a rival may take up arms for a place it holds, fought off the screen with WoDX Storyteller's battles, a battle that turn and a siege a week a turn; mortal wars and supernatural wars (Cainite and Garou units, the leaders' powers each phase, a breach where it was fought); the place and the battle's other changes wait in the approval queue; a war where a player character stands waits for the Storyteller)
 - 0.43.0 (a disguise that held lets the character past a guarded place's keepers as what it shows, livery or habit; one a keeper saw through raises the alarm: "dressed as one of us")
 - 0.41.1 (every person hears a description going round, the era templates too, not only a few; the test says why it stopped, for gates)
 - 0.41.0 (one Followers window per character: every ghoul, retainer, ally and herd member with where they are, their order or errand, loyalty and its last change, the blood bond and any trouble, with the everyday orders as buttons; a description of a culprit that witnesses saw spreads by the means of the year, from the hue and cry to face matching, and fades; NPCs who have heard it may know the culprit again, on a Storyteller card)

@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.45.0: what a battlefield leaves behind (Improvement Desk bt2, B2335-B2339). The pure part.
+ * WoDX Storyteller 0.46.0: what a battlefield leaves behind (Improvement Desk bt2, B2335-B2339). The pure part.
  *
  * When a battle ends, the Storyteller gets a card of the field's harvest: the spoils, the prisoners and the wounded
  * for everyone, then the night side by line. Kindred feed among the dying, with the Masquerade at risk if their

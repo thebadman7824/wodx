@@ -84,7 +84,7 @@ Next free block: B2340
 | B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
 | B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
 | B2100-B2105 | NPC voices | Voices |
-| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War) | Storyteller, NPC, Chronicle |
+| B2200-B2219 | Battles and sieges (B2210 the book army from Spoils of War; B2211-B2216 factions at war by themselves) | Storyteller, NPC, Chronicle |
 | B2220-B2226 | The crowd as a resource | Actions, NPC |
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
@@ -2248,6 +2248,28 @@ The Troop Types table of Spoils of War (p. 44 printed, pdf 45) was read from the
 
 Reverse: clear the units on both sides (the battle then uses men and quality), or drop the isBook branch in fight() in wodx-storyteller/scripts/battles.mjs.
 
+## B2211. Factions go to war by themselves (2026-11-12, Ben's pick, house rule)
+Ben asked on 12 November 2026 for battles and sieges that happen without the Storyteller, mainly from disputes between factions, and picked "Yes, fought off the screen" on the decision card. WoDX NPC 0.44.0 adds a step after each faction turn (world setting "Factions go to war by themselves", on): a faction that is awake, has Retainers to field (Herd for Kindred), is not run by players and not at war already, and stands Hostile (-2) or Hunted (-3) toward a rival that holds a place, takes up arms for one of the rival's places on a roll of 1 in 6 (Hostile) or 1 in 3 (Hunted). At most one new war a turn, the factions taken by Status as in the turn.
+
+Reverse: turn the setting off, or remove the warTurn call in runTurns (wodx-npc/scripts/factions.mjs).
+
+## B2212. Off the screen, and where the characters are (2026-11-12, house rule)
+A war is a WoDX Storyteller battle that remembers its war (who, for what place, mortal or supernatural). A battle in the field is fought to its end in the turn it starts, up to 30 phases and then a draw; a siege goes one week each faction turn (about seven days of game time) and is stormed once its walls are breached. No cards go to the players; the Storyteller gets one card when a war starts and one when it ends, and the Storyteller's log has the outcome. What it changes waits in the approval queue (B2206 and B2215). A war at a place where a player character's token stands is made but not fought: it waits in Battles and sieges for the Storyteller to fight with the players, or to remove.
+
+Reverse: call api.factions.warTurn by hand only, with the setting off.
+
+## B2213. Mortal wars and supernatural wars (2026-11-12, house rule on Ben's two kinds)
+Both kinds begin for the same reasons. A war is supernatural when both sides are of a hidden kind (Kindred, Garou, mages, fae, spirits or the dead), or when hunters fight one of them; otherwise it is mortal, and a hidden faction fighting a mortal one does it through its mortal followers, as the Masquerade (and its like) demands, with no powers and no breach. In a supernatural war the hidden side fields its own (Kindred: ghoul knights and Cainite cavalry; Garou: a pack and Kinfolk wolves, Spoils of War p. 44), the supernatural in its ranks counts in later ages, and its leader's powers add to each phase (B2214).
+
+## B2214. The leaders' powers in a phase (2026-11-12, house rule until the battle deeds table)
+In a supernatural war, each phase the leader of each hidden side (and hunters) rolls Status + 3 dice (3 to 10) at 6, and the successes count as that side's deed for the phase (one foe out of the fight a success, or extra successes on its action with the book's army). The battle deeds thread's table by post, age and line will replace this roll when it lands.
+
+## B2215. What a war changes (2026-11-12, house rule)
+Beside a battle's Status, Retainers and standing (B2206): when the attacker wins, the place it fought for goes to it (a big change, so it always waits for the Storyteller); a supernatural war in the living world starts a rumour of what was seen at the place (a breach of severity 1, 2 after more than six phases), on the beaten hidden side, whose flight is what people saw. No breach in the Umbra or the Underworld.
+
+## B2216. How a faction's dots become an army (2026-11-12, house rule)
+Up to 1499, in the living world and in the realms, a side is the book's units (B2210): its strength r is Retainers (or Herd for Kindred), its Status s. Mortal powers and the Church: r peasants, r/2 spearmen, r/2 archers, s heavy cavalry; mercenaries: swordsmen, crossbowmen and light cavalry; village folk: peasants and archers; hunters: spearmen, crossbowmen and some heavy horse; Kindred in a supernatural war: r ghoul knights, s/2 Cainite cavalry and their herd as peasants; Garou: s/2 packs and r Kinfolk wolves; mages, fae and the dead field mortal followers (their powers come as deeds). From 1500, men are 100 times 3 for each dot past the first, and quality comes from Status and Resources (mercenaries one better). A defender with Domain 3 or more holds walls, so the war is a siege (a castle, a bastion fort from 1650, bunkers from 1914) with 14 days of stores for each dot of Resources and one more; otherwise it fights on high ground with Domain 1, else in the open. A leader on the sheet commands, else a captain with Status + 2.
+
 ## B2220. The crowd as a resource (2026-11-12, house rule)
 The passers-by leftovers of the Master Plan (Passers-by and animals, priority 2) are built in WoDX NPC 0.40.0 and Actions 3.52.0. Each person in the street now carries a feeling and a spark (crowd-rules.mjs), kept on the token's passer-by flag. WoDX Actions reads them through api.passersby.mindOf and offers the mortals in sight to a wraith's Passion roll and a changeling's Epiphany. What a supernatural takes from a mortal is written on the mortal's token actor as flags.wodx-actions.crowdUse, by the Storyteller's client.
 
@@ -2362,7 +2384,7 @@ Each line names its causes, up to four: "a card: <its title>" when a chat card b
 
 Reverse: drop the tag hooks; lines then show without causes.
 ## B2330. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
-Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.45.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
+Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.46.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
 
 Reverse: DEEDS, POSTS and pickDeed in wodx-storyteller battle-deeds.mjs; the offers on a battle are dropped by setting offers to null.
 

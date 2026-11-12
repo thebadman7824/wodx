@@ -265,7 +265,10 @@ export function normBattle(b = {}) {
     started: Math.round(n(b.started)) || null,
     timePassed: Math.max(0, Math.round(n(b.timePassed))),
     legend: b.legend !== false,
-    // Storyteller 0.45.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
+    // a war between factions fought off the screen (WoDX NPC, B2211): who, for what place, and whether it runs by itself
+    war: b.war && typeof b.war === "object" ? {attacker: str(b.war.attacker, 40), defender: str(b.war.defender, 40), place: str(b.war.place, 200),
+      kind: b.war.kind === "supernatural" ? "supernatural" : "mortal", auto: !!b.war.auto, turn: Math.round(n(b.war.turn)) || null} : null,
+    // Storyteller 0.46.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
     offers: normOffers(b.offers),
     aftermath: normAftermath(b.aftermath)
   };

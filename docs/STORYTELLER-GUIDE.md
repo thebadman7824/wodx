@@ -399,6 +399,10 @@ The rolls and the book's army come from Spoils of War and the Dark Ages Companio
 
 **What the field leaves behind.** When a battle ends, its window lists the field's harvest: spoils, prisoners and the wounded, feeding among the dying, new wraiths and a thinner Shroud, Banes and Wyrm taint, Entropy in the Resonance, nightmares, the Yin, and the name the place keeps. Send any line to the Ledger (a consequence that comes due; a seen deed also lets the Veil slip), to the Legends book, or to a place (pick its scene: WoDX Otherworlds' drift thins the Shroud or thickens the Gauntlet there). Each has an Undo. Under Old fields, the Battles list shows how earlier battles are felt in the clock's year, from fresh graves to a chapel, a monument, battlefield tours, a museum or a memorial seen through the lens (B2330 to B2339).
 
+### Wars between factions
+
+With WoDX NPC's setting "Factions go to war by themselves" on (it is on by default), a faction that is Hostile or worse toward a rival may take up arms at a faction turn for a place the rival holds. You get a card when it starts and when it ends; the battle is fought off the screen (a siege a week each turn), and what it changes, the place included, waits in the approval queue. Tell the players as news when word would reach them. If a player character is at the place, the war waits in Battles and sieges for you to fight it with them. A war between Kindred, Garou, mages, fae or the dead (or hunters against them) is a supernatural war: their own kind fight, the leaders' powers count each phase, and people may see something. A hidden faction against a mortal one fights through its mortal followers (docs/DECISIONS.md B2211 to B2216).
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

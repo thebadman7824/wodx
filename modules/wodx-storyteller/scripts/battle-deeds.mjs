@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.45.0: a deed offered to each character, each phase of a battle (Improvement Desk bt1,
+ * WoDX Storyteller 0.46.0: a deed offered to each character, each phase of a battle (Improvement Desk bt1,
  * B2330-B2334). The pure part: no Foundry calls here.
  *
  * Where a character stands in the battle (their post) and the age of war of the year pick one deed for them: a
