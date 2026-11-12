@@ -1,5 +1,5 @@
 /**
- * Players ask for time to pass (WoDX Storyteller 0.52.0, B2457). A player picks wait, rest or sleep the day from the
+ * Players ask for time to pass (WoDX Storyteller 0.52.0, B2457; 0.52.1 counts only a fight on the characters' own scene). A player picks wait, rest or sleep the day from the
  * toolbar. Every player who is here tonight and plays a present character is asked; when all agree and no fight is
  * running, the time passes through the same spend() the Storyteller's own buttons use, so dawn, sunlight and dated
  * events fire as usual. One "Not now" ends the ask. An ask nobody finishes lapses after ten minutes.
@@ -13,7 +13,9 @@ const LAPSE = 10 * 60 * 1000;
 const asks = new Map();
 const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
 
-const inFight = () => all(game.combats).some(c => c.started && c.combatants.some(x => pcs().some(a => a.id === x.actorId)));
+/** A running fight on the scene where one of these characters is now; one forgotten elsewhere does not count. */
+export const fightsNow = () => all(game.combats).map(c => ({started: !!c.started, scene: c.scene?.id ?? null, actorIds: c.combatants.map(x => x.actorId).filter(Boolean)}));
+const inFight = (ids = null) => SR.fightHolds(fightsNow(), presentWhere(), ids);
 
 /** The players who must agree, and the characters whose time passes. */
 function table() {
@@ -42,7 +44,7 @@ export async function open({userId, choice}) {
   if ( !isActiveGM() ) return null;
   const c = SR.PASS_CHOICES[choice], asker = game.users.get(userId);
   if ( !c || !asker ) return null;
-  if ( inFight() ) { await say([userId], "Not while a fight is running."); return null; }
+  if ( inFight(table().actorIds) ) { await say([userId], "Not while a fight is running."); return null; }
   const t = table();
   if ( !t.actorIds.length ) { await say([userId], "Nobody's character is here to wait."); return null; }
   const id = foundry.utils.randomID();
@@ -84,7 +86,7 @@ export async function vote({id, userId, yes}) {
 async function finish(ask, st, by = null) {
   const m = ask.msg ? game.messages.get(ask.msg) : null;
   let text;
-  if ( st === "pass" && inFight() ) st = "fight";
+  if ( st === "pass" && inFight(ask.actorIds) ) st = "fight";
   if ( st === "pass" ) {
     const r = await spend({actorIds: ask.actorIds, seconds: ask.seconds, label: ask.label});
     text = r.how === "none" ? "The time could not pass." : `Everyone agreed: ${ask.label.toLowerCase()}.`;
