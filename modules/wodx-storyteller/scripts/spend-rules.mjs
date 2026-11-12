@@ -92,3 +92,14 @@ export function voteState({needed = [], agreed = [], refused = []} = {}) {
   return (needed ?? []).every(id => yes.has(id)) ? "pass" : "wait";
 }
 
+
+/**
+ * Does a running fight hold the time back (Storyteller 0.52.1)? Only a started fight that has one of these characters
+ * in it, on the scene where that character is now. A fight forgotten on another scene no longer stops time everywhere.
+ * fights: [{started, scene, actorIds}]; where: [{id, scene}] as presentWhere() gives it; ids: the characters waiting.
+ */
+export function fightHolds(fights = [], where = [], ids = null) {
+  const at = new Map((where ?? []).map(p => [p.id, p.scene ?? null]));
+  const want = ids ? new Set(ids) : new Set(at.keys());
+  return (fights ?? []).some(f => f?.started && (f.actorIds ?? []).some(id => want.has(id) && at.has(id) && at.get(id) === (f.scene ?? null)));
+}

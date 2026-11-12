@@ -308,6 +308,8 @@ export async function run() {
     } finally {
         Hooks.off("renderDialogV2", hook);
         console.error = origErr;
+        // The regeneration fight is the gate's own: end it so it does not stay running on the testbed
+        try { if (R.leftCombat && game.combats.get(R.leftCombat)) { await game.combats.get(R.leftCombat).delete(); R.combatDeleted = true; } } catch (e) { R.errors.push(`combat: ${e.message}`); }
         // The clock goes back to where it was
         try { if (game.time.worldTime !== time0) { R.clockMoved = game.time.worldTime - time0; await game.time.set(time0); } } catch (e) { R.errors.push(`clock: ${e.message}`); }
         R.finished = new Date().toISOString();

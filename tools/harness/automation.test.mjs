@@ -142,6 +142,14 @@ test("letting time pass: everyone here agrees, one no ends it", () => {
   assert.ok(Object.values(SR.PASS_CHOICES).every(c => SR.smallSpan(c.seconds)));
 });
 
+test("only a fight on the characters' own scene holds time back", () => {
+  const where = [{id: "a", scene: "s1"}, {id: "b", scene: "s2"}];
+  assert.equal(SR.fightHolds([{started: true, scene: "s9", actorIds: ["a"]}], where), false, "a fight left on another scene");
+  assert.equal(SR.fightHolds([{started: true, scene: "s1", actorIds: ["a"]}], where), true);
+  assert.equal(SR.fightHolds([{started: false, scene: "s1", actorIds: ["a"]}], where), false, "not started");
+  assert.equal(SR.fightHolds([{started: true, scene: "s2", actorIds: ["b"]}], where, ["a"]), false, "someone else's fight");
+});
+
 test("targeting: Automatic for everyone reaches players", () => {
   assert.equal(TR.modeFor("everyone", {isGM: false}), "auto");
   assert.equal(TR.modeFor("auto", {isGM: false}), "suggest");

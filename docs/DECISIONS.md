@@ -3032,3 +3032,8 @@ Reverse: hide the button for every player.
 WoDX Targeting 0.4.0 adds "Automatic for everyone", so players get automatic targets too. Only Hands off sets it; Automatic stays the Storyteller's only.
 
 Reverse: set Targeting back to Suggest.
+
+## B2459. Only a fight where the characters are holds time back (2026-11-12, testbed finding)
+WoDX Storyteller 0.52.1. Letting time pass, and the small rule for time for a long action, count a fight only when it has started, one of the waiting characters is in it, and that character is on the fight's scene now. A fight forgotten on another scene no longer stops time everywhere; the Storyteller still ends it by hand or with "End fights by themselves".
+
+Reverse: change fightHolds in spend-rules.mjs.
