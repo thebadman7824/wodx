@@ -1240,3 +1240,29 @@ After a study of how Cataclysm DDA links its items (Ben approved all seven recom
 - Later: parts fitted to guns (scopes, silencers), only where a V20 book gives a rule, after a PC book check. Taking things apart goes to the recipes work.
 
 Reverse: drop the whatIsMissing check and supply buttons in use.mjs; the kits through RENAMED in goods.mjs.
+
+## B1120. Signature features live in one table per line (2026-11-12)
+Ben approved the Splat Features Desk (https://claude.ai/artifact/Wy4A2X3qjJ88t5QTddhsk5). Each clan, tribe, kith and the like gets one feature of its own. The table is modules/wodx-chronicle/data/signatures.mjs, the pure rules scripts/signature-rules.mjs, the Foundry side scripts/signatures.mjs. Each line gets its own world setting, off by default. Vampire comes first: Toreador, Followers of Set, Brujah and Gangrel in Chronicle 0.25.0.
+
+Reverse: turn off "Clan features (Vampire)".
+
+## B1121. A Muse's Obsession (2026-11-12)
+V20 pdf 75 gives the Toreador a scene-long trance when beauty strikes. House rule: a Muse they pick keeps a pull between scenes. Obsession rises a point for each week unseen, to 5, and adds to the difficulty of the next roll to resist beauty. Seeing the Muse lowers it by 1, owning it or making something for it by 2. Harm to a Muse who is a person raises it by 2 and calls for a frenzy check.
+
+Reverse: museTick and museSeen in signature-rules.mjs.
+
+## B1122. The Corruption ledger (2026-11-12)
+The Followers of Set work on their victims through the acts WoDX already has (V20 pdf 61, Path of Typhon pdf 346). A won charm, persuasion, deceit, fast-talk or bribe moves the victim's track up 1 and a botch moves it down 1; a gift that feeds the victim's named vice moves it up 1. The track adds to the difficulty of the victim's own resistance. At 3 the victim does small wrongs for the Setite; at 5 the victim is theirs, as a retainer or ghoul bought with experience, or as leverage. A move made on a player's client goes to the approval queue.
+
+Reverse: CORRUPTING_ACTS, stepFromTrade.
+
+## B1123. Brujah causes and the Rant (2026-11-12)
+Ben's note: a list to pick from, the player's own cause allowed with the Storyteller's approval, and NPCs draw from the list. Causes carry the year they can first be held. A temper kept against the Cause (the clan's +2 frenzy difficulty, V20 pdf 59) gives a Rant point, and three make a Rant, a gathering that can turn a crowd into a mob.
+
+Reverse: CAUSES, RANT_POINTS.
+
+## B1124. Gangrel marks heal after a month (2026-11-12)
+Each frenzy leaves an animal mark (V20 pdf 63). Ben's note: not permanent, a month and then it heals as a wound would, and worth having. Each mark has an edge and a cost on rolls. Claws from a mark do Strength + 1 lethal, a house rule. Wild animals treat a Gangrel as one of their own, which comes in the next step.
+
+Reverse: MARK_LASTS, MARKS.
+
