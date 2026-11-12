@@ -53,13 +53,17 @@ export function sheetFor({rand, trade, era}) {
 }
 
 /**
- * One person. opts: era (group), culture, kind ("mortal" or "ghoul"), sex ("female", "male" or "any"), trade (or "any").
+ * One person. opts: era (group), culture, kind ("mortal" or "ghoul"), sex ("female", "male" or "any"), trade (or "any"),
+ * origin (asked for, e.g. a household's own; used when the era's tables name it).
  * Returns everything the sheet needs and the cards show.
  */
-export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any"}) {
+export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any", origin: asked = null}) {
   const s = sex === "any" ? (rand() < 0.5 ? "female" : "male") : sex;
-  const origin = text(tables, "people.origin", rand) ?? (culture === "american" ? "anglo" : "czech");
-  const n = nameOf({rand, tables, origin, sex: s});
+  const drawn = text(tables, "people.origin", rand) ?? (culture === "american" ? "anglo" : "czech");
+  // An asked origin (kin of a household) is kept when the era's tables have names for it; else the drawn one stands
+  let origin = drawn, n = null;
+  if ( asked && asked !== drawn ) { n = nameOf({rand, tables, origin: asked, sex: s}); if ( n.given ) origin = asked; else n = null; }
+  n ??= nameOf({rand, tables, origin, sex: s});
   const job = trade && trade !== "any" ? trade : (text(tables, "people.trade", rand) ?? "labourer");
   const nature = text(tables, "people.archetype", rand), demeanorRaw = text(tables, "people.archetype", rand);
   const demeanor = rand() < 0.3 ? nature : demeanorRaw;

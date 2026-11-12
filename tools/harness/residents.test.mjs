@@ -141,6 +141,19 @@ test("residents: a priest is a Christian man, a rabbi Jewish, and kin keep the h
   assert.equal(RS.wantsFor("parson", {year: 1700}).sex, "male");
   assert.equal(RS.wantsFor("parson", {year: 2000}).sex, null);
   assert.equal(RS.wantsFor("smith").sex, null);
+  // A Jewish weaver's partner is asked for by origin before 1946, so a generator that rarely draws Jewish people still fits
+  const rare = (row, {sex, origin}) => {
+    const s = sex === "any" || !sex ? "male" : sex;
+    if ( row === 0 || origin === "jewish" ) return {sex: row === 0 ? "female" : s, origin: "jewish", given: row === 0 ? "Avigail" : "Natan", family: `${row === 0 ? "bat" : "ben"} Asher`};
+    return {sex: s, origin: "czech", given: "Havel", family: "Rybář"};
+  };
+  const cottage = {region: "K", kind: "home", household: {trade: "weaver", people: [{role: "weaver"}, {role: "partner"}]}};
+  const pair = RS.nameHousehold(RS.planHousehold(cottage, {year: 1300}), rare, () => 0.5, {year: 1300});
+  assert.equal(pair[1].origin, "jewish", pair.map(p => p.name).join(", "));
+  assert.equal(pair[1].sex, "male");
+  // From 1946 a mixed household may be drawn
+  const late = RS.nameHousehold(RS.planHousehold(cottage, {year: 1990}), rare, () => 0.5, {year: 1990});
+  assert.equal(late[1].origin, "czech");
   // A Czech smith's household never takes a ben-or-bat name, and the children are not drawn Jewish
   const smithy = {region: "R", kind: "workplace", household: {trade: "smith", people: [{role: "smith"}, {role: "child"}]}};
   const czechFirst = (row, o) => row === 0 ? {sex: "male", origin: "czech", given: "Jan", family: "Kovář"} : draw(row, o);

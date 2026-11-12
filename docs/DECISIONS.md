@@ -2986,7 +2986,9 @@ Reverse: nothing to reverse.
 ## B2505. Clergy fit their church (2026-11-12, house reading)
 The testbed seeded a chapel's priest as "Bella bat David", because the People generator draws any origin and sex. Residents now draw again, up to eight times, until the person fits the role: Catholic priests, monks, friars, deacons and canons are Christian men; nuns, abbesses and prioresses Christian women; rabbis Jewish (men before 1990); Protestant parsons, vicars and ministers men before 1950, either after. The household's name comes from a man of the master's own origin, and kin keep the household's faith (Jewish or Christian) until 1946. When no draw fits, the last one stands.
 
-Reverse: change wantsFor and the sameFaith test in resident-rules.mjs.
+Amended 2026-11-12 (NPC 0.47.2, Creation 0.15.1, after the testbed gate): drawing again did not always find a Jewish partner, since the generator draws few Jewish people, so a Jewish weaver was paired with a Christian. Before 1946 the kin of a Jewish household are now asked of the generator by origin; from 1946 a mixed household may still be drawn.
+
+Reverse: change wantsFor and the sameFaith test in resident-rules.mjs; drop the origin asked in nameHousehold.
 
 ## B2450. How much runs by itself: three levels (2026-11-12, Ben's desk sa1, sb1, sb2)
 WoDX Chronicle 0.46.0 adds one choice in the approval queue window: Hands on, Balanced or Hands off. Hands on is whatever the Storyteller had set; nothing changes until another level is picked. Balanced turns on the Auto choices that come with an undo card (NPCs in combat, routines, faction turns, fights starting and ending, the weekly market turn and faction market moves) and the queue table of B2451. Hands off is the Lone Chronicle's preset without its seat, plus targeting for everyone. The window lists every change before it is made. The values from before the first move are kept and Hands on puts them back, except a setting changed by hand since, which stays. While the Lone Chronicle is on the level is left alone. Lists in automation-rules.mjs. Priority 3, with the Lone Chronicle.

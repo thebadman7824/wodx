@@ -29,9 +29,9 @@ export function build({MOD, esc, chron}) {
     const ppl = creation(), y = year(), batch = hashOf(scene.uuid);
     return listOf(scene).map((h, hi) => {
       const plans = RS.planHousehold(h, {year: y});
-      const draw = (i, {sex, trade}) => {
+      const draw = (i, {sex, trade, origin = null}) => {
         if ( !ppl?.generate ) return {sex: sex === "any" ? "female" : sex, origin: "", given: "", family: "", name: ""};
-        try { return ppl.generate({batch, row: hi * 1000 + i, nonce, kind: "mortal", sex, trade}); }
+        try { return ppl.generate({batch, row: hi * 1000 + i, nonce, kind: "mortal", sex, trade, origin}); }
         catch (e) { console.warn(`${MOD} | residents: the People generator failed`, e); return {sex, origin: "", given: "", family: "", name: ""}; }
       };
       let rand = Math.random;
