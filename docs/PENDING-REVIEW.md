@@ -747,3 +747,4 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | The Inquisition's seats, after the book check (B1114, NPC 0.40.3) | A cell: rector appointed from above; sub-rector, treasurer, archivist and cellarer elected by backing; chapter every faction turn; orders as blocs; Rank Background as standing (DA:I Companion pr 72-75, DA:I pr 157). A Council of Faith (head, Procurator Fiscalis, a councillor per order) picked by hand. Sicae Dei noted, not run. Replaces the tribunal approved earlier | POLITIES.inquisition and ["council-of-faith"] in politics-rules.mjs |

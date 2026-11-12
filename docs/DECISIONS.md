@@ -1321,11 +1321,13 @@ A Mage faction of three or more keeps the polity of its side and age. On the Tra
 
 Reverse: drop mages from DEFAULTS and the four templates.
 
-## B1114. Hunter polities (2026-11-12)
+## B1114. Hunter polities (2026-11-12, Inquisition revised the same day after the book check)
 
-A Hunter faction of three or more keeps a tribunal of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130). The tribunal's seats are a house rule until the Dark Ages Inquisitor book is read. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+A Hunter faction of three or more keeps a cell of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130).
 
-Reverse: drop hunters from DEFAULTS and the three templates.
+The Inquisition follows Dark Ages: Inquisitor and its Companion. Cardinal Marzone and the Supreme Council of Faith stand over local Councils of Faith, and those stand over cells, bypassing the bishops (Companion pr 73-75). A cell's rector is appointed from above, and the cell elects its sub-rector, treasurer, archivist and cellarer, subject to the rector's veto (Companion pr 74-75). Its chapter meets every faction turn (the Rule's three chapters a week, Companion pr 72), its blocs are the five orders, and standing is the Rank Background (DA:I pr 157). A Council of Faith can be picked by hand: a head, a Procurator Fiscalis, and a councillor for each order present. The Sicae Dei council of ten, two from each order with unanimous verdicts (Companion pr 83), is noted but not run. Neither book has rules for these seats, so the charges, votes and Council seats beyond the Procurator are house rules. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+
+Reverse: drop hunters from DEFAULTS and the four templates; for the old tribunal, the inquisition template before NPC 0.40.3.
 
 ## B1115. Mummies, demons and the Kuei-jin, picked by hand (2026-11-12)
 
