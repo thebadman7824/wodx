@@ -112,6 +112,13 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
   function registerHandler() {
     chron()?.registerApprovalHandler?.(TYPE, {
       label: "NPC attitude",
+      // Small (Chronicle 0.46.0, B2453): one step, and not down to Hostile or Hunted, which can start a fight
+      small: entry => {
+        const d = entry.data ?? {};
+        const npc = game.actors.get(d.npc), ch = game.actors.get(d.char);
+        if ( !npc || !ch || (d.to !== null && d.to !== undefined) || Math.abs(Number(d.delta) || 0) !== 1 ) return false;
+        return of(npc, ch).step + Number(d.delta) > -2;
+      },
       approve: async entry => {
         const d = entry.data ?? {};
         const npc = game.actors.get(d.npc), ch = game.actors.get(d.char);

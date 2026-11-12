@@ -295,7 +295,10 @@ export async function wrapUpDialog() {
     ? `<td><input type="checkbox" name="xp.${a.id}.${r.key}"${r.auto ? " checked" : ""} aria-label="${esc(`${a.name}: ${r.label}`)}"></td>`
     : `<td class="wodx-quiet" title="Not in this character's book">·</td>`).join("")}
     <td><input type="number" name="extra.${a.id}" value="0" style="width:4em" aria-label="${esc(`${a.name}: extra points`)}"></td></tr>`).join("");
-  const content = `<form><p>The steps run in this order. Untick any you want to skip.</p>
+  // Chronicle 0.46.0: what still waits for the Storyteller as the night ends (B2452)
+  let open = "";
+  try { open = C.chron()?.waiting?.wrapLine?.() ?? ""; } catch (e) { open = ""; }
+  const content = `<form>${open ? `<p class="wodx-held">${esc(open)}</p>` : ""}<p>The steps run in this order. Untick any you want to skip.</p>
     <ul data-fixed>${steps.map(s => `<li><label><input type="checkbox" name="step.${s.key}" checked> ${esc(s.label)}</label></li>`).join("")}</ul>
     ${have.creation && pcs.length ? `<h3>Experience</h3><p class="wodx-quiet">Tick what each character earned; the story-end columns are for the last session of a story. Nothing is given unless the experience step is ticked.</p>
       <ul class="wodx-quiet" data-fixed>${refs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>

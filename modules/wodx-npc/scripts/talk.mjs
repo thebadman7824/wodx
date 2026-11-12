@@ -41,6 +41,9 @@ export function build(ctx) {
     game.settings.register(MOD, "talkReach", {name: "Talking distance, in squares", hint: "How close a character must stand to talk (1: side by side).",
       scope: "world", config: true, type: Number, default: 2, range: {min: 1, max: 10, step: 1}});
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
+    game.settings.register(MOD, "talkAskWait", {name: "\"Ask me first\": seconds before the NPC answers by itself",
+      hint: "When an NPC is set to \"ask me first\" and you have not picked a line in this time, they say the first written line that fits, so the player is not left standing. A later pick still goes out. 0 waits for you however long it takes.",
+      scope: "world", config: true, type: Number, default: 60, range: {min: 0, max: 600, step: 10}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
     // NPC 0.45.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
@@ -415,14 +418,24 @@ export function build(ctx) {
     const lines = options.length ? options.map(o => o.line) : (fallback?.line ? [fallback.line] : []);
     const data = {userId: user.id, sceneId: r.scene.id, npcTokenId: r.npcTok.id, meTokenId: r.me.id, topic, lines};
     const btns = lines.map((l, i) => `<li><button type="button" class="wnpc-talk-pick" data-i="${i}">Say this</button> ${TK.gateLabel(l.when) ? `<span class="wodx-quiet">[${esc(TK.gateLabel(l.when))}]</span> ` : ""}${esc(l.say)}${l.when ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("");
-    await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {talkAsk: data}},
+    const card = await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {talkAsk: data}},
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(r.me.name)} asks ${esc(r.npcTok.name)} about ${esc(TK.topicLabel(topic).toLowerCase())}. You asked to answer for them.</p>`
         + `${btns ? `<ul data-fixed>${btns}</ul>` : "<p>Nothing on their sheets fits.</p>"}<button type="button" class="wnpc-talk-pick" data-i="-1">Say nothing (speak for them yourself)</button></div></div>`});
+    // NPC 0.47.0 (B2456): with no pick in time, the first fitting line goes out by itself
+    const wait = Number(setting("talkAskWait") ?? 60);
+    if ( card && lines.length && wait > 0 ) setTimeout(() => {
+      const m = game.messages.get(card.id);
+      if ( m && !m.flags?.[MOD]?.talkAsk?.done ) onPick(m, 0, {auto: true}).catch(e => console.error(`${MOD} | talk wait`, e));
+    }, wait * 1000);
   }
 
-  async function onPick(msg, i) {
+  async function onPick(msg, i, {auto = false} = {}) {
     const d = msg.flags?.[MOD]?.talkAsk;
-    if ( !d || d.done ) return;
+    if ( !d ) return;
+    // One answer by itself after the wait, then one late pick by the Storyteller; nothing after that
+    if ( d.done && !(d.auto && !d.late && !auto) ) return;
+    if ( d.done ) await msg.update({[`flags.${MOD}.talkAsk.late`]: true});
+    if ( auto ) await msg.update({[`flags.${MOD}.talkAsk.auto`]: true});
     const user = game.users.get(d.userId);
     const scene = game.scenes.get(d.sceneId);
     const r = {scene, npcTok: scene?.tokens?.get(d.npcTokenId), me: scene?.tokens?.get(d.meTokenId)};
@@ -723,7 +736,7 @@ export function build(ctx) {
       });
       const d = msg.flags?.[MOD]?.talkAsk;
       if ( d ) html?.querySelectorAll?.("button.wnpc-talk-pick").forEach(b => {
-        if ( !game.user.isGM || d.done ) { b.remove(); return; }
+        if ( !game.user.isGM || (d.done && !(d.auto && !d.late)) ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; onPick(msg, Number(b.dataset.i)).catch(e => console.error(`${MOD} | talk`, e)); });
       });
     });

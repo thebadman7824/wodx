@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.56.0 (the approval queue knows magic that reaches it is never small)
 - 3.55.0 (api.tradeLists: the trade window's wares and offers, priced as the window prices them, for gates)
 - 3.54.0 (a made thing's quality price in the trade window now shows its own words in money, not the plain price's)
 - 3.53.0 (the last VtDA20 pieces are gone: the manifest no longer lists vtda20-actions as a conflict, the actor type no longer falls back to the old vtda20 flags, and the dialog class is wodx-form-dialog)

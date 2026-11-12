@@ -2,7 +2,7 @@
   "id": "wodx-solo",
   "title": "WoDX Solo",
   "description": "World of Darkness Expanded: The Lone Chronicle, for one person playing alone. A hidden browser holds the Storyteller's seat while the player logs in as a player. One switch sets every automation to act by itself and puts the old values back when it is turned off; a watcher answers or records every card and window that waits for a Storyteller, and the seat follows the player from scene to scene. Switch it on only in a world played alone, never on a shared table. Private use only; not for distribution or sale.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "authors": [
     {
       "name": "WoDX Project (private)"

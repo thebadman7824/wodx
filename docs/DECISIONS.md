@@ -98,7 +98,7 @@ Next free block: B2510
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
 | B2430-B2439 | Music from free sources: the sorter, where audio files live, the open credits journal | Atmosphere, tools |
 | B2440-B2449 | The last of the ways of moving: riding in a fight, the mounted charge, a swimmer's load, senses by stance | Combat, Interactables, Senses, NPC |
-| B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
+| B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests, the talk wait, targeting for everyone | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
 | B2470-B2479 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
@@ -2982,3 +2982,48 @@ Reverse: pick Mortals for every household; clear the owner on the place.
 
 Reverse: nothing to reverse.
 
+
+## B2450. How much runs by itself: three levels (2026-11-12, Ben's desk sa1, sb1, sb2)
+WoDX Chronicle 0.46.0 adds one choice in the approval queue window: Hands on, Balanced or Hands off. Hands on is whatever the Storyteller had set; nothing changes until another level is picked. Balanced turns on the Auto choices that come with an undo card (NPCs in combat, routines, faction turns, fights starting and ending, the weekly market turn and faction market moves) and the queue table of B2451. Hands off is the Lone Chronicle's preset without its seat, plus targeting for everyone. The window lists every change before it is made. The values from before the first move are kept and Hands on puts them back, except a setting changed by hand since, which stays. While the Lone Chronicle is on the level is left alone. Lists in automation-rules.mjs. Priority 3, with the Lone Chronicle.
+
+Reverse: pick Hands on; or remove automation.mjs from Chronicle's main.mjs.
+
+## B2451. A "when small" standing rule per kind of proposal (2026-11-12, desk sa2, q1 to q32)
+A kind in the approval queue can wait, pass on its own, or pass on its own when small. Each kind's own handler says what small means (a small() function). At Balanced: on its own for walls broken through, people from a lifepath and new people, a step before the First Night, the night's draw, solo results and beats, between nights and a Gauntlet that moves; when small for a merit or flaw coming into play, magic, NPC attitude, factions, XP spends, markets, time for a long action, travel, downtime and Otherworld journeys; every story choice waits. A proposal that passes on its own under a small rule, or of a kind with an undo, gets a Storyteller card saying so, with Undo where the kind has one.
+
+Reverse: set each kind back to Waits in the queue window.
+
+## B2452. The Waiting tray (2026-11-12, desk sa3, sa8)
+One window (the hourglass on the token tools, and Waiting on the Chronicle Clock) lists every queue entry and every card whispered to the Storytellers in the last twelve hours that still has a button nobody pressed, oldest first. Take the recommended approves a queue entry or presses the card's safe button, chosen as the Lone Chronicle's seat chooses (the rules moved from WoDX Solo to waiting-rules.mjs). It never presses Undo, Reject, Delete or Edit. The end-of-night wrap-up names what is still open. No clock passes anything on its own.
+
+Reverse: remove waiting.mjs from Chronicle's main.mjs.
+
+## B2453. What small means, kind by kind (2026-11-12, house rule)
+Merit or flaw: every trait in it only changes dice or difficulty. NPC attitude: one step, not down to Hostile or Hunted. Factions: what the faction Auto mode already counts as small (B86). Markets: no change the Auto mode would hold back. Time for a long action: a day or a night at most, nobody in a fight. Downtime: a listed kind, a week or less. Otherworld journey: no storm, not a great journey, no hazard or Maelstrom on a leg. Magic and travel: never, because only what is already past their own Auto rules reaches the queue (witnessed vulgar magic, mind effects, another player's character, more than three targets; a place marked ask first, or a trip into daylight for one the sun burns).
+
+Reverse: change the small() function on that kind's handler.
+
+## B2454. XP spends by the book (2026-11-12, desk sa7, q13)
+An Attribute, an Ability (new or raised), Willpower, or a Discipline of the character's own clan (any for a Caitiff), at the cost the sheet gives now and with the points there, passes on its own at Balanced. A new Discipline (it needs a teacher), a Virtue and the Road or Humanity (they need a reason in the story) wait. XP awards are untouched: Ben dropped automatic awards on 8 November.
+
+Reverse: set Experience to Waits in the queue window, or edit byTheBook in wodx-creation/scripts/rules.mjs.
+
+## B2455. Fights end by themselves (2026-11-12, desk sa4)
+WoDX Combat 3.21.0, setting "End fights by themselves" (off, Suggest, Auto; Suggest by default, Auto at Balanced and Hands off). A fight is over when one side has nobody standing: down, or gone from the scene. Once that has held for a full turn, Suggest gives the Storyteller a card with End the fight and Auto ends it; the after-action card, the clock and the NPCs' memories follow as when it is ended by hand. A hidden token still counts as there, because an ambusher waits hidden, so a foe that fled while hidden is not counted gone. A fight with one side only never ends this way. This is also Lone Chronicle step 2's "fights end".
+
+Reverse: set the setting to Off.
+
+## B2456. An "ask me first" NPC answers after a wait (2026-11-12, desk sa6)
+WoDX NPC 0.47.0, setting in seconds (60; 0 waits for ever). With no pick in time the NPC says the first written line that fits. The Storyteller can still pick once afterwards and that line goes out too.
+
+Reverse: set the wait to 0.
+
+## B2457. Players ask for time to pass (2026-11-12, desk sa5)
+WoDX Storyteller 0.52.0, a player button: wait an hour, four hours, rest eight hours or sleep the day through (twelve hours). Every player here tonight who plays a present character is asked; when all agree and no fight is running, the time passes through the same spend the Storyteller's buttons use, so dawn, sunlight and dated events fire as always. One Not now ends it; an unfinished ask lapses after ten minutes. The Storyteller's Agree speaks for the table. The fixed spans work the same in every era. A player may be hidden from the button in Player toolbar buttons.
+
+Reverse: hide the button for every player.
+
+## B2458. Targeting for everyone, at Hands off (2026-11-12, desk sa10)
+WoDX Targeting 0.4.0 adds "Automatic for everyone", so players get automatic targets too. Only Hands off sets it; Automatic stays the Storyteller's only.
+
+Reverse: set Targeting back to Suggest.
