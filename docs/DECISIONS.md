@@ -1897,12 +1897,12 @@ The approved journey card says how much time passes outside and, on the Storytel
 Reverse: drop the button in journey.mjs approveJourney.
 
 ## B1965. Realms where time runs differently (2026-11-12)
-Otherworlds journey-rules REALM_TIME: the Tempest, the Labyrinth, the Umbral roads and Moon Paths keep the world's time; a Moon Bridge takes a thousandth (W20 pdf 209 / p. 207); a trod slips (C20 pdf 53 / p. 52, house figures). The Far Dreaming with Arcadia, and Deep Umbra realms, are listed as the Storyteller's call with check: true until a book check fixes what the books say and the pages (PC job game-time-book-check-2026-11-12). Realms the books are silent on keep the plain clock.
+Otherworlds journey-rules REALM_TIME: the Tempest, the Labyrinth, the Umbral roads and Moon Paths keep the world's time; a Moon Bridge takes a thousandth (W20 pdf 209 / p. 207); a trod slips (C20 pdf 53 / p. 52, house figures). After the book check (Otherworlds 0.15.1): the Labyrinth is the Storyteller's call (WR20 pdf 307); the Far Dreaming and Arcadia are the Storyteller's call, time running at random against the world (C20 pdf 53, W20 pdf 331); the Deep Umbra is the Storyteller's call, with no M20 or W20 rate (the Computer Web runs faster than the CyberRealm, W20 pdf 332; Horizon's double speed in 1456, Horizon pdf 43, was a spell, not the realm). The trod slip stays a house figure: C20 pdf 53 gives no table. The Shadowlands and the Tempest keep the world's time as a house rule, since WR20 gives no rate. A Storyteller's-call realm keeps the plain clock and the card says so.
 
 Reverse: remove REALM_TIME and timeOutside.
 
 ## B1966. A fight takes time when it ends (2026-11-12)
-WoDX Combat 3.18.0. Foundry adds no seconds for a round unless a system sets it, and none did, so fights took no time. When a started fight is ended, the time moves once by its turns times the world setting turnSeconds (house figure 3 seconds; the book check confirms the V20 wording; 0 turns it off): the clock, or the fighters' own time when they are apart. One step at the end wakes the timed parts once instead of every round. The after-action card names the length.
+WoDX Combat 3.18.0. Foundry adds no seconds for a round unless a system sets it, and none did, so fights took no time. When a started fight is ended, the time moves once by its turns times the world setting turnSeconds (3 seconds, the books' own figure: V20 pdf 262 and 277, V20 Dark Ages pdf 344, W20 pdf 241 and 290; V20 lets a slow scene stretch a turn up to 3 minutes, so a Storyteller can raise it, up to 60 here; 0 turns it off): the clock, or the fighters' own time when they are apart. One step at the end wakes the timed parts once instead of every round. The after-action card names the length.
 
 Reverse: set turnSeconds to 0.
 

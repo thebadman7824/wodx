@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.1 (after the book check: the Labyrinth is the Storyteller's call (WR20 pdf 307); the Far Dreaming, Arcadia and the Deep Umbra cards give their pages; the Shadowlands and the Tempest keep the world's time)
 - 0.15.0 (Game time: the journey card says how much time passes outside (a Moon Bridge's thousandth, a trod's slip) and has a button to let it pass; realm time table)
 - 0.13.1 (the aura overlay names its colour)
 - 0.13.0 (sendAcross: a power that has worked takes a token across the Gauntlet or the Shroud with no second roll)

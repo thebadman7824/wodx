@@ -2,7 +2,7 @@
  * WoDX Combat 3.18.0: how long a fight took, the rules (no Foundry).
  *
  * Foundry moves no time for a round unless a system sets it, so a fight left the clock where it was. When a fight
- * ends, the clock now moves by rounds times the seconds a turn takes (house figure 3, a setting; 0 keeps fights
+ * ends, the clock now moves by rounds times the seconds a turn takes (3, the books' figure: V20 pdf 262, V20 Dark Ages pdf 344, W20 pdf 241; a setting; 0 keeps fights
  * timeless), in one step so the timed parts wake once (B1966).
  */
 export const DEFAULT_TURN = 3;
