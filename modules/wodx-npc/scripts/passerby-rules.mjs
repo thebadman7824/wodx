@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.26.0 (B970 to B975): passers-by. Pure rules, harness-tested; passersby.mjs puts them on the map.
+ * WoDX NPC 0.27.0 (B970 to B975): passers-by. Pure rules, harness-tested; passersby.mjs puts them on the map.
  *
  * A scene the Storyteller turns on fills with people who walk in from the edge of the map, cross it or stop a while,
  * and walk off again. They belong to no faction and keep no routine. Who they are, what they wear and how many walk

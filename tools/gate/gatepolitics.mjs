@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.25.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.26.0 gate (politics inside factions), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatepolitics.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four Kindred NPCs and deletes them, and puts back the factions record, the
  * faction settings, the Ledger, the approval queue and its chat cards.
@@ -9,8 +9,9 @@
  *   4. two faction turns with politics on (Auto): the leader holds the top seat, one Primogen seat per clan, a card
  *   5. Undo on the second turn's card puts the politics back as they were after the first
  *   6. a boon marked broken in the Ledger costs the debtor a dot of standing, with an Undo card
- *   7. politics off: a turn runs no politics
- *   8. clean up
+ *   7. a Garou sept and the fae courts by year; a challenge with a player's character comes as a card (no tokens)
+ *   8. politics off: a turn runs no politics
+ *   9. clean up
  * Result: Data/wodx-gate/gatepolitics-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -56,7 +57,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, sv = game.modules.get("wodx-storyteller")?.version;
-      ok("1. WoDX NPC 0.25.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.25.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
+      ok("1. WoDX NPC 0.26.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.26.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
         && game.settings.settings.has(`${MOD}.factionPolitics`) && typeof FX().politicsInfo === "function", {v, sv});
     });
 
@@ -114,16 +115,27 @@ export async function run() {
       ok("6. the debtor loses a dot of standing, with an Undo card", after === Math.max(0, before - 1) && !!card, {before, after});
     });
 
-    await step("7. politics off", async () => {
+    await step("7. other lines", async () => {
+      const g = {kind: "garou", members: ["a", "b", "c"]}, fae = {kind: "fae", members: ["a", "b", "c"]};
+      const keys = [PO().polityFor(g, 1300), PO().polityFor(fae, 1300), PO().polityFor(fae, 1500), PO().polityFor(fae, 1990), PO().polityFor({kind: "spirits", members: ["a", "b", "c"]}, 1600)];
+      const before = game.messages.size;
+      await FX().stageFight({op: "pol-fight", faction: "gateCourt", challenger: made[2].id, holder: made[0].id, office: "prince", title: "Prince", how: "a challenge"});
+      await sleep(300);
+      const card = game.messages.contents.at(-1);
+      ok("7. a sept, the fae courts of each age, no default for spirits; a staged challenge with no tokens comes as a card",
+        JSON.stringify(keys) === JSON.stringify(["garou-sept", "fae-court", "commoner-freehold", "noble-fief", null]) && game.messages.size > before && /challenges/.test(card?.content ?? ""), {keys});
+    });
+
+    await step("8. politics off", async () => {
       await game.settings.set(MOD, "factionPolitics", false);
       const inner = fac("gateCourt").politics.inner;
       await FX().runTurns({reason: "gate", forced: true});
       await sleep(400);
-      ok("7. with the setting off, no inner turn runs", fac("gateCourt").politics.inner === inner, {inner});
+      ok("8. with the setting off, no inner turn runs", fac("gateCourt").politics.inner === inner, {inner});
     });
   } catch (e) { R.errors.push(e.message); }
 
-  // 8. clean up
+  // 9. clean up
   try {
     await game.settings.set(MOD, "factions", keep.factions);
     await game.settings.set(MOD, "factionMode", keep.mode);
@@ -137,7 +149,7 @@ export async function run() {
     R.removed = {messages: msgs.length, actors: made.length};
   } catch (e) { R.errors.push(`clean up: ${e.message}`); }
   await sleep(500);
-  ok("8. everything is back: factions, settings, Ledger, queue; the actors and cards are gone",
+  ok("9. everything is back: factions, settings, Ledger, queue; the actors and cards are gone",
     JSON.stringify(game.settings.get(MOD, "factions")) === JSON.stringify(keep.factions) && game.settings.get(MOD, "factionMode") === keep.mode
     && game.settings.get(MOD, "factionPolitics") === keep.politics
     && JSON.stringify(game.settings.get("wodx-chronicle", "approvals")?.pending ?? []) === JSON.stringify(keep.approvals?.pending ?? [])

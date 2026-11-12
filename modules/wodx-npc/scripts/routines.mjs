@@ -119,7 +119,7 @@ export function build(ctx) {
   const routineOf = actor => flag(actor, "routine") ?? null;
   const whereOf = actor => flag(actor, "where") ?? null;
   const blocksFor = actor => R.blocksOf(routineOf(actor), profileFor(actor).template, yearNow());
-  // The hidden passer-by actors (0.26.0) keep no routine and join no household or faction
+  // The hidden passer-by actors (0.27.0) keep no routine and join no household or faction
   const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
   const domitorOf = actor => { const id = actor.flags?.["wodx-creation"]?.lineage?.domitor?.id; return id ? game.actors.get(id) : null; };
@@ -602,7 +602,7 @@ export function build(ctx) {
   async function onRegionEvent(system, event, trigger) {
     if ( !isActiveGM() || skipping() ) return;
     const doc = event?.data?.token, behavior = system.parent, region = behavior?.parent ?? event?.region;
-    // Passers-by (0.26.0) set off no reactions
+    // Passers-by (0.27.0) set off no reactions
     if ( !doc || !region || behavior?.disabled || doc.flags?.[MOD]?.passerby ) return;
     const k = `${region.id}:${doc.id}`;
     if ( trigger === "enter" ) entered.set(k, game.time.worldTime);

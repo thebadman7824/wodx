@@ -4,7 +4,7 @@ import {readFileSync} from "node:fs";
 import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
 import * as RR from "../../modules/wodx-npc/scripts/routine-rules.mjs";
 
-/* Passers-by and animals (WoDX NPC 0.26.0, B970 to B975) */
+/* Passers-by and animals (WoDX NPC 0.27.0, B970 to B975) */
 
 const seq = (...xs) => { let i = 0; return () => xs[i++ % xs.length]; };
 

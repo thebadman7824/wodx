@@ -464,7 +464,7 @@ export function build(ctx) {
         const out = [];
         for (const t of canvas.tokens.placeables) {
             if (t === tok || t.document?.hidden || !t.actor || exclude.includes(t.actor.isToken ? t.document.id : t.actor.id)) continue;
-            if (t.document?.flags?.["wodx-npc"]?.passerby?.animal) continue; // an animal in the street is no witness (WoDX NPC 0.26.0)
+            if (t.document?.flags?.["wodx-npc"]?.passerby?.animal) continue; // an animal in the street is no witness (WoDX NPC 0.27.0)
             if (!profiles.includes(P.detectProfile(t.actor))) continue;
             if (Math.hypot(t.center.x - tok.center.x, t.center.y - tok.center.y) > maxFt * px) continue;
             let blocked = false;

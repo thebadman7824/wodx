@@ -79,7 +79,7 @@ export const POLITIES = {
   },
   sabbat: {
     label: "A Sabbat diocese", line: "vampire", kinds: ["kindred"], from: 1493, to: null,
-    rank: "Status (Sabbat)", blocs: "clan", gathering: {name: "esbat", every: 2, meets: "The esbat gathers."}, vinculum: true,
+    body: "The diocese", rank: "Status (Sabbat)", blocs: "clan", gathering: {name: "esbat", every: 2, meets: "The esbat gathers."}, vinculum: true,
     offices: [
       {key: "archbishop", title: "Archbishop", seats: 1, fill: "challenge", top: true, judge: true},
       {key: "bishop", title: "Bishop", seats: 2, fill: "challenge"},
@@ -93,7 +93,7 @@ export const POLITIES = {
   },
   anarch: {
     label: "An Anarch barony", line: "vampire", kinds: ["kindred"], from: 1381, to: null,
-    rank: "Status (Anarch)", blocs: "clan", gathering: {name: "gangs' meeting", every: 4, meets: "The gangs meet."},
+    body: "The barony", rank: "Status (Anarch)", blocs: "clan", backers: "The gangs", gathering: {name: "gangs' meeting", every: 4, meets: "The gangs meet."},
     offices: [
       {key: "baron", title: "Baron", seats: 1, fill: "backing", top: true, judge: true},
       {key: "boss", title: "Gang leader", seats: 3, fill: "backing"}
@@ -101,29 +101,100 @@ export const POLITIES = {
     law: ["selling out to the elders", "hunting on another gang's turf", "a broken word to the gangs"],
     notes: "Status among Anarchs is reputation, won by deeds and word of mouth rather than titles (V20 pdf 53). Before 1493 this is a band of the Anarch Revolt.",
     eras: {revolt: "Before 1493 the barony is a band of the Anarch Revolt, at war with its elders."}
+  },
+  "garou-sept": {
+    label: "A Garou sept", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The sept", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "moot", every: 4, meets: "The sept holds its moot under the full moon."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "elder", title: "Sept leader", seats: 1, fill: "challenge", top: true},
+      {key: "truthcatcher", title: "Truthcatcher", seats: 1, fill: "appoint", judge: true},
+      {key: "warder", title: "Warder", seats: 1, fill: "challenge"},
+      {key: "gatekeeper", title: "Gatekeeper", seats: 1, fill: "appoint"},
+      {key: "ritemaster", title: "Master of the Rite", seats: 1, fill: "appoint"},
+      {key: "talesinger", title: "Talesinger", seats: 1, fill: "appoint"},
+      {key: "challengemaster", title: "Master of the Challenge", seats: 1, fill: "appoint"}
+    ],
+    law: ["mating with another Garou", "failing to fight the Wyrm", "showing the wolf to mortals", "defying an elder of higher Rank", "harming a cub", "leaving the caern unguarded", "eating the flesh of humans or wolves"],
+    notes: "The Litany is the Garou's law (W20 pdf 52-53). To rise in Rank, a Garou challenges one of higher Rank, who picks the contest (W20 pdf 253-254). Adren hold most sept offices (W20 pdf 254). Challenges end at submission, not death.",
+    eras: {}
+  },
+  "fae-court": {
+    label: "A fae court (before the Shattering)", line: "changeling", kinds: ["fae"], from: null, to: 1349,
+    rank: "Title", rankFrom: "title", blocs: "house", gathering: {name: "court", every: 4, meets: "The lord of the freehold holds court."},
+    offices: [
+      {key: "sovereign", title: "Lord of the freehold", seats: 1, fill: "challenge", top: true, judge: true},
+      {key: "seneschal", title: "Seneschal", seats: 1, fill: "appoint"},
+      {key: "herald", title: "Herald", seats: 1, fill: "appoint"},
+      {key: "champion", title: "Champion", seats: 1, fill: "challenge"},
+      {key: "knight", title: "Sworn knight", seats: 3, fill: "appoint"}
+    ],
+    law: ["trespass on a liege's demesne", "an oath of fealty broken", "refusing rescue to one of the Kithain", "breaking the peace of safe haven", "taking a Kithain's life", "showing the Dreaming to mortals"],
+    titles: {sovereign: ["Lord of the freehold", "Baron", "Count", "Duke", "King or Queen"]},
+    notes: "Nobles hold freeholds as fiefs by oaths of fealty (C20 pdf 74-76); the Escheat is the law both courts keep, the Seelie to its letter and the Unseelie to its spirit (C20 pdf 65-66). Title is the noble's rank (C20 pdf 169-172)."
+  },
+  "commoner-freehold": {
+    label: "A commoner freehold (after the Shattering)", line: "changeling", kinds: ["fae"], from: 1350, to: 1968,
+    body: "The freehold", rank: "Standing", rankFrom: "title", blocs: "court", backers: "The commoners", gathering: {name: "gathering", every: 4, meets: "The freehold gathers by its balefire."},
+    offices: [
+      {key: "keeper", title: "Keeper of the freehold", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "warden", title: "Warden", seats: 2, fill: "backing"}
+    ],
+    law: ["trespass on the freehold", "an oath broken", "refusing rescue to one of the Kithain", "taking a Kithain's life", "showing the Dreaming to mortals"],
+    notes: "With the nobles gone to Arcadia after the Shattering of 1350 (C20 pdf 51, 58), commoners keep what freeholds remain, choosing their keepers by backing."
+  },
+  "noble-fief": {
+    label: "A noble fief (after the Resurgence)", line: "changeling", kinds: ["fae"], from: 1969, to: null,
+    rank: "Title", rankFrom: "title", blocs: "house", gathering: {name: "court", every: 4, meets: "The liege holds court."},
+    offices: [
+      {key: "sovereign", title: "Count", seats: 1, fill: "challenge", top: true, judge: true},
+      {key: "seneschal", title: "Seneschal", seats: 1, fill: "appoint"},
+      {key: "herald", title: "Herald", seats: 1, fill: "appoint"},
+      {key: "champion", title: "Champion", seats: 1, fill: "challenge"},
+      {key: "knight", title: "Sworn knight", seats: 3, fill: "appoint"},
+      {key: "commons", title: "Voice of the commoners", seats: 1, fill: "backing"}
+    ],
+    law: ["trespass on a liege's demesne", "an oath of fealty broken", "refusing rescue to one of the Kithain", "breaking the peace of safe haven", "taking a Kithain's life", "showing the Dreaming to mortals"],
+    titles: {sovereign: ["Count", "Baron", "Duke", "King or Queen"]},
+    notes: "The nobles return with the Resurgence of 1969 (C20 pdf 38, 51-52); the Accordance War between nobles and commoners follows (C20 pdf 39, 59). Escheat C20 pdf 65-66; Title C20 pdf 169-172.",
+    eras: {accordance: "In the years of the Accordance War, commoners and nobles fight over every seat."}
+  },
+  "wraith-legion": {
+    label: "A necropolis of the Hierarchy", line: "wraith", kinds: ["spirits"], from: null, to: null,
+    body: "The necropolis", rank: "Status", blocs: "legion", gathering: {name: "muster", every: 4, meets: "The legions muster before the Anacreon."},
+    offices: [
+      {key: "anacreon", title: "Anacreon", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "regent", title: "Regent", seats: 2, fill: "appoint"},
+      {key: "marshal", title: "Marshal", seats: 1, fill: "appoint"},
+      {key: "centurion", title: "Centurion", seats: 4, fill: "appoint"}
+    ],
+    law: ["meddling with the living against the Dictum Mortuum", "dealings with Renegades", "practising a banned guild's art", "disobeying a superior officer", "losing a soul in one's charge to the Tempest"],
+    notes: "The Anacreon rules a necropolis for Stygia; Regents and Centurions serve under each legion's Deathlord, and the Centurion is the lowest officer, judged on results (Wraith 20th pdf 126-136). A Great Maelstrom empties seats.",
+    eras: {}
   }
 };
 export const POLITY_LIST = Object.keys(POLITIES);
 
+/** The polity a kind of faction keeps by default in a year, when it has three or more members (B1101, B1110). */
+export const DEFAULTS = {
+  kindred: y => (y !== null && y < 1435 ? "dark-ages-court" : "camarilla"),
+  garou: () => "garou-sept",
+  fae: y => (y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court")
+};
+const inYears = (p, y) => y === null || ((p.from === null || y >= p.from) && (p.to === null || y <= p.to));
 /** The polity a faction follows in a year: its own pick when that exists then, else the default for its kind. */
 export function polityFor(f, year = null, {memberCount = null} = {}) {
   const y = Number.isFinite(Number(year)) && year !== null ? Number(year) : null;
-  const fits = key => {
-    const p = POLITIES[key];
-    if ( !p || !p.kinds.includes(f?.kind) ) return false;
-    if ( y === null ) return true;
-    return (p.from === null || y >= p.from) && (p.to === null || y <= p.to);
-  };
+  const byKind = () => { const k = DEFAULTS[f?.kind]?.(y); return k && inYears(POLITIES[k], y) ? k : null; };
   if ( f?.polity === "none" ) return null;
   if ( f?.polity && POLITIES[f.polity] ) {
-    if ( fits(f.polity) ) return f.polity;
-    // A sect before its time: the court of its age stands in (B1101)
-    return f.kind === "kindred" ? "dark-ages-court" : null;
+    if ( inYears(POLITIES[f.polity], y) ) return f.polity;
+    // A body before (or after) its time: the polity of its age for that kind stands in (B1101)
+    return byKind();
   }
-  // The default: a Kindred faction of three or more members keeps a court of its age (B1101)
+  // The default: a faction of three or more members of a kind with a polity keeps the one of its age
   const n = memberCount ?? (f?.members?.length ?? 0);
-  if ( f?.kind === "kindred" && n >= 3 ) return y !== null && y < 1435 ? "dark-ages-court" : "camarilla";
-  return null;
+  return n >= 3 ? byKind() : null;
 }
 /** The words of an office, with a court's own title for its top seat. */
 export function officeTitle(polityKey, officeKey, f = null) {
@@ -167,12 +238,18 @@ export function normPolitics(p = {}) {
   };
 }
 /** A member's standing: the polity's own record, else the Status on the sheet. */
-export const rankOf = (f, id, info = {}) => (f?.politics?.ranks?.[id] ?? clampInt(info?.[id]?.status ?? 0, 0, MAX_RANK));
+/** What a polity reads from the sheet as a member's standing: Status, Garou Rank, a Changeling's Title (rankFrom). */
+export const rankFrom = key => POLITIES[key]?.rankFrom ?? "status";
+export const baseRank = (info, id, key = null) => clampInt(info?.[id]?.[rankFrom(key)] ?? 0, 0, MAX_RANK);
+export const rankOf = (f, id, info = {}, key = null) => (f?.politics?.ranks?.[id] ?? baseRank(info, id, key));
 /** The offices a member holds, as keys. */
 export const officesOf = (f, id) => Object.entries(f?.politics?.offices ?? {}).filter(([, l]) => l.includes(id)).map(([k]) => k);
 export const holdersOf = (f, key) => f?.politics?.offices?.[key] ?? [];
-const cap = t => String(t).replace(/\b\w/g, ch => ch.toUpperCase());
-const bloc = (info, id) => String(info?.[id]?.clan ?? "").trim().toLowerCase() || null;
+const cap = t => String(t).replace(/\b\w+/g, (w, i) => (i && /^(of|the|and)$/.test(w) ? w : w[0].toUpperCase() + w.slice(1)));
+/** The plural a polity's blocs go by in the lines of a turn. */
+export const BLOC_WORDS = {clan: "clans", tribe: "tribes", house: "houses", court: "courts", legion: "legions"};
+/** A member's bloc: the sheet field the polity sorts by (clan, tribe, house, court, legion). */
+const bloc = (info, id, key = null) => String(info?.[id]?.[POLITIES[key]?.blocs ?? "clan"] ?? "").trim().toLowerCase() || null;
 
 /* ------------------------------------------------------------------ */
 /*  Applying a politics change, with its inverse                       */
@@ -180,7 +257,7 @@ const bloc = (info, id) => String(info?.[id]?.clan ?? "").trim().toLowerCase() |
 
 /** The ops this file owns. */
 export const POL_OPS = new Set(["pol-office", "pol-rank", "pol-favour", "pol-docket", "pol-docket-remove", "pol-claim", "pol-claim-remove",
-  "pol-vinculum", "pol-wary", "pol-lean", "pol-inner", "pol-boon"]);
+  "pol-vinculum", "pol-wary", "pol-lean", "pol-inner", "pol-boon", "pol-fight"]);
 /**
  * Apply one politics change to a faction record in place. Returns its inverse (an array of changes), or null when
  * nothing changed.
@@ -278,6 +355,7 @@ export function applyPolitics(f, c) {
       return [{op: "pol-inner", faction: f.id, set: was}];
     }
     case "pol-boon": return []; // a report: the creditor calls in a boon; the Storyteller marks the ledger
+    case "pol-fight": return []; // a report: a challenge with a player's character, staged as a fight (B1111)
     default: return null;
   }
 }
@@ -295,6 +373,7 @@ export function politicsBig(c, pcActors = new Set()) {
   if ( c.op === "pol-rank" && pcActors.has(c.actor) ) return true;
   if ( c.op === "pol-docket" && pcActors.has(c.charge?.against) ) return true;
   if ( c.op === "pol-boon" && pcActors.has(c.debtor) ) return true;
+  if ( c.op === "pol-fight" ) return true;
   return false;
 }
 
@@ -319,6 +398,7 @@ export function describePolitics(c, names = {}, state = null) {
     case "pol-lean": return c.who ? `The ${cap(c.bloc)} lean toward ${an(c.who)}` : `The ${c.bloc} lean toward nobody`;
     case "pol-inner": return `${fn(c.faction)}'s politics move on`;
     case "pol-boon": return `${an(c.creditor)} calls in a ${c.size ?? ""} boon from ${an(c.debtor)}`.replace("a  boon", "a boon");
+    case "pol-fight": return `${an(c.challenger)} challenges ${an(c.holder)} by ${c.how ?? "a challenge"}${c.office ? ` for ${c.title ?? "a seat"}` : " for Rank"}: stage it as a fight${c.noKill ? ", ended at submission" : ""}`;
     default: return c.op;
   }
 }
@@ -336,6 +416,17 @@ export function hits(dice, difficulty) {
 }
 const attr = (info, id, k) => clampInt(info?.[id]?.attrs?.[k] ?? 2, 0, 10) || 2;
 const roll = (rand, n, diff) => { const dice = rollDice(rand, Math.max(1, n)); return {dice, ...hits(dice, diff)}; };
+/** The contests a challenged Garou may pick from (W20 pdf 253-254): the one challenged picks the one they are best at. */
+export const CONTESTS = [
+  {how: "a contest of strength", pair: ["strength", "dexterity"]},
+  {how: "a riddle contest", pair: ["wits", "perception"]},
+  {how: "a staring contest", pair: ["charisma", "manipulation"]}
+];
+/** How a challenge is fought: a duel in a court; in a polity that lets the challenged choose, their best contest. */
+export function contestFor(key, info, holder) {
+  if ( !POLITIES[key]?.riseByChallenge ) return {how: "a challenge", pair: ["strength", "dexterity"]};
+  return [...CONTESTS].sort((a, b) => (attr(info, holder, b.pair[0]) + attr(info, holder, b.pair[1])) - (attr(info, holder, a.pair[0]) + attr(info, holder, a.pair[1])))[0];
+}
 
 /** The weights of the six inner moves for one member (B1102). */
 export const INNER_MOVES = {
@@ -353,7 +444,7 @@ function pick(rand, weights) {
 function openSeats(f, key, o, info) {
   const held = holdersOf(f, key).filter(id => live(info, id) && f.members.includes(id));
   if ( o.fill === "clan" ) {
-    const clans = new Set(f.members.filter(id => live(info, id)).map(id => bloc(info, id)).filter(Boolean));
+    const clans = new Set(f.members.filter(id => live(info, id)).map(id => bloc(info, id, key)).filter(Boolean));
     return Math.max(0, Math.min(o.seats, clans.size) - held.length);
   }
   return Math.max(0, o.seats - held.length);
@@ -367,7 +458,7 @@ const live = (info, id) => info?.[id] ? info[id].alive !== false : true;
  *         turn, year, era ("revolt" | "future" | null)}
  */
 export function innerTurn(f, ctx = {}) {
-  const key = ctx.polity, P = POLITIES[key];
+  const key = ctx.polity, P = POLITIES[key], body = P?.body ?? "The court", here = body.toLowerCase(), blocs = BLOC_WORDS[P?.blocs] ?? "clans";
   const rand = ctx.rand ?? Math.random, info = ctx.info ?? {}, turn = ctx.turn ?? 0;
   const out = {changes: [], lines: [], groups: [], gathering: false};
   if ( !P ) return out;
@@ -397,40 +488,40 @@ export function innerTurn(f, ctx = {}) {
   }
 
   // Up to three NPC members act, the highest standing first
-  const actors = members.filter(id => !info[id]?.pc).sort((a, b) => rankOf(view, b, info) - rankOf(view, a, info) || name(a).localeCompare(name(b))).slice(0, ACTORS_PER_TURN);
+  const actors = members.filter(id => !info[id]?.pc).sort((a, b) => rankOf(view, b, info, key) - rankOf(view, a, info, key) || name(a).localeCompare(name(b))).slice(0, ACTORS_PER_TURN);
   for ( const id of actors ) {
-    const r = rankOf(view, id, info), mine = officesOf(view, id);
+    const r = rankOf(view, id, info, key), mine = officesOf(view, id);
     const owed = (ctx.boons ?? []).filter(b => b.to === id && b.from && members.includes(b.from));
     const accused = p.docket.some(d => d.against === id);
     const vacant = P.offices.filter(o => openSeats(view, o.key, o, info) > 0 && !mine.includes(o.key));
-    const blocsLeft = [...new Set(members.map(m => bloc(info, m)).filter(k => k && k !== bloc(info, id) && p.lean[k] !== id))].length;
+    const blocsLeft = [...new Set(members.map(m => bloc(info, m, key)).filter(k => k && k !== bloc(info, id, key) && p.lean[k] !== id))].length;
     const w = {petition: 3, court: blocsLeft ? 2 : 0, accuse: 1, favour: owed.length ? 3 : 0, bid: vacant.length ? 3 : (r >= 3 && !mine.length ? 1 : 0.3), wait: accused ? 3 : 0.5};
     const move = pick(rand, w);
     step();
     switch ( move ) {
       case "petition": {
         const x = roll(rand, attr(info, id, "charisma") + r, 6);
-        if ( x.net ) { add({op: "pol-favour", who: id, delta: x.net >= 3 ? 2 : 1}); say(`${name(id)} petitions the court and is heard (${x.net} success${x.net === 1 ? "" : "es"}).`); }
-        else say(`${name(id)} petitions the court${x.botch ? " and gives offence" : " but is not heard"}.`);
+        if ( x.net ) { add({op: "pol-favour", who: id, delta: x.net >= 3 ? 2 : 1}); say(`${name(id)} petitions ${here} and is heard (${x.net} success${x.net === 1 ? "" : "es"}).`); }
+        else say(`${name(id)} petitions ${here}${x.botch ? " and gives offence" : " but is not heard"}.`);
         if ( x.botch ) add({op: "pol-favour", who: id, set: 0});
         break;
       }
       case "court": {
-        const b = bloc(info, id) ? [...new Set(members.map(m => bloc(info, m)).filter(k => k && k !== bloc(info, id)))] : [];
+        const b = bloc(info, id, key) ? [...new Set(members.map(m => bloc(info, m, key)).filter(k => k && k !== bloc(info, id, key)))] : [];
         const open = b.filter(k => p.lean[k] !== id);
         const target = open.length ? open[Math.floor(rand() * open.length)] : null;
         const x = roll(rand, attr(info, id, "manipulation") + r, 7);
         if ( target && x.net ) { add({op: "pol-lean", bloc: target, who: id}); say(`${name(id)} wins the ${cap(target)} to their side.`); }
-        else say(`${name(id)} courts the other clans without result.`);
+        else say(`${name(id)} courts the other ${blocs} without result.`);
         break;
       }
       case "accuse": {
         // The top seat is beyond a charge, save among the Anarchs
         const rivals = members.filter(m => m !== id && (key === "anarch" || !officesOf(view, m).includes(top?.key)));
-        const against = rivals.sort((a, b) => rankOf(view, b, info) - rankOf(view, a, info))[0] ?? null;
+        const against = rivals.sort((a, b) => rankOf(view, b, info, key) - rankOf(view, a, info, key))[0] ?? null;
         if ( !against ) { say(`${name(id)} finds nobody worth accusing.`); break; }
         const wary = (p.wary[against] ?? 0) >= turn;
-        const x = roll(rand, attr(info, id, "manipulation") + r, 6 + (wary ? 1 : 0)), y = roll(rand, attr(info, against, "wits") + rankOf(view, against, info), 6);
+        const x = roll(rand, attr(info, id, "manipulation") + r, 6 + (wary ? 1 : 0)), y = roll(rand, attr(info, against, "wits") + rankOf(view, against, info, key), 6);
         if ( x.net > y.net ) {
           const law = P.law[Math.floor(rand() * P.law.length)];
           add({op: "pol-docket", charge: {id: `${f.id}:${turn}:${id}`, by: id, against, law, turn}});
@@ -446,6 +537,7 @@ export function innerTurn(f, ctx = {}) {
         break;
       }
       case "bid": {
+        if ( mine.includes(topOffice(key)?.key) ) { say(`${name(id)} sees to the business of the top seat.`); break; }
         const o = vacant.find(x => !x.top) ?? vacant[0] ?? P.offices.filter(x => !x.top && !mine.includes(x.key)).sort(() => rand() - 0.5)[0];
         if ( !o ) { say(`${name(id)} looks for a seat and finds none.`); break; }
         const holders = holdersOf(view, o.key).filter(h => live(info, h) && f.members.includes(h));
@@ -456,15 +548,15 @@ export function innerTurn(f, ctx = {}) {
           say(`${name(id)} lays a claim to the seat of ${officeTitle(key, o.key, f)}.`);
           break;
         }
-        const holder = holders.sort((a, b) => rankOf(view, a, info) - rankOf(view, b, info))[0] ?? null;
+        const holder = holders.sort((a, b) => rankOf(view, a, info, key) - rankOf(view, b, info, key))[0] ?? null;
         if ( o.fill === "backing" ) {
-          const mineF = (p.favour[id] ?? 0) + r, theirs = holder ? (p.favour[holder] ?? 0) + rankOf(view, holder, info) : -1;
+          const mineF = (p.favour[id] ?? 0) + r, theirs = holder ? (p.favour[holder] ?? 0) + rankOf(view, holder, info, key) : -1;
           if ( mineF > theirs ) {
             if ( holder ) add({op: "pol-office", office: o.key, actor: holder, remove: true, top: !!o.top});
             add({op: "pol-office", office: o.key, actor: id, top: !!o.top});
             add({op: "pol-favour", who: id, set: 0});
-            say(`The gangs back ${name(id)} over ${holder ? name(holder) : "nobody"} for ${officeTitle(key, o.key, f)}.`);
-          } else say(`${name(id)} looks for backing against ${holder ? name(holder) : "the gangs"} and finds too little.`);
+            say(`${P.backers ?? body} back${P.backers ? "" : "s"} ${name(id)} over ${holder ? name(holder) : "nobody"} for ${officeTitle(key, o.key, f)}.`);
+          } else say(`${name(id)} looks for backing against ${holder ? name(holder) : "the holder"} and finds too little.`);
           break;
         }
         // A challenge: monomacy in the Sabbat, a duel or a test in a court (B1103). Rolled here between NPCs; the
@@ -472,16 +564,23 @@ export function innerTurn(f, ctx = {}) {
         if ( !holder ) break;
         const wary = (p.wary[holder] ?? 0) >= turn;
         const vin = key === "sabbat" && (p.vinculum[`${id}>${holder}`] ?? 0) >= 7 ? 1 : 0;
-        const x = roll(rand, attr(info, id, "strength") + attr(info, id, "dexterity"), 6 + (wary ? 1 : 0) + vin);
-        const y = roll(rand, attr(info, holder, "strength") + attr(info, holder, "dexterity"), 6);
-        const how = key === "sabbat" ? "monomacy" : "a challenge";
+        const c = contestFor(key, info, holder);
+        const how = key === "sabbat" ? "monomacy" : c.how;
+        // A player's character in the challenge: the Storyteller stages it as a fight, nothing is rolled here (B1111)
+        if ( info[id]?.pc || info[holder]?.pc ) {
+          add({op: "pol-fight", challenger: id, holder, office: o.key, title: officeTitle(key, o.key, f), how, noKill: !!P.noKill, top: !!o.top});
+          say(`${name(id)} challenges ${name(holder)} for ${officeTitle(key, o.key, f)} by ${how}; the Storyteller stages it.`);
+          break;
+        }
+        const x = roll(rand, attr(info, id, c.pair[0]) + attr(info, id, c.pair[1]), 6 + (wary ? 1 : 0) + vin);
+        const y = roll(rand, attr(info, holder, c.pair[0]) + attr(info, holder, c.pair[1]), 6);
         if ( x.net > y.net ) {
           add({op: "pol-office", office: o.key, actor: holder, remove: true, top: !!o.top});
           add({op: "pol-office", office: o.key, actor: id, top: !!o.top});
-          add({op: "pol-rank", actor: holder, delta: -1, base: info[holder]?.status ?? 0});
+          add({op: "pol-rank", actor: holder, delta: -1, base: baseRank(info, holder, key)});
           say(`${name(id)} wins the seat of ${officeTitle(key, o.key, f)} from ${name(holder)} by ${how} (${x.net} to ${y.net}).`);
         } else {
-          add({op: "pol-rank", actor: id, delta: -1, base: info[id]?.status ?? 0});
+          add({op: "pol-rank", actor: id, delta: -1, base: baseRank(info, id, key)});
           say(`${name(id)} challenges ${name(holder)} for ${officeTitle(key, o.key, f)} by ${how} and loses (${x.net} to ${y.net}).`);
         }
         break;
@@ -507,14 +606,14 @@ export function innerTurn(f, ctx = {}) {
 
 /** The gathering: charges heard, seats filled, standing granted, the Vaulderie shared. */
 function gather(f, key, ctx, add, lines, step, sofar) {
-  const P = POLITIES[key], info = ctx.info ?? {}, rand = ctx.rand ?? Math.random;
+  const P = POLITIES[key], info = ctx.info ?? {}, rand = ctx.rand ?? Math.random, body = P.body ?? "The court";
   const p = f.politics, name = id => info[id]?.name ?? "someone";
   const members = f.members.filter(id => live(info, id));
   const removed = new Set(sofar.filter(c => c.op === "pol-office" && c.remove).map(c => `${c.office}:${c.actor}`));
   const taken = new Set(sofar.filter(c => c.op === "pol-office" && !c.remove).map(c => `${c.office}:${c.actor}`));
   const holds = (k, id) => (holdersOf(f, k).includes(id) && !removed.has(`${k}:${id}`)) || taken.has(`${k}:${id}`);
   const judgeKey = judgeOffice(key)?.key, judge = members.find(id => holds(judgeKey, id)) ?? null;
-  const weight = id => (p.favour[id] ?? 0) + rankOf(f, id, info) + Object.values(p.lean).filter(w => w === id).length;
+  const weight = id => (p.favour[id] ?? 0) + rankOf(f, id, info, key) + Object.values(p.lean).filter(w => w === id).length;
 
   // Charges
   for ( const d of p.docket ) {
@@ -524,11 +623,11 @@ function gather(f, key, ctx, add, lines, step, sofar) {
     // The judge's word weighs: a charge the judge brings, or one against the judge, leans that way
     const a = weight(d.by ?? "") + rollDice(rand, 1)[0] + (judge && d.by === judge ? 3 : 0), b = weight(d.against) + rollDice(rand, 1)[0] + (judge && d.against === judge ? 3 : 0);
     if ( a > b ) {
-      add({op: "pol-rank", actor: d.against, delta: -1, base: info[d.against]?.status ?? 0});
-      lines(`${judge ? name(judge) : "The court"} finds ${name(d.against)} guilty of ${d.law}: they lose standing.`);
+      add({op: "pol-rank", actor: d.against, delta: -1, base: baseRank(info, d.against, key)});
+      lines(`${judge ? name(judge) : body} finds ${name(d.against)} guilty of ${d.law}: they lose standing.`);
     } else {
       if ( d.by ) add({op: "pol-favour", who: d.by, set: Math.max(0, (p.favour[d.by] ?? 0) - 1)});
-      lines(`${judge ? name(judge) : "The court"} clears ${name(d.against)} of ${d.law}.`);
+      lines(`${judge ? name(judge) : body} clears ${name(d.against)} of ${d.law}.`);
     }
   }
 
@@ -541,18 +640,19 @@ function gather(f, key, ctx, add, lines, step, sofar) {
     if ( claims.length ) step();
     for ( const c of claims ) add({op: "pol-claim-remove", office: c.office, who: c.who});
     if ( o.fill === "clan" ) {
-      const seated = new Set(members.filter(id => holds(o.key, id)).map(id => bloc(info, id)));
-      const clans = [...new Set(members.map(id => bloc(info, id)).filter(Boolean))].filter(k => !seated.has(k));
+      const seated = new Set(members.filter(id => holds(o.key, id)).map(id => bloc(info, id, key)));
+      const clans = [...new Set(members.map(id => bloc(info, id, key)).filter(Boolean))].filter(k => !seated.has(k));
       for ( const k of clans ) {
         if ( room <= 0 ) break;
-        const eldest = members.filter(id => bloc(info, id) === k).sort((a, b) => rankOf(f, b, info) - rankOf(f, a, info) || name(a).localeCompare(name(b)))[0];
+        const eldest = members.filter(id => bloc(info, id, key) === k).sort((a, b) => rankOf(f, b, info, key) - rankOf(f, a, info, key) || name(a).localeCompare(name(b)))[0];
         step(); add({op: "pol-office", office: o.key, actor: eldest}); room--;
         lines(`${name(eldest)} takes the ${cap(k)} seat among the ${o.title}.`);
       }
       continue;
     }
     if ( room <= 0 ) continue;
-    const want = claims.map(c => c.who).filter(id => members.includes(id) && !holds(o.key, id));
+    const topKey = topOffice(key)?.key;
+    const want = claims.map(c => c.who).filter(id => members.includes(id) && !holds(o.key, id) && (o.top || !holds(topKey, id)));
     const pool = want.length ? want : (o.top ? members : members.filter(id => !holding.has(id)));
     const ranked = [...new Set(pool)].sort((a, b) => weight(b) - weight(a) || name(a).localeCompare(name(b)));
     for ( const id of ranked.slice(0, o.top ? 1 : room) ) {
@@ -561,7 +661,7 @@ function gather(f, key, ctx, add, lines, step, sofar) {
       add({op: "pol-office", office: o.key, actor: id, top: !!o.top});
       if ( want.length ) add({op: "pol-favour", who: id, set: 0});
       holding.add(id);
-      lines(`${o.top ? "The court raises" : judge ? `${name(judge)} names` : "The court names"} ${name(id)} ${o.title}.`);
+      lines(`${o.top ? `${body} raises` : judge ? `${name(judge)} names` : `${body} names`} ${name(id)} ${o.title}.`);
     }
   }
 
@@ -569,9 +669,32 @@ function gather(f, key, ctx, add, lines, step, sofar) {
   const best = members.filter(id => (p.favour[id] ?? 0) >= 3).sort((a, b) => (p.favour[b] ?? 0) - (p.favour[a] ?? 0))[0];
   if ( best && best !== judge ) {
     step();
-    add({op: "pol-rank", actor: best, delta: 1, base: info[best]?.status ?? 0});
+    add({op: "pol-rank", actor: best, delta: 1, base: baseRank(info, best, key)});
     add({op: "pol-favour", who: best, set: 0});
-    lines(`${judge ? name(judge) : "The court"} grants ${name(best)} new standing.`);
+    lines(`${judge ? name(judge) : body} grants ${name(best)} new standing.`);
+  }
+
+  // Rising in Rank (W20 pdf 253-254): at the moot one who has earned it challenges a Garou of higher Rank
+  if ( P.riseByChallenge ) {
+    const seeker = members.filter(id => rankOf(f, id, info, key) < MAX_RANK && (p.favour[id] ?? 0) >= 2 && id !== best)
+      .sort((a, b) => (p.favour[b] ?? 0) - (p.favour[a] ?? 0) || name(a).localeCompare(name(b)))[0];
+    const r = seeker ? rankOf(f, seeker, info, key) : 0;
+    const above = seeker ? members.filter(id => rankOf(f, id, info, key) > r).sort((a, b) => rankOf(f, a, info, key) - rankOf(f, b, info, key))[0] : null;
+    if ( seeker && above ) {
+      step();
+      const c = contestFor(key, info, above);
+      add({op: "pol-favour", who: seeker, set: 0});
+      if ( info[seeker]?.pc || info[above]?.pc ) {
+        add({op: "pol-fight", challenger: seeker, holder: above, office: null, how: c.how, noKill: true, rise: true});
+        lines(`${name(seeker)} challenges ${name(above)} for Rank; ${name(above)} picks ${c.how}, and the Storyteller stages it.`);
+      } else {
+        const x = roll(rand, attr(info, seeker, c.pair[0]) + attr(info, seeker, c.pair[1]), 6), y = roll(rand, attr(info, above, c.pair[0]) + attr(info, above, c.pair[1]), 6);
+        if ( x.net > y.net ) {
+          add({op: "pol-rank", actor: seeker, delta: 1, base: baseRank(info, seeker, key)});
+          lines(`${name(seeker)} challenges ${name(above)} for Rank by ${c.how} and wins (${x.net} to ${y.net}): the sept names them a Rank higher.`);
+        } else lines(`${name(seeker)} challenges ${name(above)} for Rank by ${c.how} and fails (${x.net} to ${y.net}).`);
+      }
+    }
   }
 
   // The Vaulderie (V20 pdf 297): a die per packmate at the first rite; later, a die above the rating raises it by 1
@@ -587,6 +710,28 @@ function gather(f, key, ctx, add, lines, step, sofar) {
     }
     if ( pack.length > 1 ) lines(`The Vaulderie is shared${first ? `; ${first} new Vinculum${first === 1 ? "" : "s"}` : ""}${grew ? `; ${grew} grow stronger` : ""}.`);
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  A Great Maelstrom                                                   */
+/* ------------------------------------------------------------------ */
+
+/** Chronicle events that are a Great Maelstrom. */
+export const isMaelstrom = id => /great-maelstrom$/.test(String(id ?? ""));
+/**
+ * A Great Maelstrom sweeps the Shadowlands: in each faction run as a necropolis, every seat but the top one is lost
+ * on a die of 1 to 5 (the Tempest takes the officer or scatters the legion). Returns changes.
+ */
+export function maelstromChanges(state, {year = null, rand = Math.random} = {}) {
+  const out = [];
+  for ( const f of state?.factions ?? [] ) {
+    if ( f.dormant || polityFor(f, year) !== "wraith-legion" ) continue;
+    for ( const o of POLITIES["wraith-legion"].offices ) {
+      if ( o.top ) continue;
+      for ( const id of holdersOf(f, o.key) ) if ( rollDice(rand, 1)[0] <= 5 ) out.push({op: "pol-office", faction: f.id, office: o.key, actor: id, remove: true});
+    }
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ */
@@ -608,7 +753,7 @@ export function boonChanges(state, entry, status, {info = {}, year = null} = {})
   for ( const f of state.factions ?? [] ) {
     if ( f.dormant || !f.members.includes(entry.from.id) ) continue;
     if ( !polityFor(f, year) ) continue;
-    out.push({op: "pol-rank", faction: f.id, actor: entry.from.id, delta, base: info[entry.from.id]?.status ?? 0, why: status === "broken" ? "a broken boon" : "a boon paid"});
+    out.push({op: "pol-rank", faction: f.id, actor: entry.from.id, delta, base: baseRank(info, entry.from.id, polityFor(f, year)), why: status === "broken" ? "a broken boon" : "a boon paid"});
   }
   return out;
 }
