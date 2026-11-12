@@ -1632,3 +1632,38 @@ Reverse: sentryAct, isIntruder, GUARD_YARDS in order-rules.mjs; sentries in orde
 Two new orders, Attack the one I point at and Hold back. The fight AI lays the standing order over its choices: +5 on striking the ordered target; Hold back takes 6 off every blow and adds a full defence; Guard and Wait take 2 off running. Fear, frenzy and Rötschreck still win. Every follower also counts its masters (B1600) as a ghoul counts its domitor when choosing whom to strike. Attack is a hard order outside a fight or against something plainly not human; the other orders in a fight are not hard (B1601 narrowed to sending a follower across a fight).
 
 Reverse: fightShift in order-rules.mjs; masters and OR.fightShift in main.mjs readFight and planTurn.
+
+## B1610. Errands (2026-11-12, house rule)
+A new order, Go and do this, sends a follower on one of six errands (buy, carry a message, find, ask around, bring someone to feed on, watch a rival). It leaves the scene (its tokens hidden) and works the errand as a long task on its own sheet: the named Attribute and the first of the named Abilities its sheet carries, difficulty 6, 2 to 4 successes, by the hour (watching a rival: by the day). When the task ends the follower comes back and a card tells its master's players and the Storyteller how it went. Calling it back drops the task.
+
+Reverse: ERRANDS, errandTask, errandResult in wodx-npc/scripts/order-rules.mjs; startErrand, endErrand, onTaskDone in orders.mjs; the wodxTaskDone hook in wodx-storyteller/scripts/tasks.mjs.
+
+## B1611. Helpers on long tasks (2026-11-12, house rule)
+Help me with a long task adds the follower to one open long task of its master's. Each helper adds its own dots in the task's Ability, at least one die, as workers do. V20 teamwork pools successes instead; dice keep one roll per interval.
+
+Reverse: helperDice and helpers in wodx-storyteller/scripts/tasks-rules.mjs; poolFor in tasks.mjs; setHelper in orders.mjs.
+
+## B1612. Shopping with the master's purse (2026-11-12)
+A buying errand carries a price in the smallest coin. When the errand ends, done or botched, the price comes from the master's purse through WoDX Storyteller's money; a purse that cannot pay means nothing was bought.
+
+Reverse: onTaskDone in orders.mjs.
+
+## B1613. Witnesses and breaches (2026-11-12)
+Deal with that witness rolls the follower's Manipulation + Subterfuge at 6 on the targeted witness: a success marks them talked round in the Masquerade records, a botch marks that they told others. A breach recorded against a follower posts a card to the Storyteller naming its masters, for their standing; nothing changes on its own.
+
+Reverse: cleanupOutcome in order-rules.mjs; doCleanup and onBreach in orders.mjs.
+
+## B1614. Chases (2026-11-12)
+When a chase starts, a follower on Follow whose master is a pursuer, and one told to Cut them off the quarry, join as pursuers, level with the slowest pursuer still in it.
+
+Reverse: joinChase in wodx-interactables/scripts/chase-rules.mjs; join in chase.mjs; onChase in orders.mjs.
+
+## B1615. Spying for politics (2026-11-12)
+Watching a rival is an errand (B1610): on success the Storyteller tells the master the rival's comings and goings and what it plans at the next faction turn. Followers hold no seat or office.
+
+Reverse: ERRANDS.spy in order-rules.mjs.
+
+## B1616. Loyalty drift (2026-11-12, house rule)
+A follower's attitude toward its master moves one step through WoDX NPC's attitude track: up when a ghoul drinks from its domitor, down for each month a ghoul goes without, when its master feeds on it, and when it is made to carry out a hard order. Drift never takes it below Distrusted, so it never starts a fight; at Distrusted the Storyteller is told it may refuse, leave or turn.
+
+Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs and the wodxFed hook in wodx-actions/scripts/main.js.

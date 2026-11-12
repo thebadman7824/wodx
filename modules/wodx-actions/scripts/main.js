@@ -1326,6 +1326,8 @@ export async function feed({ actor: a, vessel: t, willing = false } = {}) {
         const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks,
             rule, fits: rule?.palate ? !!fd.fits : true, willing: !!fd.willing, fought: !!fd.fought, offering: fd.offering === undefined ? true : !!fd.offering,
             flesh: num(fd.flesh), tags: vessel ? KF.parseTags(fd.vtags) : [] });
+        // 3.46.0: WoDX NPC hears when a master feeds on a follower
+        if (vessel && fed.drunk > 0) Hooks.callAll("wodxFed", { actor, vessel, drunk: fed.drunk });
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls, fed.undo ? { kind: "feed", actor: actor.uuid, undo: fed.undo } : null);
     });
 }

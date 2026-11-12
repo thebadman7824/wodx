@@ -55,7 +55,7 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(m, /orders\.registerSettings\(\)/);
   assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
-  assert.equal(j.version, "0.34.0");
+  assert.equal(j.version, "0.35.0");
   assert.equal(j.socket, true);
 });
 
@@ -145,4 +145,73 @@ test("orders: the fight AI reads the order and guards every master", () => {
   const m = src("modules/wodx-npc/scripts/main.mjs");
   assert.match(m, /OR\.fightShift\(options, actor\.flags\?\.\[MOD\]\?\.order\)/);
   assert.match(m, /masters\.includes\(t\.actor\?\.id\)/);
+});
+
+/* NPC 0.35.0: errands, help, clean-up, chases, loyalty */
+
+test("orders: errands become long tasks on the follower's own dice", () => {
+  const t = O.errandTask("buy", {sheet: {commerce: {value: 2}}, master: "pc1", masterName: "Ilse", note: "a lantern", cost: 12});
+  assert.equal(t.ability, "commerce");
+  assert.equal(t.attr, "manipulation");
+  assert.equal(t.errand, "buy");
+  assert.equal(t.master, "pc1");
+  assert.equal(t.cost, 12);
+  assert.match(t.name, /Errand for Ilse: buy something: a lantern/);
+  assert.equal(O.errandTask("buy", {sheet: {finance: {}}}).ability, "finance");
+  assert.equal(O.errandTask("spy").interval, "day");
+  assert.equal(O.errandTask("nope"), null);
+  for ( const k of Object.keys(O.ERRANDS) ) { assert.ok(O.errandResult(k, "done")); assert.ok(O.errandResult(k, "ruined")); }
+  const n = O.normOrder({kind: "errand", errand: "vessel", task: "t1", cost: "5"});
+  assert.equal(n.errand, "vessel"); assert.equal(n.task, "t1"); assert.equal(n.cost, 5);
+  assert.equal(O.normOrder({kind: "errand", errand: "dance"}).errand, null);
+});
+
+test("orders: dealing with a witness", () => {
+  assert.equal(O.cleanupOutcome({successes: 2}).state, "convinced");
+  assert.equal(O.cleanupOutcome({successes: 0}).state, null);
+  assert.equal(O.cleanupOutcome({botch: true}).state, "told");
+  assert.ok(O.NEEDS_TARGET.has("cleanup") && O.NEEDS_TARGET.has("cutoff"));
+});
+
+test("orders: loyalty drifts a step at a time and never to Hostile", () => {
+  assert.deepEqual(O.drift("drank", {step: 0}).delta, 1);
+  assert.equal(O.drift("drank", {step: 3}), null);
+  assert.equal(O.drift("unfed", {step: -1}), null);
+  const d = O.drift("fedOn", {step: 0});
+  assert.equal(d.delta, -1); assert.equal(d.wavers, true);
+  assert.equal(O.drift("hard", {step: 2}).wavers, false);
+  assert.match(O.drift("unfed", {step: 1, months: 2}).why, /2 months/);
+  assert.equal(O.drift("errand", {step: 0}), null);
+});
+
+test("storyteller: helpers add their dots, at least one die each, and errands are kept on the task", async () => {
+  const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/tasks-rules.mjs")));
+  assert.equal(R.helperDice([]), 0);
+  assert.equal(R.helperDice([{dots: 3}, {dots: 0}]), 4);
+  const t = R.normTask({kind: "other", helpers: ["a", "b"], errand: "buy", master: "pc1"});
+  assert.deepEqual(t.helpers, ["a", "b"]); assert.equal(t.errand, "buy"); assert.equal(t.master, "pc1");
+  assert.deepEqual(R.normTask({}).helpers, []);
+  const s = src("modules/wodx-storyteller/scripts/tasks.mjs");
+  assert.match(s, /Hooks\.callAll\("wodxTaskDone"/);
+  assert.match(s, /R\.helperDice\(/);
+});
+
+test("interactables: a follower joins a running chase level with the slowest pursuer", async () => {
+  const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/chase-rules.mjs")));
+  const st = C.newChase({quarry: {id: "q", way: "foot", lead: 10}, pursuers: [{id: "p1", way: "foot"}, {id: "p2", way: "foot"}]});
+  st.pursuers[0].total = 3; st.pursuers[1].total = 1;
+  const j = C.joinChase(st, {id: "f", way: "foot", name: "the ghoul"});
+  assert.equal(j.pursuers.length, 3);
+  assert.equal(j.pursuers[2].total, 1);
+  assert.equal(C.joinChase(j, {id: "f"}), j);
+  assert.equal(C.joinChase(st, {id: "q"}), st);
+  assert.equal(C.joinChase({...st, status: "caught"}, {id: "g"}).pursuers.length, 2);
+  assert.match(src("modules/wodx-interactables/scripts/chase.mjs"), /return \{open, start, rollTurn, end, undoTurn, join,/);
+});
+
+test("followers: the hooks other modules call are wired", () => {
+  const s = src("modules/wodx-npc/scripts/orders.mjs");
+  for ( const h of ["wodxTaskDone", "wodxChase", "wodxFed", "wodxGhoulFix", "wodxBreach"] ) assert.match(s, new RegExp(`Hooks\\.on\\("${h}"`));
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /Hooks\.callAll\("wodxFed"/);
+  assert.match(src("modules/wodx-chronicle/scripts/signatures.mjs"), /Hooks\.callAll\("wodxGhoulFix", \{actor: a, drank: true/);
 });

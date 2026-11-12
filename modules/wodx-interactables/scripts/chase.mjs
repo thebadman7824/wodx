@@ -75,6 +75,18 @@ async function save(scene, st) {
   await scene.setFlag(MOD, FLAG, st);
 }
 
+/** 0.28.0: a token joins the running chase on the scene as a pursuer (WoDX NPC: a follower with its master). */
+export async function join(scene, tokenId, {why = ""} = {}) {
+  const st = stateOf(scene), d = scene?.tokens?.get(tokenId);
+  if ( !game.user.isGM || !st || !d ) return null;
+  const next = C.joinChase(st, racerOf(d, st.year || yearNow()));
+  if ( next === st ) return null;
+  await save(scene, next);
+  await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
+    content: card("The chase", `<p>${esc(d.name)} joins the chase${why ? ` (${esc(why)})` : ""}.</p>`)});
+  return next;
+}
+
 /** Open the chase window: the setup when no chase runs on the scene, else the turn. */
 export async function open() {
   if ( !game.user.isGM ) { ui.notifications.warn("Only the Storyteller runs a chase."); return null; }
@@ -290,5 +302,5 @@ export function setupChase(d = {}) {
     wire("button.wix-chase-hurt", b => hurt(msg, b.dataset.who, b.dataset.dice, b.dataset.type));
     wire("button.wix-chase-fight", () => fight(msg));
   });
-  return {open, start, rollTurn, end, undoTurn, state: stateOf, rules: C};
+  return {open, start, rollTurn, end, undoTurn, join, state: stateOf, rules: C};
 }

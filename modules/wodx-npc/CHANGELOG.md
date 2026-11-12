@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.35.0 (followers on errands: buy, carry, find, ask around, bring someone to feed on, watch a rival, worked as long tasks; help on a master's long task; deal with a witness; join a chase with the master or cut the quarry off; a follower's breach is traced to its master; loyalty drifts with vitae, neglect, feeding and hard orders)
 - 0.34.0 (followers: an NPC serves its domitor, the character whose background made it and its patron as well as anyone the Storyteller marks; WoDX spots hard orders and suggests the refusal roll; Keep watch warns the master and Guard challenges strangers; in a fight a follower minds its orders: Attack the one I point at, Hold back, Guard and Wait, and guards every character it serves)
 - 0.32.0 (first meetings read the look: dress against the NPC's station by era, dress out of its time, blood, Appearance, Status, fine work; blood sours a later meeting for the scene; guards mind blood and let a worn livery pass; worn habits and uniforms show their side; stock lines on dress and a disguise seen through)
 - 0.29.0 (players see the politics of their own factions: who holds each seat, the next gathering, the law, and their own characters' standing, seats, favour, claims and charges)

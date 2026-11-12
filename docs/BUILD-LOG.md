@@ -1669,3 +1669,7 @@ The testbed gate (gatetable 6/9 on 752ca8b) found two code faults and one gate f
 ## 2026-11-12: followers, part 1 (NPC 0.34.0, Sheets 0.10.1)
 
 Ben approved the Followers Review Desk. Part 1: the orders tool now reads every tie (B1600), so ghouls, backgrounds made real and Creation allies take orders without a macro. WoDX spots hard orders (B1601) and puts a suggested refusal roll on the approval (B1602). Keep watch and Guard notice strangers with routines.mjs noticeBy and warn or challenge (B1603). Fight orders: Attack the one I point at and Hold back, laid over the fight AI's choices with fightShift (B1604). Sheets: the Ties tab reads the domitor as {id, name}. Harness tests in tools/harness/orders.test.mjs.
+
+## 2026-11-12: followers, part 2 (NPC 0.35.0, Storyteller 0.37.0, Actions 3.46.0, Chronicle 0.34.0, Interactables 0.28.0)
+
+The rest of the Followers Review Desk. Errands as long tasks on the follower's own sheet, with a wodxTaskDone hook from Storyteller (B1610); helpers on long tasks (B1611); buying from the master's purse (B1612); dealing with a witness and breaches traced to masters (B1613); followers join chases through a new Interactables chase.join (B1614); watching a rival (B1615); loyalty drift through new wodxFed (Actions) and wodxGhoulFix (Chronicle) hooks (B1616).

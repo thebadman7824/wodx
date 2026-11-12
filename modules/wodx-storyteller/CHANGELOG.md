@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.0 (followers helping on a long task add their own dots in its Ability; a long task that ends tells WoDX NPC, for errands)
 - 0.36.0 (prices find made things by name with their quality tag; made things record their maker)
 - 0.34.1 (the prelude journal shows the character's lifepath)
 - 0.34.0 (taking things apart for parts)

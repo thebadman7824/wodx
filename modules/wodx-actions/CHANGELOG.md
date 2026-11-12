@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.46.0 (feeding on a vessel tells WoDX NPC, for a follower's loyalty)
 - 3.45.1 (the odds line shows in the roll windows again: it went inside the form, not the window's content box)
 - 3.45.0 (made things of good, fine or masterwork quality sell and buy at their quality price; Pass as someone else in With this person: a disguise against the NPC's Perception + Alertness)
 - 3.44.0 (the VtDA20 bridge is gone: no game.vtda20actions alias, no settings read from vtda20-actions, no one-time migration or its approval, and the module no longer switches itself off beside vtda20-actions; the manifest still lists vtda20-actions as a conflict)

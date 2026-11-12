@@ -16,18 +16,24 @@ export const ORDERS = {
   fetch: {label: "Go to the one I point at", hint: "Walks to the targeted token, then comes back and follows. What it brings or says is the Storyteller's."},
   // NPC 0.34.0 (B1604): orders for a fight
   attack: {label: "Attack the one I point at", hint: "In a fight it goes for the targeted token first, unless fear or its wounds drive it off."},
-  holdback: {label: "Hold back", hint: "In a fight it keeps out of the blows: it dodges and blocks, and strikes no one."}
+  holdback: {label: "Hold back", hint: "In a fight it keeps out of the blows: it dodges and blocks, and strikes no one."},
+  // NPC 0.35.0 (B1610-B1615): orders away from the map and beside it
+  errand: {label: "Go and do this (an errand)", hint: "It leaves the scene and works at it over the clock as a long task with its own dice; the result comes back on a card."},
+  help: {label: "Help me with a long task", hint: "It adds its own dots in the task's Ability to the dice of one of your long tasks until told otherwise."},
+  cleanup: {label: "Deal with that witness", hint: "It talks round the targeted witness of a breach: Manipulation + Subterfuge, difficulty 6."},
+  cutoff: {label: "Cut them off", hint: "If the targeted token runs, it joins the chase after them."}
 };
 /** Orders that stop the NPC's routine while they hold. */
-export const HOLDS = new Set(["follow", "wait", "guard", "watch", "fetch", "attack", "holdback"]);
+export const HOLDS = new Set(["follow", "wait", "guard", "watch", "fetch", "attack", "holdback", "errand", "help", "cleanup", "cutoff"]);
 /** Orders that need a targeted token. */
-export const NEEDS_TARGET = new Set(["fetch", "attack"]);
+export const NEEDS_TARGET = new Set(["fetch", "attack", "cleanup", "cutoff"]);
 
 /** Normalise a stored order. */
 export function normOrder(o = {}) {
   if ( !o || !ORDERS[o.kind] ) return null;
   return {kind: o.kind, by: String(o.by ?? ""), leader: String(o.leader ?? ""), target: o.target ? String(o.target) : null,
-    at: Number(o.at) || 0, hard: !!o.hard, note: String(o.note ?? "").slice(0, 200), stage: o.stage === "back" ? "back" : "out"};
+    at: Number(o.at) || 0, hard: !!o.hard, note: String(o.note ?? "").slice(0, 200), stage: o.stage === "back" ? "back" : "out",
+    errand: ERRANDS[o.errand] ? o.errand : null, task: o.task ? String(o.task) : null, cost: Math.max(0, Math.round(Number(o.cost) || 0))};
 }
 
 /** May a user order this NPC? It must have no player owner and serve a character the user owns (the Storyteller always may). */
@@ -61,6 +67,8 @@ export function describeOrder(o, names = {}) {
   if ( !n ) return "No order";
   const who = names[n.leader] ?? "its master";
   return {follow: `Following ${who}`, wait: "Waiting", guard: "Guarding", watch: "Keeping watch", attack: `Ordered to attack ${names[n.target] ?? "the one pointed at"}`, holdback: "Holding back",
+    errand: `Away on an errand: ${(ERRANDS[n.errand]?.label ?? "an errand").toLowerCase()}`, help: `Helping ${who} with a long task`,
+    cleanup: `Dealing with ${names[n.target] ?? "a witness"}`, cutoff: `Ready to cut off ${names[n.target] ?? "the one pointed at"}`,
     fetch: n.stage === "back" ? `Coming back to ${who}` : `Going to ${names[n.target] ?? "the one pointed at"}`}[n.kind] + (n.hard ? " (a hard order)" : "");
 }
 
@@ -144,4 +152,66 @@ export function sentryAct(kind, {noticed = false, yards = null} = {}) {
   if ( kind === "watch" ) return "alarm";
   if ( kind === "guard" ) return yards === null || yards <= GUARD_YARDS ? "challenge" : "alarm";
   return null;
+}
+
+/* ---------------- NPC 0.35.0: errands, clean-up, chases, loyalty (B1610-B1616) ---------------- */
+
+/**
+ * Errands a follower runs for its master as a long task on its own sheet (B1610, house rule: the pools follow the
+ * V20 Abilities they name; the goals and intervals are WoDX's). abilities: the first one the follower's sheet
+ * carries is used (Dark Ages sheets have Commerce where later ones have Finance).
+ */
+export const ERRANDS = {
+  buy: {label: "Buy something", attr: "manipulation", abilities: ["finance", "commerce"], goal: 3, interval: "hour",
+    done: "comes back with it; the price is paid from its master's purse.", ruined: "comes back empty-handed, and the money is spent all the same."},
+  deliver: {label: "Carry a message or a parcel", attr: "wits", abilities: ["streetwise", "etiquette"], goal: 2, interval: "hour",
+    done: "has handed it over.", ruined: "lost it on the way, or it fell into the wrong hands (the Storyteller says which)."},
+  find: {label: "Find someone or something", attr: "perception", abilities: ["investigation", "streetwise"], goal: 4, interval: "hour",
+    done: "has found what it was sent for and can lead the way.", ruined: "drew notice while asking: someone knows it was looking."},
+  ask: {label: "Ask around for rumours", attr: "charisma", abilities: ["streetwise", "etiquette"], goal: 3, interval: "hour",
+    done: "brings back what people are saying (the Storyteller gives a rumour or two).", ruined: "was taken for a spy and sent off with lies."},
+  vessel: {label: "Bring me someone to feed on", attr: "charisma", abilities: ["subterfuge", "streetwise"], goal: 3, interval: "hour",
+    done: "has brought someone willing or unwary to its master's haven: one feeding there needs no hunting roll.", ruined: "was seen leading someone away: a breach for the Storyteller to weigh."},
+  spy: {label: "Watch a rival", attr: "wits", abilities: ["stealth", "streetwise"], goal: 3, interval: "day",
+    done: "knows the rival's comings and goings, and what they plan at the next faction turn (the Storyteller says).", ruined: "was caught watching: the rival knows who sent it."}
+};
+
+/** The long task for an errand. sheet: the follower's abilities object. Returns the task data for WoDX Storyteller. */
+export function errandTask(key, {sheet = {}, master = "", masterName = "", note = "", cost = 0} = {}) {
+  const e = ERRANDS[key];
+  if ( !e ) return null;
+  const ability = e.abilities.find(k => sheet?.[k] !== undefined) ?? e.abilities[0];
+  return {kind: "other", name: `Errand for ${masterName || "its master"}: ${e.label.toLowerCase()}${note ? `: ${String(note).slice(0, 80)}` : ""}`,
+    attr: e.attr, ability, diff: 6, goal: e.goal, interval: e.interval, errand: key, master: String(master), cost: Math.max(0, Math.round(Number(cost) || 0))};
+}
+
+/** What came of an errand, for the card. */
+export function errandResult(key, status) {
+  const e = ERRANDS[key];
+  if ( !e ) return "";
+  return status === "done" ? e.done : e.ruined;
+}
+
+/** Dealing with a witness (B1613): successes of Manipulation + Subterfuge at 6. Returns the witness state to set, or null. */
+export function cleanupOutcome({successes = 0, botch = false} = {}) {
+  if ( botch ) return {state: "told", text: "botches: the witness takes fright and tells others."};
+  if ( successes > 0 ) return {state: "convinced", text: `talks the witness round (${successes} success${successes === 1 ? "" : "es"}).`};
+  return {state: null, text: "cannot talk the witness round."};
+}
+
+/**
+ * Loyalty drift (B1616, house rule): small moves in the follower's attitude toward its master through WoDX NPC's
+ * attitude track. Never below Distrusted (-1) by drift alone, so drift never starts a fight; at Distrusted or below
+ * the Storyteller is told the follower may refuse, leave or turn. Returns {delta, why} or null.
+ */
+export const DRIFT_FLOOR = -1, DRIFT_CEIL = 3;
+export function drift(kind, {step = 0, months = 0} = {}) {
+  const now = Math.round(Number(step) || 0);
+  const want = {drank: 1, unfed: -1, fedOn: -1, hard: -1, errand: 0}[kind];
+  if ( !want ) return null;
+  const to = Math.max(DRIFT_FLOOR, Math.min(DRIFT_CEIL, now + want));
+  if ( to === now ) return null;
+  const why = {drank: "drank from its domitor", unfed: `${months || 1} month${months === 1 ? "" : "s"} without the domitor's vitae`,
+    fedOn: "its master fed on it", hard: "made to carry out a hard order"}[kind];
+  return {delta: to - now, why, wavers: to <= DRIFT_FLOOR};
 }
