@@ -240,7 +240,7 @@ def wodx_sidecar(blds):
     regions.append({"id": "bridge", "label": "Footbridge", "rect": [BRIDGE[0] - 1.5, BRIDGE[1] - 1.2, 3, 2.4],
                     "behaviors": [{"type": "trigger", "system": {"label": "the footbridge over the brook", "does": "note", "who": "pcs"}}]})
     return {"format": "wodx-map", "version": 1, "name": "Kessler steading", "map": "kessler-steading.dungeondraft_map",
-            "cells": [COLS, ROWS], "seed": SEED, "openings": openings, "features": features, "regions": regions}
+            "cells": [COLS, ROWS], "seed": SEED, "place": {"kind": "yard"}, "openings": openings, "features": features, "regions": regions}
 
 # ------------------------------------------------------------------ plan view, to check the logic by eye
 def plan_svg(blds, path_out):

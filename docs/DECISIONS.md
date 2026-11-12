@@ -1125,3 +1125,32 @@ Reverse: make breaksPeace return false.
 Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
 
 Reverse: set witnessAsk off; drop the knows button.
+## B970. Passers-by: who walks the street, by year and hour (2026-11-11)
+Ben asked whether WoDX can spawn simple NPCs for flavour, such as a crowd a vampire can hunt in. WoDX NPC 0.25.0 fills a scene the Storyteller turns on with people of the year: six ages of the street (medieval to 1499, early modern, industrial from 1800, twentieth century from 1914, modern from 1980, the Future Darkness from 2025), each with its own kinds of people and clothes. Crowd sizes by part of the day are house readings: medieval nights are nearly empty under the curfew, gaslight and then late bars fill the night more and more, and the Future Darkness street is a little thinner and warier than the modern one. The scene's hunting ground (V20 p. 334, through WoDX Storyteller) sets how busy it is, from slums to patrolled streets.
+
+Reverse: CROWD, PEOPLE and AREA_CROWD in wodx-npc/scripts/passerby-rules.mjs.
+
+## B971. Passers-by are mortal vessels and witnesses (2026-11-11)
+Each passer-by is an ordinary adult mortal of ten blood points, so WoDX Actions' Feed works on them as on anyone. Some are drunk or high after dark, and some carry the outbreak when one is on in town, using the vessel states Feed already reads (V20 pp. 295, 301-302). No children are among them. Everyone else in the crowd in sight counts as a Masquerade witness.
+
+Reverse: makePasserby in passerby-rules.mjs.
+
+## B972. Simple routines (2026-11-11)
+In from one edge, out by another; three in ten stop a while inside first. People stop when a character comes within about a square and a half. The Storyteller can tell one to follow a character (into an alley, say), hold one in place, let one go, or keep one for good as an NPC of its own. When a fight starts or the Masquerade is breached, everyone runs for the nearest edge, except someone already fed on. Passers-by never start fights and set off no WoDX Reaction or Trigger regions, effect areas or Interactables noise.
+
+Reverse: tick and scatter in wodx-npc/scripts/passersby.mjs.
+
+## B973. Animals (Ben 2026-11-11)
+Animals join the crowd: strays, cats, rats and pigeons in every age, plus pigs, goats, geese, cattle and horses where the age had them in town (pigs to the 1800s slums, cab horses to 1913, dray horses to 1960). Their blood follows the vessel table WoDX Actions uses: rat a quarter point, bird a half, cat 1, dog 2, cow or horse 5. Pigs and cattle count as a cow and a goat as a dog (house reading). Towns had more animals before the motor car, so the share of animals to people falls from 0.6 in the Middle Ages to 0.15 in the modern age. Draining an animal is not the killing of a person, and an animal is never a Masquerade witness.
+
+Reverse: ANIMALS and ANIMAL_SHARE in passerby-rules.mjs; pbAnimal in wodx-actions/scripts/main.js.
+
+## B974. Kinds of place (Ben 2026-11-11)
+The crowd reads the scene's own place tag (flags.wodx-npc.place.kind, PLACE_KINDS in routine-rules.mjs, the tag Interactables, Atmosphere and the Masquerade read), which gains four kinds: back alley or courtyard, farmyard or village, docks or riverside, park or churchyard. Each kind draws its own crowd: a market is a busy square, a castle or court is a great house indoors, woods and caerns a country road, and a haven draws nobody. Each sets how busy it is and which people and animals are found there. No livestock or poultry in a back alley; only cats and the odd rat inside a palace or church; servants and gentry, not beggars or lamplighters, in a great house; livestock thick in a farmyard.
+
+Reverse: PLACES in passerby-rules.mjs.
+
+## B975. Light on the world and on Live (2026-11-11)
+Every passer-by is an unlinked token of one of two hidden actors (a person, an animal) in the folder "WoDX passers-by", so no actor is made per passer-by. They live only on the scene the Storyteller is viewing; they are deleted when they walk off, after fifteen minutes, when the scene is turned off or left, and at startup. One fed on, hurt or led away is kept until let go, and startup clears even those after a day. At most 8 a scene by default (16 at most), one batched update every 5 seconds, nothing while paused, during a time skip or (except those running away) during a fight. Every scene starts off, so nothing changes on Live until the Storyteller turns a scene on.
+
+Reverse: settings passersby, passersbyMax, passersbyEvery.

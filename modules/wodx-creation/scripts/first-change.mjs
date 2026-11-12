@@ -155,7 +155,7 @@ export async function firstChangeDialog() {
   if ( !A?.garouRules ) return ui.notifications.warn("The First Change needs WoDX Actions.");
   await A.garouRules.loadData?.();
   const D = GD();
-  const mortals = game.actors.filter(canChange).sort(byName);
+  const mortals = game.actors.filter(a => canChange(a) && !a.flags?.["wodx-npc"]?.passerbyBase).sort(byName);
   if ( !mortals.length ) return ui.notifications.warn("There is no mortal to undergo the First Change.");
   const sel = canvas?.tokens?.controlled?.[0]?.actor;
   const pick = sel && canChange(sel) ? sel : mortals[0];

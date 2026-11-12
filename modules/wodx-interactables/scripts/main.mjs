@@ -1713,7 +1713,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
-Hooks.on("updateToken", (doc, changes, options, userId) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld}).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("updateToken", (doc, changes, options, userId) => { if ( !doc?.flags?.["wodx-npc"]?.passerby && ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld}).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("updateCombat", (combat, changes) => { if ( ("turn" in (changes ?? {}) || "round" in (changes ?? {})) && combat?.started && isActiveGM() ) onTurnStart(combat).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
 Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));

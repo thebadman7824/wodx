@@ -104,6 +104,7 @@ function centreOf(doc, changes = {}) {
 function record(doc, changes) {
   if ( !doc?.parent || doc.parent.id !== canvas?.scene?.id ) return;
   if ( !("x" in (changes ?? {})) && !("y" in (changes ?? {})) ) return;
+  if ( doc.flags?.["wodx-npc"]?.passerby ) return; // passers-by leave no trail (WoDX NPC 0.25.0)
   if ( trailScene !== doc.parent.id ) { for ( const k of Object.keys(trails) ) delete trails[k]; trailScene = doc.parent.id; }
   const now = game.time.worldTime;
   trails[doc.id] = P.addStep(trails[doc.id] ?? [], {...centreOf(doc, changes), at: now}, {now});

@@ -78,7 +78,11 @@ export function build(ctx) {
       return (st?.factions ?? []).filter(f => (f.members ?? []).includes(actor.id) || f.leader === actor.id).map(f => String(f.key ?? f.name ?? "").toLowerCase()).filter(Boolean);
     } catch (e) { return []; }
   }
+  /** NPC 0.25.0: a passer-by talks only in generic stock lines (news, work, the way), with no sheet, household or faction. */
+  const isPasserby = npc => !!(npc?.token?.flags?.[MOD]?.passerby ?? npc?.document?.flags?.[MOD]?.passerby ?? npc?.flags?.[MOD]?.passerby);
+  const PASSERBY_LOCAL = ["news", "work", "directions"];
   function chainOf(npc, scene) {
+    if ( isPasserby(npc) ) return [];
     const p = savedProfile(npc);
     return TK.chainFor({own: p.talk ?? "", household: p.household ?? null, factions: factionKeysOf(npc), sceneId: scene?.id ?? null}, setting("sharedTalk") ?? {});
   }
@@ -171,6 +175,7 @@ export function build(ctx) {
   }
   /** Note when this character last talked to the NPC (the world actor, so every token of them remembers). */
   async function noteTalked(r) {
+    if ( isPasserby(r.npcTok) ) return; // one hidden actor stands for every passer-by: nobody remembers the visit
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
     if ( npc && pc ) await npc.update({[`flags.${MOD}.talked.${pc.id}`]: game.time?.worldTime ?? 0});
   }
@@ -194,7 +199,7 @@ export function build(ctx) {
   /** The menu. greet: false leaves the greeting out (after a question, the window keeps the first one). */
   function menuOf(r, user, {greet: withGreet = true} = {}) {
     const chain = chainOf(r.npcTok.actor, r.scene);
-    const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
+    const menu = isPasserby(r.npcTok) ? {ask: [], local: PASSERBY_LOCAL} : TK.menuFor(chain, knownOf(baseActor(r.me)));
     const out = {name: displayName(r.npcTok, user), me: r.me.name, ...menu};
     if ( !withGreet ) return out;
     const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
@@ -436,7 +441,7 @@ export function build(ctx) {
   async function editShared() {
     if ( !game.user.isGM ) return null;
     const shared = {...(setting("sharedTalk") ?? {})};
-    const households = [...new Set([...game.actors].map(a => savedProfile(a).household).filter(Boolean))].sort();
+    const households = [...new Set([...game.actors].filter(a => !a.flags?.[MOD]?.passerbyBase).map(a => savedProfile(a).household).filter(Boolean))].sort();
     let fx = [];
     try { fx = game.modules.get(MOD)?.api?.factions?.state?.()?.factions ?? []; } catch (e) { fx = []; }
     const keys = [["everyone", "Everyone"], ...(canvas?.scene ? [[`scene:${canvas.scene.id}`, `This scene: ${canvas.scene.name}`]] : []),

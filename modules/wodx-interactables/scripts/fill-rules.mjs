@@ -41,8 +41,12 @@ export const PLACES = {
 /** The fill place that fits each kind of WoDX NPC place; null where none fits (then a home). */
 export const FROM_NPC_PLACE = {
   home: "home", haven: "home", tavern: "home", workplace: "workshop", market: "workshop", church: "church",
+<<<<<<< HEAD
   gate: "armory", castle: "armory", wilds: "camp", street: null, caern: null, other: null,
   elysium: "home", chantry: "workshop"
+=======
+  gate: "armory", castle: "armory", wilds: "camp", street: null, caern: null, alley: null, yard: "camp", docks: "workshop", park: null, other: null
+>>>>>>> e5e271a (WIP passers-by)
 };
 
 /**

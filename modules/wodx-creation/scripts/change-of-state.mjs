@@ -216,7 +216,7 @@ function selectedActor(test) {
 export async function embraceDialog() {
   if ( !game.user.isGM ) return null;
   const {DialogV2} = foundry.applications.api;
-  const mortals = game.actors.filter(a => ["mortal", "ghoul"].includes(lineOf(a)) && !lineage(a).became).sort(byName);
+  const mortals = game.actors.filter(a => ["mortal", "ghoul"].includes(lineOf(a)) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase).sort(byName);
   const vampires = game.actors.filter(a => lineOf(a) === "vampire").sort(byName);
   if ( !mortals.length ) return ui.notifications.warn("There is no mortal to Embrace.");
   const pick = selectedActor(a => ["mortal", "ghoul"].includes(lineOf(a)));

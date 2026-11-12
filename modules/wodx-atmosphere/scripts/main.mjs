@@ -37,7 +37,7 @@ const opt = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${
 const wait = cfg => foundry.applications.api.DialogV2.wait({rejectClose: false, ...cfg, classes: ["wodx-dialog", "watmo-dialog", ...(cfg.classes ?? [])]});
 const formData = (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object;
 const SHIPPED = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "future-darkness"];
-const OUTDOOR_KINDS = ["gate", "market", "street", "wilds", "caern"];
+const OUTDOOR_KINDS = ["gate", "market", "street", "wilds", "caern", "alley", "yard", "docks", "park"];
 let CAL = null;
 let active = false;
 
