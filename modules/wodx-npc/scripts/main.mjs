@@ -33,7 +33,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.29.0";
+const VERSION = "0.32.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -803,7 +803,7 @@ rivalry.hooks();
 /* 0.27.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
-const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry});
+const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 
 Hooks.once("init", () => {
