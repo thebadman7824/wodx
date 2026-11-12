@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.43.0: story chains grown from lifepath threads (Improvement Desk 2026-11-12b cr2). House rule
+ * WoDX Chronicle 0.44.0: story chains grown from lifepath threads (Improvement Desk 2026-11-12b cr2). House rule
  * B2300 to B2304: the books ask for a prelude and for a past that matters, but give no table for when it comes back.
  *
  * Each kind of open thread has a short chain of three steps. {who} is the person (by name when the lifepath made

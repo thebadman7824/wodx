@@ -18,7 +18,7 @@ import {watched} from "./signature-rules.mjs";
  *     own golconda flag: no frenzy, no Rötschreck).
  *   Story chains (podChains): dated runs of scenes the clock deals out, and opening goals for new characters.
  *
- *   Lifepath threads (0.43.0, Improvement Desk cr2, B2300 to B2304): with Story chains on, the open threads of each
+ *   Lifepath threads (0.44.0, Improvement Desk cr2, B2300 to B2304): with Story chains on, the open threads of each
  *     player character's lifepath (a rival, a debt, someone lost, an enemy) fall due one at a time and go to the
  *     approval queue; an approved one runs as a story chain with the person the lifepath made.
  *

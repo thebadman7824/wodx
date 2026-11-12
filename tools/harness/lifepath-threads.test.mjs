@@ -7,7 +7,7 @@ import * as T from "../../modules/wodx-creation/scripts/lifepath-threads-rules.m
 import * as FP from "../../modules/wodx-creation/scripts/first-night-prelude-rules.mjs";
 import * as P from "../../modules/wodx-chronicle/scripts/pod-rules.mjs";
 
-/* Creation 0.14.0 + Chronicle 0.43.0: lifepath threads as story chains (desk cr2) and a guest in a prelude (desk bf1) */
+/* Creation 0.14.0 + Chronicle 0.44.0: lifepath threads as story chains (desk cr2) and a guest in a prelude (desk bf1) */
 
 const DAY = 86400;
 const walk = (line, birthYear, seed, pick = 0) => {

@@ -1,5 +1,5 @@
 /**
- * Lifepath threads and guest beats gate (WoDX Creation 0.14.0, Chronicle 0.43.0 or later), in rothenstein-wodx, as
+ * Lifepath threads and guest beats gate (WoDX Creation 0.14.0, Chronicle 0.44.0 or later), in rothenstein-wodx, as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gatethreads.mjs?${Date.now()}`)).run()
  * Turns Story chains on, makes its own characters and a Group if there is none, and puts the settings, actors,
@@ -56,7 +56,7 @@ export async function run() {
     const ties0 = foundry.utils.deepClone(group?.flags?.[CR]?.ties ?? []);
 
     await step("1 api", async () => {
-      ok("1 api", atLeast(game.modules.get(CR).version, "0.14.0") && atLeast(game.modules.get(C).version, "0.43.0") && typeof cre()?.lifepathThreads === "function"
+      ok("1 api", atLeast(game.modules.get(CR).version, "0.14.0") && atLeast(game.modules.get(C).version, "0.44.0") && typeof cre()?.lifepathThreads === "function"
         && typeof pod()?.lifepathTick === "function" && typeof pod()?.startThread === "function", {creation: game.modules.get(CR).version, chronicle: game.modules.get(C).version});
     });
 
