@@ -131,7 +131,7 @@ const P = {
   chinese: {
     m: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Wenming, Zhiyuan, Dewei, Tianyou, Yongkang",
     f: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Na, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying",
-    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, He, Lin, Gao, Luo"},
+    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, Deng, Lin, Gao, Luo"},
   japanese: {
     m: {old: "Tarō, Jirō, Saburō, Shirō, Gorō, Heizō, Genta, Kichibei, Jinbei, Sukezaemon, Tokubei, Yasuke, Matsukichi, Kanbei, Shinsuke, Gonbei",
       new: "Hiroshi, Takeshi, Kenji, Akira, Minoru, Shigeru, Isamu, Kiyoshi, Tadashi, Makoto, Satoshi, Daisuke, Kazuo, Yutaka, Noboru, Ichirō, Takashi, Tsuyoshi"},
