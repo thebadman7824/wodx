@@ -2337,7 +2337,7 @@ When the Storyteller has written no line that fits, WoDX NPC makes one from a gr
 Reverse: turn the world setting "Talk generator" off.
 
 ## B1641. Where generated lines sit (2026-11-12)
-Storyteller talk sheet lines (trait-gated ones first) always come first. The generator answers only after them. The hand-written stock pools are now grammar rules, with the same pools for the same era, regard and voice; children, beggars and drunks keep to their own lines; someone who hates the character shares no gossip. A line is steady for one NPC, character and day, and a line just said is passed over while another fits.
+Storyteller talk sheet lines (trait-gated ones first) always come first. The generator answers only after them. The hand-written stock pools are now grammar rules, with the same pools for the same era, regard and voice; children, beggars and drunks keep to their own lines; someone who hates the character shares no gossip. A line is steady for one NPC, character and day, and a line just said is passed over while another fits. Talk cards mark a made line with flags.wodx-npc.talk.generated, so WoDX Voices leaves it as text.
 
 Reverse: setting off, which goes back to the old stock picker.
 
