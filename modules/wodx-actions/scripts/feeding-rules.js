@@ -1,13 +1,13 @@
 /**
- * WoDX Actions 3.40.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines.
+ * WoDX Actions 3.41.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines.
  * Pure rules, no Foundry calls (tools/harness/feeding.test.mjs).
  *
- * The vessel (B940, Ben 2026-11-12): each blood point a living vessel loses is one level of lethal damage (V20 printed
+ * The vessel (B960, Ben 2026-11-12): each blood point a living vessel loses is one level of lethal damage (V20 printed
  * p. 57 says a Giovanni Kiss does twice "the damage of another vampire's", one point costing two levels). A living
  * vessel has the lower of its blood and (full blood - damage), the book's wounds rule turned both ways (V20 printed
  * p. 269). Lost blood comes back at one point a day (p. 270); the damage heals by the healing chart.
  *
- * Clan and bloodline limits (B941-B945). Each rule has a V20 version and, where V20 Dark Ages prints its own, a
+ * Clan and bloodline limits (B961-B965). Each rule has a V20 version and, where V20 Dark Ages prints its own, a
  * Dark Ages one, used in the Dark Ages and Long Night eras or before 1450.
  */
 
@@ -219,12 +219,12 @@ export function fleshEaten(state = {}, points = 0) {
 /*  Hunting: palates and habits                                         */
 /* ------------------------------------------------------------------ */
 
-/** A Ventrue palate makes the hunt harder (B942, house rule): broad +1, narrow +2. */
+/** A Ventrue palate makes the hunt harder (B962, house rule): broad +1, narrow +2. */
 export const PALATE_BREADTH = { broad: { label: "Broad (merchants, Catholics, soldiers)", diff: 1 }, narrow: { label: "Narrow (younger sisters, red-haired men)", diff: 2 } };
 export const palateHuntDifficulty = breadth => PALATE_BREADTH[breadth]?.diff ?? 0;
 
 /**
- * Feeding habits (B944): V20's own words for how a vampire feeds (V20 printed pp. 35-36, "Vulgar Argot"), each a
+ * Feeding habits (B964): V20's own words for how a vampire feeds (V20 printed pp. 35-36, "Vulgar Argot"), each a
  * saved "usual hunt" that fills in the hunting window. The pools, grounds and years are house readings.
  * from/to: years the habit makes sense in; prey: rules.js VESSELS key; area: rules.js HUNTING_GROUNDS key.
  */

@@ -1,5 +1,5 @@
 /**
- * Feeding gate (WoDX Actions 3.40.0, Creation 0.10.2), in rothenstein-wodx, as Gamemaster Test:
+ * Feeding gate (WoDX Actions 3.41.0, Creation 0.10.2), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefeed.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Feeding", vampires and mortals with tokens (the mortals unlinked, as NPCs are);
  * views the scene, then goes back and deletes everything it made (scene, tokens, actors, chat cards). The clock is
@@ -76,7 +76,7 @@ export async function run() {
     const lastMsg = () => game.messages.contents.filter(m => m.timestamp >= t0).at(-1);
 
     await step("1 the api", async () => {
-      ok("1 the api", A()?.version === "3.40.0" && typeof A()?.feedUndo === "function" && !!A()?.feedingRules?.CLAN_FEEDING?.ventrue, {version: A()?.version});
+      ok("1 the api", A()?.version === "3.41.0" && typeof A()?.feedUndo === "function" && !!A()?.feedingRules?.CLAN_FEEDING?.ventrue, {version: A()?.version});
     });
     await step("2 feed on an unlinked mortal", async () => {
       const k = by("Toreador"), before = bp(k);

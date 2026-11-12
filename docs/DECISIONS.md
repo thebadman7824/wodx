@@ -959,38 +959,103 @@ Treat with supplies opens the First aid common check one easier (house rule); ba
 
 Reverse: remove the treat, light and system cases from use.mjs.
 
+## B940. Who may fly, swim, climb, crawl, jump, go into the ground or pass through walls (2026-11-11)
+Foundry's own movement actions carry the ways of moving. Anyone may walk, climb, crawl, jump and swim. Fly needs Rise or a power, form or wings that grant flight (Phantom Wings, Wings of Rage, Wings of Pegasus, Chiropteran Marauder, a bat or bird shape, Demon wings, and the like). Through walls needs Tenebrous Form, Mist Form, Spectral Body, Incorporeal Passage or a power like them. Into the ground needs Earth Meld. The leap and wall powers that carry the Rise keyword (Hare's Leap, Great Leap, Surface Attunement, Monkey Tail, Manipulate Adhesion, Grip the Water) do not fly. The Storyteller may move any token any way, and may give a creature a way of moving for good with the actor flag wodx-combat.moves (fly, swim, wallwalk, waterwalk, waterbreath, phase, burrow, flySpeed). A player's token may not rise off the ground without flight, a climb or a jump.
 
-## B940. Feeding harms the vessel (2026-11-12)
+Reverse: setting "Flying, swimming, climbing and other ways of moving" off, or GRANTS in movement-rules.js.
 
-Each blood point a living vessel loses is one lethal level (V20 printed p. 57: a Giovanni Kiss does twice the damage of another vampire's, one point costing two levels; the Nagaraja entry on p. 407 reads the other way, and Ben chose this reading). A living vessel has the lower of its blood and (full blood less damage), the wounds rule of p. 269 read both ways, so the same loss is never counted twice. A mortal's blood is kept on the vessel (flag wodx-actions.vesselBlood, as the sheet's own pool is 0 on mortals) and comes back one point a day (p. 270); the damage heals by the healing chart. Passing out sets Unconscious, a botch on the vessel's roll also sets a "dying" flag, a vessel drained dry is marked dead, and a card button undoes the harm. The drink or drugs in a vessel's blood go when the blood does. Kindred vessels lose blood, not health. WoDX Actions 3.40.0.
+## B941. How fast each way of moving goes in a fight (2026-11-11)
+House rules, on top of walk 7, jog 12 + Dexterity, run 20 + 3 x Dexterity (VtDA20 p. 333): flying at the running speed, or the power's own (flySpeed); swimming at half the jog, the full jog with a swimming power, 1 yard with no Athletics; climbing 3 yards a turn (one success of an average climb, as the Climbing check says), walking pace for wall-walkers; crawling 3 yards; a jump as far as the last Jumping roll reached (1 yard across or 20 inches up a success), doubled by Hare's Leap or Great Leap; Earth Meld does not travel; passing through walls at walking pace. Height climbed or flown counts toward the yards.
+
+Reverse: speedFor in movement-rules.js.
+
+## B942. Breath and drowning (2026-11-11)
+Drowning is one lethal level a turn, not soaked (Hunter: The Reckoning pdf 208); the V20 books searched so far have no drowning rule. House rule: breath lasts Stamina x 10 turns, halved in a fight. A swimmer with Athletics stays up; with none they go under (a Stamina + Athletics roll at 8 brings the head up for a turn, the Storyteller's call). Kindred, wraiths, spirits and Kuei-jin do not breathe. Water-walkers stand on the water and water-breathers never run short. Breath is counted each round of a fight; outside a fight the card on entering the water gives the turns and the Storyteller counts.
+
+Reverse: breathTurns, underWater, waterTurn and NO_BREATH in movement-rules.js.
+
+## B943. Water regions (2026-11-11)
+A region holds deep water when its name says so ("WoDX: Deep water", a river, a lake, the sea, a pond, a canal, a moat, a well) and shallow water for a ford, marsh or shallows; the region flag wodx-combat.water ("deep", "shallow", "none") wins over the name. Shallow water costs double movement. A fall into deep water does no falling damage.
+
+Reverse: waterOf and SHALLOW_COST in movement-rules.js.
+
+## B944. A fall when flight ends (2026-11-11)
+When a flight effect ends (its time runs out, or the Storyteller removes it) and nothing else keeps the token up, the token drops to the ground under it (the highest region floor it stands in, else 0) and the Storyteller gets a card with the falling damage (VtDA20 p. 355) and a button that opens the fall window at that height. An Undo of the Rise effect is not a fall: it puts the token back where it was.
+
+Reverse: the deleteActiveEffect hook in movement.js.
+
+## B945. Height in range and reach, and Earth Meld (2026-11-11)
+Range and reach measure straight through the air: a flier 20 feet up is out of a sword's reach. Earth Meld hides the token while it lasts.
+
+Reverse: withHeightOf in wodx-combat main.js; the createActiveEffect hook in movement.js.
+
+## B946. What each way of moving does to rolls (2026-11-11)
+House rules, shown on the attack card and the check card; minus is easier:
+- Prone or crawling (also knocked down): own Stealth -2, melee and brawl +2, a braced shot -1, dodge +2, footing +1; up close they are struck at -2, shot from afar at +2, and noticed at +1.
+- Flying: own sight -1, dodge -1, shots +1, Stealth +1 (a shape against the sky); struck and shot at +1. Two fliers meet on even terms.
+- Swimming: own melee, shots and dodge +2, footing +1; shot at +1.
+- Under the water: own melee and dodge +2, shots +3 (guns do not fire, bows are useless), sight +2, Stealth -2; shot at +2 and noticed at +2.
+- Shallow water: own melee, dodge and footing +1, Stealth +1 (splashing).
+- Climbing: own melee and shots +2, dodge +3 (block and parry only), footing +1; struck and shot at -1; a botch means a fall.
+- After a jump this turn: a leaping strike -1, dodge +1.
+- Higher ground (a few feet above the target): melee -1.
+- In the earth: cannot act on the world, and cannot be struck. Passing through walls: cannot strike physically; the power's own rules say what touches them.
+
+Reverse: STANCES and attackStance in movement-rules.js.
+## B1000. Animal archetypes (2026-11-12)
+Ben asked for NPC behaviour archetypes by kind and era and approved the brainstorm, animals first. WoDX NPC 0.21.0 adds 16 animals in animal-rules.mjs: stray dog, guard dog, hunting hound, cat, rats, pigeons and town birds, crows and ravens, horse, cattle, pigs, sheep and goats, poultry, wolf, bear, boar and bats. Each is a template beside the line templates and a ready routine of the same name. Years and places follow Moravia: wolves gone from about 1850 and back in the hills from 1995, bears to 1800, hounds to 1914, horses in town streets to 1950, cattle at town markets to 1900, pigs in the lanes to 1850, poultry in town yards to 1900, strays fewer after 1900. Blood follows the passers-by crowd (rats and birds a quarter point, cats 1, dogs and wolves 2, livestock and bears 5); boar 3 is a house reading. All house readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of ANIMAL_TEMPLATES in npc-rules TEMPLATES and of ANIMAL_PRESETS in routine-rules PRESETS.
+
+## B1001. Herd, territory and hunger; swarm, scatter, scavenge and stalk (2026-11-12)
+Three new temperament traits, 0 to 2, read by the fight scorer and the reactions: herd (runs when outnumbered or when the others run; weaker alone), territory (fights harder and bears one more wound on its own patch, fights trespassers), hunger (bolder in the lean months, December to March). Four new tactics: swarm, scatter, scavenge and stalk. Animals bark or raise a racket only when they have the call tactic (guard dogs, poultry), never send for the watch, and take no fright at the supernatural as such: Ben ruled (2026-11-12) that animals do not shy from Kindred but do shy from wraiths, so every animal fears "wraith" and an intruder or foe who is a wraith counts as that fear.
+
+Reverse: the new lines in scoreOptions and pickReaction are marked NPC 0.21.0.
+
+## B1002. More kinds of place and roles (2026-11-12)
+PLACE_KINDS gains alley, yard, docks and park (the same four the passers-by work adds) and sewer, hospital and station. Routines gain the roles yard, alley, sewer, docks and park, and the activities grazing and roosting. A routine block can name the months it runs in.
+
+Reverse: remove the kinds; old scenes keep their tags.
+
+## B1003. Which animal a beast is (2026-11-12)
+A beast's archetype comes from its passers-by token flag (archetype, else the crowd's animal kind mapped by place and year), else the actor flag wodx-npc.animal, else a guess from its name. Nothing found keeps the plain beast template.
+
+Reverse: animalOf() in main.mjs.
+
+## B1004. The other lines wait (2026-11-12)
+Ben approved the whole brainstorm and asked for animals first. Criminals, combatants, townsfolk and the supernatural lines follow in later versions. Ben's rulings for them: Orpheus travellers only in the World of Future Darkness; Kuei-jin travellers only in Asia.
+
+## B960. Feeding harms the vessel (2026-11-12)
+
+Each blood point a living vessel loses is one lethal level (V20 printed p. 57: a Giovanni Kiss does twice the damage of another vampire's, one point costing two levels; the Nagaraja entry on p. 407 reads the other way, and Ben chose this reading). A living vessel has the lower of its blood and (full blood less damage), the wounds rule of p. 269 read both ways, so the same loss is never counted twice. A mortal's blood is kept on the vessel (flag wodx-actions.vesselBlood, as the sheet's own pool is 0 on mortals) and comes back one point a day (p. 270); the damage heals by the healing chart. Passing out sets Unconscious, a botch on the vessel's roll also sets a "dying" flag, a vessel drained dry is marked dead, and a card button undoes the harm. The drink or drugs in a vessel's blood go when the blood does. Kindred vessels lose blood, not health. WoDX Actions 3.41.0.
 
 Reverse: kissDamage returns 0 in feeding-rules.js and feedResolve reads the sheet's pool again.
 
-## B941. Clan and bloodline feeding rules (2026-11-12)
+## B961. Clan and bloodline feeding rules (2026-11-12)
 
 One table (CLAN_FEEDING in feeding-rules.js) for Ventrue, Nagaraja, Giovanni, Salubri (healers and warriors), Salubri antitribu, Noiad, Danava, Lamia, Assamite antitribu and Dark Ages Tremere, with the V20 Dark Ages version in the Dark Ages and Long Night eras or before 1450, and V20's after. The clan is read from the sheet (a custom clan's words, or a flag wodx-actions.bloodline). Feed and Hunt apply each rule: no nourishment (Ventrue miss, animals for Noiad and Danava, blood not taken by force), half without the Danava offering, a Willpower point or a Willpower roll and -2 dice for the night (a timed effect until dawn), two lethal levels a point for the Giovanni, the Seed of Lilith, the Assamite antitribu addiction roll, and the Dark Ages Tremere first drink counted twice toward the Blood Oath (WoDX Creation 0.10.2 giveVitae firstDouble). Readings: Dark Ages Giovanni take V20's two levels a point; Salubri warriors in modern nights follow the antitribu; the Lamia resist is 7 when the vessel's sex isn't known.
 
 Reverse: remove the clan's entry from CLAN_FEEDING.
 
-## B942. Ventrue palates and vessel tags (2026-11-12)
+## B962. Ventrue palates and vessel tags (2026-11-12)
 
 A Ventrue's palate is saved on the character (flag wodx-actions.palate: words, tags, broad or narrow), set in the Feed or Hunt window. A vessel's tags come from its own flag wodx-actions.vesselTags (editable in the Feed window) and a passer-by's flags["wodx-npc"].passerby.tags. Matching tags tick "fits the palate"; with no tags on either side the Storyteller ticks it. Hunting with a palate is +1 difficulty for a broad one and +2 for a narrow one (house rule); Herd is taken to fit. Prey Exclusion reads the same tags: a match calls the frenzy at once.
 
 Reverse: palateHuntDifficulty returns 0; drop the palate fields from feedingFields.
 
-## B943. Nagaraja flesh (2026-11-12)
+## B963. Nagaraja flesh (2026-11-12)
 
 The Feed window takes flesh points as well as blood (V20 printed p. 407): each gives a blood point and does one unsoakable lethal level; a human body has 10, a child 5, an animal its blood points (house reading). New Night adds a point of flesh debt for a night without flesh, shown as one less on Strength, Dexterity and Stamina per point (their bonus, as Quickening uses), and flesh eaten pays it back.
 
 Reverse: drop the flesh lines in feedResolve and newNight; nagarajaPenalty(actor, 0) clears the bonus.
 
-## B944. Feeding habits (2026-11-12)
+## B964. Feeding habits (2026-11-12)
 
 V20's argot for how a vampire feeds (printed pp. 35-36) becomes a saved "usual hunt" in the Hunt window: Alleycat or Slummer, Banker (from 1937, cold blood), Butterfly, Casanova or Tease, Farmer, Head, Headhunter, Rake, Sandman. Each fills in the hunting ground, prey, pool and what is in the blood, and warns when it clashes with the clan's rule. The pools, grounds and years are house readings; V20 gives none.
 
 Reverse: remove HUNT_STYLES entries.
 
-## B945. A fight on record (2026-11-12)
+## B965. A fight on record (2026-11-12)
 
 When WoDX Combat applies a vampire's blow, the target gets flags wodx-actions.fought.<vampire id> = the clock time, and Feed ticks "fought and beaten first" for an hour after. Seduction that leads to Feed passes the vessel as willing.
 

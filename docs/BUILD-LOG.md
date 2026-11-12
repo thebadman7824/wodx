@@ -1598,8 +1598,11 @@ Ben found the burgher palace too bare. ddcore.dress() now dresses every furnishe
 
 ## 2026-11-11: which way things face
 Ben saw chairs facing random ways and the hearth facing its wall. ddcore.orient() turns every piece after dressing. Seats face their nearest table, or else the middle of the room, in quarter turns. Pieces against a wall (beds, ovens, shelves, cupboards, mirrors) put their backs to it, keeping their footprint. Ovens, whose picture is half their 2 by 2 square deep, are moved flush to their wall. Only the pictures move: the WoDX files mark the same spots, and town features keep their footprint turn.
+## 2026-11-12: animals with their own ways (WoDX NPC 0.21.0)
+Ben approved the NPC behaviour archetypes brainstorm and asked for animals first. animal-rules.mjs holds 16 animals, each with a temperament, a ready routine by day, night and season, the kinds of place it belongs in and the years it is found there in Moravia. The fight scorer and the reactions read three new traits (herd, territory, hunger) and four new tactics (swarm, scatter, scavenge, stalk). Animals shy from wraiths but not from Kindred, by Ben's ruling. Passers-by animals pick up their archetype from the token flag; other beasts from a flag or their name. PLACE_KINDS gains alley, yard, docks, park, sewer, hospital and station; routine blocks can name months. Decisions B1000 to B1004.
+- Tests: animals.test.mjs (13).
 
-## 2026-11-12: feeding harms the vessel; clan and bloodline feeding rules (Actions 3.40.0, Creation 0.10.2, B940-B945)
+## 2026-11-12: feeding harms the vessel; clan and bloodline feeding rules (Actions 3.41.0, Creation 0.10.2, B960-B965)
 - New feeding-rules.js: bloodNow, available, kissDamage, vesselOutcome, parseTags, matchTags, preyExclusionTags, CLAN_FEEDING, clanKey, ruleFor, isDarkAgesFeeding, nourishment, lamiaDifficulty, addictionDifficulty, fleshPoints, nightPassed, fleshEaten, PALATE_BREADTH, HUNT_STYLES, styleAllowed, styleClash.
 - main.js: feed and feedResolve rewritten around the vessel's own blood (flag vesselBlood), damage, states and Undo (feedUndo, on the api); feedingRule, vesselTagsOf, feedingFields, savePalate, nagarajaPenalty; Hunt's usual hunt and palate difficulty; New Night flesh debt; a vampire's blow marks the target as fought; oathStep firstDouble.
 - social.js: Seduction's Feed passes the vessel as willing. Creation: recordDrink step, giveVitae firstDouble.

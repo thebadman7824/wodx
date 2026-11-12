@@ -109,7 +109,7 @@ const TYPE_MAP = {
 };
 
 /** Variant as lower-case text. settings.variant is a string, but system.variant is an object {shade, lament, role} in legacy actors. */
-function variantText(actor) {
+export function variantText(actor) {
     const parts = [];
     const add = v => {
         if (typeof v === "string") parts.push(v);

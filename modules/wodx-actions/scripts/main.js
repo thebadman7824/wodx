@@ -751,7 +751,14 @@ async function resolveAction(actor, target, fd) {
     }
     // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
     const ticked = TH.TICKS.filter(t => fd[`tag-${t.key}`]).map(t => t.key);
-    const tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
+    let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
+    // How the character moves (WoDX Combat 3.12.0): prone helps Stealth, flying helps sight, water spoils footing
+    try {
+        const kinds = [pool.abilityKey === "stealth" ? "stealth" : null, fd.attr === "perception" ? "perception" : null,
+            fd.attr === "dexterity" && pool.abilityKey !== "stealth" ? "dexterity" : null, pool.abilityKey === "dodge" ? "dodge" : null].filter(Boolean);
+        const mv = kinds.length ? game.wodxCombat?.movement?.rollMods?.(actor, kinds) : null;
+        if (mv?.diff) tm = { ...tm, diff: (tm.diff ?? 0) + mv.diff, parts: [...(tm.parts ?? []), ...mv.parts.map(x => `${x}, house rule`)] };
+    } catch (e) { /* WoDX Combat is off */ }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -788,7 +795,9 @@ async function resolveAction(actor, target, fd) {
 
     // Resisted
     if (fd.mode === "resisted") {
-        const op = opponentPool(target, preset.opp, fd, actor);
+        let op = opponentPool(target, preset.opp, fd, actor);
+        // Spotting someone prone, under water or in the earth is harder (WoDX Combat 3.12.0, house rule)
+        if (pool.abilityKey === "stealth") { try { const sp = game.wodxCombat?.movement?.spotMod?.(actor) ?? 0; if (sp) op = { ...op, diff: Math.min(10, op.diff + sp) }; } catch (e) { /* off */ } }
         const o = await rollPool(op.dice, op.diff);
         rolls.push(o.roll);
         body += rollBlock(`${target ? esc(target.name) : "Opponent"} (${esc(op.label)})`, o);
@@ -810,6 +819,12 @@ async function resolveAction(actor, target, fd) {
         const lvl = attr(actor, "strength") + (r.botch ? 0 : r.successes);
         const f = R.liftingFeat(lvl);
         body += `<div class="vta-big">${f ? `Effective Strength ${f.level}: ${f.feat} (${f.kg} kg)` : "Nothing moves"}</div>`;
+    }
+    // Jumping (3.40.0): the reach is kept on the actor, so the token can take a Jump move of that length (WoDX Combat 3.12.0)
+    if ((fd.preset === "jumping" || fd.preset === "jumpstand") && !r.botch && r.successes > 0) {
+        const jumpTo = CK.jumpReach(r.successes);
+        body += `<div class="vta-big">Jumps up to ${jumpTo.yards} yard${jumpTo.yards === 1 ? "" : "s"} across or ${jumpTo.upFeet} feet up. Choose Jump on the token to make it.</div>`;
+        try { await actor.setFlag("wodx-combat", "jump", { ...jumpTo, at: game.time.worldTime }); } catch (e) { /* WoDX Combat is off */ }
     }
     if (preset.note) body += `<div class="vta-note">${preset.note}</div>`;
 
@@ -1069,7 +1084,7 @@ export async function hunt({ actor: a } = {}) {
     const scene = actor.getActiveTokens?.()[0]?.scene ?? canvas?.scene ?? null;
     let here = null;
     try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
-    // The vampire's usual hunt (B944) fills in the window; the scene's own ground still wins
+    // The vampire's usual hunt (B964) fills in the window; the scene's own ground still wins
     const rule = feedingRule(actor), year = yearNow();
     const styleKey = KF.HUNT_STYLES[flag(actor, "huntStyle")] && KF.styleAllowed(flag(actor, "huntStyle"), year) ? flag(actor, "huntStyle") : "";
     const style = KF.HUNT_STYLES[styleKey] ?? null;
@@ -1147,7 +1162,7 @@ async function resolveHunt(actor, fd) {
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
-/* Feeding rules of clans and bloodlines, and the vessel's harm (3.40.0, feeding-rules.js) */
+/* Feeding rules of clans and bloodlines, and the vessel's harm (3.41.0, feeding-rules.js) */
 function yearNow() { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } }
 function feedingDarkAges() { return KF.isDarkAgesFeeding({ eraId: FXD.eraId(), year: yearNow() }); }
 /** The clan or bloodline's feeding rule for a vampire, or null. A flag wodx-actions.bloodline names a bloodline the sheet can't. */
@@ -1372,11 +1387,11 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (vb.system) upd["system.advantages.bloodpool.temporary"] = Math.max(0, blood(vesselActor).value - drunk);
         else if (drunk > 0) upd[`flags.${MOD}.vesselBlood`] = { value: bloodLeft, at: game.time?.worldTime ?? 0 };
         if (fleshEaten) upd[`flags.${MOD}.fleshTaken`] = num(flag(vesselActor, "fleshTaken")) + fleshEaten;
-        // The taste goes with the blood (B940): a drained vessel's drink or drugs are gone
+        // The taste goes with the blood (B960): a drained vessel's drink or drugs are gone
         if (bloodLeft <= 0 && flag(vesselActor, "vesselState")) upd[`flags.${MOD}.-=vesselState`] = null;
         if (Object.keys(upd).length) await updateActor(vesselActor, upd);
     }
-    // One lethal level a point (two for the Giovanni), and one unsoakable lethal level a flesh point (B940)
+    // One lethal level a point (two for the Giovanni), and one unsoakable lethal level a flesh point (B960)
     const harm = KF.kissDamage(drunk, { mult: rule?.kissMult ?? 1, living }) + fleshEaten;
     if (harm) {
         if (vesselActor && setting("applyChanges")) {
@@ -1963,7 +1978,7 @@ export async function endStory({ actors } = {}) {
 /*  Hazards: sunlight, fire, falling (p. 355-360)                      */
 /* ================================================================== */
 
-export async function hazard({ actor: a, kind = "sun" } = {}) {
+export async function hazard({ actor: a, kind = "sun", feet = 30 } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const fort = discipline(actor, "Fortitude");
@@ -1974,7 +1989,7 @@ export async function hazard({ actor: a, kind = "sun" } = {}) {
         <div class="form-group"><label>Exposure</label><select name="exposure" data-fixed>${opts(Object.entries(R.SUNLIGHT_EXPOSURE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 3)}</select></div></div>
       <div class="vta-k vta-fire"><div class="form-group"><label>Heat</label><select name="heat" data-fixed>${opts(Object.entries(R.FIRE_HEAT).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "torch")}</select></div>
         <div class="form-group"><label>Size</label><select name="size">${opts(Object.entries(R.FIRE_SIZE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 1)}</select></div></div>
-      <div class="vta-k vta-fall"><div class="form-group"><label>Distance (feet)</label><input type="number" name="feet" value="30"/></div>
+      <div class="vta-k vta-fall"><div class="form-group"><label>Distance (feet)</label><input type="number" name="feet" value="${Math.max(0, Number(feet) || 0)}"/></div>
         <div class="form-group"><label><input type="checkbox" name="sharp"/> Lands on something sharp (lethal)</label></div></div>
       <div class="vta-k vta-sun vta-fire"><div class="form-group"><label>Turns of exposure</label><input type="number" name="turns" value="1" min="1"/></div>
         <div class="form-group"><label><input type="checkbox" name="fortBlood"/> Spend blood: Fortitude soaks automatically (not vs. sun or fire)</label></div>
@@ -2502,7 +2517,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.40.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.41.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2691,7 +2706,7 @@ function kindredHooks() {
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
-    // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.40.0)
+    // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {
         try {
             if (!info?.attacker || !actor?.isOwner) return;

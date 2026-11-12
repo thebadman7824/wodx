@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {installMock} from "./foundry-mock.mjs";
 
-/* WoDX Actions 3.40.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines (feeding-rules.js) */
+/* WoDX Actions 3.41.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines (feeding-rules.js) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const KF = await import(join(root, "modules/wodx-actions/scripts/feeding-rules.js"));
@@ -227,7 +227,7 @@ test("boot", async () => {
   game.time.worldTime ??= 0;
   globalThis.fromUuid = async u => game.actors.find(a => a.uuid === u) ?? null;
   if ( process.env.FEED_DEBUG ) { ui.notifications.error = m => console.log("ERR", m); ui.notifications.warn = m => console.log("WARN", m); }
-  assert.equal(game.wodxActions.version, "3.40.0");
+  assert.equal(game.wodxActions.version, "3.41.0");
 });
 
 const lastCard = () => mock.log.chat.at(-1)?.content ?? "";

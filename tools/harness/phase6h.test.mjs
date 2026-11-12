@@ -88,7 +88,7 @@ test("the inner voice for later changelings: Bedlam's road and Banality", () => 
 });
 
 test("wiring: Actions 3.9.0, the later-era fae menu, the cantrip button by era, gender-neutral text (B48)", () => {
-  assert.match(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, /^3\.(9|[1-4]\d)\./);
+  assert.match(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, /^3\.(9|[1-9]\d)\./);
   const main = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
   assert.match(main, /FXD\.isDA\(a\) \? fx\(\)\.cast\(a\) : cx\(\)\.cantrip\(a\)/);
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
