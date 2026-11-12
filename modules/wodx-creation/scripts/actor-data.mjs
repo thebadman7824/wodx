@@ -15,6 +15,16 @@ const items = actor => [...(actor?.items ?? [])];
 /* -------------------------------------------- */
 
 /** "vampire", "ghoul", "mortal", or null for lines WoDX Creation does not handle yet. */
+/**
+ * A change of state (the Embrace, the First Change, the Awakening...) drops the old sheet's Creation flags, but the
+ * lifepath goes with the character: it is the life before. src: the old actor's data; flags: the new actor's flags.
+ */
+export function keepLifepath(flags, src) {
+  const lp = src?.flags?.[MODULE_ID]?.lifepath;
+  if ( lp ) flags[MODULE_ID] = {...(flags[MODULE_ID] ?? {}), lifepath: lp};
+  return flags;
+}
+
 export function lineOf(actor) {
   const types = CONFIG.worldofdarkness?.sheettype ?? {};
   if ( actor?.type === (types.vampire ?? "Vampire") ) return "vampire";

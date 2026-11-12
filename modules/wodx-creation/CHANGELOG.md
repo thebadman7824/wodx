@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.11.0 (lifepaths: a step-by-step chain of scenes for every line and splat, 1197 to the World of Future Darkness; the lifepath goes along through a change of state)
 - 0.10.2 (giveVitae firstDouble: a Dark Ages Tremere's first drink counts as two)
 - 0.10.1 (townsfolk spread over thirty years of age in Pass the Years; heirs ticked for them, so the town stays staffed)
 - 3, 4, 6a, 6b, Actions 3.2, 7a (People)

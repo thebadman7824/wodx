@@ -1483,6 +1483,26 @@ Reverse: GHOUL in data/signatures.mjs; ghoulTick in signatures.mjs.
 The four families from the books (Guide to the Sabbat pdf 219) are the Bratovitch (beasts), the Grimaldi (money), the Obertus (learning) and the Zantosa (vice). Ben asked how families founded in play would work, and the answer on the desk is now built. A new family has a founder, one trait from the list (beasts, money, faith or learning, vice, war, craft), two or three family Disciplines, a flaw and a year it was founded. The Storyteller's family is kept at once; a player's waits in the approval queue. A family's trait gives a die to its field or lends the vice engine. Revenants are born ghouls, so the monthly fix doesn't apply to them.
 
 Reverse: FAMILY_TRAITS and REVENANT_FAMILIES in data/signatures.mjs; the sigFamilies world setting.
+## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
+Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
+
+Reverse: remove the Lifepath button (apps.mjs, registerSheetButton) and lifepathPart in wodx-storyteller/scripts/prelude.mjs.
+
+## B1311. The chain follows Princes of Darkness's event chains, nothing else of it (2026-11-12)
+The CK3 mod runs a childe's education as an opening choice (strict, lenient, free) whose result weights a pool of follow-up events, rules some out (factor 0) and sometimes names the next one, ending in a closing event. WoDX's lifepath does the same with flags, weight factors (more) and named next scenes (n). The mod's V5 material (blood potency, resonance, predator types) is not used.
+
+Reverse: drop more and n from the tables; draws are then plain weighted picks.
+
+## B1312. Lifepath era windows (2026-11-12)
+Fourteen era bands from 1197 to the World of Future Darkness. Lines open by year: the Fallen from 1999, projectors from 1848 (the spiritualist mediums); every other line every era. Splats open by year where the setting fixes it: Cappadocians to 1444 and Giovanni from 1444, the Council's Traditions from 1466 with the Dark Ages Fellowships before, the Order of Reason's Conventions 1325 to 1896 and the Technocratic Union's from 1897, Sons of Ether from 1904, Virtual Adepts from 1961, Sidhe to 1400 and from 1969, imbued creeds from 1999 with mortal hunters 1500 to 1998, Amenti from 1999 with the old Immortals before. Rows the books give no clear year for are marked house: true and listed in PENDING-REVIEW.
+
+Reverse: the spans on each row in data/lifepaths-splats.mjs.
+
+## B1313. People from the past (2026-11-12)
+Up to three named people are ticked by default. Anyone more than 70 years before the chronicle's year is a name only, as most are long dead, unless the scene marks them lasting (a ghost, someone who shares the night). NPCs come from the People generator for the chronicle's own era, with a note of who they were to the character.
+
+Reverse: PEOPLE_DEFAULT and PEOPLE_ALIVE_SPAN in lifepath-rules.mjs.
+
 
 ## B1300. Area shapes and their sizes (2026-11-12)
 Ben approved the Improvement Desk item "Area shapes for powers". An area power's tag may carry a shape and size in yards after a colon (a.v:b10): a burst round the user, a circle where it is aimed, a cone (60 degrees) or a line (1 yard wide). With none in the tag, a size named in the power's own text is used; with none there, the range band sets it: touch a 1-yard burst, reach 2, voice the voice range, sight a 5-yard circle. House rule: the books give few sizes.
@@ -1496,7 +1516,7 @@ Reverse: oddsPanel() in wodx-actions main.js; setting showOdds.
 Ben approved "Pinned and recent actions": the last five actions and up to eight pinned ones are kept on the character (flags.wodx-actions.quick); right-click or Alt+P pins or unpins. A player who does not own the character sees their own recent list as before.
 Reverse: quick rows in profile-menus.js menuFor and main.js menu().
 
-## B1310. The after-action card and how far a fight's tale travels (2026-11-12)
+## B1340. The after-action card and how far a fight's tale travels (2026-11-12)
 Ben approved "An after-action card". When a started fight is ended, the Storyteller gets a whispered card: levels taken and dealt, blood, Willpower and other pools spent, Actions cards seen, and who outside the fight saw it (WoDX Actions' onlooker rules). House rule: a witness carries only their word before 1888, a snapshot camera is possible from 1888, a camcorder from 1985, a phone camera in most pockets from 2005, and in the Future Darkness everything is recorded. A breach is severity 2 when pictures are likely or five or more saw it. The button records the breach (the place may keep it) and starts a rumour, big at severity 2.
 Reverse: setting afterAction off; aftermath.js and aftermath-rules.js in wodx-combat.
 

@@ -6,7 +6,7 @@
  * it. Mortals who saw something they should not have are a breach; one click records it in the Masquerade ledger
  * (which follows the place: an Elysium or a haven keeps it) and starts a rumour in the night's draw.
  *
- * How far the tale travels follows the year (house rule, B1310): before photography a witness has only their word;
+ * How far the tale travels follows the year (house rule, B1340): before photography a witness has only their word;
  * from 1888 a snapshot camera is possible; from 1985 a camcorder; from 2005 a camera in most pockets; in the World of
  * Future Darkness everything is recorded. With a recording likely, or five or more witnesses, the breach is severe.
  */
