@@ -1231,6 +1231,72 @@ A member's standing inside a polity is kept on the faction (0 to 5) and starts f
 
 Reverse: write politics.ranks back to the Status item when a pol-rank change applies.
 
+## B1200. The body plan (2026-11-12)
+
+Ben approved a light body plan, modelled as a small tree of parts after Caves of Qud's bodies (review desk, 12 November 2026). WoDX Combat body-rules.js keeps the trees (person, four-legged beast, winged, bird, serpent, fish, spider, winged person, formless) and the shapes that pick them. Gear slots, natural weapons, moves and senses come from the parts. Parts have no health of their own; the health track stays as the books have it. House rule in its details.
+
+Reverse: remove body.js and body-rules.js and the calls to them in main.js and movement.js.
+
+## B1201. Which shape a body is in (2026-11-12)
+
+The Storyteller's flag wodx-combat.shape wins, then a shape power's effect (Shape of the Beast is a wolf unless the effect names a bat or a rat; Mist Form, Earth Meld, Horrid Form, Chiropteran Marauder, a Shape keyword effect), then a shapechanger's form. Only shape powers count, so a Gift that names a wolf changes nothing. Corax, Camazotz, Nagah, Rokea and Ananasi take their animal's tree in Lupus and Hispo. House rule.
+
+Reverse: shapeOf in body-rules.js.
+
+## B1202. Claws need growing (2026-11-12)
+
+Protean 2 no longer means claws at all times: picking "Claws (grow them)" in the attack dialog spends 1 blood and makes a Feral Claws effect for the scene (V20 p. 199; VtDA20 p. 240). Vicissitude needs bone talons on the lasting changes record (Bonecraft, V20 p. 242). The automatic attack never grows claws, since that costs blood.
+
+Reverse: the claw branch of weaponList and attackUsable in wodx-combat main.js.
+
+## B1203. Hit locations (2026-11-12)
+
+Ben chose hit locations on every attack. A hit lands on a part: the one aimed at (Aim at, which sets the book's targeting size: limbs +1, head and hands +2, eyes and heart +3, V20 p. 274; VtDA20 p. 346), a random part of the size picked, or at random by weight (body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5). The card says where it landed. Setting "Hit locations", on by default. House rule.
+
+Reverse: turn the setting off, or change HIT_WEIGHTS.
+
+## B1204. Maiming is offered, never automatic (2026-11-12)
+
+A hit of 3 or more lethal or aggravated levels after soak on a limb, hand, eye, wing, tail or fin whispers the Storyteller a card: crippled until those levels heal (+2 difficulty on actions with it, VtDA20 p. 348) or lost for good, which adds a lasting change in WoDX Storyteller. Three matches the stake (V20 Dark Ages p. 347). House rule for the threshold.
+
+Reverse: maimOffer in body-rules.js.
+
+## B1205. Gear in a shape that cannot use it (2026-11-12)
+
+When the shape changes, weapons in hand come off in a shape with no hands, and armor in a shape that cannot wear it (a vampire's shapes carry it along instead, B1210) (Crinos, Hispo, Lupus and the animal shapes, Mist, Earth Meld, the Zulo and Chiropteran shapes). Dedicated items stay (W20 p. 211; DA:W p. 149). W20 p. 286 has undedicated clothes shred in the bigger forms; no book says what Shape of the Beast or Earth Meld does to gear, so for those this is a house rule. An Undo card puts everything back. Setting "Gear comes off", on by default.
+
+Reverse: turn the setting off.
+
+## B1206. Features on lasting changes (2026-11-12)
+
+A lasting change in WoDX Storyteller can say what it does: bone talons, spikes or armor, an extra pair of arms, wings, gills, a tail, fangs, changed looks, a false limb, or a part lost. The Storyteller can still write anything as free text. Numbers from the books where they exist (talons Strength + 1 lethal, V20 p. 242; bone plates +1 soak each for 1 Dexterity or 1 health level, VtDA20 p. 268); the rest the Storyteller sets.
+
+Reverse: drop feature and lostPart in normChange.
+
+## B1207. What a lost part stops (2026-11-12)
+
+A lost leg halves speed (W20 p. 260); with no legs, only crawling (house rule). A lost eye: +3 difficulty on depth, shooting and throwing, +2 on sight Perception (W20 p. 259). A lost hand holds nothing. Lost wings ground a flier. Regrowth follows each line's book (Kindred VtDA20 p. 340, ghouls V20 p. 501, Garou W20 p. 259) and is done by removing the change.
+
+Reverse: LOSS_TEXT and the mobility count in body-rules.js.
+
+## B1208. Garou teeth and claws by form, W20 (2026-11-12)
+
+The book check moved three W20 forms: Glabro bites at difficulty 8 for Strength - 1 lethal and claws for Strength + 1 bashing (W20 p. 296); Crinos bites at difficulty 5. W20 gives Lupus claws as lethal in the form text (p. 287) and bashing in the maneuver list (p. 296): the form text wins. Dark Ages: Werewolf is unchanged.
+
+Reverse: naturalWeapons in wodx-actions garou.js.
+
+## B1209. The Body tab (2026-11-12)
+
+Every WoDX sheet gets a Body tab after Ties: the shape and why, the parts as a tree with what each hand holds and the natural weapons, added and lost parts, what the body can do, where blows land, and the lasting changes. The Storyteller can set the shape by hand and add a lasting change from it. Players see only the changes that show.
+
+Reverse: the Body tab block in wodx-sheets extras.mjs.
+
+## B1210. What goes along into a vampire's shape (2026-11-12)
+
+Ben approved the light helper's recommendation after the book check found no rule: in Shape of the Beast, Mist Form and Earth Meld, worn clothes, armor, jewellery and what is in pockets and pouches go with the vampire and come back with the change back; held things, and anything bigger than a small pack, drop. Armor that goes along gives no soak in the shape. WoDX does not know item sizes, so a large pack is left for the Storyteller to drop by hand.
+
+Reverse: carries in SHAPES (body-rules.js) and the shaped check in armor() (wodx-combat main.js).
+
 ## B1110. Garou, Changeling and Wraith polities (2026-11-12)
 
 Politics inside factions now covers three more lines. A Garou faction of three or more keeps a sept: a sept leader, a Truthcatcher who judges, a Warder and Master of the Challenge won or kept by challenge, the rest appointed; Rank from the sheet (system.renown.rank), tribes as blocs, the Litany as law (W20 pdf 52-53, 253-254). A Fae faction keeps the court of its age: a noble court before the Shattering (to 1349), a commoner freehold whose keeper is chosen by backing from 1350 to 1968, and a noble fief again from the Resurgence of 1969, with Title from the sheet, houses (or courts, for commoners) as blocs and the Escheat as law (C20 pdf 51-52, 58-59, 65-66, 74-76, 169-172). A Wraith necropolis (Anacreon, Regents, a Marshal, Centurions, legions as blocs; Wraith 20th pdf 126-136) is never a default, because "Spirits or the dead" also covers Umbral spirits; the Storyteller picks it. A sect picked out of its years runs as the polity of its kind and age.

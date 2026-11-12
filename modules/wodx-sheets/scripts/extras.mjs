@@ -13,6 +13,7 @@
  */
 import * as XR from "./extras-rules.mjs";
 import * as XH from "./extras-html.mjs";
+import { bodyHtml } from "./body-html.mjs";
 
 const MOD = XR.MOD, LIB = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -274,6 +275,15 @@ export async function decorate(sheet, html) {
     gearTab.insertAdjacentHTML("afterend", `<div id="tabwodxties" class="item wodx-tab-icon" data-tab="wodxties" data-tab-area="item" title="Ties"><i class="fa-solid fa-people-arrows"></i></div>`);
     el.querySelector(".tab.gear")?.insertAdjacentHTML("afterend", `<div class="tab wodxties sheet-inner-area" data-group="primary" data-tab="wodxties">${XH.tiesHtml(tieList(actor), { editable })}</div>`);
   }
+  // The Body tab (0.10.0): the body plan from WoDX Combat, after Ties
+  const cb = game.wodxCombat?.body;
+  const tiesTab = el.querySelector("nav.sheet-tabs[data-group='primary'] [data-tab='wodxties']");
+  if ( cb && tiesTab && !el.querySelector(".tab.wodxbody") ) {
+    let inner = "";
+    try { inner = bodyTabHtml(actor, cb); } catch (e) { console.warn("WoDX Sheets | body", e); inner = bodyHtml(null); }
+    tiesTab.insertAdjacentHTML("afterend", `<div id="tabwodxbody" class="item wodx-tab-icon" data-tab="wodxbody" data-tab-area="item" title="Body"><i class="fa-solid fa-person"></i></div>`);
+    el.querySelector(".tab.wodxties")?.insertAdjacentHTML("afterend", `<div class="tab wodxbody sheet-inner-area" data-group="primary" data-tab="wodxbody">${inner}</div>`);
+  }
   // The Storyteller's notes, for the Storyteller only
   if ( game.user.isGM ) el.querySelector(".tab.note")?.insertAdjacentHTML("afterbegin", XH.stNotesHtml(stNotesOf(actor)));
   // Search boxes on the long power lists
@@ -285,6 +295,18 @@ export async function decorate(sheet, html) {
     t.setAttribute("data-wodx-list", key);
     t.insertAdjacentHTML("afterbegin", `<div class="wodx-list-search">${XH.esc("")}<input type="search" class="wodx-search" data-search=".tab.${key}[data-wodx-list]" placeholder="Search" aria-label="Search this tab" autocomplete="off"></div>`);
   });
+}
+
+/** The Body tab's content for one actor. */
+export function bodyTabHtml(actor, cb) {
+  const body = cb.of(actor), R = cb.rules;
+  const held = {}, weapons = [...actor.items].filter(i => ["Melee Weapon", "Ranged Weapon"].includes(i.type) && i.system?.isequipped && !i.system?.isnatural);
+  const hands = (body.parts ?? []).filter(p => p.type === "hand").map(p => p.id);
+  weapons.forEach((w, n) => { if ( hands[n] ) held[hands[n]] = w.name; });
+  const changes = (actor.flags?.["wodx-storyteller"]?.body ?? []).filter(c => c && (game.user.isGM || c.shows !== false));
+  return bodyHtml(body, {held, changes, gm: game.user.isGM, shapeFlag: actor.flags?.["wodx-combat"]?.shape ?? "",
+    shapes: Object.fromEntries(Object.entries(R.SHAPES).map(([k, v]) => [k, v.label])),
+    hitTable: game.settings.get("wodx-combat", "hitLocations") ? R.hitTable(body) : [], outline: R.outline(body)});
 }
 
 /* -------------------------------------------------------------- */
@@ -352,6 +374,15 @@ export function listen(sheet, root) {
     };
     poss.addEventListener("dragover", ev => ev.preventDefault());
     poss.addEventListener("drop", onDrop, true);
+  }
+  // Body tab: the Storyteller sets the shape or adds a lasting change
+  const bodyEl = root.querySelector(".wodx-body");
+  if ( bodyEl && game.user.isGM ) {
+    bodyEl.querySelector(".wodx-body-shape")?.addEventListener("change", ev => game.wodxCombat?.body?.setShape(actor, ev.target.value || null));
+    bodyEl.querySelector(".wodx-body-add")?.addEventListener("click", () => {
+      const api = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.body : null;
+      if ( api?.newDialog ) api.newDialog(actor); else ui.notifications.warn("Lasting changes need WoDX Storyteller on.");
+    });
   }
   // Ties
   const ties = root.querySelector(".wodx-ties");
