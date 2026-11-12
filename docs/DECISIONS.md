@@ -1424,3 +1424,28 @@ Reverse: HOLY_HARM and DAMNED_CLANS in use-rules.mjs; the inject case in use.mjs
 Ben approved the item-links study, which puts Cataclysm's reversible recipes on the recipe machine. A thing is taken apart through Use ("Take apart for parts"). Rules in Library data/recipes.mjs SALVAGE: by name and category, what parts come out (metal, wood, hide, wire, scrap electronics, a chip, plastic, wax, a hinge, a buckle, cordage, tubing), each the first good in use in the year (steel bar stock after 1850, iron bar stock before). One more of each part at value tier 3 and up. Food, drink, drugs, medicine, coin, papers, books, maps, seeds, fuel, materials, valuables, faith, occult and hygiene goods are not taken apart.
 It needs a tool that cuts, pries or hammers (for electronics, one that turns screws or solders; Library link-rules qualities serve too), and a V20 simple action: Dexterity + Crafts, or Technology for electronics from 1900, difficulty 6 (7 at tier 4 and up). Cheap things need no roll when the pool is at least the difficulty (as B948). No successes: still whole. A botch: spoiled, nothing kept. House rule.
 Reverse: empty SALVAGE in data/recipes.mjs.
+
+## B1150. The Nosferatu trade in secrets (2026-11-12)
+V20 pdf 71: a Nosferatu's Appearance is 0, and the clan trades in what it overhears (pdf 28). When a Nosferatu deals with a mortal face to face, the Storyteller gets one card a night for each mortal, with a button that records a Masquerade breach (unless Obfuscate held). A page of secrets is an item. Handed over in a trade, it buys a minor boon while fresh and a trivial one when stale. Freshness follows how fast word travels in the age (media-rules): 60 days by word of mouth, 30 in print, 14 with newspapers, 7 with the wireless, 3 with television and 1 with the internet. The under-town map layer waits for map generation.
+
+Reverse: SECRET_FRESH in data/signatures.mjs; trueFace and secretSold in signatures.mjs.
+
+## B1151. The Tremere Pyramid (2026-11-12)
+The book check found no rank ladder in V20 core, so the ranks are a house reading: the seven circles of apprentice, then Regent, Lord, Pontifex and the Inner Council. An order may only come down the Pyramid. Refusing it costs 1 Willpower, or 2 when the order comes from three or more ranks above, and the Storyteller hears of it. Rituals as recipes wait for the recipe work.
+
+Reverse: TREMERE_RANKS; refuseCost in signature-rules.mjs.
+
+## B1152. Ventrue influence (2026-11-12)
+Once a month, a Ventrue may take a minor boon from a mortal institution of the age instead of that month's holdings income. The Storyteller logs the boon in the Ledger from the card and skips the income. A Ventrue who loses a holding answers to the clan, through a card.
+
+Reverse: INSTITUTIONS in data/signatures.mjs.
+
+## B1153. Assamite contracts (2026-11-12)
+A contract has a target, a price and a deadline. Keeping it raises standing at Alamut by one (0 to 5, starting at 1) and sends a tenth of the fee to the clan as a tithe. A contract still open at its deadline fails at the daily tick and lowers standing by one.
+
+Reverse: settleContract and TITHE.
+
+## B1154. The Giovanni's bound dead (2026-11-12)
+A ledger of bound wraiths, each held by a fetter. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date, as the book check flagged) the window names the line as the Cappadocians, whose deathly look is a Masquerade sign up close.
+
+Reverse: giovanniName in signature-rules.mjs.

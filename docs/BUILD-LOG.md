@@ -1633,3 +1633,13 @@ Chronicle 0.27.0 adds the Tzimisce's native soil (a night without it halves ever
 
 ## 2026-11-12: taking things apart for parts
 From the item-links study (Ben approved all): Library 0.13.0 adds SALVAGE rules to data/recipes.mjs and salvageOf, apartTool and successes to recipe-rules.mjs; Use offers "Take apart for parts" on the 155 goods that have parts. Storyteller 0.34.0 cookery.takeApart rolls Dexterity + Crafts (Technology for electronics), takes one of the thing and gives its parts by era. B953. Tests in recipes.test.mjs; gatecook step 8.
+
+## 2026-11-12: Nosferatu, Tremere, Ventrue, Assamite, Giovanni
+Chronicle 0.28.0 adds five clan features:
+- the Nosferatu's true-face breach card and pages of secrets that go stale at the speed of the age
+- the Tremere Pyramid, with orders that cost Willpower to refuse
+- Ventrue influence in place of a month's income
+- Assamite contracts with standing and a tithe
+- the Giovanni's bound wraiths
+
+Clan feature cards can now carry a button (breach, boon, refuse) beside Undo. A Ravnos vice and a Nosferatu face now fire on the player's own client, where social and trade acts happen. Decisions B1150 to B1154. Harness signatures.test.mjs: 17 tests. The gatesigs gate has 18 steps.
