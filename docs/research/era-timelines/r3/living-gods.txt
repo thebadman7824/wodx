@@ -53,7 +53,7 @@
 -3600|H|mor|EU|Malta|building,faith|The temples of Malta|Islanders on Malta build great stone temples.
 -3500|H|mor|ME|Sumer|science|The potter's wheel and the plough|Sumerians use the fast potter's wheel and the ox-drawn plough.
 -3500|H|mor|AF|Egypt|founding|Naqada|The towns of Upper Egypt grow rich under chiefs buried with painted pots.
--3500|M|mum|AF|Egypt|faith,crown|Osiris rules|In the legend of the Reborn, Osiris rules the Two Lands as a god-king, with Isis at his side.
+-3500|M|mum|AF|Egypt|faith,crown|Osiris rules|In the legend of the Reborn, Osiris rules the Two Lands as a god-king, with Isis beside the throne.
 -3500|W|wer|AF|Egypt|faith,occult|The striders by the river|The Silent Striders keep their oldest home among the shrines of the Nile.
 -3400|H|mor|EU|Europe|migration|Corded Ware ancestors|Herders from the steppe begin to push west into central Europe.
 -3300|H|mor|EU|Otztal Alps|death,crime|The iceman|A man is shot with an arrow and dies on a pass in the Alps; the ice keeps the body for five thousand years.

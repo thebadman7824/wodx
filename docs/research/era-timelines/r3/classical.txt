@@ -136,7 +136,7 @@
 43|H|mor|EU|Britain|war,empire|Rome invades Britain|Claudius sends four legions to Britain.
 50|H|mor|MO|Moravia|uprising,crown|Vannius driven out|The Quadi and their neighbours drive out Vannius.
 50|H|mor|EU|Londinium|founding|Londinium founded|The Romans found Londinium on the Thames.
-50|W|vam|EU|Londinium|founding,faith|Mithras comes to Britain|Some Ventrue say their elder Mithras took Londinium as his domain soon after the Romans founded it.
+50|W|vam|EU|Londinium|founding,faith|Mithras comes to Britain|Some Ventrue say their elder Mithras took Londinium as a domain soon after the Romans founded it.
 60|H|mor|EU|Britain|uprising|Boudica's revolt|Boudica of the Iceni burns Camulodunum, Londinium and Verulamium.
 64|H|mor|EU|Rome|fire,persecution|The great fire of Rome|Fire burns much of Rome; Nero blames the Christians.
 64|W|vam|EU|Rome|fire,faith|Cainites in the flames|The Ventrue of Rome weather the fire; the Christians it blames will one day shape the Cainite world.
@@ -311,7 +311,7 @@
 1000|W|mag|EU|Ceoris|occult|The Questing Years|House Tremere's Questing Years run from 1000 to 1021 (House of Tremere pdf 21).
 1003|N|mag|EU|Europe|heresy|The first medieval schisms|The Encyclopaedia's schisms among the mages begin about now.
 1019|H|mor|MO|Moravia|war,crown|Bohemia takes Moravia|Oldrich of Bohemia, through his son Bretislav, takes Moravia from Poland, between 1019 and 1029.
-1022|W|vam|EU|Ceoris|occult,crown|The Becoming|Tremere and his inner circle become Cainites in 1022 (House of Tremere pdf 23; V20 Dark Ages pdf 63).
+1022|W|vam|EU|Ceoris|occult,crown|The Becoming|Tremere and the inner circle become Cainites in 1022 (House of Tremere pdf 23; V20 Dark Ages pdf 63).
 1029|H|mor|MO|Moravia|crown|Bretislav in Moravia|Bretislav rules Moravia for his father.
 1034|H|mor|MO|Bohemia|crown|Bretislav duke|Bretislav I becomes duke of Bohemia and Moravia.
 1037|W|vam|EU|Ceoris|crown|Goratrix rules|Goratrix rules the Tremere seat from 1037 to 1133 (House of Tremere pdf 26-28).
