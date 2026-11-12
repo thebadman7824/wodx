@@ -396,7 +396,7 @@ export function sigRollEffects(list = [], ctx = {}) {
   return out;
 }
 
-/* ---------------- Mage (Chronicle 0.32.0) ---------------- */
+/* ---------------- Mage (Chronicle 0.33.0) ---------------- */
 
 /** A mage's rows: the Tradition, Craft or Convention, then a Hermetic House when one is named. */
 export const mageRows = ({sect = [], house = []} = {}) => [rowIn(MAGE, sect), rowIn(HOUSES, house)].filter(Boolean);

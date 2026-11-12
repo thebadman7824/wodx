@@ -1,5 +1,5 @@
 /**
- * Tradition, Craft and Convention features gate (WoDX Chronicle 0.32.0 or later), in rothenstein-wodx, as Gamemaster Test:
+ * Tradition, Craft and Convention features gate (WoDX Chronicle 0.33.0 or later), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatemage.mjs?${Date.now()}`)).run()
  * Makes its own mages and a mortal, turns "Tradition, Craft and Convention features (Mage)" on, and puts the setting,
  * actors and chat cards back afterwards. The clock is not moved.
@@ -49,7 +49,7 @@ export async function run() {
       mage("WoDX gate: Nephandus", "wod.bio.mage.nephandi"), {name: "WoDX gate: Mark", type: "Mortal"}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     await step("1 api", async () => {
-      ok("1 api", atLeast(game.modules.get(C).version, "0.32.0") && typeof api()?.meditate === "function" && game.settings.get(C, "sigMage") === true, {version: game.modules.get(C).version});
+      ok("1 api", atLeast(game.modules.get(C).version, "0.33.0") && typeof api()?.meditate === "function" && game.settings.get(C, "sigMage") === true, {version: game.modules.get(C).version});
     });
     await step("2 rows", async () => {
       const keys = ["Akashic", "Euthanatos", "Verbena", "Watcher", "Nephandus"].map(n => api().rowOf(by(n))?.key ?? null);

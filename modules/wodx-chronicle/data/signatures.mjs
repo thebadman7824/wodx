@@ -530,7 +530,7 @@ export const WYRM_WORDS = ["wyrm", "spiral", "fomor", "fomori", "bane", "banes",
 /** Days in a lunar month, for the Stargazer's sky reading. */
 export const LUNAR_MONTH = 29.53;
 
-/* ================= Mage (Chronicle 0.32.0) ================= */
+/* ================= Mage (Chronicle 0.33.0) ================= */
 
 /**
  * Traditions, Crafts, Conventions, the Order of Reason and the mad and fallen. match: words of the sheet's sect field

@@ -603,6 +603,15 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
 | 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
 
+## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
+| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
+| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
+| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -634,10 +643,6 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
 | 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
 | 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |
-| 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
-| 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
-| 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
-| 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 | 2026-11-12 | Area sizes when a power names none (B1300) | Touch a 1-yard burst, reach 2, voice 30, sight a 5-yard circle; cones 60 degrees, lines 1 yard wide | areaShape() in wodx-targeting target-rules.mjs |
 | 2026-11-12 | How far a fight's tale travels (B1340) | Word only before 1888, snapshot camera from 1888, camcorder 1985, phone cameras 2005, all recorded in the Future Darkness; severity 2 with pictures likely or five witnesses | EVIDENCE, severity() in wodx-combat aftermath-rules.js |
 | 2026-11-12 | Fires from knocked-over lights (B1320) | Candles and torches torch-sized; a lantern torch-sized and broken; an oil lamp a bonfire, broken; all at a torch's heat | SPILL in wodx-interactables interact-rules.mjs |
@@ -646,3 +651,8 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Sprinklers (B1323) | From 1874; douse torch-sized fires and bonfires, not an inferno | WATCHES.sprinkler, douses() in interact-rules.mjs |
 | 2026-11-12 | Colour-blind palette (B1330) | Okabe and Ito colours for the sight rings, off by default; words under every ring on by default | SAFE in wodx-senses sight-rules.mjs |
 | 2026-11-12 | VtDA20 bridge removal: keep anything? | Kept three small things: the manifest conflict with vtda20-actions and vtda20-combat (Foundry warns if both are on), profiles.js still reading an old flags.world.vtda20.profile when an actor has no WoDX one (read only), and the vtda20-dialog CSS class names. | Delete OLD_KEY and LEGACY_FLAGS in both profiles.js copies and the conflicts entries in both module.json files. |
+| 2026-11-12 | Disguises set by the Storyteller only (B1405) | A disguise is set on a worn item in its Examine notes, which only the Storyteller opens; players ask the Storyteller | Add a Dress as... use to Library's Use roster |
+| 2026-11-12 | Ghouls, hunters and Kinfolk read dress as mortals do (B1402) | Any NPC whose kind counts as mortal in the trait table (ghoul, revenant, kinfolk, hunter, sorcerer) | mortal in npcForLook, NPC attitude.mjs |
+| 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
+| 2026-11-12 | Which worn names show a side (B1407) | habit, cassock, surplice, vestments, cowl, clerical collar: kind:church; police, constable, gendarme: kind:watch; military, soldier's, regimental, army: military; livery; pilgrim's badge; corporate | SIDE_WORDS in look-rules.mjs |
+| 2026-11-12 | Worn dress always shows for era fit (B1403) | The design said conceal T or N; worn clothing now always counts and carried things only at N, so a hidden phone stays hidden | seen in look-rules.mjs |

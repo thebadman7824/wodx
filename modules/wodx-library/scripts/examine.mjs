@@ -23,6 +23,8 @@ const goodOfItem = item => {
   return (id && G.GOODS.find(g => g.id === id)) || X.goodOf(item?.name, G.GOODS);
 };
 const flagOf = item => item?.flags?.[MOD]?.examine ?? {};
+/** What a closer look reads: the Storyteller's notes, with a made thing's quality and maker filled in. */
+const lookOf = item => X.withMade(flagOf(item), item?.flags?.["wodx-storyteller"] ?? {});
 const ownerOf = item => item?.flags?.["wodx-storyteller"]?.owner ?? null;
 
 /** Fill an everyday good's description as it is made (any path: a container, a stock list, a gift). */
@@ -71,9 +73,11 @@ async function facts(item, good) {
   try {
     const m = game.modules.get("wodx-storyteller")?.api?.upkeep?.money;
     const p = good && m?.priceSync ? m.priceSync(good.name) : null;
-    if ( p?.text ) price = p.text;
+    // A made thing's quality moves its worth (Storyteller's priceFactor)
+    const fx = Number(item?.flags?.["wodx-storyteller"]?.priceFactor) || 1;
+    if ( p?.text ) price = fx !== 1 && m?.format ? m.format(Math.max(1, Math.round(p.total * fx))) : p.text;
   } catch (e) { price = null; }
-  const f = flagOf(item);
+  const f = lookOf(item);
   const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id;
   return X.factsOf(good, {kinds: G.KINDS, values: G.VALUES, conceal: G.CONCEAL, tier: era ? good?.values?.[era] : null, price, quality: f.quality});
 }
@@ -106,7 +110,7 @@ export async function lookCloser(item, actor = looker(item)) {
   const roll = await new Roll(`${p.pool}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
   const {successes, botch} = X.countSuccesses(faces, p.difficulty);
-  const found = X.findings(good.kind, successes, flagOf(item), ownerOf(item), T.detailsOf(good.former ?? good.name));
+  const found = X.findings(good.kind, successes, lookOf(item), ownerOf(item), T.detailsOf(good.former ?? good.name));
   const dice = faces.map(v => `<span class="vta-die ${v === 1 ? "one" : v >= p.difficulty ? "hit" : "miss"}">${v}</span>`).join("");
   const body = botch ? "<p>A botch. The Storyteller may tell something misleading.</p>"
     : found.length ? `<p class="wodx-quiet">What the look shows. The Storyteller fills in the details.</p><ul>${found.map(l => `<li>${esc(l.text)}</li>`).join("")}</ul>` : "<p>Nothing more than meets the eye.</p>";
@@ -123,7 +127,7 @@ export async function lookCloser(item, actor = looker(item)) {
 export async function editNotes(item) {
   if ( !game.user.isGM || !item ) return;
   await load();
-  const f = flagOf(item);
+  const f = flagOf(item), dressed = item.flags?.[MOD]?.look?.dressedAs ?? null;
   const q = Object.entries(X.QUALITY).map(([k, v]) => `<option value="${k}"${f.quality === k ? " selected" : ""}>${esc(v)}</option>`).join("");
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `Examine notes: ${item.name}`}, classes: ["wodx-dialog", "wlib-examine-notes"],
     content: `<p class="hint">What a closer look can find. One success shows how it was made, two where it comes from, three whether it is false, stolen or worn, four anything uncanny. Players never see these notes until a roll opens them.</p>
@@ -133,6 +137,9 @@ export async function editNotes(item) {
       <label>What gives the fake away <input type="text" name="forgedTell" maxlength="300" value="${esc(f.forgedTell ?? "")}"></label>
       <label><input type="checkbox" name="stolen"${f.stolen ? " checked" : ""}> It was stolen</label>
       <label><input type="checkbox" name="worn"${f.worn ? " checked" : ""}> It is worn out</label>
+      <label><input type="checkbox" name="bloody"${f.bloody ? " checked" : ""}> It is bloodstained (shows on whoever wears it)</label>
+      <label>Worn as a disguise: the station it passes for (0 to 5, blank for none) <input type="number" name="dressedStation" min="0" max="5" value="${dressed ? X.num(dressed.station) : ""}"></label>
+      <label>Sides it passes for, comma between (kind:church, livery, kind:watch) <input type="text" name="dressedSides" maxlength="200" value="${esc((dressed?.sides ?? []).join(", "))}"></label>
       <label>Something uncanny about it <textarea name="uncanny" rows="2" maxlength="400">${esc(f.uncanny ?? "")}</textarea></label>
       <label>Successes needed for the uncanny <input type="number" name="uncannyNeed" min="4" max="10" value="${X.num(f.uncannyNeed) || X.NEEDS.uncanny}"></label>
       <label>Your own lines, one per row as "successes: text" <textarea name="lines" rows="4" placeholder="2: A maker's mark of a crowned fish.">${esc(X.joinLines(f.lines ?? []))}</textarea></label>
@@ -142,7 +149,11 @@ export async function editNotes(item) {
   const next = {quality: X.QUALITY[res.quality] ? res.quality : "", origin: String(res.origin ?? "").trim(), forged: !!res.forged, forgedTell: String(res.forgedTell ?? "").trim(),
     stolen: !!res.stolen, worn: !!res.worn, uncanny: String(res.uncanny ?? "").trim(), uncannyNeed: Math.max(X.NEEDS.uncanny, X.num(res.uncannyNeed) || X.NEEDS.uncanny),
     lines: X.parseLines(res.lines ?? ""), note: String(res.note ?? "").trim()};
-  await item.update({[`flags.${MOD}.examine`]: next});
+  next.bloody = !!res.bloody;
+  // 0.14.0: a disguise (WoDX Library's look reads it; WoDX Actions' "Pass as someone else" rolls against it)
+  const ds = String(res.dressedStation ?? "").trim();
+  const look = ds === "" ? null : {station: Math.max(0, Math.min(5, X.num(ds))), sides: String(res.dressedSides ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean)};
+  await item.update({[`flags.${MOD}.examine`]: next, [`flags.${MOD}.look`]: {dressedAs: look}});
   return next;
 }
 

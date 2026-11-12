@@ -170,7 +170,7 @@ async function makeItem(a, {good, makes, batch = 1, wait = 0, waitWord = "", lea
   data.name = wait ? l.R.waitingName(finalName, waitWord) : finalName;
   data.flags = {...(data.flags ?? {}), [LIB]: {...(data.flags?.[LIB] ?? {}), ...(good?.id ? {good: good.id} : {})},
     "wodx-sheets": {...(data.flags?.["wodx-sheets"] ?? {}), ...(batch > 1 ? {qty: batch} : {})},
-    [MOD]: {...(data.flags?.[MOD] ?? {}), ...(taskId ? {madeBy: taskId} : {}), owner: {id: a.uuid, kind: "actor", name: a.name}, ...extra,
+    [MOD]: {...(data.flags?.[MOD] ?? {}), ...(taskId ? {madeBy: taskId} : {}), maker: a.name, owner: {id: a.uuid, kind: "actor", name: a.name}, ...extra,
       ...(wait ? {ripens: {at: now() + wait * 86400, name: finalName}} : {})}};
   const out = [data];
   for ( const line of leaves ) {

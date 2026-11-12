@@ -253,3 +253,18 @@ test("untagged powers: every shipped power has a table tag, and every aimed wind
   }
   assert.deepEqual(bare, ["hunter.js"], "only the Blessing window, whose Blessings are the actor's own items, reads the words alone");
 });
+
+/* ---- testbed fixes (Actions 3.45.1, Combat 3.15.1) ---- */
+
+test("the fight's start is kept as pairs, so an actor id's dot is not split; the odds box goes beside its field", async () => {
+  const AA = await import(new URL("../../modules/wodx-combat/scripts/aftermath.js", import.meta.url));
+  const snap = {name: "Ana", dmg: 1, pools: {willpower: 5}};
+  assert.deepEqual(AA.startOf({start: [["Actor.abc123", snap]]}), {"Actor.abc123": snap});
+  assert.deepEqual(AA.startOf({start: {Actor: {abc123: snap}}}), {}, "the old nested shape is ignored, not misread");
+  assert.deepEqual(AA.startOf(null), {});
+  const main = src("modules/wodx-actions/scripts/main.js");
+  assert.match(main, /anchor\.parentNode\.insertBefore\(box, anchor\)/);
+  assert.doesNotMatch(main, /form\.insertBefore\(box, anchor\)/);
+  const aa = src("modules/wodx-combat/scripts/aftermath.js");
+  assert.match(aa, /start: Object\.entries\(start\)/);
+});

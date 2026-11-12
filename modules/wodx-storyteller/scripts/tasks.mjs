@@ -146,7 +146,7 @@ export async function tick({force = false} = {}) {
             // 0.27.0: a recipe's quality and its maker as owner
             const q = t.good ? Own.finishCraft(t) : null;
             if ( q && q.quality !== "plain" ) data.name = `${data.name} (${q.label.toLowerCase()})`;
-            data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id, owner: Own.recordFor(a), ...(q ? q.flags : {})}};
+            data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id, maker: a.name, owner: Own.recordFor(a), ...(q ? q.flags : {})}};
             if ( q ) t = {...t, quality: q.quality};
             await a.createEmbeddedDocuments("Item", [data]);
             t = {...t, made: true};

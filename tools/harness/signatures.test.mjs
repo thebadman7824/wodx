@@ -313,7 +313,7 @@ test("signature effects in the trait shape, with tag aliases", () => {
   assert.equal(S.deformityByKey("hairless").effects[0].tags[0], "social");
 });
 
-/* Chronicle 0.32.0: Mage Traditions, Crafts, Conventions and Houses (B1165 to B1167) */
+/* Chronicle 0.33.0: Mage Traditions, Crafts, Conventions and Houses (B1165 to B1167) */
 
 test("a mage finds the group row by the system's sect keys, and a House stacks", () => {
   for ( const [k, want] of [["wod.bio.mage.akashic", "akashic"], ["wod.bio.mage.speakers", "dreamspeakers"], ["wod.bio.mage.ether", "sonsofether"], ["wod.bio.mage.adepts", "va"],
