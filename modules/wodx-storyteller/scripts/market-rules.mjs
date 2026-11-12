@@ -8,6 +8,9 @@
  * Indexes and supply levels are house rules set by the Storyteller. The weekly market turn (Storyteller 0.48.0,
  * market-turn-rules.mjs) moves them: it reads links (other markets this one trades with), cut (a siege or quarantine:
  * the turn leaves the market alone) and seen (how many turns each kind's supply has stood at its level).
+ * Storyteller 0.49.0 adds what factions do to a market (moves: taxes, monopolies, smuggling; market-moves-rules.mjs),
+ * roads a raid has closed (unsafe: {market id: weeks left}) and, on each trader, the weeks its keep went unpaid
+ * (behind), whether the shop has shut and for how long (shut, shutWeeks) and who backed its reopening (backer).
  */
 export const STATE_VERSION = 1;
 export const INDEX = {min: 0.5, max: 3};
@@ -28,6 +31,27 @@ const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").repl
 
 export function blankState() { return {v: STATE_VERSION, markets: []}; }
 
+/** A standing move on a market: a tax, a monopoly on one kind of goods, or smuggling that undercuts both. */
+export const MOVE_TYPES = ["tax", "monopoly", "smuggle"];
+export const TAX_RATES = [0.1, 0.2, 0.3];
+export function normMove(v = {}, kinds = []) {
+  if ( !MOVE_TYPES.includes(v?.type) || !v.faction ) return null;
+  const goods = kinds.includes(v.goods) ? v.goods : "";
+  if ( v.type === "monopoly" && !goods ) return null;
+  const rate = v.type === "tax" ? (TAX_RATES.includes(Number(v.rate)) ? Number(v.rate) : TAX_RATES[0]) : 0;
+  const weeks = Number.isFinite(Number(v.weeks)) && Number(v.weeks) > 0 ? Math.min(5200, Math.floor(Number(v.weeks))) : 0;
+  return {id: String(v.id || `${v.type}-${v.faction}-${goods || "all"}`).slice(0, 80), type: v.type, faction: String(v.faction), name: String(v.name ?? "A faction").slice(0, 120),
+    goods, rate, weeks, told: !!v.told, hand: !!v.hand};
+}
+function normTrader(t = {}) {
+  const n = k => (Number.isFinite(Number(t[k])) && Number(t[k]) > 0 ? Math.min(520, Math.floor(Number(t[k]))) : 0);
+  const out = {actor: String(t.actor), tile: String(t.tile)};
+  if ( n("behind") ) out.behind = n("behind");
+  if ( t.shut ) { out.shut = true; if ( n("shutWeeks") ) out.shutWeeks = n("shutWeeks"); }
+  if ( t.backer ) out.backer = String(t.backer).slice(0, 120);
+  return out;
+}
+
 export function normMarket(m = {}, kinds = []) {
   const index = {}, supply = {};
   for ( const k of kinds ) {
@@ -45,7 +69,31 @@ export function normMarket(m = {}, kinds = []) {
   return {id: String(m.id || slug(m.name)), name: String(m.name ?? "A market").slice(0, 80), scenes: [...new Set((m.scenes ?? []).map(String))],
     index, supply, note: String(m.note ?? "").slice(0, 500),
     links: [...new Set((m.links ?? []).map(String).filter(Boolean))], cut: !!m.cut, seen,
-    traders: (m.traders ?? []).filter(t => t?.actor && t?.tile).map(t => ({actor: String(t.actor), tile: String(t.tile)}))};
+    traders: (m.traders ?? []).filter(t => t?.actor && t?.tile).map(normTrader),
+    moves: normMoves(m.moves, kinds), unsafe: normUnsafe(m.unsafe)};
+}
+/** One tax a faction, one monopoly a kind of goods, one smuggling ring a faction; the first of each stands. */
+export function normMoves(moves, kinds = []) {
+  const out = [], seen = new Set();
+  for ( const v of Array.isArray(moves) ? moves : [] ) {
+    const n = normMove(v, kinds);
+    if ( !n ) continue;
+    const key = n.type === "monopoly" ? `monopoly:${n.goods}` : `${n.type}:${n.faction}:${n.goods}`;
+    if ( seen.has(key) ) continue;
+    seen.add(key);
+    let id = n.id, i = 2;
+    while ( out.some(x => x.id === id) ) id = `${n.id}-${i++}`;
+    out.push({...n, id});
+  }
+  return out.slice(0, 24);
+}
+function normUnsafe(u) {
+  const out = {};
+  for ( const [k, v] of Object.entries(u && typeof u === "object" ? u : {}) ) {
+    const n = Math.floor(Number(v));
+    if ( k && Number.isFinite(n) && n > 0 ) out[k] = Math.min(12, n);
+  }
+  return out;
 }
 
 export function normState(s, kinds = []) {
@@ -64,6 +112,12 @@ export function normState(s, kinds = []) {
   for ( const m of out.markets ) for ( const l of m.links ) {
     const o = out.markets.find(x => x.id === l);
     if ( !o.links.includes(m.id) ) o.links.push(m.id);
+  }
+  // A closed road is closed from both ends, and only along a link
+  for ( const m of out.markets ) for ( const k of Object.keys(m.unsafe) ) if ( !m.links.includes(k) ) delete m.unsafe[k];
+  for ( const m of out.markets ) for ( const [k, v] of Object.entries(m.unsafe) ) {
+    const o = out.markets.find(x => x.id === k);
+    if ( o && o.links.includes(m.id) ) o.unsafe[m.id] = Math.max(o.unsafe[m.id] ?? 0, v);
   }
   return out;
 }

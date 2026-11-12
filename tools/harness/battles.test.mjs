@@ -300,10 +300,11 @@ test("a book turn: the commanders' net successes move the pools, then the armies
   contests[0].rolls = {attack: r(6), resist: r(2)};
   contests[1].rolls = {attack: r(1), resist: r(3)};
   const st = B.settleBookTurn(b, B.ageFor(1230), {...pl, contests}, [[], []]);
-  assert.deepEqual(st.phase.units, [0, 4], "melee wins by 4; failed shooting does no harm to the shooters");
-  assert.equal(B.unitCount(st.sides[1].units), 3);
-  assert.equal(st.sides[1].lostUnits, 4);
-  assert.deepEqual(st.waver, {side: 1, difficulty: 4}, "losing 3 or more units makes an army waver at that many");
+  assert.deepEqual(st.phase.units, [0, 3], "melee wins by 4, held to a third of the 7 units; failed shooting does no harm to the shooters");
+  assert.equal(B.turnCap(b.sides[1]), 3);
+  assert.equal(B.unitCount(st.sides[1].units), 4);
+  assert.equal(st.sides[1].lostUnits, 3);
+  assert.deepEqual(st.waver, {side: 1, difficulty: 3}, "losing 3 or more units makes an army waver at that many");
   assert.ok(st.sides[0].units.cainiteCavalry, "mortal troops fall first");
   // undo puts the units back
   const after = B.applyStep(b, st);
@@ -328,7 +329,7 @@ test("a book turn: a lost melee costs the attackers, a withdrawal ends it, an ar
   const away = B.settleBookTurn(b, age, {...pl, contests: c});
   assert.deepEqual(away.phase.units, [0, 0], "a good withdrawal keeps the melee off");
   assert.deepEqual([away.over.winner, away.over.how], [0, "withdraw"]);
-  const thin = book({sides: [{name: "A", units: {heavyCavalry: 5}, commander: {pool: 5}}, {name: "B", units: {peasants: 2}, commander: {pool: 3}}]});
+  const thin = book({sides: [{name: "A", units: {heavyCavalry: 5}, commander: {pool: 5}}, {name: "B", units: {peasants: 1}, startUnits: {peasants: 3}, commander: {pool: 3}}]});
   const p2 = B.bookPools(thin, age, [r(0), r(0)]);
   c = B.bookContests(thin, age, p2.pools, ["melee", "melee"]);
   c[0].rolls = {attack: r(6), resist: r(1)}; c[1].rolls = {attack: r(0), resist: r(4)};

@@ -10,6 +10,8 @@
  *   event   a dated event's id (WoDX Chronicle), with eventWhen "after" (it has happened) or "before"
  *   from/to years, both inclusive; either may be empty
  *   art     the picture for mode "art"
+ * 0.33.0: the condition "a caravan in town" holds on the scenes of a market where a caravan stands (WoDX Storyteller
+ * 0.49.0), so wagons in the square or lorries at the depot show only while one is there.
  */
 
 /** The conditions a Storyteller can tick. Fixed list. */
@@ -17,7 +19,8 @@ export const CONDITIONS = {
   winter: "Winter (December to February)", spring: "Spring (March to May)", summer: "Summer (June to August)", autumn: "Autumn (September to November)",
   night: "At night", day: "By day",
   snow: "Snow on the ground", rain: "Rain falling", fog: "Fog or mist",
-  feast: "A feast day", revel: "A night of revel", fast: "A fast day or Lent"
+  feast: "A feast day", revel: "A night of revel", fast: "A fast day or Lent",
+  caravan: "A caravan in town (WoDX Storyteller's markets)"
 };
 export const MODES = {off: "Off", show: "Shows only while it holds", hide: "Hidden while it holds", art: "Changes picture while it holds"};
 
@@ -40,7 +43,8 @@ export function cleanRule(r = {}) {
 export const hasTest = r => !!(r.when.length || r.event || r.from !== null || r.to !== null);
 
 /**
- * Whether a rule holds now. ctx: {month, year, isNight, church: {feast, revel, fast, season}, weather: [tags], fired: Set or [ids]}
+ * Whether a rule holds now. ctx: {month, year, isNight, church: {feast, revel, fast, season}, weather: [tags], fired: Set or [ids],
+ * caravan: a caravan stands in this tile's scene (0.33.0)}
  * A rule that asks nothing never holds.
  */
 export function holds(rule, ctx = {}) {
@@ -53,7 +57,8 @@ export function holds(rule, ctx = {}) {
     winter: season === "winter", spring: season === "spring", summer: season === "summer", autumn: season === "autumn",
     night: !!ctx.isNight, day: !ctx.isNight,
     snow: tags.has("snow-lying") || tags.has("snow"), rain: tags.has("rain"), fog: tags.has("fog") || tags.has("mist"),
-    feast: !!ch.feast, revel: !!ch.revel, fast: !!ch.fast && !String(ch.fast).startsWith("Friday")
+    feast: !!ch.feast, revel: !!ch.revel, fast: !!ch.fast && !String(ch.fast).startsWith("Friday"),
+    caravan: !!ctx.caravan
   };
   if ( !r.when.every(k => test[k]) ) return false;
   if ( r.event ) {
@@ -97,4 +102,4 @@ export function ruleWords(rule, eventName = id => id) {
 
 /** The key of the moment: a tile needs a fresh look only when this changes. */
 export const momentKey = ctx => [ctx.year, ctx.month, ctx.day, ctx.isNight ? 1 : 0, (ctx.weather ?? []).slice().sort().join("+"),
-  ctx.church?.feast ?? "", ctx.church?.revel ? 1 : 0, ctx.church?.fast ?? "", [...(ctx.fired ?? [])].sort().join("+")].join("|");
+  ctx.church?.feast ?? "", ctx.church?.revel ? 1 : 0, ctx.church?.fast ?? "", [...(ctx.fired ?? [])].sort().join("+"), [...(ctx.caravans ?? [])].sort().join("+")].join("|");

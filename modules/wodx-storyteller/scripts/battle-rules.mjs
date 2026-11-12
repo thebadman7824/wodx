@@ -427,6 +427,9 @@ export function bookContests(battle, age, pools, actions = ["melee", "melee"]) {
  * Wavering: an army that loses 3 or more units in a turn rolls Charisma + Leadership at that many (3 to 10).
  * An army with no units left is beaten. Returns {phase, sides, over, waver} like settlePhase.
  */
+/** The most units an army can lose in one book turn: a third of those it began with, at least 1 (a WoDX reading). */
+export const turnCap = side => Math.max(1, Math.ceil((unitCount(side?.startUnits) || unitCount(side?.units)) / CAP_SHARE));
+export const CAP_SHARE = 3;
 export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
   const deedSum = [0, 1].map(i => (deeds[i] ?? []).reduce((t, d) => t + Math.max(0, n(d.successes)), 0));
   const bigDeed = [0, 1].map(i => (deeds[i] ?? []).some(d => n(d.successes) > 10));
@@ -444,6 +447,8 @@ export function settleBookTurn(battle, age, plan, deeds = [[], []]) {
     // a beaten attack costs the attackers only when the foe stood to receive it; when both close, each side's blow is its own count
     else if ( k < 0 && c[i].action === "melee" && c[1 - i].action !== "melee" ) loss[i] += -k;
   }
+  // no more than a third of the units an army began with fall in one turn (B2210, amended for Storyteller 0.48.2)
+  for ( const i of [0, 1] ) loss[i] = Math.min(loss[i], turnCap(battle.sides[i]));
   const sides = battle.sides.map(s => ({...s, commander: {...s.commander}, units: {...s.units}, penalty: 0}));
   const lostUnits = [{}, {}];
   for ( const i of [0, 1] ) {
