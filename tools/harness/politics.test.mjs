@@ -265,3 +265,46 @@ test("turn lines speak of the polity's own blocs and body", () => {
   assert.doesNotMatch(all, /other clans|petitions the court/);
   assert.doesNotMatch(all, /Get Of Fenris/);
 });
+
+// WoDX NPC 0.28.0: mages, hunters, mummies, demons and the Kuei-jin.
+test("mages and hunters keep the polity of their side and age", () => {
+  const m = (name, extra = {}) => F.normFaction({id: "m", name, kind: "mages", members: ["a", "b", "c"], ...extra});
+  assert.equal(PO.polityFor(m("A Verbena circle"), 1300), "mage-fellowship");
+  assert.equal(PO.polityFor(m("A Verbena circle"), 1466), "tradition-chantry");
+  assert.equal(PO.polityFor(m("The Craftmason lodge"), 1320), "mage-fellowship");
+  assert.equal(PO.polityFor(m("The Craftmason lodge"), 1600), "order-of-reason");
+  assert.equal(PO.polityFor(m("Iteration X lab"), 1950), "technocracy-construct");
+  assert.equal(PO.polityFor(m("Some mages", {polity: "technocracy-construct"}), 1700), "order-of-reason", "a Construct picked too early runs as the Order");
+  assert.equal(PO.polityFor(m("Some mages", {polity: "order-of-reason"}), 1990), "technocracy-construct");
+  const h = F.normFaction({id: "h", name: "Hunters", kind: "hunters", members: ["a", "b", "c"]});
+  assert.deepEqual([1300, 1499, 1500, 1998, 1999, 2030].map(y => PO.polityFor(h, y)), ["inquisition", "inquisition", "hunter-society", "hunter-society", "imbued-cell", "imbued-cell"]);
+  assert.equal(PO.baseRank({x: {arete: 3}}, "x", "tradition-chantry"), 3, "Arete stands in for standing");
+  assert.equal(PO.baseRank({x: {rankbg: 2, rank: 4}}, "x", "technocracy-construct"), 2, "the Rank Background, not Garou Rank");
+});
+
+test("mummies, demons and Kuei-jin courts are picked by hand, in their years", () => {
+  const o = F.normFaction({id: "o", name: "The Undying", kind: "other", members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(o, 1990), null);
+  assert.equal(PO.polityFor({...o, polity: "shemsu-heru"}, 1990), "shemsu-heru");
+  assert.equal(PO.polityFor({...o, polity: "fallen-congregation"}, 2000), "fallen-congregation");
+  assert.equal(PO.polityFor({...o, polity: "fallen-congregation"}, 1990), null, "no Fallen before 1999");
+  const k = F.normFaction({id: "k", name: "A court", kind: "kindred", polity: "kuei-jin-court", members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(k, 1600), "kuei-jin-court");
+});
+
+test("every polity runs an inner turn and a gathering without a fault", () => {
+  const ppl = {a: {name: "A", sect: "Verbena", creed: "Zealot", amenti: "Kher-minu", faction: "Reconcilers", wu: "Dragon", tribe: "Fianna", house: "Fiona", court: "Seelie", legion: "Iron", arete: 3, rankbg: 2, status: 2, rank: 2, title: 2},
+    b: {name: "B", sect: "Order of Hermes", creed: "Judge", amenti: "Sefekhi", faction: "Faustians", wu: "Tiger", tribe: "Uktena", house: "Gwydion", court: "Unseelie", legion: "Grim", status: 1, rank: 1},
+    c: {name: "C", sect: "Verbena", creed: "Zealot", amenti: "Kher-minu", faction: "Reconcilers", wu: "Dragon", status: 0}};
+  for ( const key of PO.POLITY_LIST ) {
+    let f = F.normFaction({id: "x", name: "X", kind: PO.POLITIES[key].kinds[0], polity: key, leader: "a", members: ["a", "b", "c"]});
+    for ( let t = 0; t < 4; t++ ) {
+      const out = PO.innerTurn(f, {polity: key, info: ppl, rand: stream(t + 3), turn: t});
+      assert.ok(out.lines.length, key);
+      const st = F.applyChanges(F.normState({factions: [f]}), out.changes.map(c => ({...c, faction: "x"})), {ids: () => "i", now: 0});
+      f = st.state.factions[0];
+    }
+    assert.ok(f.politics.inner >= 4, `${key} counts its turns`);
+    assert.ok(PO.POLITIES[key].notes && PO.POLITIES[key].law.length, `${key} has notes and law`);
+  }
+});

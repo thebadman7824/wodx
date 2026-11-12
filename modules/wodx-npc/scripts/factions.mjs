@@ -156,6 +156,8 @@ export function build(ctx) {
       info[id] = {name: a.name, alive: !routines.downState?.(a), pc: !!a.hasPlayerOwner, clan: sheetText(a, "clan"), sect: sheetText(a, "sect"), status: bgValue(a, "status"),
         tribe: sheetText(a, "tribe"), house: sheetText(a, "house"), court: sheetText(a, "court"), legion: sheetText(a, "legion"),
         rank: num(a.system?.renown?.rank), title: bgValue(a, "title"),
+        creed: sheetText(a, "creed"), faction: sheetText(a, "faction"), amenti: sheetText(a, "amenti"), wu: sheetText(a, "wu"),
+        arete: num(a.system?.advantages?.arete?.permanent), rankbg: bgValue(a, "rank"),
         attrs: Object.fromEntries(["charisma", "manipulation", "wits", "perception", "strength", "dexterity"].map(k => [k, attrOf(a, k)]))};
     }
     return info;
@@ -669,7 +671,7 @@ export function build(ctx) {
     const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();
     const polInfo = P ? politicsInfo({factions: [f]}) : {};
     const mActors = f.members.map(id => game.actors?.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
-    const polityOpts = {"": "By its kind and age (a Kindred, Garou or Fae faction of three or more keeps the polity of its age)", none: "No politics",
+    const polityOpts = {"": "By its kind and age (a Kindred, Garou, Fae, Mage or Hunter faction of three or more keeps the polity of its age)", none: "No politics",
       ...Object.fromEntries(Object.entries(PO.POLITIES).map(([k, v]) => [k, `${v.label}${v.from ? `, from ${v.from}` : ""}`]))};
     const seatOpts = cur => `<option value="">Empty</option>${mActors.map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
     const politicsHtml = `<fieldset><legend>Politics inside the faction</legend>
@@ -682,7 +684,7 @@ export function build(ctx) {
           ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${PO.baseRank(polInfo, a.id, polKey)}"></label>`).join("")}</div></fieldset>`
         : `<p class="wodx-quiet">Add members and save, then open the faction again to seat them.</p>`}
         ${pol.docket.length ? `<p><b>Charges to be heard:</b> ${pol.docket.map(d => esc(`${game.actors?.get(d.by)?.name ?? "someone"} against ${game.actors?.get(d.against)?.name ?? "someone"}: ${d.law}`)).join("; ")}.</p>` : ""}`
-      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou or Fae faction of three or more members keeps the polity of its age unless set to No politics; a Wraith necropolis is picked by hand.</p>`}
+      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou, Fae, Mage or Hunter faction of three or more members keeps the polity of its age unless set to No politics; a Wraith necropolis, the Shemsu-heru, the Fallen and a Kuei-jin court are picked by hand.</p>`}
       <p class="wodx-quiet">Turn on Politics inside factions in the module settings for courts to move each faction turn.</p></fieldset>`;
     const eventOpts = evs.length ? cur => evs.map(e => `<option value="${esc(e.id)}"${e.id === cur ? " selected" : ""}>${esc(`${e.year} ${e.name}`)}</option>`).join("") : null;
     const content = `<div class="wnpc-faction-form">

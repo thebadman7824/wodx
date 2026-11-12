@@ -1315,6 +1315,24 @@ When one of the Chronicle's Great Maelstrom events fires, each seat but the Anac
 
 Reverse: drop the isMaelstrom call in onEventFired.
 
+## B1113. Mage polities (2026-11-12)
+
+A Mage faction of three or more keeps the polity of its side and age. On the Traditions' side: a fellowship of the Arts before 1466, then a chantry of the Traditions with a master chosen by backing, a voice for each Tradition present (filled like the Primogen), a keeper of the node, a librarian and sentinels; Arete stands in for standing (M20 pdf 25, 30, 42, 78-80, 127-128, 141-143). On Reason's side (the faction's name or notes name the Order, the Union or a Convention): the Order of Reason's guildhouse from 1325 to 1896, then a Technocratic Construct from 1897, both with a head who appoints and a master or manager for each Convention present, standing from the Rank Background (M20 pdf 128-131, 174-180). A Reason polity picked out of its years runs as the other Reason polity. Seat names and standing are house rules.
+
+Reverse: drop mages from DEFAULTS and the four templates.
+
+## B1114. Hunter polities (2026-11-12)
+
+A Hunter faction of three or more keeps a tribunal of the Inquisition to 1499, a society of hunters (a chapter head, archivist and cell leaders) from 1500 to 1998 (Hunters Hunted 2 pdf 118-124, 137-141), and a cell of the imbued from 1999, with no hierarchy: the cell follows the one it backs, and creeds are its blocs (HtR pdf 35-36, 64, 89-91, 130). The tribunal's seats are a house rule until the Dark Ages Inquisitor book is read. The imbued polity follows the year alone, so in a Future Darkness chronicle where the imbued wake in 2023 the Storyteller sets No politics until then.
+
+Reverse: drop hunters from DEFAULTS and the three templates.
+
+## B1115. Mummies, demons and the Kuei-jin, picked by hand (2026-11-12)
+
+Three polities are never a default and the Storyteller picks them: the Shemsu-heru of a city with a priest to the Cult of Isis (Mummy 2nd pdf 27-29, 35-46, 136-140); a congregation of the Fallen from 1999, its first seat won by challenge and a speaker for each faction (Demon: The Fallen pdf 25, 109-118); and a Kuei-jin court with an Ancestor, mandarins and a voice for each wu (KotE pdf 24, 28-30, 39-41, 88-89). WoDX has no faction kind for mummies or demons, so those two fit factions of the kind Other.
+
+Reverse: drop the three templates.
+
 ## B1012. Nothing starts in a container (2026-11-12)
 Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
 
@@ -1366,6 +1384,26 @@ V20 pdf 69 gives one derangement that never heals. House rule from the desk: onc
 
 Reverse: DERANGEMENTS and GLIMPSE_THEMES in data/signatures.mjs; the hearAs call in wodx-npc talk.mjs.
 
+
+## B1126. Tzimisce native soil (2026-11-12)
+V20 pdf 79 and V20 Dark Ages pdf 66: a Tzimisce must rest with two handfuls of native soil, or every dice pool is halved (pdf 447) until they do. Built: carrying an item flagged as soil (or named native soil or earth) counts as resting on it; each night without it posts a card and the trait effects show pools halved. "Take native soil" in the clan feature window makes the item. A thief who lifts it makes the next night hard.
+
+Reverse: soilNight and isSoil in signature-rules.mjs; soilTick in signatures.mjs.
+
+## B1127. The Lasombra's empty frame (2026-11-12)
+V20 pdf 67 names mirrors only, so cameras are a house rule (book check flag). The camera of the year: a photograph from 1839, film from 1895, video and closed-circuit television from 1970, digital from 2000. A scene the Storyteller marks as watched gives one card a night for each Lasombra token in it: a breach found later by whoever studies the picture. From 2023 (the Future Darkness) every scene counts as watched unless marked otherwise.
+
+Reverse: CAMERAS and CAMERAS_EVERYWHERE in data/signatures.mjs; setCamera in signatures.mjs.
+
+## B1128. The Ravnos vice (2026-11-12)
+V20 pdf 73: a Ravnos must roll Self-Control to resist the vice when the chance comes. The sheet keeps one: lying (fed by deceit and fast-talk), theft (a lift, or taking from someone else's container), cheating (any trade) or a dare (marked by hand). Any other talk or trade is a chance, with one prompt a night. House reading of the difficulty: 6, +1 for each week unfed to +2, and +1 after a month in one domain, never above 9. "Moved on to a new domain" resets the stay.
+
+Reverse: RAVNOS_VICES in data/signatures.mjs; ravnosDifficulty in signature-rules.mjs.
+
+## B1129. Caitiff odd gifts (2026-11-12)
+V20 pdf 40: Caitiff have no clan weakness. House rule from the desk: a Caitiff with the Thin Blood flaw rolls once a year, one chance in ten, for an odd gift (walks at dusk and dawn, keeps down a little food, passes for mortal for a scene, one less die from sunlight). The card goes to the Storyteller with an Undo. Status that needs a sponsor in Camarilla courts waits for faction politics.
+
+Reverse: ODD_GIFTS and ODD_GIFT_CHANCE in data/signatures.mjs.
 ## B1130. Ben's Item Uses desk picks applied (2026-11-12)
 The 53 cells Ben decided on the Item Uses desk are rulings (PICKS and RULINGS in wodx-library/scripts/use-rules.mjs), and no cell asks the Storyteller any more:
 - "As for a mortal": demons and mummies eat, drink, sleep, take drugs and get first aid as mortals do.

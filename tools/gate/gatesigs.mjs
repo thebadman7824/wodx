@@ -1,5 +1,5 @@
 /**
- * Clan features gate (WoDX Chronicle 0.26.0 or later), in rothenstein-wodx, as Gamemaster Test:
+ * Clan features gate (WoDX Chronicle 0.27.0 or later), in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesigs.mjs?${Date.now()}`)).run()
  * Makes its own vampires and a mortal, turns "Clan features (Vampire)" on, and puts the setting, actors and chat cards
  * back afterwards. The clock is not moved: weeks are made by setting a Muse's last visit back.
@@ -13,6 +13,10 @@
  *   7. a Gangrel's frenzy leaves a mark that heals in 30 days, and its roll effects show
  *   8. a Malkavian with Paranoia: a glimpse a night (the second is refused) and a heard line for a talk card
  *   9. every other WoDX module still answers
+ *  10. a Tzimisce carrying soil rests; without it the next night halves every pool
+ *  11. a Lasombra in a scene marked watched: an empty frame card, if the year has cameras (the scene mark is put back)
+ *  12. a Ravnos with a vice of lying: a persuasion is a chance (prompt), a deceit feeds the vice
+ *  13. a thin-blooded Caitiff is rolled for this year's odd gift
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -42,10 +46,11 @@ export async function run() {
     actors = await Actor.create([vamp("WoDX gate: Toreador", "toreador"), vamp("WoDX gate: Setite", "custom", "Followers of Set"),
       vamp("WoDX gate: Brujah", "brujah"), vamp("WoDX gate: Gangrel", "gangrel"), vamp("WoDX gate: Ventrue", "ventrue"),
       {name: "WoDX gate: Malkavian", type: "Vampire", system: {clan: "malkavian", generation: 12, derangement: "Paranoia"}},
-      {name: "WoDX gate: Mark", type: "Mortal"}]);
+      {name: "WoDX gate: Mark", type: "Mortal"}, vamp("WoDX gate: Tzimisce", "tzimisce"), vamp("WoDX gate: Lasombra", "lasombra"),
+      vamp("WoDX gate: Ravnos", "ravnos"), vamp("WoDX gate: Caitiff", "caitiff")]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     await step("1 api", async () => {
-      ok("1 api", atLeast(game.modules.get(C).version, "0.25.1") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
+      ok("1 api", atLeast(game.modules.get(C).version, "0.27.0") && typeof api()?.tick === "function" && game.settings.get(C, "sigVampire") === true,
         {version: game.modules.get(C).version});
     });
     await step("2 rows", async () => {
@@ -103,6 +108,49 @@ export async function run() {
     await step("9 other modules", async () => {
       const off = game.modules.filter(m => m.id.startsWith("wodx-") && m.active && !m.api && !["wodx-library"].includes(m.id)).map(m => m.id);
       ok("9 other modules", !!game.wodxCombat && off.length === 0, {off});
+    });
+    await step("10 Tzimisce soil", async () => {
+      const z = by("Tzimisce");
+      await z.update({[`flags.${C}.sig`]: {soil: {}}});
+      const item = await api().giveSoil(z, "gate");
+      await api().tick({force: true});
+      await until(() => sig(z).soil?.checked != null);
+      const rested = sig(z).soil?.short === 0;
+      await item.delete();
+      await z.update({[`flags.${C}.sig.soil.checked`]: game.time.worldTime - 86400});
+      await api().tick({force: true});
+      await until(() => sig(z).soil?.short === 1);
+      const fx = api().effects(z);
+      ok("10 Tzimisce soil", rested && sig(z).soil?.short === 1 && fx.some(e => e.halve), {soil: sig(z).soil});
+    });
+    await step("11 Lasombra frame", async () => {
+      const l = by("Lasombra"), scene = canvas.scene, had = scene?.flags?.[C]?.camera ?? null;
+      const year = api().year?.() ?? null;
+      await api().setCamera(scene, true);
+      const cam = await api().emptyFrame(l, scene);
+      const again = await api().emptyFrame(l, scene);
+      await api().setCamera(scene, had);
+      const want = api().rules.cameraAt(year ?? 0);
+      ok("11 Lasombra frame", year == null ? true : (want ? !!cam && again === null : cam === null), {year, cam: cam?.label ?? null, again});
+    });
+    await step("12 Ravnos vice", async () => {
+      const r = by("Ravnos"), m = by("Mark");
+      await api().setRavnosVice(r, "lying");
+      await r.update({[`flags.${C}.sig.ravnos.fedAt`]: game.time.worldTime - 15 * 86400});
+      Hooks.callAll("wodxSocial", {actor: r, npc: m, act: "persuade", result: "win"});
+      await until(() => sig(r).ravnos?.askedAt != null);
+      const asked = sig(r).ravnos?.askedAt != null;
+      Hooks.callAll("wodxSocial", {actor: r, npc: m, act: "con", result: "win"});
+      await until(() => sig(r).ravnos?.fedAt >= game.time.worldTime);
+      ok("12 Ravnos vice", asked && sig(r).ravnos?.fedAt >= game.time.worldTime, {ravnos: sig(r).ravnos});
+    });
+    await step("13 Caitiff gift roll", async () => {
+      const c = by("Caitiff");
+      await c.createEmbeddedDocuments("Item", [{name: "Thin Blood", type: "Item"}]);
+      await c.update({[`flags.${C}.sig`]: {odd: {}}});
+      await api().tick({force: true});
+      await until(() => sig(c).odd?.year != null);
+      ok("13 Caitiff gift roll", Number.isFinite(sig(c).odd?.year), {odd: sig(c).odd});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

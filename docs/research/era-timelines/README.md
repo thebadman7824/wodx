@@ -27,3 +27,11 @@ Ben, 02:23Z: at least 300 events per era, from real history, tied to World of Da
 - Written from general historical knowledge; Wikipedia is blocked from the cloud. Dates are as commonly given; doubtful ones should be checked against a source before they reach the Encyclopaedia.
 - Texts keep gendered pronouns only for historical people whose gender is known; house readings are written neutrally.
 - Desk: `r3/desk.py` builds `desk-data-2026-11-12h3.json` (r3 plus the unreviewed round 2 cards, minus 62 round 2 history cards that repeat an r3 event) and the page from `head3.html` + `tail3.html`. Review run `2026-11-12h3` on https://claude.ai/artifact/8iWVsS3gBzQFzeNb67Xojv, with region, kind, tag, line and text filters and an "OK everything shown" button.
+- Future Darkness (added the same night): `r3/future-darkness.txt`, 308 events for 1990 to 2099, `branch: future`. Kind F (branch history) is the future branch's own mundane history around the approved timeline in `modules/wodx-chronicle/data/future-events.mjs`; W cards give a line's view and say when they follow that timeline. Regions: Europe 137, Asia 70, Middle East 51, Moravia 50. The desk's ninth tab shows them, and Show approved events puts the approved Future Darkness events beside them (build with `WOFD_EVENTS=<json dump of the non-cascade events> python3 r3/desk.py <page>`).
+
+## Approval and daily deconfliction (2026-11-12)
+
+Ben (03:13Z) approved all timeline events; `timeline-approved-2026-11-12.json` holds the 3,265 approved cards (the Future Darkness metaplot stays in `future-events.mjs`). Standing rule from then: a deconfliction check runs every day at 02:00 UTC.
+
+- `python3 daily_check.py` checks every approved set: the r3 build, branch marks, twins (one event under two years), and a dated death followed by the person acting later. It writes `daily/<date>.md` with only the findings not already ruled in `daily/accepted.json`.
+- The check is a net, not the judge: whoever runs it also reads the events changed since the last run against their neighbours, fixes real clashes in the source files (book canon over house readings; between books the newer edition wins, B861), rebuilds with `r3/build.py` and `r3/desk.py`, and records harmless findings with `python3 daily_check.py --accept`.

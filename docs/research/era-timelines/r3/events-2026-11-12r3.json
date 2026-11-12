@@ -11525,8 +11525,8 @@
 "founding",
 "occult"
 ],
-"title": "The making of Horizon",
-"text": "Mages gather to build Horizon; the Grand Convocation is coming.",
+"title": "Horizon begun",
+"text": "The house reading has mages gather to raise Horizon, whose Nodes are dedicated in 1452 before the Grand Convocation.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -13433,8 +13433,8 @@
 "tags": [
 "war"
 ],
-"title": "The founding wars",
-"text": "The war over the founding of the Council of Nine begins.",
+"title": "Arming for the founding wars",
+"text": "The house reading has Traditions and Daedaleans arm for the wars over the Council of Nine that break out in 1450.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -49541,8 +49541,8 @@
 "occult",
 "storm"
 ],
-"title": "The Fifth Great Maelstrom",
-"text": "The house reading follows Wraith canon: the Antediluvian's death sends a Maelstrom through the Underworld, and Stygia falls into ruin.",
+"title": "The Sixth Great Maelstrom",
+"text": "The house reading follows Wraith canon: the Antediluvian's death sends the Sixth Great Maelstrom through the Underworld, and Stygia falls into ruin.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "branch": "classic",
 "links": [
@@ -53240,5 +53240,6516 @@
 "title": "Ratkin Plagues of Asia and Europe"
 }
 ]
+},
+{
+"id": "r3-future-darkness-001",
+"era": "future-darkness",
+"year": 1990,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"law"
+],
+"title": "The Union holds",
+"text": "Moscow loosens its grip on eastern Europe but keeps the Soviet Union itself together as a looser federation; in this branch it never dissolves.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-002",
+"era": "future-darkness",
+"year": 1990,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"law"
+],
+"title": "The Velvet republic's first year",
+"text": "Czechoslovakia leaves the bloc and opens to Western money faster than anyone planned; Brno's trade fair fills with corporate stands.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-003",
+"era": "future-darkness",
+"year": 1990,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"money",
+"trade"
+],
+"title": "The Community looks east",
+"text": "The European Economic Community offers trade deals to the freed states of the east, and its bankers draw up plans for a single currency.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-004",
+"era": "future-darkness",
+"year": 1990,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"founding",
+"occult"
+],
+"title": "Prague's boardroom elders",
+"text": "The house reading has Prague's Ventrue buy the first privatised factories through Swiss fronts, years before the classic nights' princes think of it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "cotr-jaromir-cerny",
+"title": "Jaromir Cerny"
+},
+{
+"id": "datbn-shaagra",
+"title": "Shaagra, Methuselah of Prague"
+},
+{
+"id": "datbn-princes",
+"title": "Princes of Prague and Buda-Pest"
+}
+]
+},
+{
+"id": "r3-future-darkness-005",
+"era": "future-darkness",
+"year": 1991,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"money",
+"industry"
+],
+"title": "Japan's corporations go abroad",
+"text": "Japanese corporations buy factories and banks across Asia and Europe as the yen climbs; Arasaka opens its first European office in Frankfurt.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-006",
+"era": "future-darkness",
+"year": 1991,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Kuwait",
+"tags": [
+"war",
+"trade"
+],
+"title": "The Gulf war in this branch",
+"text": "An American-led coalition drives Iraq from Kuwait; the oil wells burn, and the region's bitterness is left to ripen for six years.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-007",
+"era": "future-darkness",
+"year": 1991,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry",
+"money"
+],
+"title": "Ostrava's steel sold east",
+"text": "A Soviet-German consortium buys the Vitkovice works, and Ostrava's mills keep running on Soviet ore.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-008",
+"era": "future-darkness",
+"year": 1991,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"founding",
+"money"
+],
+"title": "Germany reunited",
+"text": "East and West Germany unite, and Berlin becomes the banking capital of the freed east.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-009",
+"era": "future-darkness",
+"year": 1992,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Maastricht",
+"tags": [
+"treaty",
+"money"
+],
+"title": "The Community becomes a bloc",
+"text": "The European states bind their economies together at Maastricht and plan the eurodollar as a rival to the faltering American currency.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-010",
+"era": "future-darkness",
+"year": 1992,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Sarajevo",
+"tags": [
+"war",
+"siege"
+],
+"title": "The Yugoslav wars",
+"text": "Yugoslavia breaks apart in war, as in the classic world; mercenary firms from three continents hire out to every side.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-011",
+"era": "future-darkness",
+"year": 1992,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"industry",
+"money"
+],
+"title": "The chip boom",
+"text": "Korean and Japanese chip makers race for the first biologic interface designs, buying patents from bankrupt American labs.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-012",
+"era": "future-darkness",
+"year": 1992,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"money",
+"occult"
+],
+"title": "The Ventrue cross the Wall",
+"text": "The house reading has Hamburg's Ventrue move into the old East German combines as fast as the Treuhand can sell them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "bjd-berlin",
+"title": "Berlin After the Purge"
+},
+{
+"id": "berbn-divided",
+"title": "Berlin's Two Princes"
+},
+{
+"id": "berbn-gustav",
+"title": "Gustav Breidenstein"
+}
+]
+},
+{
+"id": "r3-future-darkness-013",
+"era": "future-darkness",
+"year": 1993,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"terror",
+"media"
+],
+"title": "New York burns on every screen",
+"text": "The drug lords' bomb in New York is watched live across Europe; markets close for a week and every capital puts troops at its airports.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-014",
+"era": "future-darkness",
+"year": 1993,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"science",
+"industry"
+],
+"title": "The Munich chips",
+"text": "The first biologic interface chips come out of a Munich laboratory, and German firms take the lead in neural hardware.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-015",
+"era": "future-darkness",
+"year": 1993,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"founding",
+"law"
+],
+"title": "The peaceful split",
+"text": "Czechoslovakia divides into the Czech and Slovak republics; the Czech government courts German and Japanese investment for Moravia.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-016",
+"era": "future-darkness",
+"year": 1993,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Munich",
+"tags": [
+"science",
+"occult"
+],
+"title": "Iteration X's lab",
+"text": "The house reading follows the approved timeline: the Munich chips are an Iteration X project, and Hermetics in Vienna see the Net's paradigm being laid.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-017",
+"era": "future-darkness",
+"year": 1994,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Frankfurt",
+"tags": [
+"money"
+],
+"title": "The crash reaches Europe",
+"text": "The world stock crash wipes out a third of Europe's private savings; banks fail in Italy and Spain and the Bundesbank props up the rest.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-018",
+"era": "future-darkness",
+"year": 1994,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"money"
+],
+"title": "Tokyo buys the wreckage",
+"text": "Japanese and Hong Kong investors buy failed European and American firms for a fraction of their worth.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-019",
+"era": "future-darkness",
+"year": 1994,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"crime"
+],
+"title": "The voucher funds vanish",
+"text": "Czech privatisation funds collapse in the crash; their managers flee abroad and Moravian factories pass to foreign owners.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-020",
+"era": "future-darkness",
+"year": 1994,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"occult"
+],
+"title": "The prince buys Brno",
+"text": "The house reading has the prince of Brno buy the city's textile mills and breweries through the crash, as the approved timeline's Ventrue and Giovanni do in the West.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-021",
+"era": "future-darkness",
+"year": 1994,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Jerusalem",
+"tags": [
+"treaty",
+"faith"
+],
+"title": "The peace that fails",
+"text": "A peace between Israel and its neighbours is signed and falls apart within three years as the region slides toward war.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-022",
+"era": "future-darkness",
+"year": 1995,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"war"
+],
+"title": "Moscow's hard men",
+"text": "After the crash, Soviet generals and oil men take control of the federation and promise order and bread.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-023",
+"era": "future-darkness",
+"year": 1995,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Kobe",
+"tags": [
+"quake",
+"industry"
+],
+"title": "Kobe rebuilt by the corps",
+"text": "The Kobe earthquake strikes as in the classic world, and the city is rebuilt by corporations as a company port.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-024",
+"era": "future-darkness",
+"year": 1995,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"trade",
+"money"
+],
+"title": "Oil at any price",
+"text": "With American power slipping, Gulf oil states sell to whoever pays, and Japanese and European tankers crowd the Strait of Hormuz.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-025",
+"era": "future-darkness",
+"year": 1995,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Ardennes",
+"tags": [
+"weather",
+"occult"
+],
+"title": "The forests thin",
+"text": "The house reading has the Fianna and Black Furies of Europe watch the old forests sold for timber to pay the crash debts.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-026",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"empire",
+"money"
+],
+"title": "The American collapse seen from Europe",
+"text": "When the United States government fails, European banks call in their loans and the eurodollar becomes the world's reserve currency.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-027",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"law",
+"founding"
+],
+"title": "The Eurobusiness Community",
+"text": "The European bloc reorganises itself around its corporations; seats on its councils go to firms as well as states.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-028",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"empire",
+"trade"
+],
+"title": "China fills the gap",
+"text": "China moves into markets the Americans have abandoned in Africa and south-east Asia.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-029",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"travel",
+"law"
+],
+"title": "The American students go home",
+"text": "Hundreds of American students and teachers in Olomouc and Brno are stranded when their banks fail; many never leave.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-030",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money",
+"occult"
+],
+"title": "The Collapse in Stygia",
+"text": "The house reading has Europe's Hierarchy hear of the Collapse from the American dead and prepare for refugees on both sides of the Shroud.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-031",
+"era": "future-darkness",
+"year": 1996,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"money",
+"industry"
+],
+"title": "Korea's chaebol go global",
+"text": "Korean conglomerates buy American factories at auction as the Collapse empties them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-032",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"war",
+"disaster"
+],
+"title": "The Mideast Meltdown",
+"text": "A regional war ends in nuclear exchanges that glass much of Iran, Iraq and Libya and reach Chad; millions die in a day.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-033",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"migration",
+"disaster"
+],
+"title": "Egypt spared",
+"text": "Egypt escapes the fire, and millions of refugees pour toward the Nile from the glassed lands to the west and east.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-034",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"migration",
+"war"
+],
+"title": "Turkey closes its border",
+"text": "Turkey shuts its eastern border to the fleeing millions and builds camps along it; the camps become cities.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-035",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"migration"
+],
+"title": "The Vatican's appeal",
+"text": "The pope calls Europe to take in the survivors of the Meltdown; Italy and Spain take hundreds of thousands, and resentment grows.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-036",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Karachi",
+"tags": [
+"migration",
+"plague"
+],
+"title": "The eastern flight",
+"text": "Refugees from eastern Iran cross into Pakistan and Afghanistan, and radiation sickness follows them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-037",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"death",
+"art"
+],
+"title": "Manson killed in England",
+"text": "The rockerboy Manson is murdered in England, and a generation of British youth mourns in the streets.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-038",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Tehran",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The breach under the glass",
+"text": "The house reading follows the approved timeline: Fallen escape the Abyss into the dying of Iran, Iraq and Libya, and wander toward the camps.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-039",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The Reborn count the dead",
+"text": "The house reading has the mummies of Cairo walk the refugee camps by night, marking the dead the glass left without names.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-040",
+"era": "future-darkness",
+"year": 1997,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Middle East",
+"place": "Zagros",
+"tags": [
+"disaster",
+"occult"
+],
+"title": "The Wyrm's new desert",
+"text": "The house reading has the Silent Striders' caerns of the Zagros fall silent at once, and the Umbra above the glass turn to a burned waste.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-041",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"weather",
+"famine"
+],
+"title": "The grain shortfall",
+"text": "The American Midwest drought sends grain prices soaring in Europe; bread riots break out in Naples and Marseille.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-042",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"trade",
+"money"
+],
+"title": "Moravian grain sold abroad",
+"text": "Moravian farms sell their harvests to German and Dutch buyers, and Brno's markets go short.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-043",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jakarta",
+"tags": [
+"money",
+"uprising"
+],
+"title": "The Asian squeeze",
+"text": "Indonesia's government falls in riots as food and fuel prices rise; corporations buy its oil fields from the new rulers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-044",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Damascus",
+"tags": [
+"migration",
+"law"
+],
+"title": "Syria's camps",
+"text": "Syria fills its southern deserts with camps for the Iraqi survivors and seals them with soldiers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-045",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"migration",
+"occult"
+],
+"title": "The dead cross with the living",
+"text": "The house reading has the Meltdown's wraiths follow the living into the Turkish camps, and the Shadowlands of Anatolia fill.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-046",
+"era": "future-darkness",
+"year": 1999,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"terror"
+],
+"title": "The millennium cults of Europe",
+"text": "End-of-days cults spread through Italy and Spain; the Church condemns them and some bishops quietly bless them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-047",
+"era": "future-darkness",
+"year": 1999,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"war"
+],
+"title": "The Caucasus front",
+"text": "The Soviet federation fights rebels in the Caucasus who are armed from the Meltdown's looted arsenals.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-048",
+"era": "future-darkness",
+"year": 1999,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"empire",
+"trade"
+],
+"title": "Hong Kong's handover delayed",
+"text": "With the old powers in chaos, Hong Kong becomes a free corporate port under joint British, Chinese and Japanese bank control.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-049",
+"era": "future-darkness",
+"year": 1999,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Leopold in the parishes",
+"text": "The house reading has the Society of Leopold use the cults to recruit in Italian parishes, as the approved timeline says.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-050",
+"era": "future-darkness",
+"year": 1999,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"trade",
+"building"
+],
+"title": "The Brno trade fair reborn",
+"text": "Brno's exhibition grounds are rebuilt by a Japanese firm as the showroom of central Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-051",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"death",
+"faith"
+],
+"title": "The New Year's Day deaths",
+"text": "Thousands of cult members die by their own hand on New Year's Day across Italy, Spain and Portugal.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-052",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"plague"
+],
+"title": "The wasting plague reaches Egypt",
+"text": "The wasting plague spreads through the Nile camps and into Cairo; Egypt closes its borders.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-053",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marseille",
+"tags": [
+"plague",
+"law"
+],
+"title": "Europe's quarantine",
+"text": "The Eurobusiness Community closes its southern ports to ships from Africa and the Levant to stop the plague; smugglers flourish.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-054",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"building",
+"industry"
+],
+"title": "The first Asian arcologies",
+"text": "Shanghai, Tokyo and Singapore begin arcology towers, cities in a single building for corporate workers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-055",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"plague",
+"law"
+],
+"title": "Plague cordon in Moravia",
+"text": "The Czech army cordons off a Brno suburb where the wasting plague appears among Ukrainian workers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-056",
+"era": "future-darkness",
+"year": 2000,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"building",
+"occult"
+],
+"title": "Nests under the towers",
+"text": "The house reading follows the approved timeline: Kuei-jin geomancers find dragon nests sealed beneath the new Shanghai towers.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-057",
+"era": "future-darkness",
+"year": 2001,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"science",
+"media"
+],
+"title": "The Worldsat network",
+"text": "The European space agency and Soviet partners finish the Worldsat network, and the Net becomes worldwide.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-058",
+"era": "future-darkness",
+"year": 2001,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Bangalore",
+"tags": [
+"industry",
+"media"
+],
+"title": "India's data cities",
+"text": "India's southern cities become the world's back offices, running the Net's switches for European and Japanese firms.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-059",
+"era": "future-darkness",
+"year": 2001,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"industry"
+],
+"title": "Brno's server halls",
+"text": "A German telecom builds a great switching centre in Brno, and Moravia is wired to the Net years before much of Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-060",
+"era": "future-darkness",
+"year": 2001,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"media",
+"occult"
+],
+"title": "Glamour on the wire",
+"text": "The house reading has young Kithain in London find a little Glamour in the first worldwide Net, and the elders call it a fad.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "ciotm-head-of-bran",
+"title": "The head of Bran"
+}
+]
+},
+{
+"id": "r3-future-darkness-061",
+"era": "future-darkness",
+"year": 2002,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"famine"
+],
+"title": "The Soviet food crash",
+"text": "Blights strike the Soviet and Canadian harvests; famine returns to Ukraine and Kazakhstan.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-062",
+"era": "future-darkness",
+"year": 2002,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"famine",
+"trade"
+],
+"title": "Food rationing in Europe",
+"text": "Germany and France ration meat and grain, and the corporate farms of the Netherlands grow rich.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-063",
+"era": "future-darkness",
+"year": 2002,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"famine",
+"science"
+],
+"title": "India's engineered crops",
+"text": "India plants engineered grains from European labs and avoids the worst of the famine at the cost of its seed banks.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-064",
+"era": "future-darkness",
+"year": 2002,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Ukraine",
+"tags": [
+"famine",
+"occult"
+],
+"title": "The blight's makers",
+"text": "The house reading has the Shadow Lords of Kiev trace the blight to a Pentex lab in the Netherlands, as the approved timeline's Garou suspect.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-065",
+"era": "future-darkness",
+"year": 2003,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"media",
+"crime"
+],
+"title": "The Johanneson files in Europe",
+"text": "Tesla Johanneson's leaked NSA files are republished by European papers, and Brussels opens hearings on American spying.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-066",
+"era": "future-darkness",
+"year": 2003,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taipei",
+"tags": [
+"war",
+"sea"
+],
+"title": "Taiwan Strait tensions",
+"text": "Chinese and Japanese warships shadow each other in the Taiwan Strait as both court the island's chip makers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-067",
+"era": "future-darkness",
+"year": 2003,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"plague",
+"law"
+],
+"title": "The Nile quarantine",
+"text": "Egypt seals the Nile camps for a year; the Setites run the smuggling through the cordon.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-068",
+"era": "future-darkness",
+"year": 2004,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"war",
+"money"
+],
+"title": "The First Corporate War",
+"text": "Two airlines fight over the failing Trans-World Air with sabotage, bombings and private soldiers in European airports.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-069",
+"era": "future-darkness",
+"year": 2004,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Frankfurt",
+"tags": [
+"terror",
+"war"
+],
+"title": "The airport bombings",
+"text": "Car bombs at Frankfurt and Paris airports kill hundreds during the corporate war; no government dares name the firms responsible.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-070",
+"era": "future-darkness",
+"year": 2004,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dubai",
+"tags": [
+"trade",
+"war"
+],
+"title": "Mercenary markets",
+"text": "Gulf ports become markets for corporate armies, selling arms and men to every side.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-071",
+"era": "future-darkness",
+"year": 2004,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Hermetic and Tremere quarrel",
+"text": "The house reading follows the approved timeline: Vienna's Tremere and the Order's corporate houses fight part of the airline war through proxies.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-072",
+"era": "future-darkness",
+"year": 2005,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"science",
+"media"
+],
+"title": "The cybermodem",
+"text": "The cybermodem lets users enter the Net directly through a neural plug; European firms sell it within a year.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-073",
+"era": "future-darkness",
+"year": 2005,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"science",
+"learning"
+],
+"title": "Brno's netrunners",
+"text": "Brno's technical university becomes a training ground for netrunners, and Moravian hackers find work across Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-074",
+"era": "future-darkness",
+"year": 2005,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"science",
+"occult"
+],
+"title": "Fallen in the wires",
+"text": "The house reading follows the approved timeline: a second wave of Fallen slips through into the Net, and some nest in Geneva's banks.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-075",
+"era": "future-darkness",
+"year": 2006,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"science",
+"travel"
+],
+"title": "The Soviet orbital push",
+"text": "The Soviets launch heavy lifters from Baikonur and promise a station that will rival the Europeans'.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-076",
+"era": "future-darkness",
+"year": 2006,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"founding",
+"law"
+],
+"title": "The camp cities",
+"text": "Turkey grants the eastern refugee camps their own councils; some grow into cities of a million.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-077",
+"era": "future-darkness",
+"year": 2006,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law",
+"crown"
+],
+"title": "The corporate diet",
+"text": "Japan lets its largest corporations nominate members to the Diet.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-078",
+"era": "future-darkness",
+"year": 2006,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law",
+"occult"
+],
+"title": "The Syndicate's diet",
+"text": "The house reading has the Syndicate's agents behind Japan's corporate seats in the Diet.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "wodtok-stock-exchange",
+"title": "Tokyo Stock Exchange"
+}
+]
+},
+{
+"id": "r3-future-darkness-079",
+"era": "future-darkness",
+"year": 2007,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Spratly Islands",
+"tags": [
+"war",
+"sea"
+],
+"title": "The Second Corporate War",
+"text": "Corporations fight a naval war over South China Sea oil platforms with their own fleets.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-080",
+"era": "future-darkness",
+"year": 2007,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Manila",
+"tags": [
+"war",
+"disaster"
+],
+"title": "Manila bombed",
+"text": "Corporate air strikes miss an oil terminal and hit a Manila district; thousands die.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-081",
+"era": "future-darkness",
+"year": 2007,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"art",
+"media"
+],
+"title": "Braindance reaches Europe",
+"text": "Braindance, recorded experience played into the brain, arrives in European clubs and is banned in France within a month.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-082",
+"era": "future-darkness",
+"year": 2007,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Spratly Islands",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Yama Kings at sea",
+"text": "The house reading follows the approved timeline: the Yama Kings' servants ride in both fleets, and the Kuei-jin of Manila hunt them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-083",
+"era": "future-darkness",
+"year": 2008,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"war",
+"science"
+],
+"title": "The orbital war",
+"text": "A war in orbit between corporations and states ends with stations shattered and rocks dropped on the earth.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-084",
+"era": "future-darkness",
+"year": 2008,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"war",
+"disaster"
+],
+"title": "A rock falls near Hong Kong",
+"text": "A mass driver strike meant for a launch site lands in the sea near Hong Kong; the wave floods the harbour.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-085",
+"era": "future-darkness",
+"year": 2008,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"war"
+],
+"title": "Soviet lifters grounded",
+"text": "The Soviet orbital programme loses half its craft in the war and turns to partnership with Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-086",
+"era": "future-darkness",
+"year": 2008,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"war",
+"occult"
+],
+"title": "The orbital dead",
+"text": "The house reading has the orbital war's dead fall into Shadowlands that have no ground, and drift.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-087",
+"era": "future-darkness",
+"year": 2009,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"science",
+"travel"
+],
+"title": "The Euro-Soviet Mars mission",
+"text": "A joint European and Soviet crew leaves for Mars, the first people to go.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-088",
+"era": "future-darkness",
+"year": 2009,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"treaty",
+"war"
+],
+"title": "The US-China treaty",
+"text": "The remnant American government signs a mutual defence treaty with China; Japan reads it as a threat.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-089",
+"era": "future-darkness",
+"year": 2009,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"money",
+"art"
+],
+"title": "Venice's corporate year",
+"text": "Venice is restored by a European conglomerate and becomes a private city of conferences and festivals.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-090",
+"era": "future-darkness",
+"year": 2009,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"law",
+"occult"
+],
+"title": "The Venice Conclave",
+"text": "The house reading follows the approved timeline: the Camarilla meets in the restored Venice, and the young are told to stay off camera.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "cbgv-premascines",
+"title": "The Premascines"
+},
+{
+"id": "v20c-poveglia",
+"title": "Poveglia"
+},
+{
+"id": "giovanni",
+"title": "Clan Giovanni"
+}
+]
+},
+{
+"id": "r3-future-darkness-091",
+"era": "future-darkness",
+"year": 2010,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"building",
+"industry"
+],
+"title": "Hamburg's harbour towers",
+"text": "Hamburg starts building arcology towers on its harbour and grows into Europe's great megacity.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-092",
+"era": "future-darkness",
+"year": 2010,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"building",
+"industry"
+],
+"title": "The Brno corridor",
+"text": "A Japanese electronics firm builds plants between Brno and Vienna, and the corridor fills with commuter towns.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-093",
+"era": "future-darkness",
+"year": 2010,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"trade",
+"building"
+],
+"title": "Istanbul the gateway",
+"text": "Istanbul grows rich as the gateway between Europe and the surviving east, and its population passes twenty million.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-094",
+"era": "future-darkness",
+"year": 2011,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"science",
+"building"
+],
+"title": "The Crystal Palace",
+"text": "The European orbital station called the Crystal Palace is completed and becomes a city in the sky.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-095",
+"era": "future-darkness",
+"year": 2011,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"law",
+"money"
+],
+"title": "Singapore's charter",
+"text": "Singapore sells citizenship to corporations and becomes the first charter state.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-096",
+"era": "future-darkness",
+"year": 2011,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Toulouse",
+"tags": [
+"science",
+"occult"
+],
+"title": "The Void Engineers' station",
+"text": "The house reading has the Void Engineers run part of the Crystal Palace as a Technocratic Construct.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-097",
+"era": "future-darkness",
+"year": 2012,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"plague",
+"law"
+],
+"title": "The bioplague panic",
+"text": "News of the Chicago bioplague closes Europe's airports to American flights for a year.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-098",
+"era": "future-darkness",
+"year": 2012,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"crime",
+"industry"
+],
+"title": "Shanghai's corporate police",
+"text": "Shanghai's arcologies hire their own police, and the city's government becomes a corporate board.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-099",
+"era": "future-darkness",
+"year": 2012,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"crime",
+"occult"
+],
+"title": "Akuma in the boardrooms",
+"text": "The house reading follows the approved timeline: akuma rise in Shanghai and Hong Kong corps, and the old courts lose ground.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-100",
+"era": "future-darkness",
+"year": 2012,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"plague",
+"law"
+],
+"title": "Moravia closes its airports",
+"text": "The Czech government closes Brno and Ostrava airports to American flights during the bioplague panic, and Moravian firms lose their transatlantic trade.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-101",
+"era": "future-darkness",
+"year": 2013,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"law",
+"media"
+],
+"title": "Netwatch in Europe",
+"text": "Netwatch opens European offices, and the Eurobusiness Community lets it police European nets.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-102",
+"era": "future-darkness",
+"year": 2013,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"crime"
+],
+"title": "The Brno raids",
+"text": "Netwatch agents raid Brno netrunner dens, and Moravian hackers go underground.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-103",
+"era": "future-darkness",
+"year": 2013,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"occult"
+],
+"title": "Adepts in Moravia",
+"text": "The house reading has Virtual Adepts hide in Brno's old server halls when Netwatch shuts their European nodes.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-104",
+"era": "future-darkness",
+"year": 2014,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"media",
+"law"
+],
+"title": "The Net redesigned",
+"text": "The Net is rebuilt on new rules; whole regions of the old net vanish, and European archives are lost.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-105",
+"era": "future-darkness",
+"year": 2014,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"media",
+"industry"
+],
+"title": "Korea's own net",
+"text": "Korea builds a national net walled from the rest, and other Asian states follow.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-106",
+"era": "future-darkness",
+"year": 2014,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Europe",
+"place": "Geneva",
+"tags": [
+"media",
+"occult"
+],
+"title": "Fallen in the old net",
+"text": "The house reading follows the approved timeline: when the Net is rebuilt, Fallen nest in the abandoned structures beneath Geneva's banks.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-107",
+"era": "future-darkness",
+"year": 2015,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"founding",
+"money"
+],
+"title": "Slovakia sold",
+"text": "Slovakia, bankrupt, sells its rail and power to a Soviet-German consortium.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-108",
+"era": "future-darkness",
+"year": 2015,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dubai",
+"tags": [
+"building",
+"money"
+],
+"title": "Dubai's towers",
+"text": "Dubai builds a ring of arcologies and becomes the Middle East's corporate capital.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-109",
+"era": "future-darkness",
+"year": 2015,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"uprising",
+"industry"
+],
+"title": "The Delhi data strike",
+"text": "Data workers in Delhi strike for a month, and European banks lose billions.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-110",
+"era": "future-darkness",
+"year": 2016,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"media"
+],
+"title": "The Third Corporate War",
+"text": "Corporations fight in the Net; netrunners die in their chairs, and European markets freeze.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-111",
+"era": "future-darkness",
+"year": 2016,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"crime",
+"media"
+],
+"title": "Netrunners dead in London",
+"text": "Dozens of London netrunners are found dead at their decks in a single night of the Net war.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-112",
+"era": "future-darkness",
+"year": 2016,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"war",
+"media"
+],
+"title": "Brno's switch hit",
+"text": "The Brno switching centre is burned out in the Net war, and Moravia goes dark for a week.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-113",
+"era": "future-darkness",
+"year": 2016,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"war",
+"occult"
+],
+"title": "Proxy war in London",
+"text": "The house reading follows the approved timeline: the Net war in London is partly a Ventrue and Giovanni proxy fight.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "v20c-highgate",
+"title": "Highgate Cemetery"
+},
+{
+"id": "dbi-mithras-rule",
+"title": "How Mithras rules"
+},
+{
+"id": "dbi-lothian",
+"title": "The Fief of Lothian"
+}
+]
+},
+{
+"id": "r3-future-darkness-114",
+"era": "future-darkness",
+"year": 2017,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Zurich",
+"tags": [
+"science",
+"law"
+],
+"title": "The clone ban",
+"text": "Switzerland bans the new self-aware clones; corporations move their clone labs to charter states.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-115",
+"era": "future-darkness",
+"year": 2017,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"science",
+"industry"
+],
+"title": "Singapore's clone labs",
+"text": "Singapore licenses the clone labs other states ban, and its clinics sell copies of the dying to anyone who can pay.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-116",
+"era": "future-darkness",
+"year": 2017,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"science",
+"occult"
+],
+"title": "The clone question",
+"text": "The house reading has mummies visit Singapore's clone labs and leave unsettled by bodies that come back with no Ba.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-117",
+"era": "future-darkness",
+"year": 2018,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"founding",
+"war"
+],
+"title": "The Anatolian League",
+"text": "Turkey, the camp cities and Azerbaijan form a league to keep order on the edge of the glass.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-118",
+"era": "future-darkness",
+"year": 2018,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"uprising"
+],
+"title": "Ukraine's corporate strike",
+"text": "Ukrainian miners and farmers strike against Soviet corporate owners, and Moscow sends troops.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-119",
+"era": "future-darkness",
+"year": 2018,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Middle East",
+"place": "Ankara",
+"tags": [
+"war",
+"occult"
+],
+"title": "The League's wolves",
+"text": "The house reading has Silent Striders scout the Anatolian League's eastern marches for the waste septs that will come.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-120",
+"era": "future-darkness",
+"year": 2019,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"building"
+],
+"title": "Neo-Kowloon",
+"text": "Hong Kong's old walled districts are rebuilt as the arcology city called Neo-Kowloon.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-121",
+"era": "future-darkness",
+"year": 2019,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"industry",
+"art"
+],
+"title": "Milan's chrome",
+"text": "Milan's fashion houses sell cyberware as fashion, and chrome becomes the style of European youth.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-122",
+"era": "future-darkness",
+"year": 2019,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"industry",
+"money"
+],
+"title": "The Brno chrome plants",
+"text": "Cyberware makers open plants in Moravia, and Brno's workers take discounted implants.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-123",
+"era": "future-darkness",
+"year": 2019,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"building",
+"occult"
+],
+"title": "Neo-Kowloon's nests",
+"text": "The house reading has Neo-Kowloon built over three dragon nests, and the courts that hold them become rich.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-124",
+"era": "future-darkness",
+"year": 2020,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"industry",
+"crime"
+],
+"title": "Hamburg's undercity",
+"text": "Hamburg's arcologies leave an undercity of gangs and refugees beneath them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-125",
+"era": "future-darkness",
+"year": 2020,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"building",
+"law"
+],
+"title": "Tokyo's arcology wards",
+"text": "Tokyo's wards become arcology districts run by their corporations, with company police, company schools and company shrines.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-126",
+"era": "future-darkness",
+"year": 2020,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"plague",
+"migration"
+],
+"title": "Cairo's camps",
+"text": "Cairo's camps hold four million, and the plague still burns in them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-127",
+"era": "future-darkness",
+"year": 2020,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"plague",
+"occult"
+],
+"title": "Healers in the camps",
+"text": "The house reading follows the approved timeline: Amenti healers work in Cairo's camps, and the Setites run the trade around them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-128",
+"era": "future-darkness",
+"year": 2021,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith"
+],
+"title": "The pope of the purge",
+"text": "A new pope from Poland preaches that Europe must guard itself against what walks in the dark.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-129",
+"era": "future-darkness",
+"year": 2021,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"faith"
+],
+"title": "Olomouc's archbishop",
+"text": "The archbishop of Olomouc refuses to preach the new pope's call against unseen enemies.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-130",
+"era": "future-darkness",
+"year": 2021,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Leopold's new patron",
+"text": "The house reading has the Society of Leopold win the new pope's ear and prepare its proof.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-131",
+"era": "future-darkness",
+"year": 2022,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"law",
+"faith"
+],
+"title": "Poland's faith laws",
+"text": "Poland passes laws that put the Church back into schools and courts.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-132",
+"era": "future-darkness",
+"year": 2022,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taipei",
+"tags": [
+"science",
+"learning"
+],
+"title": "Taipei's schools",
+"text": "Taipei's net schools reach students across Asia, and Taiwan becomes the classroom of the Pacific Rim.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-133",
+"era": "future-darkness",
+"year": 2022,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Warsaw's Kindred nervous",
+"text": "The house reading has Warsaw's Kindred watch Poland's faith laws and quietly move havens to Moravia.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-134",
+"era": "future-darkness",
+"year": 2023,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Roman visions",
+"text": "Strange visions are reported in Rome; the Church calls them miracles, and a few people begin to see what others cannot.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-135",
+"era": "future-darkness",
+"year": 2023,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The first imbued of Rome",
+"text": "The house reading follows the approved timeline: the first imbued wake in Rome, and the Society of Leopold seeks them out.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-136",
+"era": "future-darkness",
+"year": 2023,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"industry",
+"crime"
+],
+"title": "Hamburg's corp farms",
+"text": "Hamburg's food arcologies grow most of north Germany's protein, and Garou raids on them begin to make the news as vandalism.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-137",
+"era": "future-darkness",
+"year": 2024,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"media",
+"crime"
+],
+"title": "The Vaulderie braindance",
+"text": "A braindance of a strange blood rite sells in London clubs as a horror fake.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-138",
+"era": "future-darkness",
+"year": 2024,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"occult"
+],
+"title": "Rumours in Brno",
+"text": "Brno's netrunners trade rumours of files that show people without body heat.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-139",
+"era": "future-darkness",
+"year": 2024,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"media",
+"occult"
+],
+"title": "The deniable raids",
+"text": "The house reading follows the approved timeline: Garou raids on corp farms around Hamburg stay deniable, but the footage is kept.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-140",
+"era": "future-darkness",
+"year": 2025,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"media",
+"terror"
+],
+"title": "The Elysium raid",
+"text": "A Society of Leopold raid on a Roman Elysium goes out live, and the Vatican confirms its purpose.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-141",
+"era": "future-darkness",
+"year": 2025,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Brussels",
+"tags": [
+"law",
+"media"
+],
+"title": "Europe in shock",
+"text": "The flood of files about the hidden world brings Europe's councils into emergency session.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-142",
+"era": "future-darkness",
+"year": 2025,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"law"
+],
+"title": "The Czech reply",
+"text": "The Czech government refuses to pass purge laws and calls for calm, and Moravia becomes a refuge.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-143",
+"era": "future-darkness",
+"year": 2025,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"media",
+"occult"
+],
+"title": "Brno's Kindred hold their breath",
+"text": "The house reading has Brno's prince order every Kindred in Moravia to stay off the Net and wait.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-144",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"law",
+"persecution"
+],
+"title": "The purge laws",
+"text": "Italy, Spain and Poland pass purge laws, and thermographic gates go up at every station; anyone without body heat is shot on sight.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-145",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Milan",
+"tags": [
+"crime",
+"persecution"
+],
+"title": "The first gate killings",
+"text": "Gate guards in Milan shoot a woman with a cooling implant; the courts rule the shooting lawful.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-146",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"migration",
+"law"
+],
+"title": "Refugees in Moravia",
+"text": "People fleeing the purge states, living and otherwise, arrive in Brno and Olomouc; the Czech police are told not to ask.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-147",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Dubai",
+"tags": [
+"trade",
+"law"
+],
+"title": "Dubai's quiet trade",
+"text": "Gulf charter cities sell discreet residence to anyone who can pay and promise not to show up on cameras.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-148",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"migration",
+"occult"
+],
+"title": "Brno's Elysium overflows",
+"text": "The house reading has the prince of Brno take in Kindred fleeing Italy and Poland, at a price in boons that will be called in for decades.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-149",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"science",
+"occult"
+],
+"title": "Biotechnica in Cairo",
+"text": "The house reading follows the approved timeline: a Biotechnica team arrives in Cairo to copy the rebirth seen in the 2025 footage.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-150",
+"era": "future-darkness",
+"year": 2026,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"persecution",
+"crime"
+],
+"title": "The Madrid gates",
+"text": "Madrid's metro gates shoot a dozen people in the first week, most of them with medical implants that run cold.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-151",
+"era": "future-darkness",
+"year": 2027,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lisbon",
+"tags": [
+"law",
+"persecution"
+],
+"title": "Portugal joins the purge",
+"text": "Portugal passes its own purge law after riots in Lisbon.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-152",
+"era": "future-darkness",
+"year": 2027,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law"
+],
+"title": "Japan's registry debate",
+"text": "Japan's Diet debates a registry for the newly revealed beings, following the Free States' lead.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-153",
+"era": "future-darkness",
+"year": 2027,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"law",
+"uprising"
+],
+"title": "Germany refuses",
+"text": "Germany refuses purge laws but allows thermographic checks at airports; Catholic Bavaria protests.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-154",
+"era": "future-darkness",
+"year": 2027,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Krakow",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Krakow deputies",
+"text": "The house reading has Polish imbued sworn in as purge deputies in Krakow, and the Merciful among them leave within a year.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-155",
+"era": "future-darkness",
+"year": 2027,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taipei",
+"tags": [
+"law",
+"faith"
+],
+"title": "Taiwan's open courts",
+"text": "Taiwan's courts rule that the revealed have the rights of persons, and Taipei becomes a refuge in the east.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-156",
+"era": "future-darkness",
+"year": 2028,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"war"
+],
+"title": "The parish militias",
+"text": "The Society of Leopold's parish militias march openly in Rome, Madrid and Warsaw with blessed rounds and optics.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-157",
+"era": "future-darkness",
+"year": 2028,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"faith",
+"uprising"
+],
+"title": "The Olomouc sermon",
+"text": "A priest in Olomouc preaches against the purge militias and is shot by an unknown gunman; thousands march at the funeral.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-158",
+"era": "future-darkness",
+"year": 2028,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"crime",
+"war"
+],
+"title": "The Pacific Rim street war",
+"text": "The San Francisco war between Kindred and Kuei-jin spreads to Neo-Kowloon, and whole arcology levels change hands.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-159",
+"era": "future-darkness",
+"year": 2028,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mage"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"occult",
+"law"
+],
+"title": "Vienna's Hermetics openly",
+"text": "The house reading has the Order's Vienna house hold open lectures, and Paradox stays quiet in the lecture hall.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-160",
+"era": "future-darkness",
+"year": 2029,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"weather",
+"occult"
+],
+"title": "Storms from the east",
+"text": "Strange storms roll out of the Mideast glass across the Balkans and into central Europe; people report voices in the wind.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-161",
+"era": "future-darkness",
+"year": 2029,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"storm",
+"occult"
+],
+"title": "Storms of the dead",
+"text": "The house reading follows the approved timeline: the storms are the dead of the glass blowing into Europe's Shadowlands, and Vienna's Hierarchy is swamped.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-162",
+"era": "future-darkness",
+"year": 2029,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"occult",
+"migration"
+],
+"title": "Septs on the glass",
+"text": "The house reading follows the approved timeline: Silent Striders lead packs to the middle ring of the Mideast glass and found waste septs there.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-163",
+"era": "future-darkness",
+"year": 2029,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taipei",
+"tags": [
+"learning",
+"media"
+],
+"title": "The Taipei lessons",
+"text": "A teacher in Taipei gives lessons on balance over the Net, and thousands across Asia watch.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-164",
+"era": "future-darkness",
+"year": 2029,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"weather",
+"occult"
+],
+"title": "The voices in the wind reach Moravia",
+"text": "The storms from the east reach Moravia; Brno's people stay indoors, and the Olomouc churches ring their bells against the wind.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-165",
+"era": "future-darkness",
+"year": 2030,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"building",
+"industry"
+],
+"title": "Hamburg passes thirty million",
+"text": "Hamburg's arcology sprawl passes thirty million people, the largest city in Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-166",
+"era": "future-darkness",
+"year": 2030,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"building"
+],
+"title": "Tokyo's nest abandoned",
+"text": "A Tokyo arcology's basement levels are sealed after power failures no engineer can explain.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-167",
+"era": "future-darkness",
+"year": 2030,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"migration",
+"law"
+],
+"title": "Istanbul's walls",
+"text": "Istanbul builds a wall around its old city to keep out the camp cities.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-168",
+"era": "future-darkness",
+"year": 2030,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"building",
+"occult"
+],
+"title": "The Gauntlet over Hamburg",
+"text": "The house reading follows the approved timeline: Glass Walkers find the Gauntlet over Hamburg nearly impossible to cross indoors.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-169",
+"era": "future-darkness",
+"year": 2030,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"migration",
+"law"
+],
+"title": "Olomouc's refuge camp",
+"text": "Olomouc's old barracks become a camp for people fleeing the purge states, run by the archdiocese against Rome's wishes.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-170",
+"era": "future-darkness",
+"year": 2031,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"war",
+"persecution"
+],
+"title": "The Sabbat's war in Spain",
+"text": "Packs of the revealed fight back in Madrid's undercity; the purge militias burn whole blocks.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-171",
+"era": "future-darkness",
+"year": 2031,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law"
+],
+"title": "The Czech asylum law",
+"text": "The Czech parliament passes an asylum law that does not ask whether a refugee has a pulse.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-172",
+"era": "future-darkness",
+"year": 2031,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"war",
+"occult"
+],
+"title": "The Sabbat fights",
+"text": "The house reading follows the approved timeline: the Sabbat becomes the only sect still fighting, and Camarilla neonates in Madrid go over to it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-173",
+"era": "future-darkness",
+"year": 2032,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"law",
+"persecution"
+],
+"title": "Hungary's half measure",
+"text": "Hungary passes a registry law, not a purge, and becomes a crossing point between the crusade's Europe and Moravia.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-174",
+"era": "future-darkness",
+"year": 2032,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"faith",
+"law"
+],
+"title": "India's temple councils",
+"text": "Indian temples demand a voice in laws about the revealed, and the courts agree.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-175",
+"era": "future-darkness",
+"year": 2032,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Europe",
+"place": "Budapest",
+"tags": [
+"migration",
+"occult"
+],
+"title": "The crossing at Budapest",
+"text": "The house reading has Garou Kinfolk families cross through Budapest to the Moravian hills, guided by Silent Striders.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-176",
+"era": "future-darkness",
+"year": 2032,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"learning",
+"trade"
+],
+"title": "Gulf money in Egypt",
+"text": "Gulf banks pay to rebuild Egypt's ports, betting that the Nile will outlast their oil.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-177",
+"era": "future-darkness",
+"year": 2033,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"building",
+"learning"
+],
+"title": "Alexandria rebuilt",
+"text": "Alexandria is rebuilt as a free port and university city with Gulf money.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-178",
+"era": "future-darkness",
+"year": 2033,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"war",
+"uprising"
+],
+"title": "Ukraine's secession",
+"text": "Ukraine breaks from the Soviet federation after a short war.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-179",
+"era": "future-darkness",
+"year": 2033,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"building",
+"occult"
+],
+"title": "The tombs under Alexandria",
+"text": "The house reading has the rebuilding of Alexandria open old tombs, and the mummies claim them first.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-180",
+"era": "future-darkness",
+"year": 2034,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"law",
+"persecution"
+],
+"title": "France's thermal checks",
+"text": "France puts thermal gates in its metro but stops short of purge law.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-181",
+"era": "future-darkness",
+"year": 2034,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"money",
+"law"
+],
+"title": "Bottled blood in Japan",
+"text": "Biotechnica's licensed blood goes on sale in Japan's registry wards.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-182",
+"era": "future-darkness",
+"year": 2034,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law",
+"money"
+],
+"title": "The Brno blood clinics",
+"text": "Brno licenses donor clinics where the revealed may feed by contract, the first in central Europe.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-183",
+"era": "future-darkness",
+"year": 2034,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"law",
+"occult"
+],
+"title": "The prince's clinics",
+"text": "The house reading has the prince of Brno own the clinics through a Viennese front, and take a tithe of every pint.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-184",
+"era": "future-darkness",
+"year": 2035,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"crown",
+"war"
+],
+"title": "The Soviet split",
+"text": "The Soviet federation splits into a Russian core and a Central Asian league.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-185",
+"era": "future-darkness",
+"year": 2035,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Almaty",
+"tags": [
+"founding"
+],
+"title": "The Central Asian League",
+"text": "Kazakhstan, Uzbekistan and their neighbours form a league with Chinese backing.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-186",
+"era": "future-darkness",
+"year": 2035,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Almaty",
+"tags": [
+"founding",
+"occult"
+],
+"title": "The steppe courts",
+"text": "The house reading has Kuei-jin courts from western China follow the money to Almaty.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-187",
+"era": "future-darkness",
+"year": 2035,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"founding",
+"war"
+],
+"title": "Free Ukraine",
+"text": "Ukraine's new republic opens its borders to the revealed, and Kiev's Shadow Lords are its unseen guard.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-188",
+"era": "future-darkness",
+"year": 2036,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"crime",
+"law"
+],
+"title": "Hunter contracts",
+"text": "Singapore's corporations hire imbued teams for site security, and the first hunter contracts are signed under Singapore law.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-189",
+"era": "future-darkness",
+"year": 2036,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry"
+],
+"title": "Ostrava's last mine",
+"text": "Ostrava's last coal mine closes; the shafts are sold as data vaults.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-190",
+"era": "future-darkness",
+"year": 2036,
+"month": null,
+"kind": "tied",
+"lines": [
+"Werewolf"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry",
+"occult"
+],
+"title": "The vaults below Ostrava",
+"text": "The house reading has the Glass Walkers find Weaver spirits nesting in Ostrava's new data vaults.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-191",
+"era": "future-darkness",
+"year": 2036,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Kiev",
+"tags": [
+"science",
+"disaster"
+],
+"title": "Chernobyl's new tomb",
+"text": "The sealed Chernobyl reactor is covered again, and Ukrainian guides lead tours of the zone's wolves.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-192",
+"era": "future-darkness",
+"year": 2037,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Krakow",
+"tags": [
+"faith",
+"persecution"
+],
+"title": "The Krakow trials",
+"text": "Polish courts try families accused of hiding vampires; dozens are jailed.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-193",
+"era": "future-darkness",
+"year": 2037,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baku",
+"tags": [
+"trade",
+"war"
+],
+"title": "Baku's oil war",
+"text": "Corporate armies fight over the Caspian oil fields near Baku.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-194",
+"era": "future-darkness",
+"year": 2037,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Europe",
+"place": "Krakow",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Krakow imbued split",
+"text": "The house reading has Krakow's imbued divide over the trials; the Merciful hide the families, the Zealots testify.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-195",
+"era": "future-darkness",
+"year": 2038,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law"
+],
+"title": "Austria's registry",
+"text": "Austria passes a registry law, and Vienna's Tremere become respectable citizens on paper.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-196",
+"era": "future-darkness",
+"year": 2038,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"law",
+"occult"
+],
+"title": "The Tremere register",
+"text": "The house reading has the Tremere of Vienna register a handful of their number and hide the rest behind them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": [
+{
+"id": "v20c-prime-chantry",
+"title": "The Prime Chantry"
+}
+]
+},
+{
+"id": "r3-future-darkness-197",
+"era": "future-darkness",
+"year": 2038,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"uprising",
+"media"
+],
+"title": "The Seoul reveal riots",
+"text": "Riots break out in Seoul when a famous singer is revealed as Kindred; the singer goes on singing.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-198",
+"era": "future-darkness",
+"year": 2039,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"fire",
+"persecution"
+],
+"title": "The Lyon burning",
+"text": "Crusaders burn a house in Lyon said to shelter fae; children die, and Europe is horrified.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-199",
+"era": "future-darkness",
+"year": 2039,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Paris",
+"tags": [
+"uprising"
+],
+"title": "The Lyon protests",
+"text": "Millions march in Paris against the crusade after Lyon, and France refuses to pass a purge law for another generation.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-200",
+"era": "future-darkness",
+"year": 2039,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"fire",
+"occult"
+],
+"title": "The freehold that burned",
+"text": "The house reading follows the approved timeline: the Lyon house was a changeling freehold, and the Merciful imbued walk out of the crusade.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-201",
+"era": "future-darkness",
+"year": 2039,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"science",
+"law"
+],
+"title": "Japan's clone law",
+"text": "Japan forbids clones from holding property, and the first clone strike follows in Osaka.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-202",
+"era": "future-darkness",
+"year": 2040,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"science",
+"plague"
+],
+"title": "The Delhi cure",
+"text": "An Indian lab sells a cure for the wasting plague.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-203",
+"era": "future-darkness",
+"year": 2040,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"founding",
+"law"
+],
+"title": "Prague's free quarter",
+"text": "Prague's old town becomes a free quarter where the revealed may live openly, and tourists come to look at them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-204",
+"era": "future-darkness",
+"year": 2040,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"founding",
+"occult"
+],
+"title": "Prague's open freehold",
+"text": "The house reading has the Kithain of Prague open a freehold in the free quarter, and Glamour runs strong there for a generation.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-205",
+"era": "future-darkness",
+"year": 2041,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Warsaw",
+"tags": [
+"war",
+"persecution"
+],
+"title": "The Warsaw undercity raids",
+"text": "The Polish army clears Warsaw's undercity with flamethrowers and drones, and thousands of the poor die with the hunted.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-206",
+"era": "future-darkness",
+"year": 2041,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"money",
+"trade"
+],
+"title": "The oil runs low",
+"text": "The great Gulf fields begin to run dry, and the charter cities turn from oil to banking and water.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-207",
+"era": "future-darkness",
+"year": 2042,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law",
+"faith"
+],
+"title": "Japan registers the Kuei-jin",
+"text": "Japan's registry extends to the Kuei-jin courts, which sign contracts and rebuild openly.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-208",
+"era": "future-darkness",
+"year": 2042,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"exploration",
+"occult"
+],
+"title": "Ghost caerns on the glass",
+"text": "Explorers on the glass report places where wolves and the dead gather together under a burned sky.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-209",
+"era": "future-darkness",
+"year": 2043,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"learning",
+"faith"
+],
+"title": "The Alexandria school",
+"text": "A school opens in Alexandria for mortals who would learn Ma'at; corps send spies as students.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-210",
+"era": "future-darkness",
+"year": 2043,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"learning",
+"occult"
+],
+"title": "The Shemsu-heru teach",
+"text": "The house reading follows the approved timeline: the Shemsu-heru found the school, and the Setites mark it.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-211",
+"era": "future-darkness",
+"year": 2043,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"founding",
+"faith"
+],
+"title": "Lyon's chapels",
+"text": "Merciful imbued open chapels in Lyon for anyone the crusade has hurt.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-212",
+"era": "future-darkness",
+"year": 2044,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"occult",
+"war"
+],
+"title": "The last fortress",
+"text": "The house reading follows the approved timeline: the heirs of the Dark Kingdom of Iron fortify the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-213",
+"era": "future-darkness",
+"year": 2044,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"occult",
+"faith"
+],
+"title": "Rothenstein's walking dead",
+"text": "Visitors to Rothenstein report the dead walking its old walls at night, and pilgrims come to see.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-214",
+"era": "future-darkness",
+"year": 2044,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"learning",
+"occult"
+],
+"title": "Students of chi",
+"text": "Tokyo universities offer courses in feeling chi, and Visionary imbued sit at the back.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-215",
+"era": "future-darkness",
+"year": 2045,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mosul",
+"tags": [
+"war",
+"persecution"
+],
+"title": "Kindred on the glass rim",
+"text": "Kindred driven out of the crusade's Europe settle on the rim of the Mideast glass, where no drone flies.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-216",
+"era": "future-darkness",
+"year": 2045,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"war",
+"persecution"
+],
+"title": "Sabbat raids on Rome",
+"text": "Sabbat packs from the glass rim raid Rome and Naples for blood like a border war.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-217",
+"era": "future-darkness",
+"year": 2046,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"industry"
+],
+"title": "Brno's data boom",
+"text": "Brno's data vaults and chrome plants make it the richest city in central Europe for a decade.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-218",
+"era": "future-darkness",
+"year": 2046,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"war",
+"building"
+],
+"title": "China's arcology feuds",
+"text": "China's arcologies fight each other with hired armies, and Beijing's government cannot stop them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-219",
+"era": "future-darkness",
+"year": 2047,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Madrid",
+"tags": [
+"fire",
+"persecution"
+],
+"title": "The Madrid fires",
+"text": "The crusade burns Madrid's undercity, and the smoke hangs over the city for a week.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-220",
+"era": "future-darkness",
+"year": 2047,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"plague",
+"faith"
+],
+"title": "The free clinics",
+"text": "A medical firm opens free clinics in the dead zones and in Cairo's camps, and no one knows who pays for them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-221",
+"era": "future-darkness",
+"year": 2047,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Reconcilers' clinics",
+"text": "The house reading follows the approved timeline: the Reconcilers run the clinics, and the Alexandria school becomes their uneasy ally.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-222",
+"era": "future-darkness",
+"year": 2048,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"industry",
+"law"
+],
+"title": "Contract Embraces in Japan",
+"text": "Japanese firms begin hiring registered Kindred for night work in the orbital docks, and a generation is Embraced by contract, owing a firm before a sire.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-223",
+"era": "future-darkness",
+"year": 2048,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Amsterdam",
+"tags": [
+"flood",
+"weather"
+],
+"title": "The dykes fail",
+"text": "A North Sea storm surge breaks the outer dykes of Holland; the Dutch abandon the lowest polders and move inland to corporate towns.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-224",
+"era": "future-darkness",
+"year": 2048,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Mikulov",
+"tags": [
+"weather",
+"trade"
+],
+"title": "The vineyards die",
+"text": "Years of drought kill the old vineyards of the Palava hills, and Moravian wine becomes a luxury grown under glass.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-225",
+"era": "future-darkness",
+"year": 2049,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"crime",
+"occult"
+],
+"title": "Sleepers who do not wake",
+"text": "Hamburg's hospitals fill with people who fall asleep and cannot be woken; the papers call it the long sleep.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-226",
+"era": "future-darkness",
+"year": 2049,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"death",
+"occult"
+],
+"title": "The sleepers in the Shadowlands",
+"text": "The house reading follows the approved timeline: the long sleepers have fallen into the Shadowlands, and Hamburg's wraiths do not know what to do with the living among them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-227",
+"era": "future-darkness",
+"year": 2049,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Dhaka",
+"tags": [
+"flood",
+"migration"
+],
+"title": "Bengal under water",
+"text": "The sea and the failing monsoon drive thirty million people out of the Bengal delta toward India's walled cities.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-228",
+"era": "future-darkness",
+"year": 2050,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown",
+"law"
+],
+"title": "The Czech crusader party",
+"text": "A party calling for Czech purge laws wins its first seats in Brno and Olomouc, promising order after a decade of refugees.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-229",
+"era": "future-darkness",
+"year": 2050,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"faith",
+"law"
+],
+"title": "India's open temples",
+"text": "India's temple councils win a court ruling that the revealed may worship and live openly, and Delhi becomes a refuge in the east.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-230",
+"era": "future-darkness",
+"year": 2050,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"science",
+"travel"
+],
+"title": "The Moon base",
+"text": "A Russian and European base opens at the lunar south pole to mine ice for the orbital yards.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-231",
+"era": "future-darkness",
+"year": 2051,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"war",
+"persecution"
+],
+"title": "Slovakia's purge",
+"text": "Slovakia passes a purge law after a crusader government takes power, and Moravia's eastern border fills with people fleeing the gates.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-232",
+"era": "future-darkness",
+"year": 2051,
+"month": null,
+"kind": "tied",
+"lines": [
+"Changeling"
+],
+"region": "Europe",
+"place": "Bratislava",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The fae on the Morava",
+"text": "The house reading has Slovak changelings cross the Morava by night into the Moravian hills, carrying a freehold's Balefire in a lantern.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-233",
+"era": "future-darkness",
+"year": 2052,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"law"
+],
+"title": "The hollowed deputies",
+"text": "The crusade's deputies in Rome who take bribes from vampire clients stop hearing their Messengers, and the faithful call them hollowed.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-234",
+"era": "future-darkness",
+"year": 2052,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Jakarta",
+"tags": [
+"flood",
+"building"
+],
+"title": "Jakarta moves",
+"text": "Indonesia finishes moving its capital inland as the sea takes north Jakarta.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-235",
+"era": "future-darkness",
+"year": 2052,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"faith",
+"persecution"
+],
+"title": "The archdiocese defies Prague",
+"text": "The archbishop of Olomouc refuses to bless the crusade's gates and is placed under house arrest.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-236",
+"era": "future-darkness",
+"year": 2053,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Istanbul",
+"tags": [
+"war",
+"siege"
+],
+"title": "The Bosphorus war",
+"text": "The camp cities of Anatolia rise against Istanbul's wall, and the city holds them off for a year with corporate artillery.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-237",
+"era": "future-darkness",
+"year": 2053,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"trade",
+"law"
+],
+"title": "Vienna the neutral city",
+"text": "Vienna declares itself open to every line and every faith, and its cafes fill with Kindred diplomats, crusader spies and corporate brokers.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-238",
+"era": "future-darkness",
+"year": 2054,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"law"
+],
+"title": "Korea's registry",
+"text": "Korea passes its own registry law, and the Korean courts of the Kuei-jin sign contracts with the great firms.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-239",
+"era": "future-darkness",
+"year": 2054,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Mosul",
+"tags": [
+"war",
+"persecution"
+],
+"title": "The rim war",
+"text": "Crusader air strikes hit Kindred havens on the rim of the Mideast glass; the strikes miss most and kill refugees.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-240",
+"era": "future-darkness",
+"year": 2055,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "London",
+"tags": [
+"money",
+"crown"
+],
+"title": "London's fall",
+"text": "London's banks fail when Gulf money leaves for Asia, and the city sells its parks and palaces to pay its debts.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-241",
+"era": "future-darkness",
+"year": 2055,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Singapore",
+"tags": [
+"money",
+"trade"
+],
+"title": "Singapore's century",
+"text": "Singapore takes London's place as the world's banker, and its charter citizenship is the most costly passport on earth.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-242",
+"era": "future-darkness",
+"year": 2056,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Faith on the glass",
+"text": "Cults on the edge of the Mideast glass worship the Fallen openly, and pilgrims walk in from three continents.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-243",
+"era": "future-darkness",
+"year": 2056,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Baghdad",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The glass gorges",
+"text": "The house reading follows the approved timeline: faith flows to the Fallen so freely that some remember why they fell, and others grow worse.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-244",
+"era": "future-darkness",
+"year": 2057,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Prague",
+"tags": [
+"crown",
+"persecution"
+],
+"title": "The crusade wins Prague",
+"text": "A crusader coalition wins the Czech election on a promise of purge law, and the gates go up in Prague's stations within a month.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-245",
+"era": "future-darkness",
+"year": 2057,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"occult",
+"death"
+],
+"title": "The thinning walls",
+"text": "Hamburg's people see the dead in the streets after dark, and the city stops pretending it does not.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-246",
+"era": "future-darkness",
+"year": 2057,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown",
+"persecution"
+],
+"title": "Brno's gates",
+"text": "Thermal gates go up in Brno's stations a month after Prague's, and the Brno Elysium goes dark.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-247",
+"era": "future-darkness",
+"year": 2058,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"law",
+"persecution"
+],
+"title": "The Rothenstein trials",
+"text": "The crusade reaches Moravia, and Rothenstein's old families are tried in public for hiding Kindred for centuries.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-248",
+"era": "future-darkness",
+"year": 2058,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"migration",
+"persecution"
+],
+"title": "The flight from Brno",
+"text": "Brno's revealed and those who sheltered them flee south to Vienna, east to the glass and north into the mountains.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-249",
+"era": "future-darkness",
+"year": 2058,
+"month": null,
+"kind": "tied",
+"lines": [
+"Vampire"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The old families' price",
+"text": "The house reading has the elders the old families hid let them hang to keep their own havens secret, and the families' heirs never forgive them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-250",
+"era": "future-darkness",
+"year": 2058,
+"month": null,
+"kind": "tied",
+"lines": [
+"Hunter"
+],
+"region": "Moravia",
+"place": "Olomouc",
+"tags": [
+"persecution",
+"occult"
+],
+"title": "The Merciful of Olomouc",
+"text": "The house reading has Merciful imbued in Olomouc smuggle Rothenstein's children out before the trials end.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-251",
+"era": "future-darkness",
+"year": 2059,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Berlin",
+"tags": [
+"crime",
+"science"
+],
+"title": "Thin-blood alchemy",
+"text": "Thin-blood alchemy is sold on Berlin's streets like any drug, and the purge states cannot stop it at the border.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-252",
+"era": "future-darkness",
+"year": 2059,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Beijing",
+"tags": [
+"science",
+"travel"
+],
+"title": "China on Mars",
+"text": "A Chinese colony ship lands on Mars beside the old Euro-Soviet base.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-253",
+"era": "future-darkness",
+"year": 2060,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"occult",
+"building"
+],
+"title": "District reality",
+"text": "Tokyo's arcologies find that warding charms sold to tenants work in one tower and fail in the next.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-254",
+"era": "future-darkness",
+"year": 2060,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Venice",
+"tags": [
+"flood"
+],
+"title": "Venice drowned",
+"text": "The sea barrier at Venice fails for good, and the restored city is left to the tides; its owners move the festivals to the Alps.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-255",
+"era": "future-darkness",
+"year": 2061,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"occult",
+"building"
+],
+"title": "Hamburg's caerns dark",
+"text": "The last spirit places inside Hamburg go dark, and the city's Garou take Weaver patrons or leave.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-256",
+"era": "future-darkness",
+"year": 2061,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"money",
+"weather"
+],
+"title": "The heat wall",
+"text": "Summer heat in the Gulf passes what people can survive outdoors, and the charter cities seal their streets under glass.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-257",
+"era": "future-darkness",
+"year": 2062,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"crime",
+"media"
+],
+"title": "The suicide virus",
+"text": "A program loose on a Seoul corporate grid drives hundreds of workers to suicide in one night; Netwatch blames a rival, and no one believes it.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-258",
+"era": "future-darkness",
+"year": 2062,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"media",
+"occult"
+],
+"title": "Spectres in the code",
+"text": "The house reading follows the approved timeline: the virus is Spectral, and Seoul's dead are its first victims.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-259",
+"era": "future-darkness",
+"year": 2063,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"treaty",
+"occult"
+],
+"title": "The shifters' Concord",
+"text": "Shapechangers who hid for centuries meet on the glass and swear a new Concord with the Garou of the waste septs.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-260",
+"era": "future-darkness",
+"year": 2063,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law",
+"crime"
+],
+"title": "The Accord comes to Tokyo",
+"text": "Japan adopts the Night City Accord, and registered Kindred, Garou and imbued sign it as a condition of their contracts.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-261",
+"era": "future-darkness",
+"year": 2063,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty",
+"law"
+],
+"title": "Vienna's refugees",
+"text": "Vienna takes in Moravian refugees and gives them papers that do not ask about pulses.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-262",
+"era": "future-darkness",
+"year": 2064,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"terror",
+"learning"
+],
+"title": "The school attacked",
+"text": "Gunmen strike the Alexandria school and kill teachers and students; the attackers are found dead in the desert a week later.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-263",
+"era": "future-darkness",
+"year": 2064,
+"month": null,
+"kind": "tied",
+"lines": [
+"Mummy"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"terror",
+"occult"
+],
+"title": "Set's answer",
+"text": "The house reading follows the approved timeline: Set's followers strike the school and every adviser they can find, and the mummies prepare their reply.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-264",
+"era": "future-darkness",
+"year": 2065,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Taipei",
+"tags": [
+"learning",
+"faith"
+],
+"title": "The teachers' followers",
+"text": "Millions across Asia follow the Taipei teachers' lessons in balance, and the old courts call them traitors.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-265",
+"era": "future-darkness",
+"year": 2065,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Moscow",
+"tags": [
+"war",
+"crown"
+],
+"title": "The Russian core falls",
+"text": "Moscow's government collapses into rival corporate fiefs, and Russia is ruled from company towns.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-266",
+"era": "future-darkness",
+"year": 2066,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"treaty",
+"money"
+],
+"title": "The elders' ceasefire",
+"text": "The corps buy peace from the elders the crusade could not reach, in exchange for what the old blood knows; the young call it betrayal.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-267",
+"era": "future-darkness",
+"year": 2066,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"trade",
+"occult"
+],
+"title": "Chi for sale",
+"text": "Wan Kuei in Neo-Kowloon sell chi to the corps and to Western Kindred, and the old courts call it selling the Dragon.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-268",
+"era": "future-darkness",
+"year": 2067,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"crown",
+"uprising"
+],
+"title": "The Brno rising",
+"text": "Brno's workers rise against the crusader government; the army retakes the city in three days.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-269",
+"era": "future-darkness",
+"year": 2067,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"faith",
+"uprising"
+],
+"title": "The Lyon heresy",
+"text": "Lyon's people break with the crusade and declare a free commune; the crusade surrounds it.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-270",
+"era": "future-darkness",
+"year": 2068,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"occult",
+"faith"
+],
+"title": "Voices under the glass",
+"text": "Cults on the glass hear voices calling from beneath it, and pilgrims dig.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-271",
+"era": "future-darkness",
+"year": 2068,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"occult",
+"faith"
+],
+"title": "The Earthbound call",
+"text": "The house reading follows the approved timeline: the Earthbound beneath the glass begin calling their old servants home.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-272",
+"era": "future-darkness",
+"year": 2069,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Delhi",
+"tags": [
+"building",
+"migration"
+],
+"title": "Delhi's walls",
+"text": "Delhi walls itself against the delta refugees and becomes a city of eighty million.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-273",
+"era": "future-darkness",
+"year": 2070,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"death",
+"occult"
+],
+"title": "The dead come back",
+"text": "In Hamburg the dead begin returning to their own bodies in the morgues, and the city's undertakers hire armed guards.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-274",
+"era": "future-darkness",
+"year": 2070,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Ostrava",
+"tags": [
+"industry",
+"crime"
+],
+"title": "The vault city",
+"text": "Ostrava's old mine shafts become a city of data vaults, run by a firm no one has seen.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-275",
+"era": "future-darkness",
+"year": 2071,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"law",
+"money"
+],
+"title": "The registry bought",
+"text": "Japan's registry is bought, share by share, by its oldest members, and the list of every haven is sold to the highest bidder.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-276",
+"era": "future-darkness",
+"year": 2072,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Barcelona",
+"tags": [
+"weather",
+"famine"
+],
+"title": "The Spanish dust",
+"text": "Southern Spain turns to dust, and its people move north into France and the Alps.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-277",
+"era": "future-darkness",
+"year": 2073,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"weather",
+"faith"
+],
+"title": "The Nile fails",
+"text": "The Nile runs low for three years, and Cairo's people turn to the mummies for help.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-278",
+"era": "future-darkness",
+"year": 2074,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The born imbued",
+"text": "Children born to imbued parents in the Lyon commune see what others cannot from their first year.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-279",
+"era": "future-darkness",
+"year": 2075,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"war"
+],
+"title": "The arcology wars",
+"text": "China's arcologies fight open wars for water and power through hired armies.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-280",
+"era": "future-darkness",
+"year": 2075,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Mikulov",
+"tags": [
+"weather",
+"trade"
+],
+"title": "The Moravian dust bowl",
+"text": "South Moravia's fields turn to dust, and Mikulov's last farmers sell to a water firm.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-281",
+"era": "future-darkness",
+"year": 2076,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"treaty"
+],
+"title": "The Vienna Concord",
+"text": "Vienna hosts a meeting of every line, and they agree on almost nothing but meeting again.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-282",
+"era": "future-darkness",
+"year": 2077,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"occult",
+"war"
+],
+"title": "The citadel in the Shadowlands",
+"text": "Rothenstein's people see the dead manning the walls at night, and the crusade's priests refuse to go near.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-283",
+"era": "future-darkness",
+"year": 2078,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Riyadh",
+"tags": [
+"money",
+"trade"
+],
+"title": "The Gulf's end",
+"text": "The last Gulf oil field closes, and the charter cities live on finance and water rights.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-284",
+"era": "future-darkness",
+"year": 2079,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marseille",
+"tags": [
+"fire",
+"terror"
+],
+"title": "The clinic fires",
+"text": "Free clinics burn on one night in Marseille, Cairo, Istanbul and Delhi.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-285",
+"era": "future-darkness",
+"year": 2079,
+"month": null,
+"kind": "tied",
+"lines": [
+"Demon"
+],
+"region": "Europe",
+"place": "Marseille",
+"tags": [
+"fire",
+"occult"
+],
+"title": "The Earthbound strike",
+"text": "The house reading follows the approved timeline: the clinics belonged to the Reconcilers, and the Earthbound burned them.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-286",
+"era": "future-darkness",
+"year": 2080,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"money",
+"crown"
+],
+"title": "Brno's long decline",
+"text": "Brno is half empty, its data vaults sold, its trade fair a market for scrap and stolen chrome.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-287",
+"era": "future-darkness",
+"year": 2081,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"faith",
+"persecution"
+],
+"title": "The heresy courts",
+"text": "With few monsters left to try, the crusade's courts start calling ordinary dissenters heretics.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-288",
+"era": "future-darkness",
+"year": 2081,
+"month": null,
+"kind": "tied",
+"lines": [
+"Wraith"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"war",
+"occult"
+],
+"title": "Moravia holds",
+"text": "The house reading follows the approved timeline: the Hierarchy's legions break everywhere but Moravia.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-289",
+"era": "future-darkness",
+"year": 2082,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Seoul",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Seoul vote",
+"text": "Korea's voters are asked whether magic is real; the result is a tie.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-290",
+"era": "future-darkness",
+"year": 2083,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"money",
+"art"
+],
+"title": "The dream market bottled",
+"text": "Tokyo's corporations bottle dreams and sell them, and the street dream markets close.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-291",
+"era": "future-darkness",
+"year": 2084,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"crime"
+],
+"title": "The Hamburg dead count",
+"text": "Hamburg's census counts more ghosts than living in some districts.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-292",
+"era": "future-darkness",
+"year": 2085,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"occult",
+"building"
+],
+"title": "Spirits in the walls",
+"text": "Glass Walkers on arcology security find wild spirits sealed in Hamburg's walls, still calling.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-293",
+"era": "future-darkness",
+"year": 2086,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Lyon",
+"tags": [
+"crime",
+"terror"
+],
+"title": "The Accord murders",
+"text": "A string of murders in Lyon, Tokyo and Seoul breaks the Accord in three cities at once.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-294",
+"era": "future-darkness",
+"year": 2087,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Iraq",
+"tags": [
+"war",
+"occult"
+],
+"title": "The deep glass stirs",
+"text": "Things climb out of the deep glass at the Meltdown's heart, and the waste septs fall back.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-295",
+"era": "future-darkness",
+"year": 2087,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Alexandria",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The Duat darkens",
+"text": "The Alexandria school's priests report that the Underworld darkens at its western edge.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-296",
+"era": "future-darkness",
+"year": 2088,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Marseille",
+"tags": [
+"art",
+"faith"
+],
+"title": "Stories in the wastes",
+"text": "Wandering storytellers in the southern wastes keep the old tales alive for children no one else visits.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-297",
+"era": "future-darkness",
+"year": 2089,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"occult",
+"faith"
+],
+"title": "Heralds in the markets",
+"text": "Strangers walk the night markets of Neo-Kowloon and the Kuei-jin flee them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-298",
+"era": "future-darkness",
+"year": 2089,
+"month": null,
+"kind": "tied",
+"lines": [
+"Kindred of the East"
+],
+"region": "Asia",
+"place": "Hong Kong",
+"tags": [
+"occult",
+"faith"
+],
+"title": "The Demon Emperor's heralds",
+"text": "The house reading follows the approved timeline: the heralds are the Demon Emperor's, and the Sixth Age is at its height.",
+"ref": "Real history; the World of Darkness reading is a house rule",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-299",
+"era": "future-darkness",
+"year": 2090,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Shanghai",
+"tags": [
+"war",
+"occult"
+],
+"title": "The last nest",
+"text": "Three Kuei-jin courts and a corporate army fight over the last untapped nest in Asia.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-300",
+"era": "future-darkness",
+"year": 2091,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"faith"
+],
+"title": "The Reconcilers pray",
+"text": "In Vienna a circle of the Fallen prays in a ruined church, and the city hears singing at midnight.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-301",
+"era": "future-darkness",
+"year": 2092,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"death",
+"occult"
+],
+"title": "Holes in the wall",
+"text": "Projectors map the wall between life and death and find holes the size of cities, Hamburg the largest.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-302",
+"era": "future-darkness",
+"year": 2093,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Asia",
+"place": "Tokyo",
+"tags": [
+"death",
+"occult"
+],
+"title": "The Hungry Dead",
+"text": "Starving Kuei-jin lose themselves, and Hungry Dead hunt Tokyo's arcologies by night.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-303",
+"era": "future-darkness",
+"year": 2094,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Rome",
+"tags": [
+"persecution",
+"faith"
+],
+"title": "The empty cities",
+"text": "The crusade's cities are nearly empty of the revealed; the wastes are full of them.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-304",
+"era": "future-darkness",
+"year": 2095,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Hamburg",
+"tags": [
+"faith",
+"crown"
+],
+"title": "The crusade belt",
+"text": "The crusade rules a belt of cities from Rome to Hamburg, and its inquisitors whisper that its leaders cast no reflection.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-305",
+"era": "future-darkness",
+"year": 2096,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Brno",
+"tags": [
+"occult"
+],
+"title": "Brno's wards",
+"text": "The last people of Brno ward their doors with salt and iron.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-306",
+"era": "future-darkness",
+"year": 2097,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Middle East",
+"place": "Cairo",
+"tags": [
+"faith",
+"occult"
+],
+"title": "Apophis turns",
+"text": "The mummies of Cairo dream of the serpent Apophis turning in its sleep.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-307",
+"era": "future-darkness",
+"year": 2098,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Moravia",
+"place": "Rothenstein",
+"tags": [
+"occult",
+"war"
+],
+"title": "The last night of Rothenstein",
+"text": "Rothenstein's walls are full of the dead, and its people wait for the end.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-308",
+"era": "future-darkness",
+"year": 2099,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Europe",
+"place": "Vienna",
+"tags": [
+"faith",
+"occult"
+],
+"title": "The last Concord",
+"text": "The lines meet in Vienna one last time and choose their sides for the Time of Future Judgement.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
 }
 ]
