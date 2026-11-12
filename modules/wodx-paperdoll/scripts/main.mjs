@@ -9,7 +9,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.5.0";
+export const VERSION = "0.6.4";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;

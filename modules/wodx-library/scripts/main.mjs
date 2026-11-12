@@ -14,7 +14,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.4.0";
+export const VERSION = "0.16.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 

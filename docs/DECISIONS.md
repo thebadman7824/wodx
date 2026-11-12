@@ -2,6 +2,96 @@
 
 Decisions taken while building. The master plan's review table holds the design decisions; this file holds the build ones.
 
+## Index of decision blocks
+
+Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
+
+Next free block: B2320
+
+<!-- decision-index:start -->
+| Block | Feature | Modules |
+|---|---|---|
+| B1-B99 | Phases 0 to 7c: the fork, eras and the clock, lineage, the Embrace, experience costs, search boxes, the turn conductor | System fork, Chronicle, Creation, Actions, Combat, NPC |
+| B100-B107 | Phase 7d factions and 7e the open world | NPC, Storyteller |
+| B108-B112 | Doors, locks and forcing | Interactables |
+| B113-B115 | Targeting and common checks | Targeting, Actions |
+| B116-B119 | Containers, traps, clues and light sources | Interactables |
+| B120-B133 | Master Plan gap items: dated events, data versions, the archive of the dead, the Ledger, gear by era, death into a wraith, the Awakening | Chronicle, Creation, Storyteller, Library, Actions, Sheets |
+| B150-B159 | Hiding places | Interactables |
+| B160-B169 | Responsive maps | Interactables, NPC, Storyteller |
+| B170-B179 | WoDX Senses | Senses |
+| B200-B212 | Phase 8: weather, era kits, handouts, the night's draw, story aids, journeys, token frames | Atmosphere, Storyteller, Otherworlds |
+| B240-B249 | Dark Ages: Mage Grimoire | Actions |
+| B250-B287 | Phase 6 leftovers and the 9 November batch: feast days, living maps, state changes, the Near Dreaming, ageing, the codex, rumours, the Encyclopaedia | Chronicle, Interactables, Senses, Creation, Otherworlds, Atmosphere, Storyteller, Library |
+| B310-B315 | Player immersion | Interactables, Senses, Chronicle, Storyteller, Atmosphere, NPC |
+| B320-B331 | Between nights, money by era, consensus | Storyteller, Otherworlds, Actions |
+| B340-B351 | Paperdoll tokens; moves out of turn (B351) | Paperdoll, Combat |
+| B360-B363 | Serious faces | Paperdoll |
+| B370-B387 | Long tasks, followers, hardship, lasting changes | Storyteller, Interactables, Actions, Paperdoll |
+| B396-B401 | Paperdoll mouths, lips and grounds | Paperdoll |
+| B402-B405 | Watch points, release checks, map adoption, container fill | Interactables, Chronicle |
+| B430-B437 | The Storyteller's hand | Storyteller |
+| B500-B509 | Rules that clash between lines; the Future Darkness branch | Chronicle, Actions |
+| B520-B525 | Bites, the Delirium and blood of other lines | Actions |
+| B570-B589 | Everyday goods and the town generator | Library, Interactables |
+| B590-B599 | Era item lists, money and markets (B593 is used twice: item behaviour, Encyclopaedia dates) | Library, Interactables, Storyteller |
+| B600-B610 | Sheet extras, containers, money by era, descriptions and Examine | Sheets, Library |
+| B620-B632 | Only when, trigger regions, households, stock, mood regions, talk sheets | Interactables, NPC, Storyteller, Atmosphere |
+| B650-B659 | Map generation: parts, era layers, landforms, building designs | Interactables |
+| B660-B669 | Teleport, NPC topics and present-day layouts | Interactables, NPC |
+| B670-B676 | NPC attitude and With this person | NPC, Actions, Chronicle |
+| B700-B711 | Travel, routines by age, word and rumours | Storyteller, NPC |
+| B730-B739 | Realm maps and Umbral twins | Otherworlds, Storyteller |
+| B740-B746 | Stock talk; realm map keywords and layouts | NPC, Otherworlds |
+| B760-B769 | The crossover referee, the anachronism check, Mage effect keywords | Chronicle, Sheets, Actions |
+| B780-B799 | Lines and eras that meet, effect keywords for every line (block given to that thread) | Actions |
+| B800-B810 | Trait effects; fights that start by themselves | Chronicle, Actions, Combat |
+| B820-B826 | NPC rivalries | NPC, Combat |
+| B830-B836 | Factions by age, founding, splitting; the ambush | NPC, Combat |
+| B840-B844 | Hardship weather, standing, bodies left behind | Storyteller, NPC |
+| B850-B856 | Owning things and places | Storyteller |
+| B860-B861 | Hardship thresholds; clashing dated events | Storyteller, Chronicle |
+| B880-B898 | Merits and flaws on the senses and in the world; trade and haggling | Senses, Actions, Chronicle, Storyteller |
+| B905-B906 | Goods naming and the New Items Desk | Library |
+| B910-B918 | Chases; things can be used | Interactables, Library, Sheets |
+| B940-B947 | Ways of moving (B947 is used twice: ways of moving after the book check, recipes) | Combat, Actions |
+| B948-B953 | Recipes and taking things apart | Library |
+| B960-B965 | Feeding harm and clan feeding laws | Actions, Creation |
+| B970-B975 | Passers-by | NPC |
+| B980-B984 | Who an act startles | NPC, Actions |
+| B1000-B1014 | Animal archetypes, mortal and supernatural NPC archetypes, how things work together | NPC, Library, Interactables |
+| B1100-B1105 | Politics inside factions | NPC |
+| B1110-B1116 | Polities for the other lines | NPC |
+| B1120-B1131 | Signature features (vampire clans); item uses | Chronicle, Library |
+| B1150-B1169 | Signature features: clans, bloodlines, Werewolf and Mage (block given to the splat features thread) | Chronicle |
+| B1200-B1210 | The body plan | Combat, Sheets |
+| B1300-B1302 | Area shapes, odds, pinned actions | Targeting, Actions |
+| B1310-B1313 | Lifepaths | Storyteller |
+| B1320-B1324 | Using the room in a fight | Interactables |
+| B1330 | Colour-blind safe colours | Senses |
+| B1340 | The after-action card | Combat |
+| B1380-B1385 | What an NPC can tell of a character | NPC |
+| B1400-B1411 | Made things' quality and the look | Library, NPC |
+| B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
+| B1600-B1606 | Before the First Night | Creation |
+| B1610-B1614 | The guided builder and the prelude runner | Creation |
+| B1700-B1702 | The Legends book | Chronicle |
+| B1710-B1714 | Progress clocks | Storyteller |
+| B1720-B1724 | Standing with the spirit courts | Otherworlds |
+| B1800-B1804 | Followers taking orders | NPC |
+| B1810-B1816 | Errands and helpers | NPC, Storyteller |
+| B1820-B1827 | The Followers window; descriptions that spread and fade | NPC, Sheets, Library |
+| B1900-B1908 | Relationships, secrets and the family tree | Sheets, NPC, Creation |
+| B1960-B1970 | Game time | Chronicle, Storyteller, Combat, Otherworlds |
+| B2100-B2105 | NPC voices | Voices |
+| B2200-B2209 | Battles and sieges | Storyteller |
+| B2220-B2226 | The crowd as a resource | Actions, NPC |
+| B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
+| B2310-B2319 | Battle deeds and what a battlefield leaves behind | Storyteller, Otherworlds, Chronicle |
+<!-- decision-index:end -->
+
+## The decisions
+
 | # | Date | Decision | Why |
 |---|------|----------|-----|
 | B1 | 2026-11-06 | Pre-launch review accepted: a minimal template world and the Rothenstein rebuild move into Phase 0. Phase 8 only finishes the template. | Gives every later phase a real world to test against. |
@@ -2056,6 +2146,46 @@ A follower's attitude toward its master moves one step through WoDX NPC's attitu
 
 Reverse: drift in order-rules.mjs; driftFor in orders.mjs; the wodxGhoulFix hook in wodx-chronicle/scripts/signatures.mjs; WoDX Actions' wodxFed hook (by, vessel).
 
+## B1820. One Followers window per character (2026-11-12, improvement desk fo1)
+WoDX NPC 0.41.0 lists everyone who serves a character in one window, opened from the Relationships tab's Followers button, the token tools (the people icon) or api.openFollowers(actor). A follower is any NPC that serves the character through one of the four ties order-rules.servesFrom reads (B1800). Each row gives its kind (Ghoul from the domitor tie; Retainer, Ally, Herd, Contact or Mentor from the Background made real; Ally from a Creation ally; else Follower), where it is (here, another scene, away on an errand, not on any map), its order, its loyalty with the last change and the reason from the attitude log, the blood bond step (V20's three drinks) and open trouble. Players see their own characters' followers only, and only those they are allowed to see in Foundry.
+
+Reverse: drop followers.mjs and followers-rules.mjs from wodx-npc, the wodxFollowers token tool and openFollowers in main.mjs, and the tie-followers button in wodx-sheets extras.
+
+## B1821. Orders from the Followers window (2026-11-12)
+A follower on the scene being viewed gets buttons for the everyday orders (Follow, Wait, Guard, Keep watch, Hold back, No order) and "Give an order…", which opens the full order window with that follower and master picked. The buttons go through the same path as the order window (orders.send: carried out on the active Storyteller's client, else by socket), so a hard order still waits in the approval queue. Followers elsewhere get no buttons, since an order needs the token on the map.
+
+Reverse: quickFor in followers-rules.mjs returns [] always.
+
+## B1822. What counts as trouble on a follower's row (2026-11-12)
+Dealing with a witness, set to cut someone off or attack, under a hard order, wavering in its loyalty (at Distrusted, the floor of loyalty drift, B1816), and a description of it going round (B1823). The reason for the last loyalty change is shown to the player whose character it serves: loyalty drift writes reasons from the player's own acts (kept fed, a hard order). A Storyteller's own reason typed into the attitude log shows too.
+
+Reverse: troubles and lastText in followers-rules.mjs; hide r.last for players in followers.mjs.
+
+## B1823. A description that spreads and fades (2026-11-12, house rule, improvement desk cw1)
+When WoDX Actions records a breach with witnesses, when WoDX Interactables reports a theft, break-in, fire, desecration or fight that someone on the map sees (WoDX NPC's noticing roll), or when a fight ends with foes alive or onlookers who see a player character, WoDX NPC 0.41.0 writes a description of the culprit (a player character, or an NPC who serves one) from WoDX Library's look. A second sighting of the same culprit at the same place within ten minutes of world time freshens the same description. The Storyteller gets a card with the words, Drop it, and the Descriptions abroad list (token tools, the question-mark figure). Players never see a description. World setting "Descriptions that spread" (on by default) turns it off. V20 has no rules for this.
+
+Reverse: world setting culpritDescriptions off, or drop wanted.mjs and wanted-rules.mjs.
+
+## B1824. How word gets round, by year (2026-11-12, house figures)
+1197-1499 the hue and cry and the town crier (the rest of town in 24 hours, forgotten in 14 days); 1500-1849 a printed notice and the constable's word (48 hours, 30 days); 1850-1979 a police sketch and the telegraph wire (12 hours, 60 days); 1980-1999 a police sketch on the evening news (6 hours, 90 days); 2000-2022 camera footage and phone photos (3 hours, 180 days); from 2023, the World of Future Darkness, cameras and face matching (1 hour, 365 days). The place where it happened hears at once, and the place's Alert zones carry it on by bell, telephone, radio or runner, as they carry the alarm (NPC 0.23.0). Word stops at the Shroud and the Gauntlet: an Umbral or Underworld map (wodx-otherworlds layer other than physical) hears only what a carrier takes there.
+
+Reverse: MEANS in wanted-rules.mjs.
+
+## B1825. When a description still matches (2026-11-12, house rule)
+Strong when the clothes, uniform and station still fit; none once the culprit has changed clothes, put on a disguise, or a disguise roll held against that NPC. Size (from the token: big, huge, small) and a face people remember, an ugly face or a monstrous one still give a partial match through new clothes. From 2000 photographs keep the face, so new clothes only make it partial; from 2023 face matching keeps the face whatever the clothes, and a held disguise only makes it partial. V20 sheets have no height, so the token's size stands in.
+
+Reverse: matchOf in wanted-rules.mjs; marksOf and sizeOf in wodx-library look-rules.mjs.
+
+## B1826. Who tests a description, and the roll (2026-11-12, house rule)
+When a player character moves where word has reached, NPCs there who see them (the noticing roll) test it: the watch, soldiers, sheriffs, hunters, inquisitors, Technocrats, ghouls, ordinary townsfolk and passers-by, never animals, spirits or the culprit's own followers, at most four a move and once a minute for each pair. The Storyteller gets a card: the match, its reason, and a roll of Perception + Alertness at difficulty 6 for a strong match or 8 for a partial one, 1 harder once the description is half forgotten, with a button to raise the alarm at that place. Nothing happens by itself.
+
+Reverse: TESTERS and recogniseRoll in wanted-rules.mjs; test in wanted.mjs.
+
+## B1827. Whether witnesses know the culprit's name (2026-11-12)
+A description carries the culprit's name when any witness has already met them (WoDX NPC's attitude: met). Otherwise the card says "someone", and only the Storyteller sees who it was.
+
+Reverse: namedBy in wanted.mjs.
+
 ## B2200. Battles and sieges as two abstract forces (2026-11-12, house rule)
 The Master Plan item "Battles and sieges" (Lines and eras that meet, priority 3) is built in WoDX Storyteller 0.43.0 as a Storyteller tool, "Battles and sieges" in the Storyteller's hand (api.battles). A battle is fought between two forces, not token by token: each has a name, a faction (optional), men, a quality (1 levies to 5 the best of the age), the supernatural in its ranks (0 to 5), where it stands, and a commander (a sheet, or a name and a pool). Players see a card in words each step; the Storyteller's card has the dice. Every step has an Undo. The book search (12 November 2026, /mnt/project-files/battle-book-check.md) found war rules only in two Dark Ages: Vampire books, Spoils of War (pp. 40-45 printed, pdf = printed + 1) and the Dark Ages Companion (pp. 42-48 printed, pdf = printed - 25); no V20 book has them. Their rolls are used where they fit (B2202 to B2205); the forces' weight, resolve, the breach clock and the ages after 1500 are house rules. Spoils of War's full Right of Command army (Centre, Wings and Reserve, units by type) is not built: its troop table is garbled in the scan and needs reading from the book.
 
@@ -2141,51 +2271,90 @@ The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers
 
 Reverse: nothing to reverse.
 
-## B2300. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
+## B2300. Lifepath threads become story chains (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item cr2, approved by Ben. V20 asks for a prelude that sets up the character's past (page to be confirmed by a book check), but gives no table for when that past comes back. With WoDX Chronicle's Story chains setting on, each player character's kept lifepath is read by WoDX Creation for open threads: a person from the past whose role or note leaves something open (an enemy, a rival, a debt either way, a secret someone knows, someone lost, a promise), or a kept Flaw (Enemy, Clan Enmity, Hunted, Dark Secret) that no person already carries. At most four per character, sharpest first. Each kind has a three-step chain of its own; the person the lifepath made as an NPC is named in it.
+
+Reverse: turn off Story chains, or reject the thread in the approval queue.
+
+## B2301. When a thread falls due (2026-11-12, house rule)
+The first thread comes to the approval queue 14 days of game time after Chronicle first sees the character's lifepath, each next one 30 days after the last, one at a time per character. Approved, it runs as a story chain from the scene's city; rejected, it is left in the past and never put again. The Storyteller can also start any thread at once from Threads from the past in the story chains window.
+
+Reverse: change LP_DAYS in wodx-chronicle/data/pod-lifepath.mjs.
+
+## B2302. A thread in the year of play (2026-11-12, house rule)
+The chain is written for the year it fires, not the year of the scene. A mortal from more than 70 years back is long dead, and a descendant carries the thread. The undying (Kindred, the dead, spirits) from more than 150 years back come back far stronger, and an enemy, rival, creditor or keeper of a secret among them may now be the pawn of something older. A mortal from 40 to 70 years back is old. News and searching follow the era: a pedlar or inn talk before 1500, a sealed letter to 1799, telegrams and newspapers to 1945, a phone call or a private investigator to 2022, a filtered message or a data broker in the World of Future Darkness.
+
+Reverse: change LP_ALIVE_SPAN, LP_OLD_SPAN or MEANS in Chronicle's pod rules and data.
+
+## B2303. Who counts as undying in a lifepath (2026-11-12, house rule)
+A person's role and note are read for the Kindred and others who do not age: a sire, a vampire, a prince, a harpy, a domitor, an anarch, the dead, spirits and monsters; for a vampire's lifepath, an elder or a member of the court too. Everyone else ages and dies in a lifetime. When the Storyteller links a different NPC, its name is used, but its age is still judged from the role.
+
+Reverse: edit UNDYING in wodx-creation/scripts/lifepath-threads-rules.mjs.
+
+## B2304. Lifepath threads speak of the character, not to them (2026-11-12)
+Lifepath roles are written to the player ("your sire's rival, who would see you destroyed"). On the Storyteller's chain cards and the approval queue they are turned around to name the character ("Jana's sire's rival, who would see Jana destroyed").
+
+Reverse: drop third() in Chronicle's pod rules.
+
+## B2305. A guest in another character's prelude (2026-11-12, house rule)
+Improvement Desk 2026-11-12b item bf1, approved by Ben. In the prelude runner, the Storyteller can ask another player's character into the current scene. It is offered only where the guest's lifepath years allow: at least 8 years old, and alive. Mortals, hunters, Garou, changelings and other lines with a mortal span live 100 years; ghouls and revenants 200; mages 150. The Kindred, the dead, mummies, Kuei-jin and the fallen do not age once turned; a guest turned 100 years or more before the scene comes only as an elder, a wraith only as a ghost. A guest with no lifepath is the Storyteller's call. Places are not checked: every lifepath is set in the chronicle's own lands of the Bohemian crown, so the Storyteller rules out a guest who was abroad.
+
+Reverse: change UNDYING_LINES, SPAN, GUEST_MIN_AGE or ELDER_YEARS in first-night-prelude-rules.mjs.
+
+## B2306. The guest's beat (2026-11-12)
+The Storyteller picks one beat question for how the guest was there (as a mortal, turned, an elder or a ghost), then asks the guest's player on a chat card, or writes what happened at the table. The answer goes to troupe ties on the Group actor as a guest tie (one per scene, beside the ring's questions, which it never replaces), into the host's prelude log with Undo, and ticks the guest's ties step. How they met lists it as "the guest in the host's prelude".
+
+Reverse: Undo in the prelude log removes the tie.
+
+## B2307. A guest beat costs and gives nothing (2026-11-12)
+The beat is story only. It spends none of the host's 3 prelude freebie points and gives the guest no points; a roll with stakes in the same scene still costs the host as before.
+
+Reverse: none needed; give a reward from the runner by hand.
+
+## B2310. A deed offered to each character, each phase (2026-11-12, house rule; Improvement Desk bt1)
 Ben approved desk item bt1 on 12 November 2026. WoDX Storyteller 0.45.0 offers each character in a battle one deed per phase, picked from a table by their post (in the line, with the commander, scouting, on the walls, at the gate or the breach), the age group of the year (medieval, pike and musket, the 19th century, the world wars, the modern age, the World of Future Darkness) and the realm (the Umbra and the Underworld have their own). The pick is stable for a phase (a hash of the battle, phase and character), and Swap goes through the rest without repeats. Each deed is an Attribute plus the better of one or two Abilities at 6 to 8, and its successes join the Deeds the battle already counts (Dark Ages Companion pp. 44-45 printed: each success takes a foe out of the fight). The table, the posts and the picking are house rules.
 
 Reverse: DEEDS, POSTS and pickDeed in wodx-storyteller battle-deeds.mjs; the offers on a battle are dropped by setting offers to null.
 
-## B2301. The post a character stands at (2026-11-12, house rule)
+## B2311. The post a character stands at (2026-11-12, house rule)
 With no post picked, a character in command is with the commander, one at the rear is scouting, and one in the thick of it is in the line; in a siege that has been breached or stormed the defenders are on the walls and the attackers at the breach. No deeds are offered during the weeks of a siege, only when it is fought.
 
 Reverse: postFor in battle-deeds.mjs.
 
-## B2302. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
+## B2312. Deeds of their own kind and the Masquerade (2026-11-12, house rule)
 A supernatural character (by WoDX Combat's kind of being) is offered a deed of their own kind about one time in three: a vampire commanding the enemy captain, showing what they are, or feeding in the press; a Garou in war form; a mage's vulgar or coincidental Effect; a changeling waking dreams of glory; a wraith reaching through the Shroud; a hunter finding the monster in the ranks; spirits of war called. Deeds that the living can see as more than human are marked seen; in a battle in the living world each seen deed that succeeded is counted by the aftermath, and sending the feeding line to the Ledger lets the Veil slip one point for each (at most 3), with an Undo.
 
 Reverse: the kinds and seen fields in DEEDS; seenDeeds in battle-aftermath.mjs.
 
-## B2303. Off-screen deeds for faction wars (2026-11-12, house rule)
+## B2313. Off-screen deeds for faction wars (2026-11-12, house rule)
 For battles fought with no window (factions at war), leaderDeed() picks a command deed for a side's leader, or a deed of the leader's kind when the side has supernatural help of 2 or more, with the commander's Perception + Leadership as the pool; deedSuccessesFor() rolls it with any random source (V20: successes at the difficulty less 1s, a botch when nothing succeeded and a 1 came up). Exposed as api.battleDeeds.leaderDeed and deedSuccessesFor.
 
 Reverse: leaderDeed, deedSuccessesFor in battle-deeds.mjs.
 
-## B2304. Deeds roll from the sheet, by the Storyteller (2026-11-12)
+## B2314. Deeds roll from the sheet, by the Storyteller (2026-11-12)
 The Storyteller rolls each deed from the window (the dice go to the Storyteller's card; the player gets a card with the deed when it is offered). A botched deed adds nothing. Rolling again replaces the roll. Offers belong to one phase: fighting the phase uses them and clears them; Undo of the phase does not bring them back.
 
 Reverse: rollDeed and offer in battle-extras.mjs.
 
-## B2305. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
+## B2315. What a battlefield leaves behind (2026-11-12, house rule; Improvement Desk bt2)
 Ben approved desk item bt2 on 12 November 2026. When a battle ends, the Battles window lists the field's harvest by line: spoils, prisoners (a tenth of a routed side) and the wounded (twice the dead) by age; feeding among the dying for 3 nights (7 after 1,000 dead), 2 easier on the field; new wraiths among the fallen (one in a hundred of the dead, at least one from 20 dead) and a thinner Shroud; Banes and Wyrm taint from 100 dead; Entropy in the Resonance and nightmares from 50 dead; the Yin rising for the Kindred of the East; and the name the place keeps. All of it is a house rule; the counts are not from a book.
 
 Reverse: aftermathFor in wodx-storyteller battle-aftermath.mjs.
 
-## B2306. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
+## B2316. Each aftermath line goes to the Ledger, the Legends book or the place, with Undo (2026-11-12)
 A line with a lasting effect can go to the Ledger as a consequence that comes due (the feeding ends, the Shroud heals after a year and a day, the Resonance fades), to the Legends book (Chronicle 0.42.2 adds the sent lines to the battle's entry), or to a place picked as a scene (WoDX Otherworlds drift). Each sent line is kept on the battle with an Undo that removes the Ledger entry, takes the drift back, or drops the Legends text.
 
 Reverse: send and unsend in battle-extras.mjs.
 
-## B2307. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
+## B2317. Mass death thins the Shroud (2026-11-12, house rule on Wraith 20th)
 The desk wording said "a stronger Shroud"; Wraith 20th puts the Shroud lowest where death and grief are, so a battle thins it instead (logged in PENDING-REVIEW). WoDX Otherworlds 0.17.0 adds a Shroud track to drift: massdeath -1, shroudheals +1, inside -3 to +3, and a place with a Shroud rating reads it with the drift inside 4 to 10. A battle thins it 1, or 2 after 10,000 dead.
 
 Reverse: the massdeath and shroudheals kinds and shroudWithDrift in wodx-otherworlds drift-rules.mjs.
 
-## B2308. Old fields are felt in later years (2026-11-12, house rule)
+## B2318. Old fields are felt in later years (2026-11-12, house rule)
 A field of 10 or more dead in the living world appears under Old fields in the Battles list in later years: fresh graves in its first year, the survivors' memory for 40 years, then by the clock's year a chapel or a cross before 1800, a monument and walks from 1800, battlefield tourists by rail from 1860, a memorial and museum from 1914, a visitor centre, re-enactors and detectorists from 1960, and on the Future Darkness branch from 2026 a memorial seen through the lens. Fields of 1,000 dead (or 100 within 200 years) are still haunted; 10,000 dead keep the Shroud thin. The Legends book's battle entry carries any lines sent to it.
 
 Reverse: fieldEcho and oldFields in battle-aftermath.mjs.
 
-## B2309. Desk item numbers kept for this work
-B2300 to B2319 are this work's block; B2310 to B2319 are free for follow-ups.
-
+## B2319. Decision numbers kept for this work
+B2310 to B2319 are this work's block, all used.

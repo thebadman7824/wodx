@@ -65,3 +65,11 @@
 .wnpc-why-cold { color: var(--wodx-cold, #8a1f2d); }
 .wnpc-why-box summary { cursor: pointer; font-size: 0.9em; opacity: 0.8; }
 .wnpc-gate { font-size: 0.85em; margin: 0; }
+
+/* 0.41.0: the Followers window and Descriptions abroad */
+.wnpc-followers-rows, .wnpc-wanted-rows { display: grid; gap: 8px; max-height: 70vh; overflow-y: auto; }
+.wnpc-follower, .wnpc-wanted-row { border: 1px solid var(--color-border-light-2, #999); border-radius: 4px; padding: 6px 8px; }
+.wnpc-follower p, .wnpc-wanted-row p { margin: 2px 0; }
+.wnpc-follower-trouble { color: var(--color-level-warning, #a35a00); }
+.wnpc-follower-orders { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.wnpc-follower-orders button { flex: 0 0 auto; width: auto; font-size: 0.85em; padding: 0 6px; }
