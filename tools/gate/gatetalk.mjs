@@ -194,8 +194,8 @@ export async function run() {
     });
     await step("talk generator (NPC 0.37.0): stock lines from the grammar, children keep their own, rumours carried, off as before", async () => {
       const L = talk().lines;
-      const [gen] = await Actor.create([{name: "WoDX gate: Talk generated", type: "Mortal"}]);
-      const [kid2] = await Actor.create([{name: "WoDX gate: Talk generated child", type: "Mortal", flags: {[MOD]: {behavior: {voice: "child"}}}}]);
+      const gen = await Actor.create({name: "WoDX gate: Talk generated", type: "Mortal"});
+      const kid2 = await Actor.create({name: "WoDX gate: Talk generated child", type: "Mortal", flags: {[MOD]: {behavior: {voice: "child"}}}});
       actors.push(gen, kid2);
       await scene.createEmbeddedDocuments("Token", [{name: "gen", actorId: gen.id, x: G * 8, y: G * 6}, {name: "kid2", actorId: kid2.id, x: G * 8, y: G * 4}]);
       const gTok = scene.tokens.find(t => t.actorId === gen.id), cTok = scene.tokens.find(t => t.actorId === kid2.id);
