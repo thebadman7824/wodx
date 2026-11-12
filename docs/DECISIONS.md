@@ -1755,6 +1755,11 @@ Each line has three opening goals for before 1800 and three from 1800, and morta
 
 Reverse: GOALS in data/pod.mjs; section in pod.mjs.
 
+## B1519. Anda marks heal like the Gangrel's (2026-11-12)
+Ben's note on the Splat Features Desk: an Anda takes the same animal marks from frenzy as any Gangrel, each lasting a month before it heals.
+
+Reverse: also on the anda row in data/signatures.mjs.
+
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
@@ -1821,17 +1826,17 @@ A made thing's quality tag ("a sword (fine work)") no longer hides the good from
 Reverse: stripQuality in Storyteller money.mjs; withQuality in Actions trade-rules.js; withMade in Library examine-rules.mjs; extraDiff in use.mjs.
 
 ## B1401. The look (2026-11-12)
-WoDX Library reads a character the way a stranger does: station 0 to 5 from the best worn dress (its value tier this era, a step for worn valuables of tier 4 or more), dress or shown gear out of its time, condition (blood, wounds, filth, wet, torn, a weapon drawn), Appearance, Status, sides shown by worn habits, uniforms and liveries, and a disguise. House rule throughout; Appearance, Status and Resources are V20's (page refs owed by the book check).
+WoDX Library reads a character the way a stranger does: station 0 to 5 from the best worn dress (its value tier this era, a step for worn valuables of tier 4 or more), dress or shown gear out of its time, condition (blood, wounds, filth, wet, torn, a weapon drawn), Appearance, Status, sides shown by worn habits, uniforms and liveries, and a disguise. House rule throughout. Appearance, Status and Resources are V20's: Appearance p. 98 (pdf 106), first sight and bearing, dress included; Status p. 118 (pdf 126), standing among the Kindred, not mortal rank; Resources p. 116 (pdf 124), the means to dress well, not dress itself (book check 2026-11-12, /mnt/project-files/look/book-check.md). No book ties dress to station: that link is a house rule.
 
 Reverse: look-rules.mjs and look.mjs; api.look in Library main.mjs.
 
 ## B1402. The look at a first meeting (2026-11-12)
-Mortal NPCs: dress the era's gap above their station +1, below -1; strange dress -1; blood or wounds -1; filth or wet -1 with station 3 or more. All NPCs: Appearance 4 to 5 +1; fine work worn +1 with an NPC who has the craft. Mortals only: Appearance 0 -1 unless Monstrous. Supernatural NPCs: Status 3 or more +1 with their own kind. The look is held to 2 steps, traits to 2, the two together to 3 (Ben's pick). NPC station: worn dress, else Resources, else template, else 1.
+Mortal NPCs: dress the era's gap above their station +1, below -1; strange dress -1; blood or wounds -1; filth or wet -1 with station 3 or more. All NPCs: Appearance 4 to 5 +1; fine work worn +1 with an NPC who has the craft. Mortals only: Appearance 0 -1 unless Monstrous (V20 Dark Ages p. 55, pdf 56: Appearance 0 fails first impressions except to intimidate; V20 p. 63, pdf 71). Supernatural NPCs: Status 3 or more +1 with their own kind. The look is held to 2 steps, traits to 2, the two together to 3 (Ben's pick). NPC station: worn dress, else Resources, else template, else 1.
 
 Reverse: lookSeed and TEMPLATE_STATION in look-rules.mjs; seedFor in NPC attitude.mjs.
 
 ## B1403. How loudly dress speaks, by era (2026-11-12)
-Gap needed: 2 until 1913 (from 1800, a gap of 1 also counts with NPCs of station 4 or 5); 3 from 1914. Worn dress always shows; carried things show only when they can't be hidden (conceal N).
+No sumptuary or dress-by-rank rule in V20 Dark Ages (book check 2026-11-12); these weights are a history-based house rule. Gap needed: 2 until 1913 (from 1800, a gap of 1 also counts with NPCs of station 4 or 5); 3 from 1914. Worn dress always shows; carried things show only when they can't be hidden (conceal N).
 
 Reverse: ERA_WEIGHTS and seen in look-rules.mjs.
 
@@ -1841,7 +1846,7 @@ After a first meeting, blood or wounds lower a mortal NPC's attitude by 1 for th
 Reverse: sceneStep in look-rules.mjs; withScene in attitude-rules.mjs.
 
 ## B1405. Pass as someone else (2026-11-12)
-A disguise roll in With this person: Manipulation + Subterfuge (or Performance) against the NPC's Perception + Alertness, difficulty 6; the watcher must beat the disguise's successes. The result is kept per NPC on the character (flags wodx-actions.disguise). While it holds, that NPC reads the disguise's station and sides. A disguise is set on a worn item in its Examine notes (station and sides). House rule until the book check names the book's roll.
+A disguise roll in With this person: Manipulation + Subterfuge (or Performance) against the NPC's Perception + Alertness, difficulty 6; the watcher must beat the disguise's successes. The result is kept per NPC on the character (flags wodx-actions.disguise). While it holds, that NPC reads the disguise's station and sides. A disguise is set on a worn item in its Examine notes (station and sides). House rule: neither core book has a mundane disguise roll (book check 2026-11-12). The nearest is Mask of a Thousand Faces, Manipulation + Performance (V20 p. 185, pdf 193), which is why Performance counts too.
 
 Reverse: the disguise act and disguiseNpc preset in social-rules.js.
 
@@ -1851,9 +1856,9 @@ New "Only when" tests: dressed fine/poor/even (against the NPC being dealt with)
 Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-rules.mjs; NOTICE in stock-talk-more.mjs.
 
 ## B1407. Guards and worn sides (2026-11-12)
-Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
+Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own. Added 2026-11-12 (NPC 0.43.0): a disguise that held with a keeper of the place (any NPC if none of the keepers has met it) counts its sides as worn there; one a keeper saw through adds "dressed as one of us" to the alarm, as the design asked.
 
-Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
+Reverse: sit.bloody, sit.seenThrough and disguiseAt in routine-rules.mjs; wornPass and dz in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
 
 ## B1380. What an NPC can tell of a character (2026-11-12)
 An NPC can tell what someone is only when it is plainly inhuman (a war form, Horrid Form, a spirit or wraith that shows itself, or the Storyteller's "obvious" tick), when one of its senses shows that line (Auspex 2 and up, Second Sight, Kenning; Garou scent, Sense Wyrm and mage Awareness by roll, as for rivalries), or when the Masquerade records list it as a witness who saw that character and was not made to forget. The same check now runs for player characters as for NPCs. A hunter NPC's "goes for the monster first" and "take them alive" use it, not the sheet's kind.

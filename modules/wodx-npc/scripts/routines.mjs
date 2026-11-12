@@ -657,10 +657,14 @@ export function build(ctx) {
     // NPC 0.32.0: what the intruder wears (WoDX Library's look): a livery or habit the place allows lets them by; blood alarms
     let look = null;
     try { look = game.modules.get("wodx-library")?.api?.look?.of?.(intruder) ?? null; } catch (e) { look = null; }
-    const wornPass = !!look && (look.sides ?? []).some(sd => allowed.some(n => String(n).toLowerCase() === sd));
+    // NPC 0.43.0: a held disguise passes as what it shows; one a keeper of this place saw through raises the alarm
+    const dz = R.disguiseAt(look, (intruder.isToken ? intruder.baseActor : intruder)?.flags?.["wodx-actions"]?.disguise ?? {}, residentsOf(placeIds).map(a => a.id));
+    const shown = [...(look?.sides ?? []), ...(dz.pass ? look.disguise.sides : [])];
+    const wornPass = !!look && shown.some(sd => allowed.some(n => String(n).toLowerCase() === sd));
     const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder) && !wornPass;
     const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder),
       bloody: !!look && (look.condition ?? []).some(c => c === "bloody" || c === "wounded"),
+      seenThrough: dz.seenThrough,
       wraith: ctx.C?.()?.getKind?.(intruder) === "wraith", alone: aloneNow(doc), month: d.month};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
     if ( !cond.met ) return null;
