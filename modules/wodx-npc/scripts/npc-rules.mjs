@@ -8,6 +8,7 @@
 import * as TK from "./talk-rules.mjs";
 import {ANIMAL_TEMPLATES, ANIMALS} from "./animal-rules.mjs";
 import {MORTAL_TEMPLATES, MORTALS} from "./mortal-rules.mjs";
+import {SUPERNATURAL_TEMPLATES, pickSupernatural} from "./supernatural-rules.mjs";
 
 /** Temperament weights (0–2) and thresholds, per template. WoDX's readings of each line's usual conduct. */
 export const TEMPLATES = {
@@ -43,7 +44,7 @@ export const TEMPLATES = {
   changeling: {label: "Changeling", line: "fae", aggression: 0.7, caution: 1, cunning: 1.2, loyalty: 0.8, cowardice: 0.6, berserk: 0.2, power: 1.2,
     fleeAt: 4, frenzyProne: false, fears: ["iron"], tactics: ["power", "flee", "masquerade"]},
   spectre: {label: "Spectre", line: "spirit", aggression: 1.6, caution: 0.3, cunning: 1, loyalty: 0.4, cowardice: 0.1, berserk: 1, power: 1.6,
-    fleeAt: 6, frenzyProne: false, fears: [], tactics: ["power"]},
+    fleeAt: 6, frenzyProne: false, hunger: 1, fears: [], tactics: ["power", "swarm"]},
   fomor: {label: "Fomor", line: "mortal", aggression: 1.5, caution: 0.5, cunning: 0.5, loyalty: 1, cowardice: 0.3, berserk: 0.8, power: 1,
     fleeAt: 5, frenzyProne: false, fears: [], tactics: ["melee", "power"]},
   inquisitor: {label: "Inquisitor", line: "hunter", aggression: 1, caution: 1, cunning: 1, loyalty: 1.5, cowardice: 0.2, berserk: 0, power: 1,
@@ -55,7 +56,9 @@ export const TEMPLATES = {
   // NPC 0.21.0 (B1000): the animal archetypes, from animal-rules.mjs
   ...ANIMAL_TEMPLATES,
   // NPC 0.23.0 (B1005): criminals, combatants and townsfolk, from mortal-rules.mjs
-  ...MORTAL_TEMPLATES
+  ...MORTAL_TEMPLATES,
+  // NPC 0.24.0 (B1009): supernatural NPCs by line, from supernatural-rules.mjs
+  ...SUPERNATURAL_TEMPLATES
 };
 
 /** Tactics a profile can list, and what each does (shown in the behaviour window). */
@@ -73,9 +76,12 @@ export const TACTICS = {
 };
 
 /** The template a line's NPC starts from. info: {kind, generation, melee, ranged}. */
-export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = [], animal = null, mortal = null}) {
+export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = [], animal = null, mortal = null, where = {}}) {
   const has = re => (sides ?? []).some(x => re.test(String(x)));
   if ( has(/fomor/) ) return "fomor";
+  // NPC 0.24.0: a clan, tribe, kith, Tradition or creed with its own conduct, where and when it belongs
+  const sub = pickSupernatural({kind, sides, generation}, where ?? {});
+  if ( sub ) return sub;
   switch ( kind ) {
     case "kindred": return has(/^sect:.*sabbat/) ? "sabbat" : generation && generation <= 8 ? "elder" : "neonate";
     case "mage": return has(/technocra|order of reason|daedalean|iteration x|progenitor|syndicate|void engineer|new world order/) ? "technocrat" : "mage";

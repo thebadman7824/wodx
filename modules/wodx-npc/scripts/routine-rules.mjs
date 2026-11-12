@@ -17,6 +17,7 @@
 
 import {ANIMAL_PRESETS, ANIMAL_DEFAULT_PRESET} from "./animal-rules.mjs";
 import {MORTAL_PRESETS, MORTAL_DEFAULT_PRESET} from "./mortal-rules.mjs";
+import {SUPERNATURAL_PRESETS, SUPERNATURAL_DEFAULT_PRESET} from "./supernatural-rules.mjs";
 
 export const ACTIVITIES = {
   sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
@@ -53,7 +54,8 @@ export const ROLES = {
   sewer: {label: "Sewers and cellars", kinds: ["sewer", "alley"]},
   docks: {label: "The riverside", kinds: ["docks", "street"]},
   park: {label: "Parks and churchyards", kinds: ["park", "church", "wilds"]},
-  hospital: {label: "Hospital or asylum", kinds: ["hospital", "workplace"]}
+  hospital: {label: "Hospital or asylum", kinds: ["hospital", "workplace"]},
+  caern: {label: "The caern", kinds: ["caern", "wilds"]}
 };
 
 const weekdays = [0, 1, 2, 3, 4, 5];
@@ -268,6 +270,9 @@ Object.assign(DEFAULT_PRESET, ANIMAL_DEFAULT_PRESET);
 // NPC 0.23.0 (B1005): criminals, combatants and townsfolk
 Object.assign(PRESETS, MORTAL_PRESETS);
 Object.assign(DEFAULT_PRESET, MORTAL_DEFAULT_PRESET);
+// NPC 0.24.0 (B1009): supernatural NPCs by line
+Object.assign(PRESETS, SUPERNATURAL_PRESETS);
+Object.assign(DEFAULT_PRESET, SUPERNATURAL_DEFAULT_PRESET);
 Object.assign(DEFAULT_PRESET, {sabbat: "sabbat-pack", sheriff: "sheriff", mage: "mage", technocrat: "technocrat", changeling: "changeling",
   inquisitor: "inquisitor", soldier: "soldier", ghost: "wraith"});
 
