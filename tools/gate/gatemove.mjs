@@ -1,5 +1,5 @@
 /**
- * Ways of moving gate (WoDX Combat 3.12.1, Actions 3.41.1), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Ways of moving gate (WoDX Combat 3.12.1, Actions 3.42.1), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatemove.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Moving" (gridless, 100 px), a deep-water region, two actors and two tokens; views
  * the scene, then goes back to the scene it started on and deletes everything it made.

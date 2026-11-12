@@ -12,6 +12,8 @@
  *   6. a Nagaraja eats two flesh points: blood, lethal on the vessel, the flesh debt paid
  *   7. Hunt: the usual hunt is saved and a narrow palate adds +2
  *   8. every other WoDX module still answers
+ * The Nagaraja starts on 7 blood so that a new sheet's Self-Control of 0 brings no hunger roll (a failed one gorges).
+ * The palate check reads "palate allows", which both the V20 and the Dark Ages wording have.
  * Result: Data/wodx-gate/gatefeed-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -60,7 +62,7 @@ export async function run() {
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     actors = await createActors([vamp("WoDX gate: Toreador", "toreador"), vamp("WoDX gate: Ventrue", "ventrue"), vamp("WoDX gate: Giovanni", "giovanni"),
-      vamp("WoDX gate: Nagaraja", "custom", "Nagaraja", 6),
+      vamp("WoDX gate: Nagaraja", "custom", "Nagaraja", 7),
       {name: "WoDX gate: Vessel", type: "Mortal"}, {name: "WoDX gate: Merchant", type: "Mortal"}, {name: "WoDX gate: Carter", type: "Mortal"}, {name: "WoDX gate: Body", type: "Mortal"}]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
     const pb = tags => ({"wodx-npc": {passerby: {kind: tags[0], tags}}});
@@ -105,7 +107,7 @@ export async function run() {
       await A().feed({actor: v, vessel: tok("carter").object});
       await p; await sleep(500);
       const b2 = bp(v);
-      ok("4 Ventrue palate", s1.fits === true && s2.fits === false && b1 === b0 + 2 && b2 === b1 && /comes back up/.test(lastMsg()?.content ?? ""),
+      ok("4 Ventrue palate", s1.fits === true && s2.fits === false && b1 === b0 + 2 && b2 === b1 && /palate allows/.test(lastMsg()?.content ?? ""),
         {fits: [s1.fits, s2.fits], blood: [b0, b1, b2], tags: s1.vtags});
     });
     await step("5 Giovanni", async () => {

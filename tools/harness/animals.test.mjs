@@ -156,3 +156,9 @@ test("the runtime wires animals in", () => {
   assert.match(rt, /wraith: ctx\.C\?\.\(\)\?\.getKind\?\.\(intruder\) === "wraith"/);
   assert.doesNotMatch(rt, /template === "beast"/);
 });
+
+test("blood follows the V20 animals appendix, with house rules where it lists none", () => {
+  const want = {rats: 0.25, bats: 0.25, pigeons: 0.25, crows: 0.5, cat: 1, "stray-dog": 2, "guard-dog": 2, hound: 2,
+    wolf: 2, horse: 4, pigs: 4, boar: 4, bear: 5, cattle: 5, "sheep-goats": 3, poultry: 0.5};
+  for ( const [k, b] of Object.entries(want) ) assert.equal(AN.ANIMALS[k].blood, b, k);
+});

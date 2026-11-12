@@ -32,6 +32,7 @@ export const PLACE_KINDS = {
   street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
   alley: "Back alley or courtyard", yard: "Farmyard, stable or village", docks: "Docks or riverside", park: "Park, garden or churchyard",
   sewer: "Sewer, cellar or tunnels", hospital: "Hospital or asylum", station: "Station or depot",
+  elysium: "Elysium (the Prince's neutral ground)", chantry: "Chantry or Horizon (a mage's stronghold)",
   other: "Other"
 };
 

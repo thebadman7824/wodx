@@ -26,7 +26,7 @@ export const MOODS = {
 };
 
 /** The twelve kinds of place WoDX NPC tags, and the weather loops, in the order a scene looks for them. */
-export const PLACE_KINDS = ["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "other"];
+export const PLACE_KINDS = ["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "elysium", "chantry", "other"];
 export const WEATHER_LOOPS = ["thunder", "gale", "downpour", "rain", "snow", "wind", "night"];
 export const CUES = {dawn: "Dawn is close", dusk: "Sunset", notice: "Something needs the Storyteller", birds: "Birdsong before dawn", cock: "Cock-crow before dawn"};
 /** Cues that sound the same in every era: they ship once, in sounds/common, and a kit folder can still replace them. */

@@ -378,7 +378,7 @@ async function applyCore(item, casterName = "the caster") {
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, movementAction: tok.movementAction ?? null, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       const effect = await T.applyTimed(a, {name: o.name ?? o.label, description: `${o.text} (cast by ${casterName})`, duration: o.timed, condition: o.condition,
         changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504", data: o.difficulty ? {difficulty: o.difficulty} : null});
-      // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.41.1: Foundry 14 lifts a flier)
+      // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.42.1: Foundry 14 lifts a flier)
       if ( tok && o.feet ) {
         if ( "movementAction" in tok && tok.movementAction !== "fly" ) await tok.update({movementAction: "fly"});
         await tok.update({elevation: n(tok.elevation) + o.feet});

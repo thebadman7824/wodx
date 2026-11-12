@@ -1107,3 +1107,35 @@ Reverse: eras and regions in supernatural-rules.mjs.
 A Marauder's turn takes one of its scored options by chance (the same for the same round), so it acts as its madness takes it. The card says so.
 
 Reverse: erratic on the marauder template.
+
+
+
+## B980. Who an act startles: breach, startled or calm, for every line (2026-11-12)
+
+Ben asked that Masquerade witnesses depend on who is looking: a Cainite is calm at another Cainite's Discipline, but startled by a Crinos or an apocalyptic form. modules/wodx-actions/scripts/witness-rules.js names the secret an act shows (the actor's profile) and sorts each onlooker. Mortals and hunters who do not know are breach witnesses; creatures of another kind are startled; their own kind, Kindred and ghouls for each other, Kinfolk for the Garou, and anyone the Storyteller has marked as knowing are calm. Ben ruled on the uncertain pairs on the witness desk (2026-11-12): animals are startled rather than breach witnesses (calm at vulgar magick), and wraiths, demons, mummies and spirits are never startled.
+
+Reverse: give witnessesOf back its profiles filter in the feeding card and let recordBreach skip sortOnlookers.
+
+## B981. Only Sleepers make vulgar magick witnessed (2026-11-12)
+
+For a mage, only mortals and hunters are breach witnesses (M20, Paradox and witnesses); an animal does not count, and other kinds are startled. The Cast window names the Sleepers who can see and sets the Effect to "with witnesses" when one does.
+
+Reverse: drop observersOf from the M20 ctx in main.js.
+
+## B982. The place decides how far word goes: open, guarded, closed (2026-11-12)
+
+A scene or region's WoDX NPC place tag gets a Masquerade setting. Left blank, its kind decides: a haven, caern or chantry is closed, an Elysium guarded, anywhere else open. Open places work as before. In a guarded or closed place the breach is still recorded, so the Storyteller can deal with the witnesses, but no rumour goes out to the town (entry.spread false; WoDX NPC skips it). New kinds of place: Elysium and Chantry or Horizon. House rule.
+
+Reverse: set MODE_OF_KIND to {} in witness-rules.js.
+
+## B983. Feeding or violence in Elysium breaks the Prince's peace (2026-11-12)
+
+In a guarded place, feeding, biting, frenzy or violence by a Cainite or ghoul gets a card line saying it breaks the Prince's peace and the Keeper of Elysium and the Prince will hear of it (V20, the Traditions and Elysium). Other Disciplines only note that the Kindred present keep the secret. House rule.
+
+Reverse: make breaksPeace return false.
+
+## B984. A Discipline used in sight asks; a startled onlooker can be marked as knowing (2026-11-12)
+
+Not every Discipline shows, so after one is used where breach witnesses or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw (setting "Ask who saw a Discipline", on by default). Feeding, a Crinos, the apocalyptic form and vulgar magick tell at once. A startled card has a button that marks those onlookers as knowing that kind from then on (world flag wodx.knows); unlinked tokens such as passers-by are skipped, since they share an actor. Each onlooker is startled by the same creature once a scene. Hook wodxSecretSeen {by, secret, seen, event}.
+
+Reverse: set witnessAsk off; drop the knows button.
