@@ -16,6 +16,7 @@ import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import * as AN from "./animal-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
+import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildFounding} from "./founding.mjs";
@@ -30,7 +31,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.23.0";
+const VERSION = "0.24.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -70,7 +71,17 @@ function infoOf(actor) {
   let sides = [];
   try { sides = rivalry?.sidesOf?.(actor)?.own ?? []; } catch (e) { sides = []; }
   return {kind: C()?.getKind?.(actor) ?? "mortal", generation: num(s.generation) || 13,
-    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides, animal: animalOf(actor), mortal: mortalOf(actor)};
+    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides, animal: animalOf(actor), mortal: mortalOf(actor), where: whereNow()};
+}
+/**
+ * NPC 0.24.0 (B1011): the year, era and region archetypes check. A scene's region is its flag wodx-npc.region,
+ * else WoDX Storyteller's money region; Moravia when neither says.
+ */
+function whereNow() {
+  let era = null, region = null;
+  try { era = chron()?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { era = null; }
+  try { region = canvas?.scene?.getFlag?.(MOD, "region") ?? game.settings.get("wodx-storyteller", "moneyRegion") ?? null; } catch (e) { region = null; }
+  return {year: yearNow(), era, region: region || "moravian"};
 }
 /** NPC 0.23.0 (B1008): a mortal's archetype from the actor flag wodx-npc.archetype, else a guess from the name. */
 function mortalOf(actor) {
@@ -255,6 +266,8 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
+  // NPC 0.24.0: a Marauder's Quiet picks among what it could do
+  if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
   if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
   if ( fight.state.self.rotschreck ) options.unshift({action: "flee", score: 99, why: "Rötschreck: the Red Fear drives them from fire or sunlight"});
   const topAttack = options.find(o => o.action === "attack" || o.action === "shoot");

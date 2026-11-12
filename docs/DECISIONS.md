@@ -1078,3 +1078,18 @@ Reverse: REPORT_HOURS in mortal-rules.mjs; drop report from SELF_RESPONSES.
 
 ## B1008. The supernatural lines are next (2026-11-12)
 Third and last step: supernatural NPCs by line, with Ben's rulings (Orpheus travellers only in the World of Future Darkness, Kuei-jin travellers only in Asia).
+
+## B1009. Supernatural NPCs by line (2026-11-12)
+The third step of the approved archetypes brainstorm. WoDX NPC 0.24.0 adds 29 archetypes in supernatural-rules.mjs under the line templates, picked by the sheet's clan, tribe, kith, Tradition, legion or creed: Nosferatu, Toreador, Gangrel, the old Lasombra and Tzimisce lords (to 1493, generation 8 or lower), Anarchs (from 1381), revenant families; Bone Gnawers and Glass Walkers in towns (from 1500), caern warders, Black Spiral Dancers, Kinfolk, Fera watchers; Hollow Ones (from 1900), Marauders, Nephandi; Hierarchy legionnaires, Renegades and Heretics; sidhe nobles, redcaps and trolls (to 1400 and from 1969), Dauntain (from 1969); the Arcanum (from 1885), the imbued by creed (Zeal, shielding, Mercy or Vision; from 1999, from 2023 in the World of Future Darkness); mummies (from 1990), the Fallen (from 1999); Kuei-jin and Orpheus travellers. The Sabbat, the Technocracy and the Inquisition keep their 0.18.0 templates. Spectres gain hunger and swarm. House readings, in PENDING-REVIEW.
+
+Reverse: drop the spread of SUPERNATURAL_TEMPLATES and SUPERNATURAL_PRESETS, and the pickSupernatural call in templateFor.
+
+## B1010. Orpheus only in the Future Darkness, Kuei-jin only in Asia (2026-11-12)
+Ben's rulings. An archetype can name the eras (future-darkness, time-of-future-judgement) or regions (asia) it belongs to; outside them the NPC keeps its line template. A scene's region is its flag wodx-npc.region, else WoDX Storyteller's money region, else Moravia, so no Kuei-jin appears until a scene is set in Asia.
+
+Reverse: eras and regions in supernatural-rules.mjs.
+
+## B1011. A Marauder's Quiet (2026-11-12)
+A Marauder's turn takes one of its scored options by chance (the same for the same round), so it acts as its madness takes it. The card says so.
+
+Reverse: erratic on the marauder template.

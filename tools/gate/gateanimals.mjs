@@ -7,7 +7,8 @@
  *   3. the actor flag wodx-npc.animal wins over the name (cat), and the cat keeps the alley at night
  *   4. a wraith foe sends a horse running; a Kindred foe does not stop a guard dog
  *   5. NPC 0.23.0: a Mortal named "Hans the footpad" takes the footpad template; a beaten footpad offers to surrender
- *   6. every other WoDX module still answers
+ *   6. NPC 0.24.0: a Nosferatu by clan; no Kuei-jin outside Asia, no Orpheus crew before the Future Darkness
+ *   7. every other WoDX module still answers
  * Result: Data/wodx-gate/gateanimals-result.json.
  */
 async function save(R, name) {
@@ -54,6 +55,13 @@ export async function run() {
       const NR = api.rules, foe = {id: "e", name: "Foe", visible: true, distance: 1, reach: true, wounds: 0, fearSources: [], attackDice: 4};
       const opts = NR.scoreOptions(p, {self: {wounds: 3}, enemies: [foe], allies: []}).map(o => o.action);
       ok("mortal by name", p.template === "footpad" && opts.includes("surrender") && api.routines.blocksFor(mortal).some(b => b.place === "alley"), {template: p.template, opts});
+    });
+    await step("supernatural by line", async () => {
+      const NR = api.rules;
+      const nos = NR.templateFor({kind: "kindred", sides: ["clan:nosferatu"]});
+      const kj = NR.templateFor({kind: "kindred", sides: ["side:kuei-jin"], where: {region: "moravian"}});
+      const orph = NR.templateFor({kind: "mortal", sides: ["side:orpheus"], where: {era: "victorian"}});
+      ok("supernatural by line", nos === "nosferatu" && kj === "neonate" && orph === "civilian" && !!api.routineRules.PRESETS.nosferatu, {nos, kj, orph});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-library", "wodx-storyteller", "wodx-atmosphere"];
