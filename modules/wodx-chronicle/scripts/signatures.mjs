@@ -84,10 +84,10 @@ export async function museSeen(actorOrId, museId, how = "see") {
 
 /** The weekly rise of every Toreador's Obsession, and healed Gangrel marks. Run by the active Storyteller. */
 let lastTick = -1;
-export async function tick() {
+export async function tick({force = false} = {}) {
   if ( !on() || !isActiveGM() ) return;
   const t = now(), day = Math.floor(t / 86400);
-  if ( day === lastTick ) return;
+  if ( day === lastTick && !force ) return;
   lastTick = day;
   for ( const a of game.actors ) {
     const sig = a.flags?.[MODULE_ID]?.[FLAG];
