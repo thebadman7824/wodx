@@ -147,6 +147,7 @@ export async function run() {
     await step("13 Caitiff gift roll", async () => {
       const c = by("Caitiff");
       await c.createEmbeddedDocuments("Item", [{name: "Thin Blood", type: "Item"}]);
+      await c.update({[`flags.${C}.sig`]: {odd: {}}});
       await api().tick({force: true});
       await until(() => sig(c).odd?.year != null);
       ok("13 Caitiff gift roll", Number.isFinite(sig(c).odd?.year), {odd: sig(c).odd});
