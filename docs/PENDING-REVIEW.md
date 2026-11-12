@@ -276,6 +276,14 @@ Ben approved every recommendation for dealing with NPCs from the Actions menu: t
 | 2026-11-11 | Stolen goods and barter (B895, B897). | A trader gives the fence's share for anything lifted; barter gives no change; a trader whose purse is short cannot buy. |
 | 2026-11-11 | Cheap goods sold to a trader (B898). | Anything with a price fetches at least the smallest coin, since half the price of cheap goods rounds down to nothing (340 of 797 goods). |
 
+## Approved by Ben, 12 November 2026, 00:33 UTC (witness desk)
+
+Ben ruled on each uncertain pair on the witness desk (https://claude.ai/artifact/DH9xFLYAoSYxjacJZ4hd47).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals and hunters who don't know breach the Masquerade, mortals seeing a changeling or a wraith included. Garou, mages, changelings, Kindred, ghouls and animals are startled by another kind. Wraiths, demons, mummies and spirits are never startled. Own kind, Kinfolk for the Garou and anyone marked as knowing stay calm; Kinfolk seeing a Cainite breach. For vulgar magick only Sleepers count. | Edit KNOWS and BREACH_PROFILES in witness-rules.js. |
+
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
 Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
@@ -494,6 +502,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | How long breath lasts, and drowning (B942) | Drowning is one lethal level a turn (Hunter pdf 208). Breath lasts Stamina x 10 turns, halved in a fight (house rule; no V20 rule found yet). Book check queued. | breathTurns in movement-rules.js |
 | 2026-11-11 | Which regions are water (B943) | Named by the region ("WoDX: Deep water", a river, a lake) or a flag; shallow water costs double movement; a fall into deep water does no damage. | waterOf in movement-rules.js |
 | 2026-11-11 | What each way of moving does to rolls (B946) | Prone: Stealth -2, hard to see and to shoot from afar, easy to strike up close. Flying, swimming, under the water, wading, climbing and a jump each have their own changes (DECISIONS B946). | STANCES in movement-rules.js |
-| 2026-11-12 | Who is alarmed by what, across the lines (B980-B981)? | Mortals, hunters and animals who don't know breach the Masquerade; other supernatural kinds are startled (a card for the Storyteller, no mortal rumour); own kind, ghouls of the Kindred, Kinfolk of the Garou and anyone marked as knowing stay calm. For vulgar magick only Sleepers count. | Restore the profile filter in witnessesOf and the feeding card. |
 | 2026-11-12 | Does the place change a breach (B982-B983)? | Yes: each scene or region gets Open, Guarded or Closed, by default from its kind (haven, caern, chantry closed; Elysium guarded). Guarded and closed record the witnesses but start no town rumour; feeding or violence in Elysium is flagged as breaking the Prince's peace. | Set MODE_OF_KIND to {} in witness-rules.js. |
 | 2026-11-12 | Should every Discipline use check for witnesses (B984)? | It asks: a card after a Discipline used in sight, with a button to record who saw, since many powers don't show. Setting "Ask who saw a Discipline" turns it off. | Turn the setting off. |

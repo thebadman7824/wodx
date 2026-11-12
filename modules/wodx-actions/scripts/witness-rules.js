@@ -4,10 +4,11 @@
  *   The secret   The kind of creature an act shows for what it is: the profile of whoever did it (a Cainite feeding,
  *                a Garou in Crinos, a demon's apocalyptic form, a mage's vulgar magick).
  *   Each onlooker who can see it is one of three:
- *     breach     a mortal who does not know (mortal, hunter, animal): the Masquerade breaks and word can spread.
- *     startled   a creature of another kind: no mortal rumour, but they have seen something they did not know.
+ *     breach     a mortal who does not know (mortal, hunter): the Masquerade breaks and word can spread.
+ *     startled   a creature of another kind, or an animal: no mortal rumour, but they have seen something they did not know.
  *     calm       their own kind, or one who already knows this kind (a ghoul of the Kindred, Kinfolk of the Garou,
- *                herd or retainers the Storyteller has ticked). Spirits are never startled.
+ *                herd or retainers the Storyteller has ticked). Spirits, wraiths, demons and mummies are never startled:
+ *                they have seen too much of the world to be (Ben's ruling, 2026-11-12).
  *   Mage: only Sleepers make vulgar magick "witnessed" (M20, Paradox), so animals are not breach witnesses there.
  *
  *   The place    open, guarded or closed. A scene or region may set it; otherwise its kind of place decides:
@@ -29,12 +30,12 @@ export const SECRETS = {
 /** What each kind of onlooker already takes in stride. "*" is everything. */
 export const KNOWS = {
   kindred: ["kindred", "ghoul"], ghoul: ["kindred", "ghoul"], lupine: ["lupine"], mage: ["mage"], fae: ["fae"],
-  wraith: ["wraith"], spirit: ["*"], demon: ["demon"], mummy: ["mummy"], exalted: ["exalted"],
+  wraith: ["*"], spirit: ["*"], demon: ["*"], mummy: ["*"], exalted: ["exalted"],
   hunter: [], mortal: [], beast: []
 };
 
 /** Onlookers who break a secret by seeing it: those with no world of their own to hide it in. */
-export const BREACH_PROFILES = ["mortal", "hunter", "beast"];
+export const BREACH_PROFILES = ["mortal", "hunter"];
 /** Mage: only Sleepers count. */
 export const SLEEPER_PROFILES = ["mortal", "hunter"];
 
@@ -62,7 +63,7 @@ export function reaction(secret, who = {}) {
   if ( p === secret || known.includes("*") || known.includes(secret) ) return "calm";
   const breakers = secret === "mage" ? SLEEPER_PROFILES : BREACH_PROFILES;
   if ( breakers.includes(p) ) return "breach";
-  if ( BREACH_PROFILES.includes(p) ) return "calm"; // an animal at a mage's vulgar magick
+  if ( p === "beast" && secret === "mage" ) return "calm"; // an animal at a mage's vulgar magick
   return "startled";
 }
 

@@ -10,7 +10,7 @@ test("Kindred and ghouls are calm at a Cainite's Discipline; mortals breach", ()
   assert.equal(W.reaction("kindred", {profile: "ghoul"}), "calm");
   assert.equal(W.reaction("kindred", {profile: "mortal"}), "breach");
   assert.equal(W.reaction("kindred", {profile: "hunter"}), "breach");
-  assert.equal(W.reaction("kindred", {profile: "beast"}), "breach");
+  assert.equal(W.reaction("kindred", {profile: "beast"}), "startled");
 });
 
 test("A Cainite is startled by a Crinos or an apocalyptic form", () => {
@@ -34,8 +34,8 @@ test("Only Sleepers witness vulgar magick; other kinds are startled", () => {
   assert.equal(W.reaction("mage", {profile: "mage"}), "calm");
 });
 
-test("Spirits are never startled; unknown profiles count as mortal; no secret, no breach", () => {
-  for ( const s of Object.keys(W.SECRETS) ) assert.equal(W.reaction(s, {profile: "spirit"}), "calm");
+test("Spirits, wraiths, demons and mummies are never startled; unknown profiles count as mortal; no secret, no breach", () => {
+  for ( const s of Object.keys(W.SECRETS) ) for ( const p of ["spirit", "wraith", "demon", "mummy"] ) assert.equal(W.reaction(s, {profile: p}), "calm");
   assert.equal(W.reaction("kindred", {profile: "nonsense"}), "breach");
   assert.equal(W.reaction(null, {profile: "mortal"}), "calm");
   assert.equal(W.secretOf("mortal"), null);

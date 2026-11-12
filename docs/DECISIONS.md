@@ -1006,7 +1006,7 @@ Reverse: STANCES and attackStance in movement-rules.js.
 
 ## B980. Who an act startles: breach, startled or calm, for every line (2026-11-12)
 
-Ben asked that Masquerade witnesses depend on who is looking: a Cainite is calm at another Cainite's Discipline, but startled by a Crinos or an apocalyptic form. modules/wodx-actions/scripts/witness-rules.js names the secret an act shows (the actor's profile) and sorts each onlooker. Mortals, hunters and animals who do not know are breach witnesses; creatures of another kind are startled; their own kind, Kindred and ghouls for each other, Kinfolk for the Garou, and anyone the Storyteller has marked as knowing are calm. Spirits are never startled. House rule.
+Ben asked that Masquerade witnesses depend on who is looking: a Cainite is calm at another Cainite's Discipline, but startled by a Crinos or an apocalyptic form. modules/wodx-actions/scripts/witness-rules.js names the secret an act shows (the actor's profile) and sorts each onlooker. Mortals and hunters who do not know are breach witnesses; creatures of another kind are startled; their own kind, Kindred and ghouls for each other, Kinfolk for the Garou, and anyone the Storyteller has marked as knowing are calm. Ben ruled on the uncertain pairs on the witness desk (2026-11-12): animals are startled rather than breach witnesses (calm at vulgar magick), and wraiths, demons, mummies and spirits are never startled.
 
 Reverse: give witnessesOf back its profiles filter in the feeding card and let recordBreach skip sortOnlookers.
 
