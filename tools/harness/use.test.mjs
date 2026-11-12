@@ -60,7 +60,8 @@ test("use: each line takes it its own way; unsure cells ask the Storyteller", ()
   assert.equal(U.effectFor("alcohol", "vampire").does, "none");
   assert.equal(U.effectFor("alcohol", "changeling").state, "drunk");
   assert.equal(U.effectFor("alcohol", "mortal").waters, true);
-  assert.equal(U.effectFor("alcohol", "werewolf").does, "storyteller");
+  assert.equal(U.effectFor("alcohol", "werewolf").does, "takes", "Ben: weaker than for a mortal");
+  assert.match(U.effectFor("alcohol", "werewolf").text, /Weaker than for a mortal/);
   assert.equal(U.effectFor("food", "vampire").does, "none");
   assert.equal(U.effectFor("food", "wraith").does, "cannot");
   assert.equal(U.effectFor("blood", "vampire").does, "blood");
@@ -93,4 +94,40 @@ test("use: wired into the Library, the Possessions row, carried light and the co
   assert.match(src("modules/wodx-interactables/scripts/main.mjs"), new RegExp(`const VERSION = "${iv.replace(/\./g, "\\.")}"`));
   assert.equal(U.ABILITIES.play.preset, "performance");
   assert.match(src("modules/wodx-actions/scripts/main.js"), /extraDiff: preDiff = 0/);
+});
+
+test("use: Ben's desk picks are rulings, and holy water burns the damned (2026-11-12)", () => {
+  for ( const [sub, lines] of Object.entries(U.PICKS) ) for ( const l of Object.keys(lines) ) {
+    const c = U.effectFor(sub, l);
+    assert.equal(c.sure, true, `${sub} ${l}`);
+    assert.notEqual(c.does, undefined, `${sub} ${l}`);
+    if ( c.text ) { assert.doesNotMatch(c.text, /—|–/); assert.doesNotMatch(c.text, /\b(he|she|his|her|him|hers|Ben)\b/); }
+  }
+  assert.equal(U.effectFor("food", "mummy").does, "feeds");
+  assert.equal(U.effectFor("blood", "werewolf").does, "none");
+  assert.equal(U.effectFor("unknown", "wraith").does, "cannot");
+  assert.match(U.effectFor("hallucinogen", "changeling").text, /Stronger than for a mortal/);
+  assert.equal(U.effectFor("holywater", "demon").does, "harms");
+  assert.equal(U.effectFor("holywater", "vampire").does, "none");
+  assert.equal(U.effectForActor("holywater", "vampire", "Baali").does, "harms");
+  assert.equal(U.effectForActor("holywater", "vampire", "wod.bio.vampire.followersofset Followers of Set").does, "harms");
+  assert.equal(U.effectForActor("holywater", "vampire", "Toreador").does, "none");
+  assert.match(U.effectFor("holywater", "demon").text, /lethal damage each turn/);
+  assert.equal(U.effectForActor("holywater", "demon", "", {torment: 3}).does, "none", "Torment 3 or less: unhurt");
+  assert.equal(U.effectForActor("holywater", "demon", "", {torment: 3, holyFlaw: true}).does, "harms");
+  assert.equal(U.effectForActor("holywater", "demon", "", {torment: 6}).does, "harms");
+  const unsure = Object.entries(U.EFFECTS).flatMap(([k, r]) => U.LINES.filter(l => !U.effectFor(k, l).sure).map(l => `${k} ${l}`));
+  assert.deepEqual(unsure, [], "every cell on the desk is decided");
+});
+
+test("use: Ben's item notes: patches, the syringe and the spoon, drinks and food to cook with", () => {
+  const good = n => G.GOODS.find(g => g.name === n);
+  assert.deepEqual(U.abilitiesOf(good("a dermal patch")), ["apply"]);
+  assert.equal(U.substanceOf(good("a dermal patch")), "stimulant");
+  assert.deepEqual(U.abilitiesOf(good("a fentanyl patch")), ["apply"]);
+  assert.deepEqual(U.abilitiesOf(good("a glass syringe")), ["inject"]);
+  assert.deepEqual(U.abilitiesOf(good("milk")), ["drink"]);
+  assert.deepEqual(U.abilitiesOf(good("honey")), ["eat"]);
+  assert.match(src("modules/wodx-library/scripts/use.mjs"), /RR\.usesOf\(good\.name/);
+  assert.match(src("modules/wodx-library/scripts/use.mjs"), /case "inject":/);
 });

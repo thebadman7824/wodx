@@ -31,6 +31,8 @@ export const ABILITIES = {
   eat: {label: "Eat", effect: "take", verb: "eats"},
   drink: {label: "Drink", effect: "take", verb: "drinks"},
   take: {label: "Take", effect: "take", verb: "takes"},
+  apply: {label: "Put it on the skin", effect: "take", verb: "puts on"},
+  inject: {label: "Inject something", effect: "inject", verb: "injects"},
   smoke: {label: "Smoke", effect: "take", verb: "smokes"},
   treat: {label: "Treat someone", effect: "treat", verb: "treats a wound with"},
   light: {label: "Light it", effect: "light", verb: "lights"},
@@ -74,7 +76,7 @@ const ALCOHOL = R("ale", "beer", "cider", "wine", "mead", "claret", "port\\b", "
 const CAFFEINE = R("coffee", "tea\\b", "cola", "energy drink", "espresso", "cocoa", "chocolate drink", "mate\\b");
 const SUBSTANCES = [
   ["opiate", R("opium", "poppy", "laudanum", "soothing syrup", "morphine", "heroin", "fentanyl", "oxycodone", "codeine", "tramadol")],
-  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "methamphetamine", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed(?! loader)")],
+  ["stimulant", R("coca", "cocaine", "crack", "amphetamine", "meth", "methamphetamine", "khat", "betel", "ecstasy", "neurostim", "prescription stimulants", "speed(?! loader)", "dermal patch")],
   ["cannabis", R("hashish", "marijuana", "joint", "cannabis")],
   ["hallucinogen", R("mushroom", "henbane", "peyote", "lsd", "belladonna", "dream gas", "ketamine")],
   ["sedative", R("chloral", "ether for", "sleeping pill", "sedatives", "chloroform", "anesthetic", "rocuronium")],
@@ -85,7 +87,7 @@ const SUBSTANCES = [
   ["blood", /^(a bag of )?blood$/i],
   ["holywater", R("holy water")]
 ];
-const PARAPHERNALIA = R("syringe", "bent spoon", "opium pipe", "hookah", "clay pipe", "dermal patch", "lighter");
+const PARAPHERNALIA = R("syringe", "bent spoon", "opium pipe", "hookah", "clay pipe", "lighter");
 
 /** What is in a thing: food, water, alcohol, caffeine, a drug class, a remedy, blood, holy water, or null. */
 export function substanceOf(good) {
@@ -100,8 +102,10 @@ export function substanceOf(good) {
   return null;
 }
 
+/** Food that is drunk: it feeds and quenches thirst. */
+const DRUNK_FOOD = R("milk", "milkshake", "chocolate milkshake", "fast-food milkshake", "nectar", "smoothie", "broth", "buttermilk", "kefir");
 /** Food that is cooked with rather than eaten as it is. */
-const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|sugarloaf in blue paper|vinegar|yeast|cornmeal|flour|bread flour|maize meal|mustard|tomato sauce|mayonnaise|ketchup|barbecue sauce|hot sauce|buffalo sauce|italian seasoning|soy sauce|mushroom ketchup|raw soybeans|sugar beet|lard|suet|cooking oil|olive oil|honeycomb|rennet|malt|sugar|juniper berries|wash|a cut of raw meat|a plucked fowl|a bunch of grapes|baking soda|baking powder|dry spicebush berries)$/i;
+const INGREDIENT = /^(an? )?(grain|barley|dried peas|oats|rice|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|sugarloaf in blue paper|vinegar|yeast|cornmeal|flour|bread flour|maize meal|italian seasoning|soy sauce|mushroom ketchup|raw soybeans|sugar beet|lard|suet|cooking oil|olive oil|rennet|malt|sugar|juniper berries|wash|a cut of raw meat|a plucked fowl|baking soda|baking powder|dry spicebush berries)$/i;
 
 /* Which carried light a thing is (Interactables carry-rules CARRIED). */
 const LIGHTS = [
@@ -167,13 +171,16 @@ export function abilitiesOf(good) {
   if ( !good ) return [];
   const n = good.name, k = good.kind, out = new Set();
   const sub = substanceOf(good);
-  if ( k === "food" ) out.add(sub ? "eat" : "cook");
+  // 2026-11-12: milk and shakes are drunk; anything a recipe uses also gets Cook with it (use.mjs, from recipe-rules)
+  if ( k === "food" ) out.add(sub ? (DRUNK_FOOD.test(n) ? "drink" : "eat") : "cook");
   if ( k === "drink" ) out.add(sub === "water" && /coffee beans/i.test(n) ? "cook" : "drink");
   if ( sub === "blood" ) out.add("drink");
   if ( sub === "holywater" ) { out.add("drink"); out.add("throw"); }
   if ( k === "drugs" ) {
     if ( sub === "tobacco" || sub === "cannabis" || /opium(?! pipe)|crack|hookah|pipe/i.test(n) ) out.add(sub && sub !== "unknown" ? "smoke" : "smoke");
+    else if ( /\bpatch\b/i.test(n) && sub ) out.add("apply");
     else if ( sub ) out.add("take");
+    if ( /syringe/i.test(n) ) out.add("inject");
   }
   if ( sub === "remedy" || sub === "sedative" || sub === "opiate" || sub === "stimulant" ) if ( k === "medicine" ) out.add("take");
   if ( (k === "medicine" || (k === "drugs" && /cream\b/i.test(n)) || (k === "manuals" && /medical/i.test(n))) && SUPPLIES.test(n) ) out.add("treat");
@@ -294,8 +301,54 @@ export const EFFECT_LABELS = {food: "Food", water: "Water and soft drinks", caff
   opiate: "Opiates", sedative: "Sedatives", hallucinogen: "Hallucinogens", cannabis: "Cannabis", tobacco: "Tobacco", remedy: "Medicines and pills",
   unknown: "An unknown drug", blood: "Bagged blood", holywater: "Holy water", care: "First aid supplies (the patient)", bed: "A bed"};
 
-/** Ben's rulings from the desk: {[substance]: {[line]: {does, state?, text?}}}. Laid over EFFECTS. */
-export const RULINGS = {};
+/**
+ * Ben's picks from the Item Uses desk (2026-11-12): mortal (as for a mortal), weaker, stronger, none, cannot.
+ * RULINGS turns them into cells, laid over EFFECTS. Medicine for a mummy was left blank on the desk and follows
+ * the other mummy picks (as for a mortal).
+ */
+export const PICKS = {"alcohol": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "bed": {"demon": "mortal", "mummy": "mortal"}, "blood": {"demon": "none", "mummy": "none", "werewolf": "none"}, "caffeine": {"demon": "mortal", "mummy": "mortal"}, "cannabis": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "care": {"demon": "mortal", "mummy": "mortal", "vampire": "none", "werewolf": "mortal"}, "food": {"demon": "mortal", "mummy": "mortal"}, "hallucinogen": {"changeling": "stronger", "demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "holywater": {"demon": "stronger", "mummy": "mortal", "vampire": "mortal"}, "opiate": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "remedy": {"demon": "mortal", "werewolf": "weaker", "mummy": "mortal"}, "sedative": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "stimulant": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "tobacco": {"demon": "mortal", "mummy": "mortal", "werewolf": "weaker"}, "unknown": {"changeling": "stronger", "demon": "mortal", "ghoul": "weaker", "hunter": "mortal", "mage": "mortal", "mortal": "mortal", "mummy": "mortal", "revenant": "weaker", "vampire": "none", "werewolf": "weaker", "wraith": "cannot"}, "water": {"demon": "mortal", "mummy": "mortal"}};
+const WEAKER = "Weaker than for a mortal: halve the dice it costs (round down) and how long it lasts (house rule).";
+const STRONGER = "Stronger than for a mortal: one more die off each pool it touches, and it lasts twice as long (house rule).";
+/**
+ * Holy water against the damned (Ben, 2026-11-12; book check item-uses/holy-water-book-check.md). Baali and
+ * Followers of Set: one aggravated level on contact (Dark Ages: Vampire pdf 293; V20 pdf 403 has the Baali burn on
+ * touch with no amount), plus +1 difficulty for the scene (house rule). Demons follow Demon: the Fallen pdf 256.
+ */
+export const HOLY_HARM = {does: "harms", sure: true, text: "Holy water burns it: one health level of aggravated damage where it touches, soaked only with Fortitude (Dark Ages: Vampire pdf 293), and +1 difficulty to its rolls for the rest of the scene (house rule)."};
+export const HOLY_DEMON = {does: "harms", sure: true, text: "Holy water burns a demon: lethal damage each turn it stays on the skin, one level for ordinary holy water and up to five for water blessed by someone of great faith (Demon: the Fallen pdf 256), and +1 difficulty to its rolls for the rest of the scene (house rule)."};
+export const HOLY_CALM = {does: "none", sure: true, text: "A demon whose Torment is 3 or less is not hurt by holy things (Demon: the Fallen pdf 256), unless it has the Cannot Enter Holy Ground Flaw (Demon Players Guide pdf 86)."};
+/** What "none" says, where the general line reads badly. */
+const NONE_TEXT = {
+  care: {vampire: "Bandages and stitches do nothing for dead flesh; blood heals a vampire."},
+  blood: {werewolf: "A mouthful of cold blood: nothing but nausea.", demon: "Cold blood in a bag does nothing for a demon.", mummy: "Cold blood in a bag does nothing for a mummy."},
+  unknown: {vampire: DEADMEAT.text}
+};
+function ruling(sub, line, pick) {
+  const mortal = EFFECTS[sub]?.mortal ?? ST;
+  const what = String(EFFECT_LABELS[sub] ?? sub).toLowerCase();
+  if ( pick === "none" ) return {does: "none", text: NONE_TEXT[sub]?.[line] ?? `${EFFECT_LABELS[sub] ?? sub} does nothing to a ${LINE_LABELS[line].toLowerCase()}.`};
+  if ( pick === "cannot" ) return {does: "cannot", text: line === "wraith" ? NOBODY.text : `A ${LINE_LABELS[line].toLowerCase()} cannot take ${what}.`};
+  if ( sub === "holywater" && pick === "stronger" ) return line === "demon" ? HOLY_DEMON : HOLY_HARM;
+  const base = {does: mortal.does, ...(mortal.state ? {state: mortal.state} : {}), ...(mortal.waters ? {waters: true} : {}), ...(mortal.text ? {text: mortal.text} : {})};
+  if ( mortal.does === "storyteller" ) return {does: "storyteller", text: pick === "weaker" ? WEAKER : pick === "stronger" ? STRONGER : "The Storyteller says what it is and what it does."};
+  if ( pick === "weaker" || pick === "stronger" ) {
+    const st = base.state && STATES[base.state] ? `${STATES[base.state].label}: ${STATES[base.state].text} ` : "";
+    return {...base, text: `${st}${pick === "weaker" ? WEAKER : STRONGER}`};
+  }
+  return base;
+}
+export const RULINGS = Object.fromEntries(Object.entries(PICKS).map(([sub, lines]) => [sub, Object.fromEntries(Object.entries(lines).map(([l, p]) => [l, ruling(sub, l, p)]))]));
+/** Vampire clans that holy water harms as it harms a demon (Ben, 2026-11-12). */
+export const DAMNED_CLANS = /baali|followers?\s*of\s*set|setite/i;
+/**
+ * The cell for a character: as effectFor, but holy water harms Baali and Followers of Set, and a demon only at
+ * Torment 4 or more or with the Cannot Enter Holy Ground Flaw.
+ */
+export function effectForActor(sub, line, clan = "", {torment = null, holyFlaw = false} = {}) {
+  if ( sub === "holywater" && line === "vampire" && DAMNED_CLANS.test(String(clan ?? "")) ) return HOLY_HARM;
+  if ( sub === "holywater" && line === "demon" && torment !== null && Number(torment) <= 3 && !holyFlaw ) return HOLY_CALM;
+  return effectFor(sub, line);
+}
 
 /** What a substance does to a line: {does, state, text, sure}. */
 export function effectFor(sub, line) {

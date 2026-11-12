@@ -1366,3 +1366,19 @@ V20 pdf 69 gives one derangement that never heals. House rule from the desk: onc
 
 Reverse: DERANGEMENTS and GLIMPSE_THEMES in data/signatures.mjs; the hearAs call in wodx-npc talk.mjs.
 
+## B1130. Ben's Item Uses desk picks applied (2026-11-12)
+The 53 cells Ben decided on the Item Uses desk are rulings (PICKS and RULINGS in wodx-library/scripts/use-rules.mjs), and no cell asks the Storyteller any more:
+- "As for a mortal": demons and mummies eat, drink, sleep, take drugs and get first aid as mortals do.
+- "Weaker": werewolves feel alcohol and drugs at half the dice and half the time; ghouls and revenants feel an unknown drug the same way.
+- "Stronger": hallucinogens and unknown drugs hit changelings one die harder and last twice as long.
+- "None": bagged blood does nothing for demons, mummies or werewolves; first aid does nothing for vampires; an unknown drug does nothing to a vampire.
+- "Cannot": a wraith cannot take an unknown drug.
+Medicine for a mummy was left blank and follows the other mummy picks (as for a mortal). Library 0.12.0.
+
+Reverse: empty PICKS.
+
+## B1131. Holy water burns the damned; Ben's item notes (2026-11-12)
+Holy water harms demons and vampires of the Baali and the Followers of Set (read from the sheet's clan). The book check (item-uses/holy-water-book-check.md) set the numbers. Baali and Followers of Set take one aggravated level on contact, soaked only with Fortitude, from Dark Ages: Vampire pdf 293; V20 pdf 403 has the Baali burned on touch with no amount, and no book gives Setites anything special, so for them it is Ben's house rule. Demons take lethal damage each turn it stays on the skin, one level for ordinary holy water and up to five for strongly blessed water, and nothing at Torment 3 or less unless they have the Cannot Enter Holy Ground Flaw (Demon: the Fallen pdf 256, Demon Players Guide pdf 86). All three also get +1 difficulty for the scene, which is a house rule. Other vampires and mummies take it as water, as Ben picked, even though Dark Ages: Vampire burns all the unliving (V20 has no such rule).
+From Ben's notes on the desk: a patch is put on the skin and its drug is taken (a dermal patch of street stims is a stimulant); the syringe's Inject picks something held (heroin, morphine, ketamine, penicillin and the like) and takes it; heroin needs a spoon and a flame as well as the syringe. From the food marked Fix: milk and shakes are drunk, so they feed and quench thirst; sauces, honey and grapes can be eaten as they are; anything a recipe uses also gets Cook with it.
+
+Reverse: HOLY_HARM and DAMNED_CLANS in use-rules.mjs; the inject case in use.mjs.
