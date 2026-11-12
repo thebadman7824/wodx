@@ -33,7 +33,8 @@ test("links: a use that needs another thing says what is missing", () => {
   assert.deepEqual(needs("pipe tobacco", "smoke"), ["fire", "pipe"]);
   assert.deepEqual(needs("a cigarette", "smoke"), ["fire"]);
   assert.deepEqual(needs("an electronic cigarette", "smoke"), []);
-  assert.deepEqual(needs("heroin", "take"), ["injects"]);
+  assert.deepEqual(needs("heroin", "take"), ["injects", "spoon", "fire"]);
+  assert.deepEqual(needs("morphine", "take"), ["injects"]);
   assert.deepEqual(needs("laudanum", "take"), []);
   assert.deepEqual(needs("a tallow candle", "light"), ["fire"]);
   assert.deepEqual(needs("a flashlight", "light"), []);
