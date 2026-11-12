@@ -1607,3 +1607,28 @@ Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-
 Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
 
 Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
+
+## B1600. One tie for followers (2026-11-12)
+An NPC serves every character named by any of four ties: flags.wodx-npc.serves, flags.wodx-chronicle.bound.actor (a background made real), flags.wodx-creation.lineage.domitor (a ghoul, {id, name}) and flags.wodx-creation.ally.patron. Each tie stays with the module that keeps it; the orders tool reads all four.
+
+Reverse: servesFrom in wodx-npc/scripts/order-rules.mjs.
+
+## B1601. Hard orders WoDX spots (2026-11-12)
+Any order but Wait given while a fight is on the scene, and a Go-to order toward a hostile token or one plainly not human, counts as hard even unticked, and goes to the approval queue with the reasons.
+
+Reverse: hardReasons in order-rules.mjs.
+
+## B1602. The suggested refusal roll (2026-11-12, house rule)
+A ghoul blood bound to the leader obeys; only an order that means near-certain death lets it try to refuse, Willpower difficulty 8. Anyone else refuses on any success of Willpower at 6, plus its attitude step toward the leader and its bond stage, held to 4-9. The Storyteller still decides.
+
+Reverse: loyaltyCheck in order-rules.mjs; loyaltyFor in orders.mjs.
+
+## B1603. Sentries (2026-11-12)
+A follower on Keep watch or Guard rolls to notice anyone who moves on the scene who is not a player's character, a passer-by or a follower of the same master, at most once every 30 seconds for each pair, with the reaction regions' sight range, walls and notice roll. Watch whispers a warning to the master's players and the Storyteller. Guard, within 10 yards, steps beside the stranger and challenges them; farther off it warns.
+
+Reverse: sentryAct, isIntruder, GUARD_YARDS in order-rules.mjs; sentries in orders.mjs; noticeBy in routines.mjs.
+
+## B1604. Orders in a fight (2026-11-12)
+Two new orders, Attack the one I point at and Hold back. The fight AI lays the standing order over its choices: +5 on striking the ordered target; Hold back takes 6 off every blow and adds a full defence; Guard and Wait take 2 off running. Fear, frenzy and Rötschreck still win. Every follower also counts its masters (B1600) as a ghoul counts its domitor when choosing whom to strike. Attack is a hard order outside a fight or against something plainly not human; the other orders in a fight are not hard (B1601 narrowed to sending a follower across a fight).
+
+Reverse: fightShift in order-rules.mjs; masters and OR.fightShift in main.mjs readFight and planTurn.

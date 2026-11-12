@@ -2,6 +2,9 @@
  * WoDX NPC 0.8.0: followers who take orders. The rules are in order-rules.mjs.
  *
  *   flags.wodx-npc.serves  [actor ids]  the player characters this NPC serves (set by the Storyteller)
+ *   NPC 0.34.0: an NPC also serves its domitor (a ghoul), the character whose background made it (Make them real)
+ *   and its patron (a Creation ally); order-rules servesFrom reads all four. Keep watch and Guard now notice
+ *   whoever comes and warn the master or step into the way; WoDX spots a hard order itself and suggests the roll.
  *   flags.wodx-npc.order   {kind, by, leader, target, at, hard, note, stage}
  *
  * A player picks one of their followers on the scene and an order; the request goes by socket to the active
@@ -15,7 +18,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 export const T_ORDER = "wodx-npc.order";
 
 export function build(ctx) {
-  const {MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor} = ctx;
+  const {MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor, yardsBetween, obvious, attitude} = ctx;
   const SOCKET = `module.${MOD}`;
   const flag = (doc, k) => doc?.flags?.[MOD]?.[k];
   const unsetKey = path => {
@@ -24,7 +27,15 @@ export function build(ctx) {
   };
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const owned = user => game.actors.filter(a => a.testUserPermission?.(user, "OWNER") && a.hasPlayerOwner).map(a => a.id);
-  const servesOf = a => (Array.isArray(flag(a, "serves")) ? flag(a, "serves") : []);
+  const servesOf = a => O.servesFrom(a?.flags);
+  const inFightOn = scene => !!game.combats?.some?.(c => c.started && c.scene?.id === scene?.id);
+  /** The roll WoDX suggests for a hard order: Willpower against the bond and the follower's attitude to the leader. */
+  function loyaltyFor(npc, leaderId) {
+    const drinks = npc?.flags?.["wodx-creation"]?.lineage?.bonds?.[leaderId]?.drinks ?? 0;
+    let step = 0;
+    try { step = Number(attitude?.()?.of?.(npc, game.actors.get(leaderId))?.step) || 0; } catch (e) { step = 0; }
+    return O.loyaltyCheck({bondStage: Math.min(3, Number(drinks) || 0), step, willpower: npc?.system?.advantages?.willpower?.permanent ?? 3});
+  }
   const orderOf = a => O.normOrder(flag(a, "order"));
   const names = () => Object.fromEntries(Array.from(game.actors ?? [], a => [a.id, a.name]));
   const timers = new Map();
@@ -59,10 +70,14 @@ export function build(ctx) {
     const leader = O.leaderFor({picked: req.leader, serves: servesOf(npc), ownedActorIds: mine, isGM: user.isGM});
     if ( req.kind === "follow" && !leader ) return {ok: false, why: "Pick the character it should follow."};
     const order = O.normOrder({kind: req.kind, by: user.id, leader, target: req.target ?? null, at: game.time?.worldTime ?? 0, hard: !!req.hard, note: req.note});
-    if ( order.kind === "fetch" && !scene.tokens.get(order.target) ) return {ok: false, why: "Target the one it should go to first."};
+    if ( O.NEEDS_TARGET.has(order.kind) && !scene.tokens.get(order.target) ) return {ok: false, why: "Target the one it should go to or attack first."};
+    const tgt = order.target ? scene.tokens.get(order.target) : null;
+    const why = O.hardReasons({kind: order.kind, inFight: inFightOn(scene), target: tgt ? {hostile: tgt.disposition === -1, obvious: !!obvious?.(tgt.actor)} : null});
+    if ( why.length ) order.hard = true;
     if ( order.hard && !user.isGM ) {
+      const loyal = loyaltyFor(npc, leader);
       await chron()?.approvals?.propose?.({type: T_ORDER, key: `order:${npc.id}`, title: `A hard order for ${npc.name}: ${O.ORDERS[order.kind].label.toLowerCase()}`,
-        detail: `${user.name} orders ${npc.name}: ${O.ORDERS[order.kind].label}.${order.note ? ` "${order.note}"` : ""} Weigh the bond and loyalty before you agree.`,
+        detail: `${user.name} orders ${npc.name}: ${O.ORDERS[order.kind].label}.${order.note ? ` "${order.note}"` : ""}${why.length ? ` Hard because ${why.join(" and ")}.` : ""} ${loyal.text} Weigh the bond and loyalty before you agree.`,
         data: {sceneId: scene.id, tokenId: tok.id, order}});
       return {ok: true, waiting: true};
     }
@@ -155,6 +170,45 @@ export function build(ctx) {
     await message.update({content: message.content.replace(/<button type="button" data-action="wnpc-order-cancel"[^>]*>[^<]*<\/button>/, "<p><i>Cancelled.</i></p>")});
   }
 
+  /* ---------------- Sentries (NPC 0.34.0) ---------------- */
+
+  const lastLook = new Map();
+  const LOOK_EVERY = 30 * 1000;
+  /** Active Storyteller: someone moved; followers on Keep watch or Guard on that scene may notice them. */
+  async function sentries(doc) {
+    const scene = doc?.parent;
+    if ( !isActiveGM() || !setting("followerOrders") || scene?.id !== canvas?.scene?.id || !doc.actor ) return [];
+    const iTok = canvas.tokens.get(doc.id);
+    if ( !iTok ) return [];
+    const out = [];
+    for ( const t of scene.tokens ) {
+      if ( !t.actor || t.id === doc.id || t.hidden ) continue;
+      const o = orderOf(t.actor);
+      if ( !o || !(o.kind === "watch" || o.kind === "guard") || routines?.downState?.(t.actor) ) continue;
+      const mine = servesOf(t.actor);
+      const theirs = servesOf(doc.actor);
+      if ( !O.isIntruder({pc: !!doc.actor.hasPlayerOwner, passerby: !!doc.flags?.[MOD]?.passerby, down: !!routines?.downState?.(doc.actor),
+        sharesMaster: theirs.some(id => mine.includes(id)) || mine.includes(doc.actorId)}) ) continue;
+      const k = `${t.id}:${doc.id}`;
+      if ( (lastLook.get(k) ?? 0) > Date.now() - LOOK_EVERY ) continue;
+      lastLook.set(k, Date.now());
+      const wTok = canvas.tokens.get(t.id);
+      const seen = await routines?.noticeBy?.(wTok, iTok) ?? {noticed: false};
+      const act = O.sentryAct(o.kind, seen);
+      if ( !act ) continue;
+      out.push({follower: t.id, act});
+      const leader = game.actors.get(o.leader);
+      const tell = [...new Set([...gmIds(), ...game.users.filter(u => !u.isGM && leader?.testUserPermission?.(u, "OWNER")).map(u => u.id)])];
+      if ( act === "challenge" ) await stepBeside(t, doc);
+      const text = act === "challenge" ? `<b>${esc(t.name)}</b> steps into <b>${esc(doc.name)}</b>'s way and challenges them.`
+        : `<b>${esc(t.name)}</b> sees <b>${esc(doc.name)}</b> and warns ${esc(leader?.name ?? "its master")}.`;
+      await ChatMessage.create({content: `<div class="wodx-card wnpc-order"><p>${text}</p><p class="wodx-quiet">${esc(seen.why ?? "")}</p></div>`,
+        whisper: tell, speaker: {alias: o.kind === "guard" ? "On guard" : "On watch"}});
+    }
+    return out;
+  }
+  const sentryWait = new Map();
+
   /* ---------------- The window ---------------- */
 
   /** Give an order: pick a follower on this scene, the order, and who it serves. */
@@ -179,7 +233,7 @@ export function build(ctx) {
         <div class="form-group"><label>A hard order (dangerous, or against its nature)</label><input type="checkbox" name="hard"></div>
         <div class="form-group"><label>In your words</label><input type="text" name="note" maxlength="200"></div>
         ${game.user.isGM ? `<div class="form-group"><label>It serves</label><input type="checkbox" name="setServes"> <small>Make it serve the character above</small></div>` : ""}
-        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty.</p>`,
+        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone or set it on them, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty.</p>`,
       buttons: [{action: "go", label: "Give the order", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
     if ( !res || !res.token ) return null;
     const tok = canvas.scene.tokens.get(res.token);
@@ -214,6 +268,8 @@ export function build(ctx) {
     Hooks.on("wodxChronicleReady", () => registerHandler());
     Hooks.on("updateToken", (doc, change) => {
       if ( !isActiveGM() || !setting("followerOrders") || !("x" in (change ?? {}) || "y" in (change ?? {})) ) return;
+      clearTimeout(sentryWait.get(doc.id));
+      sentryWait.set(doc.id, setTimeout(() => { sentryWait.delete(doc.id); sentries(doc).catch(e => console.error(`${MOD} | sentries`, e)); }, 900));
       if ( !doc.actor?.hasPlayerOwner ) return;
       if ( !(doc.parent?.tokens ?? []).some(t => orderOf(t.actor)?.leader === doc.actorId) ) return;
       queueFollow(doc);
@@ -228,5 +284,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, registerHandler, give, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, rules: O};
+  return {registerSettings, hooks, registerHandler, give, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor, rules: O};
 }

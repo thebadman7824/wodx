@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.10.1 (the Ties tab lists a character's ghouls and a ghoul's domitor again)
 - 0.10.0 (the Body tab: shape, parts, what the body can do, where blows land, lasting changes)
 - 0.8.2 (item descriptions in a fold under each possession, closed by default)
 - 0.8.1 (a cast button on each rote in the Rotes list)

@@ -609,6 +609,18 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |
 | 2026-11-12 | Lifepath people (B1313) | Three ticked by default; more than 70 years back is a name only | PEOPLE_DEFAULT, PEOPLE_ALIVE_SPAN |
 
+## Approved by Ben, 12 November 2026, 04:46 UTC (followers desk)
+
+Ben approved every recommendation on the Followers Review Desk (https://claude.ai/artifact/K4NCdhYriZjwgtzCgQQC4F). Built in three PRs; this table grows as each lands.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How does WoDX know who a follower serves? | Read all four ties (orders flag, Make them real, a ghoul's domitor, a Creation ally's patron); nothing migrated (B1600). | `servesFrom` in wodx-npc/scripts/order-rules.mjs: drop a tie from it. |
+| 2026-11-12 | Ties tab misses ghouls | Fixed: the domitor is read as {id, name} or a bare id (Sheets 0.10.1). | `domitorId` in wodx-sheets/scripts/extras-rules.mjs. |
+| 2026-11-12 | Who decides hard orders? | WoDX counts an order as hard in a fight, or when sent toward someone hostile or plainly not human, and the Storyteller sees a suggested refusal roll: blood bound obeys (Willpower 8 only against near-certain death), else Willpower at 6 + attitude step + bond stage, 4 to 9. House rule (B1601, B1602). | `hardReasons` and `loyaltyCheck` in order-rules.mjs. |
+| 2026-11-12 | What do Keep watch and Guard do? | A follower on watch who notices a stranger (the reaction regions' notice roll) warns its master's player; a guard within 10 yards steps into their way and challenges them, farther off it warns. Players' characters, passers-by and fellow followers are never challenged (B1603). | `sentryAct`, `isIntruder` in order-rules.mjs; `sentries` in orders.mjs. |
+| 2026-11-12 | Do orders count in fights? | Yes: new Attack the one I point at and Hold back; Guard and Wait make running less likely; every follower guards its masters as a ghoul its domitor. In a fight only a Go-to order, or an attack on something plainly not human, is hard (B1604). | `fightShift` in order-rules.mjs; `OR.fightShift` in npc main.mjs. |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

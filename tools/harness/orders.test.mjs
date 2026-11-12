@@ -55,6 +55,94 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(m, /orders\.registerSettings\(\)/);
   assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
-  assert.equal(j.version, "0.32.0");
+  assert.equal(j.version, "0.34.0");
   assert.equal(j.socket, true);
+});
+
+/* NPC 0.34.0: one tie, hard orders, sentries */
+
+test("orders: an NPC serves whoever any of the four ties names, once each", () => {
+  assert.deepEqual(O.servesFrom({}), []);
+  assert.deepEqual(O.servesFrom({"wodx-npc": {serves: ["pc1"]}}), ["pc1"]);
+  assert.deepEqual(O.servesFrom({"wodx-chronicle": {bound: {actor: "pc2", bg: "retainers", role: "Retainer"}}}), ["pc2"]);
+  assert.deepEqual(O.servesFrom({"wodx-creation": {lineage: {domitor: {id: "pc3", name: "Ilse"}}}}), ["pc3"]);
+  assert.deepEqual(O.servesFrom({"wodx-creation": {lineage: {domitor: "pc3"}}}), ["pc3"]);
+  assert.deepEqual(O.servesFrom({"wodx-creation": {ally: {patron: {id: "pc4", name: "Jan"}, payer: "self"}}}), ["pc4"]);
+  assert.deepEqual(O.servesFrom({"wodx-npc": {serves: ["pc1", "pc3"]}, "wodx-creation": {lineage: {domitor: {id: "pc3"}}, ally: {patron: null}}}), ["pc1", "pc3"]);
+  assert.deepEqual(O.servesFrom(null), []);
+});
+
+test("orders: WoDX spots a hard order in a fight or toward danger", () => {
+  assert.deepEqual(O.hardReasons({kind: "follow"}), []);
+  assert.deepEqual(O.hardReasons({kind: "follow", inFight: true}), []);
+  assert.deepEqual(O.hardReasons({kind: "holdback", inFight: true}), []);
+  assert.deepEqual(O.hardReasons({kind: "fetch", inFight: true}), ["it is sent across a fight"]);
+  assert.equal(O.hardReasons({kind: "fetch", target: {hostile: true, obvious: true}}).length, 2);
+  assert.deepEqual(O.hardReasons({kind: "guard", target: {hostile: true}}), []);
+  assert.deepEqual(O.hardReasons({kind: "attack", inFight: true, target: {hostile: true}}), []);
+  assert.deepEqual(O.hardReasons({kind: "attack", inFight: false}), ["it is told to start a fight"]);
+  assert.equal(O.hardReasons({kind: "attack", inFight: true, target: {obvious: true}}).length, 1);
+});
+
+test("orders: the suggested loyalty roll follows the bond and the attitude", () => {
+  const bound = O.loyaltyCheck({bondStage: 3, willpower: 4});
+  assert.equal(bound.bound, true);
+  assert.equal(bound.diff, 8);
+  assert.equal(O.loyaltyCheck({bondStage: 0, step: 0, willpower: 3}).diff, 6);
+  assert.equal(O.loyaltyCheck({bondStage: 2, step: 2}).diff, 9);
+  assert.equal(O.loyaltyCheck({bondStage: 0, step: -3}).diff, 4);
+  assert.equal(O.loyaltyCheck({bondStage: 5, step: 9}).bound, true);
+  assert.equal(O.loyaltyCheck({willpower: 0}).pool, 1);
+});
+
+test("orders: sentries notice strangers only, and warn or step in the way", () => {
+  assert.equal(O.isIntruder({}), true);
+  assert.equal(O.isIntruder({pc: true}), false);
+  assert.equal(O.isIntruder({passerby: true}), false);
+  assert.equal(O.isIntruder({sharesMaster: true}), false);
+  assert.equal(O.isIntruder({down: true}), false);
+  assert.equal(O.sentryAct("watch", {noticed: false}), null);
+  assert.equal(O.sentryAct("watch", {noticed: true, yards: 4}), "alarm");
+  assert.equal(O.sentryAct("guard", {noticed: true, yards: 4}), "challenge");
+  assert.equal(O.sentryAct("guard", {noticed: true, yards: 30}), "alarm");
+  assert.equal(O.sentryAct("follow", {noticed: true}), null);
+});
+
+test("orders: the orders tool reads every tie, and sentries are wired to token moves", () => {
+  const s = src("modules/wodx-npc/scripts/orders.mjs");
+  assert.match(s, /servesOf = a => O\.servesFrom\(a\?\.flags\)/);
+  assert.match(s, /sentries\(doc\)/);
+  assert.match(src("modules/wodx-npc/scripts/routines.mjs"), /bookNow, noticeBy\}/);
+});
+
+test("sheets: the Ties tab finds ghouls whose domitor is stored as {id, name}", async () => {
+  const XR = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs")));
+  assert.equal(XR.domitorId({domitor: {id: "v1", name: "Ilse"}}), "v1");
+  assert.equal(XR.domitorId({domitor: "v1"}), "v1");
+  assert.equal(XR.domitorId({}), null);
+  assert.equal(XR.domitorId(null), null);
+  assert.match(src("modules/wodx-sheets/scripts/extras.mjs"), /XR\.domitorId\(x\.flags/);
+});
+
+test("orders: in a fight a follower's order moves its choices", () => {
+  const opts = [{action: "attack", target: "t1", score: 6, why: "the nearest foe"}, {action: "attack", target: "t2", score: 4, why: "x"},
+    {action: "flee", score: 3, why: "outnumbered"}, {action: "willpower", score: 2, why: "thin"}];
+  assert.equal(O.fightShift(opts, null), opts);
+  const atk = O.fightShift(opts, {kind: "attack", target: "t2"});
+  assert.equal(atk[0].target, "t2");
+  assert.match(atk[0].why, /ordered to attack/);
+  const hold = O.fightShift(opts, {kind: "holdback"});
+  assert.equal(hold[0].action, "flee");
+  assert.ok(hold.some(o => o.action === "defend"));
+  assert.ok(hold.filter(o => o.action === "attack").every(o => o.score < 1));
+  const g = O.fightShift(opts, {kind: "guard"});
+  assert.equal(g.find(o => o.action === "flee").score, 1);
+  assert.equal(opts[0].score, 6, "the caller's list is left alone");
+  assert.ok(O.NEEDS_TARGET.has("attack") && O.ORDERS.holdback);
+});
+
+test("orders: the fight AI reads the order and guards every master", () => {
+  const m = src("modules/wodx-npc/scripts/main.mjs");
+  assert.match(m, /OR\.fightShift\(options, actor\.flags\?\.\[MOD\]\?\.order\)/);
+  assert.match(m, /masters\.includes\(t\.actor\?\.id\)/);
 });

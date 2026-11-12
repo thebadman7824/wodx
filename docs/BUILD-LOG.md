@@ -1665,3 +1665,7 @@ Library 0.14.0 adds the look (look-rules.mjs, look.mjs, api.look). It covers sta
 ## 2026-11-12: testbed fixes for the table and fight groups
 
 The testbed gate (gatetable 6/9 on 752ca8b) found two code faults and one gate fault. WoDX Actions 3.45.1: the odds line was put into the form beside a field that sits in the window's content box, so it never showed; it now goes beside the field. WoDX Combat 3.15.1: the after-action card's start snapshots were stored under actor ids, whose dot Foundry splits into nested flags, so the card read "?: took NaN levels"; they are kept as pairs now, and written only when a fighter is new. WoDX Targeting 0.2.1: no area preview without PIXI. The gate's area step uses the area tag a.v:b3. Harness 1529 pass, 0 fail (mapgen left out, as before).
+
+## 2026-11-12: followers, part 1 (NPC 0.34.0, Sheets 0.10.1)
+
+Ben approved the Followers Review Desk. Part 1: the orders tool now reads every tie (B1600), so ghouls, backgrounds made real and Creation allies take orders without a macro. WoDX spots hard orders (B1601) and puts a suggested refusal roll on the approval (B1602). Keep watch and Guard notice strangers with routines.mjs noticeBy and warn or challenge (B1603). Fight orders: Attack the one I point at and Hold back, laid over the fight AI's choices with fightShift (B1604). Sheets: the Ties tab reads the domitor as {id, name}. Harness tests in tools/harness/orders.test.mjs.

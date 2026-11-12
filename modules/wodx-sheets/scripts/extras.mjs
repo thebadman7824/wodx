@@ -239,8 +239,8 @@ function conditionNames(actor) {
 }
 function tieList(actor) {
   const own = actor.getFlag(MOD, "ties") ?? [];
-  const ghouls = game.actors.filter(x => x.flags?.["wodx-creation"]?.lineage?.domitor === actor.id).map(x => ({ uuid: x.uuid, role: "ghoul", note: "", auto: true }));
-  const dom = game.actors.get(actor.flags?.["wodx-creation"]?.lineage?.domitor);
+  const ghouls = game.actors.filter(x => XR.domitorId(x.flags?.["wodx-creation"]?.lineage) === actor.id).map(x => ({ uuid: x.uuid, role: "ghoul", note: "", auto: true }));
+  const dom = game.actors.get(XR.domitorId(actor.flags?.["wodx-creation"]?.lineage));
   if ( dom ) ghouls.unshift({ uuid: dom.uuid, role: "domitor", note: "", auto: true });
   const resolve = uuid => {
     const d = fromUuidSync(uuid);
