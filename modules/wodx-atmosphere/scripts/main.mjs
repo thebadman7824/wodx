@@ -48,7 +48,7 @@ let active = false;
 function registerSettings() {
   const world = (key, data) => game.settings.register(MOD, key, {scope: "world", config: true, ...data});
   const hidden = (key, type, def) => game.settings.register(MOD, key, {scope: "world", config: false, type, default: def});
-  world("climate", {name: "Climate", hint: "The weather's climate. Follow the region: Central Europe for Europe, Eastern North America for the Americas.",
+  world("climate", {name: "Climate", hint: "The weather's climate. Follow the region: the homeland's own climate, or that of the region a scene far from home stands in.",
     type: String, default: "auto", choices: {auto: "Follow the chronicle region", ...Object.fromEntries(Object.entries(W.CLIMATES).map(([k, v]) => [k, v.label]))},
     onChange: () => { clearCache(); AtmosphereApp.refresh(); if ( isActiveGM() ) applyWeather({force: true}); }});
   world("weather", {name: "Weather each night", hint: "Make the weather at the turn of each night and set the sky, the scenes' rain and snow, and the light. Off: nothing changes by itself.",
@@ -110,6 +110,8 @@ export function nightJdn(time = game.time.worldTime) {
 export function climate() {
   const c = setting("climate");
   if ( c && c !== "auto" && W.CLIMATES[c] ) return c;
+  // The region the viewed scene stands in (its own, else the homeland), then the part of the world
+  try { const here = chron()?.world?.here?.(); if ( here?.climate && W.CLIMATES[here.climate] ) return here.climate; } catch (e) { /* older Chronicle */ }
   let region = "europe";
   try { region = game.settings.get("wodx-chronicle", "region"); } catch (e) { /* europe */ }
   return W.climateForRegion(region);

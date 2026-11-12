@@ -109,7 +109,8 @@ test("money: Moravia's money follows history, other lands have their own", () =>
   assert.equal(R.moneyFor(1995, "german").id, "dm");
   assert.equal(R.moneyFor(1700, "american").id, "lsd");
   assert.equal(R.moneyFor(1880, "american").id, "usd");
-  assert.equal(R.moneyFor(1300, "french").id, "pfennig");
+  assert.equal(R.moneyFor(1300, "french").id, "tournois");
+  assert.equal(R.moneyFor(1300, "dutch").id, "pfennig");
   assert.equal(R.moneyFor(1197).banks, false);
   assert.equal(R.moneyFor(1700, "english").banks, true);
   // Every money covers its years without gaps, from the prologue to the far future

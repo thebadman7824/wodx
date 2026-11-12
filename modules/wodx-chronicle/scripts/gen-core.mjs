@@ -8,6 +8,7 @@
  *   {a|b|c}         one of these, evenly
  *   {{name}}        a value given by the caller (vars)
  */
+import {CULTURE_BORROW} from "./world-rules.mjs";
 
 /** A 128-bit hash of a string, as four 32-bit numbers (cyrb128). */
 export function hash128(str) {
@@ -115,12 +116,16 @@ export function draw(tableId, {rand, tables, vars} = {}) {
  * The tables that fit the chronicle: an id may have variants tagged by era group and culture
  * ("names.male" for medieval Bohemia). Picks the most specific: culture and era, then era, then culture, then plain.
  */
-export function resolveTable(all, id, {era = null, culture = null} = {}) {
+export function resolveTable(all, id, {era = null, culture = null, borrow = null} = {}) {
   const c = all.filter(t => t.id === id);
-  const score = t => (t.era ? 2 : 0) + (t.culture ? 1 : 0);
+  // A culture's own tables first, then those of the cultures it borrows from (the German lands draw Bohemia's
+  // German names), then tables written for no culture
+  const lend = borrow ?? CULTURE_BORROW[culture] ?? [];
+  const own = t => !t.culture ? 0 : t.culture.includes(culture) ? 1 : 0.5;
+  const score = t => (t.era ? 2 : 0) + own(t);
   // The era group first, then the groups it borrows from while it has no table of its own (future: modern)
   for ( const g of groupChain(era) ) {
-    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture));
+    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture) || lend.some(b => t.culture.includes(b)));
     const best = c.filter(fit).sort((a, b) => score(b) - score(a))[0];
     if ( best && (best.era || g === groupChain(era).at(-1)) ) return best;
   }

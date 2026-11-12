@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.47.3 (households anywhere in the world: the women of a household take their people's feminine family name where it has one, kin of an Arabic, Malay or Swahili household are named for the master, and the family name comes first where a people says it so)
 - 0.47.2 (residents: before 1946 the kin of a Jewish household are asked of the People generator as Jewish, so a Jewish weaver is no longer paired with a Christian partner when the generator draws few Jewish people; needs WoDX Creation 0.15.1. B2505)
 - 0.47.1 (residents: a role that asks for a faith or sex gets one: a priest, monk or friar is a Christian man, a nun a Christian woman, a rabbi Jewish, a Protestant parson a man before 1950; a household takes its name from a man of the master's own origin, and its kin keep the household's faith until 1946; the testbed named a chapel's priest "Bella bat David". B2505)
 - 0.47.0 ("ask me first" talk: after a set wait (60 seconds) the NPC says the first fitting line by itself, and a late pick still goes out; small rules for NPC attitude (one step, never down to Hostile) and faction results (what Auto already lets through))

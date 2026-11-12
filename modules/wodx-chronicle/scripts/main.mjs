@@ -31,6 +31,7 @@ import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
 import * as place from "./place.mjs";
 import * as placeRules from "./place-rules.mjs";
+import * as worldRules from "./world-rules.mjs";
 import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
 import * as legends from "./legends.mjs";
@@ -59,6 +60,7 @@ Hooks.once("init", () => {
     HouseRulesApp,
     onClockChange: () => ClockApp.refresh(),
     onEraInputsChange: () => { eras.checkEra(); ClockApp.refresh(); },
+    onHomelandChange: value => { if ( !homelandQuiet ) applyHomeland(value); },
     onActiveEraChange: async () => { await eras.onActiveEraChange(); ClockApp.refresh(); },
     onHoldChange: async () => {
       ClockApp.refresh();
@@ -164,6 +166,7 @@ Hooks.once("ready", async () => {
   const api = {
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
+    world: {regions: worldRules.WORLD_REGIONS, regionOf: worldRules.regionOf, homeland: place.homeland, setHomeland, here: place.regionHere, isAbroad: place.isAbroad, rules: worldRules},
     place: {of: place.placeOf, describeAt: place.describeAt, latitudeFor: place.latitudeFor, set: place.setPlace, dialog: place.placeDialog, rules: placeRules},
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
@@ -322,3 +325,30 @@ Hooks.on("updateSetting", s => {
   approvals.resetSession();
   if ( active && isActiveGM() ) legends.build().catch(err => console.error("WoDX | Legends", err));
 });
+
+/**
+ * A new homeland (0.47.0): the active GM's client sets what follows from it (the part of the world, the latitude and
+ * the people's culture) and says what it left alone. Money stays as it is: purses hold sums in the old money.
+ */
+let homelandQuiet = false;
+/** GM: set the homeland and what follows from it in one go, with a latitude of the caller's own if given. */
+async function setHomeland(id, {latitude = null} = {}) {
+  const r = worldRules.regionOf(id);
+  if ( !r || !game.user.isGM ) return null;
+  homelandQuiet = true;
+  try {
+    await game.settings.set(MODULE_ID, "homeland", r.id);
+    await applyHomeland(r.id, {latitude, force: true});
+  } finally { homelandQuiet = false; }
+  return r;
+}
+async function applyHomeland(id, {latitude = null, force = false} = {}) {
+  const r = worldRules.regionOf(id);
+  if ( !r || !(force || isActiveGM()) ) return;
+  await game.settings.set(MODULE_ID, "region", r.part);
+  await game.settings.set(MODULE_ID, "latitude", Number.isFinite(Number(latitude)) && latitude !== null ? Number(latitude) : r.lat);
+  await game.settings.set(MODULE_ID, "peopleCulture", worldRules.cultureOf(id));
+  const year = eras.currentYear?.();
+  const gap = worldRules.hasPeopleIn(id, year) ? "" : ` WoDX has no names for the people here before ${r.from}; until then the people generator borrows later names, so name them yourself.`;
+  ui.notifications.info(`Homeland: ${r.label}. Latitude, people's names and weather now follow it. Money is unchanged; set the money region in WoDX Storyteller if this chronicle should pay in another.${gap}`, {permanent: !!gap});
+}

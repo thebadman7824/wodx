@@ -236,7 +236,10 @@ export function langTries(lang) {
   const l = String(lang ?? "").trim().toLowerCase();
   if ( !l || l.startsWith("en") ) return ["en"];
   if ( l === "la" || l === "lat" || l === "latin" ) return ["la", "it", "en"];
-  const map = {czech: "cs", german: "de", deutsch: "de", italian: "it", french: "fr", spanish: "es", polish: "pl", hungarian: "hu", slovak: "sk"};
+  const map = {czech: "cs", german: "de", deutsch: "de", italian: "it", french: "fr", spanish: "es", polish: "pl", hungarian: "hu", slovak: "sk",
+    english: "en", portuguese: "pt", dutch: "nl", swedish: "sv", danish: "da", russian: "ru", greek: "el", romanian: "ro", serbian: "sr", turkish: "tr",
+    arabic: "ar", persian: "fa", hebrew: "he", hindi: "hi", urdu: "ur", bengali: "bn", tamil: "ta", mandarin: "zh", cantonese: "zh-HK", japanese: "ja",
+    korean: "ko", vietnamese: "vi", thai: "th", malay: "ms", javanese: "id", swahili: "sw", amharic: "am", zulu: "zu", afrikaans: "af"};
   return [map[l] ?? l, "en"];
 }
 

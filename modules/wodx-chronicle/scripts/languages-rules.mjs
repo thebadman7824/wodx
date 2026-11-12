@@ -6,7 +6,11 @@
 export const LANGUAGES = {
   common: ["Latin", "Greek", "Hebrew", "Arabic", "German", "Czech", "Slovak", "Polish", "Hungarian", "Romani", "Yiddish",
     "French", "Italian", "Spanish", "Portuguese", "English", "Dutch", "Russian", "Turkish", "Old Church Slavonic", "Mandarin",
-    "Cantonese", "Japanese", "Korean", "Hindi", "Persian", "Egyptian (ancient)", "Coptic", "Norse", "Gaelic", "Welsh"],
+    "Cantonese", "Japanese", "Korean", "Hindi", "Persian", "Egyptian (ancient)", "Coptic", "Norse", "Gaelic", "Welsh",
+    "Swedish", "Danish", "Romanian", "Serbian", "Armenian", "Georgian", "Mongolian", "Sanskrit", "Bengali", "Urdu", "Tamil", "Tibetan", "Vietnamese",
+    "Thai", "Khmer", "Malay", "Javanese", "Tagalog", "Swahili", "Amharic", "Hausa", "Yoruba", "Akan (Twi)", "Mande (Bambara)", "Kikongo", "Zulu",
+    "Xhosa", "Afrikaans", "Berber (Tamazight)", "Nahuatl", "Maya (Yucatec)", "Quechua", "Guaraní", "Navajo (Diné)", "Lakota", "Cherokee", "Inuktitut",
+    "Māori", "Hawaiian", "Samoan"],
   supernatural: ["Garou (the High Tongue)", "Enochian", "the Tongue of the Dead", "Wyrm-speech"]
 };
 
@@ -50,7 +54,22 @@ const SOUNDS = {
   latin: ["us", "um", "ae", "is", "et", "qu", "ri", "ta", "or", "es", "ti", "ca", "nu", "ex"],
   german: ["sch", "ei", "en", "ch", "au", "er", "st", "ig", "zu", "ung", "ber", "ach", "ie", "ft"],
   czech: ["př", "ch", "ně", "ý", "ov", "ská", "dž", "ou", "ř", "ec", "ní", "va", "st", "ko"],
-  hebrew: ["sh", "ah", "el", "im", "ot", "ba", "ha", "ri", "me", "kh", "ad", "on", "ei", "na"]
+  hebrew: ["sh", "ah", "el", "im", "ot", "ba", "ha", "ri", "me", "kh", "ad", "on", "ei", "na"],
+  arabic: ["al", "ah", "kh", "ma", "il", "un", "sa", "ra", "qa", "bi", "na", "th", "ya", "ha"],
+  persian: ["ast", "ān", "kh", "sh", "ra", "be", "mi", "dar", "ya", "zi", "gar", "ha", "ne", "ba"],
+  turkish: ["lar", "ük", "ış", "çe", "gü", "de", "ya", "ol", "er", "ba", "kı", "mü", "sen", "ti"],
+  hindi: ["ka", "hai", "ra", "na", "ya", "bh", "ti", "ma", "dh", "se", "ko", "ja", "pa", "la"],
+  mandarin: ["zh", "ang", "xi", "ao", "sh", "en", "li", "qu", "ui", "ong", "ma", "de", "ni", "wo"],
+  cantonese: ["ng", "oi", "ei", "au", "hk", "am", "ga", "lo", "si", "ye", "ma", "ho", "ji", "ko"],
+  japanese: ["ka", "shi", "no", "ta", "ru", "mo", "wa", "ne", "yo", "ki", "su", "ha", "ri", "tsu"],
+  korean: ["yo", "eo", "ha", "ni", "da", "seu", "eun", "ga", "ji", "ko", "im", "ne", "ra", "mu"],
+  swahili: ["wa", "ku", "ni", "mba", "nya", "li", "ka", "ta", "zi", "mwa", "ha", "ki", "ngo", "pa"],
+  yoruba: ["gb", "ọ", "ni", "wa", "ba", "ṣe", "ko", "ti", "la", "mo", "fi", "ra", "ẹ", "yi"],
+  nahuatl: ["tl", "chi", "hua", "co", "tz", "qui", "ya", "ca", "me", "xo", "pa", "ti", "no", "atl"],
+  quechua: ["qa", "ch'", "ku", "lla", "nchi", "pa", "ri", "su", "wa", "ya", "mi", "ta", "na", "q'a"],
+  hawaiian: ["ka", "le", "wa", "hi", "nu", "ma", "ʻo", "ke", "la", "pu", "ai", "ha", "no", "ku"],
+  "māori": ["wh", "ka", "te", "ra", "ngā", "ti", "ma", "ho", "ki", "pu", "ta", "re", "wa", "nu"],
+  russian: ["sk", "ov", "na", "ye", "st", "vo", "ka", "zh", "ny", "da", "shch", "ra", "li", "po"]
 };
 
 /** Speech in a tongue the reader lacks: each word becomes a made-up word of about the same length. */
