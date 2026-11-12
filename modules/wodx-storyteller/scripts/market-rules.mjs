@@ -5,7 +5,9 @@
  * category, and its traders. A trader is an NPC (whose purse is the till) and a container tile with a stock list.
  * Prices anywhere in the market are the money price times the category's index. When a trader's stock is drawn,
  * the category's supply thins or fills the draw, and the trader pays half price for what comes in.
- * Indexes and supply levels are house rules set by the Storyteller; the weekly market turn comes in a later build.
+ * Indexes and supply levels are house rules set by the Storyteller. The weekly market turn (Storyteller 0.48.0,
+ * market-turn-rules.mjs) moves them: it reads links (other markets this one trades with), cut (a siege or quarantine:
+ * the turn leaves the market alone) and seen (how many turns each kind's supply has stood at its level).
  */
 export const STATE_VERSION = 1;
 export const INDEX = {min: 0.5, max: 3};
@@ -34,8 +36,15 @@ export function normMarket(m = {}, kinds = []) {
     const s = SUPPLY[m.supply?.[k]] ? m.supply[k] : "normal";
     if ( s !== "normal" ) supply[k] = s;
   }
+  const seen = {};
+  for ( const k of kinds ) {
+    const s = m.seen?.[k];
+    const level = supply[k] ?? "normal";
+    if ( s && s.level === level && Number.isFinite(Number(s.weeks)) && Number(s.weeks) > 0 ) seen[k] = {level, weeks: Math.min(520, Math.floor(Number(s.weeks)))};
+  }
   return {id: String(m.id || slug(m.name)), name: String(m.name ?? "A market").slice(0, 80), scenes: [...new Set((m.scenes ?? []).map(String))],
     index, supply, note: String(m.note ?? "").slice(0, 500),
+    links: [...new Set((m.links ?? []).map(String).filter(Boolean))], cut: !!m.cut, seen,
     traders: (m.traders ?? []).filter(t => t?.actor && t?.tile).map(t => ({actor: String(t.actor), tile: String(t.tile)}))};
 }
 
@@ -48,6 +57,13 @@ export function normState(s, kinds = []) {
     while ( seen.has(id) ) id = `${n.id}-${i++}`;
     seen.add(id);
     out.markets.push({...n, id});
+  }
+  // Links go both ways and only to markets that exist
+  const ids = new Set(out.markets.map(m => m.id));
+  for ( const m of out.markets ) m.links = m.links.filter(l => l !== m.id && ids.has(l));
+  for ( const m of out.markets ) for ( const l of m.links ) {
+    const o = out.markets.find(x => x.id === l);
+    if ( !o.links.includes(m.id) ) o.links.push(m.id);
   }
   return out;
 }

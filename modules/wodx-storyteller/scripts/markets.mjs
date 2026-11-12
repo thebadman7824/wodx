@@ -5,7 +5,8 @@
  *   Prices (api.upkeep.money.price) read the market of the trader's tile or of the scene in view.
  *   A trader is an NPC and a container with a stock list (WoDX Interactables). When its stock is drawn, the market's
  *   supply thins or fills the draw, and the NPC's purse pays half price for what comes in; a thin till buys less.
- *   Only the Storyteller sees and edits markets. The weekly market turn is a later build.
+ *   Only the Storyteller sees and edits markets. The weekly market turn (market-turn.mjs, 0.48.0) moves them; a market
+ *   lists the markets it trades with, and one cut off (a siege, a quarantine) is left alone by the turn.
  */
 import * as MK from "./market-rules.mjs";
 import * as Money from "./money.mjs";
@@ -21,6 +22,8 @@ export function registerMarketSettings() {
 
 export const state = () => MK.normState(game.settings.get(MOD, "markets"), kindIds());
 async function save(st) { await game.settings.set(MOD, "markets", MK.normState(st, kindIds())); }
+/** Storyteller 0.48.0: the weekly market turn writes the whole state at once (one setting update a week). */
+export async function saveState(st) { if ( game.user.isGM ) await save(st); }
 
 const ICS = "wodx-interactables";
 const containerTiles = scene => (scene?.tiles ?? []).filter(t => t.flags?.[ICS]?.container);
@@ -64,9 +67,14 @@ async function editMarket(id = null) {
     <td><select name="trader.${i}.actor" aria-label="Trader"><option value="">(none)</option>${npcs.map(a => `<option value="${a.id}"${a.id === t.actor ? " selected" : ""}>${esc(a.name)}</option>`).join("")}</select></td>
     <td><select name="trader.${i}.tile" aria-label="Shop container"><option value="">(none)</option>${tiles.map(x => `<option value="${esc(x.uuid)}"${x.uuid === t.tile ? " selected" : ""}>${esc(tileLabel(x))}</option>`).join("")}</select></td>
     <td>${t.actor && game.actors.get(t.actor) ? esc(Money.purseOf(game.actors.get(t.actor)).text.carried) : ""}</td></tr>`).join("");
+  const others = st.markets.filter(x => x.id !== m.id);
+  const linkRows = others.map(x => `<li><label><input type="checkbox" name="link.${esc(x.id)}"${m.links.includes(x.id) ? " checked" : ""}> ${esc(x.name)}</label></li>`).join("");
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 700}, window: {title: `Market: ${m.name}`}, classes: ["wodx-dialog", "wst-market"],
     content: `<label>Name <input type="text" name="name" value="${esc(m.name)}" maxlength="80"></label>
       <h4>Places in this market</h4>${scenes.length > 5 ? searchBox("ul.wst-market-scenes", "Search places…", "Search places") : ""}<div class="wst-scroll" style="max-height:140px"><ul class="wst-market-scenes">${sceneRows}</ul></div>
+      <h4>Trade and the week</h4><p class="hint">Each week linked markets trade: goods go where they are short, and prices meet part way (more in an age of railways). A market cut off (a siege, a quarantine) is left as it is by the weekly turn. House rules.</p>
+      ${others.length ? `${others.length > 5 ? searchBox("ul.wst-market-links", "Search markets…", "Search markets") : ""}<div class="wst-scroll" style="max-height:120px"><ul class="wst-market-links">${linkRows}</ul></div>` : "<p class=\"hint\">No other market to trade with yet.</p>"}
+      <label><input type="checkbox" name="cut"${m.cut ? " checked" : ""}> Cut off: the weekly turn leaves this market alone</label>
       <h4>Prices and supply by category</h4><p class="hint">Price index: 1 is normal, 0.5 a glut, 3 a famine price. Supply thins or fills what traders restock: None, Short, Normal or Plenty. House rules.</p>
       <div class="wst-scroll" style="max-height:260px"><table class="wst-market-kinds" data-fixed><thead><tr><th>Category</th><th>Price index</th><th>Supply</th></tr></thead><tbody>${kindRows}</tbody></table></div>
       <h4>Traders</h4><p class="hint">An NPC and the container that is their shop (a container with a stock list). The NPC's purse is the till: restocking costs half price.</p>
@@ -80,18 +88,21 @@ async function editMarket(id = null) {
     if ( ok ) await save({...st, markets: st.markets.filter(x => x.id !== id)});
     return;
   }
-  const next = {...m, name: res.name || m.name, note: res.note ?? "", scenes: scenes.filter(s => res[`scene.${s.id}`]).map(s => s.id), index: {}, supply: {}, traders: []};
+  const links = others.filter(x => res[`link.${x.id}`]).map(x => x.id);
+  const next = {...m, name: res.name || m.name, note: res.note ?? "", scenes: scenes.filter(s => res[`scene.${s.id}`]).map(s => s.id), index: {}, supply: {}, traders: [],
+    links, cut: !!res.cut};
   for ( const k of kindIds() ) { next.index[k] = Number(res[`index.${k}`]); next.supply[k] = res[`supply.${k}`]; }
   for ( let i = 0; i <= m.traders.length; i++ ) if ( res[`trader.${i}.actor`] && res[`trader.${i}.tile`] ) next.traders.push({actor: res[`trader.${i}.actor`], tile: res[`trader.${i}.tile`]});
-  const others = st.markets.filter(x => x.id !== m.id);
-  await save({...st, markets: id ? st.markets.map(x => (x.id === id ? next : x)) : [...others, {...next, id: ""}]});
+  // A link goes both ways: the other side follows what was ticked here
+  const mirror = x => ({...x, links: links.includes(x.id) ? [...new Set([...x.links, m.id])] : x.links.filter(l => l !== m.id)});
+  await save({...st, markets: id ? st.markets.map(x => (x.id === id ? next : mirror(x))) : [...others, {...next, id: ""}]});
 }
 
 export async function marketsDialog() {
   if ( !game.user.isGM ) return;
   await Money.goodsList();
   const st = state();
-  const rows = st.markets.map(m => `<tr><td>${esc(m.name)}</td><td>${m.scenes.length}</td><td>${m.traders.length}</td>
+  const rows = st.markets.map(m => `<tr><td>${esc(m.name)}${m.cut ? " (cut off)" : ""}</td><td>${m.scenes.length}</td><td>${m.traders.length}</td>
     <td>${Object.keys(m.index).length || Object.keys(m.supply).length ? esc([...Object.entries(m.index).map(([k, v]) => `${KINDS[k] ?? k} x${v}`), ...Object.entries(m.supply).map(([k, v]) => `${KINDS[k] ?? k} ${MK.SUPPLY[v].label.toLowerCase()}`)].slice(0, 4).join(", ")) : "All normal"}</td>
     <td><button type="button" data-market="${esc(m.id)}">Edit</button></td></tr>`).join("");
   let picked = null;
@@ -102,9 +113,10 @@ export async function marketsDialog() {
       const el = dialog.element ?? dialog;
       el.querySelectorAll?.("button[data-market]").forEach(b => b.addEventListener("click", () => { picked = b.dataset.market; dialog.close(); }));
     },
-    buttons: [{action: "add", label: "New market"}, {action: "close", label: "Close"}]});
+    buttons: [{action: "add", label: "New market"}, ...(st.markets.length ? [{action: "week", label: "Run a week now"}] : []), {action: "close", label: "Close"}]});
   if ( picked ) return editMarket(picked);
   if ( res === "add" ) return editMarket(null);
+  if ( res === "week" ) return game.modules.get(MOD)?.api?.upkeep?.marketTurn?.run?.({force: true, reason: "a week (run by hand)"});
 }
 
 export async function setMarket(id, patch = {}) {

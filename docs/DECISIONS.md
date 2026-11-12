@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2350
+Next free block: B2380
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -91,6 +91,7 @@ Next free block: B2350
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
 | B2320-B2323 | The features card and what changed since last session | Sheets, Chronicle |
 | B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
+| B2370-B2379 | The weekly market turn: making, recovery, trade links, seasons by era, skip catch-up, the queue and talk of dear goods | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2576,3 +2577,39 @@ Ben changed the realm-maps pick on the study desk at 13:55 UTC to add endless se
 In Foundry (realm-maps.mjs): Realm maps has a Wild land section. Draw wild land makes the piece at a place, or finds it if it is already drawn; Walk on draws or finds the piece beside the open one and sets the selected tokens down where they walk in. Tokens keep the record of where they first came from, so Bring them back still returns them to the living world. A piece of wild land cannot be redrawn with another seed. Travel time is still the journey card's, in hours; the pieces are for the scenes on the way.
 
 Reverse: remove wild-rules.mjs, the wild block in realm-maps.mjs and the Wild land section of realmMapsDialog.
+
+## B2370. The weekly market turn (2026-11-12, house rule)
+The living economy study's step 3, which Ben approved on 2026-11-11. Once a week of world time every market that is not cut off takes one turn: making, recovery, trade along its links, then prices. It runs on the active Storyteller's client when the clock passes a week by itself (checked at most once a game hour, never during a skip) and when a time skip ends. World setting Markets move each week: Auto (the default), Suggest or Off. With no market set up nothing runs, so the Live world is untouched until a market exists there.
+
+Reverse: set Markets move each week to Off.
+
+## B2371. Supply comes back, prices follow it (2026-11-12, house rule)
+A supply that is not normal comes back one step toward normal after standing 2 weeks (empty or plenty) or 3 weeks (short). Each kind's price index drifts toward what its supply calls for (empty 2.2, short 1.4, normal 1, plenty 0.8) plus the season, closing 35% of the gap a week and never more than 0.2: a small swing, as the study set.
+
+Reverse: change RECOVER, SUPPLY_PRICE, DRIFT and SMALL in market-turn-rules.mjs.
+
+## B2372. What a town makes (2026-11-12, house rule)
+The working places that already lift a market's supply each month (B855) also hold it up each week: one or two keep a kind from staying below normal, three or more keep it at plenty, and a turn lifts it one step toward that. Recovery never takes a kind below what its workshops keep up. Owners.workshopCounts now serves both.
+
+Reverse: pass works: {} to runTurns in market-turn.mjs.
+
+## B2373. Seasons by era (2026-11-12, house rule)
+Winter (December to February) puts food 0.25 dearer and the lean months before harvest (March to June) 0.15; the harvest (August to October) makes it 0.2 cheaper. Fuel is 0.3 dearer from November to March and 0.1 cheaper in summer; light 0.15 dearer in the long nights; drink cheaper after the vintage; seed dearer at sowing. The pull is full before 1850, half from 1850 to 1949 (railways and canned goods) and 0.15 from 1950, when goods come from far away, so the World of Future Darkness barely feels a winter in its prices.
+
+Reverse: edit SEASON and seasonDamp in market-turn-rules.mjs.
+
+## B2374. Trade between markets (2026-11-12, house rule)
+A market lists the markets it trades with in the Markets window; a link goes both ways. Each week, where one linked market has two supply steps more of a kind than the other, goods move: the richer steps down and the poorer up. Their price indexes close part of the gap: 15% a week before 1830 (carts and the river), 30% to 1919 (railways), 50% after (lorries), and never more than 0.2. A market ticked Cut off (a siege, a quarantine) is left as it is and does not trade.
+
+Reverse: untick the links, or edit tradeShare.
+
+## B2375. Big swings wait where the players are (2026-11-12, house rule)
+A change that takes a kind from normal toward want (normal to short, or anything to empty) is big. In a market where a player character's token stands, it waits in the approval queue (Markets) and is left out of the turn until approved; elsewhere it goes through quietly, as the study's "markets nobody visits run quietly". Every applied turn posts one card to the Storyteller: the changes in markets with a player character there in full, a count of the quiet ones, and an Undo that puts every market back as it was before the turn. Suggest mode sends every change to the queue instead.
+
+Reverse: setting Suggest sends everything to the queue.
+
+## B2376. Long skips and talk of dear goods (2026-11-12, house rule)
+A skip plays twelve weekly turns, with each turn's own month for the season; the weeks past twelve settle at once: supply back to normal (or plenty where three workshops stand) and prices where the season of the skip's end puts them. When two linked markets' prices for a kind part by 0.6 or more, a rumour starts in the rumour network from both markets' traders: "Food is dear in Rothenstein and cheap in Brno." It is not told again until the gap has closed below 0.3. Traders who go broke, faction moves on markets (taxes, raids, monopolies) and caravans on the map are not built yet.
+
+Reverse: turn off Rumours spread between people, or raise RUMOUR_GAP.
+
