@@ -1361,3 +1361,8 @@ Each frenzy leaves an animal mark (V20 pdf 63). Ben's note: not permanent, a mon
 
 Reverse: MARK_LASTS, MARKS.
 
+## B1125. Malkavian glimpses and what the derangement hears (2026-11-12)
+V20 pdf 69 gives one derangement that never heals. House rule from the desk: once a night a Malkavian may ask for a glimpse, a riddle about the next live dated event, picked by what the event is about (plague, war, fire, a death, the Church, the Kindred, the spirit world), with only a rough "when". The event's own words are never shown to the player; the Storyteller's note names it. When the event fires, the Storyteller is told who saw it coming and may give back a Willpower point. On WoDX NPC talk cards, a Malkavian's derangement (read from the sheet's derangement field) adds one line of what they hear, from eight to ten lines for each of eleven derangements (Ben asked for variety), under the true reply.
+
+Reverse: DERANGEMENTS and GLIMPSE_THEMES in data/signatures.mjs; the hearAs call in wodx-npc talk.mjs.
+

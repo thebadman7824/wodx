@@ -14,7 +14,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse), npc |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
-| wodxEventFired | chronicle | interactables |
+| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |

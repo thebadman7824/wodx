@@ -578,6 +578,7 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | What moves a Setite victim's Corruption (B1122) | A won charm, persuasion, deceit, fast-talk or bribe +1, a botch -1, a gift that feeds the named vice +1; at 3 small wrongs, at 5 the victim is owned. Moves from a player's client wait in the approval queue | CORRUPTING_ACTS and stepFromTrade |
 | 2026-11-12 | Brujah causes (Ben's note) | A list to pick from by era, or the player's own with the Storyteller's approval; NPCs draw from the same list; three kept tempers make a Rant (B1123) | CAUSES in data/signatures.mjs |
 | 2026-11-12 | Gangrel marks (Ben's note) | Each frenzy leaves a mark with an edge and a cost; it heals after a month. Claws from a mark do Strength + 1 lethal, a house rule (B1124) | MARK_LASTS and MARKS |
+| 2026-11-12 | Malkavian glimpses and the derangement's ear (B1125) | A riddle a night about the next dated event, only a rough when; the Storyteller may give back a Willpower point when it comes true; one extra heard line on NPC talk cards per derangement, eight to ten lines each, the true reply always shown | GLIMPSE_THEMES, DERANGEMENTS |
 
 ## Waiting for review
 

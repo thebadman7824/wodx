@@ -85,3 +85,25 @@ test("Gangrel marks last a month, then heal; the showing ones change rolls", () 
   assert.equal(S.marksShow([S.newMark("tail", 0)], 1), true);
   assert.equal(S.marksShow([S.newMark("ears", 0)], 1), false);
 });
+
+test("Malkavian: derangements from the sheet, varied lines, and riddles that hide the event", () => {
+  assert.equal(S.vampireRow("Malkavian")?.feature, "glimpse");
+  assert.deepEqual(S.derangementsOf("Paranoia (since the fire); synaesthesia"), ["paranoia", "synesthesia"]);
+  assert.deepEqual(S.derangementsOf(""), []);
+  for ( const d of S.DERANGEMENTS ) assert.ok(d.lines.length >= 8, `${d.key} has many lines`);
+  const seen = new Set();
+  for ( let i = 0; i < 40; i++ ) seen.add(S.hearLine(["paranoia"], {name: "Old Jan", topic: "News", seed: S.seedOf("a", "npc", "News", i)}));
+  assert.ok(seen.size >= 6, "the same derangement gives many different lines");
+  assert.equal(S.hearLine([], {seed: 1}), null);
+  assert.ok(![...seen].some(l => /\{|\}/.test(l)), "no placeholder left");
+  const ev = {id: "black-death", name: "The Black Death and the Second Great Maelstrom", summary: "Plague reaches Europe."};
+  const g = S.glimpseFor(ev, 200, 7);
+  assert.equal(g.theme, "plague");
+  assert.ok(!/black death|maelstrom|europe/i.test(g.text), "the event's own words are not shown");
+  assert.match(g.text, /within the year/i);
+  assert.equal(S.glimpseFor({name: "Something", summary: ""}, 3, 0).theme, "other");
+  assert.equal(S.whenWords(5000), "long after tonight");
+  assert.equal(S.mayGlimpse(null, 100), true);
+  assert.equal(S.mayGlimpse(50000, 60000), false);
+  assert.equal(S.mayGlimpse(50000, 50000 + 86400), true);
+});
