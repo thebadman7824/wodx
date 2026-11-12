@@ -598,6 +598,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Mage rows (B1165) | Group row plus a House row; old names by year; Virtual Adepts from 1961, Hollow Ones from 1890, Celestial Masters and Craftmasons 1325 to 1896 are house readings | MAGE, HOUSES |
+| 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
+| 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
 | 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
 
 ## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
@@ -653,5 +656,9 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Template stations (B1402) | mob 0, civilian, soldier, hunter, ghoul, Sabbat, Garou, changeling, fomor 1; guard, neonate, mage 2; inquisitor, technocrat, sheriff 3; elder 4; animals and spirits none | TEMPLATE_STATION in look-rules.mjs |
 | 2026-11-12 | Which worn names show a side (B1407) | habit, cassock, surplice, vestments, cowl, clerical collar: kind:church; police, constable, gendarme: kind:watch; military, soldier's, regimental, army: military; livery; pilgrim's badge; corporate | SIDE_WORDS in look-rules.mjs |
 | 2026-11-12 | Worn dress always shows for era fit (B1403) | The design said conceal T or N; worn clothing now always counts and carried things only at N, so a hidden phone stays hidden | seen in look-rules.mjs |
+| 2026-11-12 | What an NPC can tell of a character (B1380) | Only when plainly inhuman, shown by a sense, or seen and not forgotten; the same for player characters; hunter NPCs go for the monster only then | canTell in wodx-npc main.mjs |
+| 2026-11-12 | Mortals noticing a tell (B1381) | Perception + Alertness, difficulty 7, one success, seeded by the day; three dice with no sheet; wounds and frenzy always seen | noticesTell in talk-rules.mjs |
+| 2026-11-12 | Stranger names in chat and the combat tracker (B1382) | Swapped per player for unmet NPCs on the scene or in the fight, when "Faces you have met" is on | hooks in faces.mjs |
+| 2026-11-12 | NPCs remember who they saw for what (B1383) | A creature of another kind that saw a secret can tell that person from then on (desk item x9, taken as recommended before 06:00) | wodxSecretSeen hook in rivalry.mjs |
 | 2026-11-12 | What the stranger line shows (B1408) | Dress by station, side worn, blood or wounds, a drawn weapon, what they are doing, manner toward the viewer; no kind, clan or trade | autoStranger in faces-rules.mjs |
 | 2026-11-12 | Look them over and Ask around pools (B1409, B1410) | Perception + Empathy, Etiquette or Awareness; Wits + Streetwise with Contacts as extra dice; difficulty 6; a fact per success | LOOKOVER in social-rules.js |
