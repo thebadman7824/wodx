@@ -457,6 +457,15 @@ export async function decorate(sheet, html) {
     tiesTab.insertAdjacentHTML("afterend", `<div id="tabwodxbody" class="item wodx-tab-icon" data-tab="wodxbody" data-tab-area="item" title="Body"><i class="fa-solid fa-person"></i></div>`);
     el.querySelector(".tab.wodxties")?.insertAdjacentHTML("afterend", `<div class="tab wodxbody sheet-inner-area" data-group="primary" data-tab="wodxbody">${inner}</div>`);
   }
+  // WoDX tab buttons take the tile and glyph colours of the line's own tab buttons beside them
+  const tileOf = el.querySelector("nav.sheet-tabs[data-group='primary'] .item:not(.wodx-tab-icon) svg");
+  if ( tileOf ) {
+    const fills = [...tileOf.querySelectorAll("path[fill]")].map(p => p.getAttribute("fill"));
+    for ( const t of el.querySelectorAll("nav.sheet-tabs .wodx-tab-icon") ) {
+      if ( fills[0] ) t.style.setProperty("--wodx-tab-tile", fills[0]);
+      if ( fills[1] ) t.style.setProperty("--wodx-tab-glyph", fills[1]);
+    }
+  }
   // The Storyteller's notes, for the Storyteller only
   if ( game.user.isGM ) el.querySelector(".tab.note")?.insertAdjacentHTML("afterbegin", XH.stNotesHtml(stNotesOf(actor)));
   // Search boxes on the long power lists

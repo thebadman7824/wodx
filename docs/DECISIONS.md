@@ -2945,3 +2945,8 @@ tools/gate/fit-audit.mjs holds checks that run on any drawn window: a control cu
 
 Reverse: remove the audit call in ui-fit.mjs.
 
+
+## B2495. WoDX tab buttons take the line's tile colours (2026-11-12)
+The Relationships and Body tab buttons were plain glyphs beside the line's own tab buttons, which are a white glyph on a tile in the line's colour, so they read as darker. WoDX Sheets 0.15.1 reads the tile and glyph colours from the sheet's own first tab button and gives them to its buttons, so every line and skin matches without a list of colours. The fit check reports a module tab button whose tile differs from the sheet's own.
+
+Reverse: remove section 6 of wodx-layout.css and the colour lines in extras.mjs.

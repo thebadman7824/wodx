@@ -103,5 +103,16 @@ export function audit(app) {
     const a = lum(mix), b = lum(bg), ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
     if (ratio < 2.6 && dim++ < 6) say("dim", c, `"${txt.trim().slice(0, 30)}" is hard to read: contrast ${ratio.toFixed(1)} to 1`);
   }
+  // Tab buttons a module adds must carry the same tile colour as the sheet's own tab buttons
+  for (const nav of app.querySelectorAll("nav.sheet-tabs")) {
+    const own = nav.querySelector(".item:not(.wodx-tab-icon) svg path[fill]");
+    if (!own) continue;
+    const want = getComputedStyle(own).fill.replace(/\s+/g, "");
+    for (const i of nav.querySelectorAll(".wodx-tab-icon")) {
+      if (i.offsetParent === null) continue;
+      const got = getComputedStyle(i).backgroundColor.replace(/\s+/g, "");
+      if (got !== want) say("shade", i, `tab button tile ${got}, the sheet's own tab buttons ${want}`);
+    }
+  }
   return out;
 }
