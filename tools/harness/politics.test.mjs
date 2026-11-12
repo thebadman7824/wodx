@@ -328,3 +328,17 @@ test("a player sees the seats and their own character's standing, never others' 
   assert.equal(PO.playerView(f, ["nobody"], {year: 1600, info}), null);
   assert.equal(PO.playerView({...f, polity: "none"}, ["pc"], {year: 1600, info}), null);
 });
+
+// WoDX NPC 0.40.3: the Inquisition as the Companion has it (cells, Councils of Faith).
+test("an Inquisition cell has a rector appointed above it and officers it elects", () => {
+  const h = F.normFaction({id: "h", name: "Inquisitors", kind: "hunters", members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(h, 1240), "inquisition");
+  const P = PO.POLITIES.inquisition;
+  assert.equal(PO.topOffice("inquisition").key, "rector");
+  assert.ok(P.offices.filter(o => !o.top).every(o => o.fill === "backing"), "the cell elects its officers");
+  assert.equal(PO.rankFrom("inquisition"), "rankbg");
+  assert.equal(P.gathering.every, 1, "chapter meets each week");
+  assert.equal(PO.polityFor({...h, polity: "council-of-faith"}, 1240), "council-of-faith");
+  assert.equal(PO.polityFor({...h, polity: "council-of-faith"}, 1600), "hunter-society", "after 1499 the society of its age");
+  assert.equal(PO.POLITIES["council-of-faith"].offices.find(o => o.key === "councillor").fill, "clan");
+});

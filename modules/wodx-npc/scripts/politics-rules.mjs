@@ -225,16 +225,29 @@ export const POLITIES = {
     eras: {future: "In the Future Darkness the Construct runs on contracts and metrics."}
   },
   inquisition: {
-    label: "A tribunal of the Inquisition", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
-    body: "The tribunal", rank: "Status", blocs: "creed", gathering: {name: "tribunal", every: 4, meets: "The tribunal sits."},
+    label: "A cell of the Inquisition", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
+    body: "The cell", rank: "Rank", rankFrom: "rankbg", blocs: "order", gathering: {name: "chapter meeting", every: 1, meets: "The cell meets in chapter."},
     offices: [
-      {key: "inquisitor", title: "Inquisitor", seats: 1, fill: "appoint", top: true, judge: true},
-      {key: "notary", title: "Notary", seats: 1, fill: "appoint"},
-      {key: "confessor", title: "Confessor", seats: 1, fill: "appoint"},
-      {key: "familiar", title: "Familiar", seats: 3, fill: "appoint"}
+      {key: "rector", title: "Rector", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "subrector", title: "Sub-rector", seats: 1, fill: "backing"},
+      {key: "treasurer", title: "Treasurer", seats: 1, fill: "backing"},
+      {key: "archivist", title: "Archivist", seats: 1, fill: "backing"},
+      {key: "cellarer", title: "Cellarer", seats: 1, fill: "backing"}
     ],
-    law: ["heresy", "consorting with the Devil's creatures", "hiding a witch", "revealing the tribunal's work", "disobeying the Inquisitor"],
-    notes: "Inquisitors of the Dark Ages hunt the Devil's own; the Inquisitor names the tribunal's officers. A house rule, since the Dark Ages Inquisitor book is not yet read."
+    law: ["heresy", "consorting with the Devil's creatures", "hiding a witch", "breaking the Rule of the chapter house", "disobeying the rector"],
+    notes: "A cell answers to its city's Council of Faith, and through it to Marzone and the Supreme Council of Faith, not to the local bishop. The Council appoints the rector; the cell elects its other officers, subject to the rector's veto (DA:I Companion pr 72-75). Rank is the Rank Background (DA:I pr 157). The charges and the vote of the officers are house rules.",
+    backers: "The cell"
+  },
+  "council-of-faith": {
+    label: "A Council of Faith", line: "hunter", kinds: ["hunters"], from: null, to: 1499,
+    body: "The Council", rank: "Rank", rankFrom: "rankbg", blocs: "order", gathering: {name: "Council", every: 4, meets: "The Council of Faith sits."},
+    offices: [
+      {key: "head", title: "Head of the Council", seats: 1, fill: "appoint", top: true, judge: true},
+      {key: "procurator", title: "Procurator Fiscalis", seats: 1, fill: "appoint"},
+      {key: "councillor", title: "Councillor for an order", seats: 5, fill: "clan"}
+    ],
+    law: ["heresy", "a cell's failure or its dead unanswered for", "a mixed cell made single-order", "defying the Supreme Council"],
+    notes: "The local Council of Faith over a city's cells, often housed by one of the five orders; it appoints and removes rectors and judges the cells' members (DA:I Companion pr 73-75, 82). The Sicae Dei answer to a council of two seniors from each order, ten in all, whose verdicts must be unanimous (Companion pr 83). The Storyteller picks this polity. Seats beyond the Procurator are house rules."
   },
   "hunter-society": {
     label: "A society of hunters", line: "hunter", kinds: ["hunters"], from: 1500, to: 1998,
@@ -374,7 +387,7 @@ export const officesOf = (f, id) => Object.entries(f?.politics?.offices ?? {}).f
 export const holdersOf = (f, key) => f?.politics?.offices?.[key] ?? [];
 const cap = t => String(t).replace(/\b\w+/g, (w, i) => (i && /^(of|the|and)$/.test(w) ? w : w[0].toUpperCase() + w.slice(1)));
 /** The plural a polity's blocs go by in the lines of a turn. */
-export const BLOC_WORDS = {clan: "clans", tribe: "tribes", house: "houses", court: "courts", legion: "legions"};
+export const BLOC_WORDS = {order: "orders", creed: "creeds", sect: "Traditions and Conventions", faction: "factions", wu: "wu", amenti: "Amenti", clan: "clans", tribe: "tribes", house: "houses", court: "courts", legion: "legions"};
 /** A member's bloc: the sheet field the polity sorts by (clan, tribe, house, court, legion). */
 const bloc = (info, id, key = null) => String(info?.[id]?.[POLITIES[key]?.blocs ?? "clan"] ?? "").trim().toLowerCase() || null;
 
