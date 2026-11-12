@@ -29,6 +29,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Setite's gift that feeds the victim's vice moves their Corruption) |
+| wodxSkipStart | chronicle | chronicle (the Legends book is brought up to date before the clock moves) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
 
@@ -46,5 +47,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxEventUndone | chronicle | a dated event taken back |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
-| wodxSkipStart | chronicle | a time skip begins |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

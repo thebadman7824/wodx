@@ -1633,3 +1633,6 @@ Chronicle 0.27.0 adds the Tzimisce's native soil (a night without it halves ever
 
 ## 2026-11-12: taking things apart for parts
 From the item-links study (Ben approved all): Library 0.13.0 adds SALVAGE rules to data/recipes.mjs and salvageOf, apartTool and successes to recipe-rules.mjs; Use offers "Take apart for parts" on the 155 goods that have parts. Storyteller 0.34.0 cookery.takeApart rolls Dexterity + Crafts (Technology for electronics), takes one of the thing and gives its parts by era. B953. Tests in recipes.test.mjs; gatecook step 8.
+
+## 2026-11-12: the Legends book
+From the Improvement Desk (item c1, Ben approved as described): WoDX Chronicle 0.28.0 adds the Legends book, a journal "Legends of the Chronicle" open to everyone, one page per century, and a Legends window (a book button with the token tools, hideable per player) that filters by kind, person, place, faction and years. Written from dated events, actors' chronology and lineage, Creation's archive, NPC court seats, Storyteller owner records and the Ledger, when a session ends, around time skips and on demand. B1300 to B1302. Harness legends.test.mjs 9 tests; gate gatelegends.

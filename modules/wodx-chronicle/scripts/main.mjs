@@ -29,6 +29,7 @@ import * as referee from "./referee.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
+import * as legends from "./legends.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -97,6 +98,7 @@ Hooks.once("init", () => {
 
   // Show real years in Foundry's own timestamp format
   const original = CONFIG.time.formatters?.timestamp;
+  legends.registerLegendsSettings();
   if ( CONFIG.time.formatters && original ) {
     CONFIG.time.formatters.timestamp = (calendar, components, options) => (calendar instanceof CONFIG.time.worldCalendarClass)
       ? CONFIG.time.worldCalendarClass.formatTimestamp(calendar, components, options)
@@ -169,6 +171,7 @@ Hooks.once("ready", async () => {
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
+    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
@@ -196,6 +199,8 @@ Hooks.once("ready", async () => {
     await events.checkEvents();
     await eras.refreshRulesJournal();
     await contentFixes.checkContentFixes();
+    // The Legends book starts with what the records already hold
+    if ( legends.book().built === null ) legends.build({quiet: true}).catch(err => console.error("WoDX | Legends", err));
     if ( !setting("openingSet") && game.time.worldTime === 0 ) {
       ui.notifications.info("WoDX: set the chronicle's opening date in the Chronicle Clock.");
       ClockApp.open();
@@ -212,6 +217,10 @@ Hooks.on("updateWorldTime", () => {
   eras.checkEra();
   events.checkEvents().then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
+
+// The Legends book is brought up to date before a time skip (so what happened first is dated first) and after it
+Hooks.on("wodxSkipStart", () => { if ( active && isActiveGM() ) legends.buildNow({quiet: true}).catch(err => console.error("WoDX | Legends", err)); });
+Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() && !skip.isHeld() ) legends.build({quiet: true}).catch(err => console.error("WoDX | Legends", err)); });
 
 Hooks.on("wodxSkipEnd", info => {
   if ( !active || skip.isHeld() ) return;
@@ -238,6 +247,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxFindMe = {
     name: "wodxFindMe", title: "Find my character (goes to your token, on any scene)", icon: "fa-solid fa-location-crosshairs", order: base + 4,
     button: true, visible: true, onChange: () => playerTools.findMyCharacter()
+  };
+  tokens.tools.wodxLegends = {
+    name: "wodxLegends", title: "Legends of the Chronicle", icon: "fa-solid fa-book-skull", order: base + 5,
+    button: true, visible: true, onChange: () => legends.LegendsApp.open()
   };
   tokens.tools.wodxApprovals = {
     name: "wodxApprovals", title: "Approval queue", icon: "fa-solid fa-inbox", order: base + 2,
@@ -273,4 +286,9 @@ async function onSocket(message) {
 }
 
 // A new session begun in WoDX Storyteller starts the count of NPC proposals again
-Hooks.on("updateSetting", s => { if ( s?.key === "wodx-storyteller.session" ) approvals.resetSession(); });
+// It also brings the Legends book up to date (WoDX Chronicle 0.28.0)
+Hooks.on("updateSetting", s => {
+  if ( s?.key !== "wodx-storyteller.session" ) return;
+  approvals.resetSession();
+  if ( active && isActiveGM() ) legends.build().catch(err => console.error("WoDX | Legends", err));
+});
