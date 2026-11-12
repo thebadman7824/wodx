@@ -15,6 +15,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxStepSideways", label: "Step sideways", module: "WoDX Otherworlds"},
   {name: "wodxPeek", label: "Peek across the Gauntlet", module: "WoDX Otherworlds"},
   {name: "wodxSoul", label: "Read the Soul", module: "WoDX Otherworlds"},
+  {name: "wodxSpirits", label: "Standing with the spirits", module: "WoDX Otherworlds"},
   {name: "wodxOtherRolls", label: "Otherworld rolls", module: "WoDX Otherworlds"},
   {name: "wodxJack", label: "Jack into the Net", module: "WoDX Otherworlds"},
   {name: "wodxCreation", label: "Spend experience", module: "WoDX Creation"},

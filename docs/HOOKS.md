@@ -15,7 +15,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables |
-| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
+| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts), npc (passers-by scatter), storyteller (a fight goes in the log for the pacing note) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |

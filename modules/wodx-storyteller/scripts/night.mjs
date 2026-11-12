@@ -5,6 +5,7 @@
  */
 import {MOD, esc, chron, setting, isActiveGM, log, entries, isPC} from "./core.mjs";
 import * as N from "./night-rules.mjs";
+import * as Pace from "./pacing-rules.mjs";
 export {N};
 import {NIGHT_TABLES} from "../data/night-tables.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -29,7 +30,19 @@ export function registerNight() {
     chron()?.registerApprovalHandler?.(TN.aid, {label: "Story aid", approve: e => approveAid(e.data)});
   };
   if ( chron()?.gen ) go(); else Hooks.once("wodxChronicleReady", go);
+  // 0.35.0: a fight goes in the log, so the pacing note knows a night was hard
+  Hooks.on("wodxFightStarted", ({combat} = {}) => {
+    if ( !isActiveGM() ) return;
+    const sc = combat?.scene ?? canvas?.scene;
+    log({kind: "note", place: sc?.id ?? null, text: `${Pace.FIGHT_TEXT}${sc ? ` on ${sc.navName || sc.name}` : ""}.`}).catch(e => console.error(`${MOD} |`, e));
+  });
 }
+
+/** The pacing note for the night's draw (the Storyteller's only), or null. */
+export function pacingNow() {
+  try { return Pace.pacingNote(entries(), game.time.worldTime); } catch (e) { return null; }
+}
+const paceHtml = p => (p ? `<p class="wstory-pace"><i class="fa-solid fa-gauge-simple"></i> <b>Pacing:</b> ${esc(p.text)} <span class="wodx-quiet">It does not change the draw.</span></p>` : "");
 
 /* ---- where and when ---- */
 
@@ -96,7 +109,8 @@ function nightHtml(n) {
 }
 
 export async function proposeNight(n) {
-  return chron()?.propose?.({type: TN.night, key: `night:${n.jdn}:${n.nonce}`, title: `The night's draw${n.date ? `: ${n.date}` : ""}`, detail: N.nightText(n), data: n});
+  const p = pacingNow();
+  return chron()?.propose?.({type: TN.night, key: `night:${n.jdn}:${n.nonce}`, title: `The night's draw${n.date ? `: ${n.date}` : ""}`, detail: `${p ? `Pacing: ${p.text} ` : ""}${N.nightText(n)}`, data: n});
 }
 
 /** Approved: into the log and the nights journal. */
@@ -129,7 +143,7 @@ export async function nightDialog() {
     const n = await drawNight({nonce});
     if ( !n ) return ui.notifications.warn("WoDX Chronicle's generators are not ready.");
     const choice = await DialogV2.wait({classes: ["wodx-dialog", "wstory-dialog", "wstory-night"], window: {title: "The night's draw"}, rejectClose: false,
-      content: `<div class="wstory-draw">${nightHtml(n)}<p class="wodx-quiet">Nothing reaches the players until you approve it in the queue.</p></div>`,
+      content: `<div class="wstory-draw">${paceHtml(pacingNow())}${nightHtml(n)}<p class="wodx-quiet">Nothing reaches the players until you approve it in the queue.</p></div>`,
       buttons: [{action: "send", label: "Send to the queue", default: true}, {action: "again", label: "Draw again"}, {action: "close", label: "Close"}]});
     if ( choice === "again" ) { nonce++; continue; }
     if ( choice === "send" ) { await proposeNight(n); ui.notifications.info("The night's draw is in the approval queue."); }

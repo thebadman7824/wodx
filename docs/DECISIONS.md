@@ -1466,3 +1466,33 @@ Reverse: the hooks in Chronicle main.mjs (updateSetting, wodxSkipStart, wodxSkip
 ## B1302. The book across the eras (2026-11-12)
 One chapter (journal page) per century that has lines, oldest first, from 1197 to the World of Future Darkness, dated on the Chronicle Clock's calendar. Setting the clock back takes a dated event out again, as the dated events do; other lines stay but count as after today's date, so players stop seeing them until the clock passes them again. The book keeps 5000 lines, dropping the oldest.
 Reverse: LEGENDS_CAP and merge() in legends-rules.mjs.
+## B1310. Progress clocks (2026-11-12)
+Ben approved the Improvement Desk item "Progress clocks" as described. WoDX Storyteller 0.35.0 shows long work and slow threats as segmented clocks (after Blades in the Dark). Clocks read from records WoDX keeps: long tasks (successes of the goal), heat on a hunting ground (of 10), ties that need tending (shown once half the time has gone), Ledger objectives (steps done) and open Ledger entries with a due date (time gone between made and due). The Storyteller makes clocks of their own (4, 6, 8, 10 or 12 segments) for a faction's plan or a hunter closing in. Rules in clock-rules.mjs; stored in the world setting wodx-storyteller.clocks.
+Reverse: remove the Clocks tool and the dashboard section.
+## B1311. Who sees a clock (2026-11-12)
+Every clock starts as the Storyteller's only. The Storyteller shows a clock to everyone or to the players of chosen characters, read clocks included. A house rule.
+Reverse: normClock's shown default in clock-rules.mjs.
+## B1312. Clocks that fill by themselves (2026-11-12)
+An own clock can fill by hand only (the default), one segment each faction turn, one each session's end, or one each full week of game time (counted from when the setting is chosen; setting the clock back starts the count again). When a clock fills, the Storyteller gets a whispered card; what happens is theirs to decide.
+Reverse: TICKS and tickAll in clock-rules.mjs.
+## B1313. A fight goes in the Storyteller's log (2026-11-12)
+When WoDX Combat starts a fight (wodxFightStarted), the Storyteller's log gets a note "A fight began on <scene>." It feeds the pacing note and the session report.
+Reverse: the wodxFightStarted listener in night.mjs registerNight.
+## B1314. The pacing note on the night's draw (2026-11-12)
+Ben chose the lighter version of the pacing dial: a note for the Storyteller only, on the night's draw window and its queue entry, that never changes what the draw picks. It reads the last seven nights of the log (a night runs noon to noon): a night is hard when it had a fight, a frenzy, a death or torpor, a Masquerade breach, Diablerie or a road encounter. The note says, first that matches: three or more hard nights of the last four; a hard night just past; three or more quiet nights in a row. Rules in pacing-rules.mjs.
+Reverse: pacingNow in night.mjs.
+## B1320. Standing with the spirit courts (2026-11-12)
+Ben approved the Improvement Desk item "Standing with the spirit courts" as described. WoDX Otherworlds 0.14.0 keeps, on each character who deals with spirits (Garou and the other Changing Breeds, Kinfolk, mages, mortal shamans), a standing from -5 to +5 with seven courts: Bird, Beast, Elementals, Wyld, Weaver, Wyrm and the character's totem. The books give chiminage, Bans and spirits who remember; the number is a house rule. Stored on flags.wodx-otherworlds.spirits; rules in spirit-rules.mjs.
+Reverse: remove the Spirits tool; the flag can stay.
+## B1321. What moves standing (2026-11-12)
+House rule: chiminage paid +1 with the spirit's court; chiminage owed and not paid -2; a Bane destroyed +1 with the Wyld and the totem and -1 with the Wyrm; a spirit bound or slain against its will -2 with its court; the totem's Ban kept through a hard test +1; the Ban broken -3; a favour +1 and a slight -1 with a chosen court; or the Storyteller moves a court by hand. WoDX Actions' Chiminage, when the Storyteller records a debt paid with a court picked, moves it by itself.
+Reverse: MOVES in spirit-rules.mjs.
+## B1322. What standing does (2026-11-12)
+House rule: +3 or more is -1 difficulty to summon a spirit of the court, to be taught a Gift by one, or to bind one into a fetish or talen; +5 is -2. -3 or less is +1 difficulty, -5 is +2 and the court may refuse outright. WoDX Actions applies it to Summon a spirit and Perform a rite when a court is picked, and shows the standing when learning a Gift.
+Reverse: effect() in spirit-rules.mjs; courtField in Actions garou.js.
+## B1323. What players see of standing (2026-11-12)
+Players see their own characters' standing in words (honoured, well regarded, known kindly, unknown, mistrusted, resented, scorned), not the number or what moved it.
+Reverse: spiritsDialog in Otherworlds spirits.mjs.
+## B1324. The courts across the eras (2026-11-12)
+The Storyteller's window gives a house note for the era from the clock's year: the Weaver's spirits gather where people build before 1800, spread with mills, rail and wire after, and take the Net from 1990; the Wyrm's feed on war and plague, then on industry; the Wyld's draw back from the cities. In the World of Future Darkness the courts of the machines and the Net are the Storyteller's to name, kept under Weaver spirits.
+Reverse: eraNotes in spirit-rules.mjs.

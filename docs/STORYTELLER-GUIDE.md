@@ -418,3 +418,13 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 | WoDX Masquerade | Breaches |
 
 Folders: "WoDX · Before the Embrace", "WoDX · Before the years", "WoDX · The Dead", "WoDX people".
+
+## The Legends book, progress clocks and the spirits (2026-11-12)
+
+**Legends of the Chronicle.** A journal everyone can read, one page per century, of what has really happened: dated events, the dead, Embraces and ghoulings, seats won and lost, havens that changed hands, boons kept and broken. It brings itself up to date when you end a session, around each time skip, and when you press Bring it up to date in the Legends window (the book button). Untick a line there to keep it from the players; Embraces, oaths and debts start hidden.
+
+**Progress clocks.** The clock button opens them for everyone; the dashboard has them too. Long tasks, heat, ties and Ledger objectives show as clocks by themselves. Make your own for a faction's plan or a hunter closing in, and let it fill each faction turn, each session or each week if you like. Nobody but you sees a clock until you press the eye and choose who does.
+
+**Pacing.** The night's draw window now opens with a line for you alone: three quiet nights in a row, or a hard night just past. It never changes what the draw picks.
+
+**The spirits.** The feather button opens a character's standing with the spirit courts. Record chiminage, Banes, Bans and slights there; Summon a spirit, Perform a rite and Chiminage in WoDX Actions take the court and use its standing.
