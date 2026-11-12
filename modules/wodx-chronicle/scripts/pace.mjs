@@ -31,6 +31,7 @@ async function check() {
 export function startPace() {
   if ( timer ) return;
   timer = setInterval(() => { check().catch(e => console.error(`${MODULE_ID} | pace`, e)); }, 30000);
+  timer?.unref?.(); // the harness runs this under Node: never keep it alive
   Hooks.on("updateWorldTime", () => { if ( !stepping ) last = Date.now(); });
 }
 export const paceLine = () => P.paceWords(setting("paceMinutes"), setting("paceEvery"));
