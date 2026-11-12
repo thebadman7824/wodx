@@ -8,6 +8,9 @@
  *     reads.
  *   Troupe ties (Storyteller): each player gets one question about the next character in a ring; the answers go on
  *     the Group actor and tick the step. A shared scene journal "How they met" gathers them.
+ *   A guest in this scene (0.14.0, Improvement Desk bf1, B2305 to B2307): the Storyteller asks another player's
+ *     character into a prelude scene, where their years allow. That player plays one beat (answered on a chat card,
+ *     or written by the Storyteller at the table), and the tie goes to troupe ties with what happened.
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import * as P from "./first-night-prelude-rules.mjs";
@@ -25,6 +28,8 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const pcs = () => [...(game.actors ?? [])].filter(a => a.hasPlayerOwner && !/group|spirit|creature/i.test(String(a.type))).sort((a, b) => a.name.localeCompare(b.name));
 const FOLDER = "WoDX preludes";
 
+/** A character's years from their lifepath, for a guest check: {line, birthYear, turnYear}, or null. */
+const guestYears = a => { const p = lifepathOf(a)?.path; return p ? {line: p.line, birthYear: p.birthYear, turnYear: p.turnYear} : null; };
 const preludeOf = actor => P.normPrelude(actor?.flags?.[MODULE_ID]?.[FLAG]?.prelude ?? {});
 const savePrelude = (actor, p) => actor.update({[`flags.${MODULE_ID}.${FLAG}.prelude`]: P.normPrelude(p)});
 const lineKey = actor => { try { return LP.lineFor(actor.type, actor.system?.settings?.variant ?? ""); } catch (e) { return "mortal"; } };
@@ -64,7 +69,7 @@ export class PreludeRunApp extends ApplicationV2 {
     window: {title: "The prelude", icon: "fa-solid fa-masks-theater", resizable: true},
     position: {width: 620, height: "auto"},
     actions: {prev: PreludeRunApp.#onPrev, next: PreludeRunApp.#onNext, roll: PreludeRunApp.#onRoll, reward: PreludeRunApp.#onReward,
-      undo: PreludeRunApp.#onUndo, short: PreludeRunApp.#onShort, note: PreludeRunApp.#onNote, journal: PreludeRunApp.#onJournal}
+      undo: PreludeRunApp.#onUndo, short: PreludeRunApp.#onShort, note: PreludeRunApp.#onNote, journal: PreludeRunApp.#onJournal, guest: PreludeRunApp.#onGuest}
   };
 
   static openFor(actor) {
@@ -103,6 +108,7 @@ export class PreludeRunApp extends ApplicationV2 {
           <button type="button" data-action="next" ${i >= scenes.length - 1 ? "disabled" : ""}>Next scene</button>
           <button type="button" data-action="roll"><i class="fa-solid fa-dice-d10"></i> A roll with stakes</button>
           <button type="button" data-action="note">A note</button>
+          <button type="button" data-action="guest"><i class="fa-solid fa-user-plus"></i> A guest in this scene</button>
         </div>
         <h4>What the prelude gives (${rec.spent} of ${P.PRELUDE_BUDGET} freebie points)</h4>
         <div class="wodx-buttons">${rewards}</div>
@@ -135,6 +141,36 @@ export class PreludeRunApp extends ApplicationV2 {
     const text = await DialogV2.prompt({window: {title: "A note"}, rejectClose: false, content: `<div class="form-group"><input type="text" name="t" maxlength="300"></div>`,
       ok: {label: "Add", callback: (e, b) => b.form.elements.t.value.trim()}});
     if ( text ) await this.#log({kind: "note", text: `${this.scene?.title ?? ""}: ${text}`});
+  }
+
+  static async #onGuest() {
+    const host = this.actor, scene = this.scene;
+    if ( !scene ) return;
+    const year = scene.year ?? yearNow();
+    const others = pcs().filter(a => a.id !== host.id).map(a => ({a, fit: P.guestFit(year, guestYears(a))}));
+    if ( !others.length ) return ui.notifications.info("A guest needs another player character.");
+    const opts = others.map(({a, fit}) => `<option value="${a.id}" ${fit.ok ? "" : "disabled"}>${esc(a.name)}${fit.why ? `: ${esc(fit.why)}` : ""}</option>`).join("");
+    if ( !others.some(o => o.fit.ok) ) return ui.notifications.info(`No other character could have been there${year ? ` in ${year}` : ""}.`);
+    const id = await DialogV2.prompt({window: {title: "A guest in this scene"}, rejectClose: false,
+      content: `<p>${esc(scene.title)}${year ? ` (${year})` : ""}. Who else was there?</p><div class="form-group"><select name="g" data-fixed>${opts}</select></div>`,
+      ok: {label: "Next", callback: (e, b) => b.form.elements.g.value}});
+    const pick = others.find(o => o.a.id === id && o.fit.ok);
+    if ( !pick ) return;
+    const beats = (P.GUEST_BEATS[pick.fit.as] ?? P.GUEST_BEATS.mortal).map((b, i) => P.guestBeat(pick.fit.as, i, pick.a.name, host.name));
+    const got = await DialogV2.wait({window: {title: `${pick.a.name} in ${host.name}'s prelude`}, rejectClose: false,
+      content: `${pick.fit.why ? `<p class="wodx-quiet">${esc(pick.fit.why)}</p>` : ""}<div class="form-group"><label>The beat</label><select name="b" data-fixed>${beats.map((b, i) => `<option value="${i}">${esc(b)}</option>`).join("")}</select></div>
+        <div class="form-group stacked"><label>What happened, if it was played at the table</label><textarea name="t" rows="3"></textarea></div>`,
+      buttons: [{action: "send", label: "Ask the player", default: true, callback: (e, b) => ({beat: beats[Number(b.form.elements.b.value) || 0], text: b.form.elements.t.value.trim(), send: true})},
+        {action: "write", label: "Write it now", callback: (e, b) => ({beat: beats[Number(b.form.elements.b.value) || 0], text: b.form.elements.t.value.trim()})},
+        {action: "cancel", label: "Cancel"}]});
+    if ( !got || got === "cancel" ) return;
+    const tie = P.guestTie({from: pick.a.id, about: host.id, scene: scene.key, year: scene.year ?? null, title: scene.title, beat: got.beat, text: got.text});
+    if ( got.text ) return saveGuest(tie);
+    const owners = game.users.filter(u => !u.isGM && pick.a.testUserPermission(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({whisper: [...owners, ...gmIds()], speaker: {alias: "Before the First Night"},
+      content: `<div class="wodx-card wodx-fn-tie"><h3>${esc(pick.a.name)} in ${esc(host.name)}'s prelude</h3><p>${esc(tie.q)}</p><button type="button" data-wodx-fn-guest>Play the beat</button></div>`,
+      flags: {[MODULE_ID]: {guest: tie}}});
+    await this.#log({kind: "note", text: `${scene.title}: ${pick.a.name} asked in as a guest.`});
   }
 
   static async #onRoll() {
@@ -197,6 +233,7 @@ export class PreludeRunApp extends ApplicationV2 {
     if ( u.actor ) await game.actors.get(u.actor)?.delete();
     if ( u.path ) await a.update({[u.path]: u.was});
     if ( u.itemId ) await a.items.get(u.itemId)?.update({"system.value": u.was, "system.level": String(u.was)});
+    if ( u.tie ) await dropTie(u.tie);
     e.undone = true;
     if ( e.kind === "reward" ) rec.spent = Math.max(0, rec.spent - P.rewardCost(u.kind, costsOf(a)));
     await savePrelude(a, rec);
@@ -242,15 +279,38 @@ export async function sendTies() {
   return out;
 }
 
+const groupActor = () => game.actors.find(x => /group/i.test(String(x.type)));
+async function putTie(tie) {
+  const a = game.actors.get(tie.from), b = game.actors.get(tie.about), group = groupActor();
+  if ( !a || !b || !group ) return;
+  const ties = [...(group.flags?.[MODULE_ID]?.ties ?? []).filter(t => !P.sameTie(t, tie)), {...tie, text: String(tie.text ?? "").slice(0, 1000), fromName: a.name, aboutName: b.name}];
+  await group.update({[`flags.${MODULE_ID}.ties`]: ties});
+}
+async function dropTie(tie) {
+  const group = groupActor();
+  if ( group ) await group.update({[`flags.${MODULE_ID}.ties`]: (group.flags?.[MODULE_ID]?.ties ?? []).filter(t => !P.sameTie(t, tie))});
+}
+
+/** GM: a guest's beat, written to troupe ties and to the host's prelude log (with Undo). Any client may call it. */
+export async function saveGuest(tie) {
+  if ( !game.user.isGM ) return game.socket.emit(`module.${MODULE_ID}`, {type: "guest.answer", payload: {tie}});
+  const a = game.actors.get(tie?.from), host = game.actors.get(tie?.about);
+  if ( !a || !host || !tie.text ) return;
+  await putTie(tie);
+  const rec = preludeOf(host);
+  rec.log.push({at: game.time?.worldTime ?? 0, scene: tie.scene, kind: "guest", text: `${tie.q} ${a.name}: ${tie.text}`,
+    undo: {tie: {from: tie.from, about: tie.about, kind: "guest", scene: tie.scene}}});
+  await savePrelude(host, rec);
+  await a.update({[`flags.${MODULE_ID}.${FLAG}.steps.ties`]: {done: true, at: game.time?.worldTime ?? 0, by: null}});
+  globalThis.foundry?.applications?.instances?.get?.(`wodx-fn-prelude-${host.id}`)?.render();
+  globalThis.foundry?.applications?.instances?.get?.("wodx-first-night")?.render();
+}
+
 async function saveTie(from, about, q, text) {
   if ( !game.user.isGM ) return game.socket.emit(`module.${MODULE_ID}`, {type: "tie.answer", payload: {from, about, q, text}});
   const a = game.actors.get(from), b = game.actors.get(about);
   if ( !a || !b ) return;
-  const group = game.actors.find(x => /group/i.test(String(x.type)));
-  if ( group ) {
-    const ties = [...(group.flags?.[MODULE_ID]?.ties ?? []).filter(t => !(t.from === from && t.about === about)), {from, about, q, text: String(text).slice(0, 1000), fromName: a.name, aboutName: b.name}];
-    await group.update({[`flags.${MODULE_ID}.ties`]: ties});
-  }
+  await putTie({from, about, q, text});
   await a.update({[`flags.${MODULE_ID}.${FLAG}.steps.ties`]: {done: true, at: game.time?.worldTime ?? 0, by: null}});
   globalThis.foundry?.applications?.instances?.get?.("wodx-first-night")?.render();
 }
@@ -260,7 +320,7 @@ export async function meetingJournal() {
   if ( !game.user.isGM ) return null;
   const group = game.actors.find(x => /group/i.test(String(x.type)));
   const ties = group?.flags?.[MODULE_ID]?.ties ?? [];
-  const body = ties.length ? ties.map(t => `<h3>${esc(t.fromName)} on ${esc(t.aboutName)}</h3><p><em>${esc(t.q)}</em></p><p>${esc(t.text)}</p>`).join("")
+  const body = ties.length ? ties.map(t => `<h3>${t.kind === "guest" ? `${esc(t.fromName)} in ${esc(t.aboutName)}'s prelude` : `${esc(t.fromName)} on ${esc(t.aboutName)}`}</h3><p><em>${esc(t.q)}</em></p><p>${esc(t.text)}</p>`).join("")
     : "<p>No answers yet.</p>";
   return JournalEntry.create({name: "How they met", ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER},
     pages: [{name: "How they met", type: "text", text: {content: `<p>A shared scene before the first night, built from what each player said about another.</p>${body}`, format: 1}}]})
@@ -268,8 +328,23 @@ export async function meetingJournal() {
 }
 
 export function registerTies() {
-  game.socket?.on?.(`module.${MODULE_ID}`, async m => { if ( m?.type === "tie.answer" && game.user.isGM && game.users.activeGM?.id === game.user.id ) await saveTie(m.payload.from, m.payload.about, m.payload.q, m.payload.text); });
+  game.socket?.on?.(`module.${MODULE_ID}`, async m => { if ( m?.type === "tie.answer" && game.user.isGM && game.users.activeGM?.id === game.user.id ) await saveTie(m.payload.from, m.payload.about, m.payload.q, m.payload.text);
+    if ( m?.type === "guest.answer" && game.user.isGM && game.users.activeGM?.id === game.user.id ) await saveGuest(m.payload?.tie); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
+    const g = message.flags?.[MODULE_ID]?.guest;
+    if ( g ) {
+      const root = el?.[0] ?? el, btn = root?.querySelector?.("[data-wodx-fn-guest]");
+      if ( !btn ) return;
+      if ( !game.actors.get(g.from)?.isOwner ) { btn.remove(); return; }
+      btn.addEventListener("click", async () => {
+        const text = await DialogV2.prompt({window: {title: "A guest's beat"}, rejectClose: false, content: `<p>${esc(g.q)}</p><textarea name="t" rows="4"></textarea>`,
+          ok: {label: "Send", callback: (e, b) => b.form.elements.t.value.trim()}});
+        if ( !text ) return;
+        await saveGuest({...g, text});
+        ui.notifications.info("Your beat is in the troupe ties.");
+      });
+      return;
+    }
     const t = message.flags?.[MODULE_ID]?.tie;
     if ( !t ) return;
     const root = el?.[0] ?? el, btn = root?.querySelector?.("[data-wodx-fn-tie]");

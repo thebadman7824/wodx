@@ -18,13 +18,19 @@ import {watched} from "./signature-rules.mjs";
  *     own golconda flag: no frenzy, no Rötschreck).
  *   Story chains (podChains): dated runs of scenes the clock deals out, and opening goals for new characters.
  *
- * World setting podState = {cities: {<name>: {value, at, sect}}, chains: [{id, key, where, at, last}]}.
+ *   Lifepath threads (0.43.0, Improvement Desk cr2, B2300 to B2304): with Story chains on, the open threads of each
+ *     player character's lifepath (a rival, a debt, someone lost, an enemy) fall due one at a time and go to the
+ *     approval queue; an approved one runs as a story chain with the person the lifepath made.
+ *
+ * World setting podState = {cities: {<name>: {value, at, sect}}, chains: [{id, key, where, at, last, lp?}],
+ *   lp: {<actorId>: {since, last, seen: {<threadId>: "put"|"running"|"dismissed"}}}}.
  * Actor flags wodx-chronicle.golconda = {step, mentor, mentorAt, log} and wodx-chronicle.goal = {key, label}.
  * Each switch starts off. The city of a scene is its flag wodx-chronicle.city, or the setting podCity.
  */
 
 const DAY = 86400;
 const T_TEACH = `${MODULE_ID}.podTeach`;
+const T_LP = `${MODULE_ID}.podLifepath`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 const now = () => game.time?.worldTime ?? 0;
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -219,18 +225,66 @@ export async function stopChain(id) { const s = state(); s.chains = (s.chains ??
 /** Post every step that has fallen due. */
 export async function dealChains() {
   if ( !lineOn("podChains") || !isActiveGM() ) return;
-  const s = state(), t = now();
+  const s = state(), t = now(), yr = currentYear();
   let changed = false;
   for ( const run of s.chains ?? [] ) {
-    let n = P.nextStep(run);
+    let n = P.nextStep(run, yr);
     while ( n && n.due <= t ) {
-      const c = P.chainByKey(run.key);
+      const c = P.chainOf(run, yr);
       await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, `<p>${esc(run.where)}. ${esc(n.text)}</p>${n.last ? `<p class="vta-note">The last step. ${esc(c.page)}.</p>` : ""}`);
       run.at = n.index + 1; run.last = t; changed = true;
-      n = P.nextStep(run);
+      n = P.nextStep(run, yr);
     }
   }
-  if ( changed ) { s.chains = s.chains.filter(r => P.nextStep(r)); await saveState(s); }
+  if ( changed ) { s.chains = s.chains.filter(r => P.nextStep(r, yr)); await saveState(s); }
+}
+
+/* ---------------- lifepath threads (cr2) ---------------- */
+
+const threadsOf = a => { try { return api("wodx-creation")?.lifepathThreads?.(a) ?? []; } catch (e) { return []; } };
+const pcs = () => [...(game.actors ?? [])].filter(a => a.hasPlayerOwner && !/group|spirit|creature/i.test(String(a.type)));
+
+/** Put each character's next due thread to the Storyteller (one per character per call). */
+export async function lifepathTick() {
+  if ( !lineOn("podChains") || !isActiveGM() ) return;
+  const s = state(), t = now();
+  s.lp ??= {};
+  let changed = false;
+  for ( const a of pcs() ) {
+    const threads = threadsOf(a);
+    if ( !threads.length ) continue;
+    if ( !s.lp[a.id] ) { s.lp[a.id] = {since: t, last: null, seen: {}}; changed = true; }
+    const st = s.lp[a.id], x = P.lpNext(st, threads, t);
+    if ( !x ) continue;
+    st.seen[x.id] = "put"; st.last = t; changed = true;
+    await propose({type: T_LP, key: `lp:${a.id}:${x.id}`, title: `From ${a.name}'s past: ${x.label.toLowerCase()}`,
+      detail: `${x.year}, ${x.scene}: ${x.name ? `${x.name}, ` : ""}${P.third(x.role, a.name)}${x.note ? `, ${P.third(x.note, a.name)}` : ""}. Approve to run it as a story chain; reject to leave it in the past.`,
+      data: {actor: a.id, thread: x}});
+  }
+  if ( changed ) await saveState(s);
+}
+
+/** Start a thread's chain now (approval, or the Storyteller's window). */
+export async function startThread(actorId, thread, where = "") {
+  if ( !game.user.isGM || !thread?.kind ) return null;
+  const a = game.actors.get(actorId), s = state();
+  s.chains ??= []; s.lp ??= {};
+  const st = s.lp[actorId] ??= {since: now(), last: now(), seen: {}};
+  if ( s.chains.some(r => r.lp?.actorId === actorId && r.lp?.id === thread.id) ) return null;
+  st.seen[thread.id] = "running";
+  const run = {id: foundry.utils.randomID(), key: `lp:${thread.kind}`, where: where || cityOf(canvas?.scene), at: 0, last: now(),
+    lp: {...thread, actorId, actorName: a?.name ?? ""}};
+  if ( thread.actorId ) { const n = game.actors.get(thread.actorId); if ( n ) run.lp.name = n.name; }
+  s.chains.push(run);
+  await saveState(s);
+  await dealChains();
+  return run;
+}
+async function dismissThread(actorId, id) {
+  if ( !actorId || !id ) return;
+  const s = state(); s.lp ??= {};
+  (s.lp[actorId] ??= {since: now(), last: now(), seen: {}}).seen[id] = "dismissed";
+  await saveState(s);
 }
 const lineOf = a => { const t = a?.type ?? "", k = kindName(a);
   if ( t === "Vampire" || /vampire/.test(k) ) return "vampire";
@@ -294,6 +348,7 @@ export class PodApp extends ApplicationV2 {
       quiet: async function(e, el) { const s = state(); delete s.cities?.[el.dataset.city]; await saveState(s); this.render(); },
       chain: async function(e, el) { const k = this.element.querySelector("select[name=chain]").value, w = this.element.querySelector("input[name=where]").value.trim(); await startChain(k, w); this.render(); },
       stop: async function(e, el) { await stopChain(el.dataset.id); this.render(); },
+      thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
         await raiseBuilding({patron: v("patron"), building: v("building"), faction: v("faction"), restore: f.querySelector("[name=restore]").checked}); }
     }};
@@ -313,8 +368,11 @@ export class PodApp extends ApplicationV2 {
     }
     if ( lineOn("podChains") ) {
       const list = P.chainsFor(yr);
-      parts.push(`<h3>Story chains</h3><ul>${(s.chains ?? []).map(r => { const c = P.chainByKey(r.key), n = P.nextStep(r); return `<li>${esc(c?.label ?? r.key)} at ${esc(r.where)}: ${n ? `next, ${esc(n.title)}, in ${Math.max(0, Math.ceil((n.due - now()) / DAY))} days` : "done"} <button type="button" data-action="stop" data-id="${r.id}">Stop</button></li>`; }).join("") || "<li>None running.</li>"}</ul>
+      parts.push(`<h3>Story chains</h3><ul>${(s.chains ?? []).map(r => { const c = P.chainOf(r, yr), n = P.nextStep(r, yr); return `<li>${esc(c?.label ?? r.key)} at ${esc(r.where)}: ${n ? `next, ${esc(n.title)}, in ${Math.max(0, Math.ceil((n.due - now()) / DAY))} days` : "done"} <button type="button" data-action="stop" data-id="${r.id}">Stop</button></li>`; }).join("") || "<li>None running.</li>"}</ul>
         ${list.length ? `<div class="form-group"><select name="chain" data-fixed>${list.map(c => `<option value="${c.key}">${esc(c.label)}</option>`).join("")}</select><input name="where" placeholder="Where (blank for this city)"><button type="button" data-action="chain">Start</button></div>` : `<p>No chain fits ${yr}.</p>`}`);
+      const seenOf = id => s.lp?.[id]?.seen ?? {}, word = {put: "waiting for approval", running: "running", dismissed: "left in the past"};
+      const rows = pcs().flatMap(a => threadsOf(a).map(x => `<li>${esc(a.name)}: ${esc(x.label)} (${x.year}, ${esc(x.name ? `${x.name}, ${x.role}` : x.role)})${seenOf(a.id)[x.id] ? `, ${word[seenOf(a.id)[x.id]] ?? ""}` : ` <button type="button" data-action="thread" data-actor="${a.id}" data-thread="${esc(x.id)}">Start now</button>`}</li>`));
+      parts.push(`<h3>Threads from the past</h3><ul>${rows.join("") || "<li>No open threads. They come from a character's lifepath.</li>"}</ul><p class="vta-note">Each falls due by itself in time and comes to the approval queue.</p>`);
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -335,6 +393,8 @@ export function registerPodHooks() {
     await a.update({[`flags.${MODULE_ID}.golconda.mentorAt`]: (r.mentorAt ?? now()) + P.MENTOR_DAYS * DAY});
     await golcondaStep(a, 1, `${r.mentor}'s teaching`);
   }});
+  registerHandler(T_LP, {label: "A thread from a character's lifepath returns as a story chain",
+    approve: e => startThread(e.data?.actor, e.data?.thread), reject: e => dismissThread(e.data?.actor, e.data?.thread?.id)});
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | exposure`, e)); });
   Hooks.on("wodxSensesGather", onSenses);
   Hooks.on("wodxDamageApplied", onDamage);
@@ -344,7 +404,7 @@ export function registerPodHooks() {
   Hooks.on("wodxFirstNightSigned", onFirstNight);
   let last = 0;
   const tick = () => { if ( !isActiveGM() || Date.now() - last < 2000 ) return; last = Date.now();
-    dealChains().catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    dealChains().then(() => lifepathTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", tick);
   Hooks.on("wodxSkipEnd", tick);
@@ -358,4 +418,4 @@ export function registerPodHooks() {
 }
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
-  startChain, stopChain, dealChains, goals, setGoal, open: () => new PodApp().render(true), rules: P};
+  startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal, open: () => new PodApp().render(true), rules: P};

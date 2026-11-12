@@ -747,3 +747,9 @@ Ben explicitly approved every row that was waiting for review ("Approve all item
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | Lifepath threads (cr2): when do they fall due? | The first 14 days of game time after Chronicle first sees the lifepath, then one every 30 days, each through the approval queue (B2301) | Change LP_DAYS in wodx-chronicle/data/pod-lifepath.mjs |
+| 2026-11-12 | Lifepath threads (cr2): what happens to people from long ago? | A mortal more than 70 years back is dead and a descendant carries the thread; the undying more than 150 years back come back stronger and may serve something older (B2302) | Change LP_ALIVE_SPAN or LP_OLD_SPAN in Chronicle's pod-rules.mjs |
+| 2026-11-12 | Lifepath threads (cr2): who counts as undying? | Read from the role: sires, vampires, princes, harpies, domitors, anarchs, the dead, spirits, monsters; for a vampire's past, elders and the court too (B2303) | Edit UNDYING in wodx-creation/scripts/lifepath-threads-rules.mjs |
+| 2026-11-12 | Guest in a prelude (bf1): how long does each line live, for the years check? | Mortal span 100 years; ghouls and revenants 200; mages 150; Kindred, wraiths, mummies, Kuei-jin and the fallen do not age once turned; 100 years turned makes an elder; a wraith comes as a ghost (B2305) | Change SPAN, UNDYING_LINES or ELDER_YEARS in first-night-prelude-rules.mjs |
+| 2026-11-12 | Guest in a prelude (bf1): are places checked? | No: every lifepath is set in the chronicle's own lands, so the Storyteller rules out a guest who was abroad (B2305) | Add a place check to guestFit once lifepaths have regions |
+| 2026-11-12 | Guest in a prelude (bf1): does a guest beat cost or give points? | No, it is story only (B2307) | Give a reward from the runner by hand |
