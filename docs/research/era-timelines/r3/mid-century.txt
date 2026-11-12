@@ -1,0 +1,306 @@
+# Mid-century, 1919 to 1989. year[-month]|kind|lines|region|place|tags|title|text
+1919-1|H|mor|EU|Paris|treaty|The Paris Peace Conference|The victors meet in Paris to redraw the map of Europe and the Middle East; the beaten are not invited.
+1919-1|H|mor|EU|Berlin|uprising,death|The Spartacist rising|Freikorps veterans crush a communist rising in Berlin and murder Rosa Luxemburg and Karl Liebknecht.
+1919-1|H|mor|MO|Cieszyn|war|The Seven Days' War|Czechoslovakia and Poland fight over the coal district of Cieszyn Silesia, beside Ostrava.
+1919-3|H|mor|EU|Budapest|revolution|The Hungarian Soviet Republic|Bela Kun's communists take power in Hungary for a hundred and thirty-three days.
+1919-3|H|mor|MO|Kadan|massacre|The March killings|Czech troops fire on Germans demonstrating for self-rule in the Sudeten towns; fifty-four die.
+1919-3|H|mor|ME|Cairo|uprising|The Egyptian revolution|Egyptians rise against British rule when the nationalist Zaghlul is exiled.
+1919-3|H|mor|AS|Seoul|uprising|The March First Movement|Koreans read a declaration of independence in Seoul; Japanese troops kill thousands across the country.
+1919-4|H|mor|AS|Amritsar|massacre|Amritsar|General Dyer's troops fire into an unarmed crowd in the Jallianwala Bagh and kill hundreds.
+1919-5|H|mor|AS|Beijing|uprising,learning|The May Fourth Movement|Beijing students march against the treaty giving Shandong to Japan, and a new Chinese culture is born.
+1919-5|H|mor|ME|Smyrna|war|The Greeks land at Smyrna|Greek troops land at Smyrna with Allied blessing, and the war for Anatolia begins.
+1919-5|H|mor|ME|Samsun|war,founding|Mustafa Kemal at Samsun|Mustafa Kemal lands at Samsun and begins organising Turkish resistance.
+1919-6|H|mor|EU|Versailles|treaty|The Treaty of Versailles|Germany signs the treaty in the Hall of Mirrors, accepting guilt for the war and huge reparations.
+1919-6|H|mor|EU|Scapa Flow|sea|Scapa Flow|The interned German fleet scuttles itself at Scapa Flow.
+1919-9|H|mor|EU|Saint-Germain|treaty|Saint-Germain|Austria signs away its empire and is forbidden to join Germany.
+1919|H|mor|MO|Brno|founding,learning|Masaryk University|Brno gets its Czech university at last, named for the president.
+1919|H|mor|MO|Brno|law|Great Brno|Brno absorbs twenty-three villages and suburbs and becomes the second city of the republic.
+1919|W|vam|MO|Brno|founding,occult|Brno's Kindred renamed|The house reading has Brno's Kindred court give itself Czech names for its offices, and the German-speaking elders take offence.
+1919|H|mor|AS|Kabul|war,founding|The Third Afghan War|Afghanistan fights Britain for a month and wins control of its own foreign affairs.
+1919|H|mor|EU|Weimar|founding,law|The Weimar Republic|Germany's national assembly meets at Weimar and writes a democratic constitution.
+1920-6|H|mor|EU|Trianon|treaty|Trianon|Hungary loses two thirds of its land, Slovakia among it, by the Treaty of Trianon.
+1920-8|H|mor|EU|Warsaw|battle|The Miracle on the Vistula|Pilsudski's Poles turn the Red Army back before Warsaw and stop the revolution from marching west.
+1920-8|H|mor|ME|Sevres|treaty|Sevres|The Ottoman sultan signs away most of Anatolia; the Turkish nationalists refuse it.
+1920|H|mor|EU|Prague|law|The Czechoslovak constitution|Czechoslovakia adopts a democratic constitution on the French model.
+1920|H|mor|ME|Damascus|war,crown|Faisal driven out|France defeats King Faisal's Syrian army at Maysalun and takes Damascus.
+1920|H|mor|ME|Baghdad|uprising|The Iraqi revolt|Iraq rises against British rule; the RAF bombs villages to end it.
+1920|H|mor|ME|San Remo|treaty,empire|The mandates|The Allies give Syria and Lebanon to France and Iraq and Palestine to Britain.
+1920|W|mum|ME|Cairo|uprising,occult|The Reborn and the new Egypt|The house reading has the Reborn watch Egypt's nationalists with hope, for a free Egypt guards its own dead.
+1920|H|mor|EU|Prague|faith|The Czechoslovak Hussite Church|Priests break from Rome to found a national Czechoslovak church.
+1921|H|mor|EU|Kronstadt|uprising|Kronstadt|The sailors of Kronstadt rise against the Bolsheviks and are crushed.
+1921|H|mor|EU|Volga|famine|The Volga famine|War and requisitions bring famine to the Volga; five million die.
+1921|H|mor|ME|Cairo|treaty|The Cairo Conference|Churchill makes Faisal king of Iraq and Abdullah emir of Transjordan.
+1921|H|mor|AS|Shanghai|founding|The Chinese Communist Party|A dozen delegates found the Chinese Communist Party in Shanghai.
+1921|H|mor|EU|Dublin|treaty|The Anglo-Irish Treaty|The Irish Free State is born, and the civil war follows.
+1921|W|mag|EU|Vienna|occult,learning|The Order in Vienna|The house reading has Vienna's Hermetics salvage the old court library's secret shelves as the empire's archives are split.
+1922-9|H|mor|ME|Smyrna|fire,massacre|Smyrna burns|The Turkish army retakes Smyrna, and the Greek and Armenian quarters burn.
+1922-10|H|mor|EU|Rome|revolution|The March on Rome|Mussolini's Blackshirts march on Rome and the king makes him prime minister.
+1922-11|H|mor|ME|Luxor|occult,exploration|Tutankhamun's tomb|Howard Carter opens the sealed tomb of Tutankhamun in the Valley of the Kings.
+1922-11|W|mum|ME|Luxor|occult,crime|The curse of the pharaoh|The house reading has the tomb's guardians wake, and Lord Carnarvon's death the next spring is no accident.
+1922-12|H|mor|EU|Moscow|founding|The Soviet Union|Russia, Ukraine, Belarus and Transcaucasia join as the Union of Soviet Socialist Republics.
+1922|W|hun|EU|London|occult,crime|The Cottingley fairies|The house reading has the Arcanum smile at the fairy photographs that fool Conan Doyle, and quietly visit the beck at Cottingley.
+1923|H|mor|ME|Lausanne|treaty,migration|The Lausanne exchange|Greece and Turkey trade populations; over a million Greeks and half a million Muslims are uprooted.
+1923|H|mor|ME|Ankara|founding|The Turkish Republic|Mustafa Kemal proclaims the Republic of Turkey with its capital at Ankara.
+1923|H|mor|AS|Tokyo|quake,fire|The Great Kanto earthquake|An earthquake and firestorm destroy Tokyo and Yokohama and kill over a hundred thousand; mobs murder Koreans.
+1923|W|kue|AS|Tokyo|quake,occult|Kanto and the Wan Kuei|The house reading has the Kuei-jin of Tokyo see the quake as a sign of the Sixth Age deepening.
+1923|H|mor|EU|Berlin|money|Hyperinflation|The German mark collapses; a loaf of bread costs billions and the savings of the middle class vanish.
+1923|H|mor|EU|Munich|revolution|The beer hall putsch|Hitler tries to seize power in Munich and is jailed.
+1924|H|mor|ME|Istanbul|faith,law|The caliphate abolished|The Turkish republic abolishes the caliphate and sends the last caliph into exile.
+1924|H|mor|EU|Moscow|death|Lenin dies|Lenin dies after a series of strokes, and Stalin begins to outmanoeuvre the other heirs.
+1924|H|mor|EU|Prague|art,death|Kafka dies|Franz Kafka dies near Vienna; a friend refuses to burn the manuscripts.
+1924|W|wra|EU|Ypres|death,occult|The Menin Gate|The house reading has the names on the Menin Gate draw the unremembered dead of Flanders in a slow crowd.
+1925|H|mor|ME|Damascus|uprising|The Great Syrian Revolt|The Druze rise against the French, and France shells Damascus.
+1925|H|mor|ME|Tehran|crown|Reza Shah|Reza Khan ends the Qajar dynasty and crowns himself shah of Persia.
+1925|H|mor|AS|Shanghai|uprising|The May Thirtieth Movement|British-led police fire on protesters in Shanghai, and strikes spread across China.
+1925|H|mor|EU|Locarno|treaty|Locarno|Germany, France and Belgium agree their western borders; the eastern ones are left open.
+1926|H|mor|AS|Guangzhou|war|The Northern Expedition|Chiang Kai-shek's Nationalists march north from Canton to beat the warlords and unify China.
+1926|H|mor|EU|London|uprising,industry|The General Strike|British unions call a general strike for nine days in support of the miners.
+1926|H|mor|MO|Brno|art|The Makropulos Affair|Janacek's opera of a woman who has lived three hundred years opens in Brno.
+1926|W|vam|MO|Brno|art,occult|An opera about the undying|The house reading has the Kindred of Brno attend Janacek's premiere and wonder who told the composer.
+1927|H|mor|AS|Shanghai|massacre|The Shanghai massacre|Chiang turns on his communist allies in Shanghai and kills thousands.
+1927|H|mor|ME|Kirkuk|industry,trade|Oil at Baba Gurgur|Oil gushes for days from the well at Baba Gurgur near Kirkuk, and Iraq's oil age begins.
+1927|H|mor|EU|Berlin|art|Metropolis|Fritz Lang's film of a city of machines and workers opens in Berlin.
+1928|H|mor|MO|Brno|building,art|The Exhibition of Contemporary Culture|Brno opens its new exhibition grounds with a show of ten years of the republic; functionalist buildings rise across the city.
+1928|H|mor|ME|Ismailia|founding,faith|The Muslim Brotherhood|Hassan al-Banna, a schoolteacher, founds the Muslim Brotherhood in Ismailia to renew Egypt through Islam.
+1928|H|mor|EU|London|science|Penicillin|Alexander Fleming notices mould killing bacteria in a dish.
+1929|H|mor|EU|Prague|faith|The St Wenceslas millennium|Czechoslovakia marks a thousand years since the murder of St Wenceslas, and St Vitus Cathedral is finished.
+1929|H|mor|ME|Hebron|massacre|The Hebron massacre|Arab rioters kill sixty-seven Jews in Hebron, ending a community that had lived there for centuries.
+1929|H|mor|EU|Vienna|money|The Great Crash|The Wall Street crash spreads ruin to Europe; two years later the Vienna Creditanstalt fails and the Depression deepens.
+1929|W|mag|EU|London|money,occult|The Syndicate's crash|The house reading has the Syndicate allow the crash, the better to buy up the wreckage.
+1930|H|mor|MO|Brno|building,art|Villa Tugendhat|Mies van der Rohe finishes the Tugendhat house on a Brno hillside, a landmark of modern architecture.
+1930|H|mor|AS|Dandi|uprising|The Salt March|Gandhi walks to the sea at Dandi to make salt against British law; tens of thousands are jailed.
+1930|H|mor|AS|Taiwan|uprising|The Wushe rising|Indigenous Seediq rise against Japanese rule in Taiwan and are crushed with gas.
+1931|H|mor|AS|Mukden|war,empire|The Mukden Incident|Japanese officers blow up a railway and use it to seize Manchuria.
+1931|H|mor|AS|Wuhan|flood|The China floods|The Yangtze and Huai flood, and perhaps two million die.
+1931|H|mor|MO|Zlin|industry,founding|Bata's Zlin|The shoe king Tomas Bata builds Zlin into a company town of brick and glass and sells shoes across the world.
+1931|H|mor|EU|Madrid|revolution|The Spanish Republic|Spain's king leaves and a republic is proclaimed.
+1932|H|mor|MO|Otrokovice|death,travel|Bata dies|Tomas Bata dies when his plane crashes on take-off at Otrokovice.
+1932|H|mor|EU|Ukraine|famine|The Holodomor|Stalin's seizure of grain and seed starves Ukraine and the Kuban; millions die in villages sealed off by police.
+1932|H|mor|ME|Riyadh|founding,crown|Saudi Arabia|Ibn Saud, master of Najd and the Hejaz, names his kingdom Saudi Arabia after his own house.
+1932|H|mor|ME|Baghdad|founding|Iraq independent|Iraq joins the League of Nations as an independent kingdom.
+1933|H|mor|EU|Berlin|crown|Hitler chancellor|President Hindenburg appoints Hitler chancellor of Germany, and the Nazis take the state apart within months.
+1933|H|mor|EU|Berlin|fire,law|The Reichstag fire|The German parliament burns, and the Nazis use it to suspend civil rights.
+1933|W|vam,mag|EU|Berlin|occult,terror|The shadow over Germany|The house reading has German Kindred and Mages split over the Nazis; some see a tool, most see a fire that burns the hand.
+1933|H|mor|EU|Dachau|persecution|Dachau|The first concentration camp opens at Dachau outside Munich, for communists, socialists and other enemies of the state.
+1933|H|mor|AS|Tokyo|treaty|Japan leaves the League|Japan walks out of the League of Nations over Manchuria.
+1934|H|mor|EU|Vienna|uprising|The Austrian civil war|Socialist workers fight the government in Vienna for four days; the army shells the workers' flats.
+1934|H|mor|EU|Berlin|crime,terror|The Night of the Long Knives|Hitler has the SA leaders and other rivals murdered.
+1934|H|mor|AS|Jiangxi|migration,war|The Long March|The Red Army breaks out of encirclement and marches six thousand miles to Shaanxi.
+1934|H|mor|AS|Bihar|quake|The Bihar earthquake|An earthquake on the Nepal border kills ten thousand.
+1935|H|mor|EU|Prague|crown|Benes president|The aged Masaryk retires, and the foreign minister Edvard Benes becomes president of Czechoslovakia.
+1935|H|mor|EU|Nuremberg|law,persecution|The Nuremberg laws|Germany strips Jews of citizenship and forbids marriage between Jews and other Germans.
+1935|H|mor|AS|Quetta|quake|The Quetta earthquake|An earthquake in the night destroys Quetta in Baluchistan and kills thirty thousand.
+1935|H|mor|ME|Tehran|law|Persia becomes Iran|Reza Shah asks the world to call the country Iran.
+1936|H|mor|EU|Madrid|war|The Spanish Civil War|Generals rise against the Spanish republic, and Europe's armies try out their weapons in Spain.
+1936|W|vam|EU|Madrid|war,occult|The Lasombra in Spain|The house reading has the Sabbat and the Camarilla both fight in the shadow of the Spanish war; the Lasombra claim Madrid.
+1936|H|mor|EU|Berlin|sport|The Berlin Olympics|Germany stages the Olympics as propaganda; Jesse Owens wins four gold medals.
+1936|H|mor|ME|Jaffa|uprising|The Arab revolt in Palestine|Palestinian Arabs strike and rise against British rule and Jewish immigration.
+1936|H|mor|AS|Xi'an|crime|The Xi'an Incident|Chiang Kai-shek is kidnapped by his own generals until he agrees to fight Japan with the communists.
+1936|H|mor|MO|Brno|building|The Masaryk circuit|Brno opens its road racing circuit, and the Czechoslovak Grand Prix draws crowds of a hundred thousand.
+1937|H|mor|AS|Marco Polo Bridge|war|The war with Japan|Fighting at the Marco Polo Bridge begins full war between China and Japan.
+1937|H|mor|AS|Nanjing|massacre|The Nanjing massacre|Japanese troops kill hundreds of thousands of civilians and prisoners in Nanjing.
+1937|W|kue|AS|Nanjing|massacre,occult|Nanjing's hungry dead|The house reading has the Yomi stir beneath Nanjing, and the Kuei-jin courts of the city fall.
+1937|H|mor|EU|Guernica|war,terror|Guernica|German and Italian bombers destroy the Basque town of Guernica on market day, and Picasso paints it.
+1937|H|mor|EU|Moscow|terror|The Great Terror|Stalin's police shoot hundreds of thousands and send millions to the camps.
+1938-3|H|mor|EU|Vienna|empire|The Anschluss|Germany annexes Austria, and Czechoslovakia is surrounded on three sides.
+1938-9|H|mor|EU|Munich|treaty|Munich|Britain and France agree that Germany may take the Sudetenland; Czechoslovakia is not asked.
+1938-10|H|mor|MO|Opava|empire,migration|The Sudetenland taken|German troops march into the borderlands, Opava and Znojmo among them, and Czechs flee inland.
+1938-11|H|mor|EU|Berlin|persecution,fire|Kristallnacht|Nazis burn synagogues and smash Jewish shops across Germany and Austria.
+1938|W|all,vam|MO|Brno|occult,war|The prince goes to ground|The house reading has the Kindred of Brno split after Munich; some flee to Prague, the prince goes to ground under the Spilberk.
+1938|H|mor|EU|Berlin|science|Fission|Hahn and Strassmann split the uranium atom in Berlin.
+1939-3|H|mor|MO|Brno|empire,war|The Protectorate|German troops enter Prague and Brno; Bohemia and Moravia become a protectorate of the Reich and Slovakia a client state.
+1939-9|H|mor|EU|Poland|war|Poland invaded|Germany invades Poland, the Soviets follow from the east, and Britain and France declare war.
+1939-11|H|mor|EU|Prague|persecution,learning|The universities closed|After student protests, Czech universities are closed, nine students are shot and twelve hundred sent to camps.
+1939-11|H|mor|EU|Finland|war,weather|The Winter War|The Soviet Union attacks Finland, and the Finns hold in the snow for three months.
+1939|W|wra|EU|Poland|war,occult|The coming storm|The house reading has the Underworld shake as the war begins; the Hierarchy prepares for the worst Maelstrom in memory.
+1939|W|mag|EU|Berlin|science,occult|The Technocracy and the Reich|The house reading has the Technocracy's council forbid any convention to serve the Reich, though some Progenitors ignore it.
+1940-4|H|mor|EU|Katyn|massacre|Katyn|Soviet police shoot over twenty thousand Polish officers and prisoners in the Katyn forest and elsewhere.
+1940-5|H|mor|EU|Sedan|war,battle|The fall of France|German armour breaks through the Ardennes at Sedan; France falls in six weeks.
+1940-5|H|mor|EU|Dunkirk|sea,war|Dunkirk|Over three hundred thousand Allied soldiers are taken off the beaches at Dunkirk.
+1940-9|H|mor|EU|London|war,fire|The Blitz|German bombers attack London night after night for eight months.
+1940-9|W|vam|EU|London|war,occult|The Blitz and the Kindred|The house reading has London's Kindred shelter deep in the Underground with the mortals, and Masquerade breaches go unreported in the chaos.
+1940|H|mor|EU|London|war,founding|The Czechoslovak government in exile|Benes forms a government in exile in London; Czechoslovak airmen fly in the Battle of Britain.
+1940|H|mor|AS|Hanoi|war,empire|Japan in Indochina|Japanese troops enter French Indochina by agreement with Vichy, and America cuts off Japan's oil.
+1940|W|hun|EU|London|war,occult|The Arcanum's blackout|The house reading has the Arcanum move its London library to the country and lose a crate of Prague papers on the way.
+1941-4|H|mor|EU|Belgrade|war,terror|Yugoslavia invaded|Germany bombs Belgrade without warning and overruns Yugoslavia and Greece in a few weeks.
+1941-5|H|mor|ME|Baghdad|war,uprising|The Iraqi coup|A pro-Axis government in Iraq fights the British and loses; a pogrom follows in Baghdad.
+1941-6|H|mor|EU|Russia|war|Barbarossa|Germany invades the Soviet Union with three million men.
+1941-8|H|mor|ME|Tehran|war,crown|Iran invaded|Britain and the Soviets invade Iran, and Reza Shah gives up the throne to his son.
+1941-9|H|mor|EU|Babi Yar|massacre|Babi Yar|German units shoot nearly thirty-four thousand Jews in two days in a ravine outside Kiev.
+1941-9|H|mor|EU|Leningrad|siege,famine|The siege of Leningrad|Germany surrounds Leningrad; about a million die in a siege of nearly nine hundred days.
+1941-9|H|mor|EU|Prague|terror|Heydrich arrives|Reinhard Heydrich takes charge of the protectorate and begins mass arrests and executions.
+1941-10|H|mor|EU|Lodz|persecution|The deportations from the protectorate|Jews from Prague and Brno are deported to Lodz and Terezin.
+1941-12|H|mor|AS|Hong Kong|war|Hong Kong falls|Japan attacks Hong Kong, Malaya and Pearl Harbor in a day.
+1941-12|H|mor|EU|Moscow|battle,weather|Moscow holds|The Soviets stop the Germans before Moscow in the cold and counterattack.
+1941|H|mor|EU|Terezin|persecution|Terezin|The fortress town of Terezin becomes a ghetto and transit camp for the Jews of Bohemia and Moravia.
+1941|W|hun|EU|Terezin|persecution,occult|The children's drawings|The house reading has an Arcanum member smuggle out drawings from Terezin, and some of them show things no child should know.
+1942-1|H|mor|EU|Wannsee|persecution|Wannsee|Nazi officials meet at a villa by the Wannsee to plan the murder of Europe's Jews.
+1942-2|H|mor|AS|Singapore|war|Singapore falls|Britain surrenders Singapore with eighty thousand troops, the worst defeat in its history.
+1942-5|H|mor|EU|Prague|terror,death|The Heydrich attack|Czechoslovak paratroopers Gabcik and Kubis ambush Heydrich in a Prague street; Heydrich dies a week later.
+1942-6|H|mor|EU|Lidice|massacre|Lidice|In revenge the Germans shoot the men of Lidice, send the women and children to camps, and raze the village.
+1942-6|H|mor|EU|Lezaky|massacre|Lezaky|The Germans destroy the hamlet of Lezaky and kill its people.
+1942-6|H|mor|EU|Prague|siege|The church of St Cyril and Methodius|The paratroopers die fighting in the crypt of a Prague church.
+1942-6|W|wra|EU|Lidice|massacre,occult|The Lidice dead|The house reading has the dead of Lidice refuse the Hierarchy and haunt the empty fields as a Circle.
+1942-6|H|mor|AS|Midway|sea,battle|Midway|Japan loses four carriers at Midway in the Pacific.
+1942-8|H|mor|EU|Stalingrad|battle,siege|Stalingrad|The Germans reach the Volga at Stalingrad, and the city becomes a battle of streets and cellars.
+1942-10|H|mor|ME|El Alamein|battle|El Alamein|Montgomery's Eighth Army breaks Rommel's lines at El Alamein.
+1942|H|mor|EU|Auschwitz|persecution,massacre|The death camps|The camps of Auschwitz, Treblinka, Sobibor and Belzec murder millions of Jews, Roma and others.
+1942|W|wer,wra|EU|Auschwitz|massacre,occult|The Wyrm's harvest|The house reading has the Garou of Europe find the camps the deepest wounds the Wyrm has made in their age.
+1942|H|mor|AS|Bataan|war,massacre|The Bataan death march|Japan marches American and Filipino prisoners to camps; thousands die on the road.
+1943-1|H|mor|EU|Stalingrad|battle|Stalingrad surrenders|The frozen remnant of the German Sixth Army surrenders at Stalingrad; ninety thousand men go into captivity.
+1943-4|H|mor|EU|Warsaw|uprising|The Warsaw ghetto rising|The Jews of the Warsaw ghetto fight the Germans for a month.
+1943-7|H|mor|EU|Kursk|battle|Kursk|The greatest tank battle in history is fought at Kursk, and Germany loses the east.
+1943-7|H|mor|EU|Hamburg|fire,war|The Hamburg firestorm|Allied bombing creates a firestorm in Hamburg that kills about forty thousand.
+1943|H|mor|AS|Bengal|famine|The Bengal famine|Famine kills perhaps three million in Bengal while rice is shipped elsewhere.
+1943|W|mag|EU|London|science,occult|The Ascension War's other front|The house reading has the Technocracy work quietly on both the radar and the bomb, and Traditions fight to keep magic out of the war.
+1944-6|H|mor|EU|Normandy|battle,sea|D-Day|Allied armies land on five beaches in Normandy, and the liberation of western Europe begins.
+1944-8|H|mor|EU|Warsaw|uprising|The Warsaw Uprising|The Polish Home Army rises in Warsaw; the Soviets wait across the river while the Germans destroy the city.
+1944-8|H|mor|EU|Banska Bystrica|uprising|The Slovak National Uprising|Slovaks rise against the Germans and their own regime; the rising is crushed in two months.
+1944-8|H|mor|MO|Brno|war|Brno bombed|Allied bombers strike Brno's factories and rail yards; hundreds of civilians die.
+1944-10|H|mor|EU|Dukla|battle|The Dukla Pass|Soviet and Czechoslovak troops fight their way through the Dukla Pass into Slovakia.
+1944|H|mor|AS|Imphal|battle|Imphal and Kohima|The British and Indians stop the Japanese invasion of India at Imphal and Kohima.
+1944|W|vam|EU|Paris|war,occult|The liberation of Paris|The house reading has the Toreador of Paris return from hiding and quarrel over who collaborated.
+1945-1|H|mor|EU|Auschwitz|persecution|Auschwitz liberated|Soviet troops reach Auschwitz and find seven thousand prisoners left behind by the death marches.
+1945-2|H|mor|EU|Dresden|fire,war|Dresden|Allied bombers destroy the old city of Dresden in a firestorm that kills some twenty-five thousand.
+1945-2|H|mor|EU|Yalta|treaty|Yalta|Churchill, Roosevelt and Stalin meet at Yalta to shape postwar Europe.
+1945-4|H|mor|MO|Brno|war,battle|Brno liberated|The Red Army takes Brno after a week of fighting.
+1945-4|H|mor|MO|Ostrava|battle|The Ostrava operation|Soviet and Czechoslovak troops take Ostrava after weeks of fighting.
+1945-5|H|mor|EU|Prague|uprising|The Prague Uprising|Prague rises against the Germans; the Vlasov army changes sides and helps.
+1945-5|H|mor|EU|Berlin|war|Germany surrenders|Hitler is dead in the Berlin bunker, and Germany surrenders on 8 May; Prague is still fighting.
+1945-5|H|mor|MO|Brno|migration,massacre|The Brno death march|Some twenty thousand German-speaking people of Brno are driven toward the Austrian border; thousands die on the road.
+1945-5|H|mor|EU|Usti|massacre|The expulsions begin|Czechoslovakia begins expelling its three million Germans; many are killed in the first wild months.
+1945-8|H|mor|AS|Hiroshima|war,science|Hiroshima and Nagasaki|American atomic bombs destroy Hiroshima and Nagasaki, and Japan surrenders.
+1945-8|W|wra|AS|Hiroshima|war,occult|The bomb in the Underworld|The house reading has the bombs tear holes in the Shroud, and the Dark Kingdom of Jade shaken to its depths.
+1945-8|W|kue|AS|Hiroshima|war,occult|The Kuei-jin and the bomb|The house reading has the Kuei-jin of Japan hide from the sun the bombs made, and many never return.
+1945|W|mag|AS|Hiroshima|science,occult|The Technocracy's victory|The house reading has the Technocracy see the bomb as proof that its paradigm has won the war.
+1945|H|mor|EU|Potsdam|treaty|Potsdam|The Allies agree how to run Germany and approve the expulsion of Germans from the east.
+1945|H|mor|AS|Hanoi|founding,revolution|Vietnam declares independence|Ho Chi Minh declares an independent Vietnam in Hanoi.
+1945|H|mor|AS|Seoul|empire|Korea divided|Korea is divided at the thirty-eighth parallel between Soviet and American zones.
+1945|W|all,vam|MO|Brno|war,occult|Brno's empty havens|The house reading has the Kindred who fled Brno return to a city of Soviet soldiers and missing German elders.
+1946|H|mor|EU|Nuremberg|law|The Nuremberg trials|The Nazi leaders are tried and many are hanged.
+1946|H|mor|MO|Brno|law|The communists win Moravia|The Communists come first in the free election of 1946.
+1946|H|mor|ME|Jerusalem|terror|The King David Hotel|Jewish militants of the Irgun bomb the British headquarters in Jerusalem's King David Hotel and kill ninety-one.
+1946|H|mor|AS|Calcutta|massacre|The Calcutta killings|Riots between Hindus and Muslims in Calcutta kill thousands in four days and foreshadow partition.
+1946|W|wra|MO|Brno|massacre,occult|The road to Pohorelice|The house reading has the dead of the Brno march haunt the road south, and the Moravian Hierarchy argue about whose they are.
+1947|H|mor|AS|Delhi|founding,migration|Partition|India and Pakistan become independent; millions flee and perhaps a million die.
+1947|H|mor|ME|Qumran|learning,exploration|The Dead Sea Scrolls|A Bedouin shepherd finds ancient scrolls in a cave near Qumran.
+1947|W|mag,hun|ME|Qumran|learning,occult|The scrolls watched|The house reading has the Celestial Chorus and the Society of Leopold both send scholars to the scrolls.
+1948-2|H|mor|EU|Prague|revolution|The February coup|The Communists take power in Czechoslovakia when the democratic ministers resign and Benes gives way.
+1948-3|H|mor|EU|Prague|death|Jan Masaryk falls|The foreign minister Jan Masaryk is found dead below his window.
+1948-5|H|mor|ME|Tel Aviv|founding,war|Israel|Ben-Gurion declares the state of Israel in Tel Aviv, and the armies of its Arab neighbours invade.
+1948|H|mor|ME|Deir Yassin|massacre,migration|The Nakba|Some seven hundred thousand Palestinians flee or are driven from their homes.
+1948|H|mor|EU|Berlin|siege|The Berlin airlift|The Soviets blockade West Berlin, and the Allies fly in its food for a year.
+1948|H|mor|AS|Delhi|death|Gandhi killed|A Hindu nationalist shoots Gandhi at a prayer meeting in Delhi.
+1949|H|mor|AS|Beijing|founding,revolution|The People's Republic|Mao proclaims the People's Republic of China from the Gate of Heavenly Peace, and Chiang flees to Taiwan.
+1949|W|kue|AS|Beijing|revolution,occult|The Middle Kingdom falls silent|The house reading has the Kuei-jin courts of China driven underground by the new state.
+1949|H|mor|EU|Brussels|treaty|NATO|America, Canada and ten European states found the North Atlantic alliance against the Soviet bloc.
+1950|H|mor|AS|Seoul|war|The Korean War|North Korea invades the south, and American and United Nations troops are drawn in, then China.
+1950|H|mor|AS|Lhasa|empire|Tibet invaded|The Chinese army enters Tibet and defeats its small army at Chamdo.
+1950|W|mag|AS|Lhasa|empire,occult|The Akashics scatter|The house reading has the Akashic Brotherhood carry treasures out of Tibet.
+1951|H|mor|ME|Tehran|trade,law|Iranian oil nationalised|Prime Minister Mossadegh nationalises Iran's oil, and Britain blockades Iranian exports.
+1952|H|mor|ME|Cairo|revolution|The Free Officers|Nasser's Free Officers overthrow King Farouk, and Egypt becomes a republic within a year.
+1952|H|mor|EU|Prague|law,persecution|The Slansky trial|Fourteen Communist leaders, most of them Jewish, are tried as traitors; eleven are hanged.
+1953|H|mor|EU|Moscow|death|Stalin dies|Stalin dies at his dacha after a stroke, and the camps begin slowly to empty.
+1953|H|mor|EU|Plzen|uprising,money|The Plzen rising|A currency reform wipes out savings, and workers in Plzen storm the town hall.
+1953|H|mor|ME|Tehran|revolution|The coup in Iran|American and British agents help the army and the mobs overthrow Mossadegh, and the shah returns.
+1953|H|mor|AS|Panmunjom|treaty|The Korean armistice|The fighting in Korea ends with the peninsula divided.
+1953|W|vam|EU|Prague|law,occult|The Kindred in the show trials|The house reading has Prague's Kindred use the purges to settle their own accounts, and hunters among the secret police note odd deaths.
+1954|H|mor|AS|Dien Bien Phu|battle,siege|Dien Bien Phu|The Viet Minh crush the French at Dien Bien Phu.
+1955|H|mor|EU|Warsaw|treaty|The Warsaw Pact|The Soviet bloc forms its own military alliance in Warsaw in answer to NATO.
+1955|H|mor|EU|Vienna|treaty|The Austrian treaty|The four powers leave Austria, which becomes free and neutral; Vienna is no longer divided.
+1955|H|mor|AS|Bandung|treaty|Bandung|Asian and African leaders meet at Bandung in Java and found the movement of non-aligned nations.
+1955|H|mor|AS|Tokyo|faith|Japan's new parties|Japan's conservatives merge into the Liberal Democratic Party, which will rule for decades.
+1956-2|H|mor|EU|Moscow|law|The secret speech|Khrushchev denounces Stalin's crimes to a closed session of the party congress, and the speech leaks abroad.
+1956-10|H|mor|EU|Budapest|uprising,revolution|The Hungarian revolution|Hungary rises against Soviet rule; Soviet tanks crush it within weeks.
+1956-10|H|mor|ME|Suez|war,trade|The Suez crisis|Israel, Britain and France attack Egypt after Nasser takes the canal; America forces them out.
+1956-10|H|mor|EU|Poznan|uprising|Polish October|Poland wins a gentler communism under Gomulka after riots in Poznan.
+1956|W|vam|EU|Budapest|revolution,occult|Blood on the Danube|The house reading has the Brujah of Budapest fight beside the students and the Tzimisce feed on the reprisals.
+1957|H|mor|EU|Moscow|science|Sputnik|The Soviet Union puts the first satellite in orbit.
+1957|W|mag|EU|Moscow|science,occult|The Void Engineers look up|The house reading has the Void Engineers race to claim space for the Technocracy before the Traditions can dream it otherwise.
+1957|H|mor|EU|Kyshtym|disaster,science|The Kyshtym disaster|A nuclear waste tank explodes in the Urals and poisons a wide stretch of land; the Soviets keep it secret.
+1957|H|mor|EU|Rome|treaty|The Treaty of Rome|France, Germany, Italy and the Low Countries found the European Economic Community.
+1958|H|mor|ME|Baghdad|revolution|The Iraqi revolution|Officers overthrow Iraq's monarchy and kill the young king and his family in the palace courtyard.
+1958|H|mor|AS|Beijing|famine|The Great Leap Forward|Mao's Great Leap brings famine that kills tens of millions.
+1958|H|mor|EU|Brussels|building,art|Expo 58|Czechoslovakia's pavilion and its Laterna Magika win the Brussels fair.
+1959|H|mor|AS|Lhasa|uprising|The Tibetan rising|Tibet rises against China, and the Dalai Lama flees to India.
+1960|H|mor|EU|Brno|law|The new constitution|Czechoslovakia declares itself a socialist republic, the second in the bloc after the Soviet Union.
+1960|H|mor|ME|Baghdad|founding,trade|OPEC|Iran, Iraq, Kuwait, Saudi Arabia and Venezuela found OPEC in Baghdad to take back control of oil prices.
+1961|H|mor|EU|Moscow|science,travel|Gagarin|Yuri Gagarin orbits the earth in Vostok 1, the first person in space.
+1961|H|mor|EU|Berlin|building|The Berlin Wall|East Germany builds a wall through Berlin overnight to stop its people from leaving.
+1961|W|vam|EU|Berlin|building,occult|The Wall and the Kindred|The house reading follows canon in spirit: Berlin's Kindred divide like the city, and crossing becomes a matter for princes.
+1962|H|mor|EU|London|war,terror|The Cuban missile crisis|Europe waits for nuclear war for thirteen days while America and the Soviets face off over missiles in Cuba.
+1962|H|mor|AS|Ladakh|war|The Sino-Indian War|China defeats India in a short war high in the Himalayas and keeps Aksai Chin.
+1962|W|cha|EU|London|art,occult|The Beatles and Glamour|The house reading has Liverpool's music pour Glamour into the Dreaming years before the Resurgence.
+1963|H|mor|EU|Skopje|quake|The Skopje earthquake|An earthquake destroys most of Skopje and kills over a thousand; the city is rebuilt to a Japanese plan.
+1963|H|mor|EU|Vajont|disaster,flood|The Vajont dam|A landslide into a dam reservoir in Italy sends a wave over the dam that kills two thousand.
+1964|H|mor|AS|Tokyo|sport,travel|The Tokyo Olympics|Japan hosts the Olympics and opens the bullet train.
+1964|H|mor|AS|Tonkin|war|The Tonkin Gulf|Reports of attacks on American destroyers in the Gulf of Tonkin let America widen its war in Vietnam.
+1964|H|mor|AS|Beijing|science|China's bomb|China tests its first atomic bomb.
+1965|H|mor|AS|Jakarta|massacre|The Indonesian killings|The army and militias kill half a million or more suspected communists.
+1965|H|mor|AS|Kashmir|war|The second Kashmir war|India and Pakistan fight a three-week war over Kashmir that ends where it began.
+1965|W|mag|EU|London|science,occult|The Sons of Ether and the space race|The house reading has the Sons of Ether launch their own etherships while the Void Engineers race the Soviets.
+1966|H|mor|AS|Beijing|revolution,persecution|The Cultural Revolution|Mao unleashes the Red Guards against teachers, temples and party rivals.
+1966|W|kue|AS|Beijing|revolution,occult|The Red Guards and the shrines|The house reading has the Red Guards smash shrines the Kuei-jin had guarded for centuries; some courts are destroyed.
+1966|H|mor|EU|Florence|flood,art|The Florence flood|The Arno floods Florence, drowns its streets and damages thousands of paintings and books.
+1967|H|mor|ME|Jerusalem|war|The Six-Day War|Israel takes Sinai, Gaza, the West Bank, East Jerusalem and the Golan.
+1967|H|mor|EU|Athens|revolution|The colonels|Greek colonels seize power in a coup and rule Greece for seven years.
+1968-1|H|mor|EU|Prague|revolution,law|The Prague Spring|Alexander Dubcek begins socialism with a human face, and censorship lifts.
+1968-1|H|mor|AS|Hue|battle|The Tet Offensive|Communist forces attack cities across South Vietnam at the lunar new year; Hue is fought over for a month.
+1968-5|H|mor|EU|Paris|uprising|May 1968|Students raise barricades in Paris, millions of workers strike, and France comes to a standstill.
+1968-8|H|mor|MO|Brno|war,empire|The invasion|Warsaw Pact troops invade Czechoslovakia; Brno's people stand in front of the tanks.
+1968-8|W|vam|EU|Prague|revolution,occult|The Kindred and the tanks|The house reading has Prague's Kindred split over the Spring; Ventrue loyal to Moscow help the invaders and the Anarchs pay for it.
+1968|H|mor|AS|My Lai|massacre|My Lai|American soldiers kill hundreds of villagers at My Lai.
+1968|W|hun|MO|Brno|revolution,occult|Hunters behind the tanks|The house reading has the StB open files on Brno's nightwalkers after the invasion, a knot later hunters will untangle.
+1969-1|H|mor|EU|Prague|death,uprising|Jan Palach|The student Jan Palach sets fire to himself in Wenceslas Square in protest.
+1969-3|H|mor|EU|Prague|sport,uprising|The hockey riots|Czechoslovakia beats the Soviets twice at ice hockey, and crowds attack the Soviet airline office.
+1969-7|H|mor|EU|London|science,travel|The Moon landing|Apollo 11 lands on the Moon, and the world watches on television.
+1969-7|W|cha|EU|London|science,occult|The Resurgence|The house reading follows Changeling canon: the Moon landing reopens the Dreaming, and the sidhe return.
+1969|H|mor|MO|Brno|law,persecution|Normalisation|Husak's regime purges half a million party members and fires the reformers from universities, papers and theatres.
+1970|H|mor|AS|Dhaka|storm,disaster|The Bhola cyclone|A cyclone kills perhaps half a million in East Pakistan.
+1970|H|mor|ME|Amman|war|Black September|Jordan's army fights the Palestinian guerrillas and drives them out to Lebanon.
+1971|H|mor|AS|Dhaka|war,founding|Bangladesh|Bangladesh breaks from Pakistan after a war and mass killings.
+1972|H|mor|EU|Munich|terror,sport|The Munich massacre|Palestinian gunmen kill eleven Israeli athletes at the Olympics.
+1972|H|mor|EU|Prague|art|The Czech film wave|Many of the Czech new-wave films are banned and their makers silenced.
+1973|H|mor|ME|Sinai|war|The Yom Kippur War|Egypt and Syria attack Israel on the holiest day of the Jewish year and are thrown back after hard fighting.
+1973|H|mor|ME|Riyadh|money,trade|The oil shock|Arab states cut oil to the West, prices quadruple, and Europe has car-free Sundays.
+1974|H|mor|EU|Cyprus|war|Cyprus divided|Turkey invades Cyprus after a Greek-backed coup, and the island is divided by a green line.
+1975|H|mor|AS|Saigon|war|Saigon falls|North Vietnamese tanks break into the presidential palace in Saigon; the last Americans leave by helicopter.
+1975|H|mor|EU|Helsinki|treaty,law|The Helsinki Accords|The Soviet bloc signs a promise to respect human rights.
+1975|H|mor|ME|Beirut|war|The Lebanese civil war|Lebanon falls into fifteen years of civil war among its faiths, the Palestinians and foreign armies.
+1975|H|mor|AS|Phnom Penh|massacre,revolution|The Khmer Rouge|The Khmer Rouge empty Phnom Penh into the countryside; in four years perhaps two million Cambodians die.
+1975|W|kue|AS|Phnom Penh|massacre,occult|The killing fields|The house reading has the Yama Kings' servants grow strong on Cambodia's dead, and the Kuei-jin of Angkor go to war against them.
+1976|H|mor|AS|Tangshan|quake|Tangshan|An earthquake destroys Tangshan and kills a quarter of a million.
+1976|H|mor|EU|Prague|art,law|The Plastic People trial|The rock band Plastic People of the Universe is jailed.
+1977|H|mor|EU|Prague|law|Charter 77|Dissidents sign Charter 77 asking the state to keep its own human rights laws.
+1977|W|vam|EU|Prague|law,occult|Kindred dissidents|The house reading has a few signers of Charter 77 Embraced in later years, so that some Kindred of Prague still carry the Charter's grudge.
+1978|H|mor|AS|Beijing|money|Deng's reforms|Deng Xiaoping opens China's economy to markets and foreign money after Mao's death.
+1978|H|mor|EU|Rome|faith|The Polish pope|Karol Wojtyla of Krakow becomes Pope John Paul II, the first pope from beyond Italy in four centuries.
+1979|H|mor|ME|Tehran|revolution|The Iranian revolution|The shah flees, and Ayatollah Khomeini returns from exile to found an Islamic republic.
+1979|H|mor|ME|Mecca|terror|The Grand Mosque seized|Armed militants seize the Grand Mosque in Mecca and hold it for two weeks.
+1979|H|mor|AS|Kabul|war|The Soviet invasion of Afghanistan|Soviet troops enter Afghanistan to prop up a communist government and fight a ten-year war.
+1979|W|wer|AS|Kabul|war,occult|The Garou and the mountains|The house reading has the Garou of the Hindu Kush fight the Soviets' shadow in the Umbra.
+1980|H|mor|EU|Gdansk|uprising|Solidarity|Shipyard workers in Gdansk strike under Lech Walesa and found Solidarity, the first free union in the bloc.
+1980|H|mor|ME|Basra|war|The Iran-Iraq War|Iraq invades Iran, and eight years of trench war and gas follow along the Shatt al-Arab.
+1981|H|mor|EU|Warsaw|law|Martial law in Poland|General Jaruzelski declares martial law and jails Solidarity's leaders.
+1981|H|mor|ME|Cairo|terror,death|Sadat killed|Soldiers shoot President Sadat at a military parade.
+1982|H|mor|ME|Beirut|war,massacre|Sabra and Shatila|Lebanese militias kill hundreds of Palestinians in the Sabra and Shatila camps while Israeli troops ring them.
+1982|H|mor|ME|Hama|massacre|Hama|Syria crushes a rising in Hama and kills thousands.
+1983|H|mor|ME|Beirut|terror|The Beirut barracks|Truck bombs kill American and French peacekeepers in Beirut.
+1984|H|mor|AS|Bhopal|disaster,industry|Bhopal|A gas leak from a pesticide plant kills thousands.
+1984|H|mor|AS|Amritsar|war,faith|The Golden Temple|Indian troops storm the Golden Temple, and Indira Gandhi is killed by bodyguards.
+1985|H|mor|EU|Moscow|crown|Gorbachev|Mikhail Gorbachev takes power and begins glasnost and perestroika.
+1986-4|H|mor|EU|Chernobyl|disaster,science|Chernobyl|A reactor explodes at Chernobyl and spreads fallout across Europe.
+1986-4|W|wer|EU|Chernobyl|disaster,occult|The Wyrm at Chernobyl|The house reading follows Werewolf canon in spirit: the Black Spiral Dancers claim the poisoned zone.
+1986|W|mag|EU|Chernobyl|disaster,occult|The Technocracy covers Chernobyl|The house reading has the New World Order help the Soviets hide the scale of the disaster.
+1987|H|mor|ME|Gaza|uprising|The first intifada|Palestinians in Gaza and the West Bank rise against Israeli occupation.
+1988|H|mor|ME|Halabja|massacre|Halabja|Iraq attacks the Kurdish town of Halabja with poison gas and kills thousands.
+1988|H|mor|EU|Armenia|quake|The Spitak earthquake|An earthquake in northern Armenia kills twenty-five thousand and levels Spitak.
+1988|H|mor|EU|Lockerbie|terror|Lockerbie|A bomb destroys an airliner over Lockerbie in Scotland.
+1989-6|H|mor|AS|Beijing|massacre|Tiananmen|The army clears Tiananmen Square of protesters and kills hundreds or more.
+1989-11|H|mor|EU|Berlin|revolution|The Wall falls|A muddled announcement opens the border, and East Germans pour through the Berlin Wall.
+1989-11|H|mor|EU|Prague|revolution|The Velvet Revolution|Students beaten in Prague start the Velvet Revolution, and the communists give way within weeks.
+1989-11|H|mor|MO|Brno|revolution|Brno's Velvet days|Crowds fill Freedom Square in Brno as the regime collapses.
+1989-12|H|mor|EU|Bucharest|revolution|The Romanian revolution|Romania rises against Ceausescu, who is caught, tried in an hour and shot on Christmas Day.
+1989-12|H|mor|EU|Prague|crown|Havel president|The playwright Vaclav Havel, jailed a year before, is elected president by the old parliament.
+1989-12|W|vam|EU|Prague|revolution,occult|The Kindred after the fall|The house reading has the Camarilla rush into the old bloc as the Sabbat and the old bloc's princes scramble.
+1989|W|cha|EU|Prague|revolution,occult|The velvet Dreaming|The house reading has the Velvet Revolution light the Dreaming of Prague, and the Kithain of Brno dance on Freedom Square.

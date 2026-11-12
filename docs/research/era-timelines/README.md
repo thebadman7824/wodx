@@ -16,3 +16,14 @@ Next stages (Ben, 2026-11-10): house-only events for each era on a second desk, 
 Stage two (2026-11-12, run h1): house-only events, 72 cards (history the books do not date, and WoDX's own events for Rothenstein and Moravia), each with a line on how it fits the approved timeline. Desk: https://claude.ai/artifact/8iWVsS3gBzQFzeNb67Xojv (collection `verdicts`, doc `2026-11-12h1__<item id>`). Rebuild: `python3 docs/research/era-timelines/house-events-2026-11-12.py`, then join head2.html, `const ERAS=` + desk-data-2026-11-12h1.json, and tail2.html.
 
 Ben approved all 72 round-one cards (2026-11-12 02:05Z) and asked for events beyond Moravia (the rest of Europe, the Middle East, Asia) and for the books' named characters to be placed in them. Round two, run h2, on the same desk: 107 cards in house_events_wider.py (kind 'named' takes the character and what happened from the book and gives a year). The script now writes desk-data-2026-11-12h2.json with both rounds; the desk reviews round two and shows round one beside it. Cards from 1990 on are for the classic timeline only.
+
+## Round 3 (2026-11-12): at least 300 events per era
+
+Ben, 02:23Z: at least 300 events per era, from real history, tied to World of Darkness canon where possible, for use by other WoDX systems.
+
+- Source files: `r3/<era>.txt`, one event per line (`year[-month]|kind|lines|region|place|tags|title|text`). `r3/build.py` checks them (era span, kinds, lines, regions, tag list, em-dashes, duplicates) and writes `r3/events-2026-11-12r3.json` with Encyclopaedia links matched by place.
+- Counts: Dark Ages 346, Long Night 306, Renaissance 326, Age of Reason 338, Victorian 324, Great War 303, Mid-century 305, Modern 303 (2,551 in all). Events from 1990 carry `branch: classic`.
+- Kinds: history (real history), tied (real history with a house reading for one or more lines, said so in the text), named (a book character placed in a real year).
+- Written from general historical knowledge; Wikipedia is blocked from the cloud. Dates are as commonly given; doubtful ones should be checked against a source before they reach the Encyclopaedia.
+- Texts keep gendered pronouns only for historical people whose gender is known; house readings are written neutrally.
+- Desk: `r3/desk.py` builds `desk-data-2026-11-12h3.json` (r3 plus the unreviewed round 2 cards, minus 62 round 2 history cards that repeat an r3 event) and the page from `head3.html` + `tail3.html`. Review run `2026-11-12h3` on https://claude.ai/artifact/8iWVsS3gBzQFzeNb67Xojv, with region, kind, tag, line and text filters and an "OK everything shown" button.

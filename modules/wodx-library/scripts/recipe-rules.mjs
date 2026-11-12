@@ -204,7 +204,7 @@ export function usesOf(name, goods = [], year = 0) {
   return out;
 }
 
-/* ---------------------------------------------------------------- taking things apart (0.12.0) */
+/* ---------------------------------------------------------------- taking things apart (0.13.0) */
 
 /**
  * The parts a good gives when taken apart in a year: {ok, why, parts: [{name, n}], ab, diff, tool, quick}.

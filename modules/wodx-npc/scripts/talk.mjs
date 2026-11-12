@@ -273,9 +273,12 @@ export function build(ctx) {
     for ( const c of line?.then?.codex ?? [] ) { const n = await giveCodex(actor, c); if ( n ) notes.push(n); }
     if ( line?.then?.run && chron()?.when?.run ) await chron().when.run(line.then.run, {actor, token: r.me, scene: r.scene, label: r.npcTok.name});
     const name = displayName(r.npcTok, user);
+    // WoDX Chronicle's clan features: what a deranged Malkavian hears beyond the true reply (Chronicle 0.26.0)
+    let heard = null;
+    try { heard = say ? chron()?.signatures?.hearAs?.(actor, {topic: TK.topicLabel(topic), name, npcId: r.npcTok.actor?.id ?? ""}) ?? null : null; } catch (e) { heard = null; }
     const extra = [taught.length ? `Now you can ask about ${taught.map(TK.topicLabel).join(", ")}.` : "", ...notes].filter(Boolean);
     const content = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} asks about ${esc(TK.topicLabel(topic).toLowerCase())}.</p>`
-      + `<p>${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
+      + `<p>${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),

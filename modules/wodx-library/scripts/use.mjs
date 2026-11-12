@@ -24,6 +24,8 @@ const SOCKET = `module.${MOD}`;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let G = null;
 const load = async () => (G ??= await import("../data/goods.mjs"));
+let RR = null;
+const yearNow = () => { try { return Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
 const st = () => game.modules.get("wodx-storyteller")?.api;
 const actions = () => game.modules.get("wodx-actions")?.api;
 const inter = () => game.modules.get("wodx-interactables")?.api;
@@ -35,6 +37,8 @@ const goodOfItem = item => {
   return (id && G.GOODS.find(g => g.id === id)) || X.goodOf(item?.name, G.GOODS);
 };
 export const lineOfActor = a => U.lineOf(a?.type, a?.system?.settings?.variant);
+/** A vampire's clan as words (a custom clan's own name, or the key and its translation), for holy water. */
+const clanOf = a => { const s = a?.system ?? {}; if ( s.clan === "custom" ) return s.custom?.clan ?? ""; const k = String(s.clan ?? ""); return `${k} ${game.i18n?.localize?.(k) ?? ""}`; };
 const holderOf = item => (item?.parent?.documentName === "Actor" ? item.parent : null) ?? canvas?.tokens?.controlled?.[0]?.actor ?? game.user.character ?? null;
 const tokenOf = actor => actor?.getActiveTokens?.()?.[0]?.document ?? null;
 const targetActor = () => [...(game.user.targets ?? [])][0]?.actor ?? null;
@@ -45,8 +49,15 @@ export async function abilitiesOfItem(item) {
   await load();
   const good = goodOfItem(item);
   const list = good ? U.abilitiesOf(good) : [];
+  // 2026-11-12: a food or drink a recipe uses can be cooked with as well as eaten
+  if ( good && ["food", "drink"].includes(good.kind) && !list.includes("cook") ) {
+    try {
+      RR ??= await import("./recipe-rules.mjs");
+      if ( RR.usesOf(good.name, G.GOODS, yearNow()).length ) list.push("cook");
+    } catch (e) { /* recipes not loaded */ }
+  }
   if ( U.normPages(item?.flags?.[MOD]?.pages).length && !list.includes("read") ) list.push("read");
-  // 0.12.0: things with parts in them can be taken apart (Storyteller's recipes, data/recipes.mjs SALVAGE)
+  // 0.13.0: things with parts in them can be taken apart (Storyteller's recipes, data/recipes.mjs SALVAGE)
   try { if ( !list.includes("salvage") && (await st()?.cookery?.salvageOf?.(item))?.ok ) list.push("salvage"); } catch (e) { /* no Storyteller */ }
   return list;
 }
@@ -90,10 +101,12 @@ async function spendOne(item) {
 async function takeIt(actor, item, good, ability, patient = actor) {
   const key = U.effectKeyOf(good, ability);
   const line = lineOfActor(patient);
-  const eff = U.effectFor(key, line);
+  const tor = patient?.system?.advantages?.torment;
+  const eff = U.effectForActor(key, line, clanOf(patient), {torment: tor ? Number(tor.permanent ?? tor.temporary ?? 0) : null,
+    holyFlaw: (patient?.items ?? []).some(i => /cannot enter holy ground/i.test(i.name))});
   const thing = item.name;
   await say(actor, ability === "throw" && patient !== actor ? `${actor.name} throws ${thing} over ${patient.name}.` : U.useLine(actor.name, ability, thing));
-  if ( eff.does === "feeds" ) await gmDo({op: "mark", actor: patient.id, kinds: ["food"]});
+  if ( eff.does === "feeds" ) await gmDo({op: "mark", actor: patient.id, kinds: ability === "drink" ? ["food", "water"] : ["food"]});
   if ( eff.does === "waters" || eff.waters ) await gmDo({op: "mark", actor: patient.id, kinds: ["water"]});
   if ( eff.does === "blood" && patient.isOwner ) {
     const b = patient.system?.advantages?.bloodpool ?? {};
@@ -264,6 +277,15 @@ export async function run(item, ability, actor = holderOf(item)) {
       const r = ck?.takeApart ? await ck.takeApart(actor, item) : {ok: false, why: "Taking apart needs WoDX Storyteller."};
       if ( !r.ok && !r.rolled ) ui.notifications.warn(r.why);
       return r;
+    }
+    case "inject": {
+      // 2026-11-12: the syringe draws up something the character holds, and that thing is taken
+      const can = (actor.items ?? []).filter(i => i.id !== item.id && L.INJECTABLE.test(goodOfItem(i)?.name ?? i.name) && !/auto-?injector/i.test(i.name));
+      if ( !can.length ) return ui.notifications.warn("Nothing in Possessions can be injected.");
+      const pick = can.length === 1 ? can[0].id : await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: `Inject: ${item.name}`}, classes: ["wodx-dialog", "wlib-use"],
+        content: `<p>Inject what?</p>`, buttons: [...can.map((i, n) => ({action: i.id, label: i.name, default: n === 0})), {action: "cancel", label: "Cancel"}]});
+      const what = can.find(i => i.id === pick);
+      return what ? run(what, "take", actor) : null;
     }
     case "cook": {
       // 0.10.0: Cook, brew or mix (Storyteller), showing the recipes this thing goes into

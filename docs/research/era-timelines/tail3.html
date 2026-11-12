@@ -1,0 +1,74 @@
+const RUN="2026-11-12h3";let showBook=false,coll=null,cur=null,busy=false;
+const V={};const F={st:'all',rg:'',k:'',tg:'',ln:'',q:''};const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LBL={ok:'OK',fix:'Fix',cut:'Cut'};const KIND={history:'History',tied:'Tied',named:'Named character'};
+function pick(){const h=location.hash.slice(1);cur=ERAS.find(e=>e.id===h)?.id||ERAS[0].id;}
+function chips(host,key,opts){const el=$(host);for(const [v,l] of opts){const b=document.createElement('button');b.textContent=l;b.dataset.v=v;b.setAttribute('aria-pressed',F[key]===v);b.onclick=()=>{F[key]=v;el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v));render();};el.append(b);}}
+chips('#f-st','st',[['all','All'],['todo','Not reviewed'],['ok','OK'],['fix','Fix'],['cut','Cut']]);
+chips('#f-rg','rg',[['','All'],['Moravia','Moravia'],['Europe','Europe'],['Middle East','Middle East'],['Asia','Asia']]);
+chips('#f-k','k',[['','All'],['history','History'],['tied','Tied'],['named','Named']]);
+const TAGS=[...new Set(ERAS.flatMap(e=>e.items.flatMap(i=>i.tg)))].sort();for(const t of TAGS){const o=document.createElement('option');o.value=o.textContent=t;$('#f-tg').append(o);}
+const LINES=['Mortals','Vampire','Werewolf','Mage','Wraith','Changeling','Hunter','Mummy','Kindred of the East','Demon','All lines'];for(const t of LINES){const o=document.createElement('option');o.value=o.textContent=t;$('#f-ln').append(o);}
+$('#f-tg').onchange=e=>{F.tg=e.target.value;render();};$('#f-ln').onchange=e=>{F.ln=e.target.value;render();};
+let qt;$('#f-q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{F.q=e.target.value.trim().toLowerCase();render();},200);};
+function passes(i){const st=V[i.id]?.verdict||'';
+ if(F.st==='todo'&&st)return false;if(['ok','fix','cut'].includes(F.st)&&st!==F.st)return false;
+ if(F.rg&&i.rg!==F.rg)return false;if(F.k&&i.k!==F.k)return false;if(F.tg&&!i.tg.includes(F.tg))return false;
+ if(F.ln&&!i.ln.includes(F.ln))return false;
+ if(F.q&&!(i.t+' '+i.pl+' '+i.x).toLowerCase().includes(F.q))return false;return true;}
+function controls(id){const st=(V[id]||{}).verdict||'';return {st,html:`<div class="vb"><button class="okb" aria-pressed="${st==='ok'}">OK</button><button class="fixb" aria-pressed="${st==='fix'}">Fix</button><button class="cutb" aria-pressed="${st==='cut'}">Cut</button></div><textarea id="n-${id}" placeholder="What should change, and why?"></textarea>`};}
+function wire(c,id){const ta=c.querySelector('textarea');ta.value=(V[id]||{}).note||'';
+ c.querySelector('.okb').onclick=()=>save(id,'ok',ta.value);c.querySelector('.fixb').onclick=()=>save(id,'fix',ta.value);c.querySelector('.cutb').onclick=()=>save(id,'cut',ta.value);
+ ta.onchange=()=>{if(V[id]?.verdict||ta.value)save(id,V[id]?.verdict||'fix',ta.value);};}
+let shownIds=[];
+function render(){
+ const nav=$('#eras');nav.textContent='';
+ for(const e of ERAS){const done=e.items.filter(i=>V[i.id]?.verdict).length;const b=document.createElement('button');b.setAttribute('aria-pressed',e.id===cur);b.innerHTML=`${esc(e.name)}<small>${done}/${e.items.length}</small>`;b.onclick=()=>{location.hash=e.id;};nav.append(b);}
+ const e=ERAS.find(x=>x.id===cur);const n={ok:0,fix:0,cut:0};e.items.forEach(i=>{const v=V[i.id]?.verdict;if(n[v]!==undefined)n[v]++;});
+ $('#tally').innerHTML=`<span><b>${e.items.length}</b> events</span><span><b>${n.ok}</b> OK</span><span><b>${n.fix}</b> Fix</span><span><b>${n.cut}</b> Cut</span><span><b>${e.items.length-n.ok-n.fix-n.cut}</b> not reviewed</span>`;
+ const host=$('#era');host.textContent='';
+ const cnt=r=>e.items.filter(i=>i.rg===r).length;
+ const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.length} events: ${cnt('Moravia')} in Moravia, ${cnt('Europe')} elsewhere in Europe, ${cnt('Middle East')} in the Middle East, ${cnt('Asia')} in Asia. ${e.items.filter(i=>i.k!=='history').length} carry a World of Darkness reading.</p>`;host.append(h);
+ const gid='era3-'+e.id;const g=document.createElement('div');g.className='eranote';const k=controls(gid);g.innerHTML=`<p class="txt"><b>This era as a whole.</b> What is missing or wrong before these events feed the Encyclopaedia and other systems.</p>`+k.html;host.append(g);wire(g,gid);
+ const list=e.items.filter(passes);shownIds=list.map(i=>i.id);
+ const todo=list.filter(i=>!V[i.id]?.verdict).length;$('#shown').textContent=`${list.length} shown, ${todo} not reviewed`;$('#bulk').disabled=busy||!todo;
+ const years=new Map();for(const i of list){if(!years.has(i.y))years.set(i.y,[]);years.get(i.y).push(i);}
+ if(showBook)for(const b of e.appr){if(!years.has(b.y))years.set(b.y,[]);years.get(b.y).push({...b,book:true});}
+ const sorted=[...years.entries()].sort((a,b)=>a[0]-b[0]);
+ if(!sorted.length){const p=document.createElement('p');p.className='empty';p.textContent='Nothing to show with these filters.';host.append(p);}
+ for(const [y,items] of sorted){const row=document.createElement('div');row.className='yearrow';row.innerHTML=`<div class="yr">${y}</div>`;const cards=document.createElement('div');cards.className='cards';
+  for(const i of items){if(i.book){const p=document.createElement('p');p.className='bookline';p.innerHTML=`<b>${esc(i.s)}:</b> ${esc(i.t)}. ${esc(i.x)}`;cards.append(p);continue;}
+   const {st,html}=controls(i.id);const c=document.createElement('article');c.className='card '+st;
+   const tags=[`<span class="tag chron">${KIND[i.k]||i.k}</span>`,`<span class="tag">${esc(i.rg)}${i.pl?': '+esc(i.pl):''}</span>`,`<span class="tag">${esc(i.ln)}</span>`,...i.tg.map(t=>`<span class="tag soft">${esc(t)}</span>`),i.src==='r2'?'<span class="tag">Round two</span>':''].join('');
+   const mo=i.m?['','January','February','March','April','May','June','July','August','September','October','November','December'][i.m]+' ':'';
+   c.innerHTML=`<div class="head"><h3>${esc(i.t)}</h3><span class="state">${LBL[st]||'Not reviewed'}</span></div><div class="tags">${tags}</div><p class="txt">${mo?'<b>'+mo+y+'.</b> ':''}${esc(i.x)}</p>${i.lk.length?`<p class="links">Encyclopaedia: ${i.lk.map(esc).join('; ')}</p>`:''}${i.ref?`<p class="refs">${esc(i.ref)}</p>`:''}`+html;cards.append(c);wire(c,i.id);}
+  row.append(cards);host.append(row);}
+}
+async function save(id,verdict,note){
+ if(!coll){$('#notice').textContent='Notes cannot be saved in this view. Open the page signed in to claude.ai.';return;}
+ V[id]={verdict,note,run:RUN};render();
+ try{await coll.doc(RUN+'__'+id).set({item:id,run:RUN,verdict,note:note||'',at:Date.now()});$('#notice').textContent='Saved.';}
+ catch(e){$('#notice').textContent='That note did not save ('+(e.code||'error')+'). Try again.';}
+}
+$('#bulk').onclick=async()=>{
+ if(!coll){$('#notice').textContent='Notes cannot be saved in this view. Open the page signed in to claude.ai.';return;}
+ const ids=shownIds.filter(id=>!V[id]?.verdict);if(!ids.length)return;
+ if(!confirm(`Mark ${ids.length} shown events OK? Events you already marked keep their verdict.`))return;
+ busy=true;let done=0,fail=0;for(const id of ids)V[id]={verdict:'ok',note:'',run:RUN};render();
+ for(const id of ids){try{await coll.doc(RUN+'__'+id).set({item:id,run:RUN,verdict:'ok',note:'',at:Date.now()});done++;}catch(e){fail++;delete V[id];}
+  if(done%20===0)$('#notice').textContent=`Saving ${done} of ${ids.length}…`;}
+ busy=false;$('#notice').textContent=fail?`${done} saved, ${fail} did not save. Press the button again to retry those.`:`${done} marked OK.`;render();};
+$('#bk').onclick=()=>{showBook=!showBook;$('#bk').setAttribute('aria-pressed',showBook);render();};
+addEventListener('hashchange',()=>{pick();render();scrollTo(0,0);});
+pick();render();
+(async()=>{
+ const t=setTimeout(()=>{$('#notice').textContent='Saved notes did not load. Your clicks will still try to save.';},10000);
+ let db=null;try{db=window.claude?await claude.use('db'):null;}catch(e){db=null;}
+ if(!db){clearTimeout(t);$('#notice').textContent='Saved notes are unavailable here. Open the page signed in to claude.ai to review.';return;}
+ coll=db.collection('verdicts');
+ coll.onSnapshot(snap=>{clearTimeout(t);if(busy)return;for(const k in V)delete V[k];
+  for(const d of snap.docs.map(d=>d.data()).filter(Boolean)){if(d.run===RUN)V[d.item]=d;}
+  $('#notice').textContent=`Draft ${RUN}. Notes save as you click.`;render();},
+  e=>{clearTimeout(t);$('#notice').textContent='Saved notes did not load ('+(e.code||'error')+').';});
+})();
+</script>

@@ -289,7 +289,7 @@ export const FACTORY_PRINTER = 2040;
 /* ---------------------------------------------------------------- taking things apart */
 
 /**
- * Library 0.12.0: taking a thing apart for parts (Cataclysm's reversible recipes; the item-links study, approved by
+ * Library 0.13.0: taking a thing apart for parts (Cataclysm's reversible recipes; the item-links study, approved by
  * Ben 2026-11-12). Each rule: a name pattern (and categories it applies to), the parts it gives, and the Ability.
  * A part is a list of goods, first one in use in the year wins ("metal" gives steel bar stock after 1850, a bar of
  * iron before). Things that are eaten, drunk, taken, burned, written on or struck as coin are not taken apart.
