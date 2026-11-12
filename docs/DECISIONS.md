@@ -75,7 +75,7 @@ Next free block: B2330
 | B1500-B1529 | Signature features: Changeling, Wraith and the small lines; Masquerade, cities, story chains (block given to the splat features thread) | Chronicle, Storyteller |
 | B1600-B1606 | Before the First Night | Creation |
 | B1610-B1614 | The guided builder and the prelude runner | Creation |
-| B1640-B1659 | The talk generator (grammar NPC talk with no AI model) | NPC |
+| B1640-B1659 | The talk generator (grammar NPC talk with no AI model), who is speaking, mood | NPC |
 | B1700-B1702 | The Legends book | Chronicle |
 | B1710-B1714 | Progress clocks | Storyteller |
 | B1720-B1724 | Standing with the spirit courts | Otherworlds |
@@ -2357,6 +2357,21 @@ Reverse: setting off, which goes back to the old stock picker.
 Lexicon entries carry an era band or exact years: coin follows WoDX Storyteller's Moravian money rows (denars to 1299, groschen and heller 1300-1526, kreuzer 1527-1891, heller and kronen 1892-1918, korun 1919-2019, eurobucks and credits from 2020); gendarmes from 1849; no railway station before 1839; coffee from 1700.
 
 Reverse: edit SYMBOLS in data/grammar/house.mjs.
+
+## B1643. Who is speaking: clans, tribes, Traditions, Conventions and kiths (2026-11-12)
+The talk generator reads the NPC's sides (clan, tribe, Tradition or Convention, kith, sect and the like, from the sheet and factions) and adds a few greetings and brush-offs for each group: 15 clans and bloodlines, 13 tribes, 9 Traditions, 5 Conventions, 9 kiths. They pool with the era's lines, so the group colours the talk without taking it over. Every line keeps the Masquerade and the Veil: manner only, nothing that names what the speaker is. House writing. Ben approved on the desk 2026-11-12.
+
+Reverse: remove a group's rows from data/grammar/groups.mjs.
+
+## B1644. Mood (2026-11-12)
+An NPC talks in a mood: the one the Storyteller sets in the behaviour window wins; else a place in alarm makes them afraid, wounds make them hurt, a fight with the character or a fall in regard in the last day makes them angry, a wary place makes them wary. Afraid and hurt crowd out other lines; the rest pool with them. Moods: afraid, hurt, angry, grieving, wary, weary, cheerful.
+
+Reverse: set the mood in the behaviour window, or edit moodOf in scripts/talk-grammar.mjs.
+
+## B1645. Asking about a name with no answer written (2026-11-12)
+When a character asks about a person, place or faction they have heard of and nobody wrote an answer, the generator answers by regard and mood, naming the topic ("The old mill? I know the name. Not much more."). Before, it was a plain brush-off.
+
+Reverse: setting "Talk generator" off.
 
 ## B2320. The features card on the sheet (2026-11-12, Improvement Desk sg1)
 Under the in-play strip, a folded card lists every line feature the character has (clan or bloodline, tribe, auspice, breed, kith, seeming, court, Tradition, Guild, legion, House, creed and the rest), each with what it does, when it fires and when it last fired in play. The owner and the Storyteller see it; players only ever open their own sheets. "When it fires" is one line for each engine (Chronicle FEATURE_WHEN) plus the rolls it changes. "Last fired" is the in-game date of the feature's latest card (flags.wodx-chronicle.sigFired), so a feature with no card (a plain roll bonus) reads "not yet in play".

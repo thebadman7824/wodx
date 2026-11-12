@@ -13,8 +13,9 @@ const TK = await imp("modules/wodx-npc/scripts/talk-rules.mjs");
 const STOCK = await imp("modules/wodx-npc/data/stock-talk.mjs");
 const MORE = await imp("modules/wodx-npc/data/stock-talk-more.mjs");
 const {HOUSE} = await imp("modules/wodx-npc/data/grammar/house.mjs");
+const GR = await imp("modules/wodx-npc/data/grammar/groups.mjs");
 
-const grammar = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE);
+const grammar = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GR.GROUPS_GRAMMAR);
 const YEARS = [1197, 1250, 1420, 1499, 1500, 1620, 1750, 1800, 1850, 1870, 1899, 1900, 1944, 1979, 1980, 1995, 2025, 2026, 2060];
 
 test("facts: values, any-of, not, years and rated traits", () => {
@@ -64,7 +65,7 @@ test("every kind that must speak does, in every era band, every year and every r
     for ( const year of YEARS ) {
       for ( const regard of G.REGARDS ) {
         for ( const seed of [0, 1, 7, 99, 12345] ) {
-          const r = G.generate(kind, {year, regard}, {grammar, seed});
+          const r = G.generate(kind, {year, regard, topic: "the mill"}, {grammar, seed});
           assert.ok(r?.say, `${kind} ${year} ${regard}`);
           assert.ok(!/#\w|\{\w+\}/.test(r.say), `${kind} ${year} ${regard}: ${r.say}`);
           assert.ok(/^".+"$/.test(r.say), r.say);
@@ -129,4 +130,54 @@ test("the writing: gender-neutral, no dashes for pauses, quoted speech, eras agr
   }
   for ( const list of Object.values(HOUSE.rules) ) for ( const r of list ) for ( const l of r.say ) assert.ok(/^".+"$/.test(l), l);
   for ( const y of YEARS ) assert.equal(G.bandOf(y), TK.eraBand(y), String(y));
+});
+
+test("groups: a clan's own greetings pool with the era's, and every group speaks at every warmth", () => {
+  const lines = f => new Set([...Array(300).keys()].map(seed => G.generate("greet", f, {grammar, seed})?.say));
+  const v = lines({era: "nineteenth", regard: "neutral", clan: ["ventrue"]});
+  assert.ok([...v].some(l => l.includes("How may I be of use")) && [...v].some(l => STOCK.GREET.nineteenth.neutral.includes(l)));
+  const groups = {};
+  for ( const r of GR.GROUPS_GRAMMAR.rules.greet.filter(r => r.id.startsWith("group.")) ) { const [, k, v2] = r.id.split("."); (groups[k] ??= new Set()).add(v2); }
+  for ( const [k, vals] of Object.entries(groups) ) for ( const v2 of vals ) for ( const regard of G.REGARDS ) {
+    const r = G.generate("greet", {era: "modern", regard, [k]: [v2]}, {grammar, seed: 3});
+    assert.ok(r?.say && !/#\w|\{\w+\}/.test(r.say), `${k} ${v2} ${regard}`);
+  }
+  assert.ok(Object.values(groups).reduce((n, s2) => n + s2.size, 0) >= 45, "clans, tribes, Traditions, Conventions and kiths");
+});
+
+test("groups keep the Masquerade: no line names what the speaker is", () => {
+  const all = [];
+  for ( const list of Object.values(GR.GROUPS_GRAMMAR.rules) ) for ( const r of list ) all.push(...r.say);
+  for ( const l of all ) {
+    assert.ok(!/\b(kindred|cainite|vampire|blood|garou|werewolf|wolf|magick|mage|fae|changeling|glamour|ventrue|brujah|tremere|clan|tribe|sept|umbra|wyrm|paradox)\b/i.test(l), l);
+    assert.ok(!/\b(he|she|him|her|his|hers|himself|herself|lord|lady|sir|madam|brother|sister)\b/i.test(l), l);
+    assert.ok(!/—|--/.test(l) && /^".+"$/.test(l), l);
+  }
+});
+
+test("sides become facts: aliases, antitribu, only the keys asked for", () => {
+  assert.deepEqual(G.factsFromSides(["clan:Ventrue antitribu", "aff:Hermetic", "faction:the watch"], GR.SIDE_FACTS),
+    {clan: ["ventrue antitribu", "ventrue"], aff: ["hermetic", "order of hermes"]});
+  assert.deepEqual(G.factsFromSides(["clan:clan Brujah"], ["clan"]), {clan: ["brujah"]});
+});
+
+test("mood: the Storyteller's wins, then alarm, wounds, a fight or a fall in regard within a day, then a wary place", () => {
+  assert.equal(G.moodOf({set: "Grieving", alert: "alarm"}), "grieving");
+  assert.equal(G.moodOf({alert: "alarm", wounded: true}), "afraid");
+  assert.equal(G.moodOf({wounded: true}), "hurt");
+  assert.equal(G.moodOf({fought: 1000, now: 1000 + 3600}), "angry");
+  assert.equal(G.moodOf({fought: 1000, now: 1000 + 3 * 86400, alert: "wary"}), "wary");
+  assert.equal(G.moodOf({drop: 50, now: 100}), "angry");
+  assert.equal(G.moodOf({}), null);
+  for ( const m of GR.MOODS ) for ( const kind of ["greet", "none", "farewell"] ) assert.ok(G.generate(kind, {era: "medieval", regard: "neutral", mood: m}, {grammar})?.say, `${m} ${kind}`);
+  // fear crowds out everything else
+  const scared = new Set([...Array(200).keys()].map(seed => G.generate("greet", {era: "modern", regard: "love", mood: "afraid", clan: ["toreador"]}, {grammar, seed}).say));
+  assert.ok([...scared].every(l => GR.GROUPS_GRAMMAR.rules.greet.find(r => r.id === "mood.afraid.greet").say.includes(l)), [...scared].join(" "));
+});
+
+test("asking about a known name: the topic goes into the line, capitalised where it starts one", () => {
+  const r = G.generate("ask", {era: "modern", regard: "dislike", topic: "the old mill"}, {grammar, seed: 0});
+  assert.ok(/the old mill|The old mill/.test(r.say), r.say);
+  for ( let seed = 0; seed < 40; seed++ ) { const x = G.generate("ask", {era: "modern", regard: "dislike", topic: "the old mill"}, {grammar, seed}); assert.ok(/^"[A-Z]/.test(x.say), x.say); }
+  assert.equal(G.generate("ask", {era: "modern", regard: "neutral"}, {grammar}), null, "no topic, no answer");
 });

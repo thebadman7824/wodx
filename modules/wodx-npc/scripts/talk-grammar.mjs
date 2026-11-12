@@ -157,9 +157,61 @@ export function generate(kind, facts = {}, {grammar, seed = 0, recent = []} = {}
   const start = mix(seed, kind) % pool.length;
   for ( let i = 0; i < pool.length; i++ ) {
     const p = pool[(start + i) % pool.length];
-    const say = expand(p.line, f, grammar.symbols ?? {}, mix(seed, p.line));
+    const say = capFirst(expand(p.line, f, grammar.symbols ?? {}, mix(seed, p.line)));
     if ( !said.has(say) || i === pool.length - 1 ) return {say, rule: p.rule, score};
   }
+  return null;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Who is speaking, and in what mood (NPC 0.43.0)                     */
+/* ------------------------------------------------------------------ */
+
+/** Other spellings of a group as sheets and factions write it. */
+export const GROUP_ALIASES = {
+  setite: "followers of set", setites: "followers of set", "the followers of set": "followers of set", assamites: "assamite",
+  hermetic: "order of hermes", "the order of hermes": "order of hermes", hermetics: "order of hermes", chorus: "celestial chorus",
+  akashics: "akashic brotherhood", ecstatics: "cult of ecstasy", etherites: "sons of ether", "society of ether": "sons of ether",
+  "virtual adept": "virtual adepts", "children of gaia": "children of gaia", fangs: "silver fangs", furies: "black furies",
+  gnawers: "bone gnawers", fenrir: "get of fenris", "get of fenrir": "get of fenris", talons: "red talons", striders: "silent striders",
+  "iteration-x": "iteration x", nwo: "new world order", "void engineer": "void engineers", syndicate: "syndicate", progenitor: "progenitors"
+};
+/**
+ * Talk facts from an NPC's sides (WoDX NPC rivalry: "clan:ventrue", "aff:order of hermes", "line:vampire"), for the keys
+ * given. "Clan Ventrue" and "Ventrue antitribu" both count as ventrue; antitribu also stays as written.
+ */
+export function factsFromSides(sides = [], keys = []) {
+  const out = {}, want = new Set(keys);
+  for ( const s of sides ?? [] ) {
+    const i = String(s).indexOf(":");
+    if ( i < 1 ) continue;
+    const k = s.slice(0, i).trim().toLowerCase();
+    if ( want.size && !want.has(k) ) continue;
+    let v = s.slice(i + 1).trim().toLowerCase().replace(/^(clan|tribe|house|the tradition of)\s+/, "");
+    const vals = new Set([v]);
+    if ( / antitribu$/.test(v) ) vals.add(v.replace(/ antitribu$/, ""));
+    for ( const x of [...vals] ) if ( GROUP_ALIASES[x] ) vals.add(GROUP_ALIASES[x]);
+    (out[k] ??= []).push(...vals);
+  }
+  for ( const k of Object.keys(out) ) out[k] = [...new Set(out[k])];
+  return out;
+}
+
+const DAY = 86400;
+/**
+ * The mood an NPC talks in (B1644). The Storyteller's choice wins; else a place in alarm makes them afraid, wounds make
+ * them hurt, a fight with this character in the last day or a fall in regard makes them angry, a wary place makes them
+ * wary. Otherwise none, and they speak as the era and regard have it.
+ * alert: "alarm" | "wary" | "calm"; fought: world time of the last fight with the character; drop: world time of the
+ * last fall in their regard for the character.
+ */
+export function moodOf({set = null, alert = "calm", wounded = false, fought = null, drop = null, now = 0} = {}) {
+  if ( set ) return String(set).toLowerCase();
+  if ( alert === "alarm" ) return "afraid";
+  if ( wounded ) return "hurt";
+  const recent = t => Number.isFinite(Number(t)) && t !== null && now - Number(t) >= 0 && now - Number(t) <= DAY;
+  if ( recent(fought) || recent(drop) ) return "angry";
+  if ( alert === "wary" ) return "wary";
   return null;
 }
 
@@ -266,4 +318,4 @@ export function lint(grammar = {}) {
 }
 
 /** Kinds that must speak for every era band and every regard (the harness checks them). */
-export const MUST_SPEAK = ["greet", "none", "gossip", "news", "work", "directions", "farewell", "cry:alarm", "cry:threat", "cry:hurt"];
+export const MUST_SPEAK = ["ask", "greet", "none", "gossip", "news", "work", "directions", "farewell", "cry:alarm", "cry:threat", "cry:hurt"];

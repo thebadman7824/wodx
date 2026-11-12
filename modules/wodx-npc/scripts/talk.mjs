@@ -22,6 +22,8 @@ import * as STOCK from "../data/stock-talk.mjs";
 import * as MORE from "../data/stock-talk-more.mjs";
 import * as G from "./talk-grammar.mjs";
 import {HOUSE} from "../data/grammar/house.mjs";
+import {GROUPS_GRAMMAR, SIDE_FACTS} from "../data/grammar/groups.mjs";
+import * as AR from "./alert-rules.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -120,13 +122,25 @@ export function build(ctx) {
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
   /* NPC 0.44.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
-  const GRAMMAR = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE);
+  const GRAMMAR = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR);
   const lately = new Map(); // NPC|character -> the last few generated lines, passed over while others fit
+  /** NPC 0.43.0: the speaker's clan, tribe, Tradition, kith and the like, and their mood (B1643, B1644). */
+  function whoAndMood(r) {
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me), now = game.time?.worldTime ?? 0;
+    let sides = [];
+    try { sides = game.modules.get(MOD)?.api?.rivalry?.sidesOf?.(npc)?.own ?? []; } catch (e) { sides = []; }
+    const log = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.log ?? [];
+    const drop = [...log].reverse().find(e => Number(e?.delta) < 0)?.at ?? null;
+    let alert = "calm";
+    try { alert = AR.levelAt(r.scene?.flags?.[MOD]?.alert ?? null, now); } catch (e) { alert = "calm"; }
+    const mood = G.moodOf({set: savedProfile(npc).mood ?? null, alert, wounded: holds(npc, "wounded"), fought: npc?.flags?.[MOD]?.fought?.[pc?.id] ?? null, drop, now});
+    return {...G.factsFromSides(sides, SIDE_FACTS), ...(mood ? {mood} : {})};
+  }
   /** A generated line for this kind of talk, or null (generator off, or nothing fits). */
   function genLine(r, kind, c, extra = {}) {
     if ( !setting("talkGrammar") ) return null;
     const npc = baseActor(r.npcTok), pc = baseActor(r.me), key = `${npc?.id}|${pc?.id}`;
-    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...extra};
+    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...whoAndMood(r), ...extra};
     let hit = null;
     try { hit = G.generate(kind, facts, {grammar: GRAMMAR, seed: c.seed, recent: lately.get(key) ?? []}); } catch (e) { console.warn("WoDX NPC | talk generator", e); hit = null; }
     if ( hit?.say ) lately.set(key, [...(lately.get(key) ?? []), hit.say].slice(-6));
@@ -215,6 +229,11 @@ export function build(ctx) {
     if ( !stockOn(r.npcTok.actor) ) return null;
     const kind = TK.LOCAL[topic] ? topic : "none";
     const c = stockCtx(r, kind);
+    // NPC 0.43.0: a topic the character has heard of, with no line written for it, gets a generated answer
+    if ( kind === "none" && topic && topic !== "none" ) {
+      const ask = genLine(r, "ask", c, {topic: String(topic)});
+      if ( ask?.say ) return {kind: "stock", say: ask.say, when: "", then: TK.parseThen(""), rumourId: null, rule: ask.rule};
+    }
     const rum = kind === "rumours" && c.regard !== "hate" ? rumourFor(r) : null;
     const gk = kind === "rumours" ? (rum ? "rumour" : "gossip") : kind;
     const gen = genLine(r, gk, c, rum ? {rumour: rum.text} : {});
