@@ -18,6 +18,7 @@ const newer = (a, b) => {
   for ( let i = 0; i < 3; i++ ) if ( (pa[i] ?? 0) !== (pb[i] ?? 0) ) return (pa[i] ?? 0) > (pb[i] ?? 0);
   return true;
 };
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 const CARD = text => `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">Gate asks about the bridge.</p><p>${text}</p></div></div>`;
 
 export async function run() {
@@ -38,9 +39,10 @@ export async function run() {
     if ( S ) S.speak = u => spoken.push({text: u.text, pitch: u.pitch, rate: u.rate, voice: u.voice?.name ?? null});
     await game.settings.set(MOD, "enabled", true); await game.settings.set(MOD, "mute", false); await game.settings.set(MOD, "gmHears", true);
     made.scene = await Scene.create({name: "WoDX gate: voices", width: 1000, height: 1000});
-    const [a1, a2] = await Actor.create([{name: "Gate toll keeper", type: "Mortal", flags: {"wodx-npc": {behavior: {voice: "peasant"}}}}, {name: "Gate prince", type: "Mortal"}]);
+    const [a1, a2] = await createActors([{name: "Gate toll keeper", type: "Mortal", flags: {"wodx-npc": {behavior: {voice: "peasant"}}}}, {name: "Gate prince", type: "Mortal"}]);
     made.actors = [a1, a2];
-    const [t1, t2] = await made.scene.createEmbeddedDocuments("Token", [{name: a1.name, actorId: a1.id, actorLink: true, x: 100, y: 100}, {name: a2.name, actorId: a2.id, actorLink: true, x: 300, y: 100}]);
+    const toks = await made.scene.createEmbeddedDocuments("Token", [{name: a1.name, actorId: a1.id, actorLink: true, x: 100, y: 100}, {name: a2.name, actorId: a2.id, actorLink: true, x: 300, y: 100}]);
+    const t1 = toks.find(t => t.actorId === a1.id), t2 = toks.find(t => t.actorId === a2.id);
     const post = async (tok, text, extra = {}) => {
       const m = await ChatMessage.create({speaker: {alias: tok.name, scene: made.scene.id, token: tok.id}, content: CARD(text), whisper: [game.user.id], flags: {"wodx-npc": {talk: {actor: null}}}, ...extra});
       made.msgs.push(m); await sleep(300); return m;
