@@ -41,7 +41,8 @@ export async function run() {
     await step("api", async () => {
       for ( const r of [0.0001, 0.9999] ) if ( (await faceOf(r)) === 10 ) r10 = r;
       CONFIG.Dice.randomUniform = rnd0;
-      const hand = JSON.stringify(st()?.hand?.tools?.() ?? st()?.hand ?? "");
+      const tools = st()?.hand?.tools;
+      const hand = JSON.stringify(Array.isArray(tools) ? tools.map(t => [t.key, t.label]) : "");
       ok("api", typeof api()?.pursue === "function" && !!api()?.rules?.SHIPS?.dromon && typeof api()?.open === "function", {r10, hand: /naval|Ships at sea/.test(hand)});
     });
     let f;
@@ -91,7 +92,7 @@ export async function run() {
       await new Promise(r => setTimeout(r, 300));
       const t2 = app2?.element?.textContent ?? "", h2 = app2?.element?.innerHTML ?? "";
       await app2?.close?.();
-      ok("the window", /WoDX gate: a chase/.test(t1) && /Gate dromon/.test(t2) && /Dromon/.test(t2) && /navFire/.test(h2) && /Undo/.test(t2), {len: [t1.length, t2.length]});
+      ok("the window", /WoDX gate: a chase/.test(t1) && /Gate dromon/.test(t2) && /Dromon/.test(t2) && /navFire/.test(h2) && /navRemove/.test(h2), {len: [t1.length, t2.length]});
     });
     await step("let the time pass", async () => {
       const w0 = game.time.worldTime, secs = await api().passTime(f.id);
