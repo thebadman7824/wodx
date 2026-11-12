@@ -20,11 +20,37 @@ export function registerFaceSettings() {
     scope: "world", config: true, type: Boolean, default: false, onChange: () => refreshAll()});
 }
 
+/** NPC 0.34.0: the stranger line, built from what shows, kept a few seconds per token (refreshToken fires often). */
+const autoCache = new Map();
+function autoFor(token, a, ids) {
+  const key = token.document?.uuid ?? token.id, now = Date.now();
+  const hit = autoCache.get(key);
+  if ( hit && now - hit.at < 5000 ) return hit.text;
+  let text = "";
+  try {
+    const base = (a.isToken ? a.token?.baseActor : null) ?? game.actors?.get?.(a.id) ?? a;
+    const api = game.modules.get(MOD)?.api;
+    const tpl = api?.profileFor?.(base, {phases: false})?.template ?? null;
+    const animal = api?.animals?.[tpl] ? (api.animals[tpl].template?.label ?? api.animals[tpl].crowd ?? tpl) : null;
+    const lk = game.modules.get("wodx-library")?.api?.look ?? null;
+    const look = lk?.of?.(a) ?? null;
+    const me = ids.map(id => game.actors.get(id)).find(Boolean) ?? null;
+    let step = null;
+    try { step = me ? api?.attitude?.of?.(base, me)?.step ?? null : null; } catch (e) { step = null; }
+    text = F.autoStranger({station: look && look.worn?.length ? look.station : null, sides: look?.sides ?? [], condition: look?.condition ?? [],
+      activity: base.flags?.[MOD]?.where?.activity ?? null, step, animal});
+  } catch (e) { text = ""; }
+  autoCache.set(key, {at: now, text});
+  return text;
+}
+
 /** The nameplate for this player. */
 export function applyName(token) {
   const a = token?.actor, plate = token?.nameplate;
   if ( !a || !plate || game.user.isGM ) return;
-  const want = F.nameFor({name: token.document.name, flags: a.flags?.[MOD] ?? {}, mine: mine(), gm: game.user.isGM, on: on(), playerOwned: a.hasPlayerOwner});
+  const flags = a.flags?.[MOD] ?? {}, ids = mine();
+  const auto = !String(flags.stranger ?? "").trim() && on() && !a.hasPlayerOwner && !F.knows(flags, ids) ? autoFor(token, a, ids) : "";
+  const want = F.nameFor({name: token.document.name, flags, mine: ids, gm: game.user.isGM, on: on(), playerOwned: a.hasPlayerOwner, auto});
   if ( plate.text !== want ) plate.text = want;
 }
 function refreshAll() {
