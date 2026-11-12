@@ -46,6 +46,8 @@ export async function run() {
       fae("WoDX gate: Selkie", "wod.bio.changeling.selkies"), fae("WoDX gate: Troll", "wod.bio.changeling.troll"), fae("WoDX gate: Boggan", "wod.bio.changeling.boggans"),
       fae("WoDX gate: Hag", "wod.bio.changeling.nighthags"), fae("WoDX gate: Glome", "wod.bio.changeling.glomes")]);
     const by = n => actors.find(a => a.name === `WoDX gate: ${n}`);
+    // the system drops permanent ratings given on create (testbed probe, step 12): set them after
+    for ( const a of actors ) await a.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 3, "system.advantages.glamour.permanent": 6, "system.advantages.glamour.temporary": 2});
     await step("1 api", async () => {
       ok("1 api", atLeast(game.modules.get(C).version, "0.34.0") && typeof api()?.revel === "function" && game.settings.get(C, "sigChangeling") === true, {version: game.modules.get(C).version});
     });
