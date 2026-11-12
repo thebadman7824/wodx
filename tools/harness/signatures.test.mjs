@@ -14,7 +14,8 @@ test("clan names find their row on whole words only", () => {
   assert.equal(S.vampireRow("Settler"), null);
   assert.equal(S.vampireRow("", null, "Brujah")?.key, "brujah");
   assert.equal(S.vampireRow(["Gangrel antitribu"])?.key, "gangrel");
-  assert.equal(S.vampireRow("Ventrue"), null);
+  assert.equal(S.vampireRow("Ventrue")?.key, "ventrue");
+  assert.equal(S.vampireRow("Settite of nowhere"), null);
   for ( const r of S.VAMPIRE ) assert.ok(r.page && r.title && r.text, r.key);
 });
 
@@ -164,4 +165,49 @@ test("a thin-blooded Caitiff rolls once a year for an odd gift", () => {
   const all = {gifts: S.ODD_GIFTS.map(g => g.key), year: 1};
   assert.equal(S.oddGift(all, 2, () => 0).gift, null, "no gift left to give");
   assert.ok(S.thinBlooded(["Thin Blood"])); assert.ok(!S.thinBlooded(["Thick skin"]));
+});
+
+/* Chronicle 0.28.0: Nosferatu, Tremere, Ventrue, Assamite, Giovanni (B1150 to B1154) */
+
+test("the five clans find their rows; Cappadocians are the Giovanni row", () => {
+  assert.equal(S.vampireRow("Nosferatu")?.feature, "secrets");
+  assert.equal(S.vampireRow("Tremere")?.feature, "pyramid");
+  assert.equal(S.vampireRow("Ventrue")?.feature, "domain");
+  assert.equal(S.vampireRow("Banu Haqim")?.feature, "contracts");
+  assert.equal(S.vampireRow("Cappadocian")?.feature, "family");
+  assert.equal(S.giovanniName(1300), "Cappadocian");
+  assert.equal(S.giovanniName(1500), "Giovanni");
+});
+
+test("a secret goes stale as fast as word travels in its age", () => {
+  const D = S.DAY;
+  assert.equal(S.freshDays(1200), 60);
+  assert.equal(S.freshDays(2000), 1);
+  assert.equal(S.secretPrice(0, 30 * D, 1200), "minor");
+  assert.equal(S.secretPrice(0, 61 * D, 1200), "trivial");
+  assert.equal(S.secretPrice(0, 2 * D, 2000), "trivial");
+  assert.ok(S.isSecretPage("A page of secrets: the abbot"));
+  assert.ok(!S.isSecretPage("A page of sums"));
+});
+
+test("orders come only from above, and refusing costs more from far above", () => {
+  assert.ok(S.mayOrder(7, 2)); assert.ok(!S.mayOrder(2, 2));
+  assert.equal(S.refuseCost(3, 2), 1); assert.equal(S.refuseCost(8, 2), 2);
+  assert.equal(S.rankLabel(99), "Inner Council");
+});
+
+test("Ventrue influence once a month from the institutions of the age", () => {
+  assert.ok(S.institutionsAt(1197).includes("the bishop's court"));
+  assert.ok(!S.institutionsAt(1197).includes("a bank"));
+  assert.ok(S.institutionsAt(2030).includes("an arcology board"));
+  assert.ok(S.mayInfluence(null, 5)); assert.ok(!S.mayInfluence(5, 5)); assert.ok(S.mayInfluence(5, 6));
+});
+
+test("Assamite contracts: kept raises standing and pays a tithe, overdue ones fail", () => {
+  const c = S.newContract({target: "the reeve", price: 50, days: 10, now: 0});
+  assert.equal(S.overdue([c], 9 * S.DAY).length, 0);
+  assert.equal(S.overdue([c], 10 * S.DAY).length, 1);
+  let r = S.settleContract(c, 1, true); assert.equal(r.standing, 2); assert.equal(r.tithe, 5);
+  r = S.settleContract(c, 0, false); assert.equal(r.standing, 0); assert.equal(r.tithe, 0);
+  assert.equal(S.settleContract(c, 5, true).standing, 5);
 });

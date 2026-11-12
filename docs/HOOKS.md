@@ -27,8 +27,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSensesGather | senses | senses |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
-| wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
-| wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Setite's gift that feeds the victim's vice moves their Corruption) |
+| wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption) |
+| wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxSkipStart | chronicle | chronicle (the Legends book is brought up to date before the clock moves) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |

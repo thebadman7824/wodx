@@ -1,11 +1,11 @@
 /**
- * Legends book gate (WoDX Chronicle 0.28.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * Legends book gate (WoDX Chronicle 0.29.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatelegends.mjs?${Date.now()}`)).run()
  * Back the world up first.
  *
  * It holds the world, works on its own throwaway actors, scene, Ledger entry and faction, and puts back the book,
  * the Ledger, the factions, the session mark and the hold at the end.
- *   1. the module: WoDX Chronicle 0.28.0 or later with the legends API
+ *   1. the module: WoDX Chronicle 0.29.0 or later with the legends API
  *   2. a build writes the journal "Legends of the Chronicle", open to everyone, with an About page
  *   3. a death and an Embrace on a gate actor become lines; the Embrace waits for the Storyteller
  *   4. a boon the Ledger marks kept becomes a line (WoDX Storyteller on)
@@ -53,7 +53,7 @@ export async function run() {
   const jText = () => journal()?.pages.contents.map(p => p.text?.content ?? "").join(" ") ?? "";
   try {
     const mod = game.modules.get(M);
-    ok("1. module", mod?.active && newer(mod.version, "0.28.0") && !!api?.legends?.build, {version: mod?.version});
+    ok("1. module", mod?.active && newer(mod.version, "0.29.0") && !!api?.legends?.build, {version: mod?.version});
     await api.hold(true);
     await api.legends.build();
     const j = journal();

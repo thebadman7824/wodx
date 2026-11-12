@@ -583,6 +583,12 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Lasombra and cameras (B1127) | House rule: no image on photographs (1839), film (1895), video (1970) or digital (2000); a watched scene gives a breach found later; every scene watched from 2023 unless marked | CAMERAS in data/signatures.mjs |
 | 2026-11-12 | The Ravnos vice (B1128) | Lying, theft, cheating or a dare; one Self-Control prompt a night, difficulty 6 rising with weeks unfed and a long stay, to 9 | ravnosDifficulty |
 | 2026-11-12 | Caitiff odd gifts (B1129) | A thin-blooded Caitiff rolls once a year, one in ten, for one of four gifts; Storyteller card with Undo | ODD_GIFTS |
+| 2026-11-12 | Nosferatu secrets (B1150) | A true-face card with a breach button; a page of secrets buys a minor boon while fresh, a trivial one when stale; freshness follows the age's media | SECRET_FRESH |
+| 2026-11-12 | Tremere ranks (B1151) | House reading: the seven circles, then Regent, Lord, Pontifex and the Inner Council; refusing an order costs 1 Willpower, or 2 from three or more ranks above | TREMERE_RANKS, refuseCost |
+| 2026-11-12 | Ventrue influence (B1152) | Once a month, a minor boon from an institution of the age in place of holdings income | INSTITUTIONS |
+| 2026-11-12 | Assamite contracts (B1153) | Kept: standing +1 and a 10% tithe; overdue: standing -1 | settleContract |
+| 2026-11-12 | Giovanni bound dead (B1154) | A wraith ledger held by fetters; Cappadocian before 1444 (house reading of the date) | giovanniName |
+| 2026-11-12 | Ben accepted every recommendation on the Splat Features Desk (03:29 UTC) | All 276 items, the new "Every one has something" rows included, are Build as written | None |
 
 ## Waiting for review
 

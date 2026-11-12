@@ -6,7 +6,7 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 
 /**
- * WoDX Chronicle 0.27.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
+ * WoDX Chronicle 0.28.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
  * signature-rules.mjs, table in data/signatures.mjs.
  *
  *   Actor flag wodx-chronicle.sig = {muses: [], cause, marks: []}: the character's own tracks (owner and Storyteller see them).
@@ -31,7 +31,7 @@ const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-act
 
 export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigVampire", {
-    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice and the Caitiff's odd gifts. Off by default.",
+    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts and the Giovanni's bound dead. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
 }
@@ -47,11 +47,23 @@ const isFeature = (actor, f) => on() && rowOf(actor)?.feature === f;
 
 /* ---------------- cards and Undo ---------------- */
 
-async function card(title, body, {whisper = gmIds(), undo = null} = {}) {
-  const btn = undo ? `<button type="button" data-wct-sig-undo>Undo</button>` : "";
+async function card(title, body, {whisper = gmIds(), undo = null, act = null} = {}) {
+  const btn = (undo ? `<button type="button" data-wct-sig-undo>Undo</button>` : "") + (act ? `<button type="button" data-wct-sig-act>${esc(act.label)}</button>` : "");
+  const flags = {};
+  if ( undo ) flags.sigUndo = undo;
+  if ( act ) flags.sigAct = act;
   return ChatMessage.create({content: `<div class="wodx-card wct-sig"><h3>${esc(title)}</h3>${body}${btn}</div>`,
-    speaker: {alias: "Chronicle"}, whisper, flags: undo ? {[MODULE_ID]: {sigUndo: undo}} : {}});
+    speaker: {alias: "Chronicle"}, whisper, flags: Object.keys(flags).length ? {[MODULE_ID]: flags} : {}});
 }
+/** Card buttons other than Undo: {key, label, who: "gm"|"owner", uuid (the actor whose owner may press), data}. */
+const ACTS = {};
+async function runAct(message) {
+  const act = message?.flags?.[MODULE_ID]?.sigAct, fn = ACTS[act?.key];
+  if ( !fn || !mayPress(act) ) return;
+  await message.update({[`flags.${MODULE_ID}.sigAct`]: null, content: `${message.content}<p class="vta-note">${esc(act.label)}: done.</p>`});
+  await fn(act.data ?? {});
+}
+const mayPress = act => !!act && (game.user.isGM || (act.who === "owner" && !!fromUuidSync?.(act.uuid)?.isOwner));
 /** Undo data: {uuid, path, before}. Only the Storyteller may press it. */
 async function runUndo(message) {
   const u = message?.flags?.[MODULE_ID]?.sigUndo;
@@ -91,7 +103,7 @@ export async function tick({force = false} = {}) {
   const t = now(), day = Math.floor(t / 86400);
   if ( day === lastTick && !force ) return;
   lastTick = day;
-  for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); }
+  for ( const a of game.actors ) if ( a.hasPlayerOwner || a.flags?.[MODULE_ID]?.[FLAG] ) { await soilTick(a, t); await oddTick(a); await contractTick(a, t); }
   for ( const a of game.actors ) {
     const sig = a.flags?.[MODULE_ID]?.[FLAG];
     if ( !sig ) continue;
@@ -210,7 +222,8 @@ export async function setVice(npc, setite, vice) {
 }
 function onSocial(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
-  if ( a && on() && isActiveGM() && isFeature(a, "vice") ) ravnosChance(a, p.act, npc);
+  if ( a?.isOwner && on() && isFeature(a, "vice") ) ravnosChance(a, p.act, npc);
+  if ( a?.isOwner && npc && on() && isFeature(a, "secrets") ) trueFace(a, npc);
   if ( !a || !npc || !isFeature(a, "corruption") ) return;
   const d = S.stepFromSocial(p.act, p.result);
   if ( d ) work(npc, a, d, `${p.act}, ${p.result}`);
@@ -226,7 +239,8 @@ function goodNamed(name) {
 }
 function onTrade(p) {
   const a = toActor(p?.actor), npc = toActor(p?.npc);
-  if ( a && on() && isActiveGM() && isFeature(a, "vice") ) ravnosChance(a, p.mode, npc);
+  if ( a?.isOwner && on() && isFeature(a, "vice") ) ravnosChance(a, p.mode, npc);
+  if ( a?.isOwner && npc && on() && isFeature(a, "secrets") && S.isSecretPage(p.give) ) secretSold(a, npc, p.give);
   if ( !a || !npc || !isFeature(a, "corruption") ) return;
   const rec = corruption(npc)[a.id];
   const good = goodNamed(p.give);
@@ -357,7 +371,7 @@ async function ravnosChance(a, act, npc) {
 }
 function onTaken(p) {
   const a = toActor(p?.actor);
-  if ( a && on() && isFeature(a, "vice") && sigOf(a).ravnos?.vice === "theft" ) ravnosFed(a);
+  if ( a?.isOwner && on() && isFeature(a, "vice") && sigOf(a).ravnos?.vice === "theft" ) ravnosFed(a);
 }
 
 /* ---------------- Caitiff ---------------- */
@@ -371,6 +385,149 @@ async function oddTick(a) {
   sig.odd = r.gift ? {...r.odd, gifts: [...(r.odd.gifts ?? []), r.gift.key]} : r.odd;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   if ( r.gift ) await card(`${a.name}: an odd gift`, `<p>This year ${esc(a.name)} may wake with a gift of thin blood: <b>${esc(r.gift.label)}</b>. ${esc(r.gift.text)} Keep it or take it back.</p>`, {undo: {uuid: a.uuid, path: FLAG, before}});
+}
+
+/* ---------------- Nosferatu ---------------- */
+
+const isMortal = a => /mortal|human|ghoul|kinfolk/.test(String(actorsApi("wodx-combat")?.getKind?.(a) ?? a?.type ?? "").toLowerCase()) && !/vampire|kindred/.test(String(a?.type ?? "").toLowerCase());
+const tonightKey = () => Math.floor((now() - 43200) / 86400);
+/** A Nosferatu deals face to face with a mortal: one card a night for each, with a button to record the breach. */
+async function trueFace(a, npc) {
+  if ( !isMortal(npc) ) return null;
+  const sig = sigOf(a), seen = sig.faces ?? {};
+  if ( seen[npc.id] === tonightKey() ) return null;
+  sig.faces = {...seen, [npc.id]: tonightKey()};
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return card(`${a.name}: the true face`, `<p>${esc(npc.name)} dealt with ${esc(a.name)} face to face. Unless Obfuscate held, that is a breach of the Masquerade.</p>`,
+    {act: {key: "breach", label: "Record the breach", who: "gm", data: {by: a.uuid, npc: npc.uuid}}});
+}
+ACTS.breach = async ({by, npc}) => {
+  const a = await fromUuid(by), w = await fromUuid(npc);
+  if ( a && w ) await actorsApi("wodx-actions")?.recordBreach?.({by: a, event: "saw the true face of a Nosferatu", witnesses: [w]});
+};
+/** Write down a secret as an item in the Nosferatu's pack. */
+export async function secret(actorOrId, {about = "what was overheard", text = ""} = {}) {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const [item] = await a.createEmbeddedDocuments("Item", [{name: `A page of secrets: ${about}`, type: "Item", system: {description: esc(text)},
+    flags: {[MODULE_ID]: {secret: {about, at: now(), year: currentYear()}}}}]);
+  return item ?? null;
+}
+/** A page of secrets handed over in a trade: the Storyteller can log the boon it buys. */
+async function secretSold(a, npc, name) {
+  const item = npc.items?.find?.(i => i.name === name) ?? a.items?.find?.(i => i.name === name);
+  const f = item?.flags?.[MODULE_ID]?.secret ?? {at: now(), year: currentYear()};
+  const size = S.secretPrice(f.at, now(), f.year ?? currentYear());
+  return card(`${a.name} sells a secret`, `<p>${esc(npc.name)} takes ${esc(name)}. ${size === "minor" ? "It is fresh: a minor boon." : "It is stale: a trivial boon."}</p>`,
+    {act: {key: "boon", label: "Log the boon", who: "gm", data: {from: {id: npc.id, name: npc.name}, to: {id: a.id, name: a.name}, size, what: name}}});
+}
+ACTS.boon = async ({from, to, size, what}) => {
+  await actorsApi("wodx-storyteller")?.ledger?.save?.({kind: "boon", size, from, to, what});
+};
+
+/* ---------------- Tremere ---------------- */
+
+export async function setRank(actorOrId, rank) {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const sig = sigOf(a); sig.rank = Math.max(0, Math.min(S.TREMERE_RANKS.length - 1, Number(rank) || 0));
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return sig.rank;
+}
+const rankOf = a => Number(a?.flags?.[MODULE_ID]?.[FLAG]?.rank ?? 0);
+/** An order down the Pyramid: a card to the one below, who may refuse at a Willpower cost. */
+export async function order(fromActor, toActor_, text = "") {
+  const f = toActor(fromActor), t = toActor(toActor_);
+  if ( !f || !t || !S.mayOrder(rankOf(f), rankOf(t)) ) return null;
+  const cost = S.refuseCost(rankOf(f), rankOf(t));
+  return card(`${f.name} (${S.rankLabel(rankOf(f))}) gives an order`, `<p>To ${esc(t.name)}: ${esc(text)}</p><p class="vta-note">Obey, or refuse at the cost of ${cost} Willpower.</p>`,
+    {whisper: ownerIds(t), act: {key: "refuse", label: `Refuse (${cost} Willpower)`, who: "owner", uuid: t.uuid, data: {to: t.uuid, from: f.name, cost, text}}});
+}
+ACTS.refuse = async ({to, from, cost, text}) => {
+  const t = await fromUuid(to);
+  if ( !t ) return;
+  const path = "system.advantages.willpower.temporary", wp = Number(foundry.utils.getProperty(t, path) ?? 0);
+  await t.update({[path]: Math.max(0, wp - cost)});
+  await card(`${t.name} refuses an order`, `<p>${esc(t.name)} refused ${esc(from)}: ${esc(text)}. Willpower ${Math.max(0, wp - cost)}. The Pyramid will hear of it.</p>`);
+};
+
+/* ---------------- Ventrue ---------------- */
+
+const monthKey = () => { const d = getEngine().timeToDate(now()); return d.year * 12 + (d.month ?? 1); };
+/** Turn this month's holdings income into a boon owed by an institution of the age. */
+export async function influence(actorOrId, institution = "") {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "domain") ) return null;
+  const sig = sigOf(a), key = monthKey();
+  if ( !S.mayInfluence(sig.influenceKey, key) ) { ui.notifications?.info?.("Once a month."); return null; }
+  const inst = institution || S.institutionsAt(currentYear())[0];
+  sig.influenceKey = key;
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name}: influence`, `<p>${esc(a.name)} takes a favour from ${esc(inst)} in place of this month's income. Skip their holdings income this month.</p>`,
+    {act: {key: "boon", label: "Log the boon", who: "gm", data: {from: {id: null, name: inst}, to: {id: a.id, name: a.name}, size: "minor", what: "influence in place of a month's income"}}});
+  return inst;
+}
+/** A Ventrue lost a holding: they answer to the clan. */
+export async function lostHolding(actorOrId, name = "a holding") {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "domain") ) return null;
+  return card(`${a.name} answers to the clan`, `<p>${esc(a.name)} lost ${esc(name)}. The clan's elders call them to account at the next gathering.</p>`);
+}
+
+/* ---------------- Assamite ---------------- */
+
+export async function contract(actorOrId, {target = "", price = 0, days = 30} = {}) {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const sig = sigOf(a), c = S.newContract({id: foundry.utils.randomID(), target, price, days, now: now()});
+  sig.contracts = [...(sig.contracts ?? []), c];
+  sig.standing ??= 1;
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name} takes a contract`, `<p>${esc(c.target)}, for ${c.price}. Due in ${days} days.</p>`, {whisper: ownerIds(a)});
+  return c;
+}
+export async function settle(actorOrId, id, done = true) {
+  const a = toActor(actorOrId), sig = sigOf(a);
+  const i = (sig.contracts ?? []).findIndex(c => c.id === id && c.status === "open");
+  if ( i < 0 ) return null;
+  const before = foundry.utils.deepClone(sig), r = S.settleContract(sig.contracts[i], sig.standing, done);
+  sig.contracts[i] = r.contract; sig.standing = r.standing;
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  await card(`${a.name}: ${done ? "a contract kept" : "a contract failed"}`, `<p>${esc(r.contract.target)}. Standing at Alamut ${r.standing} of ${S.STANDING_MAX}.${r.tithe ? ` Tithe to the clan: ${r.tithe}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  return r;
+}
+async function contractTick(a, t) {
+  if ( !isFeature(a, "contracts") ) return;
+  for ( const c of S.overdue(sigOf(a).contracts ?? [], t) ) await settle(a, c.id, false);
+}
+
+/* ---------------- Giovanni ---------------- */
+
+export async function bindWraith(actorOrId, {name = "a wraith", fetter = ""} = {}) {
+  const a = toActor(actorOrId);
+  if ( !a ) return null;
+  const sig = sigOf(a), w = S.newServant({id: foundry.utils.randomID(), name, fetter, now: now()});
+  sig.servants = [...(sig.servants ?? []), w];
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+  return w;
+}
+export async function callWraith(actorOrId, id) {
+  const a = toActor(actorOrId), w = (sigOf(a).servants ?? []).find(x => x.id === id);
+  if ( !a || !w ) return null;
+  await card(`${a.name} calls ${w.name}`, `<p>${esc(a.name)} calls a bound wraith${w.fetter ? `, held by ${esc(w.fetter)}` : ""}. It comes across from the Shadowlands.</p>`);
+  return w;
+}
+export async function releaseWraith(actorOrId, id) {
+  const a = toActor(actorOrId), sig = sigOf(a);
+  sig.servants = (sig.servants ?? []).filter(x => x.id !== id);
+  await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
+}
+
+/** A small form; returns the fields or null. */
+async function ask(title, fields) {
+  return foundry.applications.api.DialogV2.prompt({classes: ["wodx", "wodx-dialog"], window: {title},
+    content: fields.map(f => `<div class="form-group"><label>${esc(f.label)}</label><input name="${f.name}" type="${f.type ?? "text"}" value="${esc(f.value ?? "")}"></div>`).join(""),
+    ok: {label: "OK", callback: (event, button) => Object.fromEntries(fields.map(f => [f.name, button.form.elements[f.name].value.trim()]))}, rejectClose: false});
 }
 
 /* ---------------- the window ---------------- */
@@ -399,6 +556,10 @@ export async function open(actorOrId) {
   if ( sig.soil ) body += `<h4>Native soil</h4><p>${carriesSoil(a) ? "Carried." : "Not carried."}${sig.soil.short ? ` Dice pools halved (${sig.soil.short} night${sig.soil.short === 1 ? "" : "s"} without it).` : ""}</p>`;
   if ( sig.ravnos?.vice ) body += `<h4>Vice</h4><p>${esc(S.ravnosVice(sig.ravnos.vice)?.label)}. Self-Control difficulty to resist now: ${S.ravnosDifficulty(sig.ravnos, t)}.</p>`;
   if ( row?.feature === "camera" ) { const y = currentYear(), c = S.cameraAt(y); body += `<h4>Cameras</h4><p>${c ? `${esc(c.label)} is the camera of the year. This scene is ${S.watched(y, canvas?.scene?.flags?.[MODULE_ID]?.camera) ? "watched" : "not watched"}.` : "No camera exists yet."}</p>`; }
+  if ( row?.feature === "pyramid" ) body += `<h4>The Pyramid</h4><p>${esc(S.rankLabel(sig.rank ?? 0))}.</p>`;
+  if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / 86400))} days` : ""}</li>`).join("")}</ul>`;
+  if ( sig.servants?.length ) body += `<h4>Bound dead</h4><ul>${sig.servants.map(w => `<li>${esc(w.name)}${w.fetter ? ` (held by ${esc(w.fetter)})` : ""}</li>`).join("")}</ul>`;
+  if ( row?.feature === "family" && currentYear() < 1444 ) body += `<p class="vta-note">In this age the line is the Cappadocians: their deathly look is a Masquerade sign up close.</p>`;
   if ( sig.odd?.gifts?.length ) body += `<h4>Odd gifts</h4><ul>${sig.odd.gifts.map(k => `<li>${esc(S.ODD_GIFTS.find(g => g.key === k)?.label ?? k)}</li>`).join("")}</ul>`;
   if ( game.user.isGM ) {
     const victims = game.actors.filter(x => x.flags?.[MODULE_ID]?.[CFLAG]?.[a.id]);
@@ -408,6 +569,18 @@ export async function open(actorOrId) {
   if ( row?.feature === "glimpse" && on() ) buttons.unshift({action: "glimpse", label: "Ask for a glimpse"});
   if ( row?.feature === "cause" && on() && sig.cause?.rant >= S.RANT_POINTS ) buttons.unshift({action: "rant", label: "Call the Rant"});
   if ( row?.feature === "soil" && on() && !carriesSoil(a) ) buttons.unshift({action: "soil", label: "Take native soil"});
+  if ( row?.feature === "secrets" && on() ) buttons.unshift({action: "secret", label: "Write a page of secrets"});
+  if ( row?.feature === "pyramid" && on() && game.user.isGM ) buttons.unshift({action: "rank", label: "Set rank"});
+  if ( row?.feature === "domain" && on() ) buttons.unshift({action: "influence", label: "Influence in place of income"});
+  if ( row?.feature === "contracts" && on() ) {
+    buttons.unshift({action: "contract", label: "Take a contract"});
+    const open = (sig.contracts ?? []).find(c => c.status === "open");
+    if ( open ) buttons.unshift({action: `kept:${open.id}`, label: `Kept: ${open.target}`});
+  }
+  if ( row?.feature === "family" && on() ) {
+    buttons.unshift({action: "bind", label: "Bind a wraith"});
+    (sig.servants ?? []).slice(0, 3).forEach(w => buttons.unshift({action: `call:${w.id}`, label: `Call ${w.name}`}));
+  }
   if ( row?.feature === "vice" && on() ) {
     if ( !sig.ravnos?.vice ) S.RAVNOS_VICES.forEach(v => buttons.unshift({action: `vice:${v.key}`, label: `Vice: ${v.label}`}));
     else buttons.unshift({action: "fed", label: "The vice was fed"}, {action: "moved", label: "Moved on to a new domain"});
@@ -417,6 +590,13 @@ export async function open(actorOrId) {
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "rant" ) return spendRant(a);
   if ( pick === "soil" ) return giveSoil(a);
+  if ( pick === "secret" ) { const f = await ask("A page of secrets", [{name: "about", label: "About"}, {name: "text", label: "What was learned"}]); return f?.about ? secret(a, f) : null; }
+  if ( pick === "rank" ) { const f = await ask("Rank in the Pyramid", [{name: "rank", label: `0 (${S.TREMERE_RANKS[0]}) to ${S.TREMERE_RANKS.length - 1} (${S.TREMERE_RANKS.at(-1)})`, type: "number", value: sig.rank ?? 0}]); return f ? setRank(a, f.rank) : null; }
+  if ( pick === "influence" ) { const list = S.institutionsAt(currentYear()); const f = await ask("Influence", [{name: "inst", label: `Institution (${list.join(", ")})`, value: list.at(-1)}]); return f ? influence(a, f.inst) : null; }
+  if ( pick === "contract" ) { const f = await ask("A contract", [{name: "target", label: "Target"}, {name: "price", label: "Price", type: "number", value: 0}, {name: "days", label: "Days to the deadline", type: "number", value: 30}]); return f?.target ? contract(a, f) : null; }
+  if ( pick === "bind" ) { const f = await ask("Bind a wraith", [{name: "name", label: "Name"}, {name: "fetter", label: "Held by (a fetter)"}]); return f?.name ? bindWraith(a, f) : null; }
+  if ( String(pick).startsWith("kept:") ) return settle(a, String(pick).slice(5), true);
+  if ( String(pick).startsWith("call:") ) return callWraith(a, String(pick).slice(5));
   if ( pick === "fed" ) return ravnosFed(a);
   if ( pick === "moved" ) return movedOn(a);
   if ( pick === "cam" ) return setCamera(canvas.scene, !S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera));
@@ -442,7 +622,9 @@ export function registerSignatureHooks() {
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick());
   Hooks.on("renderChatMessageHTML", (message, el) => {
-    const root = el?.[0] ?? el, b = root?.querySelector?.("[data-wct-sig-undo]");
+    const root = el?.[0] ?? el, a = root?.querySelector?.("[data-wct-sig-act]");
+    if ( a ) { if ( !mayPress(message.flags?.[MODULE_ID]?.sigAct) ) a.remove(); else a.addEventListener("click", () => runAct(message)); }
+    const b = root?.querySelector?.("[data-wct-sig-undo]");
     if ( !b ) return;
     if ( !game.user.isGM || !message.flags?.[MODULE_ID]?.sigUndo ) { b.remove(); return; }
     b.addEventListener("click", () => runUndo(message));
@@ -462,4 +644,5 @@ export function registerSignatureHooks() {
 }
 
 export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
-  giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, effects, tick, year: () => currentYear(), rules: S};
+  giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
+  bindWraith, callWraith, releaseWraith, effects, tick, year: () => currentYear(), rules: S};
