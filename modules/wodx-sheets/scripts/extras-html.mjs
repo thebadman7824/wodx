@@ -100,7 +100,7 @@ export function tiesHtml(rows, { editable = true } = {}) {
 }
 
 /**
- * WoDX Sheets 0.11.0 (B1500): the Relationships tab, every tie WoDX keeps in one place. rows: from WoDX NPC's
+ * WoDX Sheets 0.11.0 (B1900): the Relationships tab, every tie WoDX keeps in one place. rows: from WoDX NPC's
  * ties [{kind, label, groupLabel, name, uuid, note, source, hidden, secret, hand, kindText, xpSpent, gone}];
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).

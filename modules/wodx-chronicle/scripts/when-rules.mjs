@@ -218,7 +218,7 @@ export function parseTest(line, {eras = null} = {}) {
     }
     return ok({t: "num", key: traitKey, op: c[1], n, trait: true});
   }
-  // Chronicle 0.36.0 (B1506): any rated trait by name, "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2"
+  // Chronicle 0.38.0 (B1906): any rated trait by name, "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2"
   const rt = /^(?:rating\s+)?(.+?)\s*(<=|>=|<|>|==|=|!=)?\s*(\d+)$/i.exec(text);
   if ( rt && /[a-z]/i.test(rt[1]) && ratingKey(unquote(rt[1])) ) return ok({t: "rating", want: ratingKey(unquote(rt[1])), op: rt[2] ?? ">=", n: Number(rt[3])});
   if ( word === "rating" ) return bad("write rating Dominate 2, or just Dominate 2");

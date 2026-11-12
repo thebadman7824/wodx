@@ -598,6 +598,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Small lines (B1507) | Own table and setting each; sheet fields where they exist, a pick for Kuei-jin and Orpheus | SMALL_LINES |
+| 2026-11-12 | Hunters by era (B1508) | Inquisition every era, mortal hunters 1500 to 1998, imbued from 1999, agencies from 1900 (a house reading); monster-only fight dice | HUNTER |
+| 2026-11-12 | Borrowed engines (B1509) | Guard, rulings, riddles, stars, bound dead, secrets, corruption and leverage reused across the small lines | data/signatures.mjs |
+| 2026-11-12 | NPC-only rows (B1510) | Bane mummies, Earthbound, Wan Xian, Cabiri | data/signatures.mjs |
 | 2026-11-12 | Wraith picks (B1504) | Guild, legion and faction picked in the window and kept on the actor; a legion suggested by the manner of death (a house reading) | GUILDS, LEGIONS |
 | 2026-11-12 | Wraith engines (B1505) | Borrowed riddle, leverage and mad ear; the Emerald luck once a week (a house reading of once a story) | luck |
 | 2026-11-12 | Factions of the dead (B1506) | Heretics, Renegades, Ferrymen, Spectres and the Risen, one per wraith | WRAITH_FACTIONS |
@@ -609,6 +613,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
 | 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |
 | 2026-11-12 | Changing Breeds (B1164) | Eleven Fera, eight Hengeyokai with the Beast Courts line, Apis, Camazotz and Grondr gone before 1197 (a house reading), Kinfolk harm cards | FERA |
+| 2026-11-12 | City exposure (B1511) | Bands Quiet 0, Whispers 3, Talk 6, Watched 10, Hunted 15; a point a breach plus witnesses, print from 1605 and cameras; a point off a quiet week (house numbers) | EXPOSURE_BANDS, breachPoints |
+| 2026-11-12 | Sect law (B1512) | Camarilla and the Church of Caine act at Watched, the others at Hunted; bringing to heel takes 3 off | SECT_LAW, HEEL_DROP |
+| 2026-11-12 | Great cities (B1514) | Nine cities with dated states from history; Senses adds the city's smell and sound | CITIES |
+| 2026-11-12 | Golconda road (B1516) | Ten steps; killing costs 2, frenzy, theft and harmful feeding 1; a mentor a step a month (house numbers) | GOLCONDA_SETBACKS |
+| 2026-11-12 | Story chains and goals (B1517, B1518) | Six chains in play, separate from the lifepath chains; three goals a line for each of two ages | CHAINS, GOALS |
 
 ## Approved by Ben, 12 November 2026, 04:40 UTC (lifepaths)
 
@@ -683,11 +692,11 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Height in targeting (x7) | Range and areas measured in three dimensions from token elevation; a cone or line aims level, so a flyer must be within its spread | inShape(), withHeight() in wodx-targeting target-rules.mjs |
 | 2026-11-12 | Prelude runner rolls and stakes (B1611, B1612) | Difficulty 6 by default, ones cancel; failed stakes add 0-point Flaws (Enemy, Dark Secret, Nightmares, Hunted) or a lost tie; gains capped at 3 freebie points | first-night-prelude-rules.mjs |
 | 2026-11-12 | Troupe tie questions (B1613) | Six questions, a ring by name, answers on the Group actor | TIE_QUESTIONS |
-| 2026-11-12 | Who may see a tie (B1501) | Owners of either end; a hidden hand-made tie is the Storyteller's; a tie a secret hides shows once the secret is found | visibleTo in ties-rules.mjs |
-| 2026-11-12 | What a found secret is worth (B1503) | A major boon owed by the holder to the finder, in the Ledger | hookEntry in secrets-rules.mjs |
-| 2026-11-12 | How secrets are dug up (B1504) | Investigation (Perception + Investigation 7), Telepathy (V20 roll), Spies or Contacts (Manipulation + Streetwise 7), Aura Perception (Perception + Empathy 8, marks on the soul only); 1 success for a secret that matters, 3 for a grave one, one fewer by Auspex | METHODS in secrets-rules.mjs |
-| 2026-11-12 | Which courts care about which secret, by age (B1505) | Table in secrets-rules.mjs: heresy to the Inquisition and any court to 1650, infernalism always, diablerie not to the Sabbat, sect ties from 1493, defection from 1897; proof adds 3 a point at the gathering and lays the secret bare | SECRET_KINDS, the accuse move in politics-rules.mjs |
-| 2026-11-12 | Trait-gated talk lines go first (B1507) | A fitting line that needs a trait beats a plain line on the same sheet | fitting in talk-rules.mjs |
+| 2026-11-12 | Who may see a tie (B1901) | Owners of either end; a hidden hand-made tie is the Storyteller's; a tie a secret hides shows once the secret is found | visibleTo in ties-rules.mjs |
+| 2026-11-12 | What a found secret is worth (B1903) | A major boon owed by the holder to the finder, in the Ledger | hookEntry in secrets-rules.mjs |
+| 2026-11-12 | How secrets are dug up (B1904) | Investigation (Perception + Investigation 7), Telepathy (V20 roll), Spies or Contacts (Manipulation + Streetwise 7), Aura Perception (Perception + Empathy 8, marks on the soul only); 1 success for a secret that matters, 3 for a grave one, one fewer by Auspex | METHODS in secrets-rules.mjs |
+| 2026-11-12 | Which courts care about which secret, by age (B1905) | Table in secrets-rules.mjs: heresy to the Inquisition and any court to 1650, infernalism always, diablerie not to the Sabbat, sect ties from 1493, defection from 1897; proof adds 3 a point at the gathering and lays the secret bare | SECRET_KINDS, the accuse move in politics-rules.mjs |
+| 2026-11-12 | Trait-gated talk lines go first (B1907) | A fitting line that needs a trait beats a plain line on the same sheet | fitting in talk-rules.mjs |
 | 2026-11-12 | Lifepaths: where they live (B1310) | A Creation wizard on the sheet header and the Creation window; the Storyteller's prelude journal shows the result instead of a second prelude (as the stale design review recommends) | B1310 reverse note |
 | 2026-11-12 | Lifepath years for the lines (B1312) | Demons from 1999, Orpheus projectors from 1848 (spiritualist mediums, a house reading), others every era | LINES in data/lifepaths.mjs |
 | 2026-11-12 | Lifepath splat years the books leave open (B1312) | House readings: Daughters of Cacophony from 1550, Samedi and Bata'a from 1700, Harbingers of Skulls from 1990, Hollow Ones from 1920, Ahrimanes and Salubri antitribu from 1493, Blood Brothers from 1500, Lhiannan to 1600, Lamia to 1450, Croatan to 1590, Bunyip to 1920, Apis to 1400, Camazotz to 1600, Grondr to 1300, House Janissary from 1450, House Tremere (mages) to 1199, House Diedne in hiding every era, Children of Knowledge to 1490, Valdaermen to 1500, Ksirafai with the Order of Reason, Spooks from 1840, government hunting agencies from 1900, Cabiri and the old Immortals before 1999, a reliquary-bound Fallen, Jiang Shi, the Sidhe noble Houses with the Sidhe years. White Howlers are left out: they fell long before 1197 | spans on each row in data/lifepaths-splats.mjs |

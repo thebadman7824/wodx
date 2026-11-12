@@ -2,7 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.36.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)
+- 0.38.0 ("Only when" tests for any rated trait by name, such as Dominate 2 or Etiquette >= 3; the "secret" Then outcome hands a character a secret)
+- 0.37.0 (four ideas from the Princes of Darkness mod, each with its own world setting off by default: a Masquerade exposure track for each city with the sect's law and a court card; nine great cities that change state by date, with Senses lines and a boon for a building raised; Golconda as a road of ten steps with setbacks and a mentor; story chains dealt by the clock and opening goals; the window Cities, Golconda and story chains)
+- 0.36.0 (signature features for Hunter, Mummy, Demon, Kuei-jin and Orpheus, each with its own world setting off by default; Hunter creeds by era, Demon House and faction stacked, a pick for Kuei-jin Dharmas and Orpheus groups)
 - 0.35.0 (Wraith features: the sixteen Guilds, eight legions with the one the manner of death suggests, and the factions of the dead, picked in the feature window; world setting Guild and legion features (Wraith), off by default)
 - 0.34.1 (a Before the First Night button on the Clock when WoDX Creation 0.12.0 is on)
 - 0.34.0 (Changeling features: kith, seeming, court and sidhe House stacked, revels, the Pooka lie, the Selkie coat, oaths, the court in power by the season, the Thallain, Inanimae, Nunnehi, Dark-Kin, Dauntain and Hsien; world setting Kith, seeming and court features (Changeling), off by default; a Fianna Galliard now gains Wisdom for a tale)
