@@ -27,7 +27,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
   const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
   const flagOf = doc => doc?.flags?.[MOD]?.passerby ?? null;
   const isPB = doc => !!flagOf(doc);
-  let cal = null, timer = null, busy = false, ticks = 0;
+  let cal = null, timer = null, busy = false, busySince = 0, ticks = 0, lastTick = null;
   const unset = path => { const Del = foundry.data?.operators?.ForcedDeletion; return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null}; };
 
   function registerSettings() {
@@ -133,11 +133,30 @@ export function build({MOD, esc, isActiveGM, chron}) {
     return td.toObject();
   }
 
-  /** One tick of the street on the scene being viewed. */
+  /**
+   * One tick of the street on the scene being viewed. Returns "busy" when another tick is still running, "skip" when
+   * this client does not run the street, else true. 0.40.1: a tick that has run longer than STALE_MS is taken as lost
+   * (a Foundry call that never settled) and the next tick goes ahead; each tick gives up after TICK_MS.
+   */
   async function tick() {
-    if ( busy || !isActiveGM() || !canvas?.ready ) return;
-    busy = true;
+    if ( !isActiveGM() || !canvas?.ready ) return "skip";
+    if ( busy && !PR.tickStale(busySince, Date.now()) ) return "busy";
+    busy = true; busySince = Date.now();
+    const mine = busySince;
     try {
+      await PR.withTimeout(tickBody(), PR.TICK_MS);
+      lastTick = {at: Date.now(), ok: true};
+    } catch (e) {
+      lastTick = {at: Date.now(), ok: false, error: e?.message ?? String(e)};
+      console.error(`${MOD} | passers-by`, e);
+    } finally { if ( busySince === mine ) busy = false; }
+    return true;
+  }
+  /** For gates: is a tick running, since when, and how the last one ended. */
+  const state = () => ({busy, busySince, lastTick});
+
+  async function tickBody() {
+    {
       ticks++;
       const scene = canvas.scene;
       if ( ticks % 12 === 1 ) await sweep({keep: scene?.id});
@@ -216,9 +235,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
       if ( nP < people ) make.push(await spawn(scene, {time, street, place}));
       if ( nA < beasts ) make.push(await spawn(scene, {animal: true, time, street, place}));
       if ( make.filter(Boolean).length ) await scene.createEmbeddedDocuments("Token", make.filter(Boolean), {wodxPasserby: true});
-    } catch (e) {
-      console.error(`${MOD} | passers-by`, e);
-    } finally { busy = false; }
+    }
   }
   const num = v => Number(v) || 0;
 
@@ -358,5 +375,5 @@ export function build({MOD, esc, isActiveGM, chron}) {
   /** What a passer-by token carries for the crowd rules: {feeling, spark, kind} or null for anyone else. */
   const mindOf = doc => { const f = flagOf(doc?.document ?? doc); return f && !f.animal ? {feeling: f.feeling ?? null, spark: Number.isFinite(f.spark) ? f.spark : null, kind: f.kind} : null; };
 
-  return {registerSettings, hooks, tick, sweep, clearAll, scatter, follow, hold, letGo, keepForGood, openCrowd, hudButtons, crowdOf, doorsOf, mindOf, spawnOne, rules: CR, isPasserby: isPB, baseActor};
+  return {registerSettings, hooks, tick, sweep, clearAll, scatter, follow, hold, letGo, keepForGood, openCrowd, hudButtons, crowdOf, doorsOf, mindOf, spawnOne, state, rules: CR, isPasserby: isPB, baseActor};
 }
