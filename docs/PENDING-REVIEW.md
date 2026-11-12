@@ -598,6 +598,10 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Signature effects on rolls (B1161) | The rows' roll effects now reach the dice through the traits api; ability keys became tags | rollEffects, RAW_TAGS |
 | 2026-11-12 | Tribe engines (B1162) | Guarded place, truce (Charisma + Empathy, a house reading), leverage, Silver Fang hearing, sky reading, tales and scars; Croatan end 1590 and Bunyip end 1890 are house readings | TRIBES |
 | 2026-11-12 | Auspices and breeds (B1163) | Philodox ruling, Galliard tale, Ahroun first against the Wyrm (soak die in Crinos a house reading), six metis deformities | AUSPICES, BREEDS, DEFORMITIES |
+| 2026-11-12 | Changeling rows (B1500) | Kith, seeming, court and House stacked; Thallain, Inanimae, Nunnehi and Dark-Kin kiths grouped; the Dark-Kin feature is a house reading | KITHS |
+| 2026-11-12 | Changeling engines (B1501) | Revel Glamour by card, Pooka truth costs Willpower, the seal coat item, troll and sidhe oaths | signatures.mjs |
+| 2026-11-12 | Courts and seemings (B1502) | Unseelie hold power Samhain to Beltaine, Seelie the rest; a die to the court's own social rolls in its half | COURTS |
+| 2026-11-12 | Sidhe Houses (B1503) | Fourteen Houses with a theme and a seat; boons and flaws from the book by the Storyteller | FAE_HOUSES |
 | 2026-11-12 | Mage rows (B1165) | Group row plus a House row; old names by year; Virtual Adepts from 1961, Hollow Ones from 1890, Celestial Masters and Craftmasons 1325 to 1896 are house readings | MAGE, HOUSES |
 | 2026-11-12 | Mage engines (B1166) | Akashic dawn, Euthanatos Good Death and Jhor, certámen stakes as favours, Hippolyta oaths, the Watchers; borrowed engines for Taftani, Syndicate, Celestial Masters, Quaesitor, Nephandi | signatures.mjs |
 | 2026-11-12 | Hermetic Houses (B1167) | Eight Houses with rows; Janissary end 1700 and House Tremere leaving in 1199 are house readings; the rest wait for Houses of Hermes | HOUSES |

@@ -24,7 +24,7 @@ const T_FAMILY = `${MODULE_ID}.sigFamily`;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 /** Any line's features on. Which rows an actor gets is decided per line in rowsOf. */
-const on = () => lineOn("sigVampire") || lineOn("sigWerewolf") || lineOn("sigMage");
+const on = () => lineOn("sigVampire") || lineOn("sigWerewolf") || lineOn("sigMage") || lineOn("sigChangeling");
 const now = () => game.time?.worldTime ?? 0;
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const actorsApi = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
@@ -45,12 +45,20 @@ export function registerSignatureSettings() {
     name: "Tradition, Craft and Convention features (Mage)", hint: "Each group's own feature, with the old names of each age: the Akashic dawn, Euthanatos mercy and Jhor, Hermetic certamen and the Houses, the Watchers of the New World Order, Syndicate leverage, Taftani djinn, the Sisters' oaths, the Celestial Masters' charts, the Nephandi's corruption and the rest. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
   });
+  game.settings.register(MODULE_ID, "sigChangeling", {
+    name: "Kith, seeming and court features (Changeling)", hint: "Each kith's, seeming's, court's and sidhe House's own feature, stacked: the Satyr's and Clurichaun's revels, the Pooka's lies, the Selkie's coat, troll and sidhe oaths, the court that holds power by the season, the Inanimae, Nunnehi, Thallain and Hsien. Off by default.",
+    scope: "world", config: true, type: Boolean, default: false
+  });
   game.settings.register(MODULE_ID, "sigFamilies", {scope: "world", config: false, type: Array, default: []});
 }
 const foundedFamilies = () => { try { return (game.settings.get(MODULE_ID, "sigFamilies") ?? []).filter(f => !f.founded || f.founded <= currentYear()); } catch (e) { return []; } };
 
+const FAE_LIKE = new Set([...S.KITHS, ...S.SEEMINGS, ...S.COURTS, ...S.FAE_HOUSES]);
 const TRIBE_LIKE = new Set([...S.MAGE, ...S.HOUSES, ...S.TRIBES, ...S.AUSPICES, ...S.BREEDS, ...S.FERA, S.KINFOLK]);
 const kindName = actor => String(actorsApi("wodx-combat")?.getKind?.(actor) ?? actor?.type ?? "").toLowerCase();
+const isFae = actor => actor?.type === "Changeling" || /changeling|kithain|\bfae\b|hsien/.test(kindName(actor));
+const faeNames = actor => { const s = actor?.system ?? {}; return {kith: [s.kith === "custom" ? s.custom?.kith : s.kith, s.custom?.kith].filter(Boolean),
+  seeming: [s.seeming].filter(Boolean), court: [s.court].filter(Boolean), house: [s.house, actor?.flags?.[MODULE_ID]?.house].filter(Boolean)}; };
 const isMage = actor => actor?.type === "Mage" || /\bmage|sorcer|psychic/.test(kindName(actor));
 const mageNames = actor => { const s = actor?.system ?? {}; return {sect: [s.sect, s.custom?.sect, s.custom?.affiliation].filter(Boolean),
   house: [actor?.flags?.[MODULE_ID]?.house, s.custom?.sect].filter(Boolean)}; };
@@ -66,6 +74,7 @@ function garouNames(actor) {
 /** Every signature row an actor has now, with each line's setting applied: a Garou stacks tribe, auspice and breed. */
 export function rowsOf(actor) {
   if ( !actor ) return [];
+  if ( isFae(actor) ) return lineOn("sigChangeling") ? S.faeRows(faeNames(actor)) : [];
   if ( isMage(actor) ) return lineOn("sigMage") ? S.mageRows(mageNames(actor)) : [];
   if ( isShifter(actor) ) return lineOn("sigWerewolf") ? S.garouRows(garouNames(actor)) : [];
   if ( actor.flags?.world?.wodx?.kinfolk ) return lineOn("sigWerewolf") ? [S.KINFOLK] : [];
@@ -604,6 +613,45 @@ async function saveFamily(f) {
 }
 
 /** A small form; returns the fields or null. */
+/* ---------------- Changeling: kiths, seemings, courts, Houses ---------------- */
+
+/** Satyrs and Clurichaun: a revel; the Storyteller's button gives Glamour to each changeling on the scene (a Satyr one more). */
+export async function revel(actorOrId, scene = canvas?.scene) {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "revel") ) return null;
+  const there = [...new Set([a.id, ...(scene?.tokens ?? []).map(t => t.actor?.id).filter(Boolean)])];
+  return card(`${a.name} holds a revel`, `<p>Drink, music and dancing${scene ? ` at ${esc(scene.name)}` : ""}. Every changeling there gains a point of Glamour; a Satyr gains two. Passers-by may be drawn in.</p>`,
+    {whisper: [], act: {key: "glamour", label: "Give the Glamour", who: "gm", data: {ids: there}}});
+}
+ACTS.glamour = async ({ids = []}) => {
+  for ( const id of ids ) {
+    const x = game.actors.get(id);
+    if ( !x || !isFae(x) ) continue;
+    const g = x.system?.advantages?.glamour ?? {};
+    await x.update({"system.advantages.glamour.temporary": S.revelGlamour(rowWith(x, "revel") ?? rowsOf(x)[0], g)});
+  }
+};
+/** Pooka: the plain truth told costs a Willpower point. */
+export async function toldTruth(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "truth") ) return null;
+  return willpower(a, -1, "The plain truth, told");
+}
+/** Selkies: the seal coat, an item in the pack. */
+const carriesCoat = a => (a?.items ?? []).some(i => S.isCoat({name: i.name, coat: i.flags?.[MODULE_ID]?.coat}));
+export async function giveCoat(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a || !isFeature(a, "coat") || carriesCoat(a) ) return null;
+  const [item] = await a.createEmbeddedDocuments("Item", [{name: "A seal coat", type: "Item", system: {description: "Worn, it gives the seal shape and the sea's ways of moving."}, flags: {[MODULE_ID]: {coat: true}}}]);
+  return item ?? null;
+}
+/** A Selkie's coat leaves the pack (taken or traded): the Storyteller hears of it. */
+function onItemGone(item) {
+  const a = item?.parent;
+  if ( !a || !isActiveGM() || !on() || !isFeature(a, "coat") || !S.isCoat({name: item.name, coat: item.flags?.[MODULE_ID]?.coat}) ) return;
+  card(`${a.name}: the coat is gone`, `<p>Without the seal coat ${esc(a.name)} cannot change, and must win it back.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]}).catch(e => console.error(`${MODULE_ID} | seal coat`, e));
+}
+
 /* ---------------- Mage: Traditions, Crafts, Conventions, Houses ---------------- */
 
 const wpOf = a => a?.system?.advantages?.willpower ?? {};
@@ -647,9 +695,9 @@ export async function oath(actorOrId, {to = "", what = ""} = {}) {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "oath") || !what ) return null;
   const sig = sigOf(a);
-  sig.oaths = [...(sig.oaths ?? []), {to: String(to || "the sisterhood"), what: String(what), at: now(), broken: false}].slice(-12);
+  sig.oaths = [...(sig.oaths ?? []), {to: String(to || (rowWith(a, "oath")?.key === "hippolyta" ? "the sisterhood" : "their word")), what: String(what), at: now(), broken: false}].slice(-12);
   await putSig(a, sig);
-  await card(`${a.name} swears an oath`, `<p>To ${esc(to || "the sisterhood")}: ${esc(what)}.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]});
+  await card(`${a.name} swears an oath`, `<p>To ${esc(sig.oaths.at(-1).to)}: ${esc(what)}.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]});
   return sig.oaths.length;
 }
 export async function breakOath(actorOrId) {
@@ -743,13 +791,16 @@ export async function readSky(actorOrId) {
   return giveGlimpse(a, sig, {field: "skyAt", title: "the stars", quiet: "The stars say nothing tonight."});
 }
 
+/** Only the Get of Fenris row tells by scars; any tale-telling row (Fianna, Galliard) makes it a tale. */
+const isScarOnly = a => { const r = rowsOf(a).filter(x => rowHas(x, "renown")); return r.length > 0 && r.every(x => x.key === "fenris"); };
 /** Fianna, Get of Fenris and Galliards: a tale or a scar for Renown, awarded by the Storyteller. */
 export async function tale(actorOrId, {hero = "", what = ""} = {}) {
-  const a = toActor(actorOrId), row = rowWith(a, "renown");
-  if ( !a || !row ) return null;
-  const scar = row.key === "fenris", heroName = scar ? a.name : (hero || a.name);
+  const a = toActor(actorOrId), rows = rowsOf(a).filter(r => rowHas(r, "renown"));
+  if ( !a || !rows.length ) return null;
+  // a Fianna Galliard is still a Galliard: Wisdom for the teller whenever one of the rows is the auspice
+  const scar = isScarOnly(a), heroName = scar ? a.name : (hero || a.name);
   const heroActor = game.actors.getName?.(heroName) ?? null;
-  const deltas = row.key === "galliard" ? {wisdom: 1} : {};
+  const deltas = rows.some(r => r.key === "galliard") ? {wisdom: 1} : {};
   return card(scar ? `${a.name}: a scar won in battle` : `${a.name} tells a tale`, `<p>${scar ? `${esc(a.name)} shows ${esc(what || "a lasting scar")} as a trophy.` : `${esc(a.name)} tells of ${esc(heroName)}${what ? `: ${esc(what)}` : ""}.`} Award Glory to ${esc(heroName)} if it moved the moot${deltas.wisdom ? `, and Wisdom to ${esc(a.name)} for telling it` : ""}.</p>`,
     {act: {key: "renown", label: "Award the Renown", who: "gm", data: {hero: heroActor?.uuid ?? (scar ? a.uuid : null), teller: a.uuid, wisdom: !!deltas.wisdom, why: scar ? "a scar won in battle" : "a tale at the moot"}}});
 }
@@ -836,6 +887,8 @@ export function effects(actorOrId) {
 function whenNow(a) {
   const out = new Set();
   if ( a?.system?.shapes?.crinos?.isactive ) out.add("crinos");
+  if ( Number(canvas?.scene?.environment?.darknessLevel ?? canvas?.scene?.darkness ?? 0) >= 0.5 ) out.add("dark");
+  try { const c = rowsOf(a).find(r => r.feature === "court"); if ( c && S.courtInPower(describeTime(now(), 49.5).month) === c.key ) out.add("court"); } catch (e) { /* no clock */ }
   try { for ( const t of game.modules.get("wodx-atmosphere")?.api?.weather?.now?.()?.tags ?? [] ) out.add(t); } catch (e) { /* no weather */ }
   return out;
 }
@@ -864,6 +917,8 @@ export async function open(actorOrId) {
   if ( sig.contracts?.length ) body += `<h4>Contracts</h4><p>Standing at Alamut ${sig.standing ?? 1} of ${S.STANDING_MAX}.</p><ul>${sig.contracts.slice(-8).map(c => `<li>${esc(c.target)}: ${esc(c.status)}${c.status === "open" ? `, due in ${Math.max(0, Math.ceil((c.due - t) / 86400))} days` : ""}</li>`).join("")}</ul>`;
   if ( sig.servants?.length ) body += `<h4>${rowWith(a, "family")?.servant ? "Bound servants" : "Bound dead"}</h4><ul>${sig.servants.map(w => `<li>${esc(w.name)}${w.fetter ? ` (held by ${esc(w.fetter)})` : ""}</li>`).join("")}</ul>`;
   if ( rows.some(r => r.feature === "family") && currentYear() < 1444 ) body += `<p class="vta-note">In this age the line is the Cappadocians: their deathly look is a Masquerade sign up close.</p>`;
+  if ( has("coat") ) body += `<h4>The seal coat</h4><p>${carriesCoat(a) ? "Carried." : "Not carried: no seal shape."}</p>`;
+  if ( has("court") ) { let m = null; try { m = describeTime(now(), 49.5).month; } catch (e) { m = null; } if ( m ) body += `<h4>The courts</h4><p>The ${S.courtInPower(m) === "unseelie" ? "Unseelie" : "Seelie"} Court holds power now.</p>`; }
   if ( has("mercy") ) body += `<h4>Jhor</h4><p>${sig.jhor ?? 0}.</p>`;
   if ( sig.oaths?.length ) body += `<h4>Oaths</h4><ul>${sig.oaths.slice(-6).map(o => `<li>${esc(o.to)}: ${esc(o.what)}${o.broken ? " (broken)" : ""}</li>`).join("")}</ul>`;
   if ( has("watchers") ) body += `<h4>The Watchers</h4><p>In ${yr} they read ${esc(S.recordsAt(yr))}.</p>`;
@@ -899,6 +954,9 @@ export async function open(actorOrId) {
     if ( !sig.ravnos?.vice ) S.RAVNOS_VICES.forEach(v => buttons.unshift({action: `vice:${v.key}`, label: `Vice: ${v.label}`}));
     else buttons.unshift({action: "fed", label: "The vice was fed"}, {action: "moved", label: "Moved on to a new domain"});
   }
+  if ( has("revel") && on() ) buttons.unshift({action: "revel", label: "Hold a revel"});
+  if ( has("truth") && on() ) buttons.unshift({action: "truth", label: "Told the plain truth"});
+  if ( has("coat") && on() && !carriesCoat(a) ) buttons.unshift({action: "coat", label: "Take the seal coat"});
   if ( has("dawn") && on() ) buttons.unshift({action: "dawn", label: "Meditate at dawn"});
   if ( has("mercy") && on() ) buttons.unshift({action: "mercy", label: "A Good Death given"}, {action: "anger", label: "A death in anger"});
   if ( has("certamen") && on() ) buttons.unshift({action: "certamen", label: "Call a certámen"});
@@ -908,12 +966,15 @@ export async function open(actorOrId) {
   if ( has("truce") && on() && game.combat ) buttons.unshift({action: "truce", label: "Offer a truce"});
   if ( has("leverage") && on() ) { buttons.unshift({action: "learned", label: "Learned of a failure"}); if ( sig.leverage?.length ) buttons.unshift({action: "spend", label: `Use leverage on ${sig.leverage[0].who}`}); }
   if ( has("sky") && on() ) buttons.unshift({action: "sky", label: "Read the stars"});
-  if ( has("renown") && on() ) buttons.unshift({action: "tale", label: rowWith(a, "renown")?.key === "fenris" ? "A scar won in battle" : "Tell a tale"});
+  if ( has("renown") && on() ) buttons.unshift({action: "tale", label: isScarOnly(a) ? "A scar won in battle" : "Tell a tale"});
   if ( has("ruling") && on() ) buttons.unshift({action: "ruling", label: rowWith(a, "ruling")?.key === "nagah" ? "Pass a hidden verdict" : "Give a ruling"});
   if ( has("deformity") && on() && (!sig.deformity || game.user.isGM) ) S.DEFORMITIES.forEach(d => buttons.unshift({action: `dfm:${d.key}`, label: `Deformity: ${d.label}`}));
   if ( has("camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
-  const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
+  const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${rows.some(r => FAE_LIKE.has(r)) ? "kith, seeming and court" : rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
   if ( pick === "glimpse" ) return glimpse(a);
+  if ( pick === "revel" ) return revel(a);
+  if ( pick === "truth" ) return toldTruth(a);
+  if ( pick === "coat" ) return giveCoat(a);
   if ( pick === "dawn" ) return meditate(a);
   if ( pick === "mercy" ) return death(a, true);
   if ( pick === "anger" ) return death(a, false);
@@ -926,7 +987,7 @@ export async function open(actorOrId) {
   if ( pick === "learned" ) { const f = await ask("A failure learned", [{name: "who", label: "Whose failure"}, {name: "what", label: "What they did"}]); return f?.who ? leverage(a, f) : null; }
   if ( pick === "spend" ) return spendLeverage(a, 0);
   if ( pick === "sky" ) return readSky(a);
-  if ( pick === "tale" ) { const scar = rowWith(a, "renown")?.key === "fenris"; const f = await ask(scar ? "A scar won in battle" : "A tale", scar ? [{name: "what", label: "The scar and the battle"}] : [{name: "hero", label: "The hero of the tale"}, {name: "what", label: "What they did"}]); return f ? tale(a, f) : null; }
+  if ( pick === "tale" ) { const scar = isScarOnly(a); const f = await ask(scar ? "A scar won in battle" : "A tale", scar ? [{name: "what", label: "The scar and the battle"}] : [{name: "hero", label: "The hero of the tale"}, {name: "what", label: "What they did"}]); return f ? tale(a, f) : null; }
   if ( pick === "ruling" ) { const f = await ask("A ruling", [{name: "between", label: "Between whom"}, {name: "verdict", label: "The ruling"}]); return f?.verdict ? ruling(a, f) : null; }
   if ( String(pick).startsWith("dfm:") ) return setDeformity(a, String(pick).slice(4));
   if ( pick === "rant" ) return spendRant(a);
@@ -961,6 +1022,7 @@ export function registerSignatureHooks() {
   Hooks.on("updateActor", onActorUpdate);
   Hooks.on("wodxEventFired", ev => onEventFired(ev));
   Hooks.on("wodxItemsTaken", onTaken);
+  Hooks.on("deleteItem", item => onItemGone(item));
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | the Watchers`, e)); });
   Hooks.on("wodxFightStarted", ({combat} = {}) => { desecrated(combat?.scene, "A fight broke out").catch(e => console.error(`${MODULE_ID} | guarded place`, e)); });
   Hooks.on("combatStart", combat => { onCombatStart(combat).catch(e => console.error(`${MODULE_ID} | first into battle`, e)); });
@@ -993,5 +1055,6 @@ export function registerSignatureHooks() {
 export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
+  revel, toldTruth, giveCoat,
   meditate, death, certamen, oath, breakOath,
   guardPlace, desecrated, offerTruce, leverage, spendLeverage, readSky, tale, ruling, setDeformity, year: () => currentYear(), rules: S};

@@ -346,3 +346,22 @@ test("dawn meditation once a day, and Willpower kept in bounds", () => {
   assert.equal(S.willpowerStep({temporary: 3, permanent: 6}, 1), 4);
   assert.equal(S.willpowerStep({temporary: 0, permanent: 6}, -1), 0);
 });
+
+/* Chronicle 0.34.0: Changeling kiths, seemings, courts and Houses (B1500 to B1503) */
+
+test("a changeling stacks kith, seeming, court and House, from the system's kith keys", () => {
+  assert.deepEqual(S.faeRows({kith: ["wod.bio.changeling.satyrs"], seeming: ["Wilder"], court: ["Unseelie"], house: ["Fiona"]}).map(r => r.key), ["satyr", "wilder", "unseelie", "fiona"]);
+  for ( const [k, want] of [["wod.bio.changeling.nighthags", "thallain"], ["wod.bio.changeling.glomes", "inanimae"], ["wod.bio.changeling.kachinas", "nunnehi"],
+    ["wod.bio.changeling.firbholg", "darkkin"], ["wod.bio.changeling.merrow", "merfolk"], ["wod.bio.changeling.dauntain", "dauntain"], ["wod.bio.changeling.redcap", "redcap"],
+    ["Hsien: Komuko", "komuko"], ["Hsien", "hirayanu"], ["wod.bio.changeling.sidhe", "sidhe"]] )
+    assert.equal(S.faeRows({kith: [k]})[0]?.key, want, k);
+  assert.equal(S.faeRows({court: ["Seelie"]})[0].key, "seelie", "Seelie is not read inside Unseelie");
+  for ( const r of [...S.KITHS, ...S.SEEMINGS, ...S.COURTS, ...S.FAE_HOUSES] ) { assert.ok(r.title && r.text && r.page && r.feature, r.key); assert.ok(!/—/.test(r.text), r.key); }
+});
+
+test("the court in power by the season, revel Glamour and the seal coat", () => {
+  assert.equal(S.courtInPower(11), "unseelie"); assert.equal(S.courtInPower(4), "unseelie"); assert.equal(S.courtInPower(5), "seelie"); assert.equal(S.courtInPower(10), "seelie");
+  assert.equal(S.revelGlamour(S.rowIn(S.KITHS, "satyr"), {temporary: 2, permanent: 5}), 4);
+  assert.equal(S.revelGlamour(S.rowIn(S.KITHS, "pooka"), {temporary: 2, permanent: 5}), 3);
+  assert.ok(S.isCoat({name: "A seal coat"})); assert.ok(S.isCoat({name: "old sealskin"})); assert.ok(!S.isCoat({name: "a wool coat"}));
+});

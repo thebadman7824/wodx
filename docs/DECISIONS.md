@@ -1523,6 +1523,26 @@ Reverse: meditate, death, certamen, oath, breakOath and onBreach in signatures.m
 Bonisagus, Flambeau, Quaesitor, Shaea, Ex Miscellanea, Janissary, Diedne and Tremere have rows. Janissary ends in 1700 (a house reading). Diedne were gone before 1197. House Tremere leaves the Order in 1199 (a house reading) and is the clan from then on. The other Houses (Tytalus, Verditius, Criamon, Merinita, Jerbiton, Bjornaer, Guernicus, Mercere, Fortunae) share one row until Houses of Hermes is in the store.
 
 Reverse: HOUSES in data/signatures.mjs.
+
+## B1500. Changeling features stack: kith, seeming, court and House (2026-11-12)
+Splat Features Desk, approved by Ben. A changeling's rows come from the sheet's kith (the system's keys or the custom kith), seeming, court and House, all at once. The system's longer kith list is grouped: every Thallain kith reads as the Thallain row, the Inanimae kinds as the Inanimae, the Nunnehi tribes as the Nunnehi, and the Dark-Kin as one row (its feature is a house reading). The Dauntain and the Hsien have rows, the Hsien by their shinma. The new world setting "Kith, seeming and court features (Changeling)" is off by default.
+
+Reverse: KITHS, SEEMINGS, COURTS and FAE_HOUSES in data/signatures.mjs; faeRows in signature-rules.mjs; the sigChangeling setting.
+
+## B1501. The Changeling engines (2026-11-12)
+A Satyr or Clurichaun holds a revel: a public card whose button gives a point of Glamour to each changeling on the scene, and two to a Satyr. A Pooka who tells the plain truth loses a Willpower point. A Selkie's seal coat is an item, and the Storyteller hears when it leaves the pack. Trolls and sidhe keep oaths with the Hippolyta engine, and breaking one costs a Willpower point. The extra soak die for a troll's cause is the Storyteller's to add.
+
+Reverse: revel, toldTruth, giveCoat and onItemGone in signatures.mjs.
+
+## B1502. Courts by the season, seemings by the years (2026-11-12)
+From Samhain (1 November) to Beltaine (1 May) the Unseelie Court holds power, and the Seelie Court holds it for the rest of the year. The court in power gains a die on its own social rolls (Etiquette and Leadership for the Seelie, Intimidation and Subterfuge for the Unseelie). In the Dark Ages the text reads the courts as the seasonal Courts. A childling resists Banality one easier and a grump one harder, and a grump gains a die to lore. Banality became a roll tag, and an effect can name dark (a scene at half darkness or more) as its condition.
+
+Reverse: COURTS, SEEMINGS and UNSEELIE_MONTHS in data/signatures.mjs; whenNow in signatures.mjs.
+
+## B1503. The sidhe Houses (2026-11-12)
+Each of the fourteen Houses has a row with a seat in the fae courts and a one-line theme. Ailil, Dougal, Eiluned, Gwydion and Scathach gain a die to the field of their theme. The Storyteller applies each House's boon and flaw from the book (C20 pdf 10, 51), because they are not written out here. A Fianna Galliard now gains Wisdom for a tale, as any Galliard does: the gate found that the tribe's row hid the auspice's.
+
+Reverse: FAE_HOUSES in data/signatures.mjs; isScarOnly and tale in signatures.mjs.
 ## B1310. Lifepaths: a chain of scenes before points are spent (2026-11-12)
 Improvement Desk cr1, approved by Ben. A lifepath is optional and spends nothing: birth, youth and adult life by era band, then the turn into the line, the splat's own scene and the first years after. Each choice suggests Backgrounds, Abilities, Merits, Flaws or a note, and may name someone from the past. At the end the player keeps or drops each suggestion and ticks who becomes an NPC (the Storyteller's at once, a player's through the approval queue). Kept on the actor as flags["wodx-creation"].lifepath; a change of state carries it to the new sheet. The Storyteller's prelude journal (Storyteller 0.34.1) shows it, so the one-on-one prelude builds on it rather than a second prelude being made.
 
