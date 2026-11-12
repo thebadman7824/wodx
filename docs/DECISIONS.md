@@ -1607,3 +1607,23 @@ Reverse: the look tests in when-rules.mjs; NOTICE_ORDER and NOTICE_TEST in talk-
 Blood on an intruder adds "blood on them" to the alarm and makes a challenge or a call for the watch likelier. A private place's allowed list may name a side (kind:church, livery, kind:watch); someone wearing it is not trespassing. A side worn openly shows to every NPC, whether or not it is the wearer's own.
 
 Reverse: sit.bloody in routine-rules.mjs; wornPass in routines.mjs; wornSides in rivalry.mjs; worn in knownSides.
+
+## B1380. What an NPC can tell of a character (2026-11-12)
+An NPC can tell what someone is only when it is plainly inhuman (a war form, Horrid Form, a spirit or wraith that shows itself, or the Storyteller's "obvious" tick), when one of its senses shows that line (Auspex 2 and up, Second Sight, Kenning; Garou scent, Sense Wyrm and mage Awareness by roll, as for rivalries), or when the Masquerade records list it as a witness who saw that character and was not made to forget. The same check now runs for player characters as for NPCs. A hunter NPC's "goes for the monster first" and "take them alive" use it, not the sheet's kind.
+
+Reverse: canTell in wodx-npc/scripts/main.mjs back to supernatural(t.actor).
+
+## B1381. Mortals noticing a tell (2026-11-12)
+A mortal NPC's greeting remark on a character's oddness ("Your hands are like ice") needs the NPC to tell what the character is (B1380), or one success on Perception + Alertness at difficulty 7, seeded by the day so it stays the same all day. An NPC with no sheet numbers rolls three dice. Wounds and frenzy anyone sees. House rule.
+
+Reverse: noticesTell in talk-rules.mjs returns true.
+
+## B1382. Strangers in chat and the combat tracker (2026-11-12)
+With "Faces you have met" on, each player's chat and combat tracker show the stranger's words in place of the name of any NPC on the scene or in the fight whose face that player has not met. Names of the player's own characters are never swapped. Sheets are not changed.
+
+Reverse: remove the renderChatMessageHTML and renderCombatTracker hooks in faces.mjs.
+
+## B1383. Creatures of another kind remember what they saw (2026-11-12)
+When WoDX Actions reports that a creature of another kind saw someone for what they are (the "Seen by another kind" card), the active Storyteller's WoDX NPC keeps it on that witness (flags.wodx-npc.seenAs). From then on that NPC can tell what the other is (B1380). Mortal witnesses are already kept in the Masquerade records. Player characters are not marked. At most 200 sightings are kept per NPC. Missed Connections Desk item x9, first half; the fed-on vessel waits on Actions adding the vessel to the hunt hook.
+
+Reverse: remove the wodxSecretSeen hook in wodx-npc rivalry.mjs.

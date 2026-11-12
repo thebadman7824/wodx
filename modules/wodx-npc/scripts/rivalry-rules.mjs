@@ -250,7 +250,7 @@ export function knownSides(watcher = {}, other = {}) {
   const open = new Set((other.openSides ?? []).map(lc));
   const met = !!watcher.metThem;
   const line = sides.find(s => s.startsWith("line:"))?.slice(5);
-  const lineKnown = !!other.obvious || (line && shown.has(line));
+  const lineKnown = !!other.obvious || (!!line && (shown.has(line) || (!!watcher.sawIt && line !== "mortal")));
   // NPC 0.32.0: a side worn openly shows whether or not it is the wearer's own (a borrowed habit reads as the Church)
   const worn = [...open].filter(s => !sides.includes(s));
   return [...worn, ...sides.filter(s => {
@@ -263,6 +263,48 @@ export function knownSides(watcher = {}, other = {}) {
     return met || (lineKnown && (!!other.obvious || (!!line && lc(watcher.line) === line)));
   })];
 }
+
+/**
+ * Can this watcher tell what the other is? (NPC 0.33.0, B1380.) watcher: {senses: [SENSES keys], sawIt: a recorded
+ * witness of the other's secret}; other: {line, obvious}. A mortal has nothing to tell. Returns {tells, how}, how being
+ * "obvious", the sense that showed it, or "saw it".
+ */
+export function tellsLine(watcher = {}, other = {}) {
+  const line = lc(other.line);
+  if ( !line || line === "mortal" ) return {tells: false, how: null};
+  if ( other.obvious ) return {tells: true, how: "obvious"};
+  const senses = new Set((watcher.senses ?? []).map(lc));
+  for ( const [k, shows] of Object.entries(SENSES) ) if ( senses.has(k) && shows.includes(line) ) return {tells: true, how: k};
+  if ( watcher.sawIt ) return {tells: true, how: "saw it"};
+  return {tells: false, how: null};
+}
+
+/**
+ * Did the watcher see the other for what it is? entries: the Masquerade records ({byUuid, witnesses: [{uuid, state}]});
+ * a witness still marked "saw" or "told" remembers. Made to forget, or never there, and it does not.
+ */
+export function sawSecret(entries = [], watcherIds = [], otherIds = []) {
+  const w = new Set((watcherIds ?? []).filter(Boolean)), o = new Set((otherIds ?? []).filter(Boolean));
+  if ( !w.size || !o.size ) return false;
+  return (entries ?? []).some(e => o.has(e?.byUuid) && (e?.witnesses ?? []).some(x => w.has(x?.uuid) && ["saw", "told"].includes(x?.state)));
+}
+
+/**
+ * The watcher's own memory of who it has seen for what (0.33.0, B1383): flags.wodx-npc.seenAs, {actorId: {secret, at}},
+ * written when WoDX Actions says a creature of another kind saw someone (hook wodxSecretSeen). Returns the list after
+ * adding one sighting; at most 200 kept, newest last.
+ */
+export function noteSeen(seenAs = {}, otherId, secret, at = 0) {
+  const out = {...(seenAs && typeof seenAs === "object" ? seenAs : {})};
+  if ( !otherId || !/^[A-Za-z0-9]{1,32}$/.test(String(otherId)) ) return out;
+  delete out[otherId];
+  out[otherId] = {secret: String(secret ?? "").slice(0, 20), at: Number(at) || 0};
+  const keys = Object.keys(out);
+  for ( const k of keys.slice(0, Math.max(0, keys.length - 200)) ) delete out[k];
+  return out;
+}
+/** Has the watcher seen this one for what it is? */
+export const hasSeen = (seenAs, otherId) => !!(otherId && seenAs && typeof seenAs === "object" && seenAs[otherId]);
 
 /* ------------------------------------------------------------------ */
 /*  Regard and flashpoints                                             */
