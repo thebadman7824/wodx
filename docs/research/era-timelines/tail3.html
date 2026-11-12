@@ -1,12 +1,12 @@
 const RUN="2026-11-12h3";let showBook=false,coll=null,cur=null,busy=false;
 const V={};const F={st:'all',rg:'',k:'',tg:'',ln:'',q:''};const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const LBL={ok:'OK',fix:'Fix',cut:'Cut'};const KIND={history:'History',tied:'Tied',named:'Named character'};
+const LBL={ok:'OK',fix:'Fix',cut:'Cut'};const KIND={history:'History',tied:'Tied',named:'Named character',branch:'Branch history'};
 function pick(){const h=location.hash.slice(1);cur=ERAS.find(e=>e.id===h)?.id||ERAS[0].id;}
 function chips(host,key,opts){const el=$(host);for(const [v,l] of opts){const b=document.createElement('button');b.textContent=l;b.dataset.v=v;b.setAttribute('aria-pressed',F[key]===v);b.onclick=()=>{F[key]=v;el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v));render();};el.append(b);}}
 chips('#f-st','st',[['all','All'],['todo','Not reviewed'],['ok','OK'],['fix','Fix'],['cut','Cut']]);
 chips('#f-rg','rg',[['','All'],['Moravia','Moravia'],['Europe','Europe'],['Middle East','Middle East'],['Asia','Asia']]);
-chips('#f-k','k',[['','All'],['history','History'],['tied','Tied'],['named','Named']]);
+chips('#f-k','k',[['','All'],['history','History'],['branch','Branch history'],['tied','Tied'],['named','Named']]);
 const TAGS=[...new Set(ERAS.flatMap(e=>e.items.flatMap(i=>i.tg)))].sort();for(const t of TAGS){const o=document.createElement('option');o.value=o.textContent=t;$('#f-tg').append(o);}
 const LINES=['Mortals','Vampire','Werewolf','Mage','Wraith','Changeling','Hunter','Mummy','Kindred of the East','Demon','All lines'];for(const t of LINES){const o=document.createElement('option');o.value=o.textContent=t;$('#f-ln').append(o);}
 $('#f-tg').onchange=e=>{F.tg=e.target.value;render();};$('#f-ln').onchange=e=>{F.ln=e.target.value;render();};
