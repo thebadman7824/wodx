@@ -20,6 +20,10 @@
 import * as TK from "./talk-rules.mjs";
 import * as STOCK from "../data/stock-talk.mjs";
 import * as MORE from "../data/stock-talk-more.mjs";
+import * as G from "./talk-grammar.mjs";
+import {HOUSE} from "../data/grammar/house.mjs";
+import {GROUPS_GRAMMAR, SIDE_FACTS} from "../data/grammar/groups.mjs";
+import * as AR from "./alert-rules.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -39,6 +43,9 @@ export function build(ctx) {
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
+    // NPC 0.45.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
+    game.settings.register(MOD, "talkGrammar", {name: "Talk generator", hint: "With stock talk on, NPCs put their stock lines together from words of the era and of who they are, so they repeat less. Your lines always come first. Off: the hand-written stock lines alone.",
+      scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "When a player's character walks within talking distance, an NPC may greet them out loud, once a day of game time. Only greet lines marked aloud on a talk sheet are used; otherwise a stock greeting.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passChance", {name: "Chance an NPC calls out", hint: "From 0 (never) to 1 (every time someone passes, once a day).",
@@ -114,6 +121,67 @@ export function build(ctx) {
 
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
+  /* NPC 0.45.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
+  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR);
+  let GRAMMAR = BASE;
+  /* NPC 0.45.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
+  const GRAMMAR_JOURNAL = "WoDX talk grammar";
+  const grammarJournal = () => game.journal?.find(j => j.flags?.[MOD]?.talkGrammar) ?? null;
+  const pageText = html => { const d = document.createElement("div"); d.innerHTML = String(html ?? "").replace(/<\/(p|div|li|h\d)>|<br\s*\/?>/gi, "\n"); return d.textContent ?? ""; };
+  /** Read the journal, rebuild the grammar, and tell the Storyteller what could not be read. */
+  function loadGrammar({report = false} = {}) {
+    const j = grammarJournal();
+    if ( !j ) { GRAMMAR = BASE; return []; }
+    const text = [...j.pages].filter(pg => pg.type === "text" && pg.name !== "How to write it").map(pg => pageText(pg.text?.content)).join("\n");
+    const {grammar, problems} = G.parseGrammarText(text);
+    GRAMMAR = G.mergeGrammars(BASE, grammar);
+    const unknown = G.lint(GRAMMAR).filter(x => x.includes("unknown symbol") && x.includes(" st."));
+    const all = [...problems, ...unknown];
+    if ( report && all.length && isActiveGM() ) ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(),
+      content: `<div class="vta-card wodx-x"><div class="vta-body"><p>The talk grammar journal has lines WoDX could not use:</p><ul>${all.slice(0, 20).map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div>`});
+    return all;
+  }
+  const HELP = `<p>Write one entry a line. NPCs say these when you have written no talk sheet line that fits, and they pool with WoDX's own.</p>
+<p>greet [clan: ventrue, warmth: cold] =&gt; "You are not expected."</p>
+<p>none [mood: angry | wary] =&gt; "Not now."</p>
+<p>work [year: 1300-1526, regard: !hate] =&gt; "The guild pays in #coin#."</p>
+<p>ask [trait Dominate: 2] =&gt; "Of course. {topic} is just past the bridge."</p>
+<p>#coin# [year: 1300-1526] =&gt; groschen | heller</p>
+<p>Kinds: greet, none, gossip, rumour, news, work, directions, farewell, ask. Tests: era, year, regard (hate, dislike, neutral, like, love), warmth (cold, neutral, warm), mood, voice, clan, tribe, aff (Tradition or Convention), kith, sect, trait. [id: house.greet.cold] replaces a WoDX line set; boost: 1 makes a line win over others that fit as well. Lines starting with // are notes.</p>`;
+  /** The grammar journal, made the first time it is asked for. */
+  async function openGrammar() {
+    if ( !game.user.isGM ) return null;
+    let j = grammarJournal();
+    if ( !j ) {
+      j = await JournalEntry.create({name: GRAMMAR_JOURNAL, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}, flags: {[MOD]: {talkGrammar: true}}});
+      await j.createEmbeddedDocuments("JournalEntryPage", [{name: "How to write it", type: "text", text: {content: HELP, format: 1}}, {name: "Lines", type: "text", text: {content: "<p>// your lines here</p>", format: 1}}]);
+    }
+    j.sheet?.render(true);
+    return j;
+  }
+  const lately = new Map(); // NPC|character -> the last few generated lines, passed over while others fit
+  /** NPC 0.45.0: the speaker's clan, tribe, Tradition, kith and the like, and their mood (B1643, B1644). */
+  function whoAndMood(r) {
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me), now = game.time?.worldTime ?? 0;
+    let sides = [];
+    try { sides = game.modules.get(MOD)?.api?.rivalry?.sidesOf?.(npc)?.own ?? []; } catch (e) { sides = []; }
+    const log = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.log ?? [];
+    const drop = [...log].reverse().find(e => Number(e?.delta) < 0)?.at ?? null;
+    let alert = "calm";
+    try { alert = AR.levelAt(r.scene?.flags?.[MOD]?.alert ?? null, now); } catch (e) { alert = "calm"; }
+    const mood = G.moodOf({set: savedProfile(npc).mood ?? null, alert, wounded: holds(npc, "wounded"), fought: npc?.flags?.[MOD]?.fought?.[pc?.id] ?? null, drop, now});
+    return {...G.factsFromSides(sides, SIDE_FACTS), ...(mood ? {mood} : {})};
+  }
+  /** A generated line for this kind of talk, or null (generator off, or nothing fits). */
+  function genLine(r, kind, c, extra = {}) {
+    if ( !setting("talkGrammar") ) return null;
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me), key = `${npc?.id}|${pc?.id}`;
+    const facts = {era: c.era, year: c.year, regard: c.regard, voice: c.voice?.key ?? null, ...whoAndMood(r), ...extra};
+    let hit = null;
+    try { hit = G.generate(kind, facts, {grammar: GRAMMAR, seed: c.seed, recent: lately.get(key) ?? []}); } catch (e) { console.warn("WoDX NPC | talk generator", e); hit = null; }
+    if ( hit?.say ) lately.set(key, [...(lately.get(key) ?? []), hit.say].slice(-6));
+    return hit ? {...hit, gen: {kind, facts, seed: c.seed, rule: hit.rule, n: 0}} : null;
+  }
   /** Era, regard and a steady seed for one NPC and one character. */
   function stockCtx(r, kind) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
@@ -197,7 +265,15 @@ export function build(ctx) {
     if ( !stockOn(r.npcTok.actor) ) return null;
     const kind = TK.LOCAL[topic] ? topic : "none";
     const c = stockCtx(r, kind);
+    // NPC 0.45.0: a topic the character has heard of, with no line written for it, gets a generated answer
+    if ( kind === "none" && topic && topic !== "none" ) {
+      const ask = genLine(r, "ask", c, {topic: String(topic)});
+      if ( ask?.say ) return {kind: "stock", say: ask.say, when: "", then: TK.parseThen(""), rumourId: null, rule: ask.rule, gen: ask.gen};
+    }
     const rum = kind === "rumours" && c.regard !== "hate" ? rumourFor(r) : null;
+    const gk = kind === "rumours" ? (rum ? "rumour" : "gossip") : kind;
+    const gen = genLine(r, gk, c, rum ? {rumour: rum.text} : {});
+    if ( gen?.say ) return {kind: "stock", say: gen.say, when: "", then: TK.parseThen(""), rumourId: gk === "rumour" && rum ? rum.id : null, rule: gen.rule, gen: gen.gen};
     const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null, voice: c.voice});
     return hit ? {kind: "stock", say: hit.say, when: "", then: TK.parseThen(""), rumourId: hit.rumour ? rum.id : null} : null;
   }
@@ -212,7 +288,7 @@ export function build(ctx) {
     let greet = g?.say ?? "";
     if ( stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "greet"), a = asidesOf(r, c);
-      const plain = greet || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+      const plain = greet || genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
       // the Storyteller's own greeting is never replaced, only followed
       greet = TK.composeGreet({greet: plain, remember: greet ? "" : a.remember, notice: a.notice, ledger: a.ledger, about: a.about, small: a.small});
     }
@@ -255,15 +331,16 @@ export function build(ctx) {
     line = line && !line.none ? line.line : null;
     if ( !line && stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "farewell");
-      const say = TK.moreLine("farewell", {more: MORE, era: c.era, regard: c.regard, seed: c.seed});
-      line = say ? {kind: "stock", say, when: "", then: TK.parseThen("")} : null;
+      const gen = genLine(r, "farewell", c);
+      const say = gen?.say || TK.moreLine("farewell", {more: MORE, era: c.era, regard: c.regard, seed: c.seed});
+      line = say ? {kind: "stock", say, when: "", then: TK.parseThen(""), rule: gen?.rule ?? null, gen: gen?.gen ?? null} : null;
     }
     await noteTalked(r).catch(() => null);
     if ( !line ) return {said: ""};
     const name = displayName(r.npcTok, user);
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, whisper: [...new Set([user.id, ...gmIds()])],
-      content: `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} takes their leave.</p><p>${esc(line.say)}</p></div></div>`,
-      flags: {[MOD]: {talk: {actor: baseActor(r.me)?.id, taught: [], topic: "farewell", stock: line.kind === "stock", rumour: null}}}});
+      content: `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} takes their leave.</p><p class="wnpc-said">${esc(line.say)}</p></div></div>`,
+      flags: {[MOD]: {talk: {actor: baseActor(r.me)?.id, taught: [], topic: "farewell", stock: line.kind === "stock", generated: !!line.rule, gen: line.gen ?? null, said: line.say, rumour: null}}}});
     return {said: line.say};
   }
 
@@ -286,14 +363,35 @@ export function build(ctx) {
     const gate = line?.when ? TK.gateLabel(line.when) : "";
     const extra = [taught.length ? `Now you can ask about ${taught.map(TK.topicLabel).join(", ")}.` : "", ...notes].filter(Boolean);
     const content = `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} asks about ${esc(TK.topicLabel(topic).toLowerCase())}.</p>`
-      + `${gate ? `<p class="wodx-quiet wnpc-gate">[${esc(gate)}]</p>` : ""}<p>${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
+      + `${gate ? `<p class="wodx-quiet wnpc-gate">[${esc(gate)}]</p>` : ""}<p class="wnpc-said">${say ? esc(say) : "<i>They have nothing to say about that.</i>"}</p>${heard ? `<p class="wodx-quiet wnpc-heard"><i>${esc(heard)}</i></p>` : ""}${extra.map(x => `<p class="wodx-quiet">${esc(x)}</p>`).join("")}`
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
-      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", rumour: line?.rumourId ?? null}}}});
+      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null}}}});
     return {said: say, taught, notes, none: !line};
   }
 
+  /** Another line from the same facts (the Storyteller's Reroll). */
+  async function reroll(msg) {
+    const t = msg.flags?.[MOD]?.talk, g = t?.gen;
+    if ( !g || !game.user.isGM ) return null;
+    const n = (g.n ?? 0) + 1;
+    const hit = G.generate(g.kind, g.facts, {grammar: GRAMMAR, seed: G.mix(g.seed, `reroll${n}`), recent: [t.said]});
+    if ( !hit?.say ) return null;
+    const content = msg.content.replace(/<p class="wnpc-said">[\s\S]*?<\/p>/, `<p class="wnpc-said">${esc(hit.say)}</p>`);
+    return msg.update({content, [`flags.${MOD}.talk.said`]: hit.say, [`flags.${MOD}.talk.gen`]: {...g, n, rule: hit.rule}});
+  }
+  /** Write the line onto the NPC's own talk sheet, where it becomes the Storyteller's and always comes first. */
+  async function keepLine(msg) {
+    const t = msg.flags?.[MOD]?.talk;
+    if ( !t?.said || !game.user.isGM ) return null;
+    const tok = game.scenes.get(msg.speaker?.scene)?.tokens?.get(msg.speaker?.token);
+    const npc = tok?.actor?.isToken ? game.actors.get(tok.actorId) ?? tok.actor : tok?.actor;
+    if ( !npc ) return null;
+    const p = savedProfile(npc), topic = t.topic === "farewell" ? "farewell" : TK.normTopic(t.topic) || "none";
+    await npc.setFlag(MOD, "behavior", {...p, talk: `${String(p.talk ?? "").trimEnd()}${p.talk ? "\n" : ""}[${topic}] ${t.said}`});
+    return msg.update({[`flags.${MOD}.talk.kept`]: true});
+  }
   /** Put an Encyclopaedia entry or a journal page into the character's codex. Returns a note, or "". */
   async function giveCodex(actor, name) {
     const st = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
@@ -555,7 +653,7 @@ export function build(ctx) {
       const r = {npcTok: n, me: tokDoc, scene};
       const sheet = TK.greetFor(chainOf(npc, scene), checker(pc, tokDoc, npc));
       let plain = "";
-      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
+      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = genLine(r, "greet", c)?.say || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
       const text = TK.passingLine(sheet, plain);
       if ( !text ) continue;
       await say(n, text);
@@ -595,11 +693,29 @@ export function build(ctx) {
     Hooks.on("updateToken", (doc, changes) => { onPass(doc, changes).catch(e => console.error(`${MOD} | passing`, e)); });
     Hooks.on("wodxPlaceAlarm", a => { try { onAlarm(a); } catch (e) { console.error(`${MOD} | barks`, e); } });
     Hooks.on("wodxDamageApplied", actor => { try { onHurt(actor); } catch (e) { console.error(`${MOD} | barks`, e); } });
+    Hooks.once("ready", () => { try { loadGrammar(); } catch (e) { console.error(`${MOD} | talk grammar`, e); } });
+    let gTimer = null;
+    const regrammar = doc => {
+      const j = doc?.parent ?? doc;
+      if ( !j?.flags?.[MOD]?.talkGrammar ) return;
+      clearTimeout(gTimer); gTimer = setTimeout(() => { try { loadGrammar({report: true}); } catch (e) { console.error(`${MOD} | talk grammar`, e); } }, 500);
+    };
+    for ( const h of ["createJournalEntryPage", "updateJournalEntryPage", "deleteJournalEntryPage", "deleteJournalEntry"] ) Hooks.on(h, regrammar);
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const html = el?.[0] ?? el;
       if ( msg.flags?.[MOD]?.talk?.stock && game.user.isGM ) {
         const body = html?.querySelector?.(".wnpc-talk-card .vta-body");
         if ( body && !body.querySelector(".wnpc-stock-tag") ) body.insertAdjacentHTML("beforeend", `<p class="wodx-quiet wnpc-stock-tag">Stock talk${msg.flags[MOD].talk.rumour ? ", passing on a rumour from the network" : ""}. Write a line on their talk sheet to say something else.</p>`);
+      }
+      // NPC 0.45.0 (B1647): a made line shows the Storyteller which rule made it, with Reroll and Keep
+      const tg = msg.flags?.[MOD]?.talk;
+      if ( tg?.gen && game.user.isGM && !tg.kept ) {
+        const body = html?.querySelector?.(".wnpc-talk-card .vta-body");
+        if ( body && !body.querySelector(".wnpc-gen") ) {
+          body.insertAdjacentHTML("beforeend", `<p class="wodx-quiet wnpc-gen">Made by the talk generator (${esc(tg.gen.rule ?? "")}). <button type="button" class="wnpc-gen-reroll">Reroll</button> <button type="button" class="wnpc-gen-keep">Keep</button></p>`);
+          body.querySelector(".wnpc-gen-reroll")?.addEventListener("click", ev => { ev.preventDefault(); reroll(msg).catch(e => console.error(`${MOD} | talk`, e)); });
+          body.querySelector(".wnpc-gen-keep")?.addEventListener("click", ev => { ev.preventDefault(); ev.currentTarget.disabled = true; keepLine(msg).catch(e => console.error(`${MOD} | talk`, e)); });
+        }
       }
       if ( msg.flags?.[MOD]?.talk ) html?.querySelectorAll?.("button.wnpc-talk-undo").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
@@ -613,5 +729,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine};
 }
