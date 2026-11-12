@@ -36,6 +36,7 @@ export const QUALITIES = {
   locks: {label: "picks locks", need: "lockpicks", re: R("lockpick", "set of lockpicks", "lockpick gun", "skeleton key", "bump key")},
   digs: {label: "digs", need: "a spade", re: R("spade", "shovel", "snow shovel", "mattock", "trowel", "pickaxe", "entrenching tool")},
   injects: {label: "injects", need: "a syringe", re: R("syringe", "glass syringe", "hypodermic", "hypospray")},
+  spoon: {label: "cooks a dose", need: "a spoon to cook the dose in", re: R("bent spoon", "spoon", "teaspoon", "soup spoon")},
   pipe: {label: "is a pipe to smoke", need: "a pipe", re: R("clay pipe", "pipe", "long opium pipe", "opium pipe", "hookah", "bong", "chillum", "rolling paper")}
 };
 /** Names that look like a quality but are not one. */
@@ -65,6 +66,10 @@ export function qualitiesOf(nameOrGood) {
 const LOOSE_SMOKE = R("pipe tobacco", "opium", "lump of opium", "hashish", "marijuana", "crack cocaine", "rock of crack cocaine", "tobacco leaves", "cannabis distillate");
 const NO_FLAME = R("electronic cigarette", "e-cig", "vape");
 const INJECTED = R("heroin", "morphine");
+/** Powders that are cooked in a spoon over a flame before the syringe draws them up (Ben, 2026-11-12). */
+const COOKED_DOSE = R("heroin");
+/** What a syringe can be used to inject, when it is held. */
+export const INJECTABLE = R("heroin", "morphine", "ketamine", "penicillin", "insulin", "antibiotics", "steroids?", "adrenaline", "epinephrine", "methamphetamine", "cocaine");
 /** Lights that need a flame to start; electric ones do not. */
 const FLAMES = new Set(["candle", "lantern", "lamp", "torch", "rushlight", "oil"]);
 
@@ -80,6 +85,7 @@ export function needsOf(good, ability, lightKind = null) {
     if ( LOOSE_SMOKE.test(n) && !own.has("pipe") ) need.push("pipe");
   }
   if ( ability === "take" && INJECTED.test(n) ) need.push("injects");
+  if ( ability === "take" && COOKED_DOSE.test(n) ) need.push("spoon", "fire");
   if ( ability === "light" && lightKind && FLAMES.has(lightKind) ) need.push("fire");
   if ( ["write", "draw", "mark"].includes(ability) && !own.has("writes") ) need.push("writes");
   if ( ability === "letter" && /quill pen/i.test(n) ) need.push("ink");
