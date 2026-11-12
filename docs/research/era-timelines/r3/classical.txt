@@ -368,3 +368,62 @@
 541|M|wra|ME|Constantinople|plague,disaster|The Second Great Maelstrom|Deduced: Renegades ties the Second Great Maelstrom to a great plague (pdf 32), and the next after Rome's fall is Justinian's plague of 541.
 -300|W|mag|AS|Himalayas|war,treaty|The Himalayan War ends|The Himalayan War, begun about 900 BCE, runs to about 300 BCE by one count (Sorcerers Crusade pdf 68).
 1000|M|cha|EU|Europe|occult|The Sundering deepens|Deduced: between the Battle of Stone and the Oath-Truce the fae lose ground with every new church and iron mill, as Dark Ages: Fae describes the world of 1230.
+# Wider world (Ben 2026-11-12 23:00Z: WoDX is global, not only Moravia)
+-700|H|mor|AM|Nakbe|founding,building|The first Maya cities|Maya at Nakbe and El Mirador raise stone platforms in the Peten forest.
+-500|H|mor|AF|Nok|art|The Nok heads|The Nok people of the Jos plateau work iron and model life-sized heads in fired clay.
+-500|H|mor|AM|Monte Alban|founding|Monte Alban|The Zapotecs level a mountaintop above the Oaxaca valley and build a capital on it.
+-300|H|mor|AM|El Mirador|building|La Danta|El Mirador raises La Danta, one of the largest pyramids ever built.
+-100|H|mor|AM|Nazca|art,faith|The Nazca lines|The Nazca begin scraping giant lines and figures into the desert of southern Peru.
+9|H|mor|AS|Chang'an|crown|Wang Mang's Xin|Wang Mang takes the Han throne and proclaims his own dynasty.
+25|H|mor|AS|Luoyang|crown|The Han restored|The Han return under Emperor Guangwu, with a new capital at Luoyang.
+57|H|mor|AS|Luoyang|travel|Envoys from Wa|An envoy from Wa in Japan reaches the Han court and is given a gold seal.
+100|H|mor|AF|Aksum|trade,crown|Aksum rises|Aksum in the Ethiopian highlands trades ivory and gold through the Red Sea port of Adulis.
+100|H|mor|AM|Moche valley|crown,art|The Moche|The Moche rule the river valleys of northern Peru and build pyramids of mud brick.
+127|H|mor|AS|Purushapura|faith,crown|Kanishka|The Kushan king Kanishka rules from Bactria to the Ganges and favours the Buddhists.
+166|H|mor|AS|Luoyang|travel,trade|Romans at the Han court|Men claiming to come from the emperor of Daqin, Rome, reach the Han court by sea.
+184|H|mor|AS|China|uprising,faith|The Yellow Turbans|A faith-healing sect rises against the Han across eastern China.
+200|H|mor|AM|Teotihuacan|building|The Pyramid of the Sun|Teotihuacan builds the Pyramid of the Sun on the Avenue of the Dead.
+250|H|mor|AM|Peten|crown|Maya kings|Maya cities set up dated stone monuments to their kings.
+250|H|mor|AS|Yamato|building,death|The great tombs|Yamato rulers in Japan are buried in huge keyhole-shaped mounds.
+320|H|mor|AS|Pataliputra|crown,empire|The Gupta empire|Chandragupta I founds the Gupta empire, a golden age of Indian learning.
+330|H|mor|AF|Aksum|faith,crown|Ezana turns Christian|King Ezana of Aksum takes up Christianity and puts the cross on his coins.
+378|H|mor|AM|Tikal|war,crown|Teotihuacan takes Tikal|A war leader from Teotihuacan arrives at Tikal and a new line of kings begins.
+562|H|mor|AM|Tikal|war|Caracol defeats Tikal|Caracol and its allies defeat Tikal, which falls silent for a century.
+550|H|mor|AM|Teotihuacan|fire,uprising|Teotihuacan burns|The palaces of Teotihuacan are burned, perhaps by its own people.
+589|H|mor|AS|Daxing|crown|The Sui unite China|The Sui reunite China after nearly three centuries of division.
+600|H|mor|AM|Lake Titicaca|founding,faith|Tiwanaku|Tiwanaku by Lake Titicaca rules the southern Andes from its stone temples.
+600|H|mor|AM|Ayacucho|empire|The Wari|The Wari build the first empire of the Andes, linked by roads.
+606|H|mor|AS|Kannauj|crown|Harsha|Harsha rules north India from Kannauj.
+615|H|mor|AM|Palenque|crown|Pakal|K'inich Janaab Pakal takes the throne of Palenque at twelve and rules for 68 years.
+629|H|mor|AS|Chang'an|travel,faith|Xuanzang goes west|The monk Xuanzang leaves Chang'an for India to fetch the Buddhist texts.
+645|H|mor|AS|Asuka|law|The Taika reforms|The Japanese court takes the land into the throne's hands on the Chinese model.
+652|H|mor|AF|Dongola|treaty|The Baqt|Christian Makuria and the Arab rulers of Egypt agree the Baqt, a treaty that lasts six centuries.
+695|H|mor|AM|Tikal|war|Tikal defeats Calakmul|Tikal defeats Calakmul and recovers its power.
+710|H|mor|AS|Nara|founding|Nara|Japan's court settles at Nara, laid out like Chang'an.
+755|H|mor|AS|Fanyang|uprising,war|An Lushan rebels|The general An Lushan rises against the Tang; millions die before it ends.
+794|H|mor|AS|Heian-kyo|founding|Heian-kyo|The Japanese court moves to Heian-kyo, later Kyoto.
+800|H|mor|AF|Shanga|trade,building|The Swahili towns|Swahili traders build towns of coral stone along the east African coast.
+802|H|mor|AS|Mount Kulen|crown|The Khmer god-king|Jayavarman II proclaims himself universal king of the Khmer.
+825|H|mor|AS|Java|building,faith|Borobudur|The Buddhist monument of Borobudur is finished in central Java.
+850|H|mor|AF|Igbo-Ukwu|art|The Igbo-Ukwu bronzes|Smiths at Igbo-Ukwu cast bronzes of a fineness unmatched in their time.
+869|H|mor|AM|Tikal|death,migration|The last date at Tikal|Tikal raises its last dated monument; the southern Maya cities empty.
+950|H|mor|AM|Tula|founding|Tula|The Toltecs rule central Mexico from Tula.
+960|H|mor|AS|Kaifeng|crown|The Song|The Song dynasty reunites China from Kaifeng.
+1001|H|mor|AS|Peshawar|war|Mahmud of Ghazni|Mahmud of Ghazni begins his raids into India.
+1004|H|mor|AS|Chanyuan|treaty|The Treaty of Chanyuan|The Song buy peace from the Liao with yearly silver and silk.
+1008|H|mor|AS|Heian-kyo|art|The Tale of Genji|Murasaki Shikibu is writing the Tale of Genji at the Heian court.
+1025|H|mor|AS|Kadaram|war,sea|The Chola raid Srivijaya|The Chola fleet of south India sacks the ports of Srivijaya.
+1030|H|mor|AM|Chaco Canyon|building|The great houses of Chaco|The Ancestral Puebloans build great stone houses and roads in Chaco Canyon.
+1044|H|mor|AS|Kaifeng|science,war|Gunpowder written down|A Song military manual gives the first written recipes for gunpowder.
+1050|H|mor|AM|Cahokia|founding,building|Cahokia|Cahokia on the Mississippi grows into a city round Monks Mound.
+1062|H|mor|AF|Marrakesh|founding|Marrakesh|The Almoravids found Marrakesh.
+1075|H|mor|AF|Mapungubwe|crown,trade|Mapungubwe|Mapungubwe on the Limpopo trades gold and ivory to the coast.
+1076|H|mor|AF|Koumbi Saleh|war,faith|The Almoravids and Ghana|Tradition says the Almoravids took Koumbi Saleh, the capital of Ghana.
+1085|H|mor|AF|Njimi|faith,crown|Kanem turns Muslim|King Hummay of Kanem by Lake Chad takes up Islam.
+1113|H|mor|AS|Angkor|building,faith|Angkor Wat|Suryavarman II takes the Khmer throne and begins Angkor Wat.
+1127|H|mor|AS|Kaifeng|war|The Jurchen take Kaifeng|The Jurchen take Kaifeng and two Song emperors; the Song flee south.
+1137|H|mor|AF|Lalibela|crown|The Zagwe kings|The Zagwe dynasty takes the Ethiopian throne.
+1162|H|mor|AS|Mongolia|crown|Temujin born|Temujin, later Chinggis Khan, is born on the steppe.
+1185|H|mor|AS|Dan-no-ura|battle,sea|Dan-no-ura|The Minamoto destroy the Taira at sea.
+1192|H|mor|AS|Tarain|battle|The second battle of Tarain|Muhammad of Ghor defeats Prithviraj Chauhan and opens north India.
+1192|H|mor|AS|Kamakura|crown|The first shogun|Minamoto Yoritomo is named shogun and rules Japan from Kamakura.

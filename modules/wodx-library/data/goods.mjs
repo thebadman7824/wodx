@@ -18,15 +18,16 @@
  */
 
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
-export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
+export const ERAS = ["mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
   "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 /**
- * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The prologues have
- * no years there; the ones here are a house rule so prologue goods can be dated too.
+ * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The seven prologue
+ * eras (split from Living Gods and Classical, Ben 2026-11-12) carry their years there too.
  */
 export const ERA_YEARS = {
-  "living-gods": [-10000, -801], "classical": [-800, 1196], "dark-ages": [1197, 1346], "long-night": [1347, 1449],
+  "mythic-age": [-10000, -3101], "bronze-kings": [-3100, -1178], "iron-dawn": [-1177, -801],
+  "greece-republic": [-800, -28], "roman-empire": [-27, 476], "migration-age": [477, 907], "premyslid-duchy": [908, 1196], "dark-ages": [1197, 1346], "long-night": [1347, 1449],
   "renaissance": [1450, 1600], "age-of-reason": [1601, 1836], "victorian": [1837, 1901], "wild-west": [1860, 1899], "great-war": [1914, 1918], "mid-century": [1919, 1989],
   "modern": [1990, 2003], "time-of-judgment": [2004, 2004], "future-darkness": [2010, 2098],
   "time-of-future-judgement": [2099, 2099]
@@ -702,6 +703,8 @@ export const ROWS = [
   ["a smart speaker", "house", 2014, END, "J", 1],
   ["an air purifier", "house", 2020, END, "N", 2, "future"],
   // CLOTH
+  ["a hide cloak", "cloth", -10000, 1600, "T", 0],
+  ["a stone lamp of animal fat", "light", -10000, -801, "J", 0],
   ["a folded wool cloak", "cloth", -3000, 1600, "T", 1],
   ["a linen shift", "cloth", -3000, 1600, "J", 1],
   ["a coarse wool tunic", "cloth", -500, 1450, "T", 1],

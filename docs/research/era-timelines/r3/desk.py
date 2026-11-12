@@ -38,6 +38,9 @@ if fe:
               'tg': x['tags'], 't': x['title'], 'x': x['text'], 'lk': [l['title'] for l in x['links']], 'src': 'r3'} for x in mine]
     appr = [{'y': e['year'], 't': e['name'], 'x': e['summary'], 's': 'Approved, Future Darkness'} for e in json.load(open(fe))]
     eras.append({'id': 'future-darkness', 'name': 'Future Darkness', 'span': '1990 to 2099, future branch only', 'items': items, 'appr': appr})
+# Tab names follow the era names in Chronicle (Ben asked for World of Darkness names, 2026-11-12; naming desk XZE9pqoyZxuy7n54ky8beV).
+NAMES = {p['id']: p['name'].replace(' (prologue)', '') for p in json.load(open('../../../../modules/wodx-chronicle/data/eras.json'))['profiles']}
+for e in eras: e['name'] = NAMES.get(e['id'], e['name'])
 data = json.dumps(eras, ensure_ascii=False, separators=(',', ':'))
 open('../desk-data-2026-11-12h3.json', 'w').write(data)
 print({e['id']: len(e['items']) for e in eras}, 'round 2 repeats left out', dropped, 'bytes', len(data))

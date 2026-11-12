@@ -38,7 +38,7 @@ export function profileOf(actor) {
 }
 
 /** The Dark Ages books rule the Dark Ages, the Long Night and the eras before; every later era takes V20 and its kin. */
-export const DA_ERAS = ["classical", "living-gods", "dark-ages", "long-night"];
+export const DA_ERAS = ["classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "dark-ages", "long-night"];
 export const bookOf = era => (DA_ERAS.includes(String(era ?? "").toLowerCase()) ? "da" : "late");
 
 /**

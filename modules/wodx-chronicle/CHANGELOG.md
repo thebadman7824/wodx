@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.47.0 (the two prologues become seven eras (Before the Flood, The Age of Living Gods, The Age of Cold Iron, The Classical Age, The Age of Silk and Eagles, The Age of Fallen Thrones, The Age of Gathering Darkness), each with its years and chosen with the era lock; a lock or era saved under the old prologue names opens the era that replaced it; every era takes a World of Darkness name (The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Iron Harvest, The Age of Ashes, The Final Nights, The Age of Future Darkness, Time of Future Judgement and the rest))
 - 0.46.0 (how much runs by itself: three levels (Hands on, Balanced, Hands off) picked in the approval queue window, which lists what will change first and puts back what you had at Hands on; a "when small" standing rule per kind of proposal, with an Approved on its own card and Undo where the kind has one; the Waiting tray, with every card and queue entry still waiting for you and Take the recommended; the wrap-up says what is still open; Let time pass on the player buttons list)
 - 0.45.2 (the layout pass: a pick in any WoDX window is as wide as its entries need and drops under its label when the two do not fit, so the chosen entry is not cut off)
 - 0.45.1 (the Legends book adds what a battle's field left behind, when the Storyteller sends it there from WoDX Storyteller's Battles window)
