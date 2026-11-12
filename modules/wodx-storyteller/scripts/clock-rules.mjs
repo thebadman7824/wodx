@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.39.0: progress clocks, the pure part. No Foundry calls here (B1710-B1713).
+ * WoDX Storyteller 0.41.0: progress clocks, the pure part. No Foundry calls here (B1710-B1713).
  *
  * A clock is a circle cut into segments that fill as something comes nearer: long work, heat on a hunting ground,
  * a faction's plan, a tie that needs tending. Most clocks are read from numbers WoDX already keeps and change only

@@ -29,6 +29,9 @@ import * as referee from "./referee.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
+import * as place from "./place.mjs";
+import * as placeRules from "./place-rules.mjs";
+import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
 import * as legends from "./legends.mjs";
 
@@ -60,6 +63,8 @@ Hooks.once("init", () => {
     onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); },
     onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
   });
+  // 0.35.0: the clock that runs with the table (off by default)
+  pace.registerPaceSettings(() => ClockApp.refresh());
   // The WoDX look (6e): each player's own look, text size and motion
   theme.registerThemeSettings();
   theme.applyLook();
@@ -143,9 +148,15 @@ Hooks.once("ready", async () => {
   await gen.ensureSeed();
 
   game.socket.on(SOCKET, onSocket);
+  pace.startPace();
+  Hooks.on("updateScene", (sc, ch) => { if ( ch?.flags?.[MODULE_ID] ) ClockApp.refresh(); });
+  Hooks.on("canvasReady", () => ClockApp.refresh());
 
   const api = {
     openClock: () => ClockApp.open(),
+    refreshClock: () => ClockApp.refresh(),
+    place: {of: place.placeOf, describeAt: place.describeAt, latitudeFor: place.latitudeFor, set: place.setPlace, dialog: place.placeDialog, rules: placeRules},
+    pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
@@ -290,7 +301,7 @@ async function onSocket(message) {
 }
 
 // A new session begun in WoDX Storyteller starts the count of NPC proposals again
-// It also brings the Legends book up to date (WoDX Chronicle 0.39.0)
+// It also brings the Legends book up to date (WoDX Chronicle 0.40.0)
 Hooks.on("updateSetting", s => {
   if ( s?.key !== "wodx-storyteller.session" ) return;
   approvals.resetSession();

@@ -54,7 +54,7 @@ Hooks.once("ready", () => {
     buildPenumbraPrototype, placeOf, rules, STATUS,
     crossShroud, sendAcross, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
-    journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
+    journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, passTime: journey.passJourneyTime, rules: journey.J},
     journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,

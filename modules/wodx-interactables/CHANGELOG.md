@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.30.0 (Game time: an attempt done apart from the group goes on the character's own time, with Undo)
 - 0.28.0 (missed connections, 12 November 2026: noiseAt() for a noise with no object (a fight, a chase); a chase is heard each turn (hooves and motors loud, feet quiet); a Hard feelings button after a chase moves NPC attitudes; living tiles resync when a dated event is taken back)
 - 0.27.0 (use the room in a fight: knock a lamp or candle over to start a fire, bring a chandelier down, tear a curtain or throw a window open to let the sun in by day, set off the sprinklers from 1874)
 - 0.26.1 (chases follow the book check: keeping sight by Perception against the lead, safe and top speeds and Maneuver for cars and motorcycles, crashes rolled as falls, Garou forms run faster, a rider charges in)

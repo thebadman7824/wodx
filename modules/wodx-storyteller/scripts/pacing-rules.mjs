@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.39.0: the pacing note on the night's draw (B1714, the lighter version Ben chose). No Foundry here.
+ * WoDX Storyteller 0.41.0: the pacing note on the night's draw (B1714, the lighter version Ben chose). No Foundry here.
  *
  * It reads the Storyteller's log for the last nights and says, for the Storyteller only, how the nights have run:
  * three quiet nights in a row, or a hard night just past. It never changes what the draw picks.

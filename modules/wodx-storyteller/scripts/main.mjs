@@ -26,6 +26,8 @@ import * as Money from "./money.mjs";
 import * as Markets from "./markets.mjs";
 import * as News from "./market-news.mjs";
 import * as Tasks from "./tasks.mjs";
+import * as Spend from "./spend.mjs";
+import * as SpendRules from "./spend-rules.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
 import * as HavenRules from "./haven-rules.mjs";
@@ -78,6 +80,7 @@ Hooks.once("init", () => {
   Markets.registerMarketSettings();
   News.registerMarketNewsSettings();
   Tasks.registerTaskSettings();
+  Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
@@ -103,12 +106,13 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
   if ( !C.chron() ) console.warn("WoDX | WoDX Storyteller needs WoDX Chronicle; it stays idle.");
   C.onChange(() => A.TrackerClass().refresh());
+  C.onChange(() => { try { C.chron()?.refreshClock?.(); } catch (e) { /* older Chronicle */ } });
   game.socket.on(C.SOCKET, onSocket);
   C.primeQueue();
   Markets.setupMarkets().catch(e => console.error("WoDX | markets", e));
@@ -143,6 +147,8 @@ Hooks.once("ready", () => {
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
+    time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
+      clockRow: Spend.clockRow, bindClockRow: el => Spend.bindClockRow(el, () => A.conveneDialog()), rules: SpendRules},
     tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     hand: {open: Hand.handDialog, run: Hand.runTool, tools: Hand.TOOLS, addTool: Hand.addTool, glance: () => Hand.GlanceApp.open(), call: Hand.callRoll, callDialog: Hand.callRollDialog,
@@ -275,6 +281,7 @@ async function onSocket(message) {
   if ( !C.isActiveGM() ) return;
   if ( type === "req.call" ) { await Hand.answerAsk(payload); return; }
   if ( type === "req.letter" ) { await Letters.send(payload); return; }
+  if ( type === "req.time" ) { await Spend.onAsk(payload); return; }
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
