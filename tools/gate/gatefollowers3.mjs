@@ -10,8 +10,8 @@
  *   3. a quick order from the window: Wait here sets the order
  *   4. the sheet: the Relationships tab has a Followers button
  *   5. a description is written from the look, on a Storyteller-only card, heard here and not yet elsewhere
- *   6. NPCs who have heard it and see the culprit test it: a card with the roll (three sharp-eyed watchers, so the
- *      noticing roll is all but sure)
+ *   6. NPCs who have heard it and see the culprit test it: a card with the roll (three sharp-eyed watchers two squares
+ *      away in the open, so the noticing roll is all but sure)
  *   7. the whole town hears it at once from the list; dropping it ends it
  *   8. clean up
  * Result: Data/wodx-gate/gatefollowers3-result.json.
@@ -33,13 +33,15 @@ export async function run() {
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const msgStart = Date.now(), viewed = canvas.scene, t0 = game.time.worldTime;
+  // Library sets api.look late in its ready hook: wait for it (up to 10 s) before step 1
+  for ( let i = 0; i < 50 && !game.modules.get("wodx-library")?.api?.look; i++ ) await sleep(200);
   const NPC = game.modules.get("wodx-npc")?.api, LK = game.modules.get("wodx-library")?.api?.look;
   const before = {orders: game.settings.get("wodx-npc", "followerOrders"), on: game.settings.get("wodx-npc", "culpritDescriptions"), list: foundry.utils.deepClone(game.settings.get("wodx-npc", "descriptions"))};
   let scene = null, other = null;
   const actors = [];
   const cards = () => game.messages.contents.filter(m => m.timestamp >= msgStart);
   try {
-    ok("1. modules", atLeast("wodx-npc", "0.41.0") && atLeast("wodx-library", "0.16.0") && atLeast("wodx-sheets", "0.12.0")
+    ok("1. modules", atLeast("wodx-npc", "0.41.1") && atLeast("wodx-library", "0.16.0") && atLeast("wodx-sheets", "0.12.0")
       && !!NPC?.openFollowers && !!NPC?.followers?.rowsFor && !!NPC?.wanted?.write && !!NPC?.openWanted && !!LK?.describe,
       {versions: ["wodx-npc", "wodx-library", "wodx-sheets", "wodx-chronicle", "wodx-actions", "wodx-storyteller"].map(id => `${id} ${game.modules.get(id)?.version}`)});
     await game.settings.set("wodx-npc", "followerOrders", true);
@@ -53,14 +55,15 @@ export async function run() {
     const sharp = {attributes: {perception: {value: 5}}, abilities: {alertness: {value: 5}, awareness: {value: 3}}};
     const watchers = [];
     for ( let i = 1; i <= 3; i++ ) { const w = await Actor.create({name: `WoDX gate: watcher ${i}`, type: "Mortal", ownership: {default: 0}, system: sharp}); actors.push(w); watchers.push(w); }
-    scene = await Scene.create({name: "WoDX gate: the market", width: 2000, height: 1400, grid: {size: 100}, tokenVision: false});
+    // padding 0: with the default padding the tokens stood outside the scene rectangle, whose edge blocks sight
+    scene = await Scene.create({name: "WoDX gate: the market", width: 2000, height: 1400, padding: 0, grid: {size: 100}, tokenVision: false});
     other = await Scene.create({name: "WoDX gate: the far gate", width: 1000, height: 1000, grid: {size: 100}, tokenVision: false});
     await scene.view();
     await sleep(800);
     const made = await scene.createEmbeddedDocuments("Token", [
       {name: pc.name, actorId: pc.id, x: 200, y: 200, actorLink: true}, {name: ghoul.name, actorId: ghoul.id, x: 300, y: 200, actorLink: true},
       {name: fol.name, actorId: fol.id, x: 400, y: 200, actorLink: true},
-      ...watchers.map((w, i) => ({name: w.name, actorId: w.id, x: 900 + i * 100, y: 600, actorLink: true}))]);
+      ...watchers.map((w, i) => ({name: w.name, actorId: w.id, x: 300 + i * 100, y: 400, actorLink: true}))]);
     const tk = a => made.find(k => k.actorId === a.id);
     await sleep(500);
 
@@ -101,10 +104,11 @@ export async function run() {
       && NPC.wanted.ofActor(pc.id).length >= 1, {text: desc?.text, means: desc?.means, year: game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()});
 
     // 6. Watchers who heard it test it
-    const res = await NPC.wanted.test(tk(pc));
+    let res = [];
+    for ( let i = 0; i < 3 && !res.some(r => r.level); i++ ) { res = await NPC.wanted.test(tk(pc), {force: true}); await sleep(300); }
     await sleep(500);
     const testCard = cards().find(m => m.flags?.["wodx-npc"]?.wantedTest?.culprit === pc.id);
-    ok("6. tested on sight", res.length >= 1 && !!testCard && /Perception \+ Alertness, difficulty/.test(testCard.content) && testCard.whisper.every(id => game.users.get(id)?.isGM),
+    ok("6. tested on sight", res.some(r => r.level) && !!testCard && /Perception \+ Alertness, difficulty/.test(testCard.content) && testCard.whisper.every(id => game.users.get(id)?.isGM),
       {res, notes: "uses the noticing roll: three watchers with Perception 5, Alertness 5"});
 
     // 7. The whole town hears now; drop it

@@ -143,7 +143,12 @@ test("descriptions: a second sighting soon after freshens the same one", () => {
   assert.equal(W.of([b], "pc", at + 400).length, 1);
   assert.equal(W.normDesc({cause: "nonsense"}).cause, "crime");
   assert.equal(W.tests("guard"), true);
+  assert.equal(W.tests("knight"), true, "the era templates hear the talk of the town too");
+  assert.equal(W.tests("servant"), true);
+  assert.equal(W.tests(null), true);
   assert.equal(W.tests("beast"), false);
+  assert.equal(W.tests("spirit"), false);
+  assert.equal(W.tests("wolf", {animal: true}), false);
 });
 
 test("wiring: NPC api, token tools, settings, hooks and the sheet button", () => {
@@ -154,6 +159,8 @@ test("wiring: NPC api, token tools, settings, hooks and the sheet button", () =>
   assert.match(main, /tokens\.tools\.wodxWanted/);
   assert.match(main, /wanted\.registerSettings\(\)/);
   const w = src("modules/wodx-npc/scripts/wanted.mjs");
+  assert.match(w, /skip: "no description of them heard here"/, "test says why it stopped");
+  assert.match(main, /isAnimal: AN\.isAnimal/);
   for ( const h of ["wodxBreach", "wodxMapEvent", "deleteCombat", "updateToken"] ) assert.match(w, new RegExp(`Hooks\\.on\\("${h}"`));
   assert.match(w, /whisper: gmIds\(\)/, "Storyteller cards only");
   assert.match(src("modules/wodx-npc/scripts/orders.mjs"), /async function send\(req\)/);

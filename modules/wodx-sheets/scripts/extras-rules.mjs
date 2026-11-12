@@ -289,7 +289,9 @@ export const xpSpent = items => items.filter(i => i.type === "Experience" && i.s
 /* -------------------------------------------------------------- */
 
 /** Keys a recompute or WoDX itself writes; a change made only of these is not an edit to keep. */
-const QUIET = [/^system\.settings\.isupdated$/, /^flags\.wodx-sheets\.(history|ui)/, /^_stats/, /^system\.(attributes\.\w+\.total|abilities\.\w+\.total|movement|health\.damage\.(woundlevel|woundpenalty)|initiative|soak)/];
+const QUIET = [/^system\.settings\.isupdated$/, /^flags\.wodx-sheets\.(history|ui|snap|since)/, /^flags\.wodx-chronicle\.sigFired/, /^_stats/, /^system\.(attributes\.\w+\.total|abilities\.\w+\.total|movement|health\.damage\.(woundlevel|woundpenalty)|initiative|soak)/];
+/** The keys of an update that a person or a rule really changed (recomputed totals left out). */
+export const loudKeys = changes => Object.keys(flat(changes)).filter(k => !QUIET.some(q => q.test(k)));
 /** Flatten an update into dotted keys. */
 export function flat(obj, prefix = "", out = {}) {
   for ( const [k, v] of Object.entries(obj ?? {}) ) {
@@ -325,4 +327,109 @@ export const HISTORY_MAX = 30;
 export function pushEntry(list, e) {
   if ( !e ) return list;
   return [e, ...list].slice(0, HISTORY_MAX);
+}
+
+/* -------------------------------------------------------------- */
+/*  What changed since last session (0.13.0)                       */
+/* -------------------------------------------------------------- */
+
+const FEATURE_KIND = it => (/flaw/i.test(String(it?.system?.type ?? "")) ? "Flaw" : /merit/i.test(String(it?.system?.type ?? "")) ? "Merit" : "");
+/**
+ * What the strip compares: a character's numbers and lists at a moment. label(kind, key) names a trait;
+ * standing is {faction id: words} from WoDX NPC; year is the chronicle's year.
+ */
+export function snapshotOf(sys = {}, items = [], {ties = {}, standing = {}, year = 0, at = 0, label = (k, key) => niceKey(key)} = {}) {
+  const adv = sys.advantages ?? {}, set = sys.settings ?? {}, d = sys.health?.damage ?? {};
+  const pools = {};
+  for ( const [sw, name, path] of POOLS ) { const p = adv[path]; if ( set[sw] && p ) pools[name] = [num(p.temporary), num(p.permanent ?? p.max)]; }
+  const traits = {};
+  for ( const kind of ["attributes", "abilities"] ) for ( const [k, v] of Object.entries(sys[kind] ?? {}) ) if ( v && typeof v === "object" && "value" in v ) traits[label(kind, k)] = num(v.value);
+  const xp = items.filter(i => i.type === "Experience");
+  return {at, year: num(year),
+    xp: {earned: xp.filter(i => !i.system?.isspent).reduce((n, i) => n + num(i.system?.amount), 0), spent: xpSpent(items)},
+    health: [num(d.bashing), num(d.lethal), num(d.aggravated)],
+    wp: adv.willpower ? [num(adv.willpower.temporary), num(adv.willpower.permanent)] : null,
+    pools, traits,
+    items: Object.fromEntries(items.filter(i => POSSESSION_TYPES.includes(i.type)).map(i => [i._id ?? i.id, [i.name, qtyOf(i)]])),
+    features: Object.fromEntries(items.filter(i => i.type === "Feature" && FEATURE_KIND(i)).map(i => [i._id ?? i.id, [i.name, FEATURE_KIND(i)]])),
+    ties: {...ties}, standing: {...standing}};
+}
+/** Which kinds of change a set of changed keys (or an item of a type) belongs to, for naming their causes. */
+export function catsOf(keys = [], itemType = "") {
+  const out = new Set();
+  if ( itemType === "Experience" ) out.add("xp");
+  else if ( itemType === "Feature" ) out.add("features");
+  else if ( POSSESSION_TYPES.includes(itemType) ) out.add("items");
+  for ( const k of keys ) {
+    if ( /^system\.health\./.test(k) ) out.add("health");
+    else if ( /^system\.advantages\.willpower/.test(k) ) out.add("wp");
+    else if ( /^system\.advantages\./.test(k) ) out.add("pools");
+    else if ( /^system\.(attributes|abilities)\./.test(k) ) out.add("traits");
+    else if ( /^flags\.(wodx-sheets\.ties|wodx-creation\.lineage|wodx-npc\.ties)/.test(k) ) out.add("ties");
+  }
+  return [...out];
+}
+export const CAUSES_MAX = 4;
+/** Add a cause to the kinds it touched; null when nothing new (so nothing needs saving). */
+export function addCause(since = {}, cats = [], cause = "") {
+  if ( !cause || !cats.length ) return null;
+  let changed = false;
+  const out = {...since};
+  for ( const c of cats ) {
+    const list = out[c] ?? [];
+    if ( list.includes(cause) ) continue;
+    out[c] = [...list, cause].slice(-CAUSES_MAX);
+    changed = true;
+  }
+  return changed ? out : null;
+}
+const hurtWords = h => { const [b, l, a] = h ?? [0, 0, 0]; const w = [b && `${b} bashing`, l && `${l} lethal`, a && `${a} aggravated`].filter(Boolean); return w.length ? w.join(", ") : "unhurt"; };
+const listDiff = (a = {}, b = {}) => ({gone: Object.keys(a).filter(k => !(k in b)), added: Object.keys(b).filter(k => !(k in a))});
+const nameOf = v => (Array.isArray(v) ? v[0] : v);
+/**
+ * The strip's lines: what moved between a snapshot and now, each with its kind (for its causes). A jump of years is
+ * one line, however many years it covers.
+ */
+export function changesSince(was, now) {
+  if ( !was || !now ) return [];
+  const out = [], add = (cat, text) => out.push({cat, text});
+  if ( num(was.year) && num(now.year) && was.year !== now.year ) add("time", `The year: ${was.year} to ${now.year}`);
+  const ex = num(now.xp?.earned) - num(was.xp?.earned), sp = num(now.xp?.spent) - num(was.xp?.spent);
+  if ( ex || sp ) add("xp", `Experience: ${[ex && `${ex > 0 ? "" : "less "}${Math.abs(ex)} earned`, sp && `${sp > 0 ? "" : "back "}${Math.abs(sp)} spent`].filter(Boolean).join(", ")}`);
+  for ( const [k, v] of Object.entries(now.traits ?? {}) ) { const o = was.traits?.[k]; if ( o !== undefined && o !== v ) add("traits", `${k}: ${o} to ${v}`); }
+  if ( (was.health ?? []).join() !== (now.health ?? []).join() ) {
+    const t = h => (h ?? []).reduce((n, x) => n + num(x), 0), d = t(now.health) - t(was.health);
+    add("health", `Health: ${hurtWords(was.health)} to ${hurtWords(now.health)}${d < 0 ? " (healed)" : ""}`);
+  }
+  if ( was.wp && now.wp ) {
+    if ( was.wp[0] !== now.wp[0] ) add("wp", `Willpower: ${was.wp[0]} to ${now.wp[0]}`);
+    if ( was.wp[1] !== now.wp[1] ) add("wp", `Willpower rating: ${was.wp[1]} to ${now.wp[1]}`);
+  }
+  for ( const [k, v] of Object.entries(now.pools ?? {}) ) {
+    const o = was.pools?.[k];
+    if ( !o ) continue;
+    if ( o[0] !== v[0] ) add("pools", `${k}: ${o[0]} to ${v[0]}`);
+    if ( o[1] !== v[1] ) add("pools", `${k} rating: ${o[1]} to ${v[1]}`);
+  }
+  const f = listDiff(was.features, now.features);
+  for ( const id of f.added ) add("features", `${now.features[id][1]} gained: ${now.features[id][0]}`);
+  for ( const id of f.gone ) add("features", `${was.features[id][1]} lost: ${was.features[id][0]}`);
+  const it = listDiff(was.items, now.items);
+  if ( it.added.length ) add("items", `Gained: ${it.added.map(id => now.items[id][0]).join(", ")}`);
+  if ( it.gone.length ) add("items", `Lost or given away: ${it.gone.map(id => was.items[id][0]).join(", ")}`);
+  for ( const [id, v] of Object.entries(now.items ?? {}) ) { const o = was.items?.[id]; if ( o && o[1] !== v[1] ) add("items", `${v[0]}: ${o[1]} to ${v[1]}`); }
+  const t = listDiff(was.ties, now.ties);
+  if ( t.added.length ) add("ties", `New ties: ${t.added.map(k => nameOf(now.ties[k])).join(", ")}`);
+  if ( t.gone.length ) add("ties", `Ties gone: ${t.gone.map(k => nameOf(was.ties[k])).join(", ")}`);
+  for ( const [k, v] of Object.entries(now.standing ?? {}) ) {
+    const o = was.standing?.[k];
+    if ( o === undefined ) add("standing", `Joined: ${v}`);
+    else if ( o !== v ) add("standing", `${o} to ${v}`);
+  }
+  for ( const k of Object.keys(was.standing ?? {}) ) if ( !(k in (now.standing ?? {})) ) add("standing", `Left: ${was.standing[k]}`);
+  return out;
+}
+/** The lines with their causes; time lines carry the time skip's own cause. */
+export function withCauses(lines = [], since = {}) {
+  return lines.map(l => ({...l, cause: (since[l.cat] ?? []).join(", ")}));
 }

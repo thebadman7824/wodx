@@ -149,9 +149,13 @@ export function recogniseRoll(level, str = 1) {
   return {pool: "Perception + Alertness", difficulty, text: `Perception + Alertness, difficulty ${difficulty}`};
 }
 
-/** Kinds of NPC who test a description they have heard: the watch and soldiers, hunters, and ordinary townsfolk. */
-export const TESTERS = new Set(["guard", "soldier", "sheriff", "hunter", "inquisitor", "civilian", "mob", "technocrat", "ghoul", "neonate", "elder"]);
-export const tests = template => !template || TESTERS.has(template);
+/**
+ * Who tests a description they have heard: anyone who would hear the talk of the town, so every person, mortal or
+ * not, of every era's templates (the watch, soldiers, knights, servants, gossips, hunters, Kindred). Animals, spirits,
+ * ghosts and spectres do not (NPC 0.41.1: the first list named a few templates and left out the era ones).
+ */
+export const NON_TESTERS = new Set(["beast", "spirit", "ghost", "spectre"]);
+export const tests = (template, {animal = false} = {}) => !animal && !NON_TESTERS.has(template);
 
 /** The descriptions worth keeping: not dropped, not forgotten, newest last, at most KEEP. */
 export function prune(list = [], now = 0) {

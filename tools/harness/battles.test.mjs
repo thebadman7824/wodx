@@ -267,3 +267,78 @@ test("the module wires the window into the Storyteller's hand and NPC listens fo
   const leg = readFileSync(join(root, "modules/wodx-chronicle/scripts/legends.mjs"), "utf8");
   assert.match(leg, /battleLines\(other\(ST, "battles"/);
 });
+
+const book = (over = {}) => B.normBattle({id: "bk", name: "The book army", year: 1230,
+  sides: [{name: "Example host", units: {peasants: 2, spearmen: 2, archers: 1, lightCavalry: 3, ghoulKnights: 1, cainiteCavalry: 1}, commander: {pool: 5, morale: 5}},
+    {name: "Levies", units: {peasants: 6, spearmen: 1}, commander: {pool: 4, morale: 4}}], ...over});
+const r = k => ({successes: k, botch: false, faces: []});
+
+test("the book's troop table gives the example army of Spoils of War: 19, 20, 5 and 20", () => {
+  const b = book();
+  assert.equal(b.book, true);
+  assert.deepEqual(B.unitPools(b.sides[0].units), {maneuver: 19, melee: 20, ranged: 5, defense: 20});
+  assert.equal(b.sides[0].men, 2000 + 2000 + 500 + 300 + 50 + 10);
+  assert.equal(b.sides[1].men, 7000);
+  // a house army on one side keeps the house frame
+  assert.equal(B.normBattle({sides: [{units: {peasants: 1}}, {men: 500}]}).book, false);
+  assert.equal(B.UNIT_TYPES.garouPack.troops, 5);
+  assert.deepEqual([B.UNIT_TYPES.knightsOfAcre.maneuver, B.UNIT_TYPES.knightsOfAcre.defense], [2, 4]);
+});
+
+test("a book turn: the commanders' net successes move the pools, then the armies' actions take units", () => {
+  const b = book();
+  const pl = B.bookPools(b, B.ageFor(1230), [r(3), r(1)]);
+  assert.equal(pl.net, 2);
+  assert.equal(pl.pools[0].melee, 22);
+  assert.equal(pl.pools[1].melee, 6 + 2 - 2);
+  const botched = B.bookPools(b, B.ageFor(1230), [r(0), {successes: 0, botch: true}]);
+  assert.equal(botched.net, 2, "a botch gives the other side 2");
+  const contests = B.bookContests(b, B.ageFor(1230), pl.pools, ["melee", "ranged"]);
+  assert.equal(contests[0].attack.pool, 22);
+  assert.equal(contests[0].resist.pool, pl.pools[1].defense);
+  assert.equal(contests[1].resist.pool, Math.ceil(pl.pools[0].defense / 2), "shooting is against half the Defense");
+  contests[0].rolls = {attack: r(6), resist: r(2)};
+  contests[1].rolls = {attack: r(1), resist: r(3)};
+  const st = B.settleBookTurn(b, B.ageFor(1230), {...pl, contests}, [[], []]);
+  assert.deepEqual(st.phase.units, [0, 4], "melee wins by 4; failed shooting does no harm to the shooters");
+  assert.equal(B.unitCount(st.sides[1].units), 3);
+  assert.equal(st.sides[1].lostUnits, 4);
+  assert.deepEqual(st.waver, {side: 1, difficulty: 4}, "losing 3 or more units makes an army waver at that many");
+  assert.ok(st.sides[0].units.cainiteCavalry, "mortal troops fall first");
+  // undo puts the units back
+  const after = B.applyStep(b, st);
+  assert.deepEqual(B.undoStep(after).sides[1].units, b.sides[1].units);
+});
+
+test("a book turn: a lost melee costs the attackers, a withdrawal ends it, an army with no units is beaten", () => {
+  const b = book();
+  const age = B.ageFor(1230);
+  const pl = B.bookPools(b, age, [r(0), r(0)]);
+  let c = B.bookContests(b, age, pl.pools, ["melee", "melee"]);
+  c[0].rolls = {attack: r(1), resist: r(3)}; c[1].rolls = {attack: r(0), resist: r(0)};
+  assert.deepEqual(B.settleBookTurn(b, age, {...pl, contests: c}).phase.units, [2, 0]);
+  c = B.bookContests(b, age, pl.pools, ["melee", "withdraw"]);
+  c[0].rolls = {attack: r(5), resist: r(0)}; c[1].rolls = {attack: r(3), resist: r(1)};
+  const away = B.settleBookTurn(b, age, {...pl, contests: c});
+  assert.deepEqual(away.phase.units, [0, 0], "a good withdrawal keeps the melee off");
+  assert.deepEqual([away.over.winner, away.over.how], [0, "withdraw"]);
+  const thin = book({sides: [{name: "A", units: {heavyCavalry: 5}, commander: {pool: 5}}, {name: "B", units: {peasants: 2}, commander: {pool: 3}}]});
+  const p2 = B.bookPools(thin, age, [r(0), r(0)]);
+  c = B.bookContests(thin, age, p2.pools, ["melee", "melee"]);
+  c[0].rolls = {attack: r(6), resist: r(1)}; c[1].rolls = {attack: r(0), resist: r(4)};
+  const done = B.settleBookTurn(thin, age, {...p2, contests: c});
+  assert.deepEqual([done.over.winner, done.over.how, done.sides[1].men], [0, "rout", 0]);
+  const saved = B.normBattle(B.applyStep(thin, done));
+  assert.equal(saved.sides[1].men, 0, "an army with no units keeps no men when saved");
+  // a book army drawing off leaves units behind
+  const w = B.withdraw(book(), 1);
+  assert.equal(B.unitCount(w.sides[1].units), 6);
+  assert.equal(B.undoStep(w).sides[1].units.peasants, 6);
+});
+
+test("the Storyteller's window offers the book's units and the turn's action", () => {
+  const src = readFileSync(join(root, "modules/wodx-storyteller/scripts/battles.mjs"), "utf8");
+  assert.match(src, /B\.isBook\(b0\)/);
+  assert.match(src, /name="s\$\{i\}\.u\.\$\{k\}"/);
+  assert.match(src, /name="act\$\{i\}"/);
+});
