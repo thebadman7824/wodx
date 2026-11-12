@@ -2430,7 +2430,19 @@ export const ROWS = [
   ["an ammo satchel", "containers", 1860, END, "J", 1, "cdda"],
   ["a chest rig", "containers", 1980, END, "J", 1, "cdda"],
   ["a birchbark quiver", "containers", 1197, END, "J", 1, "cdda"],
-  ["a simple cloth quiver", "containers", 1197, END, "J", 0, "cdda"]
+  ["a simple cloth quiver", "containers", 1197, END, "J", 0, "cdda"],
+  // Library 0.10.0: raw ingredients and middle products for the recipes (data/recipes.mjs)
+  ["a cut of raw meat", "food", -10000, END, "J", 1],
+  ["a plucked fowl", "food", -10000, END, "T", 1],
+  ["a bunch of grapes", "food", -5000, END, "J", 0],
+  ["a sack of malt", "food", -3000, END, "T", 1],
+  ["a jar of rennet", "food", -500, END, "P", 0],
+  ["a crock of lard", "food", -3000, END, "J", 0],
+  ["a bag of sugar", "food", 1500, END, "J", "2>1750:1>1850:0"],
+  ["a pouch of juniper berries", "food", -1000, END, "P", 0],
+  ["a bundle of tobacco leaves", "drugs", 1560, END, "J", 1],
+  ["a jar of coca paste", "drugs", 1860, END, "P", 3],
+  ["a cask of wash", "materials", 1100, END, "N", 1]
 ];
 
 /** Default source by category; every other category defaults to history. */

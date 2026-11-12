@@ -1956,6 +1956,17 @@ an ammo satchel | A bag for carrying ammunition.
 a chest rig | A harness of pouches worn on the chest.
 a birchbark quiver | A quiver of birch bark.
 a simple cloth quiver | A cloth quiver for arrows.
+a cut of raw meat | A red cut of fresh meat with a rind of fat, wrapped against the flies. It will not keep long.
+a plucked fowl | A whole bird, plucked and drawn, its legs tied with string for hanging.
+a bunch of grapes | A heavy bunch of dusky grapes, some already split and sticky.
+a sack of malt | A sack of barley that has been sprouted and dried in a kiln. It smells sweet, like biscuits.
+a jar of rennet | A small jar of rennet, the curdling stuff taken from a calf's stomach, for setting cheese.
+a crock of lard | A crock of white rendered pork fat for frying, baking and salves.
+a bag of sugar | A bag of loose white sugar.
+a pouch of juniper berries | A pouch of dark blue juniper berries with a sharp, piney smell.
+a bundle of tobacco leaves | A bundle of broad brown tobacco leaves tied at the stems, cured and ready to cut.
+a jar of coca paste | A jar of greyish, foul-smelling paste worked out of coca leaves, halfway to the white powder.
+a cask of wash | A cask of soured, bubbling mash, too rough to drink, waiting for the still.
 `;
 
 /**

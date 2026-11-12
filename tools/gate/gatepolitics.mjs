@@ -3,7 +3,7 @@
  *   await (await import(`/wodx-gate/gatepolitics.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four Kindred NPCs and deletes them, and puts back the factions record, the
  * faction settings, the Ledger, the approval queue and its chat cards.
- *   1. WoDX NPC 0.25.0+ and Storyteller 0.31.0+: the politics API and the setting
+ *   1. WoDX NPC 0.25.0+ and Storyteller 0.32.0+: the politics API and the setting
  *   2. the members' clan and Status are read from the sheets
  *   3. a Kindred court of four keeps the court of its age; a Sabbat before 1493 runs as the court of its age
  *   4. two faction turns with politics on (Auto): the leader holds the top seat, one Primogen seat per clan, a card
@@ -56,7 +56,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version, sv = game.modules.get("wodx-storyteller")?.version;
-      ok("1. WoDX NPC 0.25.0+, Storyteller 0.31.0+, the politics API and setting", newer(v, "0.25.0") && newer(sv, "0.31.0") && !!npc().politics?.polities?.camarilla
+      ok("1. WoDX NPC 0.25.0+, Storyteller 0.32.0+, the politics API and setting", newer(v, "0.25.0") && newer(sv, "0.32.0") && !!npc().politics?.polities?.camarilla
         && game.settings.settings.has(`${MOD}.factionPolitics`) && typeof FX().politicsInfo === "function", {v, sv});
     });
 

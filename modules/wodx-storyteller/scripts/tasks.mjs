@@ -10,6 +10,7 @@ import * as R from "./tasks-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";
+import * as Cook from "./cookery.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -120,12 +121,22 @@ export async function tick({force = false} = {}) {
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
           const r = await rollOnce(dice, t.diff, t.specialty);
           t = R.stepTask(t, r, t.next);
+          // 0.31.0: a botch in a drug or a medicine leaves it impure instead of ruining it; only the Storyteller hears
+          if ( r.botch && t.strength ) t = {...t, impure: true};
           rolled++; sum += r.successes; if ( r.botch ) botches++;
           if ( !(await payNow()) ) break;
         }
         if ( t.status === "done" && t.kind === "build" && !t.made ) {
           try { const made = await Own.finishBuild(a, t); built.push({task: t.id, ...made}); t = {...t, made: true, place: made.region ?? made.scene ?? ""}; }
           catch (e) { console.error(`${MOD} | building`, e); }
+        }
+        if ( t.status === "done" && t.recipe && !t.made ) {
+          try { await Cook.finishRecipe(a, t); t = {...t, made: true, quality: Cook.qualityOf(t)}; }
+          catch (e) { console.error(`${MOD} | recipe`, e); }
+        }
+        if ( t.status === "done" && t.teaches && !t.made ) {
+          try { await Cook.teach(a, t.teaches); t = {...t, made: true}; }
+          catch (e) { console.error(`${MOD} | teach`, e); }
         }
         if ( t.status === "done" && t.makes && !t.made ) {
           try {

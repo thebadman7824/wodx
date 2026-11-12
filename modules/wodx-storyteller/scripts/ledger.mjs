@@ -85,7 +85,7 @@ export async function setStatus(id, status) {
     }
     return {value: s};
   });
-  // Storyteller 0.31.0: a boon kept or broken moves the debtor's standing in WoDX NPC's courts
+  // Storyteller 0.32.0: a boon kept or broken moves the debtor's standing in WoDX NPC's courts
   if ( settled && globalThis.Hooks ) Hooks.callAll("wodxBoonSettled", {entry: settled, status});
   return out;
 }

@@ -1126,6 +1126,32 @@ Not every Discipline shows, so after one is used where breach witnesses or other
 
 Reverse: set witnessAsk off; drop the knows button.
 
+## B947. Recipes for food, drink, medicine and drugs (2026-11-12)
+Ben asked for recipes and crafting for consumables after the way Cataclysm: Dark Days Ahead runs them, and approved the design (doc "Recipes and crafting for food, drink, medicine and drugs") with all four recommendations. Mechanics only, WoDX's own methods and words.
+Library data/recipes.mjs holds 60 methods. Each names what it makes by a pattern on the goods' names, the ingredients by group (any grain, any fruit, a strong spirit), the kit by what it does (a fire, a kitchen, a brewhouse, a still, a herbalist's table, a laboratory from 1660, a pharmaceutical laboratory from 1900, a food printer from 2040), the roll, the time, the batch and any time the result must stand. A catch-all dish method reads the dish's name for its ingredients ("fish soup" needs any fish). Goods that are grown, gathered or caught, and goods made in a factory, are not made by hand. Every method carries its years.
+Rolls on V20: Dexterity + Crafts or the secondary Skill Cooking (V20 pdf 115, printed 107) for cooking and baking, Intelligence + Crafts for brewing and distilling, Intelligence + Medicine, Herbalism or Hearth Wisdom for remedies, Intelligence + Science or Medicine for the laboratory. Goals, times and dots are house rules. Eleven raw goods and middle products added to goods.mjs (raw meat, a plucked fowl, grapes, malt, rennet, lard, sugar, juniper berries, tobacco leaves, coca paste, wash).
+Reverse: delete data/recipes.mjs and scripts/recipe-rules.mjs, the cookery.mjs file in Storyteller and its calls; the old category recipes in craft-rules.mjs still work.
+
+## B948. Everyday food needs no roll (2026-11-12)
+Everyday dishes (cooking, baking, mixing a drink) are made at once when the cook's dice pool is at least the difficulty (Ben, recommendation 2). Brewing, curing, distilling, remedies and drugs always roll as a long task.
+Reverse: noRoll in recipe-rules.mjs returns false.
+
+## B949. Knowing a recipe (2026-11-12)
+A character knows a method by dots in its Ability (everyday food 1, cheese and wine 2, laudanum 3, laboratory work 4, designer drugs 5), by carrying a book that teaches its family (a cookery book, a guild's book, a herbal, a home medical guide), or by being taught (actor flag wodx-storyteller.recipes, set by the Storyteller in the window or by a training task with teaches). The Storyteller may start any recipe regardless.
+Reverse: knows in recipe-rules.mjs returns ok.
+
+## B950. Strength of made drugs and medicine (2026-11-12)
+Successes past the goal set a made drug's or medicine's strength: none weak, 1-2 usual, 3 or more strong. A botch while making one does not ruin the work; it makes the batch impure, which only the Storyteller is told when it is taken. Food and drink keep plain, good, fine and masterwork (B852).
+Reverse: STRENGTHS in recipe-rules.mjs; tasks.mjs sets impure on a botch.
+
+## B951. Kindred cannot taste (2026-11-12)
+A vampire cooking or brewing for taste rolls at one more difficulty unless the Ability is 3 or more. House rule; the PC book check found no V20 rule on vampires tasting or cooking (2026-11-12). Dark Ages Hearth Wisdom has the specialties Home Remedies and Poisons (pdf 173, printed 172), so it serves for remedies.
+Reverse: KINDRED_TASTE in recipe-rules.mjs.
+
+## B952. Batches and things that stand (2026-11-12)
+A batch's goal grows by half the base for each one past the first, up to the method's batch size, after Cataclysm's batch savings. A method with a wait (ale a week, wine three months, cheese a month, whiskey a year in the cask) makes the thing under a standing name ("ale (fermenting)"), which takes its own name when the clock passes the ready time (Storyteller ripen on world time). House rules on historical times.
+Reverse: batchGoal in recipe-rules.mjs; wait values in data/recipes.mjs.
+
 ## B1100. Politics inside factions: one engine, a polity per line and era (2026-11-12)
 
 Ben asked for politics inside every faction built around one game line, with the Camarilla and Sabbat given their own (design: https://claude.ai/artifact/EZBB2z3C51nyucxriHpQHp; Ben approved the build and every review-desk recommendation on 2026-11-12). modules/wodx-npc/scripts/politics-rules.mjs holds the polities: offices, a rank for each member, blocs, law, favours and a gathering. NPC 0.25.0 ships the four Kindred polities (Dark Ages court, Camarilla from 1435, Sabbat from 1493, Anarchs from 1381); Garou, Changeling, Wraith, Mage, hunters, mummies, demons and Kuei-jin follow in later PRs. Setting "Politics inside factions", off by default.
