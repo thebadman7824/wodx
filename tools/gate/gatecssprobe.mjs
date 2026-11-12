@@ -28,8 +28,13 @@ export async function run() {
   try { const res = await fetch(`/modules/wodx-sheets/styles/wodx-layout.css?${Date.now()}`); R.layoutFetch = { status: res.status, bytes: (await res.text()).length }; } catch (x) { R.layoutFetch = { error: x.message }; }
   const a = game.actors.find(x => x.sheet?.constructor?.name?.startsWith("Wodx") && x.system?.settings?.variant);
   if (a) {
-    await a.sheet.render(true); await sleep(1500);
-    const el = a.sheet.element?.[0] ?? a.sheet.element;
+    await a.sheet.render(true);
+    // The sheet draws a moment after render() returns: wait until its element is in the page
+    const elOf = () => { const e = a.sheet.element; return e instanceof HTMLElement ? e : e?.[0] ?? null; };
+    for (let t = 0; t < 80 && !elOf()?.isConnected; t++) await sleep(100);
+    await sleep(700);
+    const el = elOf();
+    if (!el) throw new Error("the sheet did not draw");
     const cs = (sel, props) => { const n = el.querySelector(sel); if (!n) return null; const s = getComputedStyle(n); return Object.fromEntries([["w", Math.round(n.getBoundingClientRect().width)], ...props.map(p => [p, s[p]])]); };
     R.actor = a.name; R.classes = el.className;
     R.title = cs(".window-header .window-title", ["flex", "minWidth", "overflow", "fontSize"]);
