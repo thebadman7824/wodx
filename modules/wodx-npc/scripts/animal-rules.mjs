@@ -6,7 +6,10 @@
  *   Years follow Moravia: wolves and bears thin out of the lowlands in the 1800s, wolves come back to the Beskydy hills
  *   in the 1990s, horses leave the town streets between the 1920s and the 1950s, and pigs and poultry leave town yards
  *   with the sanitation rules of the 1800s. House readings, not book rules (PENDING-REVIEW).
- *   Blood is the vessel's pool in points (V20 feeding on animals; the passers-by crowd uses the same numbers).
+ *   Blood is the vessel's pool in points, from the V20 core animals appendix (pdf 396-399, printed 388-391): rat, bat,
+ *   pigeon 1/4; crow 1/2; cat 1; dog 2; wolf 2; large horse 4; large pig or boar 4; bear 5. V20 lists no cattle,
+ *   sheep, goats or geese, so these are house rules: cattle 5 (between horse 4 and camel 6), sheep and goats 3
+ *   (as a small pig), geese and hens 1/2 (as a large bird).
  *   Animals keep no unease before Kindred (Ben, 2026-11-12) but shy from wraiths: every one fears "wraith".
  *   crowd names the passers-by animal kind (passerby-rules ANIMALS) this archetype stands behind.
  */
@@ -40,25 +43,25 @@ export const ANIMALS = {
   pigeons: {crowd: "bird", group: "bird", blood: 0.25, places: ["street", "market", "church", "park", "docks"],
     template: T("Pigeons and town birds", {caution: 2, cowardice: 2, fleeAt: 1, herd: 2, fears: ["fire", "wraith", "violence"], tactics: ["flee", "scatter"]}),
     preset: {label: "Town birds, about by day", blocks: [B(0, 24, "market", "wander", day), B(0, 24, "church", "roost", {label: "Roosting on the roofs"})]}},
-  crows: {crowd: "bird", group: "bird", blood: 0.25, places: ["wilds", "park", "yard", "market"],
+  crows: {crowd: "bird", group: "bird", blood: 0.5, places: ["wilds", "park", "yard", "market"],
     template: T("Crows and ravens", {aggression: 0.1, caution: 1.6, cunning: 1, cowardice: 1.6, fleeAt: 1, herd: 1.5, fears: ["wraith", "violence"], tactics: ["scatter", "scavenge"]}),
     preset: {label: "Crows, about by day", blocks: [B(0, 24, "wilds", "wander", day), B(0, 24, "wilds", "roost", {label: "In the rookery"})]}},
-  horse: {crowd: "horse", group: "livestock", blood: 5, places: ["yard", "wilds"], town: ["street", "gate", "tavern", "market"], townUntil: 1950,
+  horse: {crowd: "horse", group: "livestock", blood: 4, places: ["yard", "wilds"], town: ["street", "gate", "tavern", "market"], townUntil: 1950,
     template: T("Horse", {aggression: 0.4, caution: 1.2, loyalty: 0.8, cowardice: 1.4, fleeAt: 3, herd: 1.5, fears: ["fire", "crinos", "wraith"], tactics: ["melee", "flee"]}),
     preset: {label: "Horse, in harness by day", blocks: [B(6, 18, "work", "work", {days: weekdays, feast: "not", label: "In harness"}), B(0, 24, "home", "rest", {label: "In the stable"})]}},
   cattle: {crowd: "cattle", group: "livestock", blood: 5, places: ["yard", "wilds"], town: ["market"], townUntil: 1900,
     template: T("Cattle", {aggression: 0.3, fleeAt: 3, cowardice: 1.2, herd: 2, fears: ["fire", "crinos", "wraith"], tactics: ["melee", "scatter"]}),
     preset: {label: "Cattle, out to pasture", blocks: [B(6, 19, "wilds", "graze", {months: warm, label: "Out to pasture"}), B(0, 24, "home", "rest", {label: "In the byre"})]}},
-  pigs: {crowd: "pig", group: "livestock", blood: 5, places: ["yard"], town: ["street", "alley", "market"], townUntil: 1850,
+  pigs: {crowd: "pig", group: "livestock", blood: 4, places: ["yard"], town: ["street", "alley", "market"], townUntil: 1850,
     template: T("Pigs", {aggression: 0.6, caution: 0.8, cowardice: 0.8, fleeAt: 3, herd: 1, hunger: 1, tactics: ["melee", "scavenge"]}),
     preset: {label: "Pigs, rooting by day", blocks: [B(6, 18, "yard", "wander", {label: "Rooting"}), B(0, 24, "home", "sleep", {label: "In the sty"})],
       ages: {medieval: [B(6, 18, "street", "wander", {label: "Rooting in the lanes"}), B(0, 24, "home", "sleep", {label: "In the sty"})],
         early: [B(6, 18, "street", "wander", {label: "Rooting in the lanes"}), B(0, 24, "home", "sleep", {label: "In the sty"})],
         industrial: [B(6, 18, "yard", "wander", {label: "Rooting"}), B(0, 24, "home", "sleep", {label: "In the sty"})]}}},
-  "sheep-goats": {crowd: "goat", group: "livestock", blood: 5, places: ["yard", "wilds"],
+  "sheep-goats": {crowd: "goat", group: "livestock", blood: 3, places: ["yard", "wilds"],
     template: T("Sheep and goats", {aggression: 0.2, caution: 1.4, cowardice: 1.6, fleeAt: 2, herd: 2, fears: ["fire", "crinos", "wraith"], tactics: ["scatter"]}),
     preset: {label: "Sheep or goats, with the shepherd", blocks: [B(6, 19, "wilds", "graze", {months: warm, label: "With the shepherd"}), B(0, 24, "home", "rest", {label: "In the fold"})]}},
-  poultry: {crowd: "geese", group: "poultry", blood: 0.25, places: ["yard"], town: ["home", "alley"], townUntil: 1900,
+  poultry: {crowd: "geese", group: "poultry", blood: 0.5, places: ["yard"], town: ["home", "alley"], townUntil: 1900,
     template: T("Poultry", {aggression: 0.1, caution: 1.8, cowardice: 2, fleeAt: 1, herd: 2, fears: ["wraith", "violence"], tactics: ["scatter", "call"]}),
     preset: {label: "Poultry, about the yard by day", blocks: [B(0, 24, "yard", "wander", day), B(0, 24, "home", "sleep", {label: "Cooped"})]}},
   wolf: {crowd: null, group: "wild", blood: 2, places: ["wilds"], years: [[null, 1850], [1995, null]],
@@ -68,7 +71,7 @@ export const ANIMALS = {
     template: T("Bear", {aggression: 1.3, caution: 0.8, loyalty: 0, cowardice: 0.3, berserk: 0.6, fleeAt: 5, territory: 1.5, hunger: 1, tactics: ["melee", "ground"]}),
     preset: {label: "Bear, sleeps through the winter", blocks: [B(0, 24, "wilds", "hide", {months: [12, 1, 2, 3], label: "Asleep for the winter"}),
       B(0, 24, "wilds", "wander", day), B(0, 24, "wilds", "sleep")]}},
-  boar: {crowd: null, group: "wild", blood: 3, places: ["wilds"],
+  boar: {crowd: null, group: "wild", blood: 4, places: ["wilds"],
     template: T("Boar", {aggression: 1.4, caution: 0.5, cowardice: 0.4, berserk: 0.8, fleeAt: 5, territory: 1.5, fears: ["wraith"], tactics: ["melee", "ground"]}),
     preset: {label: "Boar, feeds at dusk", blocks: [B(16, 24, "wilds", "wander", {label: "Feeding"}), B(0, 5, "wilds", "wander", {label: "Feeding"}), B(0, 24, "wilds", "hide", {label: "In the thicket"})]}},
   bats: {crowd: null, group: "wild", blood: 0.25, places: ["church", "wilds", "castle"],
