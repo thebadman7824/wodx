@@ -53,6 +53,7 @@ export class CreationApp extends ApplicationV2 {
       ally: CreationApp.#onAlly,
       toggleNPCs: CreationApp.#onToggleNPCs,
       lineage: async () => { const j = await writeLineageJournal(); j?.sheet?.render(true); },
+      tree: () => { const api = game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null; if ( api?.openTree ) api.openTree(); else ui.notifications.warn("The family and lineage tree needs WoDX NPC on."); },
       log: CreationApp.#onLog,
       passYears: () => PassYearsApp.open(),
       people: () => PeopleApp.open(),
@@ -132,7 +133,8 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>
-          <button type="button" data-action="lineage"><i class="fa-solid fa-sitemap"></i> Lineage journal</button>
+          <button type="button" data-action="lineage"><i class="fa-solid fa-book"></i> Lineage journal</button>
+          <button type="button" data-action="tree"><i class="fa-solid fa-sitemap"></i> Family tree</button>
           <button type="button" data-action="passYears"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
           <button type="button" data-action="people"><i class="fa-solid fa-users"></i> People</button>
           ${isTestWorld() ? `<button type="button" data-action="skipTest" title="Test worlds only. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}

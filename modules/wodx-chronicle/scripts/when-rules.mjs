@@ -65,6 +65,7 @@ export const TESTS = {
   attitude: "attitude >= welcome: how the NPC being dealt with regards the character (WoDX NPC)",
   merit: "merit <name>: has this merit (WoDX trait table names and aliases)", flaw: "flaw <name>: has this flaw",
   background: "background <name> [>= 2]: has this background, or at this rating", power: "power <name>: has a power whose name contains this",
+  rating: "Dominate 2, Etiquette >= 3, rating Animal Ken 2: any rated trait by name (an Attribute, Ability, Discipline, Sphere, Art, Virtue or other power); a bare number means at least that",
   dressed: "dressed fine (or poor, even): the character's dress against the station of the NPC being dealt with (WoDX Library's look)",
   wears: "wears habit: has something on whose name contains this", station: "station >= 3: how well dressed the character is, 0 to 5",
   out: "out of time: wears or shows something from another age", bloody: "bloody: blood on them or wounds showing",
@@ -84,6 +85,7 @@ export const OUTCOMES = {
   cue: "cue <id>: play a WoDX Atmosphere cue (dawn, dusk, notice, birds, cock)",
   ledger: "ledger <oath|debt|boon|consequence>: <text>: add a Ledger entry (WoDX Storyteller)",
   standing: "standing <faction> -1 (or +1, or to welcome): how that faction regards the character (WoDX NPC)",
+  secret: "secret <words>: the character finds out the secret whose words match (WoDX NPC)",
   fight: "fight [names or household]: start a fight with the people named here, or with those near who distrust the character (WoDX Combat)"
 };
 
@@ -216,7 +218,47 @@ export function parseTest(line, {eras = null} = {}) {
     }
     return ok({t: "num", key: traitKey, op: c[1], n, trait: true});
   }
+  // Chronicle 0.38.0 (B1906): any rated trait by name, "Dominate 2", "Etiquette >= 3", "rating Animal Ken 2"
+  const rt = /^(?:rating\s+)?(.+?)\s*(<=|>=|<|>|==|=|!=)?\s*(\d+)$/i.exec(text);
+  if ( rt && /[a-z]/i.test(rt[1]) && ratingKey(unquote(rt[1])) ) return ok({t: "rating", want: ratingKey(unquote(rt[1])), op: rt[2] ?? ">=", n: Number(rt[3])});
+  if ( word === "rating" ) return bad("write rating Dominate 2, or just Dominate 2");
   return bad("not a test WoDX knows");
+}
+
+/** A trait name as compared: lower case, letters and digits only ("Animal Ken" => "animalken"). */
+export const ratingKey = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/** A rating from a {key: dots} map: the exact name, else the highest whose name starts with it ("dominate" finds "dominate (koldunic)"). */
+export function ratingFrom(ratings = {}, want = "") {
+  const r = ratings ?? {};
+  if ( Object.prototype.hasOwnProperty.call(r, want) ) return Number(r[want]) || 0;
+  let best = 0;
+  for ( const [k, v] of Object.entries(r) ) if ( want && k.startsWith(want) ) best = Math.max(best, Number(v) || 0);
+  return best;
+}
+
+/**
+ * Every rated trait of a character as {key: dots}, read off plain actor data: Attributes, Abilities (flat and
+ * secondary), Virtues, Spheres, and items that carry a rating (Abilities, Disciplines and other powers, Spheres,
+ * Realms, Backgrounds). loc turns a label key into words. The highest value wins when two share a name.
+ */
+export function ratingsOf(actor, loc = s => String(s ?? "")) {
+  const out = {};
+  const put = (name, v) => { const k = ratingKey(name), n = Number(v); if ( k && Number.isFinite(n) && n > (out[k] ?? -1) ) out[k] = n; };
+  const s = actor?.system ?? {};
+  for ( const [k, a] of Object.entries(s.attributes ?? {}) ) if ( a && typeof a === "object" ) { put(k, a.total ?? a.value); if ( a.label ) put(loc(a.label), a.total ?? a.value); }
+  for ( const [k, a] of Object.entries(s.abilities ?? {}) ) if ( a && typeof a === "object" && a.value !== undefined ) {
+    put(k, a.value); if ( a.label ) put(loc(a.label), a.value); if ( a.altlabel ) put(a.altlabel, a.value);
+  }
+  for ( const [k, a] of Object.entries(s.advantages?.virtues ?? {}) ) if ( a && typeof a === "object" ) { put(k, a.permanent); if ( a.label ) put(loc(a.label), a.permanent); }
+  for ( const [k, a] of Object.entries(s.spheres ?? {}) ) if ( a && typeof a === "object" ) { put(k, a.value); if ( a.label ) put(loc(a.label), a.value); }
+  for ( const i of actor?.items ?? [] ) {
+    if ( !["Ability", "Trait", "Power", "Sphere", "Realm", "Feature"].includes(i?.type) ) continue;
+    const v = i.system?.value;
+    if ( v === undefined || v === null || v === "" ) continue;
+    put(i.name, v);
+  }
+  return out;
 }
 
 /**
@@ -257,7 +299,7 @@ export function parseWhen(text, opts = {}) {
 /** Does one test pass? Returns true, false, or null when the context lacks what it reads (counts as a fail). */
 export function testOne(t, ctx = {}) {
   const a = ctx.actor ?? null;
-  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway", "feat", "power", "dressed", "wears", "station", "look", "disguise"].includes(t.t) || t.trait;
+  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway", "feat", "power", "dressed", "wears", "station", "look", "disguise", "rating"].includes(t.t) || t.trait;
   if ( needActor && !a ) return null;
   let r;
   switch ( t.t ) {
@@ -290,6 +332,7 @@ export function testOne(t, ctx = {}) {
       break;
     }
     case "power": r = (a.powers ?? []).some(n => low(n).includes(t.want)); break;
+    case "rating": r = OPS[t.op](ratingFrom(a.ratings, t.want), t.n); break;
     case "faction": r = (a.factions ?? []).some(f => t.ids.includes(low(f))); break;
     case "standing": {
       const st = a.standing ?? {};
@@ -392,6 +435,7 @@ export function helpText() {
     `When: ${["era", "year", "before", "from", "night", "day", "hour", "moon", "feast", "fast", "season", "branch"].join(", ")}.`,
     `Who: pc, npc, kind, named, faction, standing <faction> >= welcome, ${Object.keys(FIELDS).join(", ")}.`,
     `State: ${Object.keys(TRAITS).join(", ")} with <=, >=, <, >, = or != and a number (wounds also takes bruised to incapacitated); ${Object.keys(STATES).join(", ")}; condition <id>.`,
-    "Has: carries <item>, knows <codex page>, merit <name>, flaw <name>, background <name> >= 2, power <name>."
+    "Has: carries <item>, knows <codex page>, merit <name>, flaw <name>, background <name> >= 2, power <name>.",
+    "Rated traits: any Attribute, Ability, Discipline, Sphere, Art or Virtue by name and dots: Dominate 2, Etiquette >= 3, not Occult 1."
   ];
 }
