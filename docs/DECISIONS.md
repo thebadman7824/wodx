@@ -1333,6 +1333,12 @@ Three polities are never a default and the Storyteller picks them: the Shemsu-he
 
 Reverse: drop the three templates.
 
+## B1116. What players see of the politics (2026-11-12)
+
+When politics inside factions is on, the player's "Your factions" window lists each active faction one of their characters belongs to, with its polity, who holds each seat, how many faction turns until it next gathers, and its law. For their own characters it shows standing, the seats they hold, their favour, the seats they have a claim on and any charges they face. Others' favour, claims, leanings and Vinculum, and the charges others face, stay with the Storyteller. A player sees this for a secret faction too, because their character belongs to it. Players cannot make inner moves from the window; a player character's politics are played at the table.
+
+Reverse: drop courtRows from openPlayer in founding.mjs.
+
 ## B1012. Nothing starts in a container (2026-11-12)
 Ben asked that no item start inside a container. A good once written "a bottle of claret" is just claret: Fill and stock lines read "claret" or "claret (3)", never "claret (in a bottle)", and a made item carries no container. good.container stays as data (what it is usually kept in) and older "(in 3 bottles)" lines still read. 22 names that held a container ("a fiddle in a case", "a quiver of arrows", "a pyx of consecrated hosts") now name the thing, with old ids kept through RENAMED, and 140 descriptions no longer describe the bottle, sack or tin. Arrows, shotgun shells, hosts, blank CDs and pizza slices now stack. Library 0.11.0, Interactables 0.26.6.
 

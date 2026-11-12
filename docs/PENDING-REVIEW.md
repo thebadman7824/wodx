@@ -620,3 +620,4 @@ Ben picked "Build as written" on every item of the Splat Features Desk (https://
 | 2026-11-12 | Imbued cells in a Future Darkness chronicle (B1114) | The polity follows the year, from 1999; set No politics until 2023 by hand | POLITIES["imbued-cell"] |
 | 2026-11-12 | Mummies, demons and Kuei-jin (B1115) | Picked by hand only; mummies and demons on factions of the kind Other | DEFAULTS |
 | 2026-11-12 | What taking a thing apart gives (B953) | Parts by name and category, first in use in the year; one more at tier 3+; Dexterity + Crafts (Technology for electronics) at 6; a botch spoils it. | SALVAGE, PART_CHOICES in wodx-library/data/recipes.mjs |
+| 2026-11-12 | What players see of a faction's politics (B1116) | Seats and their holders, the next gathering and the law; for their own characters only: standing, seats, favour, claims and charges. No inner moves from the window | playerView in politics-rules.mjs |

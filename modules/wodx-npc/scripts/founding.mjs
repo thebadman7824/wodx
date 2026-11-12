@@ -9,6 +9,7 @@
  * The rules are in faction-rules.mjs (foundFaction, normOrders, runTurn).
  */
 import * as F from "./faction-rules.mjs";
+import * as PO from "./politics-rules.mjs";
 
 export function build(ctx, fx) {
   const {MOD, esc, gmIds, isActiveGM} = ctx;
@@ -158,6 +159,25 @@ export function build(ctx, fx) {
   /*  The players' window                                                */
   /* ------------------------------------------------------------------ */
 
+  /**
+   * NPC 0.29.0: the politics of each faction a player's character belongs to, as that character sees it (B1116):
+   * who holds the seats, when it next gathers, and the character's own standing, seats, favour, claims and charges.
+   */
+  function courtRows(s, n) {
+    const ids = mine(game.user).filter(a => game.user.isGM || a.hasPlayerOwner).map(a => a.id), year = fx.eraInfo().year;
+    const out = [];
+    for ( const f of s.factions.filter(x => !x.dormant && x.members.some(id => ids.includes(id))) ) {
+      const v = PO.playerView(f, ids, {year, info: fx.politicsInfo({factions: [f]}), names: n});
+      if ( !v ) continue;
+      const seats = v.seats.filter(o => o.holders.length).map(o => `${o.title}: ${o.holders.join(", ")}`);
+      const people = v.people.map(x => `<li><b>${esc(x.name)}</b>: ${esc(v.rank)} ${x.rank}${x.offices.length ? `; holds ${esc(x.offices.join(", "))}` : ""}${x.favour ? `; favour ${x.favour}` : ""}${x.claims.length ? `; has a claim on ${esc(x.claims.join(", "))}` : ""}${x.charges.length ? `; <b>charged with ${esc(x.charges.join("; "))}</b>` : ""}.</li>`).join("");
+      out.push(`<fieldset><legend>${esc(f.name)}: ${esc(v.label)}</legend>
+        <p>${seats.length ? esc(seats.join("; ")) + "." : "No seats are held yet."}</p>
+        <ul class="wnpc-lines">${people}</ul>
+        <p class="wodx-quiet">The ${esc(v.gathering)} meets ${v.nextIn === 1 ? "at the next faction turn" : `in ${v.nextIn} faction turns`}. Its law: ${esc(v.law.join("; "))}.</p></fieldset>`);
+    }
+    return out.length ? `<h3>Politics inside your factions</h3>${out.join("")}` : "";
+  }
   async function openPlayer() {
     const s = fx.state(), own = ownedBy(s), n = fx.names(s);
     const rows = own.map(f => {
@@ -165,11 +185,12 @@ export function build(ctx, fx) {
       for ( const [k, v] of Object.entries(a.influence) ) bits.push(`Influence (${n.sphere(k)}) ${v}`);
       return `<li><b>${esc(f.name)}</b>${f.dormant ? " (no longer active)" : ""}: ${esc(bits.join(", ") || "no dots yet")}.<br><span class="wodx-quiet">${f.run === "orders" ? (f.orders ? `Orders for its next turn: ${esc(F.MOVES[f.orders.move].label)}.` : "It waits for your orders.") : "Its turns are picked for it."}</span></li>`;
     }).join("");
+    const politics = setting("factionPolitics") ? courtRows(s, n) : "";
     const buttons = [];
     if ( setting("playerFactions") !== false ) buttons.push({action: "found", label: "Found a faction…"});
     for ( const f of own.filter(x => !x.dormant && x.run === "orders") ) buttons.push({action: `o:${f.id}`, label: `Orders: ${f.name}`.slice(0, 60)});
     buttons.push({action: "close", label: "Close", default: true});
-    const pick = await dialog("Your factions", `<div class="wnpc-faction-form">${rows ? `<ul class="wnpc-lines">${rows}</ul>` : `<p>None of your characters runs a faction.</p>`}
+    const pick = await dialog("Your factions", `<div class="wnpc-faction-form">${rows ? `<ul class="wnpc-lines">${rows}</ul>` : `<p>None of your characters runs a faction.</p>`}${politics}
       <p class="wodx-quiet">A faction acts once a week of world time. Every founding waits for the Storyteller.</p></div>`, buttons, 560);
     if ( pick === "found" ) return requestFounding();
     if ( typeof pick === "string" && pick.startsWith("o:") ) return ordersDialog(pick.slice(2));
