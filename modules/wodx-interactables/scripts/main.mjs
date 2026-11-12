@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.33.0";
+const VERSION = "0.34.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -261,6 +261,8 @@ export function characterFor(actor, center, doc) {
   const key = String(o.keyName ?? "").trim().toLowerCase();
   return {
     actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(), sunUp: SUN_UP,
+    // 0.34.0: the Storyteller kept this thing out of its time (the anachronism check in WoDX Sheets): it works in any year
+    kept: !!doc?.flags?.["wodx-sheets"]?.keepOutOfEra,
     strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"), wits: attrOf(actor, "wits"),
     potence: powerDots(actor, "potence"), abilities, meta,
     side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
@@ -652,7 +654,7 @@ export async function applyAsk(msg) {
       return countSuccesses(faces, clampDifficulty(num(ask.diff) || 6), {specialty: !!ask.specialty, willpower: !!ask.willpower && k === 0, autoSuccesses: num(op.roll?.auto)});
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
-    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP});
+    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP, kept: ch.kept});
     const tile = isTile(doc);
     const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];

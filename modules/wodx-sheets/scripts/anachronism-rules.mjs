@@ -39,5 +39,57 @@ export function newlyOut(items = [], look = () => ({}), before = {}, after = {})
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/* -------------------------------------------------------------- */
+/*  Things on the maps (0.14.0)                                    */
+/* -------------------------------------------------------------- */
+
+/** Where a year falls in a span: "early" before from, "late" after until, "ok" inside, null with no year or span. */
+export function spanStatus(span, year) {
+  const y = Number(year) || 0, from = span?.from, until = span?.until;
+  if ( !y || (!Number.isFinite(from) && !Number.isFinite(until)) ) return null;
+  if ( Number.isFinite(from) && y < from ) return "early";
+  if ( Number.isFinite(until) && y > until ) return "late";
+  return "ok";
+}
+/** A container's line as a name and a count: "silver pennies (7)" is 7 of "silver pennies". */
+export function lineOf(line) {
+  const m = /^(.+?)\s+\((\d+)\)$/.exec(String(line ?? "").trim());
+  return m ? {ref: m[1], count: Number(m[2])} : {ref: String(line ?? "").trim(), count: 1};
+}
+const keptKey = v => String(v ?? "").trim().toLowerCase();
+/**
+ * What a jump puts out of its time on the maps. things: [{scene, sceneName, id, wall, name, parts: [{key, label, from,
+ * until}], goods: [lines], kept, keptGoods: [lines]}], as WoDX Interactables' datedParts gives them for each wall and
+ * tile; lookLine(line) -> {name, eraInfo} for a line inside a container. With an empty `before`, everything out of its
+ * time now is returned. Returns [{scene, sceneName, id, wall, key, name, status, note}], by scene and name.
+ */
+export function mapNewlyOut(things = [], lookLine = () => null, before = {}, after = {}) {
+  const out = [], b = before ?? {};
+  for ( const t of things ) {
+    const base = {scene: t.scene, sceneName: t.sceneName ?? "", id: t.id, wall: !!t.wall};
+    if ( !t.kept ) for ( const p of t.parts ?? [] ) {
+      const now = spanStatus(p, after.year);
+      if ( now !== "early" && now !== "late" ) continue;
+      if ( spanStatus(p, b.year) === now ) continue;
+      const own = t.name && t.name !== p.label ? `${t.name} (${p.label.toLowerCase()})` : p.label;
+      out.push({...base, key: p.key, name: own, status: now, note: NOTE[now](after.year)});
+    }
+    const kept = new Set((t.keptGoods ?? []).map(keptKey)), seen = new Set();
+    for ( const line of t.goods ?? [] ) {
+      const k = keptKey(line);
+      if ( !k || kept.has(k) || seen.has(k) ) continue;
+      seen.add(k);
+      const L = lookLine(line) ?? {};
+      const now = eraStatus(L.eraInfo ?? null, after.era ?? null, after.year ?? 0);
+      if ( now !== "early" && now !== "late" ) continue;
+      if ( eraStatus(L.eraInfo ?? null, b.era ?? null, b.year ?? 0) === now ) continue;
+      out.push({...base, key: `goods:${k}`, name: `${L.name ?? lineOf(line).ref}, in ${t.name ? t.name.toLowerCase() : "a container"}`, status: now, note: NOTE[now](after.year || "this year")});
+    }
+  }
+  return out.sort((x, y) => x.sceneName.localeCompare(y.sceneName) || x.name.localeCompare(y.name));
+}
+/** The most rows of map things one card shows; the rest are counted. */
+export const MAP_ROWS = 60;
+
 /** Is the check on? "on", "off", or "auto": on everywhere but the Live world until the Storyteller turns it on there. */
 export const isOn = (mode, live) => mode === "on" || (mode !== "off" && !live);

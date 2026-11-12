@@ -319,9 +319,48 @@ export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
 /** How far a sound carries, in yards: in the open, and through one wall that stops sound. */
 export const EARSHOT = {silent: {open: 0, wall: 0}, quiet: {open: 5, wall: 0}, loud: {open: 30, wall: 10}};
 
+/** The year keypads, card readers and electronic alarms appear (a house reading). */
+export const ELECTRONIC_FROM = 1970;
+/** After these years a thing of this kind is a rare antique on a map (house readings): {family: {kind: year}}. */
+export const ANTIQUE_AFTER = {mount: {carriage: 1930}, light: {lamp: 1950}};
+/**
+ * Interactables 0.34.0: what on a wall or a tile belongs to a span of years, for the anachronism check in WoDX Sheets.
+ * f: its flags.wodx-interactables; wall: true for a wall or door. Returns {name, parts: [{key, label, from, until}],
+ * goods: [the lines inside a container]}; from and until are years or null. A thing the Storyteller kept out of its
+ * time (flags.wodx-sheets.keepOutOfEra on the wall or tile) works in any year: see the kept switch on the options.
+ */
+export function datedParts(f = {}, {wall = false} = {}) {
+  const parts = [], goods = [];
+  const add = (key, label, from, until) => { if ( Number.isFinite(from) || Number.isFinite(until) ) parts.push({key, label, from: Number.isFinite(from) ? from : null, until: Number.isFinite(until) ? until : null}); };
+  const keypad = () => { if ( ELECTRONIC[f.electronic] && f.electronic !== "none" ) add("electronic", "Keypad, card reader or alarm", ELECTRONIC_FROM, null); };
+  let name = "";
+  if ( wall ) { keypad(); name = KINDS[f.kind] ?? KINDS.door; }
+  else if ( f.container ) { keypad(); goods.push(...parseItems(f.items)); name = CONTAINERS[f.kind]?.label ?? CONTAINERS.chest.label; }
+  else if ( f.trap || f.clue ) name = "";
+  else if ( f.light ) {
+    const k = LIGHTS[f.lightKind] ? f.lightKind : "torch";
+    add("light", LIGHTS[k].label, k === "switch" ? ELECTRIC_FROM : null, ANTIQUE_AFTER.light[k]); name = LIGHTS[k].label;
+  }
+  else if ( f.hide ) name = "";
+  else if ( f.hazard ) {
+    const k = HAZARDS[f.hazardKind] ? f.hazardKind : "fire";
+    if ( k === "shock" ) add("hazard", HAZARDS.shock.label, ELECTRIC_FROM, null);
+    name = HAZARDS[k].label;
+  }
+  else if ( f.sacred ) name = "";
+  else if ( f.watch ) {
+    const k = WATCHES[f.watchKind] ? f.watchKind : "window";
+    add("watch", WATCHES[k].label, WATCHES[k].from, null); name = WATCHES[k].label;
+  }
+  else if ( f.mount ) {
+    const k = MOUNTS[f.mountKind] ? f.mountKind : "horse";
+    add("mount", MOUNTS[k].label, MOUNTS[k].from, ANTIQUE_AFTER.mount[k]); name = MOUNTS[k].label;
+  }
+  return {name: String(f.title ?? "").trim().slice(0, 80) || name, parts, goods};
+}
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
-export function isModern({eraId = "", year = 0} = {}) { return MODERN_ERAS.has(eraId) || year >= 1970; }
+export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
 const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods"]);
 export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
 
@@ -947,7 +986,7 @@ function watchOptions(o, ch) {
   }
   if ( W.calls ) {
     const year = Number(ch.year) || 0;
-    if ( year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
+    if ( !ch.kept && year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
     out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to; the Storyteller plays the other end."}
       : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
     out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
@@ -955,7 +994,7 @@ function watchOptions(o, ch) {
   if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it.", fight: true});
   if ( W.sprinkler ) {
     const year = Number(ch.year) || 0;
-    if ( year && year < W.from ) return [{id: "eraNote", label: "No sprinklers yet", roll: null, disabled: true, note: `Not before about ${W.from}.`}];
+    if ( !ch.kept && year && year < W.from ) return [{id: "eraNote", label: "No sprinklers yet", roll: null, disabled: true, note: `Not before about ${W.from}.`}];
     if ( o.spent ) out.push({id: "sprinklerNote", label: "The sprinklers have run", roll: null, disabled: true, note: "The Storyteller resets them."});
     else out.push({id: "setSprinklers", label: "Set off the sprinklers", roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
       note: "Puts out every torch-sized fire and bonfire on the scene; an inferno burns on. The floor is wet."});
@@ -972,7 +1011,7 @@ function lightOptions(o, ch = {}) {
     note: `Cut or loose its chain: it falls ${o.height} feet on whoever is under it (${dropDice(o.height)} dice of lethal; each success on Dexterity + Dodge at ${DROP_DODGE} takes one away).${o.on ? " Lit candles start a small fire." : ""}`});
   if ( o.on && SPILL[o.kind] ) fx.push({id: "spillLight", label: SPILL[o.kind].label, roll: null, seconds: TURN, noise: {success: "loud"}, fight: true,
     note: `A ${FIRE_SIZES[SPILL[o.kind].size].label.split(":")[0].toLowerCase()} fire where it falls (${FIRE_SIZES[SPILL[o.kind].size].levels} level${FIRE_SIZES[SPILL[o.kind].size].levels === 1 ? "" : "s"} a turn, soaked at ${FIRE_HEAT[SPILL[o.kind].heat].diff}).`});
-  if ( o.kind === "switch" && year && year < ELECTRIC_FROM ) return [{id: "eraNote", label: "No electric light yet", roll: null, disabled: true, note: `Not before about ${ELECTRIC_FROM}.`}];
+  if ( o.kind === "switch" && !ch.kept && year && year < ELECTRIC_FROM ) return [{id: "eraNote", label: "No electric light yet", roll: null, disabled: true, note: `Not before about ${ELECTRIC_FROM}.`}];
   if ( !o.count ) return [{id: "noLight", label: "Not tied to any light", roll: null, disabled: true, note: "The Storyteller has not tied this to a light on the scene."}, ...fx];
   out.push(o.on ? {id: "lightOff", label: L.off, roll: null, seconds: TURN, noise: {success: "silent"}}
     : {id: "lightOn", label: L.on, roll: null, seconds: TURN, noise: {success: "silent"}});
@@ -1107,7 +1146,7 @@ function targetOptions(o, ch) {
  */
 function mountOptions(o, ch) {
   const M = MOUNTS[o.kind], me = ch.actorId ?? "", year = Number(ch.year) || 0;
-  if ( M.from && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
+  if ( M.from && !ch.kept && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
   const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value > 0;
   const attrDots = Number(ch[M.attr]) || 0, attrLabel = cap(M.attr), skillLabel = cap(M.skill);
   const pool = (base, extra = 0) => ({attr: M.attr, attrLabel, ability: M.skill, abilityLabel: skillLabel, dice: attrDots + sk.value,
