@@ -1678,6 +1678,10 @@ NPC 0.34.0 builds a stranger line for unmet NPCs' nameplates from their look, ro
 
 ## 2026-11-12: Princes of Darkness ideas (Chronicle 0.37.0)
 Chronicle 0.37.0 builds the four ideas taken from the Princes of Darkness mod, with none of the mod's 5th edition material. Each city has a Masquerade exposure track, and the city's court acts at the band its sect's law sets. Nine great cities change state by date, and Senses picks up their smell and sound. A Kindred seeker walks Golconda as a road of ten steps. Story chains are dealt out by the clock, and new characters get opening goals. Decisions B1511 to B1518. Gate tools/gate/gatepod.mjs, 10 steps. The harness passes. Not on Live.
+
+## WoDX Voices 0.1.0, 2026-11-12
+
+- New module wodx-voices: NPC talk cards are read aloud with the browser's own speech, a steady voice per NPC, heard only by the people who see the line (B2100-B2105). Off by default. Harness voices.test.mjs (7 tests).
 ## 2026-11-12: the Legends book
 From the Improvement Desk (item c1, Ben approved as described): WoDX Chronicle 0.40.0 adds the Legends book, a journal "Legends of the Chronicle" open to everyone, one page per century, and a Legends window (a book button with the token tools, hideable per player) that filters by kind, person, place, faction and years. Written from dated events, actors' chronology and lineage, Creation's archive, NPC court seats, Storyteller owner records and the Ledger, when a session ends, around time skips and on demand. B1700 to B1702. Harness legends.test.mjs 9 tests; gate gatelegends.
 

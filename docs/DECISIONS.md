@@ -1870,6 +1870,35 @@ Reverse: TIE_QUESTIONS, ring; sendTies, saveTie in first-night-prelude.mjs.
 Once any character in the world is signed off, a new character's hub says the chronicle is under way, and the prelude runner starts in short mode. The forecast reads the current year as for everyone. Desk t2.
 
 Reverse: underWay in first-night-prelude-rules.mjs.
+## B2100. NPC voices: the engine (2026-11-12)
+Ben picked the recommendations on the NPC Voices Desk (12 November 2026). NPCs are voiced by a new module, WoDX Voices. The engine is Kokoro (Apache 2.0 model, run in the Storyteller's browser, no network), rendered once and played to the people who see the line; the browser's own speech is the fallback and is the whole of the first build. Cloud services are not used.
+
+Reverse: turn off the Voices world setting, or disable wodx-voices.
+
+## B2101. Who hears a line (2026-11-12)
+Whoever sees the talk card hears it: a whispered answer only its recipients, a line said aloud everyone. The Storyteller hears every line unless the world setting says otherwise. Each player has a volume and a mute.
+
+Reverse: shouldSpeak in modules/wodx-voices/scripts/voice-rules.mjs.
+
+## B2102. What is spoken (2026-11-12)
+Talk answers, greetings and farewells (WoDX NPC talk cards). Barks and cries stay silent in the first build; a setting to voice them comes with the Kokoro build.
+
+Reverse: onTalkCard in modules/wodx-voices/scripts/main.mjs.
+
+## B2103. A voice per NPC (2026-11-12)
+Each NPC keeps one voice, worked out from its seed (the actor id; each unlinked token has its own), its sex only when the Storyteller or the people generator recorded it, its age when given (60 and over speaks slower and lower), and its WoDX NPC Voice (noble, clergy, street and the rest, small shifts in speed and pitch). With no sex known the voice is picked by seed from every voice, so nothing is assumed. The Storyteller's choice in flags.wodx-voices.override wins. Voices on the computer come before network voices. English voices only for now; Czech and German come later for lines in those languages.
+
+Reverse: profileFor and pickVoice in voice-rules.mjs.
+
+## B2104. The supernatural in the voice (2026-11-12)
+Only when it shows: forms, powers in use, wraiths, a demon's true voice. Laid over the rendered sound in the effects build; the browser's own speech can't carry effects.
+
+Reverse: not built yet.
+
+## B2105. Build order (2026-11-12)
+Three PRs: (1) this one, the browser speech fallback, voice profiles and the talk-card hook; (2) Kokoro, a cache in a Data folder outside every world (size cap, Clear button) and playback from the token; (3) the effects and the Storyteller's voice picker with Preview. Priority 2, after the talk generator's first PR. On in the testbed, off on Live until Ben says.
+
+Reverse: n/a.
 
 ## B1960. Game time: one world clock for every scene (2026-11-12)
 Ben approved every recommendation on the Game Time Desk. Foundry's one world time stays the only clock; scenes get no clocks of their own. Every timed part of WoDX (about thirty) reads it, and separate clocks would make dated events, eras and routines disagree between maps. Groups that are apart use personal time instead (B1961).
