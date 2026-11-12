@@ -27,6 +27,7 @@ import * as CD from "./conductor.js";
 import * as CR from "./conductor-rules.js";
 import * as ST from "./start.js";
 import * as AM from "./ambush-rules.js";
+import * as MVJ from "./movement.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -547,7 +548,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
-       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0 : 0}" style="width:4em"/></div>
+       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? defenseDiffOf(target) : 0}" style="width:4em"/></div>
     ${tCel ? `<div class="form-group"><label><input type="checkbox" name="defCel" checked/> Defender Celerity ${tCel} (adds dice; dodge arrows normally)</label></div>` : ""}
     ${tFort ? `<div class="form-group"><label>Fortitude ${tFort}: spend 1 blood to soak automatically</label><select name="fortBlood" data-fixed>
        <option value="auto" selected>Automatic: ${esc(AU.SOAK_POLICIES[soakPolicy(target)])}</option><option value="yes">Spend</option><option value="no">Don't spend</option></select></div>` : ""}
@@ -892,12 +893,15 @@ function tokenDistance(a, b, { reach = false } = {}) {
     try {
         const pa = a?.center ?? a?.object?.center, pb = b?.center ?? b?.object?.center;
         if (!pa || !pb || !globalThis.canvas?.grid) return null;
-        const d = canvas.grid.measurePath([pa, pb]).distance;
+        // 3.12.0: height between the tokens counts (a flier is farther than the ground distance)
+        const d = withHeightOf(canvas.grid.measurePath([pa, pb]).distance, a, b);
         if (!reach) return d;
         const sz = t => Number((t?.document ?? t)?.width) || 1;
         return AU.reachDistance(d, sz(a), sz(b), canvas.scene?.grid?.distance ?? 5);
     } catch (e) { return null; }
 }
+
+const withHeightOf = (d, a, b) => { try { return Math.hypot(d, MVJ.heightBetween(a, b)); } catch (e) { return d; } };
 
 /** Can this attack be used at all? Bites and claws need the right body; melee needs reach; missiles need range. */
 function attackUsable(attacker, w, distance, reachD = distance) {
@@ -1379,8 +1383,9 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     ST.registerStartSettings();
     P.register();
-    const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.11.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+    const movement = MVJ.setupMovement({ MOD, off: () => OFF, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc });
+    const api = { movement, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.12.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1402,6 +1407,8 @@ Hooks.once("ready", async () => {
 /* ------------------------------------------------------------------ */
 /*  Movement in yards, any grid (3.5.0)                                */
 /* ------------------------------------------------------------------ */
+
+const MV_LABEL = m => ({ fly: "Flying", swim: "Swimming", climb: "Climbing", crawl: "Crawling", jump: "Jumping", burrow: "In the ground", phase: "Through walls" }[m] ?? "Moving");
 
 /** A token's movement allowance this turn (VtDA20 pp. 202, 241, 333, 351). */
 export function movementFor(actor) {
@@ -1445,7 +1452,7 @@ Hooks.on("preUpdateToken", (doc, changes, options) => {
     return false;
 });
 Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
-    if (OFF || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
+    if (OFF || !("x" in changes || "y" in changes || "elevation" in changes) || options?.wodxMove === false) return;
     let mode;
     try { mode = setting("movementLimit"); } catch (e) { return; }
     const tag = roundTag();
@@ -1454,19 +1461,25 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     try {
         const from = { x: doc.x, y: doc.y }, to = { x: changes.x ?? doc.x, y: changes.y ?? doc.y };
         d = canvas.grid.measurePath([from, to]).distance;
+        // 3.12.0: climbing, flying up or diving counts its height too
+        d = Math.hypot(d, (Number(changes.elevation ?? doc.elevation) || 0) - (Number(doc.elevation) || 0));
     } catch (e) { return; }
-    const yards = AU.toYards(d, doc.parent?.grid?.units ?? canvas.scene?.grid?.units);
+    const lim = movementFor(doc.actor);
+    // 3.12.0: the way of moving (fly, swim, climb, crawl, jump...) sets its own limit; shallow water costs double
+    const way = MVJ.moveCheck(doc, changes, lim);
+    const yards = AU.toYards(d, doc.parent?.grid?.units ?? canvas.scene?.grid?.units) * (way.cost || 1);
     const prev = doc.getFlag(MOD, "moved");
     const total = (prev?.tag === tag ? Number(prev.yards) || 0 : 0) + yards;
-    const lim = movementFor(doc.actor);
-    const p = AU.pace(total, lim);
+    const cap = way.limit === null ? lim.run : way.limit;
+    const p = way.limit === null ? AU.pace(total, lim) : (total <= cap + 1e-6 ? way.mode : "over");
     if (p === "over" && mode === "block" && !game.user.isGM) {
-        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their running speed this turn (${lim.run}${lim.note ? `; ${lim.note}` : ""}).`);
+        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their ${way.limit === null ? "running speed" : `${MV_LABEL(way.mode).toLowerCase()} limit`} this turn (${cap}${lim.note ? `; ${lim.note}` : ""}).`);
         return false;
     }
-    foundry.utils.setProperty(changes, `flags.${MOD}.moved`, { tag, yards: Math.round(total * 10) / 10 });
-    const label = { walk: "Walking", jog: "Jogging", run: "Running", over: "Past running speed" }[p];
-    const msg = `${label}: ${Math.round(total)} / ${lim.run} yd${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? "; no attack this turn" : ""}`;
+    foundry.utils.setProperty(changes, `flags.${MOD}.moved`, { tag, yards: Math.round(total * 10) / 10, jumped: !!way.jumped || (prev?.tag === tag && !!prev?.jumped) });
+    if (way.jumped) doc.actor?.unsetFlag?.(MOD, "jump")?.catch?.(() => null);
+    const label = { walk: "Walking", jog: "Jogging", run: "Running", over: "Past the limit" }[p] ?? MV_LABEL(p);
+    const msg = `${label}: ${Math.round(total)} / ${cap} yd${way.cost > 1 ? " (shallow water, double)" : ""}${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? "; no attack this turn" : ""}`;
     try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, msg, { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: p === "over" ? "#ff6060" : "#ffffff", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
 });
 
@@ -1722,7 +1735,7 @@ export async function quickAttack({ attacker: a = null, target: t = null } = {})
         const cm = conditionMods(attacker, target);
         const fd = { weapon: "auto", maneuver: "normal", targeting: "none", range: "short", flank: "auto", multi: "auto", opponents: 1, oppAuto: true,
             extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
-            defDiff: L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0, defCel: discipline(target, "Celerity") > 0,
+            defDiff: defenseDiffOf(target), defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
         try {
             if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd }));
@@ -1765,8 +1778,21 @@ Hooks.on("renderTokenHUD", (hud, html) => {
 /** What the conditions on attacker and defender change: {attackerDice, attackerDiff, notes}. */
 export function conditionMods(attacker, target) {
     const c = L.chronicle()?.conditions;
-    if (!c || !attacker) return { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
-    return c.attackModifiers(attacker, target ?? null);
+    if (!attacker) return { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
+    const out = c ? c.attackModifiers(attacker, target ?? null) : { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
+    // 3.12.0: prone, flying, swimming, climbing... on both sides (house rules B946)
+    try {
+        const mv = MVJ.attackMods(attacker, target ?? null);
+        out.attackerDiff += mv.diff;
+        out.notes = [...(out.notes ?? []), ...mv.notes.map(n => `${n} (house rule)`), ...(mv.blocked ? [`Cannot attack: ${mv.blocked}`] : [])];
+    } catch (e) { /* movement off */ }
+    return out;
+}
+/** The defence difficulty: the defender's conditions and, on a dodge, their stance (3.12.0). */
+function defenseDiffOf(target) {
+    let d = L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0;
+    try { d += MVJ.defenseMods(target).diff; } catch (e) { /* movement off */ }
+    return d;
 }
 
 /** Dazed when one attack does more than Stamina after soak; Stamina + 2 for the supernatural (V20 Dark Ages p. 348). */

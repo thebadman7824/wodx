@@ -591,7 +591,7 @@ export async function undo(records = []) {
         const AT = game.modules.get("wodx-npc")?.api?.attitude, npc = game.actors.get(r.attitude.npc), ch = game.actors.get(r.attitude.char);
         if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
       }
-      if ( r.effect ) await fromUuidSync(r.effect)?.delete?.();
+      if ( r.effect ) await fromUuidSync(r.effect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
       if ( r.token ) {
