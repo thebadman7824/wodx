@@ -15,6 +15,8 @@
  *   setting wodx-solo.before  {at, settings: [{mod, key, from, to}], auto: {type: true}}  the way back
  *   setting wodx-solo.log     {v, entries}  what the seat decided (solo-rules.mjs addEntry)
  *
+ *   the pause    a world opens paused; the seat starts it, since NPCs never act while it is paused
+ *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
  */
@@ -79,6 +81,7 @@ async function apply() {
     await log({kind: "preset", source: MOD, title: fresh ? `${R.NAME} begins` : "The switch topped up",
       note: `${plan.changes.length} settings, ${turnOn.length} standing approvals${plan.missing.length ? `, ${plan.missing.length} not found` : ""}`});
   }
+  if ( fresh ) await unpause("the mode began");
   if ( fresh ) {
     const rows = plan.changes.map(c => `<li>${esc(c.what)}</li>`).join("");
     await ChatMessage.create({whisper: gmIds(), speaker: {alias: R.NAME},
@@ -202,6 +205,18 @@ async function follow(user) {
   } catch (e) { console.warn(`${MOD} | follow`, e); }
 }
 const player = () => game.users.find(u => !u.isGM && u.active) ?? null;
+
+/**
+ * A Foundry world opens paused and only a Storyteller can start it; NPCs never act while it is paused. So the seat
+ * starts the game when the mode begins, when the seat sits down and when the player arrives (0.1.2). It does not
+ * touch a pause made later, such as the X-card's.
+ */
+async function unpause(why) {
+  if ( !isSeat() || !game.paused ) return false;
+  await game.togglePause(false, {broadcast: true});
+  await log({kind: "note", source: MOD, title: "The game was paused; the seat started it", note: why});
+  return true;
+}
 /**
  * Foundry tells other clients which scene a user views as passing activity, not as a change to the user, so no hook
  * fires for it (0.1.1). The seat looks every two seconds instead; follow() does nothing when the scene is the same.
@@ -246,13 +261,13 @@ Hooks.once("ready", () => {
   Hooks.on("updateSetting", s => { if ( s?.key === `${CHRON}.approvals` ) onQueue(); });
   Hooks.on("createSetting", s => { if ( s?.key === `${CHRON}.approvals` ) onQueue(); });
   Hooks.on("updateUser", (u, ch) => { if ( "viewedScene" in (ch ?? {}) || ch?.active ) follow(u); });
-  Hooks.on("userConnected", (u, on) => { if ( on ) setTimeout(() => follow(u), 1500); });
+  Hooks.on("userConnected", (u, on) => { if ( on && !u.isGM ) setTimeout(() => { unpause(`${u.name} arrived`).catch(() => {}); follow(u); }, 1500); });
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;
   if ( isActiveGM() ) {
     // Other modules register their approval types in their own ready hooks: top up once they have
-    setTimeout(() => { apply().catch(e => console.error(`${MOD} | top up`, e)); onQueue(); follow(player()); }, 3000);
+    setTimeout(() => { apply().catch(e => console.error(`${MOD} | top up`, e)); onQueue(); follow(player()); unpause("the seat sat down").catch(() => {}); }, 3000);
   } else if ( !game.user.isGM && !game.users.activeGM ) {
     ui.notifications.warn(`${R.NAME}: the Storyteller's seat is empty, so the world stands still. Start the seat and it will carry on.`, {permanent: true});
   }

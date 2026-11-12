@@ -132,7 +132,8 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
   users.activeGM = me;
   const messages = new Map(), created = [];
   let clicked = 0, viewed = null;
-  globalThis.game = {settings, modules: mods, user: me, users, world: {id: "rothenstein-wodx", flags: {wodx: true}}, time: {worldTime: 5}, messages,
+  let pauses = 0;
+  globalThis.game = {paused: true, togglePause: async p => { game.paused = p; pauses++; }, settings, modules: mods, user: me, users, world: {id: "rothenstein-wodx", flags: {wodx: true}}, time: {worldTime: 5}, messages,
     scenes: new Map([["s1", {id: "s1", name: "The yard", view: async () => { viewed = "s1"; }}]])};
   globalThis.canvas = {scene: {id: "s0"}};
   globalThis.foundry = {utils: {deepClone: v => structuredClone(v)}};
@@ -157,6 +158,8 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
   assert.deepEqual(auto, {era: true, xp: true});
   assert.equal(store.get("wodx-solo.before").settings.length, 3);
   assert.equal(api.isSeat(), true);
+  assert.equal(game.paused, false, "the seat starts a paused game when the mode begins");
+  assert.equal(pauses, 1);
   assert.equal(created.length, 1);
 
   const msg = {id: "m1", whisper: ["g1"], flags: {"wodx-npc": {}}, content: `<p><b>The guard's plan</b></p><button data-action="a">Accept</button><a data-action="u">Undo</a>`};
