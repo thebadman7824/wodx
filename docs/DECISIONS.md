@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2330
+Next free block: B2350
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -90,6 +90,7 @@ Next free block: B2330
 | B2300-B2307 | Lifepath threads as story chains; a guest in another prelude | Creation, Chronicle |
 | B2310-B2313 | The case board and what a character could know | Interactables, Library |
 | B2320-B2323 | The features card and what changed since last session | Sheets, Chronicle |
+| B2330-B2349 | The country map behind a trip, paid rides, pace and day shelter; maps that take their land from it; warrens and sewers; wild land with no edge | Storyteller, map tools, Interactables, Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2478,3 +2479,96 @@ Reverse: serverVoiceFor in voice-rules.mjs.
 The address and the key are client settings, so they never reach the world database or a player. The server makes its key on first start and keeps it in server-key.txt beside the voices; every request needs it, and browsers may call only from the Foundry addresses it allows (localhost:30000 and wodx.online by default).
 
 Reverse: --origin on the server; the two client settings.
+
+## B2330. A country map behind the travel sum (2026-11-12)
+Ben approved all eight items of the Daggerfall study desk on 12 November 2026. Moravia and its neighbours are laid on a grid of 5 km squares (117 by 85): each square has its ground (plain, river meadows, hills, uplands, mountains), any river, and the best road in it in a given year. The ground comes from 41 rough shapes, 13 rivers, 62 towns and the links between them, written for WoDX from general geography; no game's data and no book's is in it. A place sits on the map as a town plus an optional distance and direction. When both ends of a trip sit on the map and no minutes are typed, the trip finds its cheapest way across the squares; one end off the map keeps the older sums. The idea of a coarse stored map with roads as layers comes from Daggerfall Unity and its Basic Roads mod; the code and data are our own.
+
+Reverse: clear Near on the Travel places window; the map branch in tripPlan in world-rules.mjs.
+
+## B2331. The going by one's own means (2026-11-12)
+On foot, on horseback, by one's own cart and by car use the speeds road-rules.mjs already had, now by the road in each square. Roads wind (1.15 times the straight distance) and climb (hills 1.1, uplands 1.25, mountains 1.5; half that on a motorway). Off the road the going is a track's speed over 1.3 times the distance, slowed 1.3 in river meadows (1.1 from 1850, once the rivers are banked) and hills, 1.7 in uplands and 2.6 in mountains; carts and cars cannot leave the road in mountains. A big river away from a road costs 40 minutes for a ferry or ford before 1850 and 15 after. House figures.
+
+Reverse: step() in country-rules.mjs.
+
+## B2332. Paid rides run only between their stops (2026-11-12)
+A hired cart or coach (to 1945), a river boat, a train (each line from the year it opens, 1839 on), a bus (1925 on), a flight (airfields from 1920 on) and, on the Future Darkness branch, a transit pod each run only between towns their network joins in that year. The traveller first goes to the stop in the nearest town that has one, waits (10 minutes to 2 hours), rides, and goes on from the last stop. Ben's ruling of 13:09 UTC: travel from anywhere stays, and hired travel is added beside it. With no way asked for, the fastest way open is taken, but never a flight under 300 km. The idea of rides bound to their stops comes from the Travel Options and Immersive Travel mods for Daggerfall Unity.
+
+Reverse: HIRED in country-rules.mjs.
+
+## B2333. Fares (2026-11-12)
+A fare is a share of a month's plain wage (the money rules' wage for the year) for each km ridden: coach 1/500, boat 1/1500, train 1/1500 and 1/3000 from 1900, bus 1/3000, air 1/150 falling to 1/600 in 1950 and 1/2500 in 1980, pod 1/2000. So 100 km by post coach costs six days' wages and by a twentieth-century train one day's. House figures; no book prices travel.
+
+Reverse: the fare functions in HIRED.
+
+## B2334. Pace (2026-11-12)
+Careful: a quarter slower, 8 hours on the move a day, half the chance of an encounter. Steady: 10 hours. Forced: 15 percent faster and 14 hours a day, a quarter more encounters, and for each day a Stamina roll (difficulty 7) or a level of bashing harm, for mounts too; WoDX only tells the Storyteller, who calls for the rolls. Pace changes one's own going, not a paid ride. House rule; the careful and reckless choice is Daggerfall's, the numbers are ours.
+
+Reverse: PACES in country-rules.mjs.
+
+## B2335. Nights on the way (2026-11-12)
+After the day's hours the living rest until 24 hours have passed. With Inns and lodgings they sleep under a roof wherever the road is a road, for a thirtieth of a month's wage each night, and camp where there is only a track; with Camp by the road they always camp, free, with a quarter more encounters. A trip shorter than the day's hours has no night in it, and the last hour of a day is pushed through to arrive.
+
+Reverse: LODGINGS and schedule() in country-rules.mjs.
+
+## B2336. Day shelter for those the sun burns (2026-11-12)
+On the map, a Kindred or Kuei-jin moves only between dusk and dawn. The trip is cut at the towns it passes; before each stretch, if it could not be finished half an hour before dawn, the traveller waits out the day in that town and leaves at dusk. The dark slows such a trip in the years before roads were lit. A trip planned this way no longer goes to the Storyteller for arriving after dawn. A stretch between two towns that is longer than a whole night cannot be sheltered, and that trip still asks the Storyteller. Off the map the older dawn check stands.
+
+Reverse: schedule() in country-rules.mjs; the plan branch of travelNeedsAsk in world-rules.mjs.
+
+## B2337. Paying for the trip (2026-11-12)
+Fares and inn nights are taken from the purse before anyone moves. A purse that is short stops the trip and says the price and the shortfall. A trip the Storyteller approves from the queue goes ahead unpaid and the log says so.
+
+Reverse: the payment block in travel() in core.mjs.
+
+## B2338. An encounter knows its ground (2026-11-12)
+On a map trip the hour an encounter falls in is matched to the leg being travelled, so the proposal says where (in the wooded uplands between Jihlava and Třebíč) and carries the ground and the road for a map to be drawn there. Encounter hours count hours on the move, not hours asleep.
+
+Reverse: spotAt in country-rules.mjs; the encounter block in travel().
+
+## B2339. A generated map takes its land from where it sits (2026-11-12)
+tools/mapgen/ddtown.py takes --at town or town:km:DIR, the same way a place is put on the country map in Foundry. The landform the town is drawn on and whether a river crosses the map then come from the country at that spot (river meadows and plain draw as plain, the Drahany Highlands as karst, a river within 5 km puts a river on the map), unless --land or --river says otherwise. The sidecar gains a country block and a transit list naming where a paid ride is taken from on that map in that year: the tavern as the coach stand to 1945, the railway station once the town has one. Without --at nothing changes, so earlier maps come out byte for byte as before. The grid reaches Python as tools/mapgen/country.json, written by export_country.mjs; the harness fails when it is out of date.
+
+Reverse: leave --at off; the block after parse_args in ddtown.py.
+
+
+## B2340. Warrens are put together from our own kit of pieces (2026-11-12, Ben's pick, house rule)
+tools/mapgen/ddwarren.py --kind warren lays a warren from a kit of 24 square pieces drawn for WoDX (PIECES in that file; nothing is taken from any game's data): passages, bends, junctions, chambers, a store vault, two dens, four flooded pieces, a fall, two ways up and two caps. A piece is ten squares a side and opens only through the middle two squares of a side, so any two fit. The pieces go on a grid as one connected run: the ways up first, joined by wandering ways, then side runs until the count asked for (--pieces; 10 under a village, 18 a town, 28 a city) and a few ways round. A chamber may be laid where fewer ways are needed than it has, and the way that leads nowhere is capped. Dens fall farthest from the ways up. A den holds a nest to hide in and a hoard filled as a den of thieves; a vault holds a chest filled as a home; the fall is a crawl. The check in check_kit() stops the run if a piece opens anywhere it does not say.
+
+Reverse: delete ddwarren.py and tools/harness/warren.test.mjs; nothing else reads them.
+
+## B2341. A warren under a town uses the town's own squares (2026-11-12, Ben's pick)
+With --under <town sidecar> the warren's map has the same squares as the town map, so a square below is the same square above. The grid of pieces is shifted (by up to four squares either way) to the place where the most stairs come out wholly inside a building, the ways up are picked from those and spread apart, and each one records the building it comes up in (waysUp in the sidecar, and the stair's own label). Pieces under the river, a brook or an oxbow are the flooded ones nine times in ten. With no town above, the lowest corner of the warren stands in water.
+
+Reverse: run without --under.
+
+## B2342. What a warren is called and built of follows the year (2026-11-12, house rule)
+The same kit is dressed by the year (DRESS in ddwarren.py): to 1499 joined cellars and old workings; 1500 to 1849 brick vaults and casemates; 1850 to 2039 service tunnels, coal cellars and shelters; from 2040 the under-levels. Only the names, the wall and the kind of way up change (a stair before 1850, rungs after). --dress picks one whatever the year. Jihlava, Znojmo and Brno have real medieval undergrounds of this joined-cellar kind, which is why the first dress is the default for the early eras.
+
+Reverse: edit DRESS.
+
+## B2343. Sewers are laid from the town's street plan (2026-11-12, Ben's pick)
+ddtown.py --plan adds the centre lines of the ways, the river and the brooks to each sidecar (a new "plan" block, written only when asked, so maps made without it are unchanged). ddwarren.py --kind sewer --under <that sidecar> lays a main under every main street and road and a side sewer under every street and quay (never an alley or the railway), a round chamber wherever runs meet (a junction chamber where three or more meet on a main), and a manhole at each chamber as the way up to the same square of the street. No run passes under the river: each bank drains by itself to its nearest point on the river and leaves by a grated outfall, and every run records which way it falls. A run that reaches the map's edge goes on under the next part. Reflect needs nothing new on the map.
+
+Reverse: leave --plan off; delete the sewer() function.
+
+## B2344. When a place gets sewers, and what was there before (2026-11-12, house rule)
+Cities and the metropolis have sewers from 1850, towns from 1890, villages from 1950 (SEWER_FROM), and for the first thirty years only the mains. These are round figures for the Bohemian crown lands, not any one town's dates. Before that there are no sewers: a brook through the built-up part of the town runs under a cover from 1500 (a culvert wherever a house stands within eight squares of it, with its own mouth on the river) and open before then, and up to 24 houses with a yard have a cesspit under it, reached by the privy shaft. Once the sewers are in, a few cesspits remain.
+
+Reverse: change SEWER_FROM or COVERED_BROOKS_FROM in ddwarren.py.
+
+## B2345. Reflect reads a map from under the ground (2026-11-12, Ben's pick, house rule)
+Otherworlds 0.17.0: a sidecar marked "underground" (every warren and sewer map) is read piece by piece and run by run (underMarks in reflect-rules.mjs) instead of as a town. In the Penumbra a sewer carries the Weaver's webbing of its year and sours toward the Wyrm along the filth, most at the outfall and the cesspits; a covered brook still runs with the Wyld; a den is a lair that draws Banes; plain passages and chambers are faint. In the Shadowlands a fall and a closed way stand again as they were, a fall may open a Nihil, a den thins the Shroud, and filth rots fastest. The realm layouts themselves are untouched.
+
+Reverse: remove the underground branch at the top of reflect().
+
+## B2346. Two dresses of no year: the Labyrinth and a Black Spiral cavern (2026-11-12, Ben's pick, house rule)
+The warren kit has two more dresses picked only by name (--dress labyrinth, --dress spiral). They change the names, the wall and what stands in the flooded pieces (the dark between, or balefire), and the way up is a Nihil or a shaft to the pit. Reflect reads a Labyrinth map with no Penumbra at all and only decay and Nihils among the dead, and a Black Spiral cavern as a Blight all through. Whether a given night's Labyrinth looks like this stays the Storyteller's call, as before.
+
+Reverse: drop the two entries from DRESS and the two branches in underMarks.
+
+## B2347. Wild land with no edge for the open Umbra and the Tempest (2026-11-12, Ben's pick, house rule)
+Ben changed the realm-maps pick on the study desk at 13:55 UTC to add endless seeded wild land beside the small uses. Otherworlds 0.17.0, scripts/wild-rules.mjs: the open Umbra between the realms and the Tempest's storm sea are drawn a piece at a time. A piece is a realm map of the usual size at a place (x east, y south) in the wild; its ground is read off one unbroken field of smooth noise fixed by the seed, so pieces side by side meet square for square and a piece is the same every time. One trail winds across the whole wild from west to east and one from north to south (a moon path in the Umbra, a Byway in the Tempest). The Umbra is land, water, growth and rock, with ground soured toward the Wyrm that spreads by the age (nothing before 1500, most after 1950 and on the Future Darkness branch); the Tempest is open storm water with islets of rock and shoals. Each piece has an arrival, a way on at every side the travellers can walk off, and none, one or two things in it (a glen, standing stones, a soured hollow, webbing from 1850; an islet, a wreck, a maelstrom, a Nihil's mouth). The 34 realm layouts are untouched.
+
+In Foundry (realm-maps.mjs): Realm maps has a Wild land section. Draw wild land makes the piece at a place, or finds it if it is already drawn; Walk on draws or finds the piece beside the open one and sets the selected tokens down where they walk in. Tokens keep the record of where they first came from, so Bring them back still returns them to the living world. A piece of wild land cannot be redrawn with another seed. Travel time is still the journey card's, in hours; the pieces are for the scenes on the way.
+
+Reverse: remove wild-rules.mjs, the wild block in realm-maps.mjs and the Wild land section of realmMapsDialog.
