@@ -2,7 +2,7 @@ import * as SW from "./siege-works-rules.mjs";
 import * as C from "./core.mjs";
 
 /**
- * WoDX Storyteller 0.50.0: the Foundry side of the campaign around a siege (B2450-B2457), shown in the Battles
+ * WoDX Storyteller 0.50.0: the Foundry side of the campaign around a siege (B2470-B2477), shown in the Battles
  * window for a siege. The rules are in siege-works-rules.mjs. battles.mjs calls bind() once with its own get, save
  * and open, and calls week() from its own week of siege so the campaign is part of the same step and its Undo.
  */

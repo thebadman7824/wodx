@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.45.4 (Undo puts a token back through a wall: Foundry 14 stopped the plain position update at the wall, so an NPC that walked round one stayed short; the API lists infoOf, what the template is read from)
 - 0.45.3 (the noticing roll takes a difficulty for each side, so WoDX Senses can count how the watcher and the hider move)
 - 0.45.2 (in a supernatural war the leaders' powers come from WoDX Storyteller's battle deeds table, by age and kind of being, and say whether the living could see them; Status + 3 dice stays as the fallback)
 - 0.45.1 (a war fought off the screen picks each army's action by its pools (Storyteller's chooseActions) instead of always closing)

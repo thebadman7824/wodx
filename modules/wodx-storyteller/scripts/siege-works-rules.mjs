@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.50.0: the campaign around a siege, the pure part. No Foundry calls here (B2450-B2457).
+ * WoDX Storyteller 0.50.0: the campaign around a siege, the pure part. No Foundry calls here (B2470-B2477).
  *
  * Battles and sieges (battle-rules.mjs) fights a siege week by week: the besiegers' works fill a breach clock, the
  * garrison eats its stores, disease wears both camps. This file adds what Spoils of War pp. 40-42 (printed; pdf =
@@ -24,7 +24,7 @@
  *   + Archery, at the engine's difficulty step (p. 33).
  * - Walls (p. 34): each structure has a soak and health levels; each soak success counts as 2 against a siege engine.
  *
- * WoDX's own readings (house rules, B2450-B2457): a week's foraging is 14 rolls (twice a day for seven days) by one
+ * WoDX's own readings (house rules, B2470-B2477): a week's foraging is 14 rolls (twice a day for seven days) by one
  * leader for all the foragers; an engine makes one telling attack a day; the mine's dig roll is at 6 (the book
  * gives no difficulty); a botch in the tunnel loses a quarter of it; a mine fires by itself when it reaches the
  * walls; the walls' damage fills the breach clock in proportion to their health levels; a ditch or moat takes the

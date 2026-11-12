@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2460
+Next free block: B2480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -98,7 +98,8 @@ Next free block: B2460
 | B2420-B2429 | The anachronism check reads the maps | Sheets, Interactables |
 | B2430-B2439 | Music from free sources: the sorter, where audio files live, the open credits journal | Atmosphere, tools |
 | B2440-B2449 | The last of the ways of moving: riding in a fight, the mounted charge, a swimmer's load, senses by stance | Combat, Interactables, Senses, NPC |
-| B2450-B2459 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
+| B2450-B2469 | Storyteller steps that run by themselves: automation levels, small-proposal rules, the Waiting tray, fights that end, time requests (study) | Chronicle, Combat, NPC, Storyteller, Creation, Solo |
+| B2470-B2479 | The campaign around a siege: foraging, keeping order, mines and countermines, siege engines, walls and forts | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -2822,49 +2823,49 @@ The PC read the books (project-files ride-load-book-check.md). Taken up: in the 
 Reverse: have rideCapOf in movement.js return its plain answer.
 
 
-## B2450. The campaign around a siege (2026-11-12, Master Plan leftover of Battles and sieges, priority 3)
+## B2470. The campaign around a siege (2026-11-12, Master Plan leftover of Battles and sieges, priority 3)
 Battles and sieges left foraging, keeping order, sapping in yards and the siege engines open. WoDX Storyteller 0.50.0 adds them as a campaign a siege can carry (Set up the campaign in the Battles window; nothing changes for a siege without one). Everything is rolled with the week of siege and comes back with its Undo. Book basis: Spoils of War pp. 40-42 (printed; pdf = printed + 1) for foraging, order, sapping, countermining and building and using engines, and pp. 33-34 (printed) for the siege weapon and fortification tables, read on the PC on 12 November 2026 (project files battle-book-check.md, book-checks-2026-11-12b.md). Naval battle waits on a reading of the ship table.
 
 Reverse: remove the campaign field from normBattle and the W.week call in battles.mjs week(); old sieges keep working.
 
 
-## B2451. A week's foraging and the besiegers' food (2026-11-12, house reading)
+## B2471. A week's foraging and the besiegers' food (2026-11-12, house reading)
 The book has each foraging team's leader roll Perception + Survival twice a day; WoDX rolls one leader's pool 14 times a week for all the foragers, each success times the foragers being man-days of food, at the book's 4 to 9 by the land. The besiegers need 7 man-days a man a week. A supply line carries a share of that by the year (house rule): wagon trains half, boats three quarters, the railway from 1840, lorries from 1915, an airlift from 1940 and drone convoys on the Future Darkness branch all of it. A surplus fills the camp's stores in days; a shortfall eats them; with none left the camp is hungry and loses a point of resolve that week, as the garrison does.
 
 Reverse: set the supply line to nothing and turn foraging off in the campaign.
 
 
-## B2452. Keeping order by pay and supply (2026-11-12)
+## B2472. Keeping order by pay and supply (2026-11-12)
 Spoils of War p. 40: a weekly Charisma + Leadership (or Manipulation + Intimidation, typed in as the pool) at 6, needing 1 success well paid and supplied, 2 normal, 4 poorly; each success short adds 1 to every army roll the next week. WoDX keeps that as the side's unrest, added to the commanders' battle rolls and the siege works. Rolled at the end of each week for the week to come. By default the supply follows how the side was fed that week (a hungry camp or an empty storehouse is poorly supplied) and the pay box; the Storyteller can set it. A botch counts as no success (house rule).
 
 Reverse: turn order off in the campaign; unrest goes back to 0 with Undo.
 
 
-## B2453. Mines and countermines in yards (2026-11-12)
+## B2473. Mines and countermines in yards (2026-11-12)
 Spoils of War pp. 41-42 as read: planning on Intelligence + Leadership at 6 (7 or 8 for bad ground), digging Strength + Crafts weekly at 50, 25 or 10 yards a success by ground, the charge rolling Intelligence + Leadership plus a die per planning success for 3 unsoakable health levels a success; listening each day at 2 per 10 yards; countermining as sapping, twice as fast without shoring when any failure brings it down. House readings: the dig roll is at 6 (the book gives none); a botch in a mine loses a quarter of it, at least a week's worth; a mine fires by itself when it reaches the walls; the countermine has to cover the yards between the wall and the mine's head; powder adds 2 dice to the charge from the Hussite age and high explosive 4 from 1860.
 
 Reverse: give up the mine in the window; the charge dice are chargeDice() in siege-works-rules.mjs.
 
 
-## B2454. Siege engines and guns (2026-11-12)
+## B2474. Siege engines and guns (2026-11-12)
 Building and using follow Spoils of War p. 41: materials Perception + Crafts at 7 each day until the successes reach the engine's damage, then Intelligence + Crafts at 7 each week to the same number, a botch wrecking it; an engine shoots with Intelligence + Leadership at 6 plus its step, damage its dice plus the extra successes, against the walls' soak where each soak success counts as 2. House readings: one telling attack a day per engine (the book's turns are too fine for a week of siege); a Greek fire spigot against a wooden wall meets half soak; an engine can be marked ready when it was brought in built. The engines of the book stay to 1450-1650; the bombard (1380), siege cannon (1500), mortar (1550), rifled siege gun (1860), heavy howitzer (1914), bombers (1936), guided missiles (1990) and the Future Darkness railgun battery (2030) are WoDX figures.
 
 Reverse: remove the engine from the list; the figures are ENGINES in siege-works-rules.mjs.
 
 
-## B2455. Walls and the breach clock (2026-11-12, house rule)
+## B2475. Walls and the breach clock (2026-11-12, house rule)
 The walls come from the fortification table of Spoils of War p. 34 (soak and health levels), and the siege starts with walls by where the garrison stands: field works a palisade, a walled town a medium wall, a castle a heavy wall, a bastion fort the star fort's bastion and curtain, bunkers a concrete bunker line. The bastion trace (1530), earth ramparts (1600), concrete bunkers (1914) and reinforced concrete (1940) are WoDX figures. Damage from engines and mines fills the breach clock in proportion to the walls' health levels, on top of the works roll the siege already had.
 
 Reverse: pick no walls in the campaign; the breach then moves by the works roll alone.
 
 
-## B2456. A ditch or moat (2026-11-12, house rule)
+## B2476. A ditch or moat (2026-11-12, house rule)
 The book says a ditch or moat stops engines and troops until it is filled. WoDX has the first 4 successes of the works go into the ditch before the breach moves, and keeps rams, mice and crows from the walls until it is full. Mines go under it.
 
 Reverse: untick the ditch in the campaign.
 
 
-## B2457. What the campaign leaves for later (2026-11-12)
+## B2477. What the campaign leaves for later (2026-11-12)
 Not built: naval battle (Spoils of War pp. 42-43; the ship table with Speed and Maneuverability needs reading on the PC first), scouting and the campaign strategy roll (pp. 40-41), siege towers, the defenders' boiling oil, quicklime and sand at the walls during an assault (p. 33), and filled towers. Logged in PENDING-REVIEW.md.
 
 Reverse: nothing to reverse.

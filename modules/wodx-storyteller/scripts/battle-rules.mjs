@@ -274,7 +274,7 @@ export function normBattle(b = {}) {
     // Storyteller 0.47.0: the deeds offered for the next phase (battle-deeds.mjs) and what the field left behind (battle-aftermath.mjs)
     offers: normOffers(b.offers),
     aftermath: normAftermath(b.aftermath),
-    // Storyteller 0.50.0: the campaign around a siege (siege-works-rules.mjs, B2450-B2457)
+    // Storyteller 0.50.0: the campaign around a siege (siege-works-rules.mjs, B2470-B2477)
     campaign: kind === "siege" || b.campaign ? normCampaign(b.campaign) : null
   };
   out.book = b.book === undefined || b.book === null ? out.sides.every(x => unitCount(x.units) > 0) : !!b.book;

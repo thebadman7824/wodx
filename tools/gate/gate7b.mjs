@@ -28,7 +28,10 @@ function harness() {
   return {R, ok, step};
 }
 const num = v => Number(v) || 0;
+/** What WoDX NPC reads a template from (the API's own, with the name's archetype), else this gate's older reading. */
 const infoOf = a => {
+  const own = npc().infoOf?.(a);
+  if ( own ) return own;
   const s = a.system ?? {}, ab = k => num(s.abilities?.[k]?.value);
   return {kind: C().getKind(a), generation: num(s.generation) || 13, melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery"))};
 };

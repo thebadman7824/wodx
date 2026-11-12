@@ -38,7 +38,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.45.3";
+const VERSION = "0.45.4";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -437,12 +437,22 @@ function snapshot(tokens) {
   };
 }
 
+/**
+ * 0.45.4: put a token straight back on its spot. In Foundry 14 a plain x/y update is a move that stops at walls, so the
+ * Undo of a walk round a wall left the token short. A "displace" move ignores walls; the plain update is the fallback.
+ */
+async function putBack(doc, pos) {
+  if ( typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
+    try { await doc.move([{x: pos.x, y: pos.y, action: "displace"}], {animate: false, wodxMove: false}); } catch (e) { /* the update below */ }
+  }
+  if ( doc.x !== pos.x || doc.y !== pos.y ) await doc.update(pos, {animate: false, teleport: true, wodxMove: false});
+}
+
 async function undo(snap) {
   for ( const s of snap.tokens ?? [] ) {
     const doc = await fromUuid(s.uuid);
     if ( !doc ) continue;
-    const upd = {x: s.x, y: s.y};
-    await doc.update(upd, {animate: false, wodxMove: false});
+    await putBack(doc, {x: s.x, y: s.y});
     if ( s.moved ) await doc.setFlag("wodx-combat", "moved", s.moved); else await doc.unsetFlag("wodx-combat", "moved");
     if ( s.surrendered ) await doc.setFlag(MOD, "surrendered", s.surrendered); else if ( doc.getFlag(MOD, "surrendered") ) await doc.unsetFlag(MOD, "surrendered");
   }
@@ -839,7 +849,7 @@ Hooks.once("init", () => {
   passersby.registerSettings();
   wanted.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
