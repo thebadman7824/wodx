@@ -14,12 +14,12 @@ WEALTH = ["poor", "middling", "rich", "noble"]
 WORTH = {"poor": (0, 1), "middling": (1, 2), "rich": (2, 4), "noble": (3, 5)}
 # the styles each age reaches for first; the building's main style is drawn from these
 STYLES = {
-    "medieval": ["fa-ashen", "skront", "wfw", "tc"], "early": ["fa-light", "skront", "tc", "wfw", "fa-ashen"],
+    "medieval": ["fa-ashen", "skront", "tc"], "early": ["fa-light", "skront", "tc", "fa-ashen"],
     "reform": ["fa-dark", "tc-period", "skront-fine", "fa-light"], "industrial": ["tc-period", "fa-dark", "skront-fine"],
     "republic": ["tc-period", "mid-century", "fa-dark", "ada-museum"], "socialist": ["mid-century", "tyger", "eighties", "ada-military"],
     "modern": ["tyger", "ada", "wfw-modern", "ada-office"], "future": ["scifi", "ada-future", "wfw-scifi", "ada-office"],
 }
-NEUTRAL = {"fa", "wfw", "tc", "skront", "ada"}        # styles that sit with any main style of their age
+NEUTRAL = {"fa", "tc", "skront", "ada"}               # styles that sit with any main style of their age (not WFW: its cartoon look clashes)
 LIGHTS = {"medieval": "candle", "early": "candle", "reform": "oil", "industrial": "gas", "republic": "electric",
           "socialist": "electric", "modern": "electric", "future": "electric"}
 FLOOR_WORDS = {"living": r"Wood|Plank|Parquet|Carpet|Marble|Board", "sleep": r"Wood|Plank|Carpet|Board",
@@ -31,7 +31,9 @@ WALL_WORDS = {"medieval": r"PlasterWood|Wood|Stone|Log", "early": r"PlasterWood|
               "modern": r"wall|concrete|Tyger", "future": r"hull|metal|Hivehall|interior|Bulkhead"}
 NOT_FLOOR = re.compile(r"Grate|Grill|Overlay|Shadow|Water|Snow|Slime|Rain|Hole|Spike|Roof|Fields|Background|transparent|tileset|Cracked|Damaged|Broken|Destroyed", re.I)
 HOME = "moravia"
+TABLEWARE = re.compile(r"Plate|Bowl|Mug|Cup|Jug|Pitcher|Bread|Cheese|Food|Fruit|Tankard|Dish|Pot_|Pan_|Kettle|Loaf|Apple|Meat|Fish|Vegetable|Basket|Ladle|Spoon|Knife", re.I)
 _SET = 4                                               # assets a palette keeps for each piece
+_SET_CLUTTER = 24                                      # and of the small things, so a table and a shelf hold different ones
 
 
 def load(path):
@@ -57,6 +59,9 @@ class Palette:
         return self.worths.get(asset_name, 1)
 
 
+# a blue, green or purple flame is a sign of the uncanny, for a Storyteller to place, never in an ordinary room
+UNCANNY_FLAME = re.compile(r"(Blue|Purple|Green|Pink|Teal|Cyan|Skull).*(Lit|Flame|Fire)|(Brazier|Lantern|Torch|Sconce|Candle|Fire).*(Blue|Purple|Green|Pink|Teal|Cyan)", re.I)
+
 ORDER = ["medieval", "early", "reform", "industrial", "republic", "socialist", "modern", "future"]
 
 def _fits(e, band, region):
@@ -75,12 +80,17 @@ def choose(year, region, wealth, rng, catalogue):
     pool = [e for e in catalogue if _fits(e, band, reg)]
     own = [e for e in pool if band in e["bands"]]
     styles = [s for s in STYLES.get(band, []) if any(e["style"] == s for e in own)] or sorted({e["style"] for e in own})
-    main = rng.choice(styles[:2]) if styles else None
+    main = (styles[0] if band == "medieval" else rng.choice(styles[:2])) if styles else None   # FA Ashen for the middle ages
     ranked = [main] + [s for s in styles if s != main]
     order = sorted(WEALTH, key=lambda w: abs(WEALTH.index(w) - WEALTH.index(wealth)))
     sets = {}
-    for piece in sorted({e["piece"] for e in pool if e["kind"] == "objects"}):
-        cands = [e for e in pool if e["piece"] == piece and e["kind"] == "objects"]
+    for piece in sorted({e["piece"] for e in pool if e["kind"] == "objects"}) + ["tableware"]:
+        if piece == "tableware":                       # the crockery and food among the small things, for tables and shelves
+            cands = [e for e in pool if e["piece"] == "clutter" and e["kind"] == "objects" and TABLEWARE.search(e["name"])]
+        else:
+            cands = [e for e in pool if e["piece"] == piece and e["kind"] == "objects"]
+        # only pictures whose size is known (measured, or in the name): a guessed size draws them across walls
+        cands = [e for e in cands if e.get("sized", True) and not UNCANNY_FLAME.search(e["name"])]
         got = []
         for w in order:                                # own wealth first, then the nearest
             lo, hi = WORTH[w]
@@ -91,7 +101,7 @@ def choose(year, region, wealth, rng, catalogue):
             if got: break
         if got:
             got = sorted(got, key=lambda e: e["path"])
-            sets[piece] = rng.sample(got, min(_SET, len(got)))
+            sets[piece] = rng.sample(got, min(_SET_CLUTTER if piece in ("clutter", "tableware") else _SET, len(got)))
     def texture(kind, words=None):
         c = sorted((e for e in own if e["kind"] in kind and not (kind != ("walls",) and NOT_FLOOR.search(e["name"]))), key=lambda e: e["path"])
         styled = [e for e in c if e["style"] in ranked[:1]] or c
@@ -120,4 +130,11 @@ def portals(band, wealth):
     n = {"poor": 1, "middling": 1, "rich": 2, "noble": 3}.get(wealth, 1)
     return {"door": f"Door_Wood_{f}_A{n}_1x1.webp", "double": f"DoubleDoor_Wood_{f}_A{min(n, 2)}_2x1.webp",
             "doorway": f"Doorway_Wood_{f}_A.png", "arch": f"DoubleDoorway_Wood_{f}_A_Wide.png",
-            "window": "Metal_Window_A.png" if band in METAL_WINDOWS else f"Window_Wood_{f}_A{min(n, 2)}_1x1.webp"}
+            "window": "Metal_Window_A.png" if band in METAL_WINDOWS and _have("Metal_Window_A.png")
+            else f"Window_Wood_{f}_A{min(n, 2)}_1x1.webp"}
+
+
+def _have(name):
+    """True when the asset list loaded for this map holds the file (the metal window is in the older pack list only); True with no list loaded."""
+    import ddcore
+    return not ddcore.ASSETS or any(a.endswith("/" + name) and "/textures/portals/" in a for a in ddcore.ASSETS)

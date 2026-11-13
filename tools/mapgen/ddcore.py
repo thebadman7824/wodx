@@ -385,6 +385,7 @@ def orient(room):
     mx, my = room.ix + room.iw / 2, room.iy + room.ih / 2
     for it in room.items + getattr(room, "dressing", []):
         if it.get("layer", 100) != 100 or "spin" in it: continue
+        it.pop("nudge", None)                                        # worked out again: the picture may have changed
         a = it["asset"]
         cx, cy = it["x"] + it["w"] / 2, it["y"] + it["h"] / 2
         if SEATS.search(a) and it["w"] == it["h"] or re.search(r"Chair|Stool", a, re.I):
@@ -405,7 +406,7 @@ def orient(room):
         side = next((d for d in order if t[d] and (it["w"] == it["h"] or (d in "NS") == (not it["rot"]))), None)
         if side:
             it["angle"] = {"N": 0.0, "S": math.pi, "W": -math.pi / 2, "E": math.pi / 2}[side]
-            if INSET.search(a):                                      # the picture is half its square deep: move it to the wall
+            if INSET.search(drawn(it)[0]):                           # the picture is half its square deep: move it to the wall
                 it["nudge"] = {"N": (0, -.5), "S": (0, .5), "W": (-.5, 0), "E": (.5, 0)}[side]
 
 def snap(angle, rot):
@@ -552,6 +553,12 @@ TILE_RULES = [   # (asset prefix, label, flags); a container's fill place comes 
     ("Box_Crate", "Crates", {"hide": True, "hideKind": "crawl", "room": 1, "title": "Behind the crates"}),
 ]
 
+DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt: (label, flags)
+    "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
+    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home"}),   # one kind of thing each
+    "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
+}
+
 def opening_entries(key, name, openings, inside):
     """Sidecar openings for one building. openings: (kind, x, y, along) in map cells; inside: a point inside."""
     out = []
@@ -575,6 +582,15 @@ def feature_entries(prefix, room, fill="home"):
              "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags}
         if flags.get("light"): f["light"] = {"dim": 3, "bright": 1, "color": "#ff9a3c", "on": True}
         out.append(f)
+    # the furnishing's own pieces (furnishing.py): every chest, cupboard, wardrobe and bed it set down can be searched,
+    # opened or hidden in like the building type's own (ids "<room>-f<n>", so the type's own ids never move)
+    for i, it in enumerate(d for d in getattr(room, "dressing", []) if d.get("layer", 100) == 100):
+        rule = DRESSED.get(it.get("piece"))
+        if not rule: continue
+        label, flags = rule[0], dict(rule[1])
+        if flags.get("container"): flags["fillPlace"] = fill
+        out.append({"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-f{i}", "label": f"{label} ({room.name})",
+                    "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags})
     return out
 
 # ------------------------------------------------------------------ plan view, to check the logic by eye

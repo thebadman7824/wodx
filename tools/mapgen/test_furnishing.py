@@ -358,6 +358,25 @@ class FillTest(unittest.TestCase):
             return
         self.fail("the barn has no open floor room")
 
+    def test_furnished_chests_and_cupboards_can_be_searched(self):
+        import ddcore as C
+        b = _furnished("burgher-palace", 1197)
+        feats = [f for r in b.rooms for f in C.feature_entries("t-", r, b.t["fill"])]
+        own = [f for f in feats if f["id"].rsplit("-", 1)[1].startswith("f")]
+        self.assertTrue(any(f["flags"].get("container") for f in own), [f["id"] for f in feats])
+        for f in own:
+            self.assertIn(f["flags"].get("kind", "chest") if f["flags"].get("container") else "bed", ("chest", "cabinet", "bed"))
+            self.assertEqual(len(f["rect"]), 4)
+        self.assertEqual(len({f["id"] for f in feats}), len(feats))
+
+    def test_rooms_look_lived_in(self):
+        b = _furnished("burgher-palace", 1197)
+        for r in b.rooms:
+            if r.kind in ("outdoor", "passage") or r.iw * r.ih < 4: continue
+            things = [d for d in r.items + r.dressing if d.get("layer", 100) != 400]
+            cover = sum(d["w"] * d["h"] for d in things if d.get("layer", 100) == 100) / (r.iw * r.ih)
+            self.assertTrue(len(things) >= int(r.iw * r.ih / 2) or cover >= .45, (r.name, len(things), cover))   # check_map.py's bar
+
     def test_era_contrast(self):
         lasting = {e["name"] for e in _cat() if e["lasting"]}
         names = lambda b: {d.get("draw", d["asset"]).rsplit("/", 1)[-1] for r in b.rooms for d in r.dressing + r.items if d.get("layer", 100) in (50, 100)} - lasting
