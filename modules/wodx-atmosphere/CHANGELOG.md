@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.16.0 (a mood region can carry a rule: Gauntlet, Shroud and Banality steps that WoDX Otherworlds reads, and a fear-of-fire step kept for the frenzy rolls (B2913); not deployed)
 - 0.15.0 (weather by region: a scene far from home has its region's own weather for the night, rolled apart from the homeland's, and each scene shows and sounds its own; the weather window and the post say when the weather is that of a place far from home; a Storyteller's set weather abroad is kept for that region only)
 - 0.14.0 (weather of the whole world: 29 climates on both sides of the equator; the climate follows the homeland, or the region of a scene far from home)
 - 0.13.1 (music kits take the new era names)

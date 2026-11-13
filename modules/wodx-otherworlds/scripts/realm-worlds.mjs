@@ -4,6 +4,8 @@
  * a closer look at one square. "Found places" marks what the chronicle has found; "A new visit" makes the map anew
  * for the realms that change on every visit. It reads and draws only, but for the world setting "realmWorlds" (the
  * found places and the visit counts). The rules are in realm-worlds-rules.mjs.
+ * Otherworlds 0.25.0 (B2915): "Go" makes the journey a trip: the clock moves on by its time, and each day on the way
+ * may bring one of the realm's dangers. The party must already be across (step sideways or cross the Shroud first).
  */
 let RW = null, loading = null;
 /** Otherworlds 0.23.2 (B2676): the rules and the realm places (about 115 KB) load the first time a window here opens
@@ -77,7 +79,7 @@ export function view(state = {}) {
   if ( known ) { const n = map.places.length - known.size; lines.push(n ? `${n} of the ${map.places.length} places here are not yet found.` : "Every place here is found."); }
   const title = `${map.label}, ${year}${state.which && map.kind === "each" ? `: ${state.which}` : ""}`;
   return {map, from, to, known, journey: j, picture: RW.svg(map, {known, path: j?.path ?? null, title}), lines,
-    note: `The places are the realm's own, from the books. Where they lie and how long the way takes are not: ${map.ours[0].toLowerCase()}${map.ours.slice(1)}`};
+    note: `The places are the realm's own, from the books, and stand where the books say they lie when the books say so. The rest of the arrangement and how long the way takes are not from the books: ${map.ours[0].toLowerCase()}${map.ours.slice(1)}`};
 }
 
 const realmOptions = cur => LINES.map(line => { const ids = RW.REALM_IDS.filter(id => REALMS[id].line === line);
@@ -97,7 +99,7 @@ export async function realmWorldsDialog(start = {}) {
       ${v.lines.map(l => `<p style="margin:0.15rem 0">${esc(l)}</p>`).join("")}
       ${map.layout.length || map.change.length ? `<details class="wow-realm-books"><summary>What the books say of how it lies and how it changes</summary>
         ${[...map.layout, ...map.change].map(([note, ref]) => `<p style="margin:0.15rem 0">${esc(note)}. <span class="wodx-quiet">${esc(ref)}</span></p>`).join("")}
-        <p class="wodx-quiet">The map does not yet follow these notes place by place.</p></details>` : ""}
+        <p class="wodx-quiet">The map follows these notes where one flat map can; a book's above and below is laid out across the map.</p></details>` : ""}
       <div class="form-group"><label>Realm</label>${searchBox("select[name=realm]", "Find a realm…", "Search realms")}<select name="realm">${realmOptions(map.id)}</select></div>
       <div class="form-group"><label>Shown</label><select name="eyes" data-fixed><option value="home"${state.eyes === "all" ? "" : " selected"}>What the chronicle has found</option><option value="all"${state.eyes === "all" ? " selected" : ""}>The whole realm</option></select></div>
       <div class="form-group"><label>From</label><select name="from" data-fixed>${places(v.from)}</select></div>
@@ -112,10 +114,12 @@ export async function realmWorldsDialog(start = {}) {
       buttons: [{action: "show", label: "Show", default: true, callback: (ev, b) => ({go: "show", state: read(ev, b)})},
         {action: "closer", label: "Look closer at From", callback: (ev, b) => ({go: "closer", state: read(ev, b)})},
         {action: "found", label: "Found places", callback: (ev, b) => ({go: "found", state: read(ev, b)})},
+        {action: "go", label: "Go", callback: (ev, b) => ({go: "go", state: read(ev, b)})},
         ...(map.kind === "visit" ? [{action: "visit", label: "A new visit", callback: (ev, b) => ({go: "visit", state: read(ev, b)})}] : []),
         {action: "close", label: "Close"}]});
     if ( !res || res === "close" ) return null;
     state = res.state;
+    if ( res.go === "go" ) await goDialog(state);
     if ( res.go === "closer" ) await closerDialog(state);
     if ( res.go === "found" ) await foundDialog(state);
     if ( res.go === "visit" && state.realm === map.id ) { await newVisit(map.id); state.from = state.to = null; }
@@ -124,6 +128,32 @@ export async function realmWorldsDialog(start = {}) {
 }
 
 /** One square of a realm's map and the squares round it, closer. */
+/** GM: make the realm journey with the selected tokens: confirm, move the clock, roll the way, post the card. */
+export async function goDialog(state = {}) {
+  if ( !game.user.isGM ) return null;
+  await load();
+  const v = view(state), map = v.map, j = v.journey;
+  if ( !j || j.hidden || j.noWay || !j.squares ) return ui.notifications.info("Pick two found places with ground between them first.");
+  const travellers = (canvas?.tokens?.controlled ?? []).map(t => t.document);
+  const across = t => [...(t.actor?.statuses ?? [])].some(s => s === "wodx-umbra" || s === "wodx-shadowlands") || ["penumbra", "shadowlands", "umbra"].includes(t.getFlag?.(MODULE_ID, "layer"));
+  const behind = travellers.filter(t => !across(t));
+  const hazards = REALMS[map.id]?.hazards ?? [];
+  const ok = await foundry.applications.api.DialogV2.confirm({window: {title: `Go: ${map.places[j.from].name} to ${map.places[j.to].name}`}, rejectClose: false,
+    content: `<p>${esc(RW.timeWords(j.days))} on the way. The clock moves on by that much, and each day may bring one of ${esc(map.label)}'s dangers.</p>
+      ${travellers.length ? `<p>Going: ${esc(travellers.map(t => t.name).join(", "))}.</p>` : "<p>No tokens are selected: the clock and the way only.</p>"}
+      ${behind.length ? `<p><b>${esc(behind.map(t => t.name).join(", "))}</b> ${behind.length === 1 ? "is" : "are"} not across yet: step sideways or cross the Shroud first, with its roll.</p>` : ""}`});
+  if ( !ok ) return null;
+  const g = chron()?.gen, rand = g?.random ? g.random(`realm-go:${map.id}:${j.from}:${j.to}:${game.time.worldTime}`) : Math.random;
+  const plan = RW.goPlan(j, {hazards, rand});
+  if ( !plan ) return null;
+  await game.time.advance(plan.seconds);
+  await ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: map.label},
+    content: `<div class="wodx-card wow-realm-go"><p><b>${esc(map.places[j.from].name)} to ${esc(map.places[j.to].name)}</b>, ${esc(RW.timeWords(j.days))}${travellers.length ? `: ${esc(travellers.map(t => t.name).join(", "))}` : ""}.</p>
+      ${plan.meetings.length ? `<ul>${plan.meetings.map(m => `<li>Day ${m.day}: ${esc(m.what)}</li>`).join("")}</ul>` : "<p>Nothing meets them on the way.</p>"}
+      <p class="wodx-quiet">A ${plan.chance} in 100 chance each day.</p></div>`});
+  return plan;
+}
+
 export async function closerDialog(state = {}) {
   await load();
   const v = view(state), map = v.map, p = map.places[v.from];

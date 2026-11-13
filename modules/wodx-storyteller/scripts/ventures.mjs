@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.60.0: putting money into a venture (rules in venture-rules.mjs, B2740-B2743).
+ * WoDX Storyteller (B3110-B3113): putting money into a venture (rules in venture-rules.mjs, B3110-B3113).
  *
  * A character puts money from the purse into a caravan, a workshop or a trading house on a market the Storyteller
  * has set up. Each weekly market turn (market-turn.mjs) the venture pays its share into the purse (the bank where the

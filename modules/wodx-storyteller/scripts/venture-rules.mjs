@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.60.0: putting money into a venture (B2740-B2743). Pure rules, no Foundry.
+ * WoDX Storyteller (B3110-B3113): putting money into a venture (B3110-B3113). Pure rules, no Foundry.
  *
  * A character (or an NPC) puts money into a caravan, a workshop or a trading house on a market. Each weekly market
  * turn the venture pays a share of what it earns into the purse, or loses part of its value: a lost caravan, a glut,

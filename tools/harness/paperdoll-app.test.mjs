@@ -21,10 +21,11 @@ function fakeActor() {
   return a;
 }
 
-test("the sheet gets a Paperdoll button and a Figure button for an owner of a character with a health track", async () => {
+test("the sheet gets a Figure button for an owner of a character with a health track; the drawn Paperdoll button is retired (B2990)", async () => {
   const a = fakeActor(), buttons = [];
   await Hooks.callAll("getActorSheetHeaderButtons", {actor: a}, buttons);
-  assert.deepEqual(buttons.map(b => b.label), ["Paperdoll", "Figure"]);
+  assert.equal(M.DRAWN_FACES_RETIRED, true);
+  assert.deepEqual(buttons.map(b => b.label), ["Figure"]);
   const none = [];
   await Hooks.callAll("getActorSheetHeaderButtons", {actor: {...a, isOwner: false}}, none);
   await Hooks.callAll("getActorSheetHeaderButtons", {actor: {...a, system: {}}}, none);

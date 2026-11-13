@@ -15,6 +15,10 @@ import ddcore as C
 MEDIEVAL = ["dark-ages", "long-night", "renaissance"]
 FLOORS = {"planks": "Wooden_Flooring_H_Ashen.webp", "stone": "Stone_Tiles_A_03.webp", "earth": None}
 
+def floor_tex(f):
+    """The pattern texture for a room's floor: a named floor (planks, stone), or a palette's texture path."""
+    return FLOORS.get(f) if f in FLOORS else f
+
 OVEN = "Brick_Oven_Gray_A_Hot_2x2.webp"
 PIT = "Brick_Cooking_Pit_Gray_A_Hot_1x1.webp"
 FORGE = "Brick_Cooking_Pit_Gray_B_Hot_2x1.webp"
@@ -54,11 +58,15 @@ TYPES = {
                 (TABLE, "window", 1),                     # table under a window for the light
                 (BENCH, "beside:table", 1),
                 (STOOL, "beside:table", 1),
+                ("Basket_Wood_Ashen_A_1x1.webp", "wall", 1, .7),
+                ("Bucket_Wood_Ashen_B_1x1.webp", "hearth", 1, .6),
             ],
             "Passage": [(BARREL, "wall", 2, .75), (SACK, "wall", 1, .75), ("Broom_Wood_Ashen_A_1x1.webp", "corner", 1, .7),
-                        ("Firewood_Stacked_A_1x1.webp", "wall", 1, .75)],
+                        ("Firewood_Stacked_A_1x1.webp", "wall", 1, .75), ("Basket_Lid_Wood_Ashen_A_1x1.webp", "wall", 1, .7)],
             "Byre": [("Trough_Wood_Ashen_Grain_A_2x1.webp", "wall:E", 2), ("Hay_Bale_A_01_1x1.webp", "wall", 2, .75),
-                     ("Bucket_Wood_Ashen_B_1x1.webp", "wall", 1, .7)],
+                     ("Bucket_Wood_Ashen_B_1x1.webp", "wall", 1, .7),
+                     ("Rope_01_A_1x1.webp", "wall", 1, .6),
+                     ("Basket_Wood_Ashen_A_1x1.webp", "wall", 1, .6)],
         },
     },
     "barn": {
@@ -66,15 +74,15 @@ TYPES = {
         "rooms": [("Barn floor", 0, 0, 6, 5, "earth")],
         "openings": [("double", 3, 5, "h"), ("window", 3, 0, "h")],
         "partitions": [],
-        "furnish": {"Barn floor": [("Hay_Pile_A_01_2x2.webp", "corner", 2), ("Hay_Bale_A_01_1x1.webp", "wall", 2),
-                                   ("Sack_Brown_D_Grain_1x1.webp", "wall", 2, .8)]},
+        "furnish": {"Barn floor": [("Hay_Pile_A_01_2x2.webp", "corner", 2), ("Hay_Bale_A_01_1x1.webp", "wall", 3),
+                                   ("Sack_Brown_D_Grain_1x1.webp", "wall", 3, .8), ("Basket_Wood_Ashen_A_1x1.webp", "wall", 1, .75), ("Basket_Lid_Wood_Ashen_A_1x1.webp", "wall", 1, .7), ("Broom_Wood_Ashen_B_1x1.webp", "wall", 1, .7)]},
     },
     "coop": {
         "label": "Coop", "size": (2, 2), "wall": "Wood_Ashen_C.png", "place": None, "fill": "home", "eras": MEDIEVAL,
         "rooms": [("Coop", 0, 0, 2, 2, "earth")],
         "openings": [("door", 1, 0, "h")],
         "partitions": [],
-        "furnish": {"Coop": [("Hay_Bale_A_02_1x1.webp", "corner", 1, .6)]},
+        "furnish": {"Coop": [("Hay_Bale_A_02_1x1.webp", "corner", 2, .6)]},
     },
     # ---------------------------------------------------------------- village and town
     "cottage": {
@@ -228,6 +236,8 @@ class Building:
 
     def furnish(self):
         for r in self.rooms: r.furnish()
+        import furnishing as F
+        if F.DEFAULT: F.apply(self, **F.DEFAULT)
         return self
 
 def place(key, type_key, x, y, facing="S", label=None, extra=None):
@@ -337,7 +347,11 @@ class Angled:
         return out
 
     def furnish(self):
-        self.local.furnish()
+        import furnishing as F
+        keep, F.DEFAULT = dict(F.DEFAULT), {}
+        try: self.local.furnish()
+        finally: F.DEFAULT.update(keep)
+        if F.DEFAULT: F.apply(self, **F.DEFAULT)
         return self
 
 

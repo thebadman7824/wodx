@@ -12,14 +12,18 @@
  *   apps.mjs         the tracker, "Out on your own", and the dialogs
  */
 import * as C from "./core.mjs";
+import * as Wills from "./wills.mjs";
+import * as WillRules from "./will-rules.mjs";
 import * as A from "./apps.mjs";
 import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
+import * as Builder from "./builder.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
 import * as Letters from "./letters.mjs";
+import * as LettersRules from "./letters-rules.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
@@ -82,7 +86,9 @@ Hooks.once("init", () => {
   C.registerSettings();
   Led.registerLedgerSettings();
   Led.registerLedgerHooks();
+  Wills.listen();
   Setup.registerSetupSettings();
+  Builder.registerBuilderSettings();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
   Dreams.registerDreamHooks();
@@ -133,7 +139,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -157,13 +163,15 @@ Hooks.once("ready", () => {
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
+    wills: {of: Wills.willOf, save: Wills.saveWill, open: Wills.willDialog, estate: Wills.estateOf, law: Wills.lawAt, kin: Wills.kinOf, rules: WillRules},
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
+    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
-    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},
@@ -179,7 +187,7 @@ Hooks.once("ready", () => {
     siegeWorks: {rules: SiegeWorksRules, setup: SiegeWorks.setupDialog, mine: SiegeWorks.mineDialog, addEngine: SiegeWorks.addEngine, readyEngine: SiegeWorks.readyEngine,
       removeEngine: SiegeWorks.removeEngine, endMine: SiegeWorks.endMine, draw: SiegeWorks.draw},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
-    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
+    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver, list: Letters.lettersOnTheWay, delay: Letters.delayLetter, read: Letters.readOnTheWay, plan: Letters.planFor, regionOf: Letters.regionOfActor, rules: LettersRules},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
@@ -302,6 +310,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Dash.DashboardApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
     button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
+  tokens.tools.wodxBuilder = {name: "wodxBuilder", title: "Build this chronicle (the recipe's steps, each safe to run twice, with Undo)", icon: "fa-solid fa-chess-rook", order: 127,
+    button: true, visible: Builder.wanted(), onChange: () => Builder.openBuilder()};
   tokens.tools.wodxHand = {name: "wodxHand", title: "The Storyteller's hand (rules at a glance, call for a roll, before play, the end of the night, the timer)", icon: "fa-solid fa-hand-sparkles", order: 123,
     button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
   tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,

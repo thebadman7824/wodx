@@ -9,6 +9,12 @@
  * sprinklers, electric lights, live wires, keypads and the goods inside containers are read against the new year,
  * each with Keep it and Show me. A kept thing works in any year. "Out of their time" in the Storyteller's hand lists
  * everything out of its time now, whether or not the clock just moved.
+ *
+ * 0.17.0: Bring forward (B2720, B2721). The card's "On the maps" part has a Bring forward button, and each row one of
+ * its own: every thing listed turns into its nearest equal in the card's year, in any era (a motor car in 1850 becomes
+ * a carriage, an oil lamp in 2020 an electric light, a radio in 1700 a bell, a keypad before 1970 a lock of the same
+ * grade), and the goods in containers become the everyday goods of that year where the scene stands. A second card
+ * says what changed, names what has nothing like it in that year, and has Undo.
  */
 import * as AR from "./anachronism-rules.mjs";
 import {MOD} from "./extras-rules.mjs";
@@ -108,6 +114,91 @@ export async function showThing(sceneId, id, wall) {
   try { await canvas.animatePan({x, y, duration: 400}); } catch (e) { /* no canvas */ }
   return true;
 }
+/* -------------------------------------------------------------- */
+/*  Bring forward (0.17.0)                                         */
+/* -------------------------------------------------------------- */
+
+let LIB_GOODS = null;
+async function libGoods() {
+  if ( LIB_GOODS ) return LIB_GOODS;
+  try { LIB_GOODS = await import("../../wodx-library/data/goods.mjs"); } catch (e) { LIB_GOODS = {}; }
+  return LIB_GOODS;
+}
+/** The year a card speaks of: its year, or the first year of its era. */
+const yearOf = (at, G) => Number(at?.year) || Number(G?.ERA_YEARS?.[at?.era]?.[0]) || 0;
+/** Which goods are at home on a scene in a year: its region and that region's way of life then (WoDX Chronicle). */
+function inUseOn(scene, year, G) {
+  if ( typeof G?.inUseAt !== "function" ) return undefined;
+  try {
+    const w = chron()?.world, r = w?.here?.(scene);
+    if ( r?.id ) {
+      const way = typeof w?.rules?.sphereFor === "function" ? w.rules.sphereFor(r.id, year) : null;
+      return (g, y) => G.inUseAt(g, y, {way, region: r.id});
+    }
+  } catch (e) { /* Chronicle too old: goods found everywhere */ }
+  return undefined;
+}
+/**
+ * Swap each thing in `rows` (as scanMaps gives them; all out of their time now when left out) for its equal in the
+ * year of `after`, and post what changed for the Storyteller with Undo. Returns the card, or null.
+ */
+export async function bringForward(rows = null, after = now()) {
+  if ( !game.user?.isGM ) return null;
+  const R = ix()?.rules;
+  if ( typeof R?.bringForward !== "function" ) { ui.notifications?.warn("Bring forward needs WoDX Interactables 0.37.0 or later."); return null; }
+  const G = await libGoods(), year = yearOf(after, G);
+  if ( !year ) { ui.notifications?.warn("The chronicle has no year to bring things to."); return null; }
+  rows = Array.isArray(rows) ? rows : await scanMaps({}, after);
+  const by = new Map();
+  for ( const r of rows ) {
+    const k = `${r.scene}|${r.id}|${r.wall ? 1 : 0}`;
+    if ( !by.has(k) ) by.set(k, {scene: r.scene, id: r.id, wall: !!r.wall, keys: []});
+    by.get(k).keys.push(String(r.key ?? ""));
+  }
+  const done = [], none = [], undo = [];
+  for ( const t of by.values() ) {
+    const doc = docOf(t.scene, t.id, t.wall), scene = game.scenes?.get(t.scene);
+    if ( !doc ) continue;
+    const f = doc.flags?.[IX] ?? {}, own = doc.flags?.[MOD] ?? {};
+    const name = R.datedParts?.(f, {wall: t.wall})?.name || (t.wall ? "Door" : "Tile"), where = scene?.name ?? "";
+    const parts = own.keepOutOfEra ? [] : t.keys.filter(k => k && !k.startsWith("goods:"));
+    const lines = t.keys.filter(k => k.startsWith("goods:")).map(k => k.slice(6));
+    const res = parts.length ? R.bringForward(f, {wall: t.wall, year, keys: parts}) : {patch: {}, was: {}, swaps: [], none: []};
+    if ( lines.length && Array.isArray(G.GOODS) ) {
+      const inUse = inUseOn(scene, year, G);
+      const sw = AR.swapLines(f.items, l => AR.goodsSwap(l, G.GOODS, year, G.valueAt, inUse), lines);
+      if ( sw.swaps.length ) { res.was.items = f.items ?? ""; res.patch.items = sw.text; res.swaps.push(...sw.swaps); }
+      res.none.push(...sw.none.map(l => ({label: l})));
+    }
+    if ( Object.keys(res.patch).length ) {
+      await doc.update(Object.fromEntries(Object.entries(res.patch).map(([k, v]) => [`flags.${IX}.${k}`, v])));
+      undo.push({scene: t.scene, id: t.id, wall: t.wall, was: res.was});
+    }
+    for ( const s of res.swaps ) done.push({where, name, from: s.from, to: s.to});
+    for ( const n of res.none ) none.push({where, name, what: n.label});
+  }
+  if ( !done.length && !none.length ) { ui.notifications?.info("Nothing on the maps needs bringing to the year."); return null; }
+  const li = (r, text) => `<li>${r.where ? `<b>${esc(r.where)}</b>, ` : ""}${esc(r.name)}: ${text}</li>`;
+  const content = `<div class="wodx-anachronism"><h3><i class="fa-solid fa-forward"></i> Brought to ${esc(year)}</h3>
+    ${done.length ? `<ul>${done.map(r => li(r, `${esc(r.from)} is now ${esc(r.to)}`)).join("")}</ul>` : ""}
+    ${none.length ? `<p>Nothing like these is found in ${esc(year)}. Keep them or take them off the map:</p><ul>${none.map(r => li(r, esc(r.what))).join("")}</ul>` : ""}
+    ${done.length ? `<p>The pictures on the map stay as they were: change a tile's image if it should look different.</p><button type="button" data-wodx-forward-undo><i class="fa-solid fa-rotate-left"></i> Undo</button>` : ""}</div>`;
+  return ChatMessage.create({content, whisper: ChatMessage.getWhisperRecipients("GM").map(u => u.id), speaker: {alias: "WoDX Sheets"},
+    flags: {[MOD]: {broughtForward: {year, undo}}}});
+}
+/** Put back what a Bring forward card changed. */
+export async function undoForward(undo = []) {
+  if ( !game.user?.isGM ) return 0;
+  let n = 0;
+  for ( const u of undo ?? [] ) {
+    const doc = docOf(u.scene, u.id, u.wall);
+    if ( !doc ) continue;
+    await doc.update(Object.fromEntries(Object.entries(u.was ?? {}).map(([k, v]) => [`flags.${IX}.${k}`, v])));
+    n++;
+  }
+  return n;
+}
+
 /** The card's part for the maps: a list by scene, cut at MAP_ROWS. */
 function mapRows(found) {
   if ( !found.length ) return "";
@@ -115,9 +206,9 @@ function mapRows(found) {
   for ( const r of shown ) { if ( !by.has(r.scene) ) by.set(r.scene, {name: r.sceneName, rows: []}); by.get(r.scene).rows.push(r); }
   const ref = r => esc(JSON.stringify([r.scene, r.id, r.wall ? 1 : 0, r.key]));
   const list = [...by.values()].map(g => `<li><b>${esc(g.name)}</b><ul>${g.rows.map(r =>
-    `<li>${esc(r.name)}: ${esc(r.note)} <button type="button" data-wodx-keep-map="${ref(r)}"><i class="fa-solid fa-box-archive"></i> Keep it</button> <button type="button" data-wodx-show-map="${ref(r)}"><i class="fa-solid fa-location-crosshairs"></i> Show me</button></li>`).join("")}</ul></li>`).join("");
+    `<li>${esc(r.name)}: ${esc(r.note)} <button type="button" data-wodx-keep-map="${ref(r)}"><i class="fa-solid fa-box-archive"></i> Keep it</button> <button type="button" data-wodx-show-map="${ref(r)}"><i class="fa-solid fa-location-crosshairs"></i> Show me</button> <button type="button" data-wodx-forward-map="${ref(r)}"><i class="fa-solid fa-forward"></i> Bring forward</button></li>`).join("")}</ul></li>`).join("");
   const more = found.length - shown.length;
-  return `<h4>On the maps</h4><p>A kept thing works as it stands; anything else is yours to change or take off the map.</p><ul>${list}</ul>${more > 0 ? `<p>And ${more} more on the maps: run the check again after these are dealt with.</p>` : ""}`;
+  return `<h4>On the maps</h4><p>A kept thing works as it stands; anything else is yours to change or take off the map. Bring forward swaps each one for its equal in this year.</p><p><button type="button" data-wodx-bring-forward><i class="fa-solid fa-forward"></i> Bring forward</button></p><ul>${list}</ul>${more > 0 ? `<p>And ${more} more on the maps: run the check again after these are dealt with.</p>` : ""}`;
 }
 
 /**
@@ -191,7 +282,28 @@ export function setup() {
   Hooks.on("updateWorldTime", () => { if ( game.user?.isGM ) soon(); });
   Hooks.on("wodxSkipEnd", () => { if ( game.user?.isGM ) soon(); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
-    if ( !msg.flags?.[MOD]?.anachronism || !game.user.isGM ) return;
+    if ( !game.user.isGM ) return;
+    const bf = msg.flags?.[MOD]?.broughtForward;
+    if ( bf ) for ( const b of el.querySelectorAll?.("[data-wodx-forward-undo]") ?? [] ) b.addEventListener("click", async () => {
+      b.disabled = true;
+      await undoForward(bf.undo);
+      b.textContent = "Undone";
+    });
+    if ( !msg.flags?.[MOD]?.anachronism ) return;
+    const at = msg.flags[MOD].anachronism;
+    for ( const b of el.querySelectorAll?.("[data-wodx-bring-forward]") ?? [] ) b.addEventListener("click", async () => {
+      b.disabled = true;
+      try { await bringForward(await scanMaps(at.before ?? {}, at.after ?? now()), at.after ?? now()); }
+      catch (e) { b.disabled = false; console.error("WoDX Sheets | bring forward", e); }
+    });
+    for ( const b of el.querySelectorAll?.("[data-wodx-forward-map]") ?? [] ) b.addEventListener("click", async () => {
+      let r = [];
+      try { r = JSON.parse(b.dataset.wodxForwardMap); } catch (e) { return; }
+      b.disabled = true;
+      const [scene, id, wall, key] = r;
+      try { await bringForward([{scene, id, wall: !!wall, key}], at.after ?? now()); }
+      catch (e) { b.disabled = false; console.error("WoDX Sheets | bring forward", e); }
+    });
     for ( const b of el.querySelectorAll?.("[data-wodx-keep]") ?? [] ) b.addEventListener("click", async () => {
       const [a, i] = b.dataset.wodxKeep.split(".");
       if ( await keep(a, i) ) { b.disabled = true; b.textContent = "Kept"; }

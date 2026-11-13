@@ -29,18 +29,25 @@ import {MOODS as TALK_MOODS} from "../data/grammar/groups.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
+import {build as buildOverheard} from "./overheard.mjs";
 import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import * as RV from "./rivalry-rules.mjs";
+import * as KIN from "./kin.mjs";
+import * as BONDS from "./bonds.mjs";
+import * as TRUST from "./trust.mjs";
+import * as HEARTS from "./hearts.mjs";
+import * as STANDING from "./standing.mjs";
+import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.52.0";
+const VERSION = "0.67.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -830,8 +837,11 @@ rivalry.hooks();
 /* 0.27.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
+/* 0.53.0: NPCs who talk among themselves where a character can overhear (B2750 to B2753) */
+const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
+overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -855,16 +865,39 @@ Hooks.once("init", () => {
   talk.registerSettings();
   rivalry.registerSettings();
   passersby.registerSettings();
+  overheard.registerSettings();
   wanted.registerSettings();
+  KIN.registerSettings();
+  KIN.listen();
+  BONDS.registerSettings();
+  BONDS.listen();
+  TRUST.listen();
+  HEARTS.registerSettings();
+  HEARTS.listen();
+  STANDING.registerSettings();
+  LEGACY.registerSettings();
+  LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
-    settlements, openSettlements: settlements.open};
+    settlements, openSettlements: settlements.open,
+    kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
+    bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
+    trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
+      answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
+      haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
+      takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
+    standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,
+      rankShift: STANDING.rankShift, feuds: STANDING.feuds, startFeud: STANDING.startFeud, endFeud: STANDING.endFeud, feudKilling: STANDING.feudKilling, feudLaw: STANDING.feudLawHere,
+      feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules},
+    legacy: {pastLives: LEGACY.pastLives, addPastLife: LEGACY.addPastLife, recall: LEGACY.recall, teach: LEGACY.teach, taughtBy: LEGACY.taughtBy, teachingLine: LEGACY.teachingLine,
+      web: LEGACY.web, openWeb: LEGACY.openWeb, ideas: LEGACY.ideasNow, rules: LEGACY.rules}, openWeb: LEGACY.openWeb};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -878,7 +911,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**
@@ -962,6 +995,11 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => factions.openFactions()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
+  // NPC 0.61.0 (B2914): dress the selected characters for a part of the world
+  tokens.tools.wodxDress = {name: "wodxDress", title: "Dress for a part of the world (a stranger's clothes are noticed)", icon: "fa-solid fa-shirt", order: 114.5,
+    button: true, visible: true, onChange: () => wanted.dress.dialog()};
+  tokens.tools.wodxOverheard = {name: "wodxOverheard", title: "Overheard talk (NPCs who talk among themselves on this scene)", icon: "fa-solid fa-ear-listen", order: 113.5,
+    button: true, visible: game.user.isGM, onChange: () => overheard.open()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });

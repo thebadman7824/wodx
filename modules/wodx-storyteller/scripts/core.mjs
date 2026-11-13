@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.60.0";
+export const VERSION = "0.64.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -318,6 +318,9 @@ async function findTable(ref) {
   try { const t = await fromUuid(ref); if ( t ) return t; } catch (e) { /* a name, not a uuid */ }
   return all(game.tables).find(t => t.name === ref || t.id === ref) ?? null;
 }
+/** A meeting on the road for a scene (0.64.0: also the world map's "Go"). {text, table}. */
+export const roadEncounter = (scene = globalThis.canvas?.scene ?? null) => drawEncounter({scene, uuid: scene?.uuid, name: scene?.name ?? "the road"});
+
 async function drawEncounter(dest) {
   const table = await findTable(travelOf(dest.scene).table ?? setting("encounterTable"));
   if ( !table?.draw ) {

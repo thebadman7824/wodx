@@ -20,7 +20,7 @@ How it decides where things go
 Rooms, furnishing and the Dungeondraft writer are shared with the town generator (ddcore.py); the three buildings
 are building types from buildings.py.
 
-Run: python3 ddfarm.py [seed] [asset list]. The asset list is every asset path in the packs (one a line); the copy
+Run: python3 ddfarm.py [seed] [asset list] [year]. The asset list is every asset path in the packs (one a line); the copy
 used for the sample is /mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt.
 """
 import json, math, os, sys
@@ -32,6 +32,10 @@ import buildings as B
 DEBUG = bool(os.environ.get("DEBUG"))
 SEED = int(sys.argv[1]) if len(sys.argv) > 1 else 1197
 R = C.init(SEED, sys.argv[2] if len(sys.argv) > 2 else "../all.txt")
+YEAR = int(sys.argv[3]) if len(sys.argv) > 3 else 1197
+import furnishing as FURN
+if not FURN.DEFAULT:                    # furnished by purpose, the age's palette and room value (furnishing.py)
+    FURN.DEFAULT.update(year=YEAR, region="moravia", wealth=None, trade=None, seed=SEED)
 COLS, ROWS = 50, 36
 
 # ------------------------------------------------------------------ site
@@ -134,7 +138,7 @@ def trees_and_scatter(blocked):
         x, y = R.uniform(-1.5, COLS + 1.5), R.uniform(-1.5, ROWS + 1.5)
         s = R.uniform(.75, 1.35); rad = 1.9 * s                    # canopy radius in cells
         if in_clearing(x, y, -.05): continue
-        if any(rdist(x, y, *b) < rad * .7 for b in blocked): continue
+        if any(rdist(x, y, *b) < rad * 1.05 for b in blocked): continue   # no canopy over a roof or a yard
         if near(x, y, TRACK, TRACK_HALF + rad * .5) or near(x, y, BROOK, BROOK_HALF + rad * .45): continue
         if any(math.hypot(x - a, y - b) < (rad + c) * .55 for a, b, c in placed): continue
         placed.append((x, y, rad)); objs.append(obj(R.choice(pines), x, y, R.uniform(-math.pi, math.pi), s, layer=400))
@@ -159,9 +163,9 @@ def build():
     blds = build_rooms()
     walls, patterns, objects, paths = [], [], [], []
     for b in blds:
-        walls.append(wall_with_portals(b.outline, b.t["wall"], b.openings, True))
+        walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
         for a, c in b.partitions:
-            walls.append(wall_with_portals([a, c], b.t["wall"], b.openings, False))
+            walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
     for b in blds:
         for r in b.rooms:
             if B.FLOORS.get(r.floor):
@@ -170,7 +174,7 @@ def build():
             for it in r.items:
                 # a turned item: the asset's own size turned a quarter
                 rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
-                objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
+                objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
             objects.extend(C.dressing_objects(r, False))
     # yard: fences, well, woodpile, block, haystack, sty, garden crops
     def fence_box(x, y, w, h, gap_side, g0, g1):

@@ -1,0 +1,924 @@
+{
+ "_about": "Tags for Dungeondraft assets, from their paths only. packs: first pack-name match gives the eras (settle.py ages), a style and a base worth (0-5, the everyday goods scale). wood: FA wood finishes narrow the eras and set the style. pieces: first match on the file name (else the folder) gives the general piece. Bands: medieval early reform industrial republic socialist modern future.",
+ "packs": [
+  {
+   "match": "^FA_",
+   "bands": [
+    "medieval",
+    "early",
+    "reform",
+    "industrial"
+   ],
+   "style": "fa",
+   "worth": 1
+  },
+  {
+   "match": "Skront's Fine Dining",
+   "bands": [
+    "early",
+    "reform",
+    "industrial"
+   ],
+   "style": "skront-fine",
+   "worth": 3
+  },
+  {
+   "match": "Skront's Rugs",
+   "bands": [
+    "medieval",
+    "early",
+    "reform",
+    "industrial",
+    "republic"
+   ],
+   "style": "skront",
+   "worth": 2
+  },
+  {
+   "match": "Skront's|Jonathan Roberts|Hakupack|DQ_Pack|Hooded|Maelstrom Maps|5 wood|T23's Candles|CSA - Community",
+   "bands": [
+    "medieval",
+    "early"
+   ],
+   "style": "skront",
+   "worth": 1
+  },
+  {
+   "match": "\\[WFW\\] Modern",
+   "bands": [
+    "modern"
+   ],
+   "style": "wfw-modern",
+   "worth": 2
+  },
+  {
+   "match": "\\[WFW\\] Sci-Fi|WFW Sci-Fi",
+   "bands": [
+    "future"
+   ],
+   "style": "wfw-scifi",
+   "worth": 2
+  },
+  {
+   "match": "WFW 5th Anniversary|WFW Sample",
+   "bands": [
+    "medieval",
+    "early",
+    "reform"
+   ],
+   "style": "wfw",
+   "worth": 1
+  },
+  {
+   "match": "TC_Manor|TC_Hotel|TC_Bank|TC_Library|TC_Asylum|TC_Home Furnishings|TC_Furnishings",
+   "bands": [
+    "reform",
+    "industrial",
+    "republic"
+   ],
+   "style": "tc-period",
+   "worth": 2
+  },
+  {
+   "match": "TC_Feudal Japan|TC_Japanese",
+   "bands": [
+    "medieval",
+    "early",
+    "reform"
+   ],
+   "style": "tc-japan",
+   "worth": 2,
+   "regions": [
+    "east-asia"
+   ]
+  },
+  {
+   "match": "TC_Greco Roman",
+   "bands": [
+    "medieval"
+   ],
+   "style": "tc-classical",
+   "worth": 2
+  },
+  {
+   "match": "^TC_",
+   "bands": [
+    "medieval",
+    "early",
+    "reform"
+   ],
+   "style": "tc",
+   "worth": 1
+  },
+  {
+   "match": "Neologiac - 80s",
+   "bands": [
+    "socialist",
+    "modern"
+   ],
+   "style": "eighties",
+   "worth": 1
+  },
+  {
+   "match": "Modern Furnishings|Simple Sofa Set|Basic Modern Appliances",
+   "bands": [
+    "republic",
+    "socialist",
+    "modern"
+   ],
+   "style": "mid-century",
+   "worth": 1
+  },
+  {
+   "match": "^Tyger",
+   "bands": [
+    "socialist",
+    "modern"
+   ],
+   "style": "tyger",
+   "worth": 2
+  },
+  {
+   "match": "#27 - a day at the museum",
+   "bands": [
+    "republic",
+    "socialist",
+    "modern"
+   ],
+   "style": "ada-museum",
+   "worth": 3
+  },
+  {
+   "match": "#30 - a day at the university|#29 - a day at the tower",
+   "bands": [
+    "early",
+    "reform",
+    "industrial"
+   ],
+   "style": "ada-stone",
+   "worth": 2
+  },
+  {
+   "match": "#12|#19 - a day at the military|#21 - a day on the submarine",
+   "bands": [
+    "socialist",
+    "modern"
+   ],
+   "style": "ada-military",
+   "worth": 1
+  },
+  {
+   "match": "#24 - a day at the space|#31 - a day at the cyberpunk|#11 - a day at the \\[post|#18 - a day at the secret",
+   "bands": [
+    "future"
+   ],
+   "style": "ada-future",
+   "worth": 2
+  },
+  {
+   "match": "#15 - a day at the skyscraper",
+   "bands": [
+    "modern",
+    "future"
+   ],
+   "style": "ada-office",
+   "worth": 2
+  },
+  {
+   "match": "^\\[ADA\\]",
+   "bands": [
+    "modern"
+   ],
+   "style": "ada",
+   "worth": 2
+  },
+  {
+   "match": "Cyberpunk|Mog SciFi|Star Wars|Starship|NotASnark|HellScape|AP01_red|SCIFI|Scifi|Cloning Lab",
+   "bands": [
+    "future"
+   ],
+   "style": "scifi",
+   "worth": 2
+  }
+ ],
+ "wood": {
+  "Ashen": {
+   "bands": [
+    "medieval",
+    "early"
+   ],
+   "style": "fa-ashen"
+  },
+  "Light": {
+   "bands": [
+    "early",
+    "reform"
+   ],
+   "style": "fa-light"
+  },
+  "Dark": {
+   "bands": [
+    "reform",
+    "industrial",
+    "republic"
+   ],
+   "style": "fa-dark"
+  }
+ },
+ "pieces": [
+  [
+   "^(Flower_Bed|Bed_?Roll|Bedroll|Seabed|Riverbed|Garden_Bed)",
+   null
+  ],
+  [
+   "(?-i:Throne)|throne",
+   "throne"
+  ],
+  [
+   "Operation|Toy|Dentist|Barber|Wheel_?chair|Electric_?Chair|Gimbal|console seat|Deck_?Chair|Pilot|Cockpit|Ejector|(?<![A-Za-z])Med(?=Table|_)|MedTable|Massage|Operating|Surgery|Autopsy|Baccarat|Poker|Roulette|Blackjack|Craps|Alchemy|Gurney|Examination",
+   "special"
+  ],
+  [
+   "Fireplace|Hearth|Brazier|Fire_?Pit|Cooking_Pit|Cooking_Station",
+   "hearth"
+  ],
+  [
+   "Stove|Oven|Range\\b|Refrigerator|Fridge|Microwave|Furnace",
+   "stove"
+  ],
+  [
+   "Chandelier|Candelabra|Candle|Sconce|Lantern|Lamp|Torch|Light(?!house)|Lumin",
+   "light"
+  ],
+  [
+   "Bed|Bunk|\\bCot\\b|Hammock|Crib|Cradle",
+   "bed"
+  ],
+  [
+   "Armchair|Chair|Stool|Bench|Couch|Sofa|Throne|Pew|Seat|Ottoman",
+   "seat"
+  ],
+  [
+   "Desk|Lectern|Writing",
+   "desk"
+  ],
+  [
+   "Counter|Register|Bar_|Kiosk|Reception",
+   "counter"
+  ],
+  [
+   "(?-i:Table|(?<![A-Za-z])table)(?!t|s?_?Cloth|_?Setting)",
+   "table"
+  ],
+  [
+   "Bookshelf|Bookcase|Shelf|Shelves|Rack",
+   "shelf"
+  ],
+  [
+   "Cupboard|Wardrobe|Cabinet|Hutch|Dresser|Drawer|Armoire|Locker|Sideboard",
+   "cupboard"
+  ],
+  [
+   "Chest(?!plate)|Trunk|Strongbox|\\bSafe\\b|Coffer",
+   "chest"
+  ],
+  [
+   "Barrel|Keg|Cask|Crate|Sack|Basket|Pallet|Box",
+   "store"
+  ],
+  [
+   "Rug|Carpet|Door_?Mat|Mat\\b",
+   "rug"
+  ],
+  [
+   "Bath|Tub|Shower|Toilet|Sink|Basin|Urinal|Wash",
+   "bath"
+  ],
+  [
+   "Altar|\\bFont\\b|Pulpit|Shrine|Reliquary",
+   "worship"
+  ],
+  [
+   "Display|Showcase|Vitrine|Statue|Bust\\b|Tapestry|Painting|Banner|Mannequin|Pedestal|Armou?r_?Stand|Trophy",
+   "display"
+  ],
+  [
+   "Computer|Monitor|Terminal|\\bTV\\b|Television|Entertainment|Phone|Screen|Console|Server|Printer|Radio|Typewriter|Arcade",
+   "machine"
+  ],
+  [
+   "Potted|Plant|Flower|Vase",
+   "plant"
+  ],
+  [
+   "Bottle|Book|Paper|Quill|Ink|Plate|Mug|Cup\\b|Glass|Bread|Cheese|Food|Fruit|Bowl|Jug|Pitcher|Scroll|Map|Coin|Key|Pen_|Product|Setting|Cloth|Goblet|Tankard|Cutlery|Dish|Pot_|Pan_|Kettle|Candy|Cake|Pie|Meat|Fish|Vegetable|Herb|Spice|Ledger|Letter|Folder|File",
+   "clutter"
+  ]
+ ],
+ "folders": [
+  [
+   "Seating",
+   "seat"
+  ],
+  [
+   "Beds|Sleeping",
+   "bed"
+  ],
+  [
+   "(?-i:Tables)",
+   "table"
+  ],
+  [
+   "Cupboards|Wardrobes",
+   "cupboard"
+  ],
+  [
+   "Shelves",
+   "shelf"
+  ],
+  [
+   "Chests",
+   "chest"
+  ],
+  [
+   "Barrels|Crates|Sacks|Boxes|Storage",
+   "store"
+  ],
+  [
+   "Rugs|Carpets",
+   "rug"
+  ],
+  [
+   "Washing",
+   "bath"
+  ],
+  [
+   "Altars",
+   "worship"
+  ],
+  [
+   "Lightsources|Lighting",
+   "light"
+  ],
+  [
+   "Stoves|Ovens",
+   "stove"
+  ],
+  [
+   "Clutter|Writing|Food",
+   "clutter"
+  ]
+ ],
+ "lasting": "Barrel|Keg|Cask|Crate|Sack|Basket|Bucket|Firewood|Hay|Potted|Plant|Rock|Stone_?Pile|Log_|Tapestry",
+ "worth_up": {
+  "Gold|Golden|Gilded|Royal|Throne|Crystal|Jewel": 2,
+  "Silver|Marble|Ornate|Fancy|Fine|Velvet|Chandelier|King|Noble|Luxury|Carved|Decorative": 1
+ },
+ "worth_down": {
+  "Broken|Damaged|Destroyed|Rotten|Ruined": 2,
+  "Crude|Rough|Worn|Dirty|Simple|Straw|Bunk|Old_|Burnt": 1
+ },
+ "skip_folders": "Combat|Weapons|Creatures|Spells|Monster|Bones|Gore|Tokens|Vehicles|Cars|Nests|Effects|Overlays|Token Borders|Texture Borders",
+ "skip_names": "(?<![A-Za-z])(Elf|Elven|Dwarf|Dwarven|Magic|Arcane|Orc|Goblin|Dragon|Rune|Runic|Wizard|Cult|Cultist|Demon|Infernal|Necro|Skeleton|Bones|Blood)",
+ "skip_packs": "Dwarven|Elven|Magic Dome|Cultists|Dragon Temple|Ice Lair|Dark Wizard|Arcane|Underdark|Death Mist|Thorns|Runes|Creeps|Crystals|Hall of Heroes|Star Wars|HellScape",
+ "earliest": {
+  "Phone|Gram+ophone|Typewriter|Sewing_?Machine|Light_?Bulb|Bulb_|Telegraph|Bicycle|Shower|Radiator": "industrial",
+  "Neon|Radio|Fridge|Refrigerator|Vending|Electric_Fan": "republic",
+  "Television|(?<![A-Za-z])TV(?![A-Za-z])|Computer|Microwave|Monitor|Printer|Plastic|Sectional": "socialist",
+  "Lamp_?p?ost|Street_?Lamps?|Piano": "early",
+  "Couch|Sofa|Chaise|Ottoman|Wingback|Armchair": "early",
+  "Rocking": "reform",
+  "Pump": "reform"
+ },
+ "piece_words_about": "Pieces by whole words of the file name (split at capitals, underscores, spaces and digits), first rule that matches wins; a word matches itself and its plural; a word ending in * matches any word it starts. A name with a word from veto_words is no piece of furniture at all (a tree, a mine track, a coffin, a toy) and is left out.",
+ "veto_words": [
+  "tree",
+  "trees",
+  "sapling",
+  "foliage",
+  "leaves",
+  "bush",
+  "chestnut",
+  "stump",
+  "log",
+  "root",
+  "roots",
+  "corpse",
+  "body",
+  "mimic",
+  "explosive",
+  "explosives",
+  "tnt",
+  "dynamite",
+  "gunpowder",
+  "casket",
+  "coffin",
+  "sarcophagus",
+  "grave",
+  "tomb",
+  "urn",
+  "track",
+  "tracks",
+  "rail",
+  "rails",
+  "minecart",
+  "mine",
+  "cart",
+  "wagon",
+  "shipwreck",
+  "sunken",
+  "debris",
+  "wreck",
+  "airship",
+  "ice",
+  "lava",
+  "volcanic",
+  "eldritch",
+  "monster",
+  "troll",
+  "owlbear",
+  "hackey",
+  "toy",
+  "toys",
+  "spell",
+  "component",
+  "potion",
+  "potions",
+  "mushroom",
+  "fey",
+  "fairy",
+  "glowing",
+  "ghost",
+  "mystical",
+  "everspring",
+  "nightleaf",
+  "crystal",
+  "gem",
+  "gemstone",
+  "ritual",
+  "skull",
+  "skulls",
+  "torture",
+  "trap",
+  "switch",
+  "lever",
+  "pumpkin",
+  "mage",
+  "coral",
+  "webbed",
+  "stretcher",
+  "colosseum",
+  "egyptian",
+  "greek",
+  "grecian",
+  "jungle",
+  "palm",
+  "cactus",
+  "desert",
+  "snowy",
+  "windswept",
+  "awake",
+  "zurkhwood",
+  "fallen",
+  "overlay",
+  "lightray",
+  "sunbeam",
+  "glow",
+  "shadow",
+  "firefly",
+  "flag",
+  "flagpole",
+  "crossbow",
+  "arrow",
+  "bolts",
+  "clock",
+  "gear",
+  "bye",
+  "goodbye",
+  "welcome",
+  "keep",
+  "exit",
+  "enter",
+  "ramp",
+  "sign",
+  "holo",
+  "barbed",
+  "wire",
+  "fountain",
+  "roof",
+  "skylight",
+  "tube",
+  "tackle",
+  "fishing",
+  "leaf",
+  "plushie",
+  "orb",
+  "tank",
+  "pillow",
+  "pillows",
+  "treasure",
+  "pet",
+  "addon",
+  "campfire",
+  "bonfire",
+  "pyre",
+  "embers",
+  "spooky",
+  "mimic",
+  "weapon",
+  "weapons",
+  "polearm",
+  "pincers",
+  "crane",
+  "helmet",
+  "prospector",
+  "armor",
+  "armour",
+  "sword",
+  "shield",
+  "axe",
+  "spear",
+  "mace",
+  "flail",
+  "bloody",
+  "gore",
+  "drugs",
+  "drug",
+  "bong",
+  "syringe",
+  "needle",
+  "cocaine",
+  "pills",
+  "narcotics"
+ ],
+ "piece_words": [
+  [
+   "special",
+   [
+    "operation",
+    "dentist",
+    "barber",
+    "wheelchair",
+    "gimbal",
+    "cockpit",
+    "pilot",
+    "ejector",
+    "massage",
+    "operating",
+    "surgery",
+    "autopsy",
+    "baccarat",
+    "poker",
+    "roulette",
+    "blackjack",
+    "craps",
+    "alchemy",
+    "gurney",
+    "examination",
+    "med"
+   ]
+  ],
+  [
+   "plant",
+   [
+    "desk plant",
+    "potted plant"
+   ]
+  ],
+  [
+   "clutter",
+   [
+    "cake",
+    "chocolate",
+    "candy",
+    "cookie",
+    "cookies",
+    "pastry",
+    "icing",
+    "bread",
+    "pie",
+    "slice"
+   ]
+  ],
+  [
+   "throne",
+   [
+    "throne"
+   ]
+  ],
+  [
+   "hearth",
+   [
+    "fireplace",
+    "hearth",
+    "brazier",
+    "firepit",
+    "cooking pit",
+    "fire pit",
+    "cooking station"
+   ]
+  ],
+  [
+   "stove",
+   [
+    "stove",
+    "oven",
+    "range",
+    "refrigerator",
+    "fridge",
+    "microwave",
+    "furnace",
+    "kamado"
+   ]
+  ],
+  [
+   "bed",
+   [
+    "bed",
+    "bedframe",
+    "bunk",
+    "cot",
+    "hammock",
+    "crib",
+    "cradle",
+    "sleeping bag",
+    "mattress"
+   ]
+  ],
+  [
+   "seat",
+   [
+    "armchair",
+    "chair",
+    "stool",
+    "bench",
+    "couch",
+    "sofa",
+    "pew",
+    "seat",
+    "ottoman",
+    "chaise",
+    "wingback"
+   ]
+  ],
+  [
+   "desk",
+   [
+    "desk",
+    "lectern",
+    "writing desk"
+   ]
+  ],
+  [
+   "counter",
+   [
+    "counter",
+    "countertop",
+    "register",
+    "bar",
+    "kiosk",
+    "reception"
+   ]
+  ],
+  [
+   "table",
+   [
+    "table"
+   ]
+  ],
+  [
+   "shelf",
+   [
+    "bookshelf",
+    "bookcase",
+    "shelf",
+    "shelves",
+    "rack"
+   ]
+  ],
+  [
+   "cupboard",
+   [
+    "cupboard",
+    "wardrobe",
+    "cabinet",
+    "hutch",
+    "dresser",
+    "drawer",
+    "drawers",
+    "armoire",
+    "locker",
+    "sideboard",
+    "nightstand"
+   ]
+  ],
+  [
+   "chest",
+   [
+    "chest",
+    "trunk",
+    "strongbox",
+    "safe",
+    "coffer"
+   ]
+  ],
+  [
+   "store",
+   [
+    "barrel",
+    "barrell",
+    "keg",
+    "cask",
+    "crate",
+    "sack",
+    "basket",
+    "pallet",
+    "box"
+   ]
+  ],
+  [
+   "rug",
+   [
+    "rug",
+    "carpet",
+    "doormat",
+    "door mat",
+    "mat",
+    "pelt",
+    "skins",
+    "fur rug"
+   ]
+  ],
+  [
+   "bath",
+   [
+    "bath",
+    "bathtub",
+    "tub",
+    "shower",
+    "toilet",
+    "sink",
+    "basin",
+    "urinal",
+    "washstand",
+    "wash"
+   ]
+  ],
+  [
+   "worship",
+   [
+    "altar",
+    "font",
+    "pulpit",
+    "shrine",
+    "reliquary"
+   ]
+  ],
+  [
+   "display",
+   [
+    "display",
+    "showcase",
+    "vitrine",
+    "statue",
+    "bust",
+    "tapestry",
+    "painting",
+    "banner",
+    "mannequin",
+    "pedestal",
+    "armor stand",
+    "armour stand",
+    "trophy"
+   ]
+  ],
+  [
+   "machine",
+   [
+    "computer",
+    "monitor",
+    "terminal",
+    "tv",
+    "television",
+    "phone",
+    "screen",
+    "console",
+    "server",
+    "printer",
+    "radio",
+    "typewriter",
+    "arcade",
+    "gramophone",
+    "grammophone",
+    "phonograph",
+    "telephone"
+   ]
+  ],
+  [
+   "light",
+   [
+    "chandelier",
+    "candelabra",
+    "candle",
+    "candles",
+    "candlestick",
+    "sconce",
+    "lantern",
+    "lamp",
+    "torch",
+    "light"
+   ]
+  ],
+  [
+   "plant",
+   [
+    "potted",
+    "plant",
+    "plants",
+    "flower",
+    "flowers",
+    "vase",
+    "planter"
+   ]
+  ],
+  [
+   "clutter",
+   [
+    "bottle",
+    "book",
+    "books",
+    "paper",
+    "papers",
+    "quill",
+    "ink",
+    "plate",
+    "plates",
+    "mug",
+    "cup",
+    "glass",
+    "bread",
+    "cheese",
+    "food",
+    "fruit",
+    "bowl",
+    "jug",
+    "pitcher",
+    "scroll",
+    "map",
+    "coin",
+    "coins",
+    "key",
+    "pen",
+    "product",
+    "setting",
+    "cloth",
+    "goblet",
+    "tankard",
+    "cutlery",
+    "dish",
+    "pot",
+    "pan",
+    "kettle",
+    "candy",
+    "cake",
+    "pie",
+    "meat",
+    "fish",
+    "vegetable",
+    "herb",
+    "herbs",
+    "spice",
+    "spices",
+    "ledger",
+    "letter",
+    "folder",
+    "file"
+   ]
+  ]
+ ],
+ "not_pieces": [
+  "flower bed",
+  "flowerbed",
+  "seabed",
+  "riverbed",
+  "garden bed",
+  "bed roll",
+  "flatbed",
+  "table cloth",
+  "tablecloth",
+  "table setting",
+  "table runner",
+  "bar top",
+  "bedroll"
+ ],
+ "asia_words": [
+  "bamboo",
+  "tatami",
+  "futon",
+  "kotatsu",
+  "shoji",
+  "zabuton",
+  "chabudai",
+  "byobu"
+ ]
+}

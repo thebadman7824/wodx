@@ -18,6 +18,7 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import {calendarFor} from "./hunt-calendar.mjs";
 import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
@@ -95,7 +96,10 @@ export function build(ctx) {
   const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
   // 0.49.0: a breach spreads by the homeland's years for the papers, the wireless and the rest
   const homeNow = () => { try { const h = game.modules.get("wodx-chronicle")?.api?.world?.homeland?.(); return (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { return null; } };
+  // 0.62.0: the homeland tells a Kindred faction with no region of its own which court it keeps (B2960)
+  const worldRegions = () => { try { return game.modules.get("wodx-chronicle")?.api?.world?.regions ?? {}; } catch (e) { return {}; } };
   function eraInfo() {
+    PO.setHomeRegion(homeNow());
     let morality = "roads", year = 1197, name = "Dark Ages";
     try {
       const e = chron()?.eras?.activeEra?.();
@@ -546,7 +550,14 @@ export function build(ctx) {
   function huntingFor(actor, placeId) {
     const s = state(), era = eraInfo();
     const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
-    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality, {churchStep: churchStep()});
+    // The faith calendar of the town (0.54.0, B2710): each feast, fast, curfew or blackout named; the old single step as a fallback
+    let scene = null;
+    try { scene = fromUuidSync(placeId); } catch (e) { scene = null; }
+    if ( scene && scene.documentName !== "Scene" ) scene = scene.parent?.documentName === "Scene" ? scene.parent : null;
+    scene ??= canvas?.scene ?? null;
+    const calendar = calendarFor(scene, {area: place.kind ?? "market"});
+    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality,
+      calendar.active ? {calendar} : {churchStep: churchStep()});
   }
   async function huntDialog(actor = canvas?.tokens?.controlled?.[0]?.actor ?? null) {
     if ( !game.user.isGM ) return null;
@@ -586,7 +597,8 @@ export function build(ctx) {
     const tres = h.trespass ? `<p>This is ${esc(h.trespass.name)}'s domain: a trespass, at +${h.trespass.security} for its security (V20 p. 113).</p>` : "";
     const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: actor.hasPlayerOwner ? undefined : gmIds(), rolls: rolls.map(r => r.roll),
       content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(actor.name)} hunts at ${esc(n.place(placeId))}</h3>
-        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church && !h.calendar?.length ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : h.calendar?.length ? `, the calendar ${h.church > 0 ? "+" : h.church < 0 ? "−" : "±"}${Math.abs(h.church)}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        ${h.calendar?.length ? `<p class="wodx-quiet">The calendar: ${h.calendar.map(c => esc(`${c.n > 0 ? "+" : c.n < 0 ? "−" : "±"}${Math.abs(c.n)} ${c.why}`)).join("; ")}.</p>` : ""}
         <p>${rolls.map(r => `[${r.dice.join(" ")}]`).join(" ")}</p><p><b>${esc(verdict)}</b></p>${tres}</div>`});
     // A trespass the holder notices (a botch, or a holder with Domain security watching) sours its standing: queued
     if ( h.trespass && (botch || (last && h.trespass.security > 0 && last.net <= h.trespass.security)) ) {
@@ -696,9 +708,13 @@ export function build(ctx) {
     const mActors = f.members.map(id => game.actors?.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
     const polityOpts = {"": "By its kind and age (a Kindred, Garou, Fae, Mage or Hunter faction of three or more keeps the polity of its age)", none: "No politics",
       ...Object.fromEntries(Object.entries(PO.POLITIES).map(([k, v]) => [k, `${v.label}${v.from ? `, from ${v.from}` : ""}`]))};
+    const regs = worldRegions(), home = PO.homeRegion();
+    const regionOpts = Object.keys(regs).length ? {"": `The chronicle's homeland${home && regs[home] ? ` (${regs[home].label})` : ""}`,
+      ...Object.fromEntries(Object.entries(regs).map(([k, v]) => [k, v.label ?? k]))} : null;
     const seatOpts = cur => `<option value="">Empty</option>${mActors.map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
     const politicsHtml = `<fieldset><legend>Politics inside the faction</legend>
       <div class="wodx-field"><label>Polity</label><select name="polity" data-fixed>${opt(polityOpts, f.polity ?? "")}</select></div>
+      ${regionOpts ? `<div class="wodx-field"><label>Where it stands</label><select name="region" data-fixed>${opt(regionOpts, f.region ?? "")}</select></div>` : ""}
       ${P ? `<p class="wodx-quiet">In ${era.year}: ${esc(P.label)}. ${esc(P.notes)}${f.polity && f.polity !== polKey ? " Its chosen polity does not exist yet in this year, so the polity of its age stands in." : ""}</p>
         ${P.titles?.[PO.topOffice(polKey)?.key] ? `<div class="wodx-field"><label>The top seat is called</label><input type="text" name="poltitle" value="${esc(pol.title ?? "")}" maxlength="40" placeholder="${esc(PO.topOffice(polKey)?.title ?? "")}" list="wnpc-pol-titles"><datalist id="wnpc-pol-titles">${P.titles[PO.topOffice(polKey).key].map(t => `<option value="${esc(t)}">`).join("")}</datalist></div>` : ""}
         ${mActors.length ? `<table class="wodx-table" data-fixed><thead><tr><th>Seat</th><th>Held by</th></tr></thead><tbody>
@@ -707,7 +723,7 @@ export function build(ctx) {
           ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${PO.baseRank(polInfo, a.id, polKey)}"></label>`).join("")}</div></fieldset>`
         : `<p class="wodx-quiet">Add members and save, then open the faction again to seat them.</p>`}
         ${pol.docket.length ? `<p><b>Charges to be heard:</b> ${pol.docket.map(d => esc(`${game.actors?.get(d.by)?.name ?? "someone"} against ${game.actors?.get(d.against)?.name ?? "someone"}: ${d.law}`)).join("; ")}.</p>` : ""}`
-      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou, Fae, Mage or Hunter faction of three or more members keeps the polity of its age unless set to No politics; a Wraith necropolis, the Shemsu-heru, the Fallen and a Kuei-jin court are picked by hand.</p>`}
+      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou, Fae, Mage or Hunter faction of three or more members keeps the polity of its age unless set to No politics; a Kindred faction in Africa keeps a council of the Laibon, in the lands of Islam and Central Asia a court of the Ashirra, in India a court of the Ravnos until 1999 and in East Asia and Tibet a court of the Kuei-jin; a Garou faction in Asia keeps a Beast Court and in Africa a land of the Bastet; a mages' faction keeps the Wu Lung in China and Korea, the Akashic Brotherhood elsewhere in Asia and the Ahl-i-Batin in the lands of Islam; in the Americas, the Pacific and the far north before the settlers Kindred keep no court, fae keep a council of the Nunnehi in the Americas, and Garou keep a gathering of the Mokolé in Australia and a land of the Bastet in Mesoamerica; a faction named for the Nagah, the Mokolé, the Ananasi, the Corax, the Gurahl, the Ratkin or the Rokea keeps a body of its own; fae keep a court of the Hsien in East and Southeast Asia, and a circle of the land's own fae in the Pacific islands, Aotearoa and Siberia before the settlers; a Wraith necropolis, the Shemsu-heru and the Fallen are picked by hand.</p>`}
       <p class="wodx-quiet">Turn on Politics inside factions in the module settings for courts to move each faction turn.</p></fieldset>`;
     const eventOpts = evs.length ? cur => evs.map(e => `<option value="${esc(e.id)}"${e.id === cur ? " selected" : ""}>${esc(`${e.year} ${e.name}`)}</option>`).join("") : null;
     const content = `<div class="wnpc-faction-form">
@@ -760,7 +776,7 @@ export function build(ctx) {
       owners: pcs.length ? pcs.filter(a => data[`o.${a.id}`]).map(a => a.id) : f.owners, run: data.run ?? f.run, orders: f.orders,
       founded: data.founded, ended: data.ended, risesOn: data.risesOn ?? f.risesOn, endsOn: data.endsOn ?? f.endsOn,
       dormantBy: data.dormant ? (f.dormant ? f.dormantBy : null) : null, fromEvent: f.fromEvent, parent: f.parent, absorbedBy: data.dormant ? f.absorbedBy : null,
-      polity: data.polity ?? f.polity, politics: foundry.utils.deepClone(pol)};
+      polity: data.polity ?? f.polity, politics: foundry.utils.deepClone(pol), region: data.region ?? f.region ?? ""};
     if ( P && mActors.length ) {
       const offices = {...next.politics.offices};
       for ( const o of P.offices ) {
@@ -1127,7 +1143,7 @@ export function build(ctx) {
   }
 
   function hooks() {
-    Hooks.on("wodxChronicleReady", () => registerHandler());
+    Hooks.on("wodxChronicleReady", () => { registerHandler(); PO.setHomeRegion(homeNow()); });
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEraApplied", () => { if ( isActiveGM() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEventFired", ev => { onEventFired(ev).catch(e => console.error(`${MOD} |`, e)); });

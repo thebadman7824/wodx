@@ -81,7 +81,7 @@ async function cripple(message) {
   const actor = f?.actor ? await fromUuid(f.actor) : null;
   if ( !actor || !game.user.isGM ) return;
   await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Crippled: ${f.label.toLowerCase()}`, img: "icons/svg/bones.svg",
-    description: "+2 difficulty on actions with this part until the health levels from the blow heal (VtDA20 p. 348). Remove it then.", flags: {[MOD]: {crippled: f.part}}}]);
+    description: "+2 difficulty on actions with this part until the health levels on it heal (VtDA20 p. 348). WoDX Combat adds it to attacks with the part and takes this off when the part heals.", flags: {[MOD]: {crippled: f.part}}}]);
   await message.update({content: `<div class="vtc-card"><p>${esc(actor.name)}'s ${esc(f.label.toLowerCase())} is crippled until those health levels heal.</p></div>`});
 }
 
@@ -96,6 +96,69 @@ async function maim(message) {
   await message.update({content: `<div class="vtc-card"><p>${esc(actor.name)}'s ${esc(f.label.toLowerCase())} is lost (on the lasting changes record).</p></div>`});
 }
 
+/* ---------- Where wounds are (Combat 3.22.0, house rule B2690) ---------- */
+
+/** The track the doll reads: a wraith's Corpus, else the health track. */
+export function trackOf(actor) {
+  const d = actor?.system?.health?.damage ?? {};
+  const c = d.corpus && (Number(d.corpus.bashing) || Number(d.corpus.lethal) || Number(d.corpus.aggravated)) ? d.corpus : d;
+  return {bashing: Number(c.bashing) || 0, lethal: Number(c.lethal) || 0, aggravated: Number(c.aggravated) || 0};
+}
+const woundsOf = actor => { const w = actor?.flags?.[MOD]?.wounds; return Array.isArray(w) ? w : []; };
+
+/** After damage from an attack card lands: note where (the owner or the GM who applied it calls this). */
+export async function recordWound(actor, data, r, msgId) {
+  if ( !actor || !data?.location?.id || !r?.after ) return;
+  const type = r.effType ?? data.type, levels = Math.max(0, (Number(r.after[type]) || 0) - (Number(r.before?.[type]) || 0)) || data.levels;
+  const list = B.trimWounds(B.addWounds(woundsOf(actor), {part: data.location.id, type, levels, msg: msgId, at: Date.now()}), trackOf(actor));
+  await actor.setFlag(MOD, "wounds", list);
+  // 3.25.0 (B2903): wounds that add up to a maiming on one part get the same offer, once per part
+  try {
+    if ( type === "bashing" || !game.settings.get(MOD, "hitLocations") ) return;
+    const body = bodyFor(actor), part = body?.parts?.find(p => p.id === data.location.id);
+    const offered = actor.flags?.[MOD]?.maimOffered ?? [];
+    const offer = B.addedUpOffer(B.woundsByPart(list, trackOf(actor), body), offered, part, {thisBlow: levels});
+    if ( !offer ) return;
+    await actor.setFlag(MOD, "maimOffered", [...offered, part.id]);
+    await offerMaim(actor, offer);
+  } catch (e) { console.warn("WoDX Combat | wounds add up", e); }
+}
+
+/** 3.25.0 (B2903): a crippled part heals with its health levels; the Crippled effect goes and the part can be offered again. */
+async function healCrippled(actor) {
+  const effects = (actor?.effects?.contents ?? []).filter(e => e.flags?.[MOD]?.crippled);
+  const offered = actor?.flags?.[MOD]?.maimOffered ?? [];
+  if ( !effects.length && !offered.length ) return;
+  const byPart = B.woundsByPart(woundsOf(actor), trackOf(actor), bodyFor(actor));
+  const healed = new Set(B.healedParts(effects.map(e => e.flags[MOD].crippled), byPart));
+  const gone = effects.filter(e => healed.has(e.flags[MOD].crippled)).map(e => e.id);
+  if ( gone.length ) {
+    await actor.deleteEmbeddedDocuments("ActiveEffect", gone);
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, content: `<div class="vtc-card"><p>${esc(actor.name)}: the crippled part has healed.</p></div>`});
+  }
+  const still = offered.filter(id => !B.healedParts([id], byPart).length);
+  if ( still.length !== offered.length ) await actor.setFlag(MOD, "maimOffered", still);
+}
+
+/** An undone attack takes its records back. */
+export async function undoWound(actor, msgId) {
+  const list = woundsOf(actor);
+  if ( !actor || !list.some(w => w.msg === msgId) ) return;
+  await actor.setFlag(MOD, "wounds", B.undoWounds(list, msgId));
+}
+
+/** The doll's numbers for an actor: {partId: {b, l, a}}. */
+export const woundMap = actor => B.woundsByPart(woundsOf(actor), trackOf(actor), bodyFor(actor));
+
+/** The Storyteller places a level of harm on a part, or clears a part. */
+async function placeWound(actor, part, type) {
+  const next = B.placeWound(woundsOf(actor), trackOf(actor), part, type, Date.now());
+  if ( !next ) { ui.notifications.info(`Mark the ${type} level on the health track first: every ${type} level already has a place.`); return false; }
+  await actor.setFlag(MOD, "wounds", next);
+  return true;
+}
+async function clearWound(actor, part) { await actor.setFlag(MOD, "wounds", B.clearWounds(woundsOf(actor), part)); }
+
 export function setupBody() {
   game.settings.register(MOD, "hitLocations", {name: "Hit locations (house rule)",
     hint: "Every attack lands on a part of the body: the attacker may aim at a part (the book's aimed-attack difficulty for its size) or the blow lands at random by size. A heavy blow to a limb or eye offers the Storyteller a maiming. Parts have no health of their own.",
@@ -107,6 +170,18 @@ export function setupBody() {
   Hooks.on("wodxFormChanged", actor => later(actor));
   Hooks.on("createActiveEffect", e => { if ( e.parent?.documentName === "Actor" ) later(e.parent); });
   Hooks.on("deleteActiveEffect", e => { if ( e.parent?.documentName === "Actor" ) later(e.parent); });
+  // As the health track heals (or is set by hand), the oldest records of each kind go; only the user who changed it writes
+  Hooks.on("updateActor", (actor, ch, _o, userId) => {
+    if ( userId !== game.user.id || !foundry.utils.hasProperty(ch, "system.health.damage") ) return;
+    const list = woundsOf(actor);
+    if ( !list.length ) return;
+    const next = B.trimWounds(list, trackOf(actor));
+    if ( next.length !== list.length ) actor.setFlag(MOD, "wounds", next).catch(e => console.warn("WoDX Combat | wounds", e));
+  });
+  Hooks.on("updateActor", (actor, ch) => {
+    if ( !isActiveGM() || !foundry.utils.hasProperty(ch, `flags.${MOD}.wounds`) ) return;
+    setTimeout(() => healCrippled(actor).catch(e => console.warn("WoDX Combat | heal crippled", e)), 50);
+  });
   Hooks.on("updateActor", (actor, ch) => { if ( foundry.utils.hasProperty(ch, `flags.${MOD}.shape`) || foundry.utils.hasProperty(ch, `flags.${ST}.body`) || foundry.utils.hasProperty(ch, "system.shapes") ) later(actor); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     if ( msg.flags?.[MOD]?.bodyGear ) el.querySelector("[data-action='wodx-body-undo']")?.addEventListener("click", () => undoGear(msg));
@@ -117,6 +192,6 @@ export function setupBody() {
     of: bodyFor, view: viewOf, rules: B, check: checkShape,
     /** Put a character in a shape by hand (null: back to what the sheet and effects say). */
     setShape: async (actor, key) => (key && B.SHAPES[key]) ? actor.setFlag(MOD, "shape", key) : actor.unsetFlag(MOD, "shape"),
-    offerMaim
+    offerMaim, wounds: woundMap, placeWound, clearWound, recordWound, undoWound, track: trackOf
   };
 }

@@ -10,6 +10,7 @@
  * Storyteller 0.58.2 (B2675): the rules and the grid they read (data/world.mjs, about 170 KB) load the first time
  * the window opens or load() is called, not when the world starts, so a player who never opens the map never
  * fetches them. The other calls here read the rules only after that first load.
+ * Storyteller 0.64.0 (B2910): "Go" makes the journey a trip: the clock, meetings on the way, hardship, and arrival.
  */
 let WM = null, loading = null;
 /** Load the world map's rules and grid once. Returns the rules. */
@@ -22,8 +23,12 @@ export function load() {
 export const loaded = () => WM;
 const need = () => { if ( !WM ) throw new Error("WoDX Storyteller: the world map is not loaded yet; await api.worldMap.load() first"); return WM; };
 import * as D from "./discovery-rules.mjs";
+import * as LR from "./letters-rules.mjs";
+import {mediaYear} from "../../wodx-chronicle/scripts/media-rules.mjs";
 import * as C from "./core.mjs";
 import {addTool} from "./hand.mjs";
+import * as GO from "./go-rules.mjs";
+import {tick as hardshipTick} from "./hardship.mjs";
 
 const {esc} = C;
 const api = name => (game.modules?.get?.(name)?.active ? game.modules.get(name).api ?? null : null);
@@ -82,6 +87,13 @@ export function view(state) {
   if ( a ) lines.push(`From: ${WM.describe(a, {regionLabel}).words}.`);
   if ( b && j ) lines.push(`To: ${WM.describe(b, {regionLabel}).words}.`);
   if ( j ) lines.push(...WM.journeyLines(j));
+  // Storyteller 0.59.0 (B2703): how long a letter takes between the two parts of the world in the year
+  const fromR = a && WM.describe(a).region, toR = b && WM.describe(b).region;
+  if ( j?.surface && fromR && toR && fromR !== toR ) {
+    const times = LR.letterTimes({from: fromR, to: toR, year, j, future: (() => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } })(),
+      internet: {from: mediaYear("internet", fromR), to: mediaYear("internet", toR)}});
+    if ( times.length ) lines.push(`A letter: ${times.map(t => `${t.label.toLowerCase()} ${LR.wayWords(t.seconds).replace(/^in /, "")}`).join("; ")}.`);
+  }
   if ( j?.unknown ) { const y = D.knownYear(home, j.unknown); lines.push(`${regionLabel(j.unknown)} is first known in ${regionLabel(home)} in ${y}. Mark it under Discoveries if the chronicle finds it sooner.`); }
   if ( j?.noWay ) lines.push("Both ends are known, but not the lands and waters between. Mark the lands on the way under Discoveries, or show the whole world.");
   if ( known ) { const n = WM.REGION_IDS.length - known.size; lines.push(n ? `${n} of the ${WM.REGION_IDS.length} parts of the world are still beyond what ${regionLabel(home)} knows in ${year}.` : `Every part of the world is known in ${regionLabel(home)} by ${year}.`); }
@@ -114,11 +126,13 @@ export async function worldMapDialog(start = {}) {
     const res = await foundry.applications.api.DialogV2.wait({window: {title: "The world map", resizable: true}, classes: ["wodx-dialog", "wstory-dialog", "wst-hand"], position: {width: 900, height: "auto"},
       content, rejectClose: false,
       buttons: [{action: "show", label: "Show", default: true, callback: (ev, b) => ({go: "show", state: read(ev, b)})},
+        {action: "go", label: "Go", callback: (ev, b) => ({go: "go", state: read(ev, b)})},
         {action: "closer", label: "Look closer at From", callback: (ev, b) => ({go: "closer", state: read(ev, b)})},
         {action: "found", label: "Discoveries", callback: (ev, b) => ({go: "found", state: read(ev, b)})},
         ...(realmWorlds ? [{action: "realms", label: "Realms past the near worlds", callback: (ev, b) => ({go: "realms", state: read(ev, b)})}] : []), {action: "close", label: "Close"}]});
     if ( !res || res === "close" ) return null;
     state = res.state;
+    if ( res.go === "go" ) await goDialog(state);
     if ( res.go === "closer" ) await closerDialog(state);
     if ( res.go === "found" ) await discoveriesDialog(state.year);
     if ( res.go === "realms" ) await realmWorlds.open({year: state.year});
@@ -141,6 +155,45 @@ export async function closerDialog(state) {
       <p class="wodx-quiet">North is up. Each small square is about ${v.kmNorth} km north to south and ${v.km} km east to west. ${esc(lands)}.${v.rivers.length ? ` The ${esc(v.rivers.join(" and the "))} runs through.` : ""}
       This view is made from the world map and is the same every time; inside Moravia the hand-made country map is the one to trust.</p></div>`,
     buttons: [{action: "close", label: "Close", default: true}]});
+}
+
+/** GM: make the journey on the map: pick who goes and how, then move the clock, roll the way, and arrive. */
+export async function goDialog(state) {
+  if ( !game.user.isGM ) return null;
+  need();
+  const year = Math.round(Number(state.year)) || yearNow();
+  const a = spotOf(state.fromAt, state.from), b = spotOf(state.toAt, state.to);
+  const known = state.eyes === "all" ? null : knownNow(year);
+  const j = a && b && (a.lon !== b.lon || a.lat !== b.lat) ? WM.journey(a, b, {year, known}) : null;
+  if ( !j || j.unknown || j.noWay ) return ui.notifications.info("No known way leads there in that year.");
+  if ( year !== yearNow() ) return ui.notifications.info(`The party can only go in the chronicle's own year (${yearNow()}).`);
+  const pcs = game.actors.filter(x => x.hasPlayerOwner);
+  const fromR = WM.describe(a).region, toR = WM.describe(b).region;
+  const days = d => (d === 1 ? "1 day" : `${d} days`);
+  const res = await foundry.applications.api.DialogV2.wait({window: {title: `Go: ${regionLabel(fromR)} to ${regionLabel(toR)}`}, classes: ["wodx-dialog", "wstory-dialog", "wst-hand"], rejectClose: false,
+    content: `<p>The clock moves on by the days the journey takes. Each day on the way may bring a meeting, and the party is checked for food, water and sleep on arrival.</p>
+      <div class="form-group"><label>The way</label><select name="way" data-fixed><option value="surface">By land and sea, about ${days(j.surface.days)}</option>${j.air ? `<option value="air">${esc(j.air.words)}, about ${days(j.air.days)}</option>` : ""}</select></div>
+      <fieldset><legend>Who goes</legend>${pcs.length ? pcs.map(x => `<label style="display:block"><input type="checkbox" name="pc.${x.id}" checked> ${esc(x.name)}</label>`).join("") : "<p>No player characters.</p>"}</fieldset>
+      <label><input type="checkbox" name="arrive" checked> The scene in view is where they arrive: it takes the far end's part of the world (its money, names and weather)</label>`,
+    buttons: [{action: "go", label: "Go", default: true, callback: (ev, bt) => foundry.utils.expandObject(new foundry.applications.ux.FormDataExtended(bt.form).object)}, {action: "cancel", label: "Cancel"}]});
+  if ( !res || res === "cancel" ) return null;
+  const actorIds = Object.entries(res.pc ?? {}).filter(([, v]) => v).map(([k]) => k);
+  const chance = (() => { try { return game.settings.get("wodx-storyteller", "encounters") === false ? 0 : (game.settings.get("wodx-storyteller", "encounterChance") ?? 10); } catch (e) { return 10; } })();
+  const g = C.chron()?.gen, rand = g?.random ? g.random(`go:${fromR}:${toR}:${game.time.worldTime}`) : Math.random;
+  const plan = GO.goPlan(j, {way: res.way, chance, rand});
+  if ( !plan ) return null;
+  const names = actorIds.map(id => game.actors.get(id)?.name).filter(Boolean);
+  const meets = [];
+  for ( const d of plan.meetings ) meets.push({day: d + 1, ...(await C.roadEncounter(globalThis.canvas?.scene ?? null))});
+  await game.time.advance(plan.seconds);
+  if ( res.arrive && globalThis.canvas?.scene && toR ) {
+    try { const place = C.chron()?.place; if ( place?.set ) await place.set(canvas.scene, {...place.of(canvas.scene), region: toR}); } catch (e) { console.error("wodx-storyteller | go: arrival", e); }
+  }
+  try { if ( actorIds.length ) await hardshipTick({force: true, actorIds}); } catch (e) { console.error("wodx-storyteller | go: hardship", e); }
+  const lines = GO.goLines(plan, {from: regionLabel(fromR), to: regionLabel(toR), names});
+  await ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "The world map"},
+    content: `<div class="wodx-card wst-go-card"><p><b>The journey</b></p>${lines.map(l => `<p>${esc(l)}</p>`).join("")}${meets.length ? `<ul>${meets.map(m => `<li>Day ${m.day}: ${esc(m.text)}</li>`).join("")}</ul>` : ""}</div>`});
+  return {plan, meets, actorIds};
 }
 
 /** The lands beyond the known world in a year, each with a tick: ticked lands are found by the chronicle itself. */

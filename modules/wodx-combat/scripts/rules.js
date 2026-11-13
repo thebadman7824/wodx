@@ -267,6 +267,7 @@ export function attackPool(p) {
     if (p.flank === "flank") add("Flank", 1);
     if (p.flank === "rear") add("Rear", 2);
     add("Extra dice", p.extraDice || 0);
+    add("Nightmares", -(p.nightmareDice || 0));
     if (p.woundPenalty) add("Wounds", p.woundPenalty); // negative number
     if (p.multiIndex > 0) {
         add("Multiple actions", -p.multiIndex);
@@ -277,6 +278,7 @@ export function attackPool(p) {
     addD("Targeting", p.targetingDiff || 0);
     addD("Range", p.rangeDiff || 0);
     addD("Below minimum Strength", p.minStrDiff || 0);
+    addD("Crippled limb", p.crippledDiff || 0);
     if (p.bypassArmor) addD("Bypass armor", 2);
     if (p.opponents > 1) addD("Multiple opponents", Math.min(4, p.opponents - 1));
     if (p.blind) addD("Blind", 2);

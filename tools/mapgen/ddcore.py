@@ -28,6 +28,9 @@ def init(seed, asset_list):
     return R
 
 def asset(name, kind="objects"):
+    if "/textures/" in name:                       # a full path (the furnishing catalogue gives these)
+        USED.add(name.split("/")[0])
+        return "res://packs/" + name
     hits = [a for a in ASSETS if a.endswith("/" + name) and f"/textures/{kind}/" in a]
     if len(hits) > 1 and len({h.split("/")[0] for h in hits}) > 1:   # the same file in two packs: Forgotten Adventures first
         fa = [h for h in hits if h.split("/")[0] in PACKS]
@@ -94,6 +97,7 @@ class Room:
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
         self.furnish_list = list(furnish)
+        self.ctx = None               # a furnishing context (furnishing.context_for): palette, role, wealth...
         self.items, self.blocked = [], []
         inset = .18   # wall half-thickness plus a little air
         self.ix, self.iy, self.iw, self.ih = x + inset, y + inset, w - 2 * inset, h - 2 * inset
@@ -268,6 +272,10 @@ def kind_of(room):
 
 def dress(room):
     global R
+    if getattr(room, "ctx", None):                 # furnished by purpose, palette and room value (furnishing.py)
+        import furnishing
+        furnishing.fill_room(room)
+        return
     room.dressing, room.lights = [], []
     kind = kind_of(room)
     if room.iw < 1.5 or room.ih < 1.5: return
@@ -359,6 +367,10 @@ SEATS = re.compile(r"Chair|Stool|Armchair|Couch|Sofa|Throne", re.I)
 INSET = re.compile(r"Brick_Oven_.*_2x2")     # drawn 2 squares wide and 1 deep in a 2 by 2 square
 NO_FACE = re.compile(r"Table|Desk|Counter|Rug_|Stairs|Stair|Barrel|Keg|Sack|Crate|Basket|Plant|Pot_|Tree|Bush|Hay|Bucket|Firewood|Lift|StairUp", re.I)
 
+def drawn(it):
+    """(asset, scale) to draw a room item with: the palette's piece when furnishing chose one, else its own."""
+    return it.get("draw", it["asset"]), it.get("draw_scale", it["scale"])
+
 def centre(it):
     """Where a piece's picture goes: the middle of its square, moved to its wall when the picture is shallower."""
     nx, ny = it.get("nudge", (0, 0))
@@ -373,6 +385,7 @@ def orient(room):
     mx, my = room.ix + room.iw / 2, room.iy + room.ih / 2
     for it in room.items + getattr(room, "dressing", []):
         if it.get("layer", 100) != 100 or "spin" in it: continue
+        it.pop("nudge", None)                                        # worked out again: the picture may have changed
         a = it["asset"]
         cx, cy = it["x"] + it["w"] / 2, it["y"] + it["h"] / 2
         if SEATS.search(a) and it["w"] == it["h"] or re.search(r"Chair|Stool", a, re.I):
@@ -393,7 +406,7 @@ def orient(room):
         side = next((d for d in order if t[d] and (it["w"] == it["h"] or (d in "NS") == (not it["rot"]))), None)
         if side:
             it["angle"] = {"N": 0.0, "S": math.pi, "W": -math.pi / 2, "E": math.pi / 2}[side]
-            if INSET.search(a):                                      # the picture is half its square deep: move it to the wall
+            if INSET.search(drawn(it)[0]):                           # the picture is half its square deep: move it to the wall
                 it["nudge"] = {"N": (0, -.5), "S": (0, .5), "W": (-.5, 0), "E": (.5, 0)}[side]
 
 def snap(angle, rot):
@@ -444,8 +457,9 @@ def light(cx, cy, rng, colour="ffeccd8b", intensity=.7):
     LIGHTS.append({"position": v2(*at(cx, cy)), "range": rng, "intensity": intensity, "color": colour,
                    "texture": "res://textures/lights/fragments.png", "shadows": True, "node_id": NID()})
 
-def wall_with_portals(points, texture, openings, loop, kinds=None):
-    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
+def wall_with_portals(points, texture, openings, loop, kinds=None, textures=None):
+    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t.
+    textures: {opening kind: asset} from the building's palette (the age's doors and windows), else PORTALS."""
     nid = NID()
     pts = points + ([points[0]] if loop else [])
     portals = []
@@ -456,7 +470,9 @@ def wall_with_portals(points, texture, openings, loop, kinds=None):
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
-                tex, width = PORTALS[(kinds or {}).get(kind, kind)]
+                k = (kinds or {}).get(kind, kind)
+                tex, width = PORTALS[k]
+                tex = (textures or {}).get(k) or tex
                 d = ((bx - ax) / L, (by - ay) / L)
                 portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,
@@ -537,6 +553,12 @@ TILE_RULES = [   # (asset prefix, label, flags); a container's fill place comes 
     ("Box_Crate", "Crates", {"hide": True, "hideKind": "crawl", "room": 1, "title": "Behind the crates"}),
 ]
 
+DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt: (label, flags)
+    "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
+    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home"}),   # one kind of thing each
+    "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
+}
+
 def opening_entries(key, name, openings, inside):
     """Sidecar openings for one building. openings: (kind, x, y, along) in map cells; inside: a point inside."""
     out = []
@@ -560,6 +582,15 @@ def feature_entries(prefix, room, fill="home"):
              "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags}
         if flags.get("light"): f["light"] = {"dim": 3, "bright": 1, "color": "#ff9a3c", "on": True}
         out.append(f)
+    # the furnishing's own pieces (furnishing.py): every chest, cupboard, wardrobe and bed it set down can be searched,
+    # opened or hidden in like the building type's own (ids "<room>-f<n>", so the type's own ids never move)
+    for i, it in enumerate(d for d in getattr(room, "dressing", []) if d.get("layer", 100) == 100):
+        rule = DRESSED.get(it.get("piece"))
+        if not rule: continue
+        label, flags = rule[0], dict(rule[1])
+        if flags.get("container"): flags["fillPlace"] = fill
+        out.append({"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-f{i}", "label": f"{label} ({room.name})",
+                    "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags})
     return out
 
 # ------------------------------------------------------------------ plan view, to check the logic by eye

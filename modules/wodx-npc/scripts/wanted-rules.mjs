@@ -10,6 +10,9 @@
  * Nothing here comes from the books: V20 has no rules for a description abroad. The roll to know someone from a
  * description is Perception + Alertness, the pool WoDX NPC already uses for noticing; the means of each age, the times, the fade
  * and the difficulties are house figures (docs/PENDING-REVIEW.md).
+ * NPC 0.61.0 (B2914): someone dressed as a stranger to the part of the world they stand in is noticed. A
+ * description of a foreigner fades half as slowly again, and a change of clothes does not break it while they still
+ * dress as foreigners; blending into a crowd (Stealth or Subterfuge) is one harder for them. Dress of the place ends it.
  */
 
 export const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -50,8 +53,15 @@ export function normMarks(m = {}) {
   const f = m ?? {};
   return {station: Math.max(0, Math.min(5, Math.round(num(f.station)))), sides: strs(f.sides, 40), dress: strs(f.dress, 80, 4), condition: strs(f.condition, 20),
     size: ["small", "big", "huge"].includes(f.size) ? f.size : null, face: ["monstrous", "striking", "ugly"].includes(f.face) ? f.face : null,
-    monstrous: !!f.monstrous, disguised: !!f.disguised};
+    monstrous: !!f.monstrous, disguised: !!f.disguised, foreign: !!f.foreign};
 }
+
+/** Blending into a crowd while dressed as a stranger to these parts: this much more difficulty. */
+export const FOREIGN_BLEND_DIFF = 1;
+/** A description of a foreigner lasts this much longer. */
+export const FOREIGN_FADE = 1.5;
+/** Is someone dressed for one part of the world a stranger in another? Parts are WoDX Chronicle region parts. */
+export const isForeign = (dressPart, herePart) => !!dressPart && !!herePart && dressPart !== herePart;
 
 /** A description as stored, cleaned. */
 export function normDesc(d = {}) {
@@ -98,7 +108,7 @@ export function carried(desc, arrivals = []) {
 export function strength(desc, now = 0) {
   const d = normDesc(desc);
   if ( d.dropped ) return 0;
-  const span = meansOf(d.means).fade * DAY;
+  const span = meansOf(d.means).fade * DAY * (d.marks.foreign ? FOREIGN_FADE : 1);
   return Math.max(0, Math.min(1, 1 - (num(now) - d.at) / span));
 }
 export const faded = (desc, now = 0) => strength(desc, now) <= 0;
@@ -132,6 +142,7 @@ export function matchOf(desc, now = {}, {held = false} = {}) {
   if ( face === "full" ) return held ? {level: "partial", why: "the disguise holds, but face matching still flags the face"} : {level: "strong", why: "face matching knows the face whatever the clothes"};
   if ( held ) return body || was.monstrous ? {level: "partial", why: "the disguise holds, but their size or face is hard to hide"} : {level: "none", why: "the disguise holds"};
   if ( changed ) {
+    if ( was.foreign && is.foreign ) return {level: "partial", why: "new clothes, but still dressed as a stranger to these parts"};
     if ( face === "part" ) return {level: "partial", why: "new clothes, but the photographs show the face"};
     return body || was.monstrous ? {level: "partial", why: "new clothes, but their size or face still fits the description"} : {level: "none", why: "they have changed their clothes"};
   }

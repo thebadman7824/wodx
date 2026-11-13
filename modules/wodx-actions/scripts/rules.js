@@ -227,10 +227,14 @@ export const HUNTING_GROUNDS = {
     patrolled: { label: "Heavily patrolled area", diff: 8 }
 };
 
-/** Hunting roll (p. 334): Fame and Domain lower difficulty (min 3); Herd adds dice. */
-export function huntingPool({ area = "market", fame = 0, domain = 0, herd = 0, inhuman = 0 }) {
+/**
+ * Hunting roll (p. 334): Fame and Domain lower difficulty (min 3); Herd adds dice. calendar (Actions 3.58.0): the faith
+ * calendar's step, -2 to +2 (a feast makes it easier, a fast or a curfew harder); an easier night still stops at 3.
+ */
+export function huntingPool({ area = "market", fame = 0, domain = 0, herd = 0, inhuman = 0, calendar = 0 }) {
     const base = HUNTING_GROUNDS[area]?.diff ?? 6;
-    const diff = Math.max(3, base - fame - domain) + inhuman;
+    const cal = Math.max(-2, Math.min(2, Math.round(Number(calendar) || 0)));
+    const diff = Math.max(3, base - fame - domain + cal) + inhuman;
     return { difficulty: diff, bonusDice: herd };
 }
 
@@ -309,12 +313,12 @@ export function awakeningResult(roll) {
 /* ---------------- Lifting chart (p. 335) ---------------- */
 
 export const LIFTING = [
-    [1, "Throw a rock", 20], [2, "Break a wooden chair", 45], [3, "Break down a wooden door", 115],
-    [4, "Break a wooden plank", 180], [5, "Bend a sword", 295], [6, "Throw a small pony", 360],
-    [7, "Throw a riding horse", 410], [8, "Throw a warhorse", 455], [9, "Punch through a simple stone wall", 545],
-    [10, "Rip open a reinforced door", 680], [11, "Punch through a heavily reinforced door", 910],
-    [12, "Lift a small portcullis", 1360], [13, "Throw a fully loaded wagon", 1815],
-    [14, "Throw a small boat", 2265], [15, "Lift a large portcullis", 2720]
+    [1, "Hurl a stone", 20], [2, "Smash a chair to pieces", 45], [3, "Kick in a plank door", 115],
+    [4, "Snap a thick board", 180], [5, "Bend a blade double", 295], [6, "Heave a pony off its feet", 360],
+    [7, "Toss a saddle horse", 410], [8, "Toss a destrier", 455], [9, "Break a hole in a rough stone wall", 545],
+    [10, "Tear a banded door off its hinges", 680], [11, "Break through an iron-bound door", 910],
+    [12, "Raise a small gate grille", 1360], [13, "Overturn a laden cart", 1815],
+    [14, "Lift a rowing boat overhead", 2265], [15, "Raise a castle gate grille", 2720]
 ];
 export function liftingFeat(level) {
     const l = Math.max(0, Math.min(15, level));

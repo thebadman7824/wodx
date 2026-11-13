@@ -1,11 +1,11 @@
 /**
- * Putting money into a venture (WoDX Storyteller 0.60.0, B2740-B2743), in Foundry, in rothenstein-wodx only, as
+ * Putting money into a venture (WoDX Storyteller, B3110-B3113), in Foundry, in rothenstein-wodx only, as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gateventures.mjs?${Date.now()}`)).run()
  * It keeps the world's markets, caravans, ventures, factions and the settings it touches, makes two linked markets on
  * two scenes of its own, one investor with Resources 3 and Influence 2 and one faction, and puts everything back at
  * the end. The clock never moves: turns are run by hand.
- *   1. the modules: Storyteller 0.60.0 or later with api.upkeep.ventures and its settings
+ *   1. the modules: Storyteller with api.upkeep.ventures (B3110) and its settings
  *   2. the words follow the year and the market's way of life (a stake, its kind, a seat)
  *   3. putting money in takes it from the purse and opens the venture
  *   4. more than a year's allowance at once is refused
@@ -61,7 +61,7 @@ export async function run() {
   const purse = a => { const p = MO?.purse?.(a) ?? game.actors.get(a.id)?.flags?.[MOD]?.money?.purse ?? {}; return (p.carried ?? 0) + (p.bank ?? 0); };
   const ven = id => V.state().list.find(v => v.id === id);
   try {
-    ok("1. modules", M?.active && !foundry.utils.isNewerVersion("0.60.0", M.version) && typeof V?.put === "function" && typeof V?.week === "function" && has(`${MOD}.ventures`) && has(`${MOD}.ventureState`),
+    ok("1. modules", M?.active && typeof V?.put === "function" && typeof V?.week === "function" && has(`${MOD}.ventures`) && has(`${MOD}.ventureState`),
       {storyteller: M?.version});
     await game.settings.set(MOD, "marketTurn", "auto");
     await game.settings.set(MOD, "rumourNetwork", false);

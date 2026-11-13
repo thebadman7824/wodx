@@ -1,5 +1,5 @@
 /**
- * WoDX Otherworlds 0.21.0 (B2556 to B2559), 0.22.0 (B2630: the catalogue's ways in and out and its located dangers are places too): a coarse map of each realm past the near worlds, the way the world map
+ * WoDX Otherworlds 0.21.0 (B2556 to B2559), 0.24.0 (B2632: places stand where the books' notes say they lie), 0.22.0 (B2630: the catalogue's ways in and out and its located dangers are places too): a coarse map of each realm past the near worlds, the way the world map
  * shows the Earth. Each of the 34 realms in realm-maps-rules.mjs gets one map of 200 by 110 squares, made from a
  * skeleton written for it (one of eleven plans, with the realm's own landmarks from the books placed on it) and
  * filled in from a seed. A realm's redraw rule says when the seed changes: never, after each Great Maelstrom, each
@@ -215,7 +215,7 @@ const WET = "uvw";
 /** A road drawn over the ground (a trod, a byway) is this much quicker than a steady pace. */
 export const ROAD_PACE = 1.5;
 /** Days across the whole map at a steady pace, where a realm differs from its plan. */
-const DAYS = {stygia: 3, "digital-web": 0.5, cyberrealm: 1, pangaea: 40, "deep-umbra": 60, tempest: 40, "far-shores": 50, "horizon-realm": 3, "paradox-realm": 1, "dream-zone": 1, autochthonia: 6};
+const DAYS = {stygia: 3, "digital-web": 0.5, cyberrealm: 1, pangaea: 40, "deep-umbra": 60, tempest: 40, "far-shores": 0.3, "horizon-realm": 3, "paradox-realm": 1, "dream-zone": 1, autochthonia: 6};
 /** How far from a found place the map is known, in squares. */
 export const SIGHT = 18;
 export const SHROUD = "#04060a";
@@ -269,6 +269,54 @@ export function extrasOf(id) {
   return out;
 }
 
+/**
+ * 0.24.0 (B2632): where the books say a place lies, as far as one flat map can show it. Words of a hint, all of which
+ * must hold: centre, inner, mid, outer, edge (by distance from the middle of the map), n, s, e, w, mx (the middle
+ * third from west to east), and last "near:<another place>". Up is north on these maps; where a book speaks of above
+ * and below (the CyberRealm's layers, a descent through dreams) the map lays it out north to south or west to east.
+ */
+export const HINTS = {
+  aetherial: {"Sokhta's sphere": "near:Phoebe's light", "Katanka-Sonnak's domain": "outer", "the sun's fire citadel": "near:Katanka-Sonnak's domain", "the Dark Roads": "outer",
+    "A Moon Bridge to Malfeas, sold by Banes in the Wyrm Reaches": "near:the Wyrm Reaches' edge"},
+  "arcadia-gateway": {"the Palace of Summer": "e", "the Summer Fiefs": "e", "the Ocean of Dreams": "e", "the Fortress of Winter": "w", "the Autumn Country": "n", "the Springlands": "s"},
+  atrocity: {"the Atrocity Library": "edge", "The gateway among the gibbet trees, into the Hellbringer's domain": "near:the gibbet trees"},
+  battleground: {"The Signpost's first path": "near:the Signpost", "The Signpost's second path": "near:the Signpost", Retreat: "edge", "the Plain of the Apocalypse": "e", "the Triat war camps": "near:the Plain of the Apocalypse"},
+  cyberrealm: {"the Computer Web": "n", "the Pit": "s", "Old Town": "near:the Pit", Downtown: "inner"},
+  "dream-zone": {"the dreamer's own dream": "w", "Other sleepers' dreams": "mx", "the primal archetypes": "e", "Mokole Mnesis depths": "e"},
+  erebus: {"Cerberus at the border": "outer", "the plain of black rock": "outer", "the shale tunnels": "mid", "the great silver waterfall": "mid", "the lake of silver": "inner", "Charyss' fortress": "centre"},
+  flux: {"the Cocoon": "edge", "the Weaver's shell": "edge", "the Coil's maelstroms": "inner"},
+  legendary: {"the obsidian castle": "near:the Midnight Land", "the Third City": "near:the obsidian castle"},
+  malfeas: {"the Central Duchy courtyard": "inner", "Castle Cthonus dungeons": "near:the Central Duchy courtyard", "the Grand Cathedral": "near:the Central Duchy courtyard", "the Wyld Founts": "near:the Grand Cathedral", "the Temple Obscura": "mid"},
+  pangaea: {"the northern glaciers": "n"},
+  scar: {"the tunnel to Malfeas": "near:the Last Junction"},
+  "summer-country": {"the Forest of Longing": "w", "the Forest of Promise": "e", "the Mountains of the Moon": "mx", "Cloudtop High": "near:the Isle of Self"},
+  wolfhome: {"the Sewers": "near:the Town", "the Shelters": "near:the Town"},
+  "horizon-realm": {Concordia: "near:the Chantry house", "the Glacial Pools": "n", "the Cascades Region": "s", "Triton's Necklace": "s", "the Horizon Range": "outer"},
+  autochthonia: {"the damaged outer reaches": "edge"},
+  tempest: {"Necropolis ports": "outer", "The Byway from the Anchorhead": "outer", "the Sunless Sea": "mid"},
+  stygia: {"the sea-wall": "outer"},
+  labyrinth: {"the maw at the centre": "centre", "The way down to the Void": "near:the maw at the centre", "Labyrinth sentry posts": "edge", "the Venous Stair": "edge"},
+  enoch: {"Dread Palace Ghemal, the High House of Caine": "inner", "the library": "inner", "the Black Citadel": "inner"},
+  "far-dreaming": {"the Vale of Mists": "near:a trod from the Near Dreaming", "Inns and workshops of the Vale": "near:the Vale of Mists", "the thirteen gates": "e", "the Mistweir and Fin Bheara": "e"},
+  "deep-dreaming": {"the Mistweir": "outer", "Arcadia's gates": "near:the last gate"},
+  yomi: {"Scarlet Path": "w outer", "Ebon Road": "e outer", "Goblin Jungle": "near:Scarlet Path", "Wu Hua's towers": "near:Ebon Road"},
+  "yellow-springs": {"Jade Palace": "outer"},
+  "demon-abyss": {"Gate of Hell": "outer", "Seals and outer boundary of the Abyss": "outer"}
+};
+/** Where the books have a traveller arrive, where that is not the catalogue's way in. */
+export const ARRIVE = {malfeas: "the Central Duchy courtyard", battleground: "the Signpost", "summer-country": "the Forest of Longing", erebus: "Cerberus at the border"};
+/** Does a square fit a hint? places: those already standing. */
+export function fits(hint, x, y, places = []) {
+  if ( !hint ) return true;
+  const near = hint.includes("near:") ? hint.slice(hint.indexOf("near:") + 5) : null, r = R(x, y), nx = x / W, ny = y / H;
+  for ( const word of (near ? hint.slice(0, hint.indexOf("near:")) : hint).split(" ").filter(Boolean) ) {
+    const ok = {centre: r < 8, inner: r < 20, mid: r >= 18 && r <= 38, outer: r > 34, edge: r > 44 || nx < 0.08 || nx > 0.92 || ny < 0.1 || ny > 0.9, n: ny < 0.33, s: ny > 0.67, w: nx < 0.3, e: nx > 0.7, mx: nx > 0.35 && nx < 0.65}[word];
+    if ( !ok ) return false;
+  }
+  if ( near ) { const p = places.find(q => q.name === near); if ( !p ) return false; const d = Math.hypot((p.x - x) / 1.4, p.y - y); if ( d > 12 || d < 5 ) return false; }
+  return true;
+}
+
 const made = new Map();
 /**
  * The map of a realm for a year (and season, visit or name, by its redraw rule). Returns {id, label, line, world,
@@ -309,8 +357,21 @@ export function build(id, opts = {}) {
   });
   // 0.22.0 (B2630): the ways in and out and the located dangers of the catalogue stand on the map too, on free ground away from the other places
   let tries = 0;
-  for ( const [kind, name, what, ref] of extrasOf(id) ) {
+  // places with no hint first, then those a hint ties to a part of the map, then those a hint ties to another place
+  const hints = HINTS[id] ?? {}, rank = e => (!hints[e[1]] ? 0 : hints[e[1]].includes("near:") ? 2 : 1);
+  const extras = extrasOf(id).map((e, n) => [e, n]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(e => e[0]);
+  for ( const [kind, name, what, ref] of extras ) {
     if ( places.some(p => p.name.toLowerCase() === name.toLowerCase()) ) continue;
+    const hint = hints[name] ?? null;
+    if ( hint ) {   // look over the whole map for the squares that fit, and take one by the seed
+      const fit = [];
+      for ( const apart of [11, 7, 5] ) {
+        for ( let y = 5; y < H - 5; y++ ) for ( let x = 6; x < W - 6; x++ ) if ( pace[y * W + x] > 0 && !WET.includes(rows[y][x]) && fits(hint, x, y, places) && !places.some(q => Math.hypot((q.x - x) / 1.4, q.y - y) < apart) ) fit.push([x, y]);
+        if ( !fit.length ) for ( let y = 5; y < H - 5; y++ ) for ( let x = 6; x < W - 6; x++ ) if ( pace[y * W + x] > 0 && fits(hint, x, y, places) && !places.some(q => Math.hypot((q.x - x) / 1.4, q.y - y) < apart) ) fit.push([x, y]);
+        if ( fit.length ) break;
+      }
+      if ( fit.length ) { const [x, y] = fit[Math.floor(hash(places.length, 13, seed) * fit.length)]; places.push({i: places.length, x, y, kind, name, label: name[0].toUpperCase() + name.slice(1), ...(what ? {what, ref} : {}), by: hint}); continue; }
+    }
     // a place of the books stands on firm ground (not open water, void or a wall) while the map has room; the room asked between places shrinks as tries pass
     for ( ; tries < 4000; tries++ ) {
       const x = Math.round(8 + hash(tries, 11, seed) * (W - 16)), y = Math.round(6 + hash(tries, 12, seed) * (H - 12)), apart = tries < 900 ? 15 : tries < 2200 ? 11 : 8;
@@ -328,7 +389,7 @@ export function build(id, opts = {}) {
     if ( changed ) pace = paceOf();
   }
   const centred = ["spiral", "rings", "city"].includes(spec.arch) || (spec.arch === "isles" && spec.o.centre);
-  const arrive = realm.map?.arrival ?? realm.map?.back ?? null, door = arrive ? places.findIndex(p => p.name === arrive) : -1;
+  const arrive = ARRIVE[id] ?? realm.map?.arrival ?? realm.map?.back ?? null, door = arrive ? places.findIndex(p => p.name === arrive) : -1;
   const gate = door >= 0 ? door : Math.min(places.length - 1, centred && places.length > 1 && typeof (MARKS[id] ?? [])[0] !== "undefined" && labels[0] ? 1 : 0);
   const seen = new Set(rows.flatMap(r => r));
   const out = {id, label: realm.label, line: realm.line, world: realm.world, plan: spec.arch, kind: kindOf(id), seed, turn: turnOf(id, opts),
@@ -428,9 +489,10 @@ export function svg(map, {cell = 4, known = null, path = null, title = null} = {
   for ( const p of map.places ) {
     if ( known && !known.has(p.i) ) continue;
     const x = (p.x + 0.5) * cell, y = top + (p.y + 0.5) * cell, left = p.x > W * 0.62, tw = p.label.length * 6.1, g = cell * 1.8;
-    const spots = [[left ? -g - tw : g, -8], [left ? g : -g - tw, -8], [-tw / 2, -g - 13], [-tw / 2, g - 1], [left ? -g - tw : g, -20], [left ? -g - tw : g, 5]];
-    const hits = ([dx, dy]) => { const bx = x + dx, by = y + dy; return bx < 2 || bx + tw > w - 2 || by < top || boxes.some(b => bx < b[0] + b[2] && b[0] < bx + tw && by < b[1] + 13 && b[1] < by + 13); };
-    const [dx, dy] = spots.find(s => !hits(s)) ?? spots[0];
+    const a = left ? -g - tw : g, b = left ? g : -g - tw;
+    const spots = [[a, -8], [b, -8], [-tw / 2, -g - 13], [-tw / 2, g - 1], [a, -20], [a, 5], [b, -20], [b, 5], [-tw / 2, -g - 27], [-tw / 2, g + 13], [a, -33], [a, 18], [b, -33], [b, 18]];
+    const hits = ([dx, dy]) => { const bx = x + dx, by = y + dy; return (bx < 2 || bx + tw > w - 2 || by < top ? 5 : 0) + boxes.filter(q => bx < q[0] + q[2] && q[0] < bx + tw && by < q[1] + 13 && q[1] < by + 13).length; };
+    const [dx, dy] = spots.find(s => !hits(s)) ?? [...spots].sort((s, t) => hits(s) - hits(t))[0];
     boxes.push([x + dx, y + dy, tw]);
     dots.push(`<circle cx="${x}" cy="${y}" r="${cell}" fill="${p.kind === "danger" ? "#d8603a" : p.kind === "way" ? "#9ad0e8" : "#f0e6b8"}" stroke="#000" stroke-width="1"/>`);
     names.push(`<text x="${Math.round((x + dx) * 10) / 10}" y="${y + dy + 11}" font-size="12" fill="${INK}" stroke="#000" stroke-width="3" paint-order="stroke">${esc(p.label)}</text>`);
@@ -450,4 +512,26 @@ export function closerSvg(map, view, {cell = 22} = {}) {
   const s = view.size * cell, out = [];
   for ( let j = 0; j < view.size; j++ ) for ( let i = 0; i < view.size; i++ ) out.push(`<rect x="${i * cell}" y="${j * cell}" width="${cell}" height="${cell}" fill="${map.pal[view.cells[j][i]]}"/>`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s} ${s}" width="${s}" height="${s}"><rect width="${s}" height="${s}" fill="#000"/>${out.join("")}<rect x="${s / 3}" y="${s / 3}" width="${s / 3}" height="${s / 3}" fill="none" stroke="${INK}" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/></svg>`;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Go (Otherworlds 0.25.0, B2915)                                     */
+/* ------------------------------------------------------------------ */
+
+/** Most meetings one realm journey brings, and the chance of one on each day: a base and a step for each of the realm's dangers. */
+export const GO = {max: 3, base: 10, perDanger: 5, top: 50};
+
+/**
+ * The trip for a realm journey {days, squares}. hazards: the realm's dangers (words); rand: () => 0..1.
+ * Returns null when the journey cannot be made, else {seconds, days, chance, meetings: [{day, what}]}.
+ * A journey shorter than a day still gets one check.
+ */
+export function goPlan(j, {hazards = [], rand = Math.random} = {}) {
+  if ( !j || j.hidden || j.noWay || !j.squares ) return null;
+  const days = Math.max(0, Number(j.days) || 0), checks = Math.max(1, Math.ceil(days));
+  const list = (Array.isArray(hazards) ? hazards : []).filter(Boolean);
+  const chance = Math.min(GO.top, GO.base + GO.perDanger * list.length) / 100;
+  const meetings = [];
+  for ( let d = 0; d < checks && meetings.length < GO.max; d++ ) if ( rand() < chance ) meetings.push({day: d + 1, what: list.length ? list[Math.floor(rand() * list.length) % list.length] : "something of the realm"});
+  return {seconds: Math.round(Math.max(days, 1 / 24) * 86400), days, chance: Math.round(chance * 100), meetings};
 }

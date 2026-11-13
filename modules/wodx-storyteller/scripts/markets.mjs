@@ -129,7 +129,7 @@ export async function marketsDialog() {
   if ( !game.user.isGM ) return;
   await Money.goodsList();
   const st = state();
-  // 0.60.0: stakes characters hold in the market's ventures show beside the factions' moves
+  // B3110: stakes characters hold in the market's ventures show beside the factions' moves
   const stakes = id => { try { return game.modules.get(MOD)?.api?.upkeep?.ventures?.stakes?.(id) ?? ""; } catch (e) { return ""; } };
   const rows = st.markets.map(m => { const sk = stakes(m.id); return `<tr><td>${esc(m.name)}${m.cut ? " (cut off)" : ""}</td><td>${m.scenes.length}</td><td>${m.traders.length}</td>
     <td>${m.moves.length || Object.keys(m.unsafe).length || m.traders.some(t => t.shut) || sk ? esc([m.moves.length ? `${m.moves.length} faction ${m.moves.length === 1 ? "move" : "moves"}` : "", Object.keys(m.unsafe).length ? "a road closed" : "", m.traders.some(t => t.shut) ? `${m.traders.filter(t => t.shut).length} shut` : "", sk].filter(Boolean).join(", ")) : ""}</td>
