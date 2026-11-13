@@ -136,3 +136,15 @@ print(json.dumps({"egypt": go("egypt", 1500), "japan": go("japan", 1700), "morav
   assert.deepEqual(got.moravia, ["Alehouse", "Chapel", "Workshop (cooper)", "Byre-house", "Alehouse household"]);
   assert.equal(got.jewish[1], "Synagogue");
 });
+
+test("settle: the older public buildings go up only where they belong (B3460)", { skip: !py }, () => {
+  const got = run(`import json, regiontrades as RT
+ok = lambda tk, r, s, y: RT.first_group_ok(tk, r, s, y)
+print(json.dumps({"jp1830": [ok(k, "japan", "japanese", 1830) for k in ("old-synagogue", "ghetto-house", "museum-hall", "general-hospital", "cemetery-chapel", "prayer-house", "granary", "coffeehouse")],
+  "jp1900": ok("general-hospital", "japan", "japanese", 1900), "cairo": [ok("old-synagogue", "egypt", "islamic", 1830), ok("charnel-house", "egypt", "islamic", 1830)],
+  "moravia": all(ok(k, "moravia", "latin", 1830) for k in RT.CHRISTIAN_ONLY | RT.MODERN_ONLY | {"old-synagogue"})}))`);
+  assert.deepEqual(got.jp1830, [false, false, false, false, false, false, true, true]);
+  assert.equal(got.jp1900, true);
+  assert.deepEqual(got.cairo, [true, false]);
+  assert.equal(got.moravia, true);
+});
