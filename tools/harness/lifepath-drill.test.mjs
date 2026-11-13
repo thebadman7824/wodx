@@ -406,7 +406,7 @@ test("beyond Earth: orbit, the Moon and Mars open only in the future age and fro
     const st = D.current(d);
     if ( st.id === "people" ) { sawPeople = true; assert.match(st.options[0].label, /on Earth/); }
     if ( st.id === "arrival" ) sawArrival = true;
-    if ( st.id === "origin" ) { assert.match(st.age, /hired townships/); assert.ok(st.options.some(o => /first hired townships aloft/.test(o.label))); }
+    if ( st.id === "origin" ) { assert.ok(!st.options.some(o => /Born to the land|noble house|Born a wolf/.test(o.label)), "no farms or noble houses in orbit"); assert.match(st.age, /hired townships/); assert.ok(st.options.some(o => /first hired townships aloft/.test(o.label))); }
     const o = st.options.find(x => x.local && /-mark$/.test(st.id)) ?? st.options[0];
     if ( o.local && /-mark$/.test(st.id) ) own++;
     d = D.pick(d, st.id, o.id);
