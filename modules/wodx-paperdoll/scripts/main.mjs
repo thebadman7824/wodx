@@ -1,5 +1,5 @@
 import * as D from "./doll-rules.mjs";
-import {registerSpriteSettings, startSprites, spriteApi} from "./sprites.mjs";
+import {registerSpriteSettings, startSprites, spriteApi, ageOf, markChild} from "./sprites.mjs";
 import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
 import {makeFigureApp} from "./figure.mjs";
 import * as FG from "./figure-rules.mjs";
@@ -14,7 +14,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.23.0";
+export const VERSION = "0.24.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -344,7 +344,7 @@ const canBuild = actor => !!actor?.isOwner && !!actor.system?.health;
 /* The figure menu (B2587): the whole figure a token walks as, put together by the character's player. */
 let FigureApp = null;
 const figureApp = () => (FigureApp ??= makeFigureApp({skin: SKIN_LIST.slice(0, 38), hair: Object.entries(HAIR),
-  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }}));
+  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }, ageOf, markChild}));
 // a figure belongs to the character, not to one token of it: a token's sheet opens the character's own figure, which is what a batch draws
 const openFigure = actor => figureApp().open(actor?.isToken ? (game.actors.get(actor.id) ?? actor) : actor);
 Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {

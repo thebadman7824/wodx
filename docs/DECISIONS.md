@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3470
+Next free block: B3490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -166,7 +166,7 @@ Next free block: B3470
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
-| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3312) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
@@ -174,6 +174,8 @@ Next free block: B3470
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
+| B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
+| B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5131,6 +5133,11 @@ WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given nam
 
 Reverse: put back the old lists in data/people-world.mjs.
 
+## B3312. Arab world names raised to 300 (2026-11-13)
+WoDX Creation. The third people raised. Given names split into older (the Companions, the caliphs, the honorific "al-Din" names of the Seljuk and Mamluk years) and newer (the 20th century on). The family slot splits too: before the industrial age a nisba of city, tribe or trade (al-Halabi, al-Tamimi, al-Attar); from it a family name of the Levant, Egypt, the Gulf or the Maghreb, with the tribal nisbas the Gulf still uses. As before, about six in seven take "ibn" or "bint" and the father's name in every age (house reading, left as it was); the share is now worked out per age list so the split keeps it.
+
+Reverse: put back the single lists in data/people-world.mjs.
+
 ## B3320. Overheard talk of the town (2026-11-13)
 WoDX NPC, overheard-rules.mjs townTopic and the grammar's overheard:town. From api.upkeep.towns.ofScene (Storyteller B3280): plague or famine now first, then the last blow (sack, rising, fire, flood, storm, earthquake, famine, riot) in its year and the next, then the mood (angry, grim, thriving); an ordinary town gives nothing. Weight 3, as the talk of the times, and passers-by may use it, since it is street talk.
 
@@ -5416,3 +5423,58 @@ Reverse: let first_group_ok return true everywhere.
 tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
 
 Reverse: nothing to reverse; the samples follow the generator.
+
+## B3470. Caerns join the register of places of power (2026-11-13)
+WoDX Storyteller. A caern is a fourth kind on the places-of-power register (caern-rules.mjs, power.mjs): level 0 to 5, its kind from the W20 Caerns chart (p. 310), a totem, the sept with its Garou, tribes and offices (sept leader, Master of the Rite, Warder, Gatekeeper, Master of the Howl, Talesinger, Truthcatcher, den parent; W20 pp. 55-56, 252), and its Gnosis from the last Moot Rite (5 a level, p. 206). Gauntlet and Moon Bridge reach follow the level (p. 311). The window holds the moot, opens the caern (Wits + Rituals at 7 against the caern spirit, p. 206), meets raids, fights caern wars, raises the caern and takes it back.
+
+Reverse: drop the caern kind from KINDS in power-rules.mjs.
+
+## B3471. A caern without its moot lapses, sinks and dies (2026-11-13)
+WoDX Storyteller. W20 says the Moot Rite must be held at least once a month but not what happens otherwise. WoDX: a month without one and the caern lapses (no longer consecrated, its Gnosis gone, the scene's Gauntlet drifts up one); every three months of lapse cost a level; at level 0 the caern spirit leaves and the caern dies. A moot that ends a lapse thins the drift again.
+
+Reverse: change LAPSE_MONTHS in caern-rules.mjs.
+
+## B3472. A year of full moots lets a caern grow (2026-11-13)
+WoDX Storyteller. The book gives only the Rite of Caern Building (p. 208: 100 Gnosis, a fifth level only with 100 more). WoDX: after 13 full moots in a row (a year of moons) the caern is ready to grow, and a rite with 100 Gnosis offered raises it a level; 200 to reach level 5.
+
+Reverse: change RISE_MOOTS or riseCost.
+
+## B3473. Raids by era, settled by the sept if the Storyteller leaves them (2026-11-13)
+WoDX Storyteller. Each month a held caern may draw a Wyrm raid or the Weaver pressing in: Wyrm 3% and Weaver 1% before 1500, 4% and 3% to 1799, 6% and 6% to 1945, 8% and 7% to 2022, 10% and 9% after. A lapsed caern draws the Wyrm twice as often; an urban caern the Weaver. The Storyteller gets a card and can play it out or set the outcome; after 7 days the sept rolls for itself (half its Garou, +2 for a Warder, +1 for a Gatekeeper, plus the level, against twice the raid's strength, all at 6). A lost raid costs a level and steps the drift (taint or the Weaver); the Wyrm takes the caern at 0 or when it wins by 3, the Weaver calcifies it at 0. Raids can be switched off for each caern.
+
+Reverse: change RAID_ODDS or RAID_GRACE_DAYS, or untick raids on the caern.
+
+## B3474. Caern wars between septs (2026-11-13)
+WoDX Storyteller. Only the Storyteller starts one. Each side rolls half its Garou plus its best rank at 6; the defenders win ties. A taken caern changes sept, its offices fall empty, and it loses a level for the blood on the bawn (never below 1).
+
+Reverse: change caernWar in caern-rules.mjs.
+
+## B3475. Taking back a lost caern (2026-11-13)
+WoDX Storyteller. A caern taken by the Wyrm or calcified by the Weaver can be taken back with three successes at 7 (half the Garou plus their best rank); it comes back cleansed at level 1 and lapsed, so the Moot Rite has to be held to consecrate it.
+
+Reverse: change reclaim in caern-rules.mjs.
+
+## B3476. Office holders and rank (2026-11-13)
+WoDX Storyteller. The book has offices of consequence held from Adren. WoDX suggests the highest-ranking Theurge as Master of the Rite in the editor and never blocks a pick: the Storyteller's choice stands.
+
+Reverse: change OFFICES or masterOfTheRite.
+
+## B3480. A child is the grown figure drawn shorter, by the rig itself (2026-11-13)
+WoDX Paperdoll, tools/sprites/child.py. Every point and size the rig lays down passes through a squeeze toward the feet: the head shrinks least and the body most, so the head is larger for the body, as it is in life. Four bands, as a share of a grown height: 2 to 6 years 0.56, 7 to 11 0.70, 12 to 14 0.84, 15 to 17 0.94. Every share is at most 1, so the pixels stay solid and every piece of clothing, hair, hat and gear fits a child unchanged; the feet stay on the same row, so the token sits on its square as before. Ben asked for children "like the adults, only shorter" (2026-11-13).
+
+Reverse: drop the growth key from the roster (sprite-rules rosterOf) and redraw; child.py then does nothing.
+
+## B3481. The band comes from the body's age (2026-11-13)
+WoDX Paperdoll. The body's age is the birth year against the year shown, or the age when it stopped (Kindred at the Embrace, the walking dead at death), read through the Chronicle's age facts. Anyone the age floor holds under 18 with no known age (a resident child, the Storyteller's mark) is drawn in the 7 to 11 band. The figure menu may pick another child band for them, but never "Grown".
+
+Reverse: let growthOf in figure-rules.mjs return the pick as it stands.
+
+## B3482. A child figure is always a minor (2026-11-13)
+WoDX Paperdoll, with the age floor (B3210). When a child band is picked, or the roster finds one, for a character the age floor does not already hold under 18, the Chronicle's minor mark (flags.wodx-chronicle.minor) is set, and flags.wodx-paperdoll.childMark records that this module set it. Picking "Grown" again takes away only that mark. So a child-looking figure can never take part in courting, marriage, seduction or anything else the age floor refuses.
+
+Reverse: none advised; this guards the age floor.
+
+## B3483. No beard under 15 (2026-11-13)
+WoDX Paperdoll, tools/sprites/batch.py. A beard from the portrait look is not drawn in the three youngest bands; 15 to 17 keep it.
+
+Reverse: remove the beardless() check in batch.person.

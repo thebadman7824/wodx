@@ -14,6 +14,32 @@ export const MAIN_SLOTS = ["body", "legs", "feet", "over", "head", "face"];
 /** The order the layers are laid down in the quick picture, undermost first. */
 export const DRAW = ["legs", "feet", "body", "belt", "neck", "over", "hands", "face", "head", "extra", "offhand", "hand"];
 export const HAIR_STYLES = {short: "Short", long: "Long", bun: "Pinned up", bald: "None"};
+/**
+ * How grown the figure is drawn (B3480). A child is the same figure, dressed the same way, drawn shorter with a larger
+ * head for its body (tools/sprites/child.py). SCALE is the whole height as a share of a grown figure's.
+ */
+export const GROWTH = {"": "Grown", youth: "Youth, 15 to 17", young: "Young, 12 to 14", child: "Child, 7 to 11", small: "Small child, 2 to 6"};
+export const SCALE = {"": 1, youth: 0.94, young: 0.84, child: 0.70, small: 0.56};
+/** The band for an age in years: "" at 18 and over or when the age is not known. */
+export function bandOfAge(age) {
+  const a = Number(age);
+  if ( age === null || age === undefined || age === "" || !Number.isFinite(a) || a >= 18 ) return "";
+  return a < 7 ? "small" : a < 12 ? "child" : a < 15 ? "young" : "youth";
+}
+/**
+ * The band a figure is drawn in. age: the body's age in years (null when not known); minor: the age floor says under
+ * 18; chosen: the band picked in the figure menu. Someone under 18 is never drawn grown: a pick of "Grown" gives the
+ * band of their age (or "child" when no age is known). A child band picked for someone not known to be a minor is kept,
+ * and the caller marks that character a minor, so a child figure can never take part in anything romantic (B3210).
+ */
+export function growthOf({age = null, minor = false, chosen = ""} = {}) {
+  const pick = Object.hasOwn(GROWTH, chosen ?? "") ? (chosen ?? "") : "";
+  const byAge = bandOfAge(age), young = minor || !!byAge;
+  if ( pick ) return pick;
+  return young ? (byAge || "child") : "";
+}
+/** The bands the menu may offer: all of them, but not "Grown" for someone under 18. */
+export const growthChoices = (minor = false) => Object.entries(GROWTH).filter(([k]) => k || !minor);
 const hex = v => /^[0-9a-f]{6}$/i.test(v ?? "") ? v.toLowerCase() : null;
 
 /** The pieces for one place, by name; with a year, only those in use in that year (pieces with no years always show). */
@@ -27,6 +53,7 @@ export const pieceOf = (cat, name) => (cat?.items ?? []).find(e => e.n === name)
 export function normalize(raw, cat, dflt = {}) {
   const out = {skin: hex(raw?.skin) ?? hex(dflt.skin) ?? "d8aa84", hair: hex(raw?.hair) ?? hex(dflt.hair) ?? "3b2a20",
     hairStyle: Object.hasOwn(HAIR_STYLES, raw?.hairStyle) ? raw.hairStyle : "short", slots: {}};
+  if ( raw?.growth && Object.hasOwn(GROWTH, raw.growth) ) out.growth = raw.growth;
   for ( const slot of Object.keys(SLOTS) ) {
     const p = raw?.slots?.[slot], e = p?.n ? pieceOf(cat, p.n) : null;
     if ( e && e.s === slot ) out.slots[slot] = {n: e.n, ...(hex(p.c) ? {c: hex(p.c)} : {})};
