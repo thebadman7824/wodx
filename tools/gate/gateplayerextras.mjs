@@ -1,5 +1,5 @@
 /**
- * The Player UI Desk's step 6 (B2830 to B2837), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * The Player UI Desk's steps 6 and 7 (B2830 to B2838), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayerextras.mjs?${Date.now()}`)).run()
  * It makes one Vampire actor and deletes it, and puts back every WoDX setting of this screen it touches.
  *   1. the modules: Chronicle 0.52.0, Sheets 0.19.0, Solo 0.3.0, Interactables 0.38.0, Paperdoll 0.18.0, Library 0.20.0 or later
@@ -10,9 +10,10 @@
  *   6. Find anything has a ? in its title bar; with tips reset, the tip shows, and Got it marks it seen
  *   7. My WoDX preferences lists the player's own settings; Light changes some, Standard puts the defaults back
  *   8. the sheet's title bar has Sheet tools, which lists the other buttons by name
+ *   9. the first-night tour opens on six steps with the first lit up; Skip moves on to the roll (B2838)
  * Result: Data/wodx-gate/gateplayerextras-result.json.
  */
-const N = 8;
+const N = 9;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -105,6 +106,16 @@ export async function run() {
     ok("7. my preferences", rows >= 5 && (cues === null || (cues === false && cuesStd === game.settings.settings.get("wodx-atmosphere.cues").default)), {rows, cues, cuesStd});
 
     ok("8. sheet tools", !!tools && listed.length >= 3 && worded, {listed, worded});
+
+    await V.tour({again: true}); await sleep(1500);
+    const g = document.getElementById("wodx-guide");
+    const steps = g?.querySelectorAll(".wodx-guide-steps > li").length ?? 0;
+    const first = g?.querySelector(".wodx-guide-next b")?.textContent?.trim() ?? "";
+    const lit = document.querySelectorAll(".wodx-guide-glow").length;
+    g?.querySelector("[data-skip]")?.click(); await sleep(800);
+    const second = document.getElementById("wodx-guide")?.querySelector(".wodx-guide-next b")?.textContent?.trim() ?? "";
+    await foundry.applications.instances.get("wodx-guide")?.close(); await sleep(200);
+    ok("9. first-night tour", steps === 6 && /sheet/i.test(first) && lit >= 1 && /roll/i.test(second) && !document.querySelector(".wodx-guide-glow"), {steps, first, lit, second});
   } catch (e) {
     R.errors.push(String(e?.stack ?? e));
   } finally {

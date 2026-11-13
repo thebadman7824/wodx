@@ -144,3 +144,13 @@
 .wodx-prefs .wodx-body { display: grid; grid-template-rows: auto 1fr; height: 100%; gap: 6px; }
 .wodx-prefs .wodx-scroll { overflow: auto; }
 .wodx-prefs .wodx-prefs-presets button { width: auto; flex: 0 0 auto; }
+
+/* The first-night tour (B2838) */
+.wodx-guide .wodx-guide-steps { margin: 4px 0; padding-left: 1.3rem; display: grid; gap: 4px; }
+.wodx-guide .wodx-guide-done { opacity: 0.7; }
+.wodx-guide .wodx-guide-next { font-weight: normal; }
+.wodx-guide .wodx-guide-next p { margin: 2px 0 4px; }
+.wodx-guide button { width: auto; height: auto; padding: 2px 8px; margin-right: 4px; }
+.wodx-guide-glow { outline: 3px solid #e8b04a !important; outline-offset: 2px; animation: wodx-guide-pulse 1.4s ease-in-out infinite; }
+@keyframes wodx-guide-pulse { 50% { outline-color: #e8b04a55; } }
+@media (prefers-reduced-motion: reduce) { .wodx-guide-glow { animation: none; } }

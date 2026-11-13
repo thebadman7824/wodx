@@ -9,6 +9,7 @@ import * as R from "./player-view-rules.mjs";
 import {currentYear} from "./eras.mjs";
 import {PrefsApp, openGlossary} from "./player-help.mjs";
 import {toolShown} from "./player-tools.mjs";
+import {GuideApp} from "./player-guide.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 
@@ -226,6 +227,7 @@ export function installQuietChat() {
 async function gather() {
   const out = [];
   for ( const t of barTools ) out.push({kind: "tool", label: t.title ?? t.name, hint: "", icon: t.icon, run: ev => t.onChange?.(ev, true)});
+  out.push({kind: "tool", label: "The first-night tour", hint: "Six steps: your sheet, a roll, moving, the chat, asking the Storyteller, the X-card", icon: "fa-solid fa-route", run: () => GuideApp.open({again: true})});
   const actor = myActor();
   const A = game.modules.get("wodx-actions");
   if ( actor && A?.active && A.api?.menuEntries ) {
@@ -401,7 +403,7 @@ export class NowApp extends ApplicationV2 {
       <ul class="wodx-list wodx-now-list">${items.map((it, i) => `<li><button type="button" data-i="${i}"><b>${esc(it.label)}</b>${it.hint ? `<br><span class="wodx-quiet">${esc(it.hint)}</span>` : ""}</button></li>`).join("")}</ul>
       <p class="wodx-quiet">Stuck? ${solo ? "The seat sorts it out." : "The Storyteller is told."}</p>
       <div class="wodx-now-stuck">${R.STUCK_ROW.map(s => `<button type="button" data-stuck="${s.id}">${esc(s.label)}</button>`).join("")}</div>
-      <p class="wodx-quiet">Looking for something else? <a class="wodx-now-find">Find anything (Ctrl+K)</a></p>`;
+      <p class="wodx-quiet">Looking for something else? <a class="wodx-now-find">Find anything (Ctrl+K)</a>${game.user.isGM ? "" : ` · <a class="wodx-now-tour">The first-night tour</a>`}</p>`;
     return div;
   }
   _replaceHTML(result, content) {
@@ -418,5 +420,6 @@ export class NowApp extends ApplicationV2 {
       tellStoryteller(`${row.label}.`);
     }));
     content.querySelector(".wodx-now-find")?.addEventListener("click", ev => { ev.preventDefault(); FindApp.open(); });
+    content.querySelector(".wodx-now-tour")?.addEventListener("click", ev => { ev.preventDefault(); GuideApp.open({again: true}); });
   }
 }

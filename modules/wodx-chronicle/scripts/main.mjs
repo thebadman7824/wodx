@@ -19,6 +19,7 @@ import * as playerTools from "./player-tools.mjs";
 import * as playerView from "./player-view.mjs";
 import * as playerViewRules from "./player-view-rules.mjs";
 import * as playerHelp from "./player-help.mjs";
+import * as playerGuide from "./player-guide.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
@@ -87,6 +88,7 @@ Hooks.once("init", () => {
   // B2810: Beginner and Full views, Find anything
   playerView.registerPlayerViewSettings();
   playerHelp.registerPlayerHelpSettings();
+  playerGuide.registerGuideSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();
   // Phase 7a: the generator core
@@ -164,6 +166,7 @@ Hooks.once("ready", async () => {
   playerView.installHudGroups();
   playerView.installQuietChat();
   playerHelp.installPlayerHelp();
+  playerGuide.installGuide();
   automation.initAutomation();
   waiting.initWaiting();
   await gen.ensureSeed();
@@ -206,7 +209,7 @@ Hooks.once("ready", async () => {
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
-    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, openDrawer: playerView.openDrawer, rules: playerViewRules},
+    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, tour: (o = {}) => playerGuide.GuideApp.open(o), openDrawer: playerView.openDrawer, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,

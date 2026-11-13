@@ -129,7 +129,7 @@ Next free block: B2840
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
-| B2810-B2839 | The Player UI Desk: Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
+| B2810-B2839 | The Player UI Desk (B2810-B2838 used): Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3897,4 +3897,9 @@ Reverse: PrefsApp in wodx-chronicle player-help.mjs.
 The sheet's title bar keeps its icon buttons (layout pass, 12 November) and gains Sheet tools, which opens the same buttons as a short list with their names. Its words show in Beginner view; in Full view it is an icon like the others, so the sheet's name still fits. A player's own setting shows it in both views, in Beginner view only, or not at all.
 
 Reverse: sheetToolsButton in wodx-sheets main.mjs.
+
+## B2838. A guided first night (2026-11-13)
+The first time a player joins, WoDX offers a short tour (Show me or Not now). Its six steps are open your sheet, make one roll, move your token, read a chat card, ask the Storyteller something, and find the X-card. Each lights up where to look and ticks itself when the player does it; reading a card and finding the X-card tick with the player's own button, so nobody presses the X-card for practice. Any step can be skipped, and the tour can be taken again from What can I do now?, from Find anything (type tour) or from the manual's directions. A world setting turns the offer off. It changes no rule.
+
+Reverse: guideOffer off, or take installGuide out of wodx-chronicle main.mjs.
 
