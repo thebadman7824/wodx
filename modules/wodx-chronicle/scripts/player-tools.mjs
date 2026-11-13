@@ -43,6 +43,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxTalk", label: "Talk to someone", module: "WoDX NPC"},
   {name: "wodxOrders", label: "Give an order", module: "WoDX NPC"},
   {name: "wodxFollowers", label: "Followers", module: "WoDX NPC"},
+  {name: "wodxCults", label: "Your following", module: "WoDX NPC"},
   {name: "wodxFactions", label: "Factions", module: "WoDX NPC"},
   {name: "wodxDress", label: "Dress for a part of the world", module: "WoDX NPC"},
   {name: "wodxRemembered", label: "Who remembers you", module: "WoDX NPC"},

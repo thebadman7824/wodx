@@ -63,13 +63,16 @@ export async function run() {
     });
     await step("2. conceive", async () => {
       const year = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
-      [ana, bo, teen, vamp, wolf, cara] = await Actor.createDocuments([
+      const docs = await Actor.createDocuments([
         {name: "Gate Family Ana", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 28}, sex: "female"}}},
         {name: "Gate Family Bo", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 30}, sex: "male"}}},
         {name: "Gate Family Teen", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 15}, sex: "female"}}},
         {name: "Gate Family Vampire", type: "Vampire", flags: {"wodx-creation": {chronology: {bornYear: year - 90}, sex: "male"}}},
         {name: "Gate Family Wolf", type: "Werewolf", flags: {"wodx-creation": {chronology: {bornYear: year - 25}, sex: "male"}}},
         {name: "Gate Family Cara", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: year - 26}, sex: "female"}}}]);
+      const by = n => docs.find(d => d.name === n);
+      [ana, bo, teen, vamp, wolf, cara] = ["Gate Family Ana", "Gate Family Bo", "Gate Family Teen", "Gate Family Vampire", "Gate Family Wolf", "Gate Family Cara"].map(by);
+      R.notes.push({created: docs.map(d => ({name: d.name, born: d.flags?.["wodx-creation"]?.chronology?.bornYear ?? null, sex: d.flags?.["wodx-creation"]?.sex ?? null, minor: chron().age.minor(d)}))});
       made.push(ana, bo, teen, vamp, wolf, cara);
       const r = await fam().conceive(bo, ana);
       const e = exp(ana);
@@ -145,6 +148,7 @@ export async function run() {
     });
     await step("11. grow", async () => {
       const b = game.actors.get(baby?.id);
+      if ( !b ) throw new Error("no child from step 5");
       await b.setFlag("wodx-creation", "chronology", {...(b.flags["wodx-creation"]?.chronology ?? {}), bornYear: year - 6});
       const plan = await fam().growthPlan(b, year + 8);
       await fam().grow(plan);
@@ -157,6 +161,7 @@ export async function run() {
     });
     await step("12. grown", async () => {
       const b = game.actors.get(baby?.id);
+      if ( !b ) throw new Error("no child from step 5");
       const plan = await fam().growthPlan(b, year + 12);
       await fam().grow(plan);
       const c = game.actors.get(b.id);
