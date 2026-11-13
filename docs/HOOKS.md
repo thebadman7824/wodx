@@ -47,6 +47,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
+| wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
+| wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
+| wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
 
 ## Extension points (sent, nobody listens yet)
 
@@ -54,10 +57,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
-| wodxCaravan | storyteller | a caravan between linked markets: {phase (left, arrived or lost), caravan, changes} |
-| wodxMarketMove | storyteller | a faction's move on a market was carried out: {move (type tax, monopoly, smuggle or raid; faction; goods; rate), market} |
-| wodxTraderBroke | storyteller | a trader's shop shut: {market, actor} |
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
