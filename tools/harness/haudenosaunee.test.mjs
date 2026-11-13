@@ -15,7 +15,8 @@ const HN = await import(join(root, "modules/wodx-creation/data/people-haudenosau
 const RS = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
 const tablesFor = ctx => id => G.resolveTable(PEOPLE_TABLES, id, ctx);
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
-const people = (ctx, n = 400) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("hn", "k", i), tables: tablesFor(ctx), origin: "haudenosaunee", sex: i % 2 ? "female" : "male"}));
+const people = (ctx, n = 400, origin = "haudenosaunee") => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("hn", "k", i), tables: tablesFor(ctx), origin, sex: i % 2 ? "female" : "male"}));
+const AL = await import(join(root, "modules/wodx-creation/data/people-algonquian.mjs"));
 
 test("haudenosaunee: over 300 names, no repeats in a list, no pronoun words", () => {
   const lists = [HN.HN_MEN, HN.HN_WOMEN, HN.HN_CLANS, HN.HN_CHURCH.male, HN.HN_CHURCH.female, HN.HN_MODERN.male, HN.HN_MODERN.female, HN.HN_FAMILY].map(split);
@@ -44,7 +45,7 @@ test("haudenosaunee: own names and a clan before the colonies, a church name bes
 
 test("haudenosaunee: in eastern North America and Canada by age, not borrowed by the West", () => {
   const origin = (era, culture) => G.resolveTable(PEOPLE_TABLES, "people.origin", {era, culture})?.results.map(r => r.text) ?? [];
-  assert.deepEqual(origin("medieval", "american"), ["haudenosaunee"]);
+  assert.deepEqual(origin("medieval", "american"), ["haudenosaunee", "lenape", "new-england-algonquian", "powhatan"]);
   assert.deepEqual(origin("medieval", "canada"), ["haudenosaunee"]);
   assert.ok(origin("early-modern", "american").includes("english") && origin("early-modern", "american").includes("haudenosaunee"));
   assert.ok(origin("modern", "american").includes("anglo"));
@@ -63,4 +64,24 @@ test("haudenosaunee: in a household the children take the mother's clan; grown p
   assert.equal(out[1].sex, "female");
   for ( const c of out.slice(2) ) assert.equal(c.family, "of the Turtle clan", c.name);
   assert.equal(out[2].name, "G2 of the Turtle clan");
+});
+
+test("algonquian coast: three peoples, the Lenape clan from the mother, town bynames for women, staged names", () => {
+  for ( const [o, men] of [["lenape", AL.LENAPE_MEN], ["new-england-algonquian", AL.NE_MEN], ["powhatan", AL.PO_MEN]] ) {
+    const med = people({era: "medieval", culture: "american"}, 200, o);
+    assert.ok(med.every(p => p.given && !p.name.includes("{")), o);
+    assert.ok(med.filter((p, i) => i % 2 === 0).every(p => split(men).includes(p.given)), o);
+    for ( const n of split(men) ) assert.doesNotMatch(n, /\b(he|she|her|hers|him|his)\b/i, n);
+    const ind = people({era: "industrial", culture: "american"}, 50, o);
+    assert.ok(ind.every(p => p.family), `${o}: family names from the 19th century`);
+  }
+  const len = people({era: "medieval", culture: "american"}, 200, "lenape");
+  assert.ok(len.every(p => HN.CLAN.test(p.family) && /Turtle|Turkey|Wolf/.test(p.family)));
+  assert.ok(len.some(p => p.name.startsWith("A woman of the ")));
+  const ne = people({era: "medieval", culture: "american"}, 200, "new-england-algonquian");
+  assert.ok(ne.every(p => !p.family), "no clan or family name before the colonies");
+  assert.ok(ne.some(p => /^A woman of [A-Z]/.test(p.name)) && ne.some((p, i) => i % 2 && split(AL.NE_WOMEN).includes(p.given)));
+  const em = people({era: "early-modern", culture: "american"}, 200, "powhatan");
+  assert.ok(em.some((p, i) => i % 2 === 0 && p.given.includes(" ")), "some men carry a church name");
+  assert.ok(!G.resolveTable(PEOPLE_TABLES, "people.origin", {era: "medieval", culture: W.cultureOf("north-america-west")})?.results.some(r => r.text === "lenape"));
 });
