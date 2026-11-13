@@ -364,7 +364,7 @@ function rollBlock(title, r, parts = [], specialty = false) {
     return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
 }
 /**
- * 3.65.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
+ * 3.66.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
  * Subterfuge, difficulty 6 each. The reader's roll goes to the player and the Storyteller; the speaker's to the
  * Storyteller only. lie: the talk line was marked a lie. Returns {won, lines, face} (deeper-rules.js faceRead).
  */
@@ -3012,7 +3012,7 @@ function kindredHooks() {
     });
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
-    // and a Kindred's marks can be seen again (3.65.0)
+    // and a Kindred's marks can be seen again (3.66.0)
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
@@ -3046,10 +3046,10 @@ function kindredHooks() {
         const redrawn = foundry.utils.hasProperty(changes, "flags.wodx-paperdoll.sprite");
         if (!game.user.isGM || !("x" in changes || "y" in changes || redrawn)) return;
         clearTimeout(movePending);
-        // After the move animates: any Crinos on the scene may now be in a mortal's sight (3.65.0: or a token drawn as a war form)
+        // After the move animates: any Crinos on the scene may now be in a mortal's sight (3.66.0: or a token drawn as a war form)
         movePending = setTimeout(() => {
             for (const t of canvas.tokens?.placeables ?? []) if (t.actor && (GX.isShifter(t.actor) || GX.bringsDelirium({ sprite: t.document?.flags?.["wodx-paperdoll"]?.sprite }))) kx().crinosSeen(t).catch(e => console.error("WoDX |", e));
-            // 3.65.0 (B3443): a Kindred's face that no mortal has, in a mortal's sight
+            // 3.66.0 (B3443): a Kindred's face that no mortal has, in a mortal's sight
             for (const t of canvas.tokens?.placeables ?? []) if (t.actor && P.detectProfile(t.actor) === "kindred") kx().marksSeen(t).catch(e => console.error("WoDX |", e));
         }, 600);
         if (!("x" in changes || "y" in changes)) return;

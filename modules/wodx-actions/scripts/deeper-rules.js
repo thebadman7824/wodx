@@ -6,7 +6,7 @@
  *   - B3132: a mood region's fear-of-fire step (WoDX Atmosphere) adds to Rotschreck and frenzy.
  *   - B3133: an entry in the character's codex counts as research: one off the difficulty of a related Occult or
  *     lore roll, once for each entry (V20 has research take time; the one point is WoDX's figure).
- * Batch D (3.65.0):
+ * Batch D (3.66.0):
  *   - B3441: dressed above or below the station of the one they deal with (WoDX Library's look, which now reads the
  *     clothes of WoDX Paperdoll's figure too), an Etiquette or Subterfuge roll gains or loses a die. V20's Etiquette
  *     leaves dress to the Storyteller; the one die is WoDX's figure.

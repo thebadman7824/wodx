@@ -162,7 +162,7 @@ export function delirium(willpower, b, table) {
 }
 
 /**
- * Does a figure on the map bring on the Delirium (3.65.0, B3440)? A shifter's sheet in Crinos (a Fera war form counts
+ * Does a figure on the map bring on the Delirium (3.66.0, B3440)? A shifter's sheet in Crinos (a Fera war form counts
  * as Crinos), or a token drawn as a war form by WoDX Paperdoll's sprites (an NPC with no Garou sheet). Hispo does not:
  * only a Gift brings the Delirium in Hispo (W20 pp. 45, 186).
  */
