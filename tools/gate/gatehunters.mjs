@@ -35,6 +35,13 @@ export async function run() {
   const t0 = Date.now(), culprit = {id: "gateHunterCulprit", name: "Gate culprit", kind: "Vampire"};
   const mine = () => Ch.approvals.pending().filter(p => !before.has(p.id) && p.type === `${S}.hunters`);
   let region = null;
+  /** Set the test region's pressure exactly (keep: keep its files), with the turn clock at now. */
+  const setP = async (p, keep = false) => {
+    const s = foundry.utils.deepClone(game.settings.get(S, "hunterState") ?? {}), t = game.time.worldTime, r = s.regions?.[region] ?? {};
+    s.regions = {...(s.regions ?? {}), [region]: {...r, pressure: p, last: t, since: r.since || t, stage: Hu.rules.stageOf(p).key, files: keep ? (r.files ?? {}) : {}, acted: keep ? (r.acted ?? {}) : {}}};
+    s.lastTurn = t; s.trail = [];
+    await game.settings.set(S, "hunterState", s);
+  };
   try {
     if ( was.held ) await Ch.hold(false);
     if ( !was.on ) await game.settings.set(S, "hunterPressure", true);
@@ -60,7 +67,9 @@ export async function run() {
     });
 
     await step("a file grows; an investigator", async () => {
-      await Hu.add(region, "manual", {n: 4, who: culprit, gain: 1});
+      // Exactly Investigating, and nothing read from the testbed's own descriptions (lastTurn now)
+      await setP(6);
+      await Hu.add(region, "manual", {n: 0, who: culprit, gain: 1});
       const lv0 = Hu.state().regions[region].files[culprit.id]?.level;
       await Hu.turn({force: true});
       await sleep(300);
@@ -71,7 +80,7 @@ export async function run() {
 
     await step("the Hunt is harder", async () => {
       const h0 = st.upkeep.huntHere(canvas.scene);
-      await Hu.add(region, "manual", {n: 2});
+      await setP(8, true);
       const h1 = st.upkeep.huntHere(canvas.scene);
       const heatOn = game.settings.get(S, "heat");
       ok("the Hunt is harder", !heatOn || (h1.extra === Math.min(3, h0.extra + 1)), {before: h0.extra, after: h1.extra, heatOn, stage: Hu.here(canvas.scene).stage.key});

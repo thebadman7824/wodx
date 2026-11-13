@@ -206,3 +206,11 @@ test("Foundry side: weekly after the market turn, hunt reads the town, the Marke
   for ( const m of c.matchAll(/<select [^>]*>/g) ) assert.match(m[0], /data-fixed/, m[0]);
   assert.ok(!/house rule/i.test(c), "no meta words in game text");
 });
+
+test("WoDX Actions: the Hunt takes one less in a sick town and a carrier names the sickness (B3438)", () => {
+  const a = src("modules/wodx-actions/scripts/main.js");
+  assert.match(a, /name="sickDiff" value="\$\{here\.outbreak\.diff\}"/);
+  assert.match(a, /\(Number\(fd\.sickDiff\) \|\| 0\) \}\);/);
+  assert.match(a, /sick\?\.blood && sick\.disease \? \{ disease: sick\.disease, what: sick\.name \}/);
+});
+

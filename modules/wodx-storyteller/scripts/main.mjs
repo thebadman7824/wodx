@@ -40,6 +40,7 @@ import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
 import * as SpendRules from "./spend-rules.mjs";
+import * as ProjectRules from "./projects-rules.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
 import * as HavenRules from "./haven-rules.mjs";
@@ -214,7 +215,7 @@ Hooks.once("ready", () => {
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
       clockRow: Spend.clockRow, bindClockRow: el => Spend.bindClockRow(el, () => A.conveneDialog()), rules: SpendRules},
-    tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
+    tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules, budget: Tasks.budgetOf, projects: ProjectRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     hand: {open: Hand.handDialog, run: Hand.runTool, tools: Hand.TOOLS, addTool: Hand.addTool, glance: () => Hand.GlanceApp.open(), call: Hand.callRoll, callDialog: Hand.callRollDialog,
       answer: Hand.answerAsk, preflight: () => Hand.PreflightApp.open(), snapshot: Hand.snapshot, wrapUp: Hand.wrapUpDialog, noteFight: Hand.noteFight, timer: () => Hand.TimerApp.open(),
@@ -307,7 +308,7 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => PassTime.passTimeDialog()};
   tokens.tools.wodxLetters = {name: "wodxLetters", title: "Send a letter or message (it travels as the era allows)", icon: "fa-solid fa-envelope", order: 108,
     button: true, visible: true, onChange: () => Letters.openLetters()};
-  tokens.tools.wodxTasks = {name: "wodxTasks", title: "Long tasks (work that takes days or weeks: making things, research, training)", icon: "fa-solid fa-hourglass-half", order: 109,
+  tokens.tools.wodxTasks = {name: "wodxTasks", title: "Downtime and long tasks (projects that take days or weeks: research, a business, courting, making things, training)", icon: "fa-solid fa-hourglass-half", order: 109,
     button: true, visible: true, onChange: () => Tasks.tasksDialog()};
   tokens.tools.wodxProperty = {name: "wodxProperty", title: "Property and building (what you own, making things, putting up a building)", icon: "fa-solid fa-house-flag", order: 126,
     button: true, visible: true, onChange: () => Own.propertyDialog()};

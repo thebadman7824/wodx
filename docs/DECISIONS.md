@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3440
+Next free block: B3470
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -160,15 +160,18 @@ Next free block: B3440
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
-| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
-| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
+| B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
+| B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
-| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3437) | Storyteller |
+| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4881,6 +4884,41 @@ After a yes the clock counts the waiting: three Sundays of banns in Latin Christ
 
 Reverse: turn the wedding card down.
 
+## B3240. Cults are kept in WoDX NPC, apart from factions (2026-11-13)
+WoDX NPC. Ben asked for players and certain NPCs to grow cults around themselves from their words and deeds, each line with its own kind, with the Princes of Darkness mod as inspiration. A cult is its own record (world setting wodx-npc.cults) beside the factions, so the faction turn is not touched; a faction can be founded from a cult by hand. Ideas taken from Princes of Darkness, rebuilt on WoDX's own systems: a bound follower of a kind that suits the line, initiation and ordination into an inner circle, suspicion that grows until someone acts. World setting cultsOn, off by default and off in Live.
+
+Reverse: turn cultsOn off; the setting and the awe flags can stay.
+
+## B3241. Awe by place, from words and deeds (2026-11-13)
+WoDX NPC. Awe is kept on the character for each scene: words spoken in character in chat with a word of faith, blood, power or doom and NPCs within 12 grid units (1 point, at most 3 an hour, setting cultWords), a sermon (Charisma + Leadership, Expression, Performance or Empathy, or Manipulation + Intimidation, difficulty 6, 2 awe a success), a power worked in sight (3), a breach seen (2), a willing feeding (1, blood) and a social win (1). Each carries themes. Awe halves after 30 days with nothing new. House figures.
+
+Reverse: set the deed points in DEEDS in cult-rules.mjs.
+
+## B3242. When a following gathers (2026-11-13)
+WoDX NPC. Awe of 10 heard by 3 or more people puts "A following gathers" in the approval queue; the founder may ask from 5. The new cult starts with the people who were touched (3 to 12), devotion 2 (1 when asked early), secret, its creed from the three strongest themes. House rule.
+
+Reverse: FORM_AT, ASK_AT and TOUCHED_AT in cult-rules.mjs.
+
+## B3243. The weekly cult turn (2026-11-13)
+WoDX NPC. Once a week of world time: three points of attention (awe added in the cult's place, two for a gathering) raise devotion a step; four quiet weeks (two when the founder is gone) lower it. At devotion 2 or more it grows by 4% a step of devotion, more when tended and for a Devil's pyramid of recruits, capped by the place (40 before 1500, 120 to 1850, 300 to 1950, 600 after, or 5% of a settlement's people); at 1 or less a tenth drift away (a quarter at 0). Exposure rises by chance with size and openness; "people talk" starts a rumour, "watched" fires wodxCultNoticed, 10 proposes a raid. A failing cult of 13 or more may split (approval queue). Twelve turns at most in a skip; quiet years after that wear a cult down, and one whose mortal founder is gone ends after 25 years. House rules.
+
+Reverse: set the figures in cultTurn and quietYears.
+
+## B3244. Each line's kind of cult and what it gives (2026-11-13)
+WoDX NPC. Vampire: blood cult, sized and read as Herd (V20 p. 114). Mummy: the Netaru (Ben's name; not found in the books held), sized as the M20 Cult, with the Cult of Isis as the model. Demon: a cult of personality whose inner circle counts as Followers (Demon: The Fallen p. 155), Faith reaped at a gathering and offered by a thrall's pact (p. 251). Changeling: Dreamers (C20 p. 169). Wraith: a circle of remembrance read as Memoriam (Wraith 20th p. 144; the member counts for each dot are a house reading). Mage: Cult (M20 p. 310). Werewolf: the old faith (house), and Wyrm cults for NPCs only. Kuei-jin: blood or death cults read as Herd. Hunter: a flock (house). Mortal: a sect, a heresy before 1600. Each has words by era. The card states what the cult gives; the Storyteller applies it.
+
+Reverse: edit CULT_KINDS in cult-rules.mjs.
+
+## B3245. NPCs who found cults (2026-11-13)
+WoDX NPC. Once a month of world time, an NPC whose kind is read as a cult-maker (Setites, Malkavians, Baali, Tzimisce before 1500, the fallen, Ecstatics and the Chorus, Nephandi, Black Spiral Dancers and fomor, the Reborn, Kuei-jin, mortal preachers and mediums) with a token on a scene and no cult of its own has a 1 in 10 chance to found one, through the approval queue. An NPC's cult gets two points of attention a week while the NPC lives. Setting npcCults. House rule.
+
+Reverse: turn npcCults off, or edit NPC_CULTISH.
+
+## B3246. The Following window (2026-11-13)
+WoDX NPC. A token tool, Your following, shows a character's awe by place, its cults (members, devotion, creed, what it gives, the inner circle) and buttons to preach, hold a gathering and ask for a following. The Storyteller also sees exposure, can initiate or ordain the targeted NPC (one ordained for every ten members), dissolve a cult and run a turn by hand. With no character selected the Storyteller sees every cult. Players act by socket, for their own characters only.
+
+Reverse: remove the wodxCults tool.
+
 ## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
 WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
 
@@ -4976,6 +5014,31 @@ tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from
 
 Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
 
+## B3295. Each region its own turning years, with a colonial age (2026-11-13)
+tools/mapgen regiontrades.py YEARS, Ben's pick C on the Town Households desk. From 1781 each of the 44 regions has its own years for the industrial trades, the years between the wars, a colonial age under a foreign power, the socialist years and the post-war years (Japan industrial from 1868, India colonial 1857 to 1946, Korea colonial 1910 to 1945, Mexico colonial until 1821). Socialist years also in the Caribbean from 1959, mainland Southeast Asia from 1975 and East Africa from 1974, by the region's main state (pick B on the third question). The colonial age keeps the town's own head and adds a mission teacher, a police constable, a district officer, a customs clerk, a plantation overseer and a doctor. The age bands that pick the furnishings stay the Bohemian ones.
+
+Reverse: point every region at the Bohemian years.
+
+## B3296. Full trade lists for each way of life (2026-11-13)
+tools/mapgen regiontrades.py LISTS, pick B. The lands of Islam, India, China and Korea, Japan, mainland Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast, southern and central Africa, Polynesia and the far north each have their own crafts, shops, homes by standing, offices, innkeeper, farmer, smith and baker: once for the old trades (before about 1880) and once for the later ones. The socialist, present-day and future trades stay the shared tables with renames. Western Christendom and the Eastern church keep the Bohemian tables.
+
+Reverse: empty LISTS.
+
+## B3297. The same renames from 1197 (2026-11-13)
+tools/mapgen settle.py, pick A. A medieval town outside Moravia keeps the generator's roles under its way of life's names: no alehouse keeper in Cairo (a caravanserai keeper), rice farmers in Kyoto.
+
+Reverse: leave medieval households as the generator made them.
+
+## B3298. Buildings named by way of life (2026-11-13)
+tools/mapgen settle.relabel, pick B. Same footprint and furnishing, local name: a caravanserai for the alehouse in the lands of Islam, a shophouse and an inn in East Asia, a beer hall in southern Africa, and the chapel named for the faith (mosque, temple, synagogue, shrine; --faith wins). Gendarmerie post, Baťa house and Sgraffito house take plain names outside the Bohemian lands. Furnishing by region is not built.
+
+Reverse: drop relabel from ddtown.py.
+
+## B3299. A seeded goods draw in the fill tests (2026-11-13)
+tools/harness fill.test.mjs. Every draw in the file takes a seeded random source, so a draw that failed once on GitHub and then passed can no longer change between runs.
+
+Reverse: drop the rng arguments.
+
 ## B3300. One hunter pressure per world region (2026-11-13)
 WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
 
@@ -5006,6 +5069,11 @@ When a culprit with a file of level 2 or more stands in another region, that reg
 
 Reverse: change TRAIL in hunters-rules.mjs.
 
+## B3306. Hunters hear cults (2026-11-13)
+WoDX Storyteller, hunters.mjs listens to WoDX NPC's wodxCultNoticed: a cult watched adds 1 to its region's pressure, a cult moved against adds 2, and the founder gets a file (1 or 2 progress). House figures.
+
+Reverse: drop the wodxCultNoticed listener in hunters.mjs.
+
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
 
@@ -5030,6 +5098,26 @@ Reverse: make townCrowd return 1.
 WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
 
 Reverse: drop the wodxTown hook in factions.mjs.
+
+## B3340. Downtime projects are long tasks with more to them (2026-11-13)
+WoDX Storyteller. Ben picked all eight player world systems on the desk (https://claude.ai/artifact/2xgc6aoeS8Fz4CrJuMhMWA), downtime projects first as the engine the others run on. A project is a long task (tasks-rules.mjs) with nights a week, a target and complications, so the clock, the cards, Undo, recipes, buildings and helpers all keep working. Five new kinds: business, court, language, track, herd. Older tasks have nights 0 and run exactly as before.
+
+Reverse: drop the five kinds and the nights, target, complications and trouble fields from normTask; intervalS falls back to the plain interval.
+
+## B3341. A weekly budget of nights (2026-11-13)
+WoDX Storyteller. Each character has 7 nights or days a week for projects, 6 for a vampire, who loses one to the hunt; the Storyteller can set a character's own figure (flag projectBudget). Each kind has the nights a week it needs for full pace; fewer stretch each roll in proportion. When the projects given nights add up past the budget, the newest pause with a note. House figures; logged in PENDING-REVIEW.
+
+Reverse: edit BUDGET, HUNT_NIGHTS and each kind's week; set nights to 0 to leave a project out.
+
+## B3342. Complications (2026-11-13)
+WoDX Storyteller. Each roll of a project can draw a complication from a table by kind and year (1 in 10, always on a botch), skipping the last three it had where there is a choice. It goes to the Storyteller only, as a card, a log line marked for attention and the hook wodxProjectComplication, and is kept on the project. It is the start of a scene and changes nothing by itself. The Storyteller can turn complications off for a project.
+
+Reverse: set TROUBLE_CHANCE to 0 and stop drawing on a botch in drawTrouble.
+
+## B3343. What a finished project leaves (2026-11-13)
+WoDX Storyteller. Backgrounds never rise by themselves (B850): a finished business or herd puts a line on the log asking the Storyteller to award a dot of Resources or Herd; a language, a track or research asks the Storyteller to say what came of it. A courting project calls WoDX NPC's api.hearts.court each roll: a success is time spent together, a botch a slight. The hearts api refuses anyone under 18 (B3211).
+
+Reverse: edit outcomeOf and courtEvent in projects-rules.mjs, or drop courtRoll from tasks.mjs.
 
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
@@ -5067,3 +5155,17 @@ Reverse: make huntHere read U.outbreakFor(yearNow()) again.
 ## B3437. Towns lose their dead to the sickness they caught (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs (towns that change over time, B3280). While sickness spreads between towns is on, the town turn takes each town's sickness from its own outbreak (contagion-rules townHit): the week's dead (the attack times that week's share times the death share) come off its people, and its unrest rises by a tenth for each step of pressure. The town turn's own outbreaks by year (TOWN_OUTBREAKS) then do not strike, so a town never has two plagues; plague brought by dated news still does. With sickness off, the town turn works as before.
 Reverse: pass no sickFor from towns.mjs.
+
+## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
+WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
+Reverse: remove the sickDiff field and the named carrier in main.js.
+
+## B3460. The older public buildings by where they belong (2026-11-13)
+tools/mapgen regiontrades.first_group_ok, from the Japan 1830 hand check. Outside Christendom a generated town gets no charnel house, cemetery chapel, monastery library or Protestant prayer house. A Jewish quarter and its synagogue appear only in Christendom and the lands of Islam. The hospital, museum, savings bank, gendarmerie, public library, grand hotel, waterworks, dance hall, goods shed and counting house come only once the region's trades have left the old ones (its industrial, colonial or later age: Japan from 1868, India from 1857). Moravia and the rest of Christendom are unchanged. Samurai retainers and sake brewers now also live in ordinary homes in Japan, not only in rich ones.
+
+Reverse: let first_group_ok return true everywhere.
+
+## B3461. The sample settlement records carry band and tradeAge (2026-11-13)
+tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
+
+Reverse: nothing to reverse; the samples follow the generator.

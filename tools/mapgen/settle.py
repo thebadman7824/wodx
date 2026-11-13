@@ -11,8 +11,8 @@ household and the ties. The ages follow the Bohemian crown lands: the school ref
 serfdom patents of 1781, the end of the guilds in 1859, the republic of 1918, February 1948, November 1989.
 
 A town elsewhere in the world (--region, B3290 to B3293) keeps those ages for its buildings and furnishings, but its
-households take the trades of whoever ruled there after 1918 (TRADE_PLAN) under the names its way of life gives them
-(LOCAL).
+households take the region's own turning years (regiontrades.YEARS), the trade lists of its way of life
+(regiontrades.LISTS) and its names (regiontrades.RENAMES, from 1197), and its buildings their local names.
 """
 import json, math, random, re
 
@@ -140,6 +140,8 @@ COMP = {
 }
 ALONE = re.compile(r"pensioner|widow|student|unemployed")
 CRAFTS = {t for ts in CRAFT.values() for t in ts} | {"smith", "baker"}
+SHOPS = {t for ts in SHOP.values() for t in ts}
+RT_TRADES = None          # the crafts and shops of every way of life, filled below once regiontrades is read
 
 
 def _draw(R, pairs):
@@ -167,29 +169,35 @@ def lived_in(b, types):
     return d.get("place") in ("home", "tavern") or d.get("role") in ("home", "shop", "inn")
 
 
-def trade_for(b, old, age, R, turn, types):
-    """The trade of the household in building b in this age. old: the trade the generator gave it."""
+def trade_for(b, old, age, R, turn, types, tb=None):
+    """The trade of the household in building b in this age. old: the trade the generator gave it. tb: the tables
+    (tables()); left out, the Bohemian tables of the age."""
+    tb = tb or tables_of(age)
     if KEEPS.search(old or ""): return old
     key = b.type if b.type in BY_TYPE else _base(b.type) if _base(b.type) in BY_TYPE else None
     if key:
         v = BY_TYPE[key]
-        if isinstance(v, dict): return v[age]
+        if isinstance(v, dict): return tb[BY_KEY[key]]
         if v: return v
     wealth = getattr(b, "wealth", None) or "middling"
     role = "shop" if b.type == "townhouse" else "craft" if b.type == "workshop" else _role(b, types)
     if role == "craft":
         turn["craft"] += 1
-        return CRAFT[age][(turn["craft"] - 1) % len(CRAFT[age])]
+        return tb["craft"][(turn["craft"] - 1) % len(tb["craft"])]
     if role == "shop":
         turn["shop"] += 1
-        return SHOP[age][(turn["shop"] - 1) % len(SHOP[age])]
-    if role == "inn": return INN[age]
-    return _draw(R, HOME[age].get(wealth) or HOME[age]["middling"])
+        return tb["shop"][(turn["shop"] - 1) % len(tb["shop"])]
+    if role == "inn": return tb["inn"]
+    return _draw(R, tb["home"].get(wealth) or tb["home"]["middling"])
 
 
-def roles_for(trade, b, age, R):
+def tables_of(age):
+    return dict(craft=CRAFT[age], shop=SHOP[age], home=HOME[age], notables=NOTABLES[age], inn=INN[age], farm=FARM[age], smith=SMITH[age], baker=BAKER[age], comp=COMP[age])
+
+
+def roles_for(trade, b, age, R, tb=None):
     """The people of one household, as roles, for the age."""
-    c = COMP[age]
+    c = (tb or {}).get("comp") or COMP[age]
     wealth = getattr(b, "wealth", None) or "middling"
     if ALONE.search(trade) and R.random() < .5: return [trade]
     if R.random() < c["alone"]: return [trade]
@@ -199,7 +207,7 @@ def roles_for(trade, b, age, R):
     if R.random() < c["elder"]: roles.append("elder")
     if R.random() < c["servant"].get(wealth, 0): roles.append("servant")
     if trade in CRAFTS and R.random() < c["apprentice"]: roles.append("apprentice")
-    if trade in ("farmer",) and age in ("reform", "industrial", "republic") and R.random() < .35: roles.append("farmhand")
+    if trade in ("farmer", (tb or {}).get("farm")) and age in ("reform", "industrial", "republic", "colonial") and R.random() < .35: roles.append("farmhand")
     if R.random() < c["lodger"] * (1.5 if wealth == "poor" else 1): roles.append("lodger")
     return roles
 
@@ -208,8 +216,13 @@ def repeople(t, types):
     """From 1781, every household gets the trade and the make-up of the town's year. Earlier towns are left as the
     medieval generator made them. Its own random source, so the map itself is the same with or without this."""
     band = age_of(t.year)
-    if not since(band, "reform"): return band
-    age = trade_age(t.year)                              # the trade tables: the band, or the region's own (B3291)
+    if not since(band, "reform"):                        # the medieval households keep their roles, under local names (B3297)
+        if REGION != "moravia":
+            for h in t.households:
+                h["trade"] = local(h.get("trade", ""), t.year)
+                h["people"] = [{**p, "role": local(p["role"], t.year)} for p in h["people"]]
+        return band
+    age, tb = tables(t.year)                             # the region's trade age and tables (B3295, B3296)
     R = random.Random(f"{t.seed}:{t.year}:people")
     byk = {b.key: b for b in t.blds}
     turn = {"craft": 0, "shop": 0}
@@ -228,12 +241,12 @@ def repeople(t, types):
             h["trade"], h["people"], h["kept"] = trade, [{"role": trade}] + [{"role": "staff"}] * R.randint(lo, hi), True
             h["wealth"] = getattr(b, "wealth", None) or h.get("wealth") or "middling"
             continue
-        trade = trade_for(b, h.get("trade", ""), age, R, turn, types)
+        trade = trade_for(b, h.get("trade", ""), age, R, turn, types, tb)
         if KEEPS.search(trade) and trade == h.get("trade"):
             roles = [p["role"] for p in h["people"]]
             if re.search(r"priest", trade): roles = [trade] + (["housekeeper"] if since(band, "industrial") and R.random() < .6 else [r for r in roles[1:] if r in ("servant", "clerk")])
         else:
-            roles = roles_for(trade, b, age, R)
+            roles = roles_for(trade, b, age, R, tb)
             roles[0] = trade = local(trade, t.year)
         h["trade"], h["people"] = trade, [{"role": r} for r in roles]
         h["wealth"] = getattr(b, "wealth", None) or h.get("wealth") or "middling"
@@ -246,12 +259,12 @@ def repeople(t, types):
              and byk[h["building"]].type not in BY_TYPE and types.get(byk[h["building"]].type, {}).get("flats", 1) == 1]
     R.shuffle(homes)
     t.notables = []
-    for trade, least, wealth in NOTABLES[age]:
+    for trade, least, wealth in tb["notables"]:
         if k < least: continue
         pick = next((h for h in homes if h.get("wealth") == wealth), None) or (homes[0] if homes else None)
         if not pick: break
         homes.remove(pick)
-        roles = roles_for(trade, byk[pick["building"]], age, R)
+        roles = roles_for(trade, byk[pick["building"]], age, R, tb)
         roles[0] = trade = local(trade, t.year)
         pick["trade"], pick["people"] = trade, [{"role": r} for r in roles]
         t.notables.append({"role": trade, "household": pick["id"]})
@@ -295,7 +308,7 @@ def ties(t, types):
     for h in hs: by_trade.setdefault(h["trade"], []).append(h)
     for trade, group in by_trade.items():
         if len(group) < 2 or len(group) > 6 or trade in ("pensioner", "unemployed", "labourer", "day labourer", "cottager"): continue
-        if not (trade in CRAFTS or any(trade in v for v in SHOP.values()) or any(trade == v for v in INN.values()) or trade in ("alehouse keeper", "smith", "baker")
+        if not (trade in CRAFTS or trade in SHOPS or trade in RT_TRADES or any(trade in v for v in SHOP.values()) or any(trade == v for v in INN.values()) or trade in ("alehouse keeper", "smith", "baker")
                 or re.search(r"draper|spicer|cutler|saddler|glover|butcher|fishmonger|goldsmith|mercer|salter|carpenter|cooper|weaver|potter|tanner|cobbler|chandler|wheelwright|turner|dyer", trade)): continue
         for a, b in zip(group, group[1:]):
             if R.random() < .5: add(a, b, "rival", f"both in the {trade}'s trade")
@@ -373,34 +386,24 @@ def sphere_for(region, year):
     return out
 
 
-# Whose trades a region's households take in the years from 1919 (a house reading, PENDING-REVIEW B3291):
-#   bohemian  the tables as written: the first republic, then the socialist years from 1948 to 1989
-#   eastern   the same years under one-party rule (Poland, the Balkans, China)
-#   soviet    the socialist trades from 1919 to 1989, with no first republic (Russia, Central Asia, Siberia)
-#   western   the rest of the world: the years 1948 to 1989 take the post-war trades of a market town
-TRADE_PLAN = {"moravia": "bohemian", "poland-baltic": "eastern", "carpathians-balkans": "eastern", "china": "eastern",
-              "russia": "soviet", "central-asia": "soviet", "siberia": "soviet"}
+import regiontrades as RT
+
+RT_TRADES = {t for L in RT.LISTS.values() for p in L.values() for k in ("craft", "shop") for t in p[k]}
+CRAFTS |= {t for L in RT.LISTS.values() for p in L.values() for t in p["craft"]}
 
 
 def trade_age(year, region=None):
-    """The key of the trade tables for a year in a region: the age (age_of), or for a region outside the one-party
-    lands the post-war trades in place of the socialist ones."""
-    age, plan = age_of(year), TRADE_PLAN.get(region or REGION, "western")
-    if plan == "soviet" and age == "republic": return "socialist"
-    if plan == "western" and age == "socialist": return "postwar"
-    return age
+    """The key of the trade tables for a year in a region (regiontrades.YEARS, B3295): its own turning years from 1781,
+    with a colonial age where a foreign power ruled. Before 1781 the age of the band (the medieval households)."""
+    if (year or 1197) < 1781: return age_of(year)
+    return RT.trade_age(region or REGION, year)
 
 
-# Trades renamed by the way of life a town follows, or outside the Bohemian lands. A house reading (B3292): only
-# names everyone would agree on; the full trade lists of each way of life wait on the desk.
-RICE = {"farmer": "rice farmer", "farmhand": "farmhand"}
-DRY = {"brewer": "merchant", "publican": "café owner", "pub manager": "tea house manager", "bartender": "café attendant",
-       "innkeeper": "caravanserai keeper", "dance hall keeper": "café owner"}
-LOCAL = {
-    "sinic": RICE, "japanese": RICE, "theravada": RICE, "malay": {**RICE, "innkeeper": "lodging-house keeper"},
-    "islamic": DRY, "sahel": {"brewer": "merchant", "publican": "café owner", "pub manager": "café manager"},
-    "tibetan": {"farmer": "barley farmer"},
-}
+def one_party(region=None):
+    return RT.one_party(region or REGION)
+
+
+# Outside the Bohemian lands, whatever the way of life (B3292)
 OUTSIDE = {"national committee chairman": "council chairman", "national committee official": "council official", "reeve": "headman",
            "linen bleacher": "dyer"}
 SOVIET = {"co-operative farm worker": "collective farm worker", "co-operative farm chairman": "collective farm chairman",
@@ -408,12 +411,49 @@ SOVIET = {"co-operative farm worker": "collective farm worker", "co-operative fa
 
 
 def local(trade, year, region=None):
-    """A trade under the name the town's region and way of life give it."""
+    """A trade under the name the town's region and way of life give it, at any year from 1197 (B3297)."""
     region = region or REGION
     if region == "moravia": return trade
-    if TRADE_PLAN.get(region) == "soviet" and trade in SOVIET: return SOVIET[trade]
+    if region in RT.SOVIET and trade in SOVIET: return SOVIET[trade]
     trade = OUTSIDE.get(trade, trade)
-    return LOCAL.get(sphere_for(region, year), {}).get(trade, trade)
+    return RT.RENAMES.get(sphere_for(region, year), {}).get(trade, trade)
+
+
+BY_KEY = {"smithy": "smith", "bakehouse": "baker", "tavern": "inn", "pub": "inn", "post-inn": "inn", "counter-bar": "inn", "cdda-bar": "inn", "byre-house": "farm"}
+
+
+def tables(year, region=None):
+    """(trade age, the tables a town's households are drawn from): the Bohemian tables of the age, or the way of
+    life's own lists (regiontrades.LISTS, B3296); a colonial age takes the offices a colonial power brings."""
+    region = region or REGION
+    age = trade_age(year, region)
+    gen = ("industrial" if (year or 0) >= 1851 else "reform") if age == "colonial" else age
+    tb = dict(craft=CRAFT[gen], shop=SHOP[gen], home=HOME[gen], notables=NOTABLES[gen], inn=INN[gen], farm=FARM[gen], smith=SMITH[gen], baker=BAKER[gen], comp=COMP[gen])
+    own = RT.lists_for(sphere_for(region, year), age, year) if region != "moravia" else None
+    if own: tb.update({k: own[k] for k in ("craft", "shop", "home", "notables", "inn", "farm", "smith", "baker")})
+    if age == "colonial": tb["notables"] = tb["notables"][:1] + RT.COLONIAL
+    return age, tb
+
+
+def relabel(t, faith=None, region=None):
+    """Gives each building and household the name its way of life uses (B3298): same footprint, same furnishing. The
+    chapel takes the name of the faith (--faith, or the way of life's own)."""
+    region = region or REGION
+    if region == "moravia": return 0
+    sphere = sphere_for(region, t.year)
+    names = {**RT.OUTSIDE_BUILDINGS, **RT.BUILDINGS.get(sphere, {})}
+    worship = RT.FAITH_WORSHIP.get(faith) if faith else RT.WORSHIP.get(sphere)
+    n = 0
+    for b in t.blds:
+        base, sep, rest = b.label.partition(" (")
+        new = worship if base in ("Chapel", "Church") and worship else names.get(base, base)
+        if sep: rest = local(rest.rstrip(")"), t.year, region) + ")"
+        label = new + sep + rest
+        if label == b.label: continue
+        for h in t.households:
+            if h["building"] == b.key and h.get("label", "").startswith(b.label): h["label"] = label + h["label"][len(b.label):]
+        b.label, n = label, n + 1
+    return n
 
 
 def record(t, parts_index, types, era, where=None):

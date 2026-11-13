@@ -637,6 +637,7 @@ def main():
         import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
         if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
         t = Town(a.seed, a.size, a.name, not a.day).make()
+    if a.layout == "organic": settle.relabel(t, a.faith)   # local building names (B3298)
     base = slug(t.name)
     settled = None
     if a.settle:

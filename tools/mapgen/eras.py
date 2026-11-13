@@ -509,6 +509,13 @@ def in_quarter(t, b):
     return t.quarter is not None and math.dist(b.centre, t.quarter) < 12
 
 
+def quarter_ok(t, tk="ghetto-house"):
+    """A Jewish quarter (or another building of tk's kind) only where the town's way of life has one
+    (regiontrades.first_group_ok, B3460)."""
+    import settle as S
+    return S.RT.first_group_ok(tk, S.REGION, S.sphere_for(S.REGION, t.year), t.year)
+
+
 def rebuild(t, y0, era, share):
     """One era's renewal of the town's houses and shops."""
     R = t.R
@@ -525,7 +532,7 @@ def rebuild(t, y0, era, share):
         cands = types_for(y0, upto, role) or types_for(y0, upto, "home")
         fit = [c for c in cands if getattr(b, "wealth", None) in B.TYPES[c].get("wealth", (getattr(b, "wealth", None),))]
         cands = fit or cands                                  # a colony house for a poor plot, a villa for a rich one
-        if "ghetto-house" in cands and not in_quarter(t, b): cands.remove("ghetto-house")
+        if "ghetto-house" in cands and not (in_quarter(t, b) and quarter_ok(t)): cands.remove("ghetto-house")
         if not cands: continue
         if replace(t, [b], R.choice(cands)): n += 1
     return n
@@ -642,6 +649,8 @@ def older_forms(t, y0, k):
         if tk in t.older or FG.TYPES[tk]["built"][0] > upto: continue
         t.older.add(tk)
         if tk == "old-synagogue" and t.blds and not in_quarter(t, t.blds[0]): continue
+        import settle as S                                   # the older buildings by where they belong (B3460)
+        if not S.RT.first_group_ok(tk, S.REGION, S.sphere_for(S.REGION, t.year), t.year): continue
         n = int(per * k) + (t.R.random() < per * k % 1)
         if n: place_blocks(t, tk, n, where)
 
@@ -653,7 +662,7 @@ def layer_era(t, y0, era, share):
     if k: older_forms(t, y0, k)
     if era == "renaissance" and k and not any(b.type == "town-hall" for b in t.blds): place_blocks(t, "town-hall", 1, "core")
     if era == "age-of-reason" and y >= 1700 and k: place_blocks(t, "manufactory", k, "edge")
-    if era == "age-of-reason" and y >= 1781 and k and t.R.random() < .5: place_blocks(t, "prayer-house", 1, "edge")
+    if era == "age-of-reason" and y >= 1781 and k and t.R.random() < .5 and quarter_ok(t, "prayer-house"): place_blocks(t, "prayer-house", 1, "edge")
     if era == "victorian":
         if y >= 1840 and k: place_blocks(t, "mill", k, "edge")
         if y >= 1860 and k: place_blocks(t, "tenement", 2 * k, "core")
@@ -661,10 +670,10 @@ def layer_era(t, y0, era, share):
     if era == "mid-century":
         if y >= 1930 and k: place_blocks(t, "dept-store", max(1, k // 2), "core")
         if y >= 1930 and k: place_blocks(t, "bus-station", 1, "edge")
-        # Outside the one-party lands (settle.py TRADE_PLAN, B3294) there is no house of culture, and the estate's
+        # Outside the one-party lands (regiontrades.YEARS, B3294) there is no house of culture, and the estate's
         # blocks are the tower blocks of a market town's housing estate.
         import settle as S
-        one_party = S.TRADE_PLAN.get(S.REGION, "western") != "western"
+        one_party = S.one_party()
         if y >= 1950 and k and one_party: place_blocks(t, "culture-house", 1, "edge")
         if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
         if not one_party:
