@@ -8,7 +8,7 @@ from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
 import proto_attacks as PA
 S,SH=Wr.S,Wr.SH
-VERSION=5
+VERSION=6
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -61,7 +61,9 @@ def person(a):
         if p is None: notes.append('not drawn: '+n); continue
         spec.update({k:v for k,v in p.items() if k not in('small','note')}); worn+=1
     held=None
-    for n in a.get('held') or []:
+    # of several things in hand the largest is drawn; a torch counts above a knife or a dagger
+    RANK=lambda n:(0 if re.search(r'knife|dagger|misericorde|stiletto|dirk',n.lower()) else 1 if re.search(r'torch|firebrand',n.lower()) else 2)
+    for n in sorted(a.get('held') or [],key=lambda n:-RANK(n)):
         if n in It.SHIELD or like(n,SHIELD_LIKE): spec['off']=It.SHIELD[n if n in It.SHIELD else like(n,SHIELD_LIKE)]; continue
         k=It.weapon(n) or like(n,WEAPON_LIKE)
         if k and k in Wr.W and not held: held=(n,k)
