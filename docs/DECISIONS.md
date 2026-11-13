@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3430
+Next free block: B3340
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -166,7 +166,6 @@ Next free block: B3430
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
-| B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4988,8 +4987,3 @@ Reverse: make townCrowd return 1.
 WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
 
 Reverse: drop the wodxTown hook in factions.mjs.
-
-## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
-WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
-
-Reverse: drop atAges from the towns api.
