@@ -87,3 +87,9 @@ test("wiring: settings, hooks, handlers, the web button and the API", () => {
   assert.equal((main.match(/LEGACY\.registerHandlers\(\)/g) ?? []).length, 2);
   assert.match(people, /data-web/); assert.match(people, /TR\.feelingsFor\(e, v\)/); assert.match(people, /lines: KIN\.lines\(\)/);
 });
+
+test("the web's picture is drawn into its box after render, since dialog content loses SVG", () => {
+  const l = src("modules/wodx-npc/scripts/legacy.mjs");
+  assert.match(l, /<div class="wnpc-web-pic"><\/div>/); assert.match(l, /pic\.innerHTML = webSvg\(web\(state\)\)/);
+  assert.ok(!/\$\{webSvg\(w\)\}/.test(l), "no SVG in the dialog content itself");
+});

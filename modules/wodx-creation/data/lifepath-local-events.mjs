@@ -11,6 +11,7 @@
 import {EVENTS_EUROPE} from "./lifepath-events-europe.mjs";
 import {EVENTS_ASIA} from "./lifepath-events-asia.mjs";
 import {EVENTS_WORLD} from "./lifepath-events-world.mjs";
+import {EVENTS_PROLOGUE} from "./lifepath-events-prologue.mjs";
 
 export const LOCAL_EVENTS = {
 "moravia": {
@@ -111,3 +112,8 @@ Object.assign(LOCAL_EVENTS, EVENTS_EUROPE, EVENTS_ASIA, EVENTS_WORLD, {
   ["Found something under the ice and reported it, or did not","ab Science|ab Occult|flaw Dark Secret",[[2022,2099]],"0","a geologist|who saw it too"],
   ["Kept the air plant running through a failure","bg Status|ab Technology",[[2022,2099]],"+",null],
   ["Waited two years for a ship that was late","flaw Short Fuse|ab Empathy",[[2022,2099]],"-",null]]}});
+// B3180: the marks before 1197, for elders (lifepath-events-prologue.mjs)
+for ( const [id, marks] of Object.entries(EVENTS_PROLOGUE) ) {
+  LOCAL_EVENTS[id] ??= {origins: [], marks: []};
+  LOCAL_EVENTS[id].marks = [...(LOCAL_EVENTS[id].marks ?? []), ...marks];
+}

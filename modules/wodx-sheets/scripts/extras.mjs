@@ -298,7 +298,9 @@ function relationsOf(actor, editable) {
   const own = owner ? (api.secrets?.of?.(actor) ?? []).map(s => ({ text: s.text || api.secrets.rules.SECRET_KINDS[s.kind]?.label || "" })).filter(s => s.text) : [];
   let regard = "";
   try { regard = gm && !actor.hasPlayerOwner ? api.opinion?.regardHtml?.(actor) ?? "" : ""; } catch (e) { regard = ""; }
-  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
+  let family = [];
+  try { family = owner ? api.family?.lines?.(actor) ?? [] : []; } catch (e) { family = []; }
+  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, family, couples: !!api.family?.conceive, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
 }
 
 
@@ -658,6 +660,15 @@ export function listen(sheet, root) {
       if ( a.dataset.act === "tie-remove" && editable ) return setTies(actor, list => list.filter(t => t.uuid !== uuid));
       if ( a.dataset.act === "tie-hide" && editable && game.user.isGM ) return setTies(actor, list => list.map(t => t.uuid === uuid ? { ...t, hidden: !t.hidden } : t));
       if ( a.dataset.act === "tie-tree" ) return npcApi()?.openTree?.(actor);
+      if ( a.dataset.act === "tie-propose" && editable ) {
+        const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
+        return other?.documentName === "Actor" ? npcApi()?.family?.propose?.(actor, other) : null;
+      }
+      if ( a.dataset.act === "tie-child" && editable ) {
+        const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
+        if ( other?.documentName !== "Actor" ) return;
+        return game.user.isGM ? npcApi()?.family?.conceive?.(actor, other) : npcApi()?.family?.askChild?.(actor, other);
+      }
       if ( a.dataset.act === "tie-followers" ) return npcApi()?.openFollowers?.(actor);
       if ( a.dataset.act === "tie-secrets" && game.user.isGM ) return npcApi()?.openSecrets?.(actor);
     });

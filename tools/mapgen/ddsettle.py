@@ -13,8 +13,9 @@ With --sewers it also lays the sewers under each map (ddwarren.py), from 1860 on
 In Foundry: export each map from Dungeondraft and adopt it (WoDX Interactables), bring the record in under
 Settlements in the Storyteller's hand (WoDX NPC) and review it, then seed the residents on each map.
 
-The buildings, ages and trades are those of Moravia and the Bohemian crown lands (--region moravia, the only one
-built so far). A place elsewhere in the world needs its own tables first; see settle.py.
+The buildings and ages are those of Moravia and the Bohemian crown lands. With --region (any WoDX Chronicle region)
+the households from 1781 take that region's trades: who ruled it after 1918 and the names its way of life gives
+(settle.py). Buildings of other lands are not built yet.
 
 The asset lists: WODX_FA_ASSETS and WODX_NEW_ASSETS, or --assets a,b.
 """
@@ -31,7 +32,7 @@ def main():
     ap.add_argument("--seed", type=int, default=1197)
     ap.add_argument("--size", choices=("village", "town", "city", "metropolis"), default="village")
     ap.add_argument("--year", type=int, default=1197, help="1197 to 2099")
-    ap.add_argument("--region", choices=("moravia",), default="moravia", help="the part of the world whose buildings, ages and trades are used; only Moravia and the Bohemian crown lands are built so far")
+    ap.add_argument("--region", default="moravia", help="the WoDX Chronicle region the place stands in (france, japan, mexico...): from 1781 its households take that region's trades (settle.py, B3290). The buildings stay those of the Bohemian crown lands")
     ap.add_argument("--at", help="where it stands on the country map: town, or town:km:DIR (brno:12:NE)")
     ap.add_argument("--part", type=int, help="the largest side of one map, in squares; 0 keeps one map")
     ap.add_argument("--sewers", action="store_true", help="also lay the sewers under each map (from 1860, towns and larger)")
@@ -46,6 +47,7 @@ def main():
     if a.year > 1197: cmd += ["--year", str(a.year)]
     if a.name: cmd += ["--name", a.name]
     if a.at: cmd += ["--at", a.at]
+    if a.region != "moravia": cmd += ["--region", a.region]
     if a.part is not None: cmd += ["--part", str(a.part)]
     r = subprocess.run(cmd)
     if r.returncode: raise SystemExit(r.returncode)
