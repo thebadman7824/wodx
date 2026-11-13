@@ -152,3 +152,15 @@ test("cults: the Foundry side is wired, off by default, and players act by socke
   assert.match(cults, /Hooks\.callAll\("wodxCultNoticed"/);
   assert.match(cults, /testUserPermission\(u, "OWNER"\)/, "a player acts only for their own character");
 });
+
+test("cults: awe keyed by scene uuid survives the flag (stored as a list, keyed again on reading)", () => {
+  const r = C.addAwe({}, {kind: "power", place: {key: "Scene.abc123", name: "Market"}, heard: 3, themes: {healing: 2}}, 1000);
+  const stored = {v: r.awe.v, places: Object.values(r.awe.places)};
+  // What a Foundry flag update does to dotted keys: "Scene.abc123" becomes {Scene: {abc123: ...}}; a list has none
+  assert.ok(JSON.stringify(Object.keys(stored)).indexOf(".") < 0);
+  const back = C.normAwe(JSON.parse(JSON.stringify(stored)));
+  assert.equal(back.places["Scene.abc123"]?.pts, 3);
+  assert.equal(back.places["Scene.abc123"]?.touched, 3);
+  const cults = src("modules/wodx-npc/scripts/cults.mjs");
+  assert.doesNotMatch(cults, /setFlag\(MOD, "awe", (res\.awe|awe)\)/, "awe goes through saveAwe, never as a keyed object");
+});
