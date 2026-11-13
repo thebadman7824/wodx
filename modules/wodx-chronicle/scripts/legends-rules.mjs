@@ -28,7 +28,8 @@ export const KINDS = {
   office: "Offices won and lost",
   holding: "Havens and holdings",
   ledger: "Boons, oaths and debts",
-  battle: "Battles and sieges"
+  battle: "Battles and sieges",
+  deed: "Deeds in a fight"
 };
 
 /**
@@ -36,7 +37,7 @@ export const KINDS = {
  * are public among Kindred, so they show; oaths and debts are often private, and so are Embraces, so they wait.
  * Seats in a secret faction wait too (see officeLines).
  */
-export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true, battle: true};
+export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true, battle: true, deed: true};
 
 const str = (v, n = 200) => String(v ?? "").trim().slice(0, n);
 const int = v => (Number.isFinite(Number(v)) && v !== null && v !== "" ? Math.trunc(Number(v)) : null);
@@ -58,7 +59,8 @@ export function normEntry(e = {}) {
     people: (Array.isArray(e.people) ? e.people : []).map(person).filter(p => p.name).slice(0, 8),
     place: str(e.place, 160),
     faction: str(e.faction, 120),
-    shown: e.shown === undefined ? SHOWN_BY_DEFAULT[kind] !== false : !!e.shown
+    shown: e.shown === undefined ? SHOWN_BY_DEFAULT[kind] !== false : !!e.shown,
+    ...(kind === "deed" ? {won: !!e.won} : {})
   };
 }
 
@@ -147,6 +149,15 @@ export function actorLines(actors = [], archived = {}, dateOf = () => ({})) {
 
 const LEDGER_WORDS = {boon: "boon", oath: "oath", debt: "debt", consequence: "consequence", objective: "objective"};
 const BOON_SIZE = {trivial: "a trivial", minor: "a minor", major: "a major", blood: "a blood", life: "a life"};
+/**
+ * Deeds in a fight (B3161), sent by WoDX Combat's after-action card through api.legends.addDeed:
+ * [{id, at, text, people: [{id, name}], won}].
+ */
+export function deedLines(deeds = [], dateOf = () => ({})) {
+  return (Array.isArray(deeds) ? deeds : []).filter(d => d?.id).map(d => normEntry({id: `deed:${str(d.id, 120)}`, kind: "deed", ...dated(d.at, dateOf),
+    people: d.people, text: str(d.text, 480), won: !!d.won, place: d.place ?? ""}));
+}
+
 /**
  * Ledger entries kept or broken. The date is the time the Ledger marked it (the last "Marked" line of its history),
  * else when it was made. Consequences and objectives are left out: they are the Storyteller's plans, not deeds.
