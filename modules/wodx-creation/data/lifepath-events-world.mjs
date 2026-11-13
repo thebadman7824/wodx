@@ -57,7 +57,7 @@ export const EVENTS_WORLD = {
 "west-africa": {
  origins: [
   ["A household of the gold empire's court","ab Etiquette|ab Politics|bg Status","noble",1235,1450],
-  ["A family of the praise singers","ab Performance|ab Expression|ab Academics","trade",1197,2022],
+  ["A family of the great river's boat and fishing clans","ab Athletics|ab Survival|ab Crafts","trade",1197,1900],
   ["A scholar's house of the desert-edge city","ab Academics|ab Law|bg Mentor","scholar",1300,1600],
   ["A family of a slaving kingdom's capital","ab Melee|bg Status|flaw Dark Secret","soldier",1600,1890],
   ["A family of the coast towns who took the foreign schooling","ab Academics|merit Language|ab Etiquette","prof",1800,1960]],
