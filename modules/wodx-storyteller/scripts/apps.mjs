@@ -144,7 +144,7 @@ export async function openOnYourOwn(actorId = null) {
   const actor = game.actors.get(actorId) ?? (list.includes(game.user.character) ? game.user.character : list[0]);
   const places = C.travelPlaces();
   const plan = id => { const p = C.planTrip(actor, id); return p ? `${C.tripWords(p)}${p.ask ? ", asks first" : ""}` : ""; };
-  const at = C.tripContext(C.personalTime(actor.id));
+  const at = C.tripContext(C.personalTime(actor.id), C.whereIs?.(actor) ?? null);
   const ways = new Map();
   for ( const k of Object.keys(Road.ROADS) ) for ( const m of Road.modesFor(k, at.year, {future: at.future}) ) ways.set(m.id, m.label);
   // Paid rides the older list does not name (they run only between places set on the country map).

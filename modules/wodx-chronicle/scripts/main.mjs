@@ -193,7 +193,7 @@ Hooks.once("ready", async () => {
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
     referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
       cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
-    church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
+    church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     tours: {start: tours.startTour},

@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.55.0";
+export const VERSION = "0.57.1";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -217,7 +217,7 @@ export function planTrip(actor, destId, {mode = null, pace = null, lodging = nul
   const from = whereIs(actor);
   const fromPlace = from ? {id: from.id, name: sceneName(from), travel: from.flags?.[MOD]?.travel ?? {}} : null;
   const start = personalTime(actor.id);
-  const at = tripContext(start);
+  const at = tripContext(start, from ?? null);
   const wage = wageNow(at.year);
   const burns = sunBurns(actor);
   const trip = from?.id === dest.id ? {minutes: 0, by: "here", mode: null, modeLabel: null, road: null, why: []}
@@ -228,7 +228,7 @@ export function planTrip(actor, destId, {mode = null, pace = null, lodging = nul
   const arrive = start + (minutes * 60);
   const dawnAt = dawnAfter(start);
   const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: burns, plan: sched});
-  return {dest, from, minutes, start, arrive, dawnAt, ask, trip, sched, year: at.year, night: at.night};
+  return {dest, from, minutes, start, arrive, dawnAt, ask, trip, sched, year: at.year, night: at.night, region: at.region};
 }
 /** A month's plain wage in the year's money, in its smallest unit: fares and inn nights are shares of it. */
 export function wageNow(year) {
@@ -244,12 +244,14 @@ export function moneyWords(amount, year) {
 }
 
 /** The year, the dark, the weather and the branch at a time, for a trip (WoDX Atmosphere's weather when it is on). */
-export function tripContext(t) {
-  let year = 0, night = false, weather = null, future = false;
+export function tripContext(t, scene = null) {
+  let year = 0, night = false, weather = null, future = false, region = null;
   try { const d = describeTime(t, latitude()); year = d.year; night = !!d.isNight; } catch (e) { /* no calendar */ }
   try { weather = game.modules.get("wodx-atmosphere")?.active ? (game.modules.get("wodx-atmosphere").api?.weather?.now?.() ?? null) : null; } catch (e) { weather = null; }
   try { future = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { future = false; }
-  return {year, night, weather, future};
+  // 0.57.0 (B2571): the roads and ways of the region the trip starts in (the scene's own, else the homeland)
+  try { const w = chron()?.world; const r = scene && w?.here ? w.here(scene) : null; region = r?.id ?? (typeof w?.homeland?.() === "string" ? w.homeland() : null); } catch (e) { region = null; }
+  return {year, night, weather, future, region};
 }
 /** Words for how a trip goes: "on foot, 2 hours (mud, the dark)". */
 export function tripWords(plan) {
@@ -377,7 +379,7 @@ export async function travel({actorId, destId, userId = null, approved = false, 
   // The road
   if ( setting("encounters") !== false && plan.minutes > 0 ) {
     const base = setting("encounterChance") ?? 10;
-    const byRoad = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night) : base;
+    const byRoad = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night, plan.region) : base;
     const chance = Math.max(0, Math.min(100, byRoad * (sched?.enc ?? 1)));
     const hit = W.rollRoad(sched ? sched.travel : plan.minutes, chance, roadRand(`${actorId}:${plan.start}`));
     const spot = hit >= 0 && sched ? Country.spotAt(plan.trip, hit) : null;

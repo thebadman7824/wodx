@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2560
+Next free block: B2590
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -108,6 +108,9 @@ Next free block: B2560
 | B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
+| B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
+| B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
+| B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3152,6 +3155,28 @@ Reverse: pick a climate by hand in the settings.
 The list of tongues to learn grows from 30 to 71, speech a character cannot follow has 21 sound sets, and spoken lines look for 37 browser languages (Voices 0.3.2). NPC 0.48.1: a household's women take the listed feminine family name of their people, and kin of a household named "son of" are named for its master in that people's words.
 
 Reverse: trim LANGUAGES and SOUNDS in languages-rules.mjs; drop the FEMININE lookup in kinFamily.
+
+## B2535. Ben's picks on the Global World Desk (2026-11-13, 00:10 UTC)
+Ben took the recommended option on all eight scope calls. Money abroad: a money changer with a cut (B2536). Calendars: the holy days of the great faiths by region (B2537). Peoples without names: added one at a time with source notes, each shown on a desk before it ships. The hidden world outside Europe: by the book, V20 line books first, then Revised and 2nd edition; a region the books leave empty stays empty. The 519 new timeline events: the plain history is approved; the eight cards with a World of Darkness reading wait for the book check. Future Darkness outside Europe and Asia: from the Cyberpunk 2020 timeline, after a book check. Finer regions: added only when a chronicle goes there. Weather abroad: each scene far from home has its region's own weather (B2538).
+
+Reverse: answer the desk again (https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn); each build below has its own way back.
+
+## B2536. Money changers abroad (2026-11-13)
+Storyteller 0.56.0. Purses keep the home money. A price asked on a scene that stands in another region is worked in the local money by what a day's unskilled labour earns in each place, and the money changer's cut is added on top: 6 in the hundred to 1499, 4 to 1799, 2 to 1913, 3 after, and 5 more on a scene flagged troubled (war, a debased coin), never above 15. Two regions that share a money pay no cut. The cuts are house figures; the books give none.
+
+Reverse: world setting Money changers abroad off; the figures are CHANGER in money-rules.mjs.
+
+## B2537. The holy days of the great faiths (2026-11-13)
+Chronicle 0.49.0, faith-rules.mjs. Eight years beside the Western church's: the Eastern church, the Muslim year, the Jewish year, the Hindu year, the Buddhist years of the south and of Tibet, the lunar year of China (under Korean and Japanese names there; Japan on the civil calendar from 1873) and "a count of their own" for peoples whose holy days the Storyteller names. Each region keeps one by the year (REGION_FAITH: New Spain turns to the church year in 1521, the Malay world to the Muslim year about 1500). A scene far from home follows its region, or the year picked for it; the world setting overrides the homeland's. Every faith answers in the shape of the church year, so the house rule Feast and fast days reads all of them: nights of celebration move the curfew to midnight and make hunting in town 1 easier, a fast or mourning kept strictly makes it 1 harder. The nights of Ramadan count as nights of celebration. How strictly each is kept by year (KEPT) is a house reading.
+
+The Orthodox and Jewish years are right to the day. The Muslim year is the counted one and can stand a day off the sighted moon. The Hindu, Buddhist and Chinese years are worked from the true new moon and the sun's place with the modern rules for every age, so an old date can stand a day off, or a month where the old calendars leapt elsewhere.
+
+Reverse: set Whose holy days the chronicle keeps to The Western church and leave scenes' own blank; or turn Feast and fast days off.
+
+## B2538. Weather by region (2026-11-13)
+Atmosphere 0.15.0. A scene that stands in another region has that region's weather for the night, rolled with its own seed, so Cairo is dry while Rothenstein has snow. The table's weather (posts, hunting, travel) is that of the active scene; each viewed scene shows and sounds its own. Weather the Storyteller sets on a scene abroad is kept for that region and night only.
+
+Reverse: clear the scene's region in Where this scene stands.
 ## B2540. The whole Earth as one coarse grid (2026-11-12, Ben asked for a rough map of the Earth made the way Daggerfall makes its land)
 WoDX Storyteller 0.55.0 carries the world as 360 by 180 squares, one for each degree (about 100 km at the equator): each square's ground (sea, lake, ice, mountains, plateau, desert, tundra, plain, wetland, other land), the great rivers, and the named ranges, deserts and seas. tools/mapgen/world/build_world.py makes it from Natural Earth, which is in the public domain; nothing comes from a game. It is the far view only. WoDX is global (Ben, 2026-11-12), so this is the base every region's maps and trips can stand on.
 
@@ -3213,3 +3238,43 @@ Reverse: untick the land.
 
 ## B2553. Left open (2026-11-13)
 Not built: years before 1197 use the same from-of-old lists, so the prologue eras show too much as known; the Norse voyages to Vinland and other finds that were lost again; a share of the map for the players (the window is the Storyteller's); an expedition as a thing to play (ships, crews, a roll to find a coast); knowledge by faction or by supernatural kind rather than by homeland; Travel places inside one country, which needs no such rule.
+
+
+## B2554. India is hidden from Europe until 1498; lands open by year (2026-11-13, Ben's call)
+Ben decided the two questions B2550 and B2551 left with him. India is beyond Europe's known world until 1498, as in the games, and not reachable by the Levant and the Red Sea before then; with it, the lands reached past it by sea open only when Europe's ships get there (Southeast Asia 1509, the islands of Nusantara 1511). China stays known from 1245 by the roads across Asia. India in turn learns of Europe in 1498, as before. North Africa, the Near East, East Asia and Africa keep their own old knowledge of India. Lands open by their exact year as the chronicle's clock moves, not in a block at the start of an era. This replaces the sentence on India in B2551.
+Reverse: put india, southeast-asia and nusantara back to their earlier years in Europe's row of CIRCLES.
+
+## B2560. Sprite tokens, a prototype (2026-11-13)
+Ben chose on the sprite desk (12 November): whole drawn figures on the map, busts kept for sheets and chat, facing and a walk cycle, drawn by our own code in the paperdoll module, and a testbed prototype first. Paperdoll 0.7.0 holds six sheets (Kindred elder 1888, Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888), each 8 walk frames by 4 facings at 96 by 112 pixels, drawn outside the game by our own rig and shaded with five tones, a dark outline and one light. No outside art. A token that carries the flag "sprite" shows the frame for its facing and for the ground it has covered: one square is one walk cycle. The Storyteller gives or removes a sprite from the walking-figure button among the token's own buttons; the token's old picture is kept and put back. The figure is drawn twice the square, so a person stands a little over one square tall with the feet low in the square. The world setting "Sprite tokens walk and turn" turns the movement off.
+Reverse: remove the sprite from each token with the same button, or turn the setting off; delete modules/wodx-paperdoll/sprites and scripts/sprites.mjs with sprite-rules.mjs.
+
+## B2561. Baked busts leave sprite tokens alone (2026-11-13)
+When a look is baked, placed tokens that carry a sprite keep their sprite. The bust still goes to the character's sheet picture and to new tokens.
+Reverse: drop the sprite test in bake().
+
+## B2562. Left open (2026-11-13)
+Not built: sprites made in the game from a character's look and worn items (the wardrobe of 479 items exists only as drawings outside the game); weapons in the hand only when drawn; animals; the other Garou forms and each line's true forms switching with the character's state; a standing pose of its own; players choosing their own sprite.
+
+## B2570. How fast word travels, by region (2026-11-13)
+The years of the ways word travels (print, the papers, the wireless, television, the internet) were Moravia's for the whole world. Each of the 44 world regions now has its own row (Chronicle media-rules.mjs REGION_MEDIA), rounded to when each became common there: China's court gazette and small news sheets before 1197, Japan's tile-block sheets from 1615, the Ottoman press from 1727, Brazil with no press before 1808, television in South Africa only in 1976. Where a stronger way came before a weaker one, it stands from its own year. The rumour mill, Masquerade breaches and a secret's freshness read the chronicle's homeland. A house reading of history; the books give no such table. Global rule, docs/GLOBAL.md.
+Reverse: delete a region's row (it then keeps Moravia's years) or change its years.
+
+## B2571. Travel years, by region (2026-11-13)
+The railway, tram, motorway and car years, the lit roads and streets, paved country roads and the post roads were Moravia's everywhere. Each region now has its own (Storyteller road-rules.mjs REGION_ROADS): the railway in England in 1825 and in Cuba in 1837, none in Lhasa before 2006 and none on the ice, the autostrada in 1924, lamps in London's streets from the 1740s. A trip by distance, the ways offered when a character acts alone and the road's encounter chance read the region of the scene the trip starts from, else the homeland. The Moravian country map keeps its own dated lines.
+Reverse: delete a region's row or change its years.
+
+## B2572. Routines by faith (2026-11-13)
+The ready routines were written for a Western Christian town. A ready routine now follows the faith its people keep (forFaith in NPC routine-rules.mjs): the week turns so its rest day lands on the faith's own (Friday prayer at noon for Islam, the Sabbath for the Jewish year, the Liturgy for the Eastern church), and the faiths with no weekly rest day work every day and worship on their holy days until the Sunday week took hold (SUNDAY_FROM). The clergy's offices take that faith's prayers. Holy days come from Chronicle's faith years. The faith is the routine's own pick, else the faith a resident's origin points to (ORIGIN_FAITH), else the faith of the scene they live on. Kindred, Garou and the other night folk keep their own nights, and hours the Storyteller typed are never changed. The church place kind is renamed "Church, chapel, mosque, synagogue or temple"; no new kind was added.
+Reverse: pick "The Western church" in the routine window, or have blocksOf skip forFaith.
+
+## B2573. Left open (2026-11-13)
+Not built: daily prayer times for every Muslim (only the clergy keep the five); the Soviet weeks of 1929 to 1940; Ramadan's night hours in the routines; a separate place kind for mosques, synagogues and temples; the Moravian country map's rails for other regions (the maps thread owns it).
+
+## B2580. Sprite tokens attack (2026-11-13, Ben's ask)
+Each sprite has attack sheets beside its walk sheet, one per move it knows, six frames by the four facings (Paperdoll sprite-rules.mjs ACTS, files `<name>.<move>.png`). The moves so far: a strike with the hand, a thrust, a shot, a bite, the Crinos claws (a lunge with claw marks) and a worked power with a drawn effect. `api.sprites.play(token, move, toward)` writes a small flag on the token; every computer that sees the token plays the frames once from its own clock, turned toward the target, and a token that walks drops the attack. The drawing side is tools/sprites (wear.py ACTS, FACT and fx, beast.py bite, proto_attacks.py); the effects by kind of power are first sketches in twelve colours and seven shapes.
+Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the attack sheets and the ACTS table.
+
+## B2581. A blow that lands plays the attack (2026-11-13, house rule of presentation)
+When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
+Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
+

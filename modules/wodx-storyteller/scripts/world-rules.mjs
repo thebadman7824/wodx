@@ -195,7 +195,7 @@ export function tripPlan(from, to, ctx = {}) {
     if ( t ) return t;
   }
   if ( b.km ) {
-    const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future});
+    const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future, region: ctx.region ?? null});
     if ( t ) return {...t, by: "distance"};
   }
   return {...none, minutes: Math.max(1, Math.round(Number(ctx.fallback) || 30)), by: "default"};

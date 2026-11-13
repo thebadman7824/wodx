@@ -25,7 +25,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.14.0";
+const VERSION = "0.15.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -101,17 +101,22 @@ function timeAt(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? 
   try { return CAL?.describeTime(time, latitude()) ?? null; } catch (e) { return null; }
 }
 /** The night a time belongs to: before sunrise it is still the night that began the evening before. */
-export function nightJdn(time = game.time.worldTime) {
-  const t = timeAt(time);
+export function nightJdn(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
+  const t = timeAt(time, scene);
   if ( !t ) return null;
   const hours = t.hour + t.minute / 60, rise = hoursOf(t.sunrise);
   return (rise !== null && hours < rise) ? t.jdn - 1 : t.jdn;
 }
-export function climate() {
+const viewed = () => globalThis.canvas?.scene ?? null;
+/** The region a scene stands in when it is abroad (given a region other than the homeland), else null. */
+function abroad(scene = viewed()) {
+  try { const w = chron()?.world; return (scene && w?.isAbroad?.(scene)) ? (w.here(scene) ?? null) : null; } catch (e) { return null; }
+}
+export function climate(scene = viewed()) {
   const c = setting("climate");
   if ( c && c !== "auto" && W.CLIMATES[c] ) return c;
-  // The region the viewed scene stands in (its own, else the homeland), then the part of the world
-  try { const here = chron()?.world?.here?.(); if ( here?.climate && W.CLIMATES[here.climate] ) return here.climate; } catch (e) { /* older Chronicle */ }
+  // The region the scene stands in (its own, else the homeland), then the part of the world
+  try { const here = chron()?.world?.here?.(scene); if ( here?.climate && W.CLIMATES[here.climate] ) return here.climate; } catch (e) { /* older Chronicle */ }
   let region = "europe";
   try { region = game.settings.get("wodx-chronicle", "region"); } catch (e) { /* europe */ }
   return W.climateForRegion(region);
@@ -121,21 +126,28 @@ const yearNow = () => { try { return timeAt()?.year ?? null; } catch (e) { retur
 
 const cache = new Map();
 function clearCache() { cache.clear(); }
-/** The weather for a night (a JDN), hand-set or made. */
-export function weatherOn(jdn) {
+/** Where a hand-set night is kept: by the night at home, by region and night abroad. */
+const overKey = (jdn, scene) => { const r = abroad(scene); return r ? `${r.id}:${jdn}` : jdn; };
+/**
+ * The weather for a night (a JDN), hand-set or made, where a scene stands (0.15.0: each region has its own
+ * weather, so a scene abroad and one at home differ on the same night; the homeland's weather is as before).
+ */
+export function weatherOn(jdn, scene = viewed()) {
   if ( !Number.isFinite(jdn) ) return null;
-  const over = setting("overrides")?.[jdn] ?? null;
-  const key = `${seed()}|${climate()}|${jdn}|${over ? JSON.stringify(over) : ""}`;
+  const r = abroad(scene), cl = climate(scene), sd = r ? `${seed()}|${r.id}` : seed();
+  const over = setting("overrides")?.[overKey(jdn, scene)] ?? null;
+  const key = `${sd}|${cl}|${jdn}|${over ? JSON.stringify(over) : ""}`;
   if ( cache.has(key) ) return cache.get(key);
-  const d = W.weatherFor(seed(), climate(), jdn, {override: over});
+  const d0 = W.weatherFor(sd, cl, jdn, {override: over});
+  const d = (r && d0) ? {...d0, region: r.id, regionLabel: r.label} : d0;
   if ( cache.size > 60 ) cache.clear();
   cache.set(key, d);
   return d;
 }
 /** Tonight's weather, or null when the weather is off. */
-export function now() {
+export function now(scene = viewed()) {
   if ( !active || setting("weather") === "off" ) return null;
-  return weatherOn(nightJdn());
+  return weatherOn(nightJdn(game.time.worldTime, scene), scene);
 }
 
 /** Is a scene out of doors, for the weather? The scene's own choice, else WoDX Actions' daylight, else its kind of place. */
@@ -178,9 +190,10 @@ async function applySceneEffect(scene, day) {
 
 async function applyLight(scene, day, time = game.time.worldTime) {
   if ( !scene || !setting("lightFromClock") || !scene.flags?.[MOD]?.followClock ) return;
-  const t = timeAt(time);
+  // The scene's own hour and latitude when it stands far from home
+  const t = timeAt(time, scene);
   if ( !t ) return;
-  const alt = W.sunAltitude(t.jdn, t.hour + t.minute / 60, latitude());
+  const alt = W.sunAltitude(t.jdn, t.hour + t.minute / 60, Number.isFinite(Number(t.latitude)) ? Number(t.latitude) : latitude());
   const night = Number(scene.flags[MOD].night);
   const v = W.darknessFor({altitude: alt, moon: Number(t.moon?.illumination) || 0, sky: day?.sky ?? "clear", night: Number.isFinite(night) ? night : 0.9});
   const cur = Number(scene.environment?.darknessLevel ?? scene.darkness ?? 0);
@@ -197,15 +210,18 @@ export function applyWeather({force = false, quiet = false} = {}) {
 }
 async function _applyWeather({force, quiet}) {
   if ( chron()?.isSkipping?.() ) return null;
-  const day = now();
+  // The table's weather is that of the active scene (where the players are), else the one the Storyteller views
+  const main = game.scenes.active ?? viewed();
+  const day = now(main);
   if ( !day ) {
     for ( const s of viewedScenes() ) await applySceneEffect(s, null);
     return null;
   }
-  const key = `${day.jdn}:${W.weatherKey(day)}`;
+  const key = `${day.jdn}:${day.region ?? ""}:${W.weatherKey(day)}`;
   const last = setting("applied") ?? {};
   await applySky(day);
-  for ( const s of viewedScenes() ) { await applySceneEffect(s, day); await applyLight(s, day); }
+  // Each scene on screen takes the weather of the region it stands in
+  for ( const s of viewedScenes() ) { const d = now(s) ?? day; await applySceneEffect(s, d); await applyLight(s, d); }
   if ( !force && last.key === key ) return day;
   await setSetting("applied", {key, jdn: day.jdn});
   const newNight = last.jdn !== day.jdn;
@@ -228,18 +244,19 @@ async function postWeather(day, {gm = true} = {}) {
   const head = gm ? "Tonight's weather" : "The weather tonight";
   const content = `<div class="wodx-card watmo-card"><h3>${head}</h3><p>${esc(day.label)}</p>
     ${gm ? `${modifierList(day) ? `<p class="wodx-quiet">Out of doors, house rules:</p>${modifierList(day)}` : ""}
-    <p class="wodx-quiet">${day.set ? "Set by hand. " : ""}${esc(W.CLIMATES[day.climate]?.label ?? "")}${t ? `, ${esc(t.dateLabel)}` : ""}.</p>
+    <p class="wodx-quiet">${day.set ? "Set by hand. " : ""}${day.regionLabel ? `Far from home: ${esc(day.regionLabel)}. ` : ""}${esc(W.CLIMATES[day.climate]?.label ?? "")}${t ? `, ${esc(t.dateLabel)}` : ""}.</p>
     <button type="button" data-watmo="open"><i class="fa-solid fa-cloud-moon"></i> Weather and atmosphere</button>` : ""}</div>`;
   return ChatMessage.create({content, speaker: {alias: "Weather"}, whisper: gm ? all(game.users).filter(u => u.isGM).map(u => u.id) : [],
     flags: {[MOD]: {weather: day.jdn}}});
 }
 
 /** Set a night by hand (or clear it with null). */
-export async function setNight(jdn, over) {
+export async function setNight(jdn, over, scene = viewed()) {
   const o = foundry.utils.deepClone(setting("overrides") ?? {});
-  if ( over ) o[jdn] = over; else delete o[jdn];
+  const k0 = overKey(jdn, scene);
+  if ( over ) o[k0] = over; else delete o[k0];
   // Hand-set nights more than a year back are dropped, so the setting stays small
-  for ( const k of Object.keys(o) ) if ( Number(k) < jdn - 366 ) delete o[k];
+  for ( const k of Object.keys(o) ) if ( Number(String(k).split(":").pop()) < jdn - 366 ) delete o[k];
   await setSetting("overrides", o);
   clearCache();
   if ( jdn === nightJdn() ) await applyWeather({force: true, quiet: true});
@@ -1036,7 +1053,7 @@ export function AtmosphereClass() {
       div.innerHTML = `
         <section><h3>The weather</h3>
           ${today ? `<p><b>${esc(today.label)}</b></p>${modifierList(today) ? `<p class="wodx-quiet">Out of doors (house rules):</p>${modifierList(today)}` : ""}
-          <p class="wodx-quiet">Climate: ${esc(W.CLIMATES[climate()]?.label)}. Sunlight's sky: ${esc(SKY_WORDS[today.sky])}.</p>
+          <p class="wodx-quiet">${today.regionLabel ? `This scene stands far from home: ${esc(today.regionLabel)}. ` : ""}Climate: ${esc(W.CLIMATES[climate()]?.label)}. Sunlight's sky: ${esc(SKY_WORDS[today.sky])}.</p>
           <table class="watmo-fc" data-fixed><tbody>${fc}</tbody></table>
           <div class="watmo-row"><button type="button" data-action="post"><i class="fa-solid fa-comment"></i> Tell the players</button>
           <button type="button" data-action="apply"><i class="fa-solid fa-rotate"></i> Apply to the scenes now</button></div>`
