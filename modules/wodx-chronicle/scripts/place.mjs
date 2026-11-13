@@ -2,6 +2,7 @@ import {MODULE_ID, esc, setting} from "./util.mjs";
 import {describeTime} from "./calendar.mjs";
 import * as PR from "./place-rules.mjs";
 import * as WR from "./world-rules.mjs";
+import {FAITHS} from "./faith-rules.mjs";
 
 /** WoDX Chronicle 0.39.0: a scene's own place for the sun (the rules are in place-rules.mjs). */
 
@@ -46,15 +47,17 @@ export async function placeDialog(scene = globalThis.canvas?.scene ?? null) {
   const sign = n => n > 0 ? `+${n}` : String(n);
   const regions = Object.entries(WR.WORLD_REGIONS).map(([id, r]) =>
     `<option value="${id}" ${p.region === id ? "selected" : ""}>${esc(r.label)} (${r.lat}, ${sign(WR.hoursAhead(id, home))} h)</option>`).join("");
+  const faiths = Object.entries(FAITHS).map(([id, f]) => `<option value="${id}" ${p.faith === id ? "selected" : ""}>${esc(f.label)}</option>`).join("");
   const res = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"], window: {title: `Where ${scene.navName || scene.name} stands`},
     content: `<p>For a scene far from home. Leave the latitude empty to use the chronicle's (${esc(String(setting("latitude")))}).</p>
       <div class="form-group"><label>Region</label><select name="region"><option value="">Home (${esc(WR.regionOf(home).label)})</option>${regions}</select></div>
       <p class="wodx-quiet">A region gives the scene its people's names and its weather, and its latitude unless one is typed below. The list shows each region's latitude and its hours from home, to copy into the boxes.</p>
+      <div class="form-group"><label>Holy days kept here</label><select name="faith" data-fixed><option value="">Those of the region</option>${faiths}</select></div>
       <div class="form-group"><label>Latitude (degrees north)</label><input type="number" name="latitude" step="0.1" min="-89" max="89" value="${p.latitude ?? ""}"></div>
       <div class="form-group"><label>Hours ahead of home (behind: negative)</label><input type="number" name="offset" step="0.5" min="${PR.OFFSET_MIN}" max="${PR.OFFSET_MAX}" value="${p.offset}"></div>
       <p class="wodx-quiet">For example London 51.5 and -1, Cairo 30.0 and +1, New York 40.7 and -6 from Prague. The world clock, routines and dusk and dawn on the Clock keep home time; the sun, the sky and the hour shown for this scene follow this place.</p>`,
-    ok: {label: "Save", callback: (ev, b) => ({region: b.form.elements.region.value, latitude: b.form.elements.latitude.value, offset: b.form.elements.offset.value})},
+    ok: {label: "Save", callback: (ev, b) => ({region: b.form.elements.region.value, faith: b.form.elements.faith.value, latitude: b.form.elements.latitude.value, offset: b.form.elements.offset.value})},
     rejectClose: false
   });
   if ( !res ) return null;

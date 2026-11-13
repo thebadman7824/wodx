@@ -3150,3 +3150,25 @@ Reverse: pick a climate by hand in the settings.
 The list of tongues to learn grows from 30 to 71, speech a character cannot follow has 21 sound sets, and spoken lines look for 37 browser languages (Voices 0.3.2). NPC 0.48.1: a household's women take the listed feminine family name of their people, and kin of a household named "son of" are named for its master in that people's words.
 
 Reverse: trim LANGUAGES and SOUNDS in languages-rules.mjs; drop the FEMININE lookup in kinFamily.
+
+## B2535. Ben's picks on the Global World Desk (2026-11-13, 00:10 UTC)
+Ben took the recommended option on all eight scope calls. Money abroad: a money changer with a cut (B2536). Calendars: the holy days of the great faiths by region (B2537). Peoples without names: added one at a time with source notes, each shown on a desk before it ships. The hidden world outside Europe: by the book, V20 line books first, then Revised and 2nd edition; a region the books leave empty stays empty. The 519 new timeline events: the plain history is approved; the eight cards with a World of Darkness reading wait for the book check. Future Darkness outside Europe and Asia: from the Cyberpunk 2020 timeline, after a book check. Finer regions: added only when a chronicle goes there. Weather abroad: each scene far from home has its region's own weather (B2538).
+
+Reverse: answer the desk again (https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn); each build below has its own way back.
+
+## B2536. Money changers abroad (2026-11-13)
+Storyteller 0.56.0. Purses keep the home money. A price asked on a scene that stands in another region is worked in the local money by what a day's unskilled labour earns in each place, and the money changer's cut is added on top: 6 in the hundred to 1499, 4 to 1799, 2 to 1913, 3 after, and 5 more on a scene flagged troubled (war, a debased coin), never above 15. Two regions that share a money pay no cut. The cuts are house figures; the books give none.
+
+Reverse: world setting Money changers abroad off; the figures are CHANGER in money-rules.mjs.
+
+## B2537. The holy days of the great faiths (2026-11-13)
+Chronicle 0.49.0, faith-rules.mjs. Eight years beside the Western church's: the Eastern church, the Muslim year, the Jewish year, the Hindu year, the Buddhist years of the south and of Tibet, the lunar year of China (under Korean and Japanese names there; Japan on the civil calendar from 1873) and "a count of their own" for peoples whose holy days the Storyteller names. Each region keeps one by the year (REGION_FAITH: New Spain turns to the church year in 1521, the Malay world to the Muslim year about 1500). A scene far from home follows its region, or the year picked for it; the world setting overrides the homeland's. Every faith answers in the shape of the church year, so the house rule Feast and fast days reads all of them: nights of celebration move the curfew to midnight and make hunting in town 1 easier, a fast or mourning kept strictly makes it 1 harder. The nights of Ramadan count as nights of celebration. How strictly each is kept by year (KEPT) is a house reading.
+
+The Orthodox and Jewish years are right to the day. The Muslim year is the counted one and can stand a day off the sighted moon. The Hindu, Buddhist and Chinese years are worked from the true new moon and the sun's place with the modern rules for every age, so an old date can stand a day off, or a month where the old calendars leapt elsewhere.
+
+Reverse: set Whose holy days the chronicle keeps to The Western church and leave scenes' own blank; or turn Feast and fast days off.
+
+## B2538. Weather by region (2026-11-13)
+Atmosphere 0.15.0. A scene that stands in another region has that region's weather for the night, rolled with its own seed, so Cairo is dry while Rothenstein has snow. The table's weather (posts, hunting, travel) is that of the active scene; each viewed scene shows and sounds its own. Weather the Storyteller sets on a scene abroad is kept for that region and night only.
+
+Reverse: clear the scene's region in Where this scene stands.
