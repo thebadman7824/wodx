@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3010
+Next free block: B3020
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -139,6 +139,7 @@ Next free block: B3010
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
+| B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4226,3 +4227,33 @@ Reverse: empty TORMENT_BY_HOUSE.
 V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls and revenants start at 1. The result stops at the sheet's blood pool for the Generation. The wizard never rolls without the button.
 
 Reverse: remove the blood action.
+
+## B3010. The other changing breeds keep bodies of their own (2026-11-13)
+WoDX NPC 0.66.0. A Garou faction whose name or notes speak of the Ananasi, the Corax, the Gurahl, the Ratkin or the Rokea (or werespiders, wereravens, werebears, wererats, weresharks) keeps a web, a flock, a den, a nest or a shiver of its own, anywhere and in every year. The Hengeyokai's own names (Kumo, Tengu, Nezumi, Same-Bito) are tested first and keep the Beast Court. No region gives these bodies by default; they are by name or by the Storyteller's pick. WoDX's own words; a book check of the breedbooks and W20 Changing Breeds is queued.
+
+Reverse: empty BREEDS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B3011. Seats and law of the five breeds (2026-11-13)
+Ananasi: an Eldest of the web by challenge, a Voice of the Queen who judges, a voice for each faction (the tribe field), a Spinner of the threads. Corax: an Eldest of the flock by backing, a Keeper of the news who judges, a voice per roost, two Eyes of the sun, gathering every second turn. Gurahl: an Eldest of the den by challenge, a Keeper of the healing ways who judges, a voice per tribe, a Guardian of the mountain, gathering every sixth turn. Ratkin: a Rat King or Rat Queen of the nest by challenge, a Seer who judges, a voice per aspect, a Runner of the tunnels, gathering every second turn. Rokea: an Eldest of the deep by challenge, a Speaker for the sea who judges, a voice per breed, a Warden of the shore.
+
+Reverse: edit the five polities in POLITIES.
+
+## B3012. A challenge among the Rokea may kill (2026-11-13)
+Every other shapeshifter body ends a challenge at submission. The Rokea settle quarrels with teeth and serve the sea rather than the Litany, so their challenges carry no submission rule; the Storyteller stages the fight as it falls.
+
+Reverse: add noKill: true to "rokea-shiver".
+
+## B3013. The Hsien keep the courts of East Asia (2026-11-13)
+A fae faction in China, Japan, Korea, Southeast Asia or the Malay world keeps a court of the Hsien in every year: a Magistrate of the court by backing who judges, two Ministers, a voice for each family, a Keeper of the shrine and a Scribe. Tibet keeps the default. WoDX's own words until the book check.
+
+Reverse: empty HSIEN_LANDS.
+
+## B3014. The land's own fae of the Pacific and Siberia (2026-11-13)
+Before the settlers (the ways of life of WoDX Chronicle: Polynesia until 1820 in the Pacific islands and 1840 in Aotearoa, the far north until 1600 in Siberia) a fae faction there keeps a circle of the land's own fae: an Elder of the circle by backing, a Keeper of the old ways who judges, a voice for each family, a Guardian of the sacred places. After the settlers a fae faction keeps the court of its age. No canon names these fae, so the words are WoDX's own.
+
+Reverse: empty LAND_FAE_LANDS.
+
+## B3015. The faction window lists the new bodies (2026-11-13)
+The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
+
+Reverse: edit the note in factions.mjs.

@@ -476,7 +476,114 @@ export const POLITIES = {
     titles: {eldest: ["Eldest of the nest", "Elder serpent", "Keeper of the nest"]},
     notes: "The wereserpents let the other changing breeds think them dead, and work in small nests that judge those who break faith with Gaia. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Nagah.",
     eras: {}
+  }  ,
+  // NPC 0.66.0 (B3010 to B3015): the rest of the changing breeds, the Hsien and the fae of the Pacific and Siberia.
+  // WoDX's own words until the PC book pass (jobs/breeds-hsien-book-check-2026-11-13.md).
+  "ananasi-web": {
+    label: "A web of the Ananasi", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The web", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "factions", gathering: {name: "gathering", every: 4, meets: "The web gathers in the dark at the eldest's call."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the web", seats: 1, fill: "challenge", top: true},
+      {key: "voice", title: "Voice of the Queen", seats: 1, fill: "appoint", judge: true},
+      {key: "faction", title: "Voice of a faction", seats: 3, fill: "clan"},
+      {key: "spinner", title: "Spinner of the threads", seats: 1, fill: "appoint"}
+    ],
+    law: ["defying the will of the Queen", "breaking the balance of the Triat", "showing the spider to mortals", "feeding on the innocent of the web's own land", "leaving a broken thread unmended"],
+    titles: {eldest: ["Eldest of the web", "Weaver of the web", "First of the brood"]},
+    notes: "The werespiders serve their Queen, held captive by the Wyrm, and work alone or in small webs, each faction pulling toward one of the three powers of the world. The tribe field on a sheet holds the faction, and each faction present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Ananasi.",
+    eras: {}
+  },
+  "corax-flock": {
+    label: "A flock of the Corax", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The flock", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "roosts", gathering: {name: "gathering", every: 2, meets: "The ravens gather to trade what they have seen."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the flock", seats: 1, fill: "backing", top: true},
+      {key: "keeper", title: "Keeper of the news", seats: 1, fill: "appoint", judge: true},
+      {key: "roost", title: "Voice of a roost", seats: 3, fill: "clan"},
+      {key: "eye", title: "Eye of the sun", seats: 2, fill: "appoint"}
+    ],
+    law: ["hoarding news the flock needs", "lying to the flock about what one saw", "showing the raven to mortals", "serving corruption", "leaving a fallen raven's eyes to the enemy"],
+    titles: {eldest: ["Eldest of the flock", "Old raven", "First of the wing"]},
+    notes: "The wereravens keep no septs and few laws; they fly far and trade news, and a flock gathers often and briefly. The tribe field on a sheet holds the roost a raven calls home. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Corax.",
+    eras: {}
+  },
+  "gurahl-den": {
+    label: "A den of the Gurahl", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The den", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "gathering", every: 6, meets: "The bears wake and gather at the den."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the den", seats: 1, fill: "challenge", top: true},
+      {key: "keeper", title: "Keeper of the healing ways", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a tribe", seats: 4, fill: "clan"},
+      {key: "guardian", title: "Guardian of the mountain", seats: 1, fill: "appoint"}
+    ],
+    law: ["killing in anger what could be healed", "waking the den before its season", "showing the bear to mortals", "serving corruption", "turning away the sick who seek the den"],
+    titles: {eldest: ["Eldest of the den", "Old bear of the mountain", "Grandparent of the den"]},
+    notes: "The werebears are few, slow to anger and slow to forgive the wolves who hunted them; they heal, they sleep the winter through and they keep their dens far from the cities. The tribe field on a sheet holds the Gurahl tribe, and each tribe present has a voice. They gather seldom. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Gurahl.",
+    eras: {modern: "In the modern nights few Gurahl are left awake, and the wolves begin to ask their pardon."}
+  },
+  "ratkin-nest": {
+    label: "A nest of the Ratkin", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The nest", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "aspects", gathering: {name: "gathering", every: 2, meets: "The nest meets in the tunnels."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "king", title: "Rat King of the nest", seats: 1, fill: "challenge", top: true},
+      {key: "seer", title: "Seer of the nest", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of an aspect", seats: 4, fill: "clan"},
+      {key: "runner", title: "Runner of the tunnels", seats: 1, fill: "appoint"}
+    ],
+    law: ["leading the enemy to the nest", "breeding past what the land can feed", "showing the rat to mortals", "betraying the nest to the wolves", "leaving a nest-mate to die in a trap"],
+    titles: {king: ["Rat King of the nest", "Rat Queen of the nest", "Eldest of the tunnels"]},
+    notes: "The wererats live in the waste places of the cities and keep the numbers of the living down, as they say Gaia asked them; a nest answers to its Rat King or Rat Queen and mistrusts the wolves. The tribe field on a sheet holds the aspect, and each aspect present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Ratkin.",
+    eras: {medieval: "In the years of the plague the nests grow fast and bold.", modern: "In the modern nights the nests spread through the sewers and the slums of every great city."}
+  },
+  "rokea-shiver": {
+    label: "A shiver of the Rokea", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The shiver", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "breeds", gathering: {name: "gathering", every: 4, meets: "The sharks rise and gather in the deep water."},
+    riseByChallenge: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the deep", seats: 1, fill: "challenge", top: true},
+      {key: "speaker", title: "Speaker for the sea", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a breed", seats: 3, fill: "clan"},
+      {key: "warden", title: "Warden of the shore", seats: 1, fill: "appoint"}
+    ],
+    law: ["fouling the sea", "leading the land folk to the deep places", "showing the shark to mortals", "serving corruption", "turning on a shiver-mate in the water"],
+    titles: {eldest: ["Eldest of the deep", "Great one of the sea", "Old one of the reef"]},
+    notes: "The weresharks serve the sea, not the land, and see the wolves as strangers; a shiver gathers seldom and settles a quarrel with teeth. The tribe field on a sheet holds the breed, and each present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Rokea. A challenge in a shiver may kill.",
+    eras: {modern: "In the modern nights the poisoned seas and the fishing fleets drive the Rokea to anger."}
+  },
+  "hsien-court": {
+    label: "A court of the Hsien", line: "changeling", kinds: ["fae"], from: null, to: null,
+    body: "The court", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "audience", every: 4, meets: "The court gives audience on the festival night."},
+    offices: [
+      {key: "magistrate", title: "Magistrate of the court", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "minister", title: "Minister", seats: 2, fill: "appoint"},
+      {key: "voice", title: "Voice of a family", seats: 4, fill: "clan"},
+      {key: "keeper", title: "Keeper of the shrine", seats: 1, fill: "appoint"},
+      {key: "scribe", title: "Scribe of the court", seats: 1, fill: "appoint"}
+    ],
+    law: ["neglecting the duty owed to one's station", "shaming one's family before the court", "harming the shrine of a spirit", "teaching the mortals what they should not see", "dealings with the fae of the West"],
+    titles: {magistrate: ["Magistrate of the court", "Lord of the court", "Elder of the court"]},
+    notes: "The fae of East Asia are the Hsien, spirits who wear mortal flesh, and keep none of Europe's houses; they answer to a court of rank and duty, as the heavens do. Used by default for a fae faction in China, Japan, Korea, Southeast Asia or the Malay world.",
+    eras: {modern: "In the modern nights the courts shrink as the cities grow and the old shrines fall, and fae of the West arrive in the ports."}
+  },
+  "land-fae-circle": {
+    label: "A circle of the land's own fae", line: "changeling", kinds: ["fae"], from: null, to: null,
+    body: "The circle", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "gathering", every: 4, meets: "The circle gathers at the sacred place."},
+    offices: [
+      {key: "elder", title: "Elder of the circle", seats: 1, fill: "backing", top: true},
+      {key: "keeper", title: "Keeper of the old ways", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a family", seats: 4, fill: "clan"},
+      {key: "guardian", title: "Guardian of the sacred places", seats: 1, fill: "appoint"}
+    ],
+    law: ["breaking a promise made to the land's people", "harming a sacred place", "taking a child who was not given", "turning the people's dreams to fear", "dealings with the fae from over the sea"],
+    titles: {elder: ["Elder of the circle", "Grandparent of the circle", "Speaker of the circle"]},
+    notes: "Before the settlers come, the fae of the Pacific islands, Aotearoa and Siberia are the land's own, born of its peoples' dreams, and keep none of Europe's houses. Used by default for a fae faction there before the settlers; afterwards a fae faction keeps the court of its age.",
+    eras: {modern: "The Kithain come with the ships and the railways; the land's own fae keep to the far places."}
   }
+
 };
 export const POLITY_LIST = Object.keys(POLITIES);
 
@@ -515,6 +622,13 @@ const BASTET = /bastet|werecat|simba|bagheera|\bkhan\b|balam|pumonca|swara|bubas
 /** NPC 0.64.0 (B2972, B2973): the wereserpents and the dragon-kin, by name anywhere. */
 const NAGAH = /nagah|\bnagas?\b|wereserpent|\bsesha\b/i;
 const MOKOLE = /mokol|gumagan|makara|piasa|werecroc|werelizard|dragon-kin/i;
+/** NPC 0.66.0 (B3010 to B3012): the other changing breeds by name anywhere, after the Hengeyokai's own names. */
+const BREEDS = [["ananasi-web", /ananasi|werespider/i], ["corax-flock", /corax|wereraven/i], ["gurahl-den", /gurahl|werebear/i],
+  ["ratkin-nest", /ratkin|wererat/i], ["rokea-shiver", /rokea|wereshark/i]];
+/** NPC 0.66.0 (B3013): the Hsien are the fae of East and Southeast Asia. */
+export const HSIEN_LANDS = new Set(["china", "japan", "korea", "southeast-asia", "nusantara"]);
+/** NPC 0.66.0 (B3014): the land's own fae of the Pacific and Siberia before the settlers. */
+export const LAND_FAE_LANDS = new Set(["pacific-islands", "aotearoa", "siberia"]);
 /**
  * NPC 0.64.0 (B2970): the ways of life of the Americas, the Pacific and the far north before the settlers
  * (wodx-chronicle world-rules SPHERES). Kindred keep no court there; a fae faction keeps a council of the Nunnehi in
@@ -546,6 +660,7 @@ export const DEFAULTS = {
     if ( MOKOLE.test(said) ) return "mokole-gathering";
     if ( HENGEYOKAI.test(said) ) return "beast-court";
     if ( BASTET.test(said) ) return "bastet-land";
+    for ( const [key, re] of BREEDS ) if ( re.test(said) ) return key;
     const r = regionOfFaction(f, region);
     if ( beforeSettlers(r, y) && SETTLER_SHIFTERS[r] ) return SETTLER_SHIFTERS[r];
     return REGION_SHIFTERS[r] ?? "garou-sept";
@@ -553,6 +668,8 @@ export const DEFAULTS = {
   fae: (y, f, region = null) => {
     const r = regionOfFaction(f, region), sp = beforeSettlers(r, y) ? sphereOf(r, y) : null;
     if ( sp && NUNNEHI_LANDS.has(r) ) return "nunnehi-council";
+    if ( sp && LAND_FAE_LANDS.has(r) ) return "land-fae-circle";
+    if ( HSIEN_LANDS.has(r) ) return "hsien-court";
     return y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court";
   },
   mages: (y, f, region = null) => (REASON.test(`${f?.name ?? ""} ${f?.notes ?? ""}`)
