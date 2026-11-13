@@ -115,3 +115,25 @@ test("a power's look comes from what it is, then its kind, then the character's 
     assert.ok(existsSync(new URL(`../../${SR.fxPath(`${c}-${s}`)}`.replace("../../modules/", "../../modules/"), import.meta.url)), `${c}-${s}`);
   for ( const fx of Object.values(SR.FX_OWN) ) assert.ok(SR.fxOk(fx));
 });
+
+test("a character's own sprite: the roster entry, the manifest learned, the paths and what is offered", () => {
+  const e = SR.rosterOf({id: "abc123", name: "Sir Test", type: "Vampire", skin: "C8A080", hair: "nope",
+    items: [{name: "Broadsword", type: "Melee Weapon", worn: true}, {name: "Class Three", type: "Armor", worn: true}, {name: "Cloak", type: "Item", worn: false}]});
+  assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true});
+  assert.deepEqual(SR.rosterOf({id: "w1", name: "Wolf", type: "Creature"}), {id: "w1", name: "Wolf", kind: "animal"});
+  assert.equal(SR.rosterOf({id: "m", name: "M", type: "Mortal"}).powers, false);
+  const n = SR.learn("worlds/t/wodx-sprites", {sprites: {abc123: {name: "Sir Test", key: "0123abcd", acts: ["claw", "swing", "dance"]}, "bad/../id": {name: "x"}, w1: {name: "Wolf", acts: ["bite"]}}});
+  assert.equal(n, 2);
+  const own = SR.ownName("abc123");
+  assert.ok(SR.isOwn(own) && !SR.isOwn("lady-1888"));
+  assert.equal(SR.sheetPath(own), "worlds/t/wodx-sprites/abc123.png?k=0123abcd");
+  assert.equal(SR.stillPath(own), "worlds/t/wodx-sprites/abc123-still.png");
+  assert.equal(SR.actPath(own, "swing"), "worlds/t/wodx-sprites/abc123.swing.png?k=0123abcd");
+  assert.deepEqual(SR.ACTS[own], ["claw", "swing"], "only moves the game knows");
+  assert.equal(SR.moveFor(own, {weapon: "Broadsword"}), "swing");
+  assert.equal(SR.sheetPath("lady-1888"), "modules/wodx-paperdoll/sprites/proto/lady-1888.png");
+  const off = SR.offered("abc123").map(([k]) => k);
+  assert.ok(off.includes(own) && off.includes("lady-1888") && !off.includes(SR.ownName("w1")));
+  assert.equal(SR.learn("x", null), 0);
+  assert.ok(!SR.isOwn(own) && !SR.SHEETS[own], "a new manifest forgets the old one");
+});
