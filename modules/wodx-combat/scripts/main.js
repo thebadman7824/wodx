@@ -1504,7 +1504,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.24.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.24.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1868,7 +1868,7 @@ function powderNotes(attacker, weapons) {
     const guns = weapons.map(w => ({ w, g: PW.gunLock(w, year) })).filter(x => x.g?.black);
     if (!guns.length) return { html: "" };
     const wet = powderWet(attacker);
-    const lines = guns.map(({ w, g }) => `<li>${esc(w.name)} (${esc(g.label)}${g.named ? "" : ", the year's lock"}): ${esc(PW.powderNote(g, wet, powderState(attacker, w)))}</li>`);
+    const lines = guns.map(({ w, g }) => `<li>${esc(w.name)} (${esc(g.label)}${g.named ? "" : ", the year's lock"}): ${esc(PW.powderNote(g, wet, powderState(attacker, w)).replace(/^Black powder: /, ""))}</li>`);
     return { html: `<div class="vtc-note wodx-powder"><b>Black powder:</b><ul>${lines.join("")}</ul>
       ${wet.wet ? `<label><input type="checkbox" name="powderCovered"/> Powder and match kept covered (an oilcloth, a cap over the lock, a roof)</label>` : ""}</div>` };
 }
