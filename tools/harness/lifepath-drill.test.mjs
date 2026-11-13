@@ -180,11 +180,13 @@ test("your people: asked where more than one people lives, and open where no nam
     if ( !D.peoplesOf(rid, 1700).length ) open++;
   }
   assert.ok(n > 5, "several regions ask");
-  const na = D.continents(1300).find(c => c.id === "north-america").regions.find(r => r.id === "north-america-east");
-  assert.equal(na.named, false);
-  let d = start("north-america-east", 1300, 25);
+  // Eastern North America has the Haudenosaunee before the colonies (B3120); the West still has no names in 1300
+  const regs = D.continents(1300).find(c => c.id === "north-america").regions;
+  assert.equal(regs.find(r => r.id === "north-america-east").named, true);
+  assert.equal(regs.find(r => r.id === "north-america-west").named, false);
+  let d = start("north-america-west", 1300, 25);
   assert.equal(D.current(d).kind, "people");
-  d = D.pickOwn(d, "people", "Lenape");
+  d = D.pickOwn(d, "people", "Lakota");
   assert.ok(D.done(walk(d)));
   assert.ok(open >= 1);
 });

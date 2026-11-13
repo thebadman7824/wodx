@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3210
+Next free block: B3320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -150,12 +150,14 @@ Next free block: B3210
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
+| B3120-B3129 | Haudenosaunee names, clans and region mixes (peoples without names, first desk) (used B3120-B3122) | Creation, Chronicle, NPC |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4642,6 +4644,21 @@ Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
 A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
 Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.
 
+## B3120. The Haudenosaunee in eastern North America and Canada (2026-11-13)
+WoDX Creation, WoDX Chronicle. Ben's desk picks (hn-names recorded, hn-where both): recorded names only, the famous included; the people alone in both regions before the colonies, then about a quarter of people to 1799, a twentieth in the industrial age and a fiftieth in the modern. Eastern North America lost its `from` year and the old American origin tables in people.mjs, and has mixes of its own: early modern English 60, Haudenosaunee 25, Dutch 10, French 5. Its tables are marked lend: false so the West, which borrows American tables, does not draw them. Canada's mix covers Québec and the Great Lakes; its north and prairies were not Haudenosaunee land and still use the same mix (house reading).
+
+Reverse: put back `from: 1607` and `from: 1608` and the two origin tables in people.mjs, and drop the haudenosaunee entries from the mixes.
+
+## B3121. Clans from the mother; women named by clan where no name was recorded (2026-11-13)
+WoDX Creation, WoDX NPC. hn-clan mother: before the 19th century the family slot holds the clan ("of the Wolf clan"). In a household the master and the partner keep their own clans and the children take the woman's. The records keep about 230 men's names but only seven women's, so a woman is "A woman of the Wolf clan" three times in four in the medieval age, until more names are found (the decision card on women's names, recommended option). The Storyteller can type any name.
+
+Reverse: in people-haudenosaunee.mjs drop the "A woman" entries; in resident-rules.mjs drop the CLAN lines in kinFamily and nameHousehold.
+
+## B3122. Names staged by era group, not by year (2026-11-13)
+WoDX Creation. hn-later staged asks for own names only before 1700, half with a church name to 1799, and a church name with a family name from 1800. The People generator works by era group, so the early modern group (1500 to 1799) gives about a third of men a church name before the own name and women a church name nearly half the time, and the industrial and modern groups give a church given name and a family name. The own name and clan kept as a byname after 1800 are not shown in the name line.
+
+Reverse: change the weights in haudenosauneeTables().
+
 ## B3130. Nightmares takes a die from every roll (2026-11-13)
 WoDX Actions. A "Nightmares" effect made by WoDX Storyteller after a failed Willpower roll on waking (B2911) carries flags.wodx-storyteller.diceLess. Every roll from the Actions windows loses that many dice and says so, as attacks already do in WoDX Combat. The largest of several such effects counts, not their sum.
 
@@ -4721,3 +4738,13 @@ Reverse: drop worshipFor from plan in adopt-rules.mjs.
 Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
 
 Reverse: remove the --faith argument.
+
+## B3310. Chinese names raised to 300 (2026-11-13)
+WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
+
+Reverse: put back the old 22-name lists in data/people-world.mjs.
+
+## B3311. North Indian names raised to 300 (2026-11-13)
+WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
+
+Reverse: put back the old lists in data/people-world.mjs.

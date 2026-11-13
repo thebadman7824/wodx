@@ -13,6 +13,7 @@
 import {PRESETS, originFaith} from "./routine-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
+import {CLAN} from "../../wodx-creation/data/people-haudenosaunee.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
 const CHILD = /^(ben|bat|ibn|bint|bin|binti) /;
@@ -198,6 +199,8 @@ export function germanFeminine(name = "") {
  */
 export function kinFamily(house, p) {
   const origin = house.origin ?? p.origin;
+  // A clan passes from the mother (the Haudenosaunee, B3120): grown people keep their own, children take the mother's
+  if ( CLAN.test(String(house.family ?? "")) || CLAN.test(String(p.family ?? "")) ) return house.motherClan ?? p.family;
   if ( CHILD.test(String(house.family ?? "")) || CHILD.test(String(p.family ?? "")) ) {
     return house.masterSex === "male" && house.masterGiven ? `${childWord(CHILD.test(String(house.family ?? "")) ? house.family : p.family, p.sex)} ${house.masterGiven}` : p.family;
   }
@@ -277,6 +280,12 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region
       p = plan.kin ? drawFit(draw, i, {sex, trade: plan.label, ...asked}, {sex: null, origin: sameFaith}) : draw(i, {sex, trade: plan.role});
     }
     let family = p.family;
+    // In a clan household the master and the partner keep their own clans; the woman's clan is the children's
+    if ( CLAN.test(String(p.family ?? "")) && (i === 0 || plan.role === "partner" || !plan.kin) ) {
+      if ( p.sex === "female" && (i === 0 || !house.motherClan) ) house.motherClan = p.family;
+      out.push({...p, family, name: [p.given, family].filter(Boolean).join(" ") || p.name || plan.label, plan});
+      return;
+    }
     if ( i === 0 ) family = CHILD.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);
     else if ( plan.kin && plan.role !== "partner" ) family = kinFamily(house, p);
     else if ( plan.kin ) family = CHILD.test(house.family) ? p.family : kinFamily({...house, masterGiven: null}, p);
