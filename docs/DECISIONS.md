@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3160
+Next free block: B3170
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -152,6 +152,7 @@ Next free block: B3160
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
+| B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4667,3 +4668,23 @@ Reverse: empty REDATED.
 WoDX Library. Koji, tofu, onigiri, sashimi, hosomaki and kombu are at home in East Asia and reach the rest of the world in the late 20th century; salça in Anatolia and the Levant; sandpaper in China (Europe from 1834), firecrackers in China (elsewhere from 1300), the fanning mill in China (Europe from 1720), the fire piston in Southeast Asia (Europe from 1802), the hammock in the Americas (Europe from 1550), sassafras and the tree spile in North America (Europe from 1600 and 1700). They use the same place rules as other goods (REDATED_WAYS).
 
 Reverse: empty REDATED_WAYS.
+
+## B3160. Legends deeds suggest Renown and Status (2026-11-13)
+Desk item t5. When the Legends book gains a line naming a player character, WoDX suggests a change of standing in the approval queue. For a Garou, a seat won is +1 temporary Honor, a word kept +1 Honor, a word broken -1 Honor and a fight won +1 Glory. For Kindred, a seat won is +1 Status and a seat lost or a boon broken -1 Status. Others get a note that their standing rises or falls. Approving writes Garou Renown on the sheet; Status and standing are set by hand, with a whispered note. W20 gives Renown for deeds and V20 ties Status to office and prestation, but the deed-to-Renown table and the single points are WoDX's. The first build of an older chronicle suggests nothing. World setting "Legends suggest Renown and Status", on by default.
+
+Reverse: Turn the setting off, or reject the suggestions.
+
+## B3161. Fights as deeds in the Legends book (2026-11-13)
+Desk item c2, Chronicle's part. A new kind of line, "Deeds in a fight", comes from api.legends.addDeed({id, at, text, people, won, place}), which WoDX Combat's after-action card will call. Deeds are kept in the world setting legendDeeds (the newest 500).
+
+Reverse: Hide the line in the Legends window.
+
+## B3162. The language allowance holds for players (2026-11-13)
+Desk item k3. A player cannot save a language list longer than the native language plus what Linguistics gives (1, 2, 4, 8, 16) or the Language Merits give (V20 pp. 484 to 485 printed). A list that is already longer is never cut. The Storyteller can always add more.
+
+Reverse: The Storyteller adds the language for the player.
+
+## B3163. The gist of a kindred tongue (2026-11-13)
+Desk item k3. Speech in a language the reader does not know, but that is kin to one they do (WoDX's grouping: Romance, Slavic, Germanic, Norse, Celtic, Semitic, Indic, Chinese, Bantu, Malay, Egyptian), shows a "Try for the gist" button. It rolls Intelligence + Linguistics (Academics where there is no Linguistics) at difficulty 7, once per character for each message. A success shows that reader the message for the rest of the session.
+
+Reverse: Leave the button alone; the message stays unread.

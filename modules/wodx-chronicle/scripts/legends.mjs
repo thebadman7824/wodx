@@ -3,6 +3,8 @@ import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import * as events from "./events.mjs";
 import * as L from "./legends-rules.mjs";
+import * as LS from "./legend-standing-rules.mjs";
+import {propose, registerHandler} from "./approvals.mjs";
 import {officeTitle, polityFor} from "../../wodx-npc/scripts/politics-rules.mjs";
 
 /**
@@ -24,6 +26,47 @@ const dateOf = t => getEngine().timeToDate(t);
 export function registerLegendsSettings() {
   game.settings.register(MODULE_ID, "legends", {scope: "world", config: false, type: Object, default: L.blankLegends(),
     onChange: () => LegendsApp.refresh()});
+  // B3161: deeds in a fight, sent by other modules (WoDX Combat's after-action card)
+  game.settings.register(MODULE_ID, "legendDeeds", {scope: "world", config: false, type: Array, default: []});
+  // B3160: a world setting so the Storyteller can turn the suggestions off
+  game.settings.register(MODULE_ID, "legendStanding", {scope: "world", config: true, type: Boolean, default: true,
+    name: "Legends suggest Renown and Status", hint: "A deed in the Legends book (a seat won or lost, a boon kept or broken, a fight won) puts a change of Renown, Status or standing for the player characters in it in the approval queue."});
+}
+
+/** Active GM: record a deed for the book (B3161). {id, at, text, people: [{id, name}], won, place}. */
+export async function addDeed(d = {}) {
+  if ( !isActiveGM() || !d?.id || !d.text ) return null;
+  const list = (setting("legendDeeds") ?? []).filter(x => x?.id !== d.id);
+  list.push({id: String(d.id), at: Number.isFinite(Number(d.at)) ? Number(d.at) : game.time.worldTime, text: String(d.text).slice(0, 480),
+    people: (d.people ?? []).slice(0, 8), won: !!d.won, place: String(d.place ?? "").slice(0, 160)});
+  await setSetting("legendDeeds", list.slice(-500));
+  return build({quiet: true});
+}
+
+/** Put a change of standing for each player character in new lines into the approval queue (B3160). */
+async function suggestStanding(added = []) {
+  try { if ( !setting("legendStanding") ) return; } catch (e) { return; }
+  const ids = new Set(added.flatMap(e => (e.people ?? []).map(p => p.id).filter(Boolean)));
+  const kindOf = a => { try { return game.modules.get("wodx-combat")?.active ? game.modules.get("wodx-combat").api?.getKind?.(a) ?? "mortal" : "mortal"; } catch (e) { return "mortal"; } };
+  const people = {};
+  for ( const id of ids ) { const a = game.actors.get(id); if ( a ) people[id] = {pc: !!a.hasPlayerOwner, kind: kindOf(a)}; }
+  for ( const s of LS.suggestionsFor(added, people) ) {
+    await propose({type: STANDING, key: `standing:${s.entryId}:${s.actorId}`, title: `Standing: ${s.name}`, detail: LS.suggestionText(s), data: s});
+  }
+}
+export const STANDING = "legendStanding";
+registerHandler(STANDING, {label: "Renown and Status from the Legends book", approve: e => applyStanding(e)});
+
+/** Approve a suggestion: Garou Renown goes on the sheet; Status and standing are the Storyteller's to set by hand. */
+export async function applyStanding(entry) {
+  const s = entry?.data ?? {}, a = game.actors.get(s.actorId);
+  if ( !a ) return;
+  if ( ["glory", "honor", "wisdom"].includes(s.trait) ) {
+    const path = `system.renown.${s.trait}.temporary`, cur = Number(foundry.utils.getProperty(a, path));
+    if ( Number.isFinite(cur) ) { await a.update({[path]: Math.max(0, Math.min(10, cur + s.step))}); return; }
+  }
+  await ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "Legends"},
+    content: `<div class="wodx-card"><p>${esc(LS.suggestionText(s))}</p><p class="wodx-quiet">Change it on ${esc(a.name)}'s sheet by hand.</p></div>`});
 }
 
 /** The book as stored. */
@@ -88,6 +131,7 @@ export function gather(prevSnap = null) {
     ...L.actorLines(actorRows(), other(CREATION, "archived", {}), dateOf),
     ...L.ledgerLines(other(ST, "ledger", {entries: []})?.entries ?? [], dateOf),
     ...L.battleLines(other(ST, "battles", {list: []})?.list ?? [], dateOf),
+    ...L.deedLines(setting("legendDeeds") ?? [], dateOf),
     ...L.officeLines(prevSnap?.offices ?? null, snap.offices, when),
     ...L.holdingLines(prevSnap?.holdings ?? null, snap.holdings, when)
   ];
@@ -117,6 +161,7 @@ async function _build({quiet = false, gathered = null, at = null} = {}) {
   if ( changed ) await setSetting("legends", legends);
   await writeJournal(legends);
   if ( added.length && !quiet ) log(`Legends: ${added.length} new line${added.length === 1 ? "" : "s"}`);
+  if ( added.length && s.built !== null ) await suggestStanding(added);  // not on the very first build of an old chronicle
   return added;
 }
 
