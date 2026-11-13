@@ -387,7 +387,8 @@ def apply(b, year, region="moravia", wealth=None, trade=None, seed=0):
         C.dress(r)
         C.orient(r)
         f = pal.floor.get(FLOOR_KIND.get(U.kind_of_name(r.name), "living"))
-        if f and r.floor not in (None, "earth"): r.floor = f
+        if f and (r.floor not in (None, "earth") or year >= 1781 and not ANIMALS.search(r.name)):   # beaten earth floors end
+            r.floor = f                                        # with the reforms; beasts keep theirs
     own = getattr(b, "wall_tex", None) or getattr(local, "t", {}).get("wall")
     wall = pal.wall if pal else None
     ok = lambda w: w and material(w) == material(own) and ("Castle" not in w or wealth == "noble")
