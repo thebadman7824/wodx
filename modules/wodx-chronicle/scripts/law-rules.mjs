@@ -21,7 +21,8 @@ export const CRIMES = {
   "pretend-powers": "Claiming magical powers (as fraud)", duelling: "Duelling", sedition: "Sedition against the state",
   "drug-trade": "Dealing in forbidden drugs", "computer-crime": "Breaking into computers", terrorism: "Terrorism",
   "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine",
-  unfilial: "Failing in duty to parents and elders"
+  unfilial: "Failing in duty to parents and elders",
+  "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -45,7 +46,8 @@ export const PUNISH = {
   maiming: "Branding or maiming", banishment: "Banishment from the town or the land", outlawry: "Outlawry: the law no longer protects them",
   hanging: "Death by hanging, the sword or the wheel", burning: "Burning, for heresy and sorcery", galleys: "Rowing in the galleys",
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
-  confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo"
+  confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
+  "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas"
 };
 
 /** Keepers of order. */
@@ -56,7 +58,8 @@ export const ORDER = {
   detectives: "Detectives in plain clothes", "secret-police": "A secret police with informers everywhere",
   cameras: "Cameras on the streets and in shops", army: "Soldiers in the streets",
   muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting",
-  "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another"
+  "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another",
+  "headman": "The village headman and the watchmen"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -151,6 +154,22 @@ export const FAMILIES = {
     {from: 1900, note: "Police, prisons and fingerprints on foreign models", add: {order: ["police"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade", "sedition"]}},
     {from: 1950, note: "Modern states: written codes on European or Soviet lines", drop: {order: ["yamen-runners", "town-watch"], punish: ["bamboo"]}, add: {order: ["detectives"]}, set: {catch: 0.45}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}}
+  ]},
+
+  // South Asia: dharma, caste councils, the sultans' and Mughals' qadis, Company and Crown, the 1950 constitution (B3495)
+  "south-asia": {label: "South Asia", rows: [
+    {from: 0, note: "Kings who rule by dharma, with learned Brahmins as their judges' counsel", set: {
+      rule: {form: "Kingdoms whose kings uphold dharma", ruler: "The raja", council: "The ministers and the royal priests"},
+      courts: ["The king's court, advised by Brahmins who read the dharma texts", "Caste councils that judge their own members", "The village assembly"],
+      proof: ["witnesses", "oath", "ordeal"], punish: ["fine", "maiming", "banishment", "hanging", "outcaste"],
+      order: ["headman", "town-watch"], taxes: ["The king's share of the harvest", "Tolls and market dues"], bribe: 2, catch: 0.3},
+      add: {crimes: ["caste-breach", "cow-killing", "rebellion"], warn: ["Caste rules who may eat, marry, worship or draw water with whom"]}},
+    {from: 1950, note: "The constitution of 1950: one law for every citizen; untouchability abolished",
+      set: {rule: {form: "A federal parliamentary republic", ruler: "The Prime Minister, and the President", council: "Parliament and the state assemblies"},
+        courts: ["District and high courts under the codes", "The Supreme Court", "The village council for small matters"], catch: 0.4},
+      add: {order: ["police", "detectives"], proof: ["evidence", "forensic"], punish: ["prison"]},
+      drop: {crimes: ["caste-breach"], proof: ["ordeal"], punish: ["outcaste", "maiming"], order: ["headman"]}},
+    {from: 1995, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime", "terrorism"]}}
   ]}
 };
 
@@ -169,6 +188,33 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  india: [
+    {from: 0, note: "Rajput and southern kingdoms; Ghurid armies in the north", set: {rule: {ruler: "The Rajput kings in the north, the Chola and Hoysala kings in the south"}}},
+    {from: 1206, note: "The Delhi Sultanate in the north; Hindu kingdoms in the south (Vijayanagara from 1336)", set: {rule: {ruler: "The Sultan of Delhi in the north; Hindu kings in the south", council: "The sultan's nobles and the qadis"}},
+      add: {courts: ["The qadi's court for Muslims and for crimes in the sultan's cities"], taxes: ["The poll tax on non-Muslims, where the sultan levies it"]}},
+    {from: 1526, note: "The Mughal empire", set: {rule: {ruler: "The Mughal Emperor", council: "The emperor's ministers and mansabdars"}}},
+    {from: 1564, note: "Akbar lifts the poll tax on non-Muslims", drop: {taxes: ["The poll tax on non-Muslims, where the sultan levies it"]}},
+    {from: 1679, note: "Aurangzeb brings the poll tax back", add: {taxes: ["The poll tax on non-Muslims, where the sultan levies it"]}},
+    {from: 1720, note: "The poll tax lapses as Mughal power fades", drop: {taxes: ["The poll tax on non-Muslims, where the sultan levies it"]}},
+    {from: 1765, note: "The East India Company rules Bengal and spreads; Company courts from 1772", set: {rule: {form: "Company rule beside princely states", ruler: "The Governor-General of the Company, and the princes"}},
+      add: {courts: ["Company courts, with Hindu and Muslim law officers for family matters"], order: ["police"]}},
+    {from: 1829, note: "Widow burning is banned", add: {warn: ["Widow burning is a crime under Company law"]}},
+    {from: 1858, note: "Crown rule: the Indian Penal Code (1860) and the police acts", set: {rule: {form: "Crown rule beside princely states", ruler: "The Viceroy of India", council: "The Viceroy's council"}},
+      add: {courts: ["High courts under the Indian Penal Code"], punish: ["prison", "transportation"], proof: ["evidence"], crimes: ["sedition"]}},
+    {from: 1947, note: "Independence and partition: India and Pakistan (and Bangladesh from 1971)", drop: {courts: ["Company courts, with Hindu and Muslim law officers for family matters"], punish: ["transportation"], warn: ["Widow burning is a crime under Company law"]}},
+    {from: 1975, to: 1977, note: "The Emergency: rights suspended, opponents jailed", add: {warn: ["Under the Emergency, arrest without trial is the law"]}}
+  ],
+  "tibet-himalaya": [
+    {from: 0, note: "Monastic lords and princes", set: {rule: {form: "Princes and great monasteries, each with its own domain", ruler: "The abbots of the great monasteries and the local princes", council: "The monastic assemblies"},
+      courts: ["The lord's court, under the old law codes of the Tibetan kings", "The monastery's discipline master for monks and its own people", "Village heads and elders"], proof: ["oath", "witnesses", "ordeal"]},
+      drop: {crimes: ["caste-breach"], warn: ["Caste rules who may eat, marry, worship or draw water with whom"]}},
+    {from: 1247, note: "The Sakya lamas rule for the Mongol khans", set: {rule: {ruler: "The Sakya lama, for the Mongol Khan"}}},
+    {from: 1642, note: "The Dalai Lama's government at Lhasa", set: {rule: {form: "A government of lamas and lay nobles", ruler: "The Dalai Lama", council: "The Kashag, the council of ministers"}}},
+    {from: 1768, note: "In Nepal, the Gorkha kingdom; its caste-based legal code of 1854", add: {courts: ["Nepal's royal courts under the code of 1854"]}},
+    {from: 1950, note: "Tibet under the People's Republic of China", set: {rule: {form: "A region of the People's Republic", ruler: "The Party Secretary of the region", council: "The Communist Party"}, catch: 0.6},
+      add: {proof: ["party"], crimes: ["anti-state"], order: ["secret-police", "police"], punish: ["camp"], warn: ["A picture of the Dalai Lama can be a crime"]},
+      drop: {courts: ["The lord's court, under the old law codes of the Tibetan kings", "The monastery's discipline master for monks and its own people"]}}
+  ],
   china: [
     {from: 0, note: "The Southern Song in the south; the Jurchen Jin hold the north", set: {rule: {ruler: "The Song Emperor in Hangzhou, and the Jin Emperor in the north"}}},
     {from: 1279, note: "The Mongol Yuan: the conquerors above the conquered; the examinations stop until 1315", set: {rule: {ruler: "The Great Khan, Emperor of the Yuan", council: "The Central Secretariat, led by Mongols"}},

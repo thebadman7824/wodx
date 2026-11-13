@@ -127,3 +127,24 @@ test("Chinese imperial law and its neighbours (B3494)", () => {
     assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
   }
 });
+
+test("South Asia (B3495)", () => {
+  const at = (r, y) => L.lawOf(r, y);
+  assert.equal(at("india", 1300).family, "south-asia");
+  assert.ok(at("india", 1300).courts.some(c => /qadi/.test(c)));
+  assert.ok(at("india", 1300).crimes.includes("caste-breach"));
+  assert.ok(!at("india", 1600).taxes.some(x => /poll tax/.test(x)), "Akbar lifted it");
+  assert.ok(at("india", 1700).taxes.some(x => /poll tax/.test(x)), "Aurangzeb brought it back");
+  assert.ok(!at("india", 1750).taxes.some(x => /poll tax/.test(x)));
+  assert.ok(at("india", 1900).courts.some(c => /Penal Code/.test(c)));
+  assert.ok(!at("india", 1960).crimes.includes("caste-breach"), "1950 constitution");
+  assert.ok(at("india", 1976).warn.some(w => /Emergency/.test(w)));
+  assert.ok(!at("india", 1980).warn.some(w => /Emergency/.test(w)));
+  assert.match(at("tibet-himalaya", 1700).rule.ruler, /Dalai Lama/);
+  assert.match(at("tibet-himalaya", 1950).rule.form, /People's Republic/);
+  assert.ok(!at("tibet-himalaya", 1300).crimes.includes("caste-breach"));
+  for ( const r of ["india", "tibet-himalaya"] ) for ( const y of [1197, 1500, 1800, 1950, 2022] ) {
+    const x = at(r, y);
+    assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
+  }
+});
