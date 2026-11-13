@@ -65,7 +65,8 @@ export const ORDER = {
   "headman": "The village headman and the watchmen",
   "societies": "Masked societies and age sets that keep order",
   "sheriff": "The sheriff of the shire, who can raise the posse",
-  "jito": "The shogun's land stewards and constables"
+  "jito": "The shogun's land stewards and constables",
+  "clan-elders": "The elders and fighters of each clan"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -266,6 +267,20 @@ export const FAMILIES = {
     {from: 1947, note: "The postwar constitution", set: {rule: {form: "A constitutional monarchy with a parliament", ruler: "The Prime Minister; the Emperor as symbol", council: "The National Diet"}, catch: 0.55},
       add: {proof: ["forensic"], crimes: ["drug-trade"]}, drop: {punish: ["hard-labour"]}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.65}}
+  ]},
+
+  // The steppe and the north of Asia: clan custom, the Yassa of the khans, then khanates, Russia, the Soviets (B3600)
+  steppe: {label: "The steppe and northern Asia", rows: [
+    {from: 0, note: "Clan custom; khans raised by the assembly of the clans", set: {
+      rule: {form: "Khans and clan chiefs, raised by the assembly of the great clans", ruler: "The khan", council: "The assembly of the clans"},
+      courts: ["The khan's court", "Clan elders judging by custom"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Tribute in horses, livestock and furs"], bribe: 2, catch: 0.3},
+      add: {crimes: ["rebellion"], warn: ["Horse theft is paid back many times over, or with death"]}},
+    {from: 1206, note: "The Great Yassa of Genghis Khan", add: {courts: ["The khan's judges under the Great Yassa"], warn: ["The law of the khans forbids fouling running water"]}},
+    {from: 1900, note: "Russian, Chinese and later Soviet courts and police", set: {rule: {form: "Provinces of an empire, later Soviet republics"}, catch: 0.45},
+      add: {order: ["police", "secret-police"], punish: ["prison", "camp"], proof: ["evidence"], courts: ["The state's courts"]},
+      drop: {courts: ["The khan's judges under the Great Yassa", "The khan's court"], warn: ["The law of the khans forbids fouling running water"]}},
+    {from: 1992, note: "Independent republics and the Russian Federation", drop: {punish: ["camp"]}, add: {order: ["cameras"], crimes: ["computer-crime", "drug-trade"]}}
   ]}
 };
 
@@ -284,6 +299,23 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  "central-asia": [
+    {from: 0, note: "The Qara Khitai and the Khwarazmian shahs", set: {rule: {ruler: "The Gurkhan of the Qara Khitai and the Shah of Khwarazm"}}, add: {courts: ["The qadi's court in Samarkand, Bukhara and the oasis towns"]}},
+    {from: 1219, note: "The Mongol conquest; the Chagatai khans", set: {rule: {ruler: "The Chagatai Khan"}}},
+    {from: 1370, note: "Timur and the Timurids", set: {rule: {ruler: "Timur, later the Timurid princes"}}},
+    {from: 1500, note: "The Uzbek khanates of Bukhara, Khiva and Kokand", set: {rule: {ruler: "The Khan of Bukhara, Khiva or Kokand"}}},
+    {from: 1865, note: "Russian conquest (Tashkent 1865, Bukhara a protectorate 1868)", set: {rule: {ruler: "The Russian Governor-General of Turkestan"}}},
+    {from: 1924, note: "Soviet republics", set: {rule: {form: "Soviet republics under one Party", ruler: "The Party's First Secretary"}}, add: {proof: ["party"], crimes: ["anti-state"]},
+      drop: {courts: ["The qadi's court in Samarkand, Bukhara and the oasis towns"]}},
+    {from: 1991, note: "Independent republics, most under strong presidents", set: {rule: {form: "Independent republics", ruler: "The President"}}, drop: {proof: ["party"], crimes: ["anti-state"]}}
+  ],
+  siberia: [
+    {from: 0, note: "The peoples of the taiga and the tundra keep their own custom", set: {rule: {form: "Peoples of the forest and the tundra under their own elders and shamans", ruler: "The clan elders", council: "The clan gatherings"}}},
+    {from: 1582, note: "Russian conquest: fur tribute and forts", set: {rule: {form: "A Russian frontier of forts", ruler: "The tsar's governors in the forts"}}, add: {taxes: ["The fur tribute to the tsar"], order: ["bailiff"]}},
+    {from: 1650, note: "Siberia becomes the empire's place of exile", add: {warn: ["Convicts and exiles from all Russia serve out their sentences here"]}},
+    {from: 1930, to: 1960, note: "The Gulag camps", add: {warn: ["The camps of the Gulag lie across the land"]}},
+    {from: 1961, note: "The camps close", drop: {warn: ["Convicts and exiles from all Russia serve out their sentences here"], taxes: ["The fur tribute to the tsar"]}}
+  ],
   russia: [
     {from: 0, note: "The princes of the Rus under the Russkaya Pravda; Novgorod ruled by its assembly", set: {rule: {ruler: "The princes of the Rus, and Novgorod's assembly", council: "The boyars and the town assemblies"}}},
     {from: 1240, to: 1479, note: "The Mongol yoke: the princes rule by the khan's patent and pay tribute", add: {warn: ["The princes rule only with the Golden Horde's patent, and tribute goes to the khan"], taxes: ["Tribute to the Golden Horde"]}},

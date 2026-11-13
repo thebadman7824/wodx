@@ -214,3 +214,15 @@ test("Japan (B3499)", () => {
   assert.ok(at(2000).punish.includes("hanging"), "Japan keeps the death penalty");
   assert.match(at(1950).rule.form, /constitutional/);
 });
+
+test("The steppe and northern Asia (B3600)", () => {
+  const ca = y => L.lawOf("central-asia", y), si = y => L.lawOf("siberia", y);
+  assert.equal(ca(1300).family, "steppe");
+  assert.equal(si(1300).family, "steppe");
+  assert.ok(ca(1250).courts.some(c => /Yassa/.test(c)) && !ca(1950).courts.some(c => /Yassa/.test(c)));
+  assert.match(ca(1400).rule.ruler, /Timur/);
+  assert.ok(ca(1950).proof.includes("party") && !ca(2000).proof.includes("party"));
+  assert.ok(ca(1950).punish.includes("camp") && !ca(2000).punish.includes("camp"));
+  assert.ok(si(1700).taxes.some(t => /fur tribute/.test(t)) && !si(1970).taxes.some(t => /fur tribute/.test(t)));
+  assert.ok(si(1940).warn.some(w => /Gulag/.test(w)) && !si(1970).warn.some(w => /Gulag/.test(w)));
+});
