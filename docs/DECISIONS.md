@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3520
+Next free block: B3630
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -176,9 +176,10 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3497) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3602) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5526,6 +5527,16 @@ WoDX Chronicle, law-rules.mjs. The common family for the British Isles: the date
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
 
+## B3498. Orthodox and Russian law family (2026-11-13)
+Russia and the Aegean use the Orthodox family: the ruler's law beside the church's canons, then ministries and police, with region rows for the Rus, Muscovy, the tsars, the Soviet state and the Federation, and for Byzantium, Ottoman rule and modern Greece.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3499. Japanese law family (2026-11-13)
+Japan uses its own family: the shogun rules in the emperor's name through warrior courts, then the Tokugawa order, then the Meiji codes and the postwar constitution. New ids: jito, commoner-arms, leaving-country.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
 ## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
 WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
 
@@ -5560,3 +5571,18 @@ Reverse: none needed; add names as found.
 WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
 
 Reverse: edit the lists in data/people-algonquian.mjs.
+
+## B3600. Steppe and northern Asia law family (2026-11-13)
+Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3601. Americas law family (2026-11-13)
+The eight American regions use the Americas family: the first peoples' councils and custom, then each region's empire, colonial law and republic, with modern police from 1900. New ids: marshals, alcohol.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3602. Pacific and Australia law family (2026-11-13)
+Australia, Aotearoa and the Pacific islands use the Pacific family: chiefs and sacred restrictions, the first peoples' own law, then colonial and national courts; each region's death penalty ends on its real date.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.

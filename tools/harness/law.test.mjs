@@ -185,3 +185,73 @@ test("English common law (B3497)", () => {
   assert.match(at(1655).rule.form, /commonwealth/);
   assert.match(at(1700).rule.form, /constitutional/);
 });
+
+test("Orthodox and Russian law (B3498)", () => {
+  const ru = y => L.lawOf("russia", y), ae = y => L.lawOf("aegean", y);
+  assert.equal(ru(1300).family, "orthodox");
+  assert.equal(ae(1300).family, "orthodox");
+  assert.ok(ru(1300).warn.some(w => /Golden Horde/.test(w)) && !ru(1500).warn.some(w => /Golden Horde/.test(w)));
+  assert.ok(ru(1700).warn.some(w => /runaway serf/.test(w)) && !ru(1870).warn.some(w => /runaway serf/.test(w)));
+  assert.ok(ru(1870).proof.includes("jury") && !ru(1930).proof.includes("jury"));
+  assert.ok(ru(1940).punish.includes("camp") && !ru(1970).punish.includes("camp"));
+  assert.ok(ru(1950).proof.includes("party") && !ru(2000).proof.includes("party"));
+  assert.ok(!ru(2000).punish.includes("hanging"));
+  assert.ok(!ae(1197).proof.includes("ordeal"), "Roman law in the east");
+  assert.ok(ae(1600).courts.some(c => /qadi/.test(c)) && !ae(1900).courts.some(c => /qadi/.test(c)));
+  assert.ok(ae(1970).order.includes("secret-police"));
+});
+
+test("Japan (B3499)", () => {
+  const at = y => L.lawOf("japan", y);
+  assert.equal(at(1300).family, "japanese");
+  assert.ok(at(1250).courts.some(c => /Goseibai/.test(c)));
+  assert.ok(at(1500).warn.some(w => /warlord/.test(w)) && !at(1650).warn.some(w => /warlord/.test(w)));
+  assert.ok(at(1700).crimes.includes("commoner-arms") && !at(1900).crimes.includes("commoner-arms"));
+  assert.ok(at(1700).crimes.includes("leaving-country") && !at(1860).crimes.includes("leaving-country"));
+  assert.ok(at(1700).crimes.includes("wrong-faith") && !at(1880).crimes.includes("wrong-faith"));
+  assert.ok(at(1700).order.includes("baojia") && !at(1880).order.includes("jito"));
+  assert.ok(at(1935).order.includes("secret-police") && !at(1950).order.includes("secret-police"));
+  assert.ok(at(2000).punish.includes("hanging"), "Japan keeps the death penalty");
+  assert.match(at(1950).rule.form, /constitutional/);
+});
+
+test("The steppe and northern Asia (B3600)", () => {
+  const ca = y => L.lawOf("central-asia", y), si = y => L.lawOf("siberia", y);
+  assert.equal(ca(1300).family, "steppe");
+  assert.equal(si(1300).family, "steppe");
+  assert.ok(ca(1250).courts.some(c => /Yassa/.test(c)) && !ca(1950).courts.some(c => /Yassa/.test(c)));
+  assert.match(ca(1400).rule.ruler, /Timur/);
+  assert.ok(ca(1950).proof.includes("party") && !ca(2000).proof.includes("party"));
+  assert.ok(ca(1950).punish.includes("camp") && !ca(2000).punish.includes("camp"));
+  assert.ok(si(1700).taxes.some(t => /fur tribute/.test(t)) && !si(1970).taxes.some(t => /fur tribute/.test(t)));
+  assert.ok(si(1940).warn.some(w => /Gulag/.test(w)) && !si(1970).warn.some(w => /Gulag/.test(w)));
+});
+
+test("The Americas (B3601)", () => {
+  const ne = y => L.lawOf("north-america-east", y), mx = y => L.lawOf("mexico", y), an = y => L.lawOf("andes", y);
+  for ( const r of ["canada", "north-america-east", "north-america-west", "mexico", "caribbean", "andes", "brazil", "southern-cone"] ) {
+    assert.equal(L.lawOf(r, 1300).family, "americas", r);
+    assert.ok(L.lawOf(r, 1300).order.includes("clan-elders"), r);
+    assert.ok(!L.lawOf(r, 1950).order.includes("clan-elders"), r);
+  }
+  assert.match(mx(1450).rule.ruler, /Tlatoani/);
+  assert.ok(mx(1600).order.includes("inquisitors") && !mx(1850).order.includes("inquisitors"));
+  assert.match(an(1500).rule.ruler, /Inca/);
+  assert.ok(ne(1692).warn.some(w => /Salem/.test(w)) && !ne(1693).warn.some(w => /Salem/.test(w)));
+  assert.ok(ne(1800).warn.some(w => /enslaved/.test(w)) && !ne(1870).warn.some(w => /enslaved/.test(w)));
+  assert.ok(ne(1925).crimes.includes("alcohol") && !ne(1940).crimes.includes("alcohol"));
+  assert.ok(L.lawOf("north-america-west", 1870).order.includes("marshals"));
+  assert.ok(ne(2000).punish.includes("hanging") && !L.lawOf("canada", 2000).punish.includes("hanging"));
+});
+
+test("The Pacific and Australia (B3602)", () => {
+  const au = y => L.lawOf("australia", y), nz = y => L.lawOf("aotearoa", y), pi = y => L.lawOf("pacific-islands", y);
+  for ( const r of ["australia", "aotearoa", "pacific-islands"] ) assert.equal(L.lawOf(r, 1300).family, "pacific", r);
+  assert.ok(!au(1300).warn.some(w => /tapu/.test(w)) && au(1300).warn.some(w => /story and ceremony/.test(w)));
+  assert.ok(au(1800).warn.some(w => /Convicts/.test(w)) && !au(1900).warn.some(w => /Convicts/.test(w)));
+  assert.ok(au(1950).warn.some(w => /children/.test(w)) && !au(1980).warn.some(w => /children/.test(w)));
+  assert.ok(nz(1500).warn.some(w => /tapu/.test(w)) && !nz(1900).warn.some(w => /tapu/.test(w)));
+  assert.ok(pi(1810).warn.some(w => /tapu/.test(w)) && !pi(1820).warn.some(w => /tapu/.test(w)));
+  assert.ok(!au(1990).punish.includes("hanging") && !nz(1970).punish.includes("hanging"));
+  assert.ok(!au(1950).order.includes("clan-elders"));
+});

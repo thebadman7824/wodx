@@ -23,6 +23,10 @@ test("furnishing: the Python unit tests pass", {skip: !py && "needs Python 3"}, 
   run(["-m", "unittest", "test_furnishing"], gen);
 });
 
+test("map preview: the renderer draws floors, walls, doors and pieces with stand-in pictures", {skip: !py && "needs Python 3"}, () => {
+  run(["-m", "unittest", "test_render_preview"], gen);       // skips itself without Pillow and numpy
+});
+
 const site = (year, extra = []) => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-furnish-"));
   run([join(gen, "ddsite.py"), "--kind", "floors", "--type", "burgher-palace", "--year", String(year), "--assets", `${FA},${NEW},${OLD}`, "--out", dir, ...extra], dir);

@@ -23,7 +23,9 @@ export const CRIMES = {
   "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine",
   unfilial: "Failing in duty to parents and elders",
   "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
-  "pass-law": "Being found without a pass where the pass laws apply"
+  "pass-law": "Being found without a pass where the pass laws apply",
+  "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad",
+  "alcohol": "Making or selling alcohol"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -63,7 +65,10 @@ export const ORDER = {
   "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another",
   "headman": "The village headman and the watchmen",
   "societies": "Masked societies and age sets that keep order",
-  "sheriff": "The sheriff of the shire, who can raise the posse"
+  "sheriff": "The sheriff of the shire, who can raise the posse",
+  "jito": "The shogun's land stewards and constables",
+  "clan-elders": "The elders and fighters of each clan",
+  "marshals": "Federal marshals and town marshals"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -225,6 +230,82 @@ export const FAMILIES = {
     {from: 1965, note: "Hanging for murder ends (for good in 1969)", drop: {punish: ["hanging"]}},
     {from: 1990, note: "Cameras on every high street; the Computer Misuse Act", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.6}},
     {from: 2000, note: "The Terrorism Act", add: {crimes: ["terrorism"]}}
+  ]},
+
+  // Orthodox and Russian law: the prince's law beside the church's canons, then codes, the tsars, the Party (B3498)
+  orthodox: {label: "Orthodox and Russian law", rows: [
+    {from: 0, note: "The prince's law beside the church's canons", set: {
+      rule: {form: "A principality or empire whose ruler stands beside the Orthodox church", ruler: "The grand prince or the emperor", council: "The boyars or the great officials, and the bishops"},
+      courts: ["The prince's court and the prince's officials", "Church courts under the canons for clergy, marriage and morals", "Village communes and their elders"],
+      proof: ["witnesses", "oath", "ordeal", "combat"], punish: ["fine", "flogging", "banishment", "maiming", "hanging", "confiscation"],
+      order: ["bailiff", "town-watch"], taxes: ["Tribute and dues to the prince", "Tolls on the rivers and at markets"], bribe: 3, catch: 0.3},
+      add: {crimes: ["heresy", "sorcery", "blasphemy", "rebellion"], warn: ["Blood money is owed for a killing, by the victim's rank"]}},
+    {from: 1800, note: "Ministries, police and prisons", add: {order: ["police"], punish: ["prison", "hard-labour"]}, drop: {proof: ["ordeal", "combat"], warn: ["Blood money is owed for a killing, by the victim's rank"]}, set: {catch: 0.4}},
+    {from: 1900, note: "Fingerprints and the new codes", add: {proof: ["evidence", "forensic"], crimes: ["sedition", "drug-trade"]}, drop: {crimes: ["heresy", "sorcery"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime", "terrorism"]}, set: {catch: 0.5}}
+  ]},
+
+  // Japan: the shogun's law beside the court's, warrior house law, the Tokugawa order, the Meiji codes (B3499)
+  japanese: {label: "Japan", rows: [
+    {from: 0, note: "The emperor reigns in Kyoto; the shogun's government in Kamakura rules", set: {
+      rule: {form: "An empire in name, ruled by the shogun's warrior government", ruler: "The Shogun, in the Emperor's name", council: "The shogunate's regents and council"},
+      courts: ["The shogunate's courts for warriors and their lands", "The imperial court's old codes for the court nobles", "Temples and shrines judging the people of their own estates", "Village elders"],
+      proof: ["witnesses", "oath"], punish: ["fine", "banishment", "hanging", "confiscation"],
+      order: ["jito", "town-watch"], taxes: ["Rice tax to the lord of the land", "Labour for the lord"], bribe: 2, catch: 0.3},
+      add: {crimes: ["rebellion"], warn: ["A warrior may answer an insult from a commoner with the sword"]}},
+    {from: 1232, note: "The Goseibai Shikimoku, the warriors' own code", add: {courts: ["Shogunal judges under the Goseibai Shikimoku"]}},
+    {from: 1338, note: "The Ashikaga shoguns in Kyoto", set: {rule: {ruler: "The Ashikaga Shogun"}}},
+    {from: 1467, to: 1587, note: "The age of warring states: each warlord's house law rules the domain", add: {warn: ["Each warlord's house law rules the domain; the shogun's word reaches nowhere"]}},
+    {from: 1588, note: "The sword hunt: weapons taken from commoners", add: {crimes: ["commoner-arms"]}},
+    {from: 1603, note: "The Tokugawa order: shogun in Edo, daimyo in their domains, groups of five households", set: {rule: {ruler: "The Tokugawa Shogun in Edo", council: "The senior councillors and the daimyo"}},
+      add: {courts: ["The shogunate's magistrates in Edo, Osaka and Kyoto", "Each daimyo's own court in the domain"], order: ["baojia"], punish: ["flogging"]}},
+    {from: 1614, to: 1872, note: "Christianity forbidden", add: {crimes: ["wrong-faith"], warn: ["Christians are hunted; villagers must tread on a holy image to prove they are not"]}},
+    {from: 1639, to: 1853, note: "The closed country", add: {crimes: ["leaving-country"]}},
+    {from: 1868, note: "The Meiji restoration: the emperor rules; codes on French then German lines", set: {rule: {form: "An empire under the Meiji constitution (1889)", ruler: "The Emperor", council: "The cabinet and the Imperial Diet"}, bribe: 3, catch: 0.45},
+      add: {courts: ["The new courts of the empire"], order: ["police", "detectives"], punish: ["prison", "hard-labour"], proof: ["evidence"]},
+      drop: {courts: ["The shogunate's courts for warriors and their lands", "Shogunal judges under the Goseibai Shikimoku", "The shogunate's magistrates in Edo, Osaka and Kyoto", "Each daimyo's own court in the domain"], order: ["jito", "baojia", "town-watch"], warn: ["A warrior may answer an insult from a commoner with the sword"]}},
+    {from: 1876, note: "Swords banned in public", drop: {crimes: ["commoner-arms"]}, add: {warn: ["Only soldiers and police may wear a sword in public"]}},
+    {from: 1925, to: 1945, note: "The Peace Preservation Law and the thought police", add: {crimes: ["anti-state"], order: ["secret-police"], warn: ["The thought police arrest people for their opinions"]}},
+    {from: 1947, note: "The postwar constitution", set: {rule: {form: "A constitutional monarchy with a parliament", ruler: "The Prime Minister; the Emperor as symbol", council: "The National Diet"}, catch: 0.55},
+      add: {proof: ["forensic"], crimes: ["drug-trade"]}, drop: {punish: ["hard-labour"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.65}}
+  ]},
+
+  // The steppe and the north of Asia: clan custom, the Yassa of the khans, then khanates, Russia, the Soviets (B3600)
+  steppe: {label: "The steppe and northern Asia", rows: [
+    {from: 0, note: "Clan custom; khans raised by the assembly of the clans", set: {
+      rule: {form: "Khans and clan chiefs, raised by the assembly of the great clans", ruler: "The khan", council: "The assembly of the clans"},
+      courts: ["The khan's court", "Clan elders judging by custom"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Tribute in horses, livestock and furs"], bribe: 2, catch: 0.3},
+      add: {crimes: ["rebellion"], warn: ["Horse theft is paid back many times over, or with death"]}},
+    {from: 1206, note: "The Great Yassa of Genghis Khan", add: {courts: ["The khan's judges under the Great Yassa"], warn: ["The law of the khans forbids fouling running water"]}},
+    {from: 1900, note: "Russian, Chinese and later Soviet courts and police", set: {rule: {form: "Provinces of an empire, later Soviet republics"}, catch: 0.45},
+      add: {order: ["police", "secret-police"], punish: ["prison", "camp"], proof: ["evidence"], courts: ["The state's courts"]},
+      drop: {courts: ["The khan's judges under the Great Yassa", "The khan's court"], warn: ["The law of the khans forbids fouling running water"]}},
+    {from: 1992, note: "Independent republics and the Russian Federation", drop: {punish: ["camp"]}, add: {order: ["cameras"], crimes: ["computer-crime", "drug-trade"]}}
+  ]},
+
+  // The Americas: the peoples' own councils and empires, then Spanish, Portuguese, French and English colonial law, then the republics (B3601)
+  americas: {label: "The Americas", rows: [
+    {from: 0, note: "The peoples of the land under their own councils and custom", set: {
+      rule: {form: "Nations, chiefdoms and city-states under their own councils", ruler: "The chiefs and councils of each nation", council: "The councils of elders and clans"},
+      courts: ["The council of the nation, town or clan", "Elders who settle quarrels by custom"], proof: ["witnesses", "oath"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs, or tribute where an empire rules"], bribe: 2, catch: 0.3},
+      add: {warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1900, note: "Modern courts, police and prisons", add: {order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade", "sedition"]}, drop: {order: ["clan-elders"]}, set: {catch: 0.45}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}}
+  ]},
+
+  // The Pacific and Australia: chiefs and tapu, the custom of the land's first peoples, then colonial and national law (B3602)
+  pacific: {label: "The Pacific and Australia", rows: [
+    {from: 0, note: "Chiefs and elders; sacred restrictions and their keepers", set: {
+      rule: {form: "Chiefdoms and the custom of the first peoples", ruler: "The chiefs or the elders", council: "The elders and the priests"},
+      courts: ["The chief's judgment", "Elders keeping the custom of the people"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 1, catch: 0.35},
+      add: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
+      add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}}
   ]}
 };
 
@@ -243,6 +324,156 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  australia: [
+    {from: 0, note: "The peoples of the land keep their own law, carried in story and ceremony", set: {rule: {ruler: "The elders of each people"}}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]},
+      add: {warn: ["Each people's law, carried in story and ceremony, binds who may go where and know what"]}},
+    {from: 1788, note: "New South Wales: a penal colony under British law", set: {rule: {form: "British colonies", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts under British law"], order: ["police"], punish: ["flogging", "hard-labour"],
+      warn: ["Convicts serve their sentences in chains or assigned to free settlers"]}},
+    {from: 1868, note: "The last convict ship", drop: {warn: ["Convicts serve their sentences in chains or assigned to free settlers"], punish: ["flogging"]}},
+    {from: 1901, note: "The Commonwealth of Australia", set: {rule: {form: "A federal dominion under the crown", ruler: "The Prime Minister", council: "Parliament"}}},
+    {from: 1985, note: "The death penalty abolished", drop: {punish: ["hanging"]}},
+    {from: 1910, to: 1970, note: "Children of the first peoples taken from their families", add: {warn: ["Aboriginal children are taken from their families by law"]}}
+  ],
+  aotearoa: [
+    {from: 1300, note: "The Māori: chiefs, tapu and the balancing of wrongs (utu)", set: {rule: {ruler: "The rangatira, the chiefs of each tribe"}}},
+    {from: 1840, note: "The Treaty of Waitangi and British rule", set: {rule: {form: "A British colony, later a dominion", ruler: "The governor, later the Prime Minister", council: "Parliament in Wellington"}}, add: {courts: ["Colonial courts under British law", "The Native Land Court (1865)"], order: ["police"]}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1961, note: "Hanging for murder abolished", drop: {punish: ["hanging"]}},
+    {from: 1975, note: "The Waitangi Tribunal hears the treaty's breaches", add: {courts: ["The Waitangi Tribunal"]}}
+  ],
+  "pacific-islands": [
+    {from: 0, note: "Chiefs and priests; the kapu system in Hawaiʻi", set: {rule: {ruler: "The high chiefs of each island"}}},
+    {from: 1810, note: "The Kingdom of Hawaiʻi; the kapu system ends (1819)", set: {rule: {ruler: "The King of Hawaiʻi, and the high chiefs elsewhere"}}},
+    {from: 1819, note: "The kapu system ends in Hawaiʻi", drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1880, note: "Colonial rule: France in Tahiti (1880), the United States in Hawaiʻi (1898), Germany and later New Zealand in Samoa", set: {rule: {form: "Colonies and territories", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts"]}},
+    {from: 1962, note: "Independence for Samoa (1962), Fiji (1970) and others", set: {rule: {form: "Independent states and territories", ruler: "Each state's head"}}}
+  ],
+  mexico: [
+    {from: 1428, note: "The Triple Alliance of the Mexica: the tlatoani's judges and strict sentences", set: {rule: {form: "An empire of tribute", ruler: "The Huey Tlatoani of Tenochtitlan", council: "The council of nobles"}},
+      add: {courts: ["The tlatoani's judges in Tenochtitlan"], warn: ["Drunkenness in public is punished by death, save for the old"]}},
+    {from: 1521, note: "New Spain: the Audiencia, a viceroy from 1535, the Holy Office from 1571", set: {rule: {form: "A viceroyalty of the Spanish crown", ruler: "The Viceroy of New Spain", council: "The Audiencia of Mexico"}, bribe: 3},
+      add: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith", "blasphemy"], punish: ["burning", "galleys", "flogging"], order: ["bailiff", "inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]},
+      drop: {order: ["clan-elders"], courts: ["The tlatoani's judges in Tenochtitlan"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge", "Drunkenness in public is punished by death, save for the old"]}},
+    {from: 1821, note: "Independent Mexico; the Inquisition ended (1820)", set: {rule: {form: "An independent republic, often under strongmen", ruler: "The President", council: "Congress"}},
+      drop: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning", "galleys"], order: ["inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]}, add: {courts: ["The republic's courts"]}},
+    {from: 1910, to: 1920, note: "The Revolution", add: {warn: ["Revolutionary armies are the only law in much of the land"]}},
+    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 4}},
+    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 4}}
+  ],
+  andes: [
+    {from: 1438, note: "Tawantinsuyu, the Inca state: labour owed to the state, harsh law for idleness and theft", set: {rule: {form: "An empire of labour service", ruler: "The Sapa Inca", council: "The Inca nobility"}},
+      add: {courts: ["The Inca's governors and inspectors"], taxes: ["The mit'a, labour owed to the state"], warn: ["Theft, lies and idleness are crimes against the Inca"]}},
+    {from: 1533, note: "Spanish Peru: the viceroy (1542), the Audiencia of Lima, the Holy Office (1570), the silver mines", set: {rule: {form: "A viceroyalty of the Spanish crown", ruler: "The Viceroy of Peru", council: "The Audiencia of Lima"}, bribe: 3},
+      add: {courts: ["The Audiencia of Lima", "The Holy Office of the Inquisition, for heresy and sorcery"], crimes: ["heresy", "sorcery", "wrong-faith", "blasphemy"], punish: ["burning", "flogging"], order: ["bailiff", "inquisitors"], warn: ["Indian towns must send their share of men to the silver mines of Potosí"]},
+      drop: {order: ["clan-elders"], courts: ["The Inca's governors and inspectors"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge", "Theft, lies and idleness are crimes against the Inca"]}},
+    {from: 1825, note: "Independent republics", set: {rule: {form: "Independent republics", ruler: "The President", council: "Congress"}},
+      drop: {courts: ["The Audiencia of Lima", "The Holy Office of the Inquisition, for heresy and sorcery"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning"], order: ["inquisitors"], taxes: ["The mit'a, labour owed to the state"], warn: ["Indian towns must send their share of men to the silver mines of Potosí"]},
+      add: {courts: ["The republics' courts"]}}
+  ],
+  caribbean: [
+    {from: 0, note: "The Taíno and Kalinago under their caciques", set: {rule: {ruler: "The caciques"}}},
+    {from: 1492, note: "Spanish rule, then English, French and Dutch colonies", set: {rule: {form: "Colonies of European crowns", ruler: "The colonial governor", council: "The governor's council and the planters' assembly"}},
+      add: {courts: ["Colonial courts under each crown's law"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1520, to: 1885, note: "Plantation slavery and the slave codes (the French Code Noir of 1685)", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1804, note: "Haiti, the first free republic of the region", add: {courts: ["Haiti's own courts"]}},
+    {from: 1898, note: "Cuba free of Spain; later independence for many islands (Jamaica 1962)", set: {rule: {form: "Independent republics and remaining colonies", ruler: "Each state's head or governor"}}, drop: {crimes: ["heresy", "wrong-faith"]}},
+    {from: 1959, note: "Revolutionary Cuba: one Party", add: {warn: ["In Cuba, the Committees for the Defence of the Revolution watch every street"]}}
+  ],
+  brazil: [
+    {from: 0, note: "The Tupi and other peoples of the forest", set: {rule: {ruler: "The chiefs of each people"}}},
+    {from: 1532, note: "Portuguese captaincies, a governor-general from 1549, the Ordinances of the Philippine kings (1603)", set: {rule: {form: "A colony of the Portuguese crown", ruler: "The governor-general, later the viceroy", council: "The Relação, the high court of Bahia"}},
+      add: {courts: ["The Relação of Bahia, and the captains' own justice"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging", "galleys"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1550, to: 1887, note: "Slavery, until the Golden Law of 1888", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1822, note: "The Empire of Brazil", set: {rule: {form: "A constitutional empire", ruler: "The Emperor of Brazil", council: "The General Assembly"}}, drop: {crimes: ["heresy", "wrong-faith"], punish: ["galleys"]}},
+    {from: 1889, note: "The Republic", set: {rule: {form: "A federal republic", ruler: "The President", council: "Congress"}}},
+    {from: 1964, to: 1984, note: "The military dictatorship", add: {order: ["secret-police"], warn: ["The military regime tortures and disappears its opponents"]}}
+  ],
+  "southern-cone": [
+    {from: 0, note: "The Mapuche and the peoples of the pampas", set: {rule: {ruler: "The lonkos and chiefs"}}},
+    {from: 1541, note: "Spanish Santiago (1541) and Buenos Aires (1580); the Mapuche stay free south of the Biobío", set: {rule: {form: "Spanish provinces, and free Mapuche lands to the south", ruler: "The Spanish governor", council: "The Audiencia"}},
+      add: {courts: ["The Audiencia and the colonial courts"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1818, note: "Independent Chile and Argentina", set: {rule: {form: "Independent republics", ruler: "The President", council: "Congress"}}, drop: {crimes: ["heresy", "wrong-faith"], courts: ["The Audiencia and the colonial courts"]}, add: {courts: ["The republics' courts"]}},
+    {from: 1973, to: 1990, note: "Military juntas in Chile (1973 to 1990) and Argentina (1976 to 1983)", add: {order: ["secret-police"], warn: ["The junta's men take people in the night, and many are never seen again"]}}
+  ],
+  "north-america-east": [
+    {from: 0, note: "The nations of the eastern woodlands; the Great Law of the Haudenosaunee", add: {courts: ["The Haudenosaunee Grand Council under the Great Law, and the clan mothers"]}},
+    {from: 1607, note: "English colonies under the common law", set: {rule: {form: "English colonies with their own assemblies", ruler: "The royal governor", council: "The colonial assembly"}},
+      add: {courts: ["County courts under the common law", "The colony's general court"], crimes: ["heresy", "sorcery", "blasphemy", "wrong-faith"], proof: ["jury"], order: ["sheriff", "town-watch"], punish: ["pillory", "flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1692, to: 1692, note: "The Salem witch trials", add: {warn: ["Witch trials hang the accused at Salem"]}},
+    {from: 1700, to: 1864, note: "Slavery, in the south until 1865", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1776, note: "The United States; the Constitution and the Bill of Rights (1789 to 1791)", set: {rule: {form: "A federal republic", ruler: "The President", council: "Congress, and the state legislatures"}},
+      drop: {crimes: ["heresy", "sorcery", "blasphemy", "wrong-faith"], punish: ["pillory"]}, add: {courts: ["State and federal courts", "The Supreme Court"]}},
+    {from: 1920, to: 1933, note: "Prohibition", add: {crimes: ["alcohol"], warn: ["Making or selling liquor is a federal crime"]}},
+    {from: 1935, note: "The FBI", add: {warn: ["Federal agents chase kidnappers, bank robbers and spies across state lines"]}},
+    {from: 1966, note: "Civil rights law (1964) and the Miranda warning (1966)", add: {warn: ["The police must tell the arrested of their rights"]}}
+  ],
+  "north-america-west": [
+    {from: 0, note: "The Plains, Pueblo and Pacific nations"},
+    {from: 1598, note: "Spanish New Mexico and later California", set: {rule: {form: "Spanish, later Mexican, frontier provinces", ruler: "The governor in Santa Fe or Monterey"}}, add: {courts: ["The governor's and the missions' justice"], crimes: ["heresy", "wrong-faith"]}},
+    {from: 1848, note: "The United States takes the West", set: {rule: {form: "Territories and states of the United States", ruler: "The territorial governor, later the state governor", council: "Congress, and the territorial or state legislature"}},
+      drop: {courts: ["The governor's and the missions' justice"], crimes: ["heresy", "wrong-faith"]}, add: {courts: ["Territorial and federal courts"], order: ["sheriff", "marshals"]}},
+    {from: 1850, to: 1899, note: "The Wild West: marshals, posses, vigilance committees", add: {warn: ["Out past the railhead, the marshal's gun and the posse are the law; vigilance committees hang without trial"]}, set: {catch: 0.25}},
+    {from: 1920, to: 1933, note: "Prohibition", add: {crimes: ["alcohol"]}}
+  ],
+  canada: [
+    {from: 0, note: "The nations of the north woods and the plains"},
+    {from: 1608, note: "New France under the Custom of Paris", set: {rule: {form: "A colony of the French crown", ruler: "The Governor of New France", council: "The Sovereign Council"}}, add: {courts: ["The courts of New France under the Custom of Paris"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1763, note: "British rule; Quebec keeps French civil law (1774)", set: {rule: {ruler: "The British governor"}}, add: {courts: ["British criminal courts, with French civil law in Quebec"], proof: ["jury"]}, drop: {crimes: ["heresy", "wrong-faith"]}},
+    {from: 1867, note: "Confederation; the North-West Mounted Police from 1873", set: {rule: {form: "A federal dominion under the crown", ruler: "The Prime Minister, and the Governor General", council: "Parliament in Ottawa"}}, add: {order: ["police"]}},
+    {from: 1883, to: 1996, note: "The residential schools", add: {warn: ["Children of the First Nations are taken from their families to residential schools"]}},
+    {from: 1976, note: "The death penalty abolished", drop: {punish: ["hanging"]}},
+    {from: 1982, note: "The Charter of Rights and Freedoms", add: {courts: ["Courts under the Charter of Rights and Freedoms"]}}
+  ],
+  "central-asia": [
+    {from: 0, note: "The Qara Khitai and the Khwarazmian shahs", set: {rule: {ruler: "The Gurkhan of the Qara Khitai and the Shah of Khwarazm"}}, add: {courts: ["The qadi's court in Samarkand, Bukhara and the oasis towns"]}},
+    {from: 1219, note: "The Mongol conquest; the Chagatai khans", set: {rule: {ruler: "The Chagatai Khan"}}},
+    {from: 1370, note: "Timur and the Timurids", set: {rule: {ruler: "Timur, later the Timurid princes"}}},
+    {from: 1500, note: "The Uzbek khanates of Bukhara, Khiva and Kokand", set: {rule: {ruler: "The Khan of Bukhara, Khiva or Kokand"}}},
+    {from: 1865, note: "Russian conquest (Tashkent 1865, Bukhara a protectorate 1868)", set: {rule: {ruler: "The Russian Governor-General of Turkestan"}}},
+    {from: 1924, note: "Soviet republics", set: {rule: {form: "Soviet republics under one Party", ruler: "The Party's First Secretary"}}, add: {proof: ["party"], crimes: ["anti-state"]},
+      drop: {courts: ["The qadi's court in Samarkand, Bukhara and the oasis towns"]}},
+    {from: 1991, note: "Independent republics, most under strong presidents", set: {rule: {form: "Independent republics", ruler: "The President"}}, drop: {proof: ["party"], crimes: ["anti-state"]}}
+  ],
+  siberia: [
+    {from: 0, note: "The peoples of the taiga and the tundra keep their own custom", set: {rule: {form: "Peoples of the forest and the tundra under their own elders and shamans", ruler: "The clan elders", council: "The clan gatherings"}}},
+    {from: 1582, note: "Russian conquest: fur tribute and forts", set: {rule: {form: "A Russian frontier of forts", ruler: "The tsar's governors in the forts"}}, add: {taxes: ["The fur tribute to the tsar"], order: ["bailiff"]}},
+    {from: 1650, note: "Siberia becomes the empire's place of exile", add: {warn: ["Convicts and exiles from all Russia serve out their sentences here"]}},
+    {from: 1930, to: 1960, note: "The Gulag camps", add: {warn: ["The camps of the Gulag lie across the land"]}},
+    {from: 1961, note: "The camps close", drop: {warn: ["Convicts and exiles from all Russia serve out their sentences here"], taxes: ["The fur tribute to the tsar"]}}
+  ],
+  russia: [
+    {from: 0, note: "The princes of the Rus under the Russkaya Pravda; Novgorod ruled by its assembly", set: {rule: {ruler: "The princes of the Rus, and Novgorod's assembly", council: "The boyars and the town assemblies"}}},
+    {from: 1240, to: 1479, note: "The Mongol yoke: the princes rule by the khan's patent and pay tribute", add: {warn: ["The princes rule only with the Golden Horde's patent, and tribute goes to the khan"], taxes: ["Tribute to the Golden Horde"]}},
+    {from: 1497, note: "The Sudebnik of Ivan III: a law code for Muscovy", set: {rule: {ruler: "The Grand Prince of Moscow"}}, add: {courts: ["The grand prince's governors under the Sudebnik"]}},
+    {from: 1547, note: "The tsar", set: {rule: {form: "An autocracy", ruler: "The Tsar", council: "The boyar council and the Assembly of the Land"}}},
+    {from: 1565, to: 1572, note: "The oprichnina: the tsar's private terror", add: {warn: ["The oprichniki in black ride with dog's heads at the saddle and kill as they please"]}},
+    {from: 1649, note: "The Ulozhenie: serfs bound to the land for good", add: {warn: ["A runaway serf is hunted and returned to the lord"]}},
+    {from: 1711, note: "Peter's Senate, the Holy Synod (1721) and the Table of Ranks", set: {rule: {form: "An autocratic empire", ruler: "The Emperor of All Russia", council: "The Senate and the Holy Synod"}}},
+    {from: 1826, to: 1880, note: "The Third Section, the tsar's political police", add: {order: ["secret-police"]}},
+    {from: 1861, note: "The serfs freed", drop: {warn: ["A runaway serf is hunted and returned to the lord"]}},
+    {from: 1864, note: "Court reform: public trials, lawyers, juries", add: {proof: ["jury"], courts: ["Circuit courts with juries, after the reform of 1864"]}},
+    {from: 1881, note: "The Okhrana; exile to Siberia", add: {order: ["secret-police"], punish: ["transportation"]}},
+    {from: 1906, note: "The Duma", set: {rule: {council: "The State Duma and the State Council"}}},
+    {from: 1917, note: "The Bolsheviks: the Cheka, revolutionary tribunals, the Party over all",
+      set: {rule: {form: "A one-party Soviet state", ruler: "The leader of the Communist Party", council: "The Politburo"}, catch: 0.55},
+      add: {courts: ["People's courts and revolutionary tribunals"], proof: ["party"], crimes: ["anti-state"], order: ["secret-police"]},
+      drop: {courts: ["Church courts under the canons for clergy, marriage and morals", "Circuit courts with juries, after the reform of 1864"], proof: ["jury"], crimes: ["blasphemy", "heresy"]}},
+    {from: 1930, to: 1960, note: "The Gulag", add: {punish: ["camp"]}},
+    {from: 1936, to: 1938, note: "The Great Terror", add: {warn: ["Neighbours denounce neighbours; arrests come at night and few come back"]}},
+    {from: 1991, note: "The Russian Federation", set: {rule: {form: "A federal republic with a strong president", ruler: "The President", council: "The Federal Assembly"}}, drop: {proof: ["party"], crimes: ["anti-state"]}},
+    {from: 1996, note: "A moratorium on the death penalty", drop: {punish: ["hanging"]}}
+  ],
+  aegean: [
+    {from: 0, note: "The Byzantine empire under Roman law", set: {rule: {form: "The Roman empire of the east", ruler: "The Emperor in Constantinople", council: "The imperial court and the Patriarch"}},
+      add: {courts: ["Imperial judges under the Basilika, the Roman law in Greek"]}, drop: {proof: ["ordeal", "combat"]}},
+    {from: 1204, to: 1260, note: "The Latin Empire after the Fourth Crusade", add: {warn: ["Frankish lords rule Constantinople and many islands by their own feudal law"]}},
+    {from: 1453, note: "The Ottoman conquest: the Patriarch judges Orthodox Christians in family matters", set: {rule: {form: "A province of the Ottoman empire", ruler: "The Ottoman Sultan", council: "The sultan's governors; the Patriarch for the Orthodox"}},
+      add: {courts: ["The qadi's court", "The Patriarch's court for Orthodox Christians"], taxes: ["The poll tax on Christians and Jews"]},
+      drop: {courts: ["Imperial judges under the Basilika, the Roman law in Greek"]}},
+    {from: 1830, note: "The Kingdom of Greece, with codes on Bavarian and French lines", set: {rule: {form: "A kingdom, later a republic", ruler: "The King of the Hellenes"}},
+      drop: {courts: ["The qadi's court"], taxes: ["The poll tax on Christians and Jews"]}, add: {courts: ["The Greek state's courts"]}},
+    {from: 1967, to: 1974, note: "The colonels' junta", add: {warn: ["The junta's military police torture suspects"], order: ["secret-police"]}},
+    {from: 1975, note: "The Third Republic; the EEC in 1981", set: {rule: {form: "A parliamentary republic", ruler: "The Prime Minister, and the President"}}}
+  ],
   "british-isles": [
     {from: 0, note: "England's Angevin kings; Scotland's own crown and law; Welsh princes; Irish kings and the English lordship of Ireland",
       add: {courts: ["Scotland's own courts and law, Welsh law in the princes' lands, Irish Brehon law beyond the Pale"]}},

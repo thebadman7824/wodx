@@ -105,12 +105,15 @@ def choose(year, region, wealth, rng, catalogue):
     def texture(kind, words=None):
         c = sorted((e for e in own if e["kind"] in kind and not (kind != ("walls",) and NOT_FLOOR.search(e["name"]))), key=lambda e: e["path"])
         styled = [e for e in c if e["style"] in ranked[:1]] or c
+        if kind != ("walls",) and band in FINISH:              # the age's wood finish, as its doors and furniture (Ashen in 1197)
+            styled = [e for e in styled if FINISH[band] in e["name"] or not re.search(r"Ashen|Light|Dark", e["name"])] or styled
         if words:
             hit = lambda l: [e for e in l if re.search(words, e["name"], re.I)]
             styled = hit(styled) or hit(c) or styled
         return rng.choice(styled)["path"] if styled else None
     wall = texture(("walls",), WALL_WORDS.get(band))
-    floor = {k: texture(("patterns", "tilesets"), w) for k, w in FLOOR_WORDS.items()}
+    plain = wealth in ("poor", "middling") or band == "medieval"     # marble and parquet only for the rich of later ages
+    floor = {k: texture(("patterns", "tilesets"), re.sub(r"\|?(Marble|Parquet|Carpet)", "", w) if plain else w) for k, w in FLOOR_WORDS.items()}
     door = texture(("portals",))
     lights = "rushlight" if band == "medieval" and wealth == "poor" else LIGHTS[band]
     worths = {k: e["worth"] for v in sets.values() for e in v for k in (e["name"], e["path"])}
