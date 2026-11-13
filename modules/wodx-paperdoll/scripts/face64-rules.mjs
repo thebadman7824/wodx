@@ -544,7 +544,7 @@ function wounds(c, level) {
  * Returns {rgba, expr, eyes, mouth, shut} where rgba is 64 by 64 RGBA bytes.
  */
 /**
- * Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), top(c), state}}. A
+ * Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), ears(c), top(c), state}}. A
  * feature with a state shows only while opts.state[state] is on (a form, frenzy, a visage); "tears" is on while the face
  * grieves or fears.
  */
@@ -606,7 +606,8 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( S.style === "long" ) for ( let y = 40; y < N; y++ ) for ( let x = CX - S.w - 5; x <= CX + S.w + 5; x++ ) if ( !F.has(x, y) ) F.put(x, y, H.s2, "hair");   // hair behind the neck
   BACK[S.line]?.(ctx); stage("back", ctx);
   skin(F, R, shape, S.jw < 12 ? 6 : 7); cheeks(F, R, shape);
-  if ( S.line === "nosferatu" ) nosEars(ctx);
+  if ( S.covered ) {}                   // a hood or veil hides the ears
+  else if ( S.line === "nosferatu" ) nosEars(ctx);
   else if ( S.ears === "plain" ) {      // ears, tucked into the head
     const hw = Math.round(headHw(34, shape));
     for ( const sd of [-1, 1] ) for ( let dy = 0; dy < 6; dy++ ) for ( const k of [1, 2] ) {
@@ -630,7 +631,8 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( S.style === "long" ) hairLong(F, H, shape);
   else if ( S.style === "short" ) hairShort(F, H, shape);
   else if ( S.style === "back" ) hairShort(F, H, shape, 2, 1);
-  F.outline(["skin", "neck"], R.ol); F.outline(["hair"], H.ol); F.outline(["cloth"], C.ol); F.outline(["ear"], R.ol);
+  if ( !S.covered ) stage("ears", ctx);    // ears worn over the hair; kind "ear" shares the skin's outline, so no seam at the root
+  F.outline(["skin", "neck", "ear"], R.ol); F.outline(["hair"], H.ol); F.outline(["cloth"], C.ol);
   for ( let x = CX - 13; x <= CX + 13; x++ ) for ( let y = 12; y < 29; y++ ) if ( F.kindAt(x, y) === "skin" && F.kindAt(x, y - 1) === "hair" ) F.put(x, y, R.s1);   // shade under the fringe
   POST[S.line]?.(ctx); stage("top", ctx);
   if ( level ) wounds(ctx, level);
