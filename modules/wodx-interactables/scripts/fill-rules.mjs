@@ -72,7 +72,7 @@ export function fits(item, containerKind) {
 
 /** The items that may be drawn for this era, place and container, each with its weight. */
 /**
- * 0.40.0 (B3022): where a piece of gear is at home, as WoDX Library 0.21.0 writes it on the item
+ * 0.40.0 (B3032): where a piece of gear is at home, as WoDX Library 0.21.0 writes it on the item
  * (flags.wodx-library.ways: a region, a way of life or "*", each null, a year, [from, to] or false).
  */
 export function gearAtHome(it, {year = null, way = null, region = null} = {}) {

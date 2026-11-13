@@ -144,7 +144,7 @@ function describeItem(row, notes) {
 }
 
 /**
- * Library 0.21.0 (B3021): the weapons of other lands, each a copy of the book weapon it fights as, under its own name,
+ * Library 0.21.0 (B3031): the weapons of other lands, each a copy of the book weapon it fights as, under its own name,
  * with that weapon's figures and page. local: [name, ways, {source: base name}, what it is] (data/gear-ways.mjs).
  */
 export function localGear(items, local) {
@@ -168,7 +168,7 @@ export function localGear(items, local) {
   return out;
 }
 
-/** Library 0.21.0 (B3020): is a piece of gear found in a year and place? ({year, way, region}; no place: yes) */
+/** Library 0.21.0 (B3030): is a piece of gear found in a year and place? ({year, way, region}; no place: yes) */
 export function gearAt(item, where = {}) {
   const {year = null, way = null, region = null} = where ?? {};
   if ( !way && !region ) return true;

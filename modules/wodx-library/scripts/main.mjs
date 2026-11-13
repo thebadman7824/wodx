@@ -30,7 +30,7 @@ export async function gear() {
 
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
 /**
- * 0.21.0 (B3023): where the scene stands, as WoDX Chronicle has it: {year, region, regionLabel, way, wayLabel}, or
+ * 0.21.0 (B3033): where the scene stands, as WoDX Chronicle has it: {year, region, regionLabel, way, wayLabel}, or
  * null when Chronicle is off or names no region.
  */
 export function whereNow(scene = globalThis.canvas?.scene) {

@@ -58,7 +58,7 @@ test("cyberware soak: implants are worn armor that Combat always counts", () => 
   assert.match(combat, /i\.flags\?\.\["wodx-library"\]\?\.implant/);
 });
 
-// WoDX Library 0.21.0 (B3020 to B3023): gear by region.
+// WoDX Library 0.21.0 (B3030 to B3033): gear by region.
 const W = await import(join(root, "modules/wodx-library/data/gear-ways.mjs"));
 const names = (era, where) => new Set(G.forEra(data.items, era, where).map(i => i.name));
 test("gear by region: the Americas before the settlers carry no steel, crossbow or plate", () => {
