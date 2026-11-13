@@ -3130,10 +3130,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "workshop",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "workshop"
    }
   },
   {
@@ -3373,10 +3370,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -3495,10 +3489,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -3702,10 +3693,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -3807,10 +3795,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -3912,10 +3897,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5082,10 +5064,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5170,10 +5149,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5258,10 +5234,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5346,10 +5319,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5366,10 +5336,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5522,10 +5489,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5610,10 +5574,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -5953,10 +5914,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -6041,10 +5999,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -6129,10 +6084,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   },
   {
@@ -6217,10 +6169,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    }
   }
  ],

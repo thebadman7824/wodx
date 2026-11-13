@@ -2409,10 +2409,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "church",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "church"
    },
    "rotation": 345.0
   },
@@ -2609,10 +2606,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 60.0
   },
@@ -2630,10 +2624,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 330.0
   },
@@ -2651,10 +2642,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 60.0
   },
@@ -2688,10 +2676,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 240.0
   },
@@ -2782,10 +2767,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 60.0
   },
@@ -2803,10 +2785,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 60.0
   },
@@ -2846,10 +2825,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 60.0
   },
@@ -2941,10 +2917,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 75.0
   },
@@ -2980,10 +2953,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 75.0
   },
@@ -3146,10 +3116,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 240.0
   },
@@ -3185,10 +3152,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 240.0
   },
@@ -3223,10 +3187,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 150.0
   },
@@ -3244,10 +3205,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 150.0
   },
@@ -3265,10 +3223,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 150.0
   },
@@ -3286,10 +3241,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 150.0
   },
@@ -3307,10 +3259,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 60.0
   },
@@ -3328,10 +3277,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 150.0
   },
@@ -3349,10 +3295,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "office",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "office"
    },
    "rotation": 60.0
   },
@@ -3370,10 +3313,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 345.0
   },
@@ -3391,10 +3331,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3412,10 +3349,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3433,10 +3367,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3454,10 +3385,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3475,10 +3403,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3496,10 +3421,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3517,10 +3439,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3538,10 +3457,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 180.0
   },
@@ -3559,10 +3475,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3580,10 +3493,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3601,10 +3511,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3622,10 +3529,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3643,10 +3547,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -3664,10 +3565,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 90.0
   },
@@ -4117,10 +4015,7 @@
     "kind": "cabinet",
     "lock": "none",
     "items": "",
-    "fillPlace": "home",
-    "hide": true,
-    "hideKind": "wardrobe",
-    "title": "Inside the cupboard"
+    "fillPlace": "home"
    },
    "rotation": 330.0
   },

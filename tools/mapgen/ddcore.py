@@ -555,8 +555,7 @@ TILE_RULES = [   # (asset prefix, label, flags); a container's fill place comes 
 
 DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt: (label, flags)
     "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
-    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home",
-                              "hide": True, "hideKind": "wardrobe", "title": "Inside the cupboard"}),
+    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home"}),   # one kind of thing each
     "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
 }
 
