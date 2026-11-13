@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3510
+Next free block: B3520
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -177,6 +177,7 @@ Next free block: B3510
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
+| B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5503,3 +5504,18 @@ Reverse: drop the player check in forRules, sexForWill and the Seed of Lilith ro
 WoDX Creation. Ben's ruling (2026-11-13). The share is read from the same draw that picked female or male, so everyone generated before keeps their sex, name and every later draw; a nonbinary person's name comes from the list of the draw's side, and kin take the family name in that list's form. The generator can also be asked for nonbinary people. Text about them stays gender-neutral, as for everyone.
 
 Reverse: set NONBINARY_HALF to 0 in people-rules.mjs.
+
+## B3510. Three coast peoples and where they live (2026-11-13)
+WoDX Creation, WoDX Chronicle. Ben's desk picks (al-split three, al-names recorded, al-where share): the Lenape, the New England Algonquian (Wampanoag, Massachusett, Nipmuc, Narragansett, Niantic, Mohegan, Pequot, Montaukett together) and the Powhatan towns, from names written down for real people, famous ones included. Eastern North America before the colonies: Haudenosaunee 40, Lenape 25, New England 25, Powhatan 10. Early modern: English 48, Haudenosaunee 20, Lenape 8, New England 8, Powhatan 4, Dutch 8, French 4. Industrial and modern: the coast peoples about a fortieth and a hundredth beside the Haudenosaunee share. Canada is unchanged.
+
+Reverse: drop the three from the mixes in world-rules.mjs and from BUILT in people-world.mjs.
+
+## B3511. Fewer than 300 names each (2026-11-13)
+WoDX Creation. Ben asked for at least 300 names a culture where possible. The records reached from here give 91 Lenape men's names, 114 New England men's and 17 women's, and 54 Powhatan men's and 6 women's; with clans, church names and family names each people has about 150 to 200 names. More come in as the deed books (the Pennsylvania deeds, Gookin, Drake) are read; the lists are plain text in data/people-algonquian.mjs.
+
+Reverse: none needed; add names as found.
+
+## B3512. Clans, town bynames and staged names (2026-11-13)
+WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
+
+Reverse: edit the lists in data/people-algonquian.mjs.
