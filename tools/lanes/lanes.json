@@ -5,7 +5,8 @@
   "knownGood": "D:/WoDX/testbed-known-good",
   "backups": "D:/WoDX/Backups",
   "lockMaxMinutes": 180,
-  "ignoreSettings": [],
+  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather).",
+  "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied"],
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "C:/Users/blebr/AppData/Local/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
