@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.10.0 (Aura Perception rings show only after Read the Soul, and only as much as the successes showed: the shade at one, the colour from two, a false colour on a botch; a reading holds for an hour of game time. Loud noise or a gun fired nearby asks the Storyteller for a Willpower roll from a character using Heightened Senses. Needs WoDX Otherworlds 0.24.1 for the readings. B2900, B2901)
 - 0.9.0 (what the senses tell in a mosque, a synagogue and a temple of the faiths of Asia: lines for sight, sound, smell and touch in every era, the call to prayer from the minaret and later through a speaker, the lamp over the ark, incense and bells; the three count as indoors and as holy ground for the spirit and the restless dead, as a church does. Needs WoDX NPC 0.50.0 for the new kinds of place. B2662)
 - 0.8.1 (fix: on a scene with no place set, the place guessed from the scene's name is now read as its kind; before, the Storyteller's copy of an answer could fail with an error and the place lines fell back to the plainest set)
 - 0.8.0 (the senses read how a character moves: from the air the eye reaches twice as far and sight is easier, low to the ground or in the water it reaches half as far, under the water 8 yards with no smell at all, inside the earth only dull sound; one line says where they are looking from; someone prone or under the water is picked out only on a closer look; Who sees them counts each side's stance)

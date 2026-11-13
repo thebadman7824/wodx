@@ -277,6 +277,7 @@ export function attackPool(p) {
     addD("Targeting", p.targetingDiff || 0);
     addD("Range", p.rangeDiff || 0);
     addD("Below minimum Strength", p.minStrDiff || 0);
+    addD("Crippled limb", p.crippledDiff || 0);
     if (p.bypassArmor) addD("Bypass armor", 2);
     if (p.opponents > 1) addD("Multiple opponents", Math.min(4, p.opponents - 1));
     if (p.blind) addD("Blind", 2);

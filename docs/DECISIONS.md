@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2790
+Next free block: B2950
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -126,7 +126,11 @@ Next free block: B2790
 | B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
+| B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2780-B2789 | Build this chronicle: the recipe, the builder's steps, the carry-over from an older world, anchors, and the rebuilt Rothenstein world rothenstein-x | Storyteller |
+| B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
+| B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
+| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3648,7 +3652,7 @@ WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a nigh
 Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
 
 ## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
-WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check 2026-11-13: V20 (printed p. 272, pdf 280) lets a botched shot jam or burst the gun, cleared with Wits + Firearms (printed p. 104), and V20 Dark Ages (printed pp. 344, 348) a weapon break or jam; no book with text has a rain, wet powder or musket reload rule, so the wet is a house reading (Sorcerer's Crusade's firearms chart still needs OCR).
 
 Reverse: turn the world setting off.
 
@@ -3692,3 +3696,121 @@ Desk items s1 to s4, w1 to w4, p1, p2, p4, x1 and x4. Homeland Moravia, opening 
 
 Reverse: edit data/recipe-rothenstein.mjs.
 
+## B2760. A character wizard, one page per step (2026-11-13)
+WoDX Creation 0.24.0, Ben's ask of 13 November 2026 after a look at Darkness Weaver. The guided builder of 0.13.0 was one window; the wizard walks the book's creation order a page at a time with Back and Next: the book, Attributes, Abilities, the line's powers, Backgrounds, Virtues (lines that have them), Merits and Flaws, freebie points, and a last look. Each choice goes on the sheet at once, so the sheet, the creation check and Before the First Night agree. The record is flags.wodx-creation.wizard (book, priorities, the ledger of bought Traits, the page). Every line with creation totals works (17 books). The steps follow each book's character creation chapter (V20 pdf 92 to 94 / printed 84 to 86 and the pages in data/creation-totals.mjs).
+
+Reverse: open Build from the creation check instead (api.check); the Build window of 0.13.0 is kept.
+
+## B2761. The player picks the priorities, and they hold still (2026-11-13)
+The Attributes and Abilities pages ask which group is primary, secondary and tertiary. Until the player chooses, the order the sheet suggests is shown (most dots first, ties in the book's order), and it is saved when the first dot is spent there, so later dots do not move the allotments around. The creation check (checkCreation) now takes an order; without one it still finds the cheapest fit.
+
+Reverse: clear flags.wodx-creation.wizard.order.
+
+## B2762. Early pages spend inside the allotment; the freebie page charges the book's cost (2026-11-13)
+On the pages for Attributes, Abilities, powers, Backgrounds and Virtues a + is open only while the dot costs nothing (the allotment has room, no Ability above the book's cap). On the freebie page every dot shows its price and is open while the points left cover it; a dot inside an allotment not yet used up is free there too. The price is the creation check's own, so Mummy's Rebirth dots still soak up overage first.
+
+Reverse: spend on the sheet and use the creation check.
+
+## B2763. The freebie points in full (2026-11-13)
+Budget: the book's freebies (and the Rebirth's), plus Flaw points up to the book's cap (7), plus the prelude's gains to Abilities and Backgrounds. Spent: dots past the allotments, Merit points, and Traits bought on the freebie page (Willpower, Humanity or a Road, Rage, Gnosis, Arete to 3, Glamour, where the line's costs name them). Costs the wizard cannot reach on the sheet (Chi, Hun and P'o, Foundation, Sekhem and the like) go in "Anything else", a count the player keeps. Flaws past the cap give nothing and the build no longer counts as matching; before, the hub let any build within the freebies plus 7 pass and did not charge Merits.
+
+Reverse: buildState in first-night.mjs back to checkCreation's ok.
+
+## B2764. What the pages offer (2026-11-13)
+Disciplines: the clan's three for the era first (V20 Dark Ages lists before 1500, the V20 lists after, from data/vampire.mjs), then the rest at freebie cost; a ghoul or revenant starts with Potence. Spheres are the sheet's own nine. Arcanoi, Arts, Realms and Hekau paths are offered by name; Gifts and Lores, and a Kindred of the East Discipline, are written in. Pillars, Dominions and Hunter edges have no Trait on the sheet and are counted by hand. Backgrounds come from the trait table by the line's books (V20 core, V20 Dark Ages, W20 core and Changing Breeds, M20 core and Book of Secrets, Wraith 20, C20, Hunters Hunted II, Demon: The Fallen, Mummy, Kindred of the East, Orpheus); the Dark Ages Werewolf and Mage take the W20 and M20 core lists, a house choice. Merits and Flaws come from the trait table held by the line's kind, with the book's cost; where the book gives a range the player names the points, else the lowest. Anything can still be written in by name. The name lists wait for the PC book check.
+
+Reverse: edit POWER_NAMES and BG_BOOKS in scripts/wizard-rules.mjs.
+
+## B2765. A check after the prelude (2026-11-13)
+Before the First Night has a step after the prelude, "Check after the prelude": done when the prelude step is and the build still matches the book. The prelude's gains (up to 3 freebie points, B1612) are paid from the prelude's own points, so a gain to an Ability or a Background does not push the build over; its Willpower gain is not in the totals at all. Sign-off waits for the new step. Build and Merits and Flaws open the wizard.
+
+Reverse: take "recheck" out of STEPS in first-night-rules.mjs.
+
+## B2766. The prelude's Willpower gain reaches the sheet (2026-11-13)
+The prelude runner read Willpower at system.willpower, which the system does not have, so the gain always said the sheet had none. It now reads and writes system.advantages.willpower.permanent.
+
+Reverse: none needed.
+## B2790. Talking faces drawn on a 64 pixel grid (2026-11-13)
+WoDX Paperdoll 0.16.0. Ben approved the look on 13 November 2026 ("I like this very much. Proceed with this.") after samples at 96 and 64 pixels; he picked 64 as enough detail while far easier to draw. A face is drawn pixel by pixel in the browser from a seed (face64-rules.mjs): head, hair, eyes, brows, nose, mouth, beard and clothes, with four tones of each colour and an outline only where one part meets another. Nothing is baked or uploaded, so a face costs nothing until it is shown. The layered Lorelei portraits and the earlier vector drawings stay as they were.
+
+Reverse: Turn the client setting Talking faces to Off.
+
+## B2791. Whose face, and which (2026-11-13)
+The line comes from the sheet: the actor type, the variant, the clan (Nosferatu get their own face) and the kind WoDX Combat gives it, else mortal. The seed is the actor, or the token for an unlinked token, so passers-by made from one actor still differ. The face is drawn as a woman or a man when the Paperdoll look or WoDX Creation says so; otherwise the seed decides lashes and facial hair. flags.wodx-paperdoll.face64.seed and .line override both.
+
+Reverse: Set flags.wodx-paperdoll.face64.seed or .line on the actor.
+
+## B2792. A face that moves (2026-11-13)
+When an NPC speaks to a character through WoDX NPC's Talk, the line in chat gets the speaker's face, shown at 96 pixels with hard edges. A new line plays once on each screen: the mouth follows the words as they come (open vowels wide, lip sounds nearly shut, closed at commas and full stops), the face blinks every two to six seconds, holds its reaction for a little over two seconds after the line and settles to rest. A line older than 20 seconds, or one already played, shows the face still. Only the eyes, brows and mouth change between frames. Each player picks Moving, Still or Off.
+
+Reverse: Set the client setting Talking faces to Still or Off.
+
+## B2793. How the face reacts (2026-11-13)
+In this order: a social roll that swayed the NPC and has not run out (charmed, persuaded or fooled smile; intimidated looks afraid; bribed smirks), then frenzy (anger), then the mood the Storyteller set on the NPC's behaviour (angry, afraid, sad, glad, wary), then the NPC's attitude toward that character (Hostile or worse angry, Distrusted smirks, Welcome or better smiles), else at rest. From Injured down the face rests in pain. Incapacitated: eyes shut, jaw slack, no speech. House reading; no book sets faces.
+
+Reverse: Change reactionFor in face64-rules.mjs.
+
+## B2794. Kindred fangs only by choice (2026-11-13)
+Ben's ruling (13 November 2026): visible fangs are an option for Kindred, not every Kindred shows them, and none by default. The Storyteller turns them on for one actor from the Actors list menu (Talking face: show fangs). With fangs on they show in an open mouth while speaking or snarling, and their tips rest on the lip at rest.
+
+Reverse: Pick Talking face: hide fangs.
+
+## B2795. Marks only some can see (2026-11-13)
+A changeling's horns and the glamour about them are the fae mien, seen only by the Storyteller and by a viewer whose own character is a changeling (C20). A hunter's sigil is seen only by the Storyteller and by the imbued (HtR). Other lines' marks (a mage's lit eyes, a demon's seal, a Garou's scars and tooth cord, a mummy's kohl and collar, a wraith's Deathmark, jade eyes) are drawn for everyone, as the other faces already do.
+
+Reverse: Change viewerSees in face64.mjs.
+
+## B2796. Wounds on the talking face (2026-11-13)
+The face follows the health track with the ladder Ben approved for the portraits on 10 November 2026: no bandages; each level keeps the wounds before it and adds its own (a bruise, a nick over the brow, a black eye and split lip, an open cheek, bleeding nose and scalp, a second bruise and one eye swollen shut at Crippled, both eyes shut and the jaw slack at Incapacitated); pallor takes all the skin.
+
+Reverse: Take the health level out of the face in face64.mjs.
+
+## B2800. Features on the talking face (2026-11-13)
+WoDX Paperdoll 0.17.0. Ben asked (13 November 2026) for every facial feature a game line could have, from a book check, with invented ones put to a desk. The face features desk showed 110 drafts on faces of their own line; Ben approved every recommendation ("I like them. Proceed as you have recommended."), building 102 as drawn and 8 with the changes the desk named (a hat seated on the brow, darker veins of age, larger Setite scales, a tear drop, a lower topknot, soft shadow tendrils for the Lasombra, a veil that shows the forehead, a Firmament demon's extra eyes spread over brow and cheeks). The features live in face64-features.mjs; each is drawn in stages around the face's own (colours first, behind the head, on the skin, on the face, on top). Sources are tagged books, everyday or new on the desk; page references follow the PC book check.
+
+Reverse: Clear S.features (tick none and keep, or empty FEATURES).
+
+## B2801. How an NPC gets its features (2026-11-13)
+Ben's pick on the desk: the Storyteller ticks them (Actors menu, Talking face: features, with a search box), and an NPC with none ticked rolls them by seed from what its sheet names. A feature of a group the sheet names (clan, kith, tribe, breed, tradition, house) comes six times in ten; a changeling's kith mien and a shifter breed's look always; a ghoul's flush only when the sheet says ghoul; a line's general marks about one time in seven; everyday marks about one in sixteen, at most two; a wraith always bears exactly one deathmark, a metis one deformity, anyone at most one headwear. Spectacles are never rolled, only ticked, since they belong to some eras only.
+
+Reverse: Roll them by seed in the window, or change rollFeatures in face64-features.mjs.
+
+## B2802. Form and power features show only in that state (2026-11-13)
+Ben's pick on the desk. The Beast in the eyes and Garou Rage show in frenzy; Glabro's brow and teeth while the sheet's Glabro form is on; a demon's visage (Radiance halo, Firmament eyes, Forge iron, Patterns lines, Awakenings glow, horns, Torment eyes) while its apocalyptic form has risen in this scene and hour; tears of blood when the face grieves or fears. A demon shintai, a Paradox backlash and catharsis have no sheet field, so the Storyteller ticks them under Showing now.
+
+Reverse: Remove a feature's state in face64-features.mjs.
+
+## B2803. Who sees the hidden features (2026-11-13)
+Ben's pick on the desk: only those the rules let see them, and the Storyteller. A changeling kith's mien keeps to the fae sight of B2795; a hunter's Second Sight keeps to the imbued. Every other feature is plain flesh and shows to all.
+
+Reverse: Change viewerSees in face64.mjs or the mien() wrapper in face64-features.mjs.
+
+## B2804. The face still moves only at the eyes and mouth (2026-11-13)
+With any feature on, blinking and speaking change only the eyes, brows and mouth rows, so a feature never flickers while the face talks; tested for all 110.
+
+Reverse: None needed; a harness test guards it.
+
+## B2900. Aura Perception shows only what a reading showed (2026-11-13)
+Display-Only Systems Desk item k1, Ben's pick: deepen. With Aura Perception in use, a ring shows round a creature only after the character has Read the Soul of that token (WoDX Otherworlds, Perception + Empathy at difficulty 8), and only as much as the successes showed: one success the shade alone (pale or bright), two or more the colour. A botch shows a false colour. A reading holds for one hour of game time. World setting "Aura Perception needs Read the Soul", on by default. Lifesight is unchanged.
+
+Reverse: Turn the setting off, or change AURA_READ_SECONDS and ringFor in wodx-senses/scripts/sight-rules.mjs.
+
+## B2901. Loud noise overwhelms Heightened Senses (2026-11-13)
+Desk item k1. The book warns that sudden loud noise or bright light can overwhelm heightened senses (page to pin in the book check). House reading: a loud noise from Interactables heard by the character, or a gun fired within 30 yards, gives the Storyteller a card asking for Willpower at difficulty 6; a failure leaves the character stunned and deafened for one turn. World setting "Loud noise overwhelms Heightened Senses", on by default.
+
+Reverse: Turn the setting off, or change OVERLOAD and GUN in sight-rules.mjs.
+
+## B2902. A crippled part counts on the attack (2026-11-13)
+Desk item c3. The Crippled effect from the maiming card used to state +2 difficulty without applying it. Attacks now add it (VtDA20 p. 348): an arm or hand for weapons, fists, claws and throws, a leg for kicks; bites are not affected.
+
+Reverse: Return 0 from crippledAttackDiff in wodx-combat/scripts/body-rules.js.
+
+## B2903. Wounds that add up to a maiming (2026-11-13)
+Desk item c3. When the lethal and aggravated levels recorded on one part reach three, the same three a single maiming blow needs (B1204), the Storyteller gets the same offer once for that part. The Crippled effect comes off by itself when the part's lethal and aggravated levels have healed, and the part can be offered again later. House rule, with hit locations on.
+
+Reverse: Return null from addedUpOffer in body-rules.js; delete the healCrippled hook in body.js to keep effects until removed by hand.
+
+## B2904. Living tiles switch walls, doors and lights (2026-11-13)
+Desk item t4. A living tile's rule has "While it holds, also": walls inside its square block movement and sight, doors inside it are locked, or lights inside it are on. When the rule stops holding they open, unlock or go out; a door that WoDX did not lock is left alone.
+
+Reverse: Set "While it holds, also" to "Nothing else" on the tile.
