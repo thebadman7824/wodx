@@ -67843,7 +67843,7 @@
 {
 "id": "r3-renaissance-361",
 "era": "renaissance",
-"year": 1590,
+"year": 1589,
 "month": null,
 "kind": "tied",
 "lines": [
@@ -67856,7 +67856,7 @@
 "death"
 ],
 "title": "The Croatan",
-"text": "The house reading follows the Garou's own story: in these years the Croatan tribe gives itself whole to bind a great Wyrm spirit, and the Pure Ones are two tribes where there were three.",
+"text": "The Croatan tribe gives itself whole in a great rite to bind the Eater-of-Souls, a great Wyrm spirit, and the Pure Ones are two tribes where there were three.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
 },
@@ -85266,8 +85266,7 @@
 "month": null,
 "kind": "tied",
 "lines": [
-"Werewolf",
-"Wraith"
+"Werewolf"
 ],
 "region": "Americas",
 "place": "Wounded Knee",
@@ -85276,7 +85275,7 @@
 "faith"
 ],
 "title": "The Ghost Dance",
-"text": "The house reading has the Pure Ones' Garou among the dancers, and the dead of the plains answer the dance in the Shadowlands though the living cannot see them.",
+"text": "Garou of the Pure Ones dance among the Ghost Dancers in the camps that follow Wovoka's vision, and some die with them on Wounded Knee Creek.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
