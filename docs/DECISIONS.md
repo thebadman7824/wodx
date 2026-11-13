@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3450
+Next free block: B3440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -160,6 +160,7 @@ Next free block: B3450
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
@@ -170,7 +171,6 @@ Next free block: B3450
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
-| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4883,6 +4883,41 @@ After a yes the clock counts the waiting: three Sundays of banns in Latin Christ
 
 Reverse: turn the wedding card down.
 
+## B3240. Cults are kept in WoDX NPC, apart from factions (2026-11-13)
+WoDX NPC. Ben asked for players and certain NPCs to grow cults around themselves from their words and deeds, each line with its own kind, with the Princes of Darkness mod as inspiration. A cult is its own record (world setting wodx-npc.cults) beside the factions, so the faction turn is not touched; a faction can be founded from a cult by hand. Ideas taken from Princes of Darkness, rebuilt on WoDX's own systems: a bound follower of a kind that suits the line, initiation and ordination into an inner circle, suspicion that grows until someone acts. World setting cultsOn, off by default and off in Live.
+
+Reverse: turn cultsOn off; the setting and the awe flags can stay.
+
+## B3241. Awe by place, from words and deeds (2026-11-13)
+WoDX NPC. Awe is kept on the character for each scene: words spoken in character in chat with a word of faith, blood, power or doom and NPCs within 12 grid units (1 point, at most 3 an hour, setting cultWords), a sermon (Charisma + Leadership, Expression, Performance or Empathy, or Manipulation + Intimidation, difficulty 6, 2 awe a success), a power worked in sight (3), a breach seen (2), a willing feeding (1, blood) and a social win (1). Each carries themes. Awe halves after 30 days with nothing new. House figures.
+
+Reverse: set the deed points in DEEDS in cult-rules.mjs.
+
+## B3242. When a following gathers (2026-11-13)
+WoDX NPC. Awe of 10 heard by 3 or more people puts "A following gathers" in the approval queue; the founder may ask from 5. The new cult starts with the people who were touched (3 to 12), devotion 2 (1 when asked early), secret, its creed from the three strongest themes. House rule.
+
+Reverse: FORM_AT, ASK_AT and TOUCHED_AT in cult-rules.mjs.
+
+## B3243. The weekly cult turn (2026-11-13)
+WoDX NPC. Once a week of world time: three points of attention (awe added in the cult's place, two for a gathering) raise devotion a step; four quiet weeks (two when the founder is gone) lower it. At devotion 2 or more it grows by 4% a step of devotion, more when tended and for a Devil's pyramid of recruits, capped by the place (40 before 1500, 120 to 1850, 300 to 1950, 600 after, or 5% of a settlement's people); at 1 or less a tenth drift away (a quarter at 0). Exposure rises by chance with size and openness; "people talk" starts a rumour, "watched" fires wodxCultNoticed, 10 proposes a raid. A failing cult of 13 or more may split (approval queue). Twelve turns at most in a skip; quiet years after that wear a cult down, and one whose mortal founder is gone ends after 25 years. House rules.
+
+Reverse: set the figures in cultTurn and quietYears.
+
+## B3244. Each line's kind of cult and what it gives (2026-11-13)
+WoDX NPC. Vampire: blood cult, sized and read as Herd (V20 p. 114). Mummy: the Netaru (Ben's name; not found in the books held), sized as the M20 Cult, with the Cult of Isis as the model. Demon: a cult of personality whose inner circle counts as Followers (Demon: The Fallen p. 155), Faith reaped at a gathering and offered by a thrall's pact (p. 251). Changeling: Dreamers (C20 p. 169). Wraith: a circle of remembrance read as Memoriam (Wraith 20th p. 144; the member counts for each dot are a house reading). Mage: Cult (M20 p. 310). Werewolf: the old faith (house), and Wyrm cults for NPCs only. Kuei-jin: blood or death cults read as Herd. Hunter: a flock (house). Mortal: a sect, a heresy before 1600. Each has words by era. The card states what the cult gives; the Storyteller applies it.
+
+Reverse: edit CULT_KINDS in cult-rules.mjs.
+
+## B3245. NPCs who found cults (2026-11-13)
+WoDX NPC. Once a month of world time, an NPC whose kind is read as a cult-maker (Setites, Malkavians, Baali, Tzimisce before 1500, the fallen, Ecstatics and the Chorus, Nephandi, Black Spiral Dancers and fomor, the Reborn, Kuei-jin, mortal preachers and mediums) with a token on a scene and no cult of its own has a 1 in 10 chance to found one, through the approval queue. An NPC's cult gets two points of attention a week while the NPC lives. Setting npcCults. House rule.
+
+Reverse: turn npcCults off, or edit NPC_CULTISH.
+
+## B3246. The Following window (2026-11-13)
+WoDX NPC. A token tool, Your following, shows a character's awe by place, its cults (members, devotion, creed, what it gives, the inner circle) and buttons to preach, hold a gathering and ask for a following. The Storyteller also sees exposure, can initiate or ordain the targeted NPC (one ordained for every ten members), dissolve a cult and run a turn by hand. With no character selected the Storyteller sees every cult. Players act by socket, for their own characters only.
+
+Reverse: remove the wodxCults tool.
+
 ## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
 WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
 
@@ -5118,28 +5153,3 @@ Reverse: pass no sickFor from towns.mjs.
 ## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
-
-## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
-Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
-
-Reverse: Restore the shifter-only test in crinosSeen and the old note.
-
-## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
-Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
-
-Reverse: Drop dressed from deeperMods.
-
-## B3442. The figure's clothes are worn dress (2026-11-13)
-Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
-
-Reverse: Remove figurePieces from viewOf.
-
-## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
-Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
-
-Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
-
-## B3444. Reading a face (2026-11-13)
-Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
-
-Reverse: Remove readButton and readFace, and the lie tag from parseThen.
