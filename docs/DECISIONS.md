@@ -168,7 +168,7 @@ Next free block: B3440
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
-| B3430-B3439 | Sickness that spreads between towns and people, by era and region (WoDX Actions part) (used B3430-B3438) | Actions |
+| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
