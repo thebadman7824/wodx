@@ -85,7 +85,9 @@ def draw(a):
     kind=a.get('kind') or 'person'
     if kind=='animal':
         name=a.get('animal') or a.get('name') or ''; m=M.monster(name); book=None
-        if not m and not animal(name): m=book=M.book_look(name)   # a creature of the books (B2617)
+        if not m:   # a creature of the books (B2617), unless the name is just a plain animal's
+            a0=animal(name); n0=M._norm(name)
+            if not a0 or len(n0)>len(a0)+3: m=book=M.book_look(name)
         if m and m[0]=='person':   # a monster that goes on two legs is drawn as a figure, with its own marks and size
             p=M.PEOPLE[m[1]]; post=dict(p['post'])
             if book and book[2]!=1: post['scale']=round(post.get('scale',1)*book[2],2)
