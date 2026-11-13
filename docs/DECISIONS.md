@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3070
+Next free block: B3080
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -144,6 +144,7 @@ Next free block: B3070
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
+| B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4370,3 +4371,23 @@ Reverse: the old values in TORMENT_BY_HOUSE; empty DARK_AGES_TRIBE_WILLPOWER.
 Read from the sheet's seeming: a childling starts with 1 more Glamour, a grump with 1 more Willpower. A wilder adds 1 to either, the player's pick, so the wizard leaves both at 4 and says so. Banality is not changed. With no seeming written, the wizard says what each one adds.
 
 Reverse: empty SEEMING_BONUS in derived-rules.mjs.
+
+## B3070. Where gear is at home (2026-11-13)
+WoDX Library 0.21.0. Each piece of Gear by era can carry a rule in the words of the everyday goods (a region, a way of life of WoDX Chronicle, or everywhere else; found, from a year, between two years, or never). The Americas, the Pacific and the far north before the settlers carry no steel blades, crossbows, longbows, horse lances, mail or plate and no gunpowder; the rapier, hand crossbow, bastard sword, greatsword, falchion, halberd and glaive stay in Christendom and the lands its people settle; plate in Christendom and the Balkans; the katana in Japan, the kris in the Malay world, the katar and tiger claws in India, the scimitar in the lands of Islam, the Sahel, the Swahili coast, India, Central Asia and East Africa (the Balkans from 1400); guns reach Japan in 1543, India in 1526, mainland Southeast Asia and the Malay world in 1511, Tibet in 1640, the Sahel in 1590, the Swahili coast in 1500 and southern Africa in 1600. A house reading of history.
+
+Reverse: empty GEAR_WAYS in modules/wodx-library/data/gear-ways.mjs and rebuild gear.json.
+
+## B3071. Weapons of other lands fight as book weapons (2026-11-13)
+None of the books WoDX reads gives figures for the tachi, jian, assegai, macuahuitl and the rest, so each of the 33 weapons in LOCAL_GEAR is a copy of a book weapon of its kind (the macuahuitl as the broadsword, the naginata as the halberd or glaive, the atlatl dart as the thrown javelin, quilted cotton as Class Two), under its own name and with that weapon's page, marked a house rule. One copy for each book era it belongs to: 64 items.
+
+Reverse: empty LOCAL_GEAR and rebuild gear.json.
+
+## B3072. Fill by place and era follows the land (2026-11-13)
+WoDX Interactables 0.40.0: a draw of gear for a container keeps to what is at home in the scene's region and way of life in the chronicle's year, as the everyday goods already do. With no region known, the draw is by era alone as before.
+
+Reverse: drop the gearAtHome line in candidates (fill-rules.mjs).
+
+## B3073. The Gear window shows the scene's land (2026-11-13)
+Gear by era lists what is found where the scene stands in the chronicle's year, with a Lands choice to see every land. A weapon of another land names the book weapon it fights as.
+
+Reverse: set lands to "all" in GearApp.
