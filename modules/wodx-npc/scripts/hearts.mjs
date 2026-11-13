@@ -154,6 +154,35 @@ export function childAge(actorLike) {
   return {age, stage: H.childStage(age)};
 }
 
+/* ---- Adoption (NPC 0.69.0) ---- */
+export const adoptionLawHere = ({region = regionNow(), year = yearNow()} = {}) => H.adoptionLaw(region, year, sphereNow(region, year));
+/**
+ * The Storyteller adopts `childLike` into `parentLike`'s family under the law of the place and year: a child is
+ * adopted, fostered or taken in by kafala as the law says; an adult only where adult adoption is lawful. The ties
+ * go on both sheets (Parent and Child, or Guardian and Ward), a record on each, and a card to their owners.
+ * Returns {ok, why, kind, law, record}.
+ */
+export async function adopt(parentLike, childLike, {region = regionNow(), year = yearNow(), note = ""} = {}) {
+  const p = actorOf(parentLike), c = actorOf(childLike);
+  if ( !game.user.isGM || !p || !c ) return null;
+  const law = H.adoptionLaw(region, year, sphereNow(region, year));
+  const age = game.modules.get("wodx-chronicle")?.api?.age;
+  const born = a => { const v = a?.flags?.["wodx-creation"]?.chronology?.bornYear; return v === null || v === undefined || v === "" ? null : Number(v); };
+  const can = H.canAdopt(law, {same: p.id === c.id, parentMinor: !!age?.minor?.(p), childMinor: !!age?.minor?.(c), parentBorn: born(p), childBorn: born(c)});
+  if ( !age ) can.why.push("The age check is not available (WoDX Chronicle 0.53.0 or later is needed).");
+  if ( !can.ok || !age ) { ui.notifications?.warn?.(can.why.join(" ")); return {ok: false, why: can.why, law}; }
+  const [up, down] = can.kindInfo.tie;
+  const rec = {id: foundry.utils.randomID(), at: game.time.worldTime, region, year, kind: can.kind, rite: law.rite, record: law.record, inherits: can.kindInfo.inherits, note: String(note ?? "").slice(0, 200)};
+  await addHandTie(c, p, up);
+  await addHandTie(p, c, down);
+  await c.setFlag(MOD, "adoptions", [...(c.flags?.[MOD]?.adoptions ?? []), {...rec, by: {id: p.id, name: p.name}}]);
+  await p.setFlag(MOD, "adoptions", [...(p.flags?.[MOD]?.adoptions ?? []), {...rec, of: {id: c.id, name: c.name}}]);
+  await ChatMessage.create({whisper: [...new Set([...ownersOf(p), ...ownersOf(c)])], speaker: {alias: "WoDX"}, flags: {[MOD]: {adoption: rec.id}},
+    content: card(`${p.name} takes ${c.name} into the family: ${can.kindInfo.label.toLowerCase()}`, [`${law.rite[0].toUpperCase()}${law.rite.slice(1)}, kept by ${law.record}.`, can.kindInfo.note])});
+  Hooks.callAll("wodxAdopted", {parent: p, child: c, record: rec});
+  return {ok: true, kind: can.kind, law, record: rec};
+}
+
 /* ---- Households ---- */
 export const householdOf = a => H.normHousehold(actorOf(a)?.flags?.[MOD]?.household);
 export async function setHousehold(aLike, list) {

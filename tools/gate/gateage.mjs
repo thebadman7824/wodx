@@ -96,14 +96,24 @@ export async function run() {
       const w = await npc().hearts.marry(adultA, adultB, {force: true});
       ok("8. two adults still court and marry", (c?.value ?? 0) > 0 && w?.ok === true, {warmth: c?.value, married: w?.ok, why: w?.why});
     });
+    await step("9. adopt", async () => {
+      const r = await npc().hearts.adopt(adultA, resChild, {note: "Gate Age"});
+      const up = (resChild.flags?.["wodx-sheets"]?.ties ?? []).find(t => t.uuid === adultA.uuid)?.role;
+      const kept = (resChild.flags?.["wodx-npc"]?.adoptions ?? []).length === 1 && (adultA.flags?.["wodx-npc"]?.adoptions ?? []).length === 1;
+      ok("9. an adult takes in a child by the law here, with ties and a record on both sheets", r?.ok === true && ["parent", "guardian"].includes(up) && kept, {kind: r?.kind, up, kept, why: r?.why});
+    });
+    await step("10. minor adopter", async () => {
+      const r = await npc().hearts.adopt(teen, plain);
+      ok("10. a minor cannot adopt", r?.ok === false && !(teen.flags?.["wodx-npc"]?.adoptions ?? []).length, {why: r?.why});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {
-    await step("9. clean up", async () => {
+    await step("11. clean up", async () => {
       for ( const x of made ) await x.delete().catch(() => null);
       await sleep(500);
       for ( const m of game.messages.filter(m => !msgs.has(m.id)) ) await m.delete().catch(() => null);
-      ok("9. actors and cards gone, clock untouched", game.time.worldTime === t0 && !made.some(x => game.actors.get(x.id)));
+      ok("11. actors and cards gone, clock untouched", game.time.worldTime === t0 && !made.some(x => game.actors.get(x.id)));
     });
   }
   return save(R, "gateage-result.json");

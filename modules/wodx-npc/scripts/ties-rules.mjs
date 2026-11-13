@@ -30,6 +30,9 @@ export const KINDS = {
   became: {label: "Became", back: "formerly", group: "blood"},
   parent: {label: "Parent", back: "child", group: "family", up: true},
   child: {label: "Child", back: "parent", group: "family"},
+  // NPC 0.69.0: a guardian and ward (fostering, wardship, kafala): family, but no heir by law
+  guardian: {label: "Guardian", back: "ward", group: "family", up: true},
+  ward: {label: "Ward", back: "guardian", group: "family"},
   sibling: {label: "Sibling", back: "sibling", group: "family"},
   spouse: {label: "Spouse", back: "spouse", group: "family"},
   kin: {label: "Kin", back: "kin", group: "family"},
@@ -60,7 +63,7 @@ export const KINDS = {
 export const GROUPS = {blood: "Blood and bonds", ...BR.BOND_GROUP, family: "Family and kin", teaching: "Mentors and students", service: "Allies and service",
   heart: "Friends, lovers and rivals", debts: "Debts and favours", places: "Places", other: "Other"};
 /** The roles a hand-made tie can take on the sheet (the kinds the books' Backgrounds and play make by hand). */
-export const HAND_ROLES = ["sire", "childe", "domitor", "ghoul", "parent", "child", "sibling", "spouse", "kin", "kinfolk", "garou", "mentor", "apprentice",
+export const HAND_ROLES = ["sire", "childe", "domitor", "ghoul", "parent", "child", "guardian", "ward", "sibling", "spouse", "kin", "kinfolk", "garou", "mentor", "apprentice",
   "patron", "retainer", "ally", "contact", "lover", "friend", "rival", "enemy", ...BR.BOND_HAND_ROLES, "haven", "other"];
 /** The Sheets roles from before 0.30.0 that read as these kinds. */
 const OLD_ROLE = {kin: "kin", haven: "haven"};

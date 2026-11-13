@@ -109,3 +109,37 @@ test("wiring: the month hook from Storyteller, the setting, the hooks and the AP
   const sm = src("modules/wodx-storyteller/scripts/main.mjs");
   for ( const k of ["purse: Money.purseOf", "pay: Money.pay", "transfer: Money.transfer", "money: Money.moneyNow", "rules: MoneyRules"] ) assert.ok(sm.includes(k), k);
 });
+
+// WoDX NPC 0.69.0: adoption of children and adults by the law of the place and year (B3173-B3175).
+test("adoption follows the law of the region and year, and only an older adult may adopt", () => {
+  for ( const r of Object.keys(H.REGION_ADOPTION) ) assert.ok(WR.WORLD_REGIONS[r], `${r} is a world region`);
+  for ( const s of Object.values(H.SPHERE_ADOPTION) ) assert.ok(H.ADOPTION_KINDS[s.child], `${s.child} is an adoption kind`);
+  for ( const k of Object.values(H.ADOPTION_KINDS) ) for ( const t of k.tie ) assert.ok(TR.KINDS[t], `${t} is a tie kind`);
+  assert.equal(TR.KINDS.guardian.back, "ward"); assert.equal(TR.KINDS.ward.back, "guardian");
+  const old = H.adoptionLaw("moravia", 1300, "latin");
+  assert.equal(old.child, "fostering"); assert.equal(old.adult, false);
+  const coded = H.adoptionLaw("moravia", 1900, "latin");
+  assert.equal(coded.child, "adoption"); assert.equal(coded.adult, true);
+  assert.equal(H.adoptionLaw("arabia", 1500, "islamic").child, "kafala");
+  assert.equal(H.adoptionLaw("russia", 1920, "orthodox").child, "fostering", "the Soviet ban");
+  assert.equal(H.adoptionLaw("russia", 1930, "orthodox").child, "adoption");
+  assert.equal(H.adoptionLaw("moravia", 2150, "latin").adult, true);
+  let c = H.canAdopt(coded, {childMinor: true, parentBorn: 1860, childBorn: 1895});
+  assert.ok(c.ok); assert.equal(c.kind, "adoption"); assert.ok(c.kindInfo.inherits);
+  c = H.canAdopt(old, {childMinor: true});
+  assert.ok(c.ok); assert.deepEqual(c.kindInfo.tie, ["guardian", "ward"]); assert.equal(c.kindInfo.inherits, false);
+  assert.equal(H.canAdopt(old, {childMinor: false}).ok, false, "no adult adoption before the code");
+  assert.equal(H.canAdopt(coded, {childMinor: false}).kind, "adult");
+  assert.equal(H.canAdopt(coded, {parentMinor: true, childMinor: true}).ok, false, "a minor cannot adopt");
+  assert.equal(H.canAdopt(coded, {parentBorn: 1900, childBorn: 1880}).ok, false, "the one adopting must be older");
+  assert.equal(H.canAdopt(coded, {same: true}).ok, false);
+});
+
+test("adoption is wired: the hook, the API, both sheets and the age check", () => {
+  const hearts = src("modules/wodx-npc/scripts/hearts.mjs");
+  assert.match(hearts, /export async function adopt\(/);
+  assert.match(hearts, /Hooks\.callAll\("wodxAdopted"/);
+  assert.match(hearts, /age\?\.minor\?\.\(p\)/);
+  assert.match(src("modules/wodx-npc/scripts/main.mjs"), /adopt: HEARTS\.adopt, adoptionLaw: HEARTS\.adoptionLawHere/);
+  assert.match(src("docs/HOOKS.md"), /\| wodxAdopted \| npc \|/);
+});

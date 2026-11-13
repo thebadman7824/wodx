@@ -151,7 +151,7 @@ Next free block: B3180
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
-| B3170-B3179 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3170-B3172) | Chronicle, NPC, Actions |
+| B3170-B3179 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3170-B3172); adoption of children and adults by law (B3173-B3175) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4672,3 +4672,18 @@ Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet
 WoDX Chronicle 0.53.0 guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
 
 Reverse: none.
+
+## B3173. Adoption of children and adults by the law of the place and year (2026-11-13, Ben approved)
+WoDX NPC 0.69.0 (hearts-rules.mjs SPHERE_ADOPTION, REGION_ADOPTION, adoptionLaw, canAdopt; hearts.mjs adopt). Each way of life has its own way of taking in a child: full adoption, fostering or wardship, or kafala, the Islamic guardianship in which the child keeps their own name. Adult adoption is allowed where the law allows it, as with the grown heir of a Japanese house or a French adult adoption after 1804. Dated changes by region follow the civil codes: Moravia 1811, France 1804 and 1923, England 1926, Soviet Russia's ban from 1918 to 1926, and others. From 2100 every way of life allows full adoption. These are readings of history in WoDX's own words, and the Storyteller may move a date.
+
+Reverse: edit SPHERE_ADOPTION or REGION_ADOPTION.
+
+## B3174. Who may adopt, and what the ties mean (2026-11-13)
+The one adopting must be an adult (the age floor of B3170) and, where both birth years are known, older than the one adopted. Full adoption and adult adoption make Parent and Child ties, so wills count the adopted one as a child and heir. Fostering, wardship and kafala make the new Guardian and Ward ties, which are family but not heirs by law; a will can still leave a ward a share. Each adoption is kept on both sheets (flags.wodx-npc.adoptions), a card goes to the owners, and the hook wodxAdopted is called.
+
+Reverse: remove the ties by hand on the Relationships tab.
+
+## B3175. Guardian and Ward tie kinds (2026-11-13)
+WoDX NPC 0.69.0 adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
+
+Reverse: none needed.
