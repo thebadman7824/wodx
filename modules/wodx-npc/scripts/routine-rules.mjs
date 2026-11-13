@@ -54,7 +54,7 @@ export const worshipKinds = faith => [...new Set([WORSHIP_KIND[faith] ?? "church
 export const ROLES = {
   home: {label: "Home", kinds: ["home"]},
   work: {label: "Workplace", kinds: ["workplace", "market"]},
-  church: {label: "Church", kinds: ["church"]},
+  church: {label: "Church or house of worship", kinds: ["church"]},
   tavern: {label: "Tavern", kinds: ["tavern"]},
   haven: {label: "Haven", kinds: ["haven", "home"]},
   post: {label: "Watch post", kinds: ["gate", "castle"]},
