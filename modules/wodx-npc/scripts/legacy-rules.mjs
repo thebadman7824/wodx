@@ -16,7 +16,9 @@ export const PAST_BACKGROUNDS = [
   {line: "mage", name: "Avatar", note: "An Awakened Avatar has lived before (M20); the dots set how much it can bring back."},
   {line: "mage", name: "Past Lives", note: "Memories of earlier incarnations, where the chronicle uses this Background."},
   {line: "changeling", name: "Remembrance", note: "The fae soul's memories of earlier lives (C20)."},
-  {line: "wraith", name: "Memoriam", note: "The dead remember their lives in the Skinlands (Wraith 20th)."}
+  {line: "wraith", name: "Memoriam", note: "The dead remember their lives in the Skinlands (Wraith 20th)."},
+  // B3533: a Garou's Ancestors reach the forebears of the blood, the dead the Inheritance step names among them
+  {line: "werewolf", name: "Ancestors", note: "The Garou calls on the memories of those of the blood who went before (W20)."}
 ];
 export const backgroundFor = (line, names = []) => PAST_BACKGROUNDS.find(b => (b.line === line || !line) && names.some(n => String(n).toLowerCase() === b.name.toLowerCase())) ?? null;
 /** The roll to recall a tie from a past life: the Background's dots as the pool, difficulty 8 less one per two dots (house). */

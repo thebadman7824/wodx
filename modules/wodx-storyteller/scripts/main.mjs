@@ -55,6 +55,8 @@ import * as HardRules from "./hardship-rules.mjs";
 import * as Remains from "./remains.mjs";
 import * as RemainsRules from "./remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
+import * as Levers from "./levers.mjs";
+import * as Inherit from "./inherit.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Road from "./road-rules.mjs";
@@ -137,6 +139,9 @@ Hooks.once("init", () => {
   Remains.registerRemainsHooks();
   Hunters.registerHunterSettings();
   Hunters.registerHunterHooks();
+  Levers.registerLeverSettings();
+  Levers.registerLeverTools();
+  Inherit.registerInheritTools();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   Clocks.registerClockSettings();
@@ -161,7 +166,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -221,6 +226,10 @@ Hooks.once("ready", () => {
       markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
+    // B3524-B3527: crisis levers for a region
+    levers: Levers.api(),
+    // B3530-B3533: the Inheritance step
+    inheritance: Inherit.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havenWorks: Works.api(),
