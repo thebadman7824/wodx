@@ -162,6 +162,7 @@ Next free block: B3320
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
@@ -4909,6 +4910,36 @@ Reverse: show the old sentence for every record.
 tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from 1950 gets no house of culture, and its estate blocks from 1958 are named Tower block (the grands ensembles and council estates of a market town) instead of Panel block; the building itself stays the same. The settlement record's age is now the trade age (postwar in France in 1965), with the furnishing band kept as band.
 
 Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
+
+## B3300. One hunter pressure per world region (2026-11-13)
+WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
+
+Reverse: switch off the setting "Hunters across the region"; nothing else reads the pressure.
+
+## B3301. What feeds it (2026-11-13)
+A hunting ground going Watched +1 or Hunted +2, a breach with witnesses that spreads +1, a new description of a culprit +1 (WoDX NPC descriptions, read each turn), an approved era response to a hot place +1, and +1 each turn while the Veil track stands at Hunted or worse and the region is already at Rumours. In lands of the Western church from 1450 to 1650 (the witch trials) every rise is half as large again, rounded up.
+
+Reverse: change POINTS or WITCH_TRIALS in hunters-rules.mjs.
+
+## B3302. Who hunts, by faith, year and line (2026-11-13)
+Bodies by the faith a region keeps (WoDX Chronicle faithFor) and the year, under WoDX's hunter lines (B42): bishops' courts and friars in Western and Eastern church lands to 1230; the Inquisition 1231-1833 (V20 p. 370); the Society of Leopold from 1834 (V20 p. 370; The Hunters Hunted II pp. 117-127); the sayyadin in Islamic lands to 1452 and the Ikhwan al-Safa from 1453 (The Hunters Hunted II pp. 152-153); the Judges everywhere, infernalists first (pp. 154-155); the Arcanum everywhere from 1885 (V20 p. 375, The Hunters Hunted II pp. 133-141; the year is a house reading); a state security service from 1947 (the FBI's Special Affairs Division and Project Twilight in North America, V20 p. 375, The Hunters Hunted II pp. 128-131); the imbued from 1999, or 2023 on the Future Darkness branch. Lands with no named body get local hunters. The Society and the Arcanum come to other lands once a region reaches Investigating. The Arcanum learns but never raids.
+
+Reverse: edit BODIES in hunters-rules.mjs.
+
+## B3303. Hunting is harder where the hunters move (2026-11-13)
+Hunting and Purge add +1 to hunting difficulty across the region, on top of a place's heat, at most +3 in all (upkeep.mjs huntHere).
+
+Reverse: set diff 0 on those stages.
+
+## B3304. Files on culprits and the hunters' moves (2026-11-13)
+Each region keeps a file on every culprit it hears of, in five levels (Nothing, A killer, What it is, Who and where, How to end it), 4 progress a level. From Watching on, each turn adds 1, 2 or 3 progress by stage, doubled for the Ikhwan al-Safa, the Judges and the Arcanum. At Investigating an investigator comes; at Hunting and Purge the hunters move against the culprit with the thickest file (level 2 or more); at Purge a crackdown. Each move goes to the approval queue and is not repeated in a region for 28 days. Approving starts a rumour and logs it; an investigator also sends every description of a culprit on file round the whole town.
+
+Reverse: the approval queue lets the Storyteller refuse any move; Forget in the window drops a file.
+
+## B3305. Word follows a culprit (2026-11-13)
+When a culprit with a file of level 2 or more stands in another region, that region's hunters hear after 60 days before 1500, 30 to 1849, 7 to 1979, 2 to 1999 and at once from 2000; their file starts one level lower and their pressure rises by one.
+
+Reverse: change TRAIL in hunters-rules.mjs.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
