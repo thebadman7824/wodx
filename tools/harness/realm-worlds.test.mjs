@@ -55,7 +55,7 @@ test("0.22.0: ways in and out and located dangers are places; a traveller arrive
     more += want.length;
     assert.equal(new Set(m.places.map(p => p.name)).size, m.places.length, `${id}: no place twice`);
     for ( const a of m.places ) for ( const b of m.places ) if ( a.i < b.i ) assert.ok(a.x !== b.x || a.y !== b.y, `${id}: ${a.name} and ${b.name} share a square`);
-    const arrive = REALMS[id].map?.arrival ?? REALMS[id].map?.back;
+    const arrive = RW.ARRIVE[id] ?? REALMS[id].map?.arrival ?? REALMS[id].map?.back;
     if ( arrive ) assert.equal(m.places[m.gate].name, arrive, `${id} arrival`);
   }
   assert.ok(more >= 200, `${more} further places`);
@@ -85,6 +85,35 @@ test("0.23.0: the book lookup's named places stand on the maps with what they ar
   const m = maps.malfeas, to = m.places.find(p => p.name === "the Temple Obscura").i;
   assert.ok(RW.lines(m, RW.journey(m, m.gate, to), {year: 1197}).some(l => /^The Temple Obscura: .+pdf \d/.test(l)));
   assert.ok(!RW.lines(m, RW.journey(m, m.gate, to, {known: RW.knownPlaces(m, [])}), {year: 1197}).some(l => /^The Temple Obscura: /.test(l)), "a place not yet found is not described");
+});
+
+test("0.24.0: places stand where the books say they lie, and travellers arrive where the books say", () => {
+  let n = 0;
+  for ( const [id, hints] of Object.entries(RW.HINTS) ) {
+    const m = maps[id];
+    for ( const [name, hint] of Object.entries(hints) ) {
+      const p = m.places.find(q => q.name === name);
+      assert.ok(p, `${id}: ${name} is a place of the map`);
+      assert.ok(RW.fits(hint, p.x, p.y, m.places), `${id}: ${name} lies ${hint} (at ${p.x}, ${p.y})`);
+      n++;
+    }
+  }
+  assert.ok(n >= 80, `${n} hints`);
+  for ( const [id, name] of Object.entries(RW.ARRIVE) ) assert.equal(maps[id].places[maps[id].gate].name, name, `${id} arrival`);
+  const a = maps["arcadia-gateway"].places, at = name => a.find(p => p.name === name);
+  assert.ok(at("the Palace of Summer").x > at("the Fortress of Winter").x && at("the Autumn Country").y < at("the Springlands").y, "the seasons lie by compass");
+  const y = maps.yomi.places, sc = y.find(p => p.name === "Scarlet Path"), eb = y.find(p => p.name === "Ebon Road");
+  assert.ok(eb.x - sc.x > 100, "the two bridges of Yomi lie at opposite ends");
+  // a shifting realm keeps to the hints when it is made anew
+  const f2 = RW.build("far-dreaming", {year: 1400, season: 2}), gates = f2.places.find(p => p.name === "the thirteen gates");
+  assert.ok(RW.fits("e", gates.x, gates.y, f2.places));
+  assert.equal(RW.fits("w edge", 2, 50), true);
+  // no name on a map covers another
+  for ( const id of RW.REALM_IDS ) {
+    const names = [...RW.svg(maps[id]).matchAll(/<text x="([\d.]+)" y="([\d.]+)" font-size="12"[^>]*>([^<]*)</g)].map(m => [+m[1], +m[2], m[3].replace(/&[a-z]+;/g, "x").length * 6.1]);
+    for ( let i = 0; i < names.length; i++ ) for ( let j = i + 1; j < names.length; j++ ) assert.ok(!(names[i][0] < names[j][0] + names[j][2] && names[j][0] < names[i][0] + names[i][2] && Math.abs(names[i][1] - names[j][1]) < 13), `${id}: two names overlap`);
+  }
+  assert.equal(RW.fits("centre", 2, 50), false);
 });
 
 test("the same asking gives the same map, and each redraw rule changes it only when it should", () => {

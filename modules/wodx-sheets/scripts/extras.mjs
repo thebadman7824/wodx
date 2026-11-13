@@ -16,6 +16,7 @@
 import * as XR from "./extras-rules.mjs";
 import * as XH from "./extras-html.mjs";
 import { bodyHtml } from "./body-html.mjs";
+import * as Doll from "./doll-draw.mjs";
 
 const MOD = XR.MOD, LIB = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -508,9 +509,50 @@ export function bodyTabHtml(actor, cb) {
   const hands = (body.parts ?? []).filter(p => p.type === "hand").map(p => p.id);
   weapons.forEach((w, n) => { if ( hands[n] ) held[hands[n]] = w.name; });
   const changes = (actor.flags?.["wodx-storyteller"]?.body ?? []).filter(c => c && (game.user.isGM || c.shows !== false));
-  return bodyHtml(body, {held, changes, gm: game.user.isGM, shapeFlag: actor.flags?.["wodx-combat"]?.shape ?? "",
+  return bodyHtml(body, {held, changes, gm: game.user.isGM, shapeFlag: actor.flags?.["wodx-combat"]?.shape ?? "", doll: dollOf(actor, cb, body),
     shapes: Object.fromEntries(Object.entries(R.SHAPES).map(([k, v]) => [k, v.label])),
     hitTable: game.settings.get("wodx-combat", "hitLocations") ? R.hitTable(body) : [], outline: R.outline(body)});
+}
+
+/** The damage doll's data (0.16.0, B2690): the drawing spec and the wounds in words. */
+function dollOf(actor, cb, body) {
+  const R = cb.rules, wounds = cb.wounds?.(actor) ?? {};
+  const fakes = (actor.flags?.["wodx-storyteller"]?.body ?? []).filter(c => c?.feature === "prosthetic" && c.lostPart).map(c => c.lostPart);
+  const spec = Doll.specOf(body, {plan: R.SHAPES[body.shape]?.plan ?? "person", wounds, fakes, year: yearNow()});
+  if ( !spec ) return null;
+  const all = R.flatten(R.PLANS[R.SHAPES[body.shape]?.plan]?.() ?? null);
+  const label = id => R.partLabel(body.parts.find(p => p.id === id) ?? all.find(p => p.id === id) ?? {type: id});
+  spec.labels = Object.fromEntries([...spec.parts, ...spec.lost].map(id => [id, label(id)]));
+  const KIND = {b: "bashing", l: "lethal", a: "aggravated"};
+  const list = Object.entries(wounds).map(([id, w]) => ({label: label(id), text: ["a", "l", "b"].filter(k => w[k]).map(k => `${w[k]} ${KIND[k]}`).join(", ")}));
+  return {spec, wounds: list, gm: game.user.isGM};
+}
+
+/** Draw the doll on its canvas, name parts under the pointer, and let the Storyteller place or clear wounds. */
+function wireDoll(actor, root) {
+  const cv = root.querySelector("canvas.wodx-doll");
+  if ( !cv || cv.dataset.drawn ) return;
+  cv.dataset.drawn = "1";
+  let spec = null, res = null;
+  try { spec = JSON.parse(cv.dataset.spec); res = Doll.draw(spec); cv.getContext("2d").putImageData(new ImageData(res.data, res.w, res.h), 0, 0); }
+  catch (e) { console.warn("WoDX Sheets | doll", e); return; }
+  const tip = root.querySelector(".wodx-doll-tip"), base = tip?.textContent ?? "";
+  const at = ev => { const r = cv.getBoundingClientRect(), cs = getComputedStyle(cv), pad = parseFloat(cs.paddingLeft) || 0;
+    const x = Math.floor((ev.clientX - r.left - pad) / (r.width - 2 * pad) * Doll.W), y = Math.floor((ev.clientY - r.top - pad) / (r.height - 2 * pad) * Doll.H);
+    return x >= 0 && y >= 0 && x < Doll.W && y < Doll.H ? res.at(x, y) : null; };
+  const name = id => id === "lost" ? `Lost: ${spec.lost.map(p => spec.labels?.[p] ?? p).join(", ").toLowerCase()}` : (spec.labels?.[id] ?? id) + (spec.fakes?.[id] ? " (false limb)" : "");
+  cv.addEventListener("pointermove", ev => { const id = at(ev); if ( tip ) tip.textContent = id ? name(id) : base; });
+  cv.addEventListener("pointerleave", () => { if ( tip ) tip.textContent = base; });
+  if ( !game.user.isGM ) return;
+  cv.addEventListener("click", async ev => {
+    const id = at(ev), B = game.wodxCombat?.body;
+    if ( !id || id === "lost" || !B?.placeWound ) return;
+    const pick = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: `${actor.name}: ${name(id)}`}, classes: ["wodx-dialog"],
+      content: `<p>Place one level already on the health track on this part, or clear the part. The health track itself does not change.</p>`,
+      buttons: [{action: "bashing", label: "Bashing here"}, {action: "lethal", label: "Lethal here"}, {action: "aggravated", label: "Aggravated here"}, {action: "clear", label: "Clear this part"}, {action: "cancel", label: "Cancel", default: true}]});
+    if ( !pick || pick === "cancel" ) return;
+    if ( pick === "clear" ) await B.clearWound(actor, id); else await B.placeWound(actor, id, pick);
+  });
 }
 
 /* -------------------------------------------------------------- */
@@ -591,6 +633,7 @@ export function listen(sheet, root) {
   }
   // Body tab: the Storyteller sets the shape or adds a lasting change
   const bodyEl = root.querySelector(".wodx-body");
+  if ( bodyEl ) wireDoll(actor, bodyEl);
   if ( bodyEl && game.user.isGM ) {
     bodyEl.querySelector(".wodx-body-shape")?.addEventListener("change", ev => game.wodxCombat?.body?.setShape(actor, ev.target.value || null));
     bodyEl.querySelector(".wodx-body-add")?.addEventListener("click", () => {
