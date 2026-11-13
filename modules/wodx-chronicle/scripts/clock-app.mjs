@@ -78,7 +78,7 @@ export class ClockApp extends ApplicationV2 {
       .join("");
 
     const moon = now.moon;
-    const ch = church.on(now);
+    const ch = church.on(now, {scene: globalThis.canvas?.scene ?? null, others: gm});
     const night = now.isNight ? "Night" : "Day";
     // A player sees the date and hour the way the character would hear them told
     const told = (!gm && rule("eraReckoning")) ? reckon(now, {church: ch, eraId: p?.id ?? ""}) : null;
@@ -95,9 +95,10 @@ export class ClockApp extends ApplicationV2 {
           <dt>Dark hours</dt><dd>${now.darkHours.toFixed(1)}</dd>
           <dt>Moon</dt><dd>${esc(moon.name)}, ${Math.round(moon.illumination * 100)}% lit</dd>
           <dt>Auspice moon</dt><dd>${esc(moon.auspice)}</dd>
-          <dt>Church year</dt><dd>${esc(ch.label)}</dd>
+          <dt>${esc(ch.calendar ?? "Church year")}</dt><dd>${esc(ch.label)}</dd>
         </dl>
         ${gm && ch.active && ch.lines.length ? `<p class="wodx-quiet wodx-church">${ch.lines.map(esc).join(" ")}</p>` : ""}
+        ${gm && ch.others?.length ? `<p class="wodx-quiet wodx-church-others">Also today: ${ch.others.map(o => esc(`${o.day} (${o.label})`)).join("; ")}.</p>` : ""}
       </section>
       <section class="wodx-era">
         <h3>${esc(p?.name ?? "No era")} ${a.interlude ? `<span class="wodx-tag">between eras</span>` : ""} ${lockId ? `<span class="wodx-tag">locked</span>` : ""}</h3>

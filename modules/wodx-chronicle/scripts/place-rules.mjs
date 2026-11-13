@@ -14,6 +14,8 @@
 import {regionOf} from "./world-rules.mjs";
 
 export const OFFSET_MIN = -12, OFFSET_MAX = 14;
+/** The years a scene can be told to keep (faith-rules.mjs FAITHS). */
+export const PLACE_FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
 
 /** A stored place kept clean: {latitude: number|null, offset: number}. */
 export function cleanPlace(p = {}) {
@@ -25,11 +27,13 @@ export function cleanPlace(p = {}) {
   };
   // The region the scene stands in (world-rules.mjs), kept only when it names one
   if ( regionOf(p?.region) ) out.region = p.region;
+  // Whose holy days the scene keeps, when it differs from its region's (a quarter, a mission, a court in exile)
+  if ( p?.faith && PLACE_FAITHS.includes(p.faith) ) out.faith = p.faith;
   return out;
 }
 
 /** Does the scene keep its own place? */
-export const hasOwnPlace = p => { const c = cleanPlace(p); return c.latitude !== null || c.offset !== 0 || !!c.region; };
+export const hasOwnPlace = p => { const c = cleanPlace(p); return c.latitude !== null || c.offset !== 0 || !!c.region || !!c.faith; };
 
 /** The latitude and the world time to use for a scene: {latitude, time, own}. */
 export function placeTime(p, worldTime, homeLatitude) {

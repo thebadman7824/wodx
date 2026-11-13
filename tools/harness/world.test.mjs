@@ -135,3 +135,92 @@ test("the world: a scene abroad takes its region's sun, and the hours between re
   assert.equal(WR.regionHere({}, "china").id, "china");
   assert.equal(WR.regionHere({}, "nowhere").id, "moravia");
 });
+
+test("money changers: a cut by age, none where the money is the same, and a price abroad named in local money", () => {
+  // The share by age, more where the land is troubled, capped
+  assert.equal(M.changerCut(1300), 0.06);
+  assert.equal(M.changerCut(1650), 0.04);
+  assert.equal(M.changerCut(1880), 0.02);
+  assert.equal(M.changerCut(1995), 0.03);
+  assert.equal(M.changerCut(1300, {troubled: true}), 0.11);
+  assert.ok(M.changerCut(1300, {troubled: true}) <= M.CHANGER.most);
+  // Same money on both sides: nobody needs a changer
+  assert.equal(M.changerCut(1300, {from: "moravian", to: "moravian"}), 0);
+  for ( const year of [1250, 1600, 1900, 2000, 2050] ) for ( const a of Object.keys(M.MONIES) ) for ( const b of Object.keys(M.MONIES) ) {
+    const same = M.sameMoney(year, a, b), p = M.priceAbroad(1000, year, a, b);
+    assert.equal(p.cut === 0, same, `${year} ${a} to ${b}`);
+    assert.equal(p.total, 1000 + p.cut);
+    assert.ok(p.local >= 1 && Number.isFinite(p.local) && p.localMoney?.id, `${year} ${a} to ${b} local`);
+    assert.ok(p.cut <= 150);
+  }
+  // A price abroad buys the same there as at home: a month's wage at home is a month's wage there
+  const y = 1880, home = "moravian", away = "japanese";
+  assert.equal(M.exchange(M.wageAt(y, home), y, home, away), M.wageAt(y, away));
+  // Changing money outright loses the cut once each way
+  const out = M.changeMoney(10000, y, home, away), back = M.changeMoney(out.got, y, away, home);
+  assert.equal(out.got, out.gross - out.cut);
+  assert.ok(back.got < 10000 && back.got > 10000 * 0.94, String(back.got));
+  // Nothing costs nothing
+  assert.equal(M.priceAbroad(0, y, home, away).total, 0);
+});
+
+const F = await import(join(root, "modules/wodx-chronicle/scripts/faith-rules.mjs"));
+const {jdnToGregorian} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const day = (y, m, d) => { const jdn = gregorianToJDN(y, m, d); return {year: y, month: m, day: d, calendar: "gregorian", jdn}; };
+const iso = jdn => { const g = jdnToGregorian(jdn); return `${g.year}-${g.month}-${g.day}`; };
+
+test("holy days: the reckoned years land on known dates", () => {
+  assert.equal(iso(F.hebrewNewYear(5784)), "2023-9-16");
+  assert.equal(iso(F.hebrewNewYear(5785)), "2024-10-3");
+  assert.equal(iso(F.islamicToJDN(1445, 9, 1)), "2024-3-11");
+  assert.deepEqual(F.islamicDate(F.islamicToJDN(1445, 9, 1)), {year: 1445, month: 9, day: 1});
+  assert.equal(iso(F.chineseYear(2024).newYear), "2024-2-10");
+  assert.equal(iso(F.chineseYear(2023).newYear), "2023-1-22");
+  assert.equal(F.chineseYear(2023).months.filter(m => m.leap).map(m => m.month).join(), "2");
+  assert.equal(F.chineseYear(2025).months.filter(m => m.leap).map(m => m.month).join(), "6");
+  assert.equal(iso(F.losar(2024)), "2024-2-10");
+  const is = (faith, y, m, d, re, opts) => assert.match(F.faithDay(faith, day(y, m, d), opts).day ?? "", re, `${faith} ${y}-${m}-${d}`);
+  is("orthodox", 2024, 5, 5, /Pascha/); is("orthodox", 2024, 1, 7, /Nativity/);
+  is("jewish", 2024, 4, 23, /Passover/); is("jewish", 2024, 10, 12, /Yom Kippur/); is("jewish", 2024, 3, 24, /Purim/);
+  is("islamic", 2024, 4, 10, /Eid al-Fitr/);
+  is("hindu", 2023, 11, 12, /Diwali/); is("hindu", 2024, 3, 25, /Holi/); is("hindu", 2024, 10, 12, /Dussehra/);
+  is("theravada", 2024, 5, 22, /Vesak/); is("theravada", 2024, 4, 14, /new year/);
+  is("tibetan", 2024, 5, 23, /Saga Dawa/);
+  is("chinese", 2024, 9, 17, /Mid-Autumn/); is("chinese", 2024, 9, 17, /Chuseok/, {region: "korea"}); is("chinese", 2024, 8, 14, /Obon/, {region: "japan"});
+  is("western", 2024, 3, 31, /Easter/);
+});
+
+test("holy days: every region keeps a year in every age, and every faith answers every day in the church year's shape", () => {
+  for ( const id of Object.keys(WR.WORLD_REGIONS) ) {
+    assert.ok(F.REGION_FAITH[id], `${id} has no faith row`);
+    for ( const y of [1197, 1500, 1700, 1900, 2000, 2090] ) assert.ok(F.FAITHS[F.faithFor(id, y)], `${id} ${y}`);
+  }
+  assert.equal(F.faithFor("mexico", 1500), "own"); assert.equal(F.faithFor("mexico", 1600), "western");
+  assert.equal(F.faithFor("nusantara", 1300), "hindu"); assert.equal(F.faithFor("nusantara", 1700), "islamic");
+  assert.equal(F.faithFor("egypt", 1197), "islamic"); assert.equal(F.faithFor("russia", 1900), "orthodox");
+  const keys = ["feast", "day", "fast", "season", "observance", "revel", "crowd", "curfewStart", "huntStep", "lines"];
+  for ( const y of [1197, 1650, 1890, 2024] ) {
+    const seen = {};
+    for ( let j = gregorianToJDN(y, 1, 1); j < gregorianToJDN(y + 1, 1, 1); j++ ) {
+      const g = jdnToGregorian(j);
+      for ( const f of Object.keys(F.FAITHS) ) {
+        const c = F.faithDay(f, {year: y, month: g.month, day: g.day, calendar: "gregorian", jdn: j});
+        for ( const k of keys ) assert.ok(k in c, `${f} lacks ${k}`);
+        assert.ok(c.season && Array.isArray(c.lines) && [-1, 0, 1].includes(c.huntStep));
+        assert.equal(c.curfewStart, c.revel ? 24 : null);
+        if ( c.feast ) seen[f] = (seen[f] ?? 0) + 1;
+      }
+    }
+    for ( const f of Object.keys(F.FAITHS) ) if ( f !== "own" ) assert.ok(seen[f] >= 3, `${f} has too few feasts in ${y}: ${seen[f]}`);
+  }
+  // Ramadan: a fast by day, a busy night; a strict Orthodox fast is quiet
+  const ram = F.faithDay("islamic", day(2024, 3, 20));
+  assert.equal(ram.season, "Ramadan"); assert.equal(ram.huntStep, -1); assert.match(ram.fast, /Ramadan/);
+  const lent = F.faithDay("orthodox", {...day(1500, 3, 20), calendar: "julian", jdn: gregorianToJDN(1500, 3, 20)});
+  assert.equal(lent.crowd, "quiet"); assert.equal(lent.huntStep, 1);
+  // A town of more than one people
+  assert.ok(F.otherDays(day(2024, 4, 23), "western").some(o => o.faith === "jewish" && /Passover/.test(o.day)));
+  // A scene keeps the faith picked for it
+  assert.equal(PL.cleanPlace({faith: "jewish"}).faith, "jewish"); assert.equal(PL.cleanPlace({faith: "nonsense"}).faith, undefined);
+  assert.ok(PL.hasOwnPlace({faith: "jewish"}));
+});
