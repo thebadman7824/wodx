@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.63.0 (Seduction refuses a target under 18, so the Siren's feeding after it cannot start either (B3141))
 - 3.61.1 (the lifting chart and the Kuei-jin profile note are worded in WoDX's own words, with the same weights and page references (public repository overlap check); not deployed)
 - 3.61.0 (rank in social rolls: an NPC two or more steps below on the rank ladder makes the roll one easier, two or more above one harder (WoDX NPC 0.59.0); 3.60.0 is left to the player UI work)
 - 3.59.0 (a regnant's Persuade, Intimidate, Deceive, Bribe and Charm against a thrall are 1 easier at the second drink and 2 at the third, the Vinculum counting as a bond at 5 and 8, named on the card; B2842; not deployed)

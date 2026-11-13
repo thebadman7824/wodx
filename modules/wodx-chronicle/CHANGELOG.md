@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.53.0 (the age floor: nothing romantic or sexual with anyone under 18 in any era or region; api.age.minor, api.age.romance; a lover, spouse or troth tie to or from a minor is not kept (B3140-B3142))
 - 0.51.1 (the Feast and fast days house rule's hint names everything the hunt now reads: fairs, the strictest fasts, the day of rest, curfews and blackouts)
 - 0.51.0 (the ways of life of the world: each of the 44 regions follows one in each year, from Western Christendom, the Eastern church and the lands of Islam to India, China and Korea, Japan, Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast, southern and central Africa, and Mesoamerica, the Andes, Polynesia and the far north before the settlers; a land changes on the year it did, Tenochtitlan in 1521 and Constantinople in 1453; world.rules.sphereFor for the other modules. B2670)
 - 0.50.1 (eleven world regions pay in money of their own: Korea, mainland Southeast Asia, the Malay world, Hungary and the Balkans, Greece, the Caribbean, the Andes, the River Plate and Chile, Kongo and central Africa, Tibet and the Himalaya, Canada. B2650)

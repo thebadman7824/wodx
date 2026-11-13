@@ -38,6 +38,7 @@ import * as legends from "./legends.mjs";
 import * as automation from "./automation.mjs";
 import * as automationRules from "./automation-rules.mjs";
 import * as waiting from "./waiting.mjs";
+import * as age from "./age.mjs";
 import * as waitingRules from "./waiting-rules.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
@@ -163,7 +164,10 @@ Hooks.once("ready", async () => {
   Hooks.on("updateScene", (sc, ch) => { if ( ch?.flags?.[MODULE_ID] ) ClockApp.refresh(); });
   Hooks.on("canvasReady", () => ClockApp.refresh());
 
+  age.listen();
   const api = {
+    // Chronicle 0.53.0: the age floor of 18 for anything romantic or sexual
+    age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
     world: {regions: worldRules.WORLD_REGIONS, regionOf: worldRules.regionOf, homeland: place.homeland, setHomeland, here: place.regionHere, isAbroad: place.isAbroad, rules: worldRules},

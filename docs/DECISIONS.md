@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3120
+Next free block: B3150
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -148,6 +148,7 @@ Next free block: B3120
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
+| B3140-B3149 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3140-B3142) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4474,3 +4475,18 @@ Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
 ## B3113. A large stake, a rival and a seat (2026-11-13)
 A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
 Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.
+
+## B3140. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
+WoDX Chronicle 0.53.0 (age-rules.mjs, age.mjs). Ben asked whether under-age characters are kept out of romantic and sexual situations; they were not. Now nothing romantic or sexual may involve anyone under 18: courting and warmth, a lover, spouse or troth tie, marriage, having a child, seduction, and the feeding that follows a seduction. The floor is the same in every era and region. The coming-of-age ages of older centuries stay in the lifepath only and never lower it, and the marriage law tables never model child marriage. This is a project rule, not a house rule of the books, and no setting turns it off.
+
+Reverse: none. This stays.
+
+## B3141. Who counts as under 18 (2026-11-13)
+A character counts as a minor when any sign says so: a birth year that makes them under 18 in the year shown; for Kindred, being under 18 at the Embrace, and for the walking dead, being under 18 at death, because the body stopped there; a child role from the town's residents, the child behaviour or routine, or a child made by WoDX NPC that has no birth year; or the Storyteller's own mark (flags.wodx-chronicle.minor = true). A character with no sign counts as an adult, because most townsfolk carry no birth year. The Storyteller's mark can only make someone a minor. WoDX NPC 0.68.0 refuses courting, marriage and having a child, and WoDX Actions 3.63.0 refuses Seduction (and so the Siren's feeding after it) when either side is a minor, with a short note to whoever tried. Without the Chronicle check, these refuse rather than allow.
+
+Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet its birth year.
+
+## B3142. Romantic ties to a minor are never kept (2026-11-13)
+WoDX Chronicle 0.53.0 guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
+
+Reverse: none.
