@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3170
+Next free block: B3180
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -153,6 +153,7 @@ Next free block: B3170
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
+| B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4688,3 +4689,13 @@ Reverse: The Storyteller adds the language for the player.
 Desk item k3. Speech in a language the reader does not know, but that is kin to one they do (WoDX's grouping: Romance, Slavic, Germanic, Norse, Celtic, Semitic, Indic, Chinese, Bantu, Malay, Egyptian), shows a "Try for the gist" button. It rolls Intelligence + Linguistics (Academics where there is no Linguistics) at difficulty 7, once per character for each message. A success shows that reader the message for the rest of the session.
 
 Reverse: Leave the button alone; the message stays unread.
+
+## B3170. Fights in the experience draft (2026-11-13)
+Desk item c2. WoDX Storyteller keeps the fights since the last wrap-up (api.noteFight, the newest 40). The end-of-night table lists them and ticks "Came through real danger" for each player character who took three health levels or more in one of them, or ended one down. The Storyteller can untick it. The list empties when experience is given. Three levels is WoDX's line for real danger.
+
+Reverse: Untick the box at the wrap-up.
+
+## B3171. The after-action card writes a deed (2026-11-13)
+Desk item c2. When a fight with a player character ends, WoDX Combat writes one deed in the Legends book (B3161): who fought whom, where, and "and won" when a player character is still up and every other fighter is down. Through B3160 a won fight then suggests Glory for Garou. It also notes each player character's harm for B3170.
+
+Reverse: Hide the line in the Legends window; reject the Glory suggestion.
