@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3110
+Next free block: B3100
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -147,7 +147,6 @@ Next free block: B3110
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
-| B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4448,18 +4447,3 @@ Reverse: revert the titles and notes in POLITIES in modules/wodx-npc/scripts/pol
 The Hengeyokai book says the Beast Courts do not fully count India as theirs, so a Garou faction in India now keeps a Garou sept by default; the Storyteller can still pick a Beast Court there. The year the Ahl-i-Batin left the Council was not found in M20 and needs Lore of the Traditions or Sorcerers Crusade, which the PC does not hold as text; the circle's notes stay as they are.
 
 Reverse: put india: "beast-court" back in REGION_SHIFTERS.
-
-## B3100. Cook, brew or mix and Make something keep to the land of the scene (2026-11-13)
-WoDX Storyteller. Both windows list first what is at home in the region and way of life of the character's scene in the chronicle's year (the same place rules as goods, data/goods-ways.mjs). Things from other lands stay hidden behind a Lands choice ("Every land"), marked "from another land", since a traveller may carry the know-how and the ingredients. A scene with no region shows everything, as before.
-
-Reverse: drop the where argument from listFor and makeable and the Lands select.
-
-## B3101. Ingredients are bought where they grow (2026-11-13)
-WoDX Library and Storyteller. When a character buys what a recipe is missing, the good comes from those to be had in the scene's land (membersOf with a place); with none, the window says no one there sells it. Maize, corn kernels, cornmeal and corn cobs are old in Mexico (from 3000 BCE), the Andes (2000 BCE) and North America (1000), and reach the rest of the world on the books' date. Six raw goods are added for the recipes of B3102: sorghum, millet, maguey sap, kava root, areca nuts and betel leaves, each at home where it grows. A house reading of history, rounded for play.
-
-Reverse: remove the MAIZE entries and the six rows from goods-ways.mjs, and call membersOf without a place.
-
-## B3102. Recipes for the brews, quids and dishes of other lands (2026-11-13)
-WoDX Library. Sorghum or millet beer (3 days fermenting), maize beer (5 days), pulque from maguey sap (2 days, no brewhouse), kava pounded and steeped, a whipped cacao drink, and a folded betel quid now have recipes instead of counting as raw. Chuño (potatoes frozen and dried over 10 days), rice crackers, yak butter, tsampa (roasted barley flour), injera (with the flatbreads), pemmican and dried fish, fermented cabbage and drinking chocolate (from 1500 BCE, from cacao) join the methods they belong to. Kola nuts, dried dates, rock salt, cloves, turmeric and quinoa are raw. Figures follow the nearest book-free method of each family; the books give no such recipes (house rule).
-
-Reverse: remove the new METHODS and GROUPS from data/recipes.mjs and put the names back in RAW.
