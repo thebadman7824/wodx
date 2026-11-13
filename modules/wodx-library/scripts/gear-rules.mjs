@@ -143,11 +143,50 @@ function describeItem(row, notes) {
   return bits.length ? `<p>${bits.join("<br>")}</p>` : "";
 }
 
-/** The gear an era's characters can carry, by kind and then name. */
-export function forEra(items, eraId) {
+/**
+ * Library 0.21.0 (B3021): the weapons of other lands, each a copy of the book weapon it fights as, under its own name,
+ * with that weapon's figures and page. local: [name, ways, {source: base name}, what it is] (data/gear-ways.mjs).
+ */
+export function localGear(items, local) {
+  const out = [];
+  const have = new Set(items.map(i => `${i.flags?.[MOD]?.source}|${i.name}`));
+  for ( const [name, ways, like, what] of local ?? [] ) {
+    for ( const [source, baseName] of Object.entries(like) ) {
+      const base = items.find(i => i.flags?.[MOD]?.source === source && i.name === baseName);
+      if ( !base || have.has(`${source}|${name}`) ) continue;
+      have.add(`${source}|${name}`);
+      const it = JSON.parse(JSON.stringify(base));
+      it.name = name;
+      const f = it.flags[MOD];
+      f.ways = ways; f.local = true; f.like = baseName;
+      f.notes = [what, ...(f.notes ?? []).filter(n => !/^Rate|^Clip/.test(n))];
+      it.system.reference = `${base.system.reference}; fights as the ${baseName.replace(/, thrown$/, "")} (house rule)`;
+      it.system.description = `<p>${what[0].toUpperCase()}${what.slice(1)}. Fights as the ${baseName.replace(/, thrown$/, "")}.</p>${base.system.description ?? ""}`;
+      out.push(it);
+    }
+  }
+  return out;
+}
+
+/** Library 0.21.0 (B3020): is a piece of gear found in a year and place? ({year, way, region}; no place: yes) */
+export function gearAt(item, where = {}) {
+  const {year = null, way = null, region = null} = where ?? {};
+  if ( !way && !region ) return true;
+  const ways = item?.flags?.[MOD]?.ways;
+  if ( !ways ) return true;
+  const r = region && region in ways ? ways[region] : way && way in ways ? ways[way] : "*" in ways ? ways["*"] : false;
+  if ( r === false ) return false;
+  const y = Number(year);
+  if ( r === null || r === undefined || year === null || !Number.isFinite(y) ) return true;
+  if ( Array.isArray(r) ) return y >= r[0] && y <= r[1];
+  return y >= Number(r);
+}
+
+/** The gear an era's characters can carry, by kind and then name; with where ({year, way, region}), only what is at home there. */
+export function forEra(items, eraId, where = null) {
   const order = {"Melee Weapon": 0, "Ranged Weapon": 1, Armor: 2, Item: 3};
   const id = ERA_LIKE[eraId] ?? eraId;
-  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id))
+  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id)).filter(i => !where || gearAt(i, where))
     .sort((a, b) => (order[a.type] - order[b.type]) || a.name.localeCompare(b.name));
 }
 

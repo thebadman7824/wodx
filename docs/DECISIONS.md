@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3020
+Next free block: B3030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -140,6 +140,7 @@ Next free block: B3020
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
+| B3020-B3029 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3020-B3023) | Library, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4257,3 +4258,23 @@ Reverse: empty LAND_FAE_LANDS.
 The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
 
 Reverse: edit the note in factions.mjs.
+
+## B3020. Where gear is at home (2026-11-13)
+WoDX Library 0.21.0. Each piece of Gear by era can carry a rule in the words of the everyday goods (a region, a way of life of WoDX Chronicle, or everywhere else; found, from a year, between two years, or never). The Americas, the Pacific and the far north before the settlers carry no steel blades, crossbows, longbows, horse lances, mail or plate and no gunpowder; the rapier, hand crossbow, bastard sword, greatsword, falchion, halberd and glaive stay in Christendom and the lands its people settle; plate in Christendom and the Balkans; the katana in Japan, the kris in the Malay world, the katar and tiger claws in India, the scimitar in the lands of Islam, the Sahel, the Swahili coast, India, Central Asia and East Africa (the Balkans from 1400); guns reach Japan in 1543, India in 1526, mainland Southeast Asia and the Malay world in 1511, Tibet in 1640, the Sahel in 1590, the Swahili coast in 1500 and southern Africa in 1600. A house reading of history.
+
+Reverse: empty GEAR_WAYS in modules/wodx-library/data/gear-ways.mjs and rebuild gear.json.
+
+## B3021. Weapons of other lands fight as book weapons (2026-11-13)
+None of the books WoDX reads gives figures for the tachi, jian, assegai, macuahuitl and the rest, so each of the 33 weapons in LOCAL_GEAR is a copy of a book weapon of its kind (the macuahuitl as the broadsword, the naginata as the halberd or glaive, the atlatl dart as the thrown javelin, quilted cotton as Class Two), under its own name and with that weapon's page, marked a house rule. One copy for each book era it belongs to: 64 items.
+
+Reverse: empty LOCAL_GEAR and rebuild gear.json.
+
+## B3022. Fill by place and era follows the land (2026-11-13)
+WoDX Interactables 0.40.0: a draw of gear for a container keeps to what is at home in the scene's region and way of life in the chronicle's year, as the everyday goods already do. With no region known, the draw is by era alone as before.
+
+Reverse: drop the gearAtHome line in candidates (fill-rules.mjs).
+
+## B3023. The Gear window shows the scene's land (2026-11-13)
+Gear by era lists what is found where the scene stands in the chronicle's year, with a Lands choice to see every land. A weapon of another land names the book weapon it fights as.
+
+Reverse: set lands to "all" in GearApp.

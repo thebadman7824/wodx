@@ -14,7 +14,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.19.0";
+export const VERSION = "0.21.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -29,6 +29,21 @@ export async function gear() {
 }
 
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+/**
+ * 0.21.0 (B3023): where the scene stands, as WoDX Chronicle has it: {year, region, regionLabel, way, wayLabel}, or
+ * null when Chronicle is off or names no region.
+ */
+export function whereNow(scene = globalThis.canvas?.scene) {
+  try {
+    const chron = game.modules.get("wodx-chronicle")?.api;
+    const year = Number(chron?.eras?.currentYear?.()) || null;
+    const r = chron?.world?.here?.(scene);
+    const rules = chron?.world?.rules;
+    if ( !r?.id || year === null || typeof rules?.sphereFor !== "function" ) return null;
+    const way = rules.sphereFor(r.id, year);
+    return {year, region: r.id, regionLabel: r.label ?? r.id, way, wayLabel: rules.SPHERES?.[way] ?? way};
+  } catch (e) { return null; }
+}
 const eraName = id => game.modules.get("wodx-chronicle")?.api?.eras?.getProfile?.(id)?.name ?? id;
 
 /** Fill or refresh the compendium from the data: items are matched by name and source, never deleted. */
@@ -81,6 +96,8 @@ export class GearApp extends ApplicationV2 {
 
   static #instance;
   era = null;
+  /** 0.21.0: "here" (where the scene stands, the default) or "all" (every land) */
+  lands = "here";
   static open(era) {
     this.#instance ??= new GearApp();
     if ( era !== undefined ) this.#instance.era = era;
@@ -90,15 +107,17 @@ export class GearApp extends ApplicationV2 {
   async _renderHTML() {
     const data = await gear();
     const era = this.era ?? eraNow() ?? "dark-ages";
-    const list = G.forEra(data.items, era);
+    const here = whereNow();
+    const local = this.lands !== "all" && here;
+    const list = G.forEra(data.items, era, local ? here : null);
     const kind = {"Melee Weapon": "Melee", "Ranged Weapon": "Ranged", Armor: "Armor", Item: "Other"};
     const rows = list.map(i => {
       const f = i.flags[MOD], k = `${f.source}|${i.name}`;
       const extra = [f.surgery ? `surgery ${f.surgery}` : "", f.humanity ? `Humanity cost ${f.humanity}` : ""].filter(Boolean).join(", ");
-      return `<li class="wodx-gear-row" data-search-text="${esc(`${i.name} ${kind[i.type]} ${G.SOURCES[f.source].short}`)}">
+      return `<li class="wodx-gear-row" data-search-text="${esc(`${i.name} ${kind[i.type]} ${G.SOURCES[f.source].short}${f.like ? ` ${f.like}` : ""}`)}">
         <label><input type="checkbox" name="pick" value="${esc(k)}"> <b>${esc(i.name)}</b></label>
         <span class="wodx-gear-kind">${kind[i.type]}</span> <span>${esc(G.summary(i))}${extra ? ` ${esc(extra)}` : ""}</span>
-        <span class="wodx-quiet">${esc(G.SOURCES[f.source].short)}, ${esc(f.page)}</span></li>`;
+        <span class="wodx-quiet">${f.like ? `as the ${esc(f.like.replace(/, thrown$/, ""))}, ` : ""}${esc(G.SOURCES[f.source].short)}, ${esc(f.page)}</span></li>`;
     }).join("");
     const eras = G.ERA_ORDER.map(id => `<option value="${id}" ${id === era ? "selected" : ""}>${esc(eraName(id))}</option>`).join("");
     const sel = globalThis.canvas?.tokens?.controlled?.filter(t => t.actor?.isOwner).map(t => t.actor.name) ?? [];
@@ -106,13 +125,17 @@ export class GearApp extends ApplicationV2 {
     div.className = "wodx-body";
     div.innerHTML = `<div class="wodx-top">
         <div class="form-group"><label>Era</label><div class="form-fields"><select name="era" data-fixed aria-label="Era">${eras}</select></div></div>
+        ${here ? `<div class="form-group"><label>Lands</label><div class="form-fields"><select name="lands" data-fixed aria-label="Lands">
+          <option value="here" ${local ? "selected" : ""}>${esc(here.regionLabel)} in ${here.year}</option>
+          <option value="all" ${local ? "" : "selected"}>Every land</option></select></div></div>` : ""}
         ${searchBox("ul.wodx-gear-list", "Search gear…", "Search gear")}
-        <p class="hint">${list.length} items for this era, from its books. Tick what to give, select the characters' tokens, then press Give.</p></div>
+        <p class="hint">${list.length} items for this era${local ? `, as found in ${esc(here.regionLabel)}` : ""}, from its books. Tick what to give, select the characters' tokens, then press Give.</p></div>
       <ul class="wodx-scroll wodx-gear-list">${rows || `<li class="wodx-quiet">Nothing for this era yet.</li>`}</ul>
       <footer class="form-footer wodx-footer">
         <button type="button" data-action="give"><i class="fa-solid fa-hand-holding"></i> Give to ${sel.length ? esc(sel.join(", ")) : "the selected tokens"}</button>
         ${game.user.isGM ? `<button type="button" data-action="install"><i class="fa-solid fa-book"></i> Refresh the compendium</button>` : ""}</footer>`;
     div.querySelector("select[name=era]").addEventListener("change", ev => { this.era = ev.target.value; this.render(); });
+    div.querySelector("select[name=lands]")?.addEventListener("change", ev => { this.lands = ev.target.value; this.render(); });
     return div;
   }
 

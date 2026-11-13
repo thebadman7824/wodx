@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.40.0 (Fill by place and era draws gear that is at home where the scene stands, by WoDX Library 0.21.0's gear by region (B3022); 0.39.0 is taken by the Player UI branch)
 - 0.38.0 (a living tile can also block walls, lock doors or light lamps inside its square while its rule holds: stalls that close a lane by day, the church shut on a fast day, lanterns on a night of revel. B2904)
 - 0.37.0 (Bring forward: SWAPS and bringForward in the rules say what a map thing turns into in another year, in every era, for WoDX Sheets' anachronism card: a motor car before 1900 a carriage, an electric light before 1880 a lamp, a radio a telephone or a bell, a keypad before 1970 a lock of its grade, a carriage after 1930 a motor car; sprinklers and live wires have nothing like them. B2720)
 - 0.36.0 (Fill by place and era reads where the scene stands: its region and that region's way of life in the chronicle's year, from WoDX Chronicle, so everyday goods are those at home there; the coin of the place is named in the local money from WoDX Storyteller ("7 dirhams"), and lands that trade without coin get none. Draws by era alone, as before, when Chronicle is off. B2682)
