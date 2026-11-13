@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.24.1 (Read the Soul tells WoDX Senses what the reading showed, so the Aura Perception rings follow it. B2900)
 - 0.24.0 (realm world maps follow the books' notes on how each realm lies: 80 places in 25 realms stand where the books put them (the seasons of the Arcadia Gateway by compass, the two bridges of Yomi at opposite ends, Erebus from Cerberus inward to the fortress, the Central Duchy of Malfeas round its courtyard), travellers arrive where the books say in four realms, the Far Shores lie about an hour apart; Yomi's note says the Kuei-jin hold its Ti Yu to be a copy)
 - 0.23.2 (the realm world maps load their rules and places the first time the window opens, not when the world starts, so players no longer fetch about 115 KB at start-up; api.realmWorlds.load() loads them for a script, and api.realmWorlds.rules is empty until then. B2676)
 - 0.23.1 (the Penumbra and Shadowlands reflect a mosque, a synagogue or a temple as they do a church: the loom of the Weaver and a thin Shroud. B2662)

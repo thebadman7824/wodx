@@ -288,6 +288,8 @@ export async function readTheSoul({reader, target} = {}) {
       content: `<div class="wodx-card"><h3>${esc(target.name)}'s soul</h3><ul>${r.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>`
     });
   }
+  // WoDX Senses keeps the reading for the Aura Perception rings (Otherworlds 0.24.1, B2900)
+  Hooks.callAll("wodxAuraRead", {reader: actor, token: target.id, actorId: target.actor.id, successes: result.success ? result.net : 0, botch: !!result.botch});
   r.ms = drawAura(target.object ?? target, r.draw);
   if ( r.ms !== null ) console.debug(`WoDX | aura drawn in ${r.ms.toFixed(2)} ms`);
   return {...r, faces, result};
