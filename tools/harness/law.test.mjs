@@ -200,3 +200,17 @@ test("Orthodox and Russian law (B3498)", () => {
   assert.ok(ae(1600).courts.some(c => /qadi/.test(c)) && !ae(1900).courts.some(c => /qadi/.test(c)));
   assert.ok(ae(1970).order.includes("secret-police"));
 });
+
+test("Japan (B3499)", () => {
+  const at = y => L.lawOf("japan", y);
+  assert.equal(at(1300).family, "japanese");
+  assert.ok(at(1250).courts.some(c => /Goseibai/.test(c)));
+  assert.ok(at(1500).warn.some(w => /warlord/.test(w)) && !at(1650).warn.some(w => /warlord/.test(w)));
+  assert.ok(at(1700).crimes.includes("commoner-arms") && !at(1900).crimes.includes("commoner-arms"));
+  assert.ok(at(1700).crimes.includes("leaving-country") && !at(1860).crimes.includes("leaving-country"));
+  assert.ok(at(1700).crimes.includes("wrong-faith") && !at(1880).crimes.includes("wrong-faith"));
+  assert.ok(at(1700).order.includes("baojia") && !at(1880).order.includes("jito"));
+  assert.ok(at(1935).order.includes("secret-police") && !at(1950).order.includes("secret-police"));
+  assert.ok(at(2000).punish.includes("hanging"), "Japan keeps the death penalty");
+  assert.match(at(1950).rule.form, /constitutional/);
+});
