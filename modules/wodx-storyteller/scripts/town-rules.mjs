@@ -243,13 +243,15 @@ export function risingWords(year) {
 /* ------------------------------------------------------------------ */
 
 /**
- * One week for every town. markets: the markets state's list; ctxFor(market) gives the market pressures (see
+ * One week for every town. sickFor(market): when sickness spreads between towns (B3437), the town's own sickness this
+ * week ({name, dead, pressure} or null), which then stands in for the outbreaks by year; leave it out for those.
+ * markets: the markets state's list; ctxFor(market) gives the market pressures (see
  * pressures); regionOf(town) the town's world region; latOf(town, region) its latitude (seasons turn south of the
  * equator); randFor(id) a number source for that town; events: news from outside to fold in this week.
  * Returns {state, events: [{town, name, kind, text, big, effect}], moved: [{from, to, people}]}.
  * Effects of events are already in the returned state; the caller decides whether they stand (Undo restores).
  */
-export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = () => 50, ctxFor = () => ({}), regionOf = t => t.region || "moravia", randFor = () => Math.random, events: outside = []} = {}) {
+export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = () => 50, ctxFor = () => ({}), regionOf = t => t.region || "moravia", randFor = () => Math.random, events: outside = [], sickFor = null} = {}) {
   const st = normState(state);
   const events = [], moved = [];
   const byId = new Map(markets.map(m => [m.id, m]));
@@ -259,8 +261,14 @@ export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = 
     const t = st.towns[m.id], rand = randFor(m.id), ctx = ctxFor(m) ?? {};
     const region = regionOf(t), lat = latOf(t, region);
     const say = (kind, text, big, effect = {}) => events.push({town: m.id, name: m.name, kind, text, big: !!big, effect});
+    // B3437: with sickness spreading between towns (contagion.mjs), the town's sickness is the one it has caught
+    const sick = typeof sickFor === "function" ? sickFor(m) : undefined;
+    if ( sick !== undefined ) {
+      t.struck = sick ? {key: `sick:${m.id}`, name: sick.name, weeks: 1, share: num(sick.dead)} : (String(t.struck?.key ?? "").startsWith("sick:") ? null : t.struck);
+      if ( sick ) t.unrest = r2(clamp(t.unrest + 0.1 * num(sick.pressure), 0, 5));
+    }
     // Plague: a town in an outbreak's reach may be struck, once for each outbreak
-    if ( !t.struck ) {
+    else if ( !t.struck ) {
       for ( const o of outbreaksIn(year, region) ) {
         if ( t.seen.includes(o.key) ) continue;
         if ( rand() < o.chance ) {
@@ -309,7 +317,7 @@ export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = 
     }
     // Time runs down on what lasts
     t.marks = t.marks.map(x => ({...x, weeks: x.weeks - 1})).filter(x => x.weeks > 0);
-    if ( t.struck ) { t.struck.weeks -= 1; if ( t.struck.weeks <= 0 ) { say("plague-ends", `${t.struck.name} leaves the town.`, false); t.struck = null; } }
+    if ( t.struck && !String(t.struck.key ?? "").startsWith("sick:") ) { t.struck.weeks -= 1; if ( t.struck.weeks <= 0 ) { say("plague-ends", `${t.struck.name} leaves the town.`, false); t.struck = null; } }
   }
   // Emigrants go to the linked town that does best; with no better one they leave the region
   for ( const mv of moved ) {
@@ -441,4 +449,35 @@ export function restore(state, snap = []) {
   const st = normState(state);
   for ( const s of snap ) { if ( s.town ) st.towns[s.id] = normTown(s.town); else delete st.towns[s.id]; }
   return st;
+}
+
+/* ------------------------------------------------------------------ */
+/*  The town at each settlement age (B3420, for the chronicle rebuild) */
+/* ------------------------------------------------------------------ */
+
+/** The town generator's size (tools/mapgen/ddsettle.py --size) for a number of people in a year. */
+export function generatorSize(people, year) {
+  const w = sizeWord(people, year);
+  return w === "hamlet" || w === "village" ? "village" : w === "great city" ? (num(year) >= 1850 ? "metropolis" : "city") : w;
+}
+
+/**
+ * What the rebuild's settlement ages read from a town's past (recipe ages, Storyteller B2780): for each age year,
+ * the town as its yearly history last stood at or before that year (the first line when the age comes earlier),
+ * the generator size that fits it, and the blows it took since the age before. A town with no history gives null for
+ * each age, and the recipe's own size stands.
+ *   ages: [1197, 1420, ...]; town: a town (normTown) or its view.
+ * Returns [{year, people, prosperity, unrest, size, scars: [{kind, year, text}]}] or [{year, ... null}].
+ */
+export function townAtAges(town, ages = []) {
+  const hist = [...(town?.history ?? [])].sort((a, b) => a.year - b.year);
+  const scars = town?.scars ?? [];
+  const sorted = [...ages].map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  return sorted.map((year, i) => {
+    if ( !hist.length ) return {year, people: null, prosperity: null, unrest: null, size: null, scars: []};
+    const at = hist.filter(h => h.year <= year).at(-1) ?? hist[0];
+    const from = i ? sorted[i - 1] : -Infinity;
+    return {year, people: at.people, prosperity: at.prosperity, unrest: at.unrest, size: generatorSize(at.people, year),
+      scars: scars.filter(s => s.year > from && s.year <= year).map(s => ({kind: s.kind, year: s.year, text: s.text}))};
+  });
 }

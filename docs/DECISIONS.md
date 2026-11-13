@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3330
+Next free block: B3440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -146,7 +146,7 @@ Next free block: B3330
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3087) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3088) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -160,10 +160,15 @@ Next free block: B3330
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
+| B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
+| B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
+| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4640,6 +4645,11 @@ Step 6 of gateeffects counted every "WoDX gate" effect item waiting for approval
 
 Reverse: Count every "WoDX gate" effect item again in step 6.
 
+## B3088. A decision block claim is checked again before it counts (2026-11-13)
+Two threads claimed B3260-B3269 in the same minute and one claim was lost: the project files folder is a network share, where one session's lock and write can reach another session late. Each claim now also writes a file of its own in decision-blocks.json.d, which no other write replaces, so a claim dropped from the JSON still counts. After a 12 second pause the claim is read back; when another session holds an overlapping block that it took first (earlier time, then thread id), this one withdraws and claims the next block. The same rule decides in every session, so exactly one keeps the block.
+
+Reverse: Remove the claim files and the second check from tools/decisions/claim.mjs.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -4871,6 +4881,41 @@ After a yes the clock counts the waiting: three Sundays of banns in Latin Christ
 
 Reverse: turn the wedding card down.
 
+## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
+WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
+
+Reverse: turn the setting off, or remove FATES from main.mjs.
+
+## B3261. Yearly chances are house readings (2026-11-13)
+WoDX NPC. The books give no tables for how often the undead die, sleep or sire. WoDX uses small yearly chances by line (RATES in fates-rules.mjs): a vampire 0.4% a year, three times that in the first fifty years after the Embrace; torpor 0.5% a year, more after 300 years; Garou 3% a year and dying of age at 55 to 80; mages 1.2% and Arete rising slowly to 6; changelings 1% and 0.8% lost to Banality; wraiths 0.4% destroyed, 0.3% to Oblivion, 0.05% Transcend; hunters 5%. A mummy slain rises again after 1 to 12 years. Torpor lasts by Humanity or Path (V20 pdf p. 291; the V20 Dark Ages table in wodx-creation/data/time.mjs); a torpor shorter than a year is over within the year.
+
+Reverse: edit RATES. Logged in PENDING-REVIEW.
+
+## B3262. Embrace and diablerie by sect (2026-11-13)
+WoDX NPC. The Third Tradition makes a Camarilla sire wait for an elder's leave (V20 pdf pp. 31-32), so Camarilla Embraces are rarest (0.5% a year) and the Sabbat's most common (2%); anarchs 1%, the rest 0.6%. The sheet's sect is read first; with none, a vampire before 1435 belongs to a feudal court and after it to the Camarilla. Diablerie is 0.06% a year, eight times that in the Sabbat and half in the Camarilla; it takes a simulated vampire of lower Generation about a third of the time, else a stranger, and lowers the diablerist's Generation by one only when the victim's was lower (V20 pdf p. 302). The 15th Generation cannot sire (V20 pdf p. 38); WoDX stops siring at 14th. A childe is one Generation thinner than the sire. At most 40 new ones in a jump, and those made in a jump do not sire until the next one.
+
+Reverse: edit EMBRACE, DIABLERIE_SECT, LAST_SIRING or BROOD_CAP.
+
+## B3263. Dangerous ages (2026-11-13)
+WoDX NPC. ERA_DANGER multiplies the death chance in the Inquisition's long hunt (1231-1480), the Black Death (1347-1351), the Anarch Revolt (1394-1493, vampires), the Shattering's long Banality (1350-1968, changelings), the Great War and the Second World War. These are house readings of the books' history, global rather than by region for now.
+
+Reverse: edit ERA_DANGER.
+
+## B3264. Off by default (2026-11-13)
+WoDX NPC. The world setting "Off-screen lives of supernatural NPCs" (npcFates) starts off, so Live is unchanged until the Storyteller turns it on. Short skips (under a year) only wake sleepers whose years are up.
+
+Reverse: change the default.
+
+## B3265. What approving writes (2026-11-13)
+WoDX NPC. Torpor: the Torpor condition and chronology.torpor {from, to} in world time. Waking: both cleared. Death: chronology.died and cause "off-screen", and the sheet moves to WoDX · The Dead (as Pass the Years files the dead). Diablerie: system.generation (keeping the Generation background's change). Rank: system.renown.rank; Arete: system.advantages.arete.permanent. A seat the dead held empties through the faction politics already in place, which fill it at the next gathering.
+
+Reverse: undo the sheet edits by hand; the card's text lists every one.
+
+## B3266. Brood records (2026-11-13)
+WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the world setting brood, named by the people generator of the region where it can, and lived through later jumps like anyone else. api.fates.bring(id) makes a sheet for one (a Vampire with its sire in lineage and its Generation; a Werewolf, Mage or Changeling for the others). An NPC flagged wodx-npc.fates.keep is left out, so the Storyteller's plans for a character stand.
+
+Reverse: clear the brood setting.
+
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
 
@@ -4931,6 +4976,36 @@ tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from
 
 Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
 
+## B3300. One hunter pressure per world region (2026-11-13)
+WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
+
+Reverse: switch off the setting "Hunters across the region"; nothing else reads the pressure.
+
+## B3301. What feeds it (2026-11-13)
+A hunting ground going Watched +1 or Hunted +2, a breach with witnesses that spreads +1, a new description of a culprit +1 (WoDX NPC descriptions, read each turn), an approved era response to a hot place +1, and +1 each turn while the Veil track stands at Hunted or worse and the region is already at Rumours. In lands of the Western church from 1450 to 1650 (the witch trials) every rise is half as large again, rounded up.
+
+Reverse: change POINTS or WITCH_TRIALS in hunters-rules.mjs.
+
+## B3302. Who hunts, by faith, year and line (2026-11-13)
+Bodies by the faith a region keeps (WoDX Chronicle faithFor) and the year, under WoDX's hunter lines (B42): bishops' courts and friars in Western and Eastern church lands to 1230; the Inquisition 1231-1833 (V20 p. 370); the Society of Leopold from 1834 (V20 p. 370; The Hunters Hunted II pp. 117-127); the sayyadin in Islamic lands to 1452 and the Ikhwan al-Safa from 1453 (The Hunters Hunted II pp. 152-153); the Judges everywhere, infernalists first (pp. 154-155); the Arcanum everywhere from 1885 (V20 p. 375, The Hunters Hunted II pp. 133-141; the year is a house reading); a state security service from 1947 (the FBI's Special Affairs Division and Project Twilight in North America, V20 p. 375, The Hunters Hunted II pp. 128-131); the imbued from 1999, or 2023 on the Future Darkness branch. Lands with no named body get local hunters. The Society and the Arcanum come to other lands once a region reaches Investigating. The Arcanum learns but never raids.
+
+Reverse: edit BODIES in hunters-rules.mjs.
+
+## B3303. Hunting is harder where the hunters move (2026-11-13)
+Hunting and Purge add +1 to hunting difficulty across the region, on top of a place's heat, at most +3 in all (upkeep.mjs huntHere).
+
+Reverse: set diff 0 on those stages.
+
+## B3304. Files on culprits and the hunters' moves (2026-11-13)
+Each region keeps a file on every culprit it hears of, in five levels (Nothing, A killer, What it is, Who and where, How to end it), 4 progress a level. From Watching on, each turn adds 1, 2 or 3 progress by stage, doubled for the Ikhwan al-Safa, the Judges and the Arcanum. At Investigating an investigator comes; at Hunting and Purge the hunters move against the culprit with the thickest file (level 2 or more); at Purge a crackdown. Each move goes to the approval queue and is not repeated in a region for 28 days. Approving starts a rumour and logs it; an investigator also sends every description of a culprit on file round the whole town.
+
+Reverse: the approval queue lets the Storyteller refuse any move; Forget in the window drops a file.
+
+## B3305. Word follows a culprit (2026-11-13)
+When a culprit with a file of level 2 or more stands in another region, that region's hunters hear after 60 days before 1500, 30 to 1849, 7 to 1979, 2 to 1999 and at once from 2000; their file starts one level lower and their pressure rises by one.
+
+Reverse: change TRAIL in hunters-rules.mjs.
+
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
 
@@ -4950,3 +5025,49 @@ Reverse: drop "town" from TOPICS and PASSERBY_TOPICS.
 WoDX NPC, passerby-rules.mjs townCrowd: plague halves the crowd, famine takes a fifth, unrest from 3.5 a fifth and from 4.5 two fifths, a ruined or poor town a fifth; a thriving or rich town adds a fifth, never past the scene's most. House rules.
 
 Reverse: make townCrowd return 1.
+
+## B3330. A rising costs the town's masters; a sack costs their purse (2026-11-13)
+WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
+
+Reverse: drop the wodxTown hook in factions.mjs.
+
+## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
+WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
+
+Reverse: drop atAges from the towns api.
+
+## B3430. Sickness in the towns (2026-11-13, simulated systems survey item 5)
+WoDX Storyteller, contagion-rules.mjs and contagion.mjs. A town is a market (market-rules.mjs). Once a week, right after the market turn (so it follows the "Markets move each week" setting and its "Run a week now" button), every sick town moves a week along its outbreak, its market and crowds follow, it may spread, and living characters roll. World settings: contagion (Auto, Suggest, Off; default Auto), contagionPeople (default on), hidden contagionState. In Auto a new town falls sick at once unless a player character stands there, which waits in the approval queue; Suggest queues every new town; history and dated events always queue. One card a week with Undo (state, markets, crowds and damage put back). Ben approved every simulated system proposal (2026-11-13 19:58Z).
+Reverse: set contagion to Off; clear contagionState.
+
+## B3431. The diseases and their ratings (2026-11-13)
+Eighteen sicknesses. The toxin rating, damage type and Stamina difficulty come from the M20 toxin table (M20 p. 442) for plague, cholera, influenza, the great influenza (Severe Flu), leprosy, HIV and Ebola; the rest are rated beside the nearest listed disease (smallpox, typhus, the sweating sickness and yellow fever beside Severe Flu; measles and marsh fever beside Influenza; typhoid and consumption beside Leprosy; the bloody flux beside Salmonella; the coronavirus beside Pneumonia; the Future Darkness bioplague, CP2020 pp. 177 and 179, beside Bubonic Plague). Each has years (cholera from 1817, the sweat 1485 to 1551, smallpox to 1977, HIV from 1959, the coronavirus from 2002) and, for some, home lands where it can break out by itself (yellow fever and marsh fever in hot wet lands, the sweat in the north of Europe, plague in the old world and the plague ports of the Americas). blood marks the sicknesses a vampire can carry from vessel to vessel (V20 p. 303; V20 Dark Ages p. 357): plague, typhus, typhoid, yellow fever, marsh fever, HIV, Ebola, the bioplague.
+Reverse: edit DISEASES and HOMES in contagion-rules.mjs.
+
+## B3432. The course of an outbreak in one town (2026-11-13)
+An outbreak runs the sickness's weeks (plague 26, cholera 12, influenza 8 and so on). The share falling sick each week is a triangle that peaks a third of the way in; the weeks add up to the attack share (plague 35 in the hundred, cholera 8, influenza 25), and the death share of those (plague 60, cholera 45, influenza 1). Phases: arriving, spreading, at its height, waning, over. While it spreads or stands at its height (and its attack is at least 5 in the hundred), food costs 1.25 or 1.5 times, medicine 1.5 or 2, faith 1.1 or 1.3, medicine is short and at the height food too, and scenes of the town with a passers-by crowd go quiet; all of it goes back when it is over or ended. Feeding there is 1 easier while it spreads or stands at its height.
+Reverse: change weekShare, phaseOf, marketHit or huntHit in contagion-rules.mjs.
+
+## B3433. How it spreads (2026-11-13)
+Each week a sick town may pass it along each trade link: the sickness's spread chance (plague 0.5, influenza 0.8, leprosy 0.05) times how hard it presses that week (1 at the height), times the season (1.5 in its season, 0.5 out of it; summer and winter turn round south of 10 degrees south; in the tropics 1.3 for summer sicknesses, 0.9 for winter ones), times the age of travel (1 before 1840, 1.5 to 1949, 2 after), at most 0.95. A caravan that left the town this week carries at least half its spread chance even off the links. Quarantine (the market cut off) multiplies it by a sixth. A town that came through a sickness is spared the same one for 104 weeks. A sick character, or a vampire whose WoDX Actions carrier flag names a blood-borne disease, in a clean town passes it there at half the spread chance, through the approval queue.
+Reverse: change spreadChance, seasonFactor, speedFactor, QUARANTINE or IMMUNE_WEEKS in contagion-rules.mjs.
+
+## B3434. The outbreaks of history, land by land (2026-11-13)
+HISTORY holds 45 outbreaks with the year each reached each land, every inhabited region of the world registry at least once, from the Black Death (Central Asia 1345 to Poland 1351; the Bohemian crown lands and Poland lightly struck, 0.4 of the attack) through the sweats, the smallpox of the Americas, the plagues of Milan, Seville, London, Vienna and Prague, Marseille and Moscow, the cholera pandemics, the third plague, the influenzas of 1580, 1781, 1889, 1918, 1957, 1968 and 2009, Ebola, HIV, SARS and the coronavirus pandemic of 2020. Each arrival is offered once, in the approval queue, to the first clean town of that land, while it lasts there. The Hunt now uses the land's own history where no town is set up, in place of the Europe-only list. Peoples who had not met smallpox, measles or influenza (the Americas, the Pacific, Australia, Aotearoa and the Arctic, by their first contact year) suffer 1.8 times the attack and 4 times the deaths for a hundred years after contact. The arrival years are the commonly cited ones; the Storyteller may reject any offer.
+Reverse: edit HISTORY, CONTACT or VIRGIN_YEARS in contagion-rules.mjs, or switch off the "Plague years" setting for the Hunt's words.
+
+## B3435. Characters who fall sick (2026-11-13)
+A living player character (as hardship counts them) whose token stands in a sick town is exposed each week with a chance of 2.5 times the attack times how hard it presses (at most 0.9), and then rolls Stamina against the sickness's difficulty; a failure means they catch it. Each later week they roll again (M20 p. 442): a failure deals the rating as bashing or lethal damage. It ends when its course runs out (plague 2 weeks, cholera 1, smallpox 4) or, for a bashing sickness, after two successes in a row. Leprosy, consumption and HIV strike every fourth week and never end by themselves: the Storyteller ticks Cured. The owner and the Storyteller see the damage; the week's card has Undo.
+Reverse: switch off contagionPeople, or change exposeChance and illnessWeek in contagion-rules.mjs.
+
+## B3436. The Hunt and the passers-by read the town (2026-11-13)
+upkeep.huntHere(scene).outbreak now comes from outbreakHere: the scene's town's live outbreak first ({name, note, disease, phase, blood, sickShare, diff}), else the history of the scene's land for the year, else the old list. WoDX Actions' Hunt and WoDX NPC's passers-by already read it, so feeding there offers diseased vessels and the sick on the street without a change to either module. Still to come in WoDX Actions: naming the disease on the carrier flag and using diff on the hunting roll.
+Reverse: make huntHere read U.outbreakFor(yearNow()) again.
+
+## B3437. Towns lose their dead to the sickness they caught (2026-11-13)
+WoDX Storyteller, town-rules.mjs and towns.mjs (towns that change over time, B3280). While sickness spreads between towns is on, the town turn takes each town's sickness from its own outbreak (contagion-rules townHit): the week's dead (the attack times that week's share times the death share) come off its people, and its unrest rises by a tenth for each step of pressure. The town turn's own outbreaks by year (TOWN_OUTBREAKS) then do not strike, so a town never has two plagues; plague brought by dated news still does. With sickness off, the town turn works as before.
+Reverse: pass no sickFor from towns.mjs.
+
+## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
+WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
+Reverse: remove the sickDiff field and the named carrier in main.js.
