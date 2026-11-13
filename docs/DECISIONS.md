@@ -141,7 +141,7 @@ Next free block: B3050
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
-| B3030-B3049 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3030-B3034) | Paperdoll |
+| B3030-B3049 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3030-B3035) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4313,4 +4313,9 @@ Reverse: Remove the imports of face64-garou.mjs and face64-fera.mjs from face64-
 WoDX Paperdoll 0.19.0 (face64-mage.mjs). Any mage: 50 (the Avatar's glint, foci worn as charms, sigils, Paradox scars and white locks, Resonance in the air). Fifteen each for the nine Traditions of M20 (Akashic Brotherhood, Celestial Chorus, Cult of Ecstasy, Dreamspeakers, Euthanatos, Order of Hermes, Sons of Ether, Verbena, Virtual Adepts), the Hollow Ones, the five Conventions (Iteration X, New World Order, Progenitors, Syndicate, Void Engineers), Marauders, Nephandi, Orphans, and the Ahl-i-Batin and Taftani the courts already use. Most mages look like anyone else, so these are small signs, in our own words. Eye colours on a mage are drawn after the Avatar's light, so they show.
 
 Reverse: Remove the import of face64-mage.mjs from face64-features.mjs.
+
+## B3035. Wraith faces: 50 for any wraith, 15 per guild and faction (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-wraith.mjs). Any wraith: 50 (cold eyes, grave mist and dust, cracks in the Corpus, fetters worn at the throat, the edge of a moliated mask), beside the deathmark every wraith already bears. Fifteen each for the fifteen guilds of Wraith 20th (Artificers, Chanteurs, Harbingers, Haunters, Masquers, Mnemoi, Monitors, Oracles, Pardoners, Proctors, Puppeteers, Sandmen, Solicitors, Spooks, Usurers) and for the Hierarchy, Heretics, Renegades and Spectres, in our own words.
+
+Reverse: Remove the import of face64-wraith.mjs from face64-features.mjs.
 

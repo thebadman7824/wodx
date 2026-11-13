@@ -11,6 +11,7 @@ import "./face64-kindred.mjs";
 import "./face64-garou.mjs";
 import "./face64-fera.mjs";
 import "./face64-mage.mjs";
+import "./face64-wraith.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
