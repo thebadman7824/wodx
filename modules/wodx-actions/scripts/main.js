@@ -67,6 +67,7 @@ import * as TH from "./trait-hooks.js";
 import * as KF from "./feeding-rules.js";
 import * as HN from "./hunt-night-rules.js";
 import * as OD from "./odds-rules.js";
+import * as AIM from "./aim.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -430,12 +431,22 @@ function opts(entries, sel) {
 function rootOf(html) { return html instanceof HTMLElement ? html : (html?.[0] ?? html); }
 
 async function dialog(title, content, label, callback, { width = 460, render = null } = {}) {
+    AIM.dropped();
     const r = await P.ask({
         title, content, width, classes: ["vta-dialog"], onRender: render,
         buttons: [{ id: "ok", label, icon: "fas fa-dice-d10", default: true }, { id: "cancel", label: "Cancel" }]
     });
+    const power = AIM.taken();
     if (!r || r.id !== "ok") return null;
-    try { return await callback(r.data, null); }
+    try {
+        const out = await callback(r.data, null);
+        // A power that was rolled is shown on the map: a sprite token plays its casting move (Paperdoll)
+        if (power?.actor && out) {
+            const target = power.target ?? [...(game.user.targets ?? [])].map(t => t.actor).find(a => a && a !== power.actor) ?? null;
+            Hooks.callAll("wodxPowerShown", power.actor, { target });
+        }
+        return out;
+    }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); return null; }
 }
 
@@ -2650,7 +2661,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.56.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.57.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

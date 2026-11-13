@@ -14,7 +14,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxCrossing | otherworlds | storyteller |
 | wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss) |
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
-| wodxPowerShown | none yet (any module may send it with the actor and a target) | paperdoll (a sprite token plays its casting move) |
+| wodxPowerShown | actions (a power rolled from its window, with the actor and a target) | paperdoll (a sprite token plays its casting move) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news) |
