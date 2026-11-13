@@ -3,6 +3,8 @@
  * One line per good: "name | text". A line "@YEAR name | text" is the wording from that year on, where the thing itself
  * changed. WoDX's own words. Edit here; the Item Review Desk reads the same text.
  */
+import {WAY_DESC_RAW} from "./goods-ways.mjs";
+
 export const DESC_RAW = `
 a bronze coin | A small, worn disc of bronze. The stamped head is rubbed almost smooth by hands and purses.
 a cowrie shell | A glossy, humped seashell with a toothed slit underneath. Far from the sea it passes as small money, strung by the dozen.
@@ -2081,7 +2083,7 @@ export const detailsOf = name => DETAILS[name] ?? [];
 /** {name: [{from, text}]} sorted by year. */
 export const DESC = (() => {
   const out = {};
-  for ( const line of DESC_RAW.split("\n") ) {
+  for ( const line of (DESC_RAW + WAY_DESC_RAW).split("\n") ) {
     const m = /^(?:@(-?\d+) )?(.+?) \| (.+)$/.exec(line.trim());
     if ( !m ) continue;
     (out[m[2]] ??= []).push({from: m[1] === undefined ? -Infinity : Number(m[1]), text: m[3]});

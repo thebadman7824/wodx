@@ -1769,3 +1769,8 @@ From the open list of the global rule (docs/GLOBAL.md), priority 1. A Muslim NPC
 ## 2026-11-13: maps load on first use, and a map of Storyteller (Storyteller 0.58.2, Otherworlds 0.23.2)
 
 From today's Stale Design Desk (items e1 and e2, recommendations taken while Ben is away), priority 5, Live performance. Every client used to fetch the world map grid and rules and the realm world maps' rules and places at start-up, about 310 KB that only the Storyteller reads. Both now load the first time their window opens, through a load() call that later calls reuse. The gates gateworldmap (9 steps) and gaterealmworlds (8 steps) load first and check that the main scripts no longer import them; tools/harness/lazy-maps.test.mjs walks the static imports. Storyteller has a README with a map of its parts, files, settings and api keys, checked by tools/harness/storyteller-readme.test.mjs. B2675 to B2677.
+
+## 2026-11-13: goods by way of life and region (Library 0.19.0, Interactables 0.36.0)
+
+Priority 1 under the global rule: GLOBAL.md listed goods and gear as "mostly European and North American". Everyday goods now say where they are at home (B2680): 183 existing goods placed by faith, people and the year each land had them, and 80 goods of their own for the 16 ways of life. The coins of Europe stay home and a coin of the place is named in the local money (B2681). Fill by place and era draws for the scene's region and its way of life in the chronicle's year (B2682). New harness file goods-ways.test.mjs (6 tests); fill, examine, use, recipes, markets, ownership, anachronism and sheet extras tests pass. Not sorted by region yet: Gear by era, crafting and the cookery lists, which still read goods by year alone.
+

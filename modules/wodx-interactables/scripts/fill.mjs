@@ -7,6 +7,8 @@
  * until the config window is saved. Nothing runs on players' machines.
  * 0.21.0: everyday goods by era (WoDX Library's data/goods.mjs: food, tools, cloth, coin, papers and the like) join the
  * draw as plain lines of text. The Storyteller picks gear, goods or both; goods alone work without Gear by era.
+ * 0.36.0: goods follow the scene's region and way of life in the chronicle's year (WoDX Chronicle and Library), and
+ * the coin of the place is named in the local money (WoDX Storyteller). Each module stays optional.
  */
 import * as F from "./fill-rules.mjs";
 
@@ -42,13 +44,46 @@ export async function gearIndex() {
   return [...idx].map(e => ({name: e.name, type: e.type, uuid: e.uuid ?? `Compendium.${pack.collection}.Item.${e._id}`, flags: e.flags ?? {}, system: e.system ?? {}}));
 }
 
-/** Everyday goods from WoDX Library: {goods, weights}, empty when WoDX Library is off or too old. */
+/** Everyday goods from WoDX Library: {goods, weights, inUse}, empty when WoDX Library is off or too old. */
 export async function goodsData() {
-  if ( !game.modules.get("wodx-library")?.active ) return {goods: [], weights: null};
+  if ( !game.modules.get("wodx-library")?.active ) return {goods: [], weights: null, inUse: null};
   try {
     const m = await import("../../wodx-library/data/goods.mjs");
-    return {goods: m.GOODS ?? [], weights: m.PLACE_WEIGHTS ?? null};
-  } catch (e) { return {goods: [], weights: null}; }
+    return {goods: m.GOODS ?? [], weights: m.PLACE_WEIGHTS ?? null, inUse: typeof m.inUseAt === "function" ? m.inUseAt : null};
+  } catch (e) { return {goods: [], weights: null, inUse: null}; }
+}
+
+/**
+ * 0.36.0: where a scene stands. {year, region, regionLabel, way, wayLabel, money} from WoDX Chronicle (its region, or
+ * the homeland), or nulls when Chronicle is off; the fill then draws by era alone, as before.
+ */
+export function whereFor(scene = canvas?.scene) {
+  const chron = game.modules.get("wodx-chronicle")?.api;
+  const out = {year: null, region: null, regionLabel: null, way: null, wayLabel: null, money: null};
+  try {
+    out.year = Number(chron?.eras?.currentYear?.()) || null;
+    const r = chron?.world?.here?.(scene);
+    if ( r?.id ) Object.assign(out, {region: r.id, regionLabel: r.label ?? r.id, money: r.money ?? null});
+    const rules = chron?.world?.rules;
+    if ( out.region && out.year !== null && typeof rules?.sphereFor === "function" ) {
+      out.way = rules.sphereFor(out.region, out.year);
+      out.wayLabel = rules.SPHERES?.[out.way] ?? out.way;
+    }
+  } catch (e) { /* Chronicle too old: by era alone */ }
+  return out;
+}
+
+/** 0.36.0: names n coins of the local money (WoDX Storyteller), or null when Storyteller is off. */
+export async function coinNamer(where) {
+  if ( !game.modules.get("wodx-storyteller")?.active || !where?.money || where.year === null ) return null;
+  try {
+    const M = await import("../../wodx-storyteller/scripts/money-rules.mjs");
+    const L = await import("../../wodx-library/data/goods-ways.mjs");
+    const m = M.moneyFor(where.year, where.money);
+    // A land that trades without coin has no coin of the place to find
+    if ( m?.id === "barter" ) return () => null;
+    return n => L.localCoinLine(m?.units, n);
+  } catch (e) { return null; }
 }
 
 /** Draw for a container. opts: {place, count, era, container, items, rng}. Returns the drawn items. */
@@ -64,7 +99,11 @@ export async function drawFor(opts = {}) {
 export async function fillDialog(tile, field = null) {
   if ( !game.user.isGM ) return null;
   const items = await gearIndex();
-  const {goods, weights} = await goodsData();
+  let {goods, weights, inUse} = await goodsData();
+  const where = whereFor(tile?.parent ?? canvas?.scene);
+  const coin = await coinNamer(where);
+  const barter = coin && coin(3) === null;
+  if ( barter ) goods = goods.filter(g => !g.localCoin);
   if ( !items.length && !goods.length ) { ui.notifications.warn("Gear by era isn't installed yet. Open Gear by era once (WoDX Library) and try again."); return null; }
   const whatSel = !items.length ? "goods" : !goods.length ? "gear" : "both";
   const container = field?.form?.querySelector?.(`[name="flags.${MOD}.kind"]`)?.value ?? tile?.flags?.[MOD]?.kind ?? "chest";
@@ -72,7 +111,7 @@ export async function fillDialog(tile, field = null) {
   const formPlace = field?.form?.querySelector?.(`[name="flags.${MOD}.fillPlace"]`)?.value;
   const guess = guessFor(tile, formPlace === undefined ? undefined : formPlace || null);
   const ask = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 460}, window: {title: "Fill by place and era"}, classes: ["wodx-dialog", "wix-fill"],
-    content: `<p>Draws for ${esc(eraName(era))}. You see the draw before anything goes in.</p>
+    content: `<p>Draws for ${esc(eraName(era))}${where.way ? `, ${esc(where.regionLabel)} (${esc(where.wayLabel)})` : ""}. You see the draw before anything goes in.</p>
       <div class="form-group"><label>Draw from</label><select name="what" data-fixed>${opt(whatSel === "both" ? F.WHAT : {[whatSel]: F.WHAT[whatSel]}, whatSel)}</select></div>
       <div class="form-group"><label>The place</label><select name="place" data-fixed>${opt(F.PLACES, guess.place)}</select></div>
       ${guess.from ? `<p class="hint">${esc(guess.from === "own" ? "Set for this container." : `From where it sits: ${guess.name ?? "this scene"}.`)} Change it if it doesn't fit.</p>` : ""}
@@ -81,7 +120,8 @@ export async function fillDialog(tile, field = null) {
     buttons: [{action: "draw", label: "Draw", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
   if ( !ask || ask === "cancel" ) return null;
   for ( let tries = 0; tries < 20; tries++ ) {
-    const got = F.drawMixed({items, goods, weights, what: ask.what ?? whatSel, era, place: ask.place, container, count: Number(ask.count) || 3});
+    const got = F.drawMixed({items, goods, weights, what: ask.what ?? whatSel, era, place: ask.place, container, count: Number(ask.count) || 3,
+      year: where.year, way: where.way, region: where.region, inUse, coin});
     if ( !got.length ) { ui.notifications.info("Nothing fits that place and era."); return null; }
     const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: "The draw"}, classes: ["wodx-dialog", "wix-fill-review"],
       content: `<p>Untick what doesn't belong here.</p><ul class="wix-fill-list" data-fixed>${got.map((g, i) => `<li><label><input type="checkbox" name="k${i}" checked> ${esc(g.name)}${g.goods ? "" : " <span class=\"hint\">(gear)</span>"}</label></li>`).join("")}</ul>`,
