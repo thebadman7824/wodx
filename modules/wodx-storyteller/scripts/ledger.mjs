@@ -198,6 +198,8 @@ export async function onDeath(dead, {deleted = false} = {}) {
   // 0.61.0: what they had is divided by the will and the law of the place and year
   // Fix: only a death recorded on the sheet; a sheet deleted (a stray copy, a gate's actor) has no estate to divide
   if ( !deleted ) { try { await Wills.onDeath(dead); } catch (e) { console.error(`${MOD} | estate`, e); } }
+  // B3530: the Inheritance step for everything else the dead held
+  if ( !deleted ) { try { await (await import("./inherit.mjs")).onDeath(dead); } catch (e) { console.error(`${MOD} | inheritance`, e); } }
   for ( const row of L.inheritance(ledger(), dead.id, heir) ) {
     const e = row.entry;
     await c?.propose?.({type: T.inherit, key: `inherit:${e.id}`,

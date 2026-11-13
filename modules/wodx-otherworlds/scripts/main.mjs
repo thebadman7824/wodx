@@ -68,8 +68,8 @@ Hooks.once("ready", () => {
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     // B3270-B3276: Wyrm corruption that spreads between places and into people
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
-      plan: corruption.planTurn, apply: corruption.applyTurn, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules},
-    drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
+      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules},
+    drift: {of: drift.driftOf, step: drift.stepDrift, lever: drift.leverStep, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
     realmWorlds: {open: realmWorlds.realmWorldsDialog, view: realmWorlds.view, closer: realmWorlds.closerDialog, places: realmWorlds.foundDialog, mapOf: realmWorlds.mapOf,
