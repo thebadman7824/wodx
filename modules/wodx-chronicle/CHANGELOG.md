@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.70.0 (Law of the land: the far north family for the Arctic (Inuit and Sámi custom with song duels, shaming and exile, Danish, Norwegian, Swedish and Russian crown courts from 1721, the state's police from 1920, Greenland home rule in 1979). Every region now has its own family; only Antarctica keeps the general stand-in)
+- 0.69.0 (Law of the land: the Pacific family for Australia, Aotearoa and the Pacific islands (chiefs and tapu, the first peoples' own law in Australia, the penal colony, the stolen generations, the Treaty of Waitangi and its tribunal, Hawaiian kapu and its end, colonial rule and independence))
 - 0.68.0 (Law of the land: the Americas family for all eight American regions (the peoples' own councils and the Great Law, the Mexica and the Inca, the viceroyalties and the Holy Office, the slave codes, the colonies under common and French law, the republics, Prohibition, the Wild West, the juntas))
 - 0.67.0 (Law of the land: the steppe family for Central Asia and Siberia (clan custom and the khan's court, the Great Yassa, the Chagatai, Timurid and Uzbek khans, Russian conquest, fur tribute and exile, Soviet republics and the Gulag, independence))
 - 0.66.0 (Law of the land: the Japanese family (the shogunate's warrior courts and the Goseibai Shikimoku, warring-state house law, the sword hunt, the Tokugawa order, the ban on Christianity and the closed country, the Meiji codes, the thought police, the postwar constitution))
