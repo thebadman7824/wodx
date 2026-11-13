@@ -337,6 +337,17 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 - **Look closer at From** shows that one square at about 5 km to a small square. It is made from the world map and is the same every time.
 - With WoDX Otherworlds on, **Show** also offers the Penumbra, the Shadowlands and the Near Dreaming (the same map as it looks from the other side) and the chart of the worlds, which gives every realm of Realm maps a spot. Where a realm sits on the chart is WoDX's own arrangement, not a rule.
 
+### Realm world maps
+
+**Realm world maps** (among the token tools, and under **Realms past the near worlds** in the world map window) shows the whole of one realm past the near worlds: Pangaea, Malfeas, the Tempest, Stygia, the Far Dreaming and 29 more. It makes nothing in the world; it is for answering "what lies where in this realm, and how long is the way?"
+
+- Pick a **Realm**, then **From** and **To** among its places, and choose **Show**. Under the map: the time the way takes and the ground it mostly crosses, what holds for the realm in the year, and when its map changes.
+- The places are the realm's own, from the books. Where they lie, the ground between them and every travel time are WoDX's own, because the books give no maps and no distances. Treat a time as a starting point and change it when the story wants.
+- **Shown** starts at what the chronicle has found: travellers know the place where they arrive, the rest is dark, and no journey can end at a place not yet found. **Found places** ticks the places the chronicle has found. **The whole realm** shows everything, for the Storyteller's eyes.
+- Some realms do not hold still. The Tempest, the Far Shores and the Labyrinth are made anew by each Great Maelstrom; the Far Dreaming each season (pick the **Season**); Flux, a Battleground, a Dream Zone, the Deep Dreaming, a Paradox Realm and the Deep Umbra on every visit (choose **A new visit**). A Horizon Realm, a Shade Realm, a Shard Realm and a Dark Kingdom each have a map of their own by the name typed under **Which one**. A map made anew starts with nothing found.
+- **Look closer at From** shows the square of that place and its neighbours.
+- To play a scene inside a realm, draw it with **Realm maps** as before; the world map of a realm does not make scenes.
+
 ### Settlements: a whole town from the generator
 
 The town generator can make a whole place for any year from 1197 to 2099 in one command (tools/mapgen/ddsettle.py: a name, a seed, a size and a year). Beside the Dungeondraft maps it writes a settlement record, a file ending in .settlement.json: every household with its trade, its standing and its people, the offices of the age, and the ties between households.

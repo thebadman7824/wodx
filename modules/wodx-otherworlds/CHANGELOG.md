@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.21.0 (realm world maps: each of the 34 realms past the near worlds has a coarse map of its own, 200 by 110 squares, made from a plan written for the realm with its landmarks from the books placed on it; a journey between two places has a time, any place can be looked at closer, and places stay hidden until the Storyteller marks them found; a realm's map is the same in every age, or made anew by each Great Maelstrom, each season or every visit, or one for each realm of its kind by name; where the places lie and every travel time are WoDX's own, the books give none; the window is among the token tools and opens from the world map)
 - 0.20.0 (the chart of the worlds: every realm of the realm maps catalogue has a spot in rings round the living world, on four sides (the spirit wilds, the high and far reaches, the Dreaming, the lands of the dead), with the barrier each side lies behind; the Penumbra, the Shadowlands and the Near Dreaming dress WoDX Storyteller's world map as the Earth seen from the other side. B2545 to B2547)
 - 0.19.0 (a small rule for Otherworld journeys: no storm, not a great journey, no hazard or Maelstrom on the way)
 - 0.18.0 (the Shroud drifts on a track of its own: mass death thins it a point, it heals back; a place with a Shroud rating reads it with the drift; WoDX Storyteller's battle aftermath sends it)

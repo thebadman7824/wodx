@@ -16,6 +16,8 @@ import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
 import * as worldsChartRules from "./worlds-chart-rules.mjs";
+import * as realmWorlds from "./realm-worlds.mjs";
+import * as realmWorldsRules from "./realm-worlds-rules.mjs";
 import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
@@ -41,6 +43,7 @@ Hooks.once("init", () => {
   registerStatuses();
   journey.registerJourneySettings();
   realms.registerRealmSettings();
+  realmWorlds.registerRealmWorldSettings();
   realms.setupRealms();
 });
 
@@ -64,6 +67,8 @@ Hooks.once("ready", () => {
     drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
+    realmWorlds: {open: realmWorlds.realmWorldsDialog, view: realmWorlds.view, closer: realmWorlds.closerDialog, places: realmWorlds.foundDialog, mapOf: realmWorlds.mapOf,
+      found: realmWorlds.found, setFound: realmWorlds.setFound, visits: realmWorlds.visits, newVisit: realmWorlds.newVisit, rules: realmWorldsRules},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
       dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules,
       drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},
@@ -149,6 +154,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxRealmMaps = {
     name: "wodxRealmMaps", title: "Realm maps: draw a realm past the near worlds, send the selected tokens there, bring them back (Storyteller)", icon: "fa-solid fa-map", order: 133,
     button: true, visible: game.user.isGM, onChange: () => realmMaps.realmMapsDialog()
+  };
+  tokens.tools.wodxRealmWorlds = {
+    name: "wodxRealmWorlds", title: "Realm world maps: the whole of a realm, its places, journeys and what is found (Storyteller)", icon: "fa-solid fa-map-location-dot", order: 134,
+    button: true, visible: game.user.isGM, onChange: () => realmWorlds.realmWorldsDialog()
   };
   tokens.tools.wodxReflect = {
     name: "wodxReflect", title: "Reflect a generated town map in the Penumbra and Shadowlands (Storyteller)", icon: "fa-solid fa-ghost", order: 115,
