@@ -70,6 +70,7 @@ export async function run() {
     if ( typeof A.play === "function" ) {
       const sheets = {};
       for ( const n of names ) for ( const act of SR.ACTS?.[n] ?? [] ) sheets[SR.actPath(n, act)] = (await fetch(`/${SR.actPath(n, act)}`, {method: "HEAD"})).status;
+      await A.play(t, "cast", docs[1]); await sleep(1300);   // once first, so the step proves a repeat of the same move plays too
       const move = await A.play(t, "cast", docs[1]); await sleep(350);
       const during = A.playing(t.id), atex = t.object?.mesh?.texture, aw = atex?.baseTexture?.width ?? atex?.source?.width, facing = A.state(t.id)?.facing;
       await sleep(1500);

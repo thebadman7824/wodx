@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.8.1 (fix: the same attack played twice in a row toward the same side did nothing the second time; found on the testbed; not deployed)
 - 0.8.0 (sprite tokens attack: each of the six test figures has its own attack moves, six frames in every facing, a strike with the hand, a thrust, a shot, a bite, the Crinos claws, and a worked power with its effect; a blow that lands in a fight plays the attacker's move turned toward the one struck, on every screen; the four people redrawn from one description each so walk and attack match; not deployed)
 - 0.7.1 (sprite tokens: a figure that stops while facing left or right stands with its feet together, not in mid-stride; the Lupus is a darker grey-brown so it reads as a wolf at night; not deployed)
 - 0.7.0 (sprite tokens, a prototype for the testbed: a token given a sprite shows a whole drawn figure that turns the way it moves and walks as it goes; six figures to try, the Kindred elder, the Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888; drawn by our own code, sharp at any zoom; the bust stays on sheets; given and taken off by the Storyteller through the module api for now; not deployed)
