@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.28.0: the short lifepath (B2828). Pure rules. The player answers where the character comes from
+ * WoDX Creation 0.30.0: the short lifepath (B2828). Pure rules. The player answers where the character comes from
  * (continent, region, people, origin); the dice tell the rest from the same region and year tables the long path
  * uses, and the story is shown as one paragraph. Every pick can still be changed with Back, or the long path chosen.
  */

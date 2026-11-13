@@ -8,7 +8,7 @@
   "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready).",
   "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"],
   "lanes": [
-    {"id": 1, "port": 30000, "dataPath": "C:/Users/blebr/AppData/Local/FoundryVTT", "autoReset": false},
+    {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
     {"id": 3, "port": 30030, "dataPath": "D:/WoDX/FoundryData-lane3", "autoReset": true}
   ]

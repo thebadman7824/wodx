@@ -8,6 +8,7 @@ import {readFileSync, writeFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 import * as G from "../../modules/wodx-library/scripts/gear-rules.mjs";
+import {GEAR_WAYS, LOCAL_GEAR} from "../../modules/wodx-library/data/gear-ways.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const md = f => readFileSync(join(root, "docs/research/gear-tables", `${f}.md`), "utf8");
@@ -39,12 +40,15 @@ export function build() {
     const it = G.rowToItem({...row, kind: "cyberware"}, "cyberpunk-2020", {cyber: true, surgery: G.clean(row.surgery), humanity: G.clean(row["humanity cost"])});
     if ( it ) items.push(it);
   }
+  // Library 0.21.0 (B3020, B3021): where each piece is at home, and the weapons of other lands
+  for ( const it of items ) if ( GEAR_WAYS[it.name] ) it.flags[G.MOD].ways = GEAR_WAYS[it.name];
+  items.push(...G.localGear(items, LOCAL_GEAR));
   return items;
 }
 
 if ( import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("build-gear.mjs") ) {
   const items = build();
-  writeFileSync(join(root, "modules/wodx-library/data/gear.json"), JSON.stringify({version: 1, items}, null, 1) + "\n");
+  writeFileSync(join(root, "modules/wodx-library/data/gear.json"), JSON.stringify({version: 2, items}, null, 1) + "\n");
   const by = {}; for ( const i of items ) by[i.type] = (by[i.type] ?? 0) + 1;
   console.log(`${items.length} items`, by);
 }

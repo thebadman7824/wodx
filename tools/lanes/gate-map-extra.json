@@ -1,0 +1,6 @@
+{
+  "_about": "Corrections to the gate map in gate-map.mjs: add or remove modules a gate covers, and files in tools/gate that are diagnostics, not gates.",
+  "notGates": ["gate6c-diag", "gatecssprobe"],
+  "add": {},
+  "remove": {}
+}

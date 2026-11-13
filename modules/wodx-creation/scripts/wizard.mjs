@@ -12,6 +12,7 @@ import * as B from "./first-night-build-rules.mjs";
 import * as W from "./wizard-rules.mjs";
 import * as Q from "./quick-start-rules.mjs";
 import * as D from "./derived-rules.mjs";
+import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
 
@@ -24,6 +25,19 @@ const chron = () => (game.modules.get("wodx-chronicle")?.active ? game.modules.g
 const darkEra = () => { try { return ["dark-ages", "long-night"].includes(chron()?.eras?.activeEra?.()?.profile?.id ?? ""); } catch (e) { return false; } };
 
 export const wizardOf = actor => W.normWizard(actor?.flags?.[MODULE_ID]?.[FLAG] ?? {});
+/** The player view's hover help in WoDX Sheets, when that module has it: one text for each Trait in all of WoDX. */
+let sheetHelp = null;
+import("../../wodx-sheets/scripts/beginner-rules.mjs").then(m => { sheetHelp = typeof m.helpFor === "function" ? m.helpFor : null; }).catch(() => null);
+const noteFor = (label, lineId, group) => traitNote(label, lineId, {help: sheetHelp, group});
+
+/** What a page's Traits mean, folded under one line: [{label, group}]. */
+function notesBlock(list, lineId) {
+  const seen = new Set();
+  const items = list.map(t => ({label: t.label, ...noteFor(t.label, lineId, t.group)})).filter(t => t.text && !seen.has(t.label) && seen.add(t.label));
+  if ( !items.length ) return "";
+  return `<details class="wodx-wz-notes"><summary>What these mean</summary><dl>${items.map(t => `<dt>${esc(t.label)}</dt><dd>${esc(t.text)}${t.ref ? ` <span class="wodx-quiet">(${esc(t.ref)})</span>` : ""}</dd>`).join("")}</dl></details>`;
+}
+
 const saveWizard = (actor, w) => actor.update({[`flags.${MODULE_ID}.${FLAG}`]: W.normWizard(w)});
 
 /** The book the wizard counts by: the player's pick, else the creation check's. */
@@ -163,7 +177,8 @@ export class WizardApp extends ApplicationV2 {
     const up = W.canRaise(ctx.view, ctx.lineId, ch, {page, value, max, ...ctx.opts});
     const data = Object.entries(change).map(([k, v]) => `data-${k}="${esc(v)}"`).join(" ");
     const price = page === "freebies" && up.cost ? `<span class="wodx-quiet">+${up.cost}</span>` : "";
-    return `<tr><td>${esc(label)}</td><td class="wodx-fn-dots">${B.dots(value, 5)}</td>
+    const note = noteFor(label, ctx.lineId, change.group ?? (change.kind === "virtue" ? "virtues" : null)).text;
+    return `<tr><td${note ? ` title="${esc(note)}"` : ""}>${esc(label)}</td><td class="wodx-fn-dots">${B.dots(value, 5)}</td>
       <td><button type="button" data-action="step" ${data} data-d="-1" data-page="${page}" ${value <= min ? "disabled" : ""} aria-label="One less ${esc(label)}">-</button>
       <button type="button" data-action="step" ${data} data-d="1" data-page="${page}" ${up.ok ? "" : "disabled"} title="${esc(up.why ?? "")}" aria-label="One more ${esc(label)}">+</button> ${price}</td></tr>`;
   }
@@ -217,7 +232,8 @@ export class WizardApp extends ApplicationV2 {
     const intro = kind === "attributes"
       ? "Pick which group matters most to the character, then spend its dots. Every Attribute starts with one free dot."
       : `Pick the order for Talents, Skills and Knowledges, then spend. No Ability goes above ${L.abilityCap} here; freebie points can raise one later.`;
-    return `<h3>${kind === "attributes" ? "Attributes" : "Abilities"}</h3><p>${intro}</p>${out}`;
+    const all = groups.flatMap(g => (traits[g] ?? []).map(t => ({label: t.label, group: kind === "attributes" ? "attributes" : g})));
+    return `<h3>${kind === "attributes" ? "Attributes" : "Abilities"}</h3><p>${intro}</p>${out}${notesBlock(all, ctx.lineId)}`;
   }
 
   #powers(ctx) {
@@ -287,7 +303,8 @@ export class WizardApp extends ApplicationV2 {
     const rows = this.#virtueRows(ctx, "virtues");
     return `<h3>Virtues</h3><p>${ctx.L.virtues} dots. Each Virtue in use starts with one free dot${ctx.lineId === "v20" ? " (Conviction and Instinct, for a Path, start at none)" : ""}.</p>
       ${rows ? `<table class="wodx-table">${rows}</table>` : `<p class="wodx-quiet">This sheet shows no Virtues.</p>`}
-      ${this.#derived(ctx)}`;
+      ${this.#derived(ctx)}
+      ${notesBlock((B.traitGroups(this.actor.system ?? {}).virtues ?? []).map(t => ({label: t.label, group: "virtues"})), ctx.lineId)}`;
   }
 
   /** The Traits that follow from the others, with a button to put each on the sheet (B3000). */
@@ -302,7 +319,8 @@ export class WizardApp extends ApplicationV2 {
       ${off > 1 ? `<p><button type="button" data-action="derive" data-key=""><i class="fa-solid fa-wand-magic"></i> Set all ${off}</button></p>` : ""}
       ${blood ? `<p>Blood to start with: ${esc(blood.how)}. Now ${bloodNow}. <button type="button" data-action="blood">${blood.roll ? `<i class="fa-solid fa-dice-d10"></i> Roll it` : "Set it"}</button></p>` : ""}
       ${d.notes.length ? `<p class="wodx-quiet">${d.notes.map(esc).join(" ")}</p>` : ""}
-      <p class="wodx-quiet">From ${esc(d.ref)}. Dots bought with freebies and the prelude's Willpower are added on top.</p>`;
+      <p class="wodx-quiet">From ${esc(d.ref)}. Dots bought with freebies and the prelude's Willpower are added on top.</p>
+      ${notesBlock(d.rows.map(r => ({label: r.label === "Humanity or Path" ? "Humanity" : r.label, group: r.key})), ctx.lineId)}`;
   }
 
   #merits(ctx) {

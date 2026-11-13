@@ -1118,6 +1118,16 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | Sheet tools shows its words only in Beginner view (B2837) | In Full view it is an icon like the others, so the sheet's name fits | The sheetTools setting, or wodx-worded in main.mjs |
 | 2026-11-13 | Is the first-night tour offered to every new player? (B2838) | Yes, once, with Not now; the Storyteller can turn the offer off in the world settings | guideOffer setting |
 
+## Approved by Ben, 13 November 2026, 18:49 UTC (Security Desk)
+
+Ben approved every recommendation on the Security Desk (https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK), for Live and the PC testbeds both.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Securing Live and the PC testbeds (26 items) | All 26 recommendations. Repo side in tools/security and the Caddyfile; Live changes as one command block Ben runs on a quiet evening, ending with the waiting reboot; PC side as PC helper jobs | tools/security/README.md has the undo for each Live step |
+| 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
+| 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1145,6 +1155,7 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | Which Demon groups get their own face features? (B3048) | The seven houses and the five factions at 15 each | Add rows to face64-demon.mjs |
 | 2026-11-13 | Which Mummy and Kuei-jin groups get their own face features? (B3049) | Shemsu-heru, Amenti, Teomallki, Wu Tian, Children of Apophis, Bane mummies; the five Dharmas; 15 each | Add rows to face64-mummy.mjs |
 | 2026-11-13 | Which ear kinds a Nosferatu may roll, and how often (B3050) | Bat 3 in 12, long 2 in 12, plain, torn, drooping, stub, finned, holes and odd pair 1 in 12 each | Change the pick list in face64-rules.mjs |
+| 2026-11-13 | How often a changeling shows a fae mien skin (B3051) | One in three, to fae sight only | Change the chance in face64-rules.mjs |
 | 2026-11-13 | Does pressing Set in the wizard keep dots bought with freebies or the prelude? (B3001) | Yes: the book value plus every bought or prelude dot | Pass bought: {} in derivedFor |
 | 2026-11-13 | Garou starting Willpower by tribe, with Fenrir and the Warders of Men read as the Get of Fenris and the Glass Walkers (B3002) | The W20 core values; waits for the book check | Empty WILLPOWER_BY_TRIBE |
 | 2026-11-13 | Demon starting Torment by House (B3003) | 3 for Devils, Scourges, Malefactors and Fiends; 4 for Defilers, Devourers and Slayers; waits for the book check | Empty TORMENT_BY_HOUSE |
@@ -1155,8 +1166,14 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | When the nightly lane reset runs, and which lanes (B3023) | 04:40 PC time, lanes 2 and 3 only; lane 1 is never reset by the task | Run register-lane-reset.ps1 with another -At, or set autoReset in lanes.json |
 | 2026-11-13 | How long lane backups are kept (B3023) | All kept: a reset backs up a lane's world only when it differs from the known-good copy, and removing backups needs your word | Say how many to keep |
 | 2026-11-13 | Leftover test documents on a lane (B3021) | A warning, not a stop, since many older gates leave their test folders; settings, modules and the clock do stop a run | Say to make documents stop a run too |
-| 2026-11-13 | Securing Live and the PC testbeds (Security Desk, 26 items, https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK) | Report only, nothing changed. Until you pick, Live stays as it is; the recommended fixes that touch Live, the router or your accounts wait for your explicit go-ahead and are not covered by auto-approval | Nothing to reverse |
-| 2026-11-13 | Read Live's real settings (SSH, firewall, headers, updates, backups) | A read-only audit job for the PC helper (jobs/live-security-audit-2026-11-13.md, script security-desk/live-audit.sh); it prints settings only, never passwords or keys | Cancel the job |
-| 2026-11-13 | Your Windows user name in tools/lanes (Security Desk r2) | Recommend reading the lane 1 path from %LOCALAPPDATA% at run time; not changed yet | Pick Keep on the desk |
 | 2026-11-13 | Demon Torment by House after the book check (B3005) | Devils 4 and Defilers 3 (they were swapped); the rest as before | The old values in TORMENT_BY_HOUSE |
 | 2026-11-13 | Changeling seeming in the derived Traits (B3006) | Childling +1 Glamour, grump +1 Willpower, wilder told to add one by hand; this replaces the earlier "not applied" row | Empty SEEMING_BONUS |
+| 2026-11-13 | Where is each piece of Gear by era at home, and when do guns reach each land? (B3070, B3072, B3073) | No steel, crossbow, lance, mail, plate or guns in the Americas, the Pacific and the far north before the settlers; European swords and plate in Christendom; the katana, kris, katar and scimitar in their lands; guns by the year each land took them up (Japan 1543, India 1526); the fill and the Gear window follow the scene's land | Empty GEAR_WAYS in modules/wodx-library/data/gear-ways.mjs and run node tools/library/build-gear.mjs |
+| 2026-11-13 | What figures do weapons of other lands use? (B3071) | Each of 33 (the tachi, naginata, jian, talwar, shotel, assegai, macuahuitl, patu and the rest) fights as a book weapon of its kind and keeps its page, marked a house rule, until a book gives its own | Edit or empty LOCAL_GEAR and rebuild gear.json |
+| 2026-11-13 | Where do the wizard's Trait explanations come from? (B3007, B3008) | The player view's hover help for the common Traits, the wizard's own notes for the line Traits it leaves out, so each Trait has one text | Drop notesBlock in wizard.mjs |
+| 2026-11-13 | Hover and a folded "What these mean" list, or always shown? (B3007) | Both hover and the folded list; nothing extra open by default | Make the details element open |
+| 2026-11-13 | Should a Garou faction in India keep a Beast Court by default? (B3091) | No: the Hengeyokai book says the Courts do not fully count India as theirs, so a Garou sept is the default there; a Beast Court can still be picked | Put india back in REGION_SHIFTERS in modules/wodx-npc/scripts/politics-rules.mjs |
+| 2026-11-13 | How many voices of the ulama sit in an Ashirra court? (B3090) | Two, appointed; the Imam's seat is won by backing | Edit "ashirra" in POLITIES |
+| 2026-11-13 | How much should a venture earn and lose each week, by age? (Improvement Desk mk1, B3111) | A house reading: high and risky before 1450 (a caravan about 30 in the hundred a year), steady and thin after 1946 (a trading house about 7); a bad-week roll except for caravans, which lose by the real caravans | Change BASE, AGE_RETURN, RISK or BAD_SHARE in modules/wodx-storyteller/scripts/venture-rules.mjs |
+| 2026-11-13 | How do Resources and Influence limit and protect a venture? (B3112) | Resources: a year's allowance at once; Resources plus Influence ventures at a time; Influence takes a tenth off a loss per dot, half at most; no Background dots from a stake | Change mostAtOnce, mostVentures or shield in venture-rules.mjs |
+| 2026-11-13 | When does a stake count as large, and what does a seat give? (B3113) | 60 months of a plain wage; a rival faction notes it once; a seat after 8 weeks with Influence, through the approval queue, a tenth more share and a tenth less loss | Change LARGE_WAGES, SEAT_WEEKS or the seat effect in venture-rules.mjs |

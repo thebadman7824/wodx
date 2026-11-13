@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.28.0: the wizard's quick start (B2827). Pure rules, tested by the harness.
+ * WoDX Creation 0.30.0: the wizard's quick start (B2827). Pure rules, tested by the harness.
  * The player picks a concept; the quick start spends the book's Attribute, Ability and Virtue allotments the way that
  * concept would, on whatever Traits the sheet shows (a Dark Ages sheet's Archery and Ride, a modern sheet's Firearms
  * and Drive), and suggests a Nature and Demeanor from the sheet's own archetypes. Everything stays editable on the

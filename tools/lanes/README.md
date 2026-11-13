@@ -4,7 +4,7 @@ Three local Foundry servers on Ben's PC, so gates can run side by side. Decision
 
 | Lane | Port | User-data folder | Nightly reset |
 |---|---|---|---|
-| 1 | 30000 | C:\Users\blebr\AppData\Local\FoundryVTT (the existing testbed) | never |
+| 1 | 30000 | %LOCALAPPDATA%\FoundryVTT (the existing testbed; lanes.json reads %NAME% from the environment) | never |
 | 2 | 30020 | D:\WoDX\FoundryData-lane2 | 04:40 |
 | 3 | 30030 | D:\WoDX\FoundryData-lane3 | 04:40 |
 
@@ -20,6 +20,12 @@ The runner takes the first free lane, locks it, checks for drift and only then r
 - a file or version of a package in the repo checkout (modules/*, system/worldofdarkness) differs on the lane;
 - the running server reports another version than the repo (restart the lane after a deploy);
 - an active module, a world setting or the clock differs from the lane's clean fingerprint.
+
+Only the gates a change needs: `run-gate.mjs --touched [--base origin/main]` (the map is `gate-map.mjs`; corrections in
+`gate-map-extra.json`). Every gate: `--all`, split with `--shard 1/2`. `--report <file>` appends each gate's line.
+The nightly task resets lanes 2 and 3 and then runs `nightly.mjs`: pull main, deploy where the code differs
+(`lanes.mjs deploy --if-changed`), every gate split across the two lanes, lines in nightly-gates.log. A file named
+`nightly-off` here turns the full run off. B3083, B3084.
 
 On drift nothing runs (exit 4) and the differences are printed and saved in `<lane>\wodx-lane\drift.json`.
 Changed documents are a warning only. After each gate the runner puts the clock and the pause back.
