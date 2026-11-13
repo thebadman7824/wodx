@@ -101,11 +101,12 @@ export function tiesHtml(rows, { editable = true } = {}) {
 
 /**
  * WoDX Sheets 0.11.0 (B1900): the Relationships tab, every tie WoDX keeps in one place. rows: from WoDX NPC's
- * ties [{kind, label, groupLabel, name, uuid, note, source, hidden, secret, hand, kindText, xpSpent, gone}];
+ * ties [{kind, label, groupLabel, name, uuid, note, source, hidden, secret, hand, kindText, xpSpent, gone, rule}]; rule (Sheets 0.18.0): what the
+ * bond does in play, a line under the tie;
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).
  */
-const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", hand: "" };
+const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
 export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true, followers = false } = {}) {
   const groups = new Map();
   for ( const r of rows ) { if ( !groups.has(r.groupLabel) ) groups.set(r.groupLabel, []); groups.get(r.groupLabel).push(r); }
@@ -120,7 +121,7 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
       + `${gm ? `<a class="wodx-act" data-act="tie-hide" title="${r.hidden ? "Show it to players" : "Hide it from players"}"><i class="fa-solid ${r.hidden ? "fa-eye" : "fa-eye-slash"}"></i></a>` : ""}`
       + `<a class="wodx-act" data-act="tie-remove" title="Remove the tie"><i class="fa-solid fa-xmark"></i></a>` : r.note ? `<span class="wodx-quiet">${esc(r.note)}</span>` : "";
     return `<div class="wodx-tie" data-search-item data-uuid="${esc(r.hand ?? r.uuid ?? "")}" data-open-uuid="${esc(r.uuid ?? "")}">
-    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}</div>`;
+    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
   };
   const list = groups.size ? [...groups].map(([g, rs]) => `<div class="wodx-tie-group"><div class="wodx-tie-head">${esc(g)}</div>${rs.map(row).join("")}</div>`).join("")
     : `<div class="wodx-quiet">No relationships yet. Drag a character, a scene or a journal entry here.</div>`;

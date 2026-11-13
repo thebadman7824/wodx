@@ -14,6 +14,8 @@
  */
 
 /** The kinds of link, and how each reads from the other end. group orders the Relationships tab. */
+import * as BR from "./bond-rules.mjs";
+
 export const KINDS = {
   sire: {label: "Sire", back: "childe", group: "blood", up: true},
   childe: {label: "Childe", back: "sire", group: "blood"},
@@ -46,14 +48,15 @@ export const KINDS = {
   enemy: {label: "Enemy", back: "enemy", group: "heart"},
   owes: {label: "Owes", back: "owed", group: "debts"},
   owed: {label: "Is owed by", back: "owes", group: "debts"},
+  ...BR.BOND_KINDS,
   haven: {label: "Haven", back: null, group: "places"},
   other: {label: "Other", back: "other", group: "other"}
 };
-export const GROUPS = {blood: "Blood and bonds", family: "Family and kin", teaching: "Mentors and students", service: "Allies and service",
+export const GROUPS = {blood: "Blood and bonds", ...BR.BOND_GROUP, family: "Family and kin", teaching: "Mentors and students", service: "Allies and service",
   heart: "Friends, lovers and rivals", debts: "Debts and favours", places: "Places", other: "Other"};
 /** The roles a hand-made tie can take on the sheet (the kinds the books' Backgrounds and play make by hand). */
 export const HAND_ROLES = ["sire", "childe", "domitor", "ghoul", "parent", "child", "sibling", "spouse", "kin", "kinfolk", "garou", "mentor", "apprentice",
-  "patron", "retainer", "ally", "contact", "lover", "friend", "rival", "enemy", "haven", "other"];
+  "patron", "retainer", "ally", "contact", "lover", "friend", "rival", "enemy", ...BR.BOND_HAND_ROLES, "haven", "other"];
 /** The Sheets roles from before 0.30.0 that read as these kinds. */
 const OLD_ROLE = {kin: "kin", haven: "haven"};
 
@@ -71,7 +74,7 @@ export const bondWord = drinks => (Number(drinks) >= 3 ? "full bond" : Number(dr
  * for a link a secret hides and hand is the uuid on the from-actor's own hand-made list (so the sheet can edit it). A link made in two places is kept once: the first source (WoDX's own records) wins,
  * and a hand-made note is kept on it.
  */
-export function edges(actors = [], {ledger = []} = {}) {
+export function edges(actors = [], {ledger = [], vinculum = {}} = {}) {
   const list = [...(actors ?? [])].filter(a => a?.id);
   const byId = new Map(list.map(a => [a.id, a]));
   const byName = new Map();
@@ -89,7 +92,7 @@ export function edges(actors = [], {ledger = []} = {}) {
       if ( hand ) e.hand = hand;
       return;
     }
-    const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand};
+    const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand, rule: BR.RULE_OF[k] ?? ""};
     seen.set(key, e); out.push(e);
     const b = KINDS[k]?.back;
     if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false});
@@ -114,6 +117,18 @@ export function edges(actors = [], {ledger = []} = {}) {
     if ( kin?.founder?.id ) add(a.id, who(kin.founder), "ancestor", {note: kin.relation ? `${kin.relation} of theirs` : "", source: "family line"});
     const ally = a.flags?.["wodx-creation"]?.ally;
     if ( ally?.patron ) add(a.id, who(ally.patron), "patron", {source: "background"});
+  }
+  // 0.56.0: packmates who share a pack name, a wraith's Fetters that name someone, the Sabbat Vinculum
+  for ( const p of BR.packPairs(list) ) add(p.a.id, {id: p.b.id, name: p.b.name}, "packmate", {note: p.note, source: "pack"});
+  const byLowName = new Map(list.map(a => [low(a.name), a]));
+  for ( const a of list ) if ( a.type === "Wraith" || a.type === "Spectre" ) for ( const f of BR.fetterLinks(a, byLowName) ) add(a.id, {id: f.actorId, name: byId.get(f.actorId)?.name ?? ""}, "fetter", {note: f.rating ? `Fetter ${f.rating}` : "", source: "fetter"});
+  for ( const [k, r] of Object.entries(vinculum ?? {}) ) {
+    const [x, y] = String(k).split(">");
+    if ( !byId.has(x) || !byId.has(y) || !(Number(r) > 0) ) continue;
+    const e = seen.get(`${x}|${y}|packmate`);
+    const note = `Vinculum ${r}`;
+    if ( e ) e.note = e.note ? `${e.note}; ${note}` : note;
+    else add(x, {id: y, name: byId.get(y).name}, "packmate", {note, source: "politics", back: false});
   }
   // A domitor's ghoul also drinks: say so on the domitor link rather than twice
   for ( const a of list ) {

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.59.0 (a regnant's Persuade, Intimidate, Deceive, Bribe and Charm against a thrall are 1 easier at the second drink and 2 at the third, the Vinculum counting as a bond at 5 and 8, named on the card; B2778; not deployed)
 - 3.58.0 (the hunt window reads the faith calendar of the town: feasts, fairs, strict fasts, Good Friday and Yom Kippur, Ramadan nights, the day of rest in the market, the curfew in the years a town keeps one and the wartime blackouts, each listed by name with its step, -2 to +2, as a number the Storyteller can change; the window now shows the odds before the roll, prey in the first hour and within the hours given and the chance of a botch, with every change to the pool and difficulty named; not deployed)
 - 3.57.1 (the word that a power was rolled now carries the power's name, its Discipline, Gift list or the like, its kind and the character's line, so the map can show an effect that fits it; not deployed)
 - 3.57.0 (a power rolled from its window says so to the other modules, with who worked it and at whom, so a sprite token plays its casting move; every line's power window does this, a cancelled window does not; not deployed)

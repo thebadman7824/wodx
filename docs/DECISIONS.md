@@ -3692,3 +3692,38 @@ An undying owner whose will is held through false heirs passes it to themselves 
 
 Reverse: untick "held through false heirs" on the will, or change FALSE_HEIR in will-rules.mjs.
 
+
+## B2776. Bonds from the books as relationships (2026-11-13, relationships desk r1 to r9, Ben approved)
+WoDX NPC 0.56.0 (bond-rules.mjs, bonds.mjs), Sheets 0.18.0. New tie kinds in a group of their own, Oaths, packs and circles: packmate, cabal, familiar, sworn and holder of the oath, troth, Dreamer, Fetter, cellmate, pact and pact thrall, cult and cultist, wu. Each reads back from the other end, can be made by hand on the Relationships tab, and carries a line saying what it does in play, which the tab shows under the tie. The blood bond, the ghoul's need and the Kinfolk tie, which WoDX already kept, get their lines too. The ghoul's monthly drink and the neglect of Fetters and Passions stay with Storyteller upkeep, which already tends them.
+
+Reverse: remove the kinds from BOND_KINDS in bond-rules.mjs; hand ties already made fall back to Other.
+
+## B2777. The Vinculum as a bond step (2026-11-13)
+A Sabbat Vinculum of 8 to 10 counts as a full blood bond toward that packmate, 5 to 7 as a second drink, less as nothing. It runs one way, as faction politics keeps it (thrall>regnant). House reading of V20 p. 297.
+
+Reverse: change vinculumStep in bond-rules.mjs.
+
+## B2778. The regnant's easier Social rolls (2026-11-13)
+WoDX Actions 3.59.0. A regnant's Persuade, Intimidate, Deceive, Bribe and Charm against a thrall are 1 easier at the second drink and 2 at the third (V20 Dark Ages p. 342, as WoDX Actions' Blood Oath stages already say), read from the lineage, Actions' own oaths and the Vinculum. The card names it.
+
+Reverse: remove bondShift in social.js.
+
+## B2779. Packmates from the pack name (2026-11-13)
+Every sheet sharing a pack name (any case) is a packmate of the others, with the pack's totem as the note. A Garou pack's totem ban binds the whole pack (W20).
+
+Reverse: clear the pack name on the sheet.
+
+## B2780. Fetters that name someone (2026-11-13)
+A wraith's Fetter item whose name is exactly the name of a character in the world, or whose flags.wodx-npc.tie holds that character's id, is a Fetter tie to them, with its rating as the note.
+
+Reverse: rename the Fetter item.
+
+## B2781. Cards for bonds (2026-11-13)
+When a thrall at the second drink or more rolls an attack on the regnant (WoDX Combat), the thrall's owners and the Storyteller get a card: the blow needed a Willpower roll first (V20 Dark Ages p. 342). When someone is hurt, a wraith whose Fetter they are is told. When someone dies or their sheet is deleted, the wraith whose Fetter they were faces a Fetter's Harrowing (Wraith 20th p. 309), and their pack, cell, cabal, wu, the changeling whose Dreamer they were and the mage whose familiar they were are told. Setting "Cards for bonds", on by default.
+
+Reverse: turn the setting off.
+
+## B2782. Losing a cellmate (2026-11-13)
+A hunter who loses a cellmate rolls Willpower at difficulty 7 or loses a point of temporary Willpower. House rule; the hunter books give no single rule for it.
+
+Reverse: edit the cellmate line in cardsFor in bond-rules.mjs.

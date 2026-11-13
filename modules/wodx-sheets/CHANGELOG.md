@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.18.0 (the Relationships tab says under each bond what it does in play, and where it came from: the pack name, a Fetter, the Vinculum or the family line; B2776; not deployed)
 - 0.17.0 (Bring forward on the anachronism card: one button for every thing on the maps and one on each row swap it for its equal in the card's year, in any era, with WoDX Interactables 0.37.0; the goods in containers become the everyday goods of that year where the scene stands, keeping their count; a result card says what changed, names what has nothing like it, and has Undo. B2720, B2721)
 - 0.16.0 (the damage doll at the top of the Body tab: a small pixel figure drawn from the body plan that changes with the shape, added and lost parts, and false limbs in wood, steel or chrome by era; each part takes the colour of the wounds on it, purple for bashing, red for lethal, charred black for aggravated; point at a part to name it, and the Storyteller clicks a part to place or clear a wound)
 - 0.15.2 (Coin of which land has a new choice, The chronicle's money: the Possessions tab's coins of the time and Add coins then take their names from WoDX Storyteller's money, for every world region and year, and on a scene abroad from the money of that land. The default stays the German lands. B2653)

@@ -117,6 +117,8 @@ export function build(ctx) {
         const pick = pickPool(actor, preset.alts ?? [[preset.attr, preset.ability]]);
         const at = attitudeOf(npc, actor);
         const shift = at ? npcApi().attitude.rules.difficultyShift(at.step, { ignore: !!act.noShift }) : 0;
+        // NPC 0.56.0: a thrall is easier to sway for the regnant (V20 Dark Ages p. 342)
+        const bondShift = Number(npcApi()?.bonds?.socialShift?.(actor, npc)) || 0;
         let fd = given;
         if (!fd) {
             const content = `<form>
@@ -145,7 +147,7 @@ export function build(ctx) {
             traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
-            bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0), extraDiff: (Number(fd.extraDiff) || 0) + shift,
+            bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift,
             baseDifficulty: preset.diff ?? 6, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0,
             aura: fd.aura ? R.auraModifier(rd.value) : 0
         });
@@ -171,7 +173,7 @@ export function build(ctx) {
             speaker: { alias: name }, whisper: gmIds(), blind: true, rolls: them.roll ? [them.roll] : [],
             content: `<div class="vta-card wodx-x"><div class="vta-body"><p><b>${esc(name)}</b> resists ${esc(actor.name)} (${esc(act.label.toLowerCase())}).</p>`
                 + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them, nm.parts)}<p>${esc(res.result === "win" ? `${actor.name} wins by ${res.margin}.` : res.result === "tie" ? "A tie." : res.result === "botch" ? `${actor.name} botches.` : `${name} resists by ${res.margin}.`)}</p>`
-                + `${at ? `<p class="vta-note">Attitude ${esc(at.word)}: difficulty ${shift > 0 ? "+" : ""}${shift}.${move ? ` It moves ${move > 0 ? "up" : "down"} ${Math.abs(move)}${game.user.isGM ? "" : " (in the approval queue)"}.` : ""}</p>` : ""}</div></div>`
+                + `${bondShift ? `<p class="vta-note">Bound by blood to ${esc(actor.name)}: difficulty ${bondShift}.</p>` : ""}${at ? `<p class="vta-note">Attitude ${esc(at.word)}: difficulty ${shift > 0 ? "+" : ""}${shift}.${move ? ` It moves ${move > 0 ? "up" : "down"} ${Math.abs(move)}${game.user.isGM ? "" : " (in the approval queue)"}.` : ""}</p>` : ""}</div></div>`
         });
         await after(actor, npc, name, act, res, why);
         return res;

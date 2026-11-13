@@ -3,6 +3,7 @@ import * as SX from "./secrets-rules.mjs";
 import * as OP from "./opinion-rules.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
 import * as KIN from "./kin.mjs";
+import * as BONDS from "./bonds.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -28,7 +29,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
   /* ---------------------------------------------------------------- */
 
   function allEdges() {
-    return TR.hideBySecrets(TR.edges(people(), {ledger: ledgerEntries()}), id => SX.secretsOf(game.actors.get(id)?.flags));
+    return TR.hideBySecrets(TR.edges(people(), {ledger: ledgerEntries(), vinculum: BONDS.vinculum()}), id => SX.secretsOf(game.actors.get(id)?.flags));
   }
   /** What a user may see: their own characters, and the secrets those characters found (or that are out). */
   function viewerFor(user = game.user) {
