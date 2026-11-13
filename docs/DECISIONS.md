@@ -181,7 +181,7 @@ Next free block: B3630
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3607) | Chronicle, NPC |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3609) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5770,3 +5770,13 @@ Reverse: turn off the world setting The law looks for criminals.
 The warrant card carries a line for the culprit's kind: day arrests for the Kindred, a ghoul's domitor, Kinfolk in the watch, a mage's impossible witnesses, a changeling's mortal seeming, a wraith's borrowed body, a hunter's killing as murder, a mummy's old names, a demon's host, a revenant's family lawyers.
 
 Reverse: empty LINE_HOOKS.
+
+## B3608. Trials (2026-11-13)
+The forms of trial come from the law record's proof list (party: show trial; jury; confession; witnesses, evidence or forensic: a judge; ordeal; oath; combat), the usual one first. Ordeal: Stamina at 8. Compurgation: Charisma + Etiquette or Manipulation + Politics at 7. Confession: Stamina at 7 against the questioners. Judge and jury: Manipulation + Law, Charisma + Politics or Expression at 6 against the prosecution. Show trial: at 9 against 6 dice and more. Prosecution dice: the form's base, plus witnesses up to 4, plus 2 with forensic proof and 1 with evidence, plus extra deeds up to 3. A bribe takes 1 off where the bribe figure is 4 or less; a court seat takes 1, or 2 from the fourth rank. A botch at the ordeal or the question is a confession. House figures.
+
+Reverse: drop the wodxArrest hook in law-trial.mjs; arrests then end at the arrest.
+
+## B3609. Splat hooks for trials (2026-11-13)
+Kindred defendants roll at +1 difficulty (courts sit by day), and hot iron and fire are death to them at the ordeal; a revenant's family lawyers take 1 off. Other lines get a Storyteller line: Rage in the dock, vulgar magic before sleepers, cold iron in the cells, a wraith's whisper to a juror, no court hearing that the dead were monsters, a mummy's old names, a demon host's past.
+
+Reverse: zero the diff figures in LINE_TRIAL.
