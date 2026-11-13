@@ -58,11 +58,33 @@ test("0.22.0: ways in and out and located dangers are places; a traveller arrive
     const arrive = REALMS[id].map?.arrival ?? REALMS[id].map?.back;
     if ( arrive ) assert.equal(m.places[m.gate].name, arrive, `${id} arrival`);
   }
-  assert.ok(more >= 30, `${more} further places`);
+  assert.ok(more >= 200, `${more} further places`);
   assert.ok(maps.enoch.places.some(p => p.name === "the Aralu tombs" && p.kind === "place"));
   assert.equal(maps.stygia.places[maps.stygia.gate].name, "The harbour on the Sea of Shadows");
   assert.ok(RW.svg(maps.tempest).includes("a way in or out") && RW.svg(maps.tempest).includes("a danger"));
   assert.ok(!RW.extrasOf("yellow-springs").some(e => e[1] === "a Castigator's notice"));
+});
+
+test("0.23.0: the book lookup's named places stand on the maps with what they are and their page; the notes come with the map", async () => {
+  const {PLACES, LAYOUT, CHANGE} = await import("../../modules/wodx-otherworlds/scripts/realm-places.mjs");
+  assert.deepEqual(Object.keys(PLACES).sort(), [...RW.REALM_IDS].sort());
+  let n = 0;
+  for ( const id of RW.REALM_IDS ) {
+    for ( const [name, what, ref] of PLACES[id] ) {
+      assert.ok(name && what && /pdf \d/.test(ref), `${id}: ${name} has a page`);
+      assert.ok(name.length <= 60 && what.length <= 320, `${id}: ${name} is short`);
+      const p = maps[id].places.find(q => q.label === name[0].toUpperCase() + name.slice(1));
+      assert.ok(p && p.what === what && p.ref === ref && p.kind === "place", `${id}: ${name} is on the map`);
+      n++;
+    }
+    for ( const [note, ref] of [...LAYOUT[id], ...CHANGE[id]] ) assert.ok(note && /pdf \d/.test(ref), `${id} note has a page`);
+    assert.equal(maps[id].layout, LAYOUT[id]);
+    assert.ok(maps[id].places.length <= 20, `${id}: ${maps[id].places.length} places`);
+  }
+  assert.ok(n >= 180, `${n} places`);
+  const m = maps.malfeas, to = m.places.find(p => p.name === "the Temple Obscura").i;
+  assert.ok(RW.lines(m, RW.journey(m, m.gate, to), {year: 1197}).some(l => /^The Temple Obscura: .+pdf \d/.test(l)));
+  assert.ok(!RW.lines(m, RW.journey(m, m.gate, to, {known: RW.knownPlaces(m, [])}), {year: 1197}).some(l => /^The Temple Obscura: /.test(l)), "a place not yet found is not described");
 });
 
 test("the same asking gives the same map, and each redraw rule changes it only when it should", () => {

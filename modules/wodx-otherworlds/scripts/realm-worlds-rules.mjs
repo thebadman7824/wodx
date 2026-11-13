@@ -10,6 +10,7 @@
  * Pure rules, no Foundry.
  */
 import {REALMS, realmEra} from "./realm-maps-rules.mjs";
+import {PLACES, LAYOUT, CHANGE} from "./realm-places.mjs";
 
 export const W = 200, H = 110;
 const cx = W / 2, cy = H / 2;
@@ -209,6 +210,8 @@ export const PLANS = {
   grid: {pace: {r: 1.5, a: 0.7, c: 0.7, d: 0.7, m: 0.7, b: 0.5, u: 0.2, v: 0.15}, days: 1},
   edge: {pace: {r: 1, a: 0.8, d: 0.6, m: 0.4, w: 0.5, b: 0.5, u: 0, v: 0}, cut: "b", days: 8}
 };
+/** Ground a named place of the books does not stand on while there is room elsewhere: open water, void and walls. */
+const WET = "uvw";
 /** A road drawn over the ground (a trod, a byway) is this much quicker than a steady pace. */
 export const ROAD_PACE = 1.5;
 /** Days across the whole map at a steady pace, where a realm differs from its plan. */
@@ -261,6 +264,8 @@ export function extrasOf(id) {
   for ( const l of realm.landmarks ) out.push(["place", l]);   // build() leaves out those the plan has already placed
   for ( const k of ["arrival", "back", "on"] ) if ( typeof realm.map?.[k] === "string" ) out.push(["way", realm.map[k]]);
   for ( const h of realm.hazards ?? [] ) if ( /^an? /.test(h) && !NOT_A_SPOT.includes(h) ) out.push(["danger", h]);
+  // 0.23.0 (B2631): the named places of the book lookup, each with what it is and its page
+  for ( const [name, what, ref] of PLACES[id] ?? [] ) out.push(["place", name.replace(/^The /, "the "), what, ref]);
   return out;
 }
 
@@ -268,7 +273,7 @@ const made = new Map();
 /**
  * The map of a realm for a year (and season, visit or name, by its redraw rule). Returns {id, label, line, world,
  * plan, kind, seed, turn, cells (H strings of W letters), pal {letter: colour}, legend [[colour, words]], places
- * [{i, x, y, kind (place, way or danger), name, label}], gate (the place a traveller is taken to know on arrival), paths, days, redraw, ours}, or null.
+ * [{i, x, y, kind (place, way or danger), name, label, what and ref for a place of the book lookup}], gate (the place a traveller is taken to know on arrival), paths, days, redraw, ours}, or null.
  */
 export function build(id, opts = {}) {
   const spec = SPEC[id], realm = REALMS[id];
@@ -304,12 +309,13 @@ export function build(id, opts = {}) {
   });
   // 0.22.0 (B2630): the ways in and out and the located dangers of the catalogue stand on the map too, on free ground away from the other places
   let tries = 0;
-  for ( const [kind, name] of extrasOf(id) ) {
+  for ( const [kind, name, what, ref] of extrasOf(id) ) {
     if ( places.some(p => p.name.toLowerCase() === name.toLowerCase()) ) continue;
-    for ( ; tries < 900; tries++ ) {
-      const x = Math.round(8 + hash(tries, 11, seed) * (W - 16)), y = Math.round(6 + hash(tries, 12, seed) * (H - 12));
-      if ( !(pace[y * W + x] > 0) || places.some(p => Math.hypot((p.x - x) / 1.4, p.y - y) < 15) ) continue;
-      places.push({i: places.length, x, y, kind, name, label: name[0].toUpperCase() + name.slice(1)});
+    // a place of the books stands on firm ground (not open water, void or a wall) while the map has room; the room asked between places shrinks as tries pass
+    for ( ; tries < 4000; tries++ ) {
+      const x = Math.round(8 + hash(tries, 11, seed) * (W - 16)), y = Math.round(6 + hash(tries, 12, seed) * (H - 12)), apart = tries < 900 ? 15 : tries < 2200 ? 11 : 8;
+      if ( !(pace[y * W + x] > 0) || (tries < 3200 && kind === "place" && what && WET.includes(rows[y][x])) || places.some(p => Math.hypot((p.x - x) / 1.4, p.y - y) < apart) ) continue;
+      places.push({i: places.length, x, y, kind, name, label: name[0].toUpperCase() + name.slice(1), ...(what ? {what, ref} : {})});
       tries++;
       break;
     }
@@ -328,7 +334,7 @@ export function build(id, opts = {}) {
   const out = {id, label: realm.label, line: realm.line, world: realm.world, plan: spec.arch, kind: kindOf(id), seed, turn: turnOf(id, opts),
     cells: rows.map(r => r.join("")), pal: Object.fromEntries(Object.entries(spec.pal).map(([k, v]) => [k, v[0]])), words: Object.fromEntries(Object.entries(spec.pal).map(([k, v]) => [k, v[1]])),
     legend: Object.entries(spec.pal).filter(([k]) => seen.has(k)).map(([, v]) => v), places, gate: Math.max(0, gate), paths: model.paths.map(p => ({pts: p.pts.map(([x, y]) => [Math.round(x * 10) / 10, Math.round(y * 10) / 10]), wide: !!p.w})),
-    days: DAYS[id] ?? plan.days, redraw: spec.reseed, ours: spec.ours};
+    days: DAYS[id] ?? plan.days, redraw: spec.reseed, ours: spec.ours, layout: LAYOUT[id] ?? [], change: CHANGE[id] ?? []};
   Object.defineProperty(out, "pace", {value: pace, enumerable: false});
   if ( made.size > 24 ) made.delete(made.keys().next().value);
   made.set(key, out);
@@ -375,6 +381,7 @@ export function lines(map, j, {year = 1197, future = false} = {}) {
   if ( j && j.hidden ) out.push(j.start ? `${map.places[j.from].label} is not yet found.` : `${map.places[j.to].label} is not yet found: no journey can end there. Mark it under Found places when the chronicle finds it.`);
   else if ( j && j.noWay ) out.push(`No ground joins ${map.places[j.from].name} and ${map.places[j.to].name}.`);
   else if ( j && j.squares ) out.push(`From ${map.places[j.from].name} to ${map.places[j.to].name}: ${timeWords(j.days)}${j.across.length ? `, mostly across ${j.across.join(" and ")}` : ""}.`);
+  for ( const p of j ? [map.places[j.from], map.places[j.to]] : [] ) if ( p?.what && !(j.hidden && p === map.places[j.start ? j.from : j.to]) ) out.push(`${p.label}: ${p.what} (${p.ref}).`);
   for ( const n of era?.notes ?? [] ) out.push(n);
   if ( era?.closed ) out.push("No way leads in this year.");
   out.push(map.redraw);
@@ -416,11 +423,19 @@ export function svg(map, {cell = 4, known = null, path = null, title = null} = {
   const at = ([x, y], i) => `${i ? "L" : "M"}${(x + 0.5) * cell} ${top + (y + 0.5) * cell}`;
   if ( !known ) for ( const p of map.paths ) out.push(`<path d="${p.pts.map(at).join("")}" fill="none" stroke="#e6dcb0" stroke-width="${p.wide ? cell * 0.7 : cell * 0.45}" ${p.wide ? "" : 'stroke-dasharray="5 4" '}opacity="0.8"/>`);
   if ( path?.length > 1 ) out.push(`<path d="${path.map(at).join("")}" fill="none" stroke="#ffd060" stroke-width="${cell * 0.6}" stroke-linejoin="round" opacity="0.95"/>`);
+  // each name goes beside its dot where it covers no other name: right or left first, then above or below
+  const boxes = [], dots = [], names = [];
   for ( const p of map.places ) {
     if ( known && !known.has(p.i) ) continue;
-    const x = (p.x + 0.5) * cell, y = top + (p.y + 0.5) * cell, left = p.x > W * 0.62;
-    out.push(`<circle cx="${x}" cy="${y}" r="${cell}" fill="${p.kind === "danger" ? "#d8603a" : p.kind === "way" ? "#9ad0e8" : "#f0e6b8"}" stroke="#000" stroke-width="1"/><text x="${x + (left ? -cell * 1.8 : cell * 1.8)}" y="${y + 4}" text-anchor="${left ? "end" : "start"}" font-size="12" fill="${INK}" stroke="#000" stroke-width="3" paint-order="stroke">${esc(p.label)}</text>`);
+    const x = (p.x + 0.5) * cell, y = top + (p.y + 0.5) * cell, left = p.x > W * 0.62, tw = p.label.length * 6.1, g = cell * 1.8;
+    const spots = [[left ? -g - tw : g, -8], [left ? g : -g - tw, -8], [-tw / 2, -g - 13], [-tw / 2, g - 1], [left ? -g - tw : g, -20], [left ? -g - tw : g, 5]];
+    const hits = ([dx, dy]) => { const bx = x + dx, by = y + dy; return bx < 2 || bx + tw > w - 2 || by < top || boxes.some(b => bx < b[0] + b[2] && b[0] < bx + tw && by < b[1] + 13 && b[1] < by + 13); };
+    const [dx, dy] = spots.find(s => !hits(s)) ?? spots[0];
+    boxes.push([x + dx, y + dy, tw]);
+    dots.push(`<circle cx="${x}" cy="${y}" r="${cell}" fill="${p.kind === "danger" ? "#d8603a" : p.kind === "way" ? "#9ad0e8" : "#f0e6b8"}" stroke="#000" stroke-width="1"/>`);
+    names.push(`<text x="${Math.round((x + dx) * 10) / 10}" y="${y + dy + 11}" font-size="12" fill="${INK}" stroke="#000" stroke-width="3" paint-order="stroke">${esc(p.label)}</text>`);
   }
+  out.push(...dots, ...names);
   const shown = map.places.filter(p => !known || known.has(p.i));
   const legend = [...map.legend, ...(shown.some(p => p.kind === "way") ? [["#9ad0e8", "a way in or out"]] : []), ...(shown.some(p => p.kind === "danger") ? [["#d8603a", "a danger"]] : []), ...(known ? [[SHROUD, "not yet found"]] : [])];
   let lx = 8, ly = top + H * cell + 8;
