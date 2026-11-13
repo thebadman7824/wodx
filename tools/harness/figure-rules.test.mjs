@@ -59,3 +59,30 @@ test("the roster draws the figure the player put together, not the things marked
   assert.equal(e.figure, true);
   assert.deepEqual(F.rosterPart(F.normalize(fig, cat)).worn, e.worn, "the menu and the roster agree");
 });
+
+// Children (B3480): the band a figure is drawn in, and the age floor it must keep (B3210)
+test("children: the band follows the age, a minor is never drawn grown, and a child pick is kept", () => {
+  assert.equal(F.bandOfAge(3), "small"); assert.equal(F.bandOfAge(6), "small"); assert.equal(F.bandOfAge(7), "child");
+  assert.equal(F.bandOfAge(11), "child"); assert.equal(F.bandOfAge(12), "young"); assert.equal(F.bandOfAge(14), "young");
+  assert.equal(F.bandOfAge(15), "youth"); assert.equal(F.bandOfAge(17), "youth"); assert.equal(F.bandOfAge(18), "");
+  assert.equal(F.bandOfAge(null), ""); assert.equal(F.bandOfAge("x"), "");
+  assert.equal(F.growthOf({age: 9}), "child");
+  assert.equal(F.growthOf({age: 16, chosen: ""}), "youth", "Grown is not open to someone of 16");
+  assert.equal(F.growthOf({minor: true}), "child", "a minor of no known age is drawn as a child");
+  assert.equal(F.growthOf({age: 40}), "");
+  assert.equal(F.growthOf({age: 40, chosen: "small"}), "small", "a child pick is kept; the caller marks the minor");
+  assert.equal(F.growthOf({age: 9, chosen: "nonsense"}), "child");
+  assert.deepEqual(F.growthChoices(true).map(([k]) => k), ["youth", "young", "child", "small"]);
+  assert.equal(F.growthChoices(false)[0][0], "");
+  for ( const k of Object.keys(F.GROWTH) ) assert.ok(F.SCALE[k] > 0 && F.SCALE[k] <= 1, k);
+  assert.ok(F.SCALE.small < F.SCALE.child && F.SCALE.child < F.SCALE.young && F.SCALE.young < F.SCALE.youth && F.SCALE.youth < 1);
+  assert.equal(F.normalize({growth: "child"}, cat).growth, "child");
+  assert.equal(F.normalize({growth: "giant"}, cat).growth, undefined);
+});
+
+test("children: the roster carries the band only for a person, and only a known one", () => {
+  assert.equal(SR.rosterOf({id: "a", type: "Mortal", growth: "child"}).growth, "child");
+  assert.equal(SR.rosterOf({id: "a", type: "Mortal", growth: ""}).growth, undefined);
+  assert.equal(SR.rosterOf({id: "a", type: "Mortal", growth: "tall"}).growth, undefined);
+  assert.equal(SR.rosterOf({id: "a", type: "Creature", growth: "child"}).growth, undefined);
+});

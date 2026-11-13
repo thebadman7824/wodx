@@ -10,9 +10,12 @@
  *   4. one token walks two squares right and faces right, then two squares down and faces down
  *   5. its picture on the canvas is one frame of the sheet (96 by 112), not the whole sheet
  *   6. the token's buttons hold the walking-figure button
+ *  15. children (B3480): a character of 9 goes on the roster drawn as a child and the menu offers no "Grown"; a child
+ *      figure picked for a grown character marks them a minor, so the age floor refuses romance, and "Grown" takes the
+ *      mark away again. Step 15 makes two actors named "Sprite test child: ..." and deletes them.
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 14;
+const N = 15;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -170,6 +173,28 @@ export async function run() {
       const ways = ["swim", "climb", "fly"].map(a => SR.gaitFor("townsman-1888", {action: a})), ride = SR.gaitFor("townsman-1888", {riding: true});
       ok("14. more moves", sat?.act === "sit" && sat?.held === true && flag?.hold === true && upByWalking && knelt?.act === "kneel" && rose && slow === "search" && over && talk === "talk" && feed === "feed" && ways.join() === "swim,climb,fly" && ride === "ride",
         {sat: sat ? {act: sat.act, held: !!sat.held} : null, flag, upByWalking, knelt: knelt ? {act: knelt.act, held: !!knelt.held} : null, rose, slow, over, talk, feed, ways, ride, version: game.modules.get("wodx-paperdoll")?.version});
+    }
+    // 15. children (B3480)
+    {
+      const PD = game.modules.get("wodx-paperdoll").api, ch = game.modules.get("wodx-chronicle")?.api, now = ch?.eras?.currentYear?.() ?? 1200, made = [];
+      try {
+        const [kid, grown, other] = await Actor.createDocuments([
+          {name: "Sprite test child: Kid", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 9}}}},
+          {name: "Sprite test child: Grown", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}}}},
+          {name: "Sprite test child: Other", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 31}}}}]);
+        made.push(kid, grown, other);
+        const kidEntry = A.roster().actors.find(a => a.id === kid.id), kidAge = PD.sprites.ageOf?.(kid);
+        const app = await PD.figure.open(kid); await sleep(600);
+        const opts = [...app.element.querySelectorAll("select[name=growth] option")].map(o => o.value); await app.close();
+        const before = ch?.age?.romance?.(grown, other)?.ok;
+        await grown.setFlag("wodx-paperdoll", "figure", {skin: "c89878", hair: "3a2a1c", hairStyle: "short", slots: {}, growth: "small"});
+        await PD.sprites.markChild(grown, "small");
+        const marked = grown.flags?.["wodx-chronicle"]?.minor === true, refused = ch?.age?.romance?.(grown, other)?.ok === false;
+        const grownEntry = A.roster().actors.find(a => a.id === grown.id);
+        await PD.sprites.markChild(grown, ""); const cleared = grown.flags?.["wodx-chronicle"]?.minor !== true && ch?.age?.romance?.(grown, other)?.ok === true;
+        ok("15. children", kidEntry?.growth === "child" && kidAge?.age === 9 && kidAge?.minor === true && !opts.includes("") && opts.includes("child") && before === true && marked && refused && grownEntry?.growth === "small" && cleared,
+          {kidEntry: kidEntry ? {growth: kidEntry.growth} : null, kidAge, opts, before, marked, refused, grownGrowth: grownEntry?.growth, cleared});
+      } finally { for ( const x of made ) await x.delete().catch(() => null); }
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }

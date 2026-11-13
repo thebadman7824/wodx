@@ -14,6 +14,9 @@ export function paint(canvas, atlas, fig, cat) {
   const ctx = canvas.getContext("2d"), w = cat.w, h = cat.h;
   canvas.width = w; canvas.height = h;
   ctx.clearRect(0, 0, w, h);
+  // a child is shown shorter about the feet (B3480); the walking sprite also gets the larger head
+  const k = F.SCALE[fig.growth ?? ""] ?? 1, feet = h * 103 / 112;
+  ctx.imageSmoothingEnabled = false;
   const tmp = canvas.ownerDocument.createElement("canvas"); tmp.width = w; tmp.height = h;
   const t = tmp.getContext("2d");
   for ( const l of F.layersOf(fig, cat) ) {
@@ -24,7 +27,7 @@ export function paint(canvas, atlas, fig, cat) {
       t.globalCompositeOperation = l.mode; t.fillStyle = `#${l.tint}`; t.fillRect(0, 0, w, h);
       t.globalCompositeOperation = "destination-in"; t.drawImage(atlas, c.x, c.y, w, h, 0, 0, w, h);
     }
-    ctx.drawImage(tmp, 0, 0);
+    ctx.drawImage(tmp, 0, 0, w, h, w / 2 - w / 2 * k, feet - feet * k, w * k, h * k);
   }
 }
 
@@ -64,6 +67,9 @@ export function buildMenu(fig, cat, ui, lists) {
       <h3>Hair</h3>${swatches("hair", lists.hair, fig.hair)}
       <div class="form-group"><label for="wodx-figure-hairstyle">Worn</label><div class="form-fields"><select id="wodx-figure-hairstyle" name="hairStyle" data-fixed>${Object.entries(F.HAIR_STYLES).map(([k, l]) =>
         `<option value="${k}"${k === fig.hairStyle ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></div></div>
+      <div class="form-group"><label for="wodx-figure-growth">Grown or a child</label><div class="form-fields"><select id="wodx-figure-growth" name="growth" data-fixed>${F.growthChoices(!!ui.minor).map(([k, l]) =>
+        `<option value="${k}"${k === (fig.growth ?? ui.ageBand ?? "") ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></div></div>
+      ${ui.minor ? `<p class="hint">Under 18, so drawn as a child or a youth.</p>` : ""}
     </div>
     <div class="wodx-figure-mid"><h3>Dressed in</h3><ul class="wodx-figure-slots" data-fixed>${slots}</ul></div>
     <div class="wodx-figure-right">
@@ -93,6 +99,7 @@ export function wire(root, fig, cat, ui, on) {
   root.addEventListener("change", ev => {
     const t = ev.target;
     if ( t.name === "hairStyle" ) on.fig({...fig, hairStyle: t.value});
+    else if ( t.name === "growth" ) { const f = {...fig}; if ( t.value ) f.growth = t.value; else delete f.growth; on.fig(f); }
     else if ( t.name === "allYears" ) on.ui({...ui, allYears: t.checked});
     else if ( t.name === "dye" ) on.fig(F.dye(fig, ui.slot, t.value.replace("#", "")));
   });
@@ -110,7 +117,7 @@ export const figureOf = (actor, cat) => {
   return raw && cat ? F.normalize(raw, cat, c) : raw ?? null;
 };
 
-export function makeFigureApp({skin, hair, year}) {
+export function makeFigureApp({skin, hair, year, ageOf = () => ({age: null, minor: false}), markChild = async () => {}}) {
   const ApplicationV2 = foundry.applications.api.ApplicationV2;
   return class FigureApp extends ApplicationV2 {
     static DEFAULT_OPTIONS = {classes: ["wodx", "wodx-figure-app"], window: {title: "Figure", icon: "fa-solid fa-person", resizable: true}, position: {width: 860, height: 660}};
@@ -125,7 +132,8 @@ export function makeFigureApp({skin, hair, year}) {
     async _renderHTML() {
       const {cat, atlas} = await assets();
       const y = year?.() ?? null;
-      this.ui = {...this.ui, year: y?.year ?? null, yearLabel: y?.label ?? null};
+      const ag = ageOf(this.actor);
+      this.ui = {...this.ui, year: y?.year ?? null, yearLabel: y?.label ?? null, minor: !!ag.minor, ageBand: F.growthOf({age: ag.age, minor: ag.minor})};
       this.fig ??= F.normalize(this.actor.flags?.[MOD]?.figure, cat, this.actor.flags?.[MOD]?.look?.colors ?? {});
       const div = document.createElement("div");
       div.className = "wodx-body wodx-figure";
@@ -134,7 +142,7 @@ export function makeFigureApp({skin, hair, year}) {
       wire(div, this.fig, cat, this.ui, {
         ui: u => { this.ui = u; this.render(); },
         fig: f => { this.fig = f; this.render(); },
-        save: async f => { if ( this.actor.flags?.[MOD]?.figure ) await this.actor.unsetFlag(MOD, "figure"); await this.actor.setFlag(MOD, "figure", f); ui.notifications?.info(`${this.actor.name}: figure kept. The walking sprite follows when the sprites are next drawn.`); }
+        save: async f => { if ( this.actor.flags?.[MOD]?.figure ) await this.actor.unsetFlag(MOD, "figure"); await this.actor.setFlag(MOD, "figure", f); await markChild(this.actor, f.growth ?? ""); ui.notifications?.info(`${this.actor.name}: figure kept. The walking sprite follows when the sprites are next drawn.`); }
       });
       return div;
     }
