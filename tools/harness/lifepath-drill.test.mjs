@@ -425,3 +425,33 @@ test("beyond Earth: orbit, the Moon and Mars open only in the future age and fro
   f = D.pick(f, "region", "france");
   assert.ok(D.moveTo(f, "a1", "mars").place.a1 === "mars", "an adult chapter can be lived on Mars");
 });
+
+test("the years after the change: each line has its own ways, drawn first", async () => {
+  const {SINCE_LINES} = await import("../../modules/wodx-creation/data/lifepath-since-lines.mjs");
+  const lines = Object.keys(R.LINES).filter(k => k !== "mortal");
+  assert.deepEqual(Object.keys(SINCE_LINES).sort(), lines.sort(), "every line that changes has a list");
+  const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|husband|brother|sister|boy|girl|man|woman|men|women|lord|lady)\b/i;
+  for ( const [line, rows] of Object.entries(SINCE_LINES) ) {
+    assert.ok(rows.length >= 10, `${line} has ten ways or more`);
+    for ( const o of rows ) { assert.ok(!words.test(`${o[0]} ${o[4] ?? ""}`), o[0]); assert.ok(!/\u2014|\u2013/.test(o[0]), o[0]); }
+  }
+  for ( const line of lines ) {
+    const turn = line === "demon" ? 1999 : line === "orpheus" ? 1990 : 1300;
+    let s = D.newSince({turnYear: turn, nowYear: 2040, line, seed: `t:${line}`});
+    const steps = D.sinceSteps(s);
+    assert.ok(steps.length >= 1, `${line}: steps`);
+    for ( const st of steps ) {
+      assert.equal(st.options.length, 5, `${line} ${st.id}`);
+      assert.equal(st.options.map(o => o.tone).sort().join(""), "++--0", `${line} ${st.id} shape`);
+      const own = st.options.filter(o => o.line);
+      assert.ok(own.length >= 1, `${line} ${st.id}: the line's own ways come first`);
+      assert.ok(own.every(o => SINCE_LINES[line].some(r => r[0] === o.label)));
+      assert.ok(!st.options.some(o => o.local));
+    }
+  }
+  const mage = D.sinceSteps(D.newSince({turnYear: 1300, nowYear: 1800, line: "mage", seed: 1}));
+  assert.ok(!mage.flatMap(s => s.options).some(o => /Technocracy/.test(o.label)), "no Technocracy before it is named");
+  assert.equal(D.sinceOwn("mage", 1300, 1400).filter(o => /Technocracy/.test(o[0])).length, 0);
+  assert.equal(D.sinceOwn("demon", 1500, 1700).length, 0);
+  assert.equal(D.sinceOwn("mortal", 1500, 1700).length, 0);
+});

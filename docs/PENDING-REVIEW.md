@@ -1026,6 +1026,7 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | When was private feud lawful in each land? (B2869) | Empire and Bohemia until 1495, France 1258, Scandinavia about 1300, Russia about 1500, Britain about 1600; vendetta by custom in Italy and the Balkans; blood money in Islamic law | Edit FEUD_LAW in standing-rules.mjs |
 | 2026-11-13 | How hard is it to recall a past life? (B2873) | The Background's dots at difficulty 8, one less per two dots, at least 5; one success recalls it | Edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs |
 | 2026-11-13 | Should scene ideas from ties come every game week? (B2875) | Yes, one approval card a week; approved ideas go in the Ledger | Turn off "Scene ideas from ties" |
+| 2026-11-13 | Lifepath: the years after the change by line (Ben: "Yes. Do this.", B2624) | 139 ways of spending an age for the twelve lines that change, written from general knowledge of each line's books in WoDX's own words (no page check yet); one of each tone comes first on a first draw; the years on age-bound rows are Claude's reading of the timeline | Edit or empty a line's list in modules/wodx-creation/data/lifepath-since-lines.mjs |
 
 ## Waiting for review
 
