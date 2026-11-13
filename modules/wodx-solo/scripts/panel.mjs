@@ -259,7 +259,7 @@ export class SoloPanel extends ApplicationV2 {
     id: "wodx-solo-panel",
     classes: ["wodx", "wsolo-panel"],
     window: {title: R.NAME, icon: "fa-solid fa-moon", resizable: false},
-    position: {width: 290, height: "auto", top: 80, left: 120},
+    position: {width: 340, height: "auto", top: 80, left: 120},
     actions: {act: SoloPanel.#onAct}
   };
   static open() {
