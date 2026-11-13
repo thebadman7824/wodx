@@ -45,7 +45,8 @@ test("money of the lands: the right coin in the right years; shared coin needs n
 });
 
 test("money of the lands: a scene names its money; the region keeps its own otherwise", () => {
-  assert.deepEqual(Object.keys(P.PLACE_MONIES).sort(), [...LANDS].sort());
+  // B3552: the Underworld pays in oboli too
+  assert.deepEqual(Object.keys(P.PLACE_MONIES).sort(), [...LANDS, "underworld"].sort());
   assert.equal(P.cleanPlace({region: "nusantara", money: "philippine"}).money, "philippine");
   assert.equal(P.cleanPlace({region: "nusantara", money: "nowhere"}).money, undefined);
   assert.ok(P.hasOwnPlace({money: "balkan"}));

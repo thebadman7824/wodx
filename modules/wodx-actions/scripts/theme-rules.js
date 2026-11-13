@@ -43,7 +43,7 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul", "api:soulforge"],
         resist: ["api:shadow", "api:shadowWhisper", "api:harrowing", "api:hazard"],
         recover: ["api:healCorpus", "uses:willpower"],
         st: ["api:shadowguide", "api:hysteria", "api:maelstrom"],
@@ -80,7 +80,7 @@ export const MENU_PLAN = {
     mage: {
         act: ["action", "api:quickCheck", "api:withPerson", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
         resist: ["api:m20Counter", "uses:paradox", "api:hazard"],
-        st: ["api:m20Backlash", "api:m20Place"],
+        st: ["api:m20Backlash", "api:m20Place", "api:m20Quiet"],
         recover: ["api:healing", "uses:willpower", "api:m20Purify"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
@@ -103,7 +103,7 @@ export const MENU_PLAN = {
         act: ["action", "api:quickCheck", "api:withPerson", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
         resist: ["api:c20Trigger", "api:c20Bedlam", "api:c20ColdIron", "uses:banality", "api:hazard"],
         recover: ["api:c20Epiphany", "uses:willpower"],
-        st: ["api:c20Mists"],
+        st: ["api:c20Mists", "api:c20Everyday"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
     spirit: { act: ["action", "api:quickCheck", "api:withPerson", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
@@ -187,6 +187,7 @@ export const DESC = {
     "api:shadowguide": "Choose the player who voices this wraith's Shadow",
     "api:hysteria": "The living see a ghost: the Hysteria roll",
     "api:maelstrom": "Set the storm's force on this scene; roll the storm's harm",
+    "api:soulforge": "Soulforging: oboli, soulsteel arms and armor or an Artifact from Corpus, as a long task",
     "rules:wraith": "The wraith rules at a glance, with page references",
     "api:hunterSheet": "The hunter's traits: Conviction, Piety or Creed, the stage of the hunt",
     "api:hunterPower": "Use a Blessing or an Edge (the era decides which)",
@@ -236,6 +237,7 @@ export const DESC = {
     "api:m20Backlash": "Mage 20th: the Storyteller's backlash roll of the Paradox pool, or staving it off with Willpower",
     "api:m20Purify": "The Sorcerers Crusade: clearing the Scourge, a day alone in meditation for each point",
     "api:m20Place": "Consensus here: the styles of magick this place accepts (Storyteller)",
+    "api:m20Quiet": "Mage 20th: the Quiet as a state, its form and level; visions, tokens and lines only the player sees; rising out of it",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
     "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",
@@ -253,6 +255,7 @@ export const DESC = {
     "api:c20Invoke": "Changeling 20th: the Wyrd makes the mien and chimera real; the Autumn wards off the chimerical for an action",
     "api:c20Epiphany": "Changeling 20th: Reverie, Rapture, Ravaging, Revelry, Rhapsody or a night by a balefire",
     "api:c20Trigger": "Changeling 20th: Glamour at 8 against a Banality trigger",
+    "api:c20Everyday": "Everyday Banality: offices, courts of law, Technocracy sites and the Autumn People wear on the faerie soul; the Storyteller's count and card",
     "api:c20Mists": "Changeling 20th: how much a mortal remembers, by Banality",
     "api:demonEvoke": "Demon: an evocation of a known lore (its traits at 6, Faith for successes, ravaged thralls; Torment may twist it)",
     "api:demonForm": "Demon: the apocalyptic form (the Faith pool at 6 or a Faith point; its powers, the high-Torment ones, Revelation)",

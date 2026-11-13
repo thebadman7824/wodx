@@ -62,6 +62,9 @@ export const KINDS = {
   // B3374: a work of art from an artist (patronage-rules.mjs); the goal is set by the form
   commission: {label: "Commission a work of art", attr: "charisma", ability: "expression", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 1,
     ref: "The patron's eye and the artist's hand: the quality comes from the artist's skill, the money and the fashion of the day."},
+  // B3553: soulforging (WoDX Actions soulforge-rules.js sets the goal and difficulty by what is made)
+  soulforge: {label: "Soulforge an item (wraiths)", attr: "dexterity", ability: "crafts", diff: 7, interval: "week", goal: 6, delicate: true, house: true, week: 4,
+    ref: "Corpus heated over soulfire and hammered into shape; one soul makes one item (Wraith 20th pp. 42-44). The pool and the time are WoDX's own."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
@@ -129,6 +132,7 @@ export function normTask(t = {}) {
 export const WORKSHOPS = {
   "": {label: "Anywhere", from: null},
   forge: {label: "A forge or smithy", from: null},
+  soulforge: {label: "A soulforge with soulfire crystals (the Underworld)", from: null},
   bench: {label: "A craftsman's bench (wood, leather, cloth)", from: null},
   still: {label: "A still or an alchemist's furnace", from: null},
   scriptorium: {label: "A scribe's desk, ink and parchment", from: null},

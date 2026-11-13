@@ -54,6 +54,10 @@ import * as UR from "./mummy-rules.js";
 import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
 import * as ZXD from "./m20.js";
+import * as QX from "./quiet.js";
+import * as QR from "./quiet-rules.js";
+import * as SFX from "./soulforge.js";
+import * as BLX from "./banal-life.js";
 import * as EFX from "./effects.js";
 import * as PK from "./power-keywords.js";
 import * as BR from "./book-rituals.js";
@@ -2478,7 +2482,24 @@ let ZXE = null;
 /** Mages of the later eras (3.11.0, Phase 6m). */
 function zx() {
     return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
-        observersOf: a => { const t = a?.getActiveTokens?.()[0]; return t ? kx().observersOf(t, { secret: "mage", exclude: [a.id] }) : null; }, revealed: (a, o) => kx().revealed(a, o) });
+        observersOf: a => { const t = a?.getActiveTokens?.()[0]; return t ? kx().observersOf(t, { secret: "mage", exclude: [a.id] }) : null; }, revealed: (a, o) => kx().revealed(a, o),
+        quiet: () => qtx() });
+}
+let SFE = null;
+/** Soulforging (B3553). */
+function sfx() {
+    return SFE ??= SFX.build({ post, dialog, setFlag, attr, findAbility, notify: m => ui.notifications.warn(m) });
+}
+let BLE = null;
+/** Banality from everyday life (B3555). */
+function blx() {
+    return BLE ??= BLX.build({ dialog, setFlag, notify: m => ui.notifications.warn(m), banality: (a, k) => cx().banality(a, k), seemingOf: a => cx().info(a).seeming });
+}
+let QTE = null;
+/** The Quiet as a state (B3550). */
+function qtx() {
+    return QTE ??= QX.build({ post, rollPool, rollBlock, dialog, setFlag, spendWillpower, notify: m => ui.notifications.warn(m),
+        info: a => zx().info(a), setParadox: (a, v) => zx().setParadox(a, v), age: () => zx().age() });
 }
 
 let QXE = null;
@@ -2788,7 +2809,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.65.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
-    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
+    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
@@ -2804,7 +2825,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
-    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Info: a => cx().info(resolveActor(a)),
+    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
     demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
@@ -2849,7 +2870,7 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     memoriam: withActor(a => wx().memoriam(a)), healCorpus: withActor(a => wx().healCorpus(a)), caul: withActor(a => wx().caul(a)),
     shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
     harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
-    corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.library(), arcanoiLibraries: () => ({ w20: WX.DATA.w20, gw: WX.DATA.gw }),
+    corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), soulforge: withActor(a => sfx().forge(a)), soulforgeRules: () => sfx().rules, wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.library(), arcanoiLibraries: () => ({ w20: WX.DATA.w20, gw: WX.DATA.gw }),
     // Hunters, True Faith and Numina (3.4.0)
     hunterSheet: withActor(byLine(a => rx().sheet(a), a => hx().inquisitorSheet(a), hh2Note)),
     hunterPower: withActor(byLine(a => rx().useEdge(a), a => hx().blessing(a), a => hx().numina(a))),
@@ -2900,6 +2921,12 @@ Hooks.once("init", () => {
     // 6e: what each sheet update changes, for the card that reports it
     Hooks.on("preUpdateActor", (actor, changes, options, userId) => { if (!userId || userId === game.user.id) recordChanges(actor, changes); });
     Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
+    // B3551: Quiet visions and false lines are marked for the Storyteller; tokens shown to one player hide from the rest
+    Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]?.quiet) QX.markCard(m, el?.[0] ?? el); });
+    Hooks.on("refreshToken", t => QX.onRefreshToken(t));
+    // B3554, B3556: a soulforge task makes its item; a long task in a banal place weighs on a changeling
+    Hooks.on("wodxTaskDone", p => { if (game.users.activeGM?.id !== game.user.id) return; sfx().onTaskDone(p).catch(e => console.error("WoDX | soulforge", e)); blx().onTaskDone(p).catch(e => console.error("WoDX | banality", e)); });
+    Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]?.banalLife) blx().bind(m, el?.[0] ?? el); });
 });
 
 Hooks.once("ready", async () => {
@@ -2914,6 +2941,8 @@ Hooks.once("ready", async () => {
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
     if (chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
+    // B3556: the end of a scene counts everyday Banality for the changelings on it
+    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(canvas?.scene).catch(e => console.error("WoDX | banality", e)); });
     Hooks.on("wodxEndScene", () => {
         if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
     });

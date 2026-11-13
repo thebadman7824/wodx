@@ -130,7 +130,7 @@ export function build(ctx) {
             const b = M.backlash(r);
             const out = b.discharge === "all" ? await setParadox(actor, i.paradoxPerm) : b.discharge ? await setParadox(actor, i.paradox - b.discharge) : null;
             const q = b.discharge && b.discharge !== "all" ? M.quietLevel(b.discharge) : null;
-            const body = rollBlock("Paradox", r) + `<div class="vta-big ${b.discharge ? "bad" : ""}">${cap(esc(b.text))}.</div>${out ? `<div class="vta-res">Paradox ${out.paradox}.</div>` : ""}${q ? `<div class="vta-note">If the Storyteller chooses Quiet: level ${q.level}, ${esc(q.text)}.</div>` : ""}<div class="wodx-quiet">${REF} pp. 506, 549</div>`;
+            const body = rollBlock("Paradox", r) + `<div class="vta-big ${b.discharge ? "bad" : ""}">${cap(esc(b.text))}.</div>${out ? `<div class="vta-res">Paradox ${out.paradox}.</div>` : ""}${q ? `<div class="vta-note">If the Storyteller chooses Quiet: level ${q.level}, ${esc(q.text)}.${b.discharge >= 10 ? " Ten or more discharged can bring it on straight away (The Quiet, in the Magick menu)." : ""}</div>` : ""}<div class="wodx-quiet">${REF} pp. 506, 549</div>`;
             return post(actor, `${actor.name}: Paradox backlash`, body, [r.roll].filter(Boolean));
         });
     }
@@ -139,7 +139,7 @@ export function build(ctx) {
         const card = o.card ? game.messages?.get(o.card) : null;
         const i = info(actor);
         const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option>${EF.E.eraRules(age().key).reflect ? `<option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>` : ""}
-            <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Dispel a Quiet delusion (a Willpower point; Willpower at 7)</option></select></div>
+            <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Rise out of a Quiet (a Willpower point; three successes at 7)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="share" checked/> Knows at least one of the attacking Spheres</label></div></form>`;
         return dialog(`Countermagick: ${actor.name}`, content, "Roll", async fd => {
             if (fd.mode === "mind") {
@@ -147,6 +147,8 @@ export function build(ctx) {
                 return post(actor, `${actor.name} resists the mind`, rollBlock("Willpower", r) + `<div class="vta-res">${r.successes} taken from the Mind Effect.${r.botch ? " A botch may cost a permanent Willpower point." : ""}</div><div class="wodx-quiet">${REF} p. 330</div>`, [r.roll].filter(Boolean));
             }
             if (fd.mode === "quiet") {
+                // B3551: rising out of Quiet by the book (three successes in one roll; p. 556)
+                if (ctx.quiet) return ctx.quiet().act(actor, { mode: "rise" });
                 if (!(await spendWillpower(actor, 1))) return null;
                 const r = await rollPool(i.willpower.perm, 7);
                 if (r.successes) await setParadox(actor, i.paradox - 1);
@@ -213,5 +215,5 @@ export function build(ctx) {
         return true;
     }
 
-    return { info, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
+    return { info, setParadox, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
 }

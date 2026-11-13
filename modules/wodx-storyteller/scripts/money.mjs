@@ -271,6 +271,21 @@ export async function receive(a, amount, {to = "carried", note = ""} = {}) {
 }
 
 /**
+ * B3552: coin of another money put straight into a purse (oboli fresh from a soulforge, a find abroad): amount in that
+ * money's smallest unit. At home in that money it is carried money instead.
+ */
+export async function receiveForeign(a, where, amount, {note = ""} = {}) {
+  const amt = Math.max(0, Math.round(num(amount)));
+  if ( !amt || !R.MONIES[where] ) return {ok: false, amount: 0};
+  if ( R.sameMoney(yearNow(), region(), where) ) return receive(a, amt, {note});
+  await refreshPurse(a);
+  const p = rawPurse(a), m = R.moneyFor(yearNow(), where), foreign = {...p.foreign};
+  foreign[m.id] = {region: where, amount: (foreign[m.id]?.amount ?? 0) + amt};
+  await writePurse(a, {...p, foreign}, note || `Received ${R.formatMoney(amt, m)}`);
+  return {ok: true, amount: amt, text: R.formatMoney(amt, m)};
+}
+
+/**
  * Pay money out: from carried, then the bank where the era has banks (or when paying at home), then on credit when
  * the seller gives it, up to the credit limit. Returns {ok, fromCarried, fromBank, onCredit} or {ok: false, short}.
  */
