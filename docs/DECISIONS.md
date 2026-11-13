@@ -166,7 +166,7 @@ Next free block: B3480
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
-| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3312) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
@@ -5131,6 +5131,11 @@ Reverse: put back the old 22-name lists in data/people-world.mjs.
 WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
 
 Reverse: put back the old lists in data/people-world.mjs.
+
+## B3312. Arab world names raised to 300 (2026-11-13)
+WoDX Creation. The third people raised. Given names split into older (the Companions, the caliphs, the honorific "al-Din" names of the Seljuk and Mamluk years) and newer (the 20th century on). The family slot splits too: before the industrial age a nisba of city, tribe or trade (al-Halabi, al-Tamimi, al-Attar); from it a family name of the Levant, Egypt, the Gulf or the Maghreb, with the tribal nisbas the Gulf still uses. As before, about six in seven take "ibn" or "bint" and the father's name in every age (house reading, left as it was); the share is now worked out per age list so the split keeps it.
+
+Reverse: put back the single lists in data/people-world.mjs.
 
 ## B3320. Overheard talk of the town (2026-11-13)
 WoDX NPC, overheard-rules.mjs townTopic and the grammar's overheard:town. From api.upkeep.towns.ofScene (Storyteller B3280): plague or famine now first, then the last blow (sack, rising, fire, flood, storm, earthquake, famine, riot) in its year and the next, then the mood (angry, grim, thriving); an ordinary town gives nothing. Weight 3, as the talk of the times, and passers-by may use it, since it is street talk.
