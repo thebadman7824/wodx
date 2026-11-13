@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2560
+Next free block: B2570
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -108,6 +108,7 @@ Next free block: B2560
 | B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
+| B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3213,3 +3214,14 @@ Reverse: untick the land.
 
 ## B2553. Left open (2026-11-13)
 Not built: years before 1197 use the same from-of-old lists, so the prologue eras show too much as known; the Norse voyages to Vinland and other finds that were lost again; a share of the map for the players (the window is the Storyteller's); an expedition as a thing to play (ships, crews, a roll to find a coast); knowledge by faction or by supernatural kind rather than by homeland; Travel places inside one country, which needs no such rule.
+
+## B2560. Sprite tokens, a prototype (2026-11-13)
+Ben chose on the sprite desk (12 November): whole drawn figures on the map, busts kept for sheets and chat, facing and a walk cycle, drawn by our own code in the paperdoll module, and a testbed prototype first. Paperdoll 0.7.0 holds six sheets (Kindred elder 1888, Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888), each 8 walk frames by 4 facings at 96 by 112 pixels, drawn outside the game by our own rig and shaded with five tones, a dark outline and one light. No outside art. A token that carries the flag "sprite" shows the frame for its facing and for the ground it has covered: one square is one walk cycle. The Storyteller gives or removes a sprite from the walking-figure button among the token's own buttons; the token's old picture is kept and put back. The figure is drawn twice the square, so a person stands a little over one square tall with the feet low in the square. The world setting "Sprite tokens walk and turn" turns the movement off.
+Reverse: remove the sprite from each token with the same button, or turn the setting off; delete modules/wodx-paperdoll/sprites and scripts/sprites.mjs with sprite-rules.mjs.
+
+## B2561. Baked busts leave sprite tokens alone (2026-11-13)
+When a look is baked, placed tokens that carry a sprite keep their sprite. The bust still goes to the character's sheet picture and to new tokens.
+Reverse: drop the sprite test in bake().
+
+## B2562. Left open (2026-11-13)
+Not built: sprites made in the game from a character's look and worn items (the wardrobe of 479 items exists only as drawings outside the game); weapons in the hand only when drawn; animals; the other Garou forms and each line's true forms switching with the character's state; a standing pose of its own; players choosing their own sprite.
