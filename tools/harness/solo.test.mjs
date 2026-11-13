@@ -322,3 +322,31 @@ test("panel.mjs: a wait moves the clock in steps and stops when word comes; the 
   assert.equal(token.x, 500);
   assert.ok(logged.some(e => /token was freed/.test(e.title)));
 });
+
+test("panel.mjs 0.2.1: with no assigned character, the one on the viewed scene is used, never another's", async () => {
+  globalThis.Hooks = {on: () => 0, off: () => {}, once: () => {}};
+  const said = [];
+  globalThis.ChatMessage = {create: async d => { said.push(d); return d; }};
+  const owner = ids => function (u) { return ids.includes(u.id); };
+  const monk = {id: "monk", name: "Brother", hasPlayerOwner: true, type: "Mortal", testUserPermission: owner(["p1", "p2"])};
+  const mine = {id: "mine", name: "Gate character", hasPlayerOwner: true, type: "Mortal", testUserPermission: owner(["p1"])};
+  const tokA = {actorId: "monk", width: 1, update: async function (d) { Object.assign(this, d); }, x: 7, y: 7};
+  const tokB = {actorId: "mine", width: 1, update: async function (d) { Object.assign(this, d); }, x: 0, y: 0};
+  const village = {id: "v", name: "Village", active: false, tokens: [tokA], width: 1000, height: 1000, padding: 0, grid: {size: 100}};
+  const gate = {id: "g", name: "Gate", active: false, tokens: [tokB], width: 800, height: 800, padding: 0, grid: {size: 100}};
+  const p1 = {id: "p1", isGM: false, viewedScene: "g", character: null};
+  const users = [{id: "gm", isGM: true}, p1, {id: "p2", isGM: false}];
+  users.get = id => users.find(u => u.id === id);
+  globalThis.game = {paused: false, user: users[0], users, actors: [monk, mine], scenes: [village, gate], combats: [{started: true, scene: {id: "v"}}],
+    modules: new Map(), settings: {get: () => [], set: async () => {}}, socket: {on: () => {}, emit: () => {}}, time: {worldTime: 0, advance: async () => {}}};
+  const P = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/panel.mjs")));
+  P.installPanel({isOn: () => true, isSeat: () => true, log: async () => {}, entries: () => [], get: () => []});
+  const to = await P.unstick("p1", "token");
+  assert.deepEqual(to, {x: 400, y: 400});
+  assert.equal(tokB.x, 400);
+  assert.equal(tokA.x, 7, "the shared character on another scene is left alone");
+  // Not viewing a scene with their own token: the one they own alone, not the shared one
+  p1.viewedScene = "nowhere";
+  await P.unstick("p1", "token");
+  assert.equal(tokA.x, 7);
+});

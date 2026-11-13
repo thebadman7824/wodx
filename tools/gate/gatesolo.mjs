@@ -95,6 +95,9 @@ async function setup() {
     {...(await pc.getTokenDocument({x: 4 * G, y: 4 * G})).toObject(), actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY},
     {...(await foe.getTokenDocument({x: 6 * G, y: 4 * G})).toObject(), disposition: CONST.TOKEN_DISPOSITIONS.HOSTILE}]);
   ids.tokens = toks.map(t => t.id);
+  // The player plays the gate's character for the run, so the panel's asks never reach a real testbed character
+  ids.userCharacter = user.character?.id ?? null;
+  await user.update({character: pc.id});
   await game.settings.set(MOD, "wait", 2);
   await game.settings.set(MOD, "act", true);
   const WAIT = 2000 + 2500;
@@ -252,6 +255,7 @@ async function finish(ids, playerSteps) {
   await step("10b. let time pass", async () => {
     const pl = game.users.getName(PLAYER);
     const t0 = game.time.worldTime, t = Date.now();
+    if ( pl.character?.id !== ids.actors[0] ) throw new Error("Player Test does not play the gate's character; stopped so no real character is touched");
     const r = await S().panel.passTime(pl.id, "ten");
     const told = game.messages.some(m => m.timestamp >= t && m.flags?.[MOD]?.panel && (m.whisper ?? []).includes(pl.id));
     ok("10b. let time pass", !!r && game.time.worldTime - t0 === 600 && told, {r, moved: game.time.worldTime - t0, told});
@@ -261,6 +265,7 @@ async function finish(ids, playerSteps) {
     const pl = game.users.getName(PLAYER);
     const scene = game.scenes.get(ids.scene);
     const tok = scene.tokens.get(ids.tokens[0]);
+    if ( pl.character?.id !== ids.actors[0] ) throw new Error("Player Test does not play the gate's character; stopped so no real token is moved");
     await tok.update({x: 0, y: 0}, {animate: false});
     const to = await S().panel.unstick(pl.id, "token");
     const live = scene.tokens.get(tok.id);
@@ -301,6 +306,8 @@ async function cleanup(ids, R) {
     if ( back && canvas.scene?.id !== back.id ) { await back.view(); await sleep(800); }
     const scene = game.scenes.get(ids?.scene);
     if ( scene ) await scene.delete();
+    const pu = game.users.get(ids?.user);
+    if ( pu && ids && "userCharacter" in ids ) await pu.update({character: ids.userCharacter ?? null});
     for ( const id of ids?.actors ?? [] ) await game.actors.get(id)?.delete();
     const since = ids?.since ?? Date.now();
     const mine = game.messages.filter(m => m.timestamp >= since - 1000 && (m.speaker?.alias === TAG || m.speaker?.alias === "The Lone Chronicle" || String(m.content ?? "").includes(TAG))).map(m => m.id);
