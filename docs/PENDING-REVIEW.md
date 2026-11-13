@@ -1152,7 +1152,9 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
 | 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
 
-## Waiting for review
+## Approved by Ben, 13 November 2026, 22:51 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("I approve everything pending review").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1161,7 +1163,6 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | How often do raids come, and who settles them (B3473)? | Monthly Wyrm/Weaver odds by era (3%/1% before 1500 up to 10%/9% after 2022), doubled for a lapsed caern (Wyrm) or an urban one (Weaver); the sept rolls for itself after 7 days | Change RAID_ODDS or RAID_GRACE_DAYS, or untick raids |
 | 2026-11-13 | What does a caern war do (B3474)? | Storyteller starts it; half Garou plus best rank at 6, ties to the defenders; a taken caern changes sept, offices empty, a level lost | Change caernWar |
 | 2026-11-13 | How is a lost caern taken back (B3475)? | Three successes at 7; back at level 1, lapsed, needing a moot | Change reclaim |
-
 | 2026-11-13 | Which court does a Kindred faction outside Europe keep by default? (B2960) | Laibon in Africa south of the Sahara, Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia, Kuei-jin in East and Southeast Asia; India, Central Asia, Tibet and the pre-colonial Americas keep the European default | Empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs |
 | 2026-11-13 | What are the seats and law of a Laibon council and an Ashirra court? (B2961, B2962) | WoDX's own words (Elder of the land, Speaker of the old law, Voice of a legacy; Amir, Qadi, Wazir, Muhtasib of the night), pending the PC book check | Edit "laibon-council" and "ashirra" in POLITIES |
 | 2026-11-13 | Which courts do India, Central Asia and Tibet keep, and what does a Ravnos court look like? (B2963, B2964) | India: a court of the Ravnos until 1999, then the court of its age; Central Asia: the Ashirra; Tibet: the Kuei-jin. Seats in WoDX's own words (Eldest of the land, Keeper of the duties), pending the book check | Take the rows out of REGION_COURTS, or edit "ravnos-court", in modules/wodx-npc/scripts/politics-rules.mjs |
@@ -1259,3 +1260,8 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Low Humanity (B3563, B3566) | Hour of rising: 7+ ten minutes before sunset, 6-5 at sunset, 4 twenty minutes after, 3 thirty-five, 2 fifty, 1-0 an hour (V20 p. 311 and V20 Dark Ages p. 113 give only the ends); the bearing toward a mortal applies on a Social roll whose aura box was left off; the pixel face pales and sinks at Humanity 3-2 and looks angry at 1-0 (Humanity only, not Roads or Paths) | Edit riseOffset and bearingMods, or lowHumanityFor in wodx-paperdoll face64-rules.mjs |
 | 2026-11-13 | Waking from a long torpor (B3564) | "Longer than a lifetime" is 70 years; tongues become old forms after 100 years (gist only, Intelligence + Linguistics 7); Abilities of the age listed in AGE_BOUND are one harder until caught up at XP equal to their dots and a month per century slept. Fifth edition's Fog of Ages is left out | Edit LIFETIME, OLD_TONGUE_YEARS, AGE_BOUND, catchUp in beast-marks-rules.js |
 | 2026-11-13 | A diablerized soul pushing through (B3565) | Built from V20 p. 295 and V20 Dark Ages p. 356, which give it as a rumour only: optional setting, off by default; the trigger is the book's (Willpower 10, much stronger blood read as two Generations or more); the effect is a house roll at nightfall, Willpower against 6 + the Generation gap (most 9), a failure the victim's habits for the scene, a botch for the night | Leave the setting off, or edit MUCH_STRONGER and soulDifficulty in beast-marks-rules.js |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
