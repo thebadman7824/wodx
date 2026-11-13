@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Werewolf faces (13 November 2026, B3033). Ben: 50 for any Garou, 15 per tribe, auspice and breed, 25
+ * WoDX Paperdoll: Werewolf faces (13 November 2026, B3043). Ben: 50 for any Garou, 15 per tribe, auspice and breed, 25
  * for metis, whose deformities are the point. Faces show the breed form a character wears among people (homid), with
  * the wolf showing through. With the features already in face64-features.mjs these make up the counts.
  */

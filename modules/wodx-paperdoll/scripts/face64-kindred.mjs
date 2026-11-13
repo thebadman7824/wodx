@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Vampire faces (13 November 2026, B3032). Ben: 50 features for any Kindred, 15 for each clan and
+ * WoDX Paperdoll: Vampire faces (13 November 2026, B3042). Ben: 50 features for any Kindred, 15 for each clan and
  * bloodline, 25 for the clans whose strange looks are the point (Nosferatu, Gargoyles, Samedi). With the features
  * already in face64-features.mjs these make up the counts. Drawn from the clans' looks in our own words.
  */

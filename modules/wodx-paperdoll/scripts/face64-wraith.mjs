@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Wraith faces (13 November 2026, B3035). Ben: 50 for any wraith, 15 per guild and faction. A wraith's
+ * WoDX Paperdoll: Wraith faces (13 November 2026, B3045). Ben: 50 for any wraith, 15 per guild and faction. A wraith's
  * Corpus keeps the marks of a life and a death; these add the trade of a guild and the side taken in the Shadowlands,
  * in our own words, with the rest invented to fit.
  */

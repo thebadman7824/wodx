@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: Mage faces (13 November 2026, B3034). Ben: 50 for any of the Awakened, 15 per Tradition, Convention
+ * WoDX Paperdoll: Mage faces (13 November 2026, B3044). Ben: 50 for any of the Awakened, 15 per Tradition, Convention
  * and other faction. Most mages look like anyone else; these are the small signs of a Path, a practice and a Paradigm,
  * in our own words, with the rest invented to fit.
  */
