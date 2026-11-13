@@ -293,6 +293,64 @@ test("dated content: Moravia's origins by year of birth and marks by the years t
   for ( const o of D.datedOrigins("moravia", 1940).concat(D.datedOrigins("moravia", 1630)) ) assert.ok(!words.test(o[0]), o[0]);
 });
 
+test("the years after the change: one optional pick of five for each age lived through", () => {
+  assert.deepEqual(D.sinceSpans(1230, 1990).map(x => [x.group, x.from, x.to]), [["M", 1231, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 1990]]);
+  assert.deepEqual(D.sinceSpans(1980, 1990), [], "ten years are told by the first scenes after the turn");
+  assert.deepEqual(D.sinceSpans(1490, 1530).map(x => x.group), ["E"], "an age needs twenty years lived in it");
+  assert.deepEqual(D.sinceSpans(null, 1990), []);
+  let s = D.newSince({turnYear: 1230, nowYear: 1990, line: "vampire", seed: "q"});
+  const first = D.sinceCurrent(s);
+  assert.equal(first.id, "s-M");
+  assert.equal(first.options.length, 5);
+  assert.equal(first.options.map(o => o.tone).sort().join(""), "++--0");
+  assert.ok(!first.options.some(o => /machines|new age/.test(o.label)), "no machines in the Middle Ages");
+  assert.notEqual(D.sinceCurrent(D.sinceReroll(s, "s-M")).options.map(o => o.id).join(), first.options.map(o => o.id).join());
+  assert.equal(D.sincePick(s, "s-E", first.options[0].id), s, "only the step in turn can be answered");
+  s = D.sincePick(s, "s-M", first.options[0].id);
+  assert.ok(!D.sinceCurrent(s).options.some(o => o.id === first.options[0].id), "what was picked is not offered again");
+  s = D.sinceSkip(s, "s-E");
+  assert.equal(D.sinceCurrent(s).id, "s-I");
+  s = D.sinceSurprise(s);
+  s = D.sinceSurprise(s);
+  assert.equal(D.sinceCurrent(s), null);
+  assert.deepEqual(D.sinceStory(s).map(x => x.stage), ["s-M", "s-I", "s-N"]);
+  assert.ok(D.sincePool(s).length >= 3);
+  const b = D.sinceBack(s);
+  assert.equal(D.sinceCurrent(b).id, "s-N");
+  assert.equal(D.sinceCurrent(D.sinceBack(D.sinceBack(b))).id, "s-E", "back undoes a skip too");
+  const d = walk(start("levant", 1200, 30, {line: "vampire"}));
+  let p = R.newPath({line: "vampire", splat: "toreador", birthYear: 1200, turnYear: 1230, seed: "s", drill: d});
+  while ( !R.done(p) ) p = R.choose(p, 0);
+  const before = R.summary(p);
+  p = {...p, since: s};
+  const sum = R.summary(p, {nowYear: 1990});
+  assert.equal(sum.story.length, before.story.length + 3);
+  assert.equal(sum.story.at(-1).stage, "s-N");
+  assert.equal(new Set(sum.gives.map(g => g.key)).size, sum.gives.length);
+  assert.ok(JSON.parse(JSON.stringify(R.record(p, {}))).path.since.picks["s-M"]);
+});
+
+test("the Storyteller's limits: only some regions, some kinds of origin left out, the homeland always open", () => {
+  assert.equal(D.cleanLimits({regions: ["atlantis"], noBases: ["nonsense"]}), null);
+  assert.equal(D.cleanLimits(null), null);
+  let d = D.newDrill({birthYear: 1700, age: 30, seed: "l", homeland: "moravia", limits: {regions: ["france", "japan", "atlantis"], noBases: ["noble", "bound"]}});
+  assert.deepEqual(D.current(d).options.map(o => o.id), ["europe", "asia"]);
+  assert.equal(D.pick(d, "continent", "africa"), d);
+  d = D.pick(d, "continent", "europe");
+  assert.deepEqual(D.current(d).options.map(o => o.id).sort(), ["france", "moravia"]);
+  assert.equal(D.pick(d, "region", "italy"), d);
+  d = D.pick(d, "region", "france");
+  while ( D.current(d).id !== "origin" ) d = D.pick(d, D.current(d).id, D.current(d).options[0].id);
+  assert.ok(D.current(d).options.length > 5);
+  assert.ok(!D.current(d).options.some(o => o.base === "noble" || o.base === "bound"));
+  d = walk(d);
+  assert.ok(D.done(d));
+  assert.equal(D.moveTo(d, "a0", "italy"), d, "no move to a closed region");
+  assert.notEqual(D.moveTo(d, "a0", "japan"), d);
+  assert.ok(D.done(walk(D.newDrill({birthYear: 1700, age: 30, seed: "l2", limits: {regions: ["antarctica"]}}))), "even one odd region walks to the end");
+  assert.ok(D.originKinds().length >= 14 && D.originKinds().every(k => k.key && k.label));
+});
+
 test("no gendered words and no option id twice in a step", () => {
   const words = /\b(he|she|him|her|his|hers|himself|herself|son|daughter|mother|father|wife|husband|boy|girl|man|woman)\b/i;
   for ( const rid of ["france", "japan", "west-africa", "andes", "levant", "north-america-west", "moravia", "india"] ) for ( const y of YEARS ) for ( const line of ["mortal", "werewolf", "mage"] ) {

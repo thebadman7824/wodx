@@ -304,6 +304,14 @@ export function summary(path, {nowYear = null, pool = allEvents()} = {}) {
       people.push({...p, year: s.year, scene: e.title, idx, alive, pick: false});
     }
   });
+  if ( path.since ) {
+    for ( const s of D.sinceStory(path.since) ) story.push({...s, band: bandOf(s.year).label, since: true});
+    for ( const g of D.sincePool(path.since) ) { if ( !gives.has(g.key) ) gives.set(g.key, {...g, from: []}); gives.get(g.key).from.push(...g.from); }
+    D.sincePeople(path.since).forEach((p, i) => {
+      const alive = nowYear === null || (nowYear - p.year) <= PEOPLE_ALIVE_SPAN;
+      people.push({role: p.role, note: p.note, year: p.year, scene: p.scene, idx: `s${i}`, alive, pick: false});
+    });
+  }
   let ticked = 0;
   for ( const p of people ) if ( p.alive && ticked < PEOPLE_DEFAULT ) { p.pick = true; ticked++; }
   const order = Object.keys(KINDS);

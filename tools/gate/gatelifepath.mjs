@@ -46,7 +46,7 @@ export async function run() {
       {name: "WoDX gate: Lifepath Mortal", type: "Mortal"}]);
     made.push(vamp, mortal);
 
-    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.19.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
+    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.20.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
       && atLeast(game.modules.get("wodx-storyteller")?.version, "0.34.1"), {creation: game.modules.get(M).version, storyteller: game.modules.get("wodx-storyteller")?.version}));
 
     await step("2 sheet button", async () => {
@@ -150,8 +150,11 @@ export async function run() {
       const noAdult = D.done(kid) && !Object.keys(kid.picks).some(k => /^a\d/.test(k));
       const lint = D.lint();
       const bare = D.continents().flatMap(c => c.regions).filter(r => !D.localOf(r.id, 2000)).map(r => r.id);
+      const sinceOk = D.sinceSpans(1230, 1990).length === 4 && D.sinceCurrent(D.newSince({turnYear: 1230, nowYear: 1990, seed: "gate"}))?.options.length === 5;
+      const lim = D.newDrill({birthYear: 1700, age: 30, seed: "gate", limits: {regions: ["france"]}});
+      const limitsOk = D.current(lim).options.length === 1 && typeof game.settings.get(M, "lifepathLimits") === "object";
       const dated = D.datedMarks("moravia", 1620, 1630).length >= 2 && D.datedOrigins("moravia", 1940).length >= 1;
-      ok("10 ages and every region", !bad.length && noAdult && !lint.length && !bare.length && dated, {bad, noAdult, bare, dated, lint: lint.slice(0, 5)});
+      ok("10 ages and every region", !bad.length && noAdult && !lint.length && !bare.length && dated && sinceOk && limitsOk, {bad, noAdult, bare, dated, sinceOk, limitsOk, lint: lint.slice(0, 5)});
     });
 
     await step("8 other modules", async () => {

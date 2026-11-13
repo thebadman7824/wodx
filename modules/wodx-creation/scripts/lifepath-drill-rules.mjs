@@ -13,7 +13,7 @@
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {LOCAL_EVENTS} from "../data/lifepath-local-events.mjs";
-import {CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
+import {SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
   PEOPLE_LABELS} from "../data/lifepath-drill.mjs";
 
 export {CONTINENTS, CHAPTERS, ARRIVALS};
@@ -70,11 +70,26 @@ export function comingOfAge(regionId, birthYear) {
 }
 
 /** A fresh drill. homeland: the chronicle's own region, for the arrival question (none asked when not given). */
-export function newDrill({birthYear, age = 25, line = "mortal", homeland = null, seed = "wodx"} = {}) {
+export function newDrill({birthYear, age = 25, line = "mortal", homeland = null, seed = "wodx", limits = null} = {}) {
   const a = Math.max(AGE_MIN, Math.min(AGE_MAX, num(age) ?? 25));
+  const L = cleanLimits(limits);
   return {v: VERSION, birthYear: num(birthYear) ?? 1200, age: a, line: String(line || "mortal"), homeland: regionOf(homeland) ? homeland : null,
-    seed: String(seed), picks: {}, place: {}, rerolls: {}, placeName: ""};
+    seed: String(seed), picks: {}, place: {}, rerolls: {}, placeName: "", ...(L ? {limits: L} : {})};
 }
+
+/** The Storyteller's limits for a chronicle: {regions (only these; empty means all), noBases (origin kinds left out)}. Null when nothing is limited. */
+export function cleanLimits(limits) {
+  const regions = [...new Set((limits?.regions ?? []).filter(id => regionOf(id)))];
+  const all = new Set(ORIGINS.map(o => o[7] ?? o[0]));
+  const noBases = [...new Set((limits?.noBases ?? []).filter(b => all.has(b)))];
+  return regions.length || noBases.length ? {regions, noBases} : null;
+}
+/** Is a region open under a drill's limits? The chronicle's homeland always is. */
+export const regionOpen = (drill, id) => !drill.limits?.regions?.length || drill.limits.regions.includes(id) || id === drill.homeland;
+/** The continents and regions open under a drill's limits. */
+export const openContinents = (drill, year = null) => continents(year).map(c => ({...c, regions: c.regions.filter(r => regionOpen(drill, r.id))})).filter(c => c.regions.length);
+/** The origin kinds a Storyteller can leave out: [{key, label}]. */
+export const originKinds = () => ORIGINS.filter(o => !o[6]).map(o => ({key: o[0], label: o[1]}));
 
 /** The stages a character of this age lives through. ages: {teen, adult} from comingOfAge. */
 export function stagesFor(age, ages = {teen: 12, adult: 18}) {
@@ -180,9 +195,9 @@ export function stepsOf(drill) {
   const P = drill.picks ?? {}, born = drill.birthYear, steps = [];
   const ages = agesOf(drill);
   const out = (end = false, here = null) => ({steps, end, here, ages, closed: closedNote(drill.age, ages)});
-  steps.push({id: "continent", kind: "continent", title: "Continent", year: born, options: continents(born).map(c => ({id: c.id, label: c.label, g: "", text: `${c.regions.length} regions`}))});
+  steps.push({id: "continent", kind: "continent", title: "Continent", year: born, options: openContinents(drill, born).map(c => ({id: c.id, label: c.label, g: "", text: `${c.regions.length} ${c.regions.length === 1 ? "region" : "regions"}`}))});
   if ( !P.continent ) return out();
-  const cont = continents(born).find(c => c.id === P.continent.id);
+  const cont = openContinents(drill, born).find(c => c.id === P.continent.id);
   steps.push({id: "region", kind: "region", title: "Region", year: born, search: true,
     options: (cont?.regions ?? []).map(r => ({id: r.id, label: r.label, g: "", text: r.named ? "" : "WoDX has no name lists for this land in this year yet. You name the people.", local: !!localOf(r.id, born)}))});
   if ( !P.region ) return out();
@@ -193,7 +208,7 @@ export function stepsOf(drill) {
       options: named ? peoples.map(p => ({id: p.id, label: p.label, g: "", text: ""})) : [{id: "of-this-land", label: "A people of this land", g: "", text: "Named with the Storyteller."}]});
     if ( !P.people ) return out();
   }
-  steps.push({id: "origin", kind: "origin", title: "Origin", year: born, region: home, age: localOf(home, born)?.age ?? "", own: true, options: originsFor(home, born, drill.line)});
+  steps.push({id: "origin", kind: "origin", title: "Origin", year: born, region: home, age: localOf(home, born)?.age ?? "", own: true, options: originsFor(home, born, drill.line).filter(o => !drill.limits?.noBases?.includes(o.base))});
   if ( !P.origin ) return out();
   const base = P.origin.base ?? "trade";
   let here = home;
@@ -270,6 +285,7 @@ export function back(drill) {
 
 /** Set where a stage happened (teens or an adult chapter). That stage's picks and the later ones are dropped. */
 export function moveTo(drill, stageId, regionId) {
+  if ( !regionOpen(drill, regionId) ) return drill;
   if ( !regionOf(regionId) || !stagesFor(drill.age, agesOf(drill)).some(s => s.id === stageId && s.kind !== "child") ) return drill;
   return {...drill, picks: dropAfter(drill, `${stageId}-path`), place: {...drill.place, [stageId]: regionId}};
 }
@@ -415,6 +431,75 @@ export function sheetPlan(view = {}, kept = [], book = {}) {
 }
 
 /** Problems in the lists (the harness runs this). table: the Merits and Flaws the books give, to check the names. */
+/* ---- The years after the change (0.20.0) ---- */
+
+const GROUP_YEARS = [["M", -Infinity, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 2022], ["F", 2023, Infinity]];
+/** The ages a character lived at least SINCE_MIN years of after the turn: [{id, group, from, to}]. */
+export function sinceSpans(turnYear, nowYear) {
+  const t = num(turnYear), n = num(nowYear), out = [];
+  if ( t === null || n === null ) return out;
+  for ( const [g, a, b] of GROUP_YEARS ) {
+    const from = Math.max(a, t + 1), to = Math.min(b, n);
+    if ( to - from + 1 >= SINCE_MIN ) out.push({id: `s-${g}`, group: g, from, to});
+  }
+  return out;
+}
+export function newSince({turnYear, nowYear, line = "vampire", seed = "wodx"} = {}) {
+  return {v: VERSION, turnYear: num(turnYear), nowYear: num(nowYear), line: String(line), seed: String(seed), picks: {}, skipped: [], rerolls: {}};
+}
+/** The steps of the years after the change, each with five options. */
+export function sinceSteps(since) {
+  if ( !since ) return [];
+  const list = SINCE.filter(o => !o[2]?.lines || o[2].lines.includes(since.line));
+  return sinceSpans(since.turnYear, since.nowYear).map(sp => ({id: sp.id, kind: "since", five: true, year: sp.from, from: sp.from, to: sp.to,
+    title: `${sp.from} to ${sp.to}: how you spent those years`,
+    options: fiveOf(list.filter(o => !Object.entries(since.picks ?? {}).some(([k, v]) => k !== sp.id && v?.id === slug(o[0]))), sp.to, "trade", `${since.seed}:${sp.id}:${since.rerolls?.[sp.id] ?? 0}`)}));
+}
+export const sinceCurrent = since => sinceSteps(since).find(s => !since.picks?.[s.id] && !since.skipped?.includes(s.id)) ?? null;
+export function sincePick(since, stepId, optionId) {
+  const step = sinceCurrent(since), o = step?.options.find(x => x.id === optionId);
+  if ( !step || step.id !== stepId || !o ) return since;
+  return {...since, picks: {...since.picks, [stepId]: {id: o.id, label: o.label, g: o.g, ...(o.tone ? {tone: o.tone} : {}), ...(o.p ? {p: o.p} : {})}}};
+}
+export function sinceSkip(since, stepId) {
+  const step = sinceCurrent(since);
+  return step && step.id === stepId ? {...since, skipped: [...(since.skipped ?? []), stepId]} : since;
+}
+export function sinceReroll(since, stepId) {
+  const step = sinceCurrent(since);
+  return step && step.id === stepId ? {...since, rerolls: {...(since.rerolls ?? {}), [stepId]: (since.rerolls?.[stepId] ?? 0) + 1}} : since;
+}
+export function sinceSurprise(since) {
+  const step = sinceCurrent(since);
+  if ( !step?.options.length ) return since;
+  const rand = rng(`${since.seed}:surprise:${step.id}:${since.rerolls?.[step.id] ?? 0}`);
+  return sincePick(since, step.id, step.options[Math.floor(rand() * step.options.length)].id);
+}
+/** Undo the last step answered or skipped. Returns the same object when there is none. */
+export function sinceBack(since) {
+  const last = sinceSteps(since).filter(s => since.picks?.[s.id] || since.skipped?.includes(s.id)).at(-1);
+  if ( !last ) return since;
+  const picks = {...since.picks};
+  delete picks[last.id];
+  return {...since, picks, skipped: (since.skipped ?? []).filter(x => x !== last.id)};
+}
+export const sinceStory = since => sinceSteps(since).filter(s => since.picks?.[s.id]).map(s => ({stage: s.id, year: s.from, title: s.title, choice: since.picks[s.id].label, text: ""}));
+export function sincePool(since) {
+  const out = [];
+  for ( const s of sinceSteps(since) ) for ( const g of parseGives(since.picks?.[s.id]?.g) ) out.push({...g, key: `${g.kind}:${g.name.toLowerCase()}`, from: [s.title]});
+  return out;
+}
+export function sincePeople(since) {
+  const out = [];
+  for ( const s of sinceSteps(since) ) {
+    const p = since.picks?.[s.id]?.p;
+    if ( !p ) continue;
+    const [role, ...rest] = String(p).split("|");
+    out.push({role: role.trim(), note: rest.join("|").trim(), year: s.to, scene: s.title, step: s.id});
+  }
+  return out;
+}
+
 export function lint({table = null, backgrounds = null} = {}) {
   const bad = [];
   const seen = new Set();
@@ -469,6 +554,9 @@ export function lint({table = null, backgrounds = null} = {}) {
       if ( L[3] ) { gives(L[3][1], `${where} adult`); if ( CALL.some(o => slug(o[0]) === slug(L[3][0])) ) bad.push(`${where}: calling repeats a shared one`); }
     }
   }
+  uniq(SINCE.map(o => o[0]), "SINCE");
+  for ( const o of SINCE ) { gives(o[1], `SINCE ${o[0]}`); if ( !TONES[o[3]] ) bad.push(`SINCE ${o[0]}: no tone`); }
+  for ( const y of [1250, 1700, 1900, 2000, 2100] ) for ( const [t, n] of Object.entries(MARK_SHAPE) ) if ( SINCE.filter(o => o[3] === t && fitsMark(o[2], y, "trade")).length < n ) bad.push(`SINCE: too few "${t}" in ${y}`);
   for ( const [rid, E] of Object.entries(LOCAL_EVENTS) ) {
     if ( !regionOf(rid) ) bad.push(`dated: unknown region ${rid}`);
     uniq([...(E.origins ?? []).map(o => o[0]), ...ORIGINS.map(o => o[1]), ...Object.values(LOCAL[rid] ?? {}).flatMap(L => L[1].map(o => o[0]))], `dated ${rid} origins`);
