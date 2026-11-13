@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3470
+Next free block: B3480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -169,11 +169,12 @@ Next free block: B3470
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
-| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3373) | Storyteller |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
+| B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5306,6 +5307,31 @@ WoDX Storyteller. For a signal of weight 3, 1 in 5 a day and once a month at mos
 
 Reverse: drop the omen loop in dayRun.
 
+## B3374. Commissions are downtime projects, with artists of their own (2026-11-13)
+WoDX Storyteller. Last of the eight player world systems Ben picked. A new project kind, Commission a work of art (the patron's Charisma + Expression, difficulty 6, weekly, a night a week for full pace), names an artist from the Storyteller's list, a form of the year and the money spent (0 to 5 dots). The form sets the successes needed (3 for a photograph to 14 for an opera, a film or a game). Artists are kept in a world list with skill, fame, patron and state; the Storyteller names them, or takes them from the NPCs standing in the towns' scenes with Expression or Crafts of 2 or more.
+
+Reverse: drop the commission kind and the wodxTaskDone listener in patronage.mjs, or turn off "Patronage of the arts".
+
+## B3375. A work's quality (2026-11-13)
+WoDX Storyteller. The artist's skill, plus a dot for every two dots of money spent, plus one when the form is in fashion, less one for a Ravaged artist; 1 to 5 (poor, plain, good, fine, a masterpiece). The fashions are thirty movements by years and ways of life, rounded history in WoDX's own words. The work is made as an item on the patron with its form, quality, artist and year. A fine work or better raises the artist's fame by one. House figures.
+
+Reverse: edit qualityOf and MOVEMENTS in patronage-rules.mjs.
+
+## B3376. What a work does for its owner (2026-11-13)
+WoDX Storyteller. Shown at a gathering, a fine work adds a die to the owner's Status and social rolls there, a masterpiece in fashion two (noted on the item and in the log for the Storyteller to apply). A fine work is flagged for the Toreador's eye. A Toreador patron is asked (approval) whether it becomes a Muse (V20 pdf 75), through WoDX Chronicle's clan features. A fae patron who handles the artist kindly makes a Dreamer who gives Glamour (C20 pdf 150, Musing pdf 146); harshly, the artist is Ravaged (C20 pdf 260-263) and loses a dot of skill.
+
+Reverse: drop the status, Muse and fae lines in onCommissionDone.
+
+## B3377. Salons (2026-11-13)
+WoDX Storyteller. The Storyteller holds a gathering for a host from the Artists window: a court of song until 1400, an evening of music and verse until 1650, a salon until 1900, a gallery opening until 1990, a launch party after. A kind tale about the host starts before a crowd (B3350), and each living artist the host keeps rises a point of fame at 1 in 2.
+
+Reverse: drop holdSalon.
+
+## B3378. Artists' careers (2026-11-13)
+WoDX Storyteller. Each month an artist with a patron is kept; one without a patron for six months and with fame under 2 starves; a starving artist dies 1 in 60 a month or finds someone to pay at 1 in 10 a point of fame (at least 1). A patron who is gone keeps nobody. House figures.
+
+Reverse: edit monthArtist in patronage-rules.mjs.
+
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
 
@@ -5391,3 +5417,38 @@ Reverse: let first_group_ok return true everywhere.
 tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
 
 Reverse: nothing to reverse; the samples follow the generator.
+
+## B3470. Caerns join the register of places of power (2026-11-13)
+WoDX Storyteller. A caern is a fourth kind on the places-of-power register (caern-rules.mjs, power.mjs): level 0 to 5, its kind from the W20 Caerns chart (p. 310), a totem, the sept with its Garou, tribes and offices (sept leader, Master of the Rite, Warder, Gatekeeper, Master of the Howl, Talesinger, Truthcatcher, den parent; W20 pp. 55-56, 252), and its Gnosis from the last Moot Rite (5 a level, p. 206). Gauntlet and Moon Bridge reach follow the level (p. 311). The window holds the moot, opens the caern (Wits + Rituals at 7 against the caern spirit, p. 206), meets raids, fights caern wars, raises the caern and takes it back.
+
+Reverse: drop the caern kind from KINDS in power-rules.mjs.
+
+## B3471. A caern without its moot lapses, sinks and dies (2026-11-13)
+WoDX Storyteller. W20 says the Moot Rite must be held at least once a month but not what happens otherwise. WoDX: a month without one and the caern lapses (no longer consecrated, its Gnosis gone, the scene's Gauntlet drifts up one); every three months of lapse cost a level; at level 0 the caern spirit leaves and the caern dies. A moot that ends a lapse thins the drift again.
+
+Reverse: change LAPSE_MONTHS in caern-rules.mjs.
+
+## B3472. A year of full moots lets a caern grow (2026-11-13)
+WoDX Storyteller. The book gives only the Rite of Caern Building (p. 208: 100 Gnosis, a fifth level only with 100 more). WoDX: after 13 full moots in a row (a year of moons) the caern is ready to grow, and a rite with 100 Gnosis offered raises it a level; 200 to reach level 5.
+
+Reverse: change RISE_MOOTS or riseCost.
+
+## B3473. Raids by era, settled by the sept if the Storyteller leaves them (2026-11-13)
+WoDX Storyteller. Each month a held caern may draw a Wyrm raid or the Weaver pressing in: Wyrm 3% and Weaver 1% before 1500, 4% and 3% to 1799, 6% and 6% to 1945, 8% and 7% to 2022, 10% and 9% after. A lapsed caern draws the Wyrm twice as often; an urban caern the Weaver. The Storyteller gets a card and can play it out or set the outcome; after 7 days the sept rolls for itself (half its Garou, +2 for a Warder, +1 for a Gatekeeper, plus the level, against twice the raid's strength, all at 6). A lost raid costs a level and steps the drift (taint or the Weaver); the Wyrm takes the caern at 0 or when it wins by 3, the Weaver calcifies it at 0. Raids can be switched off for each caern.
+
+Reverse: change RAID_ODDS or RAID_GRACE_DAYS, or untick raids on the caern.
+
+## B3474. Caern wars between septs (2026-11-13)
+WoDX Storyteller. Only the Storyteller starts one. Each side rolls half its Garou plus its best rank at 6; the defenders win ties. A taken caern changes sept, its offices fall empty, and it loses a level for the blood on the bawn (never below 1).
+
+Reverse: change caernWar in caern-rules.mjs.
+
+## B3475. Taking back a lost caern (2026-11-13)
+WoDX Storyteller. A caern taken by the Wyrm or calcified by the Weaver can be taken back with three successes at 7 (half the Garou plus their best rank); it comes back cleansed at level 1 and lapsed, so the Moot Rite has to be held to consecrate it.
+
+Reverse: change reclaim in caern-rules.mjs.
+
+## B3476. Office holders and rank (2026-11-13)
+WoDX Storyteller. The book has offices of consequence held from Adren. WoDX suggests the highest-ranking Theurge as Master of the Rite in the editor and never blocks a pick: the Storyteller's choice stands.
+
+Reverse: change OFFICES or masterOfTheRite.
