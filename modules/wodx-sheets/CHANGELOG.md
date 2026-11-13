@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.2 (Coin of which land has a new choice, The chronicle's money: the Possessions tab's coins of the time and Add coins then take their names from WoDX Storyteller's money, for every world region and year, and on a scene abroad from the money of that land. The default stays the German lands. B2653)
 - 0.15.1 (the Relationships and Body tab buttons have the same tile and glyph colours as the line's own tab buttons)
 - 0.15.0 (the layout pass: the title bar always shows the name, with its buttons as icons that say what they are on hover; the Possessions, Relationships, Body and Storyteller's notes sections sit in the same panels as the rest of the sheet; WoDX fields and buttons have one shade and can be read in light and dark mode; item sheets use the width of the window and their text editor follows dark mode; list headings and long section titles no longer run into each other)
 - 0.14.0 (the anachronism check reads the maps: with WoDX Interactables on, vehicles, telephones, radios, sprinklers, electric lights, live wires, keypads and the goods inside containers on every scene are named on the card by scene, each with Keep it and Show me; "Out of their time" in the Storyteller's hand lists everything out of its time now)

@@ -1,0 +1,9 @@
+/* WoDX Solo: the player's panel and its windows (0.2.0) */
+.wsolo-panel .window-content { padding: 6px; }
+.wsolo-panel .wsolo-buttons { display: flex; flex-direction: column; gap: 4px; }
+.wsolo-panel .wsolo-buttons button { justify-content: flex-start; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wsolo-dialog .wsolo-choices { display: flex; flex-direction: column; gap: 4px; border: none; padding: 0; margin: 0; }
+.wsolo-dialog .wsolo-choice { display: block; line-height: 1.4; }
+.wsolo-dialog .wsolo-curtain { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+.wsolo-dialog .wsolo-curtain th, .wsolo-dialog .wsolo-curtain td { padding: 2px 4px; vertical-align: top; text-align: left; }
+.wsolo-dialog .window-content { max-height: 70vh; overflow-y: auto; }

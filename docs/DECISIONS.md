@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2600
+Next free block: B2690
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -107,11 +107,20 @@ Next free block: B2600
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
 | B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
-| B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
+| B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries; from B2556 a coarse map of each realm past the near worlds | Storyteller, Otherworlds |
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 | B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
+| B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
+| B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
+| B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
+| B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
+| B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
+| B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
+| B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
+| B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3245,6 +3254,27 @@ Not built: years before 1197 use the same from-of-old lists, so the prologue era
 Ben decided the two questions B2550 and B2551 left with him. India is beyond Europe's known world until 1498, as in the games, and not reachable by the Levant and the Red Sea before then; with it, the lands reached past it by sea open only when Europe's ships get there (Southeast Asia 1509, the islands of Nusantara 1511). China stays known from 1245 by the roads across Asia. India in turn learns of Europe in 1498, as before. North Africa, the Near East, East Asia and Africa keep their own old knowledge of India. Lands open by their exact year as the chronicle's clock moves, not in a block at the start of an era. This replaces the sentence on India in B2551.
 Reverse: put india, southeast-asia and nusantara back to their earlier years in Europe's row of CIRCLES.
 
+
+## B2555. Nothing beyond India opens before India (2026-11-13, Ben's call)
+Ben: China and the lands with it should not open to Europe until India opens. China is beyond Europe's known world until 1513, when Europe's ships first reach it, and Tibet and the Himalaya until 1624; with Southeast Asia 1509, Nusantara 1511, Japan 1543 and Korea 1593, every land east of India now opens after 1498. The roads across Asia no longer carry a chronicle from Europe to China before then. East Asia in turn learns of Europe in 1513, not 1290. North Africa, the Near East and Central Asia stay known to Europe from of old, and keep their own old knowledge of India and China. A chronicle that travels the old roads early marks the land found under Discoveries. This replaces the years for China and Tibet in B2550 and the sentence on China in B2554.
+Reverse: put china back to 1245 and tibet-himalaya to 1330 in Europe's row of CIRCLES, and Europe to 1290 in East Asia's.
+
+## B2556. Each realm past the near worlds has a coarse map of its own (2026-11-13, Ben's go-ahead)
+Ben saw samples of all 34 realms and said to build them as planned. Each realm of the Realm maps catalogue gets one map of 200 by 110 squares, made in two steps: a plan written for the realm (one of eleven: islands in a void or sea, one land, a spiral, rings, a city, tunnels, a patchwork of lands, lines of works, a grid of sectors, a river land, a ledge above a fall), then a fill from a seed. The realm's landmarks from the catalogue, which the book check gave with page refs, stand on the plan as its places. What a realm is and what is in it come from the books; where the places lie and how the ground runs between them are WoDX's own arrangement, since the books give no maps. The maps are read in a window (Realm world maps, among the token tools, and from the world map window); the drawn realm scenes of Realm maps are untouched.
+Reverse: remove realm-worlds.mjs and realm-worlds-rules.mjs from WoDX Otherworlds, their lines in main.mjs, and the button in WoDX Storyteller's world-map.mjs.
+
+## B2557. When a realm's map is made anew (2026-11-13)
+Each realm has one of five rules. The same in every age: most realms, among them Pangaea, Malfeas, Erebus, Stygia, Enoch, Yomi and Duat. Made anew by each Great Maelstrom: the Tempest, the Far Shores and the Labyrinth, by the years the realm maps already use (1347, 1600, 1916, 1945, 1999). Made anew each season: the Far Dreaming. Made anew on every visit: Flux, a Battleground, a Dream Zone, the Deep Dreaming, a Paradox Realm and each stretch of the Deep Umbra. One map for each realm of its kind, by the name typed: Horizon Realms, Shade Realms, Shard Realms and the Dark Kingdoms. The Atrocity Realm keeps its yards and gains new ones at 1300, 1600, 1900 and 1950. The books say that these realms shift or hold; how often is our own reading.
+Reverse: move a realm's id between the lists in KIND_OF in realm-worlds-rules.mjs.
+
+## B2558. Travel times in a realm are WoDX's own measure (2026-11-13)
+The books give no distances in the realms. Each plan has a number of days to cross the whole map at a steady pace (a city 2, a spiral 9, one land 24, a sea of islands 30) and a few realms have their own (the Digital Web half a day, Stygia 3, Pangaea 40, the Tempest 40, the Far Shores 50, the Deep Umbra 60). Each kind of ground is crossed at a share of that pace, some ground cannot be crossed at all, and a trod or other drawn road is half again as fast. A journey takes the quickest way over the squares. Where a plan would shut a place off, a way is cut to it when the map is made, so every place can be reached. The window gives the time in days or hours as "about". Time passing outside a realm stays with the journey cards of WoDX Otherworlds.
+Reverse: change PLANS and DAYS in realm-worlds-rules.mjs.
+
+## B2559. Places in a realm stay hidden until found (2026-11-13)
+As on the world map, a chronicle starts by knowing only where it arrives: one place on each realm's map. The rest of the map is drawn dark beyond 18 squares from a known place, and no journey can end at a place not yet found. The Storyteller ticks places under Found places (world setting realmWorlds of WoDX Otherworlds). A map that is made anew starts with nothing found. Nothing opens by year: unlike the Earth's lands, a realm's places are found only in play.
+Reverse: show the whole realm in the window (Shown: The whole realm), or drop the known set from view() in realm-worlds.mjs.
+
 ## B2560. Sprite tokens, a prototype (2026-11-13)
 Ben chose on the sprite desk (12 November): whole drawn figures on the map, busts kept for sheets and chat, facing and a walk cycle, drawn by our own code in the paperdoll module, and a testbed prototype first. Paperdoll 0.7.0 holds six sheets (Kindred elder 1888, Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888), each 8 walk frames by 4 facings at 96 by 112 pixels, drawn outside the game by our own rig and shaded with five tones, a dark outline and one light. No outside art. A token that carries the flag "sprite" shows the frame for its facing and for the ground it has covered: one square is one walk cycle. The Storyteller gives or removes a sprite from the walking-figure button among the token's own buttons; the token's old picture is kept and put back. The figure is drawn twice the square, so a person stands a little over one square tall with the feet low in the square. The world setting "Sprite tokens walk and turn" turns the movement off.
 Reverse: remove the sprite from each token with the same button, or turn the setting off; delete modules/wodx-paperdoll/sprites and scripts/sprites.mjs with sprite-rules.mjs.
@@ -3305,3 +3335,212 @@ Not built: windows, doors and rooms that differ by age beyond their finish (a ro
 ## B2596. Doors and windows follow the age (2026-11-13, Ben's go-ahead on the design's proposal)
 Every door, double door, doorway, arch and window takes the age's wood finish (Ashen to 1449, Light to 1780, Dark after), a finer door for a richer owner, and metal-framed windows from 1919 (palettes.portals, passed to wall_with_portals as textures). Widths stay those of ddcore.PORTALS.
 Reverse: leave the building's portal_tex unset; the Ashen set returns.
+
+
+## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
+WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
+Reverse: remove the hook call in Combat's attack and the two listeners in sprites.mjs.
+
+## B2583. Powers rolled from the sheet play the casting move (2026-11-13, Ben's ask)
+
+A power rolled from any line's power window in Actions sends wodxPowerShown with who worked it and at whom, once its card is posted. The power window is recognised by its aiming panel, which every line's power and casting window carries, so no line needs its own call. A cancelled window, or a roll that posts nothing, sends nothing. Paperdoll plays the sprite's casting move toward the target. The colour and shape of the effect still come from the sprite's own sheet; choosing them from the power rolled is open.
+
+## B2584. The computer that rolled sends the move (2026-11-13)
+
+wodxAttackRolled and wodxPowerShown are heard only on the computer that rolled. That computer writes the move to the token when its user owns the token, so a player's own attacks and powers play on every screen. Harm applied without an attack roll is still sent by the active Storyteller's computer.
+
+## B2585. A power's effect fits the power (2026-11-13, Ben's ask on supernatural attacks)
+
+The effect of a power is no longer drawn into a figure's casting sheet. It is its own sheet, a colour and a shape (twelve colours, seven shapes, 84 sheets drawn by tools/sprites/proto_fx.py), laid over the token while the casting move plays. The look is chosen in sprite-rules.mjs (fxFor): first from telling words in the power's name and its group (fire, shadow, the mind, blood, the dead, dreams and so on), then from the power's kind (a Discipline, a Gift, an Arcanos, an Evocation, Hekau, a Horror, an Edge, Numina), then from the character's line. A module may name a look outright in wodxPowerShown as fx. These looks are a first rule of presentation, not book text; any of them can be changed in the one table.
+Reverse: drop the fx field from the token's act flag in play(), and restore the elder's casting sheet from tools/sprites/proto_attacks.py with its power set.
+
+## B2586. A sprite for every character, drawn in batches on the PC (2026-11-13, Ben's choice)
+
+Ben chose batches on the PC over rewriting the drawing rig to run inside Foundry. The game writes a roster to the world's wodx-sprites folder (Paperdoll api.sprites.saveRoster): each actor's id, name, skin and hair from its portrait look, the things it has on, the weapons it has out, and whether its kind works powers. tools/sprites/batch.py reads the roster and draws, for each actor, a walk sheet, a still and its attack sheets into the same folder, with a manifest. People are dressed from their worn things by the matcher in items.py; a creature is drawn as the animal its name says. An actor whose roster entry has not changed is not drawn again. The game learns the manifest when it starts (api.sprites.loadOwn), names each sprite own- and the actor's id, offers it on that actor's tokens, and api.sprites.dress(scene) gives it to every token of a scene that has none.
+Not yet: dress by era and region for characters with nothing on, hair styles and beards from the portrait, Garou forms other than Homid, the other lines' true forms, and drawing a new batch without a job on the PC.
+Reverse: delete the world's wodx-sprites folder and clear the sprites from the tokens (api.sprites.clear).
+
+## B2587. The figure menu: players put their own figure together (2026-11-13, Ben's ask)
+
+A Figure button on any character sheet its player owns opens a window with three parts: the figure so far with skin, hair colour and how the hair is worn; the twelve places a piece can go (body, legs, feet, over all, head, face, neck, hands, belt, pinned on, in the hand, on the other arm); and the pieces for the chosen place, with a search box. Pieces are the wardrobe items the rig can draw (tools/sprites/catalogue.py writes the list and one small layer per piece to sprites/figure). The list shows the pieces in use in the chronicle's year, with a tick box for every age; clothing uses its own years, gear is offered from the first year of its earliest era on. Any piece can be dyed.
+The picture in the window is quick: ready layers laid over each other and tinted. Because Ben chose sprites drawn in batches on the PC (B2586), the walking sprite itself follows with the next batch; the window says so. The choice is kept on the actor as the flag figure, and the roster then describes that figure in place of the things marked as worn.
+Not yet: build and height, beards, a facing other than the front in the quick picture, and asking for a batch from inside the game.
+Reverse: remove the two header buttons in main.mjs; a kept figure is the flag figure on the actor.
+
+## B2588. Sprites take blows, dodge, fall and die, and run and sneak (2026-11-13, Ben's asks)
+
+Every sprite has six more sheets, made from its own walk sheet by tools/sprites/proto_attacks.py (extras), so people, beasts and the war form all have them: taking a blow, dodging, falling, dying, running and going low. Combat 3.22.1 adds the condition the harm left (the fight rules' own word) to wodxDamageApplied. Paperdoll then plays, a moment after the attacker's strike: the blow taken; a fall when the character is out of the fight (unconscious, torpor, or the last health level filled); the death when the rules say dead or Final Death. A fall or a death holds its last frame on every screen, and across reloads, until the character's health is better than Incapacitated again or api.sprites.rise(token) is called. A missed attack makes the one attacked dodge.
+How a figure dies is drawn by its kind: a Cainite crumbles from the head down to a heap of ash, a wraith or spirit thins and drifts up, anything else falls, lies still and greys. A Garou returning to its breed form in death is not shown yet.
+Going: a token that crawls uses the low sheet; one that covers more than six squares in one stretch uses the running sheet. These two are the walk leaned forward or pressed low, a first version; true run and crouch poses are open, as are climbing, swimming, riding and flying.
+Reverse: remove the reactTo call in onDamage and the dodge in onAttack (sprites.mjs); the sheets are harmless without them.
+
+## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
+The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
+Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.
+
+## B2601. Coming of age moves with the era and the region (2026-11-13, Ben's pick on lp6; house reading of history)
+Adult life starts at 14 before 1500, 15 to 1788, 16 to 1945 and 18 after; the teenage years start at 10 where adult life starts at 14, else at 12. Japan keeps 15 before 1789. Regions may set their own in REGION_COMING_OF_AGE. These ages are WoDX's own reading, not a book rule.
+Reverse: set every value of COMING_OF_AGE to 18 and empty REGION_COMING_OF_AGE in data/lifepath-drill.mjs.
+
+## B2602. Five things marked those years (2026-11-13, Ben's note on lp5)
+Each stage has two picks. The second shows five options drawn from that stage's list: two good, two hard, one neither, with "Five others" to draw again. This is Claude's reading of "five choices per life stage, two positive, two negative, one neutral". Ben, 13 November 2026 02:25Z: "The first choice should also get five choices", so since Creation 0.17.1 the first pick of each stage shows five the same way; a path of the land and age takes the "neither" place on the first draw.
+Reverse: change MARK_SHAPE in lifepath-drill-rules.mjs.
+
+## B2603. Adult chapters (2026-11-13, desk lp7)
+A new chapter of adult life opens at coming of age, 30, 45 and 60. Each chapter is a calling and a mark.
+Reverse: change CHAPTERS in data/lifepath-drill.mjs.
+
+## B2604. Rewards go on the sheet at the book's cost (2026-11-13, desk lp12 and lp13; V20 creation totals and each line's own)
+At the end the ticked picks are written to the sheet: an Ability up one dot and never past the book's creation cap, a Background at one dot or up one, a Merit or Flaw at the cost in the book table (the least cost where the book gives a range), Flaws only up to the book's cap. Nothing is free: the creation check counts every dot and point. Flaws start unticked. Names not in the book table are left off and listed. The tongue of the land of birth costs nothing.
+Reverse: untick "Put what is ticked above on the sheet"; features made this way carry flags.wodx-creation.lifepath.
+
+## B2605. Own answers and young characters pass the Storyteller (2026-11-13, desk lp10 and lp23)
+A player's own answer on any step except continent and region, or a character younger than 12, sends the lifepath to the approval queue; the sheet changes when the Storyteller approves. A Storyteller's own lifepath waits for no one.
+Reverse: return [] from reviewReasons.
+
+## B2606. Births of a line's own kind (2026-11-13, desk lp19)
+Origins of a line (born a wolf, metis, Kinfolk family, revenant family, a ghoul household, a hunter's family and the like) are offered only when the character's line fits.
+Reverse: drop the rows with a line in ORIGINS.
+
+## B2607. A life lived elsewhere (2026-11-13, desk lp9 and lp11)
+Every stage after childhood can be set in another region. When the last home is not the chronicle's homeland, a last step asks what brought the character here.
+Reverse: drop the movable flag in stepsOf and the arrival step.
+
+## B2608. Local content comes region by region (2026-11-13, desk lp15, lp16 and lp22)
+The shared lists serve all 44 regions in every age. Local origins, teenage paths and callings exist for France, Japan, West Africa, the Andes, the Levant and western North America as samples; since Creation 0.18.0 (13 November 2026, Ben: "Continue") every one of the 44 regions has them for every age, in data/lifepath-local-europe.mjs, -asia.mjs and -world.mjs, written from general history in WoDX's own words. Since Creation 0.19.0 the older Bohemian scenes are sorted into Moravia's dated content (data/lifepath-local-events.mjs: origins by span of birth years, marks by the years they happened); the generic older scenes (a mentor, a sibling, a first love, a fire) were already covered by the shared marks. data/lifepaths.mjs is unchanged and still serves records without a drill. Nothing was deleted.
+Reverse: empty LOCAL in data/lifepath-drill.mjs.
+
+## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
+A person from the past made into an NPC is named by the culture of the region where that part of life happened.
+Reverse: drop the culture argument in makePeople.
+
+## B2610. Sprites sit, kneel, look about, speak, feed and change form (2026-11-13, Ben's ask)
+Six more sheets for every sprite, made from its walk like the reactions (tools/sprites/proto_attacks.py, pose): sitting and kneeling fold the legs and stay until the figure stands up or walks off; looking about stoops and turns; speaking nods under a small speech mark; feeding leans in with a flush of red; a change of form blurs white. Slow moves take longer over the same six frames (ACT_SLOW). They are a first version made from the standing frame, like the run and the crouch; true drawn poses are open.
+Reverse: drop POSES from sprite-rules.mjs; the sheets are harmless without it.
+
+## B2611. Sprites climb, swim, fly and ride (2026-11-13, Ben's ask)
+Four more ways of going, each a sheet like the walk: climbing shows the back, hand over hand; swimming shows head and shoulders above a line of water; flying lifts the figure off its shadow; in the saddle the legs fold. The token's own way of moving picks climb, swim and fly; WoDX Interactables says who is in a saddle. A character holding a torch is drawn carrying it lit (a new piece in the rig).
+Reverse: take the four names out of GAITS in sprite-rules.mjs.
+
+## B2612. The new moves play by themselves, and from the token (2026-11-13, Ben's ask)
+Feeding (wodxFed) plays the feeding move toward the vessel; a change of form (wodxFormChanged) plays the blur; a line spoken in character from a token plays the speech mark. Whoever may move a sprite token has a button on it for sitting, kneeling, looking about and standing up. One who sits or kneels still takes a blow and still falls, and healing does not stand them up; only a fall or a death is undone by healing.
+Reverse: remove the three Hooks.on lines and the pose button in sprites.mjs.
+
+## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
+A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
+Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or drop #withSince in lifepath.mjs.
+
+## B2621. The Storyteller's limits on lifepaths (2026-11-13, desk lp11)
+A world setting (wodx-creation.lifepathLimits) holds the regions a character may come from (none marked means all) and the kinds of origin left out. The Storyteller sets it from a fold-out on the lifepath's first screen. The chronicle's own land is always open, and a stage cannot be moved to a closed region. Lifepaths already written are not changed.
+Reverse: clear the setting with "Keep these limits" and nothing marked, or return null from limitsNow.
+
+## B2622. Dated lifepath content for every region (2026-11-13, Ben: "Continue")
+Each of the 44 world regions has its own dated origins (open only in a span of birth years) and dated marks (offered when a life stage overlaps the years they happened), in WoDX's own words from general history, 1197 to 2022. Each mark is good, hard or neither, and at most one of each tone is put in front on a first draw, as for Moravia. The years after 2022 have no dated content yet. Files: modules/wodx-creation/data/lifepath-events-europe.mjs, -asia.mjs, -world.mjs.
+Reverse: remove a region's block from its file, or drop the Object.assign line in lifepath-local-events.mjs to keep Moravia only.
+
+## B2623. Lifepaths beyond Earth (2026-11-13, desk lp20)
+Orbit and the high colonies, the Moon and Mars are lands a lifepath can name, under a choice "Beyond Earth". They are not world regions of the chronicle (no weather, money or markets); they exist for lifepaths only (OFFWORLD in modules/wodx-creation/data/lifepath-drill.mjs). A land is open when the chronicle's own year is 2023 or later and the birth or stage year is no earlier than the land's first year: orbit 1999 (the year after the first townships are lifted), the Moon 2009 (after the war in orbit shows a colony there), Mars 2022 (after the first finished base). The years and the dated events follow WoDX's future timeline (docs/research/era-timelines/r3/future-darkness.txt). People born there are named with the Storyteller after their family's people on Earth.
+Reverse: remove the "Beyond Earth" row from CONTINENTS; lifepaths already written keep their text.
+
+## B2630. Ways in and out and located dangers are places on a realm's map (2026-11-13)
+Ben asked that work keep moving overnight; the coordinator passed on that realms should get more places, only from material that can be cited. The realm catalogue, which the book check gave page refs for, already names more than its landmarks: the way a traveller arrives, the way back and the way on, and dangers that sit in one spot (a Nihil, a crater field, a Pattern Spider's web, a guardian engine). These now stand on each realm's map as places of their own kind, drawn in their own colours, and a landmark the plan had no spot for is placed too. Where the catalogue names the way a traveller arrives or comes back by, that way is the place known on arrival. Dangers that are a state of the whole realm (the Void, smog, the Maelstrom) are not spots and stay off the map. Nothing new is taken from the books here and nothing is invented but the spot each place stands on, which is our own as before (B2556). More named places wait for a book lookup on the PC.
+Reverse: empty extrasOf() in realm-worlds-rules.mjs.
+
+## B2640. The lone player's panel holds five buttons for now (2026-11-13, solo desk sp21 and B2405)
+Step 2 of The Lone Chronicle gives the person playing alone a small window of their own (WoDX Solo 0.2.0): Let time pass, Travel, Pause or go on, I am stuck and Lift the curtain. The oracle, the Leads page and the trouble dial on the desk's list come with step 3, and the director in step 4, so they are left off until they exist. Every ask goes to the Storyteller's seat over the module's socket and the seat does it, so the player's screen never holds a Storyteller's secret. Travel opens WoDX Storyteller's Out on your own window; its requests pass on the standing approvals the switch already gives.
+Reverse: drop the entry from PANEL in solo-rules.mjs.
+
+## B2641. Waiting alone moves the clock ten minutes at a time and stops when something happens (2026-11-13, desk sp12; house rule)
+The waits are ten minutes, an hour, until dusk, until dawn and Sleep the day (to dusk). The seat moves the clock in steps of at most ten minutes and lets the world answer for a moment between them, so routines, the fight starter, dawn and dusk run as they would at a table. A wait stops early for a fight on the character's scene, a pause, word whispered to the player, or someone new (not a passer-by) appearing on the scene. Sleep the day stops only for a fight or a pause. No wait runs past 36 hours, and none starts during a fight or a pause. Dusk and dawn are read for the scene's own latitude.
+Reverse: set every WAITS entry's stops to ["paused"] to wait without interruption, or raise STEP to the whole wait.
+
+## B2642. I am stuck has three fixes (2026-11-13, desk sp22)
+Bring me a lead draws a foreshadowing for the character from the night's aids and sends it through the approval queue, where the standing approval lets it through; the director of step 4 will replace it with a lead chosen from what is live in the chronicle. Free my token puts the character's token at the scene's starting view, or its middle when it has none. End a hung fight or window ends every running fight on the character's scene (the after-action card and the fight's time follow as usual) and closes any dialog left open on the seat. Each fix is written in the seat's log.
+Reverse: drop the entry from STUCK in solo-rules.mjs.
+
+## B2643. The curtain shows tonight from the last dusk (2026-11-13, desk sp24)
+Lift the curtain asks once, then shows the player the seat's log since the last dusk at the character's scene: each card, window and queue entry, what the seat chose and why. The night is recorded in the world setting wodx-solo.seen (the last 60 nights), so a later bug report can say what the player knew. The log itself was always readable from a player's console (desk sp26); the curtain only puts it on screen.
+Reverse: return no rows from curtainRows.
+
+## B2644. Fights end by themselves when playing alone (2026-11-13, desk sp14)
+The switch now also sets WoDX Combat's End fights by themselves to Auto, so a fight ends a full turn after one side has nobody standing or present, and the after-action card follows. Turning the switch off puts back the old value. A fight that hangs anyway is ended from I am stuck.
+Reverse: drop the fightEnd row from PRESET in solo-rules.mjs.
+
+## B2650. Eleven more lands get their own money (2026-11-13, global rule)
+Korea, mainland Southeast Asia, the Malay world, Hungary with Transylvania and the Balkans, Greece, the Caribbean, the Andes, the River Plate with Chile, Kongo and central Africa, Tibet and the Himalaya, and Canada stop borrowing China's, Moravia's, the Ottoman lands', Mexico's or West Africa's money. Each has its own coins of the day, units and a one-dot wage from its first coin (or none) to the eurobuck. Where a land paid in a neighbour's coin in fact, the very same money is shared, so no changer stands between them in those years: the hyperpyron and akçe in Greece with Constantinople, pieces of eight in Havana and Potosí with New Spain, the renminbi in Lhasa from 1951, the livre tournois in New France. Every wage and date is history rounded for play, a house rule; the books name no coins for these lands. China, the Ottoman lands and Mexico now carry labels for themselves alone.
+Reverse: point the regions back in WORLD_REGIONS (modules/wodx-chronicle/scripts/world-rules.mjs); the new MONIES and COINS entries can stay unused.
+
+## B2651. Coin of the place in the purse (2026-11-13, global rule)
+A purse can hold coin of other lands beside home money (purse.foreign). Money by era in the hand has a last column: on a scene abroad a sum of home money is changed into the coin of the place, or back, at the changer's cut each way (B2536's figures); at home, coin of other lands can be ticked to change it home. Abroad, a price is paid first from coin of the place with no changer, and what it does not cover is charged to home money with the cut. Payments made at home (upkeep, a shop's till) never touch it. Coin of a land whose money goes out of use becomes an "Old money" keepsake item, as home coins do. The first time a player's character stands where another money is used, the Storyteller gets one card with what the purse holds and what changing it would give; back at home a card names any coin of other lands still carried. House rule; the books give no exchange rules.
+Reverse: switch off Money changers far from home in the settings, which stops the cards and the cut; the coin held stays in the purse.
+
+## B2652. A new chronicle pays in its homeland's money (2026-11-13)
+Start a chronicle sets WoDX Storyteller's money region (Coins of the day) to the chosen homeland's money when the homeland changes. A homeland changed later by hand still leaves money alone, as Chronicle's message says.
+Reverse: set Coins of the day back in the module settings.
+
+## B2653. The sheet's coin names for every region (2026-11-13, global rule)
+WoDX Sheets' Coin of which land setting gains a choice, The chronicle's money. With it, the Possessions tab's coins of the time and Add coins name the units of WoDX Storyteller's money of the place: the Storyteller's money region at home, the region's own money on a scene abroad, smallest unit first. Without WoDX Storyteller, or with another choice, the sheet keeps its own lists for the German lands, England and the United States. The default stays the German lands, so Live sees no change until the setting is picked.
+Reverse: pick another land in the setting; CHRONICLE_COINS and coinsFromMoney in extras-rules.mjs can stay.
+
+## B2631. Named places from the book lookup stand on the realm maps (2026-11-13)
+The PC read the books for each of the 34 realms and gave back 229 named places with pages, 95 notes on how the realms lie and 83 on how they change, all in our own words. 188 places went onto the maps, each with a line on what it is and its page; the window shows that line for the two ends of a journey and in Found places, and never for a place not yet found. Left out: beings and weather, roads and gates the maps already have, places the catalogue already names, and places that lie outside the realm (the outposts and conquered lands of the Yellow Springs, the other Dark Kingdoms, the Egyptian Shadowlands). A named place stands on firm ground while the map has room. The notes on lie and change are kept with each map and can be opened in the window; the maps do not yet follow them place by place, and the dated changes (Yomi 1945 and 1998, the Yellow Springs 1945, 1949 and 1997) are not yet steps of the maps. The lookup also put three page refs right: the Far Dreaming and the Deep Dreaming are Changeling 20th pdf 55 and 307 to 308, and Enoch no longer cites Sins of the Blood. One finding is left for Ben: The Thousand Hells calls Ti Yu, the Earth Prison, a made copy that belongs to the Yellow Springs, while Dark Kingdom of Jade, which the realm maps follow, sets the hells round it; nothing was moved.
+Reverse: empty PLACES in modules/wodx-otherworlds/scripts/realm-places.mjs.
+## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
+A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
+Reverse: set Daily prayers to Not kept on an NPC, or return blocksOf in modules/wodx-npc/scripts/routine-rules.mjs to forFaith alone; PRAYERS can stay unused.
+
+## B2661. Ramadan's nights in NPC routines (2026-11-13, global rule)
+In the month of Ramadan, by the counted Muslim year of WoDX Chronicle's faith years, a Muslim NPC who keeps the prayers eats a meal before dawn (140 to 85 minutes before sunrise), breaks the fast at home from sunset for 85 minutes, goes to the night prayers at the mosque (115 to 190 minutes after sunset) and is out in the streets for the late night that follows, until about five hours after sunset. Evenings at the coffee house or bathhouse wait until the month is over. The working day is left as it is.
+Reverse: drop RAMADAN from withPrayers in routine-rules.mjs.
+
+## B2662. Houses of worship of their own kind (2026-11-13, global rule)
+Mosque, Synagogue or prayer house, and Temple, pagoda or monastery of the faiths of Asia join Church as kinds of place. The church role in a routine looks for the house of the NPC's own faith first (mosque for Islam, synagogue for the Jewish year, temple for the faiths of India, China, Tibet and Southeast Asia), then for a place tagged plainly as a church, so places tagged before this keep working. A Christian is never sent to a mosque, synagogue or temple. Scene names with mosque, masjid, madrasa, synagogue, temple, pagoda, stupa, gompa, vihara or mandir are guessed to their kind; "Temple Church" stays a church. Passers-by, residents, rumours, container fills, the Penumbra and Shadowlands treat the three as churches; WoDX Senses has lines of its own for each. This replaces the 2026-11-13 choice in PENDING-REVIEW to add no separate kind.
+Reverse: tag such places as Church again; WORSHIP_KINDS and the Senses tables can stay.
+
+## B2670. The ways of life of the world (2026-11-13, global rule)
+Chronicle world-rules.mjs gives each world region a way of life by year (REGION_SPHERE, sphereFor): latin, orthodox, islamic, indic, sinic, japanese, theravada, tibetan, malay, sahel, swahili, bantu, and before the settlers mesoamerican, andean, polynesian and northern. Lands switch on the year they did (Mexico 1521, the Caribbean 1492, the Andes 1533, Constantinople 1453 and Greece again 1830, Aotearoa 1840, the Arctic's Norse until 1450). A house reading of history; no book gives one.
+Reverse: delete REGION_SPHERE and sphereFor; NPC and Creation then need their imports removed.
+
+## B2671. Passers-by by region (2026-11-13, global rule)
+NPC passerby-world.mjs changes the central European street of each age for every way of life: kinds replaced, removed or added (dervish, water seller, coffee house guest, monk on the alms round, griot, porter, llama driver, fisher, shaman), and the land's cleric in the streets from 1914. A scene's region is its own or the homeland's. Hidden tags carry the region, an origin from its mix, and a faith (the land's, or the one an origin brings; Protestant shares by land; half keep none after 1960 in the West, 1925 in the Orthodox lands, 1950 in China, Korea and Japan). Moravia's tables and tags are unchanged.
+Reverse: makePasserby without region (passersby.mjs stops passing it).
+
+## B2672. Clergy and residents by faith (2026-11-13, global rule)
+NPC resident-rules.mjs: CLERGY names each faith's priest, monk and lay helper; localClergy puts the town generator's Moravian clergy words into the words of the faith a scene keeps (a mosque's priest is the imam); wantsFor asks every office for someone of its faith (by origin, else the land's): imam, muezzin and dervish Muslim men, a lama or monk of a Buddhist land a Buddhist man, a temple priest a Hindu man, Christian clergy Christian. A synagogue keeps its rabbi in any land.
+Reverse: planRole and nameHousehold without land and region (residents.mjs).
+
+## B2673. Trades by region (2026-11-13, global rule)
+Creation people-trades-world.mjs builds a people.trade table for each culture whose region follows another way of life in an era group (read at 1350, 1650, 1870, 1950, 2000, 2060): the base list with words swapped, trades the land never had taken out, and trades of its own added. From the industrial age only clergy and a few words change. Cultures shared by regions of different ways take the first listed region's. Every trade has a sheet.
+Reverse: drop worldTradeTables from people.mjs.
+
+## B2674. Local looks for passers-by (2026-11-13, global rule)
+NPC passerby-local.mjs changes the way of life's street once more for each region, keyed by region, the way of life it keeps that year, and age (or "old" for medieval and early modern, "late" for 1914 on): a whole kind replaces or adds, a looks-only change keeps the kind's weights and station, null removes. 33 regions: the seven lands of Islam and the Aegean, Russia and Siberia, China and Korea, central and southern Africa, the Americas and Oceania before and after the settlers, and eight European lands. Moravia's street is unchanged. House readings, no book gives street tables.
+Reverse: streetTable without localTable (passerby-rules.mjs).
+
+## B2675. The world map loads on first use (2026-11-13, Stale Design Desk e1)
+Storyteller main.mjs no longer imports world-map-rules.mjs, so its grid (data/world.mjs, 168 KB) and rules (29 KB) are fetched only when the world map window first opens or a script calls api.worldMap.load(). The sync calls (view, known, found) throw a plain error until then; api.worldMap.rules is a getter that is null until loaded. Storyteller 0.58.2.
+Reverse: put back the static import in world-map.mjs and main.mjs.
+
+## B2676. The realm world maps load on first use (2026-11-13, Stale Design Desk e1)
+Otherworlds main.mjs no longer imports realm-worlds-rules.mjs, so it and realm-places.mjs (about 115 KB) load only when a realm world maps window opens or a script calls api.realmWorlds.load(). realm-maps-rules.mjs and realm-layouts.mjs still load at start, since the realm maps, the wild and the chart of the worlds read them. Otherworlds 0.23.2.
+Reverse: put back the static import in realm-worlds.mjs and main.mjs.
+
+## B2677. A map of the Storyteller module (2026-11-13, Stale Design Desk e2)
+modules/wodx-storyteller/README.md lists each part, its files, its settings and its api keys; tools/harness/storyteller-readme.test.mjs fails when a script or data file is missing from it or a setting named there is not registered. The module stays whole; look again at splitting past 100 scripts.
+Reverse: delete the README and its test.
+
+## B2680. Goods by way of life and region (2026-11-13, global rule)
+WoDX Library 0.19.0, data/goods-ways.mjs. Each everyday good can say where it is at home: a region id, one of WoDX Chronicle's 16 ways of life, or everywhere else, each with a first year, a span of years, or never. The region's own entry wins over its way of life. A good with no entry is at home everywhere, as before. 183 goods are placed: things of faith and dress stay with their faith or people (a rosary in Christendom and in the Jesuit years in Japan, a Quran in the lands of Islam and al-Andalus, a kimono in Japan, a ruff or a tricorne in Christendom until western dress spreads about 1900); no pork where Islam forbids it or before the Spanish brought pigs to the Americas; ale, gin and wine of Europe not in Muslim homes; tea, rice, maize, potatoes, coffee and cacao from the year each land had them, long before Europe where that is so. 80 goods of their own for the 16 ways of life (a prayer wheel, a kris, kola nuts, a knotted cord record, bark cloth, a seal-oil lamp and more). A house reading of history, rounded for play; the books give no lists.
+
+Reverse: delete WAYS entries or WAY_ROWS rows in goods-ways.mjs; with both empty the goods are as they were.
+
+## B2681. The coin of the place (2026-11-13)
+The coins of Europe (penny, groat, florin, pfennig, thaler, farthing, sovereign, dollar, Deutsche Mark, euro) stay in the lands that struck or used them. One good, a coin of the place, stands in everywhere from 600 BC, and is named in the local money when WoDX Storyteller knows it: the second unit of the region's money in that year (groschen in Moravia in 1350, dirhams in Cairo in 1300, reales in New Spain in 1800), so a find reads "7 dirhams". The Czech lands keep the koruna, so no euro notes there.
+
+Reverse: remove the coin entries from WAYS, and the LOCAL_COIN row.
+
+## B2682. Containers filled by region (2026-11-13)
+WoDX Interactables 0.36.0. Fill by place and era reads the scene's region (its own, or the homeland) and that region's way of life in the chronicle's year from WoDX Chronicle, and draws only goods at home there in that year; the window says which land it draws for. A land whose money is barter in that year (WoDX Storyteller) gets no coin of the place. With Chronicle off, or an old Library, it draws by era as before. Gear by era (weapons and armour) is not sorted by region yet.
+
+Reverse: clear the scene's region in Where this scene stands, or set Fill to Gear by era only.
+

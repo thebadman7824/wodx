@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.19.0 (goods by way of life and region: each good can say where it is at home, so a draw in Cairo turns up a prayer rug and not a rosary, tea is in China a thousand years before Europe and there is no ham in Tenochtitlan before the Spanish; 183 goods placed and 80 goods of their own for the 16 ways of life; the old coins of Europe stay home and a coin of the place stands in everywhere. data/goods-ways.mjs, inUseAt. B2680-B2681)
 - 0.18.0 (goods and shelves know the seven prologue eras; a hide cloak and a stone fat lamp for Before the Flood)
 - 0.17.0 (What they could know: for the Storyteller, the Encyclopaedia entries that fit a character's line and the year, with a suggestion from Intelligence + Occult, Academics or Politics; ticked entries go into the character's codex)
 - 0.16.0 (what a witness remembers of someone, from the look: dress, uniform, size, face, blood and a drawn weapon, for WoDX NPC's descriptions)

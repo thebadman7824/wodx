@@ -70,11 +70,12 @@ RULES=[
 UNSURE={  # item pattern: (desk question id)
  r'\bring\b|false teeth|glass eye|hearing aid|earbuds|earpiece|contact lenses|mouthpiece|ear trumpet|wristwatch|luxury watch|pocket watch|brooch|body camera|saint.s medal|amulet|cross on a cord|scapular|hag stone|eye bead|gris-gris':'small',
  r'crinoline|corset':'under'}
-def clothing(name):
+def clothing(name,colour=None):
+    """the pieces an item is drawn as; colour, when given, is used in place of the item's own"""
     n=name.lower()
     for pat,(dflt,spec) in RULES:
         if re.search(pat,n):
-            c=tint(n,dflt); out={}
+            c=colour or tint(n,dflt); out={}
             for k,v in spec.items():
                 rep=lambda x: c if x=='@' else tuple(rep(y) for y in x) if isinstance(x,tuple) else [rep(y) for y in x] if isinstance(x,list) else x
                 out[k]=rep(v)

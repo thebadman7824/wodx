@@ -600,7 +600,7 @@ export const REALM_LAYOUTS = {
       named: {"the throne of the Kingdom": cit, "a market of the dead": market, "a Necropolis gate": {x: gate.x, y: 2}}};
   },
 
-  // The First City remade (Sins of the Blood pdf 181 / p. 180): a walled city of the first age, square to the four
+  // The First City remade (Dirty Secrets of the Black Hand pdf 92 / p. 93): a walled city of the first age, square to the four
   // quarters, a stepped tower-temple at its heart, a processional way from the bronze gate, sealed tombs in its corners.
   "first-city"(rand, cols, rows) {
     const m = grid(cols, rows, T.ground), c = centreOf(cols, rows);
@@ -619,7 +619,7 @@ export const REALM_LAYOUTS = {
       named: {"the re-made First City": c, "the bronze gate": {x: c.x + 1, y: rows - 4}, "the Aralu tombs": {x: tombs[0].x, y: tombs[0].y + 2}}};
   },
 
-  // Between the Near and the Deep Dreaming (Changeling 20th pdf 29 / p. 28): a land out of story, rolling and bright, a
+  // Between the Near and the Deep Dreaming (Changeling 20th pdf 307 / p. 306): a land out of story, rolling and bright, a
   // road of moonlight in one great curve to the shore of the sea of dreams, a castle with four towers on a rise.
   "storyland"(rand, cols, rows) {
     const m = grid(cols, rows, T.ground), f = noise(rand, cols, rows, 5), g = noise(rand, cols, rows, 3);
@@ -642,7 +642,7 @@ export const REALM_LAYOUTS = {
       named: {"a chimerical castle": castle, "a road of moonlight": prev ?? {x: cols / 2, y: 3}, "a sea of dreams' shore": shoreAt, "a lost freehold": free}};
   },
 
-  // The farthest Dreaming (Changeling 20th pdf 29 / p. 28): dream-stuff thinning to nothing, a chain of islands winding
+  // The farthest Dreaming (Changeling 20th pdf 308 / p. 307): dream-stuff thinning to nothing, a chain of islands winding
   // inward and shrinking as it goes, to the last gate at the heart of it.
   "inward-spiral"(rand, cols, rows) {
     const m = grid(cols, rows, T.void), c = centreOf(cols, rows), isles = [];

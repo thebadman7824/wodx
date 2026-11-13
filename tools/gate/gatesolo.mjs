@@ -15,14 +15,20 @@
  *     7. a player: the mode is on, and the seat's log is not handed out
  *     8. the seat follows the player to the scene
  *     9. the Storyteller's cards are not shown to the player
+ *    9b. the panel (0.2.0) is open on the player's screen with its five buttons
+ *    9c. Pause and Go on from the panel: the seat pauses the game and starts it again
+ *    9d. Lift the curtain: the seat sends tonight's log and marks the night as seen
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
+ *   10b. Let time pass (0.2.0): ten minutes pass in one step and the player is told; the clock is put back in 13
+ *   10c. I am stuck, free my token: the character's token goes to the scene's way in
+ *   10d. the switch sets fights to end by themselves
  *    11. the stall report holds what waited
  *    12. the switch off: every setting and the standing approvals are back exactly as they were
  *    13. clean up; the clock has not moved
- * The clock never moves: with every automation on, a day passing would let the testbed's factions act for good. The
- * night with talk, travel and dawn is played in the solo world, where that harms nothing.
+ * The clock moves only in 10b, by ten minutes, and step 13 puts it back: with every automation on, a day passing would
+ * let the testbed's factions act for good. The night with talk, travel and dawn is played in the solo world.
  * Result: Data/wodx-gate/gatesolo-result.json, with the stall report in it.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -89,6 +95,9 @@ async function setup() {
     {...(await pc.getTokenDocument({x: 4 * G, y: 4 * G})).toObject(), actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY},
     {...(await foe.getTokenDocument({x: 6 * G, y: 4 * G})).toObject(), disposition: CONST.TOKEN_DISPOSITIONS.HOSTILE}]);
   ids.tokens = toks.map(t => t.id);
+  // The player plays the gate's character for the run, so the panel's asks never reach a real testbed character
+  ids.userCharacter = user.character?.id ?? null;
+  await user.update({character: pc.id});
   await game.settings.set(MOD, "wait", 2);
   await game.settings.set(MOD, "act", true);
   const WAIT = 2000 + 2500;
@@ -169,6 +178,32 @@ async function player(ids) {
     const shown = [...document.querySelectorAll("#chat [data-message-id], #sidebar [data-message-id]")].filter(el => el.textContent.includes(TAG)).length;
     ok("9. the Storyteller's cards", mine.length === 0 && shown === 0, {visible: mine.length, shown});
   });
+  await step("9b. the panel", async () => {
+    let opened = await until(() => foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered, 4000);
+    const byItself = opened;
+    if ( !opened ) { await S()?.panel?.open?.(); opened = await until(() => foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered, 3000); }
+    const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
+    const buttons = [...(el?.querySelectorAll?.("button[data-action=act]") ?? [])].map(b => b.dataset.id);
+    ok("9b. the panel", opened && byItself && buttons.length === 5, {byItself, buttons, minVersion: atLeast(MOD, "0.2.0")});
+  });
+  await step("9c. pause from the panel", async () => {
+    const was = game.paused;
+    S().panel.ask("ask.pause");
+    const flipped = await until(() => game.paused === !was, 6000);
+    S().panel.ask("ask.pause");
+    const back = await until(() => game.paused === was, 6000);
+    ok("9c. pause from the panel", flipped && back, {was, flipped, back});
+  });
+  await step("9d. the curtain", async () => {
+    const shownCurtain = () => [...(foundry.applications.instances?.values?.() ?? [])].find(a => a.rendered && /Behind the curtain/.test(a.title ?? a.options?.window?.title ?? ""));
+    S().panel.ask("ask.curtain");
+    const shown = await until(() => !!shownCurtain(), 8000);
+    const app = shownCurtain();
+    const rows = app?.element?.querySelectorAll?.("table.wsolo-curtain tbody tr")?.length ?? 0;
+    await app?.close?.();
+    const seen = await until(() => (game.settings.get(MOD, "seen") ?? []).length > 0, 4000);
+    ok("9d. the curtain", shown && seen, {rows, seen});
+  });
   return steps;
 }
 
@@ -217,6 +252,30 @@ async function finish(ids, playerSteps) {
     if ( live ) await live.delete();
   });
 
+  await step("10b. let time pass", async () => {
+    const pl = game.users.getName(PLAYER);
+    const t0 = game.time.worldTime, t = Date.now();
+    if ( pl.character?.id !== ids.actors[0] ) throw new Error("Player Test does not play the gate's character; stopped so no real character is touched");
+    const r = await S().panel.passTime(pl.id, "ten");
+    const told = game.messages.some(m => m.timestamp >= t && m.flags?.[MOD]?.panel && (m.whisper ?? []).includes(pl.id));
+    ok("10b. let time pass", !!r && game.time.worldTime - t0 === 600 && told, {r, moved: game.time.worldTime - t0, told});
+  });
+
+  await step("10c. free my token", async () => {
+    const pl = game.users.getName(PLAYER);
+    const scene = game.scenes.get(ids.scene);
+    const tok = scene.tokens.get(ids.tokens[0]);
+    if ( pl.character?.id !== ids.actors[0] ) throw new Error("Player Test does not play the gate's character; stopped so no real token is moved");
+    await tok.update({x: 0, y: 0}, {animate: false});
+    const to = await S().panel.unstick(pl.id, "token");
+    const live = scene.tokens.get(tok.id);
+    ok("10c. free my token", !!to && live.x === to.x && live.y === to.y && (to.x !== 0 || to.y !== 0), {to, now: {x: live.x, y: live.y}});
+  });
+
+  await step("10d. fights end by themselves", async () => {
+    ok("10d. fights end by themselves", read("wodx-combat", "fightEnd") === "auto", {fightEnd: read("wodx-combat", "fightEnd")});
+  });
+
   await step("11. the stall report", async () => {
     const rep = S().log.stalls(ids.since);
     R.stallReport = rep;
@@ -247,6 +306,8 @@ async function cleanup(ids, R) {
     if ( back && canvas.scene?.id !== back.id ) { await back.view(); await sleep(800); }
     const scene = game.scenes.get(ids?.scene);
     if ( scene ) await scene.delete();
+    const pu = game.users.get(ids?.user);
+    if ( pu && ids && "userCharacter" in ids ) await pu.update({character: ids.userCharacter ?? null});
     for ( const id of ids?.actors ?? [] ) await game.actors.get(id)?.delete();
     const since = ids?.since ?? Date.now();
     const mine = game.messages.filter(m => m.timestamp >= since - 1000 && (m.speaker?.alias === TAG || m.speaker?.alias === "The Lone Chronicle" || String(m.content ?? "").includes(TAG))).map(m => m.id);

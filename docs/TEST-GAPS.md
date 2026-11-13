@@ -4,7 +4,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-actions
 
-0 of 60 files loaded by the harness, mean line coverage 0%. Gates: gate6b, gate6c-diag, gate6c, gate6d, gate6e, gate6f, gate6g, gate6h, gate6i, gate6j, gate6k, gate6l, gate6m, gate6n, gate7d, gate8, gateanachronism, gateanimals, gatebattle, gatebody, gatechase, gatechecks, gateconsensus, gatecook, gatecountry, gatecrowd, gatedawn, gatedead, gatedeeds, gateeffects, gatefae, gatefeed, gatefight, gatefollowers2, gatefollowers3, gategroup6, gateknowing, gatelookhand, gatemage, gatemenu, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepod, gaterealmmaps, gatereferee, gatereflect, gateride, gaterivals, gatesenses, gatesheet1, gatesheet2, gatesheet3, gatesheet4, gatesiege, gatesmall, gatesocial, gatesolo, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewild, gatewolf, gateworld.
+0 of 60 files loaded by the harness, mean line coverage 0%. Gates: gate6b, gate6c-diag, gate6c, gate6d, gate6e, gate6f, gate6g, gate6h, gate6i, gate6j, gate6k, gate6l, gate6m, gate6n, gate7d, gate8, gateanachronism, gateanimals, gatebattle, gatebody, gatechase, gatechecks, gateconsensus, gatecook, gatecountry, gatecrowd, gatedawn, gatedead, gatedeeds, gateeffects, gatefae, gatefeed, gatefight, gatefollowers2, gatefollowers3, gategroup6, gateknowing, gatelookhand, gatemage, gatemenu, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepod, gaterealmmaps, gatereferee, gatereflect, gateregions, gateride, gaterivals, gatesenses, gatesheet1, gatesheet2, gatesheet3, gatesheet4, gatesiege, gatesmall, gatesocial, gatesolo, gatesprites, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewild, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-atmosphere
 
-0 of 7 files loaded by the harness, mean line coverage 0%. Gates: gate8, gate8b, gateadaptive, gateages, gateanimals, gatecountry, gatecrowd, gatedawn, gatefaces, gateimmersion, gateoworld, gatepaperdoll, gatepassing, gateprint, gatethemes, gatetraits, gatewalls, gatewolf, gateworld.
+0 of 7 files loaded by the harness, mean line coverage 0%. Gates: gate8, gate8b, gateadaptive, gateages, gateanimals, gatecountry, gatecrowd, gatedawn, gatefaces, gateimmersion, gateoworld, gatepaperdoll, gatepassing, gateprint, gateregions, gatethemes, gatetraits, gatewalls, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-chronicle
 
-0 of 61 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate6b, gate6c, gate6d, gate6e, gate6f, gate6g, gate6n, gate7a, gate7c, gate7d, gate7e, gate8, gate8b, gateanachronism, gateanimals, gatearchive, gateautomation, gatebattle, gatebody, gatecase, gatechase, gatechurch, gateconsensus, gatecook, gatecountry, gatecrowd, gatedawn, gatedead, gatedeeds, gateeffects, gateera, gateevents, gatefae, gatefeed, gatefight, gatefirstnight, gatefollowers, gatefollowers2, gatefollowers3, gatefounding, gategroup6, gatehand, gateimmersion, gateknow, gateknowing, gateledger, gatelegends, gateliving, gatelookhand, gatemage, gatemarketmoves, gatemarketturn, gatemenu, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gatequeue, gaterealmmaps, gaterealms, gatereferee, gatereflect, gateresidents, gateride, gaterivals, gatesenses, gatesheetchanges, gatesheetextras, gatesiege, gatesigs, gateskip, gatesmall, gatesocial, gatesolo, gatetable, gatetalk, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewhen, gatewild, gatewolf, gateworld.
+0 of 62 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate6b, gate6c, gate6d, gate6e, gate6f, gate6g, gate6n, gate7a, gate7c, gate7d, gate7e, gate8, gate8b, gateanachronism, gateanimals, gatearchive, gateautomation, gatebattle, gatebody, gatecase, gatechase, gatechurch, gateconsensus, gatecook, gatecountry, gatecrowd, gatedawn, gatedead, gatedeeds, gateeffects, gateera, gateevents, gatefae, gatefeed, gatefight, gatefirstnight, gatefollowers, gatefollowers2, gatefollowers3, gatefounding, gategroup6, gatehand, gateimmersion, gateknow, gateknowing, gateledger, gatelegends, gateliving, gatelookhand, gatemage, gatemarketmoves, gatemarketturn, gatemenu, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gatequeue, gaterealmmaps, gaterealms, gatereferee, gatereflect, gateregions, gateresidents, gateride, gaterivals, gatesenses, gatesheetchanges, gatesheetextras, gatesiege, gatesigs, gateskip, gatesmall, gatesocial, gatesolo, gatetable, gatetalk, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewhen, gatewild, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -107,6 +107,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | eras.mjs | not loaded |  |
 | events-rules.mjs | not loaded |  |
 | events.mjs | not loaded |  |
+| faith-rules.mjs | not loaded |  |
 | gen-core.mjs | not loaded |  |
 | gen.mjs | not loaded |  |
 | house-rules-app.mjs | not loaded |  |
@@ -153,7 +154,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-combat
 
-0 of 20 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate6b, gate7b, gate7b1, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatechase, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gateeffects, gatefae, gatefight, gategear, gateknowing, gatemage, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepod, gaterealmmaps, gatereferee, gatereflect, gateride, gaterivals, gatesenses, gatesiege, gatesmall, gatesolo, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gateturns, gatewild, gatewolf, gateworld.
+0 of 20 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate6b, gate7b, gate7b1, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatechase, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gateeffects, gatefae, gatefight, gategear, gateknowing, gatemage, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepod, gaterealmmaps, gatereferee, gatereflect, gateregions, gateride, gaterivals, gatesenses, gatesiege, gatesmall, gatesolo, gatesprites, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gateturns, gatewild, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -180,7 +181,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-creation
 
-0 of 31 files loaded by the harness, mean line coverage 0%. Gates: gate6b, gate7a, gatearchive, gateautomation, gatebattle, gatedeeds, gateera, gatefirstnight, gatefollowers, gatefollowers3, gateledger, gatelegends, gatelifepath, gatenaval, gatepeople, gateresidents, gatesettle, gatesiege, gateskip, gatestates, gatestates2, gatethreads, gatetime, gateworld.
+0 of 32 files loaded by the harness, mean line coverage 0%. Gates: gate6b, gate7a, gatearchive, gateautomation, gatebattle, gatedeeds, gateera, gatefirstnight, gatefollowers, gatefollowers3, gateledger, gatelegends, gatelifepath, gatenaval, gatepeople, gateregions, gateresidents, gatesettle, gatesiege, gateskip, gatestates, gatestates2, gatethreads, gatetime, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -199,6 +200,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | first-night-seed.mjs | not loaded |  |
 | first-night.mjs | not loaded |  |
 | group-sheet.mjs | not loaded |  |
+| lifepath-drill-rules.mjs | not loaded |  |
 | lifepath-rules.mjs | not loaded |  |
 | lifepath-threads-rules.mjs | not loaded |  |
 | lifepath.mjs | not loaded |  |
@@ -218,7 +220,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-interactables
 
-0 of 17 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate8, gateadopt, gateanachronism, gateanimals, gatebattle, gatebody, gatecase, gatechase, gatecook, gatecountry, gatecrowd, gatedeeds, gatefight, gatefollowers2, gateimmersion, gateknowing, gateliving, gatemarketmoves, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gaterealmmaps, gatereferee, gatereflect, gateresidents, gateride, gaterivals, gatesenses, gatesettle, gatesheetextras, gatesiege, gatesurvival, gatesurvival2, gatetable, gatetalk, gateteleport, gatetime, gatetraits, gatewhen, gatewild, gateworld, mapimport.
+0 of 17 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate8, gateadopt, gateanachronism, gateanimals, gatebattle, gatebody, gatecase, gatechase, gatecook, gatecountry, gatecrowd, gatedeeds, gatefight, gatefollowers2, gateimmersion, gateknowing, gateliving, gatemarketmoves, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gaterealmmaps, gatereferee, gatereflect, gateregions, gateresidents, gateride, gaterivals, gatesenses, gatesettle, gatesheetextras, gatesiege, gatesurvival, gatesurvival2, gatetable, gatetalk, gateteleport, gatetime, gatetraits, gatewhen, gatewild, gateworld, mapimport.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -242,7 +244,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-library
 
-0 of 15 files loaded by the harness, mean line coverage 0%. Gates: gateanachronism, gateanimals, gatebattle, gatecase, gatechase, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gatefae, gatefeed, gatefollowers3, gategear, gatehand, gateknowing, gatelibrary, gatelifepath, gatelookhand, gatemage, gatemarketmoves, gatenaval, gateowners, gatepod, gatesiege, gatesigs, gatesmall, gatesocial, gatesurvival2, gatetable, gatethreads, gatetime, gatewolf, gateworld.
+0 of 15 files loaded by the harness, mean line coverage 0%. Gates: gateanachronism, gateanimals, gatebattle, gatecase, gatechase, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gatefae, gatefeed, gatefollowers3, gategear, gatehand, gateknowing, gatelibrary, gatelifepath, gatelookhand, gatemage, gatemarketmoves, gatenaval, gateowners, gatepod, gateregions, gatesiege, gatesigs, gatesmall, gatesocial, gatesurvival2, gatetable, gatethreads, gatetime, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -264,7 +266,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-npc
 
-0 of 40 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate7b, gate7b1, gate7c, gate7d, gate8, gateadopt, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatechase, gatechurch, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gateeffects, gatefae, gatefeed, gatefight, gatefollowers, gatefollowers2, gatefollowers3, gatefounding, gategridless, gateimmersion, gateknowing, gatelegends, gatelookhand, gatemage, gatemarketmoves, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gatequeue, gaterealmmaps, gatereferee, gatereflect, gateresidents, gateride, gaterivals, gatesenses, gatesettle, gatesiege, gatesmall, gatesocial, gatesolo, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gatevoices, gatewhen, gatewild, gatewolf, gateworld.
+0 of 40 files loaded by the harness, mean line coverage 0%. Gates: gate-interact, gate-maps, gate7b, gate7b1, gate7c, gate7d, gate8, gateadopt, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatechase, gatechurch, gatecook, gatecountry, gatecrowd, gatedead, gatedeeds, gateeffects, gatefae, gatefeed, gatefight, gatefollowers, gatefollowers2, gatefollowers3, gatefounding, gategridless, gateimmersion, gateknowing, gatelegends, gatelookhand, gatemage, gatemarketmoves, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gatequeue, gaterealmmaps, gatereferee, gatereflect, gateregions, gateresidents, gateride, gaterivals, gatesenses, gatesettle, gatesiege, gatesmall, gatesocial, gatesolo, gatesurvival, gatetable, gatetalk, gatetarget, gateteleport, gatethreads, gatetime, gatetraits, gatevoices, gatewhen, gatewild, gatewolf, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -311,7 +313,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-otherworlds
 
-0 of 25 files loaded by the harness, mean line coverage 0%. Gates: gate8b, gateautomation, gatebattle, gatebody, gatecook, gatecountry, gatecrowd, gatedeeds, gatefight, gategroup6, gateknowing, gatelooks, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gaterealmmaps, gaterealms, gatereferee, gatereflect, gateride, gaterivals, gatesenses, gatesiege, gatetable, gatetalk, gateteleport, gatetime, gatetraits, gateupkeep, gateways, gatewild, gateworld.
+0 of 28 files loaded by the harness, mean line coverage 0%. Gates: gate8b, gateautomation, gatebattle, gatebody, gatecook, gatecountry, gatecrowd, gatedeeds, gatefight, gategroup6, gateknowing, gatelooks, gatemove, gatenaval, gateowners, gateoworld, gatepassing, gaterealmmaps, gaterealms, gaterealmworlds, gatereferee, gatereflect, gateregions, gateride, gaterivals, gatesenses, gatesiege, gatetable, gatetalk, gateteleport, gatetime, gatetraits, gateupkeep, gateways, gatewild, gateworld, gateworldmap.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -326,6 +328,8 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | realm-layouts.mjs | not loaded |  |
 | realm-maps-rules.mjs | not loaded |  |
 | realm-maps.mjs | not loaded |  |
+| realm-worlds-rules.mjs | not loaded |  |
+| realm-worlds.mjs | not loaded |  |
 | realms-rules.mjs | not loaded |  |
 | realms.mjs | not loaded |  |
 | reflect-rules.mjs | not loaded |  |
@@ -340,22 +344,27 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | ways-rules.mjs | not loaded |  |
 | ways.mjs | not loaded |  |
 | wild-rules.mjs | not loaded |  |
+| worlds-chart-rules.mjs | not loaded |  |
 
 ## wodx-paperdoll
 
-0 of 5 files loaded by the harness, mean line coverage 0%. Gates: gatefirstnight, gatepaperdoll.
+0 of 9 files loaded by the harness, mean line coverage 0%. Gates: gatefirstnight, gatepaperdoll, gatesprites.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
 | doll-rules.mjs | not loaded |  |
 | face-rules.mjs | not loaded |  |
+| figure-rules.mjs | not loaded |  |
+| figure.mjs | not loaded |  |
 | fit-rules.mjs | not loaded |  |
 | main.mjs | not loaded |  |
 | mouth-rules.mjs | not loaded |  |
+| sprite-rules.mjs | not loaded |  |
+| sprites.mjs | not loaded |  |
 
 ## wodx-senses
 
-0 of 8 files loaded by the harness, mean line coverage 0%. Gates: gate8, gatebody, gatecrowd, gateimmersion, gateknowing, gatemove, gateperception, gatepod, gatequiet, gateride, gatesenses, gatetable, gatethreads, gatetraits.
+0 of 8 files loaded by the harness, mean line coverage 0%. Gates: gate8, gatebody, gatecrowd, gateimmersion, gateknowing, gatemove, gateperception, gatepod, gatequiet, gateregions, gateride, gatesenses, gatetable, gatethreads, gatetraits.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -370,7 +379,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-sheets
 
-0 of 8 files loaded by the harness, mean line coverage 0%. Gates: gateanachronism, gatebody, gatecook, gatecountry, gatecssprobe, gateeffects, gatefollowers3, gatepeople, gateride, gatesettle, gatesheet1, gatesheet4, gatesheet5, gatesheetchanges, gatesheetextras, gatesheetspeed, gatesocial, gatetable, gatetraits, gateuisnap, gateworld.
+0 of 8 files loaded by the harness, mean line coverage 0%. Gates: gateanachronism, gatebody, gatecook, gatecountry, gatecssprobe, gateeffects, gatefollowers3, gatepeople, gateregions, gateride, gatesettle, gatesheet1, gatesheet4, gatesheet5, gatesheetchanges, gatesheetextras, gatesheetspeed, gatesocial, gatetable, gatetraits, gateuisnap, gateworld.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -394,7 +403,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 
 ## wodx-storyteller
 
-0 of 78 files loaded by the harness, mean line coverage 0%. Gates: diagtint, gate-maps, gate7e, gate8, gate8b, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatecase, gatechase, gatecodex, gateconsensus, gatecook, gatecountry, gatecrowd, gatedashboard, gatedead, gatedeeds, gatedreams, gateeffects, gatefae, gatefight, gatefirstnight, gatefollowers2, gatefollowers3, gategroup6, gatehand, gateimmersion, gateknowing, gateledger, gatelegends, gatelifepath, gatelookhand, gatemage, gatemarketmoves, gatemarketturn, gatemenu, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gateprelude, gaterealmmaps, gatereferee, gatereflect, gateride, gaterivals, gaterumours, gatesenses, gatesiege, gatesmall, gatesocial, gatesolo, gatesurvival, gatesurvival2, gatetable, gatetalk, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewhen, gatewild, gatewolf, gateworld.
+0 of 81 files loaded by the harness, mean line coverage 0%. Gates: diagtint, gate-maps, gate7e, gate8, gate8b, gateanachronism, gateanimals, gateautomation, gatebattle, gatebody, gatecase, gatechase, gatecodex, gateconsensus, gatecook, gatecountry, gatecrowd, gatedashboard, gatedead, gatedeeds, gatedreams, gateeffects, gatefae, gatefight, gatefirstnight, gatefollowers2, gatefollowers3, gategroup6, gatehand, gateimmersion, gateknowing, gateledger, gatelegends, gatelifepath, gatelookhand, gatemage, gatemarketmoves, gatemarketturn, gatemenu, gatenaval, gateowners, gateoworld, gatepassing, gatepeople, gatepod, gatepolitics, gateprelude, gaterealmmaps, gaterealmworlds, gatereferee, gatereflect, gateregions, gateride, gaterivals, gaterumours, gatesenses, gatesiege, gatesmall, gatesocial, gatesolo, gatesurvival, gatesurvival2, gatetable, gatetalk, gateteleport, gatethreads, gatetime, gatetraits, gateupkeep, gatewhen, gatewild, gatewolf, gateworld, gateworldmap.
 
 | File | Lines % | Functions % |
 | --- | --- | --- |
@@ -421,6 +430,7 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | craft-rules.mjs | not loaded |  |
 | dashboard-rules.mjs | not loaded |  |
 | dashboard.mjs | not loaded |  |
+| discovery-rules.mjs | not loaded |  |
 | dreams-rules.mjs | not loaded |  |
 | dreams.mjs | not loaded |  |
 | glance-rules.mjs | not loaded |  |
@@ -474,6 +484,8 @@ Written by tools/harness/test-gaps.mjs. Harness line coverage of each module fil
 | teleport.mjs | not loaded |  |
 | upkeep-rules.mjs | not loaded |  |
 | upkeep.mjs | not loaded |  |
+| world-map-rules.mjs | not loaded |  |
+| world-map.mjs | not loaded |  |
 | world-rules.mjs | not loaded |  |
 | wrapup-rules.mjs | not loaded |  |
 
