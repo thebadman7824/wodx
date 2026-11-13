@@ -83,7 +83,11 @@ export async function saveTask(a, data) {
   const id = data.id && rawTasks(a)[data.id] ? data.id : R.newId(rawTasks(a));
   const old = rawTasks(a)[id];
   const t = R.normTask({...(old ?? {started: now()}), ...data, id});
-  if ( !old ) { t.started = now(); t.next = now() + R.INTERVALS[t.interval].s; }
+  if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t); }
+  // B3357: a new climb needs the successes for the rank it climbs to
+  if ( !old && t.kind === "climb" && t.institution ) {
+    try { const I = game.modules.get(MOD).api.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
+  }
   await a.update({[`flags.${MOD}.tasks.${id}`]: t});
   return t;
 }
@@ -276,6 +280,9 @@ export async function editTask(actorId = null, taskId = null) {
   const people = game.actors.filter(x => x.id !== a.id && (game.user.isGM || x.testUserPermission?.(game.user, "LIMITED"))).sort((x, y) => x.name.localeCompare(y.name));
   const targets = opt("", "Nobody", !t.target) + people.map(x => opt(x.id, x.name, x.id === t.target?.id)).join("");
   const wk = Number(R.KINDS[t.kind].week) || 0;
+  // B3357: the institutions to climb
+  let insts = [];
+  try { insts = (game.modules.get(MOD)?.api?.institutions?.state?.()?.list ?? []).filter(i => !i.closed); } catch (e) { insts = []; }
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `${taskId ? "Change" : "New"} long task: ${a.name}`}, classes: ["wodx-dialog", "wst-task-edit"],
     content: `<div class="form-group"><label>Kind</label><select name="kind" data-fixed>${kinds}</select></div>
       <div class="form-group"><label>What it is</label><input type="text" name="name" value="${esc(taskId ? t.name : "")}" placeholder="A silver reliquary, the parish records, a fetish of the wolf"></div>
@@ -290,6 +297,7 @@ export async function editTask(actorId = null, taskId = null) {
       <p class="hint">Out of ${budgetOf(a)} a week for every project together; 0 leaves it out of the budget.${wk ? ` This kind goes at full pace with ${wk}; fewer stretch each roll.` : ""}</p>
       ${people.length > 5 ? searchBox("select[name=target]", "Search people…", "Search people") : ""}
       <div class="form-group"><label>Aimed at</label><select name="target">${targets}</select></div>
+      ${insts.length ? `<div class="form-group"><label>Institution (to climb)</label><select name="institution"><option value="">None</option>${insts.map(i => opt(i.id, i.name, i.id === t.institution)).join("")}</select></div>` : ""}
       ${game.user.isGM ? `<div class="form-group"><label>Complications</label><input type="checkbox" name="trouble"${t.trouble ? " checked" : ""}></div>` : ""}
       <div class="form-group"><label>Specialty applies</label><input type="checkbox" name="specialty"${t.specialty ? " checked" : ""}></div>
       <div class="form-group"><label>Delicate (a botch ruins it)</label><input type="checkbox" name="delicate"${t.delicate ? " checked" : ""}></div>
@@ -303,7 +311,7 @@ export async function editTask(actorId = null, taskId = null) {
   return saveTask(a, {id: taskId, kind: res.kind, name: res.name, attr: res.attr, ability: res.ability, dice: num(res.dice),
     diff: num(res.diff), goal: num(res.goal), interval: res.interval, specialty: !!res.specialty, delicate: !!res.delicate, note: res.note,
     needs: res.needs ?? "", workshop: res.workshop ?? "", makes: res.makes ?? "", waits: "",
-    nights: num(res.nights), target: res.target ? {id: res.target, name: game.actors.get(res.target)?.name ?? ""} : null,
+    nights: num(res.nights), institution: res.institution ?? "", target: res.target ? {id: res.target, name: game.actors.get(res.target)?.name ?? ""} : null,
     ...(game.user.isGM ? {trouble: !!res.trouble} : {})});
 }
 
