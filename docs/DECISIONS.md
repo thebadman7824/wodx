@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2640
+Next free block: B2650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -115,6 +115,7 @@ Next free block: B2640
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
 | B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
+| B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3400,3 +3401,24 @@ Reverse: remove the "Beyond Earth" row from CONTINENTS; lifepaths already writte
 ## B2630. Ways in and out and located dangers are places on a realm's map (2026-11-13)
 Ben asked that work keep moving overnight; the coordinator passed on that realms should get more places, only from material that can be cited. The realm catalogue, which the book check gave page refs for, already names more than its landmarks: the way a traveller arrives, the way back and the way on, and dangers that sit in one spot (a Nihil, a crater field, a Pattern Spider's web, a guardian engine). These now stand on each realm's map as places of their own kind, drawn in their own colours, and a landmark the plan had no spot for is placed too. Where the catalogue names the way a traveller arrives or comes back by, that way is the place known on arrival. Dangers that are a state of the whole realm (the Void, smog, the Maelstrom) are not spots and stay off the map. Nothing new is taken from the books here and nothing is invented but the spot each place stands on, which is our own as before (B2556). More named places wait for a book lookup on the PC.
 Reverse: empty extrasOf() in realm-worlds-rules.mjs.
+
+## B2640. The lone player's panel holds five buttons for now (2026-11-13, solo desk sp21 and B2405)
+Step 2 of The Lone Chronicle gives the person playing alone a small window of their own (WoDX Solo 0.2.0): Let time pass, Travel, Pause or go on, I am stuck and Lift the curtain. The oracle, the Leads page and the trouble dial on the desk's list come with step 3, and the director in step 4, so they are left off until they exist. Every ask goes to the Storyteller's seat over the module's socket and the seat does it, so the player's screen never holds a Storyteller's secret. Travel opens WoDX Storyteller's Out on your own window; its requests pass on the standing approvals the switch already gives.
+Reverse: drop the entry from PANEL in solo-rules.mjs.
+
+## B2641. Waiting alone moves the clock ten minutes at a time and stops when something happens (2026-11-13, desk sp12; house rule)
+The waits are ten minutes, an hour, until dusk, until dawn and Sleep the day (to dusk). The seat moves the clock in steps of at most ten minutes and lets the world answer for a moment between them, so routines, the fight starter, dawn and dusk run as they would at a table. A wait stops early for a fight on the character's scene, a pause, word whispered to the player, or someone new (not a passer-by) appearing on the scene. Sleep the day stops only for a fight or a pause. No wait runs past 36 hours, and none starts during a fight or a pause. Dusk and dawn are read for the scene's own latitude.
+Reverse: set every WAITS entry's stops to ["paused"] to wait without interruption, or raise STEP to the whole wait.
+
+## B2642. I am stuck has three fixes (2026-11-13, desk sp22)
+Bring me a lead draws a foreshadowing for the character from the night's aids and sends it through the approval queue, where the standing approval lets it through; the director of step 4 will replace it with a lead chosen from what is live in the chronicle. Free my token puts the character's token at the scene's starting view, or its middle when it has none. End a hung fight or window ends every running fight on the character's scene (the after-action card and the fight's time follow as usual) and closes any dialog left open on the seat. Each fix is written in the seat's log.
+Reverse: drop the entry from STUCK in solo-rules.mjs.
+
+## B2643. The curtain shows tonight from the last dusk (2026-11-13, desk sp24)
+Lift the curtain asks once, then shows the player the seat's log since the last dusk at the character's scene: each card, window and queue entry, what the seat chose and why. The night is recorded in the world setting wodx-solo.seen (the last 60 nights), so a later bug report can say what the player knew. The log itself was always readable from a player's console (desk sp26); the curtain only puts it on screen.
+Reverse: return no rows from curtainRows.
+
+## B2644. Fights end by themselves when playing alone (2026-11-13, desk sp14)
+The switch now also sets WoDX Combat's End fights by themselves to Auto, so a fight ends a full turn after one side has nobody standing or present, and the after-action card follows. Turning the switch off puts back the old value. A fight that hangs anyway is ended from I am stuck.
+Reverse: drop the fightEnd row from PRESET in solo-rules.mjs.
+
