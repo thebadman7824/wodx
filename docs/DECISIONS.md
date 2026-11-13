@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3150
+Next free block: B3160
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -151,6 +151,7 @@ Next free block: B3150
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
+| B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4656,3 +4657,13 @@ Reverse: Set the region's fear-of-fire step to 0.
 WoDX Actions. The roll window lists the entries in the character's codex (WoDX Storyteller) not yet used. Picking one on an Occult, Academics or lore roll takes one off the difficulty, and that entry is then spent. Whether the entry fits the roll is the player's call, and the Storyteller's to overrule. V20 lets research take time; the single point and the once-only rule are WoDX's own.
 
 Reverse: Leave "Research from the codex" at None.
+
+## B3150. Imported goods dated 1197 take the year they first turn up (2026-11-13)
+WoDX Library. The goods from the imported lists all came in dated 1197, the first year WoDX plays. 34 of them belong to later centuries and now start then: ravioli, lasagne, waffles and bratwurst 1300, pinot noir 1375, haggis 1400, lutefisk, orange juice, a gold locket and a bench vise 1500, whipped cream 1550, the haori 1550, the kilt 1590, pudding, salça, chardonnay, the yukata and cufflinks 1600, the plague robe 1619, the vegetable hosomaki 1750, chicory brew 1770, the hacksaw 1800, the glass terrarium 1829, zucchini, the bathrobe and beekeeping gloves 1850, pesto and spaghetti al pesto 1860, the water heater 1868, the black belt 1886, the honeydew melon and shorts 1900, the cheongsam 1920. The rest of the 441 are old enough for 1197 or are held to their lands by place rules. A house reading of history, rounded for play (data/goods-ways.mjs REDATED).
+
+Reverse: empty REDATED.
+
+## B3151. Goods old in one land and late in the rest (2026-11-13)
+WoDX Library. Koji, tofu, onigiri, sashimi, hosomaki and kombu are at home in East Asia and reach the rest of the world in the late 20th century; salça in Anatolia and the Levant; sandpaper in China (Europe from 1834), firecrackers in China (elsewhere from 1300), the fanning mill in China (Europe from 1720), the fire piston in Southeast Asia (Europe from 1802), the hammock in the Americas (Europe from 1550), sassafras and the tree spile in North America (Europe from 1600 and 1700). They use the same place rules as other goods (REDATED_WAYS).
+
+Reverse: empty REDATED_WAYS.
