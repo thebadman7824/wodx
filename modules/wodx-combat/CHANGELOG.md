@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.24.1 (the attack window no longer says "Black powder:" twice in front of each old gun; testbed run 2026-11-13: gatehuntpowder 8/8)
 - 3.24.0 (black powder: hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, and on any 1 in rain, sleet or hail on an outdoor scene or when swimming; heavy rain puts out a match, and a misfire in heavy rain wets the powder until the gun is reloaded; powder kept covered counts as dry; a gun that names no lock takes the lock most guns had that year; percussion caps and cartridges keep the plain botch rule; the attack window lists each old gun and its risk, the automatic attack skips a gun that cannot fire, and a new macro lights the match again; world setting Black powder misfires and wet powder, on; not deployed)
 - 3.23.0 (where wounds are: each attack that lands notes the part it hit on the character, as the health track heals the oldest notes of each kind go, and an Undo takes them back; the Storyteller can place a level on a part or clear a part from the damage doll; a Mokole in Suchid or Archid form has a body again, and four-legged shapes know their animal for the doll)
 - 3.22.1 (the word that harm was applied also says what it left the character as, out of the fight, dead or at Final Death, so the map can show a fall or a death; not deployed)

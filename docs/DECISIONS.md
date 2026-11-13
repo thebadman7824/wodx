@@ -3647,7 +3647,7 @@ WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a nigh
 Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
 
 ## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
-WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check 2026-11-13: V20 (printed p. 272, pdf 280) lets a botched shot jam or burst the gun, cleared with Wits + Firearms (printed p. 104), and V20 Dark Ages (printed pp. 344, 348) a weapon break or jam; no book with text has a rain, wet powder or musket reload rule, so the wet is a house reading (Sorcerer's Crusade's firearms chart still needs OCR).
 
 Reverse: turn the world setting off.
 
