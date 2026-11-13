@@ -75,6 +75,16 @@ SET_PIECES = [
     # worship
     SP("altar-and-candles", ["worship"], "wall", (4, 2), [("worship", 1, 0, 2, 1, "base"), ("light", 0, 0, 1, 1, "back"), ("light", 3, 0, 1, 1, "back")]),
     SP("pews", ["worship"], "centre", (4, 4), [("seat", 0, 0, 4, 1, "base"), ("seat", 0, 1.5, 4, 1, "beside"), ("seat", 0, 3, 4, 1, "beside")]),
+    # small pieces that fit round walkways
+    SP("tea-table", ["hall", "sleep", "study", "tavern"], "centre", (2, 1), [("table", 1, 0, 1, 1, "base"), ("seat", 0, 0, 1, 1, "face:base"), *on("clutter")]),
+    SP("chair-pair", ["hall", "study", "sleep", "tavern", "shop"], "wall", (2, 1), [("seat", 0, 0, 1, 1, "base"), ("seat", 1, 0, 1, 1, "back")]),
+    SP("bench-wall", ["hall", "kitchen", "tavern", "passage", "work"], "wall", (2, 1), [("seat", 0, 0, 2, 1, "base")]),
+    SP("chest-wall", ["sleep", "hall", "store", "study", "work"], "wall", (1, 1), [("chest", 0, 0, 1, 1, "base")]),
+    SP("kitchen-worktable", ["kitchen", "work"], "wall", (2, 1), [("table", 0, 0, 2, 1, "base"), *on("clutter", 3)]),
+    SP("store-sacks", ["store", "kitchen", "work"], "wall", (2, 1), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back")]),
+    SP("barrel-corner", ["store", "kitchen", "outdoor", "work", "tavern"], "corner", (1, 1), [("store", 0, 0, 1, 1, "base")]),
+    SP("court-bench", ["outdoor"], "wall", (3, 1), [("seat", 0, 0, 2, 1, "base"), ("plant", 2, 0, 1, 1, "back")]),
+    SP("court-planter", ["outdoor"], "corner", (1, 1), [("plant", 0, 0, 1, 1, "base")]),
     # holding
     SP("cell-cot", ["cell"], "wall", (2, 2), [("bed", 0, 0, 1, 2, "base"), ("store", 1, 0, 1, 1, "back")]),
     SP("paid-cell", ["cell"], "wall", (3, 2), [("bed", 0, 0, 2, 2, "base"), ("table", 2, 0, 1, 1, "back"), *on("light")]),

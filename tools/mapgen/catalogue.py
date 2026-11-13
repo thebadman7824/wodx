@@ -75,6 +75,14 @@ def tag(path):
             "cells": C.cells_of(fname), "regions": rule.get("regions")}
 
 
+def piece_of(fname):
+    """The general piece an asset name stands for (by name only), or None."""
+    stem = re.sub(r"\.(png|webp|jpg)$", "", fname.rsplit("/", 1)[-1], flags=re.I)
+    bare = re.sub(r"_(Ashen|Light|Dark)(?=_|$)", "", stem)
+    if _SKIP_NAME.search(stem): return None
+    return next((p for rx, p in _PIECES if rx.search(bare)), None)
+
+
 def build(paths):
     """Tags for every path a rule knows, de-duplicated by path."""
     seen, out = set(), []

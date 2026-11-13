@@ -1,5 +1,6 @@
 """Tests for the furnishing work: catalogue, palettes, purposes, set pieces and filling rooms.
 Run: cd tools/mapgen && python3 -m unittest test_furnishing -v"""
+import random
 import unittest
 
 import catalogue as K
@@ -213,6 +214,91 @@ class SetPieceTest(unittest.TestCase):
             for piece, dx, dy, pw, ph, rule in sp["parts"]:
                 if rule.startswith("on:"): continue
                 self.assertTrue(0 <= dx and dx + pw <= w + 1e-9 and 0 <= dy and dy + ph <= h + 1e-9, (sp["id"], piece))
+
+
+CAT_PATH = "/mnt/project-files/map-furnishing/catalogue.json"
+_CAT = []
+
+def _cat():
+    import os, palettes as P
+    if not _CAT and os.path.exists(CAT_PATH): _CAT.extend(P.load(CAT_PATH))
+    return _CAT
+
+
+def _furnished(type_key, year, wealth="rich", facing="S", seed=1, trade=None):
+    import ddcore as C, furnishing as F
+    B = _all_types()
+    C.R.seed(seed)
+    b = B.place("t", type_key, 0, 0, facing)
+    ctx = F.context_for(b, year, "moravia", wealth, trade, _cat(), seed)
+    for r in b.rooms: r.ctx = ctx[r.name]
+    b.furnish()
+    return b
+
+
+@unittest.skipUnless(__import__("os").path.exists(CAT_PATH), "needs the catalogue")
+class FillTest(unittest.TestCase):
+    def test_target_tiers(self):
+        import furnishing as F
+        T = F.TIERS.index
+        front = T(F.target_tier("front", "rich", 2, False, "reform", "hall"))
+        self.assertEqual(front - T(F.target_tier("private", "rich", 0, False, "reform", "hall")), 2)
+        self.assertEqual(T(F.target_tier("service", "rich", 0, False, "reform", "kitchen")), T("fine") - 1)
+        self.assertGreater(T(F.target_tier("front", "poor", 0, True, "reform", "hall")), T(F.target_tier("front", "poor", 0, False, "reform", "hall")))
+        self.assertLess(T(F.target_tier("private", "poor", 0, True, "reform", "hall")), T(F.target_tier("private", "poor", 0, False, "reform", "hall")))
+
+    def test_fill_reaches_target(self):
+        import furnishing as F
+        b = _furnished("burgher-palace", 1650)
+        salon = next(r for r in b.rooms if r.name == "Salon")
+        self.assertTrue(F.TIERS.index(salon.tier) >= F.TIERS.index(salon.target) or salon.full, (salon.tier, salon.target))
+        self.assertGreaterEqual(len([d for d in salon.dressing if d["layer"] == 100]), 4)
+
+    def test_doors_clear(self):
+        B = _all_types()
+        for k in sorted(B.TYPES):
+            for facing in "SE":
+                for seed in (1, 2):
+                    b = _furnished(k, 1890, "middling", facing, seed)
+                    for r in b.rooms:
+                        for d in r.dressing:
+                            if d["layer"] != 100: continue
+                            for bx, by, bw, bh, why in r.blocked:
+                                if why not in ("door clear zone", "walkway"): continue
+                                hit = d["x"] < bx + bw - 1e-6 and bx < d["x"] + d["w"] - 1e-6 and d["y"] < by + bh - 1e-6 and by < d["y"] + d["h"] - 1e-6
+                                self.assertFalse(hit, (k, facing, seed, r.name, d["asset"], why))
+
+    def test_tiny_room(self):
+        import ddcore as C, furnishing as F, palettes as P
+        r = C.Room("Corridor", 0, 0, 1.4, 3, "wood", [])
+        r.ctx = {"palette": P.choose(1890, "moravia", "rich", random.Random(1), _cat()), "role": "front", "wealth": "rich", "trade": None,
+                 "band": "industrial", "lifts": 0, "show_off": False, "prefers": [], "open_floor": False}
+        r.furnish()
+        self.assertEqual([d for d in r.dressing if d["layer"] == 100], [])
+
+    def test_open_floor_kept(self):
+        b = _furnished("barn", 1650, "middling")
+        for r in b.rooms:
+            if not r.ctx["open_floor"]: continue
+            ow, oh = r.w - 4.4, r.h - 4.4
+            if ow <= .5 or oh <= .5: continue
+            ox, oy = r.x + (r.w - ow) / 2, r.y + (r.h - oh) / 2
+            for d in r.dressing:
+                if d["layer"] != 100: continue
+                self.assertFalse(d["x"] < ox + ow and ox < d["x"] + d["w"] and d["y"] < oy + oh and oy < d["y"] + d["h"], (r.name, d["asset"]))
+            return
+        self.fail("the barn has no open floor room")
+
+    def test_era_contrast(self):
+        lasting = {e["name"] for e in _cat() if e["lasting"]}
+        names = lambda b: {d.get("draw", d["asset"]) for r in b.rooms for d in r.dressing + r.items if d.get("layer", 100) in (50, 100)} - lasting
+        a, c = names(_furnished("burgher-palace", 1197)), names(_furnished("burgher-palace", 1890))
+        self.assertEqual(a & c, set())
+
+    def test_lights_follow_era(self):
+        b = _furnished("burgher-palace", 1890)
+        self.assertEqual(b.rooms[0].ctx["palette"].lights, "gas")
+        self.assertEqual(_furnished("burgher-palace", 1995).rooms[0].ctx["palette"].lights, "electric")
 
 
 if __name__ == "__main__":

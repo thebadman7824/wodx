@@ -94,6 +94,7 @@ class Room:
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
         self.furnish_list = list(furnish)
+        self.ctx = None               # a furnishing context (furnishing.context_for): palette, role, wealth...
         self.items, self.blocked = [], []
         inset = .18   # wall half-thickness plus a little air
         self.ix, self.iy, self.iw, self.ih = x + inset, y + inset, w - 2 * inset, h - 2 * inset
@@ -268,6 +269,10 @@ def kind_of(room):
 
 def dress(room):
     global R
+    if getattr(room, "ctx", None):                 # furnished by purpose, palette and room value (furnishing.py)
+        import furnishing
+        furnishing.fill_room(room)
+        return
     room.dressing, room.lights = [], []
     kind = kind_of(room)
     if room.iw < 1.5 or room.ih < 1.5: return
