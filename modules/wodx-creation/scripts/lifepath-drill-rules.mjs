@@ -12,6 +12,7 @@
  */
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {LOCAL_EVENTS} from "../data/lifepath-local-events.mjs";
 import {CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
   PEOPLE_LABELS} from "../data/lifepath-drill.mjs";
 
@@ -119,10 +120,15 @@ const opt = (label, g, extra = {}) => ({id: slug(label), label, g: g ?? "", text
 const shared = (list, year, base) => list.filter(o => fitsRow(o[2], year, base)).map(o => opt(o[0], o[1]));
 
 /** Five things that marked a stage: two good, two hard, one neither, drawn by the drill's seed and the re-rolls. */
-export function fiveOf(list, year, base, seed, {fits = fitsMark, lead = null} = {}) {
+export function fiveOf(list, year, base, seed, {fits = fitsMark, lead = null, extra = [], front = false} = {}) {
   const rand = rng(seed);
   const fit = list.filter(o => fits(o[2], year, base));
-  const by = t => shuffled(fit.filter(o => o[3] === t), rand);
+  // extra: dated rows of the land (already fitted to the years). On the first draw one of each tone comes first.
+  const by = t => {
+    const own = shuffled(extra.filter(o => o[3] === t), rand);
+    const head = front ? own.splice(0, 1) : [];
+    return [...head, ...shuffled([...fit.filter(o => o[3] === t), ...own], rand)];
+  };
   const pools = {"+": by("+"), "-": by("-"), "0": by("0")};
   const out = [];
   for ( const [t, n] of Object.entries(MARK_SHAPE) ) out.push(...pools[t].splice(0, n));
@@ -142,6 +148,14 @@ export function pathPool(kind, year, base, regionId = null) {
   return [...(local && base !== "wild" ? [opt(local[0], local[1], {tone: "0", local: true})] : []), ...list.filter(o => fitsRow(o[2], year, base)).map(o => opt(o[0], o[1], {tone: o[3]}))];
 }
 
+/** The dated things that marked a stage lived in a region between two years: rows in the shape of the mark lists. */
+export function datedMarks(regionId, from, to, base = "trade") {
+  if ( base === "wild" ) return [];
+  return (LOCAL_EVENTS[regionId]?.marks ?? []).filter(m => m[2].some(([a, b]) => a <= to && b >= from)).map(m => [m[0], m[1], {}, m[3], m[4], true]);
+}
+/** The dated origins of a region for a year of birth. */
+export const datedOrigins = (regionId, year) => (LOCAL_EVENTS[regionId]?.origins ?? []).filter(o => year >= o[3] && year <= o[4]);
+
 /** The origins open in a region and year for a line: the line's own births, the local ones, then the shared list. */
 export function originsFor(regionId, year, line = "mortal") {
   const L = localOf(regionId, year);
@@ -149,6 +163,7 @@ export function originsFor(regionId, year, line = "mortal") {
   const row = o => opt(o[1], o[3], {text: o[2], base: o[7] ?? o[0], ...(o[6] ? {line: true} : {})});
   return [
     ...rows.filter(o => o[6]?.includes(line)).map(row),
+    ...datedOrigins(regionId, year).map(o => opt(o[0], o[1], {base: o[2], local: true})),
     ...(L?.origins ?? []).map(o => opt(o[0], o[1], {base: o[2], local: true})),
     ...rows.filter(o => !o[6]).map(row)
   ];
@@ -196,7 +211,8 @@ export function stepsOf(drill) {
     if ( !P[pid] ) return out();
     const id = `${st.id}-mark`;
     steps.push({...common, id, kind: `${st.kind}-mark`, title: `${title}: what marked those years`, five: true,
-      options: fiveOf(second, year, base, `${drill.seed}:${id}:${drill.rerolls?.[id] ?? 0}`)});
+      options: fiveOf(second, year, base, `${drill.seed}:${id}:${here}:${drill.rerolls?.[id] ?? 0}`,
+        {extra: datedMarks(here, year, born + st.to, base).filter(m => !Object.entries(P).some(([k, v]) => k !== id && v?.id === slug(m[0]))), front: !(drill.rerolls?.[id] ?? 0)})});
     if ( !P[id] ) return out();
   }
   if ( drill.homeland && here !== drill.homeland ) {
@@ -452,6 +468,13 @@ export function lint({table = null, backgrounds = null} = {}) {
       if ( L[2] ) { gives(L[2][1], `${where} teen`); if ( TPATH.some(o => slug(o[0]) === slug(L[2][0])) ) bad.push(`${where}: teen path repeats a shared one`); }
       if ( L[3] ) { gives(L[3][1], `${where} adult`); if ( CALL.some(o => slug(o[0]) === slug(L[3][0])) ) bad.push(`${where}: calling repeats a shared one`); }
     }
+  }
+  for ( const [rid, E] of Object.entries(LOCAL_EVENTS) ) {
+    if ( !regionOf(rid) ) bad.push(`dated: unknown region ${rid}`);
+    uniq([...(E.origins ?? []).map(o => o[0]), ...ORIGINS.map(o => o[1]), ...Object.values(LOCAL[rid] ?? {}).flatMap(L => L[1].map(o => o[0]))], `dated ${rid} origins`);
+    for ( const o of E.origins ?? [] ) { gives(o[1], `dated ${rid} ${o[0]}`); if ( !bases.has(o[2]) ) bad.push(`dated ${rid} ${o[0]}: unknown origin ${o[2]}`); if ( !(o[3] <= o[4]) ) bad.push(`dated ${rid} ${o[0]}: years`); }
+    uniq([...(E.marks ?? []).map(o => o[0]), ...CMARK.map(o => o[0]), ...TMARK.map(o => o[0]), ...AMARK.map(o => o[0])], `dated ${rid} marks`);
+    for ( const m of E.marks ?? [] ) { gives(m[1], `dated ${rid} ${m[0]}`); if ( !TONES[m[3]] ) bad.push(`dated ${rid} ${m[0]}: no tone`); if ( !m[2]?.length || m[2].some(([a, b]) => !(a <= b)) ) bad.push(`dated ${rid} ${m[0]}: years`); }
   }
   for ( const [rid, g] of Object.entries(REGION_COMING_OF_AGE) ) if ( !regionOf(rid) || Object.values(g).some(a => a < 12 || a > 21) ) bad.push(`coming of age: ${rid}`);
   return bad;

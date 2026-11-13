@@ -3349,7 +3349,7 @@ Every stage after childhood can be set in another region. When the last home is 
 Reverse: drop the movable flag in stepsOf and the arrival step.
 
 ## B2608. Local content comes region by region (2026-11-13, desk lp15, lp16 and lp22)
-The shared lists serve all 44 regions in every age. Local origins, teenage paths and callings exist for France, Japan, West Africa, the Andes, the Levant and western North America as samples; since Creation 0.18.0 (13 November 2026, Ben: "Continue") every one of the 44 regions has them for every age, in data/lifepath-local-europe.mjs, -asia.mjs and -world.mjs, written from general history in WoDX's own words. The sorting of the older Bohemian scenes into Moravia's local content follows in a later batch. Nothing was deleted.
+The shared lists serve all 44 regions in every age. Local origins, teenage paths and callings exist for France, Japan, West Africa, the Andes, the Levant and western North America as samples; since Creation 0.18.0 (13 November 2026, Ben: "Continue") every one of the 44 regions has them for every age, in data/lifepath-local-europe.mjs, -asia.mjs and -world.mjs, written from general history in WoDX's own words. Since Creation 0.19.0 the older Bohemian scenes are sorted into Moravia's dated content (data/lifepath-local-events.mjs: origins by span of birth years, marks by the years they happened); the generic older scenes (a mentor, a sibling, a first love, a fire) were already covered by the shared marks. data/lifepaths.mjs is unchanged and still serves records without a drill. Nothing was deleted.
 Reverse: empty LOCAL in data/lifepath-drill.mjs.
 
 ## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
