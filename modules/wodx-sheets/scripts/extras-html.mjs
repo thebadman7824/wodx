@@ -110,7 +110,8 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only);
  * family (B3220): plain lines from WoDX NPC's family news, such as a pregnancy's due season, shown to the owner;
- * couples: a lover, spouse or troth tie to a character gets a button to start a pregnancy (the Storyteller) or ask for one.
+ * couples: a lover, spouse or troth tie to a character gets a button to start a pregnancy (the Storyteller) or ask for one,
+ * and a lover, friend, ally, contact, patron or other tie a button to propose marriage (B3229).
  */
 const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", "true side": "a hidden loyalty", "past life": "from a past life", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
 export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", family = [], couples = false, tree = true, followers = false } = {}) {
@@ -128,8 +129,10 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
       + `<a class="wodx-act" data-act="tie-remove" title="Remove the tie"><i class="fa-solid fa-xmark"></i></a>` : r.note ? `<span class="wodx-quiet">${esc(r.note)}</span>` : "";
     const couple = couples && editable && ["lover", "spouse", "troth"].includes(r.kind) && String(r.uuid ?? "").startsWith("Actor.")
       ? ` <a class="wodx-act" data-act="tie-child" title="${gm ? "Start a pregnancy" : "Ask the Storyteller for a child"}"><i class="fa-solid fa-baby"></i></a>` : "";
+    const ring = couples && editable && ["lover", "troth", "friend", "ally", "contact", "patron", "other"].includes(r.kind) && String(r.uuid ?? "").startsWith("Actor.")
+      ? ` <a class="wodx-act" data-act="tie-propose" title="Propose marriage"><i class="fa-solid fa-ring"></i></a>` : "";
     return `<div class="wodx-tie" data-search-item data-uuid="${esc(r.hand ?? r.uuid ?? "")}" data-open-uuid="${esc(r.uuid ?? "")}">
-    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${couple}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
+    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${couple}${ring}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
   };
   const list = groups.size ? [...groups].map(([g, rs]) => `<div class="wodx-tie-group"><div class="wodx-tie-head">${esc(g)}</div>${rs.map(row).join("")}</div>`).join("")
     : `<div class="wodx-quiet">No relationships yet. Drag a character, a scene or a journal entry here.</div>`;

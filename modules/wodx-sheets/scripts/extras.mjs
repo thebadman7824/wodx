@@ -660,6 +660,10 @@ export function listen(sheet, root) {
       if ( a.dataset.act === "tie-remove" && editable ) return setTies(actor, list => list.filter(t => t.uuid !== uuid));
       if ( a.dataset.act === "tie-hide" && editable && game.user.isGM ) return setTies(actor, list => list.map(t => t.uuid === uuid ? { ...t, hidden: !t.hidden } : t));
       if ( a.dataset.act === "tie-tree" ) return npcApi()?.openTree?.(actor);
+      if ( a.dataset.act === "tie-propose" && editable ) {
+        const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
+        return other?.documentName === "Actor" ? npcApi()?.family?.propose?.(actor, other) : null;
+      }
       if ( a.dataset.act === "tie-child" && editable ) {
         const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
         if ( other?.documentName !== "Actor" ) return;

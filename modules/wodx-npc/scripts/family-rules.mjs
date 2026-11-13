@@ -208,3 +208,40 @@ export function schoolingFor(year, region, sphere = "latin") {
     default: return {label: "learning at the family's side", ability: "survival", from: 6};
   }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Player-asked marriage (B3229-B3231)                                */
+/* ------------------------------------------------------------------ */
+
+export const PROPOSAL_DIFFICULTY = 6;
+/** An NPC's answer by how warm they are to the one asking: Devoted says yes, Fond rolls Charisma + Empathy, lower says no. */
+export function proposalAnswer(warmth = 0, successes = null) {
+  const w = Number(warmth) || 0;
+  if ( w >= 3 ) return "yes";
+  if ( w === 2 ) return successes === null ? "roll" : Number(successes) > 0 ? "yes" : "no";
+  return "no";
+}
+/** Who must agree to a match under the courting custom of the place and year (hearts-rules courtshipFor keys). */
+export function familiesSay(courtKey) {
+  switch ( courtKey ) {
+    case "arranged": case "matchmaker": case "miai": case "consent": case "custom": return {who: "the families (the fathers, the clan or the elders)", need: true};
+    case "calling": return {who: "the parents", need: true};
+    case "dating": return {who: "the couple, with the families' blessing", need: false};
+    default: return {who: "the couple alone", need: false};
+  }
+}
+/** The waiting time and paperwork before the wedding, by the law and way of life. */
+export function waitingFor(law = {}, sphere = "latin", year = 1500) {
+  if ( law.civil ) return {label: "a civil notice of the marriage", days: 14};
+  switch ( sphere ) {
+    case "latin": return Number(year) >= 1215 ? {label: "three Sundays of banns", days: 21} : {label: "the betrothal", days: 7};
+    case "orthodox": return {label: "the banns read in church", days: 21};
+    case "islamic": case "malay": case "swahili": case "sahel": return {label: "the nikah contract written and the mahr agreed", days: 7};
+    case "sinic": case "japanese": return {label: "the go-between's exchange of gifts and a lucky day chosen", days: 30};
+    case "indic": return {label: "an auspicious day chosen by the priest", days: 30};
+    default: return {label: "the families' preparations", days: 14};
+  }
+}
+/** Ties a proposal can be made on: a lover, or a tie that could make an arranged match (never blood or household kin). */
+export const PROPOSAL_TIES = new Set(["lover", "troth", "friend", "ally", "contact", "patron", "other"]);
+export const canProposeOn = kind => PROPOSAL_TIES.has(String(kind ?? ""));
