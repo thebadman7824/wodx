@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3030
+Next free block: B3050
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -114,7 +114,7 @@ Next free block: B3030
 | B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
-| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth, the years after the change by line | Creation |
 | B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books; generated maps checked before export, furnished chests searchable, towns furnished and checked like the farm, measured picture sizes (B2634-B2639) | Otherworlds, tools/mapgen |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
@@ -139,7 +139,9 @@ Next free block: B3030
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
-| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3013) | Paperdoll |
+| B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
+| B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
+| B3030-B3049 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3030-B3033) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3461,6 +3463,10 @@ Reverse: remove a region's block from its file, or drop the Object.assign line i
 Orbit and the high colonies, the Moon and Mars are lands a lifepath can name, under a choice "Beyond Earth". They are not world regions of the chronicle (no weather, money or markets); they exist for lifepaths only (OFFWORLD in modules/wodx-creation/data/lifepath-drill.mjs). A land is open when the chronicle's own year is 2023 or later and the birth or stage year is no earlier than the land's first year: orbit 1999 (the year after the first townships are lifted), the Moon 2009 (after the war in orbit shows a colony there), Mars 2022 (after the first finished base). The years and the dated events follow WoDX's future timeline (docs/research/era-timelines/r3/future-darkness.txt). People born there are named with the Storyteller after their family's people on Earth.
 Reverse: remove the "Beyond Earth" row from CONTINENTS; lifepaths already written keep their text.
 
+
+## B2624. The years after the change by line (2026-11-13, Ben: "Yes. Do this.")
+Every line that changes (vampire, ghoul, revenant, werewolf, mage, changeling, wraith, hunter, mummy, demon, Kuei-jin, Orpheus) has its own ways of spending an age after the turn, in modules/wodx-creation/data/lifepath-since-lines.mjs, ten to thirteen each, written in WoDX's own words from each line's Revised or 20th anniversary books. On a first draw one of each tone comes first, as for a land's dated marks, and the shared list fills the rest. Rows tied to an age carry years (the Technocracy from 1850, the Order of Reason before; the Fallen from 1999; Orpheus firms from 1990; the Inquisition's burning years 1231 to 1700).
+Reverse: empty a line's list, or the whole SINCE_LINES object, and the shared list is drawn as before.
 ## B2630. Ways in and out and located dangers are places on a realm's map (2026-11-13)
 Ben asked that work keep moving overnight; the coordinator passed on that realms should get more places, only from material that can be cited. The realm catalogue, which the book check gave page refs for, already names more than its landmarks: the way a traveller arrives, the way back and the way on, and dangers that sit in one spot (a Nihil, a crater field, a Pattern Spider's web, a guardian engine). These now stand on each realm's map as places of their own kind, drawn in their own colours, and a landmark the plan had no spot for is placed too. Where the catalogue names the way a traveller arrives or comes back by, that way is the place known on arrival. Dangers that are a state of the whole realm (the Void, smog, the Maelstrom) are not spots and stay off the map. Nothing new is taken from the books here and nothing is invented but the spot each place stands on, which is our own as before (B2556). More named places wait for a book lookup on the PC.
 Reverse: empty extrasOf() in realm-worlds-rules.mjs.
@@ -4228,22 +4234,77 @@ V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls an
 
 Reverse: remove the blood action.
 
-## B3010. Many more face features, drawn with a shared kit (2026-11-13)
+## B3010. The other changing breeds keep bodies of their own (2026-11-13)
+WoDX NPC 0.66.0. A Garou faction whose name or notes speak of the Ananasi, the Corax, the Gurahl, the Ratkin or the Rokea (or werespiders, wereravens, werebears, wererats, weresharks) keeps a web, a flock, a den, a nest or a shiver of its own, anywhere and in every year. The Hengeyokai's own names (Kumo, Tengu, Nezumi, Same-Bito) are tested first and keep the Beast Court. No region gives these bodies by default; they are by name or by the Storyteller's pick. WoDX's own words; a book check of the breedbooks and W20 Changing Breeds is queued.
+
+Reverse: empty BREEDS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B3011. Seats and law of the five breeds (2026-11-13)
+Ananasi: an Eldest of the web by challenge, a Voice of the Queen who judges, a voice for each faction (the tribe field), a Spinner of the threads. Corax: an Eldest of the flock by backing, a Keeper of the news who judges, a voice per roost, two Eyes of the sun, gathering every second turn. Gurahl: an Eldest of the den by challenge, a Keeper of the healing ways who judges, a voice per tribe, a Guardian of the mountain, gathering every sixth turn. Ratkin: a Rat King or Rat Queen of the nest by challenge, a Seer who judges, a voice per aspect, a Runner of the tunnels, gathering every second turn. Rokea: an Eldest of the deep by challenge, a Speaker for the sea who judges, a voice per breed, a Warden of the shore.
+
+Reverse: edit the five polities in POLITIES.
+
+## B3012. A challenge among the Rokea may kill (2026-11-13)
+Every other shapeshifter body ends a challenge at submission. The Rokea settle quarrels with teeth and serve the sea rather than the Litany, so their challenges carry no submission rule; the Storyteller stages the fight as it falls.
+
+Reverse: add noKill: true to "rokea-shiver".
+
+## B3013. The Hsien keep the courts of East Asia (2026-11-13)
+A fae faction in China, Japan, Korea, Southeast Asia or the Malay world keeps a court of the Hsien in every year: a Magistrate of the court by backing who judges, two Ministers, a voice for each family, a Keeper of the shrine and a Scribe. Tibet keeps the default. WoDX's own words until the book check.
+
+Reverse: empty HSIEN_LANDS.
+
+## B3014. The land's own fae of the Pacific and Siberia (2026-11-13)
+Before the settlers (the ways of life of WoDX Chronicle: Polynesia until 1820 in the Pacific islands and 1840 in Aotearoa, the far north until 1600 in Siberia) a fae faction there keeps a circle of the land's own fae: an Elder of the circle by backing, a Keeper of the old ways who judges, a voice for each family, a Guardian of the sacred places. After the settlers a fae faction keeps the court of its age. No canon names these fae, so the words are WoDX's own.
+
+Reverse: empty LAND_FAE_LANDS.
+
+## B3015. The faction window lists the new bodies (2026-11-13)
+The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
+
+Reverse: edit the note in factions.mjs.
+
+## B3020. Three testbed lanes on one licence (2026-11-13)
+Ben lifted the one-testbed rule and asked for three lanes. The Foundry EULA (Terms item 2) allows installs on several computers while only one hosted instance is reachable by anyone but the licence owner, and the FAQ (License Questions, example 3) names a second instance on the same computer for personal testing as allowed. Live stays the only instance players reach; lanes 1 (port 30000, the existing testbed), 2 (30020) and 3 (30030) and the solo world (30010) stay local, with UPnP off and no router forward. Lanes 2 and 3 keep their user-data folders on D:\WoDX, since C: is tight.
+
+Reverse: mark a lane "disabled": true in tools/lanes/lanes.json, or remove its row.
+
+## B3021. A gate refuses to run on drift (2026-11-13)
+Before each run, tools/lanes/run-gate.mjs compares every file and version of every package the repo holds with the lane's Data folder, the versions the running server reports with the repo's (a lane not restarted after a deploy still runs old code), and the world's active modules, every world setting and the clock with the lane's clean fingerprint. Any difference stops the run and lists itself, in the console and in <lane>/wodx-lane/drift.json. Documents a gate left behind are listed as a warning only, since many older gates leave their test folders. Settings that change on their own can be listed in ignoreSettings.
+
+Reverse: run the PC's older headless runner, which has no check.
+
+## B3022. One gate run per lane; the runner takes the first free lane (2026-11-13)
+Each lane has a lock file holding the run's process id. A lock whose process has ended, or older than three hours, no longer counts. run-gate.mjs takes the first lane in lanes.json order that is up and free; --lane picks one, --wait keeps looking. The runner puts the clock and the pause back after every gate, and fails a gate whose clock it could not put back.
+
+Reverse: lockMaxMinutes in lanes.json; --lane 1 for the old single-lane behaviour.
+
+## B3023. Lanes 2 and 3 reset each night from a shared known-good copy (2026-11-13)
+A Windows task at 04:40 PC time puts the known-good copy of rothenstein-wodx back on lanes 2 and 3, skipping a lane that is busy. The lane's world is copied to the backups folder first, unless it already matches the known-good copy, and no backup is ever removed. Lane 1 is never reset by the task, since Ben plays in it; lanes.mjs reset refuses lane 1 without --allow-lane-1. The known-good copy is taken with lanes.mjs snapshot from a stopped lane, and the copy it replaces is backed up first.
+
+Reverse: schtasks /Delete /TN "WoDX lane reset" /F.
+
+## B3024. Deploys to a lane go through lanes.mjs (2026-11-13)
+lanes.mjs deploy stops the lane's server (only one this tool started), backs up each package folder, mirrors the repo's modules and system and the gate scripts into the lane, checks every file against the repo, starts the server again and records a new clean fingerprint. The PC's existing deploy scripts keep serving lane 1.
+
+Reverse: deploy by hand and run lanes.mjs accept.
+
+## B3030. Many more face features, drawn with a shared kit (2026-11-13)
 WoDX Paperdoll 0.19.0. Ben (13 November 2026): 100 features for anyone, 50 base features per line, 15 more per sub-splat (each clan, tribe, auspice, Tradition, guild, kith, creed, house and the like), and 25 for splats whose strange looks are the point (Nosferatu, Gargoyles); the aim is "little chance that two NPCs or players will look the same". Features are drawn with a small kit (face64-kit.mjs): named spots that follow each head's shape, small glyphs for tattoos and brands, and slots. This first batch brings the features for anyone to 140 (scars, marks, tattoos, jewellery, eyewear and masks, headwear, hair, beards, health, paint and powder, collars), more than the 100 asked, since more variety serves the aim. Objects of one era (sunglasses, a peaked cap, a cigarette) are only ticked, never rolled. The lines follow in batches.
 
 Reverse: Remove the import of face64-general.mjs from face64-features.mjs.
 
-## B3011. A rolled face gets several features, one per slot (2026-11-13)
+## B3031. A rolled face gets several features, one per slot (2026-11-13)
 An NPC with nothing ticked now rolls two or three features of its named group (clan, kith, tribe), one or two of its line and up to two everyday ones, in seeded order. Each feature may name a slot (an eye, a cheek, the neck, the head); a face never gets two in one slot, so a tattoo and a scar do not land on one cheek. A kith's or breed's whole look still always shows; a wraith still bears one deathmark and a metis one deformity; headwear still comes now and then, one at most. The harness checks that every feature shows, that no two features of a line look the same, and that 300 rolled mortals give 300 different faces.
 
 Reverse: Restore the older rollFeatures (one chance per feature) from git history.
 
-## B3012. Vampire faces: 50 for any Kindred, 15 per clan and bloodline, 25 for the strange ones (2026-11-13)
+## B3032. Vampire faces: 50 for any Kindred, 15 per clan and bloodline, 25 for the strange ones (2026-11-13)
 WoDX Paperdoll 0.19.0 (face64-kindred.mjs). Any Kindred: 51 (pallors, dead or fed lips, fangs, eyes, bites, veins, frost, collars and jewels of the night). Fifteen each for the thirteen clans of V20 and Caitiff, and for the bloodlines and Dark Ages lines the project uses: Baali, Salubri, Daughters of Cacophony, Kiasyd, True Brujah, Harbingers of Skulls, Cappadocian, Lamia, Nagaraja, Lhiannan, Noiad, Anda, Ahrimanes and Blood Brothers. Twenty-five or more for the clans whose strange flesh is their mark: Nosferatu (30), Gargoyle (25) and Samedi (25); a Gargoyle's stone, a Samedi's rot, a Harbinger's skull face and a Cappadocian's ashen face always show when the sheet names the clan. A True Brujah sheet no longer counts as Brujah. All drawn from the clans' looks in the books, in our own words; the rest invented to fit.
 
 Reverse: Remove the import of face64-kindred.mjs from face64-features.mjs.
 
-## B3013. Werewolf and other Changing Breed faces: 50 for the line, 15 per tribe, auspice, breed and Fera kind (2026-11-13)
+## B3033. Werewolf and other Changing Breed faces: 50 for the line, 15 per tribe, auspice, breed and Fera kind (2026-11-13)
 WoDX Paperdoll 0.19.0 (face64-garou.mjs, face64-fera.mjs). Any Garou: 50 (scars of battle, fur and claws, Rage, Gaia's marks, fetishes, pack paint). Fifteen each for the thirteen tribes of W20 and the Black Spiral Dancers, Croatan, White Howlers and Bunyip, for each auspice, and for homid and lupus breeds; 25 for metis, one deformity still always shown. Any of the other Changing Breeds: 50, shown when the sheet names a breed; fifteen each for Ajaba, Ananasi, Apis, Bastet, Camazotz, Corax, Grondr, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin and Rokea, counting the whole look each already had. Drawn from the books' descriptions in our own words, the rest invented to fit. Stubble is drawn sparser and fainter, so it no longer reads as a chequered patch on the chin.
 
 Reverse: Remove the imports of face64-garou.mjs and face64-fera.mjs from face64-features.mjs.

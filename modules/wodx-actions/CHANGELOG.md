@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.61.1 (the lifting chart and the Kuei-jin profile note are worded in WoDX's own words, with the same weights and page references (public repository overlap check); not deployed)
 - 3.61.0 (rank in social rolls: an NPC two or more steps below on the rank ladder makes the roll one easier, two or more above one harder (WoDX NPC 0.59.0); 3.60.0 is left to the player UI work)
 - 3.59.0 (a regnant's Persuade, Intimidate, Deceive, Bribe and Charm against a thrall are 1 easier at the second drink and 2 at the third, the Vinculum counting as a bond at 5 and 8, named on the card; B2842; not deployed)
 - 3.58.0 (the hunt window reads the faith calendar of the town: feasts, fairs, strict fasts, Good Friday and Yom Kippur, Ramadan nights, the day of rest in the market, the curfew in the years a town keeps one and the wartime blackouts, each listed by name with its step, -2 to +2, as a number the Storyteller can change; the window now shows the odds before the roll, prey in the first hour and within the hours given and the chance of a botch, with every change to the pool and difficulty named; not deployed)

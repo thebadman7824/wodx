@@ -470,7 +470,7 @@ test("before the settlers: no Kindred court, the Nunnehi for fae, the Mokolé an
   assert.equal(PO.polityFor(f("fae", "andes"), 1400), "nunnehi-council");
   assert.equal(PO.polityFor(f("fae", "arctic"), 1500), "nunnehi-council");
   assert.equal(PO.polityFor(f("fae", "andes"), 1700), "commoner-freehold", "after the settlers, the court of the age");
-  assert.equal(PO.polityFor(f("fae", "siberia"), 1500), "commoner-freehold", "the Nunnehi stay in the Americas");
+  assert.equal(PO.polityFor(f("fae", "siberia"), 1500), "land-fae-circle", "the Nunnehi stay in the Americas (NPC 0.66.0: Siberia keeps its own fae)");
   assert.equal(PO.polityFor(f("fae", "france"), 1300), "fae-court");
   assert.equal(PO.polityFor(f("garou", "australia"), 1700), "mokole-gathering");
   assert.equal(PO.polityFor(f("garou", "australia"), 1800), "garou-sept");
@@ -499,4 +499,49 @@ test("the Nagah and the Mokolé by name, ahead of the regional default", () => {
 test("every region named by the new tables is a world region", async () => {
   const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
   for ( const r of [...PO.NO_KINDRED_COURT, ...PO.NUNNEHI_LANDS, ...Object.keys(PO.SETTLER_SHIFTERS)] ) assert.ok(W.WORLD_REGIONS[r], r);
+});
+
+// WoDX NPC 0.66.0 (B3010 to B3015): the other changing breeds, the Hsien and the land's own fae.
+test("the Ananasi, Corax, Gurahl, Ratkin and Rokea by name; the Hengeyokai's own names stay in the Beast Courts", () => {
+  const g = (region, name) => F.normFaction({id: "x", kind: "garou", region, name, members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(g("brazil", "Ananasi of the old city"), 1600), "ananasi-web");
+  assert.equal(PO.polityFor(g("british-isles", "The Corax of the tower"), 1300), "corax-flock");
+  assert.equal(PO.polityFor(g("canada", "Gurahl of the north woods"), 1900), "gurahl-den");
+  assert.equal(PO.polityFor(g("moravia", "Ratkin under Brno"), 1400), "ratkin-nest");
+  assert.equal(PO.polityFor(g("pacific-islands", "The Rokea of the reef"), 2000), "rokea-shiver");
+  assert.equal(PO.polityFor(g("japan", "Nezumi of the docks"), 1700), "beast-court", "the rats of Asia sit in the Beast Courts");
+  assert.equal(PO.polityFor(g("china", "Ratkin of the river"), 1700), "ratkin-nest", "a name wins over the region");
+  assert.equal(PO.polityFor(g("british-isles", "Fianna of the hill"), 1300), "garou-sept", "a plain sept is unchanged");
+  const ppl = {a: {name: "A", tribe: "Tenere", house: "Hirayanu", rank: 3, title: 3}, b: {name: "B", tribe: "Forest Walkers", house: "Pyon", rank: 2, title: 2}, c: {name: "C", tribe: "Knife Skulkers", rank: 1, title: 1}};
+  for ( const key of ["ananasi-web", "corax-flock", "gurahl-den", "ratkin-nest", "rokea-shiver", "hsien-court", "land-fae-circle"] ) {
+    const P = PO.POLITIES[key];
+    assert.ok(P, key);
+    assert.ok(P.titles?.[PO.topOffice(key).key]?.length >= 3, `${key} offers names for its top seat`);
+    assert.ok(P.law.length >= 5, `${key} has five laws`);
+    assert.ok(/Used by default|used by default/.test(P.notes), `${key} says where it is used`);
+    assert.ok(!/—/.test(JSON.stringify(P)) && !/\b(he|she|him|her|his|hers)\b/i.test(JSON.stringify(P)), `${key}: no em-dashes or gendered words`);
+    const out = PO.innerTurn(F.normFaction({id: "x", kind: P.kinds[0], polity: key, leader: "a", members: ["a", "b", "c"]}), {polity: key, info: ppl, rand: stream(9), turn: 0});
+    assert.ok(out.lines.length, key);
+  }
+});
+
+test("the Hsien in East Asia and the land's own fae in the Pacific and Siberia before the settlers", () => {
+  const f = (region, y) => PO.polityFor(F.normFaction({id: "x", kind: "fae", region, members: ["a", "b", "c"]}), y);
+  assert.equal(f("china", 1300), "hsien-court");
+  assert.equal(f("japan", 2000), "hsien-court", "in every era");
+  assert.equal(f("korea", 1700), "hsien-court");
+  assert.equal(f("tibet-himalaya", 1300), "fae-court", "Tibet keeps the default");
+  assert.equal(f("pacific-islands", 1700), "land-fae-circle");
+  assert.equal(f("aotearoa", 1800), "land-fae-circle");
+  assert.equal(f("siberia", 1500), "land-fae-circle");
+  assert.equal(f("siberia", 1700), "commoner-freehold", "after the settlers, the court of the age");
+  assert.equal(f("aotearoa", 1900), "commoner-freehold");
+  assert.equal(f("andes", 1400), "nunnehi-council", "the Nunnehi unchanged");
+  assert.equal(f("france", 1300), "fae-court", "Europe unchanged");
+  assert.equal(PO.polityFor(F.normFaction({id: "x", kind: "fae", region: "china", polity: "noble-fief", members: ["a", "b", "c"]}), 1990), "noble-fief", "a pick still wins");
+});
+
+test("the Hsien and land-fae tables name world regions", async () => {
+  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  for ( const r of [...PO.HSIEN_LANDS, ...PO.LAND_FAE_LANDS] ) assert.ok(W.WORLD_REGIONS[r], r);
 });

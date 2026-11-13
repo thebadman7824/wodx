@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: the other Changing Breeds (13 November 2026, B3013). Ben: 50 for any of them, 15 per breed. Shown
+ * WoDX Paperdoll: the other Changing Breeds (13 November 2026, B3033). Ben: 50 for any of them, 15 per breed. Shown
  * when the sheet names a breed; each breed's whole look (face64-features.mjs) still always shows.
  */
 import {table, MOUTH_Y} from "./face64-kit.mjs";
