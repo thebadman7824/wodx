@@ -195,3 +195,28 @@ test("the Net: a persona face in one phosphor colour, still blinking and speakin
   assert.equal(P.netPaletteOf({...P.roll("x", "mortal"), net: "amber"}), "amber");
   assert.ok(new Set(Array.from({length: 30}, (_, i) => P.netPaletteOf(P.roll(`c${i}`, "mortal")))).size >= 4, "personas differ in colour");
 });
+
+test("a hood or a veil covers the neck: no bare throat shows below the chin", () => {
+  for ( const id of ["a-hood", "a-veil"] ) for ( let i = 0; i < 24; i++ ) {
+    const S = P.roll(`neck${i}`, LINES[i % LINES.length], {sex: i % 2 ? "woman" : "man"});
+    const bare = P.drawFace(S).rgba, covered = P.drawFace({...S, features: [id]}).rgba;
+    for ( let y = S.chin + 2; y < 64; y++ ) for ( let x = 29; x <= 35; x++ )
+      assert.notDeepEqual(px(covered, x, y), px(bare, x, y), `${id} on ${S.seed}: the throat shows at ${x},${y}`);
+  }
+});
+
+test("a Nosferatu's great ears grow from the side of the head, joined to it, not from behind", () => {
+  let checked = 0;
+  for ( let i = 0; i < 30; i++ ) {
+    const S = P.roll(`ear${i}`, "nosferatu");
+    if ( S.ears === "plain" ) continue;
+    checked++;
+    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "plain"}).rgba;
+    for ( const sd of [-1, 1] ) for ( const y of [30, 33, 36] ) {
+      // just past the head's edge, three pixels in a row are ear, with no gap of background between
+      const edge = 32 + sd * Math.round(P.H.headHw(y, [11, 31, 43, S.chin, S.w, S.jw, S.cw]));
+      for ( let k = 2; k <= 4; k++ ) assert.notDeepEqual(px(eared, edge + sd * k, y), px(plain, edge + sd * k, y), `${S.seed} ear joined at ${edge + sd * k},${y}`);
+    }
+  }
+  assert.ok(checked >= 10);
+});
