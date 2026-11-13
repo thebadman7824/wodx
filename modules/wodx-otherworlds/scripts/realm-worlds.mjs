@@ -80,6 +80,9 @@ export async function realmWorldsDialog(start = {}) {
       ${img(v.picture, map.label)}
       <p class="wodx-quiet">${esc(v.note)}</p>
       ${v.lines.map(l => `<p style="margin:0.15rem 0">${esc(l)}</p>`).join("")}
+      ${map.layout.length || map.change.length ? `<details class="wow-realm-books"><summary>What the books say of how it lies and how it changes</summary>
+        ${[...map.layout, ...map.change].map(([note, ref]) => `<p style="margin:0.15rem 0">${esc(note)}. <span class="wodx-quiet">${esc(ref)}</span></p>`).join("")}
+        <p class="wodx-quiet">The map does not yet follow these notes place by place.</p></details>` : ""}
       <div class="form-group"><label>Realm</label>${searchBox("select[name=realm]", "Find a realm…", "Search realms")}<select name="realm">${realmOptions(map.id)}</select></div>
       <div class="form-group"><label>Shown</label><select name="eyes" data-fixed><option value="home"${state.eyes === "all" ? "" : " selected"}>What the chronicle has found</option><option value="all"${state.eyes === "all" ? " selected" : ""}>The whole realm</option></select></div>
       <div class="form-group"><label>From</label><select name="from" data-fixed>${places(v.from)}</select></div>
@@ -122,7 +125,7 @@ export async function foundDialog(state = {}) {
   if ( !game.user.isGM ) return null;
   const map = mapOf(state), mine = found(map);
   const content = `<div style="max-height:70vh;overflow-y:auto"><p>Travellers who reach ${esc(map.label)} know ${esc(map.places[map.gate]?.name ?? "where they stand")}. Tick each other place the chronicle has found: by going there, by a guide, a map or a spirit's word. A journey can end only at a found place.</p>
-    <ul class="wow-found" data-fixed style="list-style:none;padding:0;margin:0">${map.places.filter(p => p.i !== map.gate).map(p => `<li><label><input type="checkbox" name="found.${p.i}"${mine.includes(p.i) ? " checked" : ""}> ${esc(p.label)}</label></li>`).join("")}</ul></div>`;
+    <ul class="wow-found" data-fixed style="list-style:none;padding:0;margin:0">${map.places.filter(p => p.i !== map.gate).map(p => `<li><label><input type="checkbox" name="found.${p.i}"${mine.includes(p.i) ? " checked" : ""}> ${esc(p.label)}${p.what ? ` <span class="wodx-quiet">${esc(p.what)} (${esc(p.ref)})</span>` : ""}</label></li>`).join("")}</ul></div>`;
   const res = await foundry.applications.api.DialogV2.wait({window: {title: `Found places: ${map.label}`, resizable: true}, classes: ["wodx-dialog"], position: {width: 480, height: "auto"}, content, rejectClose: false,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => Object.entries(foundry.utils.expandObject(new foundry.applications.ux.FormDataExtended(b.form).object).found ?? {}).filter(([, v]) => v).map(([k]) => Number(k))},
       {action: "close", label: "Close"}]});
