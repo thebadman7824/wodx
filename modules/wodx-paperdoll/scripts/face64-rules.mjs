@@ -48,7 +48,18 @@ export const EYES_STATES = ["open", "half", "shut"];
 export const TALK_MOUTHS = ["talk1", "talk2", "talk3"];
 const OPEN_MOUTHS = new Set(["anger", "fear", "slack", ...TALK_MOUTHS]);
 
-const SKINS = [[236, 200, 170], [222, 178, 142], [198, 150, 112], [170, 118, 84], [150, 96, 70], [118, 74, 52], [88, 56, 42], [206, 160, 120]];
+/**
+ * Everyday skin, 24 tones (Ben, 13 November 2026, from 8): light to deep, each with warm, golden, olive, ruddy or cool
+ * undertones, so that two people seldom share one.
+ */
+const SKINS = [
+  [244, 214, 190], [238, 204, 178], [236, 200, 170], [232, 196, 160], [228, 190, 168], [226, 186, 150],
+  [222, 178, 142], [214, 172, 130], [210, 168, 140], [206, 160, 120], [200, 158, 110], [198, 150, 112],
+  [186, 140, 100], [180, 132, 96], [176, 128, 88], [170, 118, 84], [160, 112, 74], [150, 96, 70],
+  [140, 92, 62], [128, 82, 58], [118, 74, 52], [104, 66, 48], [88, 56, 42], [72, 46, 36],
+];
+/** A fae mien's skin, seen only with fae sight: one changeling in three wears one. */
+export const FAE_SKINS = [[120, 160, 220], [110, 176, 120], [190, 160, 220], [200, 204, 216], [150, 120, 90], [220, 180, 200], [100, 190, 190], [230, 210, 140], [150, 150, 170], [200, 110, 90]];
 const HAIRS = [[34, 26, 26], [70, 44, 28], [104, 62, 36], [150, 104, 52], [196, 160, 92], [120, 48, 30], [150, 150, 150], [60, 56, 64]];
 const IRISES = [[90, 120, 160], [96, 140, 84], [110, 76, 44], [70, 52, 40], [120, 130, 140]];
 const CLOTHS = [[70, 84, 66], [86, 64, 54], [60, 66, 90], [92, 84, 70], [54, 50, 58]];
@@ -361,6 +372,7 @@ const PRE = {
     S.iris = r.pick([[138, 176, 48], [200, 160, 32], [58, 154, 106]]); S.bg = [52, 44, 60]; S.style = r.pick(["long", "short"]);
     // Satyrs and trolls bear horns in their fae mien; another kith only when the seed says so and no kith is known
     S.horns = /satyr|troll/.test(S.kith) || (!S.kith && r.chance(0.5)); S.hornDark = r.chance(0.5); S.hornLen = r.pick([10, 12, 13]);
+    if ( r.chance(0.35) ) S.faeSkin = r.pick(FAE_SKINS);
   },
   hunter(S, r) { S.style = r.pick(["short", "back", "bald"]); S.beard = r.pick(["stubble", "stubble", ""]); S.bg = [48, 46, 40]; },
   mummy(S, r) { S.skin = r.pick([[168, 117, 79], [152, 103, 74], [181, 130, 90], [141, 90, 62]]); S.hair = [24, 20, 24]; S.style = r.pick(["short", "long", "bald"]); S.beard = ""; S.cloth = [226, 216, 196]; S.bg = [58, 48, 36]; },
@@ -624,7 +636,9 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( !EXPRESSIONS.includes(expr) ) expr = "neutral";
   if ( level >= 7 ) { expr = "slack"; eyes = "shut"; mouth = null; }      // Incapacitated: eyes shut, jaw slack, no speech
   const mouthKind = TALK_MOUTHS.includes(mouth) ? mouth : expr;
-  const skinCol = level ? mix(S.skin, [176, 180, 170], Math.min(0.5, level * 0.07)) : S.skin;    // pallor takes all the skin
+  const seen = {fae: true, sigil: true, ...sees};
+  const baseSkin = S.faeSkin && seen.fae ? mix(S.skin, S.faeSkin, 0.55) : S.skin;   // the mien's colour, to fae sight only
+  const skinCol = level ? mix(baseSkin, [176, 180, 170], Math.min(0.5, level * 0.07)) : baseSkin;    // pallor takes all the skin
   const F = new Grid(S.bg), shape = [TOP, EYE, JAW, S.chin, S.w, S.jw, S.cw];
   const R = ramp(skinCol, S.cool), H = hramp(S.hair), C = ramp(S.cloth, true);
   const r = rng(seedOf(`${S.seed}|marks`));
