@@ -98,3 +98,20 @@ test("the move fits the weapon, and a sprite without it plays the nearest it kno
   assert.equal(SR.moveFor("garou-homid", {power: true}), null, "no casting move, so nothing plays");
   assert.equal(SR.moveFor("nobody", {brawl: true}), null);
 });
+
+test("a power's look comes from what it is, then its kind, then the character's line", async () => {
+  const {existsSync} = await import("node:fs");
+  assert.equal(SR.fxFor({power: "Command", group: "Dominate", kind: "disc", line: "kindred"}), "mind-gaze");
+  assert.equal(SR.fxFor({power: "Arms of the Abyss", group: "Obtenebration", kind: "disc"}), "shadow-tendril");
+  assert.equal(SR.fxFor({power: "Theft of Vitae", group: "Thaumaturgy"}), "blood-bolt");
+  assert.equal(SR.fxFor({power: "Unnamed", kind: "gift", line: "lupine"}), "spirit-spark");
+  assert.equal(SR.fxFor({line: "mage"}), "radiance-glyph");
+  assert.equal(SR.fxFor({power: "Command", fx: "fire-wave"}), "fire-wave", "a look named outright wins");
+  assert.equal(SR.fxFor({fx: "fire-nonsense", line: "wraith"}), "wraith-tendril");
+  assert.ok(SR.fxOk(SR.fxFor({})));
+  assert.ok(!SR.fxOk("blood") && !SR.fxOk("blood-bolt-x") && !SR.fxOk(null));
+  // every look the rules can name has its sheet
+  for ( const c of SR.FX_COLOURS ) for ( const s of SR.FX_SHAPES )
+    assert.ok(existsSync(new URL(`../../${SR.fxPath(`${c}-${s}`)}`.replace("../../modules/", "../../modules/"), import.meta.url)), `${c}-${s}`);
+  for ( const fx of Object.values(SR.FX_OWN) ) assert.ok(SR.fxOk(fx));
+});

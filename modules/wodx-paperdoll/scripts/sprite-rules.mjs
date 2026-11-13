@@ -110,3 +110,42 @@ export function moveFor(name, blow = {}) {
     : POINTED.test(blow.weapon ?? "") ? ["thrust", "swing", "claw"] : ["swing", "thrust", "claw"];
   return want.find(m => has.includes(m)) ?? (blow.power ? null : has[0]);
 }
+
+/* ---- what a power looks like (B2585) ----
+ * A power's effect is its own sheet laid over the figure's casting move: a colour and a shape. The look is read from
+ * the power's own name and its Discipline, Gift list, Arcanos and so on, first match wins; a power that names nothing
+ * telling takes the look of its kind (a Discipline, a Gift, an Arcanos), then of the character's line.
+ */
+export const FX_COLOURS = ["blood", "shadow", "fire", "lightning", "spirit", "wraith", "glamour", "radiance", "chi", "sand", "conviction", "mind"];
+export const FX_SHAPES = ["bolt", "jag", "tendril", "spark", "wave", "gaze", "glyph"];
+export const fxPath = fx => `${FOLDER}/fx/${fx}.png`;
+export const fxOk = fx => { const [c, s, more] = String(fx ?? "").split("-"); return !more && FX_COLOURS.includes(c) && FX_SHAPES.includes(s); };
+const FX_WORDS = [
+  [/lightning|thunder|storm|tempest|electri|spark/, "lightning-jag"],
+  [/fire|flame|burn|blaze|pyre|ember|ignit|inferno|sun\b|solar/, "fire-bolt"],
+  [/shadow|obtenebrat|abyss|dark|night|shroud|gloom|umbra\b|tenebr/, "shadow-tendril"],
+  [/dominat|command|mesmer|presence|majesty|entranc|awe\b|dread|terror|fear|mind|thought|telepath|auspex|dementat|madness|chimerstry|obfuscat|forget|memory|puppet|keening|will\b/, "mind-gaze"],
+  [/blood|thaumaturg|vitae|quietus|sanguin|vicissitude|flesh|bone/, "blood-bolt"],
+  [/serpent|venom|poison|plague|rot|decay|corrupt|wyrm|bane\b/, "chi-tendril"],
+  [/sand|dust|desert|stone|earth|quake/, "sand-wave"],
+  [/wind|gale|breath|howl|roar|shout|cry\b|voice|song|scream/, "spirit-wave"],
+  [/frost|ice|cold|winter|chill/, "wraith-jag"],
+  [/ward|seal|circle|sigil|rune|bind|banish|exorcis|rite\b/, "radiance-glyph"],
+  [/heal|mend|bless|holy|faith|prayer|true faith|light\b|radian|dawn/, "radiance-spark"],
+  [/death|grave|corpse|necro|oblivion|ghost|shade|wither/, "wraith-tendril"],
+  [/dream|glamour|chimer|illusion|trick|wyrd|fae\b|faerie|mist/, "glamour-spark"],
+  [/spirit|gnosis|gaia|luna|totem|ancestor|moon/, "spirit-spark"]
+];
+const FX_KIND = {disc: "blood-spark", gift: "spirit-spark", w20: "wraith-tendril", gw: "wraith-tendril", evo: "radiance-wave", hekau: "sand-glyph",
+  horror: "wraith-spark", edge: "conviction-wave", numina: "mind-glyph"};
+const FX_LINE = {kindred: "blood-spark", ghoul: "blood-spark", lupine: "spirit-spark", mage: "radiance-glyph", fae: "glamour-spark", wraith: "wraith-tendril",
+  spirit: "spirit-wave", demon: "radiance-wave", mummy: "sand-glyph", hunter: "conviction-wave", exalted: "chi-wave", beast: "spirit-wave", mortal: "mind-glyph"};
+/* The look a figure's own power takes when nothing says which power it is (a move played by hand). */
+export const FX_OWN = {"kindred-elder-1888": "blood-bolt"};
+/** The effect sheet for a power: {power, group, kind, line, fx}. `fx`, when a module names a look itself, wins. */
+export function fxFor(info = {}) {
+  if ( fxOk(info.fx) ) return info.fx;
+  const words = `${info.power ?? ""} ${info.group ?? ""}`.toLowerCase();
+  if ( words.trim() ) for ( const [re, fx] of FX_WORDS ) if ( re.test(words) ) return fx;
+  return FX_KIND[info.kind] ?? FX_LINE[info.line] ?? "mind-glyph";
+}
