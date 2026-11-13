@@ -8,7 +8,7 @@ from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
 import proto_attacks as PA
 S,SH=Wr.S,Wr.SH
-VERSION=2
+VERSION=3
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -59,10 +59,12 @@ def draw(a):
         k=animal(a.get('animal') or a.get('name') or '')
         if not k: return None,None,['no animal look for this name']
         if k in B.KINDS:
-            walk=B.sheet(B.KINDS[k]); return {'':walk,'bite':PA.lunge(walk,'bite')},k,[]
-        walk=Cr.sheet(k); return {'':walk,'bite':PA.lunge(walk,'bite')},k,[]
+            walk=B.sheet(B.KINDS[k])
+        else: walk=Cr.sheet(k)
+        return {'':walk,'bite':PA.lunge(walk,'bite'),**PA.extras(walk,'die')},k,[]
     spec,held,worn,notes=person(a)
-    return PA.person_sheets(spec,acts_for(a,held)),'person',notes
+    sheets=PA.person_sheets(spec,acts_for(a,held)); sheets.update(PA.extras(sheets[''],a.get('death') if a.get('death') in('die','ash','fade') else 'die'))
+    return sheets,'person',notes
 def key(a): return hashlib.sha1(json.dumps([VERSION,a],sort_keys=True).encode()).hexdigest()[:16]
 def run(roster,out,every=False):
     os.makedirs(out,exist_ok=True); mf=os.path.join(out,'manifest.json')
@@ -78,7 +80,7 @@ def run(roster,out,every=False):
         for act,sh in sheets.items():
             Image.fromarray(np.ascontiguousarray(sh),'RGBA').save(os.path.join(out,i+('.'+act if act else '')+'.png'),optimize=True)
         walk=sheets['']; Image.fromarray(np.ascontiguousarray(walk[2*SH:3*SH,0:S]),'RGBA').save(os.path.join(out,i+'-still.png'))
-        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,'acts':[m for m in sheets if m],'notes':notes}; drawn+=1
+        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,'acts':[m for m in sheets if m and m not in PA.GAITS],'gaits':[m for m in sheets if m in PA.GAITS],'notes':notes}; drawn+=1
         if notes: report.append((a.get('name'),notes))
     json.dump(man,open(mf,'w'),indent=1,sort_keys=True)
     return drawn,skipped,report

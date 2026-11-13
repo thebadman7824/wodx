@@ -40,6 +40,86 @@ def lunge(walk,kind):
                         if 0<=x<S and 0<=y<SH and not fr[y,x,3]: fr[y,x]=((236,236,240,255) if i==3 else (200,60,50,255) if kind=='bite' else (190,194,204,255))
             sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=fr
     return sh
+# ---- being hit, dodging, falling, dying; running and sneaking (B2588) ------------------------------------------------
+# These are made from a figure's own walk sheet, so every sprite has them: people, beasts and the war form alike.
+DIRS={0:(0,-1),1:(-1,0),2:(0,1),3:(1,0)}; FEET=103
+def _cell(sh,row,col): return sh[row*SH:(row+1)*SH,col*S:(col+1)*S]
+def _move(src,dx,dy):
+    fr=np.zeros_like(src); ys,xs=np.nonzero(src[...,3]); ok=(xs+dx>=0)&(xs+dx<S)&(ys+dy>=0)&(ys+dy<SH); fr[ys[ok]+dy,xs[ok]+dx]=src[ys[ok],xs[ok]]; return fr
+def _squash(src,k):
+    """press the figure down toward its feet: k of its height"""
+    fr=np.zeros_like(src)
+    for y in range(SH):
+        sy=int(round(FEET-(FEET-y)/k))
+        if 0<=sy<SH: fr[y]=src[sy]
+    return fr
+def _lean(src,px,sgn):
+    """tip the figure forward: the head goes px further than the feet"""
+    fr=np.zeros_like(src); ys=np.nonzero(src[...,3].any(1))[0]
+    if not len(ys): return fr
+    top=ys.min()
+    for y in range(SH):
+        d=int(round(sgn*px*max(0,FEET-y)/max(1,FEET-top))); row=src[y]
+        if d>0: fr[y,d:]=row[:S-d]
+        elif d<0: fr[y,:S+d]=row[-d:]
+        else: fr[y]=row
+    return fr
+def _turn(src,deg,sgn):
+    """turn the figure about its middle (falling over), then set it down on the ground"""
+    ys,xs=np.nonzero(src[...,3]); fr=np.zeros_like(src)
+    if not len(ys) or not deg: return src.copy()
+    cx,cy=(xs.min()+xs.max())/2,(ys.min()+ys.max())/2; a=np.deg2rad(deg*sgn); ca,sa=np.cos(a),np.sin(a)
+    Y,X=np.mgrid[0:SH,0:S]; sx=np.rint(ca*(X-cx)+sa*(Y-cy)+cx).astype(int); sy=np.rint(-sa*(X-cx)+ca*(Y-cy)+cy).astype(int)
+    ok=(sx>=0)&(sx<S)&(sy>=0)&(sy<SH); fr[ok]=src[sy[ok],sx[ok]]
+    y2=np.nonzero(fr[...,3].any(1))[0]
+    return _move(fr,0,int(FEET-y2.max())) if len(y2) else fr
+def _wash(fr,col,k):
+    out=fr.copy(); m=out[...,3]>0; out[m,:3]=(out[m,:3]*(1-k)+np.array(col)*k).astype(np.uint8); return out
+def react(walk,kind):
+    """a six-frame sheet from the standing frame: 'hit' (knocked back, a flash), 'dodge' (ducks back and down), 'fall' (goes over and lies),
+    'die' (falls and goes still and grey), 'ash' (a Cainite's Final Death: crumbles from the head down to a heap), 'fade' (a wraith: thins and drifts up)"""
+    sh=np.zeros((4*SH,6*S,4),np.uint8)
+    for row in range(4):
+        ux,uy=DIRS[row]; src=_cell(walk,row,0); side=-ux if ux else (1 if row==2 else -1)
+        for i in range(6):
+            if kind=='hit':
+                k=[0,-3,-4,-2,-1,0][i]; fr=_move(src,ux*k,uy*k//2)
+                if i==1: fr=_wash(fr,(255,255,255),.3)
+                if i==2: fr=_wash(fr,(200,40,40),.22)
+            elif kind=='dodge':
+                k=[0,-3,-6,-6,-3,0][i]; fr=_move(_squash(src,[1,.94,.88,.88,.94,1][i]),ux*k if ux else [0,3,6,6,3,0][i]*(1 if row==2 else -1),0)
+            elif kind in('fall','die'):
+                ys,xs=np.nonzero(src[...,3]); wide=len(xs) and (xs.max()-xs.min())>(ys.max()-ys.min())*1.1
+                # a beast seen from the side sinks onto its flank; anything upright goes over
+                fr=_squash(src,[1,.9,.74,.6,.52,.52][i]) if wide else _turn(src,[0,12,38,68,90,90][i],side)
+                if kind=='die' and i>=4: fr=_wash(fr,(70,70,78),.25 if i==4 else .45)
+            elif kind=='ash':
+                fr=_wash(src,(120,116,112),[0,.3,.55,.75,.9,1][i]); ys=np.nonzero(fr[...,3].any(1))[0]
+                if len(ys):
+                    top,h=ys.min(),FEET-ys.min(); cut=int(top+h*[0,.1,.35,.65,.9,1][i]); rng=np.random.default_rng(row*10+i)
+                    gone=fr[:cut]; n=np.argwhere(gone[...,3]>0); fr[:cut]=0
+                    for y,x in n[::3]:   # what crumbles drifts down into the heap
+                        px=int(np.clip(48+(x-48)*.7+rng.integers(-2,3),0,S-1)); py=int(FEET-rng.integers(0,1+int(3*[0,.1,.35,.65,.9,1][i]+1)))
+                        fr[py,px]=(*[(96,92,88),(120,116,112),(70,66,64)][int(rng.integers(0,3))],255)
+            elif kind=='fade':
+                fr=_move(src,0,-[0,1,2,4,6,8][i]); m=fr[...,3]>0; fr[m,3]=(fr[m,3]*[1,.8,.6,.4,.22,.1][i]).astype(np.uint8); fr=_wash(fr,(206,226,236),[0,.2,.35,.5,.6,.7][i])
+            sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=fr
+    return sh
+def gait(walk,kind):
+    """an eight-frame sheet from the walk: 'run' leans into it, 'sneak' goes low"""
+    sh=np.zeros_like(walk)
+    for row in range(4):
+        ux,uy=DIRS[row]
+        for f in range(8):
+            src=_cell(walk,row,f)
+            fr=_lean(src,4,ux) if kind=='run' and ux else _move(src,0,-1 if f%4==1 else 0) if kind=='run' else _lean(_squash(src,.84),2,ux) if ux else _squash(src,.84)
+            sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=fr
+    return sh
+REACTS=('hit','dodge','fall'); GAITS=('run','sneak')
+def extras(walk,death='die'):
+    """every sheet a sprite gets beyond its walk and its attacks; death is how it dies: 'die', 'ash' or 'fade', always saved as die"""
+    out={k:react(walk,k) for k in REACTS}; out['die']=react(walk,death); out.update({g:gait(walk,g) for g in GAITS}); return out
+DEATHS={'kindred-elder-1888':'ash'}
 if __name__=='__main__':
     out=sys.argv[1].rstrip('/')+'/'
     for name,(spec,acts) in PEOPLE.items():
@@ -48,3 +128,6 @@ if __name__=='__main__':
             if not act: Image.fromarray(sh[2*SH:3*SH,0:S]).save(out+name+'-still.png')
     for name,kind in BEASTS.items():
         walk=np.array(Image.open(out+name+'.png').convert('RGBA')); Image.fromarray(lunge(walk,kind)).save(out+name+'.'+kind+'.png')
+    for name in list(PEOPLE)+list(BEASTS):
+        walk=np.array(Image.open(out+name+'.png').convert('RGBA'))
+        for k,sh in extras(walk,DEATHS.get(name,'die')).items(): Image.fromarray(sh).save(out+name+'.'+k+'.png',optimize=True)

@@ -479,7 +479,7 @@ async function onSocket(p) {
         const r = await applyDamage(actor, p.type, p.levels);
         if (p.messageId) {
             const d = game.messages.get(p.messageId)?.getFlag(MOD, "data") ?? {};
-            Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
+            Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
             await recordApplied(p.messageId, actor, r);
         }
     } else if (p.action === "setDamage") await setDamage(actor, p.damage);
@@ -1269,7 +1269,7 @@ async function applyFromMessage(msg, which = "main") {
     }
     const r = await applyDamage(actor, src.type, src.levels);
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
-    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after,
+    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
         fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id });
     const key = isCounter ? "counterApplied" : "applied";
     const undoKey = isCounter ? "counterUndo" : "undo";
@@ -1471,7 +1471,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.22.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.22.1", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

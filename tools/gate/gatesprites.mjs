@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 12;
+const N = 13;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -139,6 +139,18 @@ export async function run() {
       if ( had ) await actor.setFlag("wodx-paperdoll", "figure", had); else await actor.unsetFlag("wodx-paperdoll", "figure");
       ok("12. figure menu", first > 5 && bare > 300 && dressed >= bare && !!kept?.slots?.body && entry?.figure === true && entry.worn.length === 1 && hands > 5 && search,
         {pieces: first, bare, dressed, worn, hands, search, kept, entry: entry ? {worn: entry.worn, held: entry.held, look: entry.look} : null, putBack: !actor.flags?.["wodx-paperdoll"]?.figure === !had});
+    }
+    // 13. reactions and deaths: a blow is taken, a fall stays down until the figure is helped up, Final Death is played, a miss is dodged
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888"), el = by("kindred-elder-1888"), la = by("lady-1888");
+      await A.play(tm, "hit", el); await sleep(350); const hit = A.playing(tm.id)?.act; await sleep(1200); const hitOver = !A.playing(tm.id);
+      await A.play(tm, "fall", el); await sleep(1300); const down = A.playing(tm.id), flag = tm.flags?.["wodx-paperdoll"]?.act?.hold;
+      const rose = await A.rise(tm); await sleep(400); const up = !A.playing(tm.id);
+      await A.play(el, "die", tm); await sleep(1300); const dead = A.playing(el.id); await A.rise(el); await sleep(300);
+      Hooks.callAll("wodxAttackRolled", tm.actor, {target: la.actor, attackerToken: tm.uuid, targetToken: la.uuid, weapon: "Revolver", ranged: true, hit: false});
+      await sleep(600); const dodge = A.playing(la.id)?.act; await sleep(1200);
+      ok("13. reactions", hit === "hit" && hitOver && down?.act === "fall" && down?.held === true && flag === true && rose && up && dead?.act === "die" && dead?.held === true && dodge === "dodge" && !A.playing(el.id) && !A.playing(la.id),
+        {hit, hitOver, down: down ? {act: down.act, held: !!down.held} : null, flag, rose, up, dead: dead ? {act: dead.act, held: !!dead.held} : null, dodge, combat: game.modules.get("wodx-combat")?.version});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
