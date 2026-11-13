@@ -24,11 +24,16 @@ export function build({MOD, esc, chron, settle = () => null}) {
   const listOf = scene => RS.householdsOn(regionsOf(scene));
   const residentsOn = scene => game.actors.filter(a => a.flags?.[MOD]?.resident?.scene === scene?.uuid);
 
+  /** The region a scene stands in and the faith it keeps (WoDX Chronicle); Moravia's when Chronicle cannot say. */
+  function landOf(scene) {
+    try { const f = chron()?.church?.faithOf?.(scene, year()); return {region: f?.region ?? null, faith: f?.faith ?? null}; } catch (e) { return {region: null, faith: null}; }
+  }
   /** The planned people of every household on a scene. nonce: how many times the Storyteller drew again. */
   function plan(scene, {nonce = 0} = {}) {
     const ppl = creation(), y = year(), batch = hashOf(scene.uuid);
     return listOf(scene).map((h, hi) => {
-      const plans = RS.planHousehold(h, {year: y});
+      // 0.51.0 (B2672): the land's faith names the clergy, and the clergy keep it
+      const land = landOf(scene), plans = RS.planHousehold(h, {year: y, land: land.faith});
       const draw = (i, {sex, trade, origin = null}) => {
         if ( !ppl?.generate ) return {sex: sex === "any" ? "female" : sex, origin: "", given: "", family: "", name: ""};
         try { return ppl.generate({batch, row: hi * 1000 + i, nonce, kind: "mortal", sex, trade, origin}); }
@@ -36,7 +41,7 @@ export function build({MOD, esc, chron, settle = () => null}) {
       };
       let rand = Math.random;
       try { rand = chron()?.gen?.random?.(`residents:${scene.uuid}:${hi}`, nonce) ?? Math.random; } catch (e) { rand = Math.random; }
-      const people = RS.nameHousehold(plans, draw, rand, {year: y}).map(p => ({...p, name: p.name || cap(p.plan.label)}));
+      const people = RS.nameHousehold(plans, draw, rand, {year: y, region: land.region, land: land.faith}).map(p => ({...p, name: p.name || cap(p.plan.label)}));
       // 0.48.0: what an entered settlement's review says of this household (struck, hidden folk, an office)
       let settled = null;
       try { settled = settle()?.infoFor?.(h.household.id) ?? null; } catch (e) { settled = null; }

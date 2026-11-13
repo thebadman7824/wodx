@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2670
+Next free block: B2680
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -119,6 +119,7 @@ Next free block: B2670
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
+| B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year | Chronicle, NPC, Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3467,3 +3468,19 @@ Reverse: drop RAMADAN from withPrayers in routine-rules.mjs.
 ## B2662. Houses of worship of their own kind (2026-11-13, global rule)
 Mosque, Synagogue or prayer house, and Temple, pagoda or monastery of the faiths of Asia join Church as kinds of place. The church role in a routine looks for the house of the NPC's own faith first (mosque for Islam, synagogue for the Jewish year, temple for the faiths of India, China, Tibet and Southeast Asia), then for a place tagged plainly as a church, so places tagged before this keep working. A Christian is never sent to a mosque, synagogue or temple. Scene names with mosque, masjid, madrasa, synagogue, temple, pagoda, stupa, gompa, vihara or mandir are guessed to their kind; "Temple Church" stays a church. Passers-by, residents, rumours, container fills, the Penumbra and Shadowlands treat the three as churches; WoDX Senses has lines of its own for each. This replaces the 2026-11-13 choice in PENDING-REVIEW to add no separate kind.
 Reverse: tag such places as Church again; WORSHIP_KINDS and the Senses tables can stay.
+
+## B2670. The ways of life of the world (2026-11-13, global rule)
+Chronicle world-rules.mjs gives each world region a way of life by year (REGION_SPHERE, sphereFor): latin, orthodox, islamic, indic, sinic, japanese, theravada, tibetan, malay, sahel, swahili, bantu, and before the settlers mesoamerican, andean, polynesian and northern. Lands switch on the year they did (Mexico 1521, the Caribbean 1492, the Andes 1533, Constantinople 1453 and Greece again 1830, Aotearoa 1840, the Arctic's Norse until 1450). A house reading of history; no book gives one.
+Reverse: delete REGION_SPHERE and sphereFor; NPC and Creation then need their imports removed.
+
+## B2671. Passers-by by region (2026-11-13, global rule)
+NPC passerby-world.mjs changes the central European street of each age for every way of life: kinds replaced, removed or added (dervish, water seller, coffee house guest, monk on the alms round, griot, porter, llama driver, fisher, shaman), and the land's cleric in the streets from 1914. A scene's region is its own or the homeland's. Hidden tags carry the region, an origin from its mix, and a faith (the land's, or the one an origin brings; Protestant shares by land; half keep none after 1960 in the West, 1925 in the Orthodox lands, 1950 in China, Korea and Japan). Moravia's tables and tags are unchanged.
+Reverse: makePasserby without region (passersby.mjs stops passing it).
+
+## B2672. Clergy and residents by faith (2026-11-13, global rule)
+NPC resident-rules.mjs: CLERGY names each faith's priest, monk and lay helper; localClergy puts the town generator's Moravian clergy words into the words of the faith a scene keeps (a mosque's priest is the imam); wantsFor asks every office for someone of its faith (by origin, else the land's): imam, muezzin and dervish Muslim men, a lama or monk of a Buddhist land a Buddhist man, a temple priest a Hindu man, Christian clergy Christian. A synagogue keeps its rabbi in any land.
+Reverse: planRole and nameHousehold without land and region (residents.mjs).
+
+## B2673. Trades by region (2026-11-13, global rule)
+Creation people-trades-world.mjs builds a people.trade table for each culture whose region follows another way of life in an era group (read at 1350, 1650, 1870, 1950, 2000, 2060): the base list with words swapped, trades the land never had taken out, and trades of its own added. From the industrial age only clergy and a few words change. Cultures shared by regions of different ways take the first listed region's. Every trade has a sheet.
+Reverse: drop worldTradeTables from people.mjs.
