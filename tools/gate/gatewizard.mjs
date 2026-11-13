@@ -64,7 +64,9 @@ export async function run() {
       const L = api().wizardLedger(game.actors.get(vamp.id));
       const physRow = L.check.rows.find(r => r.group === "physical");
       await act(app, "go", {dataset: {page: "freebies"}}); await sleep(200);
-      const more = [...app.element.querySelectorAll("button[data-action=step][data-d='1']")].find(b => b.dataset.path === "system.attributes.strength.value" && !b.disabled);
+      // Strength is at 5 by now; the next Physical dot that can still go up costs 5
+      const phys = ["system.attributes.strength.value", "system.attributes.dexterity.value", "system.attributes.stamina.value"];
+      const more = [...app.element.querySelectorAll("button[data-action=step][data-d='1']")].find(b => phys.includes(b.dataset.path) && !b.disabled);
       const price = more?.parentElement?.textContent ?? "";
       await app.close();
       ok("3 allotment and freebie cost", spent === physRow.allowed && physRow.over === 0 && /\+5/.test(price), {spent, allowed: physRow.allowed, price: price.trim(), rowsBefore: order.length});
