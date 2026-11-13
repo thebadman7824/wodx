@@ -342,7 +342,7 @@
 1176|H|mor|EU|Legnano|battle|Legnano|The Lombard cities beat Barbarossa at Legnano.
 1182|H|mor|MO|Moravia|crown,law|The Margraviate of Moravia|Barbarossa makes Moravia a margraviate under the emperor, held by Conrad Otto.
 1185|H|mor|MO|Loditz|battle|Loditz|Bohemians and Moravians fight at Loditz; Moravia returns to Bohemia's rule.
-1187|H|mor|ME|Hattin|battle,crusade|Hattin|Saladin destroys the crusader army at Hattin and takes Jerusalem.
+1187|H|mor|ME|Hattin|battle,crusade|Hattin|Saladin destroys the crusader army at Hattin, and the kingdom of Jerusalem lies open.
 1189|H|mor|EU|Europe|crusade|The Third Crusade|Barbarossa, Richard I and Philip II set out for the Holy Land.
 1190|H|mor|ME|Saleph|death|Barbarossa drowns|Barbarossa drowns crossing the Saleph in Anatolia.
 1192|H|mor|MO|Prague|crown|Premysl Ottokar returns|Premysl Ottokar takes the Bohemian throne, losing it again in 1193.
@@ -488,7 +488,7 @@
 -600|W|cha|EU|Ireland|war,faith|The Fianna's tales|Kithain bards set the Fenian stories in this age.
 -597|H|mor|ME|Jerusalem|war|The first exile|Nebuchadnezzar takes Jerusalem and carries its king to Babylon.
 -590|H|mor|ME|Babylon|building|The Ishtar Gate|Babylon builds the blue Ishtar Gate and the processional way.
--586|H|mor|ME|Babylon|migration|The Babylonian exile|The people of Judah are carried to Babylon.
+-586|H|mor|ME|Babylon|migration,faith|The exiles by the rivers|The people of Judah settle beside the canals of Babylon and keep their faith without a temple.
 -575|H|mor|ME|Babylon|building|The Hanging Gardens|Later Greeks tell of terraced gardens in Babylon.
 -570|H|mor|AF|Egypt|crown|Amasis|Amasis takes Egypt's throne and favours the Greeks.
 -565|H|mor|EU|Greece|crown|Peisistratos|Peisistratos rules Athens as tyrant.
@@ -1085,7 +1085,7 @@
 1098|H|mor|ME|Antioch|siege|Antioch|The crusaders take Antioch.
 1100|H|mor|AM|Peru|founding|Chimor grows|The Chimu kingdom spreads along the north coast.
 1100|H|mor|AS|India|founding|The Hoysalas|The Hoysalas rule from Belur.
-1100|H|mor|AF|Nigeria|art|The Ife heads|Smiths of Ife cast lifelike heads of bronze.
+1100|H|mor|AF|Nigeria|art|The first casters of Ife|Smiths of Ife begin working copper and clay for the shrines; the lifelike brass heads come later.
 1100|W|mag|ME|Alamut|occult,crime|The Ahl-i-Batin and Alamut|Ahl-i-Batin lore says the Assassins of Alamut were a shadow of their own teaching.
 1104|H|mor|ME|Acre|war|The crusaders take Acre|The kingdom of Jerusalem takes Acre.
 1109|H|mor|ME|Tripoli|crown|The county of Tripoli|The crusaders found the county of Tripoli.
