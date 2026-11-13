@@ -7,7 +7,8 @@
  * how is guilt found, what is a crime, what is the punishment, who keeps order, what is owed": every other system
  * reads it through api.law.
  *
- * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492). A family
+ * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492); bribe runs from
+ * 1 (cheap) to 5 (dangerous even to try), as BRIBE_WORDS says. A family
  * whose rows are not written yet stands in with the general "custom" family, marked as a guess.
  */
 
@@ -301,7 +302,7 @@ export const FAMILIES = {
     {from: 0, note: "Chiefs and elders; sacred restrictions and their keepers", set: {
       rule: {form: "Chiefdoms and the custom of the first peoples", ruler: "The chiefs or the elders", council: "The elders and the priests"},
       courts: ["The chief's judgment", "Elders keeping the custom of the people"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
-      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 1, catch: 0.35},
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 3, catch: 0.35},
       add: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
     {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
       add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
@@ -313,7 +314,7 @@ export const FAMILIES = {
     {from: 0, note: "The Inuit and the Sámi keep their own custom", set: {
       rule: {form: "Bands and families under their own custom", ruler: "The elders and the best hunters", council: "The gathering of families"},
       courts: ["The community's judgment: song duels, shaming, and in the end exile"], proof: ["witnesses"], punish: ["banishment", "fine"],
-      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 1, catch: 0.4},
+      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 4, catch: 0.4},
       add: {warn: ["One who will not share in hard times may be left behind"]}},
     {from: 1721, note: "Danish mission and trade in Greenland; Norwegian, Swedish and Russian law over the Sámi", set: {rule: {form: "Colonies and northern provinces", ruler: "The Danish, Norwegian, Swedish or Russian crown"}}, add: {courts: ["The crown's courts in the trading posts"]}},
     {from: 1920, note: "The Svalbard treaty; the state's police reach the north", add: {order: ["police"], punish: ["prison"]}},
@@ -368,8 +369,8 @@ export const REGION_ROWS = {
     {from: 1821, note: "Independent Mexico; the Inquisition ended (1820)", set: {rule: {form: "An independent republic, often under strongmen", ruler: "The President", council: "Congress"}},
       drop: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning", "galleys"], order: ["inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]}, add: {courts: ["The republic's courts"]}},
     {from: 1910, to: 1920, note: "The Revolution", add: {warn: ["Revolutionary armies are the only law in much of the land"]}},
-    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 4}},
-    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 4}}
+    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 2}},
+    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 2}}
   ],
   andes: [
     {from: 1438, note: "Tawantinsuyu, the Inca state: labour owed to the state, harsh law for idleness and theft", set: {rule: {form: "An empire of labour service", ruler: "The Sapa Inca", council: "The Inca nobility"}},
@@ -522,7 +523,7 @@ export const REGION_ROWS = {
     {from: 0, note: "The Kongo kingdom and the kingdoms of the great lakes", set: {rule: {ruler: "The Manikongo, and the kings of the lakes"}}},
     {from: 1491, note: "Kongo's kings take the Christian faith", add: {courts: ["Church courts at the Kongo royal capital"]}},
     {from: 1885, to: 1908, note: "The Congo Free State: rubber quotas, hostages and severed hands", add: {warn: ["The Free State's soldiers maim those who fall short of the rubber quota"]}},
-    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 4}},
+    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 1}},
     {from: 1998, note: "War in the Congo", set: {bribe: 3}}
   ],
   india: [
