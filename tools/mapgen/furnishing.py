@@ -259,5 +259,8 @@ def apply(b, year, region="moravia", wealth=None, trade=None, seed=0):
     if pal and pal.wall:
         b.wall_tex = pal.wall
         if local is not b: local.wall_tex = pal.wall
+    if pal and pal.portals:                                    # the age's doors and windows
+        b.portal_tex = pal.portals
+        if local is not b: local.portal_tex = pal.portals
     b.palette = pal
     return b

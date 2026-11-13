@@ -96,8 +96,8 @@ class Site:
         bx = b.outline
         for q in self.taken:
             if G.separation(bx, q) < -.01: raise SystemExit(f"{b.label} ({b.key}) stands on another building or a way")
-        self.walls.append(wall_with_portals(bx, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True))
-        for a, c in b.partitions: self.walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False))
+        self.walls.append(wall_with_portals(bx, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
+        for a, c in b.partitions: self.walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
         for r in b.rooms:
             if B.floor_tex(r.floor):
                 tex = B.floor_tex(r.floor)

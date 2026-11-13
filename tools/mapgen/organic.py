@@ -1268,8 +1268,8 @@ class OrganicTown(T.Town):
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
             pk = b.t.get("portals")                            # a later era's doors and windows
-            walls.append(wall_with_portals(b.outline, wt, ops, True, pk))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
+            walls.append(wall_with_portals(b.outline, wt, ops, True, pk, getattr(b, "portal_tex", None)))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk, getattr(b, "portal_tex", None)))
             for r in b.rooms:
                 if B.floor_tex(r.floor): patterns.append(pattern(b.room_poly(r), B.floor_tex(r.floor), b.theta))
                 objects.extend(b.dressing_world(r, True))

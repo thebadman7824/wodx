@@ -413,8 +413,8 @@ class Town:
         walls, patterns, objects, paths = [], [], [], []
         for b in self.blds:
             if not overlaps(b.rect, win): continue
-            walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True))
-            for a, c in b.partitions: walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False))
+            walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
+            for a, c in b.partitions: walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
             for r in b.rooms:
                 if B.floor_tex(r.floor):
                     patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))

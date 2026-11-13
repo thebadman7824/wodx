@@ -3300,4 +3300,8 @@ catalogue.py tags about 14,000 of 45,000 Dungeondraft assets from their paths al
 Reverse: delete catalogue_rules.json entries.
 
 ## B2595. Left open (2026-11-13)
-Not built: a room's tier in the WoDX map file (optional in the design; the Foundry side reads nothing from it yet); grounds (trees, yards) by age; regional palettes beyond the fallback to Moravia where a region has no pack of its own; what else changes between ages besides furniture (proposal in the design doc, waiting on Ben).
+Not built: windows, doors and rooms that differ by age beyond their finish (a room is named by its building type, and the types are already placed by age); a room's tier in the WoDX map file (optional in the design; the Foundry side reads nothing from it yet); grounds (trees, yards) by age; regional palettes beyond the fallback to Moravia where a region has no pack of its own; what else changes between ages besides furniture (proposal in the design doc, waiting on Ben).
+
+## B2596. Doors and windows follow the age (2026-11-13, Ben's go-ahead on the design's proposal)
+Every door, double door, doorway, arch and window takes the age's wood finish (Ashen to 1449, Light to 1780, Dark after), a finer door for a richer owner, and metal-framed windows from 1919 (palettes.portals, passed to wall_with_portals as textures). Widths stay those of ddcore.PORTALS.
+Reverse: leave the building's portal_tex unset; the Ashen set returns.

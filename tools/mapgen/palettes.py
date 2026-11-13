@@ -47,6 +47,7 @@ class Palette:
     def __init__(self, key, sets, worths, wall, floor, door, lights, style):
         self.key, self.sets, self.worths = key, sets, worths
         self.wall, self.floor, self.door, self.lights, self.style = wall, floor, door, lights, style
+        self.portals = {}
 
     def pick(self, piece, rng):
         s = self.sets.get(piece)
@@ -103,4 +104,20 @@ def choose(year, region, wealth, rng, catalogue):
     door = texture(("portals",))
     lights = "rushlight" if band == "medieval" and wealth == "poor" else LIGHTS[band]
     worths = {k: e["worth"] for v in sets.values() for e in v for k in (e["name"], e["path"])}
-    return Palette((band, reg, wealth), sets, worths, wall, floor, door, lights, main)
+    pal = Palette((band, reg, wealth), sets, worths, wall, floor, door, lights, main)
+    pal.portals = portals(band, wealth)
+    return pal
+
+
+FINISH = {"medieval": "Ashen", "early": "Light"}       # FA wood finishes by age; Dark from 1781 on
+METAL_WINDOWS = {"republic", "socialist", "modern", "future"}
+
+
+def portals(band, wealth):
+    """Doors, double doors, doorways, arches and windows for an age: the age's wood finish (the same 1, 1 and 2 cell
+    widths as ddcore.PORTALS), a finer door for a richer owner, metal-framed windows from 1919."""
+    f = FINISH.get(band, "Dark")
+    n = {"poor": 1, "middling": 1, "rich": 2, "noble": 3}.get(wealth, 1)
+    return {"door": f"Door_Wood_{f}_A{n}_1x1.webp", "double": f"DoubleDoor_Wood_{f}_A{min(n, 2)}_2x1.webp",
+            "doorway": f"Doorway_Wood_{f}_A.png", "arch": f"DoubleDoorway_Wood_{f}_A_Wide.png",
+            "window": "Metal_Window_A.png" if band in METAL_WINDOWS else f"Window_Wood_{f}_A{min(n, 2)}_1x1.webp"}

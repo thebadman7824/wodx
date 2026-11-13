@@ -456,8 +456,9 @@ def light(cx, cy, rng, colour="ffeccd8b", intensity=.7):
     LIGHTS.append({"position": v2(*at(cx, cy)), "range": rng, "intensity": intensity, "color": colour,
                    "texture": "res://textures/lights/fragments.png", "shadows": True, "node_id": NID()})
 
-def wall_with_portals(points, texture, openings, loop, kinds=None):
-    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
+def wall_with_portals(points, texture, openings, loop, kinds=None, textures=None):
+    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t.
+    textures: {opening kind: asset} from the building's palette (the age's doors and windows), else PORTALS."""
     nid = NID()
     pts = points + ([points[0]] if loop else [])
     portals = []
@@ -468,7 +469,9 @@ def wall_with_portals(points, texture, openings, loop, kinds=None):
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
-                tex, width = PORTALS[(kinds or {}).get(kind, kind)]
+                k = (kinds or {}).get(kind, kind)
+                tex, width = PORTALS[k]
+                tex = (textures or {}).get(k) or tex
                 d = ((bx - ax) / L, (by - ay) / L)
                 portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,

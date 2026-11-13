@@ -34,6 +34,8 @@ test("furnishing: a palace furnishes by its year, and the same seed gives the sa
   const a = site(1890, ["--wealth", "rich"]);
   assert.ok(!a.objects.some(t => /Ashen/.test(t) && !/Stairs/.test(t)), "an 1890 palace has no Ashen-wood pieces");
   assert.ok(a.objects.length > 60, `an 1890 palace is full (${a.objects.length} objects)`);
+  const portals = a.map.world.levels["0"].walls.flatMap(w => w.portals ?? []).map(p => p.texture);
+  assert.ok(portals.length > 0 && !portals.some(t => /Ashen/.test(t)), "an 1890 palace has no Ashen doors or windows");
   const b = site(1890, ["--wealth", "rich"]);
   assert.deepEqual(a.map.world.levels["0"].objects.map(o => [o.texture, o.position]), b.map.world.levels["0"].objects.map(o => [o.texture, o.position]));
   const old = site(1197);

@@ -79,6 +79,17 @@ def _small_catalogue():
 
 
 class PaletteTest(unittest.TestCase):
+    def test_doors_and_windows_follow_the_age(self):
+        import palettes as P
+        cat = _small_catalogue()
+        old = P.choose(1197, "moravia", "middling", random.Random(1), cat).portals
+        new = P.choose(1890, "moravia", "rich", random.Random(1), cat).portals
+        late = P.choose(1995, "moravia", "middling", random.Random(1), cat).portals
+        self.assertIn("Ashen", old["door"]); self.assertIn("Ashen", old["window"])
+        self.assertIn("Dark", new["door"]); self.assertIn("Dark", new["double"]); self.assertNotEqual(new["door"], old["door"].replace("Ashen", "Dark"))
+        self.assertIn("Metal_Window", late["window"])
+        self.assertEqual(set(old), {"door", "double", "doorway", "arch", "window"})
+
     def setUp(self):
         import palettes as P
         self.P, self.cat = P, _small_catalogue()
