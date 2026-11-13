@@ -2399,8 +2399,8 @@
    "id": "chapel-1-vestry-f1",
    "label": "Cupboard (Vestry)",
    "rect": [
-    38.443,
-    79.415,
+    38.211,
+    79.477,
     1.5,
     0.75
    ],
@@ -2596,10 +2596,10 @@
    "id": "cottage-9-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    57.245,
-    51.846,
-    2,
-    1
+    57.745,
+    51.346,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -2608,14 +2608,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
-   "id": "cottage-9-cottage-f2",
+   "id": "cottage-9-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
-    61.244,
-    51.683,
+    59.543,
+    47.018,
     1.5,
     0.75
    ],
@@ -2632,10 +2632,10 @@
    "id": "cottage-9-lean-to-f0",
    "label": "Cupboard (Lean-to)",
    "rect": [
-    53.647,
-    51.614,
-    2,
-    1
+    54.147,
+    51.114,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -2644,7 +2644,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-9-lean-to-f1",
+   "label": "Cupboard (Lean-to)",
+   "rect": [
+    54.926,
+    53.021,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
   },
   {
    "id": "ghetto-house-1-living-room-0",
@@ -2666,10 +2684,10 @@
    "id": "ghetto-house-1-living-room-f2",
    "label": "Cupboard (Living room)",
    "rect": [
-    64.113,
-    94.66,
-    1.5,
-    0.75
+    64.558,
+    94.406,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -2678,7 +2696,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
    "id": "ghetto-house-1-kitchen-0",
@@ -2757,10 +2775,10 @@
    "id": "sgraffito-house-1-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    42.679,
-    52.665,
-    2,
-    1
+    43.179,
+    52.165,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -2769,25 +2787,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
-  },
-  {
-   "id": "sgraffito-house-1-back-room-f5",
-   "label": "Cupboard (Back room)",
-   "rect": [
-    47.681,
-    51.49,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
    "id": "sgraffito-house-1-black-kitchen-0",
@@ -2815,10 +2815,10 @@
    "id": "sgraffito-house-1-hall-f2",
    "label": "Cupboard (Hall)",
    "rect": [
-    46.108,
-    54.545,
-    1.5,
-    0.75
+    46.483,
+    54.17,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -2827,7 +2827,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
    "id": "sgraffito-house-1-front-room-0",
@@ -2907,10 +2907,10 @@
    "id": "passage-house-1-chamber-f0",
    "label": "Cupboard (Chamber)",
    "rect": [
-    49.639,
-    84.4,
-    1.5,
-    0.75
+    50.014,
+    84.025,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -2919,7 +2919,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 75.0
+   "rotation": 345.0
+  },
+  {
+   "id": "passage-house-1-chamber-f2",
+   "label": "Cupboard (Chamber)",
+   "rect": [
+    48.188,
+    84.515,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 345.0
   },
   {
    "id": "passage-house-1-room-2",
@@ -2934,24 +2952,6 @@
     "container": true,
     "kind": "chest",
     "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 75.0
-  },
-  {
-   "id": "passage-house-1-room-f2",
-   "label": "Cupboard (Room)",
-   "rect": [
-    45.692,
-    88.564,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
     "items": "",
     "fillPlace": "home"
    },
@@ -3121,6 +3121,24 @@
    "rotation": 240.0
   },
   {
+   "id": "passage-house-2-chamber-f2",
+   "label": "Cupboard (Chamber)",
+   "rect": [
+    80.38,
+    86.832,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "passage-house-2-room-2",
    "label": "Chest (Room)",
    "rect": [
@@ -3142,10 +3160,10 @@
    "id": "passage-house-2-room-f2",
    "label": "Cupboard (Room)",
    "rect": [
-    81.173,
-    83.231,
-    1.5,
-    0.75
+    81.478,
+    82.734,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -3154,7 +3172,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
    "id": "passage-house-2-passage-0",
@@ -3174,11 +3192,11 @@
    "rotation": 150.0
   },
   {
-   "id": "school-1-classroom-f6",
+   "id": "school-1-classroom-f5",
    "label": "Cupboard (Classroom)",
    "rect": [
-    77.634,
-    50.63,
+    78.396,
+    50.19,
     1,
     1
    ],
@@ -3189,32 +3207,32 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 150.0
+   "rotation": 60.0
+  },
+  {
+   "id": "school-1-classroom-f6",
+   "label": "Cupboard (Classroom)",
+   "rect": [
+    77.53,
+    50.69,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office"
+   },
+   "rotation": 60.0
   },
   {
    "id": "school-1-classroom-f7",
    "label": "Cupboard (Classroom)",
    "rect": [
-    76.768,
-    51.13,
-    1,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "office"
-   },
-   "rotation": 150.0
-  },
-  {
-   "id": "school-1-classroom-f8",
-   "label": "Cupboard (Classroom)",
-   "rect": [
-    75.902,
-    51.63,
+    76.664,
+    51.19,
     1,
     1
    ],
@@ -3231,28 +3249,10 @@
    "id": "school-1-second-classroom-f0",
    "label": "Cupboard (Second classroom)",
    "rect": [
-    79.439,
-    57.382,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "office"
-   },
-   "rotation": 150.0
-  },
-  {
-   "id": "school-1-second-classroom-f5",
-   "label": "Cupboard (Second classroom)",
-   "rect": [
-    84.139,
-    57.324,
-    2,
-    1
+    80.718,
+    56.432,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3262,15 +3262,33 @@
     "fillPlace": "office"
    },
    "rotation": 60.0
+  },
+  {
+   "id": "school-1-second-classroom-f11",
+   "label": "Cupboard (Second classroom)",
+   "rect": [
+    78.747,
+    58.181,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office"
+   },
+   "rotation": 150.0
   },
   {
    "id": "school-1-third-classroom-f0",
    "label": "Cupboard (Third classroom)",
    "rect": [
-    85.259,
-    67.463,
-    2,
-    1
+    87.639,
+    62.02,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3282,13 +3300,13 @@
    "rotation": 150.0
   },
   {
-   "id": "school-1-third-classroom-f10",
+   "id": "school-1-third-classroom-f13",
    "label": "Cupboard (Third classroom)",
    "rect": [
-    83.275,
-    67.107,
-    2,
-    1
+    82.247,
+    64.244,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -3297,14 +3315,14 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 60.0
+   "rotation": 150.0
   },
   {
    "id": "bata-house-1-living-room-f0",
    "label": "Cupboard (Living room)",
    "rect": [
-    36.125,
-    89.083,
+    35.884,
+    89.148,
     2,
     1
    ],
@@ -3322,7 +3340,7 @@
    "label": "Cupboard (Living room)",
    "rect": [
     99.099,
-    24.359,
+    23.969,
     2,
     1
    ],
@@ -3340,7 +3358,7 @@
    "label": "Cupboard (Neighbours' living room)",
    "rect": [
     100.459,
-    24.109,
+    23.969,
     2,
     1
    ],
@@ -3357,10 +3375,10 @@
    "id": "panel-block-1-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
-    100.82,
-    75.82,
-    2,
-    1
+    101.07,
+    75.32,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3369,7 +3387,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "panel-block-1-second-flat-f0",
@@ -3393,10 +3411,10 @@
    "id": "panel-block-1-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    97.68,
-    85.18,
-    2,
-    1
+    98.2,
+    84.68,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3405,16 +3423,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "panel-block-1-second-stair-core-f0",
    "label": "Cupboard (Second stair core)",
    "rect": [
-    101.82,
-    90.18,
-    2,
-    1
+    102.32,
+    89.68,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3423,34 +3441,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
-  },
-  {
-   "id": "panel-block-1-second-stair-core-f5",
-   "label": "Cupboard (Second stair core)",
-   "rect": [
-    99.82,
-    90.18,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "panel-block-1-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    101.07,
-    93.18,
-    2,
-    1
+    101.57,
+    92.68,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3459,14 +3459,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "panel-block-2-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
     33.32,
-    101.68,
+    100.18,
     2,
     1
    ],
@@ -3483,8 +3483,26 @@
    "id": "panel-block-2-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
+    41.82,
+    99.93,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f8",
+   "label": "Cupboard (Second flat)",
+   "rect": [
     41.32,
-    100.18,
+    103.43,
     2,
     1
    ],
@@ -3501,10 +3519,10 @@
    "id": "panel-block-2-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    42.68,
-    104.32,
-    2,
-    1
+    46.82,
+    100.43,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3513,16 +3531,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "panel-block-2-second-stair-core-f0",
    "label": "Cupboard (Second stair core)",
    "rect": [
-    47.68,
-    99.68,
-    2,
-    1
+    48.18,
+    99.18,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3531,14 +3549,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "panel-block-2-second-stair-core-f5",
    "label": "Cupboard (Second stair core)",
    "rect": [
-    47.68,
-    101.68,
+    49.32,
+    103.68,
     2,
     1
    ],
@@ -3786,6 +3804,24 @@
    "rotation": 0.0
   },
   {
+   "id": "cottage-14-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    86.458,
+    28.144,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 90.0
+  },
+  {
    "id": "cottage-15-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -4000,24 +4036,6 @@
     "fillPlace": "home"
    },
    "rotation": 60.0
-  },
-  {
-   "id": "cottage-17-cottage-f2",
-   "label": "Cupboard (Cottage)",
-   "rect": [
-    75.98,
-    32.646,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
   },
   {
    "id": "well",
