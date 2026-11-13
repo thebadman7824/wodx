@@ -146,7 +146,7 @@ Next free block: B3320
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3087) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -155,9 +155,11 @@ Next free block: B3320
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
+| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
+| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
@@ -4604,6 +4606,17 @@ Reverse: empty NOTES.
 A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
 
 Reverse: none needed; REFS starts empty.
+
+## B3086. Each gate in a batch starts from the world as it was (2026-11-13)
+The first long --touched runs (87 to 143 gates on one lane) failed about 30 gates that pass alone: earlier gates left 26 to 28 world settings changed, solo mode on, and venture and builder state behind. run-gate.mjs now puts back every world setting a gate changed and removes the ones it added, after each gate; on lanes that are reset every night (2 and 3) it also deletes the documents the gate left. Lane 1, where Ben plays, keeps its documents. --lanes 2,3 splits a long list over two lanes side by side. The two-browser gates (gatesolo, gatelookhand) leave the map, so --touched and --all no longer run them in a batch; they run by name, alone.
+
+Reverse: Remove the settings and documents step from run-gate.mjs and the two names from notGates in gate-map-extra.json.
+
+## B3087. The effects gate clears its own leftovers from the approval queue (2026-11-13)
+Step 6 of gateeffects counted every "WoDX gate" effect item waiting for approval, so items an earlier run left behind made it fail (4 found on the testbed). It now rejects those leftovers first and counts only the item it makes itself.
+
+Reverse: Count every "WoDX gate" effect item again in step 6.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -4720,6 +4733,11 @@ Desk item c2. When a fight with a player character ends, WoDX Combat writes one 
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
 
+## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
+Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
+
+Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.
+
 ## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
 WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
 
@@ -4769,6 +4787,26 @@ Reverse: remove the ties by hand on the Relationships tab.
 WoDX NPC adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
 
 Reverse: none needed.
+
+## B3290. The town generator takes a region (2026-11-13)
+tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
+
+Reverse: drop --region; every town is peopled from the Bohemian tables again.
+
+## B3291. Whose trades from 1919 follow who ruled (2026-11-13)
+tools/mapgen settle.py TRADE_PLAN, a house reading for review. Moravia keeps its tables. Poland and the Baltic, the Carpathians and Balkans and China take the socialist trades from 1948 to 1989; Russia, Central Asia and Siberia take them from 1919 to 1989 with no first republic. Every other region takes new post-war trades from 1948 to 1989: mayor, police officer, notary, factory owner, motor mechanic, television repairer and the like, with no national committee, Party secretary or co-operative farm. The age boundaries by region wait on the review desk.
+
+Reverse: every region takes the Bohemian years and trades.
+
+## B3292. Trades renamed by way of life (2026-11-13)
+tools/mapgen settle.py LOCAL, OUTSIDE and SOVIET. Only names that need no study: farmers grow rice in China, Korea, Japan, mainland Southeast Asia and the Malay world and barley in Tibet; in the lands of Islam there are no brewers, publicans or bars (cafés, tea houses and caravanserais instead); outside the Bohemian lands the reeve is a headman and the national committee a council; under the Soviets the farm is collective and the village has a soviet. Full trade lists for each way of life wait on the review desk.
+
+Reverse: drop the renames; every region uses the Bohemian names.
+
+## B3293. The Settlements review says whose trades a record follows (2026-11-13)
+WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
+
+Reverse: show the old sentence for every record.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
