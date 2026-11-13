@@ -45,7 +45,7 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 | Residents and clergy (NPC resident-rules) | Roles and clergy follow the church in Moravia | Open: by region, with the town generator |
 | Trades (Creation people.mjs) | One list of trades for each age, written with Europe in mind (village priest, man-at-arms) | Open: trades by region |
 | Start a chronicle (Storyteller setup) | Asked for Europe, the Americas or Elsewhere; the players' era primers describe Europe | Widened: asks for the homeland. Open: primers by region |
-| Lifepaths and Prelude (Creation, Chronicle pod) | Creation 0.17.0: the mortal years drill down from continent and region over all 44 world regions in every age, with shared lists everywhere and local origins and callings for six sample regions; the other 38 regions' local content and the sorting of the Bohemian scenes are open | Partly done |
+| Lifepaths and Prelude (Creation, Chronicle pod) | Creation 0.18.0: the mortal years drill down from continent and region over all 44 world regions in every age, and every region has its own ages, origins, teenage paths and callings; the older Bohemian scenes are still to be sorted into Moravia's local content | Done but for the Bohemian scenes |
 | Factions and politics (NPC) | Sect and faction names are the books' Western ones; no Wan Kuei courts, Laibon, Ashirra or Bastet-held lands as factions | Open: review desk |
 | Goods and gear (Library) | Mostly European and North American goods | Open: review desk |
 | Calendar (Chronicle) | Julian and Gregorian, with reform dates for a few lands; no Islamic, Hebrew, Chinese or other reckonings shown | Open: review desk |

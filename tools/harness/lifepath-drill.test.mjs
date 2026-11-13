@@ -246,6 +246,23 @@ test("the drill rides inside the path: the summary tells the mortal years, then 
   assert.ok(JSON.parse(JSON.stringify(rec)).path.drill, "the record survives saving");
 });
 
+test("every world region has its own ages, origins, teenage path and calling in every age", () => {
+  for ( const rid of Object.keys(WORLD_REGIONS) ) for ( const y of [1250, 1650, 1850, 1990, 2060] ) {
+    const L = D.localOf(rid, y);
+    if ( rid === "antarctica" && y < 1789 ) { assert.equal(L, null, "no one is born on the southern ice before the sealers"); continue; }
+    assert.ok(L?.age, `${rid} ${y}: an age name`);
+    assert.ok(L.origins.length >= 2, `${rid} ${y}: origins`);
+    assert.ok(L.teen && L.adult, `${rid} ${y}: a teenage path and a calling`);
+    assert.ok(D.originsFor(rid, y).filter(o => o.local).length >= 2);
+  }
+  const words = /\b(he|she|him|her|his|hers|himself|herself|son|daughter|mother|father|wife|husband|boy|girl|man|woman|men|women|sons|daughters)\b/i;
+  for ( const rid of Object.keys(WORLD_REGIONS) ) for ( const y of [1250, 1650, 1850, 1990, 2060] ) {
+    const L = D.localOf(rid, y);
+    if ( !L ) continue;
+    for ( const t of [L.age, ...L.origins.map(o => o[0]), L.teen[0], L.adult[0]] ) { assert.ok(!words.test(t), t); assert.ok(!/[\u2013\u2014]/.test(t), t); }
+  }
+});
+
 test("no gendered words and no option id twice in a step", () => {
   const words = /\b(he|she|him|her|his|hers|himself|herself|son|daughter|mother|father|wife|husband|boy|girl|man|woman)\b/i;
   for ( const rid of ["france", "japan", "west-africa", "andes", "levant", "north-america-west", "moravia", "india"] ) for ( const y of YEARS ) for ( const line of ["mortal", "werewolf", "mage"] ) {
