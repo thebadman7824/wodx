@@ -210,6 +210,8 @@ export function build(ctx) {
                 const marked = await setWitnessState(tgt, "forgot", actor.name);
                 if (marked) body += `<div class="vta-note">Masquerade: ${esc(tgt.name)} marked as made to forget (${marked} record${marked === 1 ? "" : "s"}).</div>`;
             }
+            // B3565: Aura Perception shows the black veins of a diablerist (V20 p. 294)
+            if (/aura perception/i.test(p.n) && tgt && successes > 0) body += ctx.api().debtsMarks?.()?.auraNote?.(tgt) ?? "";
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             if (!fx && p.r && !p.passive && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: "disc", id: p.id, name: p.n, line: "v20", successes, source: `VtDA20 p. ${p.p ?? "?"}` });
@@ -719,6 +721,11 @@ export function build(ctx) {
         const html = [`<p>Sunset${t.timeLabel ? ` at ${esc(t.timeLabel)}` : ""}: Cainites rise (Road 7+ just before, 4 or less up to an hour after; VtDA20 p. 113).</p>`];
         if (auto) await ctx.api().newNight({});
         else html.push(kbtn("newNight", null, "Run New Night"));
+        // B3563: the hour each one rises, by Humanity, Road or Path (V20 p. 311, V20 Dark Ages p. 113)
+        const risers = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor"));
+        const dmk = ctx.api().debtsMarks?.();
+        if (risers.length && dmk) html.push(`<p>Rising: ${dmk.riseLines(risers).join("; ")}.</p>`);
+        try { await dmk?.soulCards?.(); } catch (e) { console.warn("WoDX | diablerie", e); }
         const heal = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor") && (n(a.system?.health?.damage?.bashing) + n(a.system?.health?.damage?.lethal)));
         if (heal.length) html.push(`<p>Wounded on rising:</p><ul>${heal.map(a => `<li>${esc(a.name)} ${kbtn("riseHeal", a, "Heal with blood")}</li>`).join("")}</ul>`);
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Nightfall</h3>${html.join("")}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
@@ -839,7 +846,7 @@ export function build(ctx) {
         });
     }
 
-    return { useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 

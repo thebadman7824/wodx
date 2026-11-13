@@ -60,7 +60,11 @@ export function stateOf(actor) {
   const s = actor?.system ?? {}, own = actor?.flags?.[MOD]?.face64?.state ?? {};
   const demon = actor?.flags?.["wodx-actions"]?.demon ?? {};
   const scene = `${game.scenes?.viewed?.id ?? ""}:${Math.floor((game.time?.worldTime ?? 0) / 3600)}`;
-  return {...own, frenzy: !!s.conditions?.isfrenzy || !!own.frenzy, glabro: !!s.shapes?.glabro?.isactive || !!own.glabro,
+  // B3566: a vampire's low Humanity shows (Humanity only; Roads and Paths keep their own looks)
+  const path = s.advantages?.path ?? {}, pLabel = String(path.custom || path.label || "");
+  const isKindred = ["kindred", "nosferatu"].includes(P.lineOf({type: actor?.type ?? "", variant: `${s.settings?.variant ?? ""}`, clan: `${s.clan ?? ""}`, kind: kindText(actor)}));
+  const lowHumanity = isKindred && path.permanent !== undefined ? P.lowHumanityFor(path.permanent ?? path.value, {humanity: !pLabel || /humanity/i.test(pLabel)}) : 0;
+  return {...own, lowHumanity, frenzy: !!s.conditions?.isfrenzy || !!own.frenzy, glabro: !!s.shapes?.glabro?.isactive || !!own.glabro,
     visage: (!!demon.formScene && demon.formScene === scene) || !!own.visage};
 }
 /** What the viewer may see: the Storyteller sees all; a changeling sees the fae mien; one of the imbued sees a sigil. */
