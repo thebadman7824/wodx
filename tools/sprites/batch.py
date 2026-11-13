@@ -8,7 +8,7 @@ from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
 import proto_attacks as PA
 S,SH=Wr.S,Wr.SH
-VERSION=1
+VERSION=2
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -27,11 +27,13 @@ def hexs(v,dflt): return '#%02x%02x%02x'%rgb(v,rgb(dflt,(60,44,30)))
 def person(a):
     """the roster entry as a figure for wear.py, with the notes of what could not be drawn"""
     L=a.get('look') or {}; notes=[]
-    spec=dict(skin=rgb(L.get('skin'),(206,170,140)),hair=(hexs(L.get('hair'),'#3a2a1c'),L.get('hairStyle') or 'short'))
+    spec=dict(skin=rgb(L.get('skin'),(206,170,140)),hair=(hexs(L.get('hair'),'#3a2a1c'),L.get('hairStyle') if L.get('hairStyle') in('short','long','bun','bald') else 'short'))
     if L.get('beard'): spec['beard']=hexs(L.get('hair'),'#3a2a1c')
     worn=0
     for n in a.get('worn') or []:
-        p=It.ARMOR.get(n); p=dict(p[0] if isinstance(p,tuple) else p) if p else It.clothing(n)
+        dye=None
+        if isinstance(n,(list,tuple)): n,dye=n[0],('#'+str(n[1]).lstrip('#') if len(n)>1 and re.fullmatch(r'#?[0-9a-fA-F]{6}',str(n[1])) else None)
+        p=It.ARMOR.get(n); p=dict(p[0] if isinstance(p,tuple) else p) if p else It.clothing(n,dye)
         if p is None and n in It.SHIELD: p=dict(off=It.SHIELD[n])
         if p is None: notes.append('not drawn: '+n); continue
         spec.update({k:v for k,v in p.items() if k not in('small','note')}); worn+=1

@@ -1,5 +1,8 @@
 import * as D from "./doll-rules.mjs";
 import {registerSpriteSettings, startSprites, spriteApi} from "./sprites.mjs";
+import {makeFigureApp} from "./figure.mjs";
+import * as FG from "./figure-rules.mjs";
+import {SKIN_LIST, HAIR} from "./face-rules.mjs";
 import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
 
 /**
@@ -10,7 +13,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.11.0";
+export const VERSION = "0.12.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -327,6 +330,21 @@ export class PaperdollApp extends ApplicationV2 {
 
 /* ---- Hooks ---- */
 const canBuild = actor => !!actor?.isOwner && !!actor.system?.health;
+/* The figure menu (B2587): the whole figure a token walks as, put together by the character's player. */
+let FigureApp = null;
+const figureApp = () => (FigureApp ??= makeFigureApp({skin: SKIN_LIST.slice(0, 38), hair: Object.entries(HAIR),
+  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }}));
+const openFigure = actor => figureApp().open(actor);
+Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
+  if ( enabled() && canBuild(sheet.actor) && !buttons.some(b => b.class === "wodx-figure") )
+    buttons.unshift({label: "Figure", class: "wodx-figure", icon: "fa-solid fa-person", onclick: () => openFigure(sheet.actor)});
+});
+Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
+  if ( !enabled() || !canBuild(app.document) || controls.some(c => c.action === "wodxFigure") ) return;
+  const go = () => openFigure(app.document);
+  if ( app.options?.actions ) app.options.actions.wodxFigure = go;
+  controls.push({icon: "fa-solid fa-person", label: "Figure", action: "wodxFigure", onClick: go});
+});
 Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
   if ( !enabled() || !canBuild(sheet.actor) || buttons.some(b => b.class === "wodx-paperdoll") ) return;
   buttons.unshift({label: "Paperdoll", class: "wodx-paperdoll", icon: "fa-solid fa-user-pen", onclick: () => PaperdollApp.open(sheet.actor)});
@@ -357,7 +375,7 @@ Hooks.once("init", () => {
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi};
   startSprites();
   if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
 });

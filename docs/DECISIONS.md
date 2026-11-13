@@ -3309,6 +3309,13 @@ Ben chose batches on the PC over rewriting the drawing rig to run inside Foundry
 Not yet: dress by era and region for characters with nothing on, hair styles and beards from the portrait, Garou forms other than Homid, the other lines' true forms, and drawing a new batch without a job on the PC.
 Reverse: delete the world's wodx-sprites folder and clear the sprites from the tokens (api.sprites.clear).
 
+## B2587. The figure menu: players put their own figure together (2026-11-13, Ben's ask)
+
+A Figure button on any character sheet its player owns opens a window with three parts: the figure so far with skin, hair colour and how the hair is worn; the twelve places a piece can go (body, legs, feet, over all, head, face, neck, hands, belt, pinned on, in the hand, on the other arm); and the pieces for the chosen place, with a search box. Pieces are the wardrobe items the rig can draw (tools/sprites/catalogue.py writes the list and one small layer per piece to sprites/figure). The list shows the pieces in use in the chronicle's year, with a tick box for every age; clothing uses its own years, gear is offered from the first year of its earliest era on. Any piece can be dyed.
+The picture in the window is quick: ready layers laid over each other and tinted. Because Ben chose sprites drawn in batches on the PC (B2586), the walking sprite itself follows with the next batch; the window says so. The choice is kept on the actor as the flag figure, and the roster then describes that figure in place of the things marked as worn.
+Not yet: build and height, beards, a facing other than the front in the quick picture, and asking for a batch from inside the game.
+Reverse: remove the two header buttons in main.mjs; a kept figure is the flag figure on the actor.
+
 ## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
 The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
 Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.
