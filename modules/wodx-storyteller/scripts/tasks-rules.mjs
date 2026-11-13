@@ -56,6 +56,9 @@ export const KINDS = {
   // B3357: climbing an institution (institution-rules.mjs); the goal is set by the rank climbed to
   climb: {label: "Climb an institution", attr: "manipulation", ability: "politics", diff: 7, interval: "week", goal: 5, delicate: false, house: true, week: 3, target: true,
     ref: "Influence is pull in the mortal world (V20 pdf 122); a pawn named as the target climbs for the character, no higher than the character's Influence."},
+  // B3359: works on a haven (haven-works-rules.mjs); the goal is set by the upgrade
+  upgrade: {label: "Improve a haven", attr: "intelligence", ability: "crafts", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 2,
+    ref: "Domain, Chantry and Sanctum dots rate the place (V20 pdf 121; M20 pdf 302, 325); the works and their traces are the chronicle's own."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
@@ -102,7 +105,9 @@ export function normTask(t = {}) {
     target: t.target && typeof t.target === "object" && t.target.id ? {id: String(t.target.id).slice(0, 40), name: String(t.target.name ?? "").slice(0, 80)} : null,
     complications: Array.isArray(t.complications) ? t.complications.slice(-10).map(c => ({key: String(c?.key ?? "").slice(0, 20), text: String(c?.text ?? "").slice(0, 300), at: n(c?.at), botch: !!c?.botch})) : [],
     trouble: t.trouble !== false,
-    institution: String(t.institution ?? "").slice(0, 60)
+    institution: String(t.institution ?? "").slice(0, 60),
+    // B3359: the haven (a scene id) and the upgrade put in
+    haven: String(t.haven ?? "").slice(0, 40), upgrade: String(t.upgrade ?? "").slice(0, 30)
   };
 }
 

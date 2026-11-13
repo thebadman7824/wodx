@@ -34,6 +34,8 @@ import * as Moves from "./market-moves.mjs";
 import * as Caravans from "./caravans.mjs";
 import * as Ventures from "./ventures.mjs";
 import * as Inst from "./institutions.mjs";
+import * as Works from "./haven-works.mjs";
+import * as Omens from "./omens.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
@@ -113,6 +115,8 @@ Hooks.once("init", () => {
   Caravans.registerCaravanSettings();
   Ventures.registerVentureSettings();
   Inst.registerInstitutionSettings();
+  Works.registerWorksSettings();
+  Omens.registerOmenSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
@@ -120,6 +124,8 @@ Hooks.once("init", () => {
   Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
   Inst.registerInstitutionHooks();
+  Works.registerWorksHooks();
+  Omens.registerOmenHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
@@ -152,7 +158,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -214,6 +220,8 @@ Hooks.once("ready", () => {
     hunters: Hunters.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
+    havenWorks: Works.api(),
+    omens: Omens.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,

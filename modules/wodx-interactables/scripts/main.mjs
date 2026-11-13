@@ -1874,7 +1874,7 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
   game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
-  game.modules.get(MOD).api.caseBoard = setupCase();
+  game.modules.get(MOD).api.caseBoard = setupCase({characterFor});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
