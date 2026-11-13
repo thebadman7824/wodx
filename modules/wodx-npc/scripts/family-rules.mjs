@@ -96,3 +96,115 @@ export function storyHooks(lines = [], kid = null) {
 
 /** The plain line shown on the sheet for a pregnancy (no body detail). */
 export const expectingLine = (season, year) => `Expecting, due in ${season}${year ? ` ${year}` : ""}.`;
+
+/* ------------------------------------------------------------------ */
+/*  Child sheets and growing up (B3223-B3226)                          */
+/* ------------------------------------------------------------------ */
+
+export const ATTRIBUTES = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
+/** The highest an Attribute may be at an age: 1 to 6, 2 to 12, 3 to 17, and the adult limit after. */
+export const attrCap = age => (age < 7 ? 1 : age < 13 ? 2 : age < 18 ? 3 : 5);
+/** The highest an Ability may be: none above 1 before 10, none above 2 before 14, 3 to 17. */
+export const abilityCap = age => (age < 10 ? 1 : age < 14 ? 2 : age < 18 ? 3 : 5);
+/** Willpower rises with the years. */
+export const willpowerFor = age => (age < 7 ? 1 : age < 13 ? 2 : age < 18 ? 3 : 4);
+/** Dots above 1 the nine Attributes hold in all, by age: none, then 3, then 6, then the 15 of a grown mortal (7, 5 and 3). */
+export const attrDots = age => (age < 7 ? 0 : age < 13 ? 3 : age < 18 ? 6 : 15);
+/** The age bands a child passes through: each crossing brings an approval card. */
+export const BANDS = [7, 10, 13, 14, 18];
+export const bandsCrossed = (from, to) => BANDS.filter(b => from < b && to >= b);
+
+/** A seeded stream, the same for the same seed (mulberry32 over a string hash). */
+export function seeded(seed) {
+  let h = 1779033703 ^ String(seed).length;
+  for ( const c of String(seed) ) { h = Math.imul(h ^ c.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+  let a = h >>> 0;
+  return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+/**
+ * The update that fits a sheet to an age. attrs: {key: {value, bonus}}, abilities: {key: {value}}. Attributes are
+ * raised toward the age's total of dots (seeded, never lowered unless over the cap) and held to the cap; Abilities are
+ * held to the cap; Willpower is set for the age. Returns {"system.attributes.x.value": n, ...}.
+ */
+export function fitToAge(attrs = {}, abilities = {}, age = 0, seed = "child") {
+  const up = {}, cap = attrCap(age), want = attrDots(age);
+  const val = {};
+  for ( const k of ATTRIBUTES ) val[k] = Math.max(1, Math.min(cap, Number(attrs[k]?.value) || 1));
+  let have = ATTRIBUTES.reduce((s, k) => s + val[k] - 1, 0);
+  const rand = seeded(`${seed}:${age}`);
+  for ( let guard = 0; have < want && guard < 200; guard++ ) {
+    const open = ATTRIBUTES.filter(k => val[k] < cap);
+    if ( !open.length ) break;
+    const k = open[Math.floor(rand() * open.length)];
+    val[k]++; have++;
+  }
+  for ( const k of ATTRIBUTES ) {
+    if ( !attrs[k] ) continue;
+    if ( val[k] !== Number(attrs[k].value) ) {
+      up[`system.attributes.${k}.value`] = val[k];
+      up[`system.attributes.${k}.total`] = val[k] + (Number(attrs[k].bonus) || 0);
+    }
+  }
+  const ab = abilityCap(age);
+  for ( const [k, v] of Object.entries(abilities) ) if ( v && typeof v === "object" && Number(v.value) > ab ) up[`system.abilities.${k}.value`] = ab;
+  up["system.advantages.willpower.permanent"] = willpowerFor(age);
+  up["system.advantages.willpower.temporary"] = willpowerFor(age);
+  return up;
+}
+
+/** Natures a child may grow into (from the Archetypes; the darkest are left to the Storyteller). */
+export const CHILD_NATURES = ["Architect", "Autocrat", "Bon Vivant", "Bravo", "Caregiver", "Celebrant", "Child", "Competitor", "Conformist",
+  "Conniver", "Curmudgeon", "Director", "Fanatic", "Gallant", "Judge", "Loner", "Martyr", "Pedagogue", "Penitent", "Perfectionist",
+  "Rebel", "Rogue", "Survivor", "Thrill-Seeker", "Traditionalist", "Trickster", "Visionary"];
+export const NATURE_AGE = 13;
+export const pickNature = seed => CHILD_NATURES[Math.floor(seeded(`${seed}:nature`)() * CHILD_NATURES.length)];
+
+/** Lifepath scenes never offered to a child: anything about love, courting or marriage (the age floor, B3210). */
+export const ROMANTIC_SCENE = /love|court|marri|wed|betroth|suitor|romance|lover/i;
+export const childSafe = e => !!e && !ROMANTIC_SCENE.test(`${e.id} ${e.title} ${e.text ?? ""} ${(e.options ?? []).map(o => `${o.label} ${o.p ?? ""} ${o.text ?? ""}`).join(" ")}`);
+
+/** The Abilities a lifepath choice grants ("ab Crafts|bg Mentor" gives Crafts), as sheet keys. */
+export const abilityKey = name => String(name ?? "").toLowerCase().replace(/[^a-z]/g, "");
+export function grantsOf(g = "") {
+  const out = {abilities: [], other: []};
+  for ( const part of String(g).split("|").map(s => s.trim()).filter(Boolean) ) {
+    const [kind, ...rest] = part.split(" ");
+    if ( kind === "ab" ) out.abilities.push(rest.join(" "));
+    else out.other.push(part.replace(/^bg /, "Background: ").replace(/^merit /, "Merit: ").replace(/^flaw /, "Flaw: ").replace(/^note /, ""));
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Schooling and work by era (B3227)                                  */
+/* ------------------------------------------------------------------ */
+
+/** The year schooling became compulsory, by region (readings of history; the Storyteller may move a date). */
+export const COMPULSORY = {
+  "moravia": 1774, "german-lands": 1763, "scandinavia": 1814, "france": 1882, "british-isles": 1880, "italy": 1877, "iberia": 1857,
+  "low-countries": 1900, "russia": 1930, "north-america-east": 1852, "north-america-west": 1874, "canada": 1871, "australia": 1872,
+  "aotearoa": 1877, "japan": 1872, "korea": 1949, "china": 1986, "india": 2009, "mexico": 1917, "brazil": 1934, "southern-cone": 1884,
+  "southern-africa": 1905
+};
+export const COMPULSORY_DEFAULT = 1960;
+/**
+ * How a child of this year, place and way of life is schooled or set to work: {label, ability, from}. ability is the
+ * Ability the years most likely gave (a sheet key), from the age it starts.
+ */
+export function schoolingFor(year, region, sphere = "latin") {
+  const y = Number(year) || 0;
+  const law = COMPULSORY[region] ?? COMPULSORY_DEFAULT;
+  if ( y >= 2023 ) return {label: "schooling on the net and in the arcology classrooms", ability: "computer", from: 6};
+  if ( y >= 1950 && y >= law ) return {label: y >= 1990 ? "the modern school day, then computers" : "the modern school day", ability: y >= 1990 ? "computer" : "academics", from: 6};
+  if ( y >= law ) return {label: "compulsory school", ability: "academics", from: 6};
+  switch ( sphere ) {
+    case "islamic": case "malay": case "sahel": case "swahili": return {label: "the kuttab, the Qur'an school, or the family trade", ability: "academics", from: 6};
+    case "sinic": return {label: "the clan school for the classics, or the fields", ability: "academics", from: 7};
+    case "japanese": return y >= 1600 ? {label: "the temple school (terakoya), or the family trade", ability: "academics", from: 7} : {label: "the household, the temple or the fields", ability: "crafts", from: 7};
+    case "indic": return {label: "the teacher's house, or the family's trade", ability: "crafts", from: 7};
+    case "latin": case "orthodox":
+      return y < 1500 ? {label: "an apprentice, a page or a novice", ability: "crafts", from: 7} : {label: "the parish school, a guild or service in a household", ability: "crafts", from: 7};
+    default: return {label: "learning at the family's side", ability: "survival", from: 6};
+  }
+}

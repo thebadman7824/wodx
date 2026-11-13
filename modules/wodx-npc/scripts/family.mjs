@@ -12,6 +12,8 @@ import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 const MOD = "wodx-npc";
 const SOCKET = `module.${MOD}`;
 const ASK_CHILD = "wodx-npc.family-child";
+const GROW = "wodx-npc.family-grow";
+const YEAR_SECONDS = 365.25 * 86400;
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
 const actorOf = x => (x?.actor ?? (typeof x === "string" ? game.actors.get(x) : x?.id ? game.actors.get(x.id) ?? x : null));
@@ -133,6 +135,8 @@ export function lines(aLike) {
   const out = [];
   const rec = expectingOf(a);
   if ( rec ) out.push(F.expectingLine(rec.season, rec.dueYear));
+  const kid = childSheetOf(a), age = ageOf(a);
+  if ( kid && !kid.grown && age !== null && age < 18 ) out.push(`A child of ${age}: Attributes up to ${F.attrCap(age)}, Abilities up to ${F.abilityCap(age)}. Grows up with the years.`);
   const rest = a?.flags?.[MOD]?.lyingIn;
   if ( rest && Number(rest.until) > (Number(game.time.worldTime) || 0) ) {
     const d = dateOf(rest.until);
@@ -162,9 +166,135 @@ async function onAsk(m) {
     detail: "Approving starts a pregnancy; the birth comes about nine months later on the clock.", data: {a: a.id, b: b.id, from: m.userId ?? null}});
 }
 
+/* ---- Child sheets and growing up (B3223-B3227) ---- */
+const bornOf = a => { const v = a?.flags?.["wodx-creation"]?.chronology?.bornYear; return v === null || v === undefined || v === "" ? null : Number(v); };
+export const childSheetOf = aLike => actorOf(aLike)?.flags?.[MOD]?.childSheet ?? null;
+export const ageOf = (aLike, year = yearNow()) => { const b = bornOf(actorOf(aLike)); return b === null ? null : Math.max(0, Number(year) - b); };
+
+/**
+ * Make a sheet a child's sheet: the Storyteller's minor mark (so the age floor holds with no birth year), Attributes,
+ * Abilities and Willpower fitted to the age, and a record of the years. A birth makes one; the Storyteller can make any.
+ */
+export async function makeChild(aLike, {bornYear = null} = {}) {
+  const a = actorOf(aLike);
+  if ( !game.user.isGM || !a ) return null;
+  if ( bornYear !== null ) await a.setFlag("wodx-creation", "chronology", {...(a.flags?.["wodx-creation"]?.chronology ?? {}), bornYear: Number(bornYear)});
+  const age = ageOf(a) ?? 0;
+  if ( age >= 18 ) return {ok: false, why: [`${a.name} is ${age}, already grown.`]};
+  const seed = childSheetOf(a)?.seed ?? foundry.utils.randomID();
+  await a.update({...F.fitToAge(a.system?.attributes, a.system?.abilities, age, seed), "flags.wodx-chronicle.minor": true,
+    [`flags.${MOD}.childSheet`]: {seed, since: yearNow(), history: childSheetOf(a)?.history ?? [], grown: null}});
+  return {ok: true, age};
+}
+
+/** What the years from one age to another bring a child: a lifepath scene, schooling, a Nature, coming of age. */
+export async function growthPlan(aLike, toYear) {
+  const a = actorOf(aLike), sheet = childSheetOf(a), born = bornOf(a);
+  if ( !a || !sheet || sheet.grown || born === null ) return null;
+  const from = ageOf(a), to = Math.max(0, Number(toYear) - born);
+  const bands = F.bandsCrossed(from, to);
+  if ( !bands.length ) return null;
+  const region = regionNow(), sphere = sphereNow(region, toYear);
+  const rand = F.seeded(`${sheet.seed}:${to}`);
+  let scene = null;
+  try {
+    const LP = await import("../../wodx-creation/scripts/lifepath-rules.mjs");
+    const stage = to >= 13 || from >= 12 ? "youth" : "birth";
+    const path = LP.newPath({line: "mortal", birthYear: born, seed: sheet.seed});
+    const flags = LP.flagsOf(path);
+    const year = born + (stage === "youth" ? 12 : 0);
+    const pool = LP.allEvents().filter(e => LP.fits(e, path, stage, flags, year) && F.childSafe(e));
+    const e = pool.length ? pool[Math.floor(rand() * pool.length)] : null;
+    if ( e ) { const i = Math.floor(rand() * (e.options?.length || 1)); const o = e.options?.[i]; scene = {id: e.id, title: e.title, choice: o?.label ?? "", grants: F.grantsOf(o?.g)}; }
+  } catch (err) { scene = null; }
+  const school = F.schoolingFor(toYear, region, sphere);
+  const nature = to >= F.NATURE_AGE && !String(a.system?.nature ?? "").trim() ? F.pickNature(sheet.seed) : "";
+  return {id: a.id, name: a.name, from, to, toYear: Number(toYear), bands, scene, school: to >= school.from ? school : null, nature, grown: to >= 18};
+}
+export const planLines = p => [
+  `${p.name}: from ${p.from} to ${p.to} years old.`,
+  ...(p.scene ? [`The years: ${p.scene.title}. ${p.scene.choice}.${p.scene.grants.abilities.length ? ` Gains ${p.scene.grants.abilities.join(" and ")}.` : ""}${p.scene.grants.other.length ? ` Notes: ${p.scene.grants.other.join(", ")}.` : ""}`] : []),
+  ...(p.school ? [`Schooling or work: ${p.school.label}.`] : []),
+  ...(p.nature ? [`A Nature shows: ${p.nature}.`] : []),
+  ...(p.grown ? ["Grown: now an adult. The child mark comes off; make them a player character through the character wizard if you wish."] : [])
+];
+
+/** Apply an approved plan: fit the sheet to the new age, add the Abilities the years gave (within the age's cap), the Nature, and coming of age. */
+export async function applyGrowth(plan) {
+  const a = game.actors.get(plan?.id);
+  if ( !game.user.isGM || !a || !childSheetOf(a) ) return null;
+  const sheet = childSheetOf(a), cap = F.abilityCap(plan.to);
+  const up = F.fitToAge(a.system?.attributes, a.system?.abilities, plan.to, sheet.seed);
+  const abs = a.system?.abilities ?? {};
+  const gain = [...(plan.scene?.grants?.abilities ?? []).map(F.abilityKey), ...(plan.school ? [plan.school.ability] : [])];
+  for ( const k of gain ) {
+    if ( !abs[k] || typeof abs[k] !== "object" ) continue;
+    const was = Number(up[`system.abilities.${k}.value`] ?? abs[k].value) || 0;
+    up[`system.abilities.${k}.value`] = Math.min(cap, was + 1);
+  }
+  if ( plan.nature ) up["system.nature"] = plan.nature;
+  const history = [...(sheet.history ?? []), {to: plan.to, year: plan.toYear, lines: planLines(plan).slice(1)}].slice(-20);
+  up[`flags.${MOD}.childSheet`] = {...sheet, history, grown: plan.grown ? plan.toYear : null};
+  await a.update(up);
+  if ( plan.grown ) await a.unsetFlag("wodx-chronicle", "minor");
+  Hooks.callAll("wodxGrownUp", {actor: a, plan});
+  return {ok: true, grown: !!plan.grown};
+}
+
+/** On a skip of whole years: one approval card for each child whose age crosses a band. */
+export async function onSkipEnd(info = {}) {
+  if ( !isActiveGM() ) return [];
+  if ( !((Number(info.to) - Number(info.from)) / YEAR_SECONDS >= 1) ) return [];
+  const toYear = dateOf(info.to).year, out = [];
+  for ( const a of game.actors ) {
+    if ( !childSheetOf(a) || childSheetOf(a).grown ) continue;
+    const plan = await growthPlan(a, toYear);
+    if ( !plan ) continue;
+    await chron()?.propose?.({type: GROW, key: `${GROW}.${a.id}.${toYear}`, title: `The years for ${a.name} (${plan.from} to ${plan.to})`, detail: planLines(plan).join("\n"), data: {plan}});
+    out.push(plan);
+  }
+  return out;
+}
+
+/* ---- Players playing children (B3228) ---- */
+const childPCs = () => { try { return !!game.settings.get(MOD, "childCharacters"); } catch (e) { return false; } };
+function minorAfter(actor, change) {
+  const rules = chron()?.age?.rules;
+  if ( !rules ) return false;
+  const merged = foundry.utils.mergeObject(actor.toObject(), foundry.utils.deepClone(change ?? {}), {inplace: false});
+  return rules.isMinor(rules.ageFacts(merged, t => dateOf(t).year), yearNow());
+}
+const playerOwners = own => Object.entries(own ?? {}).filter(([id, lvl]) => id !== "default" && Number(lvl) >= 3 && !game.users.get(id)?.isGM).map(([id]) => id);
+export function guardChildCharacters() {
+  Hooks.on("preCreateActor", doc => {
+    if ( childPCs() || game.user.isGM ) return;
+    if ( minorAfter(doc, {}) ) { ui.notifications?.warn?.("The Storyteller has not opened child characters to players. A character must be 18 or older."); return false; }
+  });
+  Hooks.on("preUpdateActor", (actor, change) => {
+    if ( childPCs() ) return;
+    const players = change?.ownership ? playerOwners(change.ownership) : [];
+    if ( players.length && minorAfter(actor, change) ) {
+      for ( const id of players ) delete change.ownership[id];
+      ui.notifications?.warn?.(`${actor.name} is under 18, and child characters are not open to players (a world setting).`);
+    }
+    if ( !game.user.isGM && foundry.utils.hasProperty(change, "flags.wodx-creation.chronology.bornYear") && minorAfter(actor, change) ) {
+      delete change.flags["wodx-creation"].chronology.bornYear;
+      ui.notifications?.warn?.("The Storyteller has not opened child characters to players. A character must be 18 or older.");
+    }
+  });
+}
+export function registerSettings() {
+  game.settings.register(MOD, "childCharacters", {scope: "world", config: true, type: Boolean, default: false,
+    name: "Players may play children", hint: "Off: no player may own or make a character under 18. On: they may, and a child character still never takes part in anything romantic or sexual."});
+}
+
 let timer = null;
 export function listen() {
+  registerSettings();
+  guardChildCharacters();
+  Hooks.on("wodxSkipEnd", info => { onSkipEnd(info).catch(e => console.error(`${MOD} | growing up`, e)); });
   Hooks.once("ready", () => {
+    chron()?.registerApprovalHandler?.(GROW, {label: "A child grows up", approve: e => applyGrowth(e.data?.plan), reject: async () => "Left as it was"});
     chron()?.registerApprovalHandler?.(ASK_CHILD, {label: "A child asked for by players", approve: e => conceive(e.data?.a, e.data?.b)});
     game.socket.on(SOCKET, m => { if ( isActiveGM() && m?.type === "family.child" ) onAsk(m).catch(e => console.error(`${MOD} | family`, e)); });
   });

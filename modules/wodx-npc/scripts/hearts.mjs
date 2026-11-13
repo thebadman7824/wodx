@@ -140,10 +140,16 @@ export async function haveChild(aLike, bLike, {name = "", sex = "", lines = null
   if ( !kid ) return {ok: false, why: "One of them cannot have children."};
   const year = yearNow();
   const nm = name || (a.id === b.id ? `Child of ${a.name.split(" ")[0]}` : `Child of ${a.name.split(" ")[0]} and ${b.name.split(" ")[0]}`);
-  const [c] = await Actor.createDocuments([{name: nm, type: kid.line === "werewolf" ? "Werewolf" : "Mortal", ownership: a.ownership,
+  // B3228: unless the Storyteller opened child characters to players, the parents' players may look at the child's sheet but not own it
+  let open = false;
+  try { open = !!game.settings.get(MOD, "childCharacters"); } catch (e) { open = false; }
+  const own = open ? a.ownership : Object.fromEntries(Object.entries(a.ownership ?? {}).map(([k, v]) => [k, k !== "default" && Number(v) >= 3 && !game.users.get(k)?.isGM ? 2 : v]));
+  const [c] = await Actor.createDocuments([{name: nm, type: kid.line === "werewolf" ? "Werewolf" : "Mortal", ownership: own,
     flags: {"wodx-creation": {chronology: {bornYear: year}, ...(sex ? {sex} : {}), ...(kid.line === "kinfolk" ? {lineage: {kinfolk: true}} : {})},
       [MOD]: {child: {kind: kid.kind, note: kid.note, parents: [a.id, b.id]}, ...(kid.line === "kinfolk" ? {kinfolk: true} : {})}}}]);
   await addHandTie(c, a, "parent"); if ( b.id !== a.id ) await addHandTie(c, b, "parent");
+  // B3223: a newborn is a child sheet, marked so the age floor always knows
+  try { await api()?.family?.makeChild?.(c); } catch (e) { console.error(`${MOD} | child sheet`, e); }
   await ChatMessage.create({whisper: [...new Set([...ownersOf(a), ...ownersOf(b)])], speaker: {alias: "WoDX"}, content: card(`${a.name} and ${b.name} have a child`, [nm + ".", ...(kid.note ? [kid.note] : [])])});
   return {ok: true, child: c, kind: kid};
 }
