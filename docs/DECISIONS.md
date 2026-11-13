@@ -155,9 +155,10 @@ Next free block: B3320
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
-| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
+| B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
+| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
@@ -4720,11 +4721,6 @@ Desk item c2. When a fight with a player character ends, WoDX Combat writes one 
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
 
-## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
-Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
-
-Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.
-
 ## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
 WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
 
@@ -4744,6 +4740,56 @@ Reverse: drop worshipFor from plan in adopt-rules.mjs.
 Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
 
 Reverse: remove the --faith argument.
+
+## B3210. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
+WoDX Chronicle (age-rules.mjs, age.mjs). Ben asked whether under-age characters are kept out of romantic and sexual situations; they were not. Now nothing romantic or sexual may involve anyone under 18: courting and warmth, a lover, spouse or troth tie, marriage, having a child, seduction, and the feeding that follows a seduction. The floor is the same in every era and region. The coming-of-age ages of older centuries stay in the lifepath only and never lower it, and the marriage law tables never model child marriage. This is a project rule, not a house rule of the books, and no setting turns it off.
+
+Reverse: none. This stays.
+
+## B3211. Who counts as under 18 (2026-11-13)
+A character counts as a minor when any sign says so: a birth year that makes them under 18 in the year shown; for Kindred, being under 18 at the Embrace, and for the walking dead, being under 18 at death, because the body stopped there; a child role from the town's residents, the child behaviour or routine, or a child made by WoDX NPC that has no birth year; or the Storyteller's own mark (flags.wodx-chronicle.minor = true). A character with no sign counts as an adult, because most townsfolk carry no birth year. The Storyteller's mark can only make someone a minor. WoDX NPC refuses courting, marriage and having a child, and WoDX Actions 3.63.0 refuses Seduction (and so the Siren's feeding after it) when either side is a minor, with a short note to whoever tried. Without the Chronicle check, these refuse rather than allow.
+
+Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet its birth year.
+
+## B3212. Romantic ties to a minor are never kept (2026-11-13)
+WoDX Chronicle guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
+
+Reverse: none.
+
+## B3213. Adoption of children and adults by the law of the place and year (2026-11-13, Ben approved)
+WoDX NPC (hearts-rules.mjs SPHERE_ADOPTION, REGION_ADOPTION, adoptionLaw, canAdopt; hearts.mjs adopt). Each way of life has its own way of taking in a child: full adoption, fostering or wardship, or kafala, the Islamic guardianship in which the child keeps their own name. Adult adoption is allowed where the law allows it, as with the grown heir of a Japanese house or a French adult adoption after 1804. Dated changes by region follow the civil codes: Moravia 1811, France 1804 and 1923, England 1926, Soviet Russia's ban from 1918 to 1926, and others. From 2100 every way of life allows full adoption. These are readings of history in WoDX's own words, and the Storyteller may move a date.
+
+Reverse: edit SPHERE_ADOPTION or REGION_ADOPTION.
+
+## B3214. Who may adopt, and what the ties mean (2026-11-13)
+The one adopting must be an adult (the age floor of B3210) and, where both birth years are known, older than the one adopted. Full adoption and adult adoption make Parent and Child ties, so wills count the adopted one as a child and heir. Fostering, wardship and kafala make the new Guardian and Ward ties, which are family but not heirs by law; a will can still leave a ward a share. Each adoption is kept on both sheets (flags.wodx-npc.adoptions), a card goes to the owners, and the hook wodxAdopted is called.
+
+Reverse: remove the ties by hand on the Relationships tab.
+
+## B3215. Guardian and Ward tie kinds (2026-11-13)
+WoDX NPC adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
+
+Reverse: none needed.
+
+## B3290. The town generator takes a region (2026-11-13)
+tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
+
+Reverse: drop --region; every town is peopled from the Bohemian tables again.
+
+## B3291. Whose trades from 1919 follow who ruled (2026-11-13)
+tools/mapgen settle.py TRADE_PLAN, a house reading for review. Moravia keeps its tables. Poland and the Baltic, the Carpathians and Balkans and China take the socialist trades from 1948 to 1989; Russia, Central Asia and Siberia take them from 1919 to 1989 with no first republic. Every other region takes new post-war trades from 1948 to 1989: mayor, police officer, notary, factory owner, motor mechanic, television repairer and the like, with no national committee, Party secretary or co-operative farm. The age boundaries by region wait on the review desk.
+
+Reverse: every region takes the Bohemian years and trades.
+
+## B3292. Trades renamed by way of life (2026-11-13)
+tools/mapgen settle.py LOCAL, OUTSIDE and SOVIET. Only names that need no study: farmers grow rice in China, Korea, Japan, mainland Southeast Asia and the Malay world and barley in Tibet; in the lands of Islam there are no brewers, publicans or bars (cafés, tea houses and caravanserais instead); outside the Bohemian lands the reeve is a headman and the national committee a council; under the Soviets the farm is collective and the village has a soviet. Full trade lists for each way of life wait on the review desk.
+
+Reverse: drop the renames; every region uses the Bohemian names.
+
+## B3293. The Settlements review says whose trades a record follows (2026-11-13)
+WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
+
+Reverse: show the old sentence for every record.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
