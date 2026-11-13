@@ -555,7 +555,7 @@ export function build(ctx) {
             const rr = await rollPool(pool.dice, diff);
             let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll];
             if (rr.successes > 0) {
-                const gr = await rollPool(info(actor).gnosis.perm, 6);
+                const gr = await rollPool(effectiveGnosis(actor), 6);
                 rolls.push(gr.roll);
                 body += rollBlock("Gnosis", gr, ["the spirit's attitude"]) + `<div class="vta-big">${esc(G.summonAttitude(gr.successes, D.summoning))}</div>`;
                 if (["Incarna", "Celestine avatar"].includes(fd.type)) body += `<div class="vta-note">Summoning an Incarna or Celestine earns Wisdom.</div>`;
@@ -585,9 +585,10 @@ export function build(ctx) {
                 woke = true;
                 body += `<div class="vta-parts">${esc(note)}</div><div class="vta-big good">It wakes.</div>`;
             } else {
-                const rr = await rollPool(info(actor).gnosis.perm, gn);
+                const sp = silverPenalty(actor);
+                const rr = await rollPool(effectiveGnosis(actor), gn);
                 rolls.push(rr.roll);
-                body += rollBlock("Gnosis", rr, [`difficulty ${gn}`]);
+                body += rollBlock("Gnosis", rr, [`difficulty ${gn}`, ...(sp ? [`${sp} less for silver carried`] : [])]);
                 if (rr.successes > 0) {
                     if (fd.how === "attune") { await it.setFlag?.(MOD, "attuned", true); body += `<div class="vta-big good">Attuned (and dedicated).</div>`; }
                     else { woke = true; body += `<div class="vta-big good">It wakes.</div>`; }
@@ -858,6 +859,23 @@ export function registerSettings(register) {
 /*  For WoDX Combat                                                    */
 /* ------------------------------------------------------------------ */
 
+/**
+ * B3636: Gnosis the bearer loses to silver fetishes WoDX made (klaive 1, grand klaive 2; W20 pdf 227 to 228), for any
+ * shapechanger that fears silver. A made fetish and its weapon are one thing (flags.wodx-library.wonder).
+ */
+export function silverPenalty(actor) {
+    if (!banesOf(actor).includes("silver")) return 0;
+    const seen = new Set(); let klaive = 0, grand = 0;
+    for (const it of actor?.items ?? []) {
+        const f = it?.flags?.["wodx-library"]?.wonder;
+        if (!f?.silver || seen.has(`${f.key}|${f.at ?? ""}`)) continue;
+        seen.add(`${f.key}|${f.at ?? ""}`);
+        if (f.silver >= 2) grand++; else klaive++;
+    }
+    return G.silverGnosisPenalty({ klaive, grand });
+}
+/** Gnosis as dice, less carried silver. */
+export const effectiveGnosis = actor => Math.max(0, info(actor).gnosis.perm - silverPenalty(actor));
 /** The bane metals this shapechanger fears (Garou: silver; Corax: gold; Mokole: both). */
 export function banesOf(actor) {
     return info(actor).fera?.bane ?? ["silver"];

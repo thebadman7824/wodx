@@ -1259,3 +1259,8 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | Kinfolk making fetishes and talens (Item Crafting Desk w5; W20 Kinfolk not readable yet, B3634) | Kinfolk with at least 1 permanent Gnosis who know the rite and have the Rituals use the same task as Garou | Edit MAKERS.kinfolk and makerOf in modules/wodx-library/scripts/wonder-rules.mjs after the W20 Kinfolk check |
+| 2026-11-13 | Which stronger spirit adds how many talens (W20 pdf 229 says two or three, B3633) | A Jaggling adds two, a greater spirit three | Edit TALEN_EXTRA in modules/wodx-library/data/wonders.mjs |
+| 2026-11-13 | Fetish rows where the book leaves something open (B3632) | Feathered Cloak takes a bird-spirit; the PUDA exists from 1985; the Fang Dagger strikes as a dagger (Strength + 1); Blade of the Kings at Strength + 2; the spirit for Devil's Deck, Grandmother's Stones, Sliver of Helios, Yantra, Pipes of Kokopelli and Net of Vengeance is WoDX's reading. Each is marked house in the table | Edit those rows in modules/wodx-library/data/wonders.mjs |
+| 2026-11-13 | Gnosis spent at a binding (B3631) | A fetish's permanent Gnosis and a talen's temporary Gnosis are paid when the rite ends, success or botch; a botch also costs a little standing with the spirit's court, and forcing a spirit in costs more | Edit finished() in modules/wodx-storyteller/scripts/wonders.mjs |
+| 2026-11-13 | Fetishes that work only for one sex (Labrys of Isthmene, B3632) | Following Ben's gender rule, a player character's gender never stops it; only an NPC's recorded gender gives the Storyteller a caution | Edit cautions() in modules/wodx-library/scripts/wonder-rules.mjs |
