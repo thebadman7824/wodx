@@ -179,7 +179,7 @@ Next free block: B3630
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3601) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5574,5 +5574,10 @@ Reverse: edit the lists in data/people-algonquian.mjs.
 
 ## B3600. Steppe and northern Asia law family (2026-11-13)
 Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3601. Americas law family (2026-11-13)
+The eight American regions use the Americas family: the first peoples' councils and custom, then each region's empire, colonial law and republic, with modern police from 1900. New ids: marshals, alcohol.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
