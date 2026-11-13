@@ -39,8 +39,8 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 | Country map and town generator (Storyteller, tools/mapgen) | The country map's bounds are 12 to 20 east and 47.4 to 51.2 north; towns, roads, rails and airfields are Moravia's | In hand in the maps thread, with a rough world map asked for by Ben |
 | Settlement generator (NPC settlement, tools/mapgen ddsettle) | Towns, buildings and street names follow Moravia only | Open in the maps thread: other regions are listed in its decision B2529 |
 | Church year (Chronicle church-rules) | The Western church year only: feasts, fasts and nights of revel | Open: other calendars of faith by region |
-| How fast word travels (Chronicle media-rules) | Printing, papers, radio, television and the internet dated for the Czech lands | Open: dates by region |
-| Travel (Storyteller road-rules) | Railway, tram and motorway years follow Moravia | Open: dates by region |
+| How fast word travels (Chronicle media-rules) | Printing, papers, radio, television and the internet dated for the Czech lands | Widened: years for all 44 regions (Chronicle 0.50.0, B2570) |
+| Travel (Storyteller road-rules) | Railway, tram and motorway years follow Moravia | Widened: railway, tram, motorway, car, lit and paved road years for all 44 regions (Storyteller 0.57.0, B2571); the Moravian country map is the maps thread's |
 | Passers-by (NPC passerby-rules) | Faith and origin follow Moravia's history; clothes are central European | Open: by region |
 | Residents and clergy (NPC resident-rules) | Roles and clergy follow the church in Moravia | Open: by region, with the town generator |
 | Trades (Creation people.mjs) | One list of trades for each age, written with Europe in mind (village priest, man-at-arms) | Open: trades by region |
@@ -59,7 +59,7 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 Review desk for the scope calls below (eight questions, picks saved in its `verdicts` collection, one doc per question id): https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn
 
 - Timeline events for the Americas, Africa and Oceania in the Future Darkness branch (1990 to 2099), and a book check of the eight new cards that carry a World of Darkness reading.
-- The spread of news and travel dates by region; NPC routines by faith (prayer times, the Sabbath, Friday prayer in place of Sunday Mass).
+- Built 13 November 2026: the spread of news and travel dates by region, and NPC routines by faith (Friday prayer, the Sabbath, temple days; Chronicle 0.50.0, Storyteller 0.57.0, NPC 0.49.0, B2570 to B2573). Still open: the five daily prayers for every Muslim NPC, Ramadan's night hours, a place kind of its own for mosques, synagogues and temples.
 - Passers-by, residents, clergy and trades by region.
 - Money: purses are not converted when a character travels; Korea, Southeast Asia and the Malay world borrow China's money, Hungary and the Balkans Moravia's, Greece the Ottoman lands', and the Caribbean and the Andes Mexico's.
 - Peoples WoDX has no names for yet: the first nations of North America and the Caribbean, Aboriginal Australians, the peoples of central Africa, the Maya, the Berbers, Armenians, Sephardi and Mizrahi Jews, Khmer, Filipinos, and the Inuit and other peoples of the far north.

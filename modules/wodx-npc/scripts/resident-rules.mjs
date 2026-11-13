@@ -10,7 +10,7 @@
  * 1995 differ without anything set here. House readings (PENDING-REVIEW): which trades work at home, the routine
  * each role keeps, a partner being of the other sex nine times in ten, and the family names a household shares.
  */
-import {PRESETS} from "./routine-rules.mjs";
+import {PRESETS, originFaith} from "./routine-rules.mjs";
 import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
@@ -255,7 +255,9 @@ export function residentFlags(person, h, scene) {
   return {
     behavior: {template: plan.template, household: h.household.label.slice(0, 60)},
     routine: {on: true, mode: null, preset: plan.preset, age: null, roles: {...plan.roles}, blocks: null},
-    resident: {scene, region: h.region, household: h.household.id, role: plan.role, master: plan.master}
+    resident: {scene, region: h.region, household: h.household.id, role: plan.role, master: plan.master,
+      // NPC 0.49.0 (B2572): a household whose origin keeps another faith than the land's (a Jewish family in Brno)
+      ...(originFaith(person.origin) ? {faith: originFaith(person.origin)} : {})}
   };
 }
 
