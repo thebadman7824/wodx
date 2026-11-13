@@ -345,3 +345,572 @@
 -900|H|mor|AM|La Venta|building|La Venta|Olmec power moves to La Venta, with its clay pyramid and offerings of buried jade.
 -900|H|mor|AF|Lake Victoria|industry,migration|Iron by the great lakes|Smiths around Lake Victoria smelt iron, and Bantu-speaking farmers carry it south and west.
 -850|H|mor|AS|Tonga|sea,exploration|Tonga and Samoa settled|Lapita sailors reach Tonga and Samoa, the far edge of the Pacific for a thousand years.
+# Before the Flood, to 300 events (Ben 2026-11-12 23:38Z: every early era meets the 300 threshold)
+-10000|H|mor|AS|Ohalo|founding|Huts by the Sea of Galilee|Earlier hunters at Ohalo left brush huts and ground wild barley; their heirs settle the same shores.
+-10000|H|mor|AM|Monte Verde|founding|Monte Verde|A camp of tents and hearths in southern Chile shows people at the far end of the Americas.
+-10000|H|mor|AF|Lake Turkana|migration|Fishers of the green lakes|Harpoon fishers live along the swollen lakes of east Africa.
+-10000|H|mor|AS|Siberia|migration|Mammoth hunters of the north|Hunters on the Siberian steppe build huts of mammoth bone.
+-10000|H|mor|EU|Lascaux|art,faith|The painted caves grow old|The great painted caves of France and Spain are already thousands of years old.
+-10000|W|wer|EU|Lascaux|occult,art|Spirits on the cave walls|Garou lorekeepers read the painted beasts as the first record of the spirits humans saw.
+-10000|W|cha|EU|Europe|occult,faith|The Dreaming unbroken|Kithain say that in these years every child's dream crossed freely into the waking world.
+-9900|H|mor|AS|Zhoukoudian|death|The Upper Cave burials|Hunters near later Beijing bury their dead with beads and red ochre.
+-9800|H|mor|ME|Zagros Mountains|founding|Shanidar's hunters|Hunters in the caves of the Zagros begin to stay through the year.
+-9700|H|mor|EU|Scandinavia|migration|The ice gives up the north|Reindeer hunters follow the melting ice into Denmark and southern Sweden.
+-9600|H|mor|ME|Abu Hureyra|science|Rye at Abu Hureyra|Villagers on the Euphrates are among the first to plant rye when wild food fails.
+-9600|W|mag|ME|Euphrates|occult,science|The first sowing as a working|Verbena tell that the first seed sown on purpose was an act of will over the world.
+-9500|H|mor|AS|Japan|art|Clay figures of Japan|Jomon hunters shape small clay figures with swollen bodies and blank faces.
+-9500|H|mor|AM|Clovis|migration|The great beasts vanish|Mammoths, horses and giant sloths die out across the Americas as hunters spread.
+-9500|W|wer|AM|Americas|occult,death|The beasts the Garou lost|Uktena tales mourn the great beasts of the Americas, and blame neither humans nor the cold alone.
+-9400|H|mor|ME|Gilgal|science|Figs at Gilgal|Villagers near Jericho keep figs that only grow from cuttings, the oldest tended tree.
+-9300|H|mor|AS|Korea|art|The first pots of Korea|Hunters on the Korean coast fire clay pots.
+-9200|H|mor|AF|Sahara|weather|Rains return to the Sahara|Monsoon rains spread north; lakes and rivers fill the Sahara.
+-9000|H|mor|ME|Nevali Cori|faith,building|The temple at Nevali Cori|Villagers near Gobekli Tepe build a cult house with carved pillars of their own.
+-9000|H|mor|AS|Indonesia|sea|The drowned plain of Sunda|Rising seas cover the land bridge that joined Java, Sumatra and Borneo.
+-9000|W|kue|AS|Middle Kingdom|occult|The Wan Kuei before the cycle|Kuei-jin legend holds that the dead of this age rose hungry with no court to guide them.
+-8800|H|mor|ME|Cyprus|sea,migration|Farmers sail to Cyprus|Farmers cross the sea to Cyprus with cattle, deer and goats.
+-8700|H|mor|ME|Zagros Mountains|science|Pigs tamed|Wild boar are bred into pigs in the hills of Anatolia and the Zagros.
+-8600|H|mor|EU|Ireland|migration|Hunters reach Ireland|The first people cross to Ireland and camp by its rivers.
+-8500|H|mor|AM|Peru|science|Squash in the Andes|People in coastal Peru grow squash and peppers.
+-8500|H|mor|AS|China|science|Millet in the north|Foragers on the north China plain begin to plant millet.
+-8500|W|vam|ME|Enoch|crime,law|Caine's mark known|The Book of Nod tradition holds that Caine's curse kept even the First City's mortals from harming him.
+-8400|H|mor|EU|Pesse|sea,science|The Pesse canoe|A dugout canoe of pine is made in the Netherlands, the oldest boat yet found.
+-8300|H|mor|AF|Sahara|art|Round-head paintings|Painters in the Sahara mountains draw floating figures with round heads.
+-8200|H|mor|ME|Anatolia|science|Flax|Flax is grown in the Near East for oil and fibre.
+-8200|W|vam|ME|Enoch|faith,crown|The childer of the Second|Noddists say the Second Generation each chose four childer, against Caine's word.
+-8000|H|mor|AF|Nile|founding|Fishers of the Nile|Fishers and hunters camp along the Nile, gathering wild grain.
+-8000|H|mor|EU|Britain|migration|The hunters of Britain|Hunters roam a Britain still joined to Europe.
+-8000|H|mor|AM|Lake Titicaca|migration|Hunters of the altiplano|Hunters live on the high plain around Lake Titicaca.
+-8000|M|wer|AS|Asia|faith,war|The Hakken stand apart|Asian shapeshifter tales say the changing breeds of the east kept their own courts and their own war.
+-7900|H|mor|ME|Jarmo|founding|Jarmo|A village of mud houses at Jarmo in the Zagros farms wheat and barley.
+-7800|H|mor|AS|Mehrgarh|death|Graves with turquoise|The villagers of Mehrgarh bury their dead with turquoise and shell from far away.
+-7700|H|mor|EU|Franchthi|sea,trade|Obsidian from Melos|Hunters in Greece sail to Melos for obsidian, the first sea trade in the Aegean.
+-7600|H|mor|AS|India|founding|Lahuradewa|Villagers on the Ganges plain gather and later grow rice.
+-7500|H|mor|ME|Catalhoyuk|art|The bull shrines|The houses of Catalhoyuk keep bull skulls set into plastered benches.
+-7500|H|mor|AM|Guitarrero Cave|science|Beans in the Andes|Cave dwellers in Peru keep beans and chili peppers.
+-7500|W|wra|ME|Catalhoyuk|death,occult|The dead under the floor|Wraith lore holds that the dead of Catalhoyuk, buried under their own beds, stayed bound to their families.
+-7400|H|mor|EU|Lepenski Vir|death|The river shrines|Hunters at the Iron Gates bury their dead under trapezoid houses by the river.
+-7300|H|mor|ME|Mesopotamia|science|Sheep for wool|Herders begin to keep sheep for their wool as well as meat.
+-7200|H|mor|AS|China|art|Painted pots of Dadiwan|Villagers at Dadiwan paint the first pots of north China.
+-7000|H|mor|AF|Sudan|art|The first pots of Africa|Fishers along the Nile and the Sahara lakes make pots with wavy lines.
+-7000|H|mor|ME|Tell Sabi Abyad|founding|Villages of the Balikh|Farmers settle the Balikh valley in Syria.
+-7000|H|mor|EU|Thessaly|founding|Sesklo|Farmers of Thessaly build Sesklo, one of Europe's first villages.
+-7000|W|mag|AS|Himalayas|occult,learning|The first chakravanti|Euthanatoi tradition places its first teachers of the wheel of life in this age.
+-7000|W|dem|ME|Fertile Crescent|occult,faith|Gods of the harvest|The Fallen claim some of the first harvest spirits were Earthbound wearing new names.
+-6900|H|mor|ME|Mesopotamia|founding|Hassuna|The first farming villages spread into northern Mesopotamia.
+-6800|H|mor|AS|Thailand|founding|Spirit Cave|Foragers in northern Thailand gather nuts, beans and peppers.
+-6800|W|wer|ME|Mesopotamia|massacre,occult|The Bastet hunted|In the War of Rage, Garou packs burn the Bastet dens near the first towns.
+-6700|H|mor|AF|Libya|art|The rock art of the Acacus|Herders paint and carve the rocks of the Acacus mountains.
+-6600|H|mor|ME|Jericho|death|Jericho's houses rebuilt|A new people rebuild Jericho with rectangular houses and plaster floors.
+-6500|H|mor|EU|Balkans|founding|Starcevo|Farmers of the Starcevo culture settle the Danube and its rivers.
+-6500|H|mor|ME|Halaf|art|Halaf pottery|Potters in northern Mesopotamia make fine painted ware.
+-6500|H|mor|AM|Mexico|science|Squash and peppers in Tehuacan|Foragers in the Tehuacan valley begin to grow squash and chili.
+-6500|W|wer|EU|Europe|war,massacre|The Gurahl hunted|Bear-folk tales say the Garou killed their healers through this age.
+-6400|H|mor|ME|Catalhoyuk|art|The volcano painting|A wall painting at Catalhoyuk may show the twin-peaked volcano above the town.
+-6300|H|mor|EU|Hungary|founding|Korös|Farmers spread up the Tisza onto the Hungarian plain.
+-6200|H|mor|ME|Mesopotamia|weather|The cold years|Two centuries of drought and cold drive villages from the uplands.
+-6100|H|mor|EU|Norway|disaster,flood|The Storegga slide|A great undersea slide off Norway sends a tsunami across the North Sea coasts.
+-6100|W|wra|EU|North Sea|death,storm|The drowned of the slide|Wraiths tell that the Storegga wave left a whole shore of the dead in the Shadowlands at once.
+-6000|H|mor|ME|Samarra|science|Irrigation at Choga Mami|Farmers at Choga Mami dig the first irrigation channels.
+-6000|H|mor|AF|Egypt|founding|Farmers in the Faiyum|Farmers by the Faiyum lake grow barley and keep goats.
+-6000|H|mor|AS|Taiwan|migration,sea|Farmers cross to Taiwan|Rice farmers from the Chinese coast settle Taiwan; their tongue will spread across the Pacific.
+-6000|H|mor|AS|New Guinea|science|Bananas and sugar cane|New Guinea gardeners grow bananas and sugar cane.
+-6000|M|kue|AS|Middle Kingdom|faith,occult|The Fall of the August Personages|Kuei-jin legend tells of a court in the east that fell before history began.
+-5900|H|mor|EU|Italy|founding|Farmers of the Tavoliere|Farmers dig ditched villages on the plain of Apulia.
+-5800|H|mor|ME|Hajji Firuz|science|The first wine|A jar at Hajji Firuz in Iran holds traces of wine.
+-5800|W|vam|ME|The Second City|crown,learning|The Antediluvians' arts|Noddist tradition says each ruler of the Second City brought one art of the blood to its height.
+-5700|H|mor|EU|Bulgaria|founding|Karanovo|A great village mound grows at Karanovo in Thrace.
+-5600|H|mor|EU|Black Sea|migration|Farmers flee the shore|Farmers move inland as the coasts change.
+-5500|H|mor|ME|Mesopotamia|founding|The Ubaid begins|Farmers of the Ubaid culture settle the southern marshes.
+-5500|H|mor|AS|China|founding|Peiligang|Millet farmers spread along the middle Yellow River.
+-5500|H|mor|EU|Spain|art|The Levantine paintings|Painters in eastern Spain draw hunters, archers and battles on rock shelters.
+-5500|M|cha|EU|Arcadia|occult,faith|The Tuatha de Danann|Kithain tradition places the reign of the first fae kings in Ireland in this age.
+-5400|H|mor|EU|Ukraine|founding|The Bug-Dniester farmers|Foragers along the Bug and Dniester begin to keep pigs and plant wheat.
+-5300|H|mor|EU|Germany|massacre|Schoneck-Kilianstadten|Another farming village is killed and buried in a ditch, legs broken.
+-5200|H|mor|ME|Iran|founding|Susiana|Villages spread over the plain of Susa.
+-5200|H|mor|EU|Moravia|building|Moravian long houses|Long houses forty metres long stand in rows on the loess of Moravia.
+-5100|H|mor|AS|India|science|Cotton in the Indus hills|The people of Mehrgarh grow cotton.
+-5000|H|mor|AS|China|founding|Banpo|A village of round houses with a ditch grows at Banpo near later Xi'an.
+-5000|H|mor|AF|Sahara|art|Cattle in the paintings|The rock painters of the Sahara turn from wild beasts to cattle herds.
+-5000|H|mor|EU|Portugal|death|Shell middens of the Tagus|Foragers by the Tagus bury their dead in great mounds of shells.
+-5000|H|mor|AM|Peru|death|The Chinchorro dead|Fishers on the Atacama coast make the oldest mummies in the world.
+-5000|W|mum|AM|Atacama|death,occult|The first kept dead|Mummy lore says the Chinchorro had their own ways of keeping the soul near the body, with no spell of life.
+-5000|W|wra|AM|Atacama|death,occult|Fetters of the Atacama|Wraiths of the Americas name the Chinchorro dead among the oldest wraiths still bound to their bodies.
+-4900|H|mor|EU|Germany|building|The Goseck circle|Farmers build a ring of ditch and palisade at Goseck, open to the winter sunrise.
+-4800|H|mor|ME|Eridu|faith|Eridu's shrine raised|The shrine at Eridu is rebuilt on a platform.
+-4800|H|mor|AS|China|founding|Hongshan|Villages of the Hongshan culture spread in the north-east.
+-4700|H|mor|EU|Brittany|death|The Barnenez cairn|A great stone cairn with eleven passage graves rises in Brittany.
+-4600|H|mor|AS|Mehrgarh|science|The wheel-made pot|Potters at Mehrgarh use the slow wheel.
+-4500|H|mor|EU|Ukraine|founding|Cucuteni-Trypillia|Farmers of Ukraine and Moldova build towns of thousands of houses and burn them every few generations.
+-4500|H|mor|ME|Levant|science|Copper smelted in Canaan|Smiths in the Negev and the Jordan valley smelt copper.
+-4500|H|mor|AS|Thailand|death|Ban Chiang|Villagers at Ban Chiang bury their dead with painted pots.
+-4500|W|cha|EU|Ukraine|fire,occult|The burned towns|Kithain say the farmers of Trypillia burned their towns to let the Dreaming out.
+-4400|H|mor|ME|Nahal Mishmar|art,faith|The Nahal Mishmar hoard|Hundreds of copper crowns, maces and wands are hidden in a cave by the Dead Sea.
+-4300|H|mor|EU|Bulgaria|death|The Varna necropolis|A chief at Varna is buried with a gold sceptre and a gold sheath.
+-4200|H|mor|EU|Balkans|disaster|The Balkan towns burn|Many of the copper-working towns of the Balkans are abandoned.
+-4200|H|mor|AS|China|art|Hongshan jade dragons|Carvers in north-east China make coiled pig-dragons of jade.
+-4100|H|mor|EU|Brittany|building|The Grand Menhir|The great standing stone at Locmariaquer is raised, twenty metres long.
+-4000|H|mor|EU|Britain|science|Farmers reach Britain|Farming comes to Britain from the continent.
+-4000|H|mor|AF|Egypt|founding|Badari|Farmers of Upper Egypt bury their dead with ivory combs and fine pots.
+-4000|H|mor|AS|India|founding|Farmers of the Deccan|Herders of the Deccan build great ash mounds.
+-4000|H|mor|AM|Mexico|science|Cobs of maize in Guila Naquitz|Small cobs of maize are kept in a cave in Oaxaca.
+-4000|M|vam|ME|The Second City|war|The Brujah's warning|Brujah tellers say their founder argued for the mortals of the Second City and was not heard.
+-4000|W|wra|ME|Mesopotamia|death,occult|A city of the dead below|Wraiths say the first dead of the cities built their own towns in the Shadowlands.
+-3900|H|mor|EU|Europe|science|The ard|Farmers in central Europe pull the first scratch ploughs with oxen.
+-3900|H|mor|AS|China|science|Silk|Villagers in China keep silkworms and weave silk.
+-3800|H|mor|EU|England|building|The Sweet Track|A timber walkway is laid across the Somerset marshes.
+-3800|H|mor|ME|Arslantepe|crown|The palace of Arslantepe|A palace with stored grain and seals rules a valley in eastern Anatolia.
+-3700|H|mor|EU|Scotland|building|The Knap of Howar|Farmers on Orkney build stone houses still standing.
+-3700|H|mor|AS|Pakistan|founding|Early Harappa|The first village of Harappa grows on the Ravi.
+-3600|H|mor|ME|Uruk|crown|The temple of Inanna|Uruk builds a great temple district for Inanna.
+-3600|H|mor|EU|Wales|death|Long barrows|Farmers bury their dead in long earth barrows.
+-3600|W|wer|EU|Britain|occult|Caerns in the barrows|Fianna lore says the first barrows of Britain were raised on caerns.
+-3500|H|mor|ME|Habuba Kabira|trade|Uruk's colonies|Uruk sets up trading towns on the upper Euphrates.
+-3500|H|mor|AF|Sudan|founding|The A-Group|The A-Group people of Lower Nubia trade with Egypt.
+-3500|H|mor|EU|Brittany|building|Gavrinis|The passage grave of Gavrinis is carved with swirling lines.
+-3500|H|mor|AS|China|founding|Liangzhu begins|A walled town with canals grows near the Yangtze delta.
+-3500|H|mor|AM|Ecuador|art|Valdivia figures|Villagers on the Ecuador coast make the first pottery of South America and small clay women.
+-3500|W|mag|AF|Egypt|occult,faith|The first priests of Thoth|Hermetic tradition places the first temple magicians in the towns of Upper Egypt.
+-3400|H|mor|ME|Uruk|science|The cylinder seal|Uruk's officials roll carved stone seals across clay.
+-3400|H|mor|EU|Poland|science|The Bronocice pot|A pot from Poland shows the oldest picture of a wheeled wagon.
+-3400|H|mor|AF|Egypt|death|The Gebelein dead|Bodies buried in the hot sand of Gebelein dry into natural mummies.
+-3400|W|mum|AF|Gebelein|death,occult|The desert keeps the dead|The Reborn say Egypt learned from the sand that the body could be kept for the soul.
+-3300|H|mor|ME|Uruk|crime,law|The Uruk tablets|The first tablets record grain, beer, sheep and labourers' rations.
+-3300|H|mor|AF|Egypt|crown|The scorpion kings|Kings of Abydos are buried with ivory labels, the first writing of Egypt.
+-3300|H|mor|AS|Indus valley|trade|Lapis from Afghanistan|Lapis lazuli from Badakhshan travels west to Mesopotamia and Egypt.
+-3300|W|vam|AF|Egypt|crown,occult|A god in the delta|Setite lore holds that Sutekh ruled from a temple in the delta before Egypt was one land.
+-3200|H|mor|ME|Mesopotamia|science|Bronze cast|Smiths alloy copper with arsenic and tin.
+-3200|H|mor|EU|Ireland|building|The tombs of Knowth|Knowth's great mound holds the most carved stone in western Europe.
+-3200|H|mor|AS|India|trade|Shells of the Gulf|Shell-workers of Gujarat trade bangles to the Indus towns.
+-3200|W|wer|EU|Ireland|occult|The Fianna's oldest caern|Fianna tales put their oldest caern at the Boyne in the age of the great tombs.
+-3150|H|mor|AF|Egypt|war|The Gebel el-Arak knife|An ivory knife handle shows a battle of ships on the Nile.
+-3150|M|mum|AF|Egypt|war,crown|The Contendings of Horus and Set|Horus and Set fight for eighty years before the gods' court.
+-3120|H|mor|ME|Jemdet Nasr|trade|Jemdet Nasr|Towns of Sumer share one set of seals and trade together.
+-9900|H|mor|AF|Taforalt|death|The sleepers of Taforalt|Hunters in a Moroccan cave bury their dead with ochre and horn cores.
+-9800|H|mor|AM|Alaska|migration|The last crossing|Hunters still cross the narrowing land bridge from Siberia before the sea closes it.
+-9600|H|mor|EU|Germany|migration|Reindeer hunters of Ahrensburg|Hunters camp by the north German lakes and cast offerings into them.
+-9400|H|mor|AS|Japan|founding|Pit houses of Jomon|Jomon families live through the year in sunken houses by the shore.
+-9200|H|mor|ME|Mureybet|founding|Mureybet|Round houses stand by the Euphrates at Mureybet, with bull skulls in the walls.
+-9000|H|mor|AF|Kenya|war,death|Nataruk|A band of foragers by Lake Turkana is killed with arrows and clubs, the oldest known battle.
+-8800|W|wer|AF|Lake Turkana|war,occult|Blood by the lake|Silent Strider lore says the dead of Nataruk were the first humans to fall in a Garou-driven cull in Africa.
+-8600|H|mor|AS|China|art|Jiahu signs|Signs scratched on shell at Jiahu may be among the oldest marks of meaning in China.
+-8400|H|mor|AM|Texas|death|Wilson-Leonard|A woman is buried with a grinding stone in central Texas.
+-8200|H|mor|EU|Finland|art|The Antrea net|Fishers on the Karelian isthmus weave a willow net with bark floats.
+-8000|H|mor|AS|Japan|art|Jomon cord patterns|Potters press twisted cords into wet clay, the mark that names the age.
+-7800|H|mor|AM|Brazil|art|The paintings of Serra da Capivara|Painters in north-east Brazil cover rock shelters with dancers and hunters.
+-7600|H|mor|ME|Arabia|weather|The green Arabia|Lakes fill the Arabian interior and herders follow them.
+-7400|H|mor|AS|India|art|The rock shelters of Bhimbetka|Painters in central India draw hunters and animals on the shelters.
+-7200|H|mor|EU|Ireland|founding|Mount Sandel|Hunters build round huts above the river Bann.
+-7000|H|mor|AM|Tennessee|building|The first earth mounds|Foragers in North America begin piling earth for camps and graves.
+-6800|H|mor|AF|Egypt|founding|Nabta Playa|Herders gather by a seasonal lake in the Egyptian desert.
+-6600|H|mor|AS|China|science|Rice beer at Jiahu|Jars at Jiahu hold traces of a drink of rice, honey and fruit.
+-6400|H|mor|AM|Peru|founding|The Paijan hunters|Hunters of coastal Peru camp in the dry valleys.
+-8000|H|mor|ME|Ganj Dareh|founding|Ganj Dareh|Villagers in the Zagros keep goats in mud-brick pens.
+-6000|H|mor|EU|Britain|sea|Britain becomes an island|The rising sea cuts Britain from the continent.
+-5800|H|mor|AF|Sudan|founding|Khartoum's fishers|Fishers and hunters settle along the Nile near later Khartoum.
+-5600|H|mor|AS|India|founding|The Indus foothills|Farming villages spread along the edge of the Indus plain.
+-5400|H|mor|AM|Andes|science|Potatoes|Farmers in the Andes grow the first potatoes.
+-5200|H|mor|AS|China|founding|Cishan|Villagers at Cishan store millet in hundreds of pits.
+-5000|H|mor|AF|Egypt|building|The stones of Nabta Playa|Herders set up a ring of standing stones in the desert.
+-5000|W|mum|AF|Nabta Playa|faith,occult|The star ring|Mummy lore says the Nabta stones watched the stars that Egypt's priests would later read for the dead.
+-4800|H|mor|AM|Mexico|science|Avocado and cotton|Foragers in Mexico grow avocados and cotton.
+-4600|H|mor|AS|China|founding|Dawenkou|Villages of the Dawenkou culture spread across Shandong.
+-4400|H|mor|EU|Romania|founding|Gumelnita|Farmers on the lower Danube work gold and copper.
+-4200|H|mor|AM|Peru|founding|Huaca Prieta|Fishers at Huaca Prieta weave cotton and build a mound by the sea.
+-4000|H|mor|AS|Korea|founding|The Jeulmun villages|Korean villagers make comb-pattern pottery and grow millet.
+-3900|H|mor|ME|Sumer|faith|The house of Enki|The temple at Eridu rises on its seventh rebuilding.
+-3800|H|mor|AF|Egypt|founding|Hierakonpolis|Hierakonpolis grows into the largest town of Upper Egypt.
+-3700|H|mor|AM|Peru|building|Sechin Bajo|A platform of stone rises in the Casma valley.
+-3600|H|mor|AS|China|founding|The Daxi rice towns|Rice farmers of the middle Yangtze build walled towns.
+-3500|H|mor|AF|Egypt|crime,death|Hierakonpolis graves|Some dead of Hierakonpolis are buried with cut throats, perhaps as offerings.
+-3400|H|mor|AS|Mongolia|migration|Herders of the steppe east|Herders with carts move onto the eastern steppe.
+-3300|H|mor|EU|Malta|building|The Ggantija temples|The great temples of Gozo are rebuilt in huge stones.
+-3250|H|mor|ME|Uruk|art|The Uruk mask|A marble face of a woman is carved at Uruk.
+# The Age of Living Gods, to 300 events
+-3100|H|mor|ME|Susa|crown|Elam rises|The towns of the Susa plain unite as Elam, Sumer's old rival in the east.
+-3100|H|mor|AS|Shahr-i Sokhta|founding|The Burnt City|Shahr-i Sokhta in the Iranian desert grows rich on lapis and tin.
+-3050|H|mor|AF|Egypt|crown|Aha and Memphis|The first kings found Memphis at the meeting of the Two Lands.
+-3000|H|mor|AF|Egypt|science|Papyrus|Egyptian scribes write on sheets made from papyrus reeds.
+-3000|H|mor|EU|Cyclades|art|The Cycladic figures|Island carvers make flat marble figures with folded arms.
+-3000|H|mor|AM|Amazon|founding|Earthworks of the Amazon|Farmers of the Amazon build raised fields and ditched villages.
+-3000|H|mor|AS|Thailand|science|Rice in south-east Asia|Rice farming reaches the river plains of Thailand.
+-3000|W|wer|AF|Egypt|occult|Bastet in the temples|Bastet lore says the Simba and the Bubasti were honoured by the god-kings as the cats of Ra.
+-2950|H|mor|ME|Sumer|science|The plough with a seed drill|Sumerian farmers fix a funnel to the plough to sow as they go.
+-2900|H|mor|ME|Mari|founding|Mari on the Euphrates|Mari is built as a round planned city on the middle Euphrates.
+-2900|W|vam|ME|Sumer|crown,occult|Cainites in the temple towns|Noddists hold that the childer of the Antediluvians hid among the en-priests of Sumer.
+-2850|H|mor|AF|Egypt|crown|Merneith|Queen Merneith may have ruled Egypt for her young son.
+-2800|H|mor|AS|Indus valley|science|Indus weights|The Indus towns use one set of cube weights from the mountains to the sea.
+-2800|H|mor|EU|Britain|building|Durrington Walls|A great ring of timber posts and houses rises near Stonehenge.
+-2750|H|mor|ME|Kish|crown|Enmebaragesi|The first king of Kish named in his own inscriptions rules about now.
+-2700|H|mor|AS|China|science|The silk loom|Weavers of the Yangtze make silk with simple looms.
+-2700|H|mor|EU|Iberia|founding|Los Millares|A walled copper-working town rises in south-east Spain.
+-2700|W|mum|AF|Egypt|death,occult|The first royal mummies|The Reborn say the kings of the Old Kingdom tried to copy the Spell of Life with linen and salt.
+-2650|H|mor|ME|Ur|crown|The Meskalamdug graves|Ur buries its princes with golden helmets and lyres.
+-2620|H|mor|AF|Egypt|building|Sneferu's pyramids|King Sneferu builds the Bent and Red pyramids at Dahshur.
+-2600|H|mor|ME|Ur|art|The Standard of Ur|A shell and lapis box shows Ur at war and at peace.
+-2600|H|mor|AS|Indus valley|learning|The Indus script|Seals with a still unread script are used from the Indus to the Gulf.
+-2600|H|mor|EU|Malta|death|The Hypogeum|The underground tomb of Hal Saflieni is cut into the rock of Malta.
+-2600|W|wra|EU|Malta|death,occult|The voices under Malta|Wraith lore names the Hypogeum's sounding chambers as a place where the dead were called to speak.
+-2550|H|mor|AF|Egypt|sea|Khufu's ship|A cedar boat forty metres long is buried beside the Great Pyramid.
+-2550|H|mor|AF|Wadi al-Jarf|learning|The diary of Merer|An official's logbook records hauling limestone for the Great Pyramid, the oldest papyrus with writing.
+-2500|H|mor|ME|Lagash|war|Lagash and Umma at war|Lagash and Umma fight for generations over a border field.
+-2500|H|mor|ME|Mesopotamia|science|Sumerian beer|Sumerian brewers make many kinds of beer, sipped through straws.
+-2500|H|mor|AS|Indus valley|trade|Dholavira|A walled city with great reservoirs stands on an island in the Rann of Kutch.
+-2500|H|mor|AM|Peru|founding|Aspero|Fishers of the Supe coast build platform mounds by the sea.
+-2500|H|mor|AF|Nubia|founding|Kerma begins|A town grows at Kerma above the third cataract of the Nile.
+-2500|W|mag|AS|Indus valley|occult,learning|The yogis of the seals|Akashic and Chakravanti scholars both read the seated horned figure of the Indus seals as one of their own.
+-2450|H|mor|AF|Egypt|faith|The sun temples|The kings of the fifth dynasty build open temples to Ra.
+-2400|H|mor|ME|Ebla|crown|Ebla's kings|Ebla rules northern Syria from a palace full of tablets.
+-2400|H|mor|EU|Britain|death|The Amesbury Archer|A man from the Alps is buried near Stonehenge with gold and copper.
+-2400|W|vam|ME|Ebla|crown,occult|The libraries of Ebla|Some Tremere scholars claim the Ebla archives name a ruler who never aged.
+-2350|H|mor|AF|Egypt|learning|The maxims of Ptahhotep|A vizier's advice on good conduct is copied for a thousand years.
+-2300|H|mor|ME|Akkad|empire|Akkadian becomes the common tongue|Akkadian spreads as the language of rule and trade.
+-2300|H|mor|AS|China|founding|Taosi|A walled town at Taosi has a platform that may track the sun.
+-2300|H|mor|EU|Ireland|art|Irish gold|Smiths in Ireland beat gold collars called lunulae.
+-2279|H|mor|ME|Akkad|crown|Rimush and the revolts|Sargon's son crushes the cities of Sumer that rise against him.
+-2254|H|mor|ME|Akkad|crown|Naram-Sin|Naram-Sin of Akkad calls himself a god and king of the four quarters.
+-2254|W|vam|ME|Akkad|crown,heresy|The god-king's curse|A later poem says Akkad was cursed for Naram-Sin's sack of a temple; Noddists see a Cainite feud behind it.
+-2200|H|mor|AF|Egypt|famine|The low Nile years|The Nile floods fail and Egypt's provinces starve.
+-2200|H|mor|AS|China|flood|The great floods of the Yellow River|Floods and drought end many of the Longshan towns.
+-2200|H|mor|ME|Tell Leilan|famine|Tell Leilan abandoned|The great city of northern Mesopotamia is left empty in the drought.
+-2150|H|mor|ME|Lagash|crown,building|Gudea of Lagash|Gudea rebuilds the temples of Lagash and leaves statues of himself at prayer.
+-2100|H|mor|ME|Ur|building|The ziggurat of Ur|Ur-Nammu builds the great stepped temple of Nanna.
+-2100|H|mor|EU|Iberia|founding|El Argar|Bronze-working towns of the El Argar culture rise in south-east Spain.
+-2100|W|wra|ME|Ur|death,occult|The dead of Ur's queens|Wraith tales say the servants buried with Ur's queens served them in the Shadowlands too.
+-2050|H|mor|AF|Egypt|crown|Mentuhotep reunites Egypt|Mentuhotep II of Thebes reunites the Two Lands.
+-2000|H|mor|ME|Ur|famine,war|The fall of Ur|The Elamites sack Ur; a lament mourns the city's end.
+-2000|H|mor|AS|Central Asia|founding|The Oxus towns|Walled towns of the Oxus civilisation stand in the oases of Bactria.
+-2000|H|mor|AM|Peru|building|Kotosh|A temple of crossed hands rises in the Andes.
+-2000|H|mor|EU|Scandinavia|art|Bronze reaches the north|The first bronze reaches Denmark and Sweden in trade for amber.
+-2000|H|mor|AF|Egypt|learning|The tale of Sinuhe|A courtier's flight and return is written, Egypt's best-loved story.
+-2000|H|mor|AS|Pacific|sea|Outriggers in the islands|Sailors of island south-east Asia use outrigger canoes.
+-2000|W|wer|AS|Central Asia|occult|Bone Gnawers' first cities|Bone Gnawer tales claim they followed the herds of humans into the oasis towns.
+-1990|H|mor|AF|Egypt|crown|Amenemhat I|Amenemhat I founds the twelfth dynasty and moves the court to Itjtawy.
+-1950|H|mor|AF|Nubia|war|Egypt's Nubian forts|Egypt builds great forts at the second cataract.
+-1900|H|mor|ME|Assur|trade|The Kanesh letters|Assyrian merchants at Kanesh write home about tin, cloth and debts.
+-1900|H|mor|AS|China|founding|Erlitou|A palace town at Erlitou may be the seat of the Xia.
+-1900|H|mor|EU|Crete|learning|Linear A|Minoan scribes write a script still unread.
+-1900|W|cha|EU|Crete|art,occult|The bull-leapers|Kithain say the Cretan bull games fed the Dreaming as no other sport has.
+-1878|H|mor|AF|Egypt|crown|Senusret III|Senusret III curbs the nobles and pushes into Nubia.
+-1850|H|mor|AF|Egypt|learning|The Moscow papyrus|An Egyptian scribe works out the volume of a cut pyramid.
+-1800|H|mor|ME|Babylon|learning|The flood tale of Atrahasis|Babylonian scribes write the story of a flood sent by the gods and one man who survives it.
+-1800|H|mor|AS|Indus valley|disaster|The Saraswati dries|Rivers of the eastern Indus shift and the towns along them empty.
+-1800|H|mor|AM|Mexico|art|Pottery in Mesoamerica|Villagers in Mesoamerica make their first pots.
+-1800|H|mor|EU|Moravia|building|Bronze in Moravia|Unetice smiths in Moravia cast bronze axes and rings for trade.
+-1800|W|vam|ME|Babylon|occult,learning|The tablet of Atrahasis|Noddists read the Atrahasis flood as a memory of the flood that ended Enoch.
+-1780|H|mor|AF|Egypt|crown|Sobekneferu|Sobekneferu rules Egypt as the first certain woman king.
+-1760|H|mor|ME|Mari|war|Hammurabi takes Mari|Hammurabi destroys Mari, his former ally.
+-1750|H|mor|ME|Babylon|law|Contracts on clay|Babylonian loans, sales and marriages are sealed on clay before witnesses.
+-1700|H|mor|ME|Anatolia|founding|Hattusa|The Hittites make Hattusa their capital.
+-1700|H|mor|AF|Egypt|crown|The Second Intermediate Period|Egypt splits between Theban kings and the Hyksos of the delta.
+-1700|H|mor|AS|China|science|Bronze casting in China|Smiths at Erlitou cast bronze vessels in clay moulds.
+-1700|H|mor|EU|Germany|death|The Leubingen mound|A chief is buried under a timber house in a mound in Thuringia.
+-1650|H|mor|AF|Egypt|science|The horse in Egypt|The Hyksos bring the horse and chariot to Egypt.
+-1650|W|wra|AF|Egypt|death,occult|The Reborn's first exile|Mummy lore says the Shemsu-heru withdrew into the tombs while the Hyksos held the delta.
+-1600|H|mor|ME|Babylon|crown|The Kassites rule Babylon|The Kassites take Babylon and rule it for four centuries.
+-1600|H|mor|AF|Egypt|learning|The Edwin Smith papyrus|A surgeon's manual describes wounds and how to treat them.
+-1600|H|mor|AS|Indus valley|migration|The Indus cities empty|The last great Indus cities are abandoned.
+-1600|H|mor|AM|Mexico|founding|Paso de la Amada|Villagers on the Pacific coast of Mexico build a ballcourt.
+-1600|W|mum|AF|Egypt|crown,occult|Ahmose and the gods|The Reborn say Horus moved openly behind the Theban kings who drove out the Hyksos.
+-1550|H|mor|AF|Egypt|war|Ahmose drives out the Hyksos|Ahmose of Thebes takes Avaris and expels the Hyksos.
+-1550|H|mor|EU|Greece|art|The mask of Agamemnon|A gold death mask is laid over a king's face at Mycenae.
+-1530|H|mor|AF|Nubia|war|Egypt conquers Kush|Thutmose I takes Kerma and the Nile to the fourth cataract.
+-1500|H|mor|ME|Ugarit|trade|Ugarit's harbour|Ugarit grows rich as a port between Egypt, Cyprus and the Hittites.
+-1500|H|mor|AS|China|faith|Shang ancestor rites|Shang kings offer cattle and captives to their ancestors.
+-1500|H|mor|AM|Mexico|founding|The Olmec heartland|Villages of the Gulf coast grow maize and build the first platforms.
+-1500|H|mor|EU|Denmark|art|The Egtved girl|A young woman is buried in Denmark in a corded skirt, in an oak coffin.
+-1500|W|wer|EU|Scandinavia|faith,occult|The Get's sun chariots|Get of Fenris tales say the sun chariots of the north were offerings to Sun himself.
+-1480|H|mor|ME|Mitanni|empire|The kingdom of Mitanni|The horse lords of Mitanni rule northern Syria.
+-1470|H|mor|AF|Egypt|faith|Hatshepsut's temple|Hatshepsut builds her terraced temple at Deir el-Bahri.
+-1450|H|mor|AF|Egypt|empire|Thutmose III's empire|Thutmose III takes Egypt's armies to the Euphrates seventeen times.
+-1450|H|mor|AS|China|founding|Zhengzhou|The Shang build a great walled city at Zhengzhou.
+-1400|H|mor|EU|Greece|learning|Linear B|Mycenaean scribes write early Greek in Linear B.
+-1400|H|mor|AS|Pacific|sea|The Lapita pots|Lapita potters stamp their pots with tooth-comb patterns.
+-1400|H|mor|AF|Egypt|building|The colossi of Memnon|Amenhotep III raises two huge statues of himself at Thebes.
+-1400|W|mag|AF|Egypt|heresy,occult|Akhenaten's mages|Hermetic history says the Aten cult split the temple magicians.
+-1380|H|mor|ME|Hattusa|empire|Suppiluliuma|Suppiluliuma I makes the Hittites a great power.
+-1350|H|mor|AF|Egypt|learning|The Amarna letters|Kings write to Pharaoh in Akkadian about gold, brides and war.
+-1350|H|mor|ME|Babylon|trade|The Uluburun ship|A ship laden with copper, tin, glass and ebony sinks off the Lycian coast.
+-1330|H|mor|AF|Egypt|crown|Ankhesenamun's letter|A widowed queen of Egypt asks the Hittite king for a son to marry.
+-1300|H|mor|AS|China|founding|Anyang|The Shang move their capital to Anyang.
+-1300|H|mor|AM|Peru|faith|Cerro Sechin|Carvings of warriors and cut-up captives line a temple in the Casma valley.
+-1300|H|mor|EU|Britain|science|Field systems|Farmers divide the British downs into small square fields.
+-1300|W|wra|AF|Egypt|death,occult|The tomb robbers|Wraith lore says many Egyptian dead lost their Fetters when the tombs were robbed.
+-1279|H|mor|AF|Egypt|building|Abu Simbel|Ramesses II cuts his great temples into the cliffs of Nubia.
+-1260|H|mor|ME|Hattusa|crown|Puduhepa|Queen Puduhepa writes to Egypt as an equal of Pharaoh.
+-1250|H|mor|ME|Babylon|faith|The Babylonian New Year|Babylon honours Marduk with a twelve-day feast.
+-1250|H|mor|AS|China|war|Chariots at Anyang|Shang kings are buried with chariots and horses.
+-1250|H|mor|AF|Egypt|crown|Nefertari|Ramesses II's queen Nefertari is buried in the finest painted tomb in Egypt.
+-1250|W|vam|AF|Egypt|crown,occult|The Setites and Ramesses|Setite tradition says the family of Ramesses II came from Set's own city.
+-1230|H|mor|AF|Egypt|war|Merneptah's stele|Merneptah's victory stele names Israel for the first time.
+-1220|H|mor|EU|Greece|building|The Lion Gate|Mycenae's walls are rebuilt with the Lion Gate.
+-1210|H|mor|ME|Ugarit|war|Ugarit's last letters|Ugarit's king writes that enemy ships are burning his land.
+-1200|H|mor|AS|India|founding|The Painted Grey Ware|Villages of the Ganges plain make grey painted pots.
+-1200|H|mor|AM|Peru|faith|The temples of Chavin begin|A shrine is built on the site that will become Chavin.
+-1200|H|mor|AF|Libya|migration|The Libyans move east|Libyan tribes press on Egypt's western delta.
+-1200|W|wer|ME|Anatolia|war,occult|The Wyrm feeds on the fall|Garou say the burning of the palaces was a feast for the Wyrm.
+-1190|H|mor|ME|Hattusa|fire|Hattusa burns|The Hittite capital is burned and left empty.
+-1180|H|mor|ME|Cyprus|migration|Sea Peoples on Cyprus|Refugees and raiders settle the coasts of Cyprus.
+-3000|H|mor|AS|Korea|founding|Shell mounds of Korea|Korean fishers leave great mounds of shells along the coast.
+-2900|H|mor|AM|Peru|building|Huaricanga|An early temple mound stands in the Fortaleza valley.
+-2800|H|mor|AF|Egypt|death|The mastabas of Saqqara|Nobles are buried in flat-topped brick tombs at Saqqara.
+-2700|H|mor|ME|Uruk|learning|The king list begins|Sumerian scribes start the lists of kings who ruled after the Flood.
+-2600|H|mor|AS|Indus valley|building|The granaries of Harappa|Harappa builds great brick halls, perhaps for grain.
+-2500|H|mor|EU|Orkney|building|The Ring of Brodgar|A great circle of stones is raised on Orkney.
+-2400|H|mor|AF|Egypt|art|The Seated Scribe|A painted limestone scribe sits with papyrus on his lap.
+-2300|H|mor|ME|Ebla|learning|The first dictionary|Scribes of Ebla write word lists in two languages.
+-2200|H|mor|EU|Brittany|death|The tumuli of Armorica|Chiefs in Brittany are buried with bronze daggers under mounds.
+-2100|H|mor|AS|Pakistan|trade|Indus beads at Ur|Carnelian beads from the Indus are buried in the graves of Ur.
+-2000|H|mor|ME|Arabia|trade|Dilmun|Bahrain is Dilmun, the island of trade and paradise in Sumerian song.
+-1900|H|mor|AF|Egypt|faith|The Coffin Texts|Spells for the dead are painted inside coffins for anyone who can pay.
+-1800|H|mor|AS|China|founding|Sanxingdui begins|A walled town rises at Sanxingdui in Sichuan.
+-1700|H|mor|EU|Hungary|building|The tell towns|Fortified towns on mounds stand on the Hungarian plain.
+-1600|H|mor|ME|Canaan|founding|Hazor|Hazor is the greatest city of Canaan.
+-1500|H|mor|AF|Egypt|learning|The Ebers papyrus|A medical book lists hundreds of remedies and spells.
+-1400|H|mor|ME|Babylon|learning|The omen tablets|Babylonian diviners write down thousands of omens from sheep livers and stars.
+-1300|H|mor|AF|Egypt|crime|The workers of Deir el-Medina|The tomb builders' village keeps records of quarrels, loans and absences.
+-1200|H|mor|EU|Iberia|founding|The Atlantic Bronze Age|Trade links Iberia, Brittany, Britain and Ireland by sea.
+# The Age of Burning Palaces, to 300 events
+-1177|H|mor|AF|Egypt|war,sea|Ramesses III's sea battle|Ramesses III beats the Sea Peoples in the mouths of the Nile and carves the battle at Medinet Habu.
+-1175|H|mor|ME|Canaan|migration|The Philistine towns|The Peleset settle Gaza, Ashkelon, Ashdod, Ekron and Gath.
+-1170|H|mor|AF|Egypt|uprising|The first strike|Tomb builders at Deir el-Medina stop work when their grain rations do not come.
+-1160|H|mor|AF|Egypt|crime|The harem conspiracy|Wives of Ramesses III plot his murder; the trial records survive.
+-1155|H|mor|ME|Elam|war|Elam sacks Babylonia|Shutruk-Nahhunte of Elam carries Hammurabi's law stele to Susa.
+-1150|H|mor|EU|Greece|migration|Mycenaeans flee east|Greeks from the ruined palaces move to Cyprus and the islands.
+-1150|H|mor|AS|China|faith|Shang bronze ritual|The last Shang kings cast great bronze cauldrons for the ancestors.
+-1140|H|mor|EU|Greece|death|Perati|Refugees bury their dead in chamber tombs on the Attic coast.
+-1130|H|mor|ME|Assyria|crown|Ashur-resh-ishi|Assyria holds its heartland against the Arameans.
+-1125|H|mor|ME|Babylon|crown|Nebuchadnezzar I|Nebuchadnezzar I of Babylon beats Elam and brings Marduk's statue home.
+-1125|W|vam|ME|Babylon|faith,occult|Marduk comes home|Noddists say the statue of Marduk carried a Cainite's blood-bound priests with it.
+-1120|H|mor|EU|Cyprus|founding|Enkomi rebuilt|Enkomi on Cyprus is rebuilt by newcomers from the Aegean.
+-1115|H|mor|ME|Assyria|empire|Tiglath-Pileser reaches the sea|Tiglath-Pileser I campaigns to the Mediterranean and hunts in Lebanon.
+-1110|H|mor|ME|Assyria|law|The Middle Assyrian laws|Assyrian law tablets set harsh rules for marriage and debt.
+-1100|H|mor|ME|Levant|migration|The Arameans|Aramean tribes spread over Syria and the Euphrates.
+-1100|H|mor|AF|Egypt|crown|Thebes ruled by priests|The high priests of Amun rule Upper Egypt in all but name.
+-1100|H|mor|EU|Iberia|founding|Gadir|Phoenician tradition dates the founding of Gadir, later Cadiz, to about now.
+-1100|H|mor|EU|Moravia|building|Urnfield hilltops of Moravia|Fortified hilltops rise across Moravia as the Bronze Age world breaks apart.
+-1100|H|mor|AS|India|science|Iron in the Ganges|Smiths of the Ganges plain make iron tools.
+-1100|H|mor|AM|Mexico|art|San Lorenzo's heads|The Olmec of San Lorenzo carve colossal stone heads of their rulers.
+-1100|W|cha|EU|Europe|occult,war|Iron in every village|Kithain mourn the age when iron left the forges of kings and came into every farmhouse.
+-1100|W|mag|ME|Phoenicia|learning,sea|Ships of the Order|Some Hermetic chronicles say Phoenician pilots kept sea charts no other people knew.
+-1090|H|mor|AF|Egypt|crime|The tombs emptied|The priests of Thebes rebury the royal mummies in hidden caches.
+-1090|W|mum|AF|Egypt|death,occult|The royal caches|The Reborn say the reburial of the kings was done to keep their bodies from the Setites.
+-1080|H|mor|AF|Egypt|travel|Wenamun's journey|The priest Wenamun sails to Byblos for cedar and is robbed and mocked.
+-1075|H|mor|ME|Byblos|trade|The cedar trade|Byblos sells cedar of Lebanon to Egypt and Assyria.
+-1070|H|mor|AF|Egypt|crown|Smendes at Tanis|Smendes rules Lower Egypt from Tanis.
+-1060|H|mor|ME|Canaan|war|The ark taken|In the Hebrew telling the Philistines capture the Ark of the Covenant at Aphek.
+-1050|H|mor|ME|Assyria|famine|Assyria in the dark|Drought and Aramean raids shrink Assyria to its old heartland.
+-1050|H|mor|AS|China|crown|The Duke of Zhou|The Duke of Zhou rules for the young king and sets the rites of the dynasty.
+-1050|H|mor|EU|Greece|art|Protogeometric pots|Athenian potters paint concentric circles with a compass.
+-1040|H|mor|AS|China|founding|Luoyi|The Zhou build an eastern capital at Luoyi.
+-1030|H|mor|ME|Israel|crown|Saul|Saul is made the first king of Israel.
+-1020|H|mor|AS|China|war|The rising of the Three Guards|Shang princes and Zhou uncles rise against the Duke of Zhou and are crushed.
+-1020|W|kue|AS|China|crown,occult|The rites of Zhou|Kuei-jin tellings say the Zhou rites set the order of the Middle Kingdom's courts of the dead.
+-1000|H|mor|EU|Greece|founding|Lefkandi|A chieftain and a woman are buried in a great hall at Lefkandi on Euboea.
+-1000|H|mor|AS|Korea|founding|The Mumun farmers|Farmers in Korea grow rice in paddies and build stone tombs.
+-1000|H|mor|AF|Ethiopia|founding|The highlands of D'mt|Farmers of the Ethiopian highlands build towns that will trade with Saba.
+-1000|H|mor|AM|Belize|founding|Cuello|Maya farmers settle Cuello in Belize.
+-1000|H|mor|AS|Fiji|sea|Fiji settled|Lapita sailors reach Fiji.
+-1000|H|mor|EU|Scandinavia|faith|The ship graves of Gotland|Islanders on Gotland lay out stone ships around their dead.
+-1000|H|mor|AS|Steppe|science|Riders of the steppe|Herders of the steppe ride horses to war and to herd.
+-1000|H|mor|EU|Ireland|art|Irish gold collars|Smiths in Ireland make gold torcs and dress-fasteners.
+-1000|W|wer|AS|Steppe|war,occult|Wolves of the steppe|Garou of the steppe ride with the horse peoples.
+-1000|W|wra|ME|Israel|death,faith|Sheol|Wraiths of the Levant say the Hebrews called the Shadowlands Sheol and feared it.
+-1000|M|dem|ME|Israel|occult|Solomon's demons|In the reckoning of the Fallen, Solomon bound Earthbound and lesser Fallen with his ring.
+-990|H|mor|ME|Jerusalem|war|David takes Jerusalem|David takes the Jebusite town of Jerusalem for his capital.
+-980|H|mor|ME|Tyre|crown|Hiram of Tyre|Hiram I makes Tyre the greatest Phoenician city.
+-970|H|mor|ME|Ezion-Geber|sea,trade|The ships to Ophir|Tyre and Israel send ships from the Red Sea to Ophir for gold.
+-960|H|mor|AS|China|travel|King Mu travels west|Legend says Zhou King Mu drove his chariot to the Queen Mother of the West.
+-960|M|kue|AS|Kunlun|occult,faith|The Queen Mother of the West|Kuei-jin say Xiwangmu's court in the Kunlun was a real court of the dead.
+-950|H|mor|ME|Israel|building|Solomon's stables|Israel builds gates and fortresses at Megiddo, Hazor and Gezer.
+-945|H|mor|AF|Egypt|crown|Shoshenq I|A Libyan chief takes the throne of Egypt as Shoshenq I.
+-930|H|mor|ME|Israel|uprising|Jeroboam's revolt|The northern tribes break from Judah under Jeroboam.
+-925|H|mor|ME|Jerusalem|war|Shoshenq raids Judah|Pharaoh Shoshenq raids Judah and Israel and carries off treasure.
+-920|H|mor|AS|China|war|King Zhao drowns|Zhou King Zhao is lost with his army crossing the Han river.
+-911|H|mor|ME|Assyria|crown|Adad-nirari II|Adad-nirari II begins Assyria's return to power.
+-900|H|mor|EU|Italy|founding|Villages on the Palatine|Herders build huts on the hills by the Tiber.
+-900|H|mor|EU|Greece|faith|Olympia's shrine|Offerings of bronze figurines pile up at Olympia.
+-900|H|mor|AS|India|founding|The Kuru kingdom|The Kuru become the first great kingdom of the Vedic peoples.
+-900|H|mor|ME|Phrygia|founding|Gordion|Gordion grows as the seat of the Phrygians.
+-900|H|mor|AF|Nubia|founding|Napata|A new kingdom grows at Napata by the sacred mountain of Jebel Barkal.
+-900|H|mor|AM|Mexico|disaster|San Lorenzo falls|San Lorenzo is abandoned and its heads buried.
+-900|H|mor|AM|Ohio|death|The Adena begin|Woodland peoples of the Ohio valley build burial mounds.
+-900|W|vam|EU|Italy|founding,occult|The hills by the Tiber|Ventrue tales say a Cainite watched the huts of the Palatine long before Rome had a name.
+-890|H|mor|ME|Assyria|war|Tukulti-Ninurta II|Assyria marches down the Euphrates collecting tribute.
+-880|H|mor|ME|Nimrud|building|Nimrud made capital|Ashurnasirpal II rebuilds Kalhu, later Nimrud, as his capital.
+-875|H|mor|ME|Israel|crown|Omri and Samaria|Omri of Israel builds a new capital at Samaria.
+-870|H|mor|ME|Assyria|massacre|Assyrian terror|Ashurnasirpal flays and impales rebels and boasts of it on his walls.
+-870|H|mor|ME|Israel|crown|Ahab and Jezebel|Ahab of Israel marries Jezebel of Tyre.
+-870|W|vam|ME|Samaria|faith,occult|Baal in Samaria|Noddists claim Jezebel's Baal priests served the Baali of Tyre.
+-860|H|mor|ME|Urartu|founding|Urartu's kings|The kingdom of Urartu takes shape around Lake Van.
+-860|H|mor|AS|China|crown|King Yi of Zhou|The Zhou kings lose their grip as their lords grow strong.
+-860|H|mor|EU|Italy|death|The Villanovan urns|Villanovan Etruscans bury their ashes in urns shaped like huts.
+-860|M|wer|ME|Israel|faith|Elijah and the ravens|Corax tales say the ravens that fed Elijah were their kin.
+-858|H|mor|ME|Assyria|crown|Shalmaneser III|Shalmaneser III fights every year for thirty-five years.
+-850|H|mor|EU|Austria|science|Iron swords at Hallstatt|Smiths of the Hallstatt world forge long iron swords.
+-850|H|mor|EU|Moravia|founding|Hallstatt in Moravia|The Hallstatt world reaches Moravia with iron and painted pots.
+-850|H|mor|AS|India|learning|The Brahmanas|Priests write prose guides to the Vedic sacrifice.
+-850|H|mor|ME|Moab|war|Moab rebels|Mesha of Moab throws off Israel's rule.
+-845|H|mor|ME|Damascus|crown|Hazael of Damascus|Hazael takes the throne of Aram and wars on Israel.
+-841|H|mor|ME|Israel|crown|Jehu's coup|Jehu kills Joram and Jezebel and pays tribute to Assyria.
+-841|H|mor|ME|Nimrud|art|The Black Obelisk|Shalmaneser's obelisk shows Jehu bowing before him.
+-835|H|mor|ME|Urartu|crown|Sarduri I|Sarduri I fortifies the citadel of Van.
+-830|H|mor|AS|China|uprising|The people of Haojing|The people of the Zhou capital rise and drive out King Li.
+-828|H|mor|AS|China|crown|King Xuan of Zhou|King Xuan restores the Zhou for a time.
+-826|H|mor|ME|Assyria|uprising|Assyria's civil war|Shalmaneser's son rebels and Assyria is torn for four years.
+-825|H|mor|AF|Libya|founding|The Garamantes|Herders of the Fezzan begin to build oasis towns.
+-820|H|mor|ME|Assyria|crown|Shamshi-Adad V|Shamshi-Adad V puts down the revolt and fights Babylon.
+-815|H|mor|EU|Greece|founding|Eretria and Chalcis|The towns of Euboea grow rich on sea trade.
+-810|H|mor|ME|Assyria|crown|Adad-nirari III|Adad-nirari III takes the throne with his mother beside him.
+-806|H|mor|ME|Damascus|war|Damascus pays Assyria|Adad-nirari III forces Damascus to pay tribute.
+-805|H|mor|AS|Steppe|death|The Arzhan kurgan|Horse lords in Tuva bury a king with 160 horses under a great timber mound.
+-1176|H|mor|ME|Carchemish|crown|Carchemish holds|The Hittite viceroys of Carchemish survive the fall and rule as Great Kings.
+-1174|H|mor|EU|Cyprus|science|Iron knives on Cyprus|Cypriot smiths make the first everyday iron knives of the Aegean.
+-1172|H|mor|ME|Anatolia|migration|The Neo-Hittite towns|Small kingdoms of Luwian speakers keep the Hittite name alive in Syria.
+-1170|H|mor|EU|Greece|fire|Mycenae burns again|The citadel of Mycenae is burned once more.
+-1168|H|mor|ME|Megiddo|disaster|Megiddo destroyed|The Canaanite city of Megiddo is burned.
+-1165|H|mor|AF|Egypt|crown|Ramesses IV|Ramesses IV sends great quarrying parties into the Wadi Hammamat.
+-1160|W|mum|AF|Egypt|crime,occult|The plot against the king|The Reborn say the harem plot used wax figures, and that a Setite sorcerer made them.
+-1155|H|mor|AF|Egypt|learning|The Great Harris Papyrus|A papyrus forty metres long lists Ramesses III's gifts to the temples.
+-1150|H|mor|EU|Italy|founding|The Proto-Villanovans|Urnfield ways spread through Italy.
+-1150|H|mor|AS|India|faith|The Atharvaveda|Vedic priests gather spells and charms for healing and harm.
+-1150|W|mag|AS|India|occult,learning|Spells of the Atharvans|Chakravanti and Akashic scholars both claim the Atharvaveda's healers as forerunners.
+-1145|H|mor|AF|Egypt|famine|Grain prices soar|Grain in Egypt costs eight times what it did under Ramesses II.
+-1140|H|mor|EU|Crete|migration|The refuge towns of Crete|Cretans move to steep hilltops such as Karphi.
+-1135|H|mor|ME|Elam|crown|Shilhak-Inshushinak|Elam's greatest builder raises temples across Susa.
+-1130|H|mor|ME|Babylon|faith|The Enuma Elish|Babylon's poem of creation makes Marduk king of the gods.
+-1120|H|mor|AS|China|founding|Zhou at Feng|The Zhou build their capital at Feng on the Wei river.
+-1110|H|mor|AF|Egypt|crime|Thebes in disorder|Libyan raiders and tomb robbers trouble Thebes.
+-1100|H|mor|ME|Levant|learning|The Ahiram sarcophagus|A king of Byblos is buried in a coffin carved with Phoenician letters.
+-1100|H|mor|EU|Greece|migration|The Dorians|Greek tradition says the Dorians came down from the north.
+-1100|H|mor|AM|Peru|building|The Old Temple of Chavin|The first temple at Chavin is built with its stone galleries.
+-1100|H|mor|AF|Sahara|trade|Horses in the Sahara|Rock art in the Sahara shows horses pulling chariots.
+-1100|W|wra|EU|Greece|death,occult|The dead of the palaces|Wraiths say the dead of the burned palaces made a court of their own in the Greek Shadowlands.
+-1090|H|mor|ME|Assyria|science|Tiglath-Pileser's gardens|The Assyrian king plants trees he brought back from his wars.
+-1080|H|mor|AS|China|crown|Zhou fiefs|The Zhou give out land to their kin as fiefs.
+-1075|H|mor|EU|Britain|science|The Dover boat|Bronze Age sailors cross the Channel in sewn plank boats.
+-1070|H|mor|ME|Babylon|famine|Babylon in want|Aramean raids and drought shrink Babylonia.
+-1060|H|mor|EU|Greece|founding|Athens survives|Athens is one of the few Mycenaean towns lived in through the dark age.
+-1050|H|mor|ME|Israel|faith|The shrine at Shiloh|The tribes of Israel keep a shrine at Shiloh.
+-1050|H|mor|AF|Nubia|crown|Nubia slips away|Egypt loses its hold on Nubia.
+-1050|H|mor|AM|Mexico|art|Olmec jade|Olmec carvers work blue-green jade into masks and celts.
+-1040|H|mor|EU|Scandinavia|art|The Nordic lurs|Bronze horns called lurs are blown in pairs in Denmark.
+-1030|H|mor|ME|Canaan|war|The Philistine iron|The Philistines keep the smiths of the land to themselves.
+-1025|H|mor|AS|China|learning|The Book of Documents|Zhou scribes record royal speeches later gathered in the Book of Documents.
+-1020|H|mor|EU|Italy|founding|Frattesina|Glass and amber workers trade at Frattesina on the Po.
+-1010|H|mor|ME|Israel|war|Saul dies at Gilboa|Saul and his sons die fighting the Philistines.
+-1000|H|mor|AS|Japan|science|Rice reaches Kyushu|Rice farming reaches the island of Kyushu from Korea.
+-1000|H|mor|AS|Thailand|science|Bronze in south-east Asia|Smiths at Ban Chiang cast bronze.
+-1000|H|mor|AF|Nigeria|founding|The Jos plateau|Farmers settle the Jos plateau, where the Nok will rise.
+-1000|H|mor|EU|Iberia|founding|Tartessos|The kingdom of Tartessos grows rich on silver in the south of Spain.
+-1000|H|mor|EU|Moravia|death|The Platenice burials|Urnfield farmers of Bohemia and Moravia bury their ashes with painted pots.
+-1000|W|kue|AS|Japan|migration,occult|The first Wan Kuei of the islands|Kuei-jin tales say the first hungry dead of Japan rose among the rice-farmers from Korea.
+-1000|W|mum|AF|Nubia|faith,occult|Amun at Jebel Barkal|The Reborn say Amun's priests carried the old rites to Napata when Thebes weakened.
+-990|H|mor|AF|Egypt|crown|Psusennes I at Tanis|Psusennes I is buried at Tanis in a silver coffin.
+-980|H|mor|EU|Greece|art|Euboean ships|Euboean traders sail again to Cyprus and the Levant.
+-975|H|mor|ME|Assyria|crown|Ashur-dan II|Ashur-dan II drives the Arameans back from the Tigris.
+-970|H|mor|AS|China|law|The Zhou bronze inscriptions|Long inscriptions on Zhou bronzes record land, lawsuits and gifts.
+-965|H|mor|ME|Jerusalem|crown|Solomon crowned|Solomon succeeds David as king in Jerusalem.
+-955|H|mor|ME|Arabia|trade|The Queen of Sheba|Hebrew tradition tells of a queen of Saba who came to Solomon with spices and gold.
+-950|H|mor|EU|Germany|founding|The Lusatian forts|Farmers of the Lusatian culture build timber forts in the north.
+-950|H|mor|AS|India|founding|Hastinapura|The Kuru town of Hastinapura grows on the Ganges.
+-940|H|mor|AF|Egypt|crown|Psusennes II|The last king of the Tanite line hands Egypt to Libyan chiefs.
+-930|H|mor|ME|Shechem|crown|Rehoboam at Shechem|Solomon's son refuses to lighten the tribes' burden.
+-920|H|mor|EU|Italy|death|Tarquinia's urns|The first cemeteries of Tarquinia fill with hut urns.
+-910|H|mor|AS|China|war|The Xianyun raids|Northern horsemen raid the Zhou lands.
+-905|H|mor|ME|Assyria|war|Assyria marches again|Assyria fights the Aramean states each summer.
+-900|H|mor|AF|Ethiopia|faith|The temple of Yeha|Sabaeans and highlanders begin building at Yeha.
+-900|H|mor|AM|Peru|art|Chavin's lanzon|The stone god of Chavin stands in the dark heart of the temple.
+-900|H|mor|AS|Korea|death|Dolmens of Korea|Farmers in Korea raise thousands of stone dolmens.
+-900|H|mor|AS|Pacific|sea|Lapita in the Reef Islands|Lapita villages spread across the Solomons and Vanuatu.
+-900|W|wer|AM|Peru|occult,faith|The jaguar priests|Balam tales say the jaguar-men carved on Chavin's walls were their own kin.
+-890|H|mor|EU|Greece|art|Athenian Geometric|Athenian potters paint bands, meanders and horses.
+-885|H|mor|ME|Assyria|war|The Assyrian army|Assyria fields the first standing army of the Iron Age.
+-880|H|mor|AF|Egypt|crown|Osorkon II|Osorkon II sends troops against Assyria.
+-875|H|mor|EU|Italy|founding|The Latial culture|Villages in Latium bury their dead with tiny model huts.
+-870|H|mor|AS|China|art|The Zhou bells|The Zhou cast bronze bells tuned to two notes each.
+-865|H|mor|ME|Damascus|crown|Ben-Hadad of Damascus|Damascus leads the Aramean states.
+-860|H|mor|EU|Greece|founding|The Greek polis grows|Villages in Greece begin to join into towns with their own shrines.
+-860|H|mor|AF|Nubia|crown|The kings of Kurru|Kings of Napata are buried under mounds at el-Kurru.
+-855|H|mor|ME|Israel|faith|Elijah|The prophet Elijah challenges Baal's priests on Mount Carmel.
+-850|H|mor|AS|Steppe|migration|The Cimmerians|Horse nomads called Cimmerians roam north of the Black Sea.
+-850|H|mor|AM|Mexico|building|The La Venta pyramid|La Venta raises a great clay pyramid.
+-850|H|mor|AF|Libya|founding|Libyan towns in Egypt|Libyan chiefs rule many towns of the delta.
+-850|W|wer|EU|Austria|occult,industry|The salt caern|Garou of the Alps read the Hallstatt salt mine as a wound the Weaver made.
+-845|H|mor|ME|Israel|war|Ramoth-Gilead|Israel and Judah fight Damascus at Ramoth-Gilead.
+-840|H|mor|ME|Urartu|war|Assyria against Urartu|Shalmaneser III marches against Urartu.
+-835|H|mor|ME|Cilicia|war|Assyria in Cilicia|Assyrian armies take the Cilician plain.
+-830|H|mor|AS|India|founding|The Panchala|The Panchala join the Kuru as a great kingdom of the Ganges.
+-825|H|mor|EU|Italy|founding|Veii grows|Veii becomes one of the great Etruscan towns.
+-820|H|mor|AF|Carthage|founding|Elissa's tale|Greek and Roman writers later tell how Elissa bought as much land as an oxhide could cover.
+-815|H|mor|AS|China|crown|King Xuan's wars|Zhou King Xuan fights the western Rong.
+-810|H|mor|EU|Germany|founding|Heuneburg begins|Settlers begin a hill town above the upper Danube.
+-805|H|mor|ME|Hama|war|The Zakkur stele|King Zakkur of Hamath records how his god saved him from a siege.
+-802|H|mor|AF|Egypt|crown|Takelot II|Egypt is split among rival kings in Thebes and the delta.
+-1060|M|wra|EU|Greece|death,occult|The ferryman's coin|Greek wraith lore says the custom of the coin for the ferryman began in these years.
+-990|M|cha|EU|Ireland|war,occult|The Milesians|Kithain tradition places the coming of the Milesians in Ireland and the retreat of the Tuatha in this age.
+-930|W|vam|ME|Israel|crown,occult|A kingdom split|Noddists say a Cainite feud behind the throne split Israel from Judah.
+-880|W|wra|ME|Nimrud|death,massacre|The flayed of Nimrud|Wraiths say Ashurnasirpal's victims formed a legion of rage in the Assyrian Shadowlands.
+-1175|H|mor|AS|China|crown|Wu Ding's heirs|Shang kings after Wu Ding fight the Qiang in the west.
+-1165|H|mor|EU|Britain|founding|The hillforts of Wessex|Farmers raise the first ramparts on the hills of southern Britain.
+-1155|H|mor|AM|Mexico|founding|Tlatilco|Villagers in the Valley of Mexico bury their dead with clay figures.
+-1145|H|mor|AS|Iran|migration|The Medes and Persians arrive|Iranian-speaking tribes settle the Zagros and the plateau.
+-1135|H|mor|AF|Egypt|crown|Ramesses IX|Ramesses IX orders the inquiry into the tomb robberies.
+-1125|H|mor|EU|Scandinavia|death|Kivik's carved grave|A great cairn in Sweden has stones carved with chariots and lurs.
+-1115|H|mor|AS|India|faith|The Vedic fire altars|Priests build fire altars of brick to set measures.
+-1105|H|mor|AS|Central Asia|founding|Yaz culture|Oasis farmers of Turkmenistan build citadels with canals.
+-1095|H|mor|AF|Nubia|founding|Gold of Kush|Kush keeps working the gold mines Egypt once held.
+-1085|H|mor|EU|Italy|founding|Sardinian towers|The nuraghe towers of Sardinia grow into fortified villages.
+-1070|H|mor|AS|China|faith|The Zhou bronze vessels|Zhou nobles cast bronzes recording the king's gifts to them.
+-1055|H|mor|AM|Mexico|art|Olmec in Guerrero|Olmec paintings are made deep in the caves of Juxtlahuaca.
+-1045|H|mor|ME|Canaan|founding|Iron Age hill villages|Small villages without pig bones spread in the highlands of Canaan.
+-1035|H|mor|EU|Greece|death|Cremation in Athens|Athenians burn their dead and bury the ash in amphorae.
+-1025|H|mor|ME|Babylon|crown|The Sealand dynasty|A line from the southern marshes rules Babylon.
+-1015|H|mor|AS|Korea|founding|Songguk-ri|A Korean village builds a timber palisade around its houses.
+-1005|H|mor|ME|Phoenicia|trade|Purple dye|Tyre and Sidon sell cloth dyed with purple from sea snails.
+-995|H|mor|EU|Spain|art|The warrior stelae|Stone slabs carved with warriors, shields and chariots stand in south-west Spain.
+-985|H|mor|AS|India|founding|The Vedic towns of the Doab|Settlements spread along the land between the Ganges and Yamuna.
+-975|H|mor|AF|Egypt|faith|The god's wives of Amun|Royal women serve as the God's Wife of Amun at Thebes.
+-965|H|mor|EU|Germany|art|The gold hats|Smiths of central Europe make tall gold hats marked with the calendar.
+-955|H|mor|AS|China|law|Zhou mandate tallies|Zhou courts keep records of land grants on bamboo.
+-945|H|mor|ME|Assyria|famine|The bad years|Drought in northern Mesopotamia weakens Assyria and Babylon alike.
+-935|H|mor|AM|Peru|trade|Chavin's road|Pilgrims bring shells from Ecuador and obsidian from the south to Chavin.
+-925|H|mor|EU|Poland|building|Biskupin|A fortified timber village is built on an island in a Polish lake.
+-915|H|mor|AS|Vietnam|founding|The Phung Nguyen|Rice farmers of the Red river delta work bronze.
+-905|H|mor|AF|Egypt|crown|Osorkon I|Osorkon I gives great gifts of silver to the temples.
+-895|H|mor|EU|Greece|faith|Delphi's first shrine|Offerings begin at the spring of Delphi.
+-885|H|mor|AS|Steppe|art|The deer stones|Herders of Mongolia raise stones carved with flying deer.
+-875|H|mor|AM|Ohio|founding|Adena villages|The Adena build round houses and trade copper.
+-865|H|mor|EU|Greece|learning|The Greek alphabet|Greeks take the Phoenician letters and add vowels.
+-855|H|mor|AS|China|art|The Zhou ritual reform|The Zhou change their bronze ritual sets toward rank.
+-845|H|mor|AF|Sahara|founding|The Tichitt villages|Herders of Mauritania build stone villages on the cliffs.
+-835|H|mor|EU|Britain|founding|The Flag Fen causeway|A timber causeway and offering place stands in the fens.
+-825|H|mor|ME|Arabia|trade|Camel caravans|Caravans of camels carry incense up the Arabian coast.
+-815|H|mor|AS|India|learning|The Shatapatha Brahmana|Vedic priests write a long guide to the fire rite.
+-805|H|mor|AF|Nubia|crown|Alara of Kush|Alara unites Kush around Napata.
+-1150|W|vam|ME|Elam|crown,war|The Elamite Cainite|Noddists say Elam's raids on Babylon were a war between two Antediluvian broods.
+-1050|W|wer|AS|China|occult,faith|The Zhou spirit rites|Stargazer tales say the Zhou rites kept the spirits of rivers and mountains bound to the kings.
+-950|W|cha|EU|Scandinavia|occult,art|The lurs of the north|Kithain say the bronze horns of Denmark were blown to call the fae to the feasts.
+-850|W|wra|AF|Nubia|death,faith|The pyramids of Kurru|Wraith lore says the kings of Kush kept Egyptian ways of binding the dead to their tombs.
+-1100|H|mor|AS|China|science|Glazed stoneware|Potters of the Zhou fire glazed stoneware.
+-1000|H|mor|ME|Arabia|science|The camel tamed|The camel is tamed in Arabia.
+-920|H|mor|EU|Moravia|trade|Amber through Moravia|The amber road runs from the Baltic through Moravia to the south.
+-880|H|mor|AF|Ethiopia|science|Ethiopian farmers|Highland farmers grow teff and plough with oxen.
+-860|H|mor|AS|Japan|founding|Late Jomon villages|Jomon villages shrink as the climate cools.
+-840|H|mor|EU|Greece|art|The Dipylon pots|Great pots mark Athenian graves with funerals painted on them.
+-820|H|mor|AM|Peru|founding|Kuntur Wasi|A temple with gold crowns rises in the northern Andes.
+-1130|H|mor|EU|Scandinavia|art|Rock carvings of Tanum|Farmers carve ships, ploughs and warriors on the rocks of western Sweden.
+-1030|H|mor|AS|India|crown|The Bharata kings|Vedic hymns praise kings of the Bharata.
+-990|H|mor|AF|Egypt|faith|The oracles of Amun|The god Amun gives verdicts by oracle at Thebes.
+-940|H|mor|AS|China|crown|King Mu's laws|The Zhou punishments code is set down under King Mu.
+-910|H|mor|EU|Italy|trade|Etruscan metal|The Etruscan hills sell iron and copper to Sardinia and the Phoenicians.
+-870|H|mor|AS|Steppe|science|The bow of the steppe|Nomads use the short recurved bow from horseback.
+-830|H|mor|EU|France|founding|Hillforts of Gaul|Hilltop forts spread across eastern France.
+-1125|H|mor|AS|China|faith|The Shang last oracle|The last Shang kings ask their ancestors about hunts, war and rain.
+-1015|H|mor|EU|Greece|founding|Old Smyrna|Greeks settle Smyrna on the coast of Asia Minor.
+-960|H|mor|AF|Egypt|crime|Tomb robbers at Tanis|Thieves strip the royal tombs of the delta.
+-900|H|mor|EU|Spain|trade|Huelva hoard|A ship's load of bronze weapons is lost in the harbour of Huelva.
+-870|H|mor|AM|Mexico|founding|Chalcatzingo|A town below a cliff carved with rain gods rises in Morelos.
+-810|H|mor|AS|India|founding|Kashi|Kashi, later Varanasi, grows on the Ganges.
+-1120|H|mor|AS|China|crown|Di Xin's rumoured cruelty|Later Zhou writers paint the last Shang king as a drunkard and a tyrant.
+-1010|H|mor|AF|Egypt|faith|The Theban priests rule|The high priests of Amun run Thebes as a state of the god.
+-940|H|mor|EU|Greece|death|The Toumba hero|The great hall of Lefkandi is covered by a mound over its two burials.

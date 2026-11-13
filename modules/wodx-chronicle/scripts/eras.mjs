@@ -138,8 +138,8 @@ export async function checkEra() {
   }
   if ( target.profile.id === activeId ) return;
 
-  // The Storyteller's lock is a decision already made
-  if ( target.locked || !rule("eraProposals") ) {
+  // The Storyteller's lock is a decision already made, and so is lifting it from a prologue, which no date reaches
+  if ( target.locked || !rule("eraProposals") || getProfile(activeId)?.prologue ) {
     await setSetting("activeEra", target.profile.id);
     return;
   }

@@ -121,6 +121,13 @@ test("with proposals off the era follows the date at once; the lock overrides", 
   await mock.settle();
   assert.equal(set("activeEra"), "renaissance");
   await game.settings.set(M, "rule.eraProposals", true);
+  // With proposals on, lifting a lock from a prologue goes straight back to the date's era
+  await game.settings.set(M, "eraLock", "iron-dawn");
+  await mock.settle();
+  assert.equal(set("activeEra"), "iron-dawn");
+  await game.settings.set(M, "eraLock", "");
+  await mock.settle();
+  assert.equal(set("activeEra"), "renaissance");
 });
 
 test("a player's request reaches the queue as a plain request, even if it claims another type", async () => {
