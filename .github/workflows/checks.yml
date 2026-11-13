@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   checks:
+    # Pull requests from outside accounts are closed by outside-guard.yml (B3030); their code is never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.user.login == 'thebadman7824'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
