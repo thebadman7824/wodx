@@ -158,7 +158,6 @@ Next free block: B3320
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
-| B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
@@ -4782,41 +4781,6 @@ Reverse: remove the ties by hand on the Relationships tab.
 WoDX NPC adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
 
 Reverse: none needed.
-
-## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
-WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
-
-Reverse: set Towns change over time to Off; the state stays and nothing else reads it.
-
-## B3281. Prosperity and unrest drift back to a town's ordinary level; pressures hold it away (2026-11-13)
-Prosperity 0 to 5 (3 getting by), unrest 0 to 5 (1 grumbling). Each week unrest eases a tenth of the way back to 1 and prosperity a fiftieth of the way back to 3, so a lasting pressure holds a town at its own level and a one-off blow wears off over a year or so. Pressures: no bread +0.3 unrest, short +0.08, dear bread and fuel up to +0.2, a tax a quarter of its rate, famine +0.15, plague +0.1, siege or cut off +0.1 unrest and -0.06 prosperity. People grow 0.2 in the hundred a year before 1750, 0.8 to 1950, 0.4 to 2022, nothing after, plus or minus 0.4 a year per step of prosperity from getting by. House rules.
-
-Reverse: change UNREST_EASE, PROSPERITY_EASE, pressures or naturalGrowth in town-rules.mjs.
-
-## B3282. Disasters by the town's make and ground (2026-11-13)
-Fire each week: 1 in 900 for timber towns, 1 in 3000 for stone, two and a half times in the dry season (June to September, turned south of the equator), halved from 1850 and again from 1950; a town is timber before 1700 unless the Storyteller says. Floods only on a town marked as on a river, in spring; storms only on a coast; earthquakes only on unsteady ground. A failed harvest once a year at harvest time: 1 in 12 before 1750, 1 in 30 to 1880, 1 in 80 to 1950, none after; it brings famine for 26 weeks and makes bread short and half again as dear in the town's market. House rules.
-
-Reverse: change fireChance, harvestChance or rollDisasters in town-rules.mjs.
-
-## B3283. Plague years by region of the world (2026-11-13)
-TOWN_OUTBREAKS: the Black Death (Europe and the Near East), its return, smallpox in Mexico and the Caribbean and the Andes, the great sickness of 1545, plague in the war years and the Great Plague, cholera from 1817 in Asia and from 1830 in Europe and beyond, the third plague in China and India, and influenza everywhere from 1918. Each strikes a town at most once, with a weekly chance while it runs, and kills a share of the people over its weeks (a third for the Black Death, a few in the hundred for cholera and influenza). The Hunt's own outbreak list is left as it is. A rounded reading of history, not a book rule.
-
-Reverse: edit or empty TOWN_OUTBREAKS.
-
-## B3284. Riots and risings (2026-11-13)
-From unrest 3.5 a riot may break out each week (15 in the hundred per step above 3, half at most), with six weeks of rest after one; it costs 0.3 prosperity and lets off 1.2 unrest. Unrest at 4.5 or more for four weeks may become a rising (one in five a week): a whole step of prosperity and 2.5 unrest. From unrest 4 a few people leave each week for the linked town that does best, or leave the land. Words follow the age (a revolt before 1500, barricades 1789 to 1990, mass protests after) and the cause (bread, the tax).
-
-Reverse: change riotChance, RIOT_REST, RISING_AFTER or RISING_CHANCE.
-
-## B3285. News and battles land at once (2026-11-13)
-A dated event with market news reaches every town at once (plague, famine, war, siege, a crash, a collapse, good times; NEWS_EFFECT). A battle at a town (its place matches the market's name or one of its scenes) lands when it ends: a siege taken by storm is a sack (two steps of prosperity, about an eighth of the people dead or fled), a siege lifted costs a little, a field battle a little more; each battle once.
-
-Reverse: drop the wodxEventFired and wodxBattle hooks in towns.mjs.
-
-## B3286. Who sees it and what waits (2026-11-13)
-Auto: the week lands with one Undo card for the Storyteller; a town where a player character stands and something happened waits whole in the approval queue. Suggest: every changed town waits. Big events start a true rumour from the town's traders, a line in the log and the wodxTown hook. A new town takes its people from a settlement record of the same name, else 400 plus 200 a scene plus 100 a trader.
-
-Reverse: change land() in towns.mjs.
 
 ## B3290. The town generator takes a region (2026-11-13)
 tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
