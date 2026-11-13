@@ -55,10 +55,13 @@ export async function run() {
         {name: "Gate Heart Wolf", type: "Werewolf"},
         {name: "Gate Heart Night", type: "Vampire", system: {advantages: {path: {custom: "Path of Night", permanent: 5}}}}]);
       made.push(a, b, c, garou, kindred);
+      // The system fills in a new sheet on create, so Nature and the Path are set afterwards
+      await a.update({"system.nature": "Bon Vivant"});
+      await kindred.update({"system.advantages.path.custom": "Path of Night", "system.advantages.path.permanent": 5});
       const w = await npc().hearts.court(a, b, "gift");
       let k = null;
       for ( let i = 0; i < 4; i++ ) k = await npc().hearts.court(c, kindred, "time");
-      ok("2. a gift to a Bon Vivant warms by two; a Kindred on a Path stays at Fond", w?.value === 2 && k?.value === 2, {w: w?.value, k: k?.value, path: kindred.system?.advantages?.path?.custom});
+      ok("2. a gift to a Bon Vivant warms by two; a Kindred on a Path stays at Fond", w?.value === 2 && k?.value === 2, {w: w?.value, k: k?.value, nature: a.system?.nature, path: kindred.system?.advantages?.path?.custom});
     });
     await step("3. law", async () => {
       const law = npc().hearts.law(), cs = npc().hearts.courtship();
@@ -78,7 +81,7 @@ export async function run() {
       kid = r?.child; if ( kid ) made.push(kid);
       const parents = kid ? npc().ties.of(kid).filter(t => t.kind === "parent").map(t => t.to.id) : [];
       const none = await npc().hearts.haveChild(kindred, c);
-      ok("5. a Garou and mortal's child is Kinfolk with both parents; a Kindred cannot", r?.ok && ["kinfolk", "garou-to-be"].includes(r.kind.kind) && parents.includes(garou.id) && parents.includes(c.id) && none?.ok === false, {kind: r?.kind?.kind});
+      ok("5. a Garou and mortal's child is Kinfolk with both parents; a Kindred cannot", r?.ok && ["kinfolk", "garou-to-be"].includes(r.kind.kind) && parents.includes(garou.id) && parents.includes(c.id) && none?.ok === false, {kind: r?.kind?.kind, ok: r?.ok, parents, garou: garou.id, c: c.id, none: none?.ok, why: r?.why});
     });
     await step("6. household", async () => {
       await npc().hearts.setHousehold(a, [{id: b.id, role: "spouse"}, {name: "Gate maid", role: "servant"}]);
@@ -102,8 +105,10 @@ export async function run() {
     await step("8. sheet", async () => {
       await npc().hearts.court(a, b, "promise");
       await a.sheet.render(true);
-      await sleep(900);
-      const html = a.sheet.element?.innerHTML ?? "";
+      await sleep(1500);
+      // Sheets are Application V1: element is a jQuery object
+      const el = a.sheet.element?.[0] ?? a.sheet.element;
+      const html = el?.querySelector?.(".tab.wodxties")?.innerHTML ?? el?.innerHTML ?? "";
       ok("8. the Relationships tab shows the warmth word", /Devoted|Fond/.test(html));
       await a.sheet.close();
     });

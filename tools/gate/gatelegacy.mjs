@@ -71,8 +71,11 @@ export async function run() {
     await step("5. web", async () => {
       const dlg = await npc().legacy.openWeb();
       await sleep(600);
-      const html = dlg?.element?.innerHTML ?? "";
-      ok("5. the web window shows the people, the links and the search box", /<svg/.test(html) && /Gate Legacy Student/.test(html) && /wodx-search/.test(html));
+      const el = dlg?.element ?? document.querySelector(".wnpc-web-dialog");
+      const w = npc().legacy.web();
+      const svg = !!el?.querySelector?.("svg"), named = (el?.textContent ?? "").includes("Gate Legacy Student"), search = !!el?.querySelector?.("input.wodx-search");
+      ok("5. the web window shows the people, the links and the search box", svg && named && search,
+        {svg, named, search, nodes: w.nodes.length, links: w.links.length, studentInWeb: w.nodes.some(n => n.id === student.id), returned: !!dlg});
       await dlg?.close?.();
     });
     await step("6. ideas", async () => {
