@@ -1158,6 +1158,13 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | How big is a district's herd (B3571)? | Town people times the district's share (slums 1/4 to patrolled 1/10), one feeding a month per hundred, at least two | Change AREA_SHARE or PEOPLE_PER_FEEDING in herd-rules.mjs |
+| 2026-11-13 | What does over-hunting do (B3572, B3573)? | Thinning +1, Over-hunted +2 with a death, heat and a rumour, Stripped +3 with two deaths, a big rumour and hunter pressure | Change STAGES or harmFor in herd-rules.mjs |
+| 2026-11-13 | How strong is shared holy ground (B3581)? | 10 a level, x1.5 to 1450 down to x0.6 in the Future Darkness, a tenth per Gauntlet drift step; refills 2 a level a week | Change ERA_STRENGTH in site-rules.mjs |
+| 2026-11-13 | What does drawing on weak shared ground do (B3582, B3584)? | Each point drawn costs a point; below half every role gives half; a moot gives back half its Gnosis | Change WEAK or mootGift in site-rules.mjs |
+| 2026-11-13 | When do claims on shared ground quarrel (B3585)? | Three draws by a pair while the site is weak; the quarrel goes to the approval queue | Change QUARREL_AT in site-rules.mjs |
+| 2026-11-13 | Which powers can a day job work through, by year (B3591)? | Guilds, lords, mercenaries early; police, press, banks, technology and corporations later; local names by faith | Change CHANNELS in day-jobs-rules.mjs |
+| 2026-11-13 | Who rolls a day job, and how do factions react (B3592, B3593)? | A follower its own sheet, a Background dot Manipulation + dots; a done hostile job costs the faction a dot (approval), a ruined one a step of regard | Change jobTask or reaction in day-jobs-rules.mjs |
 | 2026-11-13 | What happens to a caern whose moot is not held (B3471)? | A month without one: lapsed, Gnosis gone, Gauntlet drift +1; a level lost every 3 months of lapse; dead at 0 | Change LAPSE_MONTHS in caern-rules.mjs |
 | 2026-11-13 | How does a caern grow (B3472)? | 13 full moots in a row, then a rite with 100 Gnosis raises it a level; 200 to reach level 5 | Change RISE_MOOTS or riseCost |
 | 2026-11-13 | How often do raids come, and who settles them (B3473)? | Monthly Wyrm/Weaver odds by era (3%/1% before 1500 up to 10%/9% after 2022), doubled for a lapsed caern (Wyrm) or an urban one (Weaver); the sept rolls for itself after 7 days | Change RAID_ODDS or RAID_GRACE_DAYS, or untick raids |
@@ -1259,3 +1266,5 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | Law of the land: bribe and catch figures (B3490-B3603) | Each law family and region row sets bribe (1 hard to 5 easy) and catch (0.25 in 1197 up to 0.7 with face matching), rounded by family and era. | Edit the bribe and catch values in law-rules.mjs FAMILIES and REGION_ROWS. |
+| 2026-11-13 | Offices of the law and the state (B3604-B3605) | Court from 1000 people, the ruler's officers and tax office from 2000, garrison, Holy Office and secret police from 5000; the last two only while the law lists inquisitors or secret police. Rank names by law family and year. | Edit KINDS, COURT, RULER, ARMY and TAX in institution-rules.mjs. |

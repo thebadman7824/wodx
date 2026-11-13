@@ -36,6 +36,7 @@ export class ClockApp extends ApplicationV2 {
       sessionZero: () => safety.openSessionZero(),
       firstNight: () => (game.modules.get("wodx-creation")?.api?.firstNight?.() ?? ui.notifications.warn("Before the First Night needs WoDX Creation 0.12.0 or later.")),
       ask: () => approvals.askStoryteller(),
+      roster: () => game.modules.get("wodx-chronicle")?.api?.roster?.open?.(),
       approvals: () => approvals.ApprovalsApp.open(),
       waitingTray: () => game.modules.get("wodx-chronicle")?.api?.waiting?.open?.(),
       rules: ClockApp.#onRules,
@@ -144,7 +145,8 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>
           <button type="button" data-action="placeHere" title="Region, latitude and hour for a scene far from home"><i class="fa-solid fa-globe"></i> Where this scene stands</button>
           <button type="button" data-action="hold" title="Move the clock without the world reacting: no routines, faction turns, dated events or expiring effects"><i class="fa-solid fa-${held ? "play" : "pause"}"></i> ${held ? "Release the world" : "Hold the world"}</button>`
-          : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>`}
+          : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>
+          <button type="button" data-action="roster" title="Every character you own, and which one you play"><i class="fa-solid fa-users"></i> My characters</button>`}
         </div>
       </section>`;
     return div;
