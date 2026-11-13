@@ -56,6 +56,8 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 
 ## Open, not built yet
 
+Review desk for the scope calls below (eight questions, picks saved in its `verdicts` collection, one doc per question id): https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn
+
 - Timeline events for the Americas, Africa and Oceania in the Future Darkness branch (1990 to 2099), and a book check of the eight new cards that carry a World of Darkness reading.
 - Faith calendars, the spread of news and travel dates by region.
 - Passers-by, residents, clergy and trades by region.
