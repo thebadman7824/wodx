@@ -110,8 +110,9 @@ export async function run() {
     });
 
     await step("the Clock's button and window", async () => {
-      chron.refreshClock?.();
-      await sleep(600);
+      // The button lives in the Clock window, so open it first (the first run of this gate did not, and failed here)
+      await chron.openClock?.();
+      await until(() => document.querySelector('#wodx-clock [data-action="placeHere"]'), 4000);
       const btn = document.querySelector('[data-action="placeHere"]');
       const p = chron.place.dialog(scene);
       const found = await until(() => document.querySelector('dialog select[name="region"], .application select[name="region"]'), 5000);
