@@ -154,7 +154,7 @@ LISTS = {
             craft=["carpenter", "potter", "swordsmith", "lacquerer", "weaver", "tatami maker", "cooper", "papermaker"],
             shop=["rice dealer", "sake brewer", "tea merchant", "kimono dealer", "pawnbroker", "soy sauce maker", "bookseller"],
             home={"rich": _w(("merchant", 3), ("sake brewer", 2), ("samurai retainer", 2), ("physician", 1)),
-                  "middling": _w(("rice farmer", 5), ("carpenter", 1), ("weaver", 2), ("fisher", 1), ("clerk", 1)),
+                  "middling": _w(("rice farmer", 5), ("samurai retainer", 2), ("carpenter", 1), ("weaver", 2), ("fisher", 1), ("clerk", 1), ("sake brewer", 1)),
                   "poor": _w(("tenant farmer", 4), ("day labourer", 3), ("porter", 2), ("fisher", 2), ("peddler", 1))},
             notables=[("village headman", 0, "rich"), ("temple school teacher", 0, "middling"), ("domain official", 1, "rich"),
                       ("physician", 1, "rich"), ("town magistrate", 2, "rich")],
@@ -371,3 +371,24 @@ WORSHIP = {"islamic": "Mosque", "sahel": "Mosque", "swahili": "Mosque", "indic":
            "theravada": "Temple", "tibetan": "Temple", "polynesian": "Shrine", "northern": "Shrine", "mesoamerican": "Temple", "andean": "Temple"}
 FAITH_WORSHIP = {"islamic": "Mosque", "jewish": "Synagogue", "hindu": "Temple", "theravada": "Temple", "tibetan": "Temple", "chinese": "Temple",
                  "own": "Shrine", "orthodox": "Church", "western": "Church"}
+
+
+# ------------------------------------------------------------------ which of the first group's buildings a town gets
+# The older public buildings of the Bohemian towns (firstgroup.py) by where they belong (B3460):
+#   a Jewish quarter and its synagogue only in Christendom and the lands of Islam;
+#   the charnel house, the cemetery chapel, the monastery library and the Protestant prayer house only in Christendom;
+#   the hospital, museum, savings bank, gendarmerie, library, hotel, waterworks and dance hall elsewhere only once the
+#   region's trades have left the old ones (its industrial, colonial or later age)
+QUARTER_SPHERES = {"latin", "orthodox", "islamic"}
+CHRISTIAN_ONLY = {"charnel-house", "cemetery-chapel", "monastery-library", "prayer-house"}
+MODERN_ONLY = {"general-hospital", "museum-hall", "savings-bank", "gendarmerie", "public-library", "grand-hotel", "waterworks", "dance-hall",
+               "goods-shed", "counting-house"}
+
+
+def first_group_ok(tk, region, sphere, year):
+    """Does a town of this region and way of life get this older public building by the year?"""
+    if region == "moravia" or sphere in ("latin", "orthodox"): return True
+    if tk in CHRISTIAN_ONLY: return False
+    if tk in ("old-synagogue", "ghetto-house"): return sphere in QUARTER_SPHERES
+    if tk in MODERN_ONLY: return trade_age(region, year) != "reform"
+    return True
