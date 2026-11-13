@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2690
+Next free block: B2700
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -121,6 +121,7 @@ Next free block: B2690
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
+| B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3517,3 +3518,23 @@ WoDX Interactables 0.36.0. Fill by place and era reads the scene's region (its o
 
 Reverse: clear the scene's region in Where this scene stands, or set Fill to Gear by era only.
 
+
+## B2690. The damage doll (2026-11-13)
+Ben asked (13 November 2026) for a doll outline on the body map that changes with the body plan and with damage, as in Project Zomboid, and approved the sample desk as recommended. Sheets 0.16.0 draws a 64 by 80 pixel figure at the top of the Body tab, in the manner of the token sprites, on its own night plate: one pose for each body plan (person, four-legged beast, bat, bird, snake, fish, spider), bulkier for Glabro, Crinos, Zulo and Chiropteran shapes, with parts added by Vicissitude and the like. Colours: purple for bashing, red for lethal, charred black with an ember edge for aggravated, deeper with more levels. Lost parts show as a dotted outline, inner parts (the heart) and eyes only when struck.
+Reverse: drop dollHtml from bodyHtml and wireDoll from extras.mjs.
+
+## B2691. Where wounds are (2026-11-13)
+Parts still have no health of their own (B1200). Combat 3.22.0 keeps a note per health level of where an attack landed (flag wodx-combat.wounds), written when the attack card's damage is applied. As the track heals, or is set by hand, the oldest notes of each kind go first; an Undo on the card takes back that attack's notes. A note on a part the current shape lacks shows on its counterpart (a hand on the fore leg in Lupus) or on the torso. The Storyteller clicks a part on the doll to place a level the track already holds, or to clear the part; the track itself never changes from the doll.
+Reverse: remove recordWound and undoWound from main.js and the updateActor trim in body.js.
+
+## B2692. Damage with no place (2026-11-13)
+Levels on the track with no note (hit locations switched off, falls, fire, sunlight, harm outside a fight) show on the torso, so the doll still reads as hurt. Mist and a body in the earth show no wounds.
+Reverse: drop the loose-levels loop in woundsByPart.
+
+## B2693. Four-legged animals, and the Mokole fix (2026-11-13)
+Combat 3.21.0 sent a Mokole in Hispo or Lupus to a shape "beast" that does not exist, so bodyOf threw and the Body tab was empty. Mokole now keep the four-legged plan. Each four-legged shape names its animal for the doll's head and tail (FERA_BEAST): wolf for Garou and Nuwisha, fox for Kitsune, hyena for Ajaba, big cat for Bastet, bear for Gurahl, rat for Ratkin, crocodile for Mokole, bull for Apis, boar for Grondr. Senses are unchanged.
+Reverse: give FERA_ANIMAL a Mokole entry again and drop animal from bodyOf.
+
+## B2694. False limbs by era (2026-11-13)
+A lasting change "A false limb" with a part named in its "Part lost" field draws that part again as a false limb, in wood and iron before 1900, steel and plastic to 2022, and chrome in the World of Future Darkness, by the chronicle's year. The rules are unchanged: the part still counts as lost.
+Reverse: drop fakes from dollOf in extras.mjs.

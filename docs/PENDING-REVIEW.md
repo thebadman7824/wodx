@@ -969,6 +969,12 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 | 2026-11-12 | Era timelines: Future Darkness has no events for the Americas, Africa or the Pacific | Left for a pass against the Cyberpunk 2020 book, which sets that branch's history | Write them into r3/future-darkness.txt as kind F |
 | 2026-11-12 | The world map (B2540 to B2549): the whole Earth as a coarse grid from public-domain shapes, journeys by year, a closer view of any square, the otherworlds as mirrors and a chart. Samples in /mnt/project-files/world-map/ | Taken as planned in the thread; speeds and railway years are a house reading; canals open by year (Suez 1869, shut 1967 to 1974; Panama 1914), and where each realm sits on the chart is our own arrangement | Say which speeds, region borders or chart spots to change; the next step (trips and town maps anywhere, towns and ports by era) waits for the word |
 
+## Approved by Ben, 13 November 2026, 01:34 UTC (damage doll desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Where the damage doll sits, its colours, how wounds are kept, damage with no place, animal heads, false limbs (B2690-B2694) | All as recommended: top of the Body tab; purple, red, charred black; notes per level healed off with the track, Storyteller places or clears; unplaced harm on the torso; a head and tail per animal; false limbs by era | See B2690-B2694 in docs/DECISIONS.md |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
