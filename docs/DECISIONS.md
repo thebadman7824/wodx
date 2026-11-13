@@ -157,7 +157,7 @@ Next free block: B3320
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
-| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310) | Creation |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3311) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4743,3 +4743,8 @@ Reverse: remove the --faith argument.
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
 
 Reverse: put back the old 22-name lists in data/people-world.mjs.
+
+## B3311. North Indian names raised to 300 (2026-11-13)
+WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
+
+Reverse: put back the old lists in data/people-world.mjs.
