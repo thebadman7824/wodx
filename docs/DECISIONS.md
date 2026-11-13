@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2550
+Next free block: B2560
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -106,6 +106,7 @@ Next free block: B2550
 | B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
+| B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3161,3 +3162,18 @@ Not built: the closer view feeding trips and town maps outside Moravia; towns, p
 ## B2549. Canals and straits by year (2026-11-13)
 Ben: the Suez and Panama Canals did not exist in earlier eras, and travel paths must keep to that. A journey on the world map sails the Suez Canal only from 1869, and not from 1967 to 1974 when it lay shut; the Panama Canal only from 1914. Before those years, and while Suez is shut, the neck of land is land: the quickest way lands there, crosses and takes ship again, or goes the long way round, whichever is shorter in that year. The journey names any canal it passes with its opening year. The list (CANALS in world-map-rules.mjs) takes more canals as a line each. Found while checking: the one-degree grid left Panama open to ships in every year and closed Gibraltar, the Dardanelles and the mouth of the Gulf of Suez, so the Mediterranean, the Black Sea and the Red Sea's head were cut off. Those straits are now a ship's road in every age and Panama is land without its canal. The drawn map is unchanged.
 Reverse: empty CANALS, STRAITS and ISTHMUS; journeys then follow the bare grid.
+
+## B2550. The known world, by homeland and year (2026-11-13)
+Ben: simulate the discovery of India and the Americas the way the Europa Universalis games handle the ages of discovery, so that players who begin in Europe cannot travel to the Americas at once unless they find a way of their own. Each world region belongs to one of ten circles of knowledge (Europe; North Africa, the Near East and Central Asia; India; East Asia and the islands; Africa south of the desert; North America and the far north; Mexico and the Caribbean; South America; the Pacific islands; Australia). A circle knows its own regions from of old and each other region from a year on: for Europe the Caribbean from 1492, the North American coast and Canada 1497, the Cape 1488 and the East African coast 1498, Brazil 1500, Mexico 1517, the Pacific islands 1521, the Andes 1526, Japan 1543, Australia 1606, Aotearoa 1642, the southern ice 1820; China from 1245 and the Indies from 1292 by the old roads. It runs every way round: Mexico knows nothing of Europe before 1492, the Andes before 1500, the Pacific islands before 1767, Australia before 1788. A circle that has met Europe's ships learns what they find some years after them (20 to 70). From 1900 every part of the world knows every other. The years are a house reading of history, coarse on purpose, in one table (CIRCLES in discovery-rules.mjs). No game book is the source and nothing is taken from the computer games but the idea. Following the global rule, the homeland decides whose knowledge counts: a chronicle that begins in Mexico or China has its own unknown world.
+Reverse: choose "The whole world, known or not" in the world map window, or empty CIRCLES' years.
+
+## B2551. Charted land and water (2026-11-13)
+On the world map a land square is charted when its region is known. A square of sea is charted when a known region's shore lies no more than six squares further off than the nearest shore of all. So the waters along an unknown coast are closed (no ship rounds the Cape before 1488, and the coast of West Africa closes a few days' sail south of Morocco before 1444), while the open sea between a known coast and a newly found one is open (the Atlantic in 1492). A journey cannot end in an uncharted land and cannot cross uncharted squares; it says so in plain words, with the year the land becomes commonly known. India is known to Europe from of old and is reached by the Levant and the Red Sea; what 1498 opens is the sea road round Africa. The map draws the uncharted world dark.
+Reverse: pass no knowledge to journey() and it crosses the whole world as before.
+
+## B2552. The chronicle's own discoveries (2026-11-13)
+"Discoveries" in the world map window lists the lands still beyond the known world in the year, each with a tick. A ticked land is known to the chronicle whatever the year: found by a voyage, a map, a spirit's word or any other way the story gives. The list is kept in the world (setting "discovered") and only the Storyteller can change it. A land found alone may still have no way to it, when the coasts and islands before it are unknown; the window says so and the Storyteller ticks those too. Nothing rolls for discovery: it is the story's to give.
+Reverse: untick the land.
+
+## B2553. Left open (2026-11-13)
+Not built: years before 1197 use the same from-of-old lists, so the prologue eras show too much as known; the Norse voyages to Vinland and other finds that were lost again; a share of the map for the players (the window is the Storyteller's); an expedition as a thing to play (ships, crews, a roll to find a coast); knowledge by faction or by supernatural kind rather than by homeland; Travel places inside one country, which needs no such rule.

@@ -5,6 +5,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {existsSync, readFileSync} from "node:fs";
 import * as WM from "../../modules/wodx-storyteller/scripts/world-map-rules.mjs";
+import * as D from "../../modules/wodx-storyteller/scripts/discovery-rules.mjs";
 import * as W from "../../modules/wodx-storyteller/data/world.mjs";
 import * as CH from "../../modules/wodx-otherworlds/scripts/worlds-chart-rules.mjs";
 import {REALMS} from "../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs";
@@ -172,6 +173,73 @@ test("world map: the straits are open in every age", () => {
   }
 });
 
+test("known world: every region has a circle, and what is known only grows", () => {
+  const inCircle = Object.values(D.CIRCLES).flatMap(c => c.members);
+  assert.equal(new Set(inCircle).size, inCircle.length, "no region sits in two circles");
+  for ( const id of inCircle ) assert.ok(W.REGION_IDS.includes(id), `${id} is a region of the map`);
+  for ( const c of Object.values(D.CIRCLES) ) for ( const id of Object.keys(c.knows) ) assert.ok(W.REGION_IDS.includes(id), `${id} is a region of the map`);
+  assert.deepEqual(W.REGION_IDS.filter(id => !inCircle.includes(id)), ["antarctica"]);
+  for ( const home of W.REGION_IDS ) {
+    assert.ok(D.isKnown(home, home, -5000), `${home} knows itself`);
+    let last = 0;
+    for ( const year of [1197, 1400, 1500, 1600, 1800, 1900] ) { const n = D.knownRegions(home, year, W.REGION_IDS).size; assert.ok(n >= last); last = n; }
+    assert.equal(last, W.REGION_IDS.length, `${home} knows the whole world by 1900`);
+  }
+});
+
+test("known world: Europe learns of the Americas, and the Americas of Europe, in their years", () => {
+  assert.equal(D.knownYear("moravia", "caribbean"), 1492); assert.equal(D.knownYear("iberia", "mexico"), 1517); assert.equal(D.knownYear("moravia", "india"), D.OLD);
+  assert.equal(D.knownYear("moravia", "southern-africa"), 1488); assert.equal(D.knownYear("british-isles", "australia"), 1606);
+  assert.equal(D.knownYear("mexico", "iberia"), 1492); assert.equal(D.knownYear("andes", "france"), 1500); assert.equal(D.knownYear("mexico", "north-america-west"), D.OLD);
+  assert.equal(D.knownYear("china", "mexico"), 1587, "seventy years after Europe's ships");
+  assert.equal(D.knownYear("egypt", "caribbean"), 1512); assert.equal(D.knownYear("aotearoa", "pacific-islands"), D.OLD); assert.equal(D.knownYear("aotearoa", "france"), 1767);
+  assert.equal(D.knownYear("antarctica", "caribbean"), 1492);
+  assert.ok(!D.isKnown("moravia", "caribbean", 1300)); assert.ok(D.isKnown("moravia", "caribbean", 1300, ["caribbean"]), "found by the chronicle itself");
+  assert.deepEqual(D.unknownRegions("moravia", 1500, W.REGION_IDS).slice(0, 2), [{id: "southern-cone", year: 1516}, {id: "mexico", year: 1517}]);
+  assert.deepEqual(D.normFound(["caribbean", "atlantis", "caribbean"], W.REGION_IDS), ["caribbean"]);
+});
+
+test("known world: a journey keeps to the known world", () => {
+  const C = id => WM.regionCentre(id), K = (home, year, found = []) => D.knownRegions(home, year, W.REGION_IDS, found);
+  const go = (home, from, to, year, found) => WM.journey(C(from), C(to), {year, known: K(home, year, found)});
+  for ( const year of [1197, 1400, 1491] ) {
+    const j = go("moravia", "iberia", "caribbean", year);
+    assert.equal(j.unknown, "caribbean"); assert.equal(j.surface, null); assert.equal(j.air, null);
+    assert.match(WM.journeyLines(j)[0], /beyond the known world/);
+  }
+  const first = go("moravia", "iberia", "caribbean", 1492);
+  assert.ok(first.surface.days > 30 && first.surface.legs.some(l => l.way === "sea" && l.km > 5000), "the crossing of 1492");
+  assert.equal(go("moravia", "iberia", "mexico", 1492).unknown, "mexico");
+  assert.ok(go("moravia", "iberia", "mexico", 1300, ["mexico", "caribbean"]).surface, "a chronicle that found the way itself can sail it");
+  const walled = go("moravia", "iberia", "mexico", 1300, ["mexico"]);
+  assert.equal(walled.noWay, true, "Mexico alone is found, but the islands and coasts before it are not");
+  assert.match(WM.journeyLines(walled)[0], /no known way leads there/);
+  assert.ok(go("moravia", "iberia", "brazil", 1300, ["brazil"]).surface, "the open sea to a found coast is open");
+  assert.ok(go("moravia", "iberia", "india", 1197).surface, "India is reached by the old roads and the Red Sea");
+  assert.equal(go("mexico", "mexico", "iberia", 1400).unknown, "iberia", "nor does Mexico know of Spain");
+  assert.equal(go("china", "china", "mexico", 1500).unknown, "mexico");
+  assert.ok(go("pacific-islands", "pacific-islands", "aotearoa", 1300).surface);
+  // with no knowledge given, the whole world is open, as before
+  assert.ok(WM.journey(C("iberia"), C("caribbean"), {year: 1300}).surface);
+});
+
+test("known world: the waters off an unknown coast are closed, and the Cape opens with its discovery", () => {
+  const at = (chart, lon, lat) => { const q = WM.squareOf(lon, lat); return chart[q.row * WM.COLS + q.col]; };
+  const K = year => WM.charted(D.knownRegions("iberia", year, W.REGION_IDS));
+  assert.equal(at(K(1480), 18.5, -36.5), 0, "off the Cape of Good Hope in 1480"); assert.equal(at(K(1488), 18.5, -36.5), 1);
+  assert.equal(at(K(1480), 5, 38.5), 1, "the Mediterranean"); assert.equal(at(K(1480), -75, 20), 0, "the Caribbean in 1480"); assert.equal(at(K(1492), -75, 20), 1);
+  assert.equal(at(K(1480), -100, 40), 0, "the plains of North America"); assert.equal(at(K(1480), -160, 0), 0, "the middle of the Pacific");
+  // the sea road round Africa to India: closed before the Cape is known, open after
+  const sail = year => { const chart = K(year), seen = new Set(), start = WM.squareOf(-10.5, 36.5), goal = WM.squareOf(72.5, 15.5), todo = [[start.col, start.row]];
+    while ( todo.length ) { const [c, r] = todo.pop(); if ( c === goal.col && r === goal.row ) return true;
+      for ( let dr = -1; dr <= 1; dr++ ) for ( let dc = -1; dc <= 1; dc++ ) { const c2 = (c + dc + WM.COLS) % WM.COLS, r2 = r + dr, k = r2 * WM.COLS + c2;
+        if ( r2 < 0 || r2 >= WM.ROWS || seen.has(k) || !chart[k] || WM.paceAt(c2, r2, year).way !== "sea" || WM.canalAt(c2, r2) ) continue; seen.add(k); todo.push([c2, r2]); } }
+    return false; };
+  assert.equal(sail(1450), false, "no sea road from Lisbon to India in 1450"); assert.equal(sail(1498), true, "the sea road of 1498");
+  const s = WM.svg({tint: WM.shroudTint(D.knownRegions("moravia", 1300, W.REGION_IDS)), legend: [[WM.SHROUD, "beyond the known world"]]});
+  assert.ok(s.includes(WM.SHROUD) && !/NaN|undefined/.test(s));
+});
+
 test("world map: its regions are WoDX Chronicle's world regions, when that list is in the repo", {skip: !existsSync(new URL("../../modules/wodx-chronicle/scripts/world-rules.mjs", import.meta.url)) && "the world regions list is not merged yet"}, async () => {
   const {WORLD_REGIONS} = await import("../../modules/wodx-chronicle/scripts/world-rules.mjs");
   const unknown = W.REGION_IDS.filter(id => !WORLD_REGIONS[id]);
@@ -180,6 +248,6 @@ test("world map: its regions are WoDX Chronicle's world regions, when that list 
 });
 
 test("world map: the words in the window carry no dash or gendered word", () => {
-  const src = readFileSync(new URL("../../modules/wodx-storyteller/scripts/world-map.mjs", import.meta.url), "utf8") + JSON.stringify(CH.MIRRORS) + JSON.stringify(CH.SIDES);
+  const src = readFileSync(new URL("../../modules/wodx-storyteller/scripts/world-map.mjs", import.meta.url), "utf8") + JSON.stringify(D.CIRCLES) + JSON.stringify(CH.MIRRORS) + JSON.stringify(CH.SIDES);
   assert.ok(!/—/.test(src)); assert.ok(!/\b(he|she|his|her|him)\b/i.test(src.replace(/\/\*[\s\S]*?\*\//g, "")));
 });

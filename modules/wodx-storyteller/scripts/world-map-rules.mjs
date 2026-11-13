@@ -176,6 +176,53 @@ export function travelGround(col, row, year) {
   return groundAt(col, row);
 }
 
+const NEAR8 = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]];
+/** Steps from every square to the nearest of the squares that pass the test (0 on them). */
+function stepsFrom(test) {
+  const d = new Int16Array(COLS * ROWS).fill(-1);
+  let edge = [];
+  for ( let r = 0; r < ROWS; r++ ) for ( let c = 0; c < COLS; c++ ) if ( test(c, r) ) { d[r * COLS + c] = 0; edge.push(r * COLS + c); }
+  for ( let n = 1; edge.length; n++ ) {
+    const next = [];
+    for ( const k of edge ) {
+      const c = k % COLS, r = Math.floor(k / COLS);
+      for ( const [dc, dr] of NEAR8 ) {
+        const r2 = r + dr;
+        if ( r2 < 0 || r2 >= ROWS ) continue;
+        const k2 = r2 * COLS + wrap(c + dc);
+        if ( d[k2] < 0 ) { d[k2] = n; next.push(k2); }
+      }
+    }
+    edge = next;
+  }
+  return d;
+}
+/** How many squares further than the nearest shore a known shore may lie for open water to count as charted. */
+export const SEA_SLACK = 6;
+let toAnyLand = null;
+const chartCache = new Map();
+/**
+ * The squares a traveller can cross with a given knowledge of the world (a Set of region ids): 1 for charted, 0 for
+ * beyond the known world. Land is charted when its region is known. Water is charted when a known region's shore
+ * lies not much further off than the nearest shore of all: the waters along an unknown coast are closed, the open
+ * sea between a known coast and a newly found one is open.
+ */
+export function charted(known) {
+  const key = [...known].sort().join(",");
+  let got = chartCache.get(key);
+  if ( got ) return got;
+  toAnyLand ??= stepsFrom((c, r) => !!regionAt(c, r));
+  const toKnown = stepsFrom((c, r) => { const id = regionAt(c, r); return !!id && known.has(id); });
+  got = new Uint8Array(COLS * ROWS);
+  for ( let r = 0; r < ROWS; r++ ) for ( let c = 0; c < COLS; c++ ) {
+    const k = r * COLS + c, id = regionAt(c, r);
+    got[k] = id ? (known.has(id) ? 1 : 0) : (toKnown[k] >= 0 && toKnown[k] <= toAnyLand[k] + SEA_SLACK ? 1 : 0);
+  }
+  if ( chartCache.size > 12 ) chartCache.clear();
+  chartCache.set(key, got);
+  return got;
+}
+
 /** Km a day across one square for a year: {speed, way}. Sea and lakes go by ship. */
 export function paceAt(col, row, year, ways = waysIn(year)) {
   const g = travelGround(col, row, ways.year);
@@ -204,10 +251,15 @@ export const PORT_DAYS = 1;
  * The journey between two spots in a year. from, to: {lon, lat}. Returns {km (great circle), surface: {days, km,
  * legs: [{way, km, days}], path: [[col, row]...], canals: [{id, name, from}]}, air: {days, km, words} | null, best: "surface" | "air", year}.
  * The surface way is the quickest over the squares; air (from 1935) flies the great circle with a day at each end.
+ * known: a Set of region ids (discovery-rules.mjs); the journey then keeps to those regions' ground and waters. An
+ * end beyond them gives {unknown: region id, surface: null}; known ends with nothing known between give {noWay: true}.
  */
-export function journey(from, to, {year = 1197} = {}) {
+export function journey(from, to, {year = 1197, known = null} = {}) {
   const ways = waysIn(year);
   const a = landNear(squareOf(from.lon, from.lat)), b = landNear(squareOf(to.lon, to.lat));
+  const chart = known ? charted(known) : null;
+  const beyond = chart ? [b, a].map(q => regionAt(q.col, q.row)).find(id => id && !known.has(id)) ?? null : null;
+  if ( beyond ) return {km: Math.round(kmBetween(from, to)), year: ways.year, unknown: beyond, surface: null, air: null, best: null};
   const start = a.row * COLS + a.col, goal = b.row * COLS + b.col;
   const dist = new Float64Array(COLS * ROWS).fill(Infinity), prev = new Int32Array(COLS * ROWS).fill(-1);
   const heap = new Heap();
@@ -223,12 +275,15 @@ export function journey(from, to, {year = 1197} = {}) {
       if ( !dr && !dc ) continue;
       const r2 = row + dr;
       if ( r2 < 0 || r2 >= ROWS ) continue;
-      const c2 = wrap(col + dc), k2 = r2 * COLS + c2, there = paceOf(k2);
+      const c2 = wrap(col + dc), k2 = r2 * COLS + c2;
+      if ( chart && !chart[k2] ) continue;
+      const there = paceOf(k2);
       const km = Math.hypot(dr * 111.2, dc * 111.2 * Math.cos((lat - dr / 2) * D2R));
       const step = km / 2 / here.speed + km / 2 / there.speed + ((here.way === "sea") !== (there.way === "sea") ? PORT_DAYS : 0);
       if ( d + step < dist[k2] ) { dist[k2] = d + step; prev[k2] = k; heap.push(d + step, k2); }
     }
   }
+  if ( dist[goal] === Infinity ) return {km: Math.round(kmBetween(from, to)), year: ways.year, noWay: true, surface: null, air: null, best: null};
   const path = [];
   for ( let k = goal; k >= 0; k = prev[k] ) { path.push([k % COLS, Math.floor(k / COLS)]); if ( k === start ) break; }
   path.reverse();
@@ -254,6 +309,8 @@ const WAY_WORDS = (way, ways) => (way === "sea" ? ways.seaWords : way === "rail"
 /** A journey in plain lines for the Storyteller. */
 export function journeyLines(j) {
   const ways = waysIn(j.year), n = d => (d === 1 ? "1 day" : `${d} days`);
+  if ( j.unknown ) return [`${j.km} km as the crow flies. In ${j.year} that land lies beyond the known world: no chart at home shows it and no pilot knows the way.`];
+  if ( j.noWay ) return [`${j.km} km as the crow flies. In ${j.year} no known way leads there: the lands and seas between are still off the charts.`];
   const out = [`${j.km} km as the crow flies. In ${j.year}: about ${n(j.surface.days)} by land and sea${j.air ? `, or about ${n(j.air.days)} ${j.air.words}` : ""}.`];
   for ( const l of j.surface.legs ) if ( l.km >= 50 ) out.push(`${l.km} km ${WAY_WORDS(l.way, ways)}, ${n(l.days)}`);
   for ( const c of j.surface.canals ?? [] ) out.push(`Through ${c.name}, open since ${c.from}`);
@@ -366,7 +423,7 @@ export function svg({cell = 4, palette = NIGHT, tint = null, marks = [], path = 
     }
   }
   if ( rivers && palette.river ) for ( const cells of Object.values(W.RIVERS) )
-    for ( const [c, r] of cells ) if ( W.GROUND[r][c] !== "~" ) out.push(`<rect x="${c * cell + cell * 0.25}" y="${top + r * cell + cell * 0.25}" width="${cell * 0.5}" height="${cell * 0.5}" fill="${palette.river}"/>`);
+    for ( const [c, r] of cells ) if ( W.GROUND[r][c] !== "~" && tint?.(c, r, W.GROUND[r][c]) !== SHROUD ) out.push(`<rect x="${c * cell + cell * 0.25}" y="${top + r * cell + cell * 0.25}" width="${cell * 0.5}" height="${cell * 0.5}" fill="${palette.river}"/>`);
   if ( path?.length > 1 ) {
     let d = "", last = null;
     for ( const [c, r] of path ) { const x = (c + 0.5) * cell, y = top + (r + 0.5) * cell; d += `${last !== null && Math.abs(c - last) < COLS / 2 ? "L" : "M"}${x} ${y}`; last = c; }
@@ -390,6 +447,10 @@ export function svg({cell = 4, palette = NIGHT, tint = null, marks = [], path = 
 const escXml = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"})[c]);
 
 /** The legend for the plain night map. */
+/** The colour of the lands and seas beyond the known world. */
+export const SHROUD = "#04060a";
+/** A tint for svg() that hides every square beyond the known world of a Set of region ids. */
+export const shroudTint = known => { const chart = charted(known); return (c, r) => (chart[r * COLS + c] ? null : SHROUD); };
 export const EARTH_LEGEND = [[NIGHT["."], "land"], [NIGHT.p, "plain"], [NIGHT.M, "mountains"], [NIGHT.P, "plateau"], [NIGHT.D, "desert"], [NIGHT.T, "tundra"], [NIGHT.w, "wetland"], [NIGHT.i, "ice"], [NIGHT.river, "great river"]];
 
 /** A picture of one square's closer view. */

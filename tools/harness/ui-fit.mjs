@@ -493,7 +493,8 @@ game.world.id = worldId;
   const wait = api.DialogV2.wait;
   api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
   for ( const [label, fn] of [["The world map", () => WMap.open({from: "moravia", to: "japan", year: 1700})], ["The world map, Shadowlands", () => WMap.open({layer: "shadowlands"})],
-    ["The world map, chart", () => WMap.open({layer: "chart"})], ["A closer look", () => WMap.closer({from: "italy", fromAt: "41.9, 12.5"})]] ) {
+    ["The world map, chart", () => WMap.open({layer: "chart"})], ["A closer look", () => WMap.closer({from: "italy", fromAt: "41.9, 12.5"})],
+    ["The world map, unknown land", () => WMap.open({from: "iberia", to: "caribbean", year: 1300})], ["Discoveries", () => WMap.discoveries(1300)]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
