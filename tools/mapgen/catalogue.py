@@ -23,6 +23,8 @@ _LASTING = re.compile(RULES["lasting"], re.I)
 _UP = [(re.compile(rx, re.I), n) for rx, n in RULES["worth_up"].items()]
 _DOWN = [(re.compile(rx, re.I), n) for rx, n in RULES["worth_down"].items()]
 _SKIP = re.compile(RULES["skip_folders"], re.I)
+_SKIP_NAME = re.compile(RULES["skip_names"], re.I)       # fantasy races, magic: not in the World of Darkness's furniture
+_SKIP_PACK = re.compile(RULES["skip_packs"], re.I)
 _KINDS = {"walls": "wall", "tilesets": "floor", "patterns": "floor", "portals": "door"}
 _NAMES = {}
 
@@ -50,12 +52,12 @@ def tag(path):
     pid, kind, fname = parts[0], parts[2], parts[-1]
     if not re.search(r"\.(png|webp|jpg)$", fname, re.I) or re.search(r"_end\.(png|webp)$", fname): return None
     rule, pname = _pack_rule(path, pid)
-    if rule is None: return None
+    if rule is None or _SKIP_PACK.search(pname): return None
     stem = re.sub(r"\.(png|webp|jpg)$", "", fname, flags=re.I)
     if kind in _KINDS:
         piece = _KINDS[kind]
     elif kind == "objects":
-        if _SKIP.search("/".join(parts[3:-1])): return None
+        if _SKIP.search("/".join(parts[3:-1])) or _SKIP_NAME.search(fname): return None
         bare = re.sub(r"_(Ashen|Light|Dark)(?=_|$)", "", stem)          # a wood finish is not a lamp
         piece = next((p for rx, p in _PIECES if rx.search(bare)), "?")
         if piece == "?": piece = next((p for rx, p in _FOLDERS if rx.search("/".join(parts[3:-1]))), None)
