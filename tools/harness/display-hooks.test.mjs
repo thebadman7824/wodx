@@ -180,3 +180,17 @@ test("B3162, B3163: the language allowance holds, and a kindred tongue gives a r
   assert.equal(LNG.kinOf([["Czech"]], "Mandarin"), null);
   assert.equal(LNG.GIST.difficulty, 7);
 });
+
+/* ---- Batch B, Combat and Storyteller (B3170, B3171) ---- */
+import * as AFR from "../../modules/wodx-combat/scripts/aftermath-rules.js";
+import * as WUR from "../../modules/wodx-storyteller/scripts/wrapup-rules.mjs";
+
+test("B3170, B3171: a fight becomes a deed and marks real danger for the experience draft", () => {
+  assert.ok(AFR.fightWon([{pc: true}, {pc: false, down: true}]));
+  assert.ok(!AFR.fightWon([{pc: true, down: true}, {pc: false, down: true}]));
+  assert.ok(!AFR.fightWon([{pc: true}, {pc: false}]));
+  assert.ok(!AFR.fightWon([{pc: false, down: true}]));
+  assert.equal(AFR.deedText({won: true, place: "Brno", pcs: ["Ilse"], foes: ["the bandits"]}), "Ilse fought against the bandits at Brno and won.");
+  const d = WUR.dangerFrom([{id: "c", rows: [{id: "a", pc: true, taken: 3}, {id: "b", pc: true, taken: 1}, {id: "c", pc: true, down: true}, {id: "n", pc: false, taken: 7}]}]);
+  assert.deepEqual([...d].sort(), ["a", "c"]);
+});

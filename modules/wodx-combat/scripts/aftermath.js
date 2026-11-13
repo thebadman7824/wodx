@@ -102,8 +102,23 @@ export function setupAftermath({corpusTrack}) {
     } else html += `<p class="vtc-note">No mortal outside the fight could see it.</p>`;
     if ( startled.size ) html += `<p class="vtc-note">Another kind saw it too: ${[...startled.values()].map(esc).join(", ")}.</p>`;
     html += `</div>`;
+    // B3171: the fight goes into the Legends book as a deed, and into the experience draft (WoDX Storyteller)
+    try { await recordDeed(combat, list, sceneName); } catch (e) { console.error(`${MOD} | after-action deed`, e); }
     return ChatMessage.create({content: html, whisper: gmIds(), speaker: {alias: "WoDX Combat"},
       flags: {[MOD]: {aar: {by: by.map(b => ({uuid: b.actor.uuid, secret: b.secret, witnesses: b.witnesses.map(w => w.uuid)})), rumour, big: sev >= 2, done: false, scene: sceneName}}}});
+  }
+
+  const downOf = (c, a) => !!c.defeated || ["dead", "unconscious", "incapacitated"].some(x => a?.statuses?.has?.(x));
+  async function recordDeed(combat, list, place) {
+    const fighters = combat.combatants.filter(c => c.actor).map(c => ({id: c.actor.id, name: c.actor.name, uuid: c.actor.uuid, pc: !!c.actor.hasPlayerOwner, down: downOf(c, c.actor)}));
+    if ( !fighters.some(f => f.pc) ) return;
+    const won = AR.fightWon(fighters);
+    const pcs = fighters.filter(f => f.pc), foes = [...new Set(fighters.filter(f => !f.pc).map(f => f.name))];
+    const text = AR.deedText({won, place, pcs: pcs.map(f => f.name), foes});
+    const at = game.time.worldTime;
+    await chron()?.legends?.addDeed?.({id: combat.id, at, text, won, place, people: pcs.map(f => ({id: f.id, name: f.name}))});
+    const taken = new Map(list.map(r => [r.uuid, r.taken]));
+    await game.modules.get("wodx-storyteller")?.api?.noteFight?.({id: combat.id, at, text, won, rows: pcs.map(f => ({id: f.id, pc: true, taken: taken.get(f.uuid) ?? 0, down: f.down}))});
   }
 
   async function recordFromCard(msg) {
