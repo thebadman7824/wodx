@@ -20,7 +20,7 @@ const img = (svg, alt) => `<img class="wst-world-map" alt="${esc(alt)}" style="d
 /** The chronicle's homeland, as a world region id. */
 export function homeId() {
   let id = null;
-  try { id = C.chron()?.world?.homeland?.()?.id ?? null; } catch (e) { id = null; }
+  try { const h = C.chron()?.world?.homeland?.(); id = (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { id = null; }
   return WM.REGION_IDS.includes(id) ? id : "moravia";
 }
 /** The lands the chronicle has discovered for itself, before their time. */
