@@ -207,17 +207,20 @@ export function learn(folder, manifest) {
 export const offered = actorId => Object.entries(SHEETS).filter(([k]) => !isOwn(k) || k === ownName(actorId));
 const POWERED = /vampire|werewolf|changing ?breed|mage|changeling|wraith|hunter|demon|mummy|exalted|spirit/i;
 /**
- * One character for the roster, from plain facts: {id, name, type, skin, hair, figure, items: [{name, type, worn}]}.
+ * One character for the roster, from plain facts: {id, name, type, skin, hair, beard, year, figure, items: [{name, type, worn, gear, natural}]}.
  * Worn things that are not weapons are its dress, worn weapons are in its hands, and a creature is drawn as the
  * animal its name says.
  */
 export function rosterOf(c = {}) {
-  const items = (c.items ?? []).filter(i => i?.worn && i.name);
+  // only real things count: merits, powers and form bonuses can be "active" too, and teeth and claws are not carried
   const arms = i => i.type === "Melee Weapon" || i.type === "Ranged Weapon";
+  const NATURAL = /^(fangs?|bite|claws?\b.*|.*\bclaws|strike|constrict|kick|punch|grapple|tackle|stone fist|horns?|tail|talons?|gore|trample|sting|hoo(f|ves))( \(.*\))?$/i;
+  const items = (c.items ?? []).filter(i => i?.worn && i.name && (arms(i) ? !i.natural && !NATURAL.test(i.name) : (i.type === "Armor" || i.gear)));
   const hex = v => /^[0-9a-f]{6}$/i.test(v ?? "") ? v.toLowerCase() : null;
   const out = {id: String(c.id ?? ""), name: String(c.name ?? ""), kind: /^creature$/i.test(c.type ?? "") ? "animal" : "person"};
   if ( out.kind === "person" ) {
-    out.look = {skin: hex(c.skin), hair: hex(c.hair)};
+    out.look = {skin: hex(c.skin), hair: hex(c.hair), ...(c.beard ? {beard: true} : {})};
+    if ( Number.isFinite(c.year) ) out.year = c.year;
     out.worn = items.filter(i => !arms(i)).map(i => i.name).sort();
     out.held = items.filter(arms).map(i => i.name).sort();
     out.powers = POWERED.test(c.type ?? "");

@@ -28,10 +28,14 @@ export async function run() {
   const M = game.modules.get("wodx-paperdoll"), A = M?.api?.sprites, SR = A?.rules;
   try {
     ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.9.0", M.version) && typeof A?.give === "function" && typeof SR?.frameOf === "function", {version: M?.version});
-    const names = Object.keys(SR.SHEETS), answers = {};
+    // the six test figures only: a character's own sprite (own-...) is not a test figure
+    const names = Object.keys(SR.SHEETS).filter(n => !SR.isOwn?.(n)), answers = {};
     for ( const n of names ) for ( const p of [SR.sheetPath(n), SR.stillPath(n)] ) answers[p] = (await fetch(`/${p}`, {method: "HEAD"})).status;
     ok("2. sheets", names.length >= 6 && Object.values(answers).every(s => s === 200), {answers});
 
+    // the test tokens live on one scene: go there if another scene is showing
+    const home = game.scenes.find(s => s.tokens.some(t => t.name?.startsWith("Sprite test: Kindred elder")));
+    if ( home && home.id !== canvas.scene?.id ) { await home.view(); await sleep(2500); }
     const scene = canvas.scene, g = canvas.grid.size, actor = game.actors.find(a => a.type !== "Group") ?? game.actors.contents[0];
     const cx = Math.round(canvas.dimensions.sceneX + canvas.dimensions.sceneWidth / 2), cy = Math.round(canvas.dimensions.sceneY + canvas.dimensions.sceneHeight / 2);
     const docs = [];

@@ -129,7 +129,7 @@ export function makeFigureApp({skin, hair, year}) {
       wire(div, this.fig, cat, this.ui, {
         ui: u => { this.ui = u; this.render(); },
         fig: f => { this.fig = f; this.render(); },
-        save: async f => { await this.actor.update({[`flags.${MOD}.-=figure`]: null}); await this.actor.setFlag(MOD, "figure", f); ui.notifications?.info(`${this.actor.name}: figure kept. The walking sprite follows when the sprites are next drawn.`); }
+        save: async f => { if ( this.actor.flags?.[MOD]?.figure ) await this.actor.unsetFlag(MOD, "figure"); await this.actor.setFlag(MOD, "figure", f); ui.notifications?.info(`${this.actor.name}: figure kept. The walking sprite follows when the sprites are next drawn.`); }
       });
       return div;
     }

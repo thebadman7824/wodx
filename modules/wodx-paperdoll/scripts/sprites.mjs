@@ -4,7 +4,7 @@
  * flag and the still picture on the token. Rules in sprite-rules.mjs.
  */
 import * as SR from "./sprite-rules.mjs";
-import {healthLevel} from "./doll-rules.mjs";
+import {healthLevel, randomLook} from "./doll-rules.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map();
 let ticking = false;
@@ -282,11 +282,12 @@ export async function loadOwn() {
 
 /** Every character of the world as the batch needs it. */
 export function roster() {
-  const actors = [];
+  const actors = [], y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.();
   for ( const a of game.actors ?? [] ) {
-    const c = a.flags?.[MOD]?.look?.colors ?? {};
-    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair, figure: a.flags?.[MOD]?.figure ?? null,
-      items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive)}))}));
+    // a character with no portrait look yet gets the one its portrait would start from (the same seed, the same look)
+    const L = a.flags?.[MOD]?.look ?? randomLook(a.id, {type: a.type ?? "", variant: a.system?.settings?.variant ?? ""}), c = L.colors ?? {};
+    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair, beard: !!L.face?.beard, year: Number.isFinite(y) ? y : undefined, figure: a.flags?.[MOD]?.figure ?? null,
+      items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive), gear: !!i.flags?.["wodx-library"], natural: !!i.system?.isnatural}))}));
   }
   return {world: game.world.id, made: new Date().toISOString(), actors};
 }
