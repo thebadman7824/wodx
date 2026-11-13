@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.54.0 (money of the whole world: 24 money regions, each from its first coin (or none) to the eurobuck, with France given its own; North America has no coin before 1607; Start a chronicle asks for the homeland)
 - 0.53.0 (a primer for each of the seven prologue eras, written for the whole world; prologue years read BCE and CE)
 - 0.52.2 (Let time pass asks only the party on the asker's scene: the players whose characters are there agree, and only their time passes. Characters elsewhere, and a fight they are in, no longer hold it back. B2460)
 - 0.52.1 (Let time pass and the small rule for time count only a fight on the scene where the waiting characters are, so a fight left running on another scene no longer stops time everywhere. B2459)

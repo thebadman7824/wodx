@@ -302,3 +302,44 @@
 1918|H|mor|EU|Vienna|art,death|Klimt and Schiele die|Klimt dies of a stroke in February and Schiele of influenza in October.
 1918|W|cha|MO|Brno|founding,occult|The Kithain choose a duke|The house reading has the Kithain of Moravia meet in a Brno cafe to choose a duke for the new republic's lands.
 1918|W|wra|MO|Olomouc|plague,occult|The Moravian Shadowlands|The house reading has the influenza and the war fill the Moravian Shadowlands; the local Hierarchy cannot ferry them all.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1914-4|H|mor|AM|Ludlow|massacre,industry,uprising|Ludlow|Militia fire on a tent camp of striking coal miners in Colorado and burn it; women and children die in a pit under a tent.
+1914-4|H|mor|AM|Veracruz|war,empire|Veracruz occupied|American marines take the port of Veracruz in the middle of Mexico's revolution.
+1914-5|H|mor|AM|Vancouver|migration,law,persecution|The Komagata Maru|A ship carrying several hundred Indian migrants is held in Vancouver harbour for two months and sent back.
+1914-8|H|mor|AM|Panama|building,trade,sea|The Panama Canal opens|The first ship passes through the canal in the week the war begins in Europe.
+1914-11|H|mor|AM|Coronel|battle,sea,war|Coronel|A German squadron sinks two British cruisers off Chile and is itself destroyed off the Falkland Islands five weeks later.
+1915-7|H|mor|AM|Port-au-Prince|empire,war|Haiti occupied|American marines land in Haiti after its president is torn apart by a crowd, and stay nineteen years.
+1915-11|H|mor|AM|Atlanta|terror,persecution,media|The Klan refounded|After a film glorifying the old Klan fills the cinemas, a new one is founded on a hilltop in Georgia.
+1916-3|H|mor|AM|Columbus, New Mexico|war,terror|Villa's raid|Pancho Villa's riders burn an American border town, and an army chases them through Chihuahua for a year without catching them.
+1916-4|H|mor|AM|Buenos Aires|law,crown|Yrigoyen elected|Argentina's first election by secret and universal male vote brings the Radical leader to power.
+1917-2|H|mor|AM|Queretaro|law,revolution|Mexico's constitution|The revolution's constitution gives the nation the land and the oil and limits the church.
+1917-3|H|mor|AM|San Juan|law,empire|Puerto Ricans made citizens|An act of Congress makes Puerto Ricans citizens of the United States weeks before conscription begins.
+1917-4|H|mor|AM|Washington|war|America enters the war|The United States declares war on Germany.
+1917-7|H|mor|AM|East St. Louis|massacre,persecution,industry|The East St. Louis riots|White mobs kill dozens of black residents and burn their homes; ten thousand march in silence down Fifth Avenue.
+1917-10|H|mor|AM|Rio de Janeiro|war,sea|Brazil at war|Brazil declares war on Germany after its ships are sunk, the only South American state to fight.
+1917-12|H|mor|AM|Halifax|disaster,sea,death|The Halifax explosion|A munitions ship blows up in Halifax harbour and kills about two thousand people.
+1918-3|H|mor|AM|Kansas|plague|The flu at Camp Funston|Soldiers at an army camp in Kansas fall ill with a new influenza, one of the first recorded outbreaks.
+1918-6|H|mor|AM|Cordoba|learning,uprising,law|The university reform|Students in Cordoba, Argentina, occupy their university, and their demands spread across Latin America.
+1918-10|H|mor|AM|Philadelphia|plague,death|The flu in the Americas|Influenza kills twelve thousand in Philadelphia in a month and empties whole villages in Labrador and Alaska.
+1914-1|H|mor|AF|Lagos|empire,law,founding|Nigeria joined|Britain joins its northern and southern protectorates into one Nigeria.
+1914-8|H|mor|AF|Togoland|war,empire|Togoland falls|British and French colonial troops take German Togoland in three weeks; a Gold Coast soldier fires the first British shot of the war.
+1914-10|H|mor|AF|Transvaal|uprising,war|The Boer rebellion|Boer officers who will not fight for Britain rise against the Union government and are put down.
+1914-11|H|mor|AF|Tanga|battle,war|Tanga|A small German colonial force beats off a British landing at Tanga in East Africa.
+1915-1|H|mor|AF|Nyasaland|uprising,faith,death|Chilembwe's rising|A Baptist minister leads a rising against forced labour and the war in Nyasaland and is shot.
+1915-7|H|mor|AF|Windhoek|war,empire|South West Africa surrenders|The German colony surrenders to South African troops.
+1916-2|H|mor|AF|Yaounde|war,empire|Kamerun falls|The last German garrison in Kamerun gives up, and Britain and France divide the colony.
+1916-9|H|mor|AF|Addis Ababa|crown,faith,uprising|Zewditu crowned|The nobles of Ethiopia depose the uncrowned emperor Iyasu for leaning toward Islam and crown Menelik's daughter, with Ras Tafari as regent.
+1916-12|H|mor|AF|Agadez|uprising,war,faith|The siege of Agadez|Tuareg fighters of the Sanusi order besiege the French garrison of Agadez for three months.
+1917-2|H|mor|AF|English Channel|sea,death,war|The Mendi|A troopship carrying the South African Native Labour Corps is rammed in fog and sinks with over six hundred men.
+1917|H|mor|AF|East Africa|war,famine,death|The carriers|Something near a million African porters carry the East African campaign on their heads, and about a hundred thousand die of hunger and disease.
+1918-8|H|mor|AF|Freetown|plague,sea|The flu lands in Africa|A naval ship brings the deadly influenza to Freetown, and it travels the coast and the railways; some two million Africans die.
+1918-11|H|mor|AF|Abercorn|war,treaty|The last surrender|Lettow-Vorbeck's undefeated column surrenders in Northern Rhodesia two weeks after the armistice.
+1914-8|H|mor|OC|Apia|war,empire|Samoa taken|New Zealand troops take German Samoa without a shot.
+1914-9|H|mor|OC|Rabaul|war,battle,empire|German New Guinea taken|Australian sailors and soldiers take the wireless station at Bita Paka and the German capital at Rabaul.
+1914-10|H|mor|OC|Micronesia|war,empire,sea|Japan in the islands|The Japanese navy takes Germany's islands north of the equator.
+1914-11|H|mor|OC|Cocos Islands|battle,sea|The Emden sunk|The Australian cruiser Sydney destroys the German raider Emden at the Cocos Islands.
+1915-11|H|mor|OC|Weddell Sea|exploration,sea,disaster|The Endurance crushed|The ice of the Weddell Sea crushes Shackleton's ship, and its crew camps on the floes.
+1916-4|H|mor|OC|Maungapohatu|faith,persecution,crime|The prophet arrested|Armed police raid the mountain community of the Tuhoe prophet Rua Kenana and kill two of the people.
+1916-8|H|mor|OC|Elephant Island|exploration,sea,travel|The rescue|Shackleton, having crossed eight hundred miles of ocean in a boat, brings a ship back for every one of the stranded crew.
+1916-10|H|mor|OC|Melbourne|law,war|Conscription refused|Australians vote down conscription for the war, and do so again the next year.
+1918-11|H|mor|OC|Apia|plague,death,sea|The flu in Samoa|A ship from Auckland lands the influenza at Apia, and about a fifth of Western Samoa's people die; American Samoa, kept closed, loses no one.

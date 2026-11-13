@@ -1,0 +1,66 @@
+# A global World of Darkness
+
+Ben, 2026-11-12: the whole world is within WoDX's scope. No built, in-development or planned work may look only at Moravia, Germany or Europe. Rothenstein in Moravia is where the first chronicle starts and nothing more.
+
+## The rule for new work
+
+1. Anything that depends on where the chronicle is (names, money, weather, faith, travel, news, clothes, buildings, events) reads the place from the world's regions in `modules/wodx-chronicle/scripts/world-rules.mjs`. It does not assume Moravia.
+2. Each such feature covers every region in that file, or says in its notes which regions it leaves for later and lists them here under Open.
+3. Research for a feature looks at the books for the whole world first (V20 and the other 20th Anniversary books, then Revised and 2nd edition), for example Kindred of the East, Kindred of the Ebony Kingdom, A World of Darkness, Veil of Night, Wind from the East, Rage Across the World, Dragons of the East and the Year of the Lotus books, and at history beyond Europe.
+4. Timelines carry events for every continent in every era.
+5. The Every era rule still holds: a region is covered from 1197 to the World of Future Darkness, and where WoDX has no names for a region's people in an age it says from which year it has.
+
+## The world's regions
+
+44 regions (Chronicle 0.48.0). Each has a typical city for the sun, a climate, a money region, and the peoples who live there by age. The Homeland setting picks the chronicle's own; a scene far from home can be given a region from the Clock (Where this scene stands), and the people generator and the weather follow it on that scene.
+
+Europe: Moravia and Bohemia, the German lands, the British Isles, France, Iberia, Italy, the Low Countries, Scandinavia, Poland and the Baltic, Hungary with Transylvania and the Balkans, the Rus and Russia, Greece and Constantinople.
+The Middle East and inner Asia: Anatolia, the Levant and Mesopotamia, Egypt, Arabia, the Maghreb, Persia, the steppe and the Silk Road, Siberia.
+South and East Asia: India, China, Japan, Korea, mainland Southeast Asia, the Malay world, Tibet and the Himalaya.
+Africa south of the Sahara: West Africa, Central Africa, East Africa, Southern Africa.
+The Americas: Canada, eastern North America, the American West, Mexico and Central America, the Caribbean, the Andes, Brazil, the southern cone.
+Oceania: Australia, Aotearoa New Zealand, the Pacific islands.
+The poles: the Arctic, Antarctica.
+
+Where a finer place has no region of its own, use the one around it: Central America under Mexico, Indochina under mainland Southeast Asia, the Philippines under the Malay world, Madagascar and the Horn under East Africa, the Sahara under the Maghreb (north) and West Africa (the Sahel), Mongolia under the steppe, the Caucasus under Anatolia, Ireland under the British Isles, Iceland under Scandinavia, Alaska under the American West. The world map (maps thread) assigns its squares to these ids and keeps the borders; the regions carry one typical city each and no borders.
+
+## Audit of 2026-11-12: what looked only at Europe
+
+| Part | What was found | State |
+| --- | --- | --- |
+| People generator (Creation) | Two cultures only: Bohemia (Czech, German, Jewish names) and the English-speaking Americas | Widened: 44 cultures, 39 peoples with their own names and name order |
+| Money (Storyteller) | Moravia, the German lands, England and the United States; France borrowed German money | Widened: 24 money regions, France with its own |
+| Weather (Atmosphere) | Seven climates, four European and three North American | Widened: 29 climates, both sides of the equator |
+| A scene far from home (Chronicle) | Latitude and hour only | Widened: the scene's region too |
+| Languages (Chronicle), voices | 30 tongues, few from outside Europe and the Near East; made-up speech had five sound sets | Widened: 71 tongues, 21 sound sets, 37 voice languages |
+| Households (NPC) | Feminine family names for Czech and German only; "son of" names for Hebrew only | Widened: any people's listed feminine form; ibn and bint, bin and binti |
+| Era timelines, 1197 to 2099 | 2,859 events: Europe 2,089, Middle East 571, Asia 561, Moravia 238; the Americas 8 and Africa 88, all in the prologues; Oceania none | Widened for 1197 to 2009: 519 more events (the Americas 235, Africa 177, Oceania 107, a new region), waiting for review. Open: Future Darkness, to be written against the Cyberpunk 2020 timeline |
+| Prologue timelines | Being widened in the prologue thread | In hand elsewhere |
+| Country map and town generator (Storyteller, tools/mapgen) | The country map's bounds are 12 to 20 east and 47.4 to 51.2 north; towns, roads, rails and airfields are Moravia's | In hand in the maps thread, with a rough world map asked for by Ben |
+| Settlement generator (NPC settlement, tools/mapgen ddsettle) | Towns, buildings and street names follow Moravia only | Open in the maps thread: other regions are listed in its decision B2529 |
+| Church year (Chronicle church-rules) | The Western church year only: feasts, fasts and nights of revel | Open: other calendars of faith by region |
+| How fast word travels (Chronicle media-rules) | Printing, papers, radio, television and the internet dated for the Czech lands | Open: dates by region |
+| Travel (Storyteller road-rules) | Railway, tram and motorway years follow Moravia | Open: dates by region |
+| Passers-by (NPC passerby-rules) | Faith and origin follow Moravia's history; clothes are central European | Open: by region |
+| Residents and clergy (NPC resident-rules) | Roles and clergy follow the church in Moravia | Open: by region, with the town generator |
+| Trades (Creation people.mjs) | One list of trades for each age, written with Europe in mind (village priest, man-at-arms) | Open: trades by region |
+| Start a chronicle (Storyteller setup) | Asked for Europe, the Americas or Elsewhere; the players' era primers describe Europe | Widened: asks for the homeland. Open: primers by region |
+| Lifepaths and Prelude (Creation, Chronicle pod) | Places and turns of life drawn from Bohemia | Open |
+| Factions and politics (NPC) | Sect and faction names are the books' Western ones; no Wan Kuei courts, Laibon, Ashirra or Bastet-held lands as factions | Open: review desk |
+| Goods and gear (Library) | Mostly European and North American goods | Open: review desk |
+| Calendar (Chronicle) | Julian and Gregorian, with reform dates for a few lands; no Islamic, Hebrew, Chinese or other reckonings shown | Open: review desk |
+| Weather history (Atmosphere eraShift) | The Little Ice Age and 1816 as Europe and North America felt them, applied everywhere | Open, minor |
+| Encyclopaedia (Library) | Follows the books read so far; the Year of the Lotus, Ebony Kingdom and other world books are thin | Open: reading list on the review desk |
+| Markets, battles, sieges and ships (Storyteller) | Rules are placeless; the armies, ships and market goods named are European | Open: review desk |
+| NPC look and sprites (Paperdoll) | On hold with Ben; body and dress should cover every region when it resumes | Noted for that thread |
+
+## Open, not built yet
+
+Review desk for the scope calls below (eight questions, picks saved in its `verdicts` collection, one doc per question id): https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn
+
+- Timeline events for the Americas, Africa and Oceania in the Future Darkness branch (1990 to 2099), and a book check of the eight new cards that carry a World of Darkness reading.
+- Faith calendars, the spread of news and travel dates by region.
+- Passers-by, residents, clergy and trades by region.
+- Money: purses are not converted when a character travels; Korea, Southeast Asia and the Malay world borrow China's money, Hungary and the Balkans Moravia's, Greece the Ottoman lands', and the Caribbean and the Andes Mexico's.
+- Peoples WoDX has no names for yet: the first nations of North America and the Caribbean, Aboriginal Australians, the peoples of central Africa, the Maya, the Berbers, Armenians, Sephardi and Mizrahi Jews, Khmer, Filipinos, and the Inuit and other peoples of the far north.
+- Places that stand under a wider region for now and may want their own: the Philippines, Indochina, Central America, the Caucasus, Mongolia, Madagascar, the Horn of Africa, the Sahara, Ireland, Iceland, Alaska.

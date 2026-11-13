@@ -33,9 +33,13 @@ export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", t
   return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin}), batch, row, nonce, eraId: ctx.eraId};
 }
 
-/** The nearest context that has people tables: the homeland's, else Bohemia's, else the medieval ones. */
+/**
+ * The nearest context that has people tables: the homeland's, else the same land in a later age (a region WoDX has
+ * no names for yet in this age, such as Australia before 1788), else Bohemia's, else the medieval ones.
+ */
 export function fitContext(g, ctx) {
-  for ( const c of [ctx, {...ctx, culture: "bohemia"}, {...ctx, culture: "bohemia", era: "medieval"}] ) if ( g.lookup(c)("people.origin") ) return c;
+  const later = ["early-modern", "industrial", "modern"].map(era => ({...ctx, era}));
+  for ( const c of [ctx, ...later, {...ctx, culture: "bohemia"}, {...ctx, culture: "bohemia", era: "medieval"}] ) if ( g.lookup(c)("people.origin") ) return c;
   return ctx;
 }
 

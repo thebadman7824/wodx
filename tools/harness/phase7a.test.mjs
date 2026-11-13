@@ -10,6 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
 const {PEOPLE_TABLES, TRADE_SHEETS} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
+const {GIVEN_ONLY} = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
 const tablesFor = ctx => id => G.resolveTable(PEOPLE_TABLES, id, ctx);
 
 test("seeded: the same seed and key give the same numbers; a nonce or a key changes them", () => {
@@ -49,7 +50,7 @@ test("every origin has names in every era and homeland the tables cover", () => 
       const tb = tablesFor({era, culture});
       for ( const {text: origin} of o.results ) for ( const sex of ["male", "female"] ) {
         assert.ok(tb(`names.${sex}.${origin}`), `given names: ${origin} ${sex} ${era} ${culture}`);
-        assert.ok(tb(`names.family.${sex}.${origin}`) || tb(`names.byname.${sex}.${origin}`), `family names: ${origin} ${sex} ${era} ${culture}`);
+        assert.ok(GIVEN_ONLY.has(origin) || tb(`names.family.${sex}.${origin}`) || tb(`names.byname.${sex}.${origin}`), `family names: ${origin} ${sex} ${era} ${culture}`);
       }
       assert.ok(tb("people.trade"), `trades: ${era} ${culture}`);
     }

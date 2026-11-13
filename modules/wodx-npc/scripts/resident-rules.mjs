@@ -11,6 +11,12 @@
  * each role keeps, a partner being of the other sex nine times in ten, and the family names a household shares.
  */
 import {PRESETS} from "./routine-rules.mjs";
+import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
+
+/** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
+const CHILD = /^(ben|bat|ibn|bint|bin|binti) /;
+const CHILD_WORDS = {ben: ["ben", "bat"], bat: ["ben", "bat"], ibn: ["ibn", "bint"], bint: ["ibn", "bint"], bin: ["bin", "binti"], binti: ["bin", "binti"]};
+const childWord = (name, sex) => (CHILD_WORDS[CHILD.exec(String(name ?? ""))?.[1]] ?? CHILD_WORDS.ben)[sex === "female" ? 1 : 0];
 
 const IX = "wodx-interactables", NPC = "wodx-npc";
 
@@ -159,12 +165,14 @@ export function germanFeminine(name = "") {
  */
 export function kinFamily(house, p) {
   const origin = house.origin ?? p.origin;
-  if ( /^(ben|bat) /.test(String(house.family ?? "")) || /^(ben|bat) /.test(String(p.family ?? "")) ) {
-    return house.masterSex === "male" && house.masterGiven ? `${p.sex === "female" ? "bat" : "ben"} ${house.masterGiven}` : p.family;
+  if ( CHILD.test(String(house.family ?? "")) || CHILD.test(String(p.family ?? "")) ) {
+    return house.masterSex === "male" && house.masterGiven ? `${childWord(CHILD.test(String(house.family ?? "")) ? house.family : p.family, p.sex)} ${house.masterGiven}` : p.family;
   }
   if ( !house.family ) return p.family;
   if ( ["czech", "slovak"].includes(origin) ) return p.sex === "female" ? czechFeminine(house.family) : house.family;
   if ( origin === "german" ) return p.sex === "female" ? germanFeminine(house.family) : house.family;
+  // Other peoples whose family names follow sex (Russian, Polish, Greek, Irish, old Norse): the listed feminine form
+  if ( p.sex === "female" && FEMININE[origin]?.[house.family] ) return FEMININE[origin][house.family];
   return house.family;
 }
 
@@ -213,7 +221,7 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0} = {}) 
   const fam = drawFit(draw, HOUSE_ROW, {sex: "male", trade: trade0}, {sex: "male", origin: o => !first.origin || o === first.origin}) ?? {};
   const house = {family: fam.family ?? first.family ?? "", origin: fam.origin ?? first.origin, masterGiven: first.given, masterSex: first.sex};
   // A medieval Jewish household is named for the master's father; the master is ben or bat him
-  if ( /^(ben|bat) /.test(house.family) ) house.family = `${first.sex === "female" ? "bat" : "ben"} ${house.family.replace(/^(ben|bat) /, "")}`;
+  if ( CHILD.test(house.family) ) house.family = `${childWord(house.family, first.sex)} ${house.family.replace(CHILD, "")}`;
   const out = [];
   plans.forEach((plan, i) => {
     let p = first;
@@ -226,10 +234,10 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0} = {}) 
       p = plan.kin ? drawFit(draw, i, {sex, trade: plan.label, ...asked}, {sex: null, origin: sameFaith}) : draw(i, {sex, trade: plan.role});
     }
     let family = p.family;
-    if ( i === 0 ) family = /^(ben|bat) /.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);
+    if ( i === 0 ) family = CHILD.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);
     else if ( plan.kin && plan.role !== "partner" ) family = kinFamily(house, p);
-    else if ( plan.kin ) family = /^(ben|bat) /.test(house.family) ? p.family : kinFamily({...house, masterGiven: null}, p);
-    out.push({...p, family, name: [p.given, family].filter(Boolean).join(" ") || p.name || plan.label, plan});
+    else if ( plan.kin ) family = CHILD.test(house.family) ? p.family : kinFamily({...house, masterGiven: null}, p);
+    out.push({...p, family, name: (FAMILY_FIRST.has(p.origin) ? [family, p.given] : [p.given, family]).filter(Boolean).join(" ") || p.name || plan.label, plan});
   });
   return out;
 }

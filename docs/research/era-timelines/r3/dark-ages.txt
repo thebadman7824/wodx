@@ -345,3 +345,39 @@
 1345|H|mor|EU|Ghent|uprising,death|Jacob van Artevelde killed|The leader of Ghent is murdered by a mob.
 1346|H|mor|EU|Germany|crown|Charles IV elected|Charles of Luxembourg is chosen King of the Romans against Louis of Bavaria.
 1346|H|mor|EU|Skopje|crown|Dusan emperor|Stefan Dusan is crowned Emperor of the Serbs and Greeks.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1200|H|mor|AM|Cuzco|founding,crown|Cuzco founded|By Inca tradition Manco Capac founds Cuzco in a high Andean valley about this year.
+1200|H|mor|AM|Cahokia|migration,building|Cahokia begins to empty|The great mound city on the Mississippi starts to lose its people, and its palisade is rebuilt for the last time.
+1221|H|mor|AM|Chichen Itza|war,crown|Chichen Itza falls|By the Maya chronicles Hunac Ceel of Mayapan overthrows the lords of Chichen Itza about this year.
+1250|H|mor|AM|Moundville|building,trade|The mound towns of the south|Moundville and Etowah are at their height, trading copper, shell and salt along the rivers of the south-east.
+1263|H|mor|AM|Mayapan|founding,crown|The League of Mayapan|Mayapan, a walled city of the Cocom lords, becomes the capital of northern Yucatan.
+1276|H|mor|AM|Mesa Verde|famine,weather,migration|The great drought|A drought of more than twenty years begins on the Colorado Plateau, and the cliff towns start to empty.
+1300|H|mor|AM|Mesa Verde|migration|The cliff dwellings left|The last families leave Mesa Verde and the Four Corners for the Rio Grande and the Hopi mesas.
+1300|H|mor|AM|Chan Chan|building,empire|Chan Chan grows|The Chimu lords of the Peruvian coast add walled palace after walled palace to their adobe capital.
+1300|H|mor|AM|Greenland|migration,sea|The Thule reach Greenland|Whale hunters from the west, ancestors of the Inuit, settle the north of Greenland and meet the Norse.
+1300|H|mor|AM|Casa Grande|building|The great house of the Hohokam|The Hohokam of the Gila valley raise a four-storey earthen house among their canals.
+1325|H|mor|AM|Tenochtitlan|founding|Tenochtitlan founded|The Mexica settle an island in Lake Texcoco where, by their story, an eagle sat on a cactus.
+1341|H|mor|AM|Greenland|migration,faith|The empty settlement|The priest Ivar Bardarson sails to the Western Settlement of Norse Greenland about this year and finds only loose cattle.
+1200|H|mor|AF|Benin City|crown,founding|The first Oba of Benin|By the palace tradition Eweka becomes the first Oba of Benin about this year.
+1203|H|mor|AF|Koumbi Saleh|war,crown|The Sosso take Ghana's capital|Sumanguru Kante of the Sosso takes Koumbi Saleh, the old capital of Ghana.
+1210|H|mor|AF|Njimi|crown,empire|Dunama Dibbalemi|Dunama Dibbalemi takes the throne of Kanem and sends cavalry across the central Sahara as far as the Fezzan.
+1220|H|mor|AF|Mapungubwe|trade,crown|Mapungubwe|A hilltop kingdom on the Limpopo trades gold and ivory to the Swahili coast and buries its rulers with gold.
+1221|H|mor|AF|Lalibela|faith,building,death|The rock churches|King Lalibela of Ethiopia dies, leaving eleven churches cut downward into the living rock.
+1235|H|mor|AF|Kirina|battle,founding|The battle of Kirina|Sundiata Keita defeats Sumanguru at Kirina and founds the empire of Mali.
+1236|H|mor|AF|Kangaba|law,founding|The gathering at Kouroukan Fouga|By the griots' account the clans of Mali meet and agree the laws and ranks of the new empire.
+1270|H|mor|AF|Ethiopia|crown,founding|The Solomonic line|Yekuno Amlak overthrows the Zagwe kings and claims descent from Solomon and the Queen of Sheba.
+1277|H|mor|AF|Kilwa|crown,trade|A new house in Kilwa|The Mahdali family takes the throne of Kilwa, and the island city grows rich on the gold of Sofala.
+1290|H|mor|AF|Great Zimbabwe|building,trade|Great Zimbabwe rises|As Mapungubwe is left, the stone walls of Great Zimbabwe go up on the plateau to the north.
+1300|H|mor|AF|Ife|art,faith|The heads of Ife|The casters of Ife make lifelike heads of brass and copper for the shrines of their kings.
+1312|H|mor|AF|Niani|crown,sea|Mansa Musa takes the throne|Musa becomes ruler of Mali after the last Mansa sails west into the Atlantic with a great fleet and does not return.
+1317|H|mor|AF|Dongola|faith,crown|The throne hall of Dongola|The throne hall of the Christian kings of Makuria on the Nile is turned into a mosque.
+1325|H|mor|AF|Gao|empire,war|Mali takes Gao and Timbuktu|Mansa Musa's generals take Gao on the Niger, and Timbuktu comes under Mali.
+1327|H|mor|AF|Timbuktu|building,faith,learning|The Djinguereber mosque|An Andalusian architect brought home from the pilgrimage builds the great mud mosque of Timbuktu.
+1331|H|mor|AF|Kilwa|travel,trade|Ibn Battuta on the Swahili coast|The traveller visits Mogadishu, Mombasa and Kilwa and calls Kilwa one of the finest towns in the world.
+1332|H|mor|AF|Ifat|war,faith|Amda Seyon's wars|The Ethiopian emperor Amda Seyon breaks the sultanate of Ifat and its allies in a single campaign.
+1200|H|mor|OC|Tongatapu|building,empire,sea|The Tongan sea empire|The Tu'i Tonga rule islands as far as Samoa and Fiji and raise the great stone trilithon on Tongatapu.
+1200|H|mor|OC|Pohnpei|building,crown|Nan Madol|The Saudeleur lords of Pohnpei build a city of basalt logs on nearly a hundred artificial islets.
+1250|H|mor|OC|Aotearoa|migration,sea,exploration|The canoes reach Aotearoa|Polynesian voyagers settle the last large land on earth without people, and find the giant moa.
+1280|H|mor|OC|Rapa Nui|building,faith|The moai|The clans of Rapa Nui carve hundreds of stone ancestors from the crater of Rano Raraku and walk them to the coast.
+1300|H|mor|OC|Hawaii|sea,faith,crown|The last long voyages|By Hawaiian tradition the priest Paao comes from the south with a new line of chiefs, and voyaging to Tahiti ends.
+1314|H|mor|OC|Aotearoa|disaster|The Kaharoa eruption|Mount Tarawera erupts about this year and buries the north of Aotearoa in ash soon after the first settlers arrive.
