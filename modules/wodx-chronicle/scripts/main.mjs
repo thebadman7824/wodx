@@ -16,6 +16,8 @@ import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
+import * as playerView from "./player-view.mjs";
+import * as playerViewRules from "./player-view-rules.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
@@ -81,6 +83,8 @@ Hooks.once("init", () => {
   effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
+  // B2800: Beginner and Full views, Find anything
+  playerView.registerPlayerViewSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();
   // Phase 7a: the generator core
@@ -154,6 +158,8 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  playerView.installViewFilter();
+  playerView.installHudGroups();
   automation.initAutomation();
   waiting.initWaiting();
   await gen.ensureSeed();
@@ -196,6 +202,7 @@ Hooks.once("ready", async () => {
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, openDrawer: playerView.openDrawer, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,

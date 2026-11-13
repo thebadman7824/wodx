@@ -103,3 +103,24 @@
 :is(.application.wodx, .application.wodx-dialog) .form-group:has(> select) > select { flex: 1 1 auto; width: auto; min-width: 8em; max-width: 100%; }
 /* ...and a pick in a table column keeps room for a short entry in full */
 :is(.application.wodx, .application.wodx-dialog) td > select { min-width: 9.5em; }
+
+/* 0.52.0 (B2800 to B2806): Beginner view drawers, token menu groups and Find anything */
+.wodx-drawer {
+  position: fixed; z-index: 100; min-width: 240px; max-width: min(360px, calc(100vw - 80px));
+  max-height: calc(100vh - 16px); overflow: auto; padding: 8px; display: grid; gap: 4px;
+  background: #16141a; color: #e8e2d6; border: 1px solid #3b3540; border-radius: 6px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+}
+.wodx-drawer h3 { margin: 0 0 4px; font-size: 0.95rem; color: #c9a14a; border: none; }
+.wodx-drawer button { display: flex; gap: 8px; align-items: flex-start; text-align: left; width: 100%; line-height: 1.3; padding: 5px 8px; white-space: normal; }
+.wodx-drawer button i { flex: none; width: 1.2em; margin-top: 2px; text-align: center; }
+.wodx-drawer details summary { cursor: pointer; color: #a99f8f; font-size: 0.85rem; padding: 4px 2px; }
+.wodx-drawer details { display: grid; gap: 4px; }
+#token-hud .wodx-hud-group { position: relative; }
+#token-hud .wodx-hud-flyout { display: none; position: absolute; top: 0; right: calc(100% + 6px); flex-direction: row-reverse; gap: 6px; }
+#token-hud .wodx-hud-group.open .wodx-hud-flyout { display: flex; }
+#token-hud .wodx-hud-group.open > .wodx-hud-toggle { outline: 2px solid #c9a14a; }
+.wodx-find .wodx-body { display: grid; gap: 6px; grid-template-rows: auto auto 1fr; height: 100%; }
+.wodx-find .wodx-find-q { width: 100%; font-size: 1.05rem; padding: 4px 8px; }
+.wodx-find .wodx-find-list { list-style: none; margin: 0; padding: 0; overflow: auto; display: grid; gap: 4px; align-content: start; }
+.wodx-find .wodx-find-list button { width: 100%; text-align: left; line-height: 1.35; padding: 5px 8px; white-space: normal; height: auto; }
+.wodx-find .wodx-tag { font-size: 0.75rem; opacity: 0.8; margin-left: 4px; }

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2800
+Next free block: B2830
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -128,6 +128,7 @@ Next free block: B2800
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
+| B2800-B2829 | The Player UI Desk: Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3731,3 +3732,39 @@ Reverse: Change viewerSees in face64.mjs.
 The face follows the health track with the ladder Ben approved for the portraits on 10 November 2026: no bandages; each level keeps the wounds before it and adds its own (a bruise, a nick over the brow, a black eye and split lip, an open cheek, bleeding nose and scalp, a second bruise and one eye swollen shut at Crippled, both eyes shut and the jaw slack at Incapacitated); pallor takes all the skin.
 
 Reverse: Take the health level out of the face in face64.mjs.
+
+## B2800. Beginner and Full views (2026-11-13)
+Ben approved the Player UI Desk (13 November 2026, every item, in the desk's order). Each player has a view: Beginner or Full. The player's own pick (My view) wins, then the Storyteller's pick for that player (Player toolbar buttons), then the world default, which is Full so nobody's screen changes until someone picks. The Storyteller always sees Full. Nothing is removed in either view.
+
+Reverse: Set Players' view when nobody has picked one to Full and clear the picks, or remove player-view.mjs from main.mjs.
+
+## B2801. Toolbar drawers (2026-11-13)
+In Beginner view a player's WoDX token buttons sit in five drawers: Right now (talk, notice, sight, case board), Me and mine (experience, followers, orders, factions, gear), Time and tasks (clock, out on your own, let time pass, letters, downtime, long tasks, clocks, property, solo), Beyond the world (step sideways, peek, read the soul, the spirits, otherworld rolls, the Net), Help and story (Library, Legends). X-card, Find my character and Find anything stay on the bar. A WoDX button not in the list stays on the bar too, so a new button is never lost. Buttons the Storyteller hid stay hidden.
+
+Reverse: TOOL_GROUP in player-view-rules.mjs.
+
+## B2802. Buttons that fit the character (2026-11-13)
+In each drawer, buttons that do not fit the character's line or year go under More instead of first: stepping sideways is for shapeshifters and spirits, peeking also for mages, the spirit courts for Garou, mages and spirits, otherworld rolls for Garou, mages, changelings, wraiths and spirits, My sight for Kindred, ghouls, Garou and wraiths, Read the Soul for every line but plain mortals and beasts, and the Net from 1990. With no character every button counts as fitting. The line is the one the Actions menu reads.
+
+Reverse: TOOL_LINES and TOOL_YEARS in player-view-rules.mjs.
+
+## B2803. Find anything (2026-11-13)
+Ctrl+K, or the magnifier on the token bar, opens one search over every token button the player may use (drawers included), the character's Actions menu entries with the common checks and dramatic systems, every journal page the player can read, and every setting the player can change. Every word typed must match; matches at the start of a name come first; 40 at most. It is in both views and for the Storyteller too. Actions gains api.menuEntries and api.runSpec for it.
+
+Reverse: Remove the wodxFind tool and the findAnything key in player-view.mjs.
+
+## B2804. Token menu groups (2026-11-13)
+In Beginner view the WoDX buttons on the token menu sit behind four buttons: Act (attacks, use, sprites and the rest), Move (room to move, burden, poses, carrying), Look (perception, use or search), Talk (faces and talk). The Actions book stays on its own, and Foundry's own buttons and other modules' buttons are not touched. A press opens the group beside it; a second press closes it.
+
+Reverse: hudGroupOf in player-view-rules.mjs, or Full view.
+
+## B2805. The Storyteller's window lists every player button (2026-11-13)
+Player toolbar buttons gains a View row (World default, Beginner or Full for each player) and the 11 player buttons it did not list: Library, Gear by era, What do I notice, My sight, Talk, Give an order, Followers, Factions, Case board, Solo panel, and Find anything (always shown, like the X-card).
+
+Reverse: PLAYER_TOOLS in player-tools.mjs.
+
+## B2806. Drawers follow the character (2026-11-13)
+The drawers are drawn again when the player's assigned character changes. A selected token counts first, then the assigned character.
+
+Reverse: The updateUser hook in player-view.mjs.
+

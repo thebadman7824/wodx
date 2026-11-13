@@ -2795,6 +2795,29 @@ Hooks.once("init", () => {
     EFX.setup();
     SX.registerBehavior();
     P.register();
+    // 3.59.0 (B2803): the menu's entries for Chronicle's Find anything, and running one of them, as the menu does
+    API.menuEntries = async actor => {
+        if (!actor) return [];
+        const legacy = !setting("profileMenu");
+        const html = legacy ? MENU.map(([k, , l]) => `<button type="button" data-k="api:${k}">${l}</button>`).join("")
+            : (await pm().menuFor(actor, { recent: [], pinned: [], isGM: game.user.isGM })).html;
+        const box = document.createElement("div"); box.innerHTML = html;
+        const seen = new Set(); const out = [];
+        for (const b of box.querySelectorAll("button[data-k]")) {
+            const spec = b.dataset.k; if (!spec || seen.has(spec)) continue; seen.add(spec);
+            out.push({ spec, label: b.textContent.trim(), hint: b.dataset.hint || b.title || "" });
+        }
+        const extras = [...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, hint: c.note || "" })),
+            ...Object.entries(PRESETS).filter(([k]) => k && !k.startsWith("check-")).map(([k, p]) => ({ spec: `preset:${k}`, label: p.label, hint: p.note || "" }))];
+        for (const x of extras) if (!seen.has(x.spec)) { seen.add(x.spec); out.push(x); }
+        return out;
+    };
+    API.runSpec = async (spec, actor) => {
+        if (!actor || !spec) return;
+        const was = P.setLine(P.detectProfile(actor));
+        LEDGER.delete(actor.id);
+        try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); } finally { P.setLine(was); }
+    };
     game.wodxActions = API;
     game.wodx ??= {};
     game.wodx.actions = API;

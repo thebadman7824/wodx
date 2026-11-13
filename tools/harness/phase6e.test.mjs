@@ -190,8 +190,13 @@ test("player toolbar buttons: players only lose buttons, the X-card always stays
   const saved = PT.fromTicks({u1: {wodxClock: true, wodxPeek: false, wodxXCard: false}, u2: {wodxClock: true}});
   assert.deepEqual(saved, {u1: {wodxPeek: false}});
   // Every WoDX token button a player sees is in the list, and only those
-  const src = ["wodx-chronicle", "wodx-otherworlds", "wodx-creation", "wodx-storyteller"].map(m => readFileSync(join(root, `modules/${m}/scripts/main.mjs`), "utf8")).join("\n");
-  const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|game\.user\.isGM)/g)].filter(x => x[2] === "true").map(x => x[1]);
+  const files = ["wodx-chronicle/scripts/main.mjs", "wodx-chronicle/scripts/player-view.mjs", "wodx-otherworlds/scripts/main.mjs", "wodx-creation/scripts/main.mjs",
+    "wodx-storyteller/scripts/main.mjs", "wodx-library/scripts/main.mjs", "wodx-senses/scripts/main.mjs", "wodx-senses/scripts/sight.mjs", "wodx-npc/scripts/main.mjs",
+    "wodx-solo/scripts/panel.mjs"];
+  const src = files.map(f => readFileSync(join(root, `modules/${f}`), "utf8")).join("\n");
+  const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|!game\.user\.isGM|game\.user\.isGM)/g)].filter(x => x[2] !== "game.user.isGM").map(x => x[1]);
+  // The case board adds its button by name (Interactables case.mjs); the Beginner view's drawer buttons are not player buttons of their own
+  playerVisible.push("wodxCaseBoard");
   assert.deepEqual([...playerVisible].sort(), PT.PLAYER_TOOLS.map(t => t.name).sort());
 });
 
