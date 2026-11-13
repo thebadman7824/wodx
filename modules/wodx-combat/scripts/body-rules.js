@@ -357,7 +357,7 @@ export function movesOf(body) {
 }
 
 /* -------------------------------------------------------------- */
-/*  Where wounds are (damage doll, house rule B2590)               */
+/*  Where wounds are (damage doll, house rule B2690)               */
 /* -------------------------------------------------------------- */
 
 /**

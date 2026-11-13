@@ -23,8 +23,10 @@ export function registerRumourSettings() {
 }
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
 const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
+/** The chronicle's homeland (0.57.0): word travels by its years, the wireless in Buenos Aires before Brno. */
+const homeNow = () => { try { const h = chron()?.world?.homeland?.(); return (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { return null; } };
 /** How the year carries word, for the window. */
-export const mediaNow = () => Media.mediaFor(yearNow(), {future: futureOn()});
+export const mediaNow = () => Media.mediaFor(yearNow(), {future: futureOn(), region: homeNow()});
 export const rumours = () => RR.normRumours(setting("rumours"));
 
 /** Who talks to whom now: each faction's members, and the characters with tokens on each scene (not players'). */
@@ -61,14 +63,14 @@ export function tick({force = false, once = null} = {}) {
     const at = await nightNow();
     const net = contacts();
     const moved = [];
-    const year = yearNow(), future = futureOn(), twist = setting("rumourGarble") ? Media.TWIST_CHANCE : 0;
+    const year = yearNow(), future = futureOn(), region = homeNow(), twist = setting("rumourGarble") ? Media.TWIST_CHANCE : 0;
     await mutate("rumours", cur => {
       const list = RR.normRumours(cur).map(r => {
         if ( once && r.id !== once ) return r;
         const nights = once ? [(r.night ?? at.jdn) + 1] : RR.nightsDue(r, at.jdn);
         let x = r;
         for ( const n of nights ) {
-          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: Media.rumourHeat(year, {big: r.big, future}), twist});
+          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: Media.rumourHeat(year, {big: r.big, future, region}), twist});
           x = {...rumour, night: once ? r.night : n, log: [...rumour.log, ...(heard.length ? [{night: n, heard: heard.length, label: once ? "by hand" : ""}] : [])].slice(-40)};
           if ( heard.length ) moved.push(r.id);
         }

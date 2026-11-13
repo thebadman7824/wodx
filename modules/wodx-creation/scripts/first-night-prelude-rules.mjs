@@ -39,7 +39,20 @@ export function buildScenes({story = [], parts = [], short = false, name = ""} =
   const after = story.filter(s => ["splat", "after", "after2"].includes(s.stage));
   if ( !short ) {
     const before = story.filter(s => !["turning", "splat", "after", "after2"].includes(s.stage));
-    for ( const s of before ) out.push({key: `life:${s.stage}:${s.year}`, title: `${s.year}: ${s.title}`, from: "lifepath", year: s.year,
+    // A drill-down lifepath (0.17.0): one scene for the birth, one for each life stage, one for the arrival
+    const groups = new Map();
+    for ( const s of before.filter(x => x.drill) ) {
+      const g = ["region", "people", "origin"].includes(s.stage) ? "born" : String(s.stage).split("-")[0];
+      if ( !groups.has(g) ) groups.set(g, []);
+      groups.get(g).push(s);
+    }
+    for ( const [g, list] of groups ) {
+      const title = g === "born" ? "Born" : g === "arrival" ? list[0].title : String(list[0].title).split(":")[0];
+      out.push({key: `life:${g}:${list[0].year}`, title: `${list[0].year}: ${title}`, from: "lifepath", year: list[0].year,
+        beats: [...list.map(x => `${g === "born" || g === "arrival" ? "" : `${String(x.title).split(": ").slice(1).join(": ")}: `}${x.choice}${x.text ? `. ${x.text}` : ""}`.replace(/^./, c => c.toUpperCase())),
+          "Play it short: where, who is there, and what the character wants from it."]});
+    }
+    for ( const s of before.filter(x => !x.drill) ) out.push({key: `life:${s.stage}:${s.year}`, title: `${s.year}: ${s.title}`, from: "lifepath", year: s.year,
       beats: [`${s.choice}${s.text ? `: ${s.text}` : ""}`, "Play it short: where, who is there, and what the character wants from it."]});
     out.push({key: "before", title: "Before", from: "template", year: turn?.year ?? null, beats: part("Before")});
   }

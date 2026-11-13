@@ -19,6 +19,7 @@ export const PRESET = [
   {mod: "wodx-npc", key: "factionMode", to: "auto", what: "factions take their turns"},
   {mod: "wodx-combat", key: "fightStart", to: "auto", what: "fights start by themselves"},
   {mod: "wodx-combat", key: "turnConductor", to: "everyone", what: "every turn ends itself"},
+  {mod: "wodx-combat", key: "fightEnd", to: "auto", what: "a fight ends once one side is down or gone"},
   {mod: "wodx-actions", key: "dawnDusk", to: "auto", what: "New Night runs at dusk"},
   {mod: "wodx-actions", key: "sunDamage", to: "apply", what: "sunlight is rolled and applied"},
   {mod: "wodx-storyteller", key: "nightDraw", to: true, what: "the night is drawn at dusk"},
@@ -93,4 +94,124 @@ export function stallReport(entries = [], since = 0) {
   }
   const rows = [...by.values()].sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
   return {total: rows.reduce((n, r) => n + r.count, 0), waiting: rows.filter(r => r.end === "left waiting").reduce((n, r) => n + r.count, 0), rows};
+}
+
+/* ------------------------------ the player's panel (0.2.0) ------------------------------ */
+
+/**
+ * What the panel offers in step 2 of the plan (B2640). The oracle, the Leads page and the trouble dial come in step 3
+ * and the director in step 4, so they are not on it yet.
+ */
+export const PANEL = [
+  {id: "time", label: "Let time pass", icon: "fa-solid fa-hourglass-half"},
+  {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
+  {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
+  {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
+  {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"}
+];
+
+/**
+ * Ways to let time pass. stops: what ends the wait early. A wait stops for a fight on the character's scene, a pause,
+ * someone new arriving there or word sent to the player; sleeping through the day stops only for a fight or a pause,
+ * since a sleeper notices nothing else (B2641).
+ */
+export const WAITS = {
+  ten: {label: "Wait ten minutes", seconds: 600, stops: ["fight", "paused", "word", "newcomer"]},
+  hour: {label: "Wait an hour", seconds: 3600, stops: ["fight", "paused", "word", "newcomer"]},
+  dusk: {label: "Wait until dusk", to: "dusk", stops: ["fight", "paused", "word", "newcomer"]},
+  dawn: {label: "Wait until dawn", to: "dawn", stops: ["fight", "paused", "word", "newcomer"]},
+  day: {label: "Sleep the day", to: "dusk", stops: ["fight", "paused"], sleep: true}
+};
+export const MAX_WAIT = 36 * 3600;
+export const STEP = 600;
+
+/** Seconds a wait asks for. toDusk / toDawn: seconds from now to the next dusk and dawn where the character is. */
+export function secondsFor(choice, {toDusk = 0, toDawn = 0} = {}) {
+  const w = WAITS[choice];
+  if ( !w ) return 0;
+  const s = w.to === "dusk" ? Number(toDusk) : w.to === "dawn" ? Number(toDawn) : Number(w.seconds);
+  return Math.max(0, Math.min(MAX_WAIT, Math.round(Number.isFinite(s) ? s : 0)));
+}
+
+/** The wait cut into steps of at most STEP seconds, so the world can answer between them. */
+export function chunks(total, step = STEP) {
+  const out = [];
+  let left = Math.max(0, Math.round(Number(total) || 0));
+  const size = Math.max(60, Math.round(Number(step) || STEP));
+  while ( left > 0 ) { const n = Math.min(size, left); out.push(n); left -= n; }
+  return out;
+}
+
+export const STOP_WORDS = {
+  fight: "a fight started",
+  paused: "the game was paused",
+  word: "word came for you",
+  newcomer: "someone came near"
+};
+
+/** Why a wait stops now, or null. seen: {fight, paused, word, newcomer} booleans. */
+export function stopFor(choice, seen = {}) {
+  const w = WAITS[choice];
+  if ( !w ) return null;
+  for ( const k of w.stops ) if ( seen?.[k] ) return k;
+  return null;
+}
+
+/** Seconds as plain words: "1 hour 20 minutes", "10 minutes". */
+export function span(seconds) {
+  const m = Math.round((Number(seconds) || 0) / 60);
+  if ( m < 1 ) return "no time";
+  const h = Math.floor(m / 60), r = m % 60;
+  const part = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+  return [h ? part(h, "hour") : "", r ? part(r, "minute") : ""].filter(Boolean).join(" ");
+}
+
+/**
+ * The fixes behind I am stuck (B2642). The lead is a foreshadowing drawn for the character and sent through the
+ * approval queue until the director of step 4 takes its place.
+ */
+export const STUCK = {
+  lead: {label: "Bring me a lead", hint: "Something is put in your character's way: a sign of what is coming."},
+  token: {label: "Free my token", hint: "Your character is put back at the scene's way in."},
+  fight: {label: "End a hung fight or window", hint: "A fight on your scene that will not finish ends, and any window waiting on the Storyteller's side closes."}
+};
+
+/**
+ * The scene's way in: its starting view when it has one, else its middle. scene: {initial: {x, y}, width, height,
+ * padding, grid: {size}}. Returns the token's top left {x, y}, snapped to the grid.
+ */
+export function wayIn(scene = {}, tokenSize = 1) {
+  const g = Number(scene?.grid?.size ?? scene?.grid) || 100;
+  const w = Number(scene?.width) || 0, h = Number(scene?.height) || 0;
+  const pad = Number(scene?.padding) || 0;
+  const offX = Math.ceil(w * pad / g) * g, offY = Math.ceil(h * pad / g) * g;
+  const ix = Number(scene?.initial?.x), iy = Number(scene?.initial?.y);
+  const cx = Number.isFinite(ix) && scene?.initial?.x != null ? ix : offX + w / 2;
+  const cy = Number.isFinite(iy) && scene?.initial?.y != null ? iy : offY + h / 2;
+  const half = (Number(tokenSize) || 1) * g / 2;
+  return {x: Math.max(0, Math.round((cx - half) / g) * g), y: Math.max(0, Math.round((cy - half) / g) * g)};
+}
+
+/** When tonight began: the last dusk at or before now. toNextDusk: seconds from now to the next dusk. */
+export function nightStart(now, toNextDusk) {
+  const n = Number(now) || 0, d = Number(toNextDusk);
+  if ( !Number.isFinite(d) || d <= 0 ) return n;
+  return Math.max(0, n + d - 86400);
+}
+
+/** The log as the curtain shows it: tonight's entries, oldest first, in plain words. */
+export function curtainRows(entries = [], since = 0) {
+  return (entries ?? []).filter(e => e && (Number(e.wt) || 0) >= since).map(e => ({
+    wt: Number(e.wt) || 0, kind: KINDS[e.kind] ?? KINDS.note, title: String(e.title ?? ""),
+    what: e.acted ? `the seat chose ${e.choice}` : e.choice ? `the seat would choose ${e.choice}` : e.note ? String(e.note) : "",
+    note: e.acted || e.choice ? String(e.note ?? "") : ""
+  }));
+}
+
+/** The nights the player has looked behind the curtain: keys of the night's start, newest last, at most 60. */
+export function markSeen(seen = [], key) {
+  const k = Math.round(Number(key) || 0);
+  const list = (Array.isArray(seen) ? seen : []).map(Number).filter(Number.isFinite).filter(x => x !== k);
+  list.push(k);
+  return list.slice(-60);
 }

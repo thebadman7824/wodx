@@ -27,7 +27,8 @@ export const ACTIVITIES = {
 
 /** Kinds of place a scene, or a region inside one, can be tagged with. */
 export const PLACE_KINDS = {
-  home: "Home", workplace: "Workplace or shop", church: "Church, chapel or cloister", tavern: "Tavern or inn",
+  home: "Home", workplace: "Workplace or shop", church: "Church, chapel or another house of worship", mosque: "Mosque",
+  synagogue: "Synagogue or prayer house", temple: "Temple, pagoda or monastery of the faiths of Asia", tavern: "Tavern or inn",
   haven: "Haven (a Cainite's resting place)", gate: "Gate, watch-house or barracks", market: "Market or square",
   street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
   alley: "Back alley or courtyard", yard: "Farmyard, stable or village", docks: "Docks or riverside", park: "Park, garden or churchyard",
@@ -36,11 +37,24 @@ export const PLACE_KINDS = {
   other: "Other"
 };
 
+/**
+ * NPC 0.50.0 (B2662): a house of worship of each faith has a kind of its own. The "church" role finds the faith's own
+ * kind first, then a place tagged plainly as a church (as every house of worship was before). Other modules that know
+ * only "church" read baseKind.
+ */
+export const WORSHIP_KINDS = ["church", "mosque", "synagogue", "temple"];
+export const WORSHIP_KIND = {western: "church", orthodox: "church", islamic: "mosque", jewish: "synagogue", hindu: "temple",
+  theravada: "temple", tibetan: "temple", chinese: "temple", own: "temple"};
+export const isWorship = kind => WORSHIP_KINDS.includes(kind);
+export const baseKind = kind => (isWorship(kind) ? "church" : kind);
+/** The kinds of place the church role looks for, for a faith. */
+export const worshipKinds = faith => [...new Set([WORSHIP_KIND[faith] ?? "church", "church"])];
+
 /** The roles a routine block can name, and the kinds of place each falls back to when the NPC has none set. */
 export const ROLES = {
   home: {label: "Home", kinds: ["home"]},
   work: {label: "Workplace", kinds: ["workplace", "market"]},
-  church: {label: "Church", kinds: ["church"]},
+  church: {label: "Church or house of worship", kinds: ["church"]},
   tavern: {label: "Tavern", kinds: ["tavern"]},
   haven: {label: "Haven", kinds: ["haven", "home"]},
   post: {label: "Watch post", kinds: ["gate", "castle"]},
@@ -106,10 +120,204 @@ export const PRESETS = {
 /** The routine each 7b template starts from. Spirits and the plain beast have none; the animal archetypes keep their own (animal-rules). */
 export const DEFAULT_PRESET = {guard: "night-watch", civilian: "labourer", ghoul: "ghoul", neonate: "neonate", elder: "elder", garou: "garou", hunter: "hunter"};
 
-export const blocksOf = (routine, template, year = null) => {
-  if ( Array.isArray(routine?.blocks) && routine.blocks.length ) return routine.blocks;
+/**
+ * The blocks an NPC follows. Their own blocks win as they stand; a ready routine follows the year, and from NPC
+ * 0.49.0 (B2572) the faith its people keep (keep: {faith, region}, see forFaith below).
+ */
+export const blocksOf = (routine, template, year = null, keep = null, {prayers = true} = {}) => {
+  const y = Number(year) || 0;
+  if ( Array.isArray(routine?.blocks) && routine.blocks.length ) {
+    // NPC 0.50.0: the Storyteller's own hours stand; the five prayers are laid over them only when asked for
+    if ( !prayers || routine?.prayers !== "five" || keep?.faith !== "islamic" || NO_WEEK.has(template) ) return routine.blocks;
+    return withPrayers(routine.blocks, {...keep, year: y});
+  }
   const key = PRESETS[routine?.preset] ? routine.preset : DEFAULT_PRESET[template];
-  return presetBlocks(key, routine?.age || ageOf(year));
+  const blocks = presetBlocks(key, routine?.age || ageOf(year));
+  if ( !keep?.faith || NO_WEEK.has(template) ) return blocks;
+  const turned = forFaith(blocks, {...keep, year: y});
+  if ( !prayers || keep.faith !== "islamic" || !keepsPrayers(routine?.prayers, keep.region, y) ) return turned;
+  return withPrayers(turned, {...keep, year: y});
+};
+
+/* ------------------------------------------------------------------ */
+/*  Routines by faith (NPC 0.49.0, B2572)                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The ready routines were written for a Western Christian town: Mass on Sunday, a working week of Monday to
+ * Saturday, the canonical hours for the clergy. A people who keep another faith (WoDX Chronicle's faith-rules: the
+ * region's, or the scene's own) get the same hours turned to their week:
+ *
+ *   rest day   Sunday for the churches, Friday for Islam (the noon prayer at the great mosque), the Sabbath for the
+ *              Jewish year; the faiths of India, China, Tibet and Southeast Asia keep no weekly day of rest, so their
+ *              working week runs every day and the weekly worship moves to the holy days (the moon days of the
+ *              Buddhist south, the temple feasts), until the Sunday week took hold there (SUNDAY_FROM)
+ *   the week   the whole week turns with the rest day, so the night out and the short day fall on its eve
+ *   words      Mass becomes Friday prayer, the Sabbath service, the temple; the clergy's offices become the
+ *              prayers of that faith
+ *
+ * Kindred, Garou and the other night folk keep their own hours and are left as they are. A house reading, rounded for
+ * play; the books give no such table.
+ */
+const NO_WEEK = new Set(["neonate", "elder", "garou", "spirit", "beast"]);
+
+/** The year the Sunday week (the government's and the schools' day off) took hold in a region whose faith has none,
+ *  or turned a Friday land to Sunday (Turkey in 1935, Soviet Central Asia in 1924, the Dutch Indies, the colonies). */
+export const SUNDAY_FROM = {
+  "india": 1843, "china": 1912, "japan": 1876, "korea": 1895, "southeast-asia": 1899, "tibet-himalaya": 1959,
+  "nusantara": 1800, "west-africa": 1900, "east-africa": 1900, "anatolia": 1935, "central-asia": 1924, "antarctica": 1899
+};
+/** The weekday (0 Monday ... 6 Sunday) a faith rests and worships in a region and year, or null for none. */
+export function restDay(faith, region = null, year = 0) {
+  const y = Number(year) || 0, sun = SUNDAY_FROM[region];
+  if ( faith === "western" || faith === "orthodox" ) return 6;
+  if ( faith === "jewish" ) return 5;
+  if ( sun && y >= sun ) return 6;
+  if ( faith === "islamic" ) return 4;
+  return null;
+}
+
+/** The weekday a faith gathers to worship (whatever day the state rests): null for the faiths with no weekly day. */
+export const holyDay = faith => ({western: 6, orthodox: 6, islamic: 4, jewish: 5})[faith] ?? null;
+
+/** What weekly worship, feast-day worship and the clergy's offices are called in each faith. */
+const WORDS = {
+  orthodox: {week: "The Divine Liturgy", feast: "The Liturgy of the feast", offices: {"Matins and Lauds": "Matins", "Mass and the offices": "The Liturgy and the hours"}},
+  islamic: {week: "Friday prayer at the great mosque", feast: "The prayer of the feast", hours: [12, 14],
+    offices: {"Matins and Lauds": "The dawn prayer", "Prime": "Lessons after the dawn prayer", "Sext": "The noon prayer",
+      "Vespers": "The sunset prayer", "Vespers to Compline, dusk to the late bell": "The sunset and night prayers",
+      "The office": "Prayer and teaching", "Parish work": "The mosque's work", "Parish rounds": "Rounds of the quarter",
+      "Mass and the offices": "Friday prayer and the sermon"}},
+  jewish: {week: "The Sabbath service", feast: "Prayers of the festival",
+    offices: {"Matins and Lauds": "Morning prayer", "Prime": "Study", "Sext": "Afternoon prayer", "Vespers": "Evening prayer",
+      "Vespers to Compline, dusk to the late bell": "Evening prayer and study", "Parish work": "The congregation's work",
+      "Parish rounds": "Visits in the quarter", "Mass and the offices": "The Sabbath service and study"}},
+  hindu: {week: "At the temple", feast: "At the temple for the festival",
+    offices: {"Matins and Lauds": "Dawn worship", "Prime": "Recitation", "Sext": "The noon offering", "Vespers": "The evening lamps",
+      "Vespers to Compline, dusk to the late bell": "The evening lamps and the last worship", "Parish work": "The temple's work",
+      "Parish rounds": "Rites in the households", "Mass and the offices": "The temple's great worship"}},
+  theravada: {week: "At the monastery", feast: "At the monastery on the moon day",
+    offices: {"Matins and Lauds": "Morning chanting", "Prime": "The alms round", "Sext": "The last meal before noon",
+      "Vespers": "Evening chanting", "Vespers to Compline, dusk to the late bell": "Evening chanting and sitting",
+      "Parish work": "The monastery's work", "Parish rounds": "Teaching in the villages", "Mass and the offices": "The moon day's teaching"}},
+  tibetan: {week: "At the monastery", feast: "At the monastery for the festival",
+    offices: {"Matins and Lauds": "Morning prayers in the assembly hall", "Prime": "Debate in the courtyard", "Sext": "The noon assembly",
+      "Vespers": "Evening prayers", "Vespers to Compline, dusk to the late bell": "Evening prayers and study",
+      "Parish work": "The monastery's work", "Parish rounds": "Rites in the households", "Mass and the offices": "The great assembly"}},
+  chinese: {week: "Offerings at the temple", feast: "At the temple for the festival",
+    offices: {"Matins and Lauds": "Morning recitation", "Prime": "Study of the classics", "Sext": "The noon offering",
+      "Vespers": "Evening recitation", "Vespers to Compline, dusk to the late bell": "Evening recitation",
+      "Parish work": "The temple's work", "Parish rounds": "Rites in the households", "Mass and the offices": "The temple's great rite"}},
+  own: {week: "At the holy place", feast: "At the holy place for the festival",
+    offices: {"Matins and Lauds": "The dawn rite", "Vespers": "The evening rite", "Parish work": "The keeper's work",
+      "Parish rounds": "Rites in the households", "Mass and the offices": "The great rite"}}
+};
+const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const MASS = /^(sunday |feast-day )?mass(es)?$/i;
+
+/** A ready routine's blocks turned to a faith's week. keep: {faith, region, year}. The Western church: unchanged. */
+export function forFaith(blocks, {faith = "western", region = null, year = 0} = {}) {
+  if ( !faith || faith === "western" || !Array.isArray(blocks) ) return blocks;
+  const rest = restDay(faith, region, year), words = WORDS[faith] ?? {}, shift = rest === null ? 0 : rest - 6;
+  const turn = d => (((d + shift) % 7) + 7) % 7;
+  const dayWords = label => (shift ? label.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/g, w => DAY_NAMES[turn(DAY_NAMES.indexOf(w))]) : label);
+  return blocks.map(b => {
+    const out = {...b}, days = Array.isArray(b.days) && b.days.length ? b.days : null;
+    const worship = b.place === "church" && b.activity === "pray";
+    const weekly = worship && days?.length === 1 && days[0] === 6;
+    const holy = holyDay(faith);
+    if ( weekly && holy === null ) Object.assign(out, {days: null, feast: "only"});
+    else if ( weekly ) out.days = [holy];
+    else if ( days && rest === null ) { if ( days.length >= 5 ) out.days = null; }
+    else if ( days && shift ) out.days = days.map(turn);
+    if ( weekly && holy !== null && words.hours ) [out.from, out.to] = words.hours;
+    const lab = String(b.label ?? "");
+    if ( worship && (weekly || MASS.test(lab)) ) out.label = (weekly && holy !== null) ? (words.week ?? lab) : (words.feast ?? lab);
+    else if ( words.offices?.[lab] ) out.label = words.offices[lab];
+    else out.label = dayWords(lab);
+    if ( faith === "islamic" && b.activity === "drink" && !lab ) out.label = Number(year) >= 1550 ? "The coffee house" : "With friends at the bathhouse";
+    return out;
+  });
+}
+
+/**
+ * The faith a person's origin points to where it differs from the land's (WoDX Creation's origins): a Jewish
+ * household in Brno keeps the Sabbath, an Arab family in Iberia Friday prayer, a Greek one in Venice the Liturgy.
+ * null: they keep the faith of the place.
+ */
+const ORIGIN_FAITH = {jewish: "jewish", arabic: "islamic", turkish: "islamic", persian: "islamic", greek: "orthodox", russian: "orthodox",
+  serbian: "orthodox", romanian: "orthodox", armenian: "orthodox", tamil: "hindu", hindi: "hindu", tibetan: "tibetan", chinese: "chinese"};
+export const originFaith = origin => ORIGIN_FAITH[String(origin ?? "").toLowerCase()] ?? null;
+
+/* ------------------------------------------------------------------ */
+/*  The five daily prayers and Ramadan (NPC 0.50.0, B2660 to B2661)    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A Muslim NPC on a ready routine stops for the five prayers wherever they are: at dawn before sunrise, after noon,
+ * in the afternoon, after sunset and at nightfall. Each takes twenty minutes. The prayer leader (any routine with
+ * daily prayers at the house of worship) leads all five at the mosque. On Friday the noon prayer is the Friday prayer
+ * the week already holds. In Ramadan a meal before dawn, the fast broken at sunset, the night prayers at the mosque
+ * and a late night out come on top; daytime drinking with friends waits for the night.
+ *
+ * A block laid on the sun: sun is "sunrise", "noon", "afternoon" or "sunset" and off the minutes from it [start, end].
+ * The sun's times are the Chronicle's for the day (they move with the season and the latitude); where the sun does
+ * not rise or set, 06:00 and 18:00 stand in. from and to stay as whole hours for the routine window. A block whose
+ * place is "same" keeps the NPC where the next fitting block puts them.
+ *
+ * Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default.
+ * A house reading of when the prayers fall, rounded for play; the books give no prayer table.
+ */
+export const PRAYERS = [
+  {key: "dawn", sun: "sunrise", off: [-80, -60], from: 5, to: 6, label: "The dawn prayer"},
+  {key: "noon", sun: "noon", off: [10, 30], from: 12, to: 13, label: "The noon prayer", days: [0, 1, 2, 3, 5, 6]},
+  {key: "afternoon", sun: "afternoon", off: [0, 20], from: 15, to: 16, label: "The afternoon prayer"},
+  {key: "sunset", sun: "sunset", off: [5, 25], from: 18, to: 19, label: "The sunset prayer"},
+  {key: "night", sun: "sunset", off: [90, 110], from: 20, to: 21, label: "The night prayer"}
+];
+export const RAMADAN = [
+  {key: "suhur", sun: "sunrise", off: [-140, -85], from: 3, to: 4, place: "home", activity: "rest", label: "The meal before dawn"},
+  {key: "iftar", sun: "sunset", off: [0, 85], from: 18, to: 19, place: "home", activity: "rest", label: "Breaking the fast"},
+  {key: "tarawih", sun: "sunset", off: [115, 190], from: 20, to: 22, place: "church", activity: "pray", label: "The night prayers of Ramadan"},
+  {key: "night-out", sun: "sunset", off: [190, 300], from: 22, to: 24, place: "street", activity: "wander", label: "Out in the Ramadan night"}
+];
+/** Years a region's Muslims do not keep the prayers openly by default: [from, to]. */
+export const PRAYERS_HIDDEN = {"central-asia": [[1929, 1990]]};
+export const PRAYER_MODES = {"": "As their faith and land keep", five: "The five daily prayers and Ramadan", none: "Not kept"};
+/** Are the prayers kept? mode: the routine's own pick ("five", "none" or none). */
+export function keepsPrayers(mode, region = null, year = 0) {
+  if ( mode === "five" ) return true;
+  if ( mode === "none" ) return false;
+  const y = Number(year) || 0;
+  return !(PRAYERS_HIDDEN[region] ?? []).some(([a, b]) => y >= a && y <= b);
+}
+const leads = blocks => blocks.some(b => b.place === "church" && b.activity === "pray" && !b.days?.length && b.feast !== "only" && !b.sun);
+/** The prayer and Ramadan blocks laid over a routine's blocks (the prayers first, so they win). */
+export function withPrayers(blocks, {year = 0} = {}) {
+  if ( !Array.isArray(blocks) ) return blocks;
+  const leader = leads(blocks);
+  const B0 = {when: "any", days: null, feast: "any"};
+  const pray = PRAYERS.map(p => ({...B0, from: p.from, to: p.to, sun: p.sun, off: [...p.off], days: p.days ? [...p.days] : null,
+    place: leader ? "church" : "same", activity: "pray", label: leader ? `Leads ${p.label.replace(/^The /, "the ")}` : p.label, prayer: p.key}));
+  const fast = RAMADAN.map(p => ({...B0, from: p.from, to: p.to, sun: p.sun, off: [...p.off], place: p.place, activity: p.activity, ramadan: "only",
+    label: leader && p.key === "tarawih" ? "Leads the night prayers of Ramadan" : p.label, prayer: p.key}));
+  const rest = blocks.map(b => (b.activity === "drink" && !b.ramadan ? {...b, ramadan: "not"} : b));
+  return [...pray, ...fast, ...rest];
+}
+const hoursOf = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s ?? "")); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
+/** The hours [start, end] a sun block runs on a day (end may pass 24). */
+export function sunWindow(b, d) {
+  const rise = hoursOf(d?.sunrise) ?? 6, set = hoursOf(d?.sunset) ?? 18, noon = (rise + set) / 2;
+  const base = {sunrise: rise, sunset: set, noon, afternoon: noon + 0.6 * (set - noon)}[b.sun];
+  if ( base === undefined ) return null;
+  const [a, z] = Array.isArray(b.off) ? b.off : [0, 20];
+  return [(((base + a / 60) % 24) + 24) % 24, (((base + a / 60) % 24) + 24) % 24 + (z - a) / 60];
+}
+const inSun = (b, d) => {
+  const w = sunWindow(b, d);
+  if ( !w ) return hourIn(b, d.hour);
+  const h = d.hour + (Number(d.minute) || 0) / 60;
+  return ((h - w[0]) % 24 + 24) % 24 < w[1] - w[0];
 };
 
 /* ------------------------------------------------------------------ */
@@ -290,21 +498,29 @@ export function hourIn(b, hour) {
 }
 
 /** The block in force at a world time, and its index: {block, index} or null. */
-export function blockAt(blocks, time, describe) {
+export function blockAt(blocks, time, describe, from = 0) {
   const d = describe(time);
   let yesterday = null;
-  for ( let i = 0; i < (blocks?.length ?? 0); i++ ) {
+  for ( let i = from; i < (blocks?.length ?? 0); i++ ) {
     const b = blocks[i];
-    if ( !hourIn(b, d.hour) ) continue;
+    // NPC 0.50.0: a block laid on the sun (the prayers) reads the day's sunrise and sunset to the minute
+    if ( b.sun ? !inSun(b, d) : !hourIn(b, d.hour) ) continue;
     // The part of a block after midnight belongs to the day it started on
-    const day = wraps(b) && d.hour < b.to ? (yesterday ??= describe(time - 86400)) : d;
+    const day = !b.sun && wraps(b) && d.hour < b.to ? (yesterday ??= describe(time - 86400)) : d;
     if ( Array.isArray(b.days) && b.days.length && !b.days.includes(day.dayOfWeek) ) continue;
     if ( b.feast === "only" && !day.feast ) continue;
     if ( b.feast === "not" && day.feast ) continue;
+    if ( b.ramadan === "only" && !day.ramadan ) continue;
+    if ( b.ramadan === "not" && day.ramadan ) continue;
     if ( b.when === "day" && d.isNight ) continue;
     if ( b.when === "night" && !d.isNight ) continue;
     // NPC 0.21.0: months it runs in (1 January ... 12 December), for seasons: pasture, winter sleep
     if ( Array.isArray(b.months) && b.months.length && d.month && !b.months.includes(day.month ?? d.month) ) continue;
+    // NPC 0.50.0: "same" prays where the next fitting block puts them
+    if ( b.place === "same" ) {
+      const under = blockAt(blocks.map(x => (x.place === "same" ? {...x, days: [-1]} : x)), time, describe, i + 1);
+      return {block: {...b, place: under?.block?.place ?? "home"}, index: i};
+    }
     return {block: b, index: i};
   }
   return null;
@@ -330,6 +546,7 @@ export function checkBlocks(blocks) {
     if ( !Number.isInteger(b.from) || b.from < 0 || b.from > 24 ) bad.push(`Block ${n}: "from" must be a whole hour, 0 to 24`);
     if ( !Number.isInteger(b.to) || b.to < 0 || b.to > 24 ) bad.push(`Block ${n}: "to" must be a whole hour, 0 to 24`);
     if ( !b.place ) bad.push(`Block ${n} has no place`);
+    if ( b.sun && !sunWindow(b, {}) ) bad.push(`Block ${n}: the sun can be sunrise, noon, afternoon or sunset`);
     if ( !ACTIVITIES[b.activity] ) bad.push(`Block ${n} has no activity`);
   });
   return bad;
@@ -347,14 +564,14 @@ const hash = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.co
  * A role the NPC has set wins; else a place of a fitting kind, the same one for the same NPC each time.
  * Returns {place, missing}: missing names a role whose place no longer exists.
  */
-export function resolvePlace(block, {places = [], roles = {}, seed = "", domitorPlace = null} = {}) {
+export function resolvePlace(block, {places = [], roles = {}, seed = "", domitorPlace = null, faith = null} = {}) {
   if ( !block?.place ) return {place: null, missing: null};
   const ids = new Set(places.map(p => p.id));
   const p = block.place;
   if ( ids.has(p) ) return {place: p, missing: null};
   if ( p === "domitor" ) {
     if ( domitorPlace && ids.has(domitorPlace) ) return {place: domitorPlace, missing: null};
-    return resolvePlace({...block, place: "haven"}, {places, roles, seed});
+    return resolvePlace({...block, place: "haven"}, {places, roles, seed, faith});
   }
   let missing = null;
   if ( roles?.[p] ) {
@@ -362,7 +579,9 @@ export function resolvePlace(block, {places = [], roles = {}, seed = "", domitor
     missing = p;
   }
   if ( !ROLES[p] && !missing ) missing = p; // a place id that was deleted
-  for ( const k of ROLES[p]?.kinds ?? [] ) {
+  // NPC 0.50.0 (B2662): the house of worship of their own faith first
+  const kinds = p === "church" && faith ? worshipKinds(faith) : (ROLES[p]?.kinds ?? []);
+  for ( const k of kinds ) {
     const cands = places.filter(x => x.kind === k).sort((a, b) => String(a.id).localeCompare(String(b.id)));
     if ( cands.length ) return {place: cands[hash(`${seed}:${p}`) % cands.length].id, missing};
   }
@@ -391,7 +610,10 @@ export function guessPlace(name) {
     [/\b(lair|haven)\b/i, "haven"],
     [/\b(watch-house|barracks|gate|toll-post|guardhouse)\b/i, "gate"],
     [owner ? /\b(house|room|rooms|chambers|cabin|cottage|presbytery|quarters|home)\b/i : /\b(cottage|house)\b/i, "home"],
+    [/\b(mosque|masjid|madrasa|minaret)\b/i, "mosque"],
+    [/\b(synagogue|shul|beth midrash|prayer house)\b/i, "synagogue"],
     [/\b(church|chapel|cathedral|churchyard|cloister|scriptorium|hermitage|abbey|monastery|church close)\b/i, "church"],
+    [/\b(temple|pagoda|stupa|gompa|vihara|mandir)\b/i, "temple"],
     [/\b(tavern|inn|alehouse|brewhouse)\b/i, "tavern"],
     [/\b(keep|castle|bailey|great hall|ward|undercroft)\b/i, "castle"],
     [/\b(market|square)\b/i, "market"],

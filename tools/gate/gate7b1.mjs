@@ -33,9 +33,27 @@ export async function run() {
   const curName = () => combat.combatant?.name;
   const toTurn = async tok => { await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tok.id)}); await sleep(400); };
 
+  // The conductor may be in the middle of moving the fight on (an NPC that has just acted, a new round with new Initiative):
+  // it is switched off and the fight left to come to rest before a step places the turn by hand.
+  const settle = async () => {
+    await game.settings.set(MOD, "turnConductor", "off");
+    for ( let n = 0; n < 10; n++ ) { const k = `${combat.round}:${combat.turn}`; await sleep(1500); if ( k === `${combat.round}:${combat.turn}` ) return; }
+  };
+
+  // A hard blow in an earlier step can leave the hero dazed (no action next turn, by the rules), and the conductor then rightly passes the
+  // hero's turn over. The steps that need the hero to act take such states off first, and say which they found.
+  const NO_ACTION = ["dazed", "incapacitated", "torpor", "staked", "immobilized"];
+  const fit = async tok => { const cd = game.modules.get("wodx-chronicle")?.api?.conditions, had = NO_ACTION.filter(id => cd?.hasCondition?.(tok.actor, id));
+    for ( const id of had ) await cd.setCondition(tok.actor, id, false);
+    await C().setDamage(tok.actor, zero); return had; };
+
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
-    for ( const role of ["hero", "fighter", "runner"] ) T[role] = canvas.tokens.placeables.find(t => t.document.getFlag(NPC, "gateRole") === role);
+    for ( const role of ["hero", "fighter", "runner"] ) {
+      // the arena may hold more than one token marked with a role (older test figures): the one that is in the fight is meant
+      const marked = canvas.tokens.placeables.filter(t => t.document.getFlag(NPC, "gateRole") === role);
+      T[role] = marked.find(t => combat?.combatants.some(c => c.tokenId === t.id)) ?? marked[0];
+    }
     // No fight left from gate 7b: make one on the arena with the three gate tokens, marked so it is cleaned up after
     if ( !combat && sc && T.hero && T.fighter && T.runner ) {
       made = combat = await Combat.create({scene: sc.id, active: true, flags: {[NPC]: {gateFight: true, gate7b1Made: true}}});
@@ -76,26 +94,50 @@ export async function run() {
   });
 
   await step("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", async () => {
-    await game.settings.set(MOD, "turnConductor", "everyone");
+    // Every time the fight is moved on during this step, what the conductor knew at that moment is written down (who, its reason, its counters)
+    const moves = [], w0 = Date.now(), own = {};
+    const note = how => { const c = CD().state(), cc = combat.combatant; moves.push({ms: Date.now() - w0, how, from: cc?.name, round: combat.round, level: game.settings.get(MOD, "turnConductor"),
+      why: c.why ?? null, key: c.key ?? null, sameTurn: c.combatantId === cc?.id, actions: c.actions, spent: c.actionSpent, grace: c.graceEndsAt ? c.graceEndsAt - Date.now() : null, timer: c.timerEndsAt ? c.timerEndsAt - Date.now() : null,
+      npcDone: c.npcDone, held: !!cc?.getFlag(MOD, "held"), owner: !!cc?.actor?.hasPlayerOwner, defeated: !!cc?.isDefeated}); };
+    for ( const k of ["nextTurn", "nextRound"] ) { own[k] = Object.hasOwn(combat, k) ? combat[k] : null; const f = combat[k].bind(combat); combat[k] = (...a) => { note(k); return f(...a); }; }
+    try {
+    await settle();
+    const cleared = await fit(T.hero);
     await toTurn(T.hero);
-    const id = combat.combatant?.id;
     // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
     await game.settings.set(MOD, "conductorGrace", 4);
+    // What the step starts from is written down, so a failure says why: who has the turn, a hold left over, harm, the conductor's own reason
+    const heroC = combat.combatants.find(c => c.tokenId === T.hero.id);
+    const heldBefore = !!heroC?.getFlag(MOD, "held");
+    if ( heldBefore ) await heroC.unsetFlag(MOD, "held");
+    await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(1500);
+    if ( combat.combatant?.id !== heroC?.id ) { await settle(); await toTurn(T.hero); await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(1500); }
+    const id = combat.combatant?.id, t0 = Date.now(), log = [];
+    const dmg = a => { const d = a?.system?.health?.damage ?? {}; return (Number(d.bashing) || 0) + (Number(d.lethal) || 0) + (Number(d.aggravated) || 0); };
+    const start = {turn: curName(), isHero: id === heroC?.id, owner: !!heroC?.actor?.hasPlayerOwner, heldBefore, damage: dmg(heroC?.actor), defeated: !!heroC?.isDefeated, why: CD().state().why ?? null};
     let sawCount = false;
-    const hk = Hooks.on("updateCombat", c => { if ( c.id === combat.id && c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true; });
+    const hk = Hooks.on("updateCombat", (c, ch) => { if ( c.id !== combat.id ) return;
+      if ( c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true;
+      if ( "turn" in ch || "round" in ch ) log.push({ms: Date.now() - t0, turn: c.combatant?.name, round: c.round, why: CD().state().why ?? null}); });
     try {
-      await C().quickAttack({attacker: T.hero, target: T.fighter});
+      let attack = null;
+      try { const r = await C().quickAttack({attacker: T.hero, target: T.fighter}); attack = r == null ? "nothing came back" : "done"; } catch (e) { attack = `failed: ${e.message}`; }
+      const attackMs = Date.now() - t0;
       const counting = await waitFor(() => sawCount || !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 8000);
+      const whyMid = CD().state().why ?? null, flagMid = combat.getFlag(MOD, "conductor") ?? null;
       const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
-      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended,
+        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, moves, cleared, t0: t0 - w0, grace: game.settings.get(MOD, "conductorGrace")});
     } finally { Hooks.off("updateCombat", hk); }
+    } finally { for ( const k of ["nextTurn", "nextRound"] ) { if ( own[k] ) combat[k] = own[k]; else delete combat[k]; } }
     await game.settings.set(MOD, "conductorGrace", 2);
     await game.settings.set(MOD, "turnConductor", "npc"); await sleep(600);
     for ( const t of Object.values(T) ) await C().setDamage(t.actor, zero);
   });
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
-    await game.settings.set(MOD, "turnConductor", "off");
+    await settle();
+    await fit(T.hero);
     // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
     const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
     await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);

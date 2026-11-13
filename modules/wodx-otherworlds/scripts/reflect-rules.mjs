@@ -68,7 +68,7 @@ export function reflect(sidecar, layer = "penumbra", {year = null, future = fals
   }
   for ( const r of sc.regions ?? [] ) {
     const kind = r.place?.kind, area = r.area, p = places[id(r)] ?? {}, rid = id(r);
-    if ( kind === "church" || p.type === "chapel" || rid === "market-cross" ) { add("loom", r, 0.9); add("thin", r, 0.6); continue; }
+    if ( ["church", "mosque", "synagogue", "temple"].includes(kind) || p.type === "chapel" || rid === "market-cross" ) { add("loom", r, 0.9); add("thin", r, 0.6); continue; }
     if ( kind === "tavern" ) add("loom", r, 0.5);
     if ( kind === "market" ) { add("loom", r, 0.4); add("web", r, web * 0.8); }
     if ( p.dirty ) { add("blight", r, 0.7); add("rot", r, 0.8); continue; }

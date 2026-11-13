@@ -479,7 +479,7 @@ async function onSocket(p) {
         const r = await applyDamage(actor, p.type, p.levels);
         if (p.messageId) {
             const d = game.messages.get(p.messageId)?.getFlag(MOD, "data") ?? {};
-            Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
+            Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
             if (p.which !== "counter") await BD.recordWound(actor, d, r, p.messageId).catch(e => console.warn(`${MOD} | wounds`, e));
             await recordApplied(p.messageId, actor, r);
         }
@@ -872,6 +872,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     html = await addFlavor(html, fkey, { attacker: attacker.name, target: target?.name ?? "the enemy" },
         { style: F.attackStyle(w), group: target ? F.targetGroup(P.detectProfile(target)) : null });
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
+    // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
+    Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
 
     // ---- Apply
     if (setting("autoApply")) {
@@ -1268,7 +1271,7 @@ async function applyFromMessage(msg, which = "main") {
     const r = await applyDamage(actor, src.type, src.levels);
     if (!isCounter) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
-    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after,
+    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
         fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id });
     const key = isCounter ? "counterApplied" : "applied";
     const undoKey = isCounter ? "counterUndo" : "undo";
@@ -1471,7 +1474,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.22.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.23.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

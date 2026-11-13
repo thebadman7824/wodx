@@ -77,17 +77,33 @@ export function build(ctx) {
   let cal = null;
   async function loadCalendar() { cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); return cal; }
   /** describe(time) for the rules: the Chronicle's own reading of the clock, with the feast of the day. */
-  function describer() {
+  function describer(faith = "western") {
     const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
     const extra = [...R.parseFeasts(setting("feasts")), ...(chron()?.church?.extra?.() ?? [])];
+    // 0.49.0 (B2572): a people of another faith keep its holy days (WoDX Chronicle's faith-rules)
+    const F = faith && faith !== "western" ? chron()?.church?.faiths : null;
     const memo = new Map();
     return time => {
       if ( memo.has(time) ) return memo.get(time);
       const d = cal.describeTime(time, lat);
-      const out = {...d, feast: R.feastOn(d, extra)};
+      let feast = null, ramadan = false;
+      if ( F?.faithDay ) {
+        try {
+          const c = F.faithDay(faith, d, {extra}); feast = c?.feast ?? (faith === "theravada" ? c?.day ?? null : null);
+          // 0.50.0 (B2661): the month of the fast, from the counted Muslim year
+          if ( faith === "islamic" ) ramadan = F.islamicDate ? F.islamicDate(d.jdn)?.month === 9 : c?.season === "Ramadan";
+        }
+        catch (e) { feast = R.feastOn(d, extra); }
+      } else feast = R.feastOn(d, extra);
+      const out = {...d, feast, ramadan};
       memo.set(time, out);
       return out;
     };
+  }
+  /** One describer for each faith in a tick. */
+  function describers() {
+    const m = new Map();
+    return faith => { const k = faith || "western"; if ( !m.has(k) ) m.set(k, describer(k)); return m.get(k); };
   }
   /** The curfew's hour on a day: the setting, or midnight on a night of revel (WoDX Chronicle's feast and fast days). */
   function curfewStartOn(d) {
@@ -118,14 +134,29 @@ export function build(ctx) {
   const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
   const routineOf = actor => flag(actor, "routine") ?? null;
   const whereOf = actor => flag(actor, "where") ?? null;
-  const blocksFor = actor => R.blocksOf(routineOf(actor), profileFor(actor).template, yearNow());
+  /**
+   * The faith an NPC keeps and the region they live in (0.49.0, B2572): their routine's own pick, else the faith their
+   * origin points to (a Jewish household in Brno), else the faith of the scene they live on (WoDX Chronicle's faithOf:
+   * the scene's own region, else the homeland).
+   */
+  function keepOf(actor, year = yearNow(), {own = true} = {}) {
+    const r = routineOf(actor) ?? {}, res = flag(actor, "resident") ?? {};
+    let scene = null;
+    try { scene = res.scene ? fromUuidSync(res.scene) : null; } catch (e) { scene = null; }
+    let here = null;
+    try { here = chron()?.church?.faithOf?.(scene ?? null, year) ?? null; } catch (e) { here = null; }
+    const faith = (own && r.faith) || res.faith || here?.faith || "western";
+    return {faith, region: here?.region ?? null};
+  }
+  const blocksFor = actor => { const y = yearNow(); return R.blocksOf(routineOf(actor), profileFor(actor).template, y, keepOf(actor, y)); };
   // The hidden passer-by actors (0.27.0) keep no routine and join no household or faction
   const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
   const domitorOf = actor => { const id = actor.flags?.["wodx-creation"]?.lineage?.domitor?.id; return id ? game.actors.get(id) : null; };
   const placeCtx = (actor, places, computed) => {
     const dom = domitorOf(actor);
-    return {places, roles: routineOf(actor)?.roles ?? {}, seed: actor.id, domitorPlace: dom ? (computed?.get(dom.id)?.place ?? whereOf(dom)?.place) : null};
+    return {places, roles: routineOf(actor)?.roles ?? {}, seed: actor.id, domitorPlace: dom ? (computed?.get(dom.id)?.place ?? whereOf(dom)?.place) : null,
+      faith: keepOf(actor).faith};
   };
   /** Dead, in torpor or incapacitated: the routine stops and the Storyteller is told. */
   function downState(actor) {
@@ -443,7 +474,7 @@ export function build(ctx) {
   async function tick(how = "walk", {scene = canvas?.scene, post = true} = {}) {
     if ( !isActiveGM() ) return null;
     await loadCalendar();
-    const t = game.time.worldTime, describe = describer(), places = listPlaces();
+    const t = game.time.worldTime, describeBy = describers(), places = listPlaces();
     const npcs = routineNpcs(), computed = new Map(), updates = [], reports = [];
     // Domitors first, so a ghoul can follow theirs
     const order = [...npcs].sort((a, b) => (domitorOf(a) ? 1 : 0) - (domitorOf(b) ? 1 : 0));
@@ -457,7 +488,7 @@ export function build(ctx) {
       }
       const p = flag(actor, "paused");
       if ( p?.until && t >= p.until ) updates.push({_id: actor.id, ...unsetKey(`flags.${MOD}.paused`)});
-      const r = R.placeAt(blocksFor(actor), t, describe, placeCtx(actor, places, computed));
+      const r = R.placeAt(blocksFor(actor), t, describeBy(keepOf(actor).faith), placeCtx(actor, places, computed));
       computed.set(actor.id, r);
       if ( r.missing ) {
         const k = `${actor.id}:missing:${r.missing}`;
@@ -1219,7 +1250,7 @@ export function build(ctx) {
   return (placesClass = PlacesApp);
   }
 
-  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
+  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", mosque: "church", synagogue: "church", temple: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
   /** Give each place's named owner that place as home, haven, post, church or work. Asks first. */
   async function matchOwners() {
     const places = listPlaces().filter(p => p.owner);
@@ -1251,8 +1282,11 @@ export function build(ctx) {
     if ( !actor || !game.user.isGM ) return null;
     const r = routineOf(actor) ?? {}, tpl = profileFor(actor).template, places = listPlaces().sort((a, b) => a.name.localeCompare(b.name));
     const preset = r.preset ?? R.DEFAULT_PRESET[tpl] ?? "recluse";
-    const year = yearNow(), age = r.age ?? "";
-    const blocks = R.blocksOf({...r, preset}, tpl, year);
+    const year = yearNow(), age = r.age ?? "", keep = keepOf(actor, year);
+    const blocks = R.blocksOf({...r, preset}, tpl, year, keep, {prayers: false});
+    const faiths = chron()?.church?.faiths?.FAITHS ?? {};
+    const faithOpts = {"": `Where they live (now ${faiths[keepOf(actor, year, {own: false}).faith]?.label ?? "the Western church"})`,
+      ...Object.fromEntries(Object.entries(faiths).map(([k, v]) => [k, v.label]))};
     const shown = R.presetsFor(year);
     if ( !shown[preset] && R.PRESETS[preset] ) shown[preset] = R.PRESETS[preset];
     const roleOpts = Object.fromEntries(Object.entries(R.ROLES).map(([k, v]) => [k, `${v.label} (role)`]));
@@ -1271,8 +1305,10 @@ export function build(ctx) {
       <div class="wodx-field"><label><input type="checkbox" name="on" ${r.on ? "checked" : ""}> Keeps a routine</label></div>
       <div class="wodx-field"><label>Routines and reactions</label><select name="mode" data-fixed>${opt({"": `As the scene or world says (${NR.MODES[modeOf(actor)].split(" (")[0]})`, ...NR.MODES}, r.mode ?? "")}</select></div>
       <div class="wodx-field"><label>Ready routine</label><select name="preset" data-fixed>${opt(Object.fromEntries(Object.entries(shown).map(([k, v]) => [k, v.label])), preset)}</select></div>
+      <div class="wodx-field"><label>Keeps the holy days of</label><select name="faith" data-fixed>${opt(faithOpts, r.faith ?? "")}</select></div>
+      <div class="wodx-field"><label>Daily prayers (Islam)</label><select name="prayers" data-fixed>${opt(R.PRAYER_MODES, r.prayers ?? "")}</select></div>
       <div class="wodx-field"><label>Hours of the age</label><select name="age" data-fixed>${opt({"": `Follow the year (now ${R.AGES[R.ageOf(year)].label})`, ...Object.fromEntries(Object.entries(R.AGES).map(([k, v]) => [k, v.label]))}, age)}</select></div>
-      <p class="wodx-quiet">A ready routine changes its hours with the age (the factory day, the short Saturday, late bars) unless you fix an age here, or type hours of its own. Change the ready routine or the age and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
+      <p class="wodx-quiet">A ready routine changes its hours with the age (the factory day, the short Saturday, late bars) unless you fix an age here, or type hours of its own. A Muslim NPC on a ready routine also stops for the five prayers by the sun and keeps Ramadan's nights; those are laid over the hours below and not shown in them. With hours of their own, they pray only when Daily prayers is set to the five prayers. Change the ready routine or the age and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
       ${searchBox("select.wnpc-place-pick", "Search places…", "Search places")}
       <fieldset><legend>Their places</legend>${roles}</fieldset>
       ${searchBox("table.wnpc-blocks", "Search the hours…", "Search the hours")}
@@ -1285,10 +1321,11 @@ export function build(ctx) {
       rejectClose: false
     });
     if ( !data || data === "cancel" ) return null;
-    const out = {on: !!data.on, mode: data.mode || null, preset: data.preset || preset, age: R.AGES[data.age] ? data.age : null, roles: {}, blocks: null};
+    const out = {on: !!data.on, mode: data.mode || null, preset: data.preset || preset, age: R.AGES[data.age] ? data.age : null, roles: {}, blocks: null,
+      faith: faiths[data.faith] ? data.faith : null, prayers: R.PRAYER_MODES[data.prayers] && data.prayers ? data.prayers : null};
     for ( const k of Object.keys(R.ROLES) ) if ( data[`role-${k}`] ) out.roles[k] = data[`role-${k}`];
     if ( out.roles.domitor ) delete out.roles.domitor;
-    if ( !data.reset && out.preset === preset && (out.age ?? "") === age ) {
+    if ( !data.reset && out.preset === preset && (out.age ?? "") === age && (out.faith ?? "") === (r.faith ?? "") ) {
       const typed = [];
       for ( let k = 0; data[`b${k}.place`] !== undefined; k++ ) {
         if ( !data[`b${k}.place`] ) continue;
@@ -1298,7 +1335,7 @@ export function build(ctx) {
       }
       const bad = R.checkBlocks(typed);
       if ( bad.length ) { ui.notifications.error(`The routine was not saved. ${bad.slice(0, 3).join("; ")}.`); return null; }
-      const same = JSON.stringify(typed.map(norm)) === JSON.stringify(R.presetBlocks(preset, out.age || R.ageOf(year)).map(norm));
+      const same = JSON.stringify(typed.map(norm)) === JSON.stringify(R.blocksOf({preset, age: out.age}, tpl, year, keep, {prayers: false}).map(norm));
       out.blocks = same ? null : typed;
     }
     await actor.update({[`flags.${MOD}.routine`]: out});
@@ -1464,7 +1501,7 @@ export function build(ctx) {
     });
   }
 
-  return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
+  return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }

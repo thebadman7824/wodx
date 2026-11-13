@@ -6,7 +6,10 @@
  *   allowance into the bank (before banks: the strongbox at home), first paying off any debt.
  *
  *   Actor flag wodx-storyteller.money {away, neglected, note}: the world time the character left home, or the
- *   world time the fortune stopped being kept up (null when neither). The Resources rating comes from the sheet.
+ *   world time the fortune stopped being kept up (null when neither).
+ * 0.58.0: purse.foreign holds coin of other lands, changed at a money changer abroad (changePurse). Abroad a price
+ *   is paid first from coin of the place; a card tells the Storyteller when a character first stands where the
+ *   money differs (flag money.abroadIn, the money id there). The Resources rating comes from the sheet.
  *   Once a month of game time (and after a skip), the Storyteller gets one card: how each character lives now,
  *   the coin of the day, and whose way of living drops within the month. Runs on the active Storyteller's client.
  */
@@ -93,15 +96,16 @@ export async function monthly({force = false} = {}) {
 export async function moneyDialog() {
   if ( !game.user.isGM ) return;
   const list = moneyActors(), c = coinsNow();
-  const cur = moneyNow(), unit = cur.units[0];
+  const cur = moneyNow(), unit = cur.units[0], away = awayMoney(), awayM = away ? R.moneyFor(yearNow(), away.region) : null;
   const rows = list.map(a => { const m = moneyOf(a), pu = purseOf(a); return `<tr><td>${esc(a.name)}</td><td>${m.dots}</td>
     <td><input type="number" step="any" min="0" name="${a.id}.carried" value="${R.mainUnits(pu.carried, cur)}" aria-label="Carried, in ${esc(unit[1])}"><br><small>${esc(pu.text.carried)}</small></td>
     <td><input type="number" step="any" min="0" name="${a.id}.bank" value="${R.mainUnits(pu.bank, cur)}" aria-label="Bank, in ${esc(unit[1])}"><br><small>${esc(pu.text.bank)}${pu.debt ? `; owes ${esc(pu.text.debt)}` : ""}</small></td><td>${esc(m.living.name)}${m.living.house ? " *" : ""}<br><small>${esc(m.living.why)}</small></td>
     <td><input type="checkbox" name="${a.id}.away"${m.away !== null ? " checked" : ""}>${m.away !== null ? ` <small>${m.away} d</small>` : ""}</td>
-    <td><input type="checkbox" name="${a.id}.neglected"${m.neglected !== null ? " checked" : ""}>${m.neglected !== null ? ` <small>${m.neglected} d</small>` : ""}</td></tr>`; }).join("");
+    <td><input type="checkbox" name="${a.id}.neglected"${m.neglected !== null ? " checked" : ""}>${m.neglected !== null ? ` <small>${m.neglected} d</small>` : ""}</td>${changeCell(a, pu, away, cur)}</tr>`; }).join("");
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 640}, window: {title: "Money by era"}, classes: ["wodx-dialog", "wst-money"],
     content: `<p>${esc(c.label)}, ${yearNow() || "this year"}: people pay in ${esc(c.coin)}; sums are reckoned in ${esc(c.account)}. A one-dot allowance is ${esc(R.formatMoney(R.allowance(1, yearNow(), region()), cur))} a month.</p>
-      ${list.length > 5 ? searchBox("table.wst-money-t", "Search characters…", "Search characters") : ""}<div class="wst-scroll"><table class="wst-money-t"><thead><tr><th>Character</th><th>Resources</th><th>Carried (${esc(unit[1])})</th><th>${cur.banks ? "Bank" : "At home"} (${esc(unit[1])})</th><th>Living as</th><th>Away</th><th>Neglected</th></tr></thead><tbody>${rows || "<tr><td colspan='7'>No player characters yet.</td></tr>"}</tbody></table></div>
+      ${list.length > 5 ? searchBox("table.wst-money-t", "Search characters…", "Search characters") : ""}<div class="wst-scroll"><table class="wst-money-t"><thead><tr><th>Character</th><th>Resources</th><th>Carried (${esc(unit[1])})</th><th>${cur.banks ? "Bank" : "At home"} (${esc(unit[1])})</th><th>Living as</th><th>Away</th><th>Neglected</th><th>${away ? `Change into ${esc(awayM.label)}` : "Coin of other lands"}</th></tr></thead><tbody>${rows || "<tr><td colspan='8'>No player characters yet.</td></tr>"}</tbody></table></div>
+      ${away ? `<p class="hint">This scene stands in ${esc(away.label)}, where people pay in ${esc(awayM.label)}. A money changer here takes ${Math.round(R.changerCut(yearNow(), {troubled: away.troubled, from: region(), to: away.region}) * 100)} in the hundred each way. Type a sum of home money to change into the coin of the place (${esc(unit[1])}), or a sum of the coin of the place to change back (${esc(awayM.units[0][1])}). Coin of the place pays for things here with no changer.</p>` : ""}
       <p class="hint">Away from home: 2 dots last six months on what they carry, 3 dots live plainly anywhere. A neglected fortune of 4 or 5 dots keeps comfort for a year, then less (V20 p. 116, V20 Dark Ages pp. 181-182). * marks a house rule where the books are silent.
       Raising money fast: ${esc(R.RAISE.pool)}, ${esc(R.RAISE.interval)}, difficulty ${R.RAISE.difficulty}; on a botch ${esc(R.RAISE.botch)} (V20 p. 252). ${esc(R.RAISE.sell)}</p>`,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
@@ -110,6 +114,10 @@ export async function moneyDialog() {
     const pu = rawPurse(a), w = cur.units[0][2];
     const carried = Math.round(num(res[`${a.id}.carried`]) * w), bank = Math.round(num(res[`${a.id}.bank`]) * w);
     if ( carried !== pu.carried || bank !== pu.bank || (pu.money && pu.money !== cur.id) ) await writePurse(a, {...pu, carried, bank}, "Set by the Storyteller");
+    const into = num(res[`${a.id}.into`]), back = num(res[`${a.id}.back`]);
+    if ( away && into > 0 ) await changePurse(a, Math.round(into * w), {});
+    if ( away && back > 0 ) await changePurse(a, Math.round(back * awayM.units[0][2]), {back: true});
+    for ( const id of Object.keys(rawPurse(a).foreign) ) if ( res[`${a.id}.home.${id}`] ) await changePurse(a, rawPurse(a).foreign[id]?.amount ?? 0, {back: true, money: id});
     await setAway(a, !!res[`${a.id}.away`]);
     await setNeglected(a, !!res[`${a.id}.neglected`]);
   }
@@ -124,7 +132,31 @@ export const moneyNow = () => R.moneyFor(yearNow(), region());
 function rawPurse(a) {
   const p = a?.flags?.[MOD]?.money?.purse ?? {};
   return {money: p.money ?? null, year: p.year ?? null, carried: num(p.carried), bank: num(p.bank), debt: num(p.debt),
-    paidMonth: Number.isFinite(p.paidMonth) ? p.paidMonth : null, log: Array.isArray(p.log) ? p.log : []};
+    paidMonth: Number.isFinite(p.paidMonth) ? p.paidMonth : null, log: Array.isArray(p.log) ? p.log : [], foreign: R.cleanForeign(p.foreign)};
+}
+
+/** Coin of other lands in a purse, with words: [{id, region, amount, text, label}]. */
+export function foreignOf(a) {
+  return Object.entries(rawPurse(a).foreign).map(([id, f]) => {
+    const m = R.moneyFor(yearNow(), f.region), money = m.id === id ? m : (Object.values(R.MONIES).flatMap(r => r.list).find(x => x.id === id) ?? m);
+    return {id, region: f.region, amount: f.amount, text: R.formatMoney(f.amount, money), label: money.label};
+  });
+}
+
+/** The dialog's last cell: change into the coin of the place, change back, and coin of other lands to change home. */
+function changeCell(a, pu, away, cur) {
+  const held = foreignOf(a), here = away ? R.moneyFor(yearNow(), away.region) : null;
+  const mine = here ? held.find(f => f.id === here.id) : null;
+  const others = held.filter(f => f !== mine);
+  const parts = [];
+  if ( away ) {
+    parts.push(`<input type="number" step="any" min="0" name="${a.id}.into" value="" placeholder="0" aria-label="Change into ${esc(here.label)}, in ${esc(cur.units[0][1])}">`);
+    parts.push(`<small>Holds ${esc(mine?.text ?? "none")}</small>`);
+    if ( mine ) parts.push(`<input type="number" step="any" min="0" name="${a.id}.back" value="" placeholder="0" aria-label="Change back, in ${esc(here.units[0][1])}">`);
+  }
+  if ( !away ) for ( const f of others ) parts.push(`<label><input type="checkbox" name="${a.id}.home.${f.id}"> <small>${esc(f.text)}: change home</small></label>`);
+  else if ( others.length ) parts.push(`<small>Also ${others.map(f => esc(f.text)).join(", ")}</small>`);
+  return `<td>${parts.join("<br>") || "<small>none</small>"}</td>`;
 }
 
 /** What a character or NPC has: amounts in the smallest unit of the money in use, plus words for each. */
@@ -135,15 +167,29 @@ export function purseOf(a) {
     text: {carried: fmt(p.carried), bank: fmt(p.bank), debt: fmt(p.debt)}, banks: m.banks};
 }
 
+/** Remove the purse's whole foreign map (Foundry 14's ForcedDeletion; the old "-=" key where it is missing). */
+async function dropForeign(a) {
+  const Del = globalThis.foundry?.data?.operators?.ForcedDeletion;
+  await a.update(Del ? {[`flags.${MOD}.money.purse.foreign`]: new Del()} : {[`flags.${MOD}.money.purse.-=foreign`]: null});
+}
+
 async function writePurse(a, next, note) {
   if ( !a?.update ) return null;
   const old = rawPurse(a), m = moneyNow();
   const entry = {at: now(), carried: next.carried - old.carried, bank: next.bank - old.bank, debt: next.debt - old.debt, note: String(note ?? "").slice(0, 120)};
+  const foreign = R.cleanForeign(next.foreign ?? old.foreign), fd = {};
+  for ( const id of new Set([...Object.keys(old.foreign), ...Object.keys(foreign)]) ) {
+    const d = (foreign[id]?.amount ?? 0) - (old.foreign[id]?.amount ?? 0);
+    if ( d ) fd[id] = {region: foreign[id]?.region ?? old.foreign[id].region, delta: d};
+  }
+  if ( Object.keys(fd).length ) entry.foreign = fd;
   if ( next.paidMonth !== undefined && next.paidMonth !== old.paidMonth ) entry.prevPaid = old.paidMonth;
   const log = [...old.log, entry].slice(-30);
   const purse = {money: m.id, year: yearNow(), carried: Math.max(0, Math.round(next.carried)), bank: Math.max(0, Math.round(next.bank)),
-    debt: Math.max(0, Math.round(next.debt)), paidMonth: next.paidMonth ?? old.paidMonth, log};
+    debt: Math.max(0, Math.round(next.debt)), paidMonth: next.paidMonth ?? old.paidMonth, log, foreign};
   const upd = {[`flags.${MOD}.money.purse`]: purse};
+  // A coin of another land spent to nothing must leave the flag, which a merge would keep: clear the map first
+  if ( Object.keys(old.foreign).some(id => !foreign[id]) ) await dropForeign(a);
   if ( a.system?.money && typeof a.system.money === "object" ) {
     upd["system.money.carried"] = R.mainUnits(purse.carried, m);
     upd["system.money.bank"] = R.mainUnits(purse.bank, m);
@@ -154,6 +200,7 @@ async function writePurse(a, next, note) {
 
 /** Bring a purse into this year's money: savings keep what they buy; coins of the old money become a keepsake item. */
 export async function refreshPurse(a) {
+  await refreshForeign(a);
   const p = rawPurse(a), m = moneyNow();
   if ( !p.money || p.money === m.id ) return false;
   const old = Object.values(R.MONIES).flatMap(r => r.list).find(x => x.id === p.money);
@@ -164,6 +211,50 @@ export async function refreshPurse(a) {
   await writePurse(a, {carried: 0, bank: R.convertSavings(p.bank, from, yearNow(), region()), debt: R.convertSavings(p.debt, from, yearNow(), region())},
     `Money changed to ${m.label}`);
   return true;
+}
+
+/** Coin of other lands that has gone out of use there becomes a keepsake item, like old money at home. */
+async function refreshForeign(a) {
+  const p = rawPurse(a), stale = R.staleForeign(p.foreign, yearNow());
+  if ( !stale.length ) return false;
+  const all = Object.values(R.MONIES).flatMap(r => r.list), items = [], foreign = {...p.foreign};
+  for ( const id of stale ) {
+    const old = all.find(x => x.id === id);
+    if ( old && a.createEmbeddedDocuments ) items.push({name: `Old money: ${R.formatMoney(foreign[id].amount, old)} (${old.label})`, type: "Item"});
+    delete foreign[id];
+  }
+  if ( items.length ) await a.createEmbeddedDocuments("Item", items);
+  await writePurse(a, {...p, foreign}, "Coin of other lands out of use");
+  return true;
+}
+
+/**
+ * Change money at a money changer (0.58.0). Into the coin of the place: amount in home money's smallest unit,
+ * taken from what is carried. back: amount of the coin of the place (or of money id `money`, anywhere) changed
+ * into home money. Returns {ok, got, text} or {ok: false, why}.
+ */
+export async function changePurse(a, amount, {scene = null, back = false, money = null} = {}) {
+  if ( !a ) return {ok: false, why: "No one to change money for."};
+  await refreshPurse(a);
+  const amt = Math.max(0, Math.round(num(amount))), p = rawPurse(a), y = yearNow(), home = region();
+  if ( !amt ) return {ok: false, why: "Nothing to change."};
+  const away = awayMoney(scene), foreign = {...p.foreign};
+  if ( back ) {
+    const id = money ?? (away ? R.moneyFor(y, away.region).id : null), f = id ? foreign[id] : null;
+    if ( !f ) return {ok: false, why: "No coin of that land in the purse."};
+    const take = Math.min(f.amount, amt);
+    const r = R.changeMoney(take, y, f.region, home, {troubled: !!away?.troubled && !money});
+    foreign[id] = {region: f.region, amount: f.amount - take};
+    await writePurse(a, {...p, carried: p.carried + r.got, foreign}, `Changed ${R.formatMoney(take, id)} back at a money changer`);
+    return {ok: true, got: r.got, cut: r.cut, text: R.formatMoney(r.got, moneyNow())};
+  }
+  if ( !away ) return {ok: false, why: "This scene stands at home: there is nothing to change into."};
+  if ( amt > p.carried ) return {ok: false, why: `Only ${R.formatMoney(p.carried, moneyNow())} is carried.`};
+  const r = R.changeMoney(amt, y, home, away.region, {troubled: away.troubled});
+  const id = r.money.id;
+  foreign[id] = {region: away.region, amount: (foreign[id]?.amount ?? 0) + r.got};
+  await writePurse(a, {...p, carried: p.carried - amt, foreign}, `Changed into ${r.money.label} at a money changer`);
+  return {ok: true, got: r.got, cut: r.cut, text: R.formatMoney(r.got, r.money)};
 }
 
 /** Add money. to: "carried" or "bank". */
@@ -181,10 +272,15 @@ export async function receive(a, amount, {to = "carried", note = ""} = {}) {
  * Pay money out: from carried, then the bank where the era has banks (or when paying at home), then on credit when
  * the seller gives it, up to the credit limit. Returns {ok, fromCarried, fromBank, onCredit} or {ok: false, short}.
  */
-export async function pay(a, amount, {from = "any", credit = false, atHome = false, note = ""} = {}) {
-  const amt = Math.max(0, Math.round(num(amount)));
+export async function pay(a, amount, {from = "any", credit = false, atHome = false, note = "", scene = null} = {}) {
+  let amt = Math.max(0, Math.round(num(amount)));
   await refreshPurse(a);
   const p = rawPurse(a), m = moneyNow();
+  // 0.58.0: abroad, coin of the place pays first, with no changer
+  const away = (atHome || from === "bank") ? null : awayMoney(scene);
+  const localId = away ? R.moneyFor(yearNow(), away.region).id : null;
+  const split = localId && p.foreign[localId] ? R.splitAbroad(amt, p.foreign[localId].amount, yearNow(), region(), away.region, {troubled: away.troubled}) : {local: 0, home: amt};
+  amt = split.home;
   const canBank = from !== "carried" && (m.banks || atHome || from === "bank");
   const fromCarried = from === "bank" ? 0 : Math.min(p.carried, amt);
   const fromBank = canBank ? Math.min(p.bank, amt - fromCarried) : 0;
@@ -194,8 +290,10 @@ export async function pay(a, amount, {from = "any", credit = false, atHome = fal
     onCredit = Math.min(room, short); short -= onCredit;
   }
   if ( short > 0 ) return {ok: false, short, text: R.formatMoney(short, m)};
-  await writePurse(a, {carried: p.carried - fromCarried, bank: p.bank - fromBank, debt: p.debt + onCredit}, note || "Paid");
-  return {ok: true, fromCarried, fromBank, onCredit};
+  const foreign = {...p.foreign};
+  if ( split.local ) foreign[localId] = {...foreign[localId], amount: foreign[localId].amount - split.local};
+  await writePurse(a, {carried: p.carried - fromCarried, bank: p.bank - fromBank, debt: p.debt + onCredit, foreign}, note || "Paid");
+  return {ok: true, fromCarried, fromBank, onCredit, fromLocal: split.local, localMoney: localId};
 }
 
 /** Move money between two purses (a sale, a bribe, wages, a theft). */
@@ -213,6 +311,10 @@ export async function undoLast(a) {
   if ( !e ) return false;
   const purse = {...p, carried: p.carried - num(e.carried), bank: p.bank - num(e.bank), debt: p.debt - num(e.debt), log: p.log.slice(0, -1)};
   if ( "prevPaid" in e ) purse.paidMonth = e.prevPaid;
+  const foreign = {...p.foreign};
+  for ( const [id, f] of Object.entries(e.foreign ?? {}) ) foreign[id] = {region: f.region, amount: (foreign[id]?.amount ?? 0) - num(f.delta)};
+  purse.foreign = R.cleanForeign(foreign);
+  if ( Object.keys(p.foreign).some(id => !purse.foreign[id]) ) await dropForeign(a);
   await a.update({[`flags.${MOD}.money.purse`]: {...purse, money: p.money, year: p.year}});
   return true;
 }
@@ -332,7 +434,40 @@ export async function payDay(a, month) {
   return {total, toDebt, months, text: R.formatMoney(total, moneyNow())};
 }
 
+/**
+ * A character arrives on a scene (0.58.0). The first time they stand where people pay in another money, the
+ * Storyteller gets one card: what the purse holds, the coin of the place and the changer's cut. Back where home
+ * money is used, the mark clears, and coin of other lands still held is named. Active Storyteller only.
+ */
+export async function arrival(token) {
+  if ( !isActiveGM() || !setting("money") || setting("changers") === false ) return null;
+  // The base actor, so an unlinked token (its own synthetic actor) still shares one mark and one purse (0.58.1)
+  const a = (token?.actorId ? game.actors?.get?.(token.actorId) : null) ?? token?.actor, scene = token?.parent;
+  if ( !a || !isPC(a) || !scene ) return null;
+  const f = a.flags?.[MOD]?.money ?? {}, away = awayMoney(scene), y = yearNow();
+  const localM = away ? R.moneyFor(y, away.region) : null;
+  if ( !away ) {
+    if ( !f.abroadIn ) return null;
+    await a.update({[`flags.${MOD}.money.abroadIn`]: null});
+    const held = foreignOf(a);
+    if ( !held.length ) return {home: true};
+    await ChatMessage.create({content: `<div class="wodx-card wst-money"><h3>Home money again</h3><p>${esc(a.name)} still carries ${held.map(h => esc(h.text)).join(", ")}. A changer at home will take it back; Money by era in the hand has a box for it.</p></div>`,
+      whisper: gmIds(), speaker: {alias: "Money"}});
+    return {home: true, held: held.length};
+  }
+  if ( f.abroadIn === localM.id ) return null;
+  await a.update({[`flags.${MOD}.money.abroadIn`]: localM.id});
+  const pu = purseOf(a), mine = foreignOf(a).find(h => h.id === localM.id);
+  const share = R.changerCut(y, {troubled: away.troubled, from: region(), to: away.region});
+  const q = pu.carried > 0 ? R.changeMoney(pu.carried, y, region(), away.region, {troubled: away.troubled}) : null;
+  await ChatMessage.create({content: `<div class="wodx-card wst-money"><h3>Another land's money</h3><p>${esc(a.name)} stands in ${esc(away.label)}, where people pay in ${esc(localM.label)}. The purse holds ${esc(pu.text.carried)}${mine ? ` and ${esc(mine.text)} of the coin here` : ""}.</p>
+    <p>A money changer here takes ${Math.round(share * 100)} in the hundred.${q ? ` Changing all of it would give ${esc(R.formatMoney(q.got, q.money))}.` : ""} Until it is changed, prices here are charged to home money with the changer's cut. Money by era in the hand changes it.</p></div>`,
+    whisper: gmIds(), speaker: {alias: "Money"}});
+  return {away: localM.id};
+}
+
 export function registerMoneyHooks() {
+  Hooks.on("createToken", (doc, options) => { if ( options?.wodxGate ) return; arrival(doc).catch(e => console.error(`${MOD} | arrival`, e)); });
   Hooks.on("wodxSkipEnd", () => { monthly().catch(e => console.error(`${MOD} |`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } monthly().catch(e => console.error(`${MOD} |`, e)); });
 }

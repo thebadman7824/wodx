@@ -197,6 +197,7 @@ W={ # name: (carry, spec). carry: up (blade up at the side), pole (upright), low
  'assault':('low',[('c',-9,-3,1.5,1.1,'black'),('c',-3,17,1.2,.8,'black'),('c',4,4.1,1.0,.9,'black',0,5.5),('c',-1,-.9,.9,.8,'black',0,2.8),('c',13,13.1,.5,.5,'black',0,-2)]),
  'gatling':('low',[('c',-4,16,2.4,2.4,'brass'),('c',-8,-4,1.4,1.4,'iron'),('x',2,5,1.0,'dwood')]),'launcher':('low',[('c',-8,14,1.9,1.9,'green'),('c',0,.1,.9,.8,'black',0,3)]),
  'flamer':('low',[('c',-6,12,1.4,1.0,'iron'),('b',-7,2.6,'red'),('b',13,1.0,'flame')]),'laser':('low',[('c',-5,12,1.3,1.0,'chrome'),('b',12.5,.9,'red')]),
+ 'torch':('up',[('c',-2.5,11,.8,.9,'dwood'),('b',12.2,1.9,'flame'),('b',14.4,1.1,'flame')]),
  'rock':('fist',[('b',2.4,1.6,'stone')]),'grenade':('fist',[('b',2.6,1.7,'green'),('b',.8,.7,'iron')]),'dynamite':('up',[('c',0,6,1.0,1.0,'red'),('h',-99,0,0,'cord')]),'bottle':('up',[('c',0,5,1.3,1.3,'glass'),('c',5,7.5,.6,.6,'glass'),('b',8.4,.9,'flame')]),
  'pipebomb':('up',[('c',0,6,1.1,1.1,'iron'),('x',0,1.3,.5,'iron'),('x',6,1.3,.5,'iron')]),'flashbang':('fist',[('c',1,4.5,1.2,1.2,'iron')]),'cracker':('fist',[('c',1,4,.6,.6,'red')]),
  'knuckles':('fist',[('x',1.2,1.4,.7,'brass')]),'katar':('fist',[('x',.5,1.8,.6,'iron'),('c',1.5,9,1.3,.4,'steel')]),'claws':('fist',[('c',1.5,6,.5,.3,'steel',-1.4,-1.8),('c',1.5,6.5,.5,.3,'steel'),('c',1.5,6,.5,.3,'steel',1.4,1.8)]),
@@ -310,8 +311,15 @@ def neckwear(cv,d,cx,dy,view):
         for x,y in ((-2,40),(-1,41),(0,42),(1,41),(2,40)): cv.px(cx+x+(3 if s else 0),y+dy,rp[4] if x else rp[3])
         if len(d['neck'])>2: cv.px(cx+(3 if s else 0),43+dy,col(d['neck'][2]))
     elif k=='cord' and not b: cv.px(cx+(3 if s else 0),42+dy,rp[3]); cv.px(cx+(3 if s else 0),43+dy,rp[2])
-def front(d,f,back=False):
-    cv=K.Cv(); ph=f/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
+def actdir(d,act,hs,back,cx,dy):
+    """where the held thing points during an attack seen from the front or the back"""
+    name,i=act; sg=1 if back else -1; hx,hy=hs[0],hs[1]-1.5
+    if name in('swing','claw'):
+        sx,sy=cx+sg*d['sw'],41.5+dy; ex,ey=hx-sx,hy-sy; n=math.hypot(ex,ey) or 1; return (hx,hy),(ex/n,ey/n)
+    if d['held'] and W[d['held']][0]=='bow' and name=='shot': return (hx,hy),(sg*.05,-1)
+    return (hx,hy),((0,-1) if back else (sg*.12,.99))
+def front(d,f,back=False,act=None):
+    cv=K.Cv(); ph=(f if not act else (0,0,0,1,1,0)[act[1]])/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; view='b' if back else 'f'
     dy=round(abs(math.sin(ph))*-0.8); ov=d['over']
     stowed(cv,d,view,dy,'pre')
@@ -379,6 +387,8 @@ def front(d,f,back=False):
     hands={}
     for sgn,p in ((-1,ph+math.pi),(1,ph)):
         s=math.sin(p)*1.6; shd=(cx+sgn*sw,41.5+dy); el=(cx+sgn*(sw+1.4),50.5+dy+s*.5); wr=(cx+sgn*(sw+1.2),59+dy+s); g='A%d'%sgn
+        if act and sgn==(-1 if not back else 1):
+            fa=FACT[act[0]]; e=fa['el'][act[1]]; q=fa['wr'][act[1]]; el=(shd[0]+sgn*e[0],shd[1]+e[1]); wr=(shd[0]+sgn*q[0],shd[1]+q[1])
         cv.capsule(shd,el,2.4*t,2.0*t+(.5 if wide else 0),ramp=au,g=g); cv.capsule(el,wr,1.9*t+(.5 if wide else 0),1.6*t+(1.0 if wide else 0),ramp=af,g=g)
         if kind=='plate': cv.capsule((shd[0],shd[1]-.5),(shd[0]+sgn*.5,shd[1]+1),3.2,2.8,ramp=tr,g='P%d'%sgn)
         hand(cv,d,wr,g); hands[sgn]=(wr[0],wr[1]+1.5)
@@ -407,10 +417,85 @@ def front(d,f,back=False):
     stowed(cv,d,view,dy,'post')
     if d['off'] and not back: shield(cv,d,cx+sw+2.5,53+dy,'f')
     if d['held']:
-        hs=hands[-1 if not back else 1]; a,u=carry(d,view,hs,dy); held(cv,a,u,W[d['held']][1],'W')
-    cv.outline(d['ink']); texture(cv,d); return cv.c
-def side(d,f):
-    cv=K.Cv(); ph=f/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
+        hs=hands[-1 if not back else 1]; a,u=carry(d,view,hs,dy)
+        if act: a,u=actdir(d,act,hs,back,cx,dy)
+        held(cv,a,u,W[d['held']][1],'W')
+    cv.outline(d['ink']); texture(cv,d)
+    if act:
+        hs=hands[-1 if not back else 1]; a,u=actdir(d,act,hs,back,cx,dy); L=wlen(d['held'])[1] if d['held'] else 1
+        fx(cv.c,d,act,(a[0]+u[0]*L,a[1]+u[1]*L),(0,-1) if back else (0,1),(cx,31.5+dy),view)
+    return cv.c
+ACTS={ # six frames each. Angles from straight down, forward positive: upper arm, forearm, the held thing; leg = walk frame used for the stance
+ 'swing': dict(ua=[150,200,215,120,70,45],fa=[170,215,235,125,80,60],wa=[190,235,255,140,80,50],leg=[0,0,1,2,2,1]),
+ 'thrust':dict(ua=[-20,-40,-45,60,84,50],fa=[75,80,85,88,90,80],wa=[90,90,90,90,90,90],leg=[0,0,1,2,2,1]),
+ 'shot':  dict(ua=[45,80,86,96,88,60],fa=[80,88,90,100,92,80],wa=[80,90,90,104,92,80],leg=[0,0,0,0,0,0]),
+ 'cast':  dict(ua=[20,60,86,90,90,60],fa=[60,80,88,92,90,75],wa=[90,90,90,90,90,90],leg=[0,0,0,1,1,0]),
+ 'claw':  dict(ua=[140,190,200,110,60,40],fa=[120,150,160,100,70,60],wa=[90,90,90,90,90,90],leg=[0,0,1,2,2,1]),
+}
+FACT={
+ 'swing': dict(el=[(2,-4),(3,-7),(3,-8),(3,-2),(1,5),(0,7)],wr=[(4,-11),(4,-15),(3,-16),(7,-3),(-1,11),(-3,13)]),
+ 'claw':  dict(el=[(2,-3),(3,-6),(3,-7),(3,-2),(1,4),(0,6)],wr=[(3,-9),(3,-12),(2,-13),(5,-3),(-1,9),(-3,11)]),
+ 'thrust':dict(el=[(2,6),(2.5,5),(2.5,5),(1,6),(0,7),(1,7)],wr=[(2,9),(3,6),(3,6),(0,11),(-1,13),(0,11)]),
+ 'shot':  dict(el=[(1.5,6),(1,5),(1,4.5),(1,4),(1,4.5),(1.5,6)],wr=[(0,10),(-1,8),(-1,7),(-1,6),(-1,7),(0,10)]),
+ 'cast':  dict(el=[(1.5,7),(1.5,5),(1,4.5),(1,4),(1,4.5),(1.5,6)],wr=[(1,12),(0,9),(-1,7),(-1,6.5),(-1,7),(0,10)]),
+}
+FXCOL=dict(blood=[(96,10,14),(150,20,24),(200,40,40)],shadow=[(10,8,16),(52,36,84),(132,104,190)],fire=[(190,70,20),(236,150,40),(250,226,130)],lightning=[(120,160,230),(190,220,250),(250,250,255)],
+ spirit=[(60,130,120),(120,200,180),(210,244,230)],wraith=[(70,90,110),(130,160,180),(206,226,236)],glamour=[(220,120,200),(120,200,240),(250,230,130)],radiance=[(200,150,50),(240,206,110),(255,246,210)],
+ chi=[(20,80,60),(60,150,110),(170,230,190)],sand=[(150,110,50),(206,170,90),(240,220,160)],conviction=[(210,190,120),(240,236,200),(255,255,255)],mind=[(110,60,150),(170,110,210),(230,200,250)])
+def fx(c,d,act,tip,u,head,view='s'):
+    """effects drawn over the finished frame: muzzle flash, swing arc, and a power's own effect (d['power'] = (colour, shape)). u is the way the attack goes"""
+    name,i=act; ux,uy=u; n0=math.hypot(ux,uy) or 1; ux/=n0; uy/=n0; vx,vy=-uy,ux
+    def put(x,y,col):
+        x=int(round(x)); y=int(round(y))+YO
+        if 0<=x<S and 0<=y<SH: c[y,x]=(*col,255)
+    P=lambda k,o=0:(tip[0]+ux*k+vx*o,tip[1]+uy*k+vy*o)
+    if name=='shot' and i==3 and d['held'] and W[d['held']][0]!='bow':
+        for k,(a,b) in enumerate(((1,0),(2,0),(3,0),(2,-1),(2,1),(1,-1),(1,1))): put(*P(a,b),(250,226,130) if k<3 else (236,150,40))
+    if name in('swing','claw') and i in(3,4):
+        rr=17 if name=='swing' else 11
+        for k in range(10):
+            if view=='s': a=R(150-k*10-(20 if i==4 else 0)); put(48+math.sin(a)*rr,40.5+math.cos(a)*rr,(236,236,240) if k%2 else (190,194,204))
+            else: sg=-1 if view=='f' else 1; a=R(200-k*13-(25 if i==4 else 0)); put(48+sg*(8+math.sin(a)*rr*.75),44+math.cos(a)*rr*-.9,(236,236,240) if k%2 else (190,194,204))
+    pw=d.get('power')
+    if name=='cast' and pw and i>=2:
+        cols=FXCOL[pw[0]]; shape=pw[1]; n=(i-1)*9 if view=='s' else (i-1)*6
+        if shape=='bolt':
+            for k in range(n):
+                o=math.sin(k*.9+i)*1.2; put(*P(k,o),cols[2 if k>n-4 else 1]); put(*P(k,o+1),cols[0]); put(*P(k,o-1),cols[1] if k>n-7 else cols[0])
+                if k>n-4: put(*P(k,o-2),cols[1]); put(*P(k,o+2),cols[1])
+        elif shape=='jag':
+            o=0
+            for k in range(n):
+                if k%3==0: o+=((K.hsh(k,i)>.5)*2-1)*2
+                put(*P(k,o),cols[2]); put(*P(k,o+1),cols[1])
+        elif shape=='tendril':
+            for j in range(3):
+                bx=tip[0]+8+j*8 if view=='s' else 48+(j-1)*10
+                for k in range(min(n+4,30-j*4)):
+                    x=bx+math.sin(k*.4+j+i)*2.6; w=2 if k<12 else 1
+                    put(x-1,86-k,cols[2]); put(x+w+1,86-k,cols[1])
+                    for q in range(w+1): put(x+q,86-k,cols[0])
+        elif shape=='spark':
+            for k in range(n*2):
+                r=K.hsh(k,i*7); a=K.hsh(k*3,i)*6.28; q=P(4+r*n,0); put(q[0]+math.cos(a)*(3+r*4),q[1]+math.sin(a)*(3+r*4),cols[k%3])
+        elif shape=='wave':
+            for k in range(0,n,4):
+                for t in range(-6,7): put(*P(k+3-abs(t)*.35,t),cols[2 if k>n-6 else 1 if abs(t)<4 else 0])
+        elif shape=='gaze':
+            hx,hy=head
+            if view=='s': put(hx+2.4,hy,cols[2]); put(hx+3.4,hy,cols[1])
+            elif view=='f': put(hx-2,hy,cols[2]); put(hx+2,hy,cols[2])
+            for k in range(3,n,3): put(hx+ux*(4+k)+vx*math.sin(k*.6)*.8,hy+uy*(4+k)+vy*math.sin(k*.6)*.8,cols[1 if k%2 else 2])
+            for t in range(16):
+                a=t/16*6.28; put(hx+math.cos(a)*(7+i*.5),hy-1+math.sin(a)*(7+i*.5),cols[0 if t%2 else 1])
+        elif shape=='glyph':
+            q=P(9)
+            for t in range(20):
+                a=t/20*6.28; put(q[0]+math.cos(a)*5,q[1]+math.sin(a)*5,cols[1])
+            for t in range(-3,4): put(q[0]+t,q[1],cols[2]); put(q[0],q[1]+t,cols[2])
+            for k in range(n//2): put(*P(15+k,math.sin(k)),cols[0])
+def side(d,f,act=None):
+    cv=K.Cv(); ph=(f if not act else ACTS[act[0]]['leg'][act[1]])/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
     longk=LONG.get(kind,0); amp=.45 if (longk>=77 or lk=='skirtlong') else .7 if (lk in('skirt','kilt') or longk>=62) else 1
     k,dy=rig.kin(ph,False,amp); ov=d['over']; th,shk=legramps(d); w=legw(d); px=cv.px
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
@@ -463,7 +548,16 @@ def side(d,f):
                 if dx*dx+dyy*dyy<=5.5**2 and (dyy<-1.2 or dx<-1.4-(dyy*.25)) and not (dx>2.2 and dyy>-2.6): px(x,y,hr[3 if (-dx*.5-dyy*.8)>2 else 2 if dyy<1 else 1],pid)
     if st=='bun' and not hood: cv.capsule((cx-5,cy-3),(cx-5.5,cy-3),2.2,2.2,ramp=hr)
     hoodpost(cv,d,cx,cy,'s',pid); hat(cv,d,cx,cy,'s',pid); face(cv,d,cx,cy,'s')
-    if d['held']:
+    if act:
+        A=ACTS[act[0]]; i=act[1]; sh=(47,40.5+dy); el=pol(sh,R(A['ua'][i]),9.5); wr=pol(el,R(A['fa'][i]),8.5)
+        if d['held']:
+            c=W[d['held']][0]; wa=180 if (c=='bow' and act[0]=='shot') else A['wa'][i]; u=(math.sin(R(wa)),math.cos(R(wa)))
+            if c=='pole' and act[0]=='thrust': an=(wr[0]-u[0]*6,wr[1]-u[1]*6)
+            else: an=wr
+            held(cv,an,u,W[d['held']][1],'W'); tip=(an[0]+u[0]*wlen(d['held'])[1],an[1]+u[1]*wlen(d['held'])[1])
+        else: u=(math.sin(R(A['fa'][i])),math.cos(R(A['fa'][i]))); tip=(wr[0]+u[0]*2,wr[1]+u[1]*2)
+        arm([sh,el,wr],0,'A0')
+    elif d['held']:
         sh=(47,40.5+dy); el=pol(sh,R(-8),9.5); c=W[d['held']][0]; wr=pol(el,R(62 if c!='pole' else 75),8.5)
         hs=(wr[0]+.4,wr[1]+1)
         if c in('pole','bow'): a,u=carry(d,'s',hs,dy); held(cv,a,u,W[d['held']][1],'W'); arm([sh,el,wr],0,'A0')
@@ -471,7 +565,9 @@ def side(d,f):
     else: arm(k[0]['arm'],0,'A0')
     if ov and ov[0] in('poncho','cape'):
         L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((47,41+dy),(47,L+dy),4.6,5.0+(L-41)*.1,ramp=rc(ov[1]),g='poncho')
-    cv.outline(d['ink']); texture(cv,d); return cv.c
+    cv.outline(d['ink']); texture(cv,d)
+    if act: fx(cv.c,d,act,tip,u,(cx,cy))
+    return cv.c
 def sheet(d):
     sh=np.zeros((4*SH,8*S,4),np.uint8)
     for f in range(8):

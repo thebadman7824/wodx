@@ -10,7 +10,8 @@
  * 1995 differ without anything set here. House readings (PENDING-REVIEW): which trades work at home, the routine
  * each role keeps, a partner being of the other sex nine times in ten, and the family names a household shares.
  */
-import {PRESETS} from "./routine-rules.mjs";
+import {PRESETS, originFaith} from "./routine-rules.mjs";
+import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
@@ -66,12 +67,41 @@ export function householdsOn(regions = []) {
 
 /** Trades that work in the house they live in (a cottage craft, a farm). Any building tagged as a workplace counts too. */
 const AT_HOME = /smith|potter|weaver|spinner|cobbler|shoemaker|dyer|tanner|cooper|turner|basket|wheelwright|butcher|baker|brewer|miller|tailor|seamstress|carpenter|joiner|chandler|glazier|saddler|farmer|cottager|alehouse|innkeeper|tavern|shopkeeper|spicer|merchant|grocer|apothecary|barber|priest|parson|rabbi|craft|mason/i;
-const WORK_KINDS = new Set(["workplace", "tavern", "market", "yard", "castle", "church", "hospital", "station", "docks"]);
+const WORK_KINDS = new Set(["workplace", "tavern", "market", "yard", "castle", "church", "mosque", "synagogue", "temple", "hospital", "station", "docks"]);
+
+/** Clergy of every faith (0.51.0, B2672): the words a household's trade or role may use for them. */
+const CLERGY_WORDS = /priest|chaplain|parson|vicar|monk|friar|nun|rabbi|curate|imam|mullah|muezzin|qadi|mufti|dervish|sheikh of the|lama|bhikkhu|abbot|abbess|brahmin|pujari|diviner|shaman|kannushi|daoist|taoist|temple keeper|keeper of the old ways|marabout|cantor|hazzan/;
+
+/**
+ * What the clergy of each faith are called (0.51.0, B2672; house reading): the town generator writes Moravia's
+ * words, and a house of worship in another land takes its own. [priest, monk or nun, the one who calls or sings].
+ */
+export const CLERGY = {
+  western: ["priest", "monk", "sexton"], orthodox: ["priest of the Eastern church", "monk", "reader"],
+  islamic: ["imam", "dervish", "muezzin"], jewish: ["rabbi", "student of the law", "cantor"],
+  hindu: ["temple priest", "holy ascetic", "temple drummer"], theravada: ["monk", "novice monk", "temple attendant"],
+  tibetan: ["lama", "monk", "temple attendant"], chinese: ["temple keeper", "Buddhist monk", "temple attendant"],
+  own: ["keeper of the old ways", "diviner", "drummer"]
+};
+const CLERIC_SLOT = [[/priest|parson|vicar|curate|chaplain|pastor|minister|rabbi|imam|lama|temple keeper/, 0], [/monk|friar|nun|abbot|abbess|prior/, 1], [/sexton|cantor|reader|muezzin|clerk|bell/, 2]];
+/**
+ * A clergy trade in the words of the faith a place keeps: "priest" at a mosque in Cairo is the imam, "monk" in Lhasa
+ * a monk still. Other trades, and clergy of the place's own faith, come back as they were.
+ */
+export function localClergy(trade, faith) {
+  const t = String(trade ?? ""), low = t.toLowerCase(), words = CLERGY[faith];
+  if ( !words || faith === "western" || !(CLERGY_WORDS.test(low) || /sexton|bell-ringer/.test(low)) ) return t;
+  if ( /\bnun\b|abbess/.test(low) && ["theravada", "tibetan", "chinese"].includes(faith) ) return "nun";
+  if ( Object.values(CLERGY).find(w => w.includes(low)) === words ) return t;
+  if ( /rabbi|cantor/.test(low) && faith !== "jewish" ) return t; // a synagogue keeps its own in any land
+  const slot = CLERIC_SLOT.find(([re]) => re.test(low))?.[1];
+  return slot === undefined ? t : words[slot];
+}
 
 /** The ready routine for a trade. Every key is one routine-rules (or mortal-rules) already has. */
 export function presetForTrade(trade = "") {
   const t = String(trade).toLowerCase();
-  if ( /priest|chaplain|parson|vicar|monk|friar|nun|rabbi|curate/.test(t) ) return "priest";
+  if ( CLERGY_WORDS.test(t) ) return "priest";
   if ( /innkeeper|tavern|alehouse|publican|landlord|barkeep|bartender/.test(t) ) return "innkeeper";
   if ( /merchant|trader|chandler|draper|mercer|grocer|shopkeeper|spicer|pedlar|stallholder|apothecary/.test(t) ) return "merchant";
   if ( /guard|watch|sergeant|constable|bailiff|police|gendarme/.test(t) ) return "day-watch";
@@ -99,10 +129,13 @@ export function roleLabel(role, trade) {
  * The plan for one role in a household. h: {region, kind, household: {trade, people}}; i: the person's index; year.
  * Returns {role, label, master, kin, trade, template, preset, roles}: roles maps routine roles to place ids.
  */
-export function planRole(h, i, {year = 0} = {}) {
+export function planRole(h, i, {year = 0, land = null} = {}) {
   const {household: hh, region, kind} = h;
-  const role = hh.people[i]?.role ?? "resident";
-  const trade = hh.trade || hh.people[0]?.role || "";
+  // 0.51.0: a house of worship of the land's faith (or one tagged mosque or temple) names its clergy that faith's way
+  const faith = land ? (kind === "mosque" ? "islamic" : kind === "synagogue" ? "jewish" : land) : null;
+  const local = x => faith ? localClergy(x, faith) : x;
+  const role = local(hh.people[i]?.role ?? "resident");
+  const trade = local(hh.trade || hh.people[0]?.role || "");
   const r = role.toLowerCase();
   const master = i === 0 && !["staff", "household"].includes(r);
   const atHome = WORK_KINDS.has(kind) || AT_HOME.test(trade);
@@ -120,9 +153,9 @@ export function planRole(h, i, {year = 0} = {}) {
   else if ( r === "servant" ) { preset = "servant"; template = "servant"; }
   else if ( ["apprentice", "farmhand", "journeyman"].includes(r) ) { preset = "labourer"; roles.work = region; }
   else if ( r === "staff" ) { preset = presetForTrade(trade); delete roles.home; roles.work = region; }
-  else if ( r === "clerk" && /priest|rabbi|parson/.test(trade.toLowerCase()) ) preset = "labourer";
+  else if ( r === "clerk" && /priest|rabbi|parson|imam|lama/.test(trade.toLowerCase()) ) preset = "labourer";
   else preset = presetForTrade(role);
-  if ( preset === "priest" && kind === "church" ) roles.church = region;
+  if ( preset === "priest" && ["church", "mosque", "synagogue", "temple"].includes(kind) ) roles.church = region;
   if ( preset === "innkeeper" && kind === "tavern" ) roles.tavern = region;
   if ( !PRESETS[preset] ) preset = "labourer";
   const ageOk = PRESETS[preset];
@@ -188,17 +221,27 @@ export const HOUSE_ROW = 31;
 export const RETRY_STEP = 100, RETRIES = 8;
 
 /**
- * What a role asks of the person who fills it (house reading of the church in Moravia): Christian clergy are not
- * Jewish, and priests, monks and friars are men, as are rabbis, who are Jewish; nuns are women. Protestant churches
- * ordained women only in the twentieth century, so from 1950 a parson or vicar may be either. Returns
- * {sex: "male"|"female"|null, origin: (origin) => boolean}.
+ * What a role asks of the person who fills it. Before 0.51.0 a house reading of the church in Moravia; now of every
+ * faith (B2672): a person keeps the faith their origin points to (routine-rules originFaith), else the land's
+ * (faithFor of the region). Christian clergy are Christian, an imam, muezzin or dervish Muslim, a rabbi or cantor
+ * Jewish, a lama or monk of a Buddhist land Buddhist, a temple priest Hindu. Priests, monks, imams and lamas are men,
+ * as are rabbis until 1990; nuns are women. Protestant churches ordained women only in the twentieth century, so
+ * from 1950 a parson or vicar may be either. Returns {sex: "male"|"female"|null, origin: (origin) => boolean}.
  */
-export function wantsFor(trade = "", {year = 0} = {}) {
+const BUDDHIST = new Set(["theravada", "tibetan", "chinese"]);
+export function wantsFor(trade = "", {year = 0, region = null, land = null} = {}) {
   const t = String(trade).toLowerCase(), y = Number(year) || 0;
-  if ( /rabbi/.test(t) ) return {sex: y >= 1990 ? null : "male", origin: o => o === "jewish"};
-  if ( /\bnun\b|abbess|prioress/.test(t) ) return {sex: "female", origin: o => o !== "jewish"};
-  if ( /parson|vicar|pastor|minister/.test(t) ) return {sex: y >= 1950 ? null : "male", origin: o => o !== "jewish"};
-  if ( /priest|chaplain|monk|friar|curate|canon|deacon|abbot|prior/.test(t) ) return {sex: "male", origin: o => o !== "jewish"};
+  land ??= region ? faithFor(region, y || 1197) : "western";
+  const faithOf = o => originFaith(o) ?? (o === "jewish" ? "jewish" : land);
+  const keeps = test => o => test(faithOf(o ?? ""));
+  const christian = keeps(f => f === "western" || f === "orthodox");
+  if ( /rabbi|cantor|hazzan/.test(t) ) return {sex: y >= 1990 ? null : "male", origin: o => o === "jewish"};
+  if ( /imam|mullah|muezzin|qadi|mufti|dervish|marabout/.test(t) ) return {sex: "male", origin: keeps(f => f === "islamic")};
+  if ( /lama|bhikkhu|buddhist monk|novice monk/.test(t) || (/\bmonk\b/.test(t) && BUDDHIST.has(land)) ) return {sex: "male", origin: keeps(f => BUDDHIST.has(f))};
+  if ( /temple priest|brahmin|pujari|holy ascetic/.test(t) ) return {sex: "male", origin: keeps(f => f === "hindu")};
+  if ( /\bnun\b|abbess|prioress/.test(t) ) return {sex: "female", origin: BUDDHIST.has(land) ? keeps(f => BUDDHIST.has(f)) : christian};
+  if ( /parson|vicar|pastor|minister/.test(t) ) return {sex: y >= 1950 ? null : "male", origin: christian};
+  if ( /priest|chaplain|monk|friar|curate|canon|deacon|abbot|prior/.test(t) ) return {sex: "male", origin: christian};
   return {sex: null, origin: () => true};
 }
 const fits = (p, want) => !!p && (!want.sex || p.sex === want.sex) && want.origin(p.origin ?? "");
@@ -212,10 +255,10 @@ export function drawFit(draw, i, opts, want) {
   return p;
 }
 
-export function nameHousehold(plans, draw, rand = Math.random, {year = 0} = {}) {
+export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region = null, land = null} = {}) {
   if ( !plans.length ) return [];
   const trade0 = plans[0].trade || plans[0].role;
-  const want = plans[0].master ? wantsFor(trade0, {year}) : {sex: null, origin: () => true};
+  const want = plans[0].master ? wantsFor(trade0, {year, region, land}) : {sex: null, origin: () => true};
   const first = drawFit(draw, 0, {sex: "any", trade: trade0}, want);
   // The household's name is drawn from a man of the master's own origin, so a Czech master never heads a ben-or-bat household
   const fam = drawFit(draw, HOUSE_ROW, {sex: "male", trade: trade0}, {sex: "male", origin: o => !first.origin || o === first.origin}) ?? {};
@@ -255,7 +298,9 @@ export function residentFlags(person, h, scene) {
   return {
     behavior: {template: plan.template, household: h.household.label.slice(0, 60)},
     routine: {on: true, mode: null, preset: plan.preset, age: null, roles: {...plan.roles}, blocks: null},
-    resident: {scene, region: h.region, household: h.household.id, role: plan.role, master: plan.master}
+    resident: {scene, region: h.region, household: h.household.id, role: plan.role, master: plan.master,
+      // NPC 0.49.0 (B2572): a household whose origin keeps another faith than the land's (a Jewish family in Brno)
+      ...(originFaith(person.origin) ? {faith: originFaith(person.origin)} : {})}
   };
 }
 

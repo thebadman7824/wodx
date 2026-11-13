@@ -79,7 +79,7 @@
 1485|H|mor|EU|Vienna|siege|Matthias takes Vienna|Matthias Corvinus captures Vienna and moves his court there.
 1486|W|vam|EU|Europe|faith|The first Conclave|The Camarilla holds its first Conclave and proclaims the Masquerade.
 1486|W|hun|EU|Speyer|occult,persecution,media|The Hammer of Witches|Kramer's Malleus Maleficarum is printed; hunters use it for two centuries.
-1487|H|mor|EU|Lisbon|exploration,sea|Dias rounds the Cape|Bartolomeu Dias sails round the southern tip of Africa.
+1487|H|mor|EU|Lisbon|exploration,sea|Dias sails south|Bartolomeu Dias leaves Lisbon with three ships to find the southern end of Africa.
 1488|H|mor|EU|Bruges|uprising|Maximilian held captive|Bruges imprisons Maximilian of Austria.
 1489|H|mor|ME|Cyprus|crown,trade|Venice takes Cyprus|Cyprus's Venetian queen hands the island to Venice.
 1490|H|mor|EU|Vienna|crown,death|Matthias dies|Matthias Corvinus dies; his library and his army scatter.

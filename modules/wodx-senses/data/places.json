@@ -559,6 +559,341 @@
     }
    ]
   },
+  "mosque": {
+   "sight": [
+    {
+     "t": "Carpets cover the floor, row on row, all facing the same wall."
+    },
+    {
+     "t": "A niche in the far wall marks the way to Mecca."
+    },
+    {
+     "t": "Shoes stand in pairs inside the door."
+    },
+    {
+     "t": "No pictures anywhere: bands of script run around the walls."
+    },
+    {
+     "t": "Oil lamps hang on long chains under the dome.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Gas brackets on the pillars, their glass gone yellow.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A ring of bulbs under the dome, and a cable running up to the minaret.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "A Qur'an left open on its folding stand.",
+     "n": 1
+    },
+    {
+     "t": "One carpet has been rolled back, and the floor under it scrubbed pale.",
+     "n": 2
+    },
+    {
+     "t": "Footprints in the dust of the minaret stair go up and do not come down.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "Bare feet whisper over the carpets."
+    },
+    {
+     "t": "A voice reciting, low and steady, from a corner.",
+     "p": [
+      "day",
+      "dusk"
+     ]
+    },
+    {
+     "t": "The call to prayer from the minaret, carried on the air.",
+     "e": [
+      "medieval",
+      "early",
+      "industrial"
+     ]
+    },
+    {
+     "t": "The call to prayer, loud and crackling through a speaker.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "Water running in the washing place off the court.",
+     "n": 1
+    },
+    {
+     "t": "A whisper from the empty rows, too close.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Old wool and rosewater."
+    },
+    {
+     "t": "Clean stone and the water of the washing place."
+    },
+    {
+     "t": "Lamp oil and a thread of incense.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Carpet cleaner and someone's cologne.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "Dates and bread, set aside for after sunset.",
+     "n": 1
+    },
+    {
+     "t": "Under the rosewater, old blood.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The carpet is soft underfoot, and cool."
+    },
+    {
+     "t": "Cool air settles from the dome."
+    },
+    {
+     "t": "The floor before the niche is warm, as if someone knelt there a long while.",
+     "n": 2
+    }
+   ]
+  },
+  "synagogue": {
+   "sight": [
+    {
+     "t": "Benches face a raised reading desk in the middle of the room."
+    },
+    {
+     "t": "A curtain hangs before the ark in the wall that faces Jerusalem."
+    },
+    {
+     "t": "A lamp burns over the ark; it is never let go out."
+    },
+    {
+     "t": "A gallery above, behind a wooden lattice."
+    },
+    {
+     "t": "Tallow candles in brass holders along the walls.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Gas jets in glass globes, and a board of donors' names.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Electric lights, and a camera over the street door.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "A prayer shawl left folded on a bench.",
+     "n": 1
+    },
+    {
+     "t": "The curtain of the ark hangs crooked, as if pulled aside in haste.",
+     "n": 2
+    },
+    {
+     "t": "A name has been scratched off the memorial board, and not long ago.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The wood creaks as the building settles."
+    },
+    {
+     "t": "Two voices from a side room, arguing over a text.",
+     "p": [
+      "day",
+      "dusk"
+     ]
+    },
+    {
+     "t": "The street is close: carts and voices just beyond the wall.",
+     "e": [
+      "medieval",
+      "early",
+      "industrial"
+     ]
+    },
+    {
+     "t": "A clock ticks somewhere in the gallery.",
+     "n": 1
+    },
+    {
+     "t": "A page turns in the empty room.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Old paper and candle wax."
+    },
+    {
+     "t": "Polished wood."
+    },
+    {
+     "t": "Wine and spice from the last blessing.",
+     "n": 1
+    },
+    {
+     "t": "Damp, rising from the ritual bath below.",
+     "n": 2
+    },
+    {
+     "t": "Smoke, though nothing here is burning.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The benches are worn smooth by long use."
+    },
+    {
+     "t": "The room is cooler than the street."
+    },
+    {
+     "t": "The reading desk is warm under the hand.",
+     "n": 2
+    }
+   ]
+  },
+  "temple": {
+   "sight": [
+    {
+     "t": "Incense smoke hangs in slow layers under the roof."
+    },
+    {
+     "t": "The holy images look down from the altar, gilded and calm."
+    },
+    {
+     "t": "Offerings on low tables: fruit, flowers, little heaps of rice."
+    },
+    {
+     "t": "Paper charms and strips of cloth hang from the beams."
+    },
+    {
+     "t": "Rows of small lamps flicker before the images.",
+     "e": [
+      "medieval",
+      "early",
+      "industrial"
+     ]
+    },
+    {
+     "t": "Electric lamps shaped like lotus buds, and a box for coins.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "One offering bowl has been knocked over and left where it fell.",
+     "n": 1
+    },
+    {
+     "t": "The ash in the incense burner has been drawn into a shape.",
+     "n": 2
+    },
+    {
+     "t": "The eyes of one image are wet.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "A bell struck once, and the hum that follows."
+    },
+    {
+     "t": "Chanting, many voices on one note.",
+     "p": [
+      "dawn",
+      "dusk"
+     ]
+    },
+    {
+     "t": "Wind chimes in the eaves."
+    },
+    {
+     "t": "A drum, slow, from the back of the hall.",
+     "n": 1
+    },
+    {
+     "t": "Beads clicking fast where nobody stands.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Sandalwood and smoke."
+    },
+    {
+     "t": "Flowers left too long in the heat."
+    },
+    {
+     "t": "Rancid butter from the lamps.",
+     "e": [
+      "medieval",
+      "early",
+      "industrial"
+     ]
+    },
+    {
+     "t": "Burnt sugar from the offerings.",
+     "n": 1
+    },
+    {
+     "t": "Under the incense, something rotting.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "Stone or polished wood, cool under bare feet."
+    },
+    {
+     "t": "Warm air rises off the lamps."
+    },
+    {
+     "t": "A draught from behind the altar, where there should be a wall.",
+     "n": 2
+    }
+   ]
+  },
   "tavern": {
    "sight": [
     {

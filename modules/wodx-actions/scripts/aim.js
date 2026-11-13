@@ -13,11 +13,22 @@ export function tagOf(lib, p) {
     if (!A || !p) return null;
     return A.tagFor(lib, p.id, { name: p.n ?? p.name, text: p.e ?? p.text ?? "", diff: p.diff ?? p.d, passive: !!p.passive });
 }
+/* The power window now open: who works the power and at whom. The window's own roll takes it (taken()), so a
+   power that is rolled can be shown on the map; a cancelled window drops it (dropped()). */
+let open = null;
+export function taken() { const o = open; open = null; return o; }
+export function dropped() { open = null; }
 export function aim(root, { actor, lib = "none", power = () => null, onPick = () => {}, cast = null } = {}) {
+    const mine = open = { actor, target: null, kind: lib === "none" ? null : lib, power: null };
+    const pick = a => { mine.target = a ?? null; return onPick(a); };
+    // which power the window has chosen, kept as the choice changes (read once the window is gone)
+    const note = () => { try { const p = power(root); mine.power = p ? { name: p.n ?? p.name ?? null, group: p.d ?? p.group ?? p.list ?? p.arcanos ?? p.lore ?? null } : null; } catch (e) { /* the window's own business */ } };
+    note();
+    root?.addEventListener?.("change", note); root?.addEventListener?.("input", note);
     const A = api();
     if (!A || !root) return null;
     try {
-        const h = A.attach(root, { actor, cast, onPick, tag: () => tagOf(lib, power(root)) });
+        const h = A.attach(root, { actor, cast, onPick: pick, tag: () => tagOf(lib, power(root)) });
         if (h) root.querySelectorAll?.(".wodx-hdr-tgt").forEach(e => { e.hidden = true; });
         return h;
     } catch (e) { console.warn("WoDX | targeting panel", e); return null; }

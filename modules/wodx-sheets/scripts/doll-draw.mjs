@@ -1,5 +1,5 @@
 /**
- * WoDX Sheets 0.16.0: the damage doll (house rule B2590). No Foundry calls here.
+ * WoDX Sheets 0.16.0: the damage doll (house rule B2690). No Foundry calls here.
  *
  * Draws a small pixel figure (64 x 80) from a body plan in the manner of the token sprites, and colours each part by the
  * health levels that landed on it: bruise purple for bashing, red for lethal, charred black for aggravated. Lost parts

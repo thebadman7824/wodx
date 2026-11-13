@@ -16,11 +16,13 @@
  *   setting wodx-solo.log     {v, entries}  what the seat decided (solo-rules.mjs addEntry)
  *
  *   the pause    a world opens paused; the seat starts it, since NPCs never act while it is paused
+ *   the panel    the player's own buttons: time, travel, pause, I am stuck, the curtain (panel.mjs, 0.2.0)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
  */
 import * as R from "./solo-rules.mjs";
+import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -244,11 +246,12 @@ Hooks.once("init", () => {
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "before", {scope: "world", config: false, type: Object, default: {}});
   game.settings.register(MOD, "log", {scope: "world", config: false, type: Object, default: R.blankLog()});
+  registerPanelSettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -256,6 +259,7 @@ Hooks.once("ready", () => {
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {solo: api});
 
+  installPanel({isOn, isSeat, log, entries, get});
   Hooks.on("createChatMessage", onMessage);
   Hooks.on("renderDialogV2", onDialog);
   Hooks.on("updateSetting", s => { if ( s?.key === `${CHRON}.approvals` ) onQueue(); });

@@ -11,6 +11,8 @@
  *   6. the Storyteller's prelude journal shows the lifepath
  *   7. every line plays to the end in 1197, 1620, 1916, 2005 and 2050 (the Fallen from 1999)
  *   8. every other WoDX module still answers
+ *   9. the drill-down: Surprise me walks continent, region, origin and the life stages; the kept picks go on the sheet
+ *  10. a young character has no adult chapters, and every region in five years walks to the end
  * Result: Data/wodx-gate/gatelifepath-result.json.
  */
 const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
@@ -34,7 +36,7 @@ export async function run() {
   const made = [], journals = [];
   const flag = a => game.actors.get(a.id)?.flags?.[M]?.lifepath ?? null;
   const play = async app => {
-    for ( let i = 0; i < 20 && app.element?.querySelector("[data-action=pick]"); i++ ) {
+    for ( let i = 0; i < 60 && app.element?.querySelector("[data-action=pick]"); i++ ) {
       app.element.querySelector("[data-action=pick]").click();
       await sleep(150);
     }
@@ -44,7 +46,7 @@ export async function run() {
       {name: "WoDX gate: Lifepath Mortal", type: "Mortal"}]);
     made.push(vamp, mortal);
 
-    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.11.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
+    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.22.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
       && atLeast(game.modules.get("wodx-storyteller")?.version, "0.34.1"), {creation: game.modules.get(M).version, storyteller: game.modules.get("wodx-storyteller")?.version}));
 
     await step("2 sheet button", async () => {
@@ -67,7 +69,7 @@ export async function run() {
       await sleep(1200);
       const rec = flag(vamp);
       const card = game.messages.contents.some(m => m.timestamp >= t0 && m.content?.includes("Lifepath: WoDX gate: Lifepath Toreador"));
-      ok("3 play and save", guessed && end && rec?.path?.steps?.length === 7 && rec.kept.length > 0 && card, {guessed, end, steps: rec?.path?.steps?.length, kept: rec?.kept?.length, card});
+      ok("3 play and save", guessed && end && rec?.path?.steps?.length >= 2 && !!rec?.path?.drill?.picks?.origin && rec.kept.length > 0 && card, {guessed, end, steps: rec?.path?.steps?.length, kept: rec?.kept?.length, card});
     });
 
     await step("4 a person becomes an NPC", async () => {
@@ -105,6 +107,55 @@ export async function run() {
         for ( let i = 0; i < 20 && !Rl.done(p); i++ ) { if ( !Rl.currentEvent(p) ) bad.push(`${line} ${y} ${Rl.stageNow(p)}`); p = Rl.choose(p, 0); }
       }
       ok("7 every line, every era", !bad.length && !Rl.lint().length, {bad});
+    });
+
+    await step("9 drill-down to the sheet", async () => {
+      const [m2] = await createActors([{name: "WoDX gate: Lifepath Drill", type: "Mortal"}]);
+      made.push(m2);
+      const app = await api().lifepath(m2);
+      await sleep(400);
+      app.element.querySelector("[data-action=begin]").click();
+      await sleep(300);
+      const first = app.element.textContent.includes("Continent");
+      let five = 0, search = 0;
+      for ( let i = 0; i < 60 && app.element.querySelector("[data-action=surprise]"); i++ ) {
+        if ( app.element.querySelector("[data-action=others]") && app.element.querySelectorAll("[data-action=pick]").length === 5 ) five++;
+        if ( app.element.querySelector(".wodx-search, [data-search], input[type=search]") ) search++;
+        app.element.querySelector("[data-action=surprise]").click();
+        await sleep(150);
+      }
+      await play(app);
+      const end = !!app.element.querySelector("[data-action=save]") && !!app.element.querySelector("input[name=apply]");
+      app.element.querySelectorAll("input[name=person]").forEach(i => { i.checked = false; });
+      app.element.querySelector("[data-action=save]").click();
+      await sleep(1500);
+      const rec = flag(m2);
+      const items = game.actors.get(m2.id).items.filter(i => i.flags?.[M]?.lifepath);
+      const card = game.messages.contents.some(m => m.timestamp >= t0 && m.content?.includes("Put on the sheet"));
+      ok("9 drill-down to the sheet", first && five >= 4 && end && !!rec?.path?.drill?.picks?.region && items.length > 0 && items.every(i => i.type === "Feature") && card,
+        {first, five, search, end, region: rec?.path?.drill?.picks?.region?.id, items: items.map(i => i.name), card});
+    });
+
+    await step("10 ages and every region", async () => {
+      const D = await import(`/modules/${M}/scripts/lifepath-drill-rules.mjs`);
+      const walk = d => { for ( let i = 0; i < 60 && D.current(d); i++ ) d = D.surprise(d); return d; };
+      const bad = [];
+      for ( const c of D.continents() ) for ( const r of c.regions ) for ( const y of [1197, 1620, 1916, 2005, 2050] ) {
+        let d = D.newDrill({birthYear: y - 30, age: 30, seed: `gate:${r.id}:${y}`});
+        d = D.pick(D.pick(d, "continent", c.id), "region", r.id);
+        if ( !D.done(walk(d)) ) bad.push(`${r.id} ${y}`);
+      }
+      let kid = D.newDrill({birthYear: 1990, age: 15, seed: "gate:kid"});
+      kid = walk(D.pick(D.pick(kid, "continent", "europe"), "region", "france"));
+      const noAdult = D.done(kid) && !Object.keys(kid.picks).some(k => /^a\d/.test(k));
+      const lint = D.lint();
+      const bare = D.continents().flatMap(c => c.regions).filter(r => !D.localOf(r.id, 2000)).map(r => r.id);
+      const sinceOk = D.sinceSpans(1230, 1990).length === 4 && D.sinceCurrent(D.newSince({turnYear: 1230, nowYear: 1990, seed: "gate"}))?.options.length === 5;
+      const lim = D.newDrill({birthYear: 1700, age: 30, seed: "gate", limits: {regions: ["france"]}});
+      const limitsOk = D.current(lim).options.length === 1 && typeof game.settings.get(M, "lifepathLimits") === "object";
+      const dated = D.datedMarks("moravia", 1620, 1630).length >= 2 && D.datedOrigins("moravia", 1940).length >= 1 && D.datedMarks("japan", 1940, 1946).length >= 2 && D.datedMarks("west-africa", 1320, 1330).length >= 1 && D.datedOrigins("andes", 1500).length >= 1
+        && D.continents(2060, 2090).some(c => c.regions.some(r => r.id === "mars")) && !D.continents(2060, 2010).some(c => c.regions.some(r => r.id === "orbit")) && !!D.localOf("luna", 2060);
+      ok("10 ages and every region", !bad.length && noAdult && !lint.length && !bare.length && dated && sinceOk && limitsOk, {bad, noAdult, bare, dated, sinceOk, limitsOk, lint: lint.slice(0, 5)});
     });
 
     await step("8 other modules", async () => {

@@ -17,6 +17,9 @@
  * changes, "4>1600:2>1850:1" (tier 4, from 1600 tier 2, from 1850 tier 1). source defaults by category.
  */
 
+import {WAYS, WAY_ROWS, LOCAL_COIN, inUseAt, firstYearAt} from "./goods-ways.mjs";
+export {WAYS, LOCAL_COIN, inUseAt, firstYearAt};
+
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
 export const ERAS = ["mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
   "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
@@ -333,6 +336,9 @@ const END = 2099;
  * measure ("a sack of grain", "a bottle of gin") stacks one to three of that measure unless listed here.
  */
 export const STACK_SIZES = {
+  "a coin of the place": ["coins of the place", 3, 12],
+  "a bag of cacao beans": ["bags of cacao beans", 1, 3],
+  "a kola nut": ["kola nuts", 2, 8],
   "a bronze coin": ["bronze coins", 2, 12],
   "a cowrie shell": ["cowrie shells", 5, 40],
   "a square-holed copper coin": ["square-holed copper coins", 10, 100],
@@ -2613,13 +2619,18 @@ export function splitContainer(name) {
   return m ? {name: m[2], container: `a ${m[1]}`} : null;
 }
 
-export const GOODS = ROWS.map(([name, kind, from, to, conceal, value, src]) => {
+
+/** Library 0.19.0: every row, the goods of each way of life last (goods-ways.mjs). */
+export const ALL_ROWS = [...ROWS, ...WAY_ROWS.map(r => r.slice(0, 7))];
+const WHERE = Object.fromEntries(WAY_ROWS.map(r => [r[0], r[7]]));
+
+export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) => {
   const eras = erasFor(from, to);
   const steps = parseValue(value ?? 0, from);
   const split = splitContainer(name);
   const g = {id: slug(RENAMED[name] ?? name), name: split?.name ?? name, was: RENAMED[name] ?? null, former: split ? name : null,
     container: split?.container ?? null, kind, from, to, eras, conceal, small: conceal === "P" || conceal === "J",
-    source: src ?? KIND_SOURCE[kind] ?? "hist", steps};
+    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
   g.values = Object.fromEntries(eras.map(e => [e, valueAt(g, Math.max(ERA_YEARS[e][0], from))]));
   g.value = eras.length ? g.values[eras[0]] : valueAt(g, from);
   const [use, kindStacks] = BEHAVIOUR_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind] ?? ["kept", false];
@@ -2629,6 +2640,6 @@ export const GOODS = ROWS.map(([name, kind, from, to, conceal, value, src]) => {
   g.stack = stacks ? {plural, min: listed?.[1] ?? 1, max: listed?.[2] ?? (plural ? 3 : 1)} : null;
   const uses = USES_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind]?.[3] ?? [];
   Object.assign(g, {use, stacks, uses, sheet: KIND_BEHAVIOUR[kind]?.[2] ?? "Item"});
-  g.tags = {category: kind, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container};
+  g.tags = {category: kind, ways: g.ways, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container};
   return g;
 });

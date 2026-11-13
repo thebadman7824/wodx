@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.36.0 (Fill by place and era reads where the scene stands: its region and that region's way of life in the chronicle's year, from WoDX Chronicle, so everyday goods are those at home there; the coin of the place is named in the local money from WoDX Storyteller ("7 dirhams"), and lands that trade without coin get none. Draws by era alone, as before, when Chronicle is off. B2682)
+- 0.35.3 (mosques, synagogues and temples, WoDX NPC 0.50.0's new kinds of place, fill their containers as a church does and are kept when a map is adopted. B2662)
 - 0.35.2 (adopting a generated map: a building that holds several households, such as a block of flats, keeps all of them on its region instead of only the last; a map that is part of a settlement says so in the plan, with where its record goes. B2526)
 - 0.35.1 (the seven prologue eras count as early eras for locks and light, as the two old ones did)
 - 0.35.0 (riding outside a chase: rideOf tells WoDX Combat which mount or vehicle a token is on, at the reins or as a passenger, with its pace this year on the scene's ground; a carried passenger's move is not counted against their own)

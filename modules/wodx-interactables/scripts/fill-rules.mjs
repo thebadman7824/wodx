@@ -6,6 +6,8 @@
  * the Storyteller keeps goes in. Guns too big to carry, ship and siege gear and parries are never drawn; cyberware
  * only in a clinic. A small container (a box, drawers, a strongbox, a safe) only takes what can be hidden in a
  * coat or smaller.
+ * 0.36.0: everyday goods follow the scene's region and its way of life in the chronicle's year (WoDX Library 0.19.0):
+ * no rosary in Kyoto, tea in China long before Europe, and the coin of the place in the local money.
  * 0.20.0: the place starts at a first guess: the container's own fill place (a generated map's file can set it), else
  * the WoDX NPC place tag of the region it sits in, else the scene's tag, else a home. The Storyteller can change it.
  */
@@ -40,7 +42,7 @@ export const PLACES = {
 
 /** The fill place that fits each kind of WoDX NPC place; null where none fits (then a home). */
 export const FROM_NPC_PLACE = {
-  home: "home", haven: "home", tavern: "home", workplace: "workshop", market: "workshop", church: "church",
+  home: "home", haven: "home", tavern: "home", workplace: "workshop", market: "workshop", church: "church", mosque: "church", synagogue: "church", temple: "church",
   gate: "armory", castle: "armory", wilds: "camp", street: null, caern: null, alley: null, yard: "camp", docks: "workshop", park: null, other: null,
   elysium: "home", chantry: "workshop"
 };
@@ -104,12 +106,15 @@ export function draw(items, {era = null, place = "home", container = "chest", co
  * 0.21.0: everyday goods (WoDX Library's data/goods.mjs) that may be drawn for this era, place and container, each
  * with its weight. weights: the goods' place weights (PLACE_WEIGHTS there). A small container takes small goods only.
  */
-export function goodsCandidates(goods, weights, {era = null, place = "home", container = "chest"} = {}) {
+export function goodsCandidates(goods, weights, {era = null, place = "home", container = "chest", year = null, way = null, region = null, inUse = null} = {}) {
   const w = weights?.[place] ?? weights?.home ?? {};
+  const local = typeof inUse === "function" && Number.isFinite(Number(year)) && year !== null && (way || region);
   const out = [];
   for ( const g of goods ?? [] ) {
     if ( !g?.name || !w[g.kind] ) continue;
-    if ( era && !(g.eras ?? []).includes(era) ) continue;
+    // 0.36.0: where the year, the region and its way of life are known, a good must be at home there that year
+    if ( local ) { if ( !inUse(g, Number(year), {way, region}) ) continue; }
+    else if ( era && !(g.eras ?? []).includes(era) ) continue;
     if ( SMALL.has(container) && !g.small ) continue;
     out.push({item: g, weight: w[g.kind], cat: "goods"});
   }
@@ -120,9 +125,11 @@ export function goodsCandidates(goods, weights, {era = null, place = "home", con
  * A good is one thing that stacks (a coin, a candle), never a pile: draw how many from its usual stack size and
  * write "7 bronze coins", or the name alone for one.
  */
-export function goodsLine(g, rng = Math.random) {
+export function goodsLine(g, rng = Math.random, coin = null) {
   const lo = Math.max(1, g?.stack?.min ?? 1), hi = Math.max(lo, g?.stack?.max ?? 1);
   const n = lo + Math.floor(rng() * (hi - lo + 1));
+  // 0.36.0: the coin of the place is named in the local money when WoDX Storyteller knows it ("7 dirhams")
+  if ( g?.localCoin && typeof coin === "function" ) { const line = coin(n); if ( line ) return line; }
   // Nothing starts in a container (Ben, 2026-11-12): "claret (3)", never "claret (in 3 bottles)".
   if ( g?.container ) return n > 1 ? `${g.name} (${n})` : g.name;
   return n > 1 && g.stack?.plural ? `${n} ${g.stack.plural}` : g.name;
@@ -135,13 +142,15 @@ export const WHAT = {both: {label: "Gear and everyday goods"}, goods: {label: "E
  * One draw from gear and goods together. Returns [{name, line, goods}]: line is what goes in the container's list
  * (a gear item's link, or a good's name as plain text).
  */
-export function drawMixed({items = [], goods = [], weights = null, what = "both", era = null, place = "home", container = "chest", count = 3, rng = Math.random} = {}) {
+export function drawMixed({items = [], goods = [], weights = null, what = "both", era = null, place = "home", container = "chest", count = 3, rng = Math.random,
+  year = null, way = null, region = null, inUse = null, coin = null} = {}) {
   const pool = [
     ...(what === "goods" ? [] : candidates(items, {era, place, container})),
-    ...(what === "gear" ? [] : goodsCandidates(goods, weights, {era, place, container}))
+    ...(what === "gear" ? [] : goodsCandidates(goods, weights, {era, place, container, year, way, region, inUse}))
   ];
+  const goodsOut = g => { const line = goodsLine(g, rng, coin); return {name: g.localCoin ? line : g.name, line, goods: true}; };
   return pick(pool, howMany(count), rng).map(p => p.cat === "goods"
-    ? {name: p.item.name, line: goodsLine(p.item, rng), goods: true}
+    ? goodsOut(p.item)
     : {name: p.item.name, line: p.item.uuid ?? p.item.name, goods: false});
 }
 

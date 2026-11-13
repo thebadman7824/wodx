@@ -96,7 +96,7 @@ async function maim(message) {
   await message.update({content: `<div class="vtc-card"><p>${esc(actor.name)}'s ${esc(f.label.toLowerCase())} is lost (on the lasting changes record).</p></div>`});
 }
 
-/* ---------- Where wounds are (Combat 3.22.0, house rule B2590) ---------- */
+/* ---------- Where wounds are (Combat 3.22.0, house rule B2690) ---------- */
 
 /** The track the doll reads: a wraith's Corpus, else the health track. */
 export function trackOf(actor) {

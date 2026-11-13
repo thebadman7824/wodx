@@ -6,7 +6,7 @@
  * armor, speak, move), where blows land, and the lasting changes from WoDX Storyteller. The Storyteller also gets
  * controls to set the shape by hand and to add a lasting change.
  *
- * 0.16.0: the damage doll at the top (B2590): opts.doll = {spec (doll-draw specOf), wounds: [{label, text}], gm}. The
+ * 0.16.0: the damage doll at the top (B2690): opts.doll = {spec (doll-draw specOf), wounds: [{label, text}], gm}. The
  * canvas is drawn by extras.mjs once the tab is on the page.
  */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
