@@ -480,6 +480,7 @@ async function onSocket(p) {
         if (p.messageId) {
             const d = game.messages.get(p.messageId)?.getFlag(MOD, "data") ?? {};
             Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
+            if (p.which !== "counter") await BD.recordWound(actor, d, r, p.messageId).catch(e => console.warn(`${MOD} | wounds`, e));
             await recordApplied(p.messageId, actor, r);
         }
     } else if (p.action === "setDamage") await setDamage(actor, p.damage);
@@ -1263,11 +1264,12 @@ async function applyFromMessage(msg, which = "main") {
     const actor = doc?.actor ?? doc;
     if (!actor) return ui.notifications.warn("WoDX Combat: the target no longer exists.");
     if (!actor.isOwner) {
-        if (requestGM({ action: "applyDamage", uuid: actor.uuid, type: src.type, levels: src.levels, messageId: msg.id }))
+        if (requestGM({ action: "applyDamage", uuid: actor.uuid, type: src.type, levels: src.levels, messageId: msg.id, which }))
             ui.notifications.info(`Damage to ${actor.name} sent to the GM.`);
         return;
     }
     const r = await applyDamage(actor, src.type, src.levels);
+    if (!isCounter) await BD.recordWound(actor, data, r, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
     Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after, condition: r.condition?.key ?? null,
         fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id });
@@ -1288,6 +1290,7 @@ async function undoFromMessage(msg, which = "main") {
     const actor = doc?.actor ?? doc;
     if (!actor) return;
     await setDamage(actor, u.damage);
+    if (which !== "counter" && actor.isOwner) await BD.undoWound(actor, msg.id).catch(e => console.warn(`${MOD} | wounds`, e));
     const key = which === "counter" ? "counterApplied" : "applied";
     const newData = { ...data, [key]: false, [which === "counter" ? "counterUndo" : "undo"]: null };
     await msg.update({ [`flags.${MOD}.data`]: newData, content: msg.content + `<div class="vtc-note">Damage to ${actor.name} undone (${u.damage.bashing}B / ${u.damage.lethal}L / ${u.damage.aggravated}A).</div>` });
@@ -1471,7 +1474,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.22.1", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.23.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

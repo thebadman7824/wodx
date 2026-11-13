@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2690
+Next free block: B2700
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -121,6 +121,7 @@ Next free block: B2690
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
+| B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3485,6 +3486,10 @@ Reverse: pick another land in the setting; CHRONICLE_COINS and coinsFromMoney in
 ## B2631. Named places from the book lookup stand on the realm maps (2026-11-13)
 The PC read the books for each of the 34 realms and gave back 229 named places with pages, 95 notes on how the realms lie and 83 on how they change, all in our own words. 188 places went onto the maps, each with a line on what it is and its page; the window shows that line for the two ends of a journey and in Found places, and never for a place not yet found. Left out: beings and weather, roads and gates the maps already have, places the catalogue already names, and places that lie outside the realm (the outposts and conquered lands of the Yellow Springs, the other Dark Kingdoms, the Egyptian Shadowlands). A named place stands on firm ground while the map has room. The notes on lie and change are kept with each map and can be opened in the window; the maps do not yet follow them place by place, and the dated changes (Yomi 1945 and 1998, the Yellow Springs 1945, 1949 and 1997) are not yet steps of the maps. The lookup also put three page refs right: the Far Dreaming and the Deep Dreaming are Changeling 20th pdf 55 and 307 to 308, and Enoch no longer cites Sins of the Blood. One finding is left for Ben: The Thousand Hells calls Ti Yu, the Earth Prison, a made copy that belongs to the Yellow Springs, while Dark Kingdom of Jade, which the realm maps follow, sets the hells round it; nothing was moved.
 Reverse: empty PLACES in modules/wodx-otherworlds/scripts/realm-places.mjs.
+## B2632. The realm maps follow the books' notes on how each realm lies; Ti Yu stays in Yomi (2026-11-13, Ben's call)
+Ben approved the recommendations of 13 November. Ti Yu, the Earth Prison, stays at the heart of Yomi, as Dark Kingdom of Jade has it, and Yomi's note now says the Kuei-jin hold it to be a copy made for the Yellow Springs (The Thousand Hells pdf 6 to 10). The maps follow the layout notes of the book lookup where one flat map can: a table of hints (HINTS in realm-worlds-rules.mjs) ties a place to a part of the map (centre, inner, middle, outer, edge, a compass side) or to another place, and a place with a hint is put on a square that fits, also when a shifting realm is made anew. Travellers arrive where the books say in Malfeas (the Central Duchy courtyard), a Battleground (the Signpost), the Summer Country (the Forest of Longing) and Erebus (Cerberus at the border). Our own reading: up is north; a book's above and below is laid out across the map (the CyberRealm's Computer Web north and its Pit south, the Dream Zone's descent from west to east). Not followed, because the map's own plan says otherwise: the Tempest keeps Stygia at its heart, where Wraith 20th sets the Labyrinth at the centre. B2558 said the books give no distances; the lookup found some. The Far Shores lie about an hour from one another by byway, and the Far Shores map now takes about seven hours to cross, not 50 days. The Tempest's own times (Stygia to the nearest Necropolis port 2 hours, to the Labyrinth a week, to the Far Shores two weeks, by major byway) are shown with the map's notes, and the map's times do not match them yet.
+Reverse: empty HINTS and ARRIVE in realm-worlds-rules.mjs; take the last sentence off Yomi's era note in realm-maps-rules.mjs.
+
 ## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
 A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
 Reverse: set Daily prayers to Not kept on an NPC, or return blocksOf in modules/wodx-npc/scripts/routine-rules.mjs to forFaith alone; PRAYERS can stay unused.
@@ -3544,3 +3549,23 @@ WoDX Interactables 0.36.0. Fill by place and era reads the scene's region (its o
 
 Reverse: clear the scene's region in Where this scene stands, or set Fill to Gear by era only.
 
+
+## B2690. The damage doll (2026-11-13)
+Ben asked (13 November 2026) for a doll outline on the body map that changes with the body plan and with damage, as in Project Zomboid, and approved the sample desk as recommended. Sheets 0.16.0 draws a 64 by 80 pixel figure at the top of the Body tab, in the manner of the token sprites, on its own night plate: one pose for each body plan (person, four-legged beast, bat, bird, snake, fish, spider), bulkier for Glabro, Crinos, Zulo and Chiropteran shapes, with parts added by Vicissitude and the like. Colours: purple for bashing, red for lethal, charred black with an ember edge for aggravated, deeper with more levels. Lost parts show as a dotted outline, inner parts (the heart) and eyes only when struck.
+Reverse: drop dollHtml from bodyHtml and wireDoll from extras.mjs.
+
+## B2691. Where wounds are (2026-11-13)
+Parts still have no health of their own (B1200). Combat 3.22.0 keeps a note per health level of where an attack landed (flag wodx-combat.wounds), written when the attack card's damage is applied. As the track heals, or is set by hand, the oldest notes of each kind go first; an Undo on the card takes back that attack's notes. A note on a part the current shape lacks shows on its counterpart (a hand on the fore leg in Lupus) or on the torso. The Storyteller clicks a part on the doll to place a level the track already holds, or to clear the part; the track itself never changes from the doll.
+Reverse: remove recordWound and undoWound from main.js and the updateActor trim in body.js.
+
+## B2692. Damage with no place (2026-11-13)
+Levels on the track with no note (hit locations switched off, falls, fire, sunlight, harm outside a fight) show on the torso, so the doll still reads as hurt. Mist and a body in the earth show no wounds.
+Reverse: drop the loose-levels loop in woundsByPart.
+
+## B2693. Four-legged animals, and the Mokole fix (2026-11-13)
+Combat 3.21.0 sent a Mokole in Hispo or Lupus to a shape "beast" that does not exist, so bodyOf threw and the Body tab was empty. Mokole now keep the four-legged plan. Each four-legged shape names its animal for the doll's head and tail (FERA_BEAST): wolf for Garou and Nuwisha, fox for Kitsune, hyena for Ajaba, big cat for Bastet, bear for Gurahl, rat for Ratkin, crocodile for Mokole, bull for Apis, boar for Grondr. Senses are unchanged.
+Reverse: give FERA_ANIMAL a Mokole entry again and drop animal from bodyOf.
+
+## B2694. False limbs by era (2026-11-13)
+A lasting change "A false limb" with a part named in its "Part lost" field draws that part again as a false limb, in wood and iron before 1900, steel and plastic to 2022, and chrome in the World of Future Darkness, by the chronicle's year. The rules are unchanged: the part still counts as lost.
+Reverse: drop fakes from dollOf in extras.mjs.

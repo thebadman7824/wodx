@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.16.0 (the damage doll at the top of the Body tab: a small pixel figure drawn from the body plan that changes with the shape, added and lost parts, and false limbs in wood, steel or chrome by era; each part takes the colour of the wounds on it, purple for bashing, red for lethal, charred black for aggravated; point at a part to name it, and the Storyteller clicks a part to place or clear a wound)
 - 0.15.2 (Coin of which land has a new choice, The chronicle's money: the Possessions tab's coins of the time and Add coins then take their names from WoDX Storyteller's money, for every world region and year, and on a scene abroad from the money of that land. The default stays the German lands. B2653)
 - 0.15.1 (the Relationships and Body tab buttons have the same tile and glyph colours as the line's own tab buttons)
 - 0.15.0 (the layout pass: the title bar always shows the name, with its buttons as icons that say what they are on hover; the Possessions, Relationships, Body and Storyteller's notes sections sit in the same panels as the rest of the sheet; WoDX fields and buttons have one shade and can be read in light and dark mode; item sheets use the width of the window and their text editor follows dark mode; list headings and long section titles no longer run into each other)
