@@ -160,10 +160,11 @@ Next free block: B3440
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
-| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
+| B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
@@ -4882,6 +4883,41 @@ After a yes the clock counts the waiting: three Sundays of banns in Latin Christ
 
 Reverse: turn the wedding card down.
 
+## B3240. Cults are kept in WoDX NPC, apart from factions (2026-11-13)
+WoDX NPC. Ben asked for players and certain NPCs to grow cults around themselves from their words and deeds, each line with its own kind, with the Princes of Darkness mod as inspiration. A cult is its own record (world setting wodx-npc.cults) beside the factions, so the faction turn is not touched; a faction can be founded from a cult by hand. Ideas taken from Princes of Darkness, rebuilt on WoDX's own systems: a bound follower of a kind that suits the line, initiation and ordination into an inner circle, suspicion that grows until someone acts. World setting cultsOn, off by default and off in Live.
+
+Reverse: turn cultsOn off; the setting and the awe flags can stay.
+
+## B3241. Awe by place, from words and deeds (2026-11-13)
+WoDX NPC. Awe is kept on the character for each scene: words spoken in character in chat with a word of faith, blood, power or doom and NPCs within 12 grid units (1 point, at most 3 an hour, setting cultWords), a sermon (Charisma + Leadership, Expression, Performance or Empathy, or Manipulation + Intimidation, difficulty 6, 2 awe a success), a power worked in sight (3), a breach seen (2), a willing feeding (1, blood) and a social win (1). Each carries themes. Awe halves after 30 days with nothing new. House figures.
+
+Reverse: set the deed points in DEEDS in cult-rules.mjs.
+
+## B3242. When a following gathers (2026-11-13)
+WoDX NPC. Awe of 10 heard by 3 or more people puts "A following gathers" in the approval queue; the founder may ask from 5. The new cult starts with the people who were touched (3 to 12), devotion 2 (1 when asked early), secret, its creed from the three strongest themes. House rule.
+
+Reverse: FORM_AT, ASK_AT and TOUCHED_AT in cult-rules.mjs.
+
+## B3243. The weekly cult turn (2026-11-13)
+WoDX NPC. Once a week of world time: three points of attention (awe added in the cult's place, two for a gathering) raise devotion a step; four quiet weeks (two when the founder is gone) lower it. At devotion 2 or more it grows by 4% a step of devotion, more when tended and for a Devil's pyramid of recruits, capped by the place (40 before 1500, 120 to 1850, 300 to 1950, 600 after, or 5% of a settlement's people); at 1 or less a tenth drift away (a quarter at 0). Exposure rises by chance with size and openness; "people talk" starts a rumour, "watched" fires wodxCultNoticed, 10 proposes a raid. A failing cult of 13 or more may split (approval queue). Twelve turns at most in a skip; quiet years after that wear a cult down, and one whose mortal founder is gone ends after 25 years. House rules.
+
+Reverse: set the figures in cultTurn and quietYears.
+
+## B3244. Each line's kind of cult and what it gives (2026-11-13)
+WoDX NPC. Vampire: blood cult, sized and read as Herd (V20 p. 114). Mummy: the Netaru (Ben's name; not found in the books held), sized as the M20 Cult, with the Cult of Isis as the model. Demon: a cult of personality whose inner circle counts as Followers (Demon: The Fallen p. 155), Faith reaped at a gathering and offered by a thrall's pact (p. 251). Changeling: Dreamers (C20 p. 169). Wraith: a circle of remembrance read as Memoriam (Wraith 20th p. 144; the member counts for each dot are a house reading). Mage: Cult (M20 p. 310). Werewolf: the old faith (house), and Wyrm cults for NPCs only. Kuei-jin: blood or death cults read as Herd. Hunter: a flock (house). Mortal: a sect, a heresy before 1600. Each has words by era. The card states what the cult gives; the Storyteller applies it.
+
+Reverse: edit CULT_KINDS in cult-rules.mjs.
+
+## B3245. NPCs who found cults (2026-11-13)
+WoDX NPC. Once a month of world time, an NPC whose kind is read as a cult-maker (Setites, Malkavians, Baali, Tzimisce before 1500, the fallen, Ecstatics and the Chorus, Nephandi, Black Spiral Dancers and fomor, the Reborn, Kuei-jin, mortal preachers and mediums) with a token on a scene and no cult of its own has a 1 in 10 chance to found one, through the approval queue. An NPC's cult gets two points of attention a week while the NPC lives. Setting npcCults. House rule.
+
+Reverse: turn npcCults off, or edit NPC_CULTISH.
+
+## B3246. The Following window (2026-11-13)
+WoDX NPC. A token tool, Your following, shows a character's awe by place, its cults (members, devotion, creed, what it gives, the inner circle) and buttons to preach, hold a gathering and ask for a following. The Storyteller also sees exposure, can initiate or ordain the targeted NPC (one ordained for every ten members), dissolve a cult and run a turn by hand. With no character selected the Storyteller sees every cult. Players act by socket, for their own characters only.
+
+Reverse: remove the wodxCults tool.
+
 ## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
 WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
 
@@ -5031,6 +5067,11 @@ Reverse: the approval queue lets the Storyteller refuse any move; Forget in the 
 When a culprit with a file of level 2 or more stands in another region, that region's hunters hear after 60 days before 1500, 30 to 1849, 7 to 1979, 2 to 1999 and at once from 2000; their file starts one level lower and their pressure rises by one.
 
 Reverse: change TRAIL in hunters-rules.mjs.
+
+## B3306. Hunters hear cults (2026-11-13)
+WoDX Storyteller, hunters.mjs listens to WoDX NPC's wodxCultNoticed: a cult watched adds 1 to its region's pressure, a cult moved against adds 2, and the founder gets a file (1 or 2 progress). House figures.
+
+Reverse: drop the wodxCultNoticed listener in hunters.mjs.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.

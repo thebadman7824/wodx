@@ -3,7 +3,7 @@
  *
  *   Fed by     a hunting ground going Watched or Hunted (upkeep.mjs addHeat), a breach with witnesses (wodxBreach), a
  *              new description of a culprit (WoDX NPC's descriptions, read each turn), the Veil track at Hunted or
- *              worse (each turn), and an approved era response to a hot place.
+ *              worse (each turn), an approved era response to a hot place, and a cult noticed (wodxCultNoticed, B3306).
  *   Turns      every 7 days of world time on the active Storyteller's client (a long skip runs up to 12 turns): files
  *              on culprits grow, pressure cools when nothing new happens, and word follows a culprit who has moved to
  *              another region at the speed of the year.
@@ -110,6 +110,17 @@ export async function onBreach(p) {
   let scene = canvas?.scene;
   try { const tok = a?.getActiveTokens?.()[0]; if ( tok?.scene ) scene = tok.scene; } catch (err) { /* the GM's scene */ }
   return add(regionAt(scene), "breach", {why: `A breach with witnesses${e.event ? ` (${String(e.event).slice(0, 60)})` : ""}`, who: culpritOf(a), gain: 1});
+}
+
+/** A cult in the region has been noticed (WoDX NPC wodxCultNoticed, B3306): watched +1, moved +2, and a file on its founder. */
+export async function onCult(p) {
+  if ( !isActiveGM() || !on() ) return null;
+  const c = p?.cult ?? {}, band = p?.band;
+  if ( band !== "watched" && band !== "moved" ) return null;
+  let scene = null;
+  try { scene = c.place?.key ? fromUuidSync(c.place.key) : null; } catch (e) { /* gone */ }
+  const f = c.founder?.id ? {id: c.founder.id, name: c.founder.name ?? "the founder", kind: game.actors.get(c.founder.id)?.type ?? null} : null;
+  return add(regionAt(scene ?? canvas?.scene), band === "moved" ? "cultMoved" : "cultWatched", {why: `${c.name ? `The cult ${String(c.name).slice(0, 60)}` : "A cult"} is ${band === "moved" ? "acted against" : "watched"}`, who: f, gain: band === "moved" ? 2 : 1});
 }
 
 /** New descriptions of culprits since the last turn: each adds pressure where it was written and to its culprit's file. */
@@ -324,6 +335,7 @@ export function registerHunterHooks() {
   Hooks.on("updateWorldTime", () => { if ( !skipping() ) turn().catch(e => console.error(`${MOD} | hunters`, e)); });
   Hooks.on("wodxSkipEnd", () => { turn().catch(e => console.error(`${MOD} | hunters`, e)); });
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MOD} | hunters`, e)); });
+  Hooks.on("wodxCultNoticed", p => { onCult(p).catch(e => console.error(`${MOD} | hunters`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
     const b = html?.querySelector?.("[data-action=wst-hunters-open]");

@@ -11,6 +11,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
+| wodxCultNoticed | npc | storyteller (a cult watched or moved against raises the hunters' pressure in its region and opens a file on its founder, B3306) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
@@ -65,6 +66,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
+| wodxCultFormed | npc | a following gathered around a character (B3242): {cult, founder} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |
 | wodxExpecting | npc | a pregnancy begun: {mother, other, record} (the record has the due time, season and year) |
