@@ -181,7 +181,7 @@ export function addPressure(r, kind, now, {n = null, faith = null, year = 0, why
   const x = cooled(r, now);
   let pts = n === null ? num(POINTS[kind]) : num(n);
   const wt = WITCH_TRIALS;
-  if ( pts > 0 && faith === wt.faith && num(year) >= wt.from && num(year) <= wt.to ) pts = Math.ceil(pts * wt.factor);
+  if ( pts > 0 && kind !== "manual" && faith === wt.faith && num(year) >= wt.from && num(year) <= wt.to ) pts = Math.ceil(pts * wt.factor);
   const before = x.pressure, after = clamp(before + pts, 0, MAX);
   let out = {...x, pressure: after, last: pts > 0 ? num(now) : x.last, since: x.since || num(now)};
   if ( why && after !== before ) out = note(out, num(now), `${why} (${before} to ${after})`);
@@ -271,7 +271,7 @@ export function regionTurn(r, now, {bodies = [], veilLow = false, faith = null, 
   const top = Object.values(x.files).sort((a, b) => b.level - a.level || b.seen - a.seen)[0] ?? null;
   // The moves of each stage; the Storyteller's side skips one made in the last ACT_AGAIN_DAYS (actedLately)
   const ai = STAGES.indexOf(after);
-  if ( ai === 3 ) events.push({kind: "investigator", file: top});
+  if ( ai >= 3 ) events.push({kind: "investigator", file: top}); // from Investigating on, also when pressure jumps past it
   if ( ai >= 4 && canRaid(bodies) && top && top.level >= 2 ) events.push({kind: "raid", file: top});
   if ( ai === 5 ) events.push({kind: "purge", file: top});
   return {region: x, events};
