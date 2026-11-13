@@ -88,3 +88,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
+| wodxArrest | chronicle | an arrest after the law's heat: {actor, name, region, deeds, year} (the trial hears it once trials are in) |
