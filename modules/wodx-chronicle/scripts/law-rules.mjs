@@ -62,7 +62,8 @@ export const ORDER = {
   muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting",
   "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another",
   "headman": "The village headman and the watchmen",
-  "societies": "Masked societies and age sets that keep order"
+  "societies": "Masked societies and age sets that keep order",
+  "sheriff": "The sheriff of the shire, who can raise the posse"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -193,6 +194,37 @@ export const FAMILIES = {
       add: {order: ["detectives", "secret-police"], proof: ["evidence"]},
       drop: {courts: ["Colonial courts for Europeans and for grave crimes"], warn: ["Europeans and Africans do not stand under the same law"], taxes: ["The hut tax or poll tax, paid in coin"]}},
     {from: 1995, note: "Cameras and computer crime in the cities", add: {order: ["cameras"], crimes: ["computer-crime"]}}
+  ]},
+
+  // English common law: the king's justices, the jury, the sheriff, then Parliament, police and the empire (B3497)
+  common: {label: "English common law", rows: [
+    {from: 0, note: "The king's justices on circuit, the shire and manor courts, the church's courts", set: {
+      rule: {form: "A crowned king over barons who owe service", ruler: "The King of England", council: "The great council of barons and bishops"},
+      courts: ["The king's justices on circuit and the royal courts at Westminster", "Shire, hundred and manor courts", "The bishop's court for clergy, marriage, wills and heresy", "Borough courts under a town's charter"],
+      proof: ["oath", "ordeal", "combat", "witnesses"], punish: ["fine", "penance", "pillory", "maiming", "outlawry", "hanging", "confiscation"],
+      order: ["hue-cry", "sheriff", "bailiff", "town-watch"], taxes: ["The tithe to the church", "Feudal aids and scutage to the king", "Tolls at bridges and markets"], bribe: 2, catch: 0.25},
+      add: {crimes: ["heresy", "sorcery", "poaching", "rebellion"], warn: ["The deer of the royal forests are the king's, and forest law is harsh"]}},
+    {from: 1220, note: "After Magna Carta (1215) and the end of the ordeal, the jury decides guilt", add: {proof: ["jury"]}, drop: {proof: ["ordeal"]}},
+    {from: 1285, note: "The Statute of Winchester: watch and ward in every town", set: {rule: {council: "Parliament, of lords and commons"}}},
+    {from: 1351, note: "The Statute of Labourers and the Treason Act", add: {crimes: ["vagrancy"]}},
+    {from: 1361, note: "Justices of the peace in every county", add: {courts: ["Justices of the peace at quarter sessions"]}},
+    {from: 1401, to: 1676, note: "Heretics may be burned (repealed 1677)", add: {punish: ["burning"]}},
+    {from: 1534, note: "The Church of England, with the monarch at its head", add: {crimes: ["wrong-faith"], warn: ["Refusing the established church brings fines, and worse"]}},
+    {from: 1563, to: 1684, note: "The witchcraft acts and their trials", add: {warn: ["Witch trials hang the accused at the assizes"]}},
+    {from: 1649, to: 1659, note: "The Commonwealth: no king", set: {rule: {form: "A commonwealth without a king", ruler: "The Lord Protector"}}},
+    {from: 1689, note: "The Bill of Rights: the monarch rules with Parliament", set: {rule: {form: "A constitutional monarchy", ruler: "The King or Queen in Parliament", council: "Parliament and the cabinet"}}, drop: {crimes: ["heresy"]}},
+    {from: 1718, to: 1868, note: "Transportation: to America until 1776, to Australia from 1788", add: {punish: ["transportation"]}},
+    {from: 1736, note: "The Witchcraft Act of 1735: no more witches, only frauds who claim the power", add: {crimes: ["pretend-powers"]}, drop: {crimes: ["sorcery"]}},
+    {from: 1749, note: "The Bow Street Runners", add: {order: ["detectives"]}},
+    {from: 1752, to: 1832, note: "The bodies of hanged murderers go to the anatomists", add: {warn: ["A hanged murderer's body goes to the surgeons for dissection"]}},
+    {from: 1829, note: "London's police; Catholic emancipation", add: {order: ["police"], punish: ["prison"]}, drop: {crimes: ["wrong-faith"], warn: ["Refusing the established church brings fines, and worse"], order: ["hue-cry", "bailiff", "town-watch"]},
+      set: {bribe: 3, catch: 0.4}},
+    {from: 1860, note: "Police in every county; the pillory and penance gone", drop: {punish: ["pillory", "penance", "maiming", "outlawry"], crimes: ["poaching"], warn: ["The deer of the royal forests are the king's, and forest law is harsh"]}, add: {proof: ["evidence"], punish: ["hard-labour"]}},
+    {from: 1901, note: "Fingerprints at Scotland Yard; drug laws from 1920", add: {proof: ["forensic"], crimes: ["drug-trade", "sedition"]}},
+    {from: 1951, note: "The Witchcraft Act repealed", drop: {crimes: ["pretend-powers"]}, set: {catch: 0.45}},
+    {from: 1965, note: "Hanging for murder ends (for good in 1969)", drop: {punish: ["hanging"]}},
+    {from: 1990, note: "Cameras on every high street; the Computer Misuse Act", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.6}},
+    {from: 2000, note: "The Terrorism Act", add: {crimes: ["terrorism"]}}
   ]}
 };
 
@@ -211,6 +243,13 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  "british-isles": [
+    {from: 0, note: "England's Angevin kings; Scotland's own crown and law; Welsh princes; Irish kings and the English lordship of Ireland",
+      add: {courts: ["Scotland's own courts and law, Welsh law in the princes' lands, Irish Brehon law beyond the Pale"]}},
+    {from: 1284, note: "Wales under the English crown", set: {rule: {ruler: "The King of England, and the King of Scots"}}},
+    {from: 1707, note: "Union with Scotland: Great Britain, Scots law kept", set: {rule: {ruler: "The monarch of Great Britain"}}},
+    {from: 1922, note: "The Irish Free State leaves the United Kingdom", set: {rule: {ruler: "The monarch of the United Kingdom; Ireland's own government in Dublin"}}}
+  ],
   "west-africa": [
     {from: 0, note: "Kingdoms of the savanna and forest, Ghana's heirs", set: {rule: {ruler: "The kings of the savanna and the forest"}}},
     {from: 1235, note: "The Mali empire under the mansa; qadis in the trading towns", set: {rule: {ruler: "The Mansa of Mali", council: "The mansa's council of clan heads"}},

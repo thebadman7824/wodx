@@ -169,3 +169,19 @@ test("Africa south of the Sahara (B3496)", () => {
     assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
   }
 });
+
+test("English common law (B3497)", () => {
+  const at = y => L.lawOf("british-isles", y);
+  assert.equal(at(1300).family, "common");
+  assert.ok(at(1197).proof.includes("ordeal") && !at(1230).proof.includes("ordeal"));
+  assert.ok(at(1230).proof.includes("jury"));
+  assert.ok(at(1450).punish.includes("burning") && !at(1700).punish.includes("burning"));
+  assert.ok(at(1600).warn.some(w => /Witch trials/.test(w)) && !at(1700).warn.some(w => /Witch trials/.test(w)));
+  assert.ok(at(1750).crimes.includes("pretend-powers") && !at(1750).crimes.includes("sorcery"));
+  assert.ok(!at(1960).crimes.includes("pretend-powers"), "repealed 1951");
+  assert.ok(at(1800).punish.includes("transportation") && !at(1900).punish.includes("transportation"));
+  assert.ok(at(1840).order.includes("police") && !at(1840).order.includes("hue-cry"));
+  assert.ok(at(1950).punish.includes("hanging") && !at(1970).punish.includes("hanging"));
+  assert.match(at(1655).rule.form, /commonwealth/);
+  assert.match(at(1700).rule.form, /constitutional/);
+});
