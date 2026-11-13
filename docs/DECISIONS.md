@@ -143,6 +143,7 @@ Next free block: B3080
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
+| B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 <!-- decision-index:end -->
 
@@ -4355,6 +4356,21 @@ Reverse: Remove the import of face64-mummy.mjs from face64-features.mjs.
 WoDX Paperdoll 0.19.0. Ben (13 November 2026): not every Nosferatu should have bat's ears. A Nosferatu face now rolls one of nine: bat's ears (the most common), long ears to the side, plain ears, torn ears with the tips bitten off, drooping ears, stubs, finned fans, bare holes with no ear, or a pair that does not match. Beards and goatees are drawn solid with a few lighter strands, so neither reads as a chequered patch.
 
 Reverse: Set the Nosferatu ear roll in face64-rules.mjs back to bat, bat, long.
+
+## B3060. The GitHub check runs in parallel (2026-11-13, Ben)
+Ben (13 November 2026) approved speeding up the check that runs on every pull request and every push to main. The mock-Foundry harness used to run all its files one after another in one job, about four minutes. It now runs in five jobs side by side (SHARDS in .github/workflows/checks.yml). tools/harness/shard.mjs gives each job a share of the files by past run time (tools/harness/shard-times.json: wall time per file, loading included, refreshed from the TIMES line each shard prints); a file with no recorded time counts as the median. Inside a job the files still run one at a time with --test-concurrency=1, as before, so nothing that relied on that order changes. The quality checks run in their own job at the same time. The harness packages are cached by package.json, so most runs skip npm install; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD stays set. A change that only touches docs/ or Markdown runs just the harness files that read docs (shard.mjs --docs: the decision index, the modules table, versions, path case and the like) instead of the whole harness. The last job, "checks", is the one result to look at: it adds up the shards' test counts and passes when every job that ran passed, so a skipped job still counts as green. shard.test.mjs checks that every test file lands in exactly one shard. The outside-account rule (B3030) is kept: for an outside pull request none of these jobs run.
+
+Reverse: Restore the single-job checks.yml from before this change (git history) and delete shard.mjs, shard.test.mjs, shard-times.json and times-reporter.mjs.
+
+## B3005. Starting values corrected after the book check (2026-11-13)
+The PC's book check (gates/derived-traits-2026-11-13.md) found two House values swapped: Devils start at 4 Torment and Defilers at 3. The W20 tribe values and the Dark Ages names Fenrir and Warders of Men matched; the Dark Ages book gives the Children of Gaia 3 Willpower, not 4, so the Dark Ages Werewolf line reads that first.
+
+Reverse: the old values in TORMENT_BY_HOUSE; empty DARK_AGES_TRIBE_WILLPOWER.
+
+## B3006. The seeming changes a Changeling's start (2026-11-13)
+Read from the sheet's seeming: a childling starts with 1 more Glamour, a grump with 1 more Willpower. A wilder adds 1 to either, the player's pick, so the wizard leaves both at 4 and says so. Banality is not changed. With no seeming written, the wizard says what each one adds.
+
+Reverse: empty SEEMING_BONUS in derived-rules.mjs.
 
 ## B3070. Where gear is at home (2026-11-13)
 WoDX Library 0.21.0. Each piece of Gear by era can carry a rule in the words of the everyday goods (a region, a way of life of WoDX Chronicle, or everywhere else; found, from a year, between two years, or never). The Americas, the Pacific and the far north before the settlers carry no steel blades, crossbows, longbows, horse lances, mail or plate and no gunpowder; the rapier, hand crossbow, bastard sword, greatsword, falchion, halberd and glaive stay in Christendom and the lands its people settle; plate in Christendom and the Balkans; the katana in Japan, the kris in the Malay world, the katar and tiger claws in India, the scimitar in the lands of Islam, the Sahel, the Swahili coast, India, Central Asia and East Africa (the Balkans from 1400); guns reach Japan in 1543, India in 1526, mainland Southeast Asia and the Malay world in 1511, Tibet in 1640, the Sahel in 1590, the Swahili coast in 1500 and southern Africa in 1600. A house reading of history.
