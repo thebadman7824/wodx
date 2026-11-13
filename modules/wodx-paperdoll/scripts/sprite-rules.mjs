@@ -8,7 +8,7 @@ export const FRAME_H = 112;
 export const FRAMES = 8;
 export const ROW = {up: 0, left: 1, down: 2, right: 3};
 /** The frame a still figure shows: feet together seen from front or back, both feet down seen from the side. */
-export const IDLE = {up: 0, down: 0, left: 2, right: 2};
+export const IDLE = {up: 0, down: 0, left: 0, right: 0};
 /** Where the feet stand in a frame, as a share of its height. */
 export const FEET = 103 / FRAME_H;
 /** The token picture: twice the square, so a person stands a little over one square tall, with the feet low in it. */
