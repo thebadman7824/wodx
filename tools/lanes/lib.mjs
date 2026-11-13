@@ -252,7 +252,9 @@ export function lockState(lane, cfg, now = Date.now(), alive = pidAlive) {
 /** Ends a gate run that hung past its lane lock's deadline, with its browser (B3089). Only a lock a gate run wrote
  * (runner "run-gate") is acted on, and on Windows only when that process id is still a node process. */
 export function endOverdue(lock, {platform = process.platform, exec = execFileSync} = {}) {
-  if ( lock?.runner !== "run-gate" || !lock.pid || lock.pid === process.pid ) return false;
+  // Locks from before B3089 carry no runner: a gate run's lock is one whose gates are not a lanes.mjs command.
+  const gateRun = lock?.runner === "run-gate" || (!lock?.runner && Array.isArray(lock?.gates) && lock.gates.length && !lock.gates.some(g => String(g).startsWith("lanes.mjs")));
+  if ( !gateRun || !lock.pid || lock.pid === process.pid ) return false;
   try {
     if ( platform === "win32" ) {
       const row = String(exec("tasklist", ["/FI", `PID eq ${lock.pid}`, "/FO", "CSV", "/NH"], {encoding: "utf8"}));
