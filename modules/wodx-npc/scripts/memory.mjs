@@ -67,9 +67,9 @@ export function knownBy(charLike) {
 function meansOf(npc, ch) {
   const s = st();
   const owes = (s?.ledger?.state?.()?.entries ?? []).some(e => e.status === "open" && e.from?.id === ch.id && e.to?.id === npc.id);
-  const ventures = (s?.ventures?.state?.()?.list ?? []).some(v => v.state === "open" && v.actor === ch.id);
+  const ventures = (s?.upkeep?.ventures?.state?.()?.list ?? []).some(v => v.state === "open" && v.actor === ch.id);
   const household = (ch.flags?.[MOD]?.household ?? []).length > 0;
-  const seat = (s?.institutions?.seatsOf?.(npc.id) ?? []).some(x => x.rank >= 2);
+  const seat = (s?.upkeep?.institutions?.seatsOf?.(npc.id) ?? []).some(x => x.rank >= 2);
   return {boon: owes, rumours: !!s?.rumours?.start, seat, venture: ventures, hunters: !!s?.hunters?.add, kin: household,
     violent: M.temperOf(npc.system?.nature) === "unforgiving"};
 }

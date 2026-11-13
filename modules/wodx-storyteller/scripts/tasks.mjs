@@ -86,7 +86,7 @@ export async function saveTask(a, data) {
   if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t); }
   // B3357: a new climb needs the successes for the rank it climbs to
   if ( !old && t.kind === "climb" && t.institution ) {
-    try { const I = game.modules.get(MOD).api.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
+    try { const I = game.modules.get(MOD).api.upkeep.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
   }
   await a.update({[`flags.${MOD}.tasks.${id}`]: t});
   return t;
@@ -282,7 +282,7 @@ export async function editTask(actorId = null, taskId = null) {
   const wk = Number(R.KINDS[t.kind].week) || 0;
   // B3357: the institutions to climb
   let insts = [];
-  try { insts = (game.modules.get(MOD)?.api?.institutions?.state?.()?.list ?? []).filter(i => !i.closed); } catch (e) { insts = []; }
+  try { insts = (game.modules.get(MOD)?.api?.upkeep?.institutions?.state?.()?.list ?? []).filter(i => !i.closed); } catch (e) { insts = []; }
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `${taskId ? "Change" : "New"} long task: ${a.name}`}, classes: ["wodx-dialog", "wst-task-edit"],
     content: `<div class="form-group"><label>Kind</label><select name="kind" data-fixed>${kinds}</select></div>
       <div class="form-group"><label>What it is</label><input type="text" name="name" value="${esc(taskId ? t.name : "")}" placeholder="A silver reliquary, the parish records, a fetish of the wolf"></div>
