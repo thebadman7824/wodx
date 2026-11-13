@@ -981,6 +981,12 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 |---|---|---|---|
 | 2026-11-13 | Realm maps follow the books' layout notes (B2632): the Tempest keeps Stygia at its heart though Wraith 20th sets the Labyrinth at the centre, and its travel times do not match the book's | Keep the Tempest and the Labyrinth as separate maps, as they are; in lore the Tempest surrounds the Labyrinth (B2633). Up is north and a book's above and below laid out across the map stand as built | Redraw the Tempest round the Labyrinth in realm-worlds-rules.mjs |
 
+## Approved by Ben, 13 November 2026, 13:12 UTC (face features desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Which of 110 drafted face features to build, how NPCs get them, when form features show, who sees hidden ones (B2800-B2804) | All as recommended: build all, 8 with the named changes; Storyteller ticks, else rolled from clan, kith, tribe or house; form features only in that state; hidden ones only to those the rules allow | See B2800-B2804 in docs/DECISIONS.md |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

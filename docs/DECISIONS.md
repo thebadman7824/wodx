@@ -129,6 +129,7 @@ Next free block: B2840
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2770-B2789 | Relationships across the centuries (parts 1 and 2): family lines, wills and estates by law, ties after a jump in time, bonds from the books (Ben approved the whole relationships desk) | NPC, Storyteller, Sheets, Actions |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
+| B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2810-B2839 | Relationships (parts 3 to 6): trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 <!-- decision-index:end -->
 
@@ -3733,6 +3734,32 @@ Reverse: Change viewerSees in face64.mjs.
 The face follows the health track with the ladder Ben approved for the portraits on 10 November 2026: no bandages; each level keeps the wounds before it and adds its own (a bruise, a nick over the brow, a black eye and split lip, an open cheek, bleeding nose and scalp, a second bruise and one eye swollen shut at Crippled, both eyes shut and the jaw slack at Incapacitated); pallor takes all the skin.
 
 Reverse: Take the health level out of the face in face64.mjs.
+
+## B2800. Features on the talking face (2026-11-13)
+WoDX Paperdoll 0.17.0. Ben asked (13 November 2026) for every facial feature a game line could have, from a book check, with invented ones put to a desk. The face features desk showed 110 drafts on faces of their own line; Ben approved every recommendation ("I like them. Proceed as you have recommended."), building 102 as drawn and 8 with the changes the desk named (a hat seated on the brow, darker veins of age, larger Setite scales, a tear drop, a lower topknot, soft shadow tendrils for the Lasombra, a veil that shows the forehead, a Firmament demon's extra eyes spread over brow and cheeks). The features live in face64-features.mjs; each is drawn in stages around the face's own (colours first, behind the head, on the skin, on the face, on top). Sources are tagged books, everyday or new on the desk; page references follow the PC book check.
+
+Reverse: Clear S.features (tick none and keep, or empty FEATURES).
+
+## B2801. How an NPC gets its features (2026-11-13)
+Ben's pick on the desk: the Storyteller ticks them (Actors menu, Talking face: features, with a search box), and an NPC with none ticked rolls them by seed from what its sheet names. A feature of a group the sheet names (clan, kith, tribe, breed, tradition, house) comes six times in ten; a changeling's kith mien and a shifter breed's look always; a ghoul's flush only when the sheet says ghoul; a line's general marks about one time in seven; everyday marks about one in sixteen, at most two; a wraith always bears exactly one deathmark, a metis one deformity, anyone at most one headwear. Spectacles are never rolled, only ticked, since they belong to some eras only.
+
+Reverse: Roll them by seed in the window, or change rollFeatures in face64-features.mjs.
+
+## B2802. Form and power features show only in that state (2026-11-13)
+Ben's pick on the desk. The Beast in the eyes and Garou Rage show in frenzy; Glabro's brow and teeth while the sheet's Glabro form is on; a demon's visage (Radiance halo, Firmament eyes, Forge iron, Patterns lines, Awakenings glow, horns, Torment eyes) while its apocalyptic form has risen in this scene and hour; tears of blood when the face grieves or fears. A demon shintai, a Paradox backlash and catharsis have no sheet field, so the Storyteller ticks them under Showing now.
+
+Reverse: Remove a feature's state in face64-features.mjs.
+
+## B2803. Who sees the hidden features (2026-11-13)
+Ben's pick on the desk: only those the rules let see them, and the Storyteller. A changeling kith's mien keeps to the fae sight of B2795; a hunter's Second Sight keeps to the imbued. Every other feature is plain flesh and shows to all.
+
+Reverse: Change viewerSees in face64.mjs or the mien() wrapper in face64-features.mjs.
+
+## B2804. The face still moves only at the eyes and mouth (2026-11-13)
+With any feature on, blinking and speaking change only the eyes, brows and mouth rows, so a feature never flickers while the face talks; tested for all 110.
+
+Reverse: None needed; a harness test guards it.
+
 ## B2770. Family lines that outlive the character (2026-11-13, relationships desk c1, Ben approved)
 WoDX NPC 0.55.0 (kin-rules.mjs, kin.mjs). A family line hangs from one character and starts from the mortal kin the Relationships tab knows (parent, child, sibling, spouse, kin). It is kept in the world setting wodx-npc.familyLines and grows when the clock jumps: members marry, have children and die by the life table of their century and way of life, and most never get a sheet. The family and lineage tree lists the living members with what each knows of the founder (an undying founder becomes a family story, then a likeness in a family Bible or photographs, then a legend). The Storyteller can bring any living member into play as a Mortal tied to the founder as Descendant and Ancestor.
 
