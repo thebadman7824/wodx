@@ -7,6 +7,7 @@
  * not touched.
  *   1. the modules: Otherworlds 0.21.0 or later with api.realmWorlds, Storyteller 0.57.3 or later
  *   2. every realm of the Realm maps catalogue has a map with places, and every place can be reached from the first
+ *      (from Otherworlds 0.22.0 the places include the catalogue's ways in and out and its located dangers)
  *   3. redraw rules: Pangaea is the same in 1197 and 2010, the Tempest changes with the Great Maelstrom of 1347,
  *      Flux changes with the visit, two Dark Kingdoms differ by name
  *   4. the pictures: every realm draws as an SVG, shrouded and whole; the closer look is the same twice
