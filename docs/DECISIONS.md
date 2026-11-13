@@ -113,7 +113,7 @@ Next free block: B2630
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 | B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
-| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region | Creation |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3375,3 +3375,7 @@ Reverse: clear the setting with "Keep these limits" and nothing marked, or retur
 ## B2622. Dated lifepath content for every region (2026-11-13, Ben: "Continue")
 Each of the 44 world regions has its own dated origins (open only in a span of birth years) and dated marks (offered when a life stage overlaps the years they happened), in WoDX's own words from general history, 1197 to 2022. Each mark is good, hard or neither, and at most one of each tone is put in front on a first draw, as for Moravia. The years after 2022 have no dated content yet. Files: modules/wodx-creation/data/lifepath-events-europe.mjs, -asia.mjs, -world.mjs.
 Reverse: remove a region's block from its file, or drop the Object.assign line in lifepath-local-events.mjs to keep Moravia only.
+
+## B2623. Lifepaths beyond Earth (2026-11-13, desk lp20)
+Orbit and the high colonies, the Moon and Mars are lands a lifepath can name, under a choice "Beyond Earth". They are not world regions of the chronicle (no weather, money or markets); they exist for lifepaths only (OFFWORLD in modules/wodx-creation/data/lifepath-drill.mjs). A land is open when the chronicle's own year is 2023 or later and the birth or stage year is no earlier than the land's first year: orbit 1999 (the year after the first townships are lifted), the Moon 2009 (after the war in orbit shows a colony there), Mars 2022 (after the first finished base). The years and the dated events follow WoDX's future timeline (docs/research/era-timelines/r3/future-darkness.txt). People born there are named with the Storyteller after their family's people on Earth.
+Reverse: remove the "Beyond Earth" row from CONTINENTS; lifepaths already written keep their text.

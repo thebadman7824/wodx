@@ -191,7 +191,7 @@ export class LifepathApp extends ApplicationV2 {
   /** GM: which regions and kinds of origin this chronicle's lifepaths may use. */
   #limitsHTML() {
     const L = limitsNow() ?? {regions: [], noBases: []};
-    const regions = D.continents().map(c => `<optgroup label="${esc(c.label)}">${c.regions.map(r => `<option value="${r.id}" ${L.regions.includes(r.id) ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</optgroup>`).join("");
+    const regions = D.allLands().map(c => `<optgroup label="${esc(c.label)}">${c.regions.map(r => `<option value="${r.id}" ${L.regions.includes(r.id) ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</optgroup>`).join("");
     const kinds = D.originKinds().map(k => `<label class="wodx-check"><input type="checkbox" name="limitBase" value="${k.key}" ${L.noBases.includes(k.key) ? "" : "checked"}> ${esc(k.label)}</label>`).join("");
     return `<details class="wodx-lp-limits"><summary>Limits for this chronicle (Storyteller)${L.regions.length || L.noBases.length ? ": set" : ""}</summary>
       <p class="wodx-quiet">Leave the regions unmarked to allow births anywhere. The chronicle's own land is always open. Hold Ctrl or Cmd to mark several.</p>
@@ -230,7 +230,7 @@ export class LifepathApp extends ApplicationV2 {
   #drillHTML() {
     const d = this.drill, info = D.stepsOf(d), step = D.current(d);
     const n = info.steps.filter(s => d.picks[s.id]).length;
-    const land = step.region ? WORLD_REGIONS[step.region]?.label ?? "" : "";
+    const land = step.region ? D.labelOf(step.region) : "";
     const span = step.stage ? `, age ${step.from}${step.to > step.from ? ` to ${step.to}` : ""}` : "";
     const gives = g => D.parseGives(g).map(x => esc(x.kind === "note" ? x.name : `${D.KINDS[x.kind]}: ${x.name}`)).join(", ");
     const opts = step.options.map(o => `<button type="button" class="wodx-lp-option" data-action="pick" data-id="${esc(o.id)}">
@@ -362,7 +362,7 @@ export class LifepathApp extends ApplicationV2 {
     const age = (s.line === "mortal" ? Math.max(yearNow(), birthYear) : turnYear) - birthYear;
     this.begun = {line: s.line, splat: s.splat, birthYear, turnYear};
     this.path = null;
-    this.drill = D.newDrill({birthYear, age, line: s.line, homeland: homeland(), seed: `${this.actor.id}:${foundry.utils.randomID(8)}`, limits: limitsNow()});
+    this.drill = D.newDrill({birthYear, age, line: s.line, homeland: homeland(), seed: `${this.actor.id}:${foundry.utils.randomID(8)}`, limits: limitsNow(), now: yearNow()});
     this.render();
   }
   static #onPick(event, target) {
