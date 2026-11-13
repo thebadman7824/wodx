@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.65.0 (Crafting and cookery by region (B3100-B3101): Cook, brew or mix and Make something show what is made in the land of the character's scene first, with a Lands choice for every land; missing ingredients are bought from what that land has)
 - 0.64.0 (the world map's Go makes a journey a trip: the clock moves on by its days, each day may bring a meeting on the road, the party is checked for food, water and sleep, and the scene in view takes the far end's part of the world (B2910); a dream can be tied to a power, a Merit or a Flaw and then comes by itself at the next day's sleep while the dreamer still has it, and the Nightmares Flaw rolls Willpower after each day's sleep, a failure costing a die until the next sleep (B2911); not deployed)
 - 0.63.0 (gossip along ties: the rumour mill passes rumours between NPCs who are friends, lovers, kin, allies, contacts or master and servant (WoDX NPC ties), a rumour keeps its source, its subject and how true it is, and each denial slows how fast it spreads)
 - 0.62.1 (the month's money run calls wodxMonthPaid so WoDX NPC can charge a household's keep; the README lists the wills files; a will rule's text is gender-neutral)
