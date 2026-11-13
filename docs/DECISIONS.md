@@ -108,6 +108,7 @@ Next free block: B2570
 | B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
+| B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 <!-- decision-index:end -->
 
 ## The decisions

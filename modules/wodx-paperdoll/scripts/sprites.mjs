@@ -36,7 +36,7 @@ function frame(name, f) {
 }
 
 function tick() {
-  if ( !canvas?.ready || !on() ) return;
+  if ( !globalThis.canvas?.ready || !on() ) return;
   const grid = canvas.grid?.size || canvas.dimensions?.size || 100, now = performance.now(), seen = new Set();
   for ( const token of canvas.tokens?.placeables ?? [] ) {
     const name = token.document?.flags?.[MOD]?.sprite;
@@ -57,7 +57,7 @@ export function startSprites() {
   ticking = true;
   Hooks.on("renderTokenHUD", addHudButton);
   Hooks.on("canvasReady", () => { states.clear(); canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
-  if ( canvas?.ready ) canvas.app?.ticker?.add(tick);
+  if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
 
 /** Give a placed token a sprite. The token keeps its old picture in a flag, so clear() can put it back. */
