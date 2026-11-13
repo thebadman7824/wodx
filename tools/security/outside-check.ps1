@@ -33,6 +33,6 @@ try {
 
 $file = Join-Path $Out ("outside-check-{0}.txt" -f (Get-Date -Format "yyyy-MM-dd"))
 $fails = ($lines | Where-Object { $_ -like "FAIL*" }).Count
-$lines.Insert(0, ("wodx.online outside check {0}: {1} of {2} passed" -f (Get-Date -Format "u"), ($lines.Count - $fails), $lines.Count))
+$lines.Insert(0, ("wodx.online outside check {0}: {1} of {2} passed" -f ((Get-Date).ToUniversalTime().ToString("u")), ($lines.Count - $fails), $lines.Count))
 $lines | Set-Content -Path $file -Encoding UTF8
 $lines | ForEach-Object { Write-Output $_ }
