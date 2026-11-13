@@ -176,6 +176,14 @@ test("coin of the place: money gone out of use there becomes a keepsake, and the
   sceneRegion = "moravia";
   assert.deepEqual(await M.arrival(tok), {home: true});
   assert.equal(a.flags[MOD].money.abroadIn, null);
+  // An unlinked token (its own synthetic actor) still reads and marks the base actor: one card for two tokens
+  sceneRegion = "japan"; chats.length = 0;
+  game.actors.get = id => game.actors.find(x => x.id === id);
+  const synth = () => ({...a, flags: {}, update: async () => { throw new Error("wrote the synthetic actor"); }});
+  assert.deepEqual(await M.arrival({actorId: a.id, actor: synth(), parent: scene}), {away: "ryo"});
+  assert.equal(await M.arrival({actorId: a.id, actor: synth(), parent: scene}), null);
+  assert.equal(chats.length, 1);
+  sceneRegion = "moravia"; await M.arrival(tok);
   // Changers off: no card
   sceneRegion = "japan"; settings.changers = false;
   assert.equal(await M.arrival(tok), null);
