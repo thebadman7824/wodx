@@ -17,6 +17,13 @@ import {fileURLToPath} from "node:url";
 export const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO = path.resolve(HERE, "../..");
 const SKIP = new Set(["LOCK", "LOG", "LOG.old", ".DS_Store", "Thumbs.db"]);
+/**
+ * Compendium packs are LevelDB folders. A running server compacts them on its own, rewriting CURRENT, MANIFEST-n,
+ * n.log and n.ldb with the same contents, so their bytes say nothing about drift. Their files are left out; the
+ * package version and every other file still count.
+ */
+const LEVELDB = /^(CURRENT|MANIFEST-\d+|\d+\.(log|ldb|sst))$/;
+export const isPackDb = rel => /(^|\/)packs\//.test(rel) && LEVELDB.test(rel.split("/").pop());
 
 export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lanes.json")) {
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
@@ -55,6 +62,7 @@ export function hashTree(root, cacheFile = null) {
       if ( e.isDirectory() ) { walk(full); continue; }
       if ( !e.isFile() ) continue;
       const rel = path.relative(root, full).split(path.sep).join("/");
+      if ( isPackDb(rel) ) continue;
       const st = fs.statSync(full);
       const c = cache[rel];
       const hash = (c && c.size === st.size && c.mtimeMs === st.mtimeMs) ? c.hash
