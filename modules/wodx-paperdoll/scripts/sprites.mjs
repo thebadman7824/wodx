@@ -417,10 +417,14 @@ export async function dress(scene = canvas.scene) {
   let n = 0;
   for ( const t of scene?.tokens ?? [] ) {
     const name = SR.ownName(t.actorId);
-    if ( t.flags?.[MOD]?.sprite || !SR.isOwn(name) ) continue;
+    if ( !SR.isOwn(name) ) continue;
+    // a token that already wears its own sprite is given it again only when its size is not the sprite's true size (B2618),
+    // which also mends tokens made from an actor whose prototype carried the sprite but not the size
+    const want = SR.squaresOf(name) ?? t.flags?.[MOD]?.spritePrevSize ?? null, has = t.flags?.[MOD]?.sprite;
+    if ( has && (has !== name || !want || (t.width === want.width && t.height === want.height)) ) continue;
     await give(t, name); n++;
   }
   return n;
 }
 
-export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
