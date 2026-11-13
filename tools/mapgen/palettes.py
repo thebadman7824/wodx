@@ -29,7 +29,7 @@ FLOOR_WORDS = {"living": r"Wood|Plank|Parquet|Carpet|Marble|Board", "sleep": r"W
 WALL_WORDS = {"medieval": r"PlasterWood|Wood|Stone|Log", "early": r"PlasterWood|Brick|Stone", "reform": r"Brick|Plaster|Stone",
               "industrial": r"Brick|Plaster", "republic": r"Brick|Plaster|stucco", "socialist": r"concrete|stucco|Plaster|simple",
               "modern": r"wall|concrete|Tyger", "future": r"hull|metal|Hivehall|interior|Bulkhead"}
-NOT_FLOOR = re.compile(r"Grate|Grill|Overlay|Shadow|Water|Snow|Slime|Rain|Hole|Spike|Roof|Fields|Background|transparent|Cracked|Damaged|Broken|Destroyed", re.I)
+NOT_FLOOR = re.compile(r"Grate|Grill|Overlay|Shadow|Water|Snow|Slime|Rain|Hole|Spike|Roof|Fields|Background|transparent|tileset|Cracked|Damaged|Broken|Destroyed", re.I)
 HOME = "moravia"
 _SET = 4                                               # assets a palette keeps for each piece
 
@@ -56,8 +56,12 @@ class Palette:
         return self.worths.get(asset_name, 1)
 
 
+ORDER = ["medieval", "early", "reform", "industrial", "republic", "socialist", "modern", "future"]
+
 def _fits(e, band, region):
-    if band not in e["bands"] and not e["lasting"]: return False
+    if band not in e["bands"]:
+        # a lasting thing (a barrel, a sack) carries on into later ages, never back into earlier ones
+        if not e["lasting"] or ORDER.index(band) < min(ORDER.index(b) for b in e["bands"]): return False
     regs = e.get("regions")
     return not regs or region in regs
 
@@ -93,10 +97,10 @@ def choose(year, region, wealth, rng, catalogue):
         if words:
             hit = lambda l: [e for e in l if re.search(words, e["name"], re.I)]
             styled = hit(styled) or hit(c) or styled
-        return rng.choice(styled)["name"] if styled else None
+        return rng.choice(styled)["path"] if styled else None
     wall = texture(("walls",), WALL_WORDS.get(band))
     floor = {k: texture(("patterns", "tilesets"), w) for k, w in FLOOR_WORDS.items()}
     door = texture(("portals",))
     lights = "rushlight" if band == "medieval" and wealth == "poor" else LIGHTS[band]
-    worths = {e["name"]: e["worth"] for v in sets.values() for e in v}
+    worths = {k: e["worth"] for v in sets.values() for e in v for k in (e["name"], e["path"])}
     return Palette((band, reg, wealth), sets, worths, wall, floor, door, lights, main)

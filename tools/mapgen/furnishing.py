@@ -102,7 +102,7 @@ def _drawn(entry, rect, piece, layer=100):
     rot = 1 if aw != ah and (w > h) != (aw > ah) else 0
     ew, eh = (ah, aw) if rot else (aw, ah)
     sc = max(.4, min(1.6, min(w / ew, h / eh)))
-    return {"asset": entry["name"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc, 3), "layer": layer, "piece": piece}
+    return {"asset": entry["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc, 3), "layer": layer, "piece": piece}
 
 
 def _place(room, sp, pal, R):
@@ -124,7 +124,7 @@ def _place(room, sp, pal, R):
             e = pal.pick(piece, R)
             if not e: continue
             b = base_item
-            it = {"asset": e["name"], "x": b["x"] + R.uniform(.05, max(.05, b["w"] - .45)), "y": b["y"] + R.uniform(.05, max(.05, b["h"] - .45)),
+            it = {"asset": e["path"], "x": b["x"] + R.uniform(.05, max(.05, b["w"] - .45)), "y": b["y"] + R.uniform(.05, max(.05, b["h"] - .45)),
                   "w": .4, "h": .4, "rot": 0, "scale": .45, "layer": 150, "spin": R.uniform(0, 6.28), "piece": piece}
             placed.append(it)
             if piece == "light": room.lights.append((it["x"] + .2, it["y"] + .2, LIGHT_RANGE.get(pal.lights, 3) - 1))
@@ -154,6 +154,7 @@ def _reskin(room, pal, R):
         if not e: continue
         d = _drawn(e, (it["x"], it["y"], it["w"], it["h"]), piece)
         it["draw"], it["draw_scale"], it["draw_rot"] = d["asset"], d["scale"], d["rot"]
+        it.setdefault("angle", math.pi / 2 if d["rot"] else 0.0)
 
 
 def _wall_lights(room, pal, tier, R):
@@ -164,7 +165,7 @@ def _wall_lights(room, pal, tier, R):
         side = R.choice("NSEW")
         cx = room.ix + room.iw * R.uniform(.25, .75) if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
         cy = room.iy + room.ih * R.uniform(.25, .75) if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
-        if e: room.dressing.append({"asset": e["name"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6, "layer": 400, "piece": "light"})
+        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6, "layer": 400, "piece": "light"})
         room.lights.append((cx, cy, rng))
 
 
@@ -215,3 +216,41 @@ def fill_room(room):
     finally:
         room.blocked = saved
         C.R = keep_R
+
+
+# ------------------------------------------------------------------ using it from the generators
+DEFAULT = {}           # set by a command line (--year...): every building furnished afterwards uses it
+_CATALOGUE = []
+USUAL_WEALTH = {"burgher-palace": "rich", "villa": "rich", "cdda-mansion": "rich", "grand-hotel": "rich", "baroque-house": "rich",
+                "func-villa": "rich", "town-hall": "rich", "savings-bank": "rich", "cdda-bank": "rich", "counting-house": "rich",
+                "cottage": "poor", "hut": "poor", "tenement": "poor", "ghetto-house": "poor", "byre-house": "poor", "lazar-house": "poor",
+                "colony-house": "poor", "panel-block": "middling"}
+FLOOR_KIND = {"kitchen": "kitchen", "store": "store", "worship": "worship", "sleep": "sleep", "study": "study", "outdoor": "outdoor",
+              "bath": "kitchen", "cell": "store", "work": "store"}
+
+
+def catalogue():
+    """The catalogue of every asset the map may use (ddcore.ASSETS, the lists given with --assets), built once."""
+    if not _CATALOGUE: _CATALOGUE.extend(K.build(C.ASSETS))
+    return _CATALOGUE
+
+
+def apply(b, year, region="moravia", wealth=None, trade=None, seed=0):
+    """Furnish a built building again by purpose, palette and room value: its rooms' dressing, its walls and floors.
+    The type's own furniture and the WoDX file do not change. b: a Building or an Angled one (its rooms are local)."""
+    local = getattr(b, "local", b)
+    wealth = wealth or getattr(b, "wealth", None) or USUAL_WEALTH.get(re.sub(r"--.*$", "", local.type or ""), "middling")
+    trade = trade or getattr(b, "trade", None)
+    ctx = context_for(local, year, region, wealth, trade, catalogue(), seed)
+    pal = None
+    for r in local.rooms:
+        r.ctx = ctx[r.name]; pal = r.ctx["palette"]
+        C.dress(r)
+        C.orient(r)
+        f = pal.floor.get(FLOOR_KIND.get(U.kind_of_name(r.name), "living"))
+        if f and r.floor not in (None, "earth"): r.floor = f
+    if pal and pal.wall:
+        b.wall_tex = pal.wall
+        if local is not b: local.wall_tex = pal.wall
+    b.palette = pal
+    return b

@@ -92,6 +92,12 @@ class PaletteTest(unittest.TestCase):
         pal = self.P.choose(1890, "moravia", "middling", random.Random(1), self.cat + [_e("Barrel_2.png", "store", ["medieval"], 1, "fa", lasting=True)])
         self.assertIsNotNone(pal.pick("store", random.Random(1)))
 
+    def test_lasting_never_goes_back(self):
+        import random
+        cat = self.cat + [_e("Crate_Modern.png", "store", ["modern"], 1, "tyger", lasting=True)]
+        pal = self.P.choose(1197, "moravia", "middling", random.Random(1), cat)
+        self.assertNotIn("Crate_Modern.png", [e["name"] for e in pal.sets.get("store", [])])
+
     def test_wealth_fallback(self):
         import random
         pal = self.P.choose(1197, "moravia", "noble", random.Random(1), self.cat)
@@ -114,8 +120,8 @@ class PaletteTest(unittest.TestCase):
     def test_walls_and_floors_from_band(self):
         import random
         pal = self.P.choose(1995, "moravia", "middling", random.Random(1), self.cat)
-        self.assertEqual(pal.wall, "modern_wall.png")
-        self.assertEqual(pal.floor["living"], "modern_wood_floor.png")
+        self.assertEqual(pal.wall.rsplit("/", 1)[-1], "modern_wall.png")
+        self.assertEqual(pal.floor["living"].rsplit("/", 1)[-1], "modern_wood_floor.png")
 
     def test_same_seed_same_palette(self):
         import random
@@ -291,7 +297,7 @@ class FillTest(unittest.TestCase):
 
     def test_era_contrast(self):
         lasting = {e["name"] for e in _cat() if e["lasting"]}
-        names = lambda b: {d.get("draw", d["asset"]) for r in b.rooms for d in r.dressing + r.items if d.get("layer", 100) in (50, 100)} - lasting
+        names = lambda b: {d.get("draw", d["asset"]).rsplit("/", 1)[-1] for r in b.rooms for d in r.dressing + r.items if d.get("layer", 100) in (50, 100)} - lasting
         a, c = names(_furnished("burgher-palace", 1197)), names(_furnished("burgher-palace", 1890))
         self.assertEqual(a & c, set())
 

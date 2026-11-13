@@ -28,6 +28,9 @@ def init(seed, asset_list):
     return R
 
 def asset(name, kind="objects"):
+    if "/textures/" in name:                       # a full path (the furnishing catalogue gives these)
+        USED.add(name.split("/")[0])
+        return "res://packs/" + name
     hits = [a for a in ASSETS if a.endswith("/" + name) and f"/textures/{kind}/" in a]
     if len(hits) > 1 and len({h.split("/")[0] for h in hits}) > 1:   # the same file in two packs: Forgotten Adventures first
         fa = [h for h in hits if h.split("/")[0] in PACKS]
@@ -363,6 +366,10 @@ def dress(room):
 SEATS = re.compile(r"Chair|Stool|Armchair|Couch|Sofa|Throne", re.I)
 INSET = re.compile(r"Brick_Oven_.*_2x2")     # drawn 2 squares wide and 1 deep in a 2 by 2 square
 NO_FACE = re.compile(r"Table|Desk|Counter|Rug_|Stairs|Stair|Barrel|Keg|Sack|Crate|Basket|Plant|Pot_|Tree|Bush|Hay|Bucket|Firewood|Lift|StairUp", re.I)
+
+def drawn(it):
+    """(asset, scale) to draw a room item with: the palette's piece when furnishing chose one, else its own."""
+    return it.get("draw", it["asset"]), it.get("draw_scale", it["scale"])
 
 def centre(it):
     """Where a piece's picture goes: the middle of its square, moved to its wall when the picture is shallower."""

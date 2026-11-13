@@ -15,6 +15,10 @@ import ddcore as C
 MEDIEVAL = ["dark-ages", "long-night", "renaissance"]
 FLOORS = {"planks": "Wooden_Flooring_H_Ashen.webp", "stone": "Stone_Tiles_A_03.webp", "earth": None}
 
+def floor_tex(f):
+    """The pattern texture for a room's floor: a named floor (planks, stone), or a palette's texture path."""
+    return FLOORS.get(f) if f in FLOORS else f
+
 OVEN = "Brick_Oven_Gray_A_Hot_2x2.webp"
 PIT = "Brick_Cooking_Pit_Gray_A_Hot_1x1.webp"
 FORGE = "Brick_Cooking_Pit_Gray_B_Hot_2x1.webp"
@@ -228,6 +232,8 @@ class Building:
 
     def furnish(self):
         for r in self.rooms: r.furnish()
+        import furnishing as F
+        if F.DEFAULT: F.apply(self, **F.DEFAULT)
         return self
 
 def place(key, type_key, x, y, facing="S", label=None, extra=None):
@@ -337,7 +343,11 @@ class Angled:
         return out
 
     def furnish(self):
-        self.local.furnish()
+        import furnishing as F
+        keep, F.DEFAULT = dict(F.DEFAULT), {}
+        try: self.local.furnish()
+        finally: F.DEFAULT.update(keep)
+        if F.DEFAULT: F.apply(self, **F.DEFAULT)
         return self
 
 

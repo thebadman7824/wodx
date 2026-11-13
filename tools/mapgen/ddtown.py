@@ -413,15 +413,15 @@ class Town:
         walls, patterns, objects, paths = [], [], [], []
         for b in self.blds:
             if not overlaps(b.rect, win): continue
-            walls.append(wall_with_portals(b.outline, b.t["wall"], b.openings, True))
-            for a, c in b.partitions: walls.append(wall_with_portals([a, c], b.t["wall"], b.openings, False))
+            walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True))
+            for a, c in b.partitions: walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False))
             for r in b.rooms:
-                if B.FLOORS.get(r.floor):
-                    patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.FLOORS[r.floor]))
+                if B.floor_tex(r.floor):
+                    patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))
                 objects.extend(C.dressing_objects(r, True))
                 for it in r.items:
                     rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
-                    objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
+                    objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
                 objects.extend(C.dressing_objects(r, False))
         for g in self.gardens:
             x, y, w, h = g["rect"]
