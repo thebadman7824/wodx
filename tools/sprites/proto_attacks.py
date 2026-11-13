@@ -115,10 +115,78 @@ def gait(walk,kind):
             fr=_lean(src,4,ux) if kind=='run' and ux else _move(src,0,-1 if f%4==1 else 0) if kind=='run' else _lean(_squash(src,.84),2,ux) if ux else _squash(src,.84)
             sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=fr
     return sh
-REACTS=('hit','dodge','fall'); GAITS=('run','sneak')
+def _fold(src,k):
+    """fold the legs: everything below the hip is pressed to k of its height and the body comes down with it (sitting, kneeling, in the saddle)"""
+    ys=np.nonzero(src[...,3].any(1))[0]
+    if not len(ys): return src.copy()
+    top=ys.min(); hip=int(top+(FEET-top)*.56); fr=np.zeros_like(src); legs=FEET-hip; n=max(1,int(round(legs*k))); drop=legs-n
+    for j in range(n+1): fr[FEET-j]=src[min(FEET,int(round(FEET-j/k)))] if int(round(FEET-j/k))>=hip else fr[FEET-j]
+    for y in range(top,hip):
+        if y+drop<SH: fr[y+drop]=src[y]
+    fr[FEET+1:]=src[FEET+1:]
+    return fr
+def _bubble(fr):
+    """a small speech mark by the head"""
+    ys,xs=np.nonzero(fr[...,3])
+    if not len(ys): return fr
+    out=fr.copy(); x0=int(min(S-11,xs[ys<ys.min()+10].max()+2)); y0=int(max(1,ys.min()-7))
+    out[y0:y0+6,x0:x0+9]=(238,236,228,255); out[y0,x0]=out[y0,x0+8]=out[y0+5,x0]=out[y0+5,x0+8]=0; out[y0+6,x0+1:x0+3]=(238,236,228,255)
+    for d in (2,4,6): out[y0+3,x0+d]=(40,40,48,255)
+    return out
+def pose(walk,kind,lunged=None):
+    """a six-frame sheet from the standing frame: 'sit' and 'kneel' (down and stay), 'search' (stoops and looks about), 'talk' (a nod and a speech mark),
+    'feed' (leans in to the vessel, a flush of red), 'shift' (the body blurs white as it changes form)"""
+    sh=np.zeros((4*SH,6*S,4),np.uint8)
+    for row in range(4):
+        ux,uy=DIRS[row]; src=_cell(walk,row,0)
+        ys,xs=np.nonzero(src[...,3]); wide=len(xs) and (xs.max()-xs.min())>(ys.max()-ys.min())*1.1
+        for i in range(6):
+            if kind in('sit','kneel'):
+                k=([1,.86,.7,.56,.48,.48] if kind=='sit' else [1,.9,.8,.7,.64,.64])[i]; fr=_squash(src,(1+k)/2) if wide else _fold(src,k)
+            elif kind=='search':
+                fr=_move(_squash(src,.85) if wide else _lean(_fold(src,.72),3,ux or (1 if i%2 else -1)),[0,-2,-2,2,2,0][i] if not ux else 0,0)
+            elif kind=='talk':
+                fr=_move(src,0,[0,-1,0,-1,0,0][i]); fr=_bubble(fr) if 1<=i<=4 and not wide else fr
+            elif kind=='feed':
+                fr=_cell(lunged,row,i) if lunged is not None else _lean(src,[0,2,5,6,6,3][i],ux)
+                if i in(3,4): t=np.nonzero(fr[...,3].any(1))[0]; m=np.zeros(fr.shape[:2],bool); m[t.min():t.min()+14]=True; m&=fr[...,3]>0; fr=fr.copy(); fr[m,:3]=(fr[m,:3]*.72+np.array((170,20,24))*.28).astype(np.uint8)
+            elif kind=='shift':
+                fr=_wash(_squash(src,[1,.96,.9,.94,.98,1][i]),(236,240,248),[.15,.5,.9,.9,.5,.15][i])
+                if i in(2,3): fr=np.maximum(fr,_move(fr,1,0)//2+_move(fr,-1,0)//2)
+            sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=fr
+    return sh
+def way(walk,kind):
+    """an eight-frame sheet from the walk: 'climb' (seen from behind, hand over hand), 'swim' (head and shoulders above the water),
+    'fly' (off the ground, a shadow below), 'ride' (legs folded in the saddle)"""
+    sh=np.zeros_like(walk)
+    for row in range(4):
+        ux,uy=DIRS[row]
+        for f in range(8):
+            src=_cell(walk,row,f)
+            if kind=='climb': fr=_move(_cell(walk,0,f),[0,1,0,-1,0,1,0,-1][f],[0,-2,-3,-2,0,-2,-3,-2][f])
+            elif kind=='ride': fr=_fold(_cell(walk,row,0),.62)
+            elif kind=='fly':
+                fr=_move(_lean(src,3,ux),0,-12+(1 if f%4>1 else 0)); xs=np.nonzero(src[...,3].any(0))[0]
+                if len(xs):
+                    cx=(xs.min()+xs.max())//2; w=max(5,(xs.max()-xs.min())//3)
+                    for y,ww in((FEET-1,w-2),(FEET,w),(FEET+1,w-2)):
+                        seg=fr[y,cx-ww:cx+ww+1]; e=seg[...,3]==0; seg[e]=(10,10,16,90)
+            elif kind=='swim':
+                fr=np.zeros_like(src); ys=np.nonzero(src[...,3].any(1))[0]
+                if len(ys):
+                    top=ys.min(); tall=FEET-top; wide=np.nonzero(src[...,3].any(0))[0]; flat=(wide.max()-wide.min())>tall*1.1
+                    line=int(top+tall*(.62 if flat else .4)); drop=FEET-line-2+(1 if f%4>1 else 0); part=_lean(src,2,ux); part[line:]=0; fr=_move(part,0,drop)
+                    x0,x1=max(0,wide.min()-3),min(S-1,wide.max()+3)
+                    for x in range(x0,x1+1):
+                        if (x+f)%4<2: fr[FEET-1,x]=(150,190,214,200)
+                        if (x+f+2)%5<2: fr[FEET+1,x]=(96,140,176,170)
+            sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=fr
+    return sh
+REACTS=('hit','dodge','fall'); GAITS=('run','sneak'); POSES=('sit','kneel','search','talk','feed','shift'); WAYS=('climb','swim','fly','ride')
 def extras(walk,death='die'):
     """every sheet a sprite gets beyond its walk and its attacks; death is how it dies: 'die', 'ash' or 'fade', always saved as die"""
-    out={k:react(walk,k) for k in REACTS}; out['die']=react(walk,death); out.update({g:gait(walk,g) for g in GAITS}); return out
+    out={k:react(walk,k) for k in REACTS}; out['die']=react(walk,death); out.update({g:gait(walk,g) for g in GAITS})
+    out.update({k:pose(walk,k) for k in POSES}); out.update({k:way(walk,k) for k in WAYS}); return out
 DEATHS={'kindred-elder-1888':'ash'}
 if __name__=='__main__':
     out=sys.argv[1].rstrip('/')+'/'

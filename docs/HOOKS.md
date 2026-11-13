@@ -22,8 +22,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxDreamingGate | otherworlds | storyteller (the crossing log) |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place), npc (passers-by scatter), storyteller (a fight goes in the log for the pacing note) |
 | wodxFirstNightSigned | creation | chronicle (the owner gets the opening goals to pick) |
-| wodxFed | actions | npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
-| wodxFormChanged | actions | actions |
+| wodxFed | actions | paperdoll (a sprite token leans in to feed), npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
+| wodxFormChanged | actions | actions, paperdoll (a sprite token blurs as it changes) |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
 | wodxItemsTaken | interactables | chronicle (feeds a Ravnos vice of theft), storyteller (marks things taken from someone else's container as stolen) |

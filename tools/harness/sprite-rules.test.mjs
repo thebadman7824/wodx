@@ -152,11 +152,11 @@ test("reactions, deaths and ways of going (B2588)", async () => {
     assert.ok(!SR.REACTS.includes(SR.actOf(name, null)), "the move played by default is an attack");
     assert.ok(!SR.REACTS.includes(SR.moveFor(name, {weapon: "Club"})));
   }
-  assert.ok(SR.HOLD.every(m => SR.REACTS.includes(m)));
+  assert.ok(SR.HOLD.every(m => SR.REACTS.includes(m) || SR.STAY.includes(m)));
   assert.equal(SR.gaitFor("lady-1888", {action: "crawl"}), "sneak");
   assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 9}), "run");
   assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 3}), null);
-  assert.equal(SR.gaitFor("lady-1888", {action: "fly", squares: 9}), null);
+  assert.equal(SR.gaitFor("lady-1888", {action: "fly", squares: 9}), "fly");
   assert.equal(SR.gaitFor("nobody", {action: "crawl"}), null);
   assert.equal(SR.rosterOf({id: "v", name: "V", type: "Vampire"}).death, "ash");
   assert.equal(SR.rosterOf({id: "w", name: "W", type: "Wraith"}).death, "fade");
@@ -176,4 +176,29 @@ test("the roster lists only real things: no merits, no teeth or claws, and it ca
   assert.deepEqual(r.worn, ["Mail Haubergeon", "Travelling Cloak"]);
   assert.deepEqual(r.held, ["Arming Sword"]);
   assert.equal(r.year, 1230); assert.equal(r.look.beard, true);
+});
+
+test("poses and more ways of going (B2610, B2611)", async () => {
+  const {existsSync} = await import("node:fs");
+  for ( const name of ["kindred-elder-1888", "garou-homid", "garou-crinos", "garou-lupus", "townsman-1888", "lady-1888"] ) {
+    for ( const m of [...SR.POSES, ...SR.GAITS] ) assert.ok(existsSync(new URL(`../../${SR.actPath(name, m)}`, import.meta.url)), `${name}.${m}`);
+    for ( const m of SR.POSES ) assert.ok(SR.hasAct(name, m) && SR.ACT_LABELS[m] && SR.isOwnMove(m), `${name} ${m}`);
+    assert.ok(!SR.isOwnMove(SR.actOf(name, null)), "the move played by default is still an attack");
+  }
+  assert.ok(SR.STAY.every(m => SR.HOLD.includes(m) && SR.POSES.includes(m)));
+  assert.equal(SR.gaitFor("townsman-1888", {action: "swim"}), "swim");
+  assert.equal(SR.gaitFor("townsman-1888", {action: "climb", squares: 9}), "climb");
+  assert.equal(SR.gaitFor("townsman-1888", {action: "walk", riding: true}), "ride");
+  assert.equal(SR.gaitFor("townsman-1888", {action: "crawl", riding: true}), "ride");
+  assert.equal(SR.gaitFor("nobody", {action: "swim"}), null);
+  // a slow move takes longer over the same six frames
+  assert.equal(SR.actFrame(SR.ACT_TOTAL + 1), null);
+  assert.notEqual(SR.actFrame(SR.ACT_TOTAL + 1, "search"), null);
+  assert.equal(SR.actFrame(SR.ACT_TOTAL * 2.6 + 1, "search"), null);
+  // a batch's manifest may name the new sheets
+  SR.learn("worlds/x/wodx-sprites", {sprites: {abc: {name: "A", key: "1f", acts: ["swing", "sit", "talk", "nonsense"], gaits: ["run", "swim", "ride", "hop"]}}});
+  assert.ok(SR.hasAct("own-abc", "sit") && SR.hasAct("own-abc", "talk") && !SR.hasAct("own-abc", "nonsense"));
+  assert.equal(SR.gaitFor("own-abc", {action: "swim"}), "swim");
+  assert.equal(SR.gaitFor("own-abc", {action: "fly"}), null);
+  SR.learn("worlds/x/wodx-sprites", {sprites: {}});
 });

@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 13;
+const N = 14;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -155,6 +155,21 @@ export async function run() {
       await sleep(600); const dodge = A.playing(la.id)?.act; await sleep(1200);
       ok("13. reactions", hit === "hit" && hitOver && down?.act === "fall" && down?.held === true && flag === true && rose && up && dead?.act === "die" && dead?.held === true && dodge === "dodge" && !A.playing(el.id) && !A.playing(la.id),
         {hit, hitOver, down: down ? {act: down.act, held: !!down.held} : null, flag, rose, up, dead: dead ? {act: dead.act, held: !!dead.held} : null, dodge, combat: game.modules.get("wodx-combat")?.version});
+    }
+    // 14. more moves: a pose stays until the figure stands or walks off, a spoken line and a slow move play, and the sheet follows the way of going
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888"), la = by("lady-1888");
+      await A.play(tm, "sit"); await sleep(1500); const sat = A.playing(tm.id), flag = tm.flags?.["wodx-paperdoll"]?.act;
+      const x0 = tm.x; await tm.update({x: x0 + canvas.grid.size}); await sleep(1500); const upByWalking = !tm.flags?.["wodx-paperdoll"]?.act?.hold;
+      await tm.update({x: x0}); await sleep(1200);
+      await A.play(tm, "kneel"); await sleep(1500); const knelt = A.playing(tm.id); const rose = await A.rise(tm); await sleep(400);
+      await A.play(la, "search"); await sleep(1000); const slow = A.playing(la.id)?.act; await sleep(1500); const over = !A.playing(la.id);
+      const said = await ChatMessage.create({content: "A word in the dark.", speaker: ChatMessage.getSpeaker({token: la}), style: CONST.CHAT_MESSAGE_STYLES.IC}); await sleep(500);
+      const talk = A.playing(la.id)?.act; await sleep(1500); await said?.delete();
+      Hooks.callAll("wodxFed", {by: {uuid: tm.actor.uuid}, vessel: {uuid: la.actor.uuid}, drunk: 1}); await sleep(500); const feed = A.playing(tm.id)?.act; await sleep(2000);
+      const ways = ["swim", "climb", "fly"].map(a => SR.gaitFor("townsman-1888", {action: a})), ride = SR.gaitFor("townsman-1888", {riding: true});
+      ok("14. more moves", sat?.act === "sit" && sat?.held === true && flag?.hold === true && upByWalking && knelt?.act === "kneel" && rose && slow === "search" && over && talk === "talk" && feed === "feed" && ways.join() === "swim,climb,fly" && ride === "ride",
+        {sat: sat ? {act: sat.act, held: !!sat.held} : null, flag, upByWalking, knelt: knelt ? {act: knelt.act, held: !!knelt.held} : null, rose, slow, over, talk, feed, ways, ride, version: game.modules.get("wodx-paperdoll")?.version});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
