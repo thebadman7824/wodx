@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2810
+Next free block: B2950
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -129,6 +129,7 @@ Next free block: B2810
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
+| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3758,3 +3759,27 @@ With any feature on, blinking and speaking change only the eyes, brows and mouth
 
 Reverse: None needed; a harness test guards it.
 
+## B2900. Aura Perception shows only what a reading showed (2026-11-13)
+Display-Only Systems Desk item k1, Ben's pick: deepen. With Aura Perception in use, a ring shows round a creature only after the character has Read the Soul of that token (WoDX Otherworlds, Perception + Empathy at difficulty 8), and only as much as the successes showed: one success the shade alone (pale or bright), two or more the colour. A botch shows a false colour. A reading holds for one hour of game time. World setting "Aura Perception needs Read the Soul", on by default. Lifesight is unchanged.
+
+Reverse: Turn the setting off, or change AURA_READ_SECONDS and ringFor in wodx-senses/scripts/sight-rules.mjs.
+
+## B2901. Loud noise overwhelms Heightened Senses (2026-11-13)
+Desk item k1. The book warns that sudden loud noise or bright light can overwhelm heightened senses (page to pin in the book check). House reading: a loud noise from Interactables heard by the character, or a gun fired within 30 yards, gives the Storyteller a card asking for Willpower at difficulty 6; a failure leaves the character stunned and deafened for one turn. World setting "Loud noise overwhelms Heightened Senses", on by default.
+
+Reverse: Turn the setting off, or change OVERLOAD and GUN in sight-rules.mjs.
+
+## B2902. A crippled part counts on the attack (2026-11-13)
+Desk item c3. The Crippled effect from the maiming card used to state +2 difficulty without applying it. Attacks now add it (VtDA20 p. 348): an arm or hand for weapons, fists, claws and throws, a leg for kicks; bites are not affected.
+
+Reverse: Return 0 from crippledAttackDiff in wodx-combat/scripts/body-rules.js.
+
+## B2903. Wounds that add up to a maiming (2026-11-13)
+Desk item c3. When the lethal and aggravated levels recorded on one part reach three, the same three a single maiming blow needs (B1204), the Storyteller gets the same offer once for that part. The Crippled effect comes off by itself when the part's lethal and aggravated levels have healed, and the part can be offered again later. House rule, with hit locations on.
+
+Reverse: Return null from addedUpOffer in body-rules.js; delete the healCrippled hook in body.js to keep effects until removed by hand.
+
+## B2904. Living tiles switch walls, doors and lights (2026-11-13)
+Desk item t4. A living tile's rule has "While it holds, also": walls inside its square block movement and sight, doors inside it are locked, or lights inside it are on. When the rule stops holding they open, unlock or go out; a door that WoDX did not lock is left alone.
+
+Reverse: Set "While it holds, also" to "Nothing else" on the tile.

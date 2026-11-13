@@ -23,6 +23,14 @@ export function registerSight() {
     name: "Words under the sight rings", hint: "Each Aura Perception or Lifesight ring on my map says what it shows (pale, bright and wild, sparkling ...), so the colour is never the only sign.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
   });
+  game.settings.register(MOD, "auraNeedsRead", {
+    name: "Aura Perception needs Read the Soul", hint: "A ring shows round a creature only after the character has read that token's soul (WoDX Otherworlds), and only as much as the successes showed. A reading holds for an hour of game time. Off: every creature in view shows its ring.",
+    scope: "world", config: true, type: Boolean, default: true, onChange: () => drawSight()
+  });
+  game.settings.register(MOD, "overload", {
+    name: "Loud noise overwhelms Heightened Senses", hint: "When a character with Heightened Senses in use hears a loud noise or a gun fired near them, the Storyteller gets a card asking for a Willpower roll.",
+    scope: "world", config: true, type: Boolean, default: true
+  });
 }
 /** Is this player's colour-blind palette on? Other WoDX modules read it through the Senses api. */
 export const colourSafe = () => !!setting("colourSafe");
@@ -66,9 +74,10 @@ export function drawSight() {
       for ( const c of [...layer.children] ) c.destroy();
       if ( !sight || !S.SIGHTS[sight].rings ) return;
       const safe = !!setting("colourSafe"), words = setting("ringWords") !== false;
+      const needsRead = sight === "aura" && setting("auraNeedsRead") !== false, reads = a?.flags?.[MOD]?.auraReads ?? {};
       for ( const t of canvas.tokens?.placeables ?? [] ) {
         if ( !t.actor || !t.isVisible || t.actor === a ) continue;
-        const ring = S.ringFor(sight, profileOf(t.actor), {safe});
+        const ring = S.ringFor(sight, profileOf(t.actor), {safe, needsRead, read: needsRead ? S.readFor(reads, t.document?.id, game.time.worldTime) : null});
         if ( !ring ) continue;
         const rad = Math.max(t.w, t.h) * 0.58;
         layer.lineStyle(Math.max(safe ? 4 : 3, t.w / (safe ? 10 : 14)), ring.colour, ring.alpha);
@@ -86,8 +95,46 @@ export function drawSight() {
   }, 150);
 }
 
+/** 0.10.0: keep a Read the Soul result on the reader, for the aura rings (B2900). Runs on the reader's client. */
+export async function noteAuraRead({reader, token, successes = 0, botch = false} = {}) {
+  const a = reader?.actor ?? reader;
+  if ( !a?.isOwner || !token ) return null;
+  const now = game.time.worldTime;
+  const reads = S.pruneReads({...(a.flags?.[MOD]?.auraReads ?? {}), [token]: {n: Math.max(0, Number(successes) || 0), botch: !!botch, at: now}}, now);
+  await a.update({[`flags.${MOD}.-=auraReads`]: null}, {render: false});
+  await a.update({[`flags.${MOD}.auraReads`]: reads});
+  return reads[token] ?? null;
+}
+
+/** 0.10.0: Heightened Senses overwhelmed by a loud noise or a gun (B2901). The active Storyteller's client only. */
+async function overload(tokens, why) {
+  if ( setting("overload") === false || !(game.user?.isGM && game.users?.activeGM?.id === game.user.id) ) return;
+  const hit = [...new Set(tokens)].filter(t => t?.actor && sightOf(t.actor) === "heightened");
+  if ( !hit.length ) return;
+  const gms = game.users.filter(u => u.isGM).map(u => u.id);
+  const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;");
+  await ChatMessage.create({whisper: gms, speaker: {alias: "WoDX Senses"},
+    content: `<div class="wodx-card"><h3>Senses overwhelmed</h3><p class="wodx-quiet">${esc(why)}</p>${hit.map(t => `<p>${esc(S.overloadText(t.name))}</p>`).join("")}</div>`});
+}
+function near(a, b, units) {
+  const g = canvas?.grid?.distance || 5, px = canvas?.grid?.size || 100;
+  return Math.hypot(a.center.x - b.center.x, a.center.y - b.center.y) / px * g <= units;
+}
+
 export function setupSight(helpers) {
   H = helpers;
+  Hooks.on("wodxAuraRead", ev => { noteAuraRead(ev).then(() => drawSight()).catch(e => console.warn(`${MOD} | aura read`, e)); });
+  Hooks.on("wodxInteractablesNoise", ev => {
+    if ( !S.overwhelms(ev) || canvas?.scene?.id !== ev?.scene ) return;
+    const toks = (ev.heard ?? []).map(u => { try { return fromUuidSync(u)?.object ?? null; } catch (e) { return null; } });
+    overload(toks, "A loud noise nearby.");
+  });
+  Hooks.on("wodxAttackRolled", (attacker, ev = {}) => {
+    if ( !S.overwhelms(ev) || !canvas?.ready ) return;
+    let src = null; try { src = ev.attackerToken ? fromUuidSync(ev.attackerToken)?.object : null; } catch (e) { src = null; }
+    if ( !src ) return;
+    overload((canvas.tokens?.placeables ?? []).filter(t => t !== src && near(t, src, S.OVERLOAD.near)), `${attacker?.name ?? "Someone"} fires ${ev.weapon || "a gun"}.`);
+  });
   for ( const h of ["controlToken", "canvasReady", "updateToken", "createToken", "deleteToken", "sightRefresh"] ) Hooks.on(h, () => drawSight());
   Hooks.on("updateActor", (a, ch) => { if ( ch?.flags?.[MOD] !== undefined || a === myCharacter() ) drawSight(); });
   Hooks.on("getSceneControlButtons", controls => {

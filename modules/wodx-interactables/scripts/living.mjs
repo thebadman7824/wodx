@@ -51,13 +51,40 @@ export async function syncOne(tile, ctx) {
   if ( !rule ) return null;
   const on = L.holds(rule, {...ctx, caravan: (ctx.caravans ?? []).includes(tile.parent?.id)});
   const ch = L.changeFor(rule, on, {hidden: tile.hidden, src: tile.texture?.src ?? null, base: flagsOf(tile).livingBase ?? null});
-  if ( !Object.keys(ch).length ) return null;
+  const linked = await syncLinked(tile, L.cleanRule(rule).also, on);
+  if ( !Object.keys(ch).length ) return linked ? {tile: tile.id, scene: tile.parent?.id, on, linked} : null;
   const update = {};
   if ( "hidden" in ch ) update.hidden = ch.hidden;
   if ( ch.src ) update["texture.src"] = ch.src;
   if ( ch.base ) update[`flags.${MOD}.livingBase`] = ch.base;
   await tile.update(update, {wodxArt: true, wodxLiving: true});
-  return {tile: tile.id, scene: tile.parent?.id, on, ...ch};
+  return {tile: tile.id, scene: tile.parent?.id, on, ...ch, linked};
+}
+
+/** 0.38.0 (B2904): walls, doors and lights in the tile's square follow the rule. Returns how many changed. */
+async function syncLinked(tile, also, on) {
+  if ( !also || also === "none" || !tile.parent ) return 0;
+  const rect = {x: tile.x, y: tile.y, width: tile.width, height: tile.height};
+  const K = {NORMAL: CONST.WALL_SENSE_TYPES?.NORMAL ?? 20, NONE: CONST.WALL_SENSE_TYPES?.NONE ?? 0,
+    CLOSED: CONST.WALL_DOOR_STATES?.CLOSED ?? 0, LOCKED: CONST.WALL_DOOR_STATES?.LOCKED ?? 2};
+  const walls = [], lights = [];
+  if ( also === "block" || also === "lock" ) for ( const w of tile.parent.walls ?? [] ) {
+    if ( !L.wallInside(w.c, rect) ) continue;
+    const ch = L.linkedChange(also, on, "wall", {door: w.door, move: w.move, sight: w.sight, ds: w.ds, wodxLocked: !!w.flags?.[MOD]?.livingLocked}, K);
+    if ( !ch ) continue;
+    const u = {_id: w.id};
+    if ( "move" in ch ) { u.move = ch.move; u.sight = ch.sight; }
+    if ( "ds" in ch ) { u.ds = ch.ds; u[`flags.${MOD}.livingLocked`] = ch.wodxLocked; }
+    walls.push(u);
+  }
+  if ( also === "light" ) for ( const l of tile.parent.lights ?? [] ) {
+    if ( !L.inside({x: l.x, y: l.y}, rect) ) continue;
+    const ch = L.linkedChange(also, on, "light", {hidden: l.hidden}, K);
+    if ( ch ) lights.push({_id: l.id, ...ch});
+  }
+  if ( walls.length ) await tile.parent.updateEmbeddedDocuments("Wall", walls, {wodxLiving: true});
+  if ( lights.length ) await tile.parent.updateEmbeddedDocuments("AmbientLight", lights, {wodxLiving: true});
+  return walls.length + lights.length;
 }
 
 /** Look at every living tile. force: even when the moment has not changed, or the world is held. */
@@ -97,6 +124,7 @@ export function livingConfigHtml(tile) {
     <div class="form-group stacked"><label>When</label><div class="form-fields wix-living-conds">${conds}</div></div>
     ${field("A dated event", `${events.length > 5 ? searchBox(".wix-living select[name$='living.event']", "Search events…", "Search events") : ""}<select name="${p}.event">${evOpts}</select><select name="${p}.eventWhen" data-fixed><option value="after"${r.eventWhen === "after" ? " selected" : ""}>after it</option><option value="before"${r.eventWhen === "before" ? " selected" : ""}>before it</option></select>`)}
     ${field("Years", `<input type="number" name="${p}.from" value="${r.from ?? ""}" placeholder="From"> <input type="number" name="${p}.to" value="${r.to ?? ""}" placeholder="To">`, "Both included; leave either empty.")}
+    ${field("While it holds, also", `<select name="${p}.also" data-fixed>${Object.entries(L.ALSO).map(([k, v]) => `<option value="${k}"${k === r.also ? " selected" : ""}>${esc(v)}</option>`).join("")}</select>`, "Walls, doors or lights that lie inside this tile's square. Draw them over the stalls, the church door or the lanterns.")}
     ${field("Picture while it holds", `<input type="text" name="${p}.art" value="${esc(r.art ?? "")}" placeholder="Path to a file"><button type="button" class="wix-pick" data-target="${p}.art" data-type="image" title="Browse"><i class="fa-solid fa-file-import"></i></button>`, "For \"Changes picture\". Night pictures for night maps.")}
     <p class="hint">${esc(L.ruleWords(r, id => events.find(e => e.id === id)?.name ?? id))}</p>
   </fieldset>`;

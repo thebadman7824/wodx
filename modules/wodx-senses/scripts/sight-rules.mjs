@@ -53,10 +53,49 @@ export const SAFE = {
   wraith: 0x0072b2, spirit: 0x0072b2, mortal: 0xe69f00, hunter: 0xe69f00, life: 0x009e73
 };
 export const LIFE = {colour: 0xffb347, alpha: 0.6, words: "alive"};
-/** The ring a token gets under a sight: {colour, alpha, words} or null. safe: the colour-blind palette. */
-export function ringFor(sight, profile, {safe = false} = {}) {
+/**
+ * 0.10.0 (B2900): Aura Perception needs a reading. A ring shows round a creature only after the character has Read
+ * the Soul of that token (WoDX Otherworlds, Perception + Empathy at difficulty 8; the steps are V20 Dark Ages p. 195), and only as much as the successes showed: one success the shade alone, two or more the colour. A botched
+ * reading shows a false colour. A reading holds for an hour of game time, then the character must look again.
+ */
+export const AURA_READ_SECONDS = 3600;
+const PALE = new Set(["kindred", "ghoul", "wraith", "spirit"]);
+/** The last reading of this token that still holds: {n, botch, at} or null. reads: {[tokenId]: {n, botch, at}}. */
+export function readFor(reads, tokenId, now) {
+  const r = reads?.[tokenId];
+  if ( !r || typeof r !== "object" ) return null;
+  const at = Number(r.at), t = Number(now);
+  if ( Number.isFinite(at) && Number.isFinite(t) && (t < at || t - at > AURA_READ_SECONDS) ) return null;
+  if ( r.botch ) return {n: 0, botch: true, at};
+  const n = Math.max(0, Math.min(5, Math.round(Number(r.n) || 0)));
+  return n ? {n, botch: false, at} : null;
+}
+/** What a botched reading shows instead: the living look like the dead and the dead like the living. */
+export const falseProfile = p => PALE.has(p) ? "mortal" : "kindred";
+/** Keep at most `max` readings, the newest. */
+export function pruneReads(reads = {}, now, max = 40) {
+  const live = Object.entries(reads ?? {}).filter(([k]) => readFor(reads, k, now));
+  live.sort((a, b) => (Number(b[1].at) || 0) - (Number(a[1].at) || 0));
+  return Object.fromEntries(live.slice(0, max));
+}
+
+/**
+ * The ring a token gets under a sight: {colour, alpha, words} or null. safe: the colour-blind palette.
+ * needsRead (0.10.0): Aura Perception shows only what `read` (from readFor) showed; false gives every ring as before.
+ */
+export function ringFor(sight, profile, {safe = false, needsRead = false, read = null} = {}) {
   const kind = SIGHTS[sight]?.rings;
   let r = null;
+  if ( kind === "aura" && needsRead ) {
+    if ( !read ) return null;
+    if ( read.botch ) profile = falseProfile(profile);
+    else if ( read.n === 1 ) {
+      const pale = PALE.has(profile);
+      r = {colour: pale ? 0xdcdce6 : 0xfff1c9, alpha: 0.4, words: pale ? "pale" : "bright", key: pale ? "kindred" : "mortal"};
+      if ( safe ) r = {...r, colour: SAFE[r.key], alpha: 0.6};
+      return r;
+    }
+  }
   if ( kind === "aura" ) r = AURAS[profile] ? {...AURAS[profile], key: profile} : {...AURAS.mortal, key: "mortal"};
   else if ( kind === "life" ) r = ["kindred", "wraith", "spirit"].includes(profile) ? null : {...LIFE, key: "life"};
   if ( r && safe ) r = {...r, colour: SAFE[r.key] ?? r.colour, alpha: Math.max(0.6, r.alpha)};
@@ -65,3 +104,18 @@ export function ringFor(sight, profile, {safe = false} = {}) {
 
 /** Hex colour as CSS ("#rrggbb"). */
 export const css = n => `#${(Number(n) >>> 0).toString(16).padStart(6, "0").slice(-6)}`;
+
+/**
+ * 0.10.0 (B2901): Heightened Senses can be overwhelmed. V20 warns that a sudden loud noise or bright flash can stun a
+ * character whose senses are heightened (page to pin in the book check). House reading: a loud noise heard, or a gun
+ * fired near them, calls for Willpower at difficulty 6; a failure leaves them stunned and deafened for one turn.
+ */
+/** near: how far a gunshot overwhelms, in the scene's own units (yards or metres on most maps). */
+export const OVERLOAD = {difficulty: 6, turns: 1, near: 30};
+export const GUN = /\b(gun|handgun|pistol|musket|rifle|arquebus|harquebus|caliver|carbine|petronel|revolver|shotgun|blunderbuss|hand ?cannon|cannon|culverin|matchlock|wheellock|flintlock|derringer|smg|submachine|machine ?gun|assault rifle|firearm)\b/i;
+/** Does this event overwhelm heightened senses? ev {noise} or {weapon, ranged}. */
+export function overwhelms(ev = {}) {
+  if ( ev.noise === "loud" ) return true;
+  return !!(ev.ranged && GUN.test(String(ev.weapon ?? "")));
+}
+export const overloadText = name => `${name}'s heightened senses are hit by the noise. Willpower at difficulty ${OVERLOAD.difficulty}: on a failure ${name} is stunned and deafened for ${OVERLOAD.turns} turn (the senses stay heightened).`;
