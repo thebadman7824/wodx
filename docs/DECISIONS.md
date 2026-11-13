@@ -161,7 +161,8 @@ Next free block: B3470
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
-| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
+| B3260-B3269 | Off-screen lives of supernatural NPCs, gate fixes (used B3260-B3267) | NPC |
+| B3270-B3279 | Spreading Wyrm corruption across places and people (used B3270-B3277) | Otherworlds, Storyteller |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
@@ -171,6 +172,7 @@ Next free block: B3470
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 <!-- decision-index:end -->
 
@@ -4954,6 +4956,51 @@ WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the worl
 
 Reverse: clear the brood setting.
 
+## B3267. An unfilled Path counts as 7 (2026-11-13)
+WoDX NPC, fates.mjs. A new Vampire sheet has Path and Humanity at 0 until someone fills them in. Read as 0, the torpor table (V20 pdf p. 291) would put such an NPC to sleep for a millennium, so off-screen lives take a 0 as the usual 7. A true rating of 0 is a vampire lost to the Beast and is rare among NPCs in play.
+
+Reverse: drop the `v > 0` test in personOf.
+
+## B3270. Corruption of a place: a level 0 to 10 in five bands (2026-11-13)
+WoDX Otherworlds. A tracked scene holds a corruption level: clean (0), tainted (1-3), blighted (4-6), foul (7-9) and hellhole (10). The bands follow W20's picture of the Penumbra, where pollution and misery stain the spirit landscape and Wyrm-spirits breed until culled (pdf p. 314, printed 312), and of Blights and Hellholes, which can outlast the clean-up of the place they mirror (pdf p. 316-317, printed 314-315). A Hellhole never drops below 7 again. The level and band are a house reading. Scene flag `wodx-otherworlds.corruption`; only scenes the Storyteller sets up take part.
+
+Reverse: stop tracking the place in the Wyrm corruption window, or switch the setting off.
+
+## B3271. A weekly turn: sources feed it, Banes breed, unfed taint fades slowly (2026-11-13)
+WoDX Otherworlds. Once a week of world time (and after a time skip, ten years at most) each source adds weight: Bane nest 2, cult 1, Black Spiral hive 3, tainted works 1, place of suffering 1 (for a year and a day), Pentex concern 2 (from 1913, the year the WoDX timeline first shows a Pentex forerunner, a Ruhr chemical firm). Three or more Banes add 1. The chance to rise a step is 10% per weight point, times the era factor, at most 90%. A blighted place breeds one Bane every four weeks per band past tainted, up to three per band. A tainted place with nothing feeding it loses a step after 13 quiet weeks; a blighted one never heals by itself. House rules.
+
+Reverse: change the weights in `SOURCES` or the chances in `riseChance` (corruption-rules.mjs).
+
+## B3272. Spreading along links, held off by caerns and wards (2026-11-13)
+WoDX Otherworlds. A blighted place with Banes may spread one step down each link each week (5% per band past tainted, times the era factor, at most 60%), only into a place at least three levels cleaner. A tended caern, or a place cleansed in the last four weeks, does not take it. Links are set in the window and run both ways. House rule.
+
+Reverse: clear the links, or lower `spreadChance`.
+
+## B3273. The Wyrm grows stronger with the centuries (2026-11-13)
+WoDX Otherworlds. Every chance is multiplied by an era factor: 0.5 before 1750, 1 to 1899, 1.5 to 1999, 2 to 2022, 2.5 in the World of Future Darkness. It reads W20's premise that the Apocalypse draws nearer as industry spreads; the numbers are a house reading. Sources other than Pentex exist in every era, so a 1197 chronicle has Bane nests, cults, hives and battlefields.
+
+Reverse: edit `eraFactor`.
+
+## B3274. Cleansing and culling (2026-11-13)
+WoDX Otherworlds. The Rite of Cleansing needs one success, its difficulty set by the depth of the taint and one lower at dawn, and it only pains those whose taint is innate (W20 pdf p. 205-206, printed 203-204). For a place WoDX sets the difficulty by band (tainted 6, blighted 7, foul 8, hellhole 9); a success lifts one step and wards the place for four weeks. For a person the difficulty is 5 plus the taint step, and one success lifts all of it. A pack's culling removes Banes. The players roll; the Storyteller records the result in the window. House readings.
+
+Reverse: edit `BANDS[].cleanse` and `cleansePersonDifficulty`.
+
+## B3275. People take on taint; a Bane riding someone is only proposed (2026-11-13)
+WoDX Otherworlds. A linked actor with a token in a blighted place gains a step of taint every 12 weeks (foul 6, hellhole 3), werebeasts half as fast, up to three steps (touched, tainted, ripe). At ripe the approval queue asks whether a Bane takes them; approving marks them ridden (fomor). Innate taint (set by hand for fomori and Black Spiral Dancers) never moves, and Sense Wyrm finds vampires, the ridden and anyone with a step of taint. Actor flag `wodx-otherworlds.taint`. House rule.
+
+Reverse: clear the actor flag; deny the proposal.
+
+## B3276. Pentex grows through the 20th century; band changes move the Gauntlet (2026-11-13)
+WoDX Otherworlds. Once a year from 1913 each place with a Pentex concern may open another in a linked place without one (25% a year to 1945, 35% to 1999, 45% after), through the approval queue only. When a place rises into blighted or worse, the existing Gauntlet drift proposal asks for +1 (taint); when it falls back out of blighted, it asks for -1 (mend). World setting `wyrmCorruption`: off (default), suggest, auto; Live stays off until Ben says otherwise. House rules.
+
+Reverse: deny the proposals; set the setting to off.
+
+## B3277. The Wyrm corruption window opens from Upkeep (2026-11-13)
+WoDX Storyteller. The Upkeep chooser gets a Wyrm corruption button beside The Gauntlet over time, shown only when WoDX Otherworlds offers the window, so the window is reachable without a macro.
+
+Reverse: remove the button in upkeep.mjs.
+
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
 
@@ -5159,6 +5206,41 @@ Reverse: pass no sickFor from towns.mjs.
 ## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
+
+## B3450. Places of power live in one register in WoDX Storyteller (2026-11-13)
+WoDX Storyteller. Nodes, chantries and freeholds are kept in a hidden world setting (powerState), each tied to a scene and to the characters who keep it, and run on the clock once a game hour and after a skip (power.mjs, power-rules.mjs). The window opens from Upkeep, Places of power. Setting placesOfPower switches the clock off.
+
+Reverse: switch placesOfPower off, or drop Power from main.mjs.
+
+## B3451. How much a Node gives each week, by year (2026-11-13)
+WoDX Storyteller. M20 p. 320 leaves the weekly rate to the Storyteller (2 a dot for an industrial-era game, 5 to 10 for high fantasy, 1 or 2 where magic is dying). WoDX reads it by year: 4 a dot to 1449, 3 to 1699, 2 to 2022, 1 in the World of Future Darkness; half free Quintessence and half Tass, the odd point free. Each Node can take its own rate.
+
+Reverse: change NODE_RATES in power-rules.mjs.
+
+## B3452. A Node holds four weeks of output (2026-11-13)
+WoDX Storyteller. The book says a Node's supply is finite and must refill once drained but gives no rate; WoDX lets untapped energy build up to four weeks' worth and then stop.
+
+Reverse: change NODE_CAP_WEEKS.
+
+## B3453. Chantry tiers and names by era (2026-11-13)
+WoDX Storyteller. M20 p. 309 gives pools of 21 to 30 and 30 to 70; a pool of 30 is read as a small sanctuary. Mystic strongholds are covenants before 1466 and chantries after; Technocratic ones are Craftmasons' lodges before 1325, Order of Reason houses to 1898 and Constructs from 1899.
+
+Reverse: change CHANTRY_TIERS or chantryName.
+
+## B3454. Untended freeholds fade in a dull place (2026-11-13)
+WoDX Storyteller. C20 says Banality drowned freeholds over the centuries but gives no rule for one place. WoDX: a freehold whose keeper has not dreamed there for 30 days, in a place whose Banality (with the scene's drift) is at the age's bar or above, loses a rank of its rating each season. The bar is 9 before the Shattering (to 1229), 6 in the Shattering and the Interregnum (1230 to 1968), 7 after the Resurgence.
+
+Reverse: change FAE_AGES fade values or FREEHOLD_TEND_DAYS.
+
+## B3455. A balefire harvested daily (2026-11-13)
+WoDX Storyteller. C20 p. 312 lets lost ranks come back one a month if the balefire rests and one a season if it is harvested daily. WoDX counts it as daily after 20 nights running with no more than a night between.
+
+Reverse: change harvestedDaily.
+
+## B3456. Node, Chantry and Holdings are ties that need tending (2026-11-13)
+WoDX Storyteller. The three backgrounds join the ties list (every 30 days), and a keeper who draws on the place has the tie marked tended.
+
+Reverse: drop node, chantry and freehold from TIE_KINDS and BACKGROUND_TIES in upkeep-rules.mjs.
 
 ## B3460. The older public buildings by where they belong (2026-11-13)
 tools/mapgen regiontrades.first_group_ok, from the Japan 1830 hand check. Outside Christendom a generated town gets no charnel house, cemetery chapel, monastery library or Protestant prayer house. A Jewish quarter and its synagogue appear only in Christendom and the lands of Islam. The hospital, museum, savings bank, gendarmerie, public library, grand hotel, waterworks, dance hall, goods shed and counting house come only once the region's trades have left the old ones (its industrial, colonial or later age: Japan from 1868, India from 1857). Moravia and the rest of Christendom are unchanged. Samurai retainers and sake brewers now also live in ordinary homes in Japan, not only in rich ones.

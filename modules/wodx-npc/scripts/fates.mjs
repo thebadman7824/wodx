@@ -65,7 +65,8 @@ export function personOf(actor, year) {
   const tp = c.torpor && num(c.torpor.to) !== null ? {from: yearAt(c.torpor.from), to: yearAt(c.torpor.to)} : null;
   return F.normPerson({id: actor.id, name: actor.name, line, born: num(c.bornYear), made: madeT !== null ? yearAt(madeT) : null,
     generation: gen === null ? null : gen - (Number(s.generationmod) || 0),
-    road: num(s.advantages?.path?.permanent) ?? num(s.advantages?.humanity?.permanent) ?? 7,
+    // A Path of 0 on a sheet nobody filled in is taken as the usual 7 (B3267); a true 0 is a wight's, rare in play
+    road: [num(s.advantages?.path?.permanent), num(s.advantages?.humanity?.permanent)].find(v => v !== null && v > 0) ?? 7,
     sectText: s.sect ?? "", rise: line === "garou" ? num(s.renown?.rank) : line === "mage" ? num(s.advantages?.arete?.permanent) : 0,
     torpor: tp, keep: !!actor.flags?.[MOD]?.fates?.keep, office: officeOf(actor, year), clan: s.clan ?? ""});
 }
