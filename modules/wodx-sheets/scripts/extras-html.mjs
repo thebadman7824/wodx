@@ -108,10 +108,12 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * ties [{kind, label, groupLabel, name, uuid, note, source, hidden, secret, hand, kindText, xpSpent, gone, rule}]; rule (Sheets 0.18.0): what the
  * bond does in play, a line under the tie;
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
- * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).
+ * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only);
+ * family (B3220): plain lines from WoDX NPC's family news, such as a pregnancy's due season, shown to the owner;
+ * couples: a lover, spouse or troth tie to a character gets a button to start a pregnancy (the Storyteller) or ask for one.
  */
 const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", "true side": "a hidden loyalty", "past life": "from a past life", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
-export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true, followers = false } = {}) {
+export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", family = [], couples = false, tree = true, followers = false } = {}) {
   const groups = new Map();
   for ( const r of rows ) { if ( !groups.has(r.groupLabel) ) groups.set(r.groupLabel, []); groups.get(r.groupLabel).push(r); }
   const row = r => {
@@ -124,8 +126,10 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
     const tools = mine ? `<input class="wodx-tie-note" type="text" value="${esc(r.note)}" placeholder="A note" aria-label="Note">`
       + `${gm ? `<a class="wodx-act" data-act="tie-hide" title="${r.hidden ? "Show it to players" : "Hide it from players"}"><i class="fa-solid ${r.hidden ? "fa-eye" : "fa-eye-slash"}"></i></a>` : ""}`
       + `<a class="wodx-act" data-act="tie-remove" title="Remove the tie"><i class="fa-solid fa-xmark"></i></a>` : r.note ? `<span class="wodx-quiet">${esc(r.note)}</span>` : "";
+    const couple = couples && editable && ["lover", "spouse", "troth"].includes(r.kind) && String(r.uuid ?? "").startsWith("Actor.")
+      ? ` <a class="wodx-act" data-act="tie-child" title="${gm ? "Start a pregnancy" : "Ask the Storyteller for a child"}"><i class="fa-solid fa-baby"></i></a>` : "";
     return `<div class="wodx-tie" data-search-item data-uuid="${esc(r.hand ?? r.uuid ?? "")}" data-open-uuid="${esc(r.uuid ?? "")}">
-    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
+    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${couple}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
   };
   const list = groups.size ? [...groups].map(([g, rs]) => `<div class="wodx-tie-group"><div class="wodx-tie-head">${esc(g)}</div>${rs.map(row).join("")}</div>`).join("")
     : `<div class="wodx-quiet">No relationships yet. Drag a character, a scene or a journal entry here.</div>`;
@@ -138,6 +142,7 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
   return `<div class="wodx-ties" data-drop-tie="1">
     <div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">Relationships</span></div>
     <div class="wodx-poss-bar">${searchBox(".wodx-tie-list", "Search relationships")}${buttons ? ` ${buttons}` : ""}</div>
+    ${family.length ? `<div class="wodx-tie-group wodx-tie-family"><div class="wodx-tie-head">Family news</div>${family.map(l => `<div class="wodx-tie wodx-quiet">${esc(l)}</div>`).join("")}</div>` : ""}
     <div class="wodx-tie-list">${list}${secrets}</div>
     ${regard ? `<div class="wodx-tie-group wodx-tie-regard"><div class="wodx-tie-head"><i class="fa-solid fa-eye-slash"></i> How they regard the characters</div>${regard}</div>` : ""}
     <div class="wodx-quiet">Sire and childer, blood bonds, ghouls, family and Kinfolk, mentors, allies, rivals and debts, from every part of WoDX. Drag a character, scene or journal entry in to add one by hand.</div>

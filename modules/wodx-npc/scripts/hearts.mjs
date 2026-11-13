@@ -130,20 +130,20 @@ export async function divorce(aLike, bLike, {region = regionNow(), year = yearNo
 }
 
 /* ---- Children ---- */
-export async function haveChild(aLike, bLike, {name = "", sex = ""} = {}) {
+export async function haveChild(aLike, bLike, {name = "", sex = "", lines = null} = {}) {
   const a = actorOf(aLike), b = actorOf(bLike);
   if ( !game.user.isGM || !a || !b ) return null;
   // B3211: parents are adults
   const age = ageCheck(a, b);
   if ( !age.ok ) return {ok: false, why: age.why};
-  const kid = H.childOf([lineOf(a), lineOf(b)], Math.random());
+  const kid = H.childOf(lines ?? [lineOf(a), lineOf(b)], Math.random());
   if ( !kid ) return {ok: false, why: "One of them cannot have children."};
   const year = yearNow();
-  const nm = name || `Child of ${a.name.split(" ")[0]} and ${b.name.split(" ")[0]}`;
+  const nm = name || (a.id === b.id ? `Child of ${a.name.split(" ")[0]}` : `Child of ${a.name.split(" ")[0]} and ${b.name.split(" ")[0]}`);
   const [c] = await Actor.createDocuments([{name: nm, type: kid.line === "werewolf" ? "Werewolf" : "Mortal", ownership: a.ownership,
     flags: {"wodx-creation": {chronology: {bornYear: year}, ...(sex ? {sex} : {}), ...(kid.line === "kinfolk" ? {lineage: {kinfolk: true}} : {})},
       [MOD]: {child: {kind: kid.kind, note: kid.note, parents: [a.id, b.id]}, ...(kid.line === "kinfolk" ? {kinfolk: true} : {})}}}]);
-  await addHandTie(c, a, "parent"); await addHandTie(c, b, "parent");
+  await addHandTie(c, a, "parent"); if ( b.id !== a.id ) await addHandTie(c, b, "parent");
   await ChatMessage.create({whisper: [...new Set([...ownersOf(a), ...ownersOf(b)])], speaker: {alias: "WoDX"}, content: card(`${a.name} and ${b.name} have a child`, [nm + ".", ...(kid.note ? [kid.note] : [])])});
   return {ok: true, child: c, kind: kid};
 }

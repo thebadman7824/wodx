@@ -40,6 +40,7 @@ import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
 import * as HEARTS from "./hearts.mjs";
+import * as FAMILY from "./family.mjs";
 import * as STANDING from "./standing.mjs";
 import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
@@ -874,6 +875,7 @@ Hooks.once("init", () => {
   TRUST.listen();
   HEARTS.registerSettings();
   HEARTS.listen();
+  FAMILY.listen();
   STANDING.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
@@ -890,6 +892,7 @@ Hooks.once("init", () => {
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+    family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild, rules: FAMILY.rules},
     hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
