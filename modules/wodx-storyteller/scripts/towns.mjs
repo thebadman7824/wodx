@@ -109,6 +109,14 @@ function withNewTowns(st, markets) {
 const ev = e => `${e.name ?? e.town}: ${e.text}`;
 
 /** Run the weeks that are due. force: one week now whatever the clock says. Returns {events, queued} or null. */
+/** B3437: when sickness spreads between towns, each town's own sickness this week (contagion.mjs), else undefined. */
+function sickFor() {
+  const co = game.modules.get(MOD)?.api?.upkeep?.contagion;
+  if ( !co?.on?.() ) return undefined;
+  const towns = co.state().towns;
+  return m => (towns[m.id] ? co.rules.townHit(towns[m.id]) : null);
+}
+
 export async function run({force = false, reason = ""} = {}) {
   if ( !isActiveGM() || (mode() === "off" && !force) ) return null;
   const mst = Markets.state();
@@ -129,7 +137,7 @@ export async function run({force = false, reason = ""} = {}) {
     const at = base + (i + 1) * MT.WEEK, d = dateAt(at);
     const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges),
       regionOf: t => regionOfMarket(MK.marketById(mst, t.id), t), latOf: (t, region) => WORLD_REGIONS[region]?.lat ?? latitude(),
-      randFor: id => seeded(`${id}:${at}:${st.turns}`)});
+      randFor: id => seeded(`${id}:${at}:${st.turns}`), sickFor: sickFor()});
     st.turns = (st.turns ?? 0) + 1;
     st = r.state;
     for ( const e of r.events ) { events.push(e); if ( e.effect?.food ) food.add(e.town); }

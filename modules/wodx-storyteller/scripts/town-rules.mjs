@@ -243,13 +243,15 @@ export function risingWords(year) {
 /* ------------------------------------------------------------------ */
 
 /**
- * One week for every town. markets: the markets state's list; ctxFor(market) gives the market pressures (see
+ * One week for every town. sickFor(market): when sickness spreads between towns (B3437), the town's own sickness this
+ * week ({name, dead, pressure} or null), which then stands in for the outbreaks by year; leave it out for those.
+ * markets: the markets state's list; ctxFor(market) gives the market pressures (see
  * pressures); regionOf(town) the town's world region; latOf(town, region) its latitude (seasons turn south of the
  * equator); randFor(id) a number source for that town; events: news from outside to fold in this week.
  * Returns {state, events: [{town, name, kind, text, big, effect}], moved: [{from, to, people}]}.
  * Effects of events are already in the returned state; the caller decides whether they stand (Undo restores).
  */
-export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = () => 50, ctxFor = () => ({}), regionOf = t => t.region || "moravia", randFor = () => Math.random, events: outside = []} = {}) {
+export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = () => 50, ctxFor = () => ({}), regionOf = t => t.region || "moravia", randFor = () => Math.random, events: outside = [], sickFor = null} = {}) {
   const st = normState(state);
   const events = [], moved = [];
   const byId = new Map(markets.map(m => [m.id, m]));
@@ -259,8 +261,14 @@ export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = 
     const t = st.towns[m.id], rand = randFor(m.id), ctx = ctxFor(m) ?? {};
     const region = regionOf(t), lat = latOf(t, region);
     const say = (kind, text, big, effect = {}) => events.push({town: m.id, name: m.name, kind, text, big: !!big, effect});
+    // B3437: with sickness spreading between towns (contagion.mjs), the town's sickness is the one it has caught
+    const sick = typeof sickFor === "function" ? sickFor(m) : undefined;
+    if ( sick !== undefined ) {
+      t.struck = sick ? {key: `sick:${m.id}`, name: sick.name, weeks: 1, share: num(sick.dead)} : (String(t.struck?.key ?? "").startsWith("sick:") ? null : t.struck);
+      if ( sick ) t.unrest = r2(clamp(t.unrest + 0.1 * num(sick.pressure), 0, 5));
+    }
     // Plague: a town in an outbreak's reach may be struck, once for each outbreak
-    if ( !t.struck ) {
+    else if ( !t.struck ) {
       for ( const o of outbreaksIn(year, region) ) {
         if ( t.seen.includes(o.key) ) continue;
         if ( rand() < o.chance ) {
@@ -309,7 +317,7 @@ export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = 
     }
     // Time runs down on what lasts
     t.marks = t.marks.map(x => ({...x, weeks: x.weeks - 1})).filter(x => x.weeks > 0);
-    if ( t.struck ) { t.struck.weeks -= 1; if ( t.struck.weeks <= 0 ) { say("plague-ends", `${t.struck.name} leaves the town.`, false); t.struck = null; } }
+    if ( t.struck && !String(t.struck.key ?? "").startsWith("sick:") ) { t.struck.weeks -= 1; if ( t.struck.weeks <= 0 ) { say("plague-ends", `${t.struck.name} leaves the town.`, false); t.struck = null; } }
   }
   // Emigrants go to the linked town that does best; with no better one they leave the region
   for ( const mv of moved ) {

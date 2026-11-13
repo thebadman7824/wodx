@@ -11,6 +11,7 @@
  * 0.49.0: the same run ages what factions have laid on the markets and lets them move again (market-moves.mjs),
  * reckons every trader's week, and sends the goods that linked markets trade out as caravans (caravans.mjs).
  * B3110: then every venture characters have put money into pays its share or takes its loss (ventures.mjs).
+ * B3430: last, sickness moves on in the towns and spreads along the links and with the caravans that left (contagion.mjs).
  */
 import * as R from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
@@ -20,6 +21,7 @@ import * as Rumours from "./rumours.mjs";
 import * as Moves from "./market-moves.mjs";
 import * as Caravans from "./caravans.mjs";
 import * as Ventures from "./ventures.mjs";
+import * as Contagion from "./contagion.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 
@@ -105,6 +107,7 @@ export async function run({force = false, reason = ""} = {}) {
   await saveTurn({last: stamp});
   const when = reason || (due.due > 1 || due.skipped ? `${due.due + due.skipped} weeks` : "a week");
   const queued = suggest ? [...r.changes, ...r.queued] : r.queued;
+  let departed = [];
   if ( suggest ) {
     // Nothing lands until approved, but the weeks at each level still count
     await Markets.saveState({...st, markets: st.markets.map(m => ({...m, seen: r.state.markets.find(x => x.id === m.id)?.seen ?? m.seen}))});
@@ -116,6 +119,7 @@ export async function run({force = false, reason = ""} = {}) {
       const vs = Moves.views(r.state), force = {};
       for ( const v of vs ) for ( const id of v.home ) force[id] = Math.max(force[id] ?? 0, v.force);
       left = await Caravans.depart(r.shipments, r.trades, {at: now, force});
+      departed = left.map(c => ({from: c.from, to: c.to}));
     } catch (e) { console.error(`${MOD} | caravans`, e); }
     if ( r.changes.length || left.length ) await card({changes: r.changes, snap, pcs, when, skipped: due.skipped, left});
   }
@@ -128,6 +132,8 @@ export async function run({force = false, reason = ""} = {}) {
   try { await Moves.after({pre, weeks, live: due.due === 1 && !due.skipped, pcMarkets: pcs, stamp}); } catch (e) { console.error(`${MOD} | market moves`, e); }
   // B3110: ventures pay their share or lose part of their value once the markets have moved
   try { await Ventures.weekRun({weeks, stamp}); } catch (e) { console.error(`${MOD} | ventures`, e); }
+  // B3430: sickness in the towns, after the markets have moved
+  try { await Contagion.weekRun({weeks, left: departed}); } catch (e) { console.error(`${MOD} | contagion`, e); }
   return {changes: suggest ? [] : r.changes, queued, skipped: due.skipped};
 }
 
