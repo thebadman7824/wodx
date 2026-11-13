@@ -20,6 +20,7 @@ async function save(R, name) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
 export async function run() {
@@ -33,7 +34,7 @@ export async function run() {
   try {
     const player = game.users.find(u => !u.isGM);
     const own = player ? {ownership: {default: 0, [player.id]: 3}} : {};
-    const [mage, wraith, fae] = await Actor.create([
+    const [mage, wraith, fae] = await createActors([
       {name: "WoDX gate: Quiet mage", type: "Mage", ...own, system: {paradox: {temporary: 7, permanent: 0}}},
       {name: "WoDX gate: smith", type: "Wraith"},
       {name: "WoDX gate: clerk's changeling", type: "Changeling", ...own}]);
