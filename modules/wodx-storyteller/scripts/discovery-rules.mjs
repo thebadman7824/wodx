@@ -22,17 +22,17 @@ const each = (ids, year) => Object.fromEntries(ids.map(id => [id, year]));
  */
 export const CIRCLES = {
   europe: {label: "Europe", members: EUROPE, relay: null, knows: {
-    ...each(NEAR, OLD), arctic: OLD, china: 1245, "tibet-himalaya": 1330,
+    ...each(NEAR, OLD), arctic: OLD,
     "west-africa": 1444, "central-africa": 1482, "southern-africa": 1488, caribbean: 1492, "north-america-east": 1497, canada: 1497, "east-africa": 1498, india: 1498,
-    brazil: 1500, "southeast-asia": 1509, nusantara: 1511, "southern-cone": 1516, mexico: 1517, "pacific-islands": 1521, andes: 1526, "north-america-west": 1540, japan: 1543, siberia: 1582,
-    korea: 1593, australia: 1606, aotearoa: 1642, antarctica: 1820}},
+    brazil: 1500, "southeast-asia": 1509, nusantara: 1511, china: 1513, "southern-cone": 1516, mexico: 1517, "pacific-islands": 1521, andes: 1526, "north-america-west": 1540, japan: 1543, siberia: 1582,
+    korea: 1593, "tibet-himalaya": 1624, australia: 1606, aotearoa: 1642, antarctica: 1820}},
   "near-east": {label: "North Africa, the Near East and Central Asia", members: NEAR, relay: 20, knows: {
     ...each(EUROPE, OLD), india: OLD, "east-africa": OLD, "west-africa": OLD, "southern-africa": OLD, china: OLD, "southeast-asia": OLD, nusantara: OLD, "tibet-himalaya": OLD,
     korea: OLD, siberia: 1400, "central-africa": 1500, japan: 1550}},
   india: {label: "India", members: ["india"], relay: 30, knows: {
     ...each(NEAR, OLD), ...each(EUROPE, 1498), "tibet-himalaya": OLD, china: OLD, "southeast-asia": OLD, nusantara: OLD, "east-africa": OLD}},
   east: {label: "East Asia and the islands", members: ["china", "japan", "korea", "southeast-asia", "nusantara", "tibet-himalaya", "siberia"], relay: 70, knows: {
-    india: OLD, "central-asia": OLD, persia: OLD, arabia: OLD, levant: 1250, egypt: 1250, anatolia: 1250, maghreb: 1350, ...each(EUROPE, 1290), "east-africa": 1418,
+    india: OLD, "central-asia": OLD, persia: OLD, arabia: OLD, levant: 1250, egypt: 1250, anatolia: 1250, maghreb: 1350, ...each(EUROPE, 1513), "east-africa": 1418,
     "pacific-islands": 1600, australia: 1700}},
   africa: {label: "Africa south of the desert", members: ["west-africa", "central-africa", "east-africa", "southern-africa"], relay: 30, knows: {
     maghreb: OLD, egypt: OLD, arabia: OLD, levant: OLD, persia: OLD, india: OLD, china: 1418, ...each(EUROPE, 1444)}},
