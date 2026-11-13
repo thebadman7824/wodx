@@ -33,6 +33,13 @@ export async function run() {
   const curName = () => combat.combatant?.name;
   const toTurn = async tok => { await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tok.id)}); await sleep(400); };
 
+  // The conductor may be in the middle of moving the fight on (an NPC that has just acted, a new round with new Initiative):
+  // it is switched off and the fight left to come to rest before a step places the turn by hand.
+  const settle = async () => {
+    await game.settings.set(MOD, "turnConductor", "off");
+    for ( let n = 0; n < 10; n++ ) { const k = `${combat.round}:${combat.turn}`; await sleep(1500); if ( k === `${combat.round}:${combat.turn}` ) return; }
+  };
+
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
     for ( const role of ["hero", "fighter", "runner"] ) {
@@ -80,11 +87,12 @@ export async function run() {
   });
 
   await step("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", async () => {
-    await game.settings.set(MOD, "turnConductor", "everyone");
+    await settle();
     await toTurn(T.hero);
-    const id = combat.combatant?.id;
     // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
     await game.settings.set(MOD, "conductorGrace", 4);
+    await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(1500);
+    const id = combat.combatant?.id;
     let sawCount = false;
     const hk = Hooks.on("updateCombat", c => { if ( c.id === combat.id && c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true; });
     try {
@@ -99,7 +107,7 @@ export async function run() {
   });
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
-    await game.settings.set(MOD, "turnConductor", "off");
+    await settle();
     // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
     const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
     await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
