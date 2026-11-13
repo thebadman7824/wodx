@@ -26,14 +26,18 @@ export const DRIFT_KINDS = {
   dreaming: {label: "Dreams and art feed the place's Glamour (Banality)", step: -1, track: "banality"},
   disbelief: {label: "Crowds, routine and disbelief (Banality)", step: 1, track: "banality"},
   massdeath: {label: "Mass death: a battle, a massacre, a plague pit (the Shroud thins)", step: -1, track: "shroud"},
-  shroudheals: {label: "The Shroud heals as the grief fades", step: 1, track: "shroud"}
+  shroudheals: {label: "The Shroud heals as the grief fades", step: 1, track: "shroud"},
+  // B3526: the Storyteller's crisis lever for a region; its step and track are given each time
+  lever: {label: "The Storyteller's lever for the region", step: 0}
 };
-const trackOf = kind => DRIFT_KINDS[kind]?.track ?? "value";
+export const TRACKS = ["value", "banality", "shroud"];
+const trackOf = (kind, e = null) => (kind === "lever" && TRACKS.includes(e?.track) ? e.track : DRIFT_KINDS[kind]?.track ?? "value");
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
 export function normDrift(d = {}) {
-  const log = Array.isArray(d.log) ? d.log.slice(-30).map(e => ({at: num(e.at), kind: DRIFT_KINDS[e.kind] ? e.kind : "taint", step: num(e.step), why: String(e.why ?? "").slice(0, 200)})) : [];
+  const log = Array.isArray(d.log) ? d.log.slice(-30).map(e => ({at: num(e.at), kind: DRIFT_KINDS[e.kind] ? e.kind : "taint", step: num(e.step), why: String(e.why ?? "").slice(0, 200),
+    ...(e.kind === "lever" && TRACKS.includes(e.track) ? {track: e.track} : {})})) : [];
   const clampD = v => Math.max(DRIFT.min, Math.min(DRIFT.max, Math.round(num(v))));
   return {value: clampD(d.value), banality: clampD(d.banality), shroud: clampD(d.shroud), log};
 }
@@ -48,11 +52,22 @@ export function addDrift(d, kind, {at = 0, why = ""} = {}) {
   return {...cur, [t]: v, log: changed ? [...cur.log, {at, kind, step: v - cur[t], why: String(why).slice(0, 200)}].slice(-30) : cur.log, changed, before: cur[t]};
 }
 
+/**
+ * B3526: move one track by a given step for the Storyteller's lever (any size; the drift still stays inside -3 to +3).
+ * Returns the new record, whether it changed, and the step that was actually taken.
+ */
+export function leverDrift(d, track, step, {at = 0, why = ""} = {}) {
+  const cur = normDrift(d), t = TRACKS.includes(track) ? track : "value";
+  const v = Math.max(DRIFT.min, Math.min(DRIFT.max, cur[t] + Math.round(num(step))));
+  const taken = v - cur[t];
+  return {...cur, [t]: v, log: taken ? [...cur.log, {at, kind: "lever", track: t, step: taken, why: String(why).slice(0, 200)}].slice(-30) : cur.log, changed: !!taken, taken};
+}
+
 /** Undo the last step. */
 export function undoDrift(d) {
   const cur = normDrift(d), last = cur.log.at(-1);
   if ( !last ) return cur;
-  const t = trackOf(last.kind);
+  const t = trackOf(last.kind, last);
   return {...cur, [t]: Math.max(DRIFT.min, Math.min(DRIFT.max, cur[t] - last.step)), log: cur.log.slice(0, -1)};
 }
 

@@ -1152,16 +1152,24 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
 | 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
 
-## Waiting for review
+## Approved by Ben, 13 November 2026, 22:51 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("I approve everything pending review").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | How big is a district's herd (B3571)? | Town people times the district's share (slums 1/4 to patrolled 1/10), one feeding a month per hundred, at least two | Change AREA_SHARE or PEOPLE_PER_FEEDING in herd-rules.mjs |
+| 2026-11-13 | What does over-hunting do (B3572, B3573)? | Thinning +1, Over-hunted +2 with a death, heat and a rumour, Stripped +3 with two deaths, a big rumour and hunter pressure | Change STAGES or harmFor in herd-rules.mjs |
+| 2026-11-13 | How strong is shared holy ground (B3581)? | 10 a level, x1.5 to 1450 down to x0.6 in the Future Darkness, a tenth per Gauntlet drift step; refills 2 a level a week | Change ERA_STRENGTH in site-rules.mjs |
+| 2026-11-13 | What does drawing on weak shared ground do (B3582, B3584)? | Each point drawn costs a point; below half every role gives half; a moot gives back half its Gnosis | Change WEAK or mootGift in site-rules.mjs |
+| 2026-11-13 | When do claims on shared ground quarrel (B3585)? | Three draws by a pair while the site is weak; the quarrel goes to the approval queue | Change QUARREL_AT in site-rules.mjs |
+| 2026-11-13 | Which powers can a day job work through, by year (B3591)? | Guilds, lords, mercenaries early; police, press, banks, technology and corporations later; local names by faith | Change CHANNELS in day-jobs-rules.mjs |
+| 2026-11-13 | Who rolls a day job, and how do factions react (B3592, B3593)? | A follower its own sheet, a Background dot Manipulation + dots; a done hostile job costs the faction a dot (approval), a ruined one a step of regard | Change jobTask or reaction in day-jobs-rules.mjs |
 | 2026-11-13 | What happens to a caern whose moot is not held (B3471)? | A month without one: lapsed, Gnosis gone, Gauntlet drift +1; a level lost every 3 months of lapse; dead at 0 | Change LAPSE_MONTHS in caern-rules.mjs |
 | 2026-11-13 | How does a caern grow (B3472)? | 13 full moots in a row, then a rite with 100 Gnosis raises it a level; 200 to reach level 5 | Change RISE_MOOTS or riseCost |
 | 2026-11-13 | How often do raids come, and who settles them (B3473)? | Monthly Wyrm/Weaver odds by era (3%/1% before 1500 up to 10%/9% after 2022), doubled for a lapsed caern (Wyrm) or an urban one (Weaver); the sept rolls for itself after 7 days | Change RAID_ODDS or RAID_GRACE_DAYS, or untick raids |
 | 2026-11-13 | What does a caern war do (B3474)? | Storyteller starts it; half Garou plus best rank at 6, ties to the defenders; a taken caern changes sept, offices empty, a level lost | Change caernWar |
 | 2026-11-13 | How is a lost caern taken back (B3475)? | Three successes at 7; back at level 1, lapsed, needing a moot | Change reclaim |
-
 | 2026-11-13 | Which court does a Kindred faction outside Europe keep by default? (B2960) | Laibon in Africa south of the Sahara, Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia, Kuei-jin in East and Southeast Asia; India, Central Asia, Tibet and the pre-colonial Americas keep the European default | Empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs |
 | 2026-11-13 | What are the seats and law of a Laibon council and an Ashirra court? (B2961, B2962) | WoDX's own words (Elder of the land, Speaker of the old law, Voice of a legacy; Amir, Qadi, Wazir, Muhtasib of the night), pending the PC book check | Edit "laibon-council" and "ashirra" in POLITIES |
 | 2026-11-13 | Which courts do India, Central Asia and Tibet keep, and what does a Ravnos court look like? (B2963, B2964) | India: a court of the Ravnos until 1999, then the court of its age; Central Asia: the Ashirra; Tibet: the Kuei-jin. Seats in WoDX's own words (Eldest of the land, Keeper of the duties), pending the book check | Take the rows out of REGION_COURTS, or edit "ravnos-court", in modules/wodx-npc/scripts/politics-rules.mjs |
@@ -1253,6 +1261,13 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Arab world names raised to 300 (B3312) | Older and newer given names; nisbas of city, tribe and trade before the industrial age, family names after; ibn and bint as often as before in every age | Edit "arabic" in data/people-world.mjs |
 | 2026-11-13 | Peoples without names, second desk: the Algonquian coast (desk https://claude.ai/artifact/MiX1eYZE8JxsSjGqiiWswt, picks in its `verdicts` collection) | Ben picked all recommended (22:20 UTC), built as the next row; recommended: three peoples (Lenape, New England Algonquian, Powhatan) from recorded names, the Lenape clan from the mother, names staged as for the Haudenosaunee, shared with the Haudenosaunee before contact and a share after, women as for the Haudenosaunee | Pick on the desk |
 | 2026-11-13 | Algonquian coast names as built from Ben's desk picks (all recommended, 22:20 UTC; B3510 to B3512) | Lenape 91 men's names with clans from the mother; New England 114 men's and 17 women's; Powhatan 54 and 6; fewer than 300 each since the records reached hold no more; women without a recorded name as "A woman of the Turtle clan" or "A woman of Pokanoket"; later family names from the reserve rolls (house reading); eastern North America before contact Haudenosaunee 40, Lenape 25, New England 25, Powhatan 10 | Edit data/people-algonquian.mjs or the mixes in world-rules.mjs |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Law of the land: bribe and catch figures (B3490-B3603) | Each law family and region row sets bribe (1 hard to 5 easy) and catch (0.25 in 1197 up to 0.7 with face matching), rounded by family and era. | Edit the bribe and catch values in law-rules.mjs FAMILIES and REGION_ROWS. |
+| 2026-11-13 | Offices of the law and the state (B3604-B3605) | Court from 1000 people, the ruler's officers and tax office from 2000, garrison, Holy Office and secret police from 5000; the last two only while the law lists inquisitors or secret police. Rank names by law family and year. | Edit KINDS, COURT, RULER, ARMY and TAX in institution-rules.mjs. |
 | 2026-11-13 | How long a peek into the Penumbra stays on the peeker's map (B3540) | Ten minutes of game time, or until the player steps the sight off | PEEK_SECONDS in modules/wodx-senses/scripts/otherworld-sight-rules.mjs |
 | 2026-11-13 | What a turn, a scene and a story mean for how long a mage's sight holds (B3541) | A turn one game minute, a scene an hour, a story a week; a day and six months as written | HOLD in otherworld-sight-rules.mjs |
 | 2026-11-13 | Which Dark Ages Pillars give which sight (B3542) | Prime: Primus, Galdrar, Wise One. Time: Al-Anbiya, Autumn. Entropy: Forlog, Uri-El, Winter, Al-Anbiya. Correspondence: Al-Hajj, Fara | DA_PILLARS in otherworld-sight-rules.mjs |

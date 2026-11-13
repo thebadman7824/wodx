@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3520
+Next free block: B3630
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -146,7 +146,7 @@ Next free block: B3520
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3088) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3089) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -176,9 +176,12 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3492) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
+| B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
+| B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3605) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4664,6 +4667,11 @@ Two threads claimed B3260-B3269 in the same minute and one claim was lost: the p
 
 Reverse: Remove the claim files and the second check from tools/decisions/claim.mjs.
 
+## B3089. No gate run can hang a lane (2026-11-13)
+Gate runs hung for hours on lanes 1, 2 and 3 (gateage, gateadopt, a touched run): the runner waited on each gate with no limit, so a step waiting on a dialog nobody clicks in the headless browser, or a reply that never comes, held the browser open and the lane locked until someone ended the processes by hand. tools/lanes/run-gate.mjs now closes any window a gate opened (not document sheets) that waits longer than 45 seconds, so the step goes on; a gate past its limit (15 minutes, or its own in gate-map-extra.json "timeouts") fails with its world changes put back; when the page itself stops answering the browser is closed and a new one signs in for the next gate; and past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock carries a deadline that moves on before each gate, and a run that finds a lock past its deadline ends that hung run (only a gate run's own node process, with its browser) and takes the lane.
+
+Reverse: Remove the sweep, the limits and the watchdog from run-gate.mjs and the deadline from the lane lock in tools/lanes/lib.mjs.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -5501,6 +5509,41 @@ WoDX Chronicle. Everyone sees who rules, who keeps order and what a stranger sho
 
 Reverse: drop the wodxLaw button and checkYear calls.
 
+## B3493. The lands of Islam as the second law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The islamic family: the qadi's court by sharia, the ruler's court of complaints, each protected faith's own court; witnesses and oath; the muhtasib and the shurta; alms, poll tax and land tax; wine and apostasy on the books; police and prisons from 1800, written codes beside sharia from 1900, independent states from 1950. Regions add their own rulers and turning points: Anatolia, the Levant, Egypt, Arabia, the Maghreb, Persia and the Malay world (which starts with Hindu and Buddhist kingdoms and turns to the sultanates from 1400). Iberia's al-Andalus stays under Latin Christendom for now (the record follows the Christian kingdoms of the homeland's era); a finer split waits for its own row.
+
+Reverse: remove the islamic family and these region rows; the regions fall back to the custom stand-in.
+
+## B3494. Chinese imperial law as the third law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The chinese family: an emperor ruling through examined officials; the county magistrate as judge, tax collector and keeper of the peace; appeal up to the throne for every death sentence; clan elders and guilds first; confession needed before sentence, with beating allowed within limits; the bamboo, penal servitude, exile and death; families and neighbour groups answering for one another; failing parents and forbidden sects as crimes. China, Korea and mainland Southeast Asia (Buddhist and Hindu kingdoms beside Đại Việt's Chinese-model empire) add their own rows. Japan gets its own family.
+
+Reverse: remove the chinese family and these region rows; the regions fall back to the custom stand-in.
+
+## B3495. South Asia as the fourth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The south-asia family: kings who uphold dharma, Brahmins reading the dharma texts as counsel, caste councils and village assemblies, ordeals, fines, maiming and being put out of caste; caste rules and cow-killing on the books; the 1950 constitution makes one law for every citizen. India adds the Delhi Sultanate and Mughal qadis and the poll tax's dates, the Company, the Crown and the Penal Code, partition and the Emergency. Tibet and the Himalaya take their own rows (monastic lords, the Dalai Lama's government, Nepal's 1854 code, Chinese rule from 1950) and drop the caste rows.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3496. Africa south of the Sahara as the fifth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The african family: kings and chiefs with elders as assessors, lineage elders, masked societies and age sets; witnesses, oath and ordeal; fines and compensation, banishment, being sold into slavery, death. Colonial rule from 1885 (European courts above, native courts under the chiefs, the hut tax, separate law for Europeans and Africans) and independence from 1960. Four regions add their own rows. The sale of captives and colonial atrocities are stated as plain history in the Storyteller's warnings, with no game rewards attached.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3497. English common law as the sixth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The common family for the British Isles: the dated rows run from the Angevin courts and the sheriff, through the jury, justices of the peace, the established church, the witch trials, the Commonwealth, constitutional monarchy, transportation, the 1735 Witchcraft Act (claiming powers as fraud), police from 1829, to the end of hanging in 1965 and the laws of the 1990s and 2000. The colonies of the empire use their own regions' rows (North America, Australia, India) rather than this family, because their law split from England's early.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3498. Orthodox and Russian law family (2026-11-13)
+Russia and the Aegean use the Orthodox family: the ruler's law beside the church's canons, then ministries and police, with region rows for the Rus, Muscovy, the tsars, the Soviet state and the Federation, and for Byzantium, Ottoman rule and modern Greece.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3499. Japanese law family (2026-11-13)
+Japan uses its own family: the shogun rules in the emperor's name through warrior courts, then the Tokugawa order, then the Meiji codes and the postwar constitution. New ids: jito, commoner-arms, leaving-country.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
 ## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
 WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
 
@@ -5535,3 +5578,183 @@ Reverse: none needed; add names as found.
 WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
 
 Reverse: edit the lists in data/people-algonquian.mjs.
+
+## B3520. A ruling for an unclear action is a ticket in the approval queue (2026-11-13)
+WoDX Chronicle. Ben's Notes Gaps Desk item g1, built as suggested. A player ticks "ask for a ruling" in Ask the Storyteller and names what the character does, an Attribute and Ability, an expected difficulty, an optional power and whether mortals can see it. Only those choices travel by socket; the Storyteller's client reads both sheets itself and refuses a ticket for a character the player does not own. The ticket shows the pool, the crossover referee's cases for the power (B-numbers and pages from data/crossover.mjs) and the risks.
+
+Reverse: untick nothing; the old Ask the Storyteller request still works. Remove ticket.mjs and its registerTicket() call in main.mjs.
+
+## B3521. The risks a ticket names, by line and the era's book (2026-11-13)
+WoDX Chronicle, ticket-rules.mjs risksFor(). Mage: Paradox if vulgar (M20); under the Dark Ages books, the Dark Ages mage book's own rules, since M20 Paradox does not apply there. Kindred: a sin against Humanity or a Path (V20), or against the Road (V20 Dark Ages). Changeling: Banality (C20). Garou: Rage, frenzy and the Delirium (W20). Wraith: Angst (Wraith 20th). Hunter: Conviction. Demon: Torment. Witnesses add a line for the Masquerade, the Veil or the Consensus. The risks are reminders for the Storyteller; nothing is rolled or applied by them. A ticket is in NEVER_AUTO beside a player's request, so no standing rule or Light-touch mode passes or holds it.
+
+Reverse: edit risksFor() in ticket-rules.mjs.
+
+## B3522. Change difficulty and Complication on the ticket (2026-11-13)
+WoDX Chronicle. The approval queue lets a kind put its own controls on its card (handler.controls and handler.control, approvals.updatePending). The ticket's Change difficulty moves the player's difficulty 1 to 3 either way from the first one, kept inside 2 to 10; a new change replaces the last. Complication draws a foreshadowing from WoDX Storyteller's story aids for the character (at most three kept), or a short line of WoDX's own when Storyteller is off. Approving whispers the player and the Storyteller a card with a Roll button for the pool at the ruled difficulty. House rule "Pause the game while a ruling waits" (off by default) pauses the game when a ticket arrives and lifts the pause when it is decided.
+
+Reverse: turn the house rule off; set the Change difficulty back to "as asked".
+
+## B3523. The 2022 cap covers lifepaths and the main timeline only (2026-11-13)
+Ben's pick on g7 of the Notes Gaps Desk: delete nothing. The Future Darkness branch stays off by default (house rule futureBranch) and keeps its events to 2098 and the Time of Future Judgement in 2099. The standing rule that dated events stop at 2022 applies to lifepaths and the main timeline, not to the optional future branch.
+
+Reverse: none needed; a record of Ben's choice.
+
+## B3524. Crisis levers write into each system's own regional record (2026-11-13)
+WoDX Storyteller, Notes Gaps Desk g2, built as suggested. One window per region (Crisis levers for a region, in the Storyteller's hand). Plague strength (0.5 to 2 times) scales the weekly attack rate of the region's outbreaks, and only those running now. Hunter pressure (0 to 10) adds or takes away points in the hunters' record for the region, as a "manual" change so the witch-trial factor does not double it. Wyrm spread (0 to 3 times) is the region's rate in WoDX Otherworlds. Gauntlet, Shroud and Banality (up to 2 either way) move drift at every place in the region; drift still stays inside -3 to +3 and only places with that rating change. A slider shows only when its system runs. Every change is dated, written to the chronicle log with an optional reason, and kept with what it did, so "Take back the last change" reverses it exactly.
+
+Reverse: take back each change from the window, or clear wodx-storyteller.leverState.
+
+## B3525. Wyrm spread rate per region (2026-11-13)
+WoDX Otherworlds. corruptionState.rates holds a rate per region (missing means 1). It multiplies riseChance and spreadChance and nothing else; 0 holds the region's corruption where it is. A place's region is WoDX Chronicle's world.here().
+
+Reverse: set the rate back to 1, which removes it.
+
+## B3526. A lever step on drift (2026-11-13)
+WoDX Otherworlds. Drift kind "lever" carries its own track (value, banality or shroud) and step in the log, so undo reverses the right track. It is the only drift kind with a step set at the time.
+
+Reverse: undo the step in The Gauntlet over time, or from the levers window.
+
+## B3527. Hunters in the era's words on the lever (2026-11-13)
+WoDX Storyteller, house wording. Before 1231 the lever reads "zealots and witch-finders"; from the Inquisition's founding in 1231 to 1750 "the Inquisition and the witch-hunters"; after that plain "Hunter pressure". The hunters system's own stages and who hunts in each region are unchanged.
+
+Reverse: edit huntersLabel() in levers-rules.mjs.
+
+## B3528. A binding card for a player character, with no hold on the token (2026-11-13)
+WoDX Actions, Notes Gaps Desk g3 in Ben's smaller form. The keywords that bind are Fear, Sway, Bind, Possess and Hold (Dominate's commands, Presence's awe and dread, Mind's sway, a hold). When one is applied to an actor with a player owner, on its own or from the approval queue, the owners and the Storyteller get a card: the power and its command, who laid it, how long it lasts (the effect's own duration) and the resist roll from the keyword (Willpower at 6 or 7, Strength for a hold), "where the power's own book allows a resistance roll". The token is not held or moved; the Storyteller rules on what the player tries.
+
+Reverse: remove the bindingCard() call in applyItem (effects.js).
+
+## B3530. The Inheritance step moves what the estate card does not (2026-11-13)
+WoDX Storyteller, Notes Gaps Desk g6, built as suggested. A death recorded on the sheet now also queues "the Inheritance step"; approving opens it, and the Storyteller's hand has it for someone who leaves play alive. The heir list puts the will's heir first, then the Ledger's named heir, the heir Pass the Years made, the dead's kin from WoDX NPC ties, then everyone living. Ticked parts: carried items (the system's Item, Fetish, Armor and weapon types; traits and powers stay), places whose owner record names the dead, the money left in purse and bank (unticked when an estate card divides money by the will and the law, B2773), the dead's side of every open Ledger entry (older per-entry cards for the dead are set aside so the heir chosen here wins), and ties.
+
+Reverse: untick a part; give items and places back by hand.
+
+## B3531. Rivals' grudges pass to the heir (2026-11-13)
+WoDX Storyteller, house rule. Any NPC whose regard for the dead is -2 or worse looks on the heir the same way, unless they already think worse of the heir. Feuds already pass by family name and line (WoDX NPC standing), so they need nothing here.
+
+Reverse: untick Rivals; mend regard in the NPC window.
+
+## B3532. Ties pass marked as known through the dead (2026-11-13)
+WoDX Storyteller. The dead's hand-made ties (WoDX Sheets) are copied to the heir with "Known through" and the dead's name, without the heir's own tie to the dead and without doubling a tie the heir has.
+
+Reverse: remove the ties on the heir's Relationships tab.
+
+## B3533. The dead as a past self: Ancestors and Past Lives (2026-11-13)
+WoDX Storyteller and NPC. A Garou or Kinfolk heir of the dead's blood (kin by ties, or the heir Pass the Years made) with the Ancestors Background (W20), or a mage heir with Past Lives or Avatar (M20), gets the dead as a past life in WoDX NPC (flags pastLives) with the dead's ties, so NPC's recall can reach them. NPC's past-self Backgrounds gain Ancestors for the werewolf line beside Avatar, Remembrance and Memoriam; the recall roll is the same house roll (B2873).
+
+Reverse: delete the past life on the heir's sheet; drop the Ancestors row in legacy-rules.mjs.
+
+## B3534. A roster of characters for each player (2026-11-13)
+WoDX Chronicle, Notes Gaps Desk g5, built as suggested. My characters lists every actor the player owns. The tie uses the books' names: ghoul (a domitor or the ghoul flag), Kinfolk, and from the main character's tie role on the sheet: retainer, apprentice, thrall, follower; anyone else is an ally. State: dead (a death year on the chronology), in torpor (WoDX Actions' torpor flag), away (set by the Storyteller from the roster for a long journey), else awake. Play makes it the user's character and selects its token; if Foundry refuses the player that change, the Storyteller's client makes it.
+
+Reverse: none needed; the window changes nothing until used.
+
+## B3535. The roster opens when the played character falls (2026-11-13)
+WoDX Chronicle. On the player's own client, when the played character goes from awake to torpor, dead or away, a notice names it and, if the player owns anyone playable, the roster opens to pick another.
+
+Reverse: remove the updateActor hook in roster.mjs.
+
+## B3536. A new roster entry waits on the Storyteller (2026-11-13)
+WoDX Chronicle. A player's "Ask to add a character" names who and why. It never passes on its own (NEVER_AUTO). Approving opens a pick of sheets the player does not own yet; the chosen one is given to the player as owner.
+
+Reverse: take the player's ownership off the sheet.
+
+## B3570. Herd pools by district (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
+
+Reverse: turn off the herdPools setting.
+
+## B3571. How big a district's herd is (2026-11-13)
+WoDX Storyteller. House rule: the town's people (Towns over time) times the district's share (slums a quarter, lower-class three tenths, market a fifth, merchant-class 15 in 100, patrolled a tenth), one feeding a month for each hundred, never fewer than two. A district with no town uses 3,000 people before 1450, 8,000 to 1799, 40,000 to 1913, 150,000 to 2022 and 200,000 after.
+
+Reverse: change AREA_SHARE, PEOPLE_PER_FEEDING or DEFAULT_PEOPLE in herd-rules.mjs.
+
+## B3572. What over-hunting does to the hunt (2026-11-13)
+WoDX Storyteller. House rule: past the pool the district is Thinning (+1 difficulty), past half again Over-hunted (+2), past double Stripped (+3). The difficulty goes into the heat field WoDX Actions' Hunt already shows, with the herd's stage named beside the heat band.
+
+Reverse: change STAGES in herd-rules.mjs.
+
+## B3573. The harm over-hunting brings (2026-11-13)
+WoDX Storyteller. House rule: every stage sends the Storyteller a card. Over-hunted: a vessel dies (the Storyteller names who), the ground takes a hunt's heat and a rumour starts in the words of the age. Stripped: two die, a botch's heat, a big rumour and the region's hunters get a response's pressure.
+
+Reverse: change harmFor in herd-rules.mjs.
+
+## B3580. Holy ground shared by several claims (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g13 as suggested. A site ties places on the places of power register (caern, Node, freehold, chantry) and an Elysium to one strength; each place keeps its own rules. Rules in site-rules.mjs.
+
+Reverse: turn off the holyGround setting.
+
+## B3581. How strong holy ground is (2026-11-13)
+WoDX Storyteller. House rule: ten points a level of the strongest place (caern level, a Node's caern level, a freehold's rank), times 1.5 to 1450, 1.25 to 1700, 1 to 1900, 0.8 to 2022 and 0.6 after; each step of the scene's Gauntlet drift takes a tenth off or puts one back. It wells up two points a level a week, by the same factor.
+
+Reverse: change ERA_STRENGTH, maxFor or weeklyFor in site-rules.mjs.
+
+## B3582. Drawing on shared ground (2026-11-13)
+WoDX Storyteller. House rule: Quintessence from meditation, Tass, Glamour by the balefire and the Opened Caern's gain each take a point of strength a point drawn, never more than is left. Below half every role gives half; at nothing, nothing.
+
+Reverse: change WEAK and allow in site-rules.mjs, or remove the Sites.gate calls in power.mjs.
+
+## B3583. Each holder hears of a draw (2026-11-13)
+WoDX Storyteller. Every keeper of another role on the site, the Keeper of Elysium and the Storyteller get a whispered card of each draw: who drew, how much, and what is left.
+
+Reverse: remove the card in sites.mjs onDraw.
+
+## B3584. A moot feeds the ground (2026-11-13)
+WoDX Storyteller. House rule: a moot at a caern on a site gives the site half the Gnosis the sept gave.
+
+Reverse: change mootGift in site-rules.mjs.
+
+## B3585. Quarrels over shared ground (2026-11-13)
+WoDX Storyteller. House rule: each draw on a weak site counts against every other claim on it; at three for a pair, the quarrel goes to the approval queue. Approving starts a rumour and logs it, and the pair can make a treaty or fight; the count starts again. The claims (who holds each role, and for which faction) are read by api.upkeep.sites.claimsIn for faction politics, with the hooks wodxSiteDraw and wodxSiteQuarrel.
+
+Reverse: change QUARREL_AT in site-rules.mjs.
+
+## B3590. Day jobs for mortal agents (2026-11-13)
+WoDX NPC. Ben approved notes gap g14 as suggested. Six jobs (watch a place, scrub the records, stir up a crowd, buy up a debt, sabotage the works, hide a body) run as long tasks on WoDX Storyteller's clock. Rules in day-jobs-rules.mjs.
+
+Reverse: remove the Day jobs button from the Followers window.
+
+## B3591. The powers a job works through (2026-11-13)
+WoDX NPC. House rule: guilds, lords and moneylenders to 1799, mercenary companies to 1699, the garrison 1700 to 1829, printers 1500 to 1829, the police from 1830, the press 1830 to 1949, broadcast media 1950 to 2022, the networks after, banks and officials from 1800, industry 1800 to 1969, corporations from 1900, technology firms from 1970; the Church, the streets and the underworld always. Each touches one sphere of Influence of its age; the Church, the lords, the guilds and the mercenaries take local names by the land's faith.
+
+Reverse: change CHANNELS or LOCAL in day-jobs-rules.mjs.
+
+## B3592. Who rolls a day job (2026-11-13)
+WoDX NPC. A follower rolls its own Attribute and Ability for the job. A Background dot with no character behind it rolls the master's Manipulation plus the dots, since V20 lets Influence stand in for an Ability (V20 p. 115). Difficulty 6; goals of 3 or 4 successes, by the hour or the day.
+
+Reverse: change jobTask in day-jobs-rules.mjs.
+
+## B3593. How factions react to a day job (2026-11-13)
+WoDX NPC. House rule: the faction aimed at, else the one holding the most Influence in the sphere (never the master's own). A done scrub, stir or sabotage proposes that it lose a dot of the sphere (approval queue); any ruined job moves its regard for the master a step down; a ruined body-hiding reports a breach.
+
+Reverse: change reaction in day-jobs-rules.mjs.
+
+## B3600. Steppe and northern Asia law family (2026-11-13)
+Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3601. Americas law family (2026-11-13)
+The eight American regions use the Americas family: the first peoples' councils and custom, then each region's empire, colonial law and republic, with modern police from 1900. New ids: marshals, alcohol.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3602. Pacific and Australia law family (2026-11-13)
+Australia, Aotearoa and the Pacific islands use the Pacific family: chiefs and sacred restrictions, the first peoples' own law, then colonial and national courts; each region's death penalty ends on its real date.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3603. Far north law family (2026-11-13)
+The Arctic uses the far north family: the community's own judgment, then the crowns' courts in the trading posts and the state's police. With this, all regions but Antarctica have their own law family.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3604. Offices of the law and the state (2026-11-13)
+Institutions gain six kinds: court, the ruler's officers, tax office and garrison in every town big enough, and the Holy Office and secret police only while the town's law record lists inquisitors or secret police. Ranks come from tables by law family and year, with a general fallback. A town's institutions store their law family. Sizes: court 1000 people, officers and tax office 2000, garrison, Holy Office and secret police 5000. House figures.
+
+Reverse: remove the six kinds; existing seats in them stay in the saved state but are not shown.
+
+## B3605. Splat hooks for the offices (2026-11-13)
+Each new office carries a Storyteller-only line on how the lines touch it (Dominate on judges, ghoul stewards, Kinfolk in the garrison, the Inquisition's hunters, files read by hunters and the Technocracy).
+
+Reverse: drop the hook lines.

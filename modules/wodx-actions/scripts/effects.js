@@ -321,12 +321,28 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
   const rec = await applyCore(item, casterName);
+  // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
+  try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
   try {
     const mood = await moodAfter(item, casterName);
     if ( mood && rec && typeof rec === "object" ) rec.attitude = mood;
   } catch (e) { console.warn("WoDX | effect attitude", e); }
   return rec;
+}
+
+/** B3528: tell a bound player character's players what binds them, how long, and the resist roll. */
+export async function bindingCard(item, casterName = "the caster", {actor = null} = {}) {
+  const a = actor ?? actorOf(docOf(item?.target));
+  if ( !a?.hasPlayerOwner || !game.user.isGM ) return null;
+  const b = E.bindingOf(item, {caster: casterName});
+  if ( !b ) return null;
+  const users = game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  return ChatMessage.create({speaker: {alias: b.by}, whisper: users, flags: {[MOD]: {binding: {actor: a.id, key: b.key}}},
+    content: `<div class="wodx-card wodx-binding"><h3><i class="fa-solid fa-link"></i> ${esc(a.name)} is bound</h3>
+      <p><b>${esc(b.label)}</b>, from ${esc(b.by)}: ${esc(b.command)}.</p>
+      <p>It lasts ${esc(b.lasts)}. Resisting: ${esc(b.resist)}.</p>
+      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. Nothing holds your token; the Storyteller rules on what you try.</p></div>`});
 }
 
 /** Sway (not Awe) on an NPC: one step warmer toward the caster; Fear (Afraid): one step colder. Returns the undo record. */

@@ -241,6 +241,23 @@ export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "
  * What resists a keyword: {pool, diff, text}, or null. power: a power's own entry from a book check, which wins
  * ({resist: {pool, diff}} or {resist: null} for none). The difficulties on the roster are house rules (B781).
  */
+/**
+ * B3528: a binding card for a player character. The keywords that bind a mind or a body (Dominate's commands, Presence's
+ * awe and dread, Mind's sway, a hold). Returns null for anything else. The card only tells the player; nothing holds
+ * the token (Ben's pick on the Notes Gaps Desk, g3: the binding card only).
+ */
+export const BINDING_KEYS = ["fear", "sway", "possess", "bind", "hold"];
+export function bindingOf(item = {}, {caster = "", power = ""} = {}) {
+  const key = item?.key, o = item?.out ?? {};
+  if ( !BINDING_KEYS.includes(key) || !KEYWORDS[key] ) return null;
+  const r = resistOf(key);
+  const label = String(o.label ?? KEYWORDS[key].label).slice(0, 120);
+  return {key, label, by: String(caster || "someone").slice(0, 80), power: String(power || "").slice(0, 80),
+    command: String(o.text ?? KEYWORDS[key].does ?? "").slice(0, 300), lasts: String(o.duration ?? "the scene").slice(0, 80),
+    resist: r ? `${r.pool[0].toUpperCase()}${r.pool.slice(1)} at ${r.diff}, where the power's own book allows a resistance roll` : "As the power's own book says",
+    does: String(KEYWORDS[key].does ?? "").slice(0, 300)};
+}
+
 export function resistOf(key, power = null) {
   const r = power && "resist" in power ? power.resist : KEYWORDS[key]?.resist;
   if ( !r ) return null;

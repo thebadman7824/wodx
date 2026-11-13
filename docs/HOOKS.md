@@ -64,9 +64,14 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
 | wodxLever | storyteller | a lever of an institution was pulled, approved by the Storyteller: {actor, institution, key, target} (B3356) |
 | wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
+| wodxHerdStage | storyteller (a district's herd changes stage, B3572) | {sceneId, stage, before, feeds, total} |
+| wodxSiteDraw | storyteller (a draw on shared holy ground, B3582) | {site, role, points, by, strength, max} |
+| wodxSiteQuarrel | storyteller (two claims on shared holy ground quarrel, B3585) | {site, roles, claims} |
+| wodxDayJobDone | npc (a day job ended, B3590) | {master, agent, job, status, faction} |
 | wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxCultFormed | npc | a following gathered around a character (B3242): {cult, founder} |
