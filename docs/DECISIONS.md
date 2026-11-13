@@ -181,7 +181,7 @@ Next free block: B3630
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3605) | Storyteller |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3607) | Chronicle, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5758,3 +5758,15 @@ Reverse: remove the six kinds; existing seats in them stay in the saved state bu
 Each new office carries a Storyteller-only line on how the lines touch it (Dominate on judges, ghoul stewards, Kinfolk in the garrison, the Inquisition's hunters, files read by hunters and the Technocracy).
 
 Reverse: drop the hook lines.
+
+## B3606. The law's heat (2026-11-13)
+Heat per region and culprit, apart from the hunters' pressure and a hunting ground's heat. Fed only by WoDX NPC's descriptions (wodxCrimeSeen), so the witness rolls are not made twice. Gravity: theft 2, breaking in 2, forcing 1, fire 3, desecration 2 (3 where heresy or blasphemy is a crime), fight 1, breach 2; half again when a witness knows the culprit, plus a half with three or more witnesses; times 0.5 plus the land's catch. Stages at 2, 5 and 8 of 10. Half-life 14 days with a watch, 60 with police, 90 with only secret police, 365 with cameras. The law's case stays on the Storyteller's card, not on a player case board, because case boards are owned by every player. House figures.
+
+Bribe figures read as BRIBE_WORDS says, 1 cheap to 5 dangerous to try. Three region rows that meant the opposite are corrected: Zaire under Mobutu is 1, Mexico under one party and after 2000 is 2; the Pacific family is 3 and the far north 4.
+
+Reverse: turn off the world setting The law looks for criminals.
+
+## B3607. Splat hooks for the law's heat (2026-11-13)
+The warrant card carries a line for the culprit's kind: day arrests for the Kindred, a ghoul's domitor, Kinfolk in the watch, a mage's impossible witnesses, a changeling's mortal seeming, a wraith's borrowed body, a hunter's killing as murder, a mummy's old names, a demon's host, a revenant's family lawyers.
+
+Reverse: empty LINE_HOOKS.

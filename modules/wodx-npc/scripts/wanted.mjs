@@ -117,6 +117,8 @@ export function build(ctx) {
     const all = list(), old = W.sameAs(all, {of: culprit.id, scene: scene.uuid, at});
     if ( old ) desc = W.merge(old, desc);
     await save([...all.filter(d => d.id !== old?.id), desc]);
+    // B3606: the law of that land takes notice (WoDX Chronicle's law heat)
+    Hooks.callAll("wodxCrimeSeen", {of: culprit.id, cause, what, scene: scene.uuid, named: desc.named, witnesses: desc.witnesses.length, fresh: !old, at});
     await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {wanted: {id: desc.id}}},
       content: `<div class="wodx-card wnpc-wanted"><p><b>${old ? "Word freshens" : "Word goes round"}:</b> ${esc(desc.witnesses.join(", "))} saw ${esc(desc.named ? culprit.name : "someone")} ${esc(W.summary(desc, at).replace(/;.*$/, ""))}.</p>
         <p><i>${esc(desc.text.charAt(0).toUpperCase() + desc.text.slice(1))}.</i></p>
