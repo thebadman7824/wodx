@@ -176,7 +176,7 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3496) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3497) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -5518,6 +5518,11 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 
 ## B3496. Africa south of the Sahara as the fifth law family (2026-11-13)
 WoDX Chronicle, law-rules.mjs. The african family: kings and chiefs with elders as assessors, lineage elders, masked societies and age sets; witnesses, oath and ordeal; fines and compensation, banishment, being sold into slavery, death. Colonial rule from 1885 (European courts above, native courts under the chiefs, the hut tax, separate law for Europeans and Africans) and independence from 1960. Four regions add their own rows. The sale of captives and colonial atrocities are stated as plain history in the Storyteller's warnings, with no game rewards attached.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3497. English common law as the sixth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The common family for the British Isles: the dated rows run from the Angevin courts and the sheriff, through the jury, justices of the peace, the established church, the witch trials, the Commonwealth, constitutional monarchy, transportation, the 1735 Witchcraft Act (claiming powers as fraud), police from 1829, to the end of hanging in 1965 and the laws of the 1990s and 2000. The colonies of the empire use their own regions' rows (North America, Australia, India) rather than this family, because their law split from England's early.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
 
