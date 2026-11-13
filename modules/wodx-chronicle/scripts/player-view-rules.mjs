@@ -31,7 +31,7 @@ export const ON_BAR = new Set(["wodxXCard", "wodxFindMe", "wodxFind", "wodxNow"]
 /** Which drawer each WoDX player button goes in. A WoDX button not listed here stays on the bar. */
 export const TOOL_GROUP = {
   wodxTalk: "now", wodxSenses: "now", wodxSight: "now", wodxCaseBoard: "now",
-  wodxCreation: "mine", wodxPrefs: "mine", wodxFollowers: "mine", wodxOrders: "mine", wodxFactions: "mine", wodxGear: "mine",
+  wodxCreation: "mine", wodxPrefs: "mine", wodxFollowers: "mine", wodxOrders: "mine", wodxFactions: "mine", wodxGear: "mine", wodxDress: "mine",
   wodxClock: "time", wodxOnYourOwn: "time", wodxPassTime: "time", wodxLetters: "time", wodxDowntime: "time",
   wodxTasks: "time", wodxClocks: "time", wodxProperty: "time", wodxSolo: "time",
   wodxStepSideways: "beyond", wodxPeek: "beyond", wodxSoul: "beyond", wodxSpirits: "beyond", wodxOtherRolls: "beyond",

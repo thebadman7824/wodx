@@ -313,12 +313,12 @@ export function awakeningResult(roll) {
 /* ---------------- Lifting chart (p. 335) ---------------- */
 
 export const LIFTING = [
-    [1, "Throw a rock", 20], [2, "Break a wooden chair", 45], [3, "Break down a wooden door", 115],
-    [4, "Break a wooden plank", 180], [5, "Bend a sword", 295], [6, "Throw a small pony", 360],
-    [7, "Throw a riding horse", 410], [8, "Throw a warhorse", 455], [9, "Punch through a simple stone wall", 545],
-    [10, "Rip open a reinforced door", 680], [11, "Punch through a heavily reinforced door", 910],
-    [12, "Lift a small portcullis", 1360], [13, "Throw a fully loaded wagon", 1815],
-    [14, "Throw a small boat", 2265], [15, "Lift a large portcullis", 2720]
+    [1, "Hurl a stone", 20], [2, "Smash a chair to pieces", 45], [3, "Kick in a plank door", 115],
+    [4, "Snap a thick board", 180], [5, "Bend a blade double", 295], [6, "Heave a pony off its feet", 360],
+    [7, "Toss a saddle horse", 410], [8, "Toss a destrier", 455], [9, "Break a hole in a rough stone wall", 545],
+    [10, "Tear a banded door off its hinges", 680], [11, "Break through an iron-bound door", 910],
+    [12, "Raise a small gate grille", 1360], [13, "Overturn a laden cart", 1815],
+    [14, "Lift a rowing boat overhead", 2265], [15, "Raise a castle gate grille", 2720]
 ];
 export function liftingFeat(level) {
     const l = Math.max(0, Math.min(15, level));

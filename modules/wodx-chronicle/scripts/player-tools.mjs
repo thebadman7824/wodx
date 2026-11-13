@@ -42,6 +42,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxOrders", label: "Give an order", module: "WoDX NPC"},
   {name: "wodxFollowers", label: "Followers", module: "WoDX NPC"},
   {name: "wodxFactions", label: "Factions", module: "WoDX NPC"},
+  {name: "wodxDress", label: "Dress for a part of the world", module: "WoDX NPC"},
   {name: "wodxCaseBoard", label: "Case board", module: "WoDX Interactables"},
   {name: "wodxSolo", label: "Solo panel", module: "WoDX Solo"}
 ];

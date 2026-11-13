@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.25.1 (the year-and-a-day Penumbra prompt is reworded in WoDX's own words (public repository overlap check); not deployed)
+- 0.25.0 (stepping sideways reads the ground under the token: looming places and relics one lower, Blights one higher, thin Shroud and Nihils one lower on the Shroud, and the rule of a WoDX Atmosphere mood region, two steps at most (B2912, B2913); Go on the realm world maps moves the clock by the journey's time and rolls the realm's dangers on the way (B2915); not deployed)
 - 0.24.1 (Read the Soul tells WoDX Senses what the reading showed, so the Aura Perception rings follow it. B2900)
 - 0.24.0 (realm world maps follow the books' notes on how each realm lies: 80 places in 25 realms stand where the books put them (the seasons of the Arcadia Gateway by compass, the two bridges of Yomi at opposite ends, Erebus from Cerberus inward to the fortress, the Central Duchy of Malfeas round its courtyard), travellers arrive where the books say in four realms, the Far Shores lie about an hour apart; Yomi's note says the Kuei-jin hold its Ti Yu to be a copy)
 - 0.23.2 (the realm world maps load their rules and places the first time the window opens, not when the world starts, so players no longer fetch about 115 KB at start-up; api.realmWorlds.load() loads them for a script, and api.realmWorlds.rules is empty until then. B2676)

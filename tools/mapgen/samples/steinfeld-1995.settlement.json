@@ -23,7 +23,7 @@
    "name": "Steinfeld",
    "map": "steinfeld.dungeondraft_map",
    "sidecar": "steinfeld.wodx.json",
-   "households": 113
+   "households": 114
   }
  ],
  "layers": [
@@ -46,82 +46,61 @@
   "rebuild-modern"
  ],
  "buildings": {
+  "Baťa house": 2,
   "Chapel": 1,
   "Colony house": 1,
-  "Cottage": 3,
-  "Family house": 1,
-  "Functionalist villa": 1,
-  "House and shop": 1,
+  "Cottage": 1,
+  "Gate-passage house": 2,
   "House in the Jewish quarter": 1,
   "Panel block": 2,
-  "Post inn": 1,
   "School": 1,
-  "Shop house": 1,
-  "Suburban house": 6
+  "Sgraffito house": 1,
+  "Suburban house": 6,
+  "Workshop": 1
  },
  "trades": {
-  "office worker": 20,
-  "factory worker": 19,
-  "pensioner": 16,
-  "builder": 12,
-  "nurse": 10,
-  "shop assistant": 10,
+  "office worker": 21,
+  "factory worker": 17,
+  "pensioner": 14,
+  "nurse": 12,
+  "builder": 11,
+  "shop assistant": 9,
   "driver": 8,
-  "programmer": 4,
+  "student": 6,
+  "programmer": 5,
   "teacher": 4,
-  "student": 3,
-  "butcher": 1,
+  "unemployed": 2,
+  "joiner": 1,
   "mayor": 1,
   "priest": 1,
-  "publican": 1,
   "school caretaker": 1,
-  "schoolteacher": 1,
-  "shopkeeper": 1
+  "schoolteacher": 1
  },
  "notables": [
   {
    "role": "mayor",
-   "household": "steinfeld-1995-7.cottage-13-household"
+   "household": "steinfeld-1995-7.cottage-16-household"
   },
   {
    "role": "schoolteacher",
-   "household": "steinfeld-1995-7.cottage-12-household"
+   "household": "steinfeld-1995-7.cottage-17-household"
   }
  ],
  "households": [
   {
-   "id": "steinfeld-1995-7.townhouse-1-household",
-   "building": "townhouse-1",
-   "label": "House and shop (draper) household",
-   "type": "townhouse",
-   "trade": "shopkeeper",
+   "id": "steinfeld-1995-7.workshop-1-household",
+   "building": "workshop-1",
+   "label": "Workshop (carpenter) household",
+   "type": "workshop",
+   "trade": "joiner",
    "wealth": "middling",
    "people": [
-    "shopkeeper"
+    "joiner"
    ],
    "map": "",
    "at": [
-    86.2,
-    68.5
-   ]
-  },
-  {
-   "id": "steinfeld-1995-7.cottage-6-household",
-   "building": "cottage-6",
-   "label": "Cottage household",
-   "type": "cottage",
-   "trade": "factory worker",
-   "wealth": "middling",
-   "people": [
-    "factory worker",
-    "partner",
-    "child",
-    "child"
-   ],
-   "map": "",
-   "at": [
-    73.5,
-    53.3
+    43.7,
+    69.2
    ]
   },
   {
@@ -133,10 +112,7 @@
    "wealth": "middling",
    "people": [
     "factory worker",
-    "child",
-    "child",
-    "child",
-    "lodger"
+    "child"
    ],
    "map": "",
    "at": [
@@ -145,14 +121,66 @@
    ]
   },
   {
-   "id": "steinfeld-1995-7.cottage-11-household",
-   "building": "cottage-11",
-   "label": "Cottage household",
-   "type": "cottage",
-   "trade": "factory worker",
+   "id": "steinfeld-1995-7.ghetto-house-1-household",
+   "building": "ghetto-house-1",
+   "label": "House in the Jewish quarter household",
+   "type": "ghetto-house",
+   "trade": "nurse",
    "wealth": "middling",
    "people": [
-    "factory worker"
+    "nurse",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    66.1,
+    93.3
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.sgraffito-house-1-household",
+   "building": "sgraffito-house-1",
+   "label": "Sgraffito house household",
+   "type": "sgraffito-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    47.3,
+    54.8
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.passage-house-1-household",
+   "building": "passage-house-1",
+   "label": "Gate-passage house household",
+   "type": "passage-house",
+   "trade": "priest",
+   "wealth": "middling",
+   "people": [
+    "priest",
+    "housekeeper"
+   ],
+   "map": "",
+   "at": [
+    49.8,
+    86.1
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.colony-house-1-household",
+   "building": "colony-house-1",
+   "label": "Colony house household",
+   "type": "colony-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
    ],
    "map": "",
    "at": [
@@ -161,58 +189,19 @@
    ]
   },
   {
-   "id": "steinfeld-1995-7.ghetto-house-1-household",
-   "building": "ghetto-house-1",
-   "label": "House in the Jewish quarter household",
-   "type": "ghetto-house",
-   "trade": "teacher",
-   "wealth": "middling",
-   "people": [
-    "teacher",
-    "partner",
-    "child",
-    "child"
-   ],
-   "map": "",
-   "at": [
-    47.8,
-    55.6
-   ]
-  },
-  {
-   "id": "steinfeld-1995-7.post-inn-2-household",
-   "building": "post-inn-2",
-   "label": "Post inn household",
-   "type": "post-inn",
-   "trade": "publican",
-   "wealth": "middling",
-   "people": [
-    "publican",
-    "child",
-    "child",
-    "elder"
-   ],
-   "map": "",
-   "at": [
-    82.3,
-    59.5
-   ]
-  },
-  {
-   "id": "steinfeld-1995-7.colony-house-1-household",
-   "building": "colony-house-1",
-   "label": "Colony house household",
-   "type": "colony-house",
+   "id": "steinfeld-1995-7.passage-house-2-household",
+   "building": "passage-house-2",
+   "label": "Gate-passage house household",
+   "type": "passage-house",
    "trade": "pensioner",
    "wealth": "middling",
    "people": [
-    "pensioner",
-    "child"
+    "pensioner"
    ],
    "map": "",
    "at": [
-    39.7,
-    89.2
+    79.5,
+    87.2
    ]
   },
   {
@@ -226,46 +215,78 @@
     "school caretaker",
     "staff",
     "staff",
-    "staff",
     "staff"
    ],
    "map": "",
    "at": [
-    73.1,
-    91.2
+    81.4,
+    60.0
    ]
   },
   {
-   "id": "steinfeld-1995-7.func-villa-1-household",
-   "building": "func-villa-1",
-   "label": "Functionalist villa household",
-   "type": "func-villa",
-   "trade": "pensioner",
-   "wealth": "poor",
-   "people": [
-    "pensioner"
-   ],
-   "map": "",
-   "at": [
-    61.8,
-    119.3
-   ]
-  },
-  {
-   "id": "steinfeld-1995-7.shop-house-1-household",
-   "building": "shop-house-1",
-   "label": "Shop house household",
-   "type": "shop-house",
-   "trade": "butcher",
+   "id": "steinfeld-1995-7.bata-house-1-household",
+   "building": "bata-house-1",
+   "label": "Baťa house household",
+   "type": "bata-house",
+   "trade": "student",
    "wealth": "middling",
    "people": [
-    "butcher",
-    "partner"
+    "student"
    ],
    "map": "",
    "at": [
-    42.2,
-    69.6
+    40.1,
+    90.7
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.bata-house-1-household-2",
+   "building": "bata-house-1",
+   "label": "Baťa house household",
+   "type": "bata-house",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    40.1,
+    90.7
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.bata-house-2-household",
+   "building": "bata-house-2",
+   "label": "Baťa house household",
+   "type": "bata-house",
+   "trade": "unemployed",
+   "wealth": "poor",
+   "people": [
+    "unemployed"
+   ],
+   "map": "",
+   "at": [
+    100.8,
+    25.3
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.bata-house-2-household-2",
+   "building": "bata-house-2",
+   "label": "Baťa house household",
+   "type": "bata-house",
+   "trade": "unemployed",
+   "wealth": "poor",
+   "people": [
+    "unemployed"
+   ],
+   "map": "",
+   "at": [
+    100.8,
+    25.3
    ]
   },
   {
@@ -273,10 +294,14 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "office worker",
+   "trade": "teacher",
    "wealth": "middling",
    "people": [
-    "office worker"
+    "teacher",
+    "partner",
+    "child",
+    "child",
+    "elder"
    ],
    "map": "",
    "at": [
@@ -289,10 +314,12 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "pensioner",
+   "trade": "office worker",
    "wealth": "middling",
    "people": [
-    "pensioner"
+    "office worker",
+    "partner",
+    "child"
    ],
    "map": "",
    "at": [
@@ -305,10 +332,14 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "nurse",
+   "trade": "programmer",
    "wealth": "middling",
    "people": [
-    "nurse"
+    "programmer",
+    "partner",
+    "child",
+    "child",
+    "child"
    ],
    "map": "",
    "at": [
@@ -325,6 +356,8 @@
    "wealth": "middling",
    "people": [
     "builder",
+    "partner",
+    "child",
     "child"
    ],
    "map": "",
@@ -338,13 +371,11 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "shop assistant",
+   "trade": "nurse",
    "wealth": "middling",
    "people": [
-    "shop assistant",
-    "partner",
-    "child",
-    "lodger"
+    "nurse",
+    "partner"
    ],
    "map": "",
    "at": [
@@ -360,9 +391,7 @@
    "trade": "pensioner",
    "wealth": "middling",
    "people": [
-    "pensioner",
-    "partner",
-    "child"
+    "pensioner"
    ],
    "map": "",
    "at": [
@@ -375,11 +404,10 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "office worker",
+   "trade": "student",
    "wealth": "middling",
    "people": [
-    "office worker",
-    "child"
+    "student"
    ],
    "map": "",
    "at": [
@@ -392,10 +420,10 @@
    "building": "panel-block-1",
    "label": "Panel block household",
    "type": "panel-block",
-   "trade": "programmer",
+   "trade": "student",
    "wealth": "middling",
    "people": [
-    "programmer",
+    "student",
     "partner"
    ],
    "map": "",
@@ -1958,13 +1986,12 @@
    "building": "cottage-12",
    "label": "Suburban house household",
    "type": "cottage",
-   "trade": "schoolteacher",
+   "trade": "programmer",
    "wealth": "middling",
    "people": [
-    "schoolteacher",
+    "programmer",
     "partner",
-    "child",
-    "child"
+    "elder"
    ],
    "map": "",
    "at": [
@@ -1977,11 +2004,10 @@
    "building": "cottage-13",
    "label": "Suburban house household",
    "type": "cottage",
-   "trade": "mayor",
+   "trade": "pensioner",
    "wealth": "middling",
    "people": [
-    "mayor",
-    "partner"
+    "pensioner"
    ],
    "map": "",
    "at": [
@@ -2001,8 +2027,8 @@
    ],
    "map": "",
    "at": [
-    105.6,
-    25.5
+    89.7,
+    26.9
    ]
   },
   {
@@ -2019,8 +2045,8 @@
    ],
    "map": "",
    "at": [
-    96.6,
-    26.3
+    106.1,
+    36.2
    ]
   },
   {
@@ -2028,26 +2054,11 @@
    "building": "cottage-16",
    "label": "Suburban house household",
    "type": "cottage",
-   "trade": "builder",
+   "trade": "mayor",
    "wealth": "middling",
    "people": [
-    "builder"
-   ],
-   "map": "",
-   "at": [
-    106.1,
-    36.2
-   ]
-  },
-  {
-   "id": "steinfeld-1995-7.cottage-17-household",
-   "building": "cottage-17",
-   "label": "Suburban house household",
-   "type": "cottage",
-   "trade": "pensioner",
-   "wealth": "middling",
-   "people": [
-    "pensioner"
+    "mayor",
+    "child"
    ],
    "map": "",
    "at": [
@@ -2056,182 +2067,190 @@
    ]
   },
   {
-   "id": "steinfeld-1995-7.family-house-1-household",
-   "building": "family-house-1",
-   "label": "Family house household",
-   "type": "family-house",
-   "trade": "priest",
+   "id": "steinfeld-1995-7.cottage-17-household",
+   "building": "cottage-17",
+   "label": "Suburban house household",
+   "type": "cottage",
+   "trade": "schoolteacher",
    "wealth": "middling",
    "people": [
-    "priest",
-    "housekeeper"
+    "schoolteacher",
+    "partner",
+    "child",
+    "elder"
    ],
    "map": "",
    "at": [
-    49.6,
-    85.6
+    77.6,
+    30.3
    ]
   }
  ],
  "ties": [
   {
-   "a": "steinfeld-1995-7.townhouse-1-household",
-   "b": "steinfeld-1995-7.panel-block-2-household-15",
+   "a": "steinfeld-1995-7.workshop-1-household",
+   "b": "steinfeld-1995-7.panel-block-2-household-13",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1995-7.cottage-11-household",
-   "b": "steinfeld-1995-7.ghetto-house-1-household",
-   "kind": "friend",
-   "note": "neighbours who help each other"
-  },
-  {
-   "a": "steinfeld-1995-7.func-villa-1-household",
-   "b": "steinfeld-1995-7.panel-block-2-household-3",
-   "kind": "friend",
-   "note": "neighbours who help each other"
-  },
-  {
-   "a": "steinfeld-1995-7.panel-block-1-household-1",
-   "b": "steinfeld-1995-7.cottage-6-household",
-   "kind": "friend",
-   "note": "neighbours who help each other"
-  },
-  {
-   "a": "steinfeld-1995-7.panel-block-1-household-14",
+   "a": "steinfeld-1995-7.sgraffito-house-1-household",
    "b": "steinfeld-1995-7.colony-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.bata-house-1-household",
+   "b": "steinfeld-1995-7.panel-block-2-household-2",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.bata-house-2-household",
+   "b": "steinfeld-1995-7.cottage-12-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-12",
+   "b": "steinfeld-1995-7.passage-house-2-household",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-17",
-   "b": "steinfeld-1995-7.panel-block-1-household-7",
+   "a": "steinfeld-1995-7.panel-block-1-household-15",
+   "b": "steinfeld-1995-7.panel-block-1-household-5",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-18",
-   "b": "steinfeld-1995-7.panel-block-2-household-1",
+   "a": "steinfeld-1995-7.panel-block-1-household-16",
+   "b": "steinfeld-1995-7.panel-block-1-household-47",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-25",
+   "a": "steinfeld-1995-7.panel-block-1-household-23",
    "b": "steinfeld-1995-7.school-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-31",
-   "b": "steinfeld-1995-7.panel-block-1-household-17",
+   "a": "steinfeld-1995-7.panel-block-1-household-29",
+   "b": "steinfeld-1995-7.panel-block-1-household-15",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-35",
-   "b": "steinfeld-1995-7.post-inn-2-household",
+   "a": "steinfeld-1995-7.panel-block-1-household-33",
+   "b": "steinfeld-1995-7.ghetto-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-36",
-   "b": "steinfeld-1995-7.panel-block-2-household-12",
+   "a": "steinfeld-1995-7.panel-block-1-household-34",
+   "b": "steinfeld-1995-7.panel-block-2-household-10",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-36",
-   "b": "steinfeld-1995-7.cottage-6-household",
+   "a": "steinfeld-1995-7.panel-block-1-household-34",
+   "b": "steinfeld-1995-7.cottage-16-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-1-household-44",
-   "b": "steinfeld-1995-7.panel-block-1-household-47",
+   "a": "steinfeld-1995-7.panel-block-1-household-42",
+   "b": "steinfeld-1995-7.panel-block-1-household-45",
    "kind": "child",
    "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-3",
+   "b": "steinfeld-1995-7.bata-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
   },
   {
    "a": "steinfeld-1995-7.panel-block-2-household-5",
-   "b": "steinfeld-1995-7.colony-house-1-household",
+   "b": "steinfeld-1995-7.passage-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-7",
-   "b": "steinfeld-1995-7.func-villa-1-household",
-   "kind": "friend",
-   "note": "neighbours who help each other"
-  },
-  {
-   "a": "steinfeld-1995-7.panel-block-2-household-13",
-   "b": "steinfeld-1995-7.colony-house-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-11",
+   "b": "steinfeld-1995-7.passage-house-2-household",
    "kind": "sibling",
    "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-12",
+   "b": "steinfeld-1995-7.bata-house-1-household-2",
+   "kind": "friend",
+   "note": "neighbours who help each other"
   },
   {
    "a": "steinfeld-1995-7.panel-block-2-household-14",
-   "b": "steinfeld-1995-7.family-house-1-household",
+   "b": "steinfeld-1995-7.bata-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-16",
-   "b": "steinfeld-1995-7.colony-house-1-household",
-   "kind": "friend",
-   "note": "neighbours who help each other"
-  },
-  {
-   "a": "steinfeld-1995-7.panel-block-2-household-19",
-   "b": "steinfeld-1995-7.panel-block-2-household-46",
+   "a": "steinfeld-1995-7.panel-block-2-household-17",
+   "b": "steinfeld-1995-7.panel-block-2-household-44",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-20",
-   "b": "steinfeld-1995-7.colony-house-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-18",
+   "b": "steinfeld-1995-7.bata-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-26",
-   "b": "steinfeld-1995-7.colony-house-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-24",
+   "b": "steinfeld-1995-7.bata-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-36",
-   "b": "steinfeld-1995-7.family-house-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-34",
+   "b": "steinfeld-1995-7.bata-house-1-household-2",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-44",
-   "b": "steinfeld-1995-7.panel-block-2-household-1",
+   "a": "steinfeld-1995-7.panel-block-2-household-42",
+   "b": "steinfeld-1995-7.panel-block-1-household-47",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-45",
-   "b": "steinfeld-1995-7.func-villa-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-43",
+   "b": "steinfeld-1995-7.passage-house-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.panel-block-2-household-48",
-   "b": "steinfeld-1995-7.family-house-1-household",
+   "a": "steinfeld-1995-7.panel-block-2-household-46",
+   "b": "steinfeld-1995-7.bata-house-1-household-2",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.family-house-1-household",
-   "b": "steinfeld-1995-7.panel-block-2-household-1",
+   "a": "steinfeld-1995-7.cottage-16-household",
+   "b": "steinfeld-1995-7.bata-house-2-household-2",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1995-7.ghetto-house-1-household",
+   "a": "steinfeld-1995-7.cottage-17-household",
+   "b": "steinfeld-1995-7.bata-house-2-household",
+   "kind": "rival",
+   "note": "an old insult"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-1",
    "place": "school-1",
    "kind": "works-at",
    "note": "School"
@@ -2255,7 +2274,7 @@
    "note": "School"
   },
   {
-   "a": "steinfeld-1995-7.cottage-12-household",
+   "a": "steinfeld-1995-7.cottage-17-household",
    "place": "school-1",
    "kind": "works-at",
    "note": "School"

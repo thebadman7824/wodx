@@ -17,7 +17,9 @@ import ddcore as C
 BANDS = ["medieval", "early", "reform", "industrial", "republic", "socialist", "modern", "future"]
 RULES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalogue_rules.json"), encoding="utf-8"))
 _PACKS = [(re.compile(p["match"]), p) for p in RULES["packs"]]
-_PIECES = [(re.compile(rx, re.I), piece) for rx, piece in RULES["pieces"]]
+_VETO = set(RULES["veto_words"])
+_NOT = [n.split() for n in RULES["not_pieces"]]
+_PIECE_WORDS = [(piece, [w.split() for w in ws]) for piece, ws in RULES["piece_words"]]
 _FOLDERS = [(re.compile(rx, re.I), piece) for rx, piece in RULES["folders"]]
 _LASTING = re.compile(RULES["lasting"], re.I)
 _UP = [(re.compile(rx, re.I), n) for rx, n in RULES["worth_up"].items()]
@@ -28,6 +30,52 @@ _SKIP_NAME = re.compile(RULES["skip_names"], re.I)       # fantasy races, magic:
 _SKIP_PACK = re.compile(RULES["skip_packs"], re.I)
 _KINDS = {"walls": "wall", "tilesets": "floor", "patterns": "floor", "portals": "door"}
 _NAMES = {}
+# measured picture sizes (pixels, 256 to a square), read off the packs on the PC; the newest table wins
+SIZE_TABLES = ["/mnt/project-files/asset-sizes-2026-11-11.tsv", "/mnt/project-files/map-furnishing/sizes/asset-sizes-2026-11-13.tsv"]
+_MEASURED = None
+
+
+def measured():
+    global _MEASURED
+    if _MEASURED is None:
+        _MEASURED = {}
+        for t in SIZE_TABLES:
+            if not os.path.exists(t): continue
+            for line in open(t, encoding="utf-8-sig"):
+                p = line.rstrip("\n").split("\t")
+                if len(p) >= 3 and p[0] != "path":
+                    try: _MEASURED[p[0]] = (round(int(p[1]) / 256, 2), round(int(p[2]) / 256, 2))
+                    except ValueError: pass
+    return _MEASURED
+
+
+def size_of(path, fname):
+    """(cells, sized): the measured size, else the size in the name, else one square (not sized: a guess)."""
+    m = measured().get(path)
+    if m: return tuple(m), True
+    if re.search(r"_(\d+)x(\d+)(?:_\w+)?\.(?:webp|png)$", fname): return tuple(C.cells_of(fname)), True
+    return (1, 1), False
+
+
+def words(stem):
+    """The words of a file name, lower case: Horse_Chestnut_Tree_Tiny_01_A -> horse chestnut tree tiny a."""
+    stem = re.sub(r"_(Ashen|Light|Dark)(?=_|$)", "", stem)                 # a wood finish is not a lamp
+    return [w.lower() for w in re.findall(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+", stem)]
+
+
+def _has(ws, phrase):
+    n = len(phrase)
+    for i in range(len(ws) - n + 1):
+        if all(ws[i + k] == p or ws[i + k] in (p + "s", p + "es") for k, p in enumerate(phrase)): return True
+    return False
+
+
+def piece_by_words(stem):
+    """The piece a name stands for, by whole words; None for a name that is no furniture (veto_words, not_pieces);
+    "?" when no word is known."""
+    ws = words(stem)
+    if _VETO & set(ws) or any(_has(ws, n) for n in _NOT): return None
+    return next((piece for piece, phrases in _PIECE_WORDS if any(_has(ws, ph) for ph in phrases)), "?")
 
 
 def pack_name(pid):
@@ -59,8 +107,8 @@ def tag(path):
         piece = _KINDS[kind]
     elif kind == "objects":
         if _SKIP.search("/".join(parts[3:-1])) or _SKIP_NAME.search(fname): return None
-        bare = re.sub(r"_(Ashen|Light|Dark)(?=_|$)", "", stem)          # a wood finish is not a lamp
-        piece = next((p for rx, p in _PIECES if rx.search(bare)), "?")
+        piece = piece_by_words(stem)
+        if piece is None: return None
         if piece == "?": piece = next((p for rx, p in _FOLDERS if rx.search("/".join(parts[3:-1]))), None)
         if piece is None: return None
     else:
@@ -75,17 +123,20 @@ def tag(path):
         later = [b for b in bands if BANDS.index(b) >= first]
         bands = later or BANDS[first:first + 2]                       # a pack of an older age still lends its piece later
     worth = rule["worth"] + sum(n for rx, n in _UP if rx.search(stem)) - sum(n for rx, n in _DOWN if rx.search(stem))
+    cells, sized = size_of(path.strip(), fname)
+    regions = rule.get("regions")
+    if set(words(stem)) & set(RULES.get("asia_words", [])): regions = ["east-asia"]      # bamboo and tatami stay in Asia
     return {"path": path.strip(), "name": fname, "pack": pid, "pack_name": pname, "kind": kind, "piece": piece,
             "style": style, "bands": bands, "worth": max(0, min(5, worth)), "lasting": bool(_LASTING.search(stem)),
-            "cells": C.cells_of(fname), "regions": rule.get("regions")}
+            "cells": cells, "sized": sized, "regions": regions}
 
 
 def piece_of(fname):
     """The general piece an asset name stands for (by name only), or None."""
     stem = re.sub(r"\.(png|webp|jpg)$", "", fname.rsplit("/", 1)[-1], flags=re.I)
-    bare = re.sub(r"_(Ashen|Light|Dark)(?=_|$)", "", stem)
     if _SKIP_NAME.search(stem): return None
-    return next((p for rx, p in _PIECES if rx.search(bare)), None)
+    p = piece_by_words(stem)
+    return None if p == "?" else p
 
 
 def build(paths):

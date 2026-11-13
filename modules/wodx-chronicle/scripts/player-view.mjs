@@ -121,6 +121,9 @@ function outside(ev) { if ( !ev.target.closest?.(".wodx-drawer") && !ev.target.c
 function onKey(ev) { if ( ev.key === "Escape" ) closeDrawer(); }
 
 /** Open one drawer beside its button. */
+/** The buttons in the drawers now, by name (empty in Full view). */
+export function drawerTools() { return Object.values(drawers ?? {}).flatMap(d => [...d.fit, ...d.more].map(t => t.name)); }
+
 export function openDrawer(id, toolName) {
   const open = document.querySelector(`.wodx-drawer[data-group="${id}"]`);
   closeDrawer();
@@ -331,8 +334,11 @@ function standsBeyond(token) {
 function nowCtx() {
   const actor = myActor();
   const token = actor ? myToken(actor) : null;
-  const c = game.combat ?? null;
-  const mine = c && actor ? c.combatants.find(x => x.actor === actor || (token && x.tokenId === token.id)) : null;
+  // Any fight this character is in, the one on view first: the viewed combat alone can miss a fight just made
+  const isMine = x => x.actor === actor || (token && x.tokenId === token.id) || (!token && x.actorId === actor?.id);
+  const fights = [game.combat, ...(game.combats?.contents ?? [])].filter(Boolean);
+  const c = actor ? fights.find(f => f.combatants.some(isMine)) ?? null : null;
+  const mine = c ? c.combatants.find(isMine) : null;
   return {actor, token, combat: c, combatant: mine,
     ctx: {hasActor: !!actor, onScene: !!token, inFight: !!mine, needsInit: !!mine && mine.initiative == null,
       myTurn: !!mine && c?.started && c.combatant === mine, beyond: standsBeyond(token)}};

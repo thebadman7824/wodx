@@ -218,7 +218,7 @@
    "id": "living-room-0",
    "label": "Oven (Living room)",
    "rect": [
-    15.8,
+    15.82,
     12.82,
     2.0,
     2.0
@@ -286,8 +286,8 @@
    "id": "barn-floor-0",
    "label": "Hay pile (Barn floor)",
    "rect": [
-    31.32,
-    10.18,
+    27.7,
+    10.2,
     2.0,
     2.0
    ],
@@ -302,7 +302,7 @@
    "id": "barn-floor-1",
    "label": "Hay pile (Barn floor)",
    "rect": [
-    27.68,
+    31.32,
     10.18,
     2.0,
     2.0

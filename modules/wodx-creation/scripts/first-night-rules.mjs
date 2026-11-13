@@ -323,7 +323,7 @@ export function seedCards(items = [], standing = []) {
 export const STANDING_WORD = {"-3": "Hunted", "-2": "Hostile", "-1": "Distrusted", "1": "Tolerated", "2": "Welcome", "3": "Honoured"};
 
 /**
- * The hub as a checklist (Creation 0.25.0, B2829): the next step to do, and how many are left. A step counts as left
+ * The hub as a checklist (Creation 0.28.0, B2829): the next step to do, and how many are left. A step counts as left
  * when it is open and not optional; the next is the first open one this person can do (sign-off is the Storyteller's,
  * and a step waiting for the Storyteller is not the player's next). Returns {next: key or null, left, total}.
  */

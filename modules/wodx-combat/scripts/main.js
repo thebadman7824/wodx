@@ -946,6 +946,8 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
         baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
         rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
+        // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
+        nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
         bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff
     });
 }
@@ -1508,7 +1510,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.25.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.26.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

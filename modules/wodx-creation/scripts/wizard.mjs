@@ -11,6 +11,7 @@ import {totalsView, lineFor, CreationCheckApp} from "./totals-check.mjs";
 import * as B from "./first-night-build-rules.mjs";
 import * as W from "./wizard-rules.mjs";
 import * as Q from "./quick-start-rules.mjs";
+import * as D from "./derived-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
 
@@ -32,6 +33,15 @@ const feats = (actor, type) => [...(actor.items ?? [])].filter(i => i.type === "
 const points = (actor, type) => feats(actor, type).reduce((t, i) => t + n(i.system?.value), 0);
 const preludeLog = actor => actor?.flags?.[MODULE_ID]?.firstNight?.prelude?.log ?? [];
 
+const bgDots = actor => Object.fromEntries(feats(actor, BG).map(i => [i.name.trim().toLowerCase(), n(i.system?.value)]));
+const preludeWillpower = actor => (Array.isArray(preludeLog(actor)) ? preludeLog(actor) : []).filter(e => e?.kind === "reward" && !e.undone && e.undo?.kind === "willpower").length;
+
+/** The Traits that follow from the others, for a sheet (derived-rules.mjs). */
+export function derivedFor(actor, lineId = null) {
+  const line = lineId && TOTALS[lineId] ? lineId : wizardLine(actor);
+  return D.derivedTraits(line, actor?.system ?? {}, {bought: wizardOf(actor).bought, prelude: preludeWillpower(actor), backgrounds: bgDots(actor)});
+}
+
 /** The ledger for a sheet: what Before the First Night's Build step and the check after the prelude read. */
 export function ledgerFor(actor, lineId = null) {
   const line = lineId && TOTALS[lineId] ? lineId : wizardLine(actor);
@@ -46,7 +56,8 @@ export class WizardApp extends ApplicationV2 {
     window: {title: "Character wizard", icon: "fa-solid fa-wand-magic-sparkles", resizable: true},
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
-      removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub, quick: WizardApp.#onQuick}
+      removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub,
+      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood}
   };
 
   static openFor(actor, page = null) {
@@ -276,7 +287,22 @@ export class WizardApp extends ApplicationV2 {
     const rows = this.#virtueRows(ctx, "virtues");
     return `<h3>Virtues</h3><p>${ctx.L.virtues} dots. Each Virtue in use starts with one free dot${ctx.lineId === "v20" ? " (Conviction and Instinct, for a Path, start at none)" : ""}.</p>
       ${rows ? `<table class="wodx-table">${rows}</table>` : `<p class="wodx-quiet">This sheet shows no Virtues.</p>`}
-      <p class="wodx-quiet">From them: ${esc(ctx.L.start.join("; "))}.</p>`;
+      ${this.#derived(ctx)}`;
+  }
+
+  /** The Traits that follow from the others, with a button to put each on the sheet (B3000). */
+  #derived(ctx) {
+    const d = derivedFor(this.actor, ctx.lineId), blood = D.startingBlood(ctx.lineId, {backgrounds: bgDots(this.actor)});
+    const rows = d.rows.map(r => `<tr><td>${esc(r.label)}</td><td class="wodx-fn-dots">${r.have}</td><td>${r.want ?? "?"}</td><td class="wodx-quiet">${esc(r.how)}</td>
+      <td>${r.want !== null && r.off ? `<button type="button" data-action="derive" data-key="${r.key}" aria-label="Set ${esc(r.label)} to ${r.want}">Set</button>` : r.want !== null ? `<i class="fa-solid fa-check" aria-label="Matches"></i>` : ""}</td></tr>`).join("");
+    const off = d.rows.filter(r => r.off).length;
+    const bloodNow = n(this.actor.system?.advantages?.bloodpool?.temporary);
+    return `<h4>Traits that follow from the others</h4>
+      ${rows ? `<table class="wodx-table wodx-wz-derived"><thead><tr><th>Trait</th><th>Sheet</th><th>Book</th><th>How</th><th></th></tr></thead><tbody>${rows}</tbody></table>` : ""}
+      ${off > 1 ? `<p><button type="button" data-action="derive" data-key=""><i class="fa-solid fa-wand-magic"></i> Set all ${off}</button></p>` : ""}
+      ${blood ? `<p>Blood to start with: ${esc(blood.how)}. Now ${bloodNow}. <button type="button" data-action="blood">${blood.roll ? `<i class="fa-solid fa-dice-d10"></i> Roll it` : "Set it"}</button></p>` : ""}
+      ${d.notes.length ? `<p class="wodx-quiet">${d.notes.map(esc).join(" ")}</p>` : ""}
+      <p class="wodx-quiet">From ${esc(d.ref)}. Dots bought with freebies and the prelude's Willpower are added on top.</p>`;
   }
 
   #merits(ctx) {
@@ -337,12 +363,13 @@ export class WizardApp extends ApplicationV2 {
       led.left >= 0 ? `${led.left} left.` : `${-led.left} too many: take something back.`
     ];
     const warn = [...led.unspent.map(u => `${u.label}: ${u.dots} ${u.dots === 1 ? "dot" : "dots"} still to spend.`),
-      ...(led.flawsOver ? [`Flaws past ${L.flaws ?? 7} points give nothing.`] : [])];
+      ...(led.flawsOver ? [`Flaws past ${L.flaws ?? 7} points give nothing.`] : []),
+      ...derivedFor(this.actor, ctx.lineId).rows.filter(r => r.off).map(r => `${r.label}: the sheet has ${r.have}, the book gives ${r.want}.`)];
     return `<h3>Last look</h3>
       <table class="wodx-table wodx-check"><thead><tr><th>Step</th><th>Book</th><th>Sheet</th><th></th></tr></thead><tbody>${rows}</tbody></table>
       <p>${lines.map(esc).join(" ")}</p>
       ${warn.length ? `<ul class="wodx-wz-warn">${warn.map(w => `<li>${esc(w)}</li>`).join("")}</ul>` : `<p>${led.ok ? "Everything matches the book." : ""}</p>`}
-      <p class="wodx-quiet">Still to set by hand: ${esc(L.start.join("; "))}.</p>
+      ${this.#derived(ctx)}
       <div class="wodx-buttons"><button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
         <button type="button" data-action="hub"><i class="fa-solid fa-moon"></i> Before the First Night</button></div>`;
   }
@@ -350,6 +377,29 @@ export class WizardApp extends ApplicationV2 {
   /* -------------------------------------------- */
   /*  Actions                                     */
   /* -------------------------------------------- */
+
+  /** Puts one derived Trait (data-key) or all of them on the sheet. */
+  static async #onDerive(ev, el) {
+    const key = el.dataset.key ?? "", rows = derivedFor(this.actor, this.lineId).rows.filter(r => r.off && (!key || r.key === key));
+    if ( !rows.length ) return;
+    await this.actor.update(D.derivedUpdates(rows));
+    this.render();
+  }
+
+  /** The starting blood: the book's die (and Backgrounds), to the Generation's limit. */
+  static async #onBlood() {
+    const b = D.startingBlood(this.lineId, {backgrounds: bgDots(this.actor)});
+    if ( !b ) return;
+    let total = b.plus;
+    if ( b.roll ) {
+      const roll = await new Roll(`${b.roll}d10`).evaluate();
+      await roll.toMessage({speaker: ChatMessage.getSpeaker({actor: this.actor}), flavor: `Starting blood: ${b.how}`});
+      total += roll.total;
+    }
+    const max = n(this.actor.system?.advantages?.bloodpool?.max) || 10;
+    await this.actor.update({"system.advantages.bloodpool.temporary": Math.min(max, total)});
+    this.render();
+  }
 
   static async #onGo(ev, el) {
     this.page = el.dataset.page;

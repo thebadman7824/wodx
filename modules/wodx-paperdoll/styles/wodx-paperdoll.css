@@ -49,3 +49,4 @@
 /* The smaller parts under More (B2833) */
 .wodx-figure .wodx-figure-more { list-style: none; }
 .wodx-figure .wodx-figure-more > details > summary { cursor: pointer; opacity: 0.85; padding: 2px 0; }
+.wodx-face64-wrap .wodx-face64-net { border-color: rgba(120, 255, 170, 0.35); box-shadow: 0 0 6px rgba(120, 255, 170, 0.25); }

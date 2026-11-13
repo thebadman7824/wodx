@@ -1,5 +1,5 @@
 /**
- * The plain-words glossary (WoDX Library 0.20.0, B2834). Our own short words for the game's terms, no book text.
+ * The plain-words glossary (WoDX Library 0.22.0, B2834). Our own short words for the game's terms, no book text.
  * Each entry: [term, lines, era note, text]. lines: who uses the word ("all" for every line); era note: when the word
  * belongs or what it is called in another age, "" when it holds in every age.
  */

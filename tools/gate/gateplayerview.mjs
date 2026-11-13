@@ -60,7 +60,8 @@ export async function run() {
     V.preview("beginner"); await redraw();
     const beg = shown();
     const groups = beg.filter(n => n.startsWith("wodxGroup"));
-    const inDrawers = Object.entries(toolsNow()).filter(([n, t]) => t.visible === false && V.rules.TOOL_GROUP[n] && full.includes(n)).map(([n]) => n);
+    // Foundry drops hidden buttons from the controls, so the drawers say what they hold
+    const inDrawers = (V.drawers?.() ?? []).filter(n => V.rules.TOOL_GROUP[n] && full.includes(n));
     const lost = full.filter(n => !beg.includes(n) && !inDrawers.includes(n));
     ok("3. beginner view", groups.length >= 3 && !lost.length && beg.includes("wodxXCard") && beg.includes("wodxFindMe") && beg.includes("wodxFind") && beg.length < full.length,
       {shown: beg.length, groups, inDrawers: inDrawers.length, lost});

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2960
+Next free block: B3020
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -114,8 +114,8 @@ Next free block: B2960
 | B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
-| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
-| B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth, the years after the change by line | Creation |
+| B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books; generated maps checked before export, furnished chests searchable, towns furnished and checked like the farm, measured picture sizes (B2634-B2639) | Otherworlds, tools/mapgen |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
@@ -133,8 +133,14 @@ Next free block: B2960
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2810-B2839 | The Player UI Desk (B2810-B2838 used): Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
-| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
+| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
+| B2960-B2969 | Courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (B2960-B2962); the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashic Brotherhood and Ahl-i-Batin (B2963-B2968) (used B2960-B2968) | NPC |
+| B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
+| B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
+| B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
+| B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
+| B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3456,6 +3462,10 @@ Reverse: remove a region's block from its file, or drop the Object.assign line i
 Orbit and the high colonies, the Moon and Mars are lands a lifepath can name, under a choice "Beyond Earth". They are not world regions of the chronicle (no weather, money or markets); they exist for lifepaths only (OFFWORLD in modules/wodx-creation/data/lifepath-drill.mjs). A land is open when the chronicle's own year is 2023 or later and the birth or stage year is no earlier than the land's first year: orbit 1999 (the year after the first townships are lifted), the Moon 2009 (after the war in orbit shows a colony there), Mars 2022 (after the first finished base). The years and the dated events follow WoDX's future timeline (docs/research/era-timelines/r3/future-darkness.txt). People born there are named with the Storyteller after their family's people on Earth.
 Reverse: remove the "Beyond Earth" row from CONTINENTS; lifepaths already written keep their text.
 
+
+## B2624. The years after the change by line (2026-11-13, Ben: "Yes. Do this.")
+Every line that changes (vampire, ghoul, revenant, werewolf, mage, changeling, wraith, hunter, mummy, demon, Kuei-jin, Orpheus) has its own ways of spending an age after the turn, in modules/wodx-creation/data/lifepath-since-lines.mjs, ten to thirteen each, written in WoDX's own words from each line's Revised or 20th anniversary books. On a first draw one of each tone comes first, as for a land's dated marks, and the shared list fills the rest. Rows tied to an age carry years (the Technocracy from 1850, the Order of Reason before; the Fallen from 1999; Orpheus firms from 1990; the Inquisition's burning years 1231 to 1700).
+Reverse: empty a line's list, or the whole SINCE_LINES object, and the shared list is drawn as before.
 ## B2630. Ways in and out and located dangers are places on a realm's map (2026-11-13)
 Ben asked that work keep moving overnight; the coordinator passed on that realms should get more places, only from material that can be cited. The realm catalogue, which the book check gave page refs for, already names more than its landmarks: the way a traveller arrives, the way back and the way on, and dangers that sit in one spot (a Nihil, a crater field, a Pattern Spider's web, a guardian engine). These now stand on each realm's map as places of their own kind, drawn in their own colours, and a landmark the plan had no spot for is placed too. Where the catalogue names the way a traveller arrives or comes back by, that way is the place known on arrival. Dangers that are a state of the whole realm (the Void, smog, the Maelstrom) are not spots and stay off the map. Nothing new is taken from the books here and nothing is invented but the spot each place stands on, which is our own as before (B2556). More named places wait for a book lookup on the PC.
 Reverse: empty extrasOf() in realm-worlds-rules.mjs.
@@ -3506,6 +3516,30 @@ Reverse: empty HINTS and ARRIVE in realm-worlds-rules.mjs; take the last sentenc
 ## B2633. The Tempest and the Labyrinth stay separate maps (2026-11-13, Ben's call)
 In the books the Tempest surrounds the Labyrinth (Wraith 20th), and the lore keeps that: the Labyrinth lies at the heart of the storm. For play the two keep the maps they have, each its own realm world map, and the Tempest keeps Stygia at its heart with the travel times it has now. Ben, 13 November 2026: keep them separate, as they are.
 Reverse: redraw the Tempest round the Labyrinth in SPEC and MARKS of realm-worlds-rules.mjs.
+
+## B2634. Furnishing assets are tagged by whole words of their names (2026-11-13, Ben: Kessler Steading bare and misaligned)
+The catalogue (tools/mapgen/catalogue.py) read pieces from parts of words, so a horse chestnut tree was a chest, woven a stove, a hackey sack and a TNT box were stores, stone caskets went into barns and mine tracks were shelves. A name is now split into words (at capitals, underscores, spaces and digits) and a piece needs a whole word (piece_words in catalogue_rules.json, first rule wins). Names with a word of veto_words (trees, coffins, explosives, mine tracks, weapons, monsters, magic, toys, overlays, coloured flames and the like) are no furniture at all. Bamboo, tatami and futon pieces belong to East Asia. Couches, sofas and armchairs come from 1500 (the early age), rocking chairs from 1781. Tapestries last through the ages.
+Reverse: restore pieces in catalogue_rules.json and the regex match in catalogue.tag; rebuild catalogue.json (a copy of the old one is /mnt/project-files/map-furnishing/catalogue-before-wordtags-2026-11-13.json).
+
+## B2635. A picture is drawn at its own size or smaller, and only pictures of known size furnish (2026-11-13)
+About 10,000 assets carry no size in their names; the generator took them as one square while Dungeondraft draws them at their real size, so they stood across walls and off their spots, and a reskinned piece could be blown up 1.6 times. Now furniture comes only from pictures whose size is known (in the name, or measured off the packs on the PC into a size table), a picture is never scaled past its own size (at least half of it), and the half-deep oven picture is moved to its wall only when that is the picture drawn. In the middle ages a building's look is Forgotten Adventures' Ashen wood, with Skront and TC as companions; WFW's cartoon pieces no longer mix in.
+Reverse: allow unsized candidates again in palettes.choose and raise the scale caps in furnishing._reskin and _drawn.
+
+## B2636. Rooms look lived in, and every generated map is checked before it goes out (2026-11-13)
+However poor the owner, a room gets a piece or a thing on one for every 1.6 squares of floor with furniture on a quarter of it: crockery and food on tables and shelves, cloth on beds, then small pieces against the walls (a chest, a barrel, a stool, a shelf). No open flame in a byre, barn, stable, coop or hay loft; no chandelier or candelabra below a fine room; no coloured or uncanny flames; lights at least two squares apart. Books, paper, glass and coin stay out of poor and medieval homes. A porter's lodge or guard post is a lived-in room, not a passage. The farmstead (ddfarm.py) is furnished for its year (1197 unless given). tools/mapgen/check_map.py reads a finished map as Dungeondraft draws it and reports bare rooms, pieces across walls, in doorways, askew or on top of each other, and tree crowns over roofs, with a plan picture; the harness runs it on the farmstead, and maps are not sent out with problems.
+Reverse: set DENSE and COVER in furnishing.py back to 3.5 and 0.2 and drop _things_on and _along_walls; remove the check from tools/harness/mapgen.test.mjs.
+
+## B2637. Furnished chests, cupboards and beds can be searched, and doors are real (2026-11-13, Ben: "Go with all recommendations", Display-Only Systems Desk p1)
+Every chest, cupboard or wardrobe and bed the furnisher sets down goes into the map's WoDX file like the building type's own: a chest is a container with a cheap lock, a cupboard or wardrobe a container (cabinet), a bed a place to hide under (the WoDX file allows one kind of thing per spot). On Adopt they become WoDX Interactables things, and Fill by place and era fills the containers from the building's place, the scene's region and the chronicle's year. Their ids are "<room>-f<n>", so the type's own ids never move. Doors, double doors and shutters were already real doors on Adopt. A gateway or stair hall is left open; a court gets a barrel or a bench and stays mostly open (B2639).
+Reverse: empty DRESSED in tools/mapgen/ddcore.py.
+
+## B2638. Villages, towns and cities are furnished and checked like the farm (2026-11-13, after Ben: "Please make sure you are checking these things thoroughly before exporting")
+The grid towns now furnish by purpose, age and room value as the farm and the angled towns do. A picture is never drawn under half its own size (a three-square bench is not squeezed into one square, where it spilled over its neighbours); a small room with no wall left gets sacks, buckets and baskets by its walls and pieces; blue, green and purple flames stay out of ordinary rooms (they are for a Storyteller to place). A neighbour's house shown at a part's edge draws only what lies on that map. The map check measures squareness against the nearest wall and doorways in the door's own frame, so angled houses are judged fairly, and treats rugs as floor. Every 1197 sample (village, town, angled village, city parts, settlement) checks with 0 problems. The 1995 settlement still shows problems from modern pictures whose size is guessed; it waits on the measured sizes.
+Reverse: drop the furnishing default in tools/mapgen/ddtown.py main() and the floor of .5 in furnishing._drawn.
+
+## B2639. Measured picture sizes, and the last bare and misplaced pieces (2026-11-13)
+The PC measured every pack picture (45,791 sizes); the catalogue and the map check use them before the size in the name, so a picture drawn bigger than its name says (the TC pack draws 300 pixels to a square) no longer spills over walls. No street lamp, traffic light or signal hangs on a room's wall, and every wall lamp is drawn 0.6 squares across. No drugs, bongs or needles furnish an ordinary room. A court gets a barrel, a bench or a load and no chandelier; a goods shed or store is stacked across its floor along its walkways; big halls take bigger pieces. The map check counts a corridor or stair hall (straight or turned) and a court with no floor or a stone or earth floor as open, and looks for lamps through walls. Every sample (1197 to 1995, farm, villages, towns, cities, palace in four ages, a 1950 town) checks with 0 problems.
+Reverse: drop the second table from catalogue.SIZE_TABLES.
 
 ## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
 A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
@@ -4179,7 +4213,196 @@ Desk item t4. A living tile's rule has "While it holds, also": walls inside its 
 
 Reverse: Set "While it holds, also" to "Nothing else" on the tile.
 
+## B2910. The world map's Go makes a journey a trip (2026-11-13)
+Desk item t1. Go on the world map, in the chronicle's own year, asks who goes and by which way. The clock moves on by the days of the journey, each day may bring a meeting on the road (the Storyteller's encounter chance, a quarter of it by air, three at most), the party gets the hardship check for food, water and sleep, and the scene in view can take the far end's part of the world, so its money, names and weather follow. House figures; no book sets them.
+
+Reverse: Close the world map with Close instead of Go; untick the arrival box to leave the scene as it is.
+
+## B2911. Dreams tied to powers, Merits and Flaws; the Nightmares Flaw works by itself (2026-11-13)
+Desk item t6. A dream can be tied to Auspex, Oneiromancy, a dream-reading Gift or Arcanos, Oracular Ability or Nightmares. Tied with no date, it comes at the dreamer's next day's sleep (hour 8), and only while the dreamer still has the power or trait. A player character with the Nightmares Flaw (V20 p. 485) rolls Willpower at difficulty 7 after each day's sleep; a failure gives a "Nightmares" effect that takes one die until the next sleep. WoDX Combat reads it on attacks; the other rolls read it once WoDX Actions does (batch B). The difficulty waits on a PC book check.
+
+Reverse: Set "Tied to" to "Nothing" on a dream; take the Nightmares Flaw off the sheet.
+
+## B2912. The crossing reads the reflection marks (2026-11-13)
+Desk item t3. Stepping sideways and the Shroud read the reflection regions under the token: a looming place or a relic puts the Gauntlet one lower, a Blight one higher, thin Shroud or a Nihil puts the Shroud one lower. Each kind counts once and the total moves at most two steps. The note on the crossing says why.
+
+Reverse: Remove the scene's reflection (Undo in the reflection window).
+
+## B2913. Mood regions carry a rule (2026-11-13)
+Desk item m1. A "WoDX: Mood" region has Gauntlet, Shroud and Banality steps (-3 to +3) that the crossing and the place ratings read, inside the same two-step cap as B2912, and a fear-of-fire step (0 to 3) kept for Rotschreck and frenzy rolls through api.mood.ruleAt. A region's "Only when" list limits the rule too.
+
+Reverse: Set the steps to 0 on the region's behaviour.
+
+## B2914. Dress for a part of the world (2026-11-13)
+Desk item f6. A character dresses for one part of the world (token tools, "Dress for a part of the world"; the homeland by default). Standing in another part dressed so, they are a stranger: blending into a crowd is one harder (api.wanted.dress.blendDiff, read by the Stealth and Subterfuge rolls once WoDX Actions does), and a description of them fades half as slowly again and is not broken by a change of clothes while they still dress as strangers. Dressing as the place does ends it. House figures.
+
+Reverse: Dress the character for the part of the world they stand in.
+
+## B2915. Go on the realm world maps (2026-11-13)
+Desk item t2. Go between two found places of a realm moves the clock by the journey's time and checks each day for one of the realm's dangers from its catalogue entry: 10 in 100, plus 5 for each danger the realm lists, 50 at most, three meetings at most. The party must be across first (stepping sideways or crossing the Shroud, with its roll); the window says who is not. Moon Path travel times wait on a book check.
+
+Reverse: Use Close instead of Go.
+
 ## B2950. An unofficial fan work notice before the repository goes public (2026-11-13)
 Ben asked whether a disclaimer would help before the repository is made public. The Dark Pack Agreement asks for its legal notice, its logo and a statement that the work is not official World of Darkness material. README.md and a new NOTICE.md carry all three plus the third-party credits; the system fork's settings sidebar adds the unofficial line beside the notice upstream already shows (7.3.2-wodx.10). A notice does not make copying lawful, so book text and art are checked separately on the public repository review desk.
 
 Reverse: Take the line out of module/ui/settings-sidebar.js and drop NOTICE.md and the README paragraph.
+
+## B2960. The court a Kindred faction keeps, by where it stands (2026-11-13)
+WoDX NPC 0.62.0: a faction now has a region (one of the 44 world regions, or the chronicle's homeland when left empty). A Kindred faction of three or more that names no polity keeps the court of its land: a council of the Laibon in West, East, Central and Southern Africa; a court of the Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia; a court of the Kuei-jin in China, Japan, Korea, mainland Southeast Asia and the Malay world. Every other region keeps the Dark Ages court before 1435 and the Camarilla after, as before. A polity picked by hand still wins. India, Central Asia, Tibet and the Americas before the colonies are left on the European default for now.
+
+Reverse: empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2961. A council of the Laibon (2026-11-13)
+The Elder of the land holds the top seat by challenge; a Speaker of the old law judges; each legacy present has a voice (the sheet's clan field holds the legacy); a Warden of the roads and a Keeper of the tales are appointed. The council meets every fourth inner turn. Its law: feeding where the elder forbids, harm to a guest, bringing foreign Kindred's quarrels onto the land, an Embrace the legacy will not own, shaming the elders before the living. Seat names and law are WoDX's own words for the Kindred of the Ebony Kingdom; a book check is queued and may rename them. House rule.
+
+Reverse: delete "laibon-council" from POLITIES in politics-rules.mjs (factions that picked it fall back to their kind's default).
+
+## B2962. A court of the Ashirra (2026-11-13)
+The Amir holds the top seat by challenge; a Qadi judges; a Wazir, a Muhtasib of the night and a Keeper of the guest house are appointed, and each clan present has a voice. The court sits in majlis every second inner turn. Its law: a broken oath sworn before God, harm to a guest under one's roof, hunting in another's quarter, an Embrace without the Amir's leave, aid to the Sabbat. Titles and law are WoDX's own words; a book check is queued. House rule.
+
+Reverse: delete "ashirra" from POLITIES in politics-rules.mjs.
+
+## B2963. Kindred courts for India, Central Asia and Tibet (2026-11-13)
+WoDX NPC 0.63.0: a Kindred faction in India keeps a court of the Ravnos up to 1999 and the court of its age after (the clan's fall in the summer of 1999); one in Central Asia keeps a court of the Ashirra; one in Tibet and the Himalaya a court of the Kuei-jin. The pre-colonial Americas, Oceania and the far north still keep the European default. House rule, pending the PC book check.
+
+Reverse: take india, central-asia and tibet-himalaya out of REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2964. A court of the Ravnos (2026-11-13)
+The Eldest of the land holds the top seat by challenge; a Keeper of the duties judges; up to three clans present have a voice; a Watcher of the roads and a Teller of the old lines are appointed. Its law: forsaking the duty of one's line, betraying a kinsman of the blood to outsiders, feeding on a holy one, dealings with the Kuei-jin, an Embrace the Eldest will not own. The polity ends in 1999, and a faction that picked it keeps the court of its age after. Seats and law are WoDX's own words; a book check is queued. House rule.
+
+Reverse: delete "ravnos-court" from POLITIES and india from REGION_COURTS.
+
+## B2965. A Beast Court of the Hengeyokai (2026-11-13)
+A Garou faction of three or more in China, Japan, Korea, mainland Southeast Asia, the Malay world, India or Tibet keeps a Beast Court, and so does any Garou faction whose name or notes name the Hengeyokai or one of their breeds, anywhere. A Lord of the court holds the top seat by challenge, a Keeper of the mandate judges, each breed present has a voice (from the sheet's tribe field), and a Warden of the borders and a Master of the rites are appointed. Challenges end at submission, as in a sept. Seats and law are WoDX's own words; a book check of Hengeyokai: Shapeshifters of the East is queued. House rule.
+
+Reverse: delete "beast-court" from POLITIES, its rows from REGION_SHIFTERS and the HENGEYOKAI test in DEFAULTS.garou.
+
+## B2966. A land held by the Bastet (2026-11-13)
+A Garou faction of three or more in West, East, Central or Southern Africa keeps a land held by the Bastet, since few wolves are left there; so does any Garou faction whose name or notes name a Bastet tribe, anywhere. The Holder of the land holds the top seat by challenge, a Keeper of secrets judges, each tribe present has a voice, and a Watcher of the borders and a Teller of tales are appointed. Its law turns on secrets and den-realms. WoDX's own words; a book check of the Bastet breedbook is queued. House rule.
+
+Reverse: delete "bastet-land" from POLITIES, its rows from REGION_SHIFTERS and the BASTET test in DEFAULTS.garou.
+
+## B2967. The Wu Lung and the Akashic Brotherhood by region (2026-11-13)
+A mages' faction of three or more that does not serve Reason keeps a court of the Wu Lung in China and Korea, and a monastery of the Akashic Brotherhood in Japan, mainland Southeast Asia, the Malay world, India and Tibet, in every year. A faction that serves Reason keeps the Order of Reason or the Technocracy as before. The Wu Lung court is led by a Master of the mandate who also judges, with ministers, a keeper of the node and a scribe; the monastery by its Master, with elders of the hall and keepers of the node and records. WoDX's own words pending the book check. House rule.
+
+Reverse: delete "wu-lung-court" and "akashic-monastery" from POLITIES and their rows from REGION_MAGES.
+
+## B2968. A circle of the Ahl-i-Batin (2026-11-13)
+A mages' faction of three or more in the Maghreb, Egypt, Arabia, the Levant, Persia, Anatolia or Central Asia that does not serve Reason keeps a circle of the Ahl-i-Batin, in every year: a Master of the circle who also judges, a keeper of the node, a keeper of the hidden books and two watchers. Its law includes showing the hidden to those not ready and acting against the Unity. When the Subtle Ones sit on the Council and when they leave it is left to the book check; for now the circle stands whatever the year. House rule.
+
+Reverse: delete "batini-circle" from POLITIES and its rows from REGION_MAGES.
+
+## B2970. No Kindred court before the settlers (2026-11-13)
+WoDX NPC 0.64.0: where a region still follows a way of life from before the settlers (Mesoamerica, the Andes, Polynesia and the far north in WoDX Chronicle's world rules, so Mexico before 1521, the Caribbean before 1492, Australia before 1788 and Siberia before 1600), a Kindred faction keeps no court by default: the Kindred of Europe have not come, and the few undead of the land answer to no prince. Antarctica never has one by default. The Storyteller can still pick any polity. After the settler year the court of the age applies, as in Europe. House rule.
+
+Reverse: empty NO_KINDRED_COURT and drop the beforeSettlers test in DEFAULTS.kindred, modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2971. Shapeshifters before the settlers (2026-11-13)
+A Garou faction in Australia before 1788 keeps a gathering of the Mokolé (the Gumagan); one in Mesoamerica before 1521 keeps a land held by the Bastet (the Balam). North and South America keep Garou septs, for the tribes of the land. After the settler year each region keeps what it had before this change. House rule.
+
+Reverse: empty SETTLER_SHIFTERS in politics-rules.mjs.
+
+## B2972. A gathering of the Mokolé (2026-11-13)
+The Eldest who remembers holds the top seat by challenge, a Keeper of the memory judges, each stream present has a voice (from the sheet's tribe field), and a Warden of the waters and a Singer of the old days are appointed. Its law turns on keeping the memory of the world and the waters. Used by default as in B2971 and for any Garou faction whose name or notes name the Mokolé or one of their streams. WoDX's own words; a book check of the Mokolé breedbook is queued.
+
+Reverse: delete "mokole-gathering" from POLITIES and the MOKOLE test in DEFAULTS.garou.
+
+## B2973. A nest of the Nagah (2026-11-13)
+The Eldest of the nest holds the top seat by challenge, a Judge of the nest judges, each auspice present has a voice, and a Keeper of the hidden waters is appointed. Its law turns on judging the breeds and staying hidden from them. Never a regional default, since the Nagah hide; used when the Storyteller picks it or a Garou faction's name or notes name the Nagah. WoDX's own words; a book check of the Nagah breedbook is queued.
+
+Reverse: delete "nagah-nest" from POLITIES and the NAGAH test in DEFAULTS.garou.
+
+## B2974. A council of the Nunnehi (2026-11-13)
+A fae faction in the Americas or the Arctic before the settlers keeps a council of the Nunnehi: a Speaker of the council chosen by backing, a Keeper of the old ways who judges, a voice for each family, a Guardian of the dreaming places and a Teller of the old stories. After the settler year a fae faction keeps the court of its age. Polynesia and Siberia keep the European default for now. WoDX's own words; a book check of the Nunnehi book is queued.
+
+Reverse: delete "nunnehi-council" from POLITIES and the Nunnehi line in DEFAULTS.fae.
+
+## B2980. Daily worship of the other faiths (2026-11-13)
+WoDX NPC 0.65.0: a ready routine whose people keep a faith other than Islam with a daily rite gets it laid over the hours, first so it wins, as the five prayers are: for the Jewish year the morning service at the synagogue from ten to fifty minutes after sunrise on every day but the Sabbath, and the afternoon and evening services together around sunset on the days before Friday's eve; for the faiths of India worship at the household shrine at sunrise and the evening lamp at sunset; for the Buddhist south food given to the monks on their morning round, in the street; for Tibet the walk round the temple at dawn; for China incense at the household altar. The Western and Eastern churches get nothing new. A routine with hours of its own gets them only when Daily prayers and worship is set to Kept. House reading of the hours, rounded for play.
+## B2990. The drawn portrait faces are retired (2026-11-13)
+WoDX Paperdoll 0.18.0. Ben (13 November 2026): "Close the paperdoll faces for good. We are moving permanently to the pixel art faces instead," and "Close the older drawn paperdoll portrait faces." The Paperdoll window, its sheet button and Actors menu entry, and the baking of drawn pictures onto tokens and portraits are off (DRAWN_FACES_RETIRED in main.mjs). Nothing is deleted: the code, the looks kept on actors and every picture already baked stay where they are, and a token or portrait that shows a baked picture keeps it until changed. The Figure builder for sprite tokens stays on, under the world setting now named Figure builder; the setting Faces show the health track is hidden, since the pixel faces follow the health track themselves. The gate gatepaperdoll tests the retired faces and is no longer run.
+
+Reverse: Set DRAWN_FACES_RETIRED to false.
+
+## B2991. The pixel face as portrait (2026-11-13)
+The Storyteller makes an actor's pixel face its portrait from the Actors menu (Talking face: use as the portrait): the face at rest, healthy, drawn four times its size with hard edges, saved under the world's paperdoll/faces folder and set as the actor's picture. It is done by hand, never by itself, so no portrait a person chose is overwritten unasked.
+
+Reverse: Set the actor's picture back by hand.
+
+## B2992. Faces in the Net (2026-11-13)
+Ben (13 November 2026): keep the ASCII portraits, merged into the new work, redrawn in the pixel style, as the display faces in the Net. A character jacked into the Net (WoDX Otherworlds' status) shows its own pixel face as a persona on a screen: every tone mapped to five tones of one phosphor colour (green, amber, cyan, violet, ice white or red), scanlines on every other row, a faint rain of data behind, one row slipped a pixel sideways. Its features, wounds and moods still show, and it still blinks and speaks. The colour is the persona's: rolled by seed, or chosen by the Storyteller in the Talking face: features window. It shows on talk cards and on any plain line of speech from that character's token while jacked in.
+
+Reverse: Remove net from onRender in face64.mjs.
+
+## B2993. What became of the ASCII portraits (2026-11-13)
+The ASCII renderer (project files ascii/asciiport.py) drew from the Character Creator art, which the pixel faces have replaced, so it is not brought into the game; it and its samples stay in the project files. Its look (a face made of a screen's own marks, one colour on black) is what the Net faces carry over.
+
+Reverse: None needed.
+
+Reverse: empty DAILY_WORSHIP in modules/wodx-npc/scripts/routine-rules.mjs.
+
+## B2981. Who leads the daily services (2026-11-13)
+The routine that serves the house of worship (daily prayer there with no set days) leads the synagogue's two services. For the other four faiths the clergy keep their own offices, already named for the faith, and nothing is laid over them.
+
+Reverse: drop the leader branch in withWorship.
+
+## B2982. When daily worship is not kept openly (2026-11-13)
+By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Soviet campaign against religion), in China from 1966 to 1976 (the Cultural Revolution) and in Tibet from 1959 to 1979. Set to Kept, an NPC keeps it anyway, in secret as far as the Storyteller plays it.
+
+Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
+
+## B3000. The wizard works out the Traits that follow from the others (2026-11-13)
+WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; Arete 1, Willpower 5 and Quintessence equal to the Avatar for Mage; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
+
+Reverse: drop #derived from wizard.mjs; the old "Still to set by hand" line was the starting-value text.
+
+## B3001. Freebie dots and the prelude's Willpower go on top (2026-11-13)
+The book value is the base; Willpower, Humanity or a Road, Rage, Gnosis, Arete and Glamour bought on the freebie page (the wizard's bought record) and each Willpower dot the prelude gave are added. So pressing Set never takes back a dot that was paid for.
+
+Reverse: pass bought: {} and prelude: 0 in derivedFor.
+
+## B3002. Garou starting values read from the sheet's auspice, breed and tribe (2026-11-13)
+Auspice: Ragabash 1 to Ahroun 5 Rage. Breed: homid 1, metis 3, lupus 5 Gnosis. Tribe: the W20 core list of starting Willpower; Fenrir counts as the Get of Fenris and the Warders of Men as the Glass Walkers for the Dark Ages. A tribe not in the list, or an empty field, leaves the row without a value and says why. The tribe values and the Dark Ages names wait for the book check.
+
+Reverse: empty WILLPOWER_BY_TRIBE in derived-rules.mjs.
+
+## B3003. Torment by House (2026-11-13)
+Devils, Scourges, Malefactors and Fiends start at 3 Torment; Defilers, Devourers and Slayers at 4 (the Akkadian House names are read too). Waits for the book check.
+
+Reverse: empty TORMENT_BY_HOUSE.
+
+## B3004. Starting blood is rolled in the open (2026-11-13)
+V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls and revenants start at 1. The result stops at the sheet's blood pool for the Generation. The wizard never rolls without the button.
+
+Reverse: remove the blood action.
+
+## B3010. The other changing breeds keep bodies of their own (2026-11-13)
+WoDX NPC 0.66.0. A Garou faction whose name or notes speak of the Ananasi, the Corax, the Gurahl, the Ratkin or the Rokea (or werespiders, wereravens, werebears, wererats, weresharks) keeps a web, a flock, a den, a nest or a shiver of its own, anywhere and in every year. The Hengeyokai's own names (Kumo, Tengu, Nezumi, Same-Bito) are tested first and keep the Beast Court. No region gives these bodies by default; they are by name or by the Storyteller's pick. WoDX's own words; a book check of the breedbooks and W20 Changing Breeds is queued.
+
+Reverse: empty BREEDS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B3011. Seats and law of the five breeds (2026-11-13)
+Ananasi: an Eldest of the web by challenge, a Voice of the Queen who judges, a voice for each faction (the tribe field), a Spinner of the threads. Corax: an Eldest of the flock by backing, a Keeper of the news who judges, a voice per roost, two Eyes of the sun, gathering every second turn. Gurahl: an Eldest of the den by challenge, a Keeper of the healing ways who judges, a voice per tribe, a Guardian of the mountain, gathering every sixth turn. Ratkin: a Rat King or Rat Queen of the nest by challenge, a Seer who judges, a voice per aspect, a Runner of the tunnels, gathering every second turn. Rokea: an Eldest of the deep by challenge, a Speaker for the sea who judges, a voice per breed, a Warden of the shore.
+
+Reverse: edit the five polities in POLITIES.
+
+## B3012. A challenge among the Rokea may kill (2026-11-13)
+Every other shapeshifter body ends a challenge at submission. The Rokea settle quarrels with teeth and serve the sea rather than the Litany, so their challenges carry no submission rule; the Storyteller stages the fight as it falls.
+
+Reverse: add noKill: true to "rokea-shiver".
+
+## B3013. The Hsien keep the courts of East Asia (2026-11-13)
+A fae faction in China, Japan, Korea, Southeast Asia or the Malay world keeps a court of the Hsien in every year: a Magistrate of the court by backing who judges, two Ministers, a voice for each family, a Keeper of the shrine and a Scribe. Tibet keeps the default. WoDX's own words until the book check.
+
+Reverse: empty HSIEN_LANDS.
+
+## B3014. The land's own fae of the Pacific and Siberia (2026-11-13)
+Before the settlers (the ways of life of WoDX Chronicle: Polynesia until 1820 in the Pacific islands and 1840 in Aotearoa, the far north until 1600 in Siberia) a fae faction there keeps a circle of the land's own fae: an Elder of the circle by backing, a Keeper of the old ways who judges, a voice for each family, a Guardian of the sacred places. After the settlers a fae faction keeps the court of its age. No canon names these fae, so the words are WoDX's own.
+
+Reverse: empty LAND_FAE_LANDS.
+
+## B3015. The faction window lists the new bodies (2026-11-13)
+The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
+
+Reverse: edit the note in factions.mjs.

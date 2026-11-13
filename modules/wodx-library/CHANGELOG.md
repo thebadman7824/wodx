@@ -2,7 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.20.0 (a plain-words Glossary in the Library: 82 of the game's words in our own words, each with the lines that use it and, where it differs, the word or the age it belongs to; a manual page, Finding your way, for the drawers, What can I do now?, Find anything and the window help; api manual.page opens the manual at a named page)
+- 0.22.0 (a plain-words Glossary in the Library: 82 of the game's words in our own words, each with the lines that use it and, where it differs, the word or the age it belongs to; a manual page, Finding your way, for the drawers, What can I do now?, Find anything and the window help; api manual.page opens the manual at a named page)
 - 0.19.0 (goods by way of life and region: each good can say where it is at home, so a draw in Cairo turns up a prayer rug and not a rosary, tea is in China a thousand years before Europe and there is no ham in Tenochtitlan before the Spanish; 183 goods placed and 80 goods of their own for the 16 ways of life; the old coins of Europe stay home and a coin of the place stands in everywhere. data/goods-ways.mjs, inUseAt. B2680-B2681)
 - 0.18.0 (goods and shelves know the seven prologue eras; a hide cloak and a stone fat lamp for Before the Flood)
 - 0.17.0 (What they could know: for the Storyteller, the Encyclopaedia entries that fit a character's line and the year, with a suggestion from Intelligence + Occult, Academics or Politics; ticked entries go into the character's codex)

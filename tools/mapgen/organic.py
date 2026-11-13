@@ -1392,7 +1392,10 @@ class OrganicTown(T.Town):
                                  "inside": loc(b.centre), "barInside": kind in C.BARRED_INSIDE, "flags": dict(C.OPENING_FLAGS[kind])})
             for r in b.rooms:
                 ents = C.feature_entries(f"{b.key}-", r, b.t["fill"])
-                byid = {f"{b.key}-{r.name.lower().replace(' ', '-').replace(chr(39), '')}-{i}": (it, cx, cy, rot) for i, (it, cx, cy, rot) in enumerate(b.items_world(r))}
+                stem = f"{b.key}-{r.name.lower().replace(' ', '-').replace(chr(39), '')}"
+                byid = {f"{stem}-{i}": (it, cx, cy, rot) for i, (it, cx, cy, rot) in enumerate(b.items_world(r))}
+                for i, it in enumerate(d for d in getattr(r, "dressing", []) if d.get("layer", 100) == 100):   # the furnishing's pieces
+                    byid[f"{stem}-f{i}"] = (it, *b.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2), None)
                 for f in ents:
                     it, cx, cy, rot = byid[f["id"]]
                     w, h = it["w"], it["h"]

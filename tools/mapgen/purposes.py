@@ -21,9 +21,9 @@ KINDS = [
     ("study", r"Study|Office|Counting|Library|Clerk|Chancery|Archive|Scriptorium|Desk|Reading|Stacks|Librarian|Classroom|"
               r"Control|Council|Court room|Director"),
     ("work", r"Workshop|Forge|Smithy|Weaving|Spinning|Mill|Press|Growing|Surgery|Treatment|Mortuary|Recovery|Stage|Smith"),
-    ("ward", r"Ward|Dormitory|Capsule|Quarters|Locker"),
+    ("ward", r"Ward|Dormitory|Capsule|Quarters|Locker|Porter|Lodge|Post\b|Guard"),
     ("sleep", r"Bed|Chamber|Guest|Sleeping|Solar|Dressing"),
-    ("passage", r"Corridor|Passage|Stair|Entry|Entrance|Vestibule|Lift|Core|Porter|Lodge|Post\b|Guard|Concourse|Platform"),
+    ("passage", r"Corridor|Passage|Stair|Entry|Entrance|Vestibule|Lift|Core|Concourse|Platform"),
     ("hall", r"Hall|Salon|Dining|Lobby|Foyer|Gallery|Waiting|Living|Front room|Parlour|Room|Flat|Space|Cottage|Tower|Strongroom"),
 ]
 _KINDS = [(k, re.compile(rx)) for k, rx in KINDS]

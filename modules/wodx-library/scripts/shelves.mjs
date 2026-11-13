@@ -180,7 +180,7 @@ export async function ensureChangelog() {
   return ensureJournal("changelog", "WoDX · What's new", [{name: "What's new", type: "text", sort: 100, text: {content: news, format: 1}},
     {name: "In this world", type: "text", sort: 200, text: {content: list, format: 1}}], S.hashOf({CHANGES, build}));
 }
-/** The plain-words glossary (0.20.0, B2834): one page per letter, each term with who uses it and when it belongs. */
+/** The plain-words glossary (0.22.0, B2834): one page per letter, each term with who uses it and when it belongs. */
 export async function ensureGlossary() {
   const {GLOSSARY, byLetter} = await import("../data/glossary.mjs");
   const pages = [...byLetter(GLOSSARY)].map(([L, list], i) => ({name: L, type: "text", sort: (i + 1) * 100, text: {format: 1,

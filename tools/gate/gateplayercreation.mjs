@@ -1,9 +1,9 @@
 /**
- * The Player UI Desk's creation step (WoDX Creation 0.25.0, B2827 to B2829), in Foundry, in rothenstein-wodx only,
+ * The Player UI Desk's creation step (WoDX Creation 0.28.0, B2827 to B2829), in Foundry, in rothenstein-wodx only,
  * as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayercreation.mjs?${Date.now()}`)).run()
  * It makes one Vampire actor and deletes it after.
- *   1. the module: Creation 0.25.0 or later with the wizard, the lifepath and the hub
+ *   1. the module: Creation 0.28.0 or later with the wizard, the lifepath and the hub
  *   2. the wizard's book page offers 12 concepts; Soldier or guard fills Attributes, Abilities and Virtues to the
  *      book's totals (the wizard's own ledger shows nothing over and nothing unspent there) with no question asked
  *   3. the wizard then shows its last page, Concept and Nature are filled in, and every dot can still be lowered
@@ -31,7 +31,7 @@ export async function run() {
   const M = game.modules.get("wodx-creation"), C = M?.api ?? game.wodx?.creation;
   let actor = null;
   try {
-    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.25.0", M.version) && typeof C?.wizard === "function" && typeof C?.lifepath === "function" && typeof C?.firstNight === "function",
+    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.28.0", M.version) && typeof C?.wizard === "function" && typeof C?.lifepath === "function" && typeof C?.firstNight === "function",
       {creation: M?.version});
     actor = await Actor.create({name: "WoDX gate: quick start", type: "Vampire"});
     await sleep(500);

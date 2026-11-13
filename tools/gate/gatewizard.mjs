@@ -11,6 +11,8 @@
  *   7. the hub's Build step opens the wizard; the check after the prelude waits for the prelude
  *   8. the prelude's Willpower gain raises the sheet's Willpower and is not charged to the build
  *   9. every other WoDX module still answers
+ *  10. (0.26.0) the derived Traits: Set all puts Humanity and Willpower from the Virtues on the sheet, a Werewolf's
+ *      Rage, Gnosis and Willpower follow auspice, breed and tribe, and starting blood rolls to chat within the pool
  * Result: Data/wodx-gate/gatewizard-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -64,7 +66,9 @@ export async function run() {
       const L = api().wizardLedger(game.actors.get(vamp.id));
       const physRow = L.check.rows.find(r => r.group === "physical");
       await act(app, "go", {dataset: {page: "freebies"}}); await sleep(200);
-      const more = [...app.element.querySelectorAll("button[data-action=step][data-d='1']")].find(b => b.dataset.path === "system.attributes.strength.value" && !b.disabled);
+      // Strength is at 5 by now; the next Physical dot that can still go up costs 5
+      const phys = ["system.attributes.strength.value", "system.attributes.dexterity.value", "system.attributes.stamina.value"];
+      const more = [...app.element.querySelectorAll("button[data-action=step][data-d='1']")].find(b => phys.includes(b.dataset.path) && !b.disabled);
       const price = more?.parentElement?.textContent ?? "";
       await app.close();
       ok("3 allotment and freebie cost", spent === physRow.allowed && physRow.over === 0 && /\+5/.test(price), {spent, allowed: physRow.allowed, price: price.trim(), rowsBefore: order.length});
@@ -140,6 +144,27 @@ export async function run() {
     await step("9 other modules", async () => {
       const bad = game.modules.filter(m => m.id.startsWith("wodx-") && m.active && !m.api && !["wodx-paperdoll"].includes(m.id)).map(m => m.id);
       ok("9 other modules", bad.length === 0, {noApi: bad});
+    });
+    await step("10 derived traits", async () => {
+      const a = () => game.actors.get(vamp.id);
+      await a().update({"system.advantages.virtues.conscience.permanent": 3, "system.advantages.virtues.selfcontrol.permanent": 2, "system.advantages.virtues.courage.permanent": 4});
+      const bought = n => Number(api().wizardLedger(a()).extras.find(e => e.key === n)?.bought) || 0;
+      const app = await api().wizard(a(), "virtues"); await sleep(300);
+      const shown = /Traits that follow from the others/.test(app.element?.textContent ?? "");
+      const setAll = app.element?.querySelector("button[data-action=derive][data-key='']") ?? app.element?.querySelector("button[data-action=derive]");
+      if ( setAll ) { await act(app, "derive", setAll); await sleep(300); }
+      const hum = Number(a().system.advantages.path.permanent), wp = Number(a().system.advantages.willpower.permanent);
+      const wantWp = 4 + bought("willpower") + (api().derived(a()).rows.find(r => r.key === "willpower")?.how.match(/(\d+) from the prelude/)?.[1] | 0);
+      const blood0 = game.messages.size;
+      const btn = app.element?.querySelector("button[data-action=blood]");
+      if ( btn ) { await act(app, "blood", btn); await sleep(400); }
+      const blood = Number(a().system.advantages.bloodpool?.temporary), max = Number(a().system.advantages.bloodpool?.max) || 10;
+      await app.close();
+      const wolf = await Actor.create({name: "WoDX gate: Wizard derived Garou", type: "Werewolf", system: {auspice: "Ahroun", breed: "Lupus", tribe: "Bone Gnawers"}, ownership: own});
+      const wl = api().derived(wolf, "w20").rows.map(r => [r.key, r.want]);
+      ok("10 derived traits", shown && !!setAll && hum === 5 + bought("road") && wp === wantWp && game.messages.size === blood0 + 1 && blood >= 1 && blood <= max
+        && JSON.stringify(wl) === JSON.stringify([["rage", 5], ["gnosis", 5], ["willpower", 4]]),
+        {shown, setAll: !!setAll, hum, wp, wantWp, blood, max, wolf: wl, offAfter: api().derived(a()).rows.filter(r => r.off).map(r => r.key)});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
