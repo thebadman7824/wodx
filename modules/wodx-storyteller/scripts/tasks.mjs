@@ -7,7 +7,8 @@
  *   Storyteller, with Undo. Nothing runs on players' clients beyond the window.
  */
 import * as R from "./tasks-rules.mjs";
-import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
+import * as P from "./projects-rules.mjs";
+import {MOD, esc, isActiveGM, setting, isPC, chron, log, npc} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";
 import * as Cook from "./cookery.mjs";
@@ -55,6 +56,26 @@ export function poolFor(a, task) {
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
 }
 
+/** B3341: a character's weekly budget of nights for projects; the Storyteller can set their own figure (flag projectBudget). */
+export const budgetOf = a => P.budgetFor({kind: a?.type, own: a?.flags?.[MOD]?.projectBudget ?? null});
+
+/** B3342: tell the Storyteller of a complication, keep it on the project and on the log. */
+async function trouble(a, t, c) {
+  await ChatMessage.create({content: `<div class="wodx-card wst-trouble"><h3>${esc(a.name)}: ${esc(t.name)}</h3><p>${esc(c.text)}</p>
+    <p class="wodx-quiet">${c.botch ? "The roll was a botch. " : ""}A complication in a downtime project: what comes of it is the Storyteller's.</p></div>`,
+    whisper: gmIds(), speaker: {alias: "A project meets trouble"}});
+  await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: "A project met trouble", text: `${a.name}: ${t.name}. ${c.text}`});
+  Hooks.callAll("wodxProjectComplication", {actor: a, task: t, complication: c});
+}
+
+/** B3343: a courting project moves warmth through WoDX NPC, which keeps the age floor. */
+async function courtRoll(a, t, r) {
+  const ev = P.courtEvent(r);
+  if ( !ev || !t.target?.id ) return null;
+  try { return await npc()?.hearts?.court?.(a, t.target.id, ev, {successes: r.successes, botch: r.botch, why: t.name}); }
+  catch (e) { console.error(`${MOD} | courting`, e); return null; }
+}
+
 const canEdit = a => !!a && (game.user.isGM || a.isOwner);
 
 export async function saveTask(a, data) {
@@ -98,7 +119,16 @@ export async function tick({force = false} = {}) {
       const before = {}, after = {}, lines = [], built = [];
       const pursePrev = a.flags?.[MOD]?.money?.purse ? foundry.utils.deepClone(a.flags[MOD].money.purse) : null;
       let paidAny = false;
+      // B3341: projects past the weekly budget pause, newest first
+      const over = new Set(P.overBudget(tasksOf(a), budgetOf(a)));
       for ( const task of tasksOf(a) ) {
+        if ( over.has(task.id) && R.dueRolls(task, t0) ) {
+          const why = `no nights free: ${P.nightsGiven(tasksOf(a))} a week given, ${budgetOf(a)} to give`;
+          before[task.id] = raw[task.id];
+          after[task.id] = {...R.pauseTask(task), waits: why};
+          lines.push({id: task.id, name: task.name, status: "paused", rolled: 0, sum: 0, botches: 0, total: task.total, goal: task.goal, dice: 0, diff: task.diff, more: 0, waits: why});
+          continue;
+        }
         let due = Math.min(R.MAX_ROLLS, R.dueRolls(task, t0));
         if ( !due ) continue;
         before[task.id] = raw[task.id];
@@ -122,7 +152,12 @@ export async function tick({force = false} = {}) {
         const dice = poolFor(a, t);
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
           const r = await rollOnce(dice, t.diff, t.specialty);
-          t = R.stepTask(t, r, t.next);
+          const at = t.next;
+          t = R.stepTask(t, r, at);
+          // B3342, B3343: trouble, and a courting roll's warmth
+          const c = P.drawTrouble(t, r, {year: yearNow()});
+          if ( c ) { t = {...t, complications: P.addTrouble(t.complications, c, at)}; await trouble(a, t, c); }
+          if ( t.kind === "court" ) await courtRoll(a, t, r);
           // 0.31.0: a botch in a drug or a medicine leaves it impure instead of ruining it; only the Storyteller hears
           if ( r.botch && t.strength ) t = {...t, impure: true};
           rolled++; sum += r.successes; if ( r.botch ) botches++;
@@ -165,6 +200,11 @@ export async function tick({force = false} = {}) {
       for ( const [id, t] of Object.entries(after) ) if ( ["done", "ruined"].includes(t.status) && !["done", "ruined"].includes(before[id]?.status) ) Hooks.callAll("wodxTaskDone", {actor: a, task: t});
       await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined});
       for ( const l of lines ) {
+        // B3343: what a finished project leaves, for the Storyteller to award
+        if ( l.status === "done" && after[l.id]?.nights ) {
+          const o = P.outcomeOf(after[l.id], after[l.id].target?.name ?? "");
+          await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: o.background ? `A dot of ${o.background} to award` : null, text: `${a.name}: ${l.name}. ${o.text}`});
+        }
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
           attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : "was ruined by a botch"}.`});
       }
@@ -232,6 +272,10 @@ export async function editTask(actorId = null, taskId = null) {
   const abils = opt("", "None", !t.ability) + abil.map(x => opt(x.key, `${x.name} (${x.value})`, x.key === t.ability)).join("")
     + (t.ability && !abil.some(x => x.key === t.ability) ? opt(t.ability, `${cap(t.ability)} (not on the sheet)`, true) : "");
   const ints = Object.entries(R.INTERVALS).map(([k, v]) => opt(k, v.label, k === t.interval)).join("");
+  // B3340: who a courting or tracking project is aimed at (people the user can see)
+  const people = game.actors.filter(x => x.id !== a.id && (game.user.isGM || x.testUserPermission?.(game.user, "LIMITED"))).sort((x, y) => x.name.localeCompare(y.name));
+  const targets = opt("", "Nobody", !t.target) + people.map(x => opt(x.id, x.name, x.id === t.target?.id)).join("");
+  const wk = Number(R.KINDS[t.kind].week) || 0;
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `${taskId ? "Change" : "New"} long task: ${a.name}`}, classes: ["wodx-dialog", "wst-task-edit"],
     content: `<div class="form-group"><label>Kind</label><select name="kind" data-fixed>${kinds}</select></div>
       <div class="form-group"><label>What it is</label><input type="text" name="name" value="${esc(taskId ? t.name : "")}" placeholder="A silver reliquary, the parish records, a fetish of the wolf"></div>
@@ -242,6 +286,11 @@ export async function editTask(actorId = null, taskId = null) {
       <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${t.diff}" min="2" max="10"></div>
       <div class="form-group"><label>Successes needed</label><input type="number" name="goal" value="${t.goal}" min="1" max="100"></div>
       <div class="form-group"><label>One roll</label><select name="interval" data-fixed>${ints}</select></div>
+      <div class="form-group"><label>Nights a week</label><input type="number" name="nights" value="${t.nights}" min="0" max="7"></div>
+      <p class="hint">Out of ${budgetOf(a)} a week for every project together; 0 leaves it out of the budget.${wk ? ` This kind goes at full pace with ${wk}; fewer stretch each roll.` : ""}</p>
+      ${people.length > 5 ? searchBox("select[name=target]", "Search people…", "Search people") : ""}
+      <div class="form-group"><label>Aimed at</label><select name="target">${targets}</select></div>
+      ${game.user.isGM ? `<div class="form-group"><label>Complications</label><input type="checkbox" name="trouble"${t.trouble ? " checked" : ""}></div>` : ""}
       <div class="form-group"><label>Specialty applies</label><input type="checkbox" name="specialty"${t.specialty ? " checked" : ""}></div>
       <div class="form-group"><label>Delicate (a botch ruins it)</label><input type="checkbox" name="delicate"${t.delicate ? " checked" : ""}></div>
       <div class="form-group"><label>Note</label><input type="text" name="note" value="${esc(t.note)}"></div>
@@ -253,17 +302,26 @@ export async function editTask(actorId = null, taskId = null) {
   if ( !res ) return null;
   return saveTask(a, {id: taskId, kind: res.kind, name: res.name, attr: res.attr, ability: res.ability, dice: num(res.dice),
     diff: num(res.diff), goal: num(res.goal), interval: res.interval, specialty: !!res.specialty, delicate: !!res.delicate, note: res.note,
-    needs: res.needs ?? "", workshop: res.workshop ?? "", makes: res.makes ?? "", waits: ""});
+    needs: res.needs ?? "", workshop: res.workshop ?? "", makes: res.makes ?? "", waits: "",
+    nights: num(res.nights), target: res.target ? {id: res.target, name: game.actors.get(res.target)?.name ?? ""} : null,
+    ...(game.user.isGM ? {trouble: !!res.trouble} : {})});
 }
 
 /** Every task the user can see, with Pause, Change and Remove. */
 export async function tasksDialog() {
   const list = editableActors();
-  const rows = [];
+  const rows = [], budgets = [];
+  for ( const a of list ) {
+    const ts = tasksOf(a);
+    if ( ts.some(t => t.nights > 0) ) budgets.push(`<li>${esc(P.budgetLine(a.name, P.nightsGiven(ts), budgetOf(a)))}</li>`);
+  }
   for ( const a of list ) for ( const t of tasksOf(a) ) {
     const h = Math.max(0, Math.ceil((t.next - now()) / R.HOUR));
     const when = t.status === "open" ? `next roll in ${h > 48 ? `${Math.ceil(h / 24)} days` : `${h} h`}` : t.status;
-    rows.push(`<tr><td>${esc(a.name)}</td><td>${esc(t.name)}<br><small>${poolFor(a, t)} dice, difficulty ${t.diff}, ${esc(R.INTERVALS[t.interval].label.toLowerCase())}</small></td><td>${t.total} / ${t.goal}<br><small>${esc(when)}</small></td>
+    // B3340: nights given, who it is aimed at, and the last complication
+    const extra = [t.nights ? `${t.nights} night${t.nights === 1 ? "" : "s"} a week` : "", t.target?.name ? `aimed at ${t.target.name}` : "", t.waits ? `waits: ${t.waits}` : ""].filter(Boolean).join("; ");
+    const last = t.complications.at(-1);
+    rows.push(`<tr><td>${esc(a.name)}</td><td>${esc(t.name)}<br><small>${poolFor(a, t)} dice, difficulty ${t.diff}, ${esc(R.INTERVALS[t.interval].label.toLowerCase())}${extra ? `; ${esc(extra)}` : ""}</small>${last && game.user.isGM ? `<br><small><i>Trouble: ${esc(last.text)}</i></small>` : ""}</td><td>${t.total} / ${t.goal}<br><small>${esc(when)}</small></td>
       <td><button type="button" data-wst-task="edit" data-actor="${a.id}" data-id="${t.id}">Change</button>
       ${t.status === "open" || t.status === "paused" ? `<button type="button" data-wst-task="${t.status === "open" ? "pause" : "resume"}" data-actor="${a.id}" data-id="${t.id}">${t.status === "open" ? "Pause" : "Resume"}</button>` : ""}
       <button type="button" data-wst-task="remove" data-actor="${a.id}" data-id="${t.id}">Remove</button></td></tr>`);
@@ -279,8 +337,9 @@ export async function tasksDialog() {
       tasksDialog();
     });
   };
-  const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 680}, window: {title: "Long tasks"}, classes: ["wodx-dialog", "wst-tasks-dlg"],
-      content: `<p>Work that takes days or weeks of game time. Each roll is made when the clock passes it, and the result comes to the character's owner and the Storyteller.</p>
+  const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 680}, window: {title: "Downtime and long tasks"}, classes: ["wodx-dialog", "wst-tasks-dlg"],
+      content: `<p>Downtime projects and other work that takes days or weeks of game time. Each roll is made when the clock passes it, and the result comes to the character's owner and the Storyteller. A project can run into trouble on the way.</p>
+        ${budgets.length ? `<ul class="wst-budgets" data-fixed>${budgets.join("")}</ul>` : ""}
         ${rows.length > 5 ? searchBox("table.wst-tasks-t", "Search tasks…", "Search tasks") : ""}<div class="wst-scroll"><table class="wst-tasks-t"><thead><tr><th>Character</th><th>Task</th><th>Successes</th><th></th></tr></thead><tbody>${rows.join("") || "<tr><td colspan='4'>No long tasks yet.</td></tr>"}</tbody></table></div>`,
       buttons: [{action: "new", label: "New task", default: true}, ...(game.user.isGM ? [{action: "roll", label: "Roll what is due"}] : []), {action: "close", label: "Close"}]});
   if ( res === "new" ) { await editTask(); return tasksDialog(); }
