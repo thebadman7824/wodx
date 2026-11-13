@@ -1,4 +1,0 @@
----
-bump: minor
----
-NPC memory and grudges (B3346-B3349): every NPC keeps a short list of what each character did to them, taken from attitude changes and trust events or written by the Storyteller (api.memory.remember). How fast a wrong or a kindness fades follows the NPC's Nature: some never forget. Once a season an NPC with a strong grudge and the means picks one move (call in a boon, spread an unkind tale, spoil a venture, tip off the hunters, turn on someone dear, do harm), which waits in the approval queue; approving starts the rumour or adds hunter pressure and fires wodxGrudgeMove. A death recorded on the sheet passes strong grudges to the heirs at half weight. Players see a short word for each NPC who remembers them in the new Who remembers you window. World setting "NPCs remember and bear grudges".
