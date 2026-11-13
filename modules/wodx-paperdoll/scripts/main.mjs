@@ -13,7 +13,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.13.1";
+export const VERSION = "0.13.2";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -334,7 +334,8 @@ const canBuild = actor => !!actor?.isOwner && !!actor.system?.health;
 let FigureApp = null;
 const figureApp = () => (FigureApp ??= makeFigureApp({skin: SKIN_LIST.slice(0, 38), hair: Object.entries(HAIR),
   year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }}));
-const openFigure = actor => figureApp().open(actor);
+// a figure belongs to the character, not to one token of it: a token's sheet opens the character's own figure, which is what a batch draws
+const openFigure = actor => figureApp().open(actor?.isToken ? (game.actors.get(actor.id) ?? actor) : actor);
 Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
   if ( enabled() && canBuild(sheet.actor) && !buttons.some(b => b.class === "wodx-figure") )
     buttons.unshift({label: "Figure", class: "wodx-figure", icon: "fa-solid fa-person", onclick: () => openFigure(sheet.actor)});
