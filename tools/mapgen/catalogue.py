@@ -22,6 +22,7 @@ _FOLDERS = [(re.compile(rx, re.I), piece) for rx, piece in RULES["folders"]]
 _LASTING = re.compile(RULES["lasting"], re.I)
 _UP = [(re.compile(rx, re.I), n) for rx, n in RULES["worth_up"].items()]
 _DOWN = [(re.compile(rx, re.I), n) for rx, n in RULES["worth_down"].items()]
+_EARLIEST = [(re.compile(rx, re.I), b) for rx, b in RULES.get("earliest", {}).items()]   # no inventions before their age
 _SKIP = re.compile(RULES["skip_folders"], re.I)
 _SKIP_NAME = re.compile(RULES["skip_names"], re.I)       # fantasy races, magic: not in the World of Darkness's furniture
 _SKIP_PACK = re.compile(RULES["skip_packs"], re.I)
@@ -69,6 +70,10 @@ def tag(path):
     if m and style == "fa":
         w = RULES["wood"][m.group(1).capitalize()]
         bands, style = list(w["bands"]), w["style"]
+    first = next((BANDS.index(b) for rx, b in _EARLIEST if rx.search(stem)), 0)
+    if first:
+        later = [b for b in bands if BANDS.index(b) >= first]
+        bands = later or BANDS[first:first + 2]                       # a pack of an older age still lends its piece later
     worth = rule["worth"] + sum(n for rx, n in _UP if rx.search(stem)) - sum(n for rx, n in _DOWN if rx.search(stem))
     return {"path": path.strip(), "name": fname, "pack": pid, "pack_name": pname, "kind": kind, "piece": piece,
             "style": style, "bands": bands, "worth": max(0, min(5, worth)), "lasting": bool(_LASTING.search(stem)),

@@ -18,6 +18,14 @@ class CatalogueTest(unittest.TestCase):
         self.assertNotIn("modern", t["bands"])
         self.assertEqual(t["cells"], (2, 1))
 
+    def test_no_inventions_before_their_age(self):
+        for p, first in [("WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Field_Phone_Closed_01_A_Ashen.webp", "industrial"),
+                         ("ae7QH77Z/textures/objects/TC_Town Hall Asset Pack_Grammophone.png", "industrial")]:
+            t = K.tag(p)
+            self.assertIsNotNone(t, p)
+            self.assertNotIn("medieval", t["bands"], p)
+            self.assertIn(first, t["bands"], p)
+
     def test_modern_couch(self):
         t = K.tag(TYGER_COUCH)
         self.assertEqual(t["piece"], "seat")
@@ -244,6 +252,11 @@ def _furnished(type_key, year, wealth="rich", facing="S", seed=1, trade=None):
 
 @unittest.skipUnless(__import__("os").path.exists(CAT_PATH), "needs the catalogue")
 class FillTest(unittest.TestCase):
+    def test_court_with_four_doors_is_not_bare(self):
+        b = _furnished("burgher-palace", 1890, "rich")
+        court = next(r for r in b.rooms if r.name == "Court")
+        self.assertGreaterEqual(len([i for i in court.dressing if i.get("piece") != "light"]), 2)
+
     def test_target_tiers(self):
         import furnishing as F
         T = F.TIERS.index

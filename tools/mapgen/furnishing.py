@@ -111,10 +111,17 @@ def _place(room, sp, pal, R):
     base = next(p for p in sp["parts"] if p[5] == "base")
     entry = pal.pick(base[0], R)
     if not entry: return []
-    rule = {"wall": "wall", "corner": "corner", "centre": "centre"}[sp["place"]]
     if W > room.iw + 1e-6 and W > room.ih + 1e-6: return []
-    cands = room.candidates(W, H, rule)
+    rules = {"wall": ["wall"], "corner": ["corner", "wall"], "centre": ["centre"]}[sp["place"]]
+    sizes = [1, .75] if W * H <= 2 else [1]                     # a small piece may shrink to fit between walkways
+    cands, k = [], 1
+    for k in sizes:
+        cands = next((c for c in (room.candidates(W * k, H * k, r) for r in rules) if c), [])
+        if cands: break
     if not cands: return []
+    if k != 1:
+        W, H = W * k, H * k
+        sp = dict(sp, parts=[(p, dx * k, dy * k, pw * k, ph * k, r) for p, dx, dy, pw, ph, r in sp["parts"]])
     _, x, y, w, h, rot = cands[0]
     side = _side(room, x, y, w, h, sp["place"], rot)
     placed, base_item = [], None
