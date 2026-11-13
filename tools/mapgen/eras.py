@@ -661,10 +661,10 @@ def layer_era(t, y0, era, share):
     if era == "mid-century":
         if y >= 1930 and k: place_blocks(t, "dept-store", max(1, k // 2), "core")
         if y >= 1930 and k: place_blocks(t, "bus-station", 1, "edge")
-        # Outside the one-party lands (settle.py TRADE_PLAN, B3294) there is no house of culture, and the estate's
+        # Outside the one-party lands (regiontrades.YEARS, B3294) there is no house of culture, and the estate's
         # blocks are the tower blocks of a market town's housing estate.
         import settle as S
-        one_party = S.TRADE_PLAN.get(S.REGION, "western") != "western"
+        one_party = S.one_party()
         if y >= 1950 and k and one_party: place_blocks(t, "culture-house", 1, "edge")
         if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
         if not one_party:
