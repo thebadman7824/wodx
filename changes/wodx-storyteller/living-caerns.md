@@ -1,4 +1,0 @@
----
-bump: minor
----
-Living caerns: the Garou kind of place of power. A caern on the Places of power register has a level, a kind from the W20 Caerns chart, a totem, its sept with Garou, tribes and offices (the editor suggests the highest-ranking Theurge as Master of the Rite), and the Gnosis of its last moot. Hold the Moot Rite (each Garou gives Gnosis in turn, the rest of the sept can add more), open the caern for its power, meet a raid, fight a caern war, raise it after a year of full moots, or take it back once lost. On the clock a caern without its monthly moot lapses, sinks a level every three months and dies at 0; raids by the Wyrm and the Weaver come by era and settle themselves after a week. A lapse or a lost raid steps the scene's Gauntlet drift (WoDX Otherworlds). API: api.upkeep.power.caern.
