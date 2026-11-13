@@ -2,12 +2,16 @@
  * WoDX Creation 0.19.0: dated local content. The four ages of lifepath-local-*.mjs are broad; this file holds what
  * belongs to exact years in one region: origins open only in a span of birth years, and things that marked a life
  * stage lived there while they happened. The first region is Moravia and Bohemia, sorted from the older lifepath
- * scenes of data/lifepaths.mjs (which stay as they are for older records). Other regions can be added the same way.
+ * scenes of data/lifepaths.mjs (which stay as they are for older records). The other 43 regions are in lifepath-events-europe.mjs, -asia.mjs and -world.mjs (0.21.0).
  *
  *   region: {origins: [[label, gives, base, from, to]],
  *            marks:   [[label, gives, spans [[from, to]], tone "+", "-" or "0", person "role|note" or null]]}
  * A mark is offered when the stage's years overlap one of its spans. All text is WoDX's own.
  */
+import {EVENTS_EUROPE} from "./lifepath-events-europe.mjs";
+import {EVENTS_ASIA} from "./lifepath-events-asia.mjs";
+import {EVENTS_WORLD} from "./lifepath-events-world.mjs";
+
 export const LOCAL_EVENTS = {
 "moravia": {
  origins: [
@@ -67,3 +71,4 @@ export const LOCAL_EVENTS = {
   ["Stood on the sandbags in the flood","ab Athletics|bg Allies",[[1997,1997],[2002,2002]],"+",null],
   ["Lost the house to the flood","note In debt|ab Survival",[[1997,1997],[2002,2002]],"-",null]]}
 };
+Object.assign(LOCAL_EVENTS, EVENTS_EUROPE, EVENTS_ASIA, EVENTS_WORLD);
