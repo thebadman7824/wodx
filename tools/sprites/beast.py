@@ -219,8 +219,26 @@ def bite(a,i):
                 x=int(round(x0+2-abs(k)*.5+q)); y=int(round(y0+k))
                 if 0<=x<S and 0<=y<SH: out[y,x]=(*col,255)
     return out
+_FIT={}
+def fit(a):
+    """the kind set in the middle of its frame and, if it is longer than the frame, made just small enough to fit, so nothing is cut off"""
+    key=id(a)
+    if key in _FIT: return _FIT[key]
+    a2=dict(a)
+    for _ in range(8):
+        al=np.zeros((SH,S),bool)
+        for f in range(8): al|=side(a2,f)[...,3]>0
+        for f in range(8): al|=front(a2,f)[...,3]>0
+        ys,xs=np.nonzero(al)
+        if not len(xs): break
+        x0,x1,y0=xs.min(),xs.max(),ys.min(); w=x1-x0+1
+        if x0>=3 and x1<=S-4 and y0>=3: break
+        a2['ox']=a2['ox']+round((S-1)/2-(x0+x1)/2)
+        if w>S-6 or y0<3: a2['s']=a2['s']*min((S-6)/(w+2) if w>S-6 else 1,1-(3-y0)/max(1,87+K.YO-y0) if y0<3 else 1)
+    _FIT[key]=a2; return a2
 def sheet(a):
     if isinstance(a,str): a=KINDS[a]
+    a=fit(a)
     sh=np.zeros((4*SH,8*S,4),np.uint8)
     for f in range(8):
         r=side(a,f)

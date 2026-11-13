@@ -21,12 +21,17 @@ def person_sheets(spec,acts):
             for row,im in ((0,Wr.front(a,0,True,(act,i))),(1,r[:,::-1]),(2,Wr.front(a,0,False,(act,i))),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
         out[act]=sh
     return out
+def _keep(src,dx,dy):
+    """a shift cut down so that nothing of the figure is pushed out of its frame"""
+    ys,xs=np.nonzero(src[...,3])
+    if not len(xs): return dx,dy
+    dx=max(min(0,1-xs.min()),min(max(0,S-2-xs.max()),dx)); dy=max(min(0,1-ys.min()),min(max(0,SH-2-ys.max()),dy)); return int(dx),int(dy)
 def lunge(walk,kind):
     sh=np.zeros((4*SH,6*S,4),np.uint8); DIR={0:(0,-1),1:(-1,0),2:(0,1),3:(1,0)}
     for row in range(4):
         ux,uy=DIR[row]
         for i in range(6):
-            src=walk[row*SH:(row+1)*SH,[0,7,7,1,2,1][i]*S:([0,7,7,1,2,1][i]+1)*S]; k=[0,-2,-3,4,6,2][i]; dx,dy=ux*k,uy*k//2
+            src=walk[row*SH:(row+1)*SH,[0,7,7,1,2,1][i]*S:([0,7,7,1,2,1][i]+1)*S]; k=[0,-2,-3,4,6,2][i]; dx,dy=_keep(src,ux*k,uy*k//2)
             fr=np.zeros_like(src); ys,xs=np.nonzero(src[...,3]); ok=(xs+dx>=0)&(xs+dx<S)&(ys+dy>=0)&(ys+dy<SH); fr[ys[ok]+dy,xs[ok]+dx]=src[ys[ok],xs[ok]]
             if i in(3,4) and len(xs):
                 cx,cy=(xs.min()+xs.max())/2+dx,(ys.min()+ys.max())/2+dy; hx,hy=(xs.max()-xs.min())/2,(ys.max()-ys.min())/2
@@ -45,7 +50,7 @@ def lunge(walk,kind):
 DIRS={0:(0,-1),1:(-1,0),2:(0,1),3:(1,0)}; FEET=103
 def _cell(sh,row,col): return sh[row*SH:(row+1)*SH,col*S:(col+1)*S]
 def _move(src,dx,dy):
-    fr=np.zeros_like(src); ys,xs=np.nonzero(src[...,3]); ok=(xs+dx>=0)&(xs+dx<S)&(ys+dy>=0)&(ys+dy<SH); fr[ys[ok]+dy,xs[ok]+dx]=src[ys[ok],xs[ok]]; return fr
+    dx,dy=_keep(src,dx,dy); fr=np.zeros_like(src); ys,xs=np.nonzero(src[...,3]); ok=(xs+dx>=0)&(xs+dx<S)&(ys+dy>=0)&(ys+dy<SH); fr[ys[ok]+dy,xs[ok]+dx]=src[ys[ok],xs[ok]]; return fr
 def _squash(src,k):
     """press the figure down toward its feet: k of its height"""
     fr=np.zeros_like(src)
@@ -57,21 +62,32 @@ def _lean(src,px,sgn):
     """tip the figure forward: the head goes px further than the feet"""
     fr=np.zeros_like(src); ys=np.nonzero(src[...,3].any(1))[0]
     if not len(ys): return fr
-    top=ys.min()
+    top=ys.min(); xs=np.nonzero(src[...,3].any(0))[0]; px=min(px,max(0,(S-2-xs.max()) if sgn>0 else (xs.min()-1)))
     for y in range(SH):
         d=int(round(sgn*px*max(0,FEET-y)/max(1,FEET-top))); d=max(-px,min(px,d)); row=src[y]
         if d>0: fr[y,d:]=row[:S-d]
         elif d<0: fr[y,:S+d]=row[-d:]
         else: fr[y]=row
     return fr
+def seal(fr):
+    """close the one-pixel gaps that turning a figure leaves inside it, each with the mean of the four around it"""
+    a=fr[...,3]>0; g=np.pad(a,1); h=~a&g[:-2,1:-1]&g[2:,1:-1]&g[1:-1,:-2]&g[1:-1,2:]
+    if not h.any(): return fr
+    fr=fr.copy(); q=np.pad(fr.astype(np.int32),((1,1),(1,1),(0,0))); m=(q[:-2,1:-1]+q[2:,1:-1]+q[1:-1,:-2]+q[1:-1,2:])//4
+    fr[h]=m[h].astype(np.uint8); fr[h,3]=255; return fr
 def _turn(src,deg,sgn):
     """turn the figure about its middle (falling over), then set it down on the ground"""
     ys,xs=np.nonzero(src[...,3]); fr=np.zeros_like(src)
     if not len(ys) or not deg: return src.copy()
-    cx,cy=(xs.min()+xs.max())/2,(ys.min()+ys.max())/2; a=np.deg2rad(deg*sgn); ca,sa=np.cos(a),np.sin(a)
+    a=np.deg2rad(deg*sgn); ca,sa=np.cos(a),np.sin(a); w,h=xs.max()-xs.min()+1,ys.max()-ys.min()+1; wide=abs(ca)*w+abs(sa)*h
+    if wide>S-4:   # a figure too long to lie down in its frame is laid down a little smaller
+        from PIL import Image
+        k=(S-4)/wide; sm=Image.fromarray(np.ascontiguousarray(src),'RGBA').resize((max(1,round(S*k)),max(1,round(SH*k))),Image.NEAREST)
+        src=np.zeros_like(src); big=Image.new('RGBA',(S,SH),(0,0,0,0)); big.paste(sm,(round(48-48*k),round(FEET-FEET*k))); src=np.array(big); ys,xs=np.nonzero(src[...,3])
+    cx,cy=(xs.min()+xs.max())/2,(ys.min()+ys.max())/2
     Y,X=np.mgrid[0:SH,0:S]; sx=np.rint(ca*(X-cx)+sa*(Y-cy)+cx).astype(int); sy=np.rint(-sa*(X-cx)+ca*(Y-cy)+cy).astype(int)
     ok=(sx>=0)&(sx<S)&(sy>=0)&(sy<SH); fr[ok]=src[sy[ok],sx[ok]]
-    y2=np.nonzero(fr[...,3].any(1))[0]
+    fr=seal(fr); y2=np.nonzero(fr[...,3].any(1))[0]
     return _move(fr,0,int(FEET-y2.max())) if len(y2) else fr
 def _wash(fr,col,k):
     out=fr.copy(); m=out[...,3]>0; out[m,:3]=(out[m,:3]*(1-k)+np.array(col)*k).astype(np.uint8); return out

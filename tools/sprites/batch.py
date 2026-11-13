@@ -35,6 +35,17 @@ def plain(a,year):
     if year<1800: return dict(top=(c1,'coat' if h&1 else 'shirt'),under='#d8d4c8',legs=(c2,'breeches'),hose='#cfc8b8',feet=(c3,'shoe'))
     if year<1950: return dict(top=(c1,'jacket' if h&1 else 'shirt'),under='#d8d4c8',legs=(c2,'trousers'),feet=(c3,'boot' if h&2 else 'shoe'))
     return dict(top=(c1,'jacket' if h&1 else 'shirt'),legs=(c2,'trousers'),feet=(c3,'shoe'))
+def _cap(sheet):
+    """the largest scale about the feet at which every frame of a sheet still fits inside its frame"""
+    S_,SH_,F=96,112,103; k=9.0
+    for r in range(sheet.shape[0]//SH_):
+        for c in range(sheet.shape[1]//S_):
+            ys,xs=np.nonzero(sheet[r*SH_:(r+1)*SH_,c*S_:(c+1)*S_,3])
+            if not len(xs): continue
+            if xs.min()<48: k=min(k,46/(48-xs.min()))
+            if xs.max()>48: k=min(k,46/(xs.max()-48))
+            if ys.min()<F: k=min(k,(F-2)/(F-ys.min()))
+    return max(k,.5)
 def animal(name):
     n=name.lower()
     for pat,k in ANIMALS:
@@ -81,6 +92,11 @@ def acts_for(a,held):
     if a.get('powers'): out.append(('cast',None,None))
     return out
 def draw(a):
+    """draw() with the one-pixel gaps closed on every solid figure (not on glows, swarms and figures of lines, which are meant to show through)"""
+    sh,label,notes=_draw(a)
+    if sh and not re.search(r'wisp|swarm|geomid',label or ''): sh={k:PA.seal(v) for k,v in sh.items()}
+    return sh,label,notes
+def _draw(a):
     """{'' : walk sheet, move: sheet}, label of what was drawn, notes; None when nothing fits"""
     kind=a.get('kind') or 'person'
     if kind=='animal':
@@ -92,6 +108,10 @@ def draw(a):
             p=M.PEOPLE[m[1]]; post=dict(p['post'])
             if book and book[2]!=1: post['scale']=round(post.get('scale',1)*book[2],2)
             sheets=PA.person_sheets(p['spec'],p['acts']+[('claw',None,None)]); sheets.update(PA.extras(sheets[''],'fade' if post.get('alpha',1)<1 else p['death']))
+            sc=post.get('scale',1)
+            if sc>1:   # a big figure is drawn only as big as its frame holds, so no move cuts off its head or hands
+                caps={k:_cap(v) for k,v in sheets.items()}; base=min(c for k,c in caps.items() if k not in ('jump','fly'))
+                return {k:M.post(v,**dict(post,scale=round(min(sc,base,caps[k]),3))) for k,v in sheets.items()},('book:' if book else 'monster:')+m[1],[]
             return {k:M.post(v,**post) for k,v in sheets.items()},('book:' if book else 'monster:')+m[1],[]
         if m:
             walk=M.walk(m); soft=m[0]=='own' and not m[1].startswith(('plant','fish','shark','whale'))

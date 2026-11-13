@@ -123,7 +123,7 @@ def _swarm(col):
     return fn
 def _geomid(col):
     def fn(f,view):
-        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,FEET-30+math.sin(ph)*2
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,GF-30+math.sin(ph)*2
         pts=[(math.cos(ph*.5+i*math.pi/3)*10,math.sin(i*math.pi/3)*10) for i in range(6)]
         for i in range(6):
             a=(cx+pts[i][0],cy+pts[i][1]); b=(cx+pts[(i+1)%6][0],cy+pts[(i+1)%6][1]); cv.capsule(a,b,1.0,1.0,ramp=P,g='e%d'%i); cv.capsule(a,(cx,cy),.6,.6,ramp=P,g='s%d'%i)
@@ -133,14 +133,15 @@ def _geomid(col):
                 if not cv.c[y,x,3]: cv.c[y,x]=(10,10,16,80)
         return cv.c
     return fn
+GF=FEET-K.YO   # the feet line on the drawing canvas, which sits YO above the frame's
 def _tentacles(col):
     def fn(f,view):
-        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,FEET-30
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,GF-30
         for j in range(8):
             a=j/8*2*math.pi; prev=(cx,cy+4)
             for t in range(1,9):
-                r=t*3.0; q=(cx+math.cos(a+math.sin(ph+t*.5+j)*.35)*r*1.3,cy+6+math.sin(a)*r*.5+t*1.6)
-                if q[1]>FEET: q=(q[0],FEET)
+                r=t*3.0; q=(cx+math.cos(a+math.sin(ph+t*.5+j)*.35)*r*1.1,cy+6+math.sin(a)*r*.5+t*1.6)
+                if q[1]>GF: q=(q[0],GF)
                 cv.capsule(prev,q,max(.6,2.2-t*.2),max(.5,2.0-t*.2),ramp=P,g='t%d'%j); prev=q
         cv.capsule((cx,cy),(cx,cy+3),8,7,ramp=P,g='body')
         for sg in (-1,1): cv.px(cx+sg*3,cy+1,(250,230,90))
@@ -148,7 +149,7 @@ def _tentacles(col):
     return fn
 def _fish(col,kind='fish'):
     def fn(f,view):
-        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cy=FEET-12; L={'fish':16,'shark':26,'whale':34}[kind]
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cy=GF-1; L={'fish':16,'shark':26,'whale':34}[kind]
         if view=='s':
             pts=[(48-L/2+i*L/10,cy+math.sin(ph+i*.6)*(1.2*(1-i/10))) for i in range(11)]
             for i in range(10): r=[1,1.6,2.4,3.2,3.8,4.0,3.8,3.4,2.8,2.0][i]*(L/22); cv.capsule(pts[i],pts[i+1],r,r,ramp=P,g='b')
@@ -180,10 +181,10 @@ PEOPLE={
  'huntsman':P(acts=[('shot','bow',None),('cast',None,None)],skin=(214,180,150),hair=('#2a1c14','long'),top=('#6a1c22','coat'),under='#e0d8c8',legs=('#2a2a34','breeches'),hose='#d8d0c0',feet=('#1c1616','boot'),hat=('beret','#2a2a34'),over=('cloak','#23301f'),held='bow'),
  'belteroth':P(dict(scale=1.12,lift=10,alpha=.82),acts=[('cast',None,None)],skin=(34,32,44),hair=('#16141c','bald'),top=('#000000','bare'),legs=('#1c1a24','tights'),feet=('#000000','bare'),thin=.95,eyes=(190,214,236),marks=dict(wings=('#2a2836','bat'))),
  'corpse':P(dict(wash=((110,120,96),.25)),skin=(150,150,124),hair=('#3a3a30','long'),top=('#4a4436','tunic'),legs=('#3a3428','breeches'),hose='#3a3428',feet=('#000000','bare'),thin=.86,eyes=(220,220,170),marks=dict(teeth=True)),
- 'skeleton':P(skin=(222,214,190),hair=('#000000','bald'),top=('#000000','bare'),legs=('#000000','briefs'),feet=('#000000','bare'),thin=.62,eyes=(20,16,16),marks=dict(teeth=True)),
+ 'skeleton':P(skin=(222,214,190),hair=('#000000','bald'),top=('#000000','bare'),legs=('#c8bea4','briefs'),feet=('#000000','bare'),thin=.62,eyes=(20,16,16),marks=dict(teeth=True)),
  'figure':P(skin=(206,176,150),hair=('#3a2a1c','long'),top=('#3c3c4a','robe'),legs=('#3c3c4a','trousers'),feet=('#2a2422','shoe')),
  'ghostfig':P(dict(GHOST),skin=(206,206,206),hair=('#808088','long'),top=('#6a6a72','robe'),legs=('#6a6a72','trousers'),feet=('#000000','bare')),
- 'imp':P(dict(scale=.55),skin=(170,52,40),hair=('#2a1010','bald'),top=('#000000','bare'),legs=('#000000','briefs'),feet=('#000000','bare'),thin=.9,eyes=(250,220,60),marks=dict(horns=('#2a2020','goat'),tail=('#a03a2a','devil'),ears=('point',None))),
+ 'imp':P(dict(scale=.55),skin=(170,52,40),hair=('#2a1010','bald'),top=('#000000','bare'),legs=('#8a2a20','briefs'),feet=('#000000','bare'),thin=.9,eyes=(250,220,60),marks=dict(horns=('#2a2020','goat'),tail=('#a03a2a','devil'),ears=('point',None))),
  'oni':P(dict(scale=1.25),acts=[('swing','club',None)],skin=(176,56,44),hair=('#141010','long'),top=('#000000','bare'),legs=('#c8b07a','loin'),feet=('#000000','bare'),sw=8.4,thin=1.16,held='club',marks=dict(horns=('#e0d6b0','nub'),tusks=True)),
  'angel':P(dict(lift=4),acts=[('cast',None,None)],skin=(236,222,206),hair=('#e8d8a0','long'),top=('#ecebe6','robe'),legs=('#ecebe6','trousers'),feet=('#000000','bare'),marks=dict(wings=('#f4f2ea','fly'))),
  'birdman':P(skin=(60,56,64),hair=('#141418','short'),top=('#2a2a34','robe'),legs=('#2a2a34','trousers'),feet=('#c8a040','bare'),marks=dict(wings=('#1c1c22','fly'),nose='#c8a040')),

@@ -121,7 +121,9 @@ def frame(a,f,view):
     im={'flyer':_flyer,'snake':_snake,'spider':_spider}[a['plan']](a,f,view)
     if a.get('big'):
         from PIL import Image
-        k=a['big']; w,h=round(S*k),round(SH*k); big=Image.new('RGBA',(S,SH),(0,0,0,0)); big.paste(Image.fromarray(im,'RGBA').resize((w,h),Image.NEAREST),(round(48-48*k),round(102-102*k))); im=np.array(big)
+        k=a['big']; ys,xs=np.nonzero(im[...,3]); fy=int(ys.max()) if len(ys) else 102
+        if len(xs): k=min(k,46/max(1,48-xs.min(),xs.max()-48),(fy-2)/max(1,fy-ys.min()))   # grown about its feet, never past the frame's edge
+        w,h=round(S*k),round(SH*k); big=Image.new('RGBA',(S,SH),(0,0,0,0)); big.paste(Image.fromarray(im,'RGBA').resize((w,h),Image.NEAREST),(round(48-48*k),round(fy-fy*k))); im=np.array(big)
         if a.get('arms'):   # the squid's arms: four that trail and curl behind the spider's body
             ph=f/8*2*math.pi
             for j in range(4):
