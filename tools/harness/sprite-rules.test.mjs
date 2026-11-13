@@ -83,3 +83,18 @@ test("an attacker turns toward the one struck", () => {
   assert.equal(SR.facingToward({x: 0, y: 0}, {x: 10, y: -100}), "up");
   assert.equal(SR.facingToward({x: 5, y: 5}, {x: 5, y: 5}, "left"), "left");
 });
+
+test("the move fits the weapon, and a sprite without it plays the nearest it knows", () => {
+  assert.equal(SR.moveFor("townsman-1888", {ranged: true, weapon: "Revolver"}), "shot");
+  assert.equal(SR.moveFor("townsman-1888", {brawl: true}), "claw");
+  assert.equal(SR.moveFor("townsman-1888", {weapon: "Broadsword"}), "claw", "no swing or thrust: the hand");
+  assert.equal(SR.moveFor("lady-1888", {weapon: "Dagger"}), "thrust");
+  assert.equal(SR.moveFor("lady-1888", {weapon: "Club"}), "thrust");
+  assert.equal(SR.moveFor("lady-1888", {ranged: true}), "thrust");
+  assert.equal(SR.moveFor("garou-lupus", {bite: true, brawl: true}), "bite");
+  assert.equal(SR.moveFor("garou-lupus", {brawl: true}), "bite");
+  assert.equal(SR.moveFor("garou-crinos", {bite: true}), "claw");
+  assert.equal(SR.moveFor("kindred-elder-1888", {power: true}), "cast");
+  assert.equal(SR.moveFor("garou-homid", {power: true}), null, "no casting move, so nothing plays");
+  assert.equal(SR.moveFor("nobody", {brawl: true}), null);
+});

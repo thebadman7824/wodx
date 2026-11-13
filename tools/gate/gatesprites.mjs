@@ -4,7 +4,7 @@
  * It makes up to six tokens named "Sprite test: ..." on the scene being viewed and LEAVES them there for Ben to
  * walk about; run it again and it uses the same tokens. Nothing else is made, changed or deleted, and the clock is
  * not touched. To clear up: delete the tokens whose names begin "Sprite test:".
- *   1. the module: Paperdoll 0.8.0 or later with api.sprites
+ *   1. the module: Paperdoll 0.9.0 or later with api.sprites
  *   2. every sheet and still picture answers
  *   3. the test tokens stand on the scene, each with its sprite
  *   4. one token walks two squares right and faces right, then two squares down and faces down
@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 7;
+const N = 8;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -27,7 +27,7 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const M = game.modules.get("wodx-paperdoll"), A = M?.api?.sprites, SR = A?.rules;
   try {
-    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.8.0", M.version) && typeof A?.give === "function" && typeof SR?.frameOf === "function", {version: M?.version});
+    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.9.0", M.version) && typeof A?.give === "function" && typeof SR?.frameOf === "function", {version: M?.version});
     const names = Object.keys(SR.SHEETS), answers = {};
     for ( const n of names ) for ( const p of [SR.sheetPath(n), SR.stillPath(n)] ) answers[p] = (await fetch(`/${p}`, {method: "HEAD"})).status;
     ok("2. sheets", names.length >= 6 && Object.values(answers).every(s => s === 200), {answers});
@@ -78,6 +78,16 @@ export async function run() {
       ok("7. attack", move === "cast" && Object.values(sheets).every(v => v === 200) && during?.act === "cast" && aw === SR.FRAME_W * SR.ACT_FRAMES && !after && (wtex?.baseTexture?.width ?? wtex?.source?.width) === SR.FRAME_W * SR.FRAMES,
         {move, sheets, during: during?.act, facing, attackSheetWidth: aw, ended: !after});
     } else ok("7. attack", false, {error: "api.sprites.play is missing"});
+
+    // 8. a fight's attack: Combat's own signal, a ranged weapon that misses, plays the townsman's shot toward the Crinos
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888"), cr = by("garou-crinos");
+      Hooks.callAll("wodxAttackRolled", tm.actor, {target: cr.actor, attackerToken: tm.uuid, targetToken: cr.uuid, weapon: "Revolver", ranged: true, brawl: false, bite: false, hit: false});
+      await sleep(400);
+      const shot = A.playing(tm.id)?.act, want = SR.moveFor?.("townsman-1888", {ranged: true});
+      await sleep(1200);
+      ok("8. fight", want === "shot" && shot === "shot" && !A.playing(tm.id), {want, shot, combat: game.modules.get("wodx-combat")?.version});
+    }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   return save(R);

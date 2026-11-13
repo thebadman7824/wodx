@@ -12,7 +12,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc |
+| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss) |
+| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
+| wodxPowerShown | none yet (any module may send it with the actor and a target) | paperdoll (a sprite token plays its casting move) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news) |

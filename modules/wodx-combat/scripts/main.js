@@ -871,6 +871,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     html = await addFlavor(html, fkey, { attacker: attacker.name, target: target?.name ?? "the enemy" },
         { style: F.attackStyle(w), group: target ? F.targetGroup(P.detectProfile(target)) : null });
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
+    // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
+    Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
 
     // ---- Apply
     if (setting("autoApply")) {
@@ -1468,7 +1471,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.21.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.22.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
