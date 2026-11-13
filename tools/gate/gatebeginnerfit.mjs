@@ -3,7 +3,8 @@
  *   await (await import(`/wodx-gate/gatebeginnerfit.mjs?${Date.now()}`)).run()
  * Needs gateuisnap.mjs and fit-audit.mjs beside it in Data/wodx-gate.
  *   1. the Beginner preview turns on (api.playerView.preview("beginner"))
- *   2. gateuisnap runs every sheet and tab in that view (the quick roll row, the More tab) and passes
+ *   2. gateuisnap runs every sheet and tab in Full view and then in Beginner view (the quick roll row, the More tab);
+ *      Beginner view adds no finding of its own (the findings both views share are listed for the layout work)
  *   3. Find anything, What can I do now?, My WoDX preferences and the tour open, and fit-audit finds nothing in them
  *   4. each toolbar drawer opens, and fit-audit finds nothing in it
  *   5. the preview turns off again (preview(null))
@@ -38,9 +39,17 @@ export async function run() {
     ok("1. beginner preview", V.current() === "beginner" && document.body.classList.contains("wodx-view-beginner"));
     await shot("toolbar");
 
-    let snap = null;
+    // The same sheets in Full view first, so a finding Beginner view adds stands apart from one already there
+    const key = f => `${f.sheet}|${f.tab}|${f.kind}|${f.msg}`;
+    let full = null, snap = null;
+    V.preview("full"); await sleep(300);
+    try { full = await (await import(`/wodx-gate/gateuisnap.mjs?${Date.now()}`)).run(); } catch (e) { R.errors.push(`gateuisnap full: ${e.message}`); }
+    V.preview("beginner"); await sleep(300);
     try { snap = await (await import(`/wodx-gate/gateuisnap.mjs?${Date.now()}`)).run(); } catch (e) { R.errors.push(`gateuisnap: ${e.message}`); }
-    ok("2. every sheet in Beginner view", !!snap?.pass && !snap.errors, {gateuisnap: snap});
+    const had = new Set((full?.list ?? []).map(key));
+    const added = (snap?.list ?? []).filter(f => !had.has(key(f)));
+    ok("2. every sheet in Beginner view", !!snap && !snap.errors && !added.length,
+      {added, beginner: {sheets: snap?.sheets, findings: snap?.findings, byKind: snap?.byKind}, full: {findings: full?.findings, byKind: full?.byKind, list: full?.list}});
 
     const wins = [["find", () => V.find(), "wodx-find"], ["now", () => V.now(), "wodx-now"], ["prefs", () => V.prefs(), "wodx-prefs"], ["tour", () => V.tour(), "wodx-guide"]];
     const winFind = {};
