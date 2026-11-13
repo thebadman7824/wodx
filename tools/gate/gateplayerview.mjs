@@ -1,10 +1,10 @@
 /**
- * Beginner and Full views, toolbar drawers, token menu groups and Find anything (WoDX Chronicle 0.52.0, Actions 3.60.0,
+ * Beginner and Full views, toolbar drawers, token menu groups and Find anything (WoDX Chronicle 0.52.0, Actions 3.62.0,
  * B2810 to B2826), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayerview.mjs?${Date.now()}`)).run()
  * The Storyteller previews the Beginner view (this session only) and the gate puts Full back. It makes one Kindred
  * actor and one token on the viewed scene and deletes both.
- *   1. the modules: Chronicle 0.52.0 or later with api.playerView; Actions 3.60.0 or later with menuEntries and runSpec
+ *   1. the modules: Chronicle 0.52.0 or later with api.playerView; Actions 3.62.0 or later with menuEntries and runSpec
  *   2. Full view: every WoDX button as before, Find anything on the bar, no drawer buttons
  *   3. Beginner view: drawer buttons; every button shown in Full is on the bar or in a drawer; X-card, Find my character on the bar
  *   4. a drawer opens beside its button with labelled buttons, a second press closes it, and a drawer button works (the Clock opens)
@@ -49,7 +49,7 @@ export async function run() {
   let actor = null, tokDoc = null;
   try {
     ok("1. modules", C?.active && !foundry.utils.isNewerVersion("0.52.0", C.version) && typeof V?.preview === "function" && !!V?.rules?.GROUPS
-      && A?.active && !foundry.utils.isNewerVersion("3.60.0", A.version) && typeof A.api?.menuEntries === "function" && typeof A.api?.runSpec === "function",
+      && A?.active && !foundry.utils.isNewerVersion("3.62.0", A.version) && typeof A.api?.menuEntries === "function" && typeof A.api?.runSpec === "function",
       {chronicle: C?.version, actions: A?.version});
 
     ui.controls.activate?.({control: "tokens"});

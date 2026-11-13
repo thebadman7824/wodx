@@ -511,7 +511,7 @@ export function build(ctx) {
         if (TR.LINE_LOOK.includes(kind)) {
             const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
-            // 3.60.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
+            // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
             const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
             const front = beginner ? TR.frontRow(g).filter(x => !pinned.includes(x.spec)) : [];

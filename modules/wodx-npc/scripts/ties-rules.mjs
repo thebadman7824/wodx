@@ -8,11 +8,17 @@
  *   flags["wodx-sheets"].ties        the hand-made list [{uuid, role, note, hidden}] (hidden: the Storyteller's only)
  *   system.sire                      a vampire sheet's own Sire box, matched to an actor by name
  *   the Ledger                       open debts, boons and oaths between two people
+ *   flags["wodx-npc"].kin            a member of a family line brought into play (kin.mjs): ancestor, the founder
  *   flags["wodx-npc"].secrets        a secret can hide a link ({tie: {kind, id}}) until it is found (secrets-rules.mjs)
  * Every link is drawn from both ends: a sire's record makes a childe on the other sheet.
  */
 
 /** The kinds of link, and how each reads from the other end. group orders the Relationships tab. */
+import * as BR from "./bond-rules.mjs";
+import * as TRR from "./trust-rules.mjs";
+import * as HR from "./hearts-rules.mjs";
+import * as LR from "./legacy-rules.mjs";
+
 export const KINDS = {
   sire: {label: "Sire", back: "childe", group: "blood", up: true},
   childe: {label: "Childe", back: "sire", group: "blood"},
@@ -29,6 +35,8 @@ export const KINDS = {
   kin: {label: "Kin", back: "kin", group: "family"},
   kinfolk: {label: "Kinfolk", back: "garou", group: "family"},
   garou: {label: "Garou kin", back: "kinfolk", group: "family"},
+  ancestor: {label: "Ancestor", back: "descendant", group: "family", up: true},
+  descendant: {label: "Descendant", back: "ancestor", group: "family"},
   heirOf: {label: "Heir of", back: "heir", group: "family", up: true},
   heir: {label: "Heir", back: "heirOf", group: "family"},
   mentor: {label: "Mentor", back: "apprentice", group: "teaching", up: true},
@@ -43,14 +51,17 @@ export const KINDS = {
   enemy: {label: "Enemy", back: "enemy", group: "heart"},
   owes: {label: "Owes", back: "owed", group: "debts"},
   owed: {label: "Is owed by", back: "owes", group: "debts"},
+  ...BR.BOND_KINDS,
+  ...TRR.SIDE_KINDS,
+  ...LR.PAST_KINDS,
   haven: {label: "Haven", back: null, group: "places"},
   other: {label: "Other", back: "other", group: "other"}
 };
-export const GROUPS = {blood: "Blood and bonds", family: "Family and kin", teaching: "Mentors and students", service: "Allies and service",
+export const GROUPS = {blood: "Blood and bonds", ...BR.BOND_GROUP, family: "Family and kin", teaching: "Mentors and students", service: "Allies and service",
   heart: "Friends, lovers and rivals", debts: "Debts and favours", places: "Places", other: "Other"};
 /** The roles a hand-made tie can take on the sheet (the kinds the books' Backgrounds and play make by hand). */
 export const HAND_ROLES = ["sire", "childe", "domitor", "ghoul", "parent", "child", "sibling", "spouse", "kin", "kinfolk", "garou", "mentor", "apprentice",
-  "patron", "retainer", "ally", "contact", "lover", "friend", "rival", "enemy", "haven", "other"];
+  "patron", "retainer", "ally", "contact", "lover", "friend", "rival", "enemy", ...BR.BOND_HAND_ROLES, "haven", "other"];
 /** The Sheets roles from before 0.30.0 that read as these kinds. */
 const OLD_ROLE = {kin: "kin", haven: "haven"};
 
@@ -68,14 +79,14 @@ export const bondWord = drinks => (Number(drinks) >= 3 ? "full bond" : Number(dr
  * for a link a secret hides and hand is the uuid on the from-actor's own hand-made list (so the sheet can edit it). A link made in two places is kept once: the first source (WoDX's own records) wins,
  * and a hand-made note is kept on it.
  */
-export function edges(actors = [], {ledger = []} = {}) {
+export function edges(actors = [], {ledger = [], vinculum = {}, lines = []} = {}) {
   const list = [...(actors ?? [])].filter(a => a?.id);
   const byId = new Map(list.map(a => [a.id, a]));
   const byName = new Map();
   for ( const a of list ) if ( a.type === "Vampire" && !byName.has(low(a.name)) ) byName.set(low(a.name), a);
   const out = [], seen = new Map();
   const name = (ref) => (ref?.id && byId.get(ref.id)?.name) || ref?.name || "";
-  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null} = {}) => {
+  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null, foundBy = null} = {}) => {
     if ( !fromId || !to || (!to.id && !to.name && !uuid) || to.id === fromId ) return;
     const k = kindOf(kind);
     const key = `${fromId}|${to.id ?? uuid ?? low(to.name)}|${k}`;
@@ -86,10 +97,11 @@ export function edges(actors = [], {ledger = []} = {}) {
       if ( hand ) e.hand = hand;
       return;
     }
-    const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand};
+    const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand, rule: BR.RULE_OF[k] ?? ""};
+    if ( foundBy?.length ) e.foundBy = [...foundBy];
     seen.set(key, e); out.push(e);
     const b = KINDS[k]?.back;
-    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false});
+    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false, foundBy});
   };
   for ( const a of list ) {
     const l = a.flags?.["wodx-creation"]?.lineage ?? {};
@@ -107,8 +119,22 @@ export function edges(actors = [], {ledger = []} = {}) {
     if ( l.formerly ) add(a.id, who(l.formerly), "formerly", {source: "lineage"});
     if ( l.became ) add(a.id, who(l.became), "became", {source: "lineage"});
     if ( l.family?.heirOf ) add(a.id, who(l.family.heirOf), "heirOf", {source: "lineage"});
+    const kin = a.flags?.["wodx-npc"]?.kin;
+    if ( kin?.founder?.id ) add(a.id, who(kin.founder), "ancestor", {note: kin.relation ? `${kin.relation} of theirs` : "", source: "family line"});
     const ally = a.flags?.["wodx-creation"]?.ally;
     if ( ally?.patron ) add(a.id, who(ally.patron), "patron", {source: "background"});
+  }
+  // 0.56.0: packmates who share a pack name, a wraith's Fetters that name someone, the Sabbat Vinculum
+  for ( const p of BR.packPairs(list) ) add(p.a.id, {id: p.b.id, name: p.b.name}, "packmate", {note: p.note, source: "pack"});
+  const byLowName = new Map(list.map(a => [low(a.name), a]));
+  for ( const a of list ) if ( a.type === "Wraith" || a.type === "Spectre" ) for ( const f of BR.fetterLinks(a, byLowName) ) add(a.id, {id: f.actorId, name: byId.get(f.actorId)?.name ?? ""}, "fetter", {note: f.rating ? `Fetter ${f.rating}` : "", source: "fetter"});
+  for ( const [k, r] of Object.entries(vinculum ?? {}) ) {
+    const [x, y] = String(k).split(">");
+    if ( !byId.has(x) || !byId.has(y) || !(Number(r) > 0) ) continue;
+    const e = seen.get(`${x}|${y}|packmate`);
+    const note = `Vinculum ${r}`;
+    if ( e ) e.note = e.note ? `${e.note}; ${note}` : note;
+    else add(x, {id: y, name: byId.get(y).name}, "packmate", {note, source: "politics", back: false});
   }
   // A domitor's ghoul also drinks: say so on the domitor link rather than twice
   for ( const a of list ) {
@@ -129,6 +155,27 @@ export function edges(actors = [], {ledger = []} = {}) {
     if ( !e.from?.id || !e.to?.id ) continue;
     const what = e.kind === "boon" ? `${e.size ?? "minor"} boon${e.what ? `: ${e.what}` : ""}` : e.what || e.kind;
     add(e.from.id, who(e.to), "owes", {note: String(what).slice(0, 120), source: "ledger"});
+  }
+  // NPC 0.57.0: a hidden loyalty is a tie only the Storyteller sees, to the faction's leader when one is named
+  for ( const a of list ) {
+    const side = TRR.normSide(a.flags?.["wodx-npc"]?.trueSide);
+    if ( side?.leader?.id || side?.leader?.name ) add(a.id, side.leader, "spyFor", {note: `${side.name || side.faction}${side.note ? `; ${side.note}` : ""}`, source: "true side", hidden: true});
+  }
+  // NPC 0.60.0: ties from a past life, hidden until the one who lived it recalls them
+  for ( const p of LR.pastLifeEdges(list, {lines}) ) add(p.from, p.to, p.kind, {note: p.note, source: "past life", hidden: true, foundBy: p.foundBy});
+  // NPC 0.60.0: a hidden loyalty found out shows to the one who found it
+  for ( const e of out ) if ( e.kind === "spyFor" || e.kind === "spiedBy" ) {
+    const sideOwner = e.kind === "spyFor" ? e.from : e.to.id;
+    const f = Object.keys(TRR.normSide(byId.get(sideOwner)?.flags?.["wodx-npc"]?.trueSide)?.found ?? {});
+    if ( f.length ) e.foundBy = f;
+  }
+  // NPC 0.57.0: how far the one at the from end trusts the other
+  for ( const e of out ) {
+    const t = e.to.id ? byId.get(e.from)?.flags?.["wodx-npc"]?.trust?.[e.to.id] : null;
+    if ( t && Number(t.value) ) e.trust = TRR.trustWord(Number(t.value));
+    // NPC 0.58.0: a romance's warmth on lover and spouse ties
+    const w = ["lover", "spouse"].includes(e.kind) && e.to.id ? byId.get(e.from)?.flags?.["wodx-npc"]?.warmth?.[e.to.id] : null;
+    if ( w ) e.warmth = HR.warmthWord(Number(w.value));
   }
   return out;
 }
@@ -155,10 +202,18 @@ export function hideBySecrets(list = [], secretsOf = () => []) {
  */
 export function visibleTo(e, viewer = {}) {
   if ( viewer.gm ) return true;
-  if ( e.hidden ) return false;
+  // NPC 0.60.0: a hidden tie shows to a character who found it out (a past life recalled, a hidden loyalty uncovered)
+  if ( e.hidden ) return (e.foundBy ?? []).some(id => (viewer.mine ?? new Set()).has(id));
   if ( !e.secret ) return true;
   const mine = viewer.mine ?? new Set(), found = viewer.found ?? new Set();
   return mine.has(e.from) || (e.to?.id && mine.has(e.to.id)) || found.has(e.secret);
+}
+
+/** A link as a viewer may read it: the trust and warmth on it only for the Storyteller and the owners of the from end. */
+export function feelingsFor(e, viewer = {}) {
+  if ( viewer.gm || (viewer.mine ?? new Set()).has(e.from) || (e.trust === undefined && e.warmth === undefined) ) return e;
+  const {trust, warmth, ...rest} = e;
+  return rest;
 }
 
 /** One actor's links, ordered by group then kind then name. */
@@ -178,6 +233,7 @@ export const LINES = [
   {key: "ghouls", label: "Domitors and ghouls", up: "domitor", down: "ghoul"},
   {key: "family", label: "Family", up: "parent", down: "child"},
   {key: "heirs", label: "Heirs", up: "heirOf", down: "heir"},
+  {key: "line", label: "Family line", up: "ancestor", down: "descendant"},
   {key: "teaching", label: "Mentors and students", up: "mentor", down: "apprentice"},
   {key: "service", label: "Patrons and retainers", up: "patron", down: "retainer"}
 ];
