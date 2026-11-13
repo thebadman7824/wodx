@@ -123,5 +123,54 @@ class PaletteTest(unittest.TestCase):
         self.assertEqual(a.sets, b.sets)
 
 
+def _all_types():
+    import buildings as B, eratypes, firstgroup, latertypes, cddatypes  # noqa: F401  (they register their types)
+    return B
+
+
+class PurposeTest(unittest.TestCase):
+    def test_burgher_palace(self):
+        import purposes as U
+        B = _all_types()
+        p = U.purpose_of("burgher-palace", "home")
+        self.assertEqual({s["id"] for s in p["side"]}, {"show-wealth", "intimidate", "impress-clients"})
+        roles = U.room_roles(B.place("bp", "burgher-palace", 0, 0, "S"))
+        self.assertEqual(roles["Salon"], "front")
+        self.assertEqual(roles["Dining hall"], "front")
+        self.assertEqual(roles["Kitchen"], "service")
+        self.assertEqual(roles["Bedchamber"], "private")
+        self.assertEqual(roles["Servants' room"], "service")
+
+    def test_roles_follow_facing(self):
+        import purposes as U
+        B = _all_types()
+        for f in "NESW":
+            self.assertEqual(U.room_roles(B.place("bp", "burgher-palace", 3, 4, f))["Salon"], "front", f)
+
+    def test_every_type_has_purpose(self):
+        import purposes as U
+        B = _all_types()
+        for k, t in B.TYPES.items():
+            p = U.purpose_of(k, t.get("fill", "home"))
+            self.assertTrue(p["main"], k)
+            roles = U.room_roles(B.place("x", k, 0, 0, "S"))
+            self.assertTrue(set(roles.values()) <= {"front", "work", "private", "service"}, k)
+
+    def test_unknown_falls_back(self):
+        import purposes as U
+        p = U.purpose_of("no-such", "workshop")
+        self.assertEqual(p["main"], "work")
+        self.assertEqual(p["side"], [])
+
+    def test_room_kinds(self):
+        import purposes as U
+        self.assertEqual(U.kind_of_name("Cellar store"), "store")
+        self.assertEqual(U.kind_of_name("Counting room"), "study")
+        self.assertEqual(U.kind_of_name("Nave"), "worship")
+        self.assertEqual(U.kind_of_name("Taproom"), "tavern")
+        self.assertEqual(U.kind_of_name("Holding cell"), "cell")
+        self.assertEqual(U.kind_of_name("Bathroom 3"), "bath")
+
+
 if __name__ == "__main__":
     unittest.main()
