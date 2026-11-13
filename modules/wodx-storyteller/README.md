@@ -49,7 +49,7 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Money, holdings and making things
 
-- Files: `money.mjs` and `money-rules.mjs` (money by era and by region, money changers, coin of the place), `owners.mjs` and `owner-rules.mjs` (who owns what, holdings and upkeep), `craft-rules.mjs`, `build-rules.mjs`, `cookery.mjs`.
+- Files: `money.mjs` and `money-rules.mjs` (money by era and by region, money changers, coin of the place), `owners.mjs` and `owner-rules.mjs` (who owns what, holdings and upkeep), `craft-rules.mjs`, `build-rules.mjs`, `cookery.mjs`, `wonders.mjs` (making each line's supernatural items: fetishes, klaives and talens, with the Storyteller's go-ahead).
 - Settings: `money`, `changers`, `moneyRegion`, `moneyMonth`.
 
 ## Markets and trade
