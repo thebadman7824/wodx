@@ -16,6 +16,7 @@ import "./face64-changeling.mjs";
 import "./face64-hunter.mjs";
 import "./face64-demon.mjs";
 import "./face64-mummy.mjs";
+import "./face64-skins.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -203,7 +204,7 @@ def("a-warpaint", "all", "Paint", "Face paint of a people", {skin(c) { const col
 const GENERAL = new Set(["all", "Nosferatu", "Tribes", "Rank", "Paradox", "Resonance", "Shadow", "Stygian", "Hekau", "Rising", "Orders", "Visage", "Torment", "Yin", "Yang", "Bone Flowers", "Jade", "Scars", "Marks", "Jewellery", "Gear", "Headwear", "Age", "Paint", "Tattoos", "Hair", "Beard", "Health"]);
 /** Never rolled by seed, only ticked: spectacles belong to some eras and not others. */
 const TICK_ONLY = new Set(["a-spectacles"]);
-const ONE_OF = new Set(["Deathmark", "Headwear", "Metis"]);
+const ONE_OF = new Set(["Deathmark", "Headwear", "Metis", "Visage Skin"]);
 /** Lines whose named group is the whole look (a kith's mien, a breed's): always shown when the sheet names it. */
 const WHOLE = new Set(["changeling", "fera"]);
 const norm = s => String(s ?? "").toLowerCase();
@@ -270,6 +271,7 @@ export function rollFeatures(seed, line, text = "") {
     if ( !opts.length ) continue;
     if ( g === "Deathmark" && line === "wraith" ) out.push(r.pick(opts).id);
     else if ( g === "Metis" && groupMatches("Metis", text) ) out.push(r.pick(opts).id);
+    else if ( g === "Visage Skin" && line === "demon" && r.next() < 0.5 ) out.push(r.pick(opts).id);   // half of demons wear one in the visage
     else if ( g === "Headwear" && r.next() < 0.12 ) { const h = opts.filter(f => !f.slot || !used.has(f.slot)); if ( h.length ) out.push(r.pick(h).id); }
   }
   return [...new Set(out)];
