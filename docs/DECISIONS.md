@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3320
+Next free block: B3330
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -164,6 +164,7 @@ Next free block: B3320
 | B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4950,3 +4951,13 @@ Reverse: put back the old 22-name lists in data/people-world.mjs.
 WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
 
 Reverse: put back the old lists in data/people-world.mjs.
+
+## B3320. Overheard talk of the town (2026-11-13)
+WoDX NPC, overheard-rules.mjs townTopic and the grammar's overheard:town. From api.upkeep.towns.ofScene (Storyteller B3280): plague or famine now first, then the last blow (sack, rising, fire, flood, storm, earthquake, famine, riot) in its year and the next, then the mood (angry, grim, thriving); an ordinary town gives nothing. Weight 3, as the talk of the times, and passers-by may use it, since it is street talk.
+
+Reverse: drop "town" from TOPICS and PASSERBY_TOPICS.
+
+## B3321. The town's condition thins or fills the street (2026-11-13)
+WoDX NPC, passerby-rules.mjs townCrowd: plague halves the crowd, famine takes a fifth, unrest from 3.5 a fifth and from 4.5 two fifths, a ruined or poor town a fifth; a thriving or rich town adds a fifth, never past the scene's most. House rules.
+
+Reverse: make townCrowd return 1.
