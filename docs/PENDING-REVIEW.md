@@ -802,6 +802,12 @@ All 46 recommendations on https://claude.ai/artifact/Kn8aFrfLtmyCdcJ52Um28P ("Re
 | 2026-11-13 | Finer regions (the Philippines, the Caucasus, Central America and others) | Added only when a chronicle goes there; until then each stands under its wider region | Add a row to WORLD_REGIONS |
 | 2026-11-13 | Weather far from home | Each scene abroad has its region's own weather (B2538) | Clear the scene's region |
 
+## Approved by Ben, 13 November 2026, 01:34 UTC (damage doll desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Where the damage doll sits, its colours, how wounds are kept, damage with no place, animal heads, false limbs (B2590-B2594) | All as recommended: top of the Body tab; purple, red, charred black; notes per level healed off with the track, Storyteller places or clears; unplaced harm on the torso; a head and tail per animal; false limbs by era | See B2590-B2594 in docs/DECISIONS.md |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

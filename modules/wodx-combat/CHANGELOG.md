@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.22.0 (where wounds are: each attack that lands notes the part it hit on the character, as the health track heals the oldest notes of each kind go, and an Undo takes them back; the Storyteller can place a level on a part or clear a part from the damage doll; a Mokole in Suchid or Archid form has a body again, and four-legged shapes know their animal for the doll)
 - 3.21.0 (fights end by themselves: when one side has nobody left standing for a full turn, Suggest gives you a card with End the fight and Auto ends it)
 - 3.20.1 (after the book check: in the saddle no Ability counts for more dots than the rider has in Ride, V20 Dark Ages p. 399, and the attack line says so; the mounted charge's page is 399)
 - 3.20.0 (the last of the ways of moving: at the reins of a horse, cart, car or boat the mount's own pace is the limit in a fight, half with no dot in Ride or Drive, and a passenger is carried without spending a move; In the saddle and Aboard a vehicle are stances with their own changes to rolls; a rider's charge adds a damage die for each 10 yards ridden this turn, five at most; worn armor and a burden set from the token HUD slow a swimmer by quarters and take them under at four steps)
