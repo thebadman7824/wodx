@@ -346,4 +346,4 @@ export async function setupVentures() {
 }
 
 export const rules = VR;
-export const api = () => ({open: venturesDialog, state, on, put, take, week: weekRun, hit: onHappening, influenceOf, form: formHere, stakes: stakesWords, rules: VR});
+export const api = () => ({open: venturesDialog, state, on, put, take, week: weekRun, undo, hit: onHappening, influenceOf, form: formHere, stakes: stakesWords, rules: VR});
