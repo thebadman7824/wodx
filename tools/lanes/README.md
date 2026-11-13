@@ -4,7 +4,7 @@ Three local Foundry servers on Ben's PC, so gates can run side by side. Decision
 
 | Lane | Port | User-data folder | Nightly reset |
 |---|---|---|---|
-| 1 | 30000 | C:\Users\blebr\AppData\Local\FoundryVTT (the existing testbed) | never |
+| 1 | 30000 | %LOCALAPPDATA%\FoundryVTT (the existing testbed; lanes.json reads %NAME% from the environment) | never |
 | 2 | 30020 | D:\WoDX\FoundryData-lane2 | 04:40 |
 | 3 | 30030 | D:\WoDX\FoundryData-lane3 | 04:40 |
 

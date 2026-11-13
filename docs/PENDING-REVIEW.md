@@ -1028,6 +1028,16 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | Should scene ideas from ties come every game week? (B2875) | Yes, one approval card a week; approved ideas go in the Ledger | Turn off "Scene ideas from ties" |
 | 2026-11-13 | Lifepath: the years after the change by line (Ben: "Yes. Do this.", B2624) | 139 ways of spending an age for the twelve lines that change, written from general knowledge of each line's books in WoDX's own words (no page check yet); one of each tone comes first on a first draw; the years on age-bound rows are Claude's reading of the timeline | Edit or empty a line's list in modules/wodx-creation/data/lifepath-since-lines.mjs |
 
+## Approved by Ben, 13 November 2026, 18:49 UTC (Security Desk)
+
+Ben approved every recommendation on the Security Desk (https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK), for Live and the PC testbeds both.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Securing Live and the PC testbeds (26 items) | All 26 recommendations. Repo side in tools/security and the Caddyfile; Live changes as one command block Ben runs on a quiet evening, ending with the waiting reboot; PC side as PC helper jobs | tools/security/README.md has the undo for each Live step |
+| 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
+| 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1137,6 +1147,3 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | When the nightly lane reset runs, and which lanes (B3023) | 04:40 PC time, lanes 2 and 3 only; lane 1 is never reset by the task | Run register-lane-reset.ps1 with another -At, or set autoReset in lanes.json |
 | 2026-11-13 | How long lane backups are kept (B3023) | All kept: a reset backs up a lane's world only when it differs from the known-good copy, and removing backups needs your word | Say how many to keep |
 | 2026-11-13 | Leftover test documents on a lane (B3021) | A warning, not a stop, since many older gates leave their test folders; settings, modules and the clock do stop a run | Say to make documents stop a run too |
-| 2026-11-13 | Securing Live and the PC testbeds (Security Desk, 26 items, https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK) | Report only, nothing changed. Until you pick, Live stays as it is; the recommended fixes that touch Live, the router or your accounts wait for your explicit go-ahead and are not covered by auto-approval | Nothing to reverse |
-| 2026-11-13 | Read Live's real settings (SSH, firewall, headers, updates, backups) | A read-only audit job for the PC helper (jobs/live-security-audit-2026-11-13.md, script security-desk/live-audit.sh); it prints settings only, never passwords or keys | Cancel the job |
-| 2026-11-13 | Your Windows user name in tools/lanes (Security Desk r2) | Recommend reading the lane 1 path from %LOCALAPPDATA% at run time; not changed yet | Pick Keep on the desk |
