@@ -22,7 +22,11 @@ test("every fragment under changes/ is well formed", () => {
   for ( const x of decisions ) {
     assert.deepEqual(S.checkDecisionFragment(x.frag), [], x.file);
     const r = S.blockRange(x.frag.meta.block);
-    for ( const o of [...rows, ...taken] ) assert.ok(r.hi < o.lo || r.lo > o.hi, `${x.file}: ${x.frag.meta.block} overlaps B${o.lo}-B${o.hi}`);
+    // A fragment may add decisions to a block already in the index (the same block exactly), never overlap another.
+    for ( const o of rows ) if ( !(o.lo === r.lo && o.hi === r.hi) ) assert.ok(r.hi < o.lo || r.lo > o.hi, `${x.file}: ${x.frag.meta.block} overlaps B${o.lo}-B${o.hi}`);
+    const used = S.sectionNumbers(text.split("<!-- decision-index:end -->")[1] ?? "");
+    for ( const n of S.sectionNumbers(x.frag.body) ) assert.ok(!used.includes(n), `${x.file}: B${n} is already in docs/DECISIONS.md`);
+    for ( const o of taken ) assert.ok(r.hi < o.lo || r.lo > o.hi || (o.lo === r.lo && o.hi === r.hi), `${x.file}: ${x.frag.meta.block} overlaps B${o.lo}-B${o.hi}`);
     taken.push(r);
   }
 });
@@ -76,4 +80,7 @@ test("the stamp writes a decision block in order", () => {
   assert.match(top, /Next free block: B210/);
   assert.match(top, /## B130\. c\nz\n\n## B200\. late\nq\n$/);
   assert.throws(() => S.stampDecisions(doc, S.parseFragment("---\nblock: B105-B115\nfeature: Clash\nmodules: NPC\n---\n")));
+  const more = S.stampDecisions(out, S.parseFragment("---\nblock: B110-B119\nfeature: Two\nmodules: Tools only\n---\n## B114. more\nm\n"));
+  assert.match(more, /\| B110-B119 \| Two \(used B110-B114\) \| Tools only \|/, "a later fragment for the same block widens its used range");
+  assert.match(more, /## B112\. b2\nw\n\n## B114\. more\nm\n\n## B130\. c/);
 });

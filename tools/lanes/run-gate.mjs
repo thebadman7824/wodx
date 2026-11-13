@@ -5,6 +5,11 @@
  *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
  *                                                                 one share of them so two lanes split the list
  *   --report <file>       also write each gate's line and the exit code to this file
+ *   --lanes 2,3           split the gates over these lanes, one process each, side by side (use it for a long
+ *                         --touched or --all list)
+ * After each gate the runner puts back world settings the gate changed and removes ones it added; on lanes that are
+ * reset every night it also deletes documents the gate left behind (B3086). Two-browser gates (gatesolo,
+ * gatelookhand) are left out of the map; run them by name, alone.
  *
  * 1. Picks the first lane in lanes.json that is up and not locked (or the one --lane names) and locks it.
  *    --wait N keeps looking for N minutes when every lane is busy.
@@ -25,10 +30,11 @@ import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, pickLan
 import {openGM} from "./browser.mjs";
 import {gateMap, touched, gatesFor, changedPaths} from "./gate-map.mjs";
 import fs from "node:fs";
+import {fileURLToPath} from "node:url";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report"]);
+const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
 if ( args.includes("--all") ) gates.push(...Object.keys(gateMap()));
 if ( args.includes("--touched") ) {
@@ -44,6 +50,17 @@ if ( shard ) gates = gates.filter((_, i) => i % +shard[2] === +shard[1] - 1);
 if ( !gates.length || gates.some(g => !/^[\w-]+$/.test(g)) ) {
   console.error("Usage: node tools/lanes/run-gate.mjs <gate> [<gate> ...] | --touched | --all [--shard i/n] [--lane N] [--wait minutes]");
   process.exit(2);
+}
+if ( opt("lanes") && !shard ) {
+  const {spawn} = await import("node:child_process");
+  const list = opt("lanes").split(",").map(x => x.trim()).filter(Boolean);
+  const passOn = args.filter((a, i) => !["--lanes", "--lane", "--touched", "--all", "--shard"].includes(a)
+    && !(i > 0 && ["--lanes", "--lane", "--shard", "--base"].includes(args[i - 1])) && !(gates.includes(a)));
+  const codes = await Promise.all(list.map((l, i) => new Promise(done => {
+    const p = spawn(process.execPath, [fileURLToPath(import.meta.url), ...gates, "--lane", l, "--shard", `${i + 1}/${list.length}`, ...passOn], {stdio: "inherit"});
+    p.on("exit", c => done(c ?? 1));
+  })));
+  process.exit(Math.max(...codes));
 }
 const reportFile = opt("report");
 const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
@@ -100,17 +117,43 @@ try {
   } else {
     console.log(`Lane ${lane.id} matches the repo and its clean fingerprint.`);
     for ( const gate of gates ) {
-      const out = await page.evaluate(async gate => {
+      // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
+      // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
+      const out = await page.evaluate(async ({gate, ignore, cleanDocs}) => {
         const t0 = game.time.worldTime, paused = game.paused;
+        const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
+        const store = () => [...(game.settings.storage.get("world")?.contents ?? game.settings.storage.get("world")?.values?.() ?? [])];
+        const before = new Map(store().map(s => [s.key, s._source?.value ?? s.value]));
+        const COLS = ["actors", "items", "scenes", "journal", "tables", "macros", "playlists", "cards", "combats", "folders"];
+        const ids = Object.fromEntries(COLS.filter(c => game[c]).map(c => [c, new Set([...game[c]].map(d => d.id))]));
         if ( paused ) await game.togglePause(false, {broadcast: true});
         let summary, error = null;
         try { summary = await (await import(`/wodx-gate/${gate}.mjs?${Date.now()}`)).run(); }
         catch (e) { error = e?.message ?? String(e); }
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
+        let settingsBack = 0, docsGone = 0;
+        try {
+          for ( const s of store() ) {
+            if ( skip(s.key) ) continue;
+            const was = before.get(s.key), now = s._source?.value ?? s.value;
+            if ( was === undefined ) { await s.delete(); settingsBack++; }
+            else if ( JSON.stringify(was) !== JSON.stringify(now) ) { await s.update({value: was}); settingsBack++; }
+          }
+          const have = new Set(store().map(s => s.key));
+          for ( const [key, value] of before ) if ( !have.has(key) && !skip(key) ) { await getDocumentClass("Setting").create({key, value}); settingsBack++; }
+        } catch (e) { error ??= `putting settings back: ${e?.message ?? e}`; }
+        if ( cleanDocs ) for ( const c of COLS.filter(c => ids[c]) ) {
+          const extra = [...game[c]].filter(d => !ids[c].has(d.id)).map(d => d.id);
+          if ( !extra.length ) continue;
+          try { await game[c].documentClass.deleteDocuments(extra); docsGone += extra.length; } catch {}
+        }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
-        return {summary: typeof summary === "string" ? summary : JSON.stringify(summary ?? null), error, moved, back: game.time.worldTime === t0};
-      }, gate);
+        const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
+        return {summary: String(text).slice(0, 300), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone};
+      }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset});
+      const tidy = [out.settingsBack ? `${out.settingsBack} setting(s) put back` : "", out.docsGone ? `${out.docsGone} leftover document(s) deleted` : ""].filter(Boolean).join(", ");
+      if ( tidy ) out.summary += ` [${tidy}]`;
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
       if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);

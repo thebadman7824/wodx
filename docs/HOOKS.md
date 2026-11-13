@@ -59,6 +59,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 |---|---|---|
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
+| wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |

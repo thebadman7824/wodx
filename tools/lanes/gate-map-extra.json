@@ -1,6 +1,12 @@
 {
   "_about": "Corrections to the gate map in gate-map.mjs: add or remove modules a gate covers, and files in tools/gate that are diagnostics, not gates.",
-  "notGates": ["gate6c-diag", "gatecssprobe"],
+  "notGates": [
+    "gate6c-diag",
+    "gatecssprobe",
+    "gatelookhand",
+    "gatesolo"
+  ],
   "add": {},
-  "remove": {}
+  "remove": {},
+  "_notGates": "Diagnostics, and the two-browser gates (gatesolo, gatelookhand: run them by name on their own; gatesolo turns solo mode on)."
 }
