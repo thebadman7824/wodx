@@ -2,6 +2,7 @@ import * as TR from "./ties-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as OP from "./opinion-rules.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import * as KIN from "./kin.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -71,7 +72,8 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
       return `<section class="wnpc-tree-line"><h3>${esc(L.label)}</h3><ul class="wnpc-tree">${inner}</ul></section>`;
     }).join("");
     const side = t.side?.length ? `<section class="wnpc-tree-line"><h3>Also</h3><ul data-fixed>${t.side.map(s => `<li>${esc(s.label)}: ${nodeHtml(s)}</li>`).join("")}</ul></section>` : "";
-    return `<div class="wnpc-tree-wrap">${lines || side ? `${lines}${side}` : `<p>No family, blood or teaching ties are recorded for ${esc(actor.name)} yet.</p>`}
+    const kinPart = KIN.treeSection(actor);
+    return `<div class="wnpc-tree-wrap">${lines || side || kinPart ? `${lines}${side}${kinPart}` : `<p>No family, blood or teaching ties are recorded for ${esc(actor.name)} yet.</p>`}
       <p class="wodx-quiet">From the lineage WoDX keeps, each sheet's Sire box and Relationships tab, and Allies and Retainers. A tie that is still a secret shows as Unknown until it is found out.</p></div>`;
   }
   async function openTree(actorLike) {
@@ -82,6 +84,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
     const dlg = new D({window: {title: `Family and lineage: ${actor.name}`, icon: "fa-solid fa-sitemap", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog", "wnpc-tree-dialog"],
       position: {width: 560, height: "auto"}, content: treeHtml(actor), buttons: [{action: "close", label: "Close", default: true}], rejectClose: false});
     await dlg.render(true);
+    KIN.wireTree(dlg.element, () => { const box = dlg.element?.querySelector(".wnpc-tree-wrap"); if ( box ) box.outerHTML = treeHtml(actor); });
     dlg.element?.addEventListener("click", ev => {
       const o = ev.target.closest("[data-open]"), r = ev.target.closest("[data-root]");
       if ( o ) { ev.preventDefault(); game.actors.get(o.dataset.open)?.sheet?.render(true); }

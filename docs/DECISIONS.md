@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2760
+Next free block: B2830
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -126,6 +126,7 @@ Next free block: B2760
 | B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
+| B2770-B2829 | Relationships across the centuries: family lines, wills and estates by law, ties after a jump in time, then bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers and past lives (Ben approved the whole relationships desk) | NPC, Storyteller, Sheets, Actions, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3660,4 +3661,34 @@ Reverse: turn the world setting off; the item flag wodx-combat.powder holds the 
 WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus, caliver and tanegashima are matchlocks, Brown Bess a flintlock, a Colt Navy a percussion revolver, a Glock a cartridge gun). A gun that names none takes the lock most guns had that year: hand cannon before 1450, matchlock to 1700 (pistols wheellock from 1520), flintlock to 1840, percussion to 1870, then cartridges. A house reading of firearms history, global by default; the Storyteller names the lock on the sheet to change it.
 
 Reverse: name the lock in the weapon's name or description.
+
+## B2770. Family lines that outlive the character (2026-11-13, relationships desk c1, Ben approved)
+WoDX NPC 0.55.0 (kin-rules.mjs, kin.mjs). A family line hangs from one character and starts from the mortal kin the Relationships tab knows (parent, child, sibling, spouse, kin). It is kept in the world setting wodx-npc.familyLines and grows when the clock jumps: members marry, have children and die by the life table of their century and way of life, and most never get a sheet. The family and lineage tree lists the living members with what each knows of the founder (an undying founder becomes a family story, then a likeness in a family Bible or photographs, then a legend). The Storyteller can bring any living member into play as a Mortal tied to the founder as Descendant and Ancestor.
+
+Reverse: do not keep a line (the tree's Keep a family line button), or clear wodx-npc.familyLines.
+
+## B2771. Life tables, years of great dying and the kin a line starts with (2026-11-13)
+Seven periods from medieval to the far future give marrying age, children per couple, the share who grow up and the age of death; a way of life other than Western Christendom starts each period some decades later (SPHERE_SHIFT). Years of great dying add deaths: the Black Death, the Thirty Years' War in the Bohemian and German lands, the sickness after the conquest in the Americas, the two world wars and the 1918 influenza. A line keeps fourteen living members in sight (the founder's own descendants and the oldest branches first); a line left with no one picks up a branch that moved away. A character with fewer than two known kin starts with unnamed brothers and sisters. All of it is a house reading of history, rounded for play.
+
+Reverse: edit LIFE, SPHERE_SHIFT, DYING and KEEP_LIVING in kin-rules.mjs.
+
+## B2772. Ties after a jump in time (2026-11-13, relationships desk c3, Ben approved)
+WoDX NPC 0.55.0. When the clock jumps a year or more (a time skip or Pass the years), one approval card lists, for each player character, the people tied to them who died in the gap, the mortals who would now be old, blood bonds fading, Ledger entries that came due, and what each family line did. Approving it grows the family lines; rejecting leaves them as they were. Pass the years still decides each sheet's own changes. Setting "Ties after a jump in time", on by default.
+
+Reverse: turn the setting off.
+
+## B2773. Wills (2026-11-13, relationships desk c2, Ben approved)
+WoDX Storyteller 0.61.0 (wills.mjs). A will sits on the sheet (flags.wodx-storyteller.will): heirs from the Relationships tab or by name, each with a share, a note, and "held through false heirs". The Will button on the family and lineage tree opens it. The will's main living heir is the heir the Ledger passes open debts and oaths to, ahead of a heir Pass the years made or one named in the Ledger.
+
+Reverse: clear the will on the sheet.
+
+## B2774. Estates divided by the law of the place and year (2026-11-13)
+WoDX Storyteller 0.61.0 (will-rules.mjs). On a death, one approval card divides the dead person's money by the will and by the law of the homeland that year; approving it moves the money to each heir's bank. The laws are nine ways (to the eldest son with a widow's third, shared among children, among sons, fixed shares with a will of a third at most, the joint family, the house goes on, civil law, the state takes it, local custom) set by way of life with dated rows for regions that differ: civil codes in France 1804, the Low Countries 1811, the Bohemian lands 1812, Italy 1865, Iberia 1889, the German lands 1900, the British Isles 1926, Anatolia 1926, China 1931, Japan 1947, India 1956; Russia's state years 1918 to 1922. A house reading of history, rounded for play.
+
+Reverse: reject the estate card and divide by hand, or edit BY_SPHERE and BY_REGION in will-rules.mjs.
+
+## B2775. Wealth held through false heirs (2026-11-13)
+An undying owner whose will is held through false heirs passes it to themselves under a new name once every 40 years. Each jump in time that long brings one card; approving it rolls Intelligence + Finance at difficulty 6 for each passing. A failure leaves a trail someone may follow; a botch adds a secret on the owner (WoDX NPC secrets) for others to find. House rule.
+
+Reverse: untick "held through false heirs" on the will, or change FALSE_HEIR in will-rules.mjs.
 

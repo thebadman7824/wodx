@@ -8,6 +8,7 @@
  *   flags["wodx-sheets"].ties        the hand-made list [{uuid, role, note, hidden}] (hidden: the Storyteller's only)
  *   system.sire                      a vampire sheet's own Sire box, matched to an actor by name
  *   the Ledger                       open debts, boons and oaths between two people
+ *   flags["wodx-npc"].kin            a member of a family line brought into play (kin.mjs): ancestor, the founder
  *   flags["wodx-npc"].secrets        a secret can hide a link ({tie: {kind, id}}) until it is found (secrets-rules.mjs)
  * Every link is drawn from both ends: a sire's record makes a childe on the other sheet.
  */
@@ -29,6 +30,8 @@ export const KINDS = {
   kin: {label: "Kin", back: "kin", group: "family"},
   kinfolk: {label: "Kinfolk", back: "garou", group: "family"},
   garou: {label: "Garou kin", back: "kinfolk", group: "family"},
+  ancestor: {label: "Ancestor", back: "descendant", group: "family", up: true},
+  descendant: {label: "Descendant", back: "ancestor", group: "family"},
   heirOf: {label: "Heir of", back: "heir", group: "family", up: true},
   heir: {label: "Heir", back: "heirOf", group: "family"},
   mentor: {label: "Mentor", back: "apprentice", group: "teaching", up: true},
@@ -107,6 +110,8 @@ export function edges(actors = [], {ledger = []} = {}) {
     if ( l.formerly ) add(a.id, who(l.formerly), "formerly", {source: "lineage"});
     if ( l.became ) add(a.id, who(l.became), "became", {source: "lineage"});
     if ( l.family?.heirOf ) add(a.id, who(l.family.heirOf), "heirOf", {source: "lineage"});
+    const kin = a.flags?.["wodx-npc"]?.kin;
+    if ( kin?.founder?.id ) add(a.id, who(kin.founder), "ancestor", {note: kin.relation ? `${kin.relation} of theirs` : "", source: "family line"});
     const ally = a.flags?.["wodx-creation"]?.ally;
     if ( ally?.patron ) add(a.id, who(ally.patron), "patron", {source: "background"});
   }
@@ -178,6 +183,7 @@ export const LINES = [
   {key: "ghouls", label: "Domitors and ghouls", up: "domitor", down: "ghoul"},
   {key: "family", label: "Family", up: "parent", down: "child"},
   {key: "heirs", label: "Heirs", up: "heirOf", down: "heir"},
+  {key: "line", label: "Family line", up: "ancestor", down: "descendant"},
   {key: "teaching", label: "Mentors and students", up: "mentor", down: "apprentice"},
   {key: "service", label: "Patrons and retainers", up: "patron", down: "retainer"}
 ];

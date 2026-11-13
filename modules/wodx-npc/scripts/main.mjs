@@ -36,12 +36,13 @@ import {build as buildFollowers} from "./followers.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import * as RV from "./rivalry-rules.mjs";
+import * as KIN from "./kin.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.54.0";
+const VERSION = "0.55.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -835,7 +836,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -861,6 +862,8 @@ Hooks.once("init", () => {
   passersby.registerSettings();
   overheard.registerSettings();
   wanted.registerSettings();
+  KIN.registerSettings();
+  KIN.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
@@ -869,7 +872,8 @@ Hooks.once("init", () => {
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
-    settlements, openSettlements: settlements.open};
+    settlements, openSettlements: settlements.open,
+    kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules}};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -883,7 +887,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**
