@@ -125,3 +125,12 @@
 .wodx-find .wodx-find-list button { width: 100%; text-align: left; line-height: 1.35; padding: 5px 8px; white-space: normal; height: auto; }
 .wodx-find .wodx-tag { font-size: 0.75rem; opacity: 0.8; margin-left: 4px; }
 .chat-message details.wodx-world-fold > summary { cursor: pointer; opacity: 0.85; font-style: italic; }
+
+/* What can I do now? (B2826) */
+.wodx-now .wodx-body { display: grid; gap: 6px; }
+.wodx-now .wodx-now-head { margin: 0; font-weight: bold; }
+.wodx-now .wodx-now-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.wodx-now .wodx-now-list button { width: 100%; text-align: left; line-height: 1.3; padding: 4px 8px; white-space: normal; height: auto; }
+.wodx-now .wodx-now-stuck { display: flex; flex-wrap: wrap; gap: 4px; }
+.wodx-now .wodx-now-stuck button { flex: 1 1 auto; font-size: 0.9em; }
+.wodx-now p { margin: 0; }

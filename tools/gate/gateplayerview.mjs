@@ -1,6 +1,6 @@
 /**
  * Beginner and Full views, toolbar drawers, token menu groups and Find anything (WoDX Chronicle 0.52.0, Actions 3.60.0,
- * B2810 to B2816), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * B2810 to B2826), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayerview.mjs?${Date.now()}`)).run()
  * The Storyteller previews the Beginner view (this session only) and the gate puts Full back. It makes one Kindred
  * actor and one token on the viewed scene and deletes both.
@@ -20,9 +20,13 @@
  *  14. a quick roll rolls at once (one new chat card, no window); zero Abilities fold behind Show all, which opens them
  *  15. the More tab button tucks Settings and Effects, and opens them; the power tab follows Core
  *  16. hover help on Dexterity; Full view shows the sheet with none of these
+ *  17. What can I do now? is on the bar in both views; with the Kindred's token selected it reads "in the scene",
+ *      offers Look around and has the three I am stuck buttons; Look around rolls (one new card)
+ *  18. a fight with the token: "a fight is starting" with Roll initiative; with initiative set and the turn its own,
+ *      Attack and End my turn are offered (the fight is deleted after)
  * Result: Data/wodx-gate/gateplayerview-result.json.
  */
-const N = 16;
+const N = 18;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R) {
@@ -166,6 +170,41 @@ export async function run() {
     const plainFull = !sh?.querySelector(".wodx-quickrolls, .wodx-showall, .wodx-tab-more");
     await actor.sheet.close();
     ok("16. hover help, and Full view untouched", /dodge/i.test(help) && plainFull, {help, plainFull});
+
+    // 17-18. What can I do now? (B2826)
+    const onBarFull = shown().includes("wodxNow");
+    V.preview("beginner"); await redraw();
+    const onBarBeg = shown().includes("wodxNow");
+    tok.control({releaseOthers: true}); await sleep(200);
+    const nowEl = async () => { await V.now(); await sleep(900); return document.getElementById("wodx-now"); };
+    let nw = await nowEl();
+    const moment1 = nw?.querySelector("[data-moment]")?.dataset.moment;
+    const labels1 = [...(nw?.querySelectorAll("button[data-i] b") ?? [])].map(b => b.textContent);
+    const stuckN = nw?.querySelectorAll("button[data-stuck]").length ?? 0;
+    const before = game.messages.size;
+    nw?.querySelector("button[data-i]")?.click(); await sleep(2000);
+    const cards = game.messages.contents.slice(before);
+    ok("17. what can I do now", onBarFull && onBarBeg && moment1 === "scene" && labels1.includes("Look around") && stuckN === 3 && cards.length === 1,
+      {onBarFull, onBarBeg, moment1, labels1, stuckN, cards: cards.length});
+    for ( const m of cards ) await m.delete();
+    let fight = null;
+    try {
+      fight = await Combat.create({scene: canvas.scene.id, active: true});
+      await fight.createEmbeddedDocuments("Combatant", [{tokenId: tok.id, sceneId: canvas.scene.id, actorId: actor.id}]);
+      await sleep(500); nw = await nowEl();
+      const moment2 = nw?.querySelector("[data-moment]")?.dataset.moment;
+      const labels2 = [...(nw?.querySelectorAll("button[data-i] b") ?? [])].map(b => b.textContent);
+      await fight.combatants.contents[0].update({initiative: 10});
+      await fight.startCombat(); await sleep(800); nw = await nowEl();
+      const moment3 = nw?.querySelector("[data-moment]")?.dataset.moment;
+      const labels3 = [...(nw?.querySelectorAll("button[data-i] b") ?? [])].map(b => b.textContent);
+      ok("18. what can I do now in a fight", moment2 === "fightStart" && labels2.includes("Roll initiative") && moment3 === "fightTurn"
+        && labels3.includes("Attack") && labels3.includes("End my turn"), {moment2, labels2, moment3, labels3});
+    } finally {
+      if ( fight ) await fight.delete();
+      await foundry.applications.instances.get("wodx-now")?.close();
+      V.preview("full"); await redraw();
+    }
 
     V.preview("full"); await redraw();
     await canvas.hud.token.bind(tok); await sleep(600);

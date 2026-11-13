@@ -150,3 +150,31 @@ test("hover help: plain words, no dashes or stock phrases, era wording for Human
   assert.equal(SB.firstSentence("<p>Calls a mist. It lasts a scene.</p>"), "Calls a mist. It lasts a scene.", "a very short first sentence takes the next one too");
   assert.equal(SB.firstSentence("<p>The Kindred calls a mist. It lasts a scene.</p>"), "The Kindred calls a mist.");
 });
+
+test("What can I do now: the moment is read right and only usable things are offered", () => {
+  assert.equal(R.moment({}), "nobody");
+  assert.equal(R.moment({hasActor: true}), "between");
+  assert.equal(R.moment({hasActor: true, onScene: true}), "scene");
+  assert.equal(R.moment({hasActor: true, onScene: true, beyond: true}), "beyond");
+  assert.equal(R.moment({hasActor: true, onScene: true, inFight: true, needsInit: true}), "fightStart");
+  assert.equal(R.moment({hasActor: true, onScene: true, inFight: true, myTurn: true}), "fightTurn");
+  assert.equal(R.moment({hasActor: true, onScene: true, inFight: true}), "fightWait");
+  const all = {tools: new Set(["wodxTalk", "wodxPassTime", "wodxFindMe", "wodxDowntime", "wodxLetters", "wodxCreation", "wodxLibrary", "wodxOtherRolls", "wodxStepSideways"]),
+    actions: true, power: "api:useDiscipline", calls: new Set(["askChar", "sheet", "order", "initiative", "attack", "quickAttack", "endTurn"])};
+  for ( const k of Object.keys(R.MOMENTS) ) {
+    const {head, items} = R.nowItems(k, all);
+    assert.ok(head && items.length >= 2 && items.length <= R.NOW_MAX, k);
+    for ( const it of [head, ...items.map(i => `${i.label} ${i.hint ?? ""}`)] ) {
+      assert.doesNotMatch(it, /—|\b(he|she|his|her|him)\b/i, k);
+    }
+  }
+  const turn = R.nowItems("fightTurn", all).items;
+  assert.equal(turn.find(i => i.label.startsWith("Use one")).spec, "api:useDiscipline");
+  // A mortal with no powers, without Actions, with the Storyteller hiding Talk: nothing that cannot run is offered
+  const bare = R.nowItems("scene", {tools: new Set(["wodxPassTime"]), actions: false, power: null, calls: new Set(["sheet"])}).items;
+  assert.deepEqual(bare.map(i => i.tool ?? i.call), ["wodxPassTime", "sheet"]);
+  assert.equal(R.powerFrom(["action", "api:quickCheck", "api:usegift"]), "api:usegift");
+  assert.equal(R.powerFrom(["action", "api:quickCheck"]), null);
+  assert.equal(R.STUCK_ROW.length, 3);
+  assert.ok(R.ON_BAR.has("wodxNow"));
+});

@@ -203,7 +203,7 @@ Hooks.once("ready", async () => {
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
-    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, openDrawer: playerView.openDrawer, rules: playerViewRules},
+    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, openDrawer: playerView.openDrawer, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,

@@ -3838,3 +3838,8 @@ In Beginner view each Attribute, Ability, Virtue and pool on the sheet carries a
 
 Reverse: HELP in wodx-sheets beginner-rules.mjs.
 
+## B2826. What can I do now? (2026-11-13)
+A question-mark button on every player's toolbar, in both views, opens a short window that reads the moment: no character yet, a fight starting, the player's turn in a fight, someone else's turn, past the edge of the everyday world (the Umbra, the Shadowlands, the Dreaming or a realm scene), in the scene, or away from the character's scene. It offers up to six things that fit, one click each, and only things this player can use: a button the Storyteller has hidden, or a power the line does not have, is left out. Look around rolls at once. The last row is the three I am stuck buttons; with solo play on they go to the seat as the solo panel's do, otherwise a whisper tells the Storyteller. A link opens Find anything for the rest.
+
+Reverse: take wodxNow out of installViewFilter in wodx-chronicle player-view.mjs.
+

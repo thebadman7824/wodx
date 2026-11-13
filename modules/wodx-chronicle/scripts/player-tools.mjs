@@ -31,6 +31,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"},
   // 0.52.0 (B2815): the player buttons this window did not list before
   {name: "wodxFind", label: "Find anything", module: "WoDX Chronicle", locked: true},
+  {name: "wodxNow", label: "What can I do now?", module: "WoDX Chronicle", locked: true},
   {name: "wodxLibrary", label: "The Library", module: "WoDX Library"},
   {name: "wodxGear", label: "Gear by era", module: "WoDX Library"},
   {name: "wodxSenses", label: "What do I notice?", module: "WoDX Senses"},

@@ -26,7 +26,7 @@ export const GROUPS = [
 ];
 
 /** Always on the bar, in every view. */
-export const ON_BAR = new Set(["wodxXCard", "wodxFindMe", "wodxFind"]);
+export const ON_BAR = new Set(["wodxXCard", "wodxFindMe", "wodxFind", "wodxNow"]);
 
 /** Which drawer each WoDX player button goes in. A WoDX button not listed here stays on the bar. */
 export const TOOL_GROUP = {
@@ -154,3 +154,95 @@ export function oneLine(text = "", n = 90) {
   const sp = cut.lastIndexOf(" ");
   return `${(sp > n / 2 ? cut.slice(0, sp) : cut).replace(/[,;:.]$/, "")}...`;
 }
+
+/* What can I do now? (B2826): the moment, and the three to six things that make sense in it. */
+
+/**
+ * The moment the player is in. ctx: {hasActor, onScene (a token of the character on the scene being viewed), inFight
+ * (that token is in the running fight), myTurn, needsInit (in the fight without initiative), beyond (the token
+ * stands in the Umbra, the Shadowlands, the Dreaming or on a realm scene)}. Returns a key of MOMENTS.
+ */
+export function moment(ctx = {}) {
+  if ( !ctx.hasActor ) return "nobody";
+  if ( ctx.inFight ) return ctx.needsInit ? "fightStart" : ctx.myTurn ? "fightTurn" : "fightWait";
+  if ( !ctx.onScene ) return "between";
+  return ctx.beyond ? "beyond" : "scene";
+}
+
+/**
+ * Per moment: a heading in plain words and the things to offer, best first. Each thing names how it runs: tool (a
+ * toolbar button, offered only when this player has it), spec (an Actions menu entry), check (an Actions common
+ * check), call (a named helper in player-view.mjs). The first six that this player can use are shown.
+ */
+export const MOMENTS = {
+  nobody: {head: "You have no character yet.", items: [
+    {call: "askChar", label: "Ask the Storyteller for a character", hint: "A short note goes to the Storyteller."},
+    {tool: "wodxCreation", label: "Make or grow a character"},
+    {tool: "wodxLibrary", label: "Read about the world", hint: "The Library: the lines, the eras, the rules in brief."}]},
+  fightStart: {head: "A fight is starting.", items: [
+    {call: "initiative", label: "Roll initiative", hint: "Your place in the order of the fight."},
+    {call: "sheet", label: "Look over your sheet"}]},
+  fightTurn: {head: "It is your turn in the fight.", items: [
+    {call: "attack", label: "Attack", hint: "Pick a target and a weapon, or fists."},
+    {call: "quickAttack", label: "Quick attack", hint: "Your best attack on the target, at once."},
+    {spec: "power", label: "Use one of your powers"},
+    {spec: "action", label: "Try something else", hint: "Any roll: you say what, the dice say how well."},
+    {call: "endTurn", label: "End my turn"}]},
+  fightWait: {head: "The fight goes on; it is not your turn.", items: [
+    {call: "order", label: "See the fight order"},
+    {call: "sheet", label: "Check your health and pools"},
+    {check: "react", label: "React in time", hint: "When something comes at you out of turn."},
+    {spec: "power", label: "Use one of your powers"}]},
+  beyond: {head: "You are past the edge of the everyday world.", items: [
+    {check: "notice", label: "Look around"},
+    {tool: "wodxOtherRolls", label: "Rolls for this place", hint: "Crossing back, the Gauntlet, the Shroud, the Mists."},
+    {tool: "wodxStepSideways", label: "Step back across"},
+    {tool: "wodxTalk", label: "Talk to someone here"},
+    {spec: "power", label: "Use one of your powers"},
+    {tool: "wodxFindMe", label: "Find my character"}]},
+  scene: {head: "You are in the scene.", items: [
+    {check: "notice", label: "Look around", hint: "Notice what is there to notice."},
+    {tool: "wodxTalk", label: "Talk to someone", hint: "The person you target, or the nearest one."},
+    {spec: "action", label: "Try something", hint: "Any roll: you say what, the dice say how well."},
+    {spec: "power", label: "Use one of your powers"},
+    {tool: "wodxPassTime", label: "Let time pass"},
+    {call: "sheet", label: "Open your sheet"}]},
+  between: {head: "Your character is not on this scene.", items: [
+    {tool: "wodxFindMe", label: "Go to my character", hint: "The scene where your token is."},
+    {tool: "wodxDowntime", label: "Say what your character does meanwhile"},
+    {tool: "wodxLetters", label: "Send a letter or a message"},
+    {tool: "wodxPassTime", label: "Let time pass"},
+    {tool: "wodxCreation", label: "Spend experience"},
+    {call: "sheet", label: "Open your sheet"}]}
+};
+
+/** At most this many things for one moment, before the I am stuck row. */
+export const NOW_MAX = 6;
+
+/**
+ * The things to show. have: {tools: Set of toolbar button names this player has, actions: bool (Actions is on),
+ * power: the Actions entry for the line's powers or null, calls: Set of helper names that can run here}. Pure.
+ */
+export function nowItems(key, have = {}) {
+  const m = MOMENTS[key] ?? MOMENTS.scene;
+  const tools = have.tools ?? new Set(), calls = have.calls ?? new Set();
+  const ok = it => {
+    if ( it.tool ) return tools.has(it.tool);
+    if ( it.spec === "power" ) return !!(have.actions && have.power);
+    if ( it.spec || it.check ) return !!have.actions;
+    if ( it.call ) return calls.has(it.call);
+    return false;
+  };
+  return {head: m.head, items: m.items.filter(ok).slice(0, NOW_MAX).map(it => (it.spec === "power" ? {...it, spec: have.power} : it))};
+}
+
+/** The I am stuck row, the last row in every moment. With solo play on, the seat fixes it; else the Storyteller is told. */
+export const STUCK_ROW = [
+  {id: "lead", label: "I do not know what to do next", solo: "lead"},
+  {id: "token", label: "My token is stuck", solo: "token"},
+  {id: "fight", label: "A fight or a window is hung", solo: "fight"}
+];
+
+/** The Actions entry that uses the line's own powers, out of the entries the menu lists (the same words as Sheets). */
+const POWER_SPEC = /usediscipline|usegift|usearcanos|hunterpower|cast|cantrip|hekau|usecharm|uselore|useedge|chi|shintai|numina/i;
+export function powerFrom(specs = []) { return specs.find(s => POWER_SPEC.test(String(s))) ?? null; }

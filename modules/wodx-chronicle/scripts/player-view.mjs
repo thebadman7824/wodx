@@ -81,7 +81,9 @@ export function installViewFilter() {
     if ( !tokens?.tools ) return;
     tokens.tools.wodxFind = {name: "wodxFind", title: "Find anything (Ctrl+K): every button, action, page and setting",
       icon: "fa-solid fa-magnifying-glass", order: 109, button: true, visible: true, onChange: () => FindApp.open()};
-    barTools = Object.values(tokens.tools).filter(t => t?.button && t.visible !== false && t.name !== "wodxFind")
+    tokens.tools.wodxNow = {name: "wodxNow", title: "What can I do now? The few things that fit this moment, one click each",
+      icon: "fa-solid fa-circle-question", order: 108, button: true, visible: true, onChange: () => NowApp.open()};
+    barTools = Object.values(tokens.tools).filter(t => t?.button && t.visible !== false && t.name !== "wodxFind" && t.name !== "wodxNow")
       .map(t => ({name: t.name, title: t.title, icon: t.icon, onChange: t.onChange}));
     drawers = null;
     if ( currentView() !== "beginner" ) return;
@@ -293,5 +295,122 @@ export class FindApp extends ApplicationV2 {
     q.addEventListener("keydown", ev => { if ( ev.key === "Enter" ) list.querySelector("button")?.click(); });
     draw();
     setTimeout(() => q.focus(), 0);
+  }
+}
+
+/* -------------------------------------------- */
+/*  What can I do now? (B2826)                  */
+/* -------------------------------------------- */
+
+const COMBAT = () => game.modules.get("wodx-combat")?.active ? game.modules.get("wodx-combat").api : null;
+const ACTIONS = () => game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null;
+const SOLO = () => { const s = game.modules.get("wodx-solo"); return s?.active && s.api?.isOn?.() ? s.api : null; };
+
+/** The token of the character on the scene being viewed, if there is one. */
+function myToken(actor) {
+  return canvas?.tokens?.controlled?.find(t => t.actor === actor) ?? actor?.getActiveTokens?.(false, false)?.[0] ?? null;
+}
+function standsBeyond(token) {
+  const doc = token?.document;
+  if ( !doc ) return false;
+  if ( doc.parent?.flags?.["wodx-otherworlds"]?.realm || doc.parent?.flags?.["wodx-otherworlds"]?.realmMap ) return true;
+  const level = doc.parent?.levels?.get?.(doc._source?.level ?? doc.level);
+  const layer = level?.flags?.["wodx-otherworlds"]?.layer ?? "physical";
+  return layer !== "physical";
+}
+
+/** The facts the moment is read from. */
+function nowCtx() {
+  const actor = myActor();
+  const token = actor ? myToken(actor) : null;
+  const c = game.combat ?? null;
+  const mine = c && actor ? c.combatants.find(x => x.actor === actor || (token && x.tokenId === token.id)) : null;
+  return {actor, token, combat: c, combatant: mine,
+    ctx: {hasActor: !!actor, onScene: !!token, inFight: !!mine, needsInit: !!mine && mine.initiative == null,
+      myTurn: !!mine && c?.started && c.combatant === mine, beyond: standsBeyond(token)}};
+}
+
+const CALLS = {
+  askChar: () => tellStoryteller("I have no character yet. Could you give me one, or help me make one?"),
+  sheet: ({actor}) => actor?.sheet?.render(true),
+  initiative: () => COMBAT()?.rollInitiative?.(),
+  attack: () => COMBAT()?.attack?.(),
+  quickAttack: () => COMBAT()?.quickAttack?.(),
+  endTurn: ({combat}) => combat?.nextTurn?.(),
+  order: () => { ui.sidebar?.changeTab?.("combat", "primary"); ui.sidebar?.expand?.(); }
+};
+function callsHere(n) {
+  const out = new Set(["askChar", "sheet", "order"]);
+  const C = COMBAT();
+  if ( C?.rollInitiative ) out.add("initiative");
+  if ( C?.attack ) out.add("attack");
+  if ( C?.quickAttack ) out.add("quickAttack");
+  if ( n.ctx.myTurn && n.combat?.nextTurn ) out.add("endTurn");
+  return out;
+}
+
+async function tellStoryteller(text) {
+  const gms = game.users.filter(u => u.isGM).map(u => u.id);
+  await ChatMessage.create({content: `<p><b>${esc(game.user.name)}:</b> ${esc(text)}</p>`, whisper: gms, speaker: {alias: game.user.name}});
+  ui.notifications.info("The Storyteller has been told.");
+}
+
+export class NowApp extends ApplicationV2 {
+  static DEFAULT_OPTIONS = {
+    id: "wodx-now", classes: ["wodx", "wodx-now"],
+    window: {title: "What can I do now?", icon: "fa-solid fa-circle-question", resizable: true},
+    position: {width: 380, height: "auto"}
+  };
+  static #instance;
+  static #hooked = false;
+  static open() {
+    this.#instance ??= new NowApp();
+    if ( !this.#hooked ) {
+      this.#hooked = true;
+      const again = () => { if ( this.#instance?.rendered ) this.#instance.render(); };
+      for ( const h of ["updateCombat", "createCombatant", "deleteCombat", "controlToken", "canvasReady", "updateToken"] ) Hooks.on(h, foundry.utils.debounce(again, 150));
+    }
+    return this.#instance.render({force: true});
+  }
+  #run = [];
+
+  async _renderHTML() {
+    const n = nowCtx();
+    const A = ACTIONS();
+    let power = null;
+    if ( A?.menuEntries && n.actor ) { try { power = R.powerFrom((await A.menuEntries(n.actor)).map(x => x.spec)); } catch { power = null; } }
+    const key = R.moment(n.ctx);
+    const {head, items} = R.nowItems(key, {tools: new Set(barTools.map(t => t.name)), actions: !!(A?.runSpec && n.actor), power, calls: callsHere(n)});
+    this.#run = items.map(it => () => {
+      if ( it.tool ) return barTools.find(t => t.name === it.tool)?.onChange?.(new Event("click"), true);
+      if ( it.check ) return A.quickCheck({actor: n.actor, check: it.check, direct: true});
+      if ( it.spec ) return A.runSpec(it.spec, n.actor);
+      return CALLS[it.call]?.(n);
+    });
+    const solo = SOLO();
+    const div = document.createElement("div");
+    div.className = "wodx-body";
+    div.dataset.moment = key;
+    div.innerHTML = `<p class="wodx-now-head">${esc(head)}</p>
+      <ul class="wodx-list wodx-now-list">${items.map((it, i) => `<li><button type="button" data-i="${i}"><b>${esc(it.label)}</b>${it.hint ? `<br><span class="wodx-quiet">${esc(it.hint)}</span>` : ""}</button></li>`).join("")}</ul>
+      <p class="wodx-quiet">Stuck? ${solo ? "The seat sorts it out." : "The Storyteller is told."}</p>
+      <div class="wodx-now-stuck">${R.STUCK_ROW.map(s => `<button type="button" data-stuck="${s.id}">${esc(s.label)}</button>`).join("")}</div>
+      <p class="wodx-quiet">Looking for something else? <a class="wodx-now-find">Find anything (Ctrl+K)</a></p>`;
+    return div;
+  }
+  _replaceHTML(result, content) {
+    content.replaceChildren(result);
+    content.querySelectorAll("button[data-i]").forEach(b => b.addEventListener("click", ev => {
+      ev.preventDefault();
+      try { this.#run[Number(b.dataset.i)]?.(); } catch (e) { console.error("WoDX | What can I do now?", e); }
+    }));
+    content.querySelectorAll("button[data-stuck]").forEach(b => b.addEventListener("click", ev => {
+      ev.preventDefault();
+      const row = R.STUCK_ROW.find(s => s.id === b.dataset.stuck);
+      const solo = SOLO();
+      if ( solo?.panel?.ask ) { solo.panel.ask("ask.stuck", {fix: row.solo}); ui.notifications.info(`${row.label}: asked.`); return; }
+      tellStoryteller(`${row.label}.`);
+    }));
+    content.querySelector(".wodx-now-find")?.addEventListener("click", ev => { ev.preventDefault(); FindApp.open(); });
   }
 }
