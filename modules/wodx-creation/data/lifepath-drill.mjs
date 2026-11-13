@@ -27,7 +27,19 @@ export const CONTINENTS = [
  ["North America", ["canada","north-america-east","north-america-west","mexico","caribbean"]],
  ["South America", ["andes","brazil","southern-cone"]],
  ["Oceania", ["australia","aotearoa","pacific-islands"]],
- ["The poles", ["arctic","antarctica"]]];
+ ["The poles", ["arctic","antarctica"]],
+ ["Beyond Earth", ["orbit","luna","mars"]]];
+
+/**
+ * Births beyond Earth (0.22.0, desk lp20). These are not world regions of the chronicle; they exist for lifepaths only,
+ * in the World of Future Darkness: open when the chronicle's own year has reached OFFWORLD_AGE and the birth (or the
+ * stage) is no earlier than the land's first year. Years follow WoDX's future timeline (docs/research/era-timelines/r3).
+ */
+export const OFFWORLD_AGE = 2023;
+export const OFFWORLD = {
+ "orbit": {label: "Orbit and the high colonies", from: 1999},
+ "luna": {label: "The Moon", from: 2009},
+ "mars": {label: "Mars", from: 2022}};
 
 // [key, label, text, gives, from, to]
 export const ORIGINS = [
@@ -190,7 +202,16 @@ export const LOCAL = {
 
 /** Later chapters of adult life start at these ages; the first starts at the coming of age. */
 // The other regions, continent by continent (0.18.0)
-Object.assign(LOCAL, LOCAL_EUROPE, LOCAL_ASIA, LOCAL_WORLD);
+Object.assign(LOCAL, LOCAL_EUROPE, LOCAL_ASIA, LOCAL_WORLD, {
+"orbit": {
+ N: ["Orbit of the hired townships", [["A construction crew family lifted from the townships","ab Crafts|ab Athletics|bg Allies","labour"],["A station officer's household","ab Technology|ab Etiquette|bg Contacts","prof"],["A family that came up owing the passage","ab Technology|note In debt|ab Subterfuge","bound"]], ["Apprentice on the hull crews","ab Athletics|ab Technology"], ["Rigger in the orbital yards","ab Crafts|ab Technology"]],
+ F: ["Orbit of the free colonies and the sky city", [["A family of the free high colonies","ab Technology|ab Politics|bg Allies","labour"],["A household of the city in the sky","ab Etiquette|ab Finance|bg Resources","corp"],["A dock family on a night-shift contract","ab Crafts|ab Streetwise|note In debt","bound"]], ["Runner in the spin-less corridors","ab Athletics|ab Stealth"], ["Pilot of a yard tug","ab Technology|ab Alertness"]]},
+"luna": {
+ N: ["The Moon of the first colony", [["A family of the mass driver crews","ab Technology|ab Science|merit Iron Will","labour"],["A survey officer's household","ab Science|ab Academics|bg Contacts","prof"]], ["Apprentice in the pressure shops","ab Crafts|ab Technology"], ["Loader on the launch track","ab Technology|ab Athletics"]],
+ F: ["The Moon of the ice mines", [["An ice miner's family at the southern pole","ab Crafts|ab Survival|bg Allies","labour"],["A company overseer's household","ab Finance|ab Leadership|bg Resources","corp"],["A family that stayed when the contract ended","ab Survival|ab Technology|flaw Enemy","outsider"]], ["Suit runner on the surface gangs","ab Athletics|ab Technology"], ["Assayer of the ice","ab Science|ab Finance"]]},
+"mars": {
+ N: ["Mars of the first bases", [["Born at the base on the northern plain","ab Science|ab Survival|bg Fame","prof"]], ["Greenhouse hand","ab Science|ab Crafts"], ["Rover mechanic","ab Technology|ab Crafts"]],
+ F: ["Mars of three flags", [["A family of the old joint base","ab Science|ab Technology|merit Language","prof"],["A settler family off the colony ship","ab Crafts|ab Survival|bg Allies","land"],["A supply contractor's household","ab Finance|ab Subterfuge|bg Contacts","merchant"]], ["Surveyor's helper on the long drives","ab Survival|ab Technology"], ["Keeper of the air plant","ab Technology|ab Science"]]}});
 export const CHAPTERS = [30, 45, 60];
 
 /**

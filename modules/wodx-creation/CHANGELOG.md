@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.22.0 (lifepath drill-down: births and life stages beyond Earth in the World of Future Darkness, a seventh choice "Beyond Earth" with orbit and the high colonies from 1999, the Moon from 2009 and Mars from 2022, each with its own ages, origins, paths, callings and dated events from WoDX's future timeline; open only once the chronicle itself has reached 2023; the Storyteller's limits can name them)
 - 0.21.1 (lifepath wording: Japan's age from 1789 to 1945 is named "from the last shoguns to the empire"; West Africa's dated origins no longer repeat the praise singers and offer the great river's boat and fishing clans)
 - 0.21.0 (lifepath drill-down: dated local content for the other 43 world regions, 210 origins open only in a span of birth years and 684 things that marked a life stage while they happened there, from the Khan's armies and the gold pilgrimage to the tests on the atolls, each marked good, hard or neither; the first screen says the latest year a character can be born in)
 - 0.20.0 (lifepath drill-down: for those who lived on after the change, one optional pick of five for each age they lived at least twenty years of, with Surprise me, Five others and Leave untold; the Storyteller can limit a chronicle's lifepaths to some regions and leave out kinds of origin, from a fold-out on the lifepath's first screen, with the chronicle's own land always open)

@@ -367,7 +367,7 @@ test("no gendered words and no option id twice in a step", () => {
 test("dated content: every region of the world has origins and marks of its own years", async () => {
   const {LOCAL_EVENTS} = await import("../../modules/wodx-creation/data/lifepath-local-events.mjs");
   const {CONTINENTS} = await import("../../modules/wodx-creation/data/lifepath-drill.mjs");
-  const ids = CONTINENTS.flatMap(c => c[1]);
+  const ids = CONTINENTS.flatMap(c => c[1]).filter(id => !D.landOf(id)?.off);
   assert.equal(ids.length, 44);
   const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|wives|husband|brother|sister|boy|girl|man|woman|men|women)\b/i;
   for ( const id of ids ) {
@@ -387,4 +387,41 @@ test("dated content: every region of the world has origins and marks of its own 
   let own = 0;
   for ( let i = 0; i < 40 && D.current(d); i++ ) { const st = D.current(d); const o = st.options.find(x => x.local && /-mark$/.test(st.id)) ?? st.options[0]; if ( o.local && /-mark$/.test(st.id) ) own++; d = D.pick(d, st.id, o.id); }
   assert.ok(D.done(d) && own >= 2, "a life in Brazil meets Brazil's own years");
+});
+
+test("beyond Earth: orbit, the Moon and Mars open only in the future age and from their own first years", () => {
+  assert.ok(!D.continents().some(c => /Beyond/.test(c.label)), "the plain list is Earth");
+  assert.equal(D.allLands().find(c => /Beyond/.test(c.label)).regions.length, 3);
+  const beyond = d => D.current(d).options.find(o => /Beyond Earth/.test(o.label));
+  assert.ok(!beyond(D.newDrill({birthYear: 1990, age: 15, now: 2005})), "a chronicle in 2005 has no births in orbit");
+  assert.ok(!beyond(D.newDrill({birthYear: 1990, age: 30})), "nor one that gives no year");
+  assert.ok(!beyond(D.newDrill({birthYear: 1990, age: 40, now: 2030})), "born before anyone lived there");
+  let d = D.newDrill({birthYear: 2005, age: 30, now: 2035, homeland: "moravia", seed: 3});
+  assert.ok(beyond(d));
+  d = D.pick(d, "continent", beyond(d).id);
+  assert.deepEqual(D.current(d).options.map(o => o.id), ["orbit"], "only orbit had people in 2005");
+  d = D.pick(d, "region", "orbit");
+  let own = 0, sawPeople = false, sawArrival = false;
+  for ( let i = 0; i < 40 && D.current(d); i++ ) {
+    const st = D.current(d);
+    if ( st.id === "people" ) { sawPeople = true; assert.match(st.options[0].label, /on Earth/); }
+    if ( st.id === "arrival" ) sawArrival = true;
+    if ( st.id === "origin" ) { assert.match(st.age, /hired townships/); assert.ok(st.options.some(o => /first hired townships aloft/.test(o.label))); }
+    const o = st.options.find(x => x.local && /-mark$/.test(st.id)) ?? st.options[0];
+    if ( o.local && /-mark$/.test(st.id) ) own++;
+    d = D.pick(d, st.id, o.id);
+  }
+  assert.ok(D.done(d) && sawPeople && sawArrival && own >= 1);
+  assert.ok(D.story(d).some(x => /Orbit/.test(x.land ?? x.text ?? JSON.stringify(x))));
+  const all = D.continents(2060, 2090).find(c => /Beyond/.test(c.label)).regions.map(r => r.id);
+  assert.deepEqual(all, ["orbit", "luna", "mars"]);
+  assert.ok(D.datedMarks("mars", 2055, 2065).some(m => /colony ship/.test(m[0])));
+  const lim = D.cleanLimits({regions: ["luna", "nowhere"]});
+  assert.deepEqual(lim.regions, ["luna"]);
+  let e = D.newDrill({birthYear: 2060, age: 20, now: 2090, limits: lim});
+  assert.deepEqual(D.current(e).options.map(o => o.label), ["Beyond Earth"]);
+  let f = D.newDrill({birthYear: 2060, age: 30, now: 2090, seed: 9});
+  f = D.pick(f, "continent", D.current(f).options.find(o => /Europe/.test(o.label)).id);
+  f = D.pick(f, "region", "france");
+  assert.ok(D.moveTo(f, "a1", "mars").place.a1 === "mars", "an adult chapter can be lived on Mars");
 });

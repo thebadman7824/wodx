@@ -13,7 +13,7 @@
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {LOCAL_EVENTS} from "../data/lifepath-local-events.mjs";
-import {SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
+import {OFFWORLD, OFFWORLD_AGE, SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
   PEOPLE_LABELS} from "../data/lifepath-drill.mjs";
 
 export {CONTINENTS, CHAPTERS, ARRIVALS};
@@ -44,11 +44,19 @@ export function eraGroup(year) {
 const WORLD_GROUP = {M: "medieval", E: "early-modern", I: "industrial", N: "modern", F: "modern"};
 
 /** The continents with their regions; named says whether WoDX has name lists for the region's people that year. */
-export function continents(year = null) {
+export function continents(year = null, now = null) {
   return CONTINENTS.map(([label, ids]) => ({id: slug(label), label,
-    regions: ids.filter(id => regionOf(id)).map(id => ({id, label: WORLD_REGIONS[id].label, named: hasPeopleIn(id, year)}))}));
+    regions: ids.filter(id => regionOf(id) || (OFFWORLD[id] && year !== null && offworldOpen(id, year, now))).map(id => ({id, label: labelOf(id), named: !!regionOf(id) && hasPeopleIn(id, year)}))}))
+    .filter(c => c.regions.length);
 }
-export const continentOf = regionId => continents().find(c => c.regions.some(r => r.id === regionId)) ?? null;
+/** A land a lifepath can name: a world region, or a place beyond Earth (off: true). */
+export const landOf = id => regionOf(id) ?? (id && Object.hasOwn(OFFWORLD, id) ? {id, ...OFFWORLD[id], off: true} : null);
+export const labelOf = id => landOf(id)?.label ?? "";
+/** Whether a land is there to be born or live in: Earth always; beyond Earth only in the future age and from the land's first year. */
+export const offworldOpen = (id, year, now = null) => !OFFWORLD[id] || ((num(now) ?? num(year) ?? 0) >= OFFWORLD_AGE && (num(year) ?? 0) >= OFFWORLD[id].from);
+/** Every land in every age, Earth and beyond, for the Storyteller's limits and the checks. */
+export const allLands = () => CONTINENTS.map(([label, ids]) => ({id: slug(label), label, regions: ids.filter(id => landOf(id)).map(id => ({id, label: labelOf(id)}))}));
+export const continentOf = regionId => allLands().find(c => c.regions.some(r => r.id === regionId)) ?? null;
 
 /** The local lists of a region in a year, or null when none are written yet. */
 export function localOf(regionId, year) {
@@ -70,16 +78,16 @@ export function comingOfAge(regionId, birthYear) {
 }
 
 /** A fresh drill. homeland: the chronicle's own region, for the arrival question (none asked when not given). */
-export function newDrill({birthYear, age = 25, line = "mortal", homeland = null, seed = "wodx", limits = null} = {}) {
+export function newDrill({birthYear, age = 25, line = "mortal", homeland = null, seed = "wodx", limits = null, now = null} = {}) {
   const a = Math.max(AGE_MIN, Math.min(AGE_MAX, num(age) ?? 25));
   const L = cleanLimits(limits);
   return {v: VERSION, birthYear: num(birthYear) ?? 1200, age: a, line: String(line || "mortal"), homeland: regionOf(homeland) ? homeland : null,
-    seed: String(seed), picks: {}, place: {}, rerolls: {}, placeName: "", ...(L ? {limits: L} : {})};
+    seed: String(seed), picks: {}, place: {}, rerolls: {}, placeName: "", ...(L ? {limits: L} : {}), ...(num(now) !== null ? {now: num(now)} : {})};
 }
 
 /** The Storyteller's limits for a chronicle: {regions (only these; empty means all), noBases (origin kinds left out)}. Null when nothing is limited. */
 export function cleanLimits(limits) {
-  const regions = [...new Set((limits?.regions ?? []).filter(id => regionOf(id)))];
+  const regions = [...new Set((limits?.regions ?? []).filter(id => landOf(id)))];
   const all = new Set(ORIGINS.map(o => o[7] ?? o[0]));
   const noBases = [...new Set((limits?.noBases ?? []).filter(b => all.has(b)))];
   return regions.length || noBases.length ? {regions, noBases} : null;
@@ -87,7 +95,7 @@ export function cleanLimits(limits) {
 /** Is a region open under a drill's limits? The chronicle's homeland always is. */
 export const regionOpen = (drill, id) => !drill.limits?.regions?.length || drill.limits.regions.includes(id) || id === drill.homeland;
 /** The continents and regions open under a drill's limits. */
-export const openContinents = (drill, year = null) => continents(year).map(c => ({...c, regions: c.regions.filter(r => regionOpen(drill, r.id))})).filter(c => c.regions.length);
+export const openContinents = (drill, year = null) => continents(year, drill.now ?? null).map(c => ({...c, regions: c.regions.filter(r => regionOpen(drill, r.id))})).filter(c => c.regions.length);
 /** The origin kinds a Storyteller can leave out: [{key, label}]. */
 export const originKinds = () => ORIGINS.filter(o => !o[6]).map(o => ({key: o[0], label: o[1]}));
 
@@ -205,7 +213,7 @@ export function stepsOf(drill) {
   const peoples = peoplesOf(home, born), named = hasPeopleIn(home, born);
   if ( peoples.length > 1 || !named ) {
     steps.push({id: "people", kind: "people", title: "Your people", year: born, region: home, own: true,
-      options: named ? peoples.map(p => ({id: p.id, label: p.label, g: "", text: ""})) : [{id: "of-this-land", label: "A people of this land", g: "", text: "Named with the Storyteller."}]});
+      options: named ? peoples.map(p => ({id: p.id, label: p.label, g: "", text: ""})) : [{id: "of-this-land", label: landOf(home)?.off ? "Your family's people on Earth" : "A people of this land", g: "", text: "Named with the Storyteller."}]});
     if ( !P.people ) return out();
   }
   steps.push({id: "origin", kind: "origin", title: "Origin", year: born, region: home, age: localOf(home, born)?.age ?? "", own: true, options: originsFor(home, born, drill.line).filter(o => !drill.limits?.noBases?.includes(o.base))});
@@ -213,7 +221,7 @@ export function stepsOf(drill) {
   const base = P.origin.base ?? "trade";
   let here = home;
   for ( const st of stagesFor(drill.age, ages) ) {
-    here = (drill.place?.[st.id] && regionOf(drill.place[st.id])) ? drill.place[st.id] : here;
+    here = (drill.place?.[st.id] && landOf(drill.place[st.id])) ? drill.place[st.id] : here;
     const year = born + st.from, L = localOf(here, year);
     const common = {stage: st.id, year, region: here, age: L?.age ?? "", from: st.from, to: st.to, own: true};
     const [first, second, title, local] = st.kind === "child" ? [HOME, CMARK, "Childhood", null]
@@ -286,7 +294,7 @@ export function back(drill) {
 /** Set where a stage happened (teens or an adult chapter). That stage's picks and the later ones are dropped. */
 export function moveTo(drill, stageId, regionId) {
   if ( !regionOpen(drill, regionId) ) return drill;
-  if ( !regionOf(regionId) || !stagesFor(drill.age, agesOf(drill)).some(s => s.id === stageId && s.kind !== "child") ) return drill;
+  if ( !landOf(regionId) || !stagesFor(drill.age, agesOf(drill)).some(s => s.id === stageId && s.kind !== "child") ) return drill;
   return {...drill, picks: dropAfter(drill, `${stageId}-path`), place: {...drill.place, [stageId]: regionId}};
 }
 
@@ -342,7 +350,7 @@ export function story(drill) {
   return stepsOf(drill).steps.filter(s => s.id !== "continent" && P[s.id]).map(s => {
     const p = P[s.id];
     const where = s.id === "region" ? (drill.placeName ? `${drill.placeName}, ${p.label}` : p.label) : p.label;
-    const land = s.region && s.stage ? WORLD_REGIONS[s.region]?.label ?? "" : "";
+    const land = s.region && s.stage ? labelOf(s.region) : "";
     return {stage: STEP_STAGE(s), year: s.year, title: s.title, choice: where, text: p.text ?? (land && s.movable ? `In ${land}.` : ""), region: s.region ?? (s.id === "region" ? p.id : null), own: !!p.own};
   });
 }
@@ -504,7 +512,7 @@ export function lint({table = null, backgrounds = null} = {}) {
   const bad = [];
   const seen = new Set();
   for ( const [label, ids] of CONTINENTS ) for ( const id of ids ) {
-    if ( !regionOf(id) ) bad.push(`${label}: unknown region ${id}`);
+    if ( !landOf(id) ) bad.push(`${label}: unknown region ${id}`);
     if ( seen.has(id) ) bad.push(`${id} is on two continents`);
     seen.add(id);
   }
@@ -543,7 +551,7 @@ export function lint({table = null, backgrounds = null} = {}) {
     }
   }
   for ( const [rid, groups] of Object.entries(LOCAL) ) {
-    if ( !regionOf(rid) ) bad.push(`local: unknown region ${rid}`);
+    if ( !landOf(rid) ) bad.push(`local: unknown region ${rid}`);
     for ( const [g, L] of Object.entries(groups) ) {
       const where = `local ${rid} ${g}`;
       if ( !"MEINF".includes(g) ) bad.push(`${where}: unknown era group`);
@@ -558,7 +566,7 @@ export function lint({table = null, backgrounds = null} = {}) {
   for ( const o of SINCE ) { gives(o[1], `SINCE ${o[0]}`); if ( !TONES[o[3]] ) bad.push(`SINCE ${o[0]}: no tone`); }
   for ( const y of [1250, 1700, 1900, 2000, 2100] ) for ( const [t, n] of Object.entries(MARK_SHAPE) ) if ( SINCE.filter(o => o[3] === t && fitsMark(o[2], y, "trade")).length < n ) bad.push(`SINCE: too few "${t}" in ${y}`);
   for ( const [rid, E] of Object.entries(LOCAL_EVENTS) ) {
-    if ( !regionOf(rid) ) bad.push(`dated: unknown region ${rid}`);
+    if ( !landOf(rid) ) bad.push(`dated: unknown region ${rid}`);
     uniq([...(E.origins ?? []).map(o => o[0]), ...ORIGINS.map(o => o[1]), ...Object.values(LOCAL[rid] ?? {}).flatMap(L => L[1].map(o => o[0]))], `dated ${rid} origins`);
     for ( const o of E.origins ?? [] ) { gives(o[1], `dated ${rid} ${o[0]}`); if ( !bases.has(o[2]) ) bad.push(`dated ${rid} ${o[0]}: unknown origin ${o[2]}`); if ( !(o[3] <= o[4]) ) bad.push(`dated ${rid} ${o[0]}: years`); }
     uniq([...(E.marks ?? []).map(o => o[0]), ...CMARK.map(o => o[0]), ...TMARK.map(o => o[0]), ...AMARK.map(o => o[0])], `dated ${rid} marks`);

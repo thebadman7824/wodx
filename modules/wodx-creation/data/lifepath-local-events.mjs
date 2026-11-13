@@ -71,4 +71,43 @@ export const LOCAL_EVENTS = {
   ["Stood on the sandbags in the flood","ab Athletics|bg Allies",[[1997,1997],[2002,2002]],"+",null],
   ["Lost the house to the flood","note In debt|ab Survival",[[1997,1997],[2002,2002]],"-",null]]}
 };
-Object.assign(LOCAL_EVENTS, EVENTS_EUROPE, EVENTS_ASIA, EVENTS_WORLD);
+Object.assign(LOCAL_EVENTS, EVENTS_EUROPE, EVENTS_ASIA, EVENTS_WORLD, {
+"orbit": {
+ origins: [
+  ["A child of the first hired townships aloft","ab Crafts|ab Athletics|merit Language","labour",1999,2019],
+  ["Born free in a high colony after the rising","ab Politics|ab Technology|merit Iron Will","labour",2019,2099],
+  ["A family owing a firm for the lift and the air","note In debt|ab Technology|ab Subterfuge","bound",2030,2099]],
+ marks: [
+  ["Came through the war in orbit","flaw Nightmares|flaw Phobia",[[2008,2008]],"-","a crew mate|from the broken station"],
+  ["Salvaged the wrecks after the war in orbit","bg Resources|ab Technology",[[2008,2012]],"+","a salvage partner|with a claim of their own"],
+  ["Worked on the city in the sky as it was finished","ab Crafts|bg Contacts",[[2009,2011]],"+",null],
+  ["Stood with the high colony when it broke free","ab Firearms|bg Allies|flaw Enemy",[[2019,2019]],"+","a comrade|of the rising"],
+  ["Lived under martial law in the sister colony","ab Subterfuge|flaw Vengeful",[[2019,2022]],"-","an informer|on your ring"],
+  ["Sat out the war of seven hours in a sealed section","ab Alertness|merit Iron Will",[[2022,2022]],"0",null],
+  ["Took a night-shift contract in the docks","bg Resources|note In debt",[[2048,2099]],"0","a shift boss|who never comes out by day"],
+  ["Lost air in a section that was sealed too late","flaw Nightmares|flaw Phobia",[[1999,2099]],"-",null],
+  ["Carried something down the well without asking what","bg Resources|flaw Dark Secret",[[2011,2099]],"+","a broker|at the foot of the mountain track"],
+  ["Went down to Earth once and could barely stand","ab Empathy|ab Athletics",[[2011,2099]],"0","kin|on the ground"]]},
+"luna": {
+ origins: [
+  ["A family of the crews that threw the rock","flaw Dark Secret|ab Technology|merit Iron Will","labour",2009,2030],
+  ["Born at the ice base of the southern pole","ab Survival|ab Science|bg Allies","labour",2050,2099]],
+ marks: [
+  ["Knew what the launch track did in the war","flaw Dark Secret|flaw Nightmares",[[2008,2010]],"-","a track officer|who gave the order"],
+  ["Opened the ice base at the pole","ab Crafts|bg Status",[[2050,2052]],"+","a foreign partner|from the other half of the base"],
+  ["Struck for air and water rights","bg Allies|flaw Enemy",[[2050,2099]],"0","an organiser|shipped back to Earth"],
+  ["Was caught outside in a solar storm","flaw Short|merit Iron Will",[[2009,2099]],"-",null],
+  ["Found a seam of clean ice and sold the claim","bg Resources|ab Finance",[[2050,2099]],"+",null],
+  ["Walked alone on the far side","ab Awareness|ab Survival",[[2009,2099]],"0",null],
+  ["Lost a crew to a blown seal","flaw Nightmares|flaw Vengeful",[[2009,2099]],"-","a survivor|who blames the company"]]},
+"mars": {
+ origins: [
+  ["Born on the colony ship or just after landfall","ab Survival|ab Crafts|merit Language","land",2059,2075]],
+ marks: [
+  ["Watched the colony ship come down beside the old base","ab Politics|merit Language",[[2059,2059]],"0","a newcomer|you showed around"],
+  ["Came through a dust season on short rations","merit Iron Will|flaw Short",[[2022,2099]],"-",null],
+  ["Traded between the bases when the flags would not","bg Resources|bg Contacts",[[2059,2099]],"+","a go-between|trusted by all three"],
+  ["Lost someone on a long drive","flaw Nightmares|ab Survival",[[2022,2099]],"-",null],
+  ["Found something under the ice and reported it, or did not","ab Science|ab Occult|flaw Dark Secret",[[2022,2099]],"0","a geologist|who saw it too"],
+  ["Kept the air plant running through a failure","bg Status|ab Technology",[[2022,2099]],"+",null],
+  ["Waited two years for a ship that was late","flaw Short Fuse|ab Empathy",[[2022,2099]],"-",null]]}});
