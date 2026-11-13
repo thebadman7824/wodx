@@ -133,10 +133,10 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
   const messages = new Map(), created = [];
   let clicked = 0, viewed = null;
   let pauses = 0;
-  globalThis.game = {paused: true, togglePause: async p => { game.paused = p; pauses++; }, settings, modules: mods, user: me, users, world: {id: "rothenstein-wodx", flags: {wodx: true}}, time: {worldTime: 5}, messages,
+  globalThis.game = {paused: true, togglePause: async p => { game.paused = p; pauses++; }, settings, modules: mods, user: me, users, world: {id: "rothenstein-wodx", flags: {wodx: true}}, time: {worldTime: 5}, messages, socket: {on: () => {}, emit: () => {}},
     scenes: new Map([["s1", {id: "s1", name: "The yard", view: async () => { viewed = "s1"; }}]])};
   globalThis.canvas = {scene: {id: "s0"}};
-  globalThis.foundry = {utils: {deepClone: v => structuredClone(v)}};
+  globalThis.foundry = {utils: {deepClone: v => structuredClone(v)}, applications: {api: {ApplicationV2: class {}, DialogV2: class {}}, instances: new Map()}};
   globalThis.ui = {notifications: {warn: () => {}, info: () => {}}};
   globalThis.HTMLElement = class {};
   globalThis.ChatMessage = {create: async d => { created.push(d); return d; }};
@@ -190,4 +190,135 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
   await new Promise(r => setTimeout(r, 50));
   assert.equal(api.isOn(), false);
   assert.equal(store.get("wodx-npc.mode"), "suggest");
+});
+
+/* WoDX Solo 0.2.0: the player's panel (B2640 to B2644) */
+
+test("the panel holds step 2's buttons and nothing of the Storyteller's", () => {
+  assert.deepEqual(R.PANEL.map(b => b.id), ["time", "travel", "pause", "stuck", "curtain"]);
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  for ( const b of R.PANEL ) assert.ok(new RegExp(`\\b${b.id}\\(\\)`).test(src), `no action for ${b.id}`);
+});
+
+test("waits: their lengths, the cap, and dusk and dawn from the sun", () => {
+  assert.equal(R.secondsFor("ten"), 600);
+  assert.equal(R.secondsFor("hour"), 3600);
+  assert.equal(R.secondsFor("dusk", {toDusk: 5000, toDawn: 40000}), 5000);
+  assert.equal(R.secondsFor("dawn", {toDusk: 5000, toDawn: 40000}), 40000);
+  assert.equal(R.secondsFor("day", {toDusk: 30000}), 30000);
+  assert.equal(R.secondsFor("day", {toDusk: 1e7}), R.MAX_WAIT);
+  assert.equal(R.secondsFor("nap"), 0);
+  assert.equal(R.secondsFor("dusk", {toDusk: NaN}), 0);
+});
+
+test("a wait goes in steps of ten minutes at most", () => {
+  assert.deepEqual(R.chunks(1500), [600, 600, 300]);
+  assert.deepEqual(R.chunks(0), []);
+  assert.equal(R.chunks(R.MAX_WAIT).reduce((a, b) => a + b, 0), R.MAX_WAIT);
+  assert.ok(R.chunks(7777).every(n => n <= R.STEP));
+});
+
+test("what stops a wait, and a sleeper notices less", () => {
+  assert.equal(R.stopFor("hour", {}), null);
+  assert.equal(R.stopFor("hour", {word: true}), "word");
+  assert.equal(R.stopFor("hour", {newcomer: true, fight: true}), "fight");
+  assert.equal(R.stopFor("day", {word: true, newcomer: true}), null);
+  assert.equal(R.stopFor("day", {paused: true}), "paused");
+  for ( const w of Object.values(R.WAITS) ) for ( const k of w.stops ) assert.ok(R.STOP_WORDS[k], k);
+});
+
+test("time in plain words", () => {
+  assert.equal(R.span(600), "10 minutes");
+  assert.equal(R.span(3600), "1 hour");
+  assert.equal(R.span(4860), "1 hour 21 minutes");
+  assert.equal(R.span(10), "no time");
+});
+
+test("the way in: the starting view, else the middle, snapped to the grid", () => {
+  assert.deepEqual(R.wayIn({initial: {x: 1030, y: 640}, width: 3000, height: 2000, grid: {size: 100}}), {x: 1000, y: 600});
+  assert.deepEqual(R.wayIn({width: 2000, height: 1000, padding: 0.25, grid: {size: 100}}), {x: 1500, y: 800});
+  assert.deepEqual(R.wayIn({initial: {x: null, y: null}, width: 1000, height: 1000, padding: 0, grid: {size: 50}}, 2), {x: 450, y: 450});
+});
+
+test("tonight began at the last dusk", () => {
+  assert.equal(R.nightStart(100000, 80000), 93600);
+  assert.equal(R.nightStart(100000, 0), 100000);
+  assert.equal(R.nightStart(1000, 86000), 600);
+});
+
+test("the curtain shows tonight only, in plain words", () => {
+  const entries = [
+    {wt: 10, kind: "card", title: "Old", choice: "Approve", acted: true},
+    {wt: 200, kind: "card", title: "A fight", choice: "Approve", acted: true, note: "goes ahead"},
+    {wt: 300, kind: "window", title: "Roll", choice: "OK", acted: false, note: "the seat only watches"},
+    {wt: 400, kind: "queue", title: "A trade", note: "waits in the approval queue"}
+  ];
+  const rows = R.curtainRows(entries, 100);
+  assert.equal(rows.length, 3);
+  assert.equal(rows[0].what, "the seat chose Approve");
+  assert.equal(rows[0].note, "goes ahead");
+  assert.equal(rows[1].what, "the seat would choose OK");
+  assert.equal(rows[2].what, "waits in the approval queue");
+  assert.equal(rows[2].kind, "The approval queue");
+});
+
+test("nights seen: no doubles, the last sixty kept", () => {
+  assert.deepEqual(R.markSeen([1, 2], 2), [1, 2]);
+  assert.deepEqual(R.markSeen(null, 5), [5]);
+  const many = Array.from({length: 70}, (_, i) => i);
+  assert.equal(R.markSeen(many, 999).length, 60);
+});
+
+test("the switch ends fights by themselves, and the module talks over its socket", () => {
+  assert.ok(R.PRESET.some(p => p.mod === "wodx-combat" && p.key === "fightEnd" && p.to === "auto"));
+  const mod = JSON.parse(readFileSync(join(root, "modules/wodx-solo/module.json"), "utf8"));
+  assert.equal(mod.socket, true);
+  for ( const f of [...mod.esmodules, ...(mod.styles ?? [])] ) assert.ok(existsSync(join(root, "modules/wodx-solo", f)), f);
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  // Every ask is done on the seat only
+  for ( const fn of ["passTime", "togglePause", "unstick", "curtain"] )
+    assert.match(src, new RegExp(`export async function ${fn}\\([^)]*\\) \\{\\n  if \\( !H\\.isSeat\\(\\)`), fn);
+});
+
+test("panel.mjs: a wait moves the clock in steps and stops when word comes; the seat frees a token", async () => {
+  const hooks = {};
+  let hid = 0;
+  globalThis.Hooks = {on: (n, f) => { (hooks[n] ??= new Map()).set(++hid, f); return hid; }, off: (n, id) => hooks[n]?.delete(id), once: () => {}};
+  const said = [], logged = [];
+  globalThis.ChatMessage = {create: async d => { said.push(d); return d; }};
+  const token = {actorId: "a1", width: 1, update: async function (d) { Object.assign(this, d); }};
+  const scene = {id: "s1", name: "The yard", active: true, tokens: [token], initial: {x: 550, y: 550}, width: 1000, height: 1000, padding: 0, grid: {size: 100}};
+  const actor = {id: "a1", name: "Mila", hasPlayerOwner: true, type: "Mortal"};
+  const player = {id: "p1", isGM: false, active: true, name: "Player", viewedScene: "s1", character: actor};
+  const seat = {id: "g1", isGM: true, active: true};
+  const users = [seat, player];
+  users.get = id => users.find(u => u.id === id);
+  users.activeGM = seat;
+  let steps = 0;
+  globalThis.game = {paused: false, users, user: seat, actors: [actor], scenes: [scene], combats: [], modules: new Map(), settings: {get: () => [], set: async () => {}},
+    socket: {on: () => {}, emit: () => {}},
+    time: {worldTime: 0, advance: async s => {
+      game.time.worldTime += s; steps++;
+      // word for the player arrives in the third step
+      if ( steps === 3 ) for ( const f of hooks.createChatMessage.values() ) f({whisper: ["p1"], flags: {}});
+    }}};
+  globalThis.foundry = {utils: {deepClone: v => structuredClone(v)}, applications: {api: {ApplicationV2: class {}, DialogV2: class {}}, instances: new Map()}};
+  globalThis.ui = {notifications: {warn: () => {}, info: () => {}}};
+  const P = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/panel.mjs")));
+  P.installPanel({isOn: () => true, isSeat: () => true, log: async e => { logged.push(e); }, entries: () => [], get: () => []});
+  const r = await P.passTime("p1", "hour");
+  assert.equal(steps, 3);
+  assert.equal(r.passed, 1800);
+  assert.equal(r.why, "word");
+  assert.match(said.at(-1).content, /stopped after 30 minutes, because word came for you/);
+  assert.equal(hooks.createChatMessage.size, 0, "the wait leaves no hooks behind");
+  // A fight on the scene: no wait at all
+  game.combats = [{started: true, scene: {id: "s1"}}];
+  assert.equal(await P.passTime("p1", "ten"), null);
+  assert.match(said.at(-1).content, /Not while a fight is running/);
+  // Free my token
+  const to = await P.unstick("p1", "token");
+  assert.deepEqual(to, {x: 500, y: 500});
+  assert.equal(token.x, 500);
+  assert.ok(logged.some(e => /token was freed/.test(e.title)));
 });

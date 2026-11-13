@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.2.0 (13 November 2026, step 2 of The Lone Chronicle, B2640 to B2644: the player's panel, a window of their own with Let time pass (ten minutes, an hour, until dusk, until dawn, sleep the day; the clock moves ten minutes at a time and stops when a fight starts, the game is paused, word comes or someone new arrives), Travel, Pause or go on, I am stuck (bring me a lead, free my token, end a hung fight or window) and Lift the curtain (tonight's log from the seat, after asking; the night is marked as seen). Every ask is done by the seat. The switch also sets fights to end by themselves. A moon button in the Token controls opens the panel, and it opens by itself when the player arrives)
 - 0.1.3 (the seat's reading of cards now lives in WoDX Chronicle, shared with the Waiting tray)
 - 0.1.2 (12 November 2026, from the second testbed gate: a world opens paused and NPCs never act while it is paused, so the seat starts the game when the mode begins, when the seat sits down and when the player arrives. A pause made later, such as the X-card's, is left alone)
 - 0.1.1 (12 November 2026, from the first testbed gate: the seat now follows the player. Foundry passes on which scene a user views as passing activity, with no hook, so the seat looks every two seconds)
