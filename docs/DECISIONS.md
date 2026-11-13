@@ -119,7 +119,7 @@ Next free block: B2680
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
-| B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year | Chronicle, NPC, Creation |
+| B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3488,3 +3488,15 @@ Reverse: drop worldTradeTables from people.mjs.
 ## B2674. Local looks for passers-by (2026-11-13, global rule)
 NPC passerby-local.mjs changes the way of life's street once more for each region, keyed by region, the way of life it keeps that year, and age (or "old" for medieval and early modern, "late" for 1914 on): a whole kind replaces or adds, a looks-only change keeps the kind's weights and station, null removes. 33 regions: the seven lands of Islam and the Aegean, Russia and Siberia, China and Korea, central and southern Africa, the Americas and Oceania before and after the settlers, and eight European lands. Moravia's street is unchanged. House readings, no book gives street tables.
 Reverse: streetTable without localTable (passerby-rules.mjs).
+
+## B2675. The world map loads on first use (2026-11-13, Stale Design Desk e1)
+Storyteller main.mjs no longer imports world-map-rules.mjs, so its grid (data/world.mjs, 168 KB) and rules (29 KB) are fetched only when the world map window first opens or a script calls api.worldMap.load(). The sync calls (view, known, found) throw a plain error until then; api.worldMap.rules is a getter that is null until loaded. Storyteller 0.58.2.
+Reverse: put back the static import in world-map.mjs and main.mjs.
+
+## B2676. The realm world maps load on first use (2026-11-13, Stale Design Desk e1)
+Otherworlds main.mjs no longer imports realm-worlds-rules.mjs, so it and realm-places.mjs (about 115 KB) load only when a realm world maps window opens or a script calls api.realmWorlds.load(). realm-maps-rules.mjs and realm-layouts.mjs still load at start, since the realm maps, the wild and the chart of the worlds read them. Otherworlds 0.23.2.
+Reverse: put back the static import in realm-worlds.mjs and main.mjs.
+
+## B2677. A map of the Storyteller module (2026-11-13, Stale Design Desk e2)
+modules/wodx-storyteller/README.md lists each part, its files, its settings and its api keys; tools/harness/storyteller-readme.test.mjs fails when a script or data file is missing from it or a setting named there is not registered. The module stays whole; look again at splitting past 100 scripts.
+Reverse: delete the README and its test.

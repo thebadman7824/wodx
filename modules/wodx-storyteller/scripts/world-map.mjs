@@ -7,8 +7,20 @@
  * world in the year, and "Discoveries" marks the lands the chronicle has found for itself (world setting "discovered").
  * Storyteller 0.57.3: with WoDX Otherworlds 0.21.0 on, "Realms past the near worlds" opens its realm world maps.
  * The rules are in world-map-rules.mjs; the chart and the dresses are WoDX Otherworlds' worlds-chart-rules.mjs.
+ * Storyteller 0.58.2 (B2675): the rules and the grid they read (data/world.mjs, about 170 KB) load the first time
+ * the window opens or load() is called, not when the world starts, so a player who never opens the map never
+ * fetches them. The other calls here read the rules only after that first load.
  */
-import * as WM from "./world-map-rules.mjs";
+let WM = null, loading = null;
+/** Load the world map's rules and grid once. Returns the rules. */
+export function load() {
+  if ( WM ) return Promise.resolve(WM);
+  loading ??= import("./world-map-rules.mjs").then(m => (WM = m)).catch(err => { loading = null; throw err; });
+  return loading;
+}
+/** The rules once loaded, else null. */
+export const loaded = () => WM;
+const need = () => { if ( !WM ) throw new Error("WoDX Storyteller: the world map is not loaded yet; await api.worldMap.load() first"); return WM; };
 import * as D from "./discovery-rules.mjs";
 import * as C from "./core.mjs";
 import {addTool} from "./hand.mjs";
@@ -22,12 +34,13 @@ const img = (svg, alt) => `<img class="wst-world-map" alt="${esc(alt)}" style="d
 export function homeId() {
   let id = null;
   try { const h = C.chron()?.world?.homeland?.(); id = (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { id = null; }
-  return WM.REGION_IDS.includes(id) ? id : "moravia";
+  return need().REGION_IDS.includes(id) ? id : "moravia";
 }
 /** The lands the chronicle has discovered for itself, before their time. */
-export const found = () => D.normFound(C.setting("discovered"), WM.REGION_IDS);
+export const found = () => D.normFound(C.setting("discovered"), need().REGION_IDS);
 /** GM: mark a land found (or lost again). Returns the new list. */
 export async function setFound(id, on = true) {
+  await load();
   if ( !game.user.isGM || !WM.REGION_IDS.includes(id) ) return found();
   const list = found().filter(x => x !== id);
   if ( on ) list.push(id);
@@ -35,7 +48,7 @@ export async function setFound(id, on = true) {
   return list;
 }
 /** What the homeland knows in a year: a Set of region ids. */
-export const knownNow = (year = yearNow()) => D.knownRegions(homeId(), year, WM.REGION_IDS, found());
+export const knownNow = (year = yearNow()) => D.knownRegions(homeId(), year, need().REGION_IDS, found());
 
 /** A region's name for the lists: WoDX Chronicle's world regions when it has the id, else the id in plain words. */
 export function regionLabel(id) {
@@ -48,12 +61,13 @@ export function regionLabel(id) {
 export function spotOf(text, regionId) {
   const m = /^\s*(-?\d+(?:\.\d+)?)\s*[, ]\s*(-?\d+(?:\.\d+)?)\s*$/.exec(String(text ?? ""));
   if ( m && Math.abs(+m[1]) <= 90 && Math.abs(+m[2]) <= 180 ) return {lat: +m[1], lon: +m[2], words: `${m[1]}, ${m[2]}`};
-  const c = WM.regionCentre(regionId);
+  const c = need().regionCentre(regionId);
   return c ? {...c, words: regionLabel(regionId)} : null;
 }
 
 /** What the window shows for a state {layer, from, fromAt, to, toAt, year}: {picture (svg), lines, note}. */
 export function view(state) {
+  need();
   const chart = api("wodx-otherworlds")?.worldsChart ?? null;
   const year = Math.round(Number(state.year)) || yearNow();
   const a = spotOf(state.fromAt, state.from), b = spotOf(state.toAt, state.to);
@@ -76,6 +90,7 @@ export function view(state) {
 
 export async function worldMapDialog(start = {}) {
   if ( !game.user.isGM ) return null;
+  await load();
   const chart = api("wodx-otherworlds")?.worldsChart ?? null, realmWorlds = api("wodx-otherworlds")?.realmWorlds ?? null;
   const regions = Object.fromEntries(WM.REGION_IDS.map(id => [id, regionLabel(id)]).sort((x, y) => x[1].localeCompare(y[1])));
   const layers = {earth: "The living world", ...(chart ? {...Object.fromEntries(Object.entries(chart.rules.MIRRORS).map(([k, m]) => [k, m.label])), chart: "The chart of the worlds"} : {})};
@@ -113,6 +128,7 @@ export async function worldMapDialog(start = {}) {
 
 /** One square, about 5 km to a small square, made the same way every time. */
 export async function closerDialog(state) {
+  await load();
   const a = spotOf(state.fromAt, state.from);
   if ( !a ) return null;
   const sq = WM.landNear(WM.squareOf(a.lon, a.lat)), v = WM.closer(sq.col, sq.row);
@@ -130,6 +146,7 @@ export async function closerDialog(state) {
 /** The lands beyond the known world in a year, each with a tick: ticked lands are found by the chronicle itself. */
 export async function discoveriesDialog(year = yearNow()) {
   if ( !game.user.isGM ) return null;
+  await load();
   const home = homeId(), mine = found();
   const rows = [...mine.map(id => ({id, year: D.knownYear(home, id)})), ...D.unknownRegions(home, year, WM.REGION_IDS, mine)].sort((x, y) => x.year - y.year || regionLabel(x.id).localeCompare(regionLabel(y.id)));
   const content = `<div style="max-height:70vh;overflow-y:auto"><p>In ${year}, ${esc(regionLabel(home))} knows nothing of these lands, and no journey can end in them or pass through them.

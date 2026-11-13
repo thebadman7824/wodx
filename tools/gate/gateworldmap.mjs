@@ -15,9 +15,10 @@
  *   7. the window opens with its picture, From, To and Year, shows a journey after Show, and closes
  *   8. the known world: no journey from Lisbon to the Caribbean in 1400, the crossing in 1492, a land marked found
  *      and unmarked again, the shrouded map and the whole map
+ *   9. on first use: Storyteller main.mjs no longer imports the rules, and api.worldMap.load() gives them (0.58.2)
  * Result: Data/wodx-gate/gateworldmap-result.json.
  */
-const N = 8;
+const N = 9;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const within = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error(`${what} did not finish in ${ms / 1000} s`)), ms))]);
 
@@ -33,7 +34,9 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
-  const S = game.modules.get("wodx-storyteller"), O = game.modules.get("wodx-otherworlds"), WMap = S?.api?.worldMap, WM = WMap?.rules, chart = O?.api?.worldsChart;
+  const S = game.modules.get("wodx-storyteller"), O = game.modules.get("wodx-otherworlds"), WMap = S?.api?.worldMap, chart = O?.api?.worldsChart;
+  // Storyteller 0.58.2: the rules and grid load on first use; note whether anything had opened the map before this gate
+  const loadedBefore = !!WMap?.rules, WM = WMap?.load ? await WMap.load() : WMap?.rules;
   const findWin = () => [...document.querySelectorAll("dialog.application, .application.dialog, .window-app.dialog")].find(el => el.querySelector("img.wst-world-map") && el.querySelector('select[name="layer"]'));
   try {
     ok("1. modules", S?.active && O?.active && !foundry.utils.isNewerVersion("0.55.0", S.version) && !foundry.utils.isNewerVersion("0.20.0", O.version)
@@ -90,6 +93,10 @@ export async function run() {
     } finally { if ( JSON.stringify(WMap.found()) !== JSON.stringify(before) ) await game.settings.set("wodx-storyteller", "discovered", before); }
     ok("8. known world", hid.unknown === "caribbean" && hid.surface === null && open92.surface?.days > 30 && Dr.knownYear("moravia", "caribbean") === 1492 && roundTrip && shroud
       && typeof WMap.discoveries === "function", {hid: WM.journeyLines(hid), open92: open92.surface?.days, roundTrip, shroud, found: before});
+
+    // Storyteller 0.58.2 (B2675): main.mjs no longer imports the world map's rules, so the grid loads only on first use
+    const mainText = await (await fetch(`/modules/wodx-storyteller/scripts/main.mjs?${Date.now()}`)).text();
+    ok("9. on first use", !/world-map-rules\.mjs/.test(mainText) && WMap.rules === WM && typeof WM?.journey === "function", {loadedBefore});
   } catch (err) {
     R.errors.push(String(err?.stack ?? err));
     try { for ( let i = 0; i < 3; i++ ) { const w = findWin(); if ( !w ) break; w.querySelector('button[data-action="close"]')?.click(); await sleep(400); } } catch (e) { /* nothing left to close */ }

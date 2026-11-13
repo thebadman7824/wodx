@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.23.2 (the realm world maps load their rules and places the first time the window opens, not when the world starts, so players no longer fetch about 115 KB at start-up; api.realmWorlds.load() loads them for a script, and api.realmWorlds.rules is empty until then. B2676)
 - 0.23.1 (the Penumbra and Shadowlands reflect a mosque, a synagogue or a temple as they do a church: the loom of the Weaver and a thin Shroud. B2662)
 - 0.23.0 (realm world maps: 188 named places from a book lookup stand on the maps, each with what it is and its page, shown under the map for the ends of a journey and in Found places; the window opens what the books say of how each realm lies and changes; names no longer cover each other; the page refs of the Far Dreaming, the Deep Dreaming and Enoch are put right)
 - 0.22.0 (realm world maps: the ways in and out and the located dangers that the realm catalogue names are places on each realm's map, in their own colours, 38 more in all; a traveller arrives at the way in where the catalogue names one)
