@@ -6,7 +6,7 @@
 import * as SR from "./sprite-rules.mjs";
 import {healthLevel, randomLook} from "./doll-rules.mjs";
 const MOD = "wodx-paperdoll";
-const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map();
+const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
 let ticking = false;
 const on = () => { try { return game.settings.get(MOD, "sprites") !== false; } catch (e) { return true; } };
 
@@ -57,7 +57,7 @@ function tick() {
       tex = frame(name, {row: SR.ROW[st.facing] ?? SR.ROW.down, col: SR.ACT_FRAMES - 1}, a.act);
     }
     else if ( a ) {
-      const col = st.moving ? null : SR.actFrame(now - a.start);
+      const col = st.moving ? null : SR.actFrame(now - a.start, a.act);
       if ( col === null && a.hold && !st.moving ) a.held = true;
       else if ( col === null ) acts.delete(token.id);
       else {
@@ -71,7 +71,7 @@ function tick() {
     if ( !acts.has(token.id) && glows.has(token.id) ) glow(token, null);
     states.set(token.id, st);
     if ( !tex && st.moving ) {
-      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0});
+      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0, riding: rides.get(token.id) === true});
       if ( gait ) tex = frame(name, SR.frameOf(st, grid), gait);
     }
     tex ??= frame(name, SR.frameOf(st, grid));
@@ -105,6 +105,11 @@ function onTokenUpdate(doc, change) {
     // how far it goes in one stretch decides whether it runs
     const g = canvas.grid?.size || 100, was = doc.object?.position ?? doc._source ?? doc;
     strides.set(doc.id, Math.hypot((change.x ?? doc.x) - (was.x ?? doc.x), (change.y ?? doc.y) - (was.y ?? doc.y)) / g);
+    // in the saddle (WoDX Interactables knows who rides what)
+    try { const ix = game.modules.get("wodx-interactables"); rides.set(doc.id, !!(ix?.active && ix.api?.rideOf?.(doc)?.saddle)); } catch (e) { rides.delete(doc.id); }
+    // whoever sat or knelt gets up to go
+    const held = doc.flags?.[MOD]?.act;
+    if ( held?.hold && SR.STAY.includes(held.name) && mine() ) rise(doc).catch(() => null);
   }
   if ( !change?.flags?.[MOD]?.act || !on() ) return;
   const a = doc.flags?.[MOD]?.act;
@@ -124,7 +129,7 @@ function onTokenUpdate(doc, change) {
  */
 export async function play(tokenDoc, act = null, toward = null, {fx = null} = {}) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
-  const name = tokenDoc?.flags?.[MOD]?.sprite, move = SR.REACTS.includes(act) ? (SR.hasAct(name, act) ? act : null) : SR.actOf(name, act);
+  const name = tokenDoc?.flags?.[MOD]?.sprite, move = SR.isOwnMove(act) ? (SR.hasAct(name, act) ? act : null) : SR.actOf(name, act);
   if ( !move ) return null;
   const g = canvas.grid?.size ?? 0, o = toward?.document ?? toward;
   const at = o && Number.isFinite(o.x) && Number.isFinite(o.y) ? {x: o.x + (o.width ?? 0) * g / 2, y: o.y + (o.height ?? 0) * g / 2} : null;
@@ -182,7 +187,8 @@ export async function rise(tokenDoc) {
 function reactTo(actor, info, from) {
   if ( !mine() || !(info?.levels > 0) ) return;
   const to = spriteTokenOf(actor), name = to?.document.flags?.[MOD]?.sprite;
-  if ( !name || to.document.flags?.[MOD]?.act?.hold && info.condition !== "dead" && info.condition !== "finaldeath" ) return;
+  const lying = to?.document.flags?.[MOD]?.act;   // one who only sits or kneels still takes the blow
+  if ( !name || lying?.hold && !SR.STAY.includes(lying.name) && info.condition !== "dead" && info.condition !== "finaldeath" ) return;
   const move = SR.reactFor(info.condition ?? null, healthLevel(actor?.system?.health));
   if ( !SR.hasAct(name, move) ) return;
   setTimeout(() => play(to.document, move, from?.document ?? null).catch(e => console.warn(`${MOD} | sprite reaction`, e)), from ? 280 : 0);
@@ -195,10 +201,43 @@ function onActorUpdate(actor, change) {
     // a health track filled by hand (the sheet, a macro) sends no word of harm: the figure still goes down, a moment later so a real blow's own reaction comes first
     setTimeout(() => { if ( healthLevel(actor.system?.health) < 7 ) return;
       for ( const t of canvas.tokens?.placeables ?? [] ) { const f = t.document.flags?.[MOD] ?? {};
-        if ( t.actor === actor && f.sprite && !f.act?.hold && SR.hasAct(f.sprite, "fall") ) play(t.document, "fall").catch(() => null); } }, 900);
+        if ( t.actor === actor && f.sprite && !(f.act?.hold && !SR.STAY.includes(f.act.name)) && SR.hasAct(f.sprite, "fall") ) play(t.document, "fall").catch(() => null); } }, 900);
     return;
   }
-  for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor === actor && t.document.flags?.[MOD]?.act?.hold ) rise(t.document).catch(() => null);
+  for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor === actor && t.document.flags?.[MOD]?.act?.hold && !SR.STAY.includes(t.document.flags[MOD].act.name) ) rise(t.document).catch(() => null);
+}
+
+/* Things that happen in the game play their move by themselves (B2612): feeding, a change of form, a line spoken in character. */
+function onFed(info = {}) {
+  if ( !on() || !mine() ) return;
+  const toks = canvas.tokens?.placeables ?? [], by = toks.find(t => t.actor?.uuid === info.by?.uuid && t.document.flags?.[MOD]?.sprite);
+  if ( by ) play(by.document, "feed", toks.find(t => t.actor?.uuid === info.vessel?.uuid)?.document ?? null).catch(() => null);
+}
+function onForm(actor) {
+  if ( !on() || !mine() ) return;
+  for ( const t of canvas.tokens?.placeables ?? [] ) if ( (t.actor === actor || (actor?.uuid && t.actor?.uuid === actor.uuid)) && t.document.flags?.[MOD]?.sprite ) play(t.document, "shift").catch(() => null);
+}
+function onSpoken(msg) {
+  if ( !on() || !mine() || msg?.isRoll || msg?.whisper?.length || !msg?.speaker?.token ) return;
+  if ( msg.style !== undefined && msg.style !== CONST.CHAT_MESSAGE_STYLES?.IC ) return;
+  if ( Object.keys(msg.flags ?? {}).some(k => k.startsWith("wodx-")) ) return;   // a card from a WoDX module is not speech
+  const t = canvas.tokens?.get(msg.speaker.token), f = t?.document.flags?.[MOD];
+  if ( f?.sprite && !f.act?.hold && !acts.has(t.id) ) play(t.document, "talk").catch(() => null);
+}
+
+/** Sit, kneel, look about or stand up: a small window for whoever may move the token. */
+export async function pose(tokenDoc) {
+  tokenDoc = tokenDoc?.document ?? tokenDoc;
+  const name = tokenDoc?.flags?.[MOD]?.sprite, down = !!tokenDoc?.flags?.[MOD]?.act?.hold;
+  const can = ["sit", "kneel", "search", "talk"].filter(a => SR.hasAct(name, a));
+  if ( !can.length ) return null;
+  const buttons = [...can.map(a => ({action: a, label: SR.ACT_LABELS[a]})), ...(down ? [{action: "rise", label: "Stand up"}] : []), {action: "cancel", label: "Cancel"}];
+  const a = await foundry.applications.api.DialogV2.wait({window: {title: `What ${tokenDoc.name} does`}, classes: ["wodx-dialog"], rejectClose: false,
+    content: "<p>The figure on the map does it for everyone to see. One that sits or kneels stays so until it stands up or walks off.</p>", buttons});
+  if ( !a || a === "cancel" ) return null;
+  if ( a === "rise" ) return rise(tokenDoc);
+  if ( down ) await rise(tokenDoc);
+  return play(tokenDoc, a);
 }
 
 /** Harm that names an attacker but came without an attack roll just before (an older Combat, harm applied by hand) still plays the attack. */
@@ -221,6 +260,9 @@ export function startSprites() {
   Hooks.on("wodxAttackRolled", onAttack);
   Hooks.on("wodxPowerShown", onPower);
   Hooks.on("updateActor", onActorUpdate);
+  Hooks.on("wodxFed", onFed);
+  Hooks.on("wodxFormChanged", onForm);
+  Hooks.on("createChatMessage", onSpoken);
   loadOwn();
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
     // whoever lay fallen or dead when the scene was last seen still lies there
@@ -260,10 +302,18 @@ export async function pick(tokenDoc) {
 }
 
 export function addHudButton(hud, html) {
-  if ( !game.user?.isGM ) return;
   const el = html instanceof HTMLElement ? html : html?.[0];
   const col = el?.querySelector?.(".col.right") ?? el;
   const doc = hud?.object?.document ?? hud?.document;
+  // what the figure does: for whoever may move the token, when it is a sprite that knows a pose
+  if ( col && doc?.isOwner && on() && SR.hasAct(doc.flags?.[MOD]?.sprite, "sit") && !col.querySelector(".wodx-sprite-pose") ) {
+    const p = document.createElement("button");
+    p.type = "button"; p.className = "control-icon wodx-sprite-pose"; p.dataset.tooltip = "Sit, kneel, look about"; p.setAttribute("aria-label", "Sit, kneel, look about");
+    p.innerHTML = '<i class="fa-solid fa-chair"></i>';
+    p.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); pose(doc); });
+    col.append(p);
+  }
+  if ( !game.user?.isGM ) return;
   if ( !col || !doc || col.querySelector(".wodx-sprite-pick") ) return;
   const b = document.createElement("button");
   b.type = "button"; b.className = "control-icon wodx-sprite-pick"; b.dataset.tooltip = "Sprite token"; b.setAttribute("aria-label", "Sprite token");
@@ -319,4 +369,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {give, clear, pick, play, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(id), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(id), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};

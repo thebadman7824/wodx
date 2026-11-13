@@ -197,6 +197,7 @@ W={ # name: (carry, spec). carry: up (blade up at the side), pole (upright), low
  'assault':('low',[('c',-9,-3,1.5,1.1,'black'),('c',-3,17,1.2,.8,'black'),('c',4,4.1,1.0,.9,'black',0,5.5),('c',-1,-.9,.9,.8,'black',0,2.8),('c',13,13.1,.5,.5,'black',0,-2)]),
  'gatling':('low',[('c',-4,16,2.4,2.4,'brass'),('c',-8,-4,1.4,1.4,'iron'),('x',2,5,1.0,'dwood')]),'launcher':('low',[('c',-8,14,1.9,1.9,'green'),('c',0,.1,.9,.8,'black',0,3)]),
  'flamer':('low',[('c',-6,12,1.4,1.0,'iron'),('b',-7,2.6,'red'),('b',13,1.0,'flame')]),'laser':('low',[('c',-5,12,1.3,1.0,'chrome'),('b',12.5,.9,'red')]),
+ 'torch':('up',[('c',-2.5,11,.8,.9,'dwood'),('b',12.2,1.9,'flame'),('b',14.4,1.1,'flame')]),
  'rock':('fist',[('b',2.4,1.6,'stone')]),'grenade':('fist',[('b',2.6,1.7,'green'),('b',.8,.7,'iron')]),'dynamite':('up',[('c',0,6,1.0,1.0,'red'),('h',-99,0,0,'cord')]),'bottle':('up',[('c',0,5,1.3,1.3,'glass'),('c',5,7.5,.6,.6,'glass'),('b',8.4,.9,'flame')]),
  'pipebomb':('up',[('c',0,6,1.1,1.1,'iron'),('x',0,1.3,.5,'iron'),('x',6,1.3,.5,'iron')]),'flashbang':('fist',[('c',1,4.5,1.2,1.2,'iron')]),'cracker':('fist',[('c',1,4,.6,.6,'red')]),
  'knuckles':('fist',[('x',1.2,1.4,.7,'brass')]),'katar':('fist',[('x',.5,1.8,.6,'iron'),('c',1.5,9,1.3,.4,'steel')]),'claws':('fist',[('c',1.5,6,.5,.3,'steel',-1.4,-1.8),('c',1.5,6.5,.5,.3,'steel'),('c',1.5,6,.5,.3,'steel',1.4,1.8)]),

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.14.0 (more moves for sprite tokens: a figure sits or kneels and stays so until it stands up or walks off, looks about, speaks under a small speech mark when its character says a line, leans in to feed, and blurs when it changes form; it climbs, swims, flies and rides with a sheet of its own for each; a button on the token for whoever may move it; a torch is carried lit; first versions made from the walk; not deployed)
 - 0.13.3 (fix: a figure whose health track is filled by hand, on the sheet or by a macro, now falls and stays down too, not only one harmed from a damage card; found on the testbed; not deployed)
 - 0.13.2 (fix: the Figure button on a token's sheet now opens the character's own figure, so a kept figure reaches the batch; found on the testbed; not deployed)
 - 0.13.1 (the batch draws each character as itself: only armour and gear count as worn, teeth and claws are not carried, a thing the Library does not list is drawn as the nearest thing it does, a character with no portrait look gets the skin and hair its portrait would start from, one with nothing on is dressed plainly for the chronicle's year, the weapon is carried in the walk and its move comes first; found on the testbed; not deployed)

@@ -78,20 +78,30 @@ export const ACT_TOTAL = ACT_MS.reduce((a, b) => a + b, 0);
 /* Besides its attacks, every sprite can take a blow, dodge, fall and die (B2588): those sheets are made from its walk. */
 export const REACTS = ["hit", "dodge", "fall", "die"];
 /** Moves whose last frame stays on the map until the figure is helped up. */
-export const HOLD = ["fall", "die"];
+export const HOLD = ["fall", "die", "sit", "kneel"];
+/* Things a figure does that are not blows (B2610): it sits or kneels and stays so, looks about, speaks, feeds, changes form. Made from its walk. */
+export const POSES = ["sit", "kneel", "search", "talk", "feed", "shift"];
+/** Poses a figure leaves by itself as soon as it walks off. */
+export const STAY = ["sit", "kneel"];
+const OWN_MOVES = [...REACTS, ...POSES];
 export const ACTS = {
-  "kindred-elder-1888": ["claw", "cast", ...REACTS],
-  "garou-homid": ["claw", ...REACTS],
-  "garou-crinos": ["claw", ...REACTS],
-  "garou-lupus": ["bite", ...REACTS],
-  "townsman-1888": ["claw", "shot", ...REACTS],
-  "lady-1888": ["thrust", ...REACTS]
+  "kindred-elder-1888": ["claw", "cast", ...OWN_MOVES],
+  "garou-homid": ["claw", ...OWN_MOVES],
+  "garou-crinos": ["claw", ...OWN_MOVES],
+  "garou-lupus": ["bite", ...OWN_MOVES],
+  "townsman-1888": ["claw", "shot", ...OWN_MOVES],
+  "lady-1888": ["thrust", ...OWN_MOVES]
 };
 export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing",
-  hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die"};
+  hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die",
+  sit: "Sit down", kneel: "Kneel", search: "Look about", talk: "Speak", feed: "Feed", shift: "Change form"};
+/** How much longer than a blow a move takes: looking about and feeding are slow, speech and a change of form unhurried. */
+export const ACT_SLOW = {search: 2.6, feed: 2.2, talk: 1.8, shift: 1.7, sit: 1.2, kneel: 1.2};
 export const actPath = (name, act) => `${stem(name)}.${act}.png${stamp(name)}`;
 /** The move a sprite plays: the one asked for if it knows it, else its first. Null when it knows none. */
-export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l.find(m => !REACTS.includes(m)) ?? null); };
+export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l.find(m => !OWN_MOVES.includes(m)) ?? null); };
+/** A move that is never swapped for another: a reaction or a pose. */
+export const isOwnMove = act => OWN_MOVES.includes(act);
 /** A move the sprite must really have (a reaction is never swapped for an attack). */
 export const hasAct = (name, act) => (ACTS[name] ?? []).includes(act);
 /**
@@ -104,21 +114,24 @@ export function reactFor(condition, level = 0) {
   return "hit";
 }
 /* Ways of going (B2588): a sheet like the walk, for running and for going low. */
-export const GAITS = ["run", "sneak"];
+export const GAITS = ["run", "sneak", "climb", "swim", "fly", "ride"];
 export const GAIT = Object.fromEntries(Object.keys(ACTS).map(k => [k, [...GAITS]]));
 /** The sheet a moving figure uses: low when it crawls or sneaks, running when it covers a long stretch at once, else its walk (null). */
-export function gaitFor(name, {action = "walk", squares = 0} = {}) {
+export function gaitFor(name, {action = "walk", squares = 0, riding = false} = {}) {
   const has = GAIT[name] ?? [];
+  // in the saddle the mount does the going; then the way the token itself is moved (B2611)
+  if ( riding && has.includes("ride") ) return "ride";
+  if ( ["climb", "swim", "fly"].includes(action) ) return has.includes(action) ? action : null;
   if ( action === "crawl" && has.includes("sneak") ) return "sneak";
   if ( (action === "walk" || !action) && squares > RUN_SQUARES && has.includes("run") ) return "run";
   return null;
 }
 export const RUN_SQUARES = 6;
 /** The frame of an attack so many thousandths of a second after it began; null once it is over. */
-export function actFrame(elapsed) {
+export function actFrame(elapsed, act = null) {
   if ( !(elapsed >= 0) ) return 0;
-  let t = 0;
-  for ( let i = 0; i < ACT_FRAMES; i++ ) { t += ACT_MS[i]; if ( elapsed < t ) return i; }
+  let t = 0; const slow = ACT_SLOW[act] ?? 1;
+  for ( let i = 0; i < ACT_FRAMES; i++ ) { t += ACT_MS[i] * slow; if ( elapsed < t ) return i; }
   return null;
 }
 /** The facing that looks from one place toward another; the side wins a dead diagonal. */

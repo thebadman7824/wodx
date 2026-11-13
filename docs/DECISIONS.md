@@ -113,6 +113,7 @@ Next free block: B2660
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 | B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
+| B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
 | B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
@@ -3382,6 +3383,18 @@ Reverse: empty LOCAL in data/lifepath-drill.mjs.
 ## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
 A person from the past made into an NPC is named by the culture of the region where that part of life happened.
 Reverse: drop the culture argument in makePeople.
+
+## B2610. Sprites sit, kneel, look about, speak, feed and change form (2026-11-13, Ben's ask)
+Six more sheets for every sprite, made from its walk like the reactions (tools/sprites/proto_attacks.py, pose): sitting and kneeling fold the legs and stay until the figure stands up or walks off; looking about stoops and turns; speaking nods under a small speech mark; feeding leans in with a flush of red; a change of form blurs white. Slow moves take longer over the same six frames (ACT_SLOW). They are a first version made from the standing frame, like the run and the crouch; true drawn poses are open.
+Reverse: drop POSES from sprite-rules.mjs; the sheets are harmless without it.
+
+## B2611. Sprites climb, swim, fly and ride (2026-11-13, Ben's ask)
+Four more ways of going, each a sheet like the walk: climbing shows the back, hand over hand; swimming shows head and shoulders above a line of water; flying lifts the figure off its shadow; in the saddle the legs fold. The token's own way of moving picks climb, swim and fly; WoDX Interactables says who is in a saddle. A character holding a torch is drawn carrying it lit (a new piece in the rig).
+Reverse: take the four names out of GAITS in sprite-rules.mjs.
+
+## B2612. The new moves play by themselves, and from the token (2026-11-13, Ben's ask)
+Feeding (wodxFed) plays the feeding move toward the vessel; a change of form (wodxFormChanged) plays the blur; a line spoken in character from a token plays the speech mark. Whoever may move a sprite token has a button on it for sitting, kneeling, looking about and standing up. One who sits or kneels still takes a blow and still falls, and healing does not stand them up; only a fall or a death is undone by healing.
+Reverse: remove the three Hooks.on lines and the pose button in sprites.mjs.
 
 ## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
 A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
