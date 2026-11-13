@@ -1,5 +1,5 @@
 # The Great War, 1914 to 1918. year[-month]|kind|lines|region|place|tags|title|text
-1914-6|H|mor|EU|Sarajevo|terror,death|Sarajevo|A Bosnian Serb student shoots Archduke Franz Ferdinand and his wife Sophie in Sarajevo after their driver takes a wrong turn.
+1914-6|H|mor|EU|Sarajevo|terror,death|Sarajevo|In Sarajevo a young Bosnian Serb nationalist kills the heir to the Austrian throne, Franz Ferdinand, and his wife Sophie when their car stops on a side street.
 1914-6|H|mor|MO|Konopiste|death,crown|Konopiste falls silent|The archduke's estate at Konopiste in Bohemia, with its rose garden and hunting trophies, is left without a master.
 1914-7|H|mor|EU|Vienna|war,law|The ultimatum to Serbia|Austria-Hungary sends Serbia demands written to be refused, and declares war when they are not all met.
 1914-7|H|mor|EU|Belgrade|war,siege|Belgrade shelled|Austrian monitors on the Danube shell Belgrade the night after war is declared.

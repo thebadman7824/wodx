@@ -3,6 +3,10 @@
 - `ldb-check.mjs`: opens every LevelDB store in a world folder (`data/*` and `packs/*`), parses each record as JSON and prints counts by document type. Needs `npm install classic-level@1.4.1`. Run it on a copy, never on a live world: opening a store compacts it.
   `node ldb-check.mjs <world-folder>`
 - `quality-check.sh`: the automatic part of the quality gate (parse, module.json, imports, unit tests, the harness, UI fit). `bash tools/quality-check.sh`. Set `FOUNDRY_CSS` to Foundry's `public/css/foundry2.css`; on Ben's PC it is found on G: without it.
+- How work reaches main (decision blocks, fragments, small PRs, touched gates, book checks): docs/WORKFLOW.md.
+- `release/merge-stamp.mjs`: stamps module versions, changelogs, the module table and decisions from changes/ just before a merge.
+- `decisions/claim.mjs`: claims a thread's block of decision numbers in the shared registry.
+- `books/books.mjs`: book pages, word search and the 8-word overlap check against the book texts in the project files folder.
 - `release/`: release checks for the Linux live server: the letter-case path test and the build stamp (see release/README.md).
 - `harness/`: the mock-Foundry tests. `cd tools/harness`, `npm install`, then `node --test *.test.mjs`. The UI fit check is `node ui-fit.mjs <foundry2.css> [screenshot folder]`.
 

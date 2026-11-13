@@ -6,6 +6,17 @@
  * before wounds). A face lists its features in S.features.
  */
 import {FEATURES, H} from "./face64-rules.mjs";
+import "./face64-general.mjs";
+import "./face64-kindred.mjs";
+import "./face64-garou.mjs";
+import "./face64-fera.mjs";
+import "./face64-mage.mjs";
+import "./face64-wraith.mjs";
+import "./face64-changeling.mjs";
+import "./face64-hunter.mjs";
+import "./face64-demon.mjs";
+import "./face64-mummy.mjs";
+import "./face64-skins.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -190,51 +201,79 @@ def("a-warpaint", "all", "Paint", "Face paint of a people", {skin(c) { const col
 
 /* ---------------- Which features a face has ---------------- */
 /** Groups any face of the line may roll by seed; every other group (a clan, kith, tribe, house) needs the sheet to name it. */
-const GENERAL = new Set(["all", "Nosferatu", "Tribes", "Rank", "Paradox", "Resonance", "Shadow", "Stygian", "Hekau", "Rising", "Orders", "Visage", "Torment", "Yin", "Yang", "Bone Flowers", "Jade", "Scars", "Marks", "Jewellery", "Gear", "Headwear", "Age", "Paint"]);
+const GENERAL = new Set(["all", "Nosferatu", "Tribes", "Rank", "Paradox", "Resonance", "Shadow", "Stygian", "Hekau", "Rising", "Orders", "Visage", "Torment", "Yin", "Yang", "Bone Flowers", "Jade", "Scars", "Marks", "Jewellery", "Gear", "Headwear", "Age", "Paint", "Tattoos", "Hair", "Beard", "Health"]);
 /** Never rolled by seed, only ticked: spectacles belong to some eras and not others. */
 const TICK_ONLY = new Set(["a-spectacles"]);
-const ONE_OF = new Set(["Deathmark", "Headwear", "Metis"]);
+const ONE_OF = new Set(["Deathmark", "Headwear", "Metis", "Visage Skin"]);
 /** Lines whose named group is the whole look (a kith's mien, a breed's): always shown when the sheet names it. */
 const WHOLE = new Set(["changeling", "fera"]);
 const norm = s => String(s ?? "").toLowerCase();
+/** A group whose name sits inside a longer one: a True Brujah is not a Brujah. */
+const SHADOWED = {brujah: ["true brujah"], seelie: ["unseelie"]};
+/** Other names a sheet may give a group: a house by its old name. */
+const ALIASES = {devils: ["namaru"], scourges: ["asharu"], malefactors: ["annunaki"], fiends: ["neberu"], defilers: ["lammasu"], devourers: ["rabisu"], slayers: ["halaku"]};
 /** Does the sheet's text (clan, kith, tribe, tradition and so on) name this group? */
 export function groupMatches(group, text) {
   const g = norm(group), t = norm(text);
   if ( !g || !t ) return false;
+  if ( (ALIASES[g] ?? []).some(a => t.includes(a)) ) return true;
+  if ( (SHADOWED[g] ?? []).some(longer => t.includes(longer)) && !t.replaceAll(SHADOWED[g].find(l => t.includes(l)), "").includes(g) ) return false;
   const words = g.replace(/^(the|followers of|children of|harbingers of)\s+/, "").split(/\s+/);
   return t.includes(g) || words.every(w => w.length > 2 && t.includes(w.replace(/s$/, "")));
 }
 /** Features a line may show at all: its own, the Kindred's for Nosferatu, anyone's, and the shifters' when the sheet names them. */
 export function featuresFor(line, text = "") {
   return Object.values(FEATURES).filter(f => f.line === line || f.line === "all" || (line === "nosferatu" && f.line === "kindred")
-    || (f.line === "fera" && groupMatches(f.group, text)));
+    || (f.line === "fera" && (f.group === "all" ? feraNamed(text) : groupMatches(f.group, text))));
+}
+/** Does the sheet name any of the other Changing Breeds? Their shared features then show too. */
+function feraNamed(text) {
+  return [...new Set(Object.values(FEATURES).filter(f => f.line === "fera" && f.group !== "all").map(f => f.group))].some(g => groupMatches(g, text));
+}
+/** The kith and breed looks drawn here are each the whole look: shown whenever the sheet names the group. */
+for ( const f of Object.values(FEATURES) ) if ( WHOLE.has(f.line) && !("core" in f) ) f.core = true;
+/** Clans whose strange flesh is the whole point always show it. */
+for ( const id of ["v-gargoyle", "v-samedi", "v-harbinger", "v-cappadocian"] ) if ( FEATURES[id] ) FEATURES[id].core = true;
+/** Pick up to n features from list in seeded order, one per slot. */
+function take(r, list, n, used, out) {
+  const order = list.map(f => [r.next(), f]).sort((a, b) => a[0] - b[0]).map(p => p[1]);
+  let got = 0;
+  for ( const f of order ) {
+    if ( got >= n ) break;
+    if ( f.slot && used.has(f.slot) ) continue;
+    if ( f.slot ) used.add(f.slot);
+    out.push(f.id); got++;
+  }
 }
 /**
- * The features a face shows when the Storyteller has ticked none: rolled from the seed. Features of a group the sheet
- * names (a clan, a kith, a house) come often; a line's general marks now and then; everyday marks seldom, at most two;
- * a wraith always bears one deathmark and a metis one deformity; a kith or breed shows whole; one headwear at most. A ghoul's flush needs the sheet to say ghoul.
+ * The features a face shows when the Storyteller has ticked none: rolled from the seed, so that two faces seldom look
+ * alike (Ben, 13 November 2026). A kith's or breed's whole look (and a Gargoyle's stone, a Samedi's rot) always shows
+ * when the sheet names it; then two or three of the named group's own features (a clan, tribe, kith, house), one or two
+ * of the line's own, and up to two everyday marks; never two in one slot (two things on one cheek); a wraith always bears one deathmark and a metis one
+ * deformity; one headwear at most, now and then. Form and state features of a named or general group are listed and
+ * show only while their form is on. Objects of one era (spectacles, sunglasses) and a ghoul's flush are only ticked,
+ * the flush also rolled when the sheet says ghoul.
  */
 export function rollFeatures(seed, line, text = "") {
-  const r = H.rng(H.seedOf(`${seed}|features`)), out = [], seen = new Set();
-  const pool = featuresFor(line, text);
-  let everyday = 0;
-  for ( const f of pool ) {
-    if ( ONE_OF.has(f.group) ) continue;
-    const named = groupMatches(f.group, text) || (f.id === "a-ghoul" && /ghoul/i.test(text));
-    if ( f.id === "a-ghoul" && !named ) continue;
-    if ( TICK_ONLY.has(f.id) ) continue;
-    const general = GENERAL.has(f.group) && f.line !== "all";
-    const chance = f.state ? (named || general ? 1 : 0) : named ? (WHOLE.has(f.line) || f.id === "a-ghoul" ? 1 : 0.6) : general ? 0.15 : f.line === "all" ? 0.06 : 0;
-    if ( f.line === "all" && !named && everyday >= 2 ) continue;
-    if ( r.next() < chance ) { out.push(f.id); if ( f.line === "all" && !named ) everyday++; }
-  }
+  const r = H.rng(H.seedOf(`${seed}|features`)), out = [], used = new Set();
+  const pool = featuresFor(line, text).filter(f => !TICK_ONLY.has(f.id) && !f.tick && !ONE_OF.has(f.group));
+  const named = f => groupMatches(f.group, text);
+  if ( /ghoul/i.test(text) && FEATURES["a-ghoul"] ) out.push("a-ghoul");
+  const plain = pool.filter(f => f.id !== "a-ghoul");
+  for ( const f of plain ) if ( f.core && named(f) ) { out.push(f.id); if ( f.slot ) used.add(f.slot); }
+  for ( const f of plain ) if ( f.state && !f.core && (named(f) || (GENERAL.has(f.group) && f.line !== "all")) ) out.push(f.id);
+  const loose = plain.filter(f => !f.core && !f.state);
+  take(r, loose.filter(f => f.line !== "all" && named(f)), 2 + Math.floor(r.next() * 2), used, out);
+  take(r, loose.filter(f => f.line !== "all" && !named(f) && GENERAL.has(f.group)), 1 + Math.floor(r.next() * 2), used, out);
+  take(r, loose.filter(f => f.line === "all"), Math.floor(r.next() * 3), used, out);
   for ( const g of ONE_OF ) {
-    const opts = pool.filter(f => f.group === g);
+    const opts = featuresFor(line, text).filter(f => f.group === g && !f.tick);
     if ( !opts.length ) continue;
     if ( g === "Deathmark" && line === "wraith" ) out.push(r.pick(opts).id);
     else if ( g === "Metis" && groupMatches("Metis", text) ) out.push(r.pick(opts).id);
-    else if ( g === "Headwear" && r.next() < 0.12 ) out.push(r.pick(opts).id);
+    else if ( g === "Visage Skin" && line === "demon" && r.next() < 0.5 ) out.push(r.pick(opts).id);   // half of demons wear one in the visage
+    else if ( g === "Headwear" && r.next() < 0.12 ) { const h = opts.filter(f => !f.slot || !used.has(f.slot)); if ( h.length ) out.push(r.pick(h).id); }
   }
-  return out.filter(id => !seen.has(id) && seen.add(id));
+  return [...new Set(out)];
 }
 export {FEATURES};

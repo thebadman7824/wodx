@@ -209,9 +209,9 @@ test("a Nosferatu's great ears grow from the side of the head, joined to it, not
   let checked = 0;
   for ( let i = 0; i < 30; i++ ) {
     const S = P.roll(`ear${i}`, "nosferatu");
-    if ( S.ears === "plain" ) continue;
+    if ( !["bat", "long", "torn", "fin"].includes(S.ears) ) continue;
     checked++;
-    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "plain"}).rgba;
+    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "none"}).rgba;
     for ( const sd of [-1, 1] ) for ( const y of [30, 33, 36] ) {
       // just past the head's edge, three pixels in a row are ear, with no gap of background between
       const edge = 32 + sd * Math.round(P.H.headHw(y, [11, 31, 43, S.chin, S.w, S.jw, S.cw]));
@@ -219,6 +219,16 @@ test("a Nosferatu's great ears grow from the side of the head, joined to it, not
     }
   }
   assert.ok(checked >= 10);
+});
+
+test("Nosferatu ears vary: plain, stub, torn, drooping, finned, bare holes and odd pairs besides the bat's ears, each its own shape", () => {
+  const seen = new Set(), base = P.roll("earkinds", "nosferatu"), out = new Map();
+  for ( let i = 0; i < 80; i++ ) seen.add(P.roll(`ek${i}`, "nosferatu").ears);
+  for ( const k of ["bat", "long", "plain", "torn", "droop", "stub", "fin", "holes", "uneven"] ) {
+    assert.ok(seen.has(k), `${k} is rolled`);
+    const key = Buffer.from(P.drawFace({...base, ears: k}).rgba).toString("base64");
+    assert.ok(!out.has(key), `${k} draws unlike ${out.get(key)}`); out.set(key, k);
+  }
 });
 
 test("pointed ears grow from the side of the head at eye height, and a hood or veil hides every kind of ear", () => {
@@ -246,4 +256,40 @@ test("horns break through the brow from a swelling of skin, not out of the hair"
     for ( let y = 18; y < 22; y++ ) for ( let x = 18; x < 46; x++ ) if ( px(horned, x, y).join() !== px(bare, x, y).join() ) changed.push([x, y]);
     assert.ok(changed.length >= 6, `${id} ${S.seed}: the brow under each horn is changed (${changed.length})`);
   }
+});
+
+test("every feature shows on a face, and no two features of one line look the same", () => {
+  const opts = f => ({state: f.state ? {[f.state]: true} : {}, expr: f.state === "tears" ? "sorrow" : "neutral", sees: {fae: true, sigil: true}});
+  const facesOf = line => { const l = line === "all" || line === "fera" ? "mortal" : line; return [{...P.roll("u1", l), style: "bald", beard: ""}, {...P.roll("u2", l), style: "long"}, {...P.roll("u3", l), style: "short", beard: "full"}]; };
+  const look = (faces, f, ids) => faces.map(S => Buffer.from(P.drawFace({...S, features: ids}, opts(f)).rgba).toString("base64")).join("|");
+  const byLine = {};
+  for ( const f of Object.values(F.FEATURES) ) (byLine[f.line] ??= []).push(f);
+  for ( const [line, list] of Object.entries(byLine) ) {
+    const faces = facesOf(line), seen = new Map();
+    for ( const f of list ) {
+      const l = look(faces, f, [f.id]);
+      assert.notEqual(l, look(faces, f, []), `${f.id} shows on no face`);
+      assert.ok(!seen.has(l), `${f.id} looks the same as ${seen.get(l)}`);
+      seen.set(l, f.id);
+    }
+  }
+});
+
+test("rolled faces differ: of 300 mortals with rolled features, no two faces are the same", () => {
+  const seen = new Set();
+  for ( let i = 0; i < 300; i++ ) { const S = {...P.roll(`d${i}`, "mortal"), features: F.rollFeatures(`d${i}`, "mortal")}; seen.add(Buffer.from(P.drawFace(S).rgba).toString("base64")); }
+  assert.equal(seen.size, 300);
+});
+
+test("each line has 50 features of its own and each clan, tribe, kith, creed and the like 15, the strange ones 25", () => {
+  const n = {};
+  for ( const f of Object.values(F.FEATURES) ) n[`${f.line}|${f.group}`] = (n[`${f.line}|${f.group}`] ?? 0) + 1;
+  assert.ok(Object.values(F.FEATURES).filter(f => f.line === "all").length >= 100, "100 for anyone");
+  for ( const line of ["kindred", "werewolf", "fera", "mage", "wraith", "changeling", "hunter", "demon", "mummy", "kuei-jin"] ) assert.ok((n[`${line}|all`] ?? 0) >= 46, `${line}: ${n[`${line}|all`]} of its own`);
+  for ( const [k, c] of Object.entries(n) ) {
+    const [line, group] = k.split("|");
+    if ( line === "all" || group === "all" || c < 4 || group === "Deathmark" ) continue;
+    assert.ok(c >= 15, `${k}: ${c}`);
+  }
+  for ( const g of ["nosferatu|Nosferatu", "kindred|Gargoyle", "kindred|Samedi", "werewolf|Metis"] ) assert.ok((n[g] ?? 0) >= 25, `${g}: ${n[g]}`);
 });

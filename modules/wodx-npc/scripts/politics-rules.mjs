@@ -302,57 +302,60 @@ export const POLITIES = {
       {key: "wu", title: "Voice of a wu", seats: 5, fill: "clan"}
     ],
     law: ["straying from one's Dharma before the court", "harming the court's mortals", "dealing with the Kin-jin", "shaming the Ancestor"],
-    notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). Used by default for a Kindred faction in China, Japan, Korea, Southeast Asia or the Malay world; the Storyteller may pick it anywhere else."
+    notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). Korea has courts of its own, and the courts of Southeast Asia and the Malay world are the Golden Courts, little trusted by China (KotE pdf 143-151, 165). Used by default for a Kindred faction in China, Japan, Korea, Southeast Asia or the Malay world; the Storyteller may pick it anywhere else."
   },
-  // NPC 0.62.0 (B2960 to B2962): the Kindred courts of Africa and of the lands of Islam. Offices, law and titles are
-  // WoDX's own words; the book pass over Kindred of the Ebony Kingdom and the Ashirra pages is queued for the PC
-  // (jobs/world-courts-book-check-2026-11-13.md) and may rename seats.
+  // NPC 0.62.0 (B2960 to B2962): the Kindred courts of Africa and of the lands of Islam. B3090: seats
+  // renamed after the PC book pass (global-world/world-courts-book-check-2026-11-13.md); the keys stay, so seats
+  // already held keep their holders.
   "laibon-council": {
     label: "A council of the Laibon", line: "vampire", kinds: ["kindred"], from: null, to: null,
-    body: "The council", rank: "Status", blocs: "clan", blocWord: "legacies", gathering: {name: "council", every: 4, meets: "The council of the land gathers."},
+    body: "The kholo", rank: "Status", blocs: "clan", blocWord: "legacies", gathering: {name: "kholo", every: 4, meets: "The kholo gathers before the magaji."},
     offices: [
-      {key: "elder", title: "Elder of the land", seats: 1, fill: "challenge", top: true},
-      {key: "lawspeaker", title: "Speaker of the old law", seats: 1, fill: "appoint", judge: true},
+      {key: "elder", title: "Magaji of the domain", seats: 1, fill: "challenge", top: true},
+      {key: "lawspeaker", title: "Keeper of the Tenets", seats: 1, fill: "appoint", judge: true},
       {key: "legacy", title: "Voice of a legacy", seats: 5, fill: "clan"},
       {key: "warden", title: "Warden of the roads", seats: 1, fill: "appoint"},
       {key: "lorekeeper", title: "Keeper of the tales", seats: 1, fill: "appoint"}
     ],
-    law: ["feeding where the elder forbids it", "harm to a guest given shelter", "bringing the quarrels of foreign Kindred onto the land", "an Embrace the legacy will not own", "shaming the elders before the living"],
-    titles: {elder: ["Elder of the land", "Chief", "Mother of the land", "Father of the land"]},
-    notes: "The Kindred of Africa south of the Sahara follow their legacies rather than the sects of Europe. A council of elders holds a land together, each legacy speaks for its own, and foreign Kindred are guests at best (Kindred of the Ebony Kingdom). Used by default for a Kindred faction in West, East, Central or Southern Africa.",
+    law: ["feeding where the magaji forbids it", "harm to a guest given shelter", "bringing the quarrels of foreign Kindred onto the land", "an Embrace the legacy will not own", "shaming the elders before the living"],
+    titles: {elder: ["Magaji of the domain", "Magaji", "Lord of the domain"]},
+    notes: "The Kindred of Africa south of the Sahara follow their legacies rather than the sects of Europe. A domain has a lord, the magaji, advised by the kholo, the eldest Laibon of each legacy there; the law is the Tenets. The Guruhi most often lead, and the Osebo serve as scouts and warriors, often as guests in Guruhi domains (Kindred of the Ebony Kingdom pdf 13-14, 17, 20-21). The sheet's clan field holds the legacy. Used by default for a Kindred faction in West, East, Central or Southern Africa.",
     eras: {modern: "From the nineteenth century foreign Kindred follow the colonial powers into the port cities, and the council must deal with them or drive them out."}
   },
   ashirra: {
     label: "A court of the Ashirra", line: "vampire", kinds: ["kindred"], from: null, to: null,
-    body: "The court", rank: "Status", blocs: "clan", gathering: {name: "majlis", every: 2, meets: "The Amir sits in majlis."},
+    body: "The court", rank: "Status", blocs: "clan", gathering: {name: "majlis", every: 2, meets: "The Sultan and the Imam sit in majlis."},
     offices: [
-      {key: "amir", title: "Amir", seats: 1, fill: "challenge", top: true},
+      {key: "amir", title: "Sultan", seats: 1, fill: "challenge", top: true},
+      {key: "imam", title: "Imam", seats: 1, fill: "backing"},
       {key: "qadi", title: "Qadi", seats: 1, fill: "appoint", judge: true},
-      {key: "wazir", title: "Wazir", seats: 1, fill: "appoint"},
+      {key: "wazir", title: "Voice of the ulama", seats: 2, fill: "appoint"},
       {key: "voice", title: "Voice of a clan", seats: 5, fill: "clan"},
       {key: "muhtasib", title: "Muhtasib of the night", seats: 1, fill: "appoint"},
       {key: "host", title: "Keeper of the guest house", seats: 1, fill: "appoint"}
     ],
-    law: ["a broken oath sworn before God", "harm to a guest under one's roof", "hunting in another's quarter", "an Embrace without the Amir's leave", "aid to the Sabbat"],
-    titles: {amir: ["Amir", "Sultan", "Shaykh", "Malik"]},
-    notes: "The Kindred of the lands of Islam keep a sect of their own, the Ashirra, open to Kindred of any clan who hold to the faith; a city's Ashirra gather around an Amir in a majlis, and hospitality is law. Used by default for a Kindred faction in the Maghreb, Egypt, Arabia, the Levant, Persia or Anatolia.",
-    eras: {modern: "In the modern nights the Ashirra deal with the Camarilla as equals and keep the Sabbat out where they can."}
+    law: ["a broken oath sworn before God", "harm to a guest under one's roof", "hunting in another's quarter", "an Embrace without the Sultan's leave", "aid to the Sabbat"],
+    titles: {amir: ["Sultan", "Amir", "Malik"]},
+    notes: "The Kindred of the lands of Islam keep a sect of their own, the Ashirra, open to Kindred of any clan who hold to the faith. A city of the faithful has two heads, a Sultan for worldly rule and an Imam for the faith, one often stronger than the other; the ulama advise the Imam, a Qadi judges and names punishments, and the court's agents make arrests (Veil of Night pdf 45-46, 50-54). In the modern nights the Ashirra are a sect of many clans beside the Camarilla and the Sabbat (V20 Lore of the Clans pdf 23). Hospitality is law. Used by default for a Kindred faction in the Maghreb, Egypt, Arabia, the Levant, Persia or Anatolia.",
+    eras: {modern: "In the modern nights the Ashirra stand apart from both the Camarilla and the Sabbat, and keep the Sabbat out where they can."}
   },
-  // NPC 0.63.0 (B2963 to B2968): the rest of the courts beyond Europe. Offices, law and titles are WoDX's own words
-  // until the PC book pass (jobs/world-courts-book-check-2026-11-13.md, items 4 to 8) names the books' own.
+  // NPC 0.63.0 (B2963 to B2968): the rest of the courts beyond Europe. Titles checked against the PC book pass
+  // (global-world/world-courts-book-check-2026-11-13.md, items 4 to 8) in B3090.
   "ravnos-court": {
     label: "A court of the Ravnos (India)", line: "vampire", kinds: ["kindred"], from: null, to: 1999,
     body: "The court", rank: "Status", blocs: "clan", gathering: {name: "gathering", every: 4, meets: "The Eldest of the land calls the court together."},
     offices: [
       {key: "eldest", title: "Eldest of the land", seats: 1, fill: "challenge", top: true},
       {key: "keeper", title: "Keeper of the duties", seats: 1, fill: "appoint", judge: true},
-      {key: "voice", title: "Voice of a clan", seats: 3, fill: "clan"},
+      {key: "brahmins", title: "Voice of the Brahmins", seats: 1, fill: "appoint"},
+      {key: "kshatriyas", title: "Voice of the Kshatriyas", seats: 1, fill: "appoint"},
+      {key: "vaisyas", title: "Voice of the Vaisyas", seats: 1, fill: "appoint"},
       {key: "watcher", title: "Watcher of the roads", seats: 1, fill: "appoint"},
       {key: "teller", title: "Teller of the old lines", seats: 1, fill: "appoint"}
     ],
     law: ["forsaking the duty of one's line", "betraying a kinsman of the blood to outsiders", "feeding on a holy one", "dealings with the Kuei-jin", "an Embrace the Eldest will not own"],
     titles: {eldest: ["Eldest of the land", "Raja of the night", "Guru"]},
-    notes: "India is the old homeland of the Ravnos, who keep their own duties by line and hold the land against the Kuei-jin to the east. Used by default for a Kindred faction in India until 1999; the clan's fall that year ends it, and a faction there keeps the court of its age after.",
+    notes: "India is the old homeland of the Ravnos and, until 1999, the greatest Kindred power in Asia. The clan is ordered by jati: the Brahmins, the Kshatriyas, who are warriors and wage the war on the Kuei-jin, the Vaisyas, who run the cities and deal with mortals, and the Chandalas below them (Clanbook Ravnos, Revised, pdf 13, 37-38, 41). Used by default for a Kindred faction in India until 1999; the clan's fall that year ends it, and a faction there keeps the court of its age after.",
     eras: {modern: "In July 1999 the eldest of the Ravnos wakes and is destroyed, and most of the clan goes mad and dies with it; few courts of the Ravnos last past that summer."}
   },
   "beast-court": {
@@ -361,14 +364,14 @@ export const POLITIES = {
     riseByChallenge: true, noKill: true,
     offices: [
       {key: "lord", title: "Lord of the court", seats: 1, fill: "challenge", top: true},
-      {key: "keeper", title: "Keeper of the mandate", seats: 1, fill: "appoint", judge: true},
+      {key: "keeper", title: "Nagah judge of the Mandates", seats: 1, fill: "appoint", judge: true},
       {key: "voice", title: "Voice of a breed", seats: 7, fill: "clan"},
       {key: "warden", title: "Warden of the borders", seats: 1, fill: "appoint"},
       {key: "ritemaster", title: "Master of the rites", seats: 1, fill: "appoint"}
     ],
     law: ["breaking the peace between the breeds", "neglecting the spirits of the land", "showing one's other shape to mortals", "serving corruption", "harming a cub of any breed"],
     titles: {lord: ["Lord of the court", "Emperor of the court", "Elder of the court"]},
-    notes: "In East and South Asia the changing breeds of the land, wolves, tigers, foxes, ravens, rats, nagas and dragons among them, sit together in Beast Courts rather than each in its own sept (Hengeyokai: Shapeshifters of the East). The tribe field on a sheet holds the breed, and each breed present has a voice. Used by default for a Garou faction in China, Japan, Korea, Southeast Asia, the Malay world, India or Tibet, and for any Garou faction whose name speaks of Hengeyokai.",
+    notes: "From upper Mongolia to the Philippines the changing breeds of the land sit together in the Beast Courts of the Emerald Mother, bound by the Mandates, rather than each in its own sept; Asian Garou of a few tribes belong, Western Garou cannot join, and the Nagah judge those who break the Mandates. The Courts do not fully count India as theirs (Hengeyokai: Shapeshifters of the East pdf 19, 21, 23, 45, 66). The tribe field on a sheet holds the breed, and each breed present has a voice. Used by default for a Garou faction in China, Japan, Korea, Southeast Asia, the Malay world or Tibet, and for any Garou faction whose name speaks of Hengeyokai.",
     eras: {modern: "Wolves from the West came with the empires and fought the courts; in the modern nights the courts and the Western tribes keep an uneasy truce."}
   },
   "bastet-land": {
@@ -376,15 +379,15 @@ export const POLITIES = {
     body: "The land", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "gathering", every: 4, meets: "The cats of the land gather at the holder's den."},
     riseByChallenge: true, noKill: true,
     offices: [
-      {key: "holder", title: "Holder of the land", seats: 1, fill: "challenge", top: true},
+      {key: "holder", title: "Holder of the Den-Realm", seats: 1, fill: "challenge", top: true},
       {key: "secrets", title: "Keeper of secrets", seats: 1, fill: "appoint", judge: true},
       {key: "voice", title: "Voice of a tribe", seats: 5, fill: "clan"},
       {key: "watcher", title: "Watcher of the borders", seats: 1, fill: "appoint"},
       {key: "teller", title: "Teller of tales", seats: 1, fill: "appoint"}
     ],
     law: ["giving away a secret without its price", "hunting in another's den-realm unbidden", "betraying the land to the Wyrm", "showing the cat to mortals", "slaying the Kinfolk of the land"],
-    titles: {holder: ["Holder of the land", "King of the land", "Queen of the land", "Lord of the land"]},
-    notes: "The werecats keep no septs. Each holds a den-realm of its own, and where several share a land the strongest holds it and the others answer as guests and kin (Bastet breedbook). The tribe field on a sheet holds the Bastet tribe, and each tribe present has a voice. Used by default for a Garou faction in Africa south of the Sahara, where few wolves are left, and for any Garou faction whose name speaks of a Bastet tribe.",
+    titles: {holder: ["Holder of the Den-Realm", "King of the land", "Queen of the land", "Lord of the land"]},
+    notes: "The werecats keep no septs. Each guards a Den-Realm, earned through a rite rather than bought at the start, and its secrets, which are their power; where several share a land the strongest holds it and the others answer as guests and kin. The Simba, the Bagheera and other tribes live in Africa, and the Balam have kept Den-Realms in Central America since long before the Europeans (Bastet breedbook pdf 27, 49-53, 70-71, 86). The tribe field on a sheet holds the Bastet tribe, and each tribe present has a voice. Used by default for a Garou faction in Africa south of the Sahara, where few wolves are left, and for any Garou faction whose name speaks of a Bastet tribe.",
     eras: {modern: "In the modern nights the lands shrink with the wild; the holders guard what is left and trade secrets with the wolves when they must."}
   },
   "wu-lung-court": {
@@ -398,7 +401,7 @@ export const POLITIES = {
     ],
     law: ["defying the order of the court", "neglecting the rites owed to the spirits", "teaching the Arts outside the proper line", "betraying the court to the Order of Reason", "shaming one's teacher"],
     titles: {master: ["Master of the mandate", "Grand Secretary", "Dragon of the court"]},
-    notes: "The Wu Lung are the mages of the Chinese court, who keep the heavens in order through rank, rite and the spirits' service. They stand apart from the Council of Nine. Used by default for a mages' faction in China or Korea that does not serve Reason. Arete stands in for standing (house rule).",
+    notes: "The Wu Lung are the mages of the Chinese court, who keep the heavens in order through rank, rite and the spirits' service. They stand apart from the Council of Nine, and the revolutions of the twentieth century nearly wipe them out (M20 pdf 223-224). Used by default for a mages' faction in China or Korea that does not serve Reason. Arete stands in for standing (house rule).",
     eras: {modern: "From 1949 the Wu Lung lose the mainland and hold on in Hong Kong, Taiwan and the Chinese of the cities abroad."}
   },
   "akashic-monastery": {
@@ -430,20 +433,20 @@ export const POLITIES = {
     eras: {}
   },
   // NPC 0.64.0 (B2970 to B2974): the Americas, the Pacific and the far north before the settlers, the Mokolé and the
-  // Nagah. WoDX's own words until the PC book pass (jobs/world-courts-book-check-2026-11-13.md, items 9 to 11).
+  // Nagah. Checked against the PC book pass (items 9 to 11) in B3090.
   "nunnehi-council": {
     label: "A council of the Nunnehi", line: "changeling", kinds: ["fae"], from: null, to: null,
-    body: "The council", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "council", every: 4, meets: "The council gathers at the old dancing ground."},
+    body: "The council", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "tribes", gathering: {name: "council", every: 4, meets: "The council gathers at the old dancing ground."},
     offices: [
       {key: "speaker", title: "Speaker of the council", seats: 1, fill: "backing", top: true},
       {key: "keeper", title: "Keeper of the old ways", seats: 1, fill: "appoint", judge: true},
-      {key: "voice", title: "Voice of a family", seats: 5, fill: "clan"},
+      {key: "voice", title: "Voice of a tribe", seats: 5, fill: "clan"},
       {key: "guardian", title: "Guardian of the dreaming places", seats: 1, fill: "appoint"},
       {key: "teller", title: "Teller of the old stories", seats: 1, fill: "appoint"}
     ],
     law: ["breaking a promise made to the land's people", "harming a dreaming place", "taking a child who was not given", "turning the people's dreams to fear", "dealings with the fae from over the sea"],
     titles: {speaker: ["Speaker of the council", "Elder of the council", "Grandparent of the council"]},
-    notes: "The changelings of the Americas and the far north are fae of the land's own peoples, the Nunnehi, and keep none of Europe's houses or courts. Their families answer to a council and to the old ways. Used by default for a fae faction in the Americas or the far north before the settlers come; afterwards a fae faction keeps the court of its age, as the Kithain arrive.",
+    notes: "The changelings of the Americas and the far north are fae of the land's own peoples, the Nunnehi, and keep none of Europe's houses or courts. Each is tied to a mortal tribe and belongs to a Camp, Summer, Winter or the Midseason Camp between, in place of a court, and gathers Medicine in place of Glamour (C20 pdf 394-401). The sheet's house field holds the tribe; the books name no council title, so the seats are WoDX's own. Used by default for a fae faction in the Americas or the far north before the settlers come; afterwards a fae faction keeps the court of its age, as the Kithain arrive.",
     eras: {modern: "The Kithain came with the ships and took the cities; the Nunnehi keep the wild places and the reservations, and deal with the newcomers warily."}
   },
   "mokole-gathering": {
@@ -459,7 +462,7 @@ export const POLITIES = {
     ],
     law: ["letting the memory of the world be lost", "fouling the waters of the land", "showing the dragon to mortals", "serving corruption", "harming a hatchling of any breed"],
     titles: {eldest: ["Eldest who remembers", "Old one of the river", "Grandparent of the waters"]},
-    notes: "The Mokolé, the dragon-kin, carry the memory of the world in their blood and keep it by water and sun. The tribe field on a sheet holds the stream, and each stream present has a voice. Used by default for a Garou faction in Australia before the settlers, where the Gumagan keep the land, and for any Garou faction whose name speaks of the Mokolé.",
+    notes: "The Mokolé, the dragon-kin, carry the memory of the world in their blood, the Mnesis, keep it by water and sun and meet as a Gathering; the streams are the Gumagan of Australia and New Guinea, the Makara of India, the Mokole-mbembe of Africa and the Americas and the Zhong Lung of East Asia (Mokolé breedbook pdf 7, 22, 25-26, 31). The tribe field on a sheet holds the stream, and each stream present has a voice. Used by default for a Garou faction in Australia before the settlers, where the Gumagan keep the land, and for any Garou faction whose name speaks of the Mokolé.",
     eras: {modern: "From 1788 the wolves come with the settlers, and the Mokolé of Australia mourn the Bunyip the Garou destroyed."}
   },
   "nagah-nest": {
@@ -473,10 +476,117 @@ export const POLITIES = {
       {key: "keeper", title: "Keeper of the hidden waters", seats: 1, fill: "appoint"}
     ],
     law: ["letting a breed's crime against Gaia go unjudged", "showing the Nagah to the other changing breeds", "showing the serpent to mortals", "serving corruption", "betraying one's nest"],
-    titles: {eldest: ["Eldest of the nest", "Elder serpent", "Keeper of the nest"]},
-    notes: "The wereserpents let the other changing breeds think them dead, and work in small nests that judge those who break faith with Gaia. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Nagah.",
+    titles: {eldest: ["Eldest of the nest", "Sesha", "Elder serpent"]},
+    notes: "The wereserpents let the other changing breeds think them dead, and work in small nests that judge those who break faith with Gaia with much freedom, each answering to a local Crown; an elder is addressed as Sesha (Nagah breedbook pdf 47, 53, 72). Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Nagah.",
     eras: {}
+  }  ,
+  // NPC 0.66.0 (B3010 to B3015): the rest of the changing breeds, the Hsien and the fae of the Pacific and Siberia.
+  // WoDX's own words until the PC book pass (jobs/breeds-hsien-book-check-2026-11-13.md).
+  "ananasi-web": {
+    label: "A web of the Ananasi", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The web", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "factions", gathering: {name: "gathering", every: 4, meets: "The web gathers in the dark at the eldest's call."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the web", seats: 1, fill: "challenge", top: true},
+      {key: "voice", title: "Voice of the Queen", seats: 1, fill: "appoint", judge: true},
+      {key: "faction", title: "Voice of a faction", seats: 3, fill: "clan"},
+      {key: "spinner", title: "Spinner of the threads", seats: 1, fill: "appoint"}
+    ],
+    law: ["defying the will of the Queen", "breaking the balance of the Triat", "showing the spider to mortals", "feeding on the innocent of the web's own land", "leaving a broken thread unmended"],
+    titles: {eldest: ["Eldest of the web", "Weaver of the web", "First of the brood"]},
+    notes: "The werespiders serve their Queen, held captive by the Wyrm, and work alone or in small webs, each faction pulling toward one of the three powers of the world. The tribe field on a sheet holds the faction, and each faction present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Ananasi.",
+    eras: {}
+  },
+  "corax-flock": {
+    label: "A flock of the Corax", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The flock", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "roosts", gathering: {name: "gathering", every: 2, meets: "The ravens gather to trade what they have seen."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the flock", seats: 1, fill: "backing", top: true},
+      {key: "keeper", title: "Keeper of the news", seats: 1, fill: "appoint", judge: true},
+      {key: "roost", title: "Voice of a roost", seats: 3, fill: "clan"},
+      {key: "eye", title: "Eye of the sun", seats: 2, fill: "appoint"}
+    ],
+    law: ["hoarding news the flock needs", "lying to the flock about what one saw", "showing the raven to mortals", "serving corruption", "leaving a fallen raven's eyes to the enemy"],
+    titles: {eldest: ["Eldest of the flock", "Old raven", "First of the wing"]},
+    notes: "The wereravens keep no septs and few laws; they fly far and trade news, and a flock gathers often and briefly. The tribe field on a sheet holds the roost a raven calls home. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Corax.",
+    eras: {}
+  },
+  "gurahl-den": {
+    label: "A den of the Gurahl", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The den", rank: "Rank", rankFrom: "rank", blocs: "tribe", gathering: {name: "gathering", every: 6, meets: "The bears wake and gather at the den."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the den", seats: 1, fill: "challenge", top: true},
+      {key: "keeper", title: "Keeper of the healing ways", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a tribe", seats: 4, fill: "clan"},
+      {key: "guardian", title: "Guardian of the mountain", seats: 1, fill: "appoint"}
+    ],
+    law: ["killing in anger what could be healed", "waking the den before its season", "showing the bear to mortals", "serving corruption", "turning away the sick who seek the den"],
+    titles: {eldest: ["Eldest of the den", "Old bear of the mountain", "Grandparent of the den"]},
+    notes: "The werebears are few, slow to anger and slow to forgive the wolves who hunted them; they heal, they sleep the winter through and they keep their dens far from the cities. The tribe field on a sheet holds the Gurahl tribe, and each tribe present has a voice. They gather seldom. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Gurahl.",
+    eras: {modern: "In the modern nights few Gurahl are left awake, and the wolves begin to ask their pardon."}
+  },
+  "ratkin-nest": {
+    label: "A nest of the Ratkin", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The nest", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "aspects", gathering: {name: "gathering", every: 2, meets: "The nest meets in the tunnels."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "king", title: "Rat King of the nest", seats: 1, fill: "challenge", top: true},
+      {key: "seer", title: "Seer of the nest", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of an aspect", seats: 4, fill: "clan"},
+      {key: "runner", title: "Runner of the tunnels", seats: 1, fill: "appoint"}
+    ],
+    law: ["leading the enemy to the nest", "breeding past what the land can feed", "showing the rat to mortals", "betraying the nest to the wolves", "leaving a nest-mate to die in a trap"],
+    titles: {king: ["Rat King of the nest", "Rat Queen of the nest", "Eldest of the tunnels"]},
+    notes: "The wererats live in the waste places of the cities and keep the numbers of the living down, as they say Gaia asked them; a nest answers to its Rat King or Rat Queen and mistrusts the wolves. The tribe field on a sheet holds the aspect, and each aspect present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Ratkin.",
+    eras: {medieval: "In the years of the plague the nests grow fast and bold.", modern: "In the modern nights the nests spread through the sewers and the slums of every great city."}
+  },
+  "rokea-shiver": {
+    label: "A shiver of the Rokea", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The shiver", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "breeds", gathering: {name: "gathering", every: 4, meets: "The sharks rise and gather in the deep water."},
+    riseByChallenge: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the deep", seats: 1, fill: "challenge", top: true},
+      {key: "speaker", title: "Speaker for the sea", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a breed", seats: 3, fill: "clan"},
+      {key: "warden", title: "Warden of the shore", seats: 1, fill: "appoint"}
+    ],
+    law: ["fouling the sea", "leading the land folk to the deep places", "showing the shark to mortals", "serving corruption", "turning on a shiver-mate in the water"],
+    titles: {eldest: ["Eldest of the deep", "Great one of the sea", "Old one of the reef"]},
+    notes: "The weresharks serve the sea, not the land, and see the wolves as strangers; a shiver gathers seldom and settles a quarrel with teeth. The tribe field on a sheet holds the breed, and each present has a voice. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Rokea. A challenge in a shiver may kill.",
+    eras: {modern: "In the modern nights the poisoned seas and the fishing fleets drive the Rokea to anger."}
+  },
+  "hsien-court": {
+    label: "A court of the Hsien", line: "changeling", kinds: ["fae"], from: null, to: null,
+    body: "The court", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "audience", every: 4, meets: "The court gives audience on the festival night."},
+    offices: [
+      {key: "magistrate", title: "Magistrate of the court", seats: 1, fill: "backing", top: true, judge: true},
+      {key: "minister", title: "Minister", seats: 2, fill: "appoint"},
+      {key: "voice", title: "Voice of a family", seats: 4, fill: "clan"},
+      {key: "keeper", title: "Keeper of the shrine", seats: 1, fill: "appoint"},
+      {key: "scribe", title: "Scribe of the court", seats: 1, fill: "appoint"}
+    ],
+    law: ["neglecting the duty owed to one's station", "shaming one's family before the court", "harming the shrine of a spirit", "teaching the mortals what they should not see", "dealings with the fae of the West"],
+    titles: {magistrate: ["Magistrate of the court", "Lord of the court", "Elder of the court"]},
+    notes: "The fae of East Asia are the Hsien, spirits who wear mortal flesh, and keep none of Europe's houses; they answer to a court of rank and duty, as the heavens do. Used by default for a fae faction in China, Japan, Korea, Southeast Asia or the Malay world.",
+    eras: {modern: "In the modern nights the courts shrink as the cities grow and the old shrines fall, and fae of the West arrive in the ports."}
+  },
+  "land-fae-circle": {
+    label: "A circle of the land's own fae", line: "changeling", kinds: ["fae"], from: null, to: null,
+    body: "The circle", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "gathering", every: 4, meets: "The circle gathers at the sacred place."},
+    offices: [
+      {key: "elder", title: "Elder of the circle", seats: 1, fill: "backing", top: true},
+      {key: "keeper", title: "Keeper of the old ways", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a family", seats: 4, fill: "clan"},
+      {key: "guardian", title: "Guardian of the sacred places", seats: 1, fill: "appoint"}
+    ],
+    law: ["breaking a promise made to the land's people", "harming a sacred place", "taking a child who was not given", "turning the people's dreams to fear", "dealings with the fae from over the sea"],
+    titles: {elder: ["Elder of the circle", "Grandparent of the circle", "Speaker of the circle"]},
+    notes: "Before the settlers come, the fae of the Pacific islands, Aotearoa and Siberia are the land's own, born of its peoples' dreams, and keep none of Europe's houses. Used by default for a fae faction there before the settlers; afterwards a fae faction keeps the court of its age.",
+    eras: {modern: "The Kithain come with the ships and the railways; the land's own fae keep to the far places."}
   }
+
 };
 export const POLITY_LIST = Object.keys(POLITIES);
 
@@ -498,7 +608,7 @@ export const REGION_COURTS = {
 /** NPC 0.63.0 (B2965, B2966): the shapeshifters' court a Garou faction keeps by region. */
 export const REGION_SHIFTERS = {
   china: "beast-court", japan: "beast-court", korea: "beast-court", "southeast-asia": "beast-court", nusantara: "beast-court",
-  india: "beast-court", "tibet-himalaya": "beast-court",
+  "tibet-himalaya": "beast-court",
   "west-africa": "bastet-land", "east-africa": "bastet-land", "central-africa": "bastet-land", "southern-africa": "bastet-land"
 };
 /** NPC 0.63.0 (B2967, B2968): the mages' body a faction that does not serve Reason keeps by region. */
@@ -515,6 +625,13 @@ const BASTET = /bastet|werecat|simba|bagheera|\bkhan\b|balam|pumonca|swara|bubas
 /** NPC 0.64.0 (B2972, B2973): the wereserpents and the dragon-kin, by name anywhere. */
 const NAGAH = /nagah|\bnagas?\b|wereserpent|\bsesha\b/i;
 const MOKOLE = /mokol|gumagan|makara|piasa|werecroc|werelizard|dragon-kin/i;
+/** NPC 0.66.0 (B3010 to B3012): the other changing breeds by name anywhere, after the Hengeyokai's own names. */
+const BREEDS = [["ananasi-web", /ananasi|werespider/i], ["corax-flock", /corax|wereraven/i], ["gurahl-den", /gurahl|werebear/i],
+  ["ratkin-nest", /ratkin|wererat/i], ["rokea-shiver", /rokea|wereshark/i]];
+/** NPC 0.66.0 (B3013): the Hsien are the fae of East and Southeast Asia. */
+export const HSIEN_LANDS = new Set(["china", "japan", "korea", "southeast-asia", "nusantara"]);
+/** NPC 0.66.0 (B3014): the land's own fae of the Pacific and Siberia before the settlers. */
+export const LAND_FAE_LANDS = new Set(["pacific-islands", "aotearoa", "siberia"]);
 /**
  * NPC 0.64.0 (B2970): the ways of life of the Americas, the Pacific and the far north before the settlers
  * (wodx-chronicle world-rules SPHERES). Kindred keep no court there; a fae faction keeps a council of the Nunnehi in
@@ -546,6 +663,7 @@ export const DEFAULTS = {
     if ( MOKOLE.test(said) ) return "mokole-gathering";
     if ( HENGEYOKAI.test(said) ) return "beast-court";
     if ( BASTET.test(said) ) return "bastet-land";
+    for ( const [key, re] of BREEDS ) if ( re.test(said) ) return key;
     const r = regionOfFaction(f, region);
     if ( beforeSettlers(r, y) && SETTLER_SHIFTERS[r] ) return SETTLER_SHIFTERS[r];
     return REGION_SHIFTERS[r] ?? "garou-sept";
@@ -553,6 +671,8 @@ export const DEFAULTS = {
   fae: (y, f, region = null) => {
     const r = regionOfFaction(f, region), sp = beforeSettlers(r, y) ? sphereOf(r, y) : null;
     if ( sp && NUNNEHI_LANDS.has(r) ) return "nunnehi-council";
+    if ( sp && LAND_FAE_LANDS.has(r) ) return "land-fae-circle";
+    if ( HSIEN_LANDS.has(r) ) return "hsien-court";
     return y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court";
   },
   mages: (y, f, region = null) => (REASON.test(`${f?.name ?? ""} ${f?.notes ?? ""}`)

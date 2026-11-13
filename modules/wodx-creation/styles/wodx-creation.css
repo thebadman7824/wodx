@@ -62,3 +62,6 @@
 .wodx-wizard .wodx-wz-warn { color: var(--color-level-warning, #c9593f); }
 .wodx-wizard .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .wodx-wizard .wodx-buttons button { flex: 0 0 auto; width: auto; }
+.wodx-wizard .wodx-wz-notes { margin: 0.5em 0; }
+.wodx-wizard .wodx-wz-notes dt { font-weight: bold; margin-top: 0.3em; }
+.wodx-wizard .wodx-wz-notes dd { margin: 0 0 0 1em; }

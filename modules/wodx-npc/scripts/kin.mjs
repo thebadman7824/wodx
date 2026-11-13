@@ -155,7 +155,7 @@ export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
   try { if ( !game.settings.get(MOD, "tiesAgeing") ) return; } catch (e) { return; }
   const fromYear = yearAt(info.from), toYear = yearAt(info.to);
-  // NPC 0.65.1: a whole year of time must pass; a short skip over New Year is not a jump
+  // NPC 0.67.1: a whole year of time must pass; a short skip over New Year is not a jump
   if ( !((Number(info.to) - Number(info.from)) / YEAR_SECONDS >= 1) ) return;
   const rep = await reportFor(info.from, info.to);
   if ( !rep.rows.length && !rep.grown.length ) return;

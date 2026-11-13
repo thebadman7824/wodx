@@ -1,5 +1,5 @@
 {
- "version": 1,
+ "version": 2,
  "items": [
   {
    "name": "Hatchet",
@@ -115,7 +115,14 @@
      "kind": "melee",
      "notes": [
       "two-handed"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -155,7 +162,14 @@
      "kind": "melee",
      "notes": [
       "AP 3"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -269,7 +283,14 @@
       "long-night"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -349,7 +370,14 @@
      "kind": "melee",
      "notes": [
       "two-handed"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -465,7 +493,14 @@
       "long-night"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -505,7 +540,14 @@
      "kind": "melee",
      "notes": [
       "two-handed: Str+3L"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -545,7 +587,12 @@
      "kind": "melee",
      "notes": [
       "two-handed"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -585,7 +632,12 @@
      "kind": "melee",
      "notes": [
       "two-handed"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -666,7 +718,14 @@
      "notes": [
       "mounted",
       "AP 3"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -706,7 +765,14 @@
      "kind": "melee",
      "notes": [
       "AP 1, two-handed"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1095,7 +1161,14 @@
      "kind": "ranged",
      "notes": [
       "AP 2"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1146,7 +1219,14 @@
      "kind": "ranged",
      "notes": [
       "AP 3"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1197,7 +1277,14 @@
      "kind": "ranged",
      "notes": [
       "AP 4"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1385,7 +1472,14 @@
       "long-night"
      ],
      "kind": "(parry)",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1475,7 +1569,15 @@
      "kind": "armor",
      "notes": [
       "Composite Armor"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "bantu": false
+     }
     }
    }
   },
@@ -1505,7 +1607,13 @@
      "kind": "armor",
      "notes": [
       "Heavy Armor"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "carpathians-balkans": null,
+      "*": false
+     }
     }
    }
   },
@@ -1535,7 +1643,13 @@
      "kind": "armor",
      "notes": [
       "Knight's Armor"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "carpathians-balkans": null,
+      "*": false
+     }
     }
    }
   },
@@ -1572,7 +1686,12 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -1609,7 +1728,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -1683,7 +1809,12 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -1722,7 +1853,12 @@
      "kind": "melee",
      "notes": [
       "2 hands"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -1759,7 +1895,11 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "japanese": null,
+      "*": false
+     }
     }
    }
   },
@@ -1796,7 +1936,11 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "indic": null,
+      "*": false
+     }
     }
    }
   },
@@ -1870,7 +2014,11 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "malay": null,
+      "*": false
+     }
     }
    }
   },
@@ -1907,7 +2055,12 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -1944,7 +2097,12 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -1981,7 +2139,17 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "islamic": null,
+      "sahel": null,
+      "swahili": null,
+      "indic": null,
+      "central-asia": null,
+      "east-africa": null,
+      "carpathians-balkans": 1400,
+      "*": false
+     }
     }
    }
   },
@@ -2018,7 +2186,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2055,7 +2230,11 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "indic": null,
+      "*": false
+     }
     }
    }
   },
@@ -2094,7 +2273,14 @@
      "kind": "melee",
      "notes": [
       "note 2"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2170,7 +2356,14 @@
      "kind": "melee",
      "notes": [
       "2 hands"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2207,7 +2400,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2244,7 +2444,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2396,7 +2603,14 @@
      "kind": "melee",
      "notes": [
       "2 hands"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2433,7 +2647,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2507,7 +2728,14 @@
       "renaissance"
      ],
      "kind": "melee",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2546,7 +2774,14 @@
      "kind": "melee",
      "notes": [
       "+1 diff to grab"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2585,7 +2820,12 @@
      "kind": "melee",
      "notes": [
       "pole arm, 2 hands"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -2624,7 +2864,14 @@
      "kind": "melee",
      "notes": [
       "mounted only; on foot Str"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2663,7 +2910,14 @@
      "kind": "melee",
      "notes": [
       "pole arm"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2702,7 +2956,12 @@
      "kind": "melee",
      "notes": [
       "pole arm"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -2741,7 +3000,14 @@
      "kind": "melee",
      "notes": [
       "pole arm"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2780,7 +3046,14 @@
      "kind": "melee",
      "notes": [
       "pole arm"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -2936,7 +3209,14 @@
      "kind": "melee",
      "notes": [
       "improvised"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3014,7 +3294,14 @@
      "kind": "melee",
      "notes": [
       "improvised"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3092,7 +3379,14 @@
      "kind": "melee",
      "notes": [
       "improvised"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3192,7 +3486,17 @@
      "kind": "ranged",
      "notes": [
       "Rate 1/2"
-     ]
+     ],
+     "ways": {
+      "sinic": null,
+      "islamic": null,
+      "central-asia": null,
+      "indic": null,
+      "tibetan": null,
+      "japanese": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -3243,7 +3547,14 @@
      "notes": [
       "rate and conceal cells swapped in print",
       "Rate 1/2"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3293,7 +3604,12 @@
      "kind": "ranged",
      "notes": [
       "Rate 1/2"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "*": false
+     }
     }
    }
   },
@@ -3343,7 +3659,14 @@
      "kind": "ranged",
      "notes": [
       "Rate 1/3"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3393,7 +3716,14 @@
      "kind": "ranged",
      "notes": [
       "Rate 1/4"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -3489,7 +3819,26 @@
       "renaissance"
      ],
      "kind": "thrown",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3636,7 +3985,26 @@
      "notes": [
       "Rate 1/6",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3687,7 +4055,26 @@
      "notes": [
       "Rate 1/5",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3738,7 +4125,26 @@
      "notes": [
       "Rate 1/6",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3789,7 +4195,26 @@
      "notes": [
       "Rate 1/5",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3840,7 +4265,26 @@
      "notes": [
       "Rate 1/5",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": null,
+      "sinic": null,
+      "japanese": 1543,
+      "indic": 1526,
+      "theravada": 1511,
+      "malay": 1511,
+      "tibetan": 1640,
+      "sahel": 1590,
+      "swahili": 1500,
+      "bantu": 1600,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "*": null
+     }
     }
    }
   },
@@ -3891,7 +4335,13 @@
      "notes": [
       "Rate 1/4",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": 1550,
+      "*": false
+     }
     }
    }
   },
@@ -3942,7 +4392,13 @@
      "notes": [
       "Rate 1/4",
       "Clip 1 per barrel"
-     ]
+     ],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "islamic": 1550,
+      "*": false
+     }
     }
    }
   },
@@ -3969,7 +4425,15 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "bantu": false
+     }
     }
    }
   },
@@ -4023,7 +4487,13 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "carpathians-balkans": null,
+      "*": false
+     }
     }
    }
   },
@@ -4050,7 +4520,15 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false,
+      "bantu": false
+     }
     }
    }
   },
@@ -4077,7 +4555,13 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "carpathians-balkans": null,
+      "*": false
+     }
     }
    }
   },
@@ -4104,7 +4588,11 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "*": false
+     }
     }
    }
   },
@@ -4131,7 +4619,13 @@
       "renaissance"
      ],
      "kind": "armor",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "latin": null,
+      "orthodox": null,
+      "carpathians-balkans": null,
+      "*": false
+     }
     }
    }
   },
@@ -4154,7 +4648,14 @@
      "kind": "armor (shield)",
      "notes": [
       "pdf 212"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -4175,7 +4676,14 @@
       "renaissance"
      ],
      "kind": "armor (shield)",
-     "notes": []
+     "notes": [],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -6589,7 +7097,14 @@
      "kind": "ranged",
      "notes": [
       "chart note **"
-     ]
+     ],
+     "ways": {
+      "*": null,
+      "mesoamerican": false,
+      "andean": false,
+      "polynesian": false,
+      "northern": false
+     }
     }
    }
   },
@@ -10542,6 +11057,3094 @@
      "cyber": true,
      "surgery": "M",
      "humanity": "3D6"
+    }
+   }
+  },
+  {
+   "name": "Tachi",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed: Str+3L); fights as the Broadsword (house rule)",
+    "description": "<p>The long curved sword of a mounted warrior, before the katana. Fights as the Broadsword.</p><p>two-handed: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "the long curved sword of a mounted warrior, before the katana",
+      "two-handed: Str+3L"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Katana",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed: Str+3L); fights as the Broadsword (house rule)",
+    "description": "<p>The curved sword of the warrior class. Fights as the Broadsword.</p><p>two-handed: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "the curved sword of the warrior class",
+      "two-handed: Str+3L"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Katana",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20, pdf 288 / printed 280; fights as the Sword (house rule)",
+    "description": "<p>The curved sword of the warrior class. Fights as the Sword.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "T",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-core",
+     "page": "pdf 288 / printed 280",
+     "eras": [
+      "victorian",
+      "wild-west",
+      "great-war",
+      "modern",
+      "time-of-judgment",
+      "future-darkness"
+     ],
+     "kind": "melee",
+     "notes": [
+      "the curved sword of the warrior class"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Sword"
+    }
+   }
+  },
+  {
+   "name": "Naginata",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed); fights as the Halberd (house rule)",
+    "description": "<p>A curved blade on a long shaft. Fights as the Halberd.</p><p>two-handed</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved blade on a long shaft",
+      "two-handed"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Halberd"
+    }
+   }
+  },
+  {
+   "name": "Naginata",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Glaive (house rule)",
+    "description": "<p>A curved blade on a long shaft. Fights as the Glaive.</p><p>pole arm</p>",
+    "isequipped": false,
+    "difficulty": 8,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 6,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved blade on a long shaft",
+      "pole arm"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Glaive"
+    }
+   }
+  },
+  {
+   "name": "Yari",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L); fights as the Spear (house rule)",
+    "description": "<p>A straight-bladed spear. Fights as the Spear.</p><p>AP 2; two-handed at min Str 3: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight-bladed spear",
+      "AP 2; two-handed at min Str 3: Str+3L"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Yari",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Spear (house rule)",
+    "description": "<p>A straight-bladed spear. Fights as the Spear.</p><p>1 hand</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight-bladed spear",
+      "1 hand"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Yumi",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 4); fights as the Longbow (house rule)",
+    "description": "<p>A tall bow drawn from below its middle. Fights as the Longbow.</p><p>AP 4</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "archery",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 120,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 4,
+    "conceal": "N"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 4)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "ranged",
+     "notes": [
+      "a tall bow drawn from below its middle",
+      "AP 4"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Longbow"
+    }
+   }
+  },
+  {
+   "name": "Yumi",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 222 / printed 205; fights as the Longbow (house rule)",
+    "description": "<p>A tall bow drawn from below its middle. Fights as the Longbow.</p><p>rate and conceal cells swapped in print; Rate 1/2</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 6,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "archery",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 150,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 4,
+    "conceal": "N"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 222 / printed 205",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "ranged",
+     "notes": [
+      "a tall bow drawn from below its middle",
+      "rate and conceal cells swapped in print"
+     ],
+     "ways": {
+      "japanese": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Longbow"
+    }
+   }
+  },
+  {
+   "name": "Jian",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed: Str+3L); fights as the Broadsword (house rule)",
+    "description": "<p>A straight two-edged sword. Fights as the Broadsword.</p><p>two-handed: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight two-edged sword",
+      "two-handed: Str+3L"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Jian",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Broadsword (house rule)",
+    "description": "<p>A straight two-edged sword. Fights as the Broadsword.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight two-edged sword"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Jian",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20, pdf 288 / printed 280; fights as the Sword (house rule)",
+    "description": "<p>A straight two-edged sword. Fights as the Sword.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "T",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-core",
+     "page": "pdf 288 / printed 280",
+     "eras": [
+      "victorian",
+      "wild-west",
+      "great-war",
+      "modern",
+      "time-of-judgment",
+      "future-darkness"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight two-edged sword"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Sword"
+    }
+   }
+  },
+  {
+   "name": "Dao",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A single-edged curved sword. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a single-edged curved sword"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Dao",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Falchion (house rule)",
+    "description": "<p>A single-edged curved sword. Fights as the Falchion.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 3,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a single-edged curved sword"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Falchion"
+    }
+   }
+  },
+  {
+   "name": "Qiang",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L); fights as the Spear (house rule)",
+    "description": "<p>A light spear with a tassel below the head. Fights as the Spear.</p><p>AP 2; two-handed at min Str 3: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a light spear with a tassel below the head",
+      "AP 2; two-handed at min Str 3: Str+3L"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Qiang",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Spear (house rule)",
+    "description": "<p>A light spear with a tassel below the head. Fights as the Spear.</p><p>1 hand</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a light spear with a tassel below the head",
+      "1 hand"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Repeating crossbow",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2); fights as the Crossbow (house rule)",
+    "description": "<p>A crossbow fed from a box of bolts on top. Fights as the Crossbow.</p><p>AP 2</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 3,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "archery",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 90,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 3,
+    "conceal": "L"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "ranged",
+     "notes": [
+      "a crossbow fed from a box of bolts on top",
+      "AP 2"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Crossbow"
+    }
+   }
+  },
+  {
+   "name": "Repeating crossbow",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 222 / printed 205; fights as the Crossbow, Lt. (house rule)",
+    "description": "<p>A crossbow fed from a box of bolts on top. Fights as the Crossbow, Lt..</p><p>Rate 1/3</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "",
+     "bonus": 5,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "archery",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 90,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "L"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 222 / printed 205",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "ranged",
+     "notes": [
+      "a crossbow fed from a box of bolts on top"
+     ],
+     "ways": {
+      "sinic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Crossbow, Lt."
+    }
+   }
+  },
+  {
+   "name": "Talwar",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A curved sword with a disc pommel. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved sword with a disc pommel"
+     ],
+     "ways": {
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Talwar",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Scimitar (house rule)",
+    "description": "<p>A curved sword with a disc pommel. Fights as the Scimitar.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved sword with a disc pommel"
+     ],
+     "ways": {
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Scimitar"
+    }
+   }
+  },
+  {
+   "name": "Katar",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2); fights as the Dagger (house rule)",
+    "description": "<p>A punch dagger gripped across the blade. Fights as the Dagger.</p><p>AP 2</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 1,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a punch dagger gripped across the blade",
+      "AP 2"
+     ],
+     "ways": {
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Dagger"
+    }
+   }
+  },
+  {
+   "name": "Khukuri",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (can be thrown); fights as the Hatchet (house rule)",
+    "description": "<p>A heavy forward-curved knife of the hills. Fights as the Hatchet.</p><p>can be thrown</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (can be thrown)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a heavy forward-curved knife of the hills",
+      "can be thrown"
+     ],
+     "ways": {
+      "tibet-himalaya": null,
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Hatchet"
+    }
+   }
+  },
+  {
+   "name": "Khukuri",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Hand Ax (house rule)",
+    "description": "<p>A heavy forward-curved knife of the hills. Fights as the Hand Ax.</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 5,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a heavy forward-curved knife of the hills"
+     ],
+     "ways": {
+      "tibet-himalaya": null,
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Hand Ax"
+    }
+   }
+  },
+  {
+   "name": "Khukuri",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20, pdf 288 / printed 280; fights as the Knife (house rule)",
+    "description": "<p>A heavy forward-curved knife of the hills. Fights as the Knife.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "J",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-core",
+     "page": "pdf 288 / printed 280",
+     "eras": [
+      "victorian",
+      "wild-west",
+      "great-war",
+      "modern",
+      "time-of-judgment",
+      "future-darkness"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a heavy forward-curved knife of the hills"
+     ],
+     "ways": {
+      "tibet-himalaya": null,
+      "indic": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Knife"
+    }
+   }
+  },
+  {
+   "name": "Scimitar",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A curved sword for the cut from the saddle. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved sword for the cut from the saddle"
+     ],
+     "ways": {
+      "islamic": null,
+      "sahel": null,
+      "swahili": null,
+      "indic": null,
+      "central-asia": null,
+      "east-africa": null,
+      "carpathians-balkans": 1400,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Shamshir",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A slender sword with a deep curve. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a slender sword with a deep curve"
+     ],
+     "ways": {
+      "persia": null,
+      "central-asia": null,
+      "india": 1500,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Shamshir",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Scimitar (house rule)",
+    "description": "<p>A slender sword with a deep curve. Fights as the Scimitar.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a slender sword with a deep curve"
+     ],
+     "ways": {
+      "persia": null,
+      "central-asia": null,
+      "india": 1500,
+      "*": false
+     },
+     "local": true,
+     "like": "Scimitar"
+    }
+   }
+  },
+  {
+   "name": "Kilij",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A curved sword that widens near the point. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved sword that widens near the point"
+     ],
+     "ways": {
+      "anatolia": null,
+      "levant": null,
+      "egypt": null,
+      "carpathians-balkans": 1400,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Kilij",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Scimitar (house rule)",
+    "description": "<p>A curved sword that widens near the point. Fights as the Scimitar.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a curved sword that widens near the point"
+     ],
+     "ways": {
+      "anatolia": null,
+      "levant": null,
+      "egypt": null,
+      "carpathians-balkans": 1400,
+      "*": false
+     },
+     "local": true,
+     "like": "Scimitar"
+    }
+   }
+  },
+  {
+   "name": "Takouba",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed: Str+3L); fights as the Broadsword (house rule)",
+    "description": "<p>A straight sword of the desert peoples. Fights as the Broadsword.</p><p>two-handed: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight sword of the desert peoples",
+      "two-handed: Str+3L"
+     ],
+     "ways": {
+      "sahel": null,
+      "maghreb": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Takouba",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Broadsword (house rule)",
+    "description": "<p>A straight sword of the desert peoples. Fights as the Broadsword.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a straight sword of the desert peoples"
+     ],
+     "ways": {
+      "sahel": null,
+      "maghreb": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Shotel",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A sickle-curved sword that reaches round a shield. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a sickle-curved sword that reaches round a shield"
+     ],
+     "ways": {
+      "east-africa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Shotel",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Scimitar (house rule)",
+    "description": "<p>A sickle-curved sword that reaches round a shield. Fights as the Scimitar.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a sickle-curved sword that reaches round a shield"
+     ],
+     "ways": {
+      "east-africa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Scimitar"
+    }
+   }
+  },
+  {
+   "name": "Assegai",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L); fights as the Spear (house rule)",
+    "description": "<p>A short stabbing spear with a long blade. Fights as the Spear.</p><p>AP 2; two-handed at min Str 3: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a short stabbing spear with a long blade",
+      "AP 2; two-handed at min Str 3: Str+3L"
+     ],
+     "ways": {
+      "bantu": null,
+      "swahili": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Assegai",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Spear (house rule)",
+    "description": "<p>A short stabbing spear with a long blade. Fights as the Spear.</p><p>1 hand</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a short stabbing spear with a long blade",
+      "1 hand"
+     ],
+     "ways": {
+      "bantu": null,
+      "swahili": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Assegai",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20, pdf 288 / printed 280; fights as the Knife (house rule)",
+    "description": "<p>A short stabbing spear with a long blade. Fights as the Knife.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "J",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-core",
+     "page": "pdf 288 / printed 280",
+     "eras": [
+      "victorian",
+      "wild-west",
+      "great-war",
+      "modern",
+      "time-of-judgment",
+      "future-darkness"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a short stabbing spear with a long blade"
+     ],
+     "ways": {
+      "bantu": null,
+      "swahili": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Knife"
+    }
+   }
+  },
+  {
+   "name": "Throwing iron",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Hatchet (house rule)",
+    "description": "<p>A many-bladed iron thrown spinning. Fights as the Hatchet.</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "athletics",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 20,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "C"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "thrown",
+     "notes": [
+      "a many-bladed iron thrown spinning"
+     ],
+     "ways": {
+      "central-africa": null,
+      "west-africa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Hatchet, thrown"
+    }
+   }
+  },
+  {
+   "name": "Throwing iron",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 222 / printed 205; fights as the Ax (house rule)",
+    "description": "<p>A many-bladed iron thrown spinning. Fights as the Ax.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "athletics",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 10,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "C"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 222 / printed 205",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "thrown",
+     "notes": [
+      "a many-bladed iron thrown spinning"
+     ],
+     "ways": {
+      "central-africa": null,
+      "west-africa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Ax, thrown"
+    }
+   }
+  },
+  {
+   "name": "Kris",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2); fights as the Dagger (house rule)",
+    "description": "<p>A dagger with a wavy blade. Fights as the Dagger.</p><p>AP 2</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 1,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a dagger with a wavy blade",
+      "AP 2"
+     ],
+     "ways": {
+      "malay": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Dagger"
+    }
+   }
+  },
+  {
+   "name": "Dha",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Saber (house rule)",
+    "description": "<p>A long single-edged sword with a long grip. Fights as the Saber.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a long single-edged sword with a long grip"
+     ],
+     "ways": {
+      "theravada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Saber"
+    }
+   }
+  },
+  {
+   "name": "Dha",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Falchion (house rule)",
+    "description": "<p>A long single-edged sword with a long grip. Fights as the Falchion.</p>",
+    "isequipped": false,
+    "difficulty": 5,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 3,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a long single-edged sword with a long grip"
+     ],
+     "ways": {
+      "theravada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Falchion"
+    }
+   }
+  },
+  {
+   "name": "Macuahuitl",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (two-handed: Str+3L); fights as the Broadsword (house rule)",
+    "description": "<p>A wooden sword edged with obsidian blades. Fights as the Broadsword.</p><p>two-handed: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (two-handed: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a wooden sword edged with obsidian blades",
+      "two-handed: Str+3L"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Macuahuitl",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Broadsword (house rule)",
+    "description": "<p>A wooden sword edged with obsidian blades. Fights as the Broadsword.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a wooden sword edged with obsidian blades"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Broadsword"
+    }
+   }
+  },
+  {
+   "name": "Tepoztopilli",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L); fights as the Spear (house rule)",
+    "description": "<p>A broad wooden spear edged with obsidian. Fights as the Spear.</p><p>AP 2; two-handed at min Str 3: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a broad wooden spear edged with obsidian",
+      "AP 2; two-handed at min Str 3: Str+3L"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Tepoztopilli",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Spear (house rule)",
+    "description": "<p>A broad wooden spear edged with obsidian. Fights as the Spear.</p><p>1 hand</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a broad wooden spear edged with obsidian",
+      "1 hand"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Atlatl dart",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2); fights as the Javelin (house rule)",
+    "description": "<p>A dart cast with a spear-thrower. Fights as the Javelin.</p><p>AP 2</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "athletics",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 50,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "N"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "thrown",
+     "notes": [
+      "a dart cast with a spear-thrower",
+      "AP 2"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "andean": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Javelin, thrown"
+    }
+   }
+  },
+  {
+   "name": "Atlatl dart",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 222 / printed 205; fights as the Spear (house rule)",
+    "description": "<p>A dart cast with a spear-thrower. Fights as the Spear.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "athletics",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 10,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "N"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 222 / printed 205",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "thrown",
+     "notes": [
+      "a dart cast with a spear-thrower"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "andean": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear, thrown"
+    }
+   }
+  },
+  {
+   "name": "Ichcahuipilli",
+   "type": "Armor",
+   "img": "icons/svg/shield.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 351 / printed 350; fights as the Class Two (house rule)",
+    "description": "<p>Quilted cotton armor soaked in brine. Fights as the Class Two.</p><p>Cloth/Textile Armor</p>",
+    "isequipped": false,
+    "soak": {
+     "bashing": 2,
+     "lethal": 2,
+     "aggravated": 2
+    },
+    "dexpenalty": 1
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 351 / printed 350",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "armor",
+     "notes": [
+      "quilted cotton armor soaked in brine",
+      "Cloth/Textile Armor"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Class Two"
+    }
+   }
+  },
+  {
+   "name": "Ichcahuipilli",
+   "type": "Armor",
+   "img": "icons/svg/shield.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 219 / printed 202; fights as the Light Armor (house rule)",
+    "description": "<p>Quilted cotton armor soaked in brine. Fights as the Light Armor.</p>",
+    "isequipped": false,
+    "soak": {
+     "bashing": 2,
+     "lethal": 2,
+     "aggravated": 2
+    },
+    "dexpenalty": 1
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 219 / printed 202",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "armor",
+     "notes": [
+      "quilted cotton armor soaked in brine"
+     ],
+     "ways": {
+      "mesoamerican": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Light Armor"
+    }
+   }
+  },
+  {
+   "name": "Champi",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Mace (house rule)",
+    "description": "<p>A star-headed bronze mace. Fights as the Mace.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 3,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a star-headed bronze mace"
+     ],
+     "ways": {
+      "andean": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Mace"
+    }
+   }
+  },
+  {
+   "name": "Champi",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Mace (house rule)",
+    "description": "<p>A star-headed bronze mace. Fights as the Mace.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 1,
+    "conceal": "T",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a star-headed bronze mace"
+     ],
+     "ways": {
+      "andean": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Mace"
+    }
+   }
+  },
+  {
+   "name": "Huaraca",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Sling (house rule)",
+    "description": "<p>A braided wool sling. Fights as the Sling.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 3,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "range": 40,
+    "rate": 1,
+    "clip": {
+     "value": 0,
+     "max": 0
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    },
+    "minstrength": 2,
+    "conceal": "P"
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "ranged",
+     "notes": [
+      "a braided wool sling"
+     ],
+     "ways": {
+      "andean": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Sling"
+    }
+   }
+  },
+  {
+   "name": "Patu",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Club (house rule)",
+    "description": "<p>A short flat club of stone, bone or wood. Fights as the Club.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a short flat club of stone, bone or wood"
+     ],
+     "ways": {
+      "polynesian": null,
+      "aotearoa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Club"
+    }
+   }
+  },
+  {
+   "name": "Patu",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Club (house rule)",
+    "description": "<p>A short flat club of stone, bone or wood. Fights as the Club.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a short flat club of stone, bone or wood"
+     ],
+     "ways": {
+      "polynesian": null,
+      "aotearoa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Club"
+    }
+   }
+  },
+  {
+   "name": "Taiaha",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (+2 dice to Sweep); fights as the Quarterstaff (house rule)",
+    "description": "<p>A long fighting staff with a carved head. Fights as the Quarterstaff.</p><p>+2 dice to Sweep</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 3,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (+2 dice to Sweep)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a long fighting staff with a carved head",
+      "+2 dice to Sweep"
+     ],
+     "ways": {
+      "polynesian": null,
+      "aotearoa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Quarterstaff"
+    }
+   }
+  },
+  {
+   "name": "Taiaha",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Quarterstaff (house rule)",
+    "description": "<p>A long fighting staff with a carved head. Fights as the Quarterstaff.</p>",
+    "isequipped": false,
+    "difficulty": 4,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 1,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a long fighting staff with a carved head"
+     ],
+     "ways": {
+      "polynesian": null,
+      "aotearoa": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Quarterstaff"
+    }
+   }
+  },
+  {
+   "name": "Shark-tooth club",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Club (house rule)",
+    "description": "<p>A club edged with rows of shark teeth. Fights as the Club.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a club edged with rows of shark teeth"
+     ],
+     "ways": {
+      "polynesian": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Club"
+    }
+   }
+  },
+  {
+   "name": "Shark-tooth club",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Great Spiked Club (house rule)",
+    "description": "<p>A club edged with rows of shark teeth. Fights as the Great Spiked Club.</p><p>2 hands</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a club edged with rows of shark teeth",
+      "2 hands"
+     ],
+     "ways": {
+      "polynesian": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Great Spiked Club"
+    }
+   }
+  },
+  {
+   "name": "War club",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349; fights as the Mace (house rule)",
+    "description": "<p>A club with a heavy ball or stone head. Fights as the Mace.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 3,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a club with a heavy ball or stone head"
+     ],
+     "ways": {
+      "northern": null,
+      "north-america-east": null,
+      "north-america-west": null,
+      "canada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Mace"
+    }
+   }
+  },
+  {
+   "name": "War club",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Mace (house rule)",
+    "description": "<p>A club with a heavy ball or stone head. Fights as the Mace.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 4,
+     "type": "bashing",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 1,
+    "conceal": "T",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a club with a heavy ball or stone head"
+     ],
+     "ways": {
+      "northern": null,
+      "north-america-east": null,
+      "north-america-west": null,
+      "canada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Mace"
+    }
+   }
+  },
+  {
+   "name": "Stone tomahawk",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (can be thrown); fights as the Hatchet (house rule)",
+    "description": "<p>A stone axe head bound to a haft. Fights as the Hatchet.</p><p>can be thrown</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "C",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (can be thrown)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a stone axe head bound to a haft",
+      "can be thrown"
+     ],
+     "ways": {
+      "northern": null,
+      "north-america-east": null,
+      "north-america-west": null,
+      "canada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Hatchet"
+    }
+   }
+  },
+  {
+   "name": "Stone tomahawk",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Hand Ax (house rule)",
+    "description": "<p>A stone axe head bound to a haft. Fights as the Hand Ax.</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 5,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 3,
+    "conceal": "L",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a stone axe head bound to a haft"
+     ],
+     "ways": {
+      "northern": null,
+      "north-america-east": null,
+      "north-america-west": null,
+      "canada": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Hand Ax"
+    }
+   }
+  },
+  {
+   "name": "Harpoon",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "V20 Dark Ages, pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L); fights as the Spear (house rule)",
+    "description": "<p>A barbed spear on a line, for seal and whale. Fights as the Spear.</p><p>AP 2; two-handed at min Str 3: Str+3L</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": true
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "v20-dark-ages",
+     "page": "pdf 350 / printed 349 (AP 2; two-handed at min Str 3: Str+3L)",
+     "eras": [
+      "dark-ages",
+      "long-night"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a barbed spear on a line, for seal and whale",
+      "AP 2; two-handed at min Str 3: Str+3L"
+     ],
+     "ways": {
+      "northern": null,
+      "arctic": null,
+      "siberia": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
+    }
+   }
+  },
+  {
+   "name": "Harpoon",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
+   "system": {
+    "reference": "Sorcerers Crusade, pdf 221 / printed 204; fights as the Spear (house rule)",
+    "description": "<p>A barbed spear on a line, for seal and whale. Fights as the Spear.</p><p>1 hand</p>",
+    "isequipped": false,
+    "difficulty": 7,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "melee",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 2,
+    "conceal": "N",
+    "istwohanded": false
+   },
+   "flags": {
+    "wodx-library": {
+     "source": "sorcerers-crusade",
+     "page": "pdf 221 / printed 204",
+     "eras": [
+      "renaissance"
+     ],
+     "kind": "melee",
+     "notes": [
+      "a barbed spear on a line, for seal and whale",
+      "1 hand"
+     ],
+     "ways": {
+      "northern": null,
+      "arctic": null,
+      "siberia": null,
+      "*": false
+     },
+     "local": true,
+     "like": "Spear"
     }
    }
   }

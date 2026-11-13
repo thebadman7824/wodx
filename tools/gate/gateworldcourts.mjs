@@ -12,8 +12,8 @@
  *      Ahl-i-Batin in Persia, and a Technocracy faction keeps Reason
  *   3c. (0.64.0) before the settlers: no Kindred court in Mexico in 1500, the Nunnehi for fae in the Andes, the Mokolé
  *      in Australia before 1788; the Nagah and the Mokolé by name
- *   4. two faction turns with politics on: the leader of the Laibon council is Elder of the land, each legacy a voice;
- *      the Ashirra court's leader is Amir
+ *   4. two faction turns with politics on: the leader of the Laibon council is the magaji, each legacy a voice in the kholo;
+ *      the Ashirra court's leader is Sultan
  *   5. the faction window shows Where it stands with the homeland and all 44 regions, marked as a fixed list
  *   6. clean up
  * Result: Data/wodx-gate/gateworldcourts-result.json.
@@ -60,8 +60,9 @@ export async function run() {
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version;
       const want = ["laibon-council", "ashirra", "ravnos-court", "beast-court", "bastet-land", "wu-lung-court", "akashic-monastery", "batini-circle",
-        "nunnehi-council", "mokole-gathering", "nagah-nest"];
-      ok("1. WoDX NPC 0.64.0+, the region courts and the eleven new polities", newer(v, "0.64.0") && !!PO().REGION_COURTS && !!PO().REGION_SHIFTERS && !!PO().REGION_MAGES
+        "nunnehi-council", "mokole-gathering", "nagah-nest",
+        "ananasi-web", "corax-flock", "gurahl-den", "ratkin-nest", "rokea-shiver", "hsien-court", "land-fae-circle"];
+      ok("1. WoDX NPC 0.66.0+, the region courts and the eighteen new polities", newer(v, "0.66.0") && !!PO().REGION_COURTS && !!PO().REGION_SHIFTERS && !!PO().REGION_MAGES
         && typeof PO().setHomeRegion === "function" && want.every(k => !!PO().POLITIES[k]), {v, missing: want.filter(k => !PO().POLITIES[k])});
     });
 
@@ -106,6 +107,19 @@ export async function run() {
       ok("3c. no court before the settlers, the Nunnehi, the Mokolé and the Nagah", JSON.stringify(got) === JSON.stringify(want), {got});
     });
 
+    await step("3d. the other breeds, the Hsien and the land's own fae", async () => {
+      const f = (kind, region, name = "") => ({kind, region, name, members: ["a", "b", "c"]});
+      const got = {
+        ananasi: PO().polityFor(f("garou", "brazil", "Ananasi of the old city"), 1600), corax: PO().polityFor(f("garou", "british-isles", "Corax of the tower"), 1300),
+        gurahl: PO().polityFor(f("garou", "canada", "Gurahl of the woods"), 1900), ratkin: PO().polityFor(f("garou", "moravia", "Ratkin under Brno"), 1400),
+        rokea: PO().polityFor(f("garou", "pacific-islands", "Rokea of the reef"), 2000), nezumi: PO().polityFor(f("garou", "japan", "Nezumi of the docks"), 1700),
+        hsien: PO().polityFor(f("fae", "china"), 1300), pacific: PO().polityFor(f("fae", "pacific-islands"), 1700), siberiaLate: PO().polityFor(f("fae", "siberia"), 1700)
+      };
+      const want = {ananasi: "ananasi-web", corax: "corax-flock", gurahl: "gurahl-den", ratkin: "ratkin-nest", rokea: "rokea-shiver", nezumi: "beast-court",
+        hsien: "hsien-court", pacific: "land-fae-circle", siberiaLate: "commoner-freehold"};
+      ok("3d. the five breeds by name, the Hsien in China, the land's own fae in the Pacific before the settlers", JSON.stringify(got) === JSON.stringify(want), {got});
+    });
+
     const people = [["Gate Elder", "Osebo", 4], ["Gate Guest", "Guruhi", 2], ["Gate Teller", "Akunanse", 1],
       ["Gate Amir", "Assamite", 4], ["Gate Scholar", "Toreador", 2], ["Gate Watcher", "Lasombra", 1]];
     await step("4. a turn", async () => {
@@ -125,7 +139,7 @@ export async function run() {
       await sleep(500);
       const L = fac("gateLaibon"), A = fac("gateAshirra");
       const voices = (L?.politics?.offices?.legacy ?? []).map(id => game.actors.get(id)?.system?.clan);
-      ok("4. the Elder of the land and the Amir hold the top seats; one voice a legacy", L?.region === "west-africa" && L.politics.offices.elder?.[0] === ids[0]
+      ok("4. the magaji and the Sultan hold the top seats; one voice a legacy", L?.region === "west-africa" && L.politics.offices.elder?.[0] === ids[0]
         && A?.politics?.offices?.amir?.[0] === ids[3] && new Set(voices).size === voices.length && L.politics.inner >= 1 && A.politics.inner >= 1,
       {laibon: L?.politics?.offices, ashirra: A?.politics?.offices});
     });

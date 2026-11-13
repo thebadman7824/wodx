@@ -69,6 +69,13 @@ test("Mage, Wraith, Changeling, Demon and Mummy starts", () => {
   assert.deepEqual(["corpus", "pathos", "willpower"].map(k => row(w, k).want), [10, 7, 5]);
   const c = D.derivedTraits("c20", {});
   assert.deepEqual(["willpower", "glamour", "banality"].map(k => row(c, k).want), [4, 4, 3]);
+  assert.deepEqual(["willpower", "glamour"].map(k => row(D.derivedTraits("c20", {seeming: "Childling"}), k).want), [4, 5]);
+  assert.deepEqual(["willpower", "glamour"].map(k => row(D.derivedTraits("c20", {seeming: "Grump"}), k).want), [5, 4]);
+  assert.match(D.derivedTraits("c20", {seeming: "Wilder"}).notes.join(" "), /wilder adds 1/);
+  assert.equal(row(D.derivedTraits("demon", {house: "Devils"}), "torment").want, 4);
+  assert.equal(row(D.derivedTraits("demon", {house: "Defilers"}), "torment").want, 3);
+  assert.equal(row(D.derivedTraits("daw", {tribe: "Children of Gaia"}), "willpower").want, 3);
+  assert.equal(row(D.derivedTraits("w20", {tribe: "Children of Gaia"}), "willpower").want, 4);
   const dm = D.derivedTraits("demon", {house: "Slayers", ...V({conscience: 2, conviction: 4, courage: 3})});
   assert.deepEqual(["faith", "torment", "willpower"].map(k => row(dm, k).want), [3, 4, 7]);
   const mu = D.derivedTraits("mummy", {advantages: {balance: {permanent: 2}}});
@@ -108,4 +115,33 @@ test("the wizard's Virtues page sets the derived Traits on the sheet", async () 
   await act("go", {dataset: {page: "review"}});
   assert.match(app.element.textContent, /Willpower: the sheet has 2, the book gives 4/);
   await app.close();
+});
+
+/* WoDX Creation 0.29.0: short Trait explanations (B3007 to B3009) */
+const T = await import(join(root, "modules/wodx-creation/data/trait-notes.mjs"));
+
+test("Trait notes: the player view's help comes first, the wizard's own notes fill the rest", () => {
+  const help = label => (/^strength$/i.test(label) ? "From the sheet help." : "");
+  assert.equal(T.traitNote("Strength", "v20", {help}).text, "From the sheet help.");
+  assert.match(T.traitNote("Torment", "demon", {help}).text, /Abyss/);
+  assert.match(T.traitNote("Sekhem", "mummy").text, /Hekau/);
+  assert.equal(T.traitNote("Nothing Here", "v20").text, "");
+  assert.equal(T.traitNote("Torment", "demon", {help: () => { throw new Error("x"); }}).text.length > 0, true);
+  for ( const [k, v] of Object.entries(T.NOTES) ) {
+    assert.equal(k, T.noteKey(k), k);
+    assert.ok(v.length < 160 && !/—/.test(v), k);
+  }
+  for ( const [line, refs] of Object.entries(T.REFS) ) {
+    assert.ok(TOTALS[line], line);
+    for ( const r of Object.values(refs) ) assert.match(r, /^pdf \d+/);
+  }
+});
+
+test("the wizard shows what a Mummy's Balance and Sekhem mean", async () => {
+  const a = await Actor.create({name: "Notes Mummy", type: "Mummy", system: {}});
+  const app = await api().wizard(a, "review");
+  const html = app.element.innerHTML;
+  await app.close();
+  assert.equal(api().wizardLedger(a).line, "mummy");
+  assert.match(html, /What these mean[\s\S]*Sekhem<\/dt><dd>The life force/);
 });

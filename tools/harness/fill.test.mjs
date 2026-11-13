@@ -107,8 +107,9 @@ test("goods: a mixed draw keeps to the era, and a small container takes small go
   const got = F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "both", era: "dark-ages", place: "home", container: "chest", count: 12, rng: seq(0.05, 0.6, 0.35, 0.9, 0.2)});
   assert.equal(got.length, 12);
   for ( const g of got ) {
-    const src_ = g.goods ? G.GOODS.find(x => x.name === g.name) : gear.find(x => x.name === g.name);
-    assert.ok((src_.eras ?? src_.flags["wodx-library"].eras).includes("dark-ages"), g.name);
+    // a name can stand in several books (Spear, and since Library 0.21.0 the Katar of two eras)
+    const srcs = g.goods ? [G.GOODS.find(x => x.name === g.name)] : gear.filter(x => x.name === g.name);
+    assert.ok(srcs.some(x => (x.eras ?? x.flags["wodx-library"].eras).includes("dark-ages")), g.name);
     assert.ok(g.line, g.name);
   }
   const box = F.drawMixed({goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", place: "den", container: "box", count: 12});
@@ -241,4 +242,15 @@ test("nothing starts in a container (Ben, 2026-11-12)", async () => {
   }
   assert.ok(G.GOODS.find(g => g.name === "an arrow")?.stacks);
   assert.equal(G.GOODS.find(g => g.name === "an arrow")?.id, "a-quiver-of-arrows", "old ids kept");
+});
+
+// WoDX Interactables 0.40.0 (B3072): gear drawn for a container follows the scene's land.
+test("gear: a draw in Tenochtitlan before the Spanish turns up no crossbow, a draw in Kyoto a katana", () => {
+  const mex = F.candidates(gear, {era: "dark-ages", place: "home", container: "chest", year: 1400, way: "mesoamerican", region: "mexico"}).map(c => c.item.name);
+  assert.ok(mex.length && !mex.some(n => /crossbow|broadsword|longbow|class four/i.test(n)), mex.join(", "));
+  const jp = F.candidates(gear, {era: "renaissance", place: "home", container: "chest", year: 1600, way: "japanese", region: "japan"}).map(c => c.item.name);
+  assert.ok(jp.includes("Katana") && !jp.includes("Rapier"));
+  assert.ok(F.candidates(gear, {era: "renaissance", place: "home", container: "chest"}).some(c => c.item.name === "Rapier"), "no place: as before");
+  assert.equal(F.gearAtHome({flags: {"wodx-library": {ways: {japanese: 1543, "*": null}}}}, {year: 1500, way: "japanese"}), false);
+  assert.equal(F.gearAtHome({flags: {"wodx-library": {ways: {japanese: 1543, "*": null}}}}, {year: 1550, way: "japanese"}), true);
 });

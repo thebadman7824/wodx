@@ -75,7 +75,7 @@ export async function onDeath(dead) {
 /** On a jump in time: undying owners who hide their wealth through false heirs need a roll for each passing. */
 export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
-  // Storyteller 0.64.1: whole years of time passed, so a short skip over New Year does not count as a year
+  // Storyteller 0.65.1: whole years of time passed, so a short skip over New Year does not count as a year
   const years = Math.floor((Number(info.to) - Number(info.from)) / (365.25 * 86400)) || 0;
   const n = WR.passingsFor(years);
   if ( n < 1 ) return;

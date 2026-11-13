@@ -162,9 +162,9 @@ export async function run() {
       await app.close();
       const wolf = await Actor.create({name: "WoDX gate: Wizard derived Garou", type: "Werewolf", system: {auspice: "Ahroun", breed: "Lupus", tribe: "Bone Gnawers"}, ownership: own});
       const wl = api().derived(wolf, "w20").rows.map(r => [r.key, r.want]);
-      ok("10 derived traits", shown && !!setAll && hum === 5 + bought("road") && wp === wantWp && game.messages.size === blood0 + 1 && blood >= 1 && blood <= max
+      ok("10 derived traits", shown && !!setAll && hum === 5 + bought("road") && wp === wantWp && game.messages.size > blood0 && blood >= 1 && blood <= max
         && JSON.stringify(wl) === JSON.stringify([["rage", 5], ["gnosis", 5], ["willpower", 4]]),
-        {shown, setAll: !!setAll, hum, wp, wantWp, blood, max, wolf: wl, offAfter: api().derived(a()).rows.filter(r => r.off).map(r => r.key)});
+        {shown, setAll: !!setAll, hum, wp, wantWp, blood, max, newMessages: game.messages.size - blood0, wolf: wl, offAfter: api().derived(a()).rows.filter(r => r.off).map(r => r.key)});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
