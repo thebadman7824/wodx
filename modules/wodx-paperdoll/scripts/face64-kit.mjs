@@ -119,7 +119,7 @@ const seeded = (c, tag) => H.rng(H.seedOf(`${c.S.seed}|${tag}`));
  * Each step is [op, ...args]. Spots are names (see spot) or [x, y]. Colours are [r, g, b].
  * tone stage: skin col a | hair col a | bg col a | iris col
  * skin stage: t spot rx ry col a | sp n col a [x0 y0 x1 y1] | vein spot col n dir | crack spot col n | tex kind spot rx ry col | sunk col
- * top stage:  g glyph spot col [dx dy] | gx (the same, over hair and cloth too) | shades col | l [[x y]...] col | dot spot col | glow col | whites col | pupil kind | lips col a | aura col a |
+ * top stage:  g glyph spot col [dx dy] | eyec col | gx (the same, over hair and cloth too) | shades col | l [[x y]...] col | dot spot col | glow col | whites col | pupil kind | lips col a | aura col a |
  *             motes col n | pend glyph col | neck [cols] | ear col style | circ col gem | collar col style | brow col style | fangs n | hairg glyph col x y |
  *             streak col side | halo col | tears col
  */
@@ -128,6 +128,8 @@ export const OPS = {
   hair: {stage: "tone", slot: "hairColour", fn: (S, col, a = 0.6) => { S.hair = mix(S.hair, col, a); }},
   bg: {stage: "tone", slot: "bg", fn: (S, col, a = 0.5) => { S.bg = mix(S.bg, col, a); }},
   iris: {stage: "tone", slot: "eyes2", fn: (S, col) => { S.iris = col; }},
+  /** Eye colour drawn over the line's own (a mage's eyes take the Avatar's light in the tone stage). */
+  eyec: {stage: "top", slot: "eyes2", fn: (c, col) => iris(c, col)},
   t: {stage: "skin", fn: (c, s, rx, ry, col, a = 0.4, dx = 0, dy = 0) => { const [x, y] = at(c, s, dx, dy); blob(x, y, rx, ry, (px, py) => tint(c.F, px, py, col, a)); }},
   sp: {stage: "skin", slot: "skin", fn: (c, n, col, a = 0.6, box = [20, 20, 44, 52]) => { const r = seeded(c, `sp${col}`); for ( let i = 0; i < n; i++ ) tint(c.F, box[0] + Math.floor(r.next() * (box[2] - box[0])), box[1] + Math.floor(r.next() * (box[3] - box[1])), col, a); }},
   vein: {stage: "skin", fn: (c, s, col, n = 6, dir = 1) => { const [x, y] = at(c, s); for ( let i = 0; i < n; i++ ) paint(c.F, x + dir * Math.round(Math.sin(i * 1.3) * 1.2), y + i, col); }},
