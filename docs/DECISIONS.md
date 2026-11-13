@@ -180,7 +180,7 @@ Next free block: B3630
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3603) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3605) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5662,3 +5662,13 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 The Arctic uses the far north family: the community's own judgment, then the crowns' courts in the trading posts and the state's police. With this, all regions but Antarctica have their own law family.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3604. Offices of the law and the state (2026-11-13)
+Institutions gain six kinds: court, the ruler's officers, tax office and garrison in every town big enough, and the Holy Office and secret police only while the town's law record lists inquisitors or secret police. Ranks come from tables by law family and year, with a general fallback. A town's institutions store their law family. Sizes: court 1000 people, officers and tax office 2000, garrison, Holy Office and secret police 5000. House figures.
+
+Reverse: remove the six kinds; existing seats in them stay in the saved state but are not shown.
+
+## B3605. Splat hooks for the offices (2026-11-13)
+Each new office carries a Storyteller-only line on how the lines touch it (Dominate on judges, ghoul stewards, Kinfolk in the garrison, the Inquisition's hunters, files read by hunters and the Technocracy).
+
+Reverse: drop the hook lines.
