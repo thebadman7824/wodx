@@ -22,6 +22,21 @@ export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: 
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 export const chron = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
+/**
+ * Where a scene is in the chronicle: {year, region, regionLabel, way, wayLabel}, or null when the scene has no region
+ * or Chronicle is off. Cook, brew or mix and Make something keep to the goods of this place (B3100).
+ */
+export function whereNow(scene = globalThis.canvas?.scene) {
+  try {
+    const c = chron();
+    const year = Number(c?.eras?.currentYear?.()) || null;
+    const r = c?.world?.here?.(scene);
+    const rules = c?.world?.rules;
+    if ( !r?.id || year === null || typeof rules?.sphereFor !== "function" ) return null;
+    const way = rules.sphereFor(r.id, year);
+    return {year, region: r.id, regionLabel: r.label ?? r.id, way, wayLabel: rules.SPHERES?.[way] ?? way};
+  } catch (e) { return null; }
+}
 export const npc = () => game.modules?.get?.("wodx-npc")?.api ?? null;
 export const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 export const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
