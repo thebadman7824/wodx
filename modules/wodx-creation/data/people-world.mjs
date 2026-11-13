@@ -11,6 +11,7 @@
  * get family names before they bore them by law.
  */
 import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {haudenosauneeTables} from "./people-haudenosaunee.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -229,12 +230,14 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
     const until = ERA_GROUPS.slice(ERA_GROUPS.indexOf(g) + 1).findIndex(x => WORLD_REGIONS[id].mix[x]);
     const era = ERA_GROUPS.slice(ERA_GROUPS.indexOf(g), until < 0 ? undefined : ERA_GROUPS.indexOf(g) + 1 + until);
     origins.push({id: "people.origin", name: `People: origin (${WORLD_REGIONS[id].label.replace(/ \(.*$/, "")}, ${g})`,
-      results: mix.map(([text, weight]) => ({text, weight})), era, culture: [cultureOf(id)]});
+      results: mix.map(([text, weight]) => ({text, weight})), era, culture: [cultureOf(id)], ...(WORLD_REGIONS[id].lend === false ? {lend: false} : {})});
   }
 }
 
-export const WORLD_PEOPLE_TABLES = [...origins, ...names];
+// Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120)
+const BUILT = {haudenosaunee: haudenosauneeTables()};
+export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
 export const GIVEN_ONLY = new Set(Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o));
 /** Every people named here. */
-export const WORLD_PEOPLES = Object.keys(P);
+export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
