@@ -526,8 +526,14 @@ function wounds(c, level) {
  * TALK_MOUTHS. sees = {fae, sigil}: whether the viewer may see a changeling's mien and a hunter's sigil.
  * Returns {rgba, expr, eyes, mouth, shut} where rgba is 64 by 64 RGBA bytes.
  */
+/** Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), top(c)}}. */
+export const FEATURES = {};
+
 export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}} = {}) {
   level = Math.max(0, Math.min(7, Math.round(Number(level) || 0)));
+  const feats = (S.features ?? []).map(id => FEATURES[id]).filter(Boolean);
+  if ( feats.some(f => f.tone) ) { S = {...S}; for ( const f of feats ) f.tone?.(S); }
+  const stage = (k, c) => { for ( const f of feats ) f[k]?.(c); };
   if ( !EXPRESSIONS.includes(expr) ) expr = "neutral";
   if ( level >= 7 ) { expr = "slack"; eyes = "shut"; mouth = null; }      // Incapacitated: eyes shut, jaw slack, no speech
   const mouthKind = TALK_MOUTHS.includes(mouth) ? mouth : expr;
@@ -535,11 +541,11 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   const F = new Grid(S.bg), shape = [TOP, EYE, JAW, S.chin, S.w, S.jw, S.cw];
   const R = ramp(skinCol, S.cool), H = hramp(S.hair), C = ramp(S.cloth, true);
   const r = rng(seedOf(`${S.seed}|marks`));
-  const ctx = {F, R, H, C, S, r, shape, sees: {fae: true, sigil: true, ...sees}, eyes, mouthKind};
+  const ctx = {F, R, H, C, S, r, shape, sees: {fae: true, sigil: true, ...sees}, eyes, mouthKind, expr, level};
   for ( let y = S.chin; y < N; y++ ) for ( let x = 0; x < N; x++ )
     if ( Math.abs(x - CX) <= 16 + (y - S.chin) * 2.6 && !(Math.abs(x - CX) < 7 - (y - S.chin - 2) * 0.9 && y < S.chin + 7) ) F.put(x, y, x < CX + 4 ? C.b : C.s1, "cloth");
   if ( S.style === "long" ) for ( let y = 40; y < N; y++ ) for ( let x = CX - S.w - 5; x <= CX + S.w + 5; x++ ) if ( !F.has(x, y) ) F.put(x, y, H.s2, "hair");   // hair behind the neck
-  BACK[S.line]?.(ctx);
+  BACK[S.line]?.(ctx); stage("back", ctx);
   skin(F, R, shape, S.jw < 12 ? 6 : 7); cheeks(F, R, shape);
   if ( S.ears === "plain" ) {      // ears, tucked into the head
     const hw = Math.round(headHw(34, shape));
@@ -548,6 +554,7 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
       F.put(CX + sd * (hw + k), 32 + dy, (k === 1 && dy > 0 && dy < 5) ? R.s2 : sd < 0 ? R.b : R.s1, "skin");
     }
   }
+  stage("skin", ctx);
   const lid = S.cool ? [26, 28, 40] : [30, 16, 22];
   for ( const [ex, sd] of [[26, -1], [38, 1]] ) {
     const state = (level >= 6 && sd > 0) ? "shut" : eyes;       // Crippled: one eye swollen shut
@@ -559,12 +566,13 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   const lip = S.thin ? R.s2 : mix(R.b, [150, 44, 60], S.lash ? 0.5 : 0.3);
   drawMouth(F, R, MOUTH_Y, lip, mouthKind, {fangs: S.fangs && S.line === "kindred", thin: S.thin});
   if ( S.beard ) beard(F, H, shape, MOUTH_Y, S.beard, OPEN_MOUTHS.has(mouthKind));
+  stage("face", ctx);
   if ( S.style === "long" ) hairLong(F, H, shape);
   else if ( S.style === "short" ) hairShort(F, H, shape);
   else if ( S.style === "back" ) hairShort(F, H, shape, 2, 1);
   F.outline(["skin", "neck"], R.ol); F.outline(["hair"], H.ol); F.outline(["cloth"], C.ol); F.outline(["ear"], R.ol);
   for ( let x = CX - 13; x <= CX + 13; x++ ) for ( let y = 12; y < 29; y++ ) if ( F.kindAt(x, y) === "skin" && F.kindAt(x, y - 1) === "hair" ) F.put(x, y, R.s1);   // shade under the fringe
-  POST[S.line]?.(ctx);
+  POST[S.line]?.(ctx); stage("top", ctx);
   if ( level ) wounds(ctx, level);
   return {rgba: F.rgba(), expr, eyes, mouth: TALK_MOUTHS.includes(mouth) ? mouth : null, shut: level >= 7};
 }
@@ -622,3 +630,6 @@ export function reactionFor({sway = "", frenzy = false, mood = "", step = 0, lev
   if ( st >= 2 ) return {expr: "smile", rest};
   return {expr: rest, rest};
 }
+
+/** Drawing helpers for face64-features.mjs. */
+export const H = {mix, same, ramp, hramp, glow, stamp, horn, inTri, headHw, rng, seedOf, CX, EYE_Y, MOUTH_Y, OPEN_MOUTHS, hairShort, hairLong, eyeOpen};
