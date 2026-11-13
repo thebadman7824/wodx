@@ -19,13 +19,17 @@ export function field(sys = {}, key) {
 
 export const RAGE_BY_AUSPICE = {ragabash: 1, theurge: 2, philodox: 3, galliard: 4, ahroun: 5};
 export const GNOSIS_BY_BREED = {homid: 1, metis: 3, lupus: 5};
-/** W20 core, each tribe's starting Willpower. The Dark Ages names map onto them (B3002; book check pending). */
+/** W20 core, each tribe's starting Willpower. The Dark Ages names map onto them (B3002; book check passed 2026-11-13). */
 export const WILLPOWER_BY_TRIBE = {"black furies": 3, "bone gnawers": 4, "children of gaia": 4, fianna: 3, "get of fenris": 3, "glass walkers": 3,
   "red talons": 3, "shadow lords": 3, "silent striders": 3, "silver fangs": 3, stargazers: 4, uktena: 3, wendigo: 4};
 const TRIBE_ALIAS = {fenrir: "get of fenris", "warders of men": "glass walkers"};
-/** Demon: the Fallen's starting Torment by House (B3003; book check pending). */
-export const TORMENT_BY_HOUSE = {devils: 3, namaru: 3, scourges: 3, asharu: 3, malefactors: 3, annunaki: 3, fiends: 3, neberu: 3,
-  defilers: 4, lammasu: 4, devourers: 4, rabisu: 4, slayers: 4, halaku: 4};
+/** Demon: the Fallen's starting Torment by House (B3003, corrected after the book check, B3005). */
+export const TORMENT_BY_HOUSE = {devils: 4, namaru: 4, scourges: 3, asharu: 3, malefactors: 3, annunaki: 3, fiends: 3, neberu: 3,
+  defilers: 3, lammasu: 3, devourers: 4, rabisu: 4, slayers: 4, halaku: 4};
+/** The Dark Ages tribes whose starting Willpower differs from W20 (B3005, book check 2026-11-13). */
+export const DARK_AGES_TRIBE_WILLPOWER = {"children of gaia": 3};
+/** C20: what each seeming adds at the start (B3006). The Wilder picks Glamour or Willpower. */
+export const SEEMING_BONUS = {childling: {glamour: 1}, wilder: {choice: true}, grump: {willpower: 1}};
 
 const lookup = (table, text, alias = {}) => {
   const t = low(text);
@@ -90,7 +94,8 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       break;
     case "w20": case "daw": {
       const ausp = field(sys, "auspice"), breed = field(sys, "breed"), tribe = field(sys, "tribe");
-      const r = lookup(RAGE_BY_AUSPICE, ausp), g = lookup(GNOSIS_BY_BREED, breed), w = lookup(WILLPOWER_BY_TRIBE, tribe, TRIBE_ALIAS);
+      const r = lookup(RAGE_BY_AUSPICE, ausp), g = lookup(GNOSIS_BY_BREED, breed);
+      const w = (lineId === "daw" ? lookup(DARK_AGES_TRIBE_WILLPOWER, tribe) : null) ?? lookup(WILLPOWER_BY_TRIBE, tribe, TRIBE_ALIAS);
       add("rage", "Rage", "system.advantages.rage", r, r === null ? "Write the auspice on the sheet first" : "By auspice", {extra: "rage"});
       add("gnosis", "Gnosis", "system.advantages.gnosis", g, g === null ? "Write the breed on the sheet first" : "By breed", {extra: "gnosis"});
       wp(w, w === null ? (tribe ? "This tribe is not in the list: set it with the Storyteller" : "Write the tribe on the sheet first") : "By tribe");
@@ -116,11 +121,15 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       wp(5, "Starts at 5");
       notes.push("The Shadow's Angst, Dark Passions and Thorns are made with the Storyteller.");
       break;
-    case "c20":
-      wp(4, "Starts at 4");
-      add("glamour", "Glamour", "system.advantages.glamour", 4, "Starts at 4", {extra: "glamour"});
+    case "c20": {
+      const seem = Object.keys(SEEMING_BONUS).find(k => field(sys, "seeming").includes(k)), sb = SEEMING_BONUS[seem] ?? {};
+      const tag = what => seem && sb[what] ? `Starts at 4, plus ${sb[what]} as a ${seem}` : "Starts at 4";
+      wp(4 + n(sb.willpower), tag("willpower"));
+      add("glamour", "Glamour", "system.advantages.glamour", 4 + n(sb.glamour), tag("glamour"), {extra: "glamour"});
       add("banality", "Banality", "system.advantages.banality", 3, "Starts at 3");
-      notes.push("The seeming changes these starting values: check them with the Storyteller.");
+      if ( sb.choice ) notes.push("A wilder adds 1 to Glamour or to Willpower, the player's pick: raise one of them by hand.");
+      else if ( !seem ) notes.push("Write the seeming on the sheet: a childling starts with 1 more Glamour, a grump with 1 more Willpower, and a wilder picks one.");
+    }
       break;
     case "dafae":
       wp(4, "Starts at 4");
