@@ -88,6 +88,16 @@ export async function run() {
       await sleep(1200);
       ok("8. fight", want === "shot" && shot === "shot" && !A.playing(tm.id), {want, shot, combat: game.modules.get("wodx-combat")?.version});
     }
+    // 9. a power: the signal Actions sends when a power is rolled plays the elder's casting move toward the townsman
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888");
+      const el = docs.find(d => (A.acts?.(d.flags?.["wodx-paperdoll"]?.sprite) ?? []).includes("cast") && d.id !== tm?.id);
+      Hooks.callAll("wodxPowerShown", el.actor, {target: tm.actor, token: el.uuid, targetToken: tm.uuid});
+      await sleep(400);
+      const cast = A.playing(el.id)?.act;
+      await sleep(1200);
+      ok("9. power", cast === "cast" && !A.playing(el.id), {sprite: el.flags?.["wodx-paperdoll"]?.sprite, cast, actions: game.modules.get("wodx-actions")?.version, sends: typeof game.modules.get("wodx-actions")?.api?.version});
+    }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   return save(R);

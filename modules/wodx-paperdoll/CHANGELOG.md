@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.9.1 (sprite tokens play their casting move when a power is rolled from the Actions menu; attacks and powers rolled on a player's own computer now play too, sent by the computer that rolled them; not deployed)
 - 0.9.0 (sprite tokens play every attack rolled in a fight, hit or miss, with the move that fits the weapon: a shot for ranged weapons, a thrust for pointed ones, a swing for the rest, hands and claws, a bite; needs WoDX Combat 3.22.0 for misses and weapons; a hook other modules can call to show a power being worked; not deployed)
 - 0.8.1 (fix: the same attack played twice in a row toward the same side did nothing the second time; found on the testbed; not deployed)
 - 0.8.0 (sprite tokens attack: each of the six test figures has its own attack moves, six frames in every facing, a strike with the hand, a thrust, a shot, a bite, the Crinos claws, and a worked power with its effect; a blow that lands in a fight plays the attacker's move turned toward the one struck, on every screen; the four people redrawn from one description each so walk and attack match; not deployed)

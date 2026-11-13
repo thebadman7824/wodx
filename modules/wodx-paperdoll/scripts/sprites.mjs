@@ -92,17 +92,19 @@ export async function play(tokenDoc, act = null, toward = null) {
 
 const lately = new Map();
 const mine = () => game.users?.activeGM?.id === game.user?.id;
+/* An attack or a power is heard only on the computer that rolled it, so that computer sends the move when it may change the token. */
+const may = tok => !!tok?.document?.isOwner;
 const spriteTokenOf = (actor, uuid = null) => {
   const toks = canvas.tokens?.placeables ?? [];
   return (uuid ? toks.find(t => t.document.uuid === uuid) : null) ?? toks.find(t => t.actor === actor) ?? toks.find(t => actor?.uuid && t.actor?.uuid === actor.uuid) ?? null;
 };
 
-/** Every attack rolled in a fight, hit or miss, plays the move that fits the weapon. The active Storyteller's computer sends it. */
+/** Every attack rolled in a fight, hit or miss, plays the move that fits the weapon. The computer that rolled it sends it. */
 function onAttack(attacker, info = {}) {
-  if ( !on() || !mine() ) return;
+  if ( !on() ) return;
   const from = spriteTokenOf(attacker, info.attackerToken), name = from?.document.flags?.[MOD]?.sprite;
   const move = name ? SR.moveFor(name, info) : null;
-  if ( !move ) return;
+  if ( !move || !may(from) ) return;
   lately.set(from.id, performance.now());
   const to = info.target ? spriteTokenOf(info.target, info.targetToken) : null;
   play(from.document, move, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite attack`, e));
@@ -110,10 +112,10 @@ function onAttack(attacker, info = {}) {
 
 /** A power worked by a character plays its sprite's casting move, for any module that says so: Hooks.callAll("wodxPowerShown", actor, {target}). */
 function onPower(actor, info = {}) {
-  if ( !on() || !mine() ) return;
+  if ( !on() ) return;
   const from = spriteTokenOf(actor, info.token), name = from?.document.flags?.[MOD]?.sprite;
   const move = name ? SR.moveFor(name, {power: true}) : null;
-  if ( !move ) return;
+  if ( !move || !may(from) ) return;
   const to = info.target ? spriteTokenOf(info.target, info.targetToken) : null;
   play(from.document, move, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite power`, e));
 }

@@ -3290,6 +3290,14 @@ Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
 Reverse: remove the hook call in Combat's attack and the two listeners in sprites.mjs.
 
+## B2583. Powers rolled from the sheet play the casting move (2026-11-13, Ben's ask)
+
+A power rolled from any line's power window in Actions sends wodxPowerShown with who worked it and at whom, once its card is posted. The power window is recognised by its aiming panel, which every line's power and casting window carries, so no line needs its own call. A cancelled window, or a roll that posts nothing, sends nothing. Paperdoll plays the sprite's casting move toward the target. The colour and shape of the effect still come from the sprite's own sheet; choosing them from the power rolled is open.
+
+## B2584. The computer that rolled sends the move (2026-11-13)
+
+wodxAttackRolled and wodxPowerShown are heard only on the computer that rolled. That computer writes the move to the token when its user owns the token, so a player's own attacks and powers play on every screen. Harm applied without an attack roll is still sent by the active Storyteller's computer.
+
 ## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
 The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
 Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.
