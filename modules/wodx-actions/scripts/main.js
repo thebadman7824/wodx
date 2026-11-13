@@ -70,6 +70,9 @@ import * as HN from "./hunt-night-rules.js";
 import { calendarFor } from "../../wodx-npc/scripts/hunt-calendar.mjs";
 import * as OD from "./odds-rules.js";
 import * as AIM from "./aim.js";
+import * as DMK from "./debts-marks.js";
+import * as DR_DEBTS from "./debts-rules.js";
+import * as DR_BEAST from "./beast-marks-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -109,6 +112,7 @@ function registerSettings() {
     s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (V20 printed p. 268).", Boolean, true);
     GX.registerSettings(s);
     KX.registerSettings(s);
+    DMK.registerSettings();
     SX.registerSettings(s);
     WX.registerSettings(s);
     HX.registerSettings(s);
@@ -867,6 +871,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const dm = DH.modsFor(actor, fd, pool);
         if (dm.parts.length) tm = { ...tm, dice: (tm.dice ?? 0) + dm.dice, diff: (tm.diff ?? 0) + dm.diff, parts: [...(tm.parts ?? []), ...dm.parts] };
     } catch (e) { console.warn("WoDX Actions | deeper hooks", e); }
+    // B3563: a low-Humanity vampire's bearing toward a mortal, and the blood to seem alive (V20 pp. 269, 310)
+    try {
+        const bm = dm().bearingMods(actor, target, fd, PRESETS[fd.preset]);
+        if (bm) tm = { ...tm, diff: (tm.diff ?? 0) + bm.diff, parts: [...(tm.parts ?? []), ...bm.parts] };
+    } catch (e) { console.warn("WoDX Actions | bearing", e); }
     return R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1841,7 +1850,7 @@ async function resolveSpend(actor, fd) {
         }
         html += `<div class="vta-sec"><b>Quickening:</b> ${bits.join(", ")} for the scene. Announce before rolling.</div>`;
     }
-    if (imitate) { spent += imitate; html += `<div class="vta-sec"><b>Imitates life</b> for the scene: warmth, breath, blush (${imitate} blood).</div>`; }
+    if (imitate) { await dm().markImitating(actor); spent += imitate; html += `<div class="vta-sec"><b>Imitates life</b> for the scene: warmth, breath, blush (${imitate} blood).</div>`; }
     if (fd.disc) { spent += fd.disc; html += `<div class="vta-sec"><b>Discipline:</b> ${fd.disc} blood${fd.discName ? ` for ${esc(fd.discName)}` : ""}.</div>`; }
     if (fd.give) {
         const t = targetActor();
@@ -2025,6 +2034,7 @@ export async function torpor({ actor: a } = {}) {
         }
         if (fd.act === "wake") {
             await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
+            await dm().wake(actor, t?.since);
             return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">${esc(actor.name)} rises Crippled and should heal or hunt at once.</div>`);
         }
         const minDays = t.voluntary ? Math.ceil(t.days / 2) : t.days;
@@ -2037,6 +2047,7 @@ export async function torpor({ actor: a } = {}) {
         if (r.successes) {
             await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
             await kx().logEvent(actor, "Rises from torpor.", "torpor");
+            await dm().wake(actor, t?.since);
             html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt immediately.</div>`;
         } else html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. Wait a night, spend another blood point, and try again.</div>`;
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
@@ -2328,9 +2339,10 @@ async function diablerieStep(actor, victim, html = "", msg = null) {
             if (setting("applyChanges")) await updateActor(actor, { "system.generation": num(actor.system.generation) - 1 });
             html += `<div class="vta-big good">Generation lowers by ${drop}: now ${ag - 1}.</div><div class="vta-note">Elder vitae may also raise Disciplines a dot or more for a scene.</div>`;
         } else html += `<div class="vta-note">The victim's blood was no stronger: no change of Generation.</div>`;
-        html += `<div class="vta-note">Black veins mark the diablerist's aura for ${Math.max(1, ag - vg)} year(s). Most Roads forbid murder: Road loss is automatic, not rolled.</div>`;
+        html += await dm().markDiablerie(actor, victim, ag) + `<div class="vta-note">Most Roads forbid murder: Road loss is automatic, not rolled.</div>`;
         await kx().logEvent(actor, `Diablerie: consumes ${victim.name}'s soul${vg < ag ? `; Generation ${ag} → ${ag - 1}` : ""}.`, "diablerie");
         await kx().logEvent(victim, `Final Death: diablerized by ${actor.name}.`, "diablerie");
+        await dm().onFinalDeath(victim);
         const sp = await kx().sinPrompt(actor, "diablerie", "Diablerie");
         if (sp?.html) html += sp.html;
         html += btn("sin", "Record the sin");
@@ -2560,6 +2572,13 @@ function byLine(reckoning, inquisitor, hh2) {
 }
 const hh2Note = () => ui.notifications.info("Hunters Hunted II hunters are mortals: use True Faith, Numina and the Action dialog (Virtue rolls are Courage, Conscience and Self-Control).");
 
+let DME = null;
+/** Debts and oaths, the Beast at the wheel, low Humanity, long torpor and diablerie's marks (B3560 to B3565). */
+function dm() {
+    return DME ??= DMK.build({ post, dialog, setFlag, updateActor, rollPool, rollBlock, setting, spendWillpower, background, attr, abilityList, generationOf,
+        roadOf: a => KX.roadOf(a), healthTrack, kx, api: () => API, notify: m => ui.notifications.warn(m) });
+}
+
 let KXE = null;
 /** The Kindred additions and automatic prompts (3.2.0). */
 function kx() {
@@ -2746,6 +2765,14 @@ function bindCard(msg, el) {
         const r = await wx().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
+    el.querySelectorAll?.("button.vta-btn[data-dm]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `dm|${b.dataset.dm}|${b.dataset.actor}|${b.dataset.arg ?? ""}`;
+        if (used.includes(key)) return ui.notifications.info("Already done.");
+        const r = await dm().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
     el.querySelectorAll?.("button.vta-btn[data-vx]").forEach(b => b.addEventListener("click", async ev => {
         ev.preventDefault();
         await vx().onChatButton(b);
@@ -2758,7 +2785,7 @@ function bindCard(msg, el) {
         if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); fx().onButton(msg, b.dataset.fx).catch(e => console.error("WoDX |", e)); });
     });
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx]):not([data-dm])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -2785,7 +2812,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.65.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.66.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -2832,6 +2859,9 @@ const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flag
     makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
     // Kindred additions and automatic prompts (3.2.0)
     useDiscipline: withActor(a => kx().useDiscipline(a)), setRoad: withActor(a => kx().setRoad(a)), downtime: withActor(a => kx().downtime(a)),
+    bloodHunt: (o = {}) => dm().bloodHunt(o.actor ? resolveActor(o.actor) : resolveActor()), callHunt: (a, o) => dm().callHunt(resolveActor(a), o), endHunt: (id, how) => dm().endHunt(id, how),
+    oaths: withActor(a => dm().oaths(a)), diablerieMarks: withActor(a => dm().marks(a)), beastTurn: c => dm().onTurn(c ?? game.combat), wakeCard: (a, since) => dm().wake(resolveActor(a), since),
+    debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),
     masquerade: (o = {}) => kx().masquerade(o.actor ? resolveActor(o.actor) : resolveActor()), endStory,
     recordBreach: o => kx().recordBreach(o), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
@@ -2980,6 +3010,11 @@ function kindredHooks() {
         sunRound.set(combat.id, combat.round);
         sx().onRound(combat).catch(e => console.error("WoDX |", e));
     });
+    // B3562: the Beast takes a frenzied player character's turn (setting beastToken)
+    Hooks.on("updateCombat", (combat, changed) => {
+        if (!game.user.isGM || !(("turn" in (changed ?? {})) || ("round" in (changed ?? {})))) return;
+        dm().onTurn(combat).catch(e => console.error("WoDX |", e));
+    });
     Hooks.on("wodxSkipEnd", () => { busy = false; tick(); });
     Hooks.on("preUpdateActor", (actor, changes, options) => {
         if (foundry.utils.hasProperty(changes, "system.advantages.bloodpool.temporary")) options.wodxBloodBefore = num(actor.system?.advantages?.bloodpool?.temporary);
@@ -2987,6 +3022,7 @@ function kindredHooks() {
     });
     Hooks.on("updateActor", (actor, changes, options) => {
         if (options?.wodxHealthBefore) kx().onDamage(actor, { before: options.wodxHealthBefore, after: actor.system?.health?.damage ?? {}, source: "sheet" }).catch(e => console.error("WoDX |", e));
+        if (options?.wodxHealthBefore && game.user.isGM && actor.getFlag?.(MOD, "bloodHunt")) dm().checkDeath(actor).catch(e => console.error("WoDX |", e));
         if (options?.wodxBloodBefore !== undefined) kx().onBlood(actor, options.wodxBloodBefore, num(actor.system?.advantages?.bloodpool?.temporary)).catch(e => console.error("WoDX |", e));
     });
     // A new scene: the Delirium can strike the same witnesses again
