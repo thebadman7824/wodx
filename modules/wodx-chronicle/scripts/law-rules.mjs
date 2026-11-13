@@ -23,7 +23,8 @@ export const CRIMES = {
   "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine",
   unfilial: "Failing in duty to parents and elders",
   "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
-  "pass-law": "Being found without a pass where the pass laws apply"
+  "pass-law": "Being found without a pass where the pass laws apply",
+  "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -63,7 +64,8 @@ export const ORDER = {
   "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another",
   "headman": "The village headman and the watchmen",
   "societies": "Masked societies and age sets that keep order",
-  "sheriff": "The sheriff of the shire, who can raise the posse"
+  "sheriff": "The sheriff of the shire, who can raise the posse",
+  "jito": "The shogun's land stewards and constables"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -238,6 +240,32 @@ export const FAMILIES = {
     {from: 1800, note: "Ministries, police and prisons", add: {order: ["police"], punish: ["prison", "hard-labour"]}, drop: {proof: ["ordeal", "combat"], warn: ["Blood money is owed for a killing, by the victim's rank"]}, set: {catch: 0.4}},
     {from: 1900, note: "Fingerprints and the new codes", add: {proof: ["evidence", "forensic"], crimes: ["sedition", "drug-trade"]}, drop: {crimes: ["heresy", "sorcery"]}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime", "terrorism"]}, set: {catch: 0.5}}
+  ]},
+
+  // Japan: the shogun's law beside the court's, warrior house law, the Tokugawa order, the Meiji codes (B3499)
+  japanese: {label: "Japan", rows: [
+    {from: 0, note: "The emperor reigns in Kyoto; the shogun's government in Kamakura rules", set: {
+      rule: {form: "An empire in name, ruled by the shogun's warrior government", ruler: "The Shogun, in the Emperor's name", council: "The shogunate's regents and council"},
+      courts: ["The shogunate's courts for warriors and their lands", "The imperial court's old codes for the court nobles", "Temples and shrines judging the people of their own estates", "Village elders"],
+      proof: ["witnesses", "oath"], punish: ["fine", "banishment", "hanging", "confiscation"],
+      order: ["jito", "town-watch"], taxes: ["Rice tax to the lord of the land", "Labour for the lord"], bribe: 2, catch: 0.3},
+      add: {crimes: ["rebellion"], warn: ["A warrior may answer an insult from a commoner with the sword"]}},
+    {from: 1232, note: "The Goseibai Shikimoku, the warriors' own code", add: {courts: ["Shogunal judges under the Goseibai Shikimoku"]}},
+    {from: 1338, note: "The Ashikaga shoguns in Kyoto", set: {rule: {ruler: "The Ashikaga Shogun"}}},
+    {from: 1467, to: 1587, note: "The age of warring states: each warlord's house law rules the domain", add: {warn: ["Each warlord's house law rules the domain; the shogun's word reaches nowhere"]}},
+    {from: 1588, note: "The sword hunt: weapons taken from commoners", add: {crimes: ["commoner-arms"]}},
+    {from: 1603, note: "The Tokugawa order: shogun in Edo, daimyo in their domains, groups of five households", set: {rule: {ruler: "The Tokugawa Shogun in Edo", council: "The senior councillors and the daimyo"}},
+      add: {courts: ["The shogunate's magistrates in Edo, Osaka and Kyoto", "Each daimyo's own court in the domain"], order: ["baojia"], punish: ["flogging"]}},
+    {from: 1614, to: 1872, note: "Christianity forbidden", add: {crimes: ["wrong-faith"], warn: ["Christians are hunted; villagers must tread on a holy image to prove they are not"]}},
+    {from: 1639, to: 1853, note: "The closed country", add: {crimes: ["leaving-country"]}},
+    {from: 1868, note: "The Meiji restoration: the emperor rules; codes on French then German lines", set: {rule: {form: "An empire under the Meiji constitution (1889)", ruler: "The Emperor", council: "The cabinet and the Imperial Diet"}, bribe: 3, catch: 0.45},
+      add: {courts: ["The new courts of the empire"], order: ["police", "detectives"], punish: ["prison", "hard-labour"], proof: ["evidence"]},
+      drop: {courts: ["The shogunate's courts for warriors and their lands", "Shogunal judges under the Goseibai Shikimoku", "The shogunate's magistrates in Edo, Osaka and Kyoto", "Each daimyo's own court in the domain"], order: ["jito", "baojia", "town-watch"], warn: ["A warrior may answer an insult from a commoner with the sword"]}},
+    {from: 1876, note: "Swords banned in public", drop: {crimes: ["commoner-arms"]}, add: {warn: ["Only soldiers and police may wear a sword in public"]}},
+    {from: 1925, to: 1945, note: "The Peace Preservation Law and the thought police", add: {crimes: ["anti-state"], order: ["secret-police"], warn: ["The thought police arrest people for their opinions"]}},
+    {from: 1947, note: "The postwar constitution", set: {rule: {form: "A constitutional monarchy with a parliament", ruler: "The Prime Minister; the Emperor as symbol", council: "The National Diet"}, catch: 0.55},
+      add: {proof: ["forensic"], crimes: ["drug-trade"]}, drop: {punish: ["hard-labour"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.65}}
   ]}
 };
 
