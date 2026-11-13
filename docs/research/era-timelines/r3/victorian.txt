@@ -347,7 +347,7 @@
 1886|H|mor|AM|Skeleton Canyon|war,migration|Geronimo surrenders|The last Apache band at war gives itself up and is sent to prison in Florida.
 1888|H|mor|AM|Rio de Janeiro|law|The Golden Law|Brazil, the last country in the Americas to keep slavery, abolishes it; the empire falls the next year.
 1890|H|mor|AM|Wounded Knee|massacre,faith|Wounded Knee|Soldiers kill some three hundred Lakota, many of them Ghost Dancers, on Wounded Knee Creek.
-1890|W|wer,wra|AM|Wounded Knee|occult,faith|The Ghost Dance|The house reading has the Pure Ones' Garou among the dancers, and the dead of the plains answer the dance in the Shadowlands though the living cannot see them.
+1890|W|wer|AM|Wounded Knee|occult,faith|The Ghost Dance|Garou of the Pure Ones dance among the Ghost Dancers in the camps that follow Wovoka's vision, and some die with them on Wounded Knee Creek.
 1896|H|mor|AM|Dawson City|money,migration|The Klondike|Gold is found on a creek in the Yukon, and a hundred thousand people set out for it.
 1897|H|mor|AM|Canudos|war,faith,massacre|Canudos|The Brazilian army destroys a holy man's settlement in the backlands and kills nearly all its people.
 1898|H|mor|AM|Havana|war,empire,sea|The war with Spain|An American battleship blows up in Havana harbour; within the year Spain loses Cuba, Puerto Rico and the Philippines.
