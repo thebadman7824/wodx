@@ -10,9 +10,10 @@ def hsh(a,b):
 class Cv:
     def __init__(s):
         s.c=np.zeros((SH,S,4),np.uint8); s.id=np.zeros((SH,S),int); s.rid=np.full((SH,S),-1); s.dk=np.zeros((SH,S),int)
-        s.ramps=[]; s.full={}; s.groups={}; s.n=0
+        s.ramps=[]; s.full={}; s.groups={}; s.n=0; s.w=None   # w: a child.Warp that every point passes through (B3480)
     def part(s): s.n+=1; return s.n
     def px(s,x,y,col,pid=None):
+        if s.w: x,y=s.w.pt(x,y)
         x=int(round(x)); y=int(round(y))+YO
         if 0<=x<S and 0<=y<SH:
             s.c[y,x]=(*col,255); s.rid[y,x]=-1
@@ -25,6 +26,7 @@ class Cv:
             pid=s.groups[g]
         if ramp not in s.ramps: s.ramps.append(ramp)
         ri=s.ramps.index(ramp); full=s.full.setdefault(pid,np.zeros((SH,S),bool))
+        if s.w: ra*=s.w.k(a[1]); rb*=s.w.k(b[1]); a=s.w.pt(*a); b=s.w.pt(*b)
         ax,ay=a; bx,by=b; ay+=YO; by+=YO; L=max(math.hypot(bx-ax,by-ay),1e-6); m=max(ra,rb)+3
         for y in range(max(int(min(ay,by)-m),0),min(int(max(ay,by)+m),SH)):
             for x in range(max(int(min(ax,bx)-m),0),min(int(max(ax,bx)+m),S)):
