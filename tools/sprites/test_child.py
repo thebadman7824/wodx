@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import batch as Bt, child as Ch
 SH,S=112,96
 def height(a):
-    sh,_,_=Bt.draw(a); fr=sh[''][2*SH:3*SH,0:S]; ys=np.nonzero(fr[...,3])[0]; return ys.min(),ys.max(),sh
+    sh=Bt.draw(a)[0]; fr=sh[''][2*SH:3*SH,0:S]; ys=np.nonzero(fr[...,3])[0]; return ys.min(),ys.max(),sh
 base=dict(id='t1',kind='person',year=1600,look=dict(skin='c89878',hair='3a2a1c',beard=True),worn=[],held=['Dagger'])
 top0,feet0,adult=height(base); tall0=feet0-top0
 last=tall0+1
