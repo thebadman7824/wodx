@@ -360,7 +360,7 @@
 1576|H|mor|AM|Mexico City|plague|The second cocoliztli|The bleeding fever returns to New Spain and kills about two million.
 1585|H|mor|AM|Roanoke|founding,exploration|Roanoke|English settlers land on Roanoke Island off the Carolina coast.
 1590|H|mor|AM|Roanoke|migration,death|The lost colony|A relief ship finds the settlement of Roanoke empty and the word CROATOAN cut into a post.
-1590|W|wer|AM|Roanoke|occult,death|The Croatan|The house reading follows the Garou's own story: in these years the Croatan tribe gives itself whole to bind a great Wyrm spirit, and the Pure Ones are two tribes where there were three.
+1589|W|wer|AM|Roanoke|occult,death|The Croatan|The Croatan tribe gives itself whole in a great rite to bind the Eater-of-Souls, a Wyrm spirit drawn to the coast by the newcomers, and the Pure Ones are two tribes where there were three.
 1600|H|mor|AM|Huaynaputina|disaster,weather|Huaynaputina|A volcano in southern Peru explodes; the ash darkens the sky, and the next years bring cold summers and famine as far as Russia.
 1456|H|mor|AF|Cape Verde|exploration,sea|The Cape Verde islands|Ships in Portuguese service find the empty islands of Cape Verde.
 1464|H|mor|AF|Gao|crown,empire|Sunni Ali|Sunni Ali takes the throne of Songhai and builds a fleet of war canoes on the Niger.
