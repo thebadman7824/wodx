@@ -3470,6 +3470,26 @@ Reverse: take the four names out of GAITS in sprite-rules.mjs.
 Feeding (wodxFed) plays the feeding move toward the vessel; a change of form (wodxFormChanged) plays the blur; a line spoken in character from a token plays the speech mark. Whoever may move a sprite token has a button on it for sitting, kneeling, looking about and standing up. One who sits or kneels still takes a blow and still falls, and healing does not stand them up; only a fall or a death is undone by healing.
 Reverse: remove the three Hooks.on lines and the pose button in sprites.mjs.
 
+## B2613. Looks for monsters on sprite tokens (2026-11-13, Ben's ask)
+Every creature of legend in the world has a look, drawn after what its own entry says of it (the page is in the entry's notes) and not after cartoons: a basilisk is a small serpent with a cock's head, a mist dragon the size of a cat, a custodes a great spider, the Black Monk a monk like any other, the Star Daemon a turning ribbon of light and shadow, a blood rose a hedge that sways and does not walk. Four-legged ones use the beast rig with wings, a single horn, a beak or spines; those on two legs are figures with their own size and marks (tools/sprites/monster.py). Two creatures share the name Basilisk and get the same look.
+Reverse: remove monster.py and the call in batch.py draw(); those creatures go back to having no sprite.
+
+## B2614. The fae are drawn in their fae mien, and ghosts as ghosts (2026-11-13, Ben's ask)
+A changeling's sprite shows its kith: size and build, ears, horns, a tail, a redcap's cap, a satyr's legs, a troll's blue skin. The kith comes from the sheet (the roster carries line and kith), else from the name. A wraith or a spirit is pale and half seen, and drifts instead of stepping. This is how the token looks to everyone; whether mortals at the table see the fae mien stays with the Storyteller's telling.
+Reverse: remove the fae() call in batch.py draw().
+
+## B2615. Block, parry, jump, crawl (2026-11-13, Ben's ask)
+A blow that does not land is met with the defence the fight rules rolled: a block or a parry with a spark, else the dodge as before (wodxAttackRolled now names the defence). A token moved with the jump or crawl action leaps over its shadow or goes flat to the ground.
+Reverse: take block and parry out of REACTS and jump and crawl out of GAITS in sprite-rules.mjs.
+
+## B2616. Working at a lock shows on the map (2026-11-13, Ben's ask)
+Interactables says when work is done at a door, a lock or a device (wodxInteractableWorked: token, action, result). A sprite stoops to the lock for fine work (picking, a key, disarming), strikes for force, and looks about when it listens or searches.
+Reverse: remove the Hooks.on line for wodxInteractableWorked in sprites.mjs.
+
+## B2617. Creatures of the books share looks by body plan (2026-11-13, Ben's ask for a book check)
+The creature pages of the books were read on the PC and each monster, spirit and creature written down in WoDX's own words: its body plan, size, how it moves and a few look words, with the book and page. Creatures close enough in body plan and look share one look, as the master and the messenger share a figure: a wisp in one of twenty colours for lights, flames and smoke, a swarm, a crawler, a flyer, a four-legged kind, or a figure of its own size (corpse, skeleton, giant, angel, oni, an elemental of stone, fire, water and so on). tools/sprites/bestiary.py writes the table (bestiary-looks.json, each name and alias to a look and a size) and roster.md (which creatures share which look). The batch draws a creature by name from that table when no look of its own fits; the creatures that have their own look (the dragon, the gryphon, the troll and the rest of B2613) keep it.
+Reverse: delete bestiary-looks.json; book_look() then finds nothing and the batch draws as before.
+
 ## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
 A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
 Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or drop #withSince in lifepath.mjs.
