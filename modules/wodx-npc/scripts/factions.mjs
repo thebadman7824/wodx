@@ -411,6 +411,22 @@ export function build(ctx) {
       [{op: "faction-add", faction: offer}], {key: `event:${ev.id}`, kind: "event"});
     return {card, offer};
   }
+  /**
+   * B3330: a town rises or is sacked (wodxTown, WoDX Storyteller's towns): the factions that hold places there, and
+   * one that taxed its market, pay for it. Waits in the approval queue, as a faction turn's changes do.
+   */
+  async function onTown(p) {
+    if ( !isActiveGM() || mode() === "off" || !["rising", "sack"].includes(p?.kind) ) return null;
+    let market = null;
+    try { market = game.modules.get("wodx-storyteller")?.api?.upkeep?.markets?.state?.()?.markets?.find(m => m.id === p.town) ?? null; } catch (e) { market = null; }
+    if ( !market ) return null;
+    const taxers = (market.moves ?? []).filter(v => v.type === "tax").map(v => v.faction);
+    const changes = F.townChanges(state(), {sceneIds: market.scenes ?? [], taxers, kind: p.kind});
+    if ( !changes.length ) return null;
+    const n = names(state());
+    return proposeChanges(`${market.name}: ${p.kind === "rising" ? "the town rises" : "the town is sacked"}`,
+      `${p.text ?? ""} ${changes.map(c => F.describeChange(c, n)).join(". ")}.`.trim(), changes, {key: `town:${p.town}:${p.kind}:${Math.floor(game.time.worldTime)}`, kind: "town"});
+  }
   /** NPC 0.26.0: a Great Maelstrom empties seats in each necropolis (B1112), with an Undo card. */
   async function onMaelstrom(ev, year) {
     const changes = PO.maelstromChanges(state(), {year, rand: streamFor(`maelstrom:${ev.id}`)});
@@ -1156,6 +1172,7 @@ export function build(ctx) {
       onClock("clock").catch(e => console.error(`${MOD} |`, e));
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxTown", p => { onTown(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBoonSettled", p => { onBoonSettled(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
