@@ -29,6 +29,11 @@ export function loadConfig(file = process.env.WODX_LANES ?? path.join(HERE, "lan
   const cfg = JSON.parse(fs.readFileSync(file, "utf8"));
   cfg.ignoreSettings ??= [];
   cfg.lockMaxMinutes ??= 180;
+  // Paths may name environment variables as %NAME% (Windows style), read at run time, so the
+  // file holds no user names. A variable that isn't set is left as written.
+  const expand = v => typeof v === "string" ? v.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, (m, n) => (process.env[n] ?? m).replace(/\\/g, "/")) : v;
+  for ( const k of ["foundryMain", "knownGood", "backups"] ) cfg[k] = expand(cfg[k]);
+  for ( const lane of cfg.lanes ?? [] ) lane.dataPath = expand(lane.dataPath);
   return cfg;
 }
 export function getLane(cfg, id) {
