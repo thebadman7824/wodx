@@ -111,7 +111,7 @@ test("the Western church keeps the routines as written", () => {
 
 test("Islam: Friday prayer at noon, the week turned to Friday", () => {
   const b = merchant(1250, {faith: "islamic", region: "egypt"});
-  const pray = b.find(x => x.place === "church" && x.days);
+  const pray = b.find(x => x.place === "church" && x.days && !x.prayer);
   assert.deepEqual(days(pray), [4]);
   assert.equal(pray.from, 12);
   assert.match(pray.label, /Friday prayer/);
@@ -128,7 +128,7 @@ test("Islam: Friday prayer at noon, the week turned to Friday", () => {
 
 test("the Sabbath for the Jewish year, the Liturgy for the Eastern church", () => {
   const b = merchant(1400, {faith: "jewish", region: "moravia"});
-  const pray = b.find(x => x.place === "church" && x.days);
+  const pray = b.find(x => x.place === "church" && x.days && !x.prayer);
   assert.deepEqual(days(pray), [5]);
   assert.match(pray.label, /Sabbath/);
   assert.ok(b.filter(x => x.activity === "work").every(x => !x.days.includes(5)));
@@ -141,7 +141,7 @@ test("faiths with no weekly day: work every day, worship on the holy days, until
   for ( const [faith, region] of [["hindu", "india"], ["theravada", "southeast-asia"], ["chinese", "china"], ["tibetan", "tibet-himalaya"]] ) {
     assert.equal(R.restDay(faith, region, 1300), null, faith);
     const b = merchant(1300, {faith, region});
-    assert.ok(b.filter(x => x.place === "church").every(x => x.feast === "only" && !x.days), `${faith}: worship on holy days only`);
+    assert.ok(b.filter(x => x.place === "church" && !x.prayer).every(x => x.feast === "only" && !x.days), `${faith}: worship on holy days only`);
     assert.ok(b.filter(x => x.activity === "work").every(x => !x.days), `${faith}: work every day`);
   }
   assert.equal(R.restDay("chinese", "japan", 1880), 6, "Japan took the Sunday rest in 1876");

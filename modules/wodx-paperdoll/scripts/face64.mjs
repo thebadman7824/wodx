@@ -43,6 +43,7 @@ export function specOf(actor, tokDoc = null) {
   const sex = actor.flags?.[MOD]?.look?.face?.gender || {female: "woman", male: "man"}[actor.flags?.["wodx-creation"]?.people?.sex] || "";
   const kith = s.kith === "custom" ? s.custom?.kith : s.kith;
   const S = P.roll(seed, line, {sex, fangs: !!own.fangs, kith: kith ?? ""});
+  S.net = own.net ?? "";
   S.features = Array.isArray(own.features) ? own.features.filter(id => FEATURES[id]) : rollFeatures(seed, line, groupText(actor));
   return S;
 }
@@ -71,7 +72,7 @@ function viewerSees() {
 /* ---- Pixels to the page ---- */
 const CACHE = new Map();
 function frameData(S, opts) {
-  const key = JSON.stringify([S.seed, S.line, S.fangs, S.features, opts.expr, opts.eyes, opts.mouth, opts.level, opts.sees, opts.state]);
+  const key = JSON.stringify([S.seed, S.line, S.fangs, S.features, S.net, opts.expr, opts.eyes, opts.mouth, opts.level, opts.sees, opts.state, !!opts.net]);
   let d = CACHE.get(key);
   if ( !d ) {
     d = new ImageData(P.drawFace(S, opts).rgba, P.N, P.N);
@@ -81,32 +82,36 @@ function frameData(S, opts) {
   return d;
 }
 /** A 64 by 64 canvas of one actor's face, shown at any size with hard pixel edges. */
-export function drawCanvas(actor, {expr = "neutral", eyes = "open", mouth = null, level = null, tokDoc = null, canvas = null} = {}) {
+export function drawCanvas(actor, {expr = "neutral", eyes = "open", mouth = null, level = null, tokDoc = null, canvas = null, net = null} = {}) {
   const S = specOf(actor, tokDoc);
   if ( !S ) return null;
   const c = canvas ?? Object.assign(document.createElement("canvas"), {width: P.N, height: P.N, className: "wodx-face64"});
   const lv = level ?? healthLevel(actor.system?.health);
-  c.getContext("2d").putImageData(frameData(S, {expr, eyes, mouth, level: lv, sees: viewerSees(), state: stateOf(actor)}), 0, 0);
+  c.getContext("2d").putImageData(frameData(S, {expr, eyes, mouth, level: lv, sees: viewerSees(), state: stateOf(actor), net: net ?? inNet(actor)}), 0, 0);
   return c;
 }
 
 /* ---- A face that moves ---- */
 /**
- * Plays one face in a canvas: blinks now and then, speaks a line, holds a reaction, then settles to rest. Stops by
- * itself once the canvas leaves the page.
+ * Plays one face: blinks now and then, speaks a line, holds a reaction, then settles to rest. One message can be drawn
+ * more than once (the chat log, a pop-up notice, a re-render after an update), so the player paints every canvas it is
+ * given, joined or not, and stops by itself a few minutes after the line.
  */
 class Talker {
-  constructor(canvas, S, {level = 0, expr = "neutral", rest = "neutral", state = {}} = {}) {
-    Object.assign(this, {canvas, S, level, expr, rest, state, eyes: "open", mouth: null, timers: new Set(), sees: viewerSees()});
+  constructor(canvas, S, {level = 0, expr = "neutral", rest = "neutral", state = {}, net = false} = {}) {
+    Object.assign(this, {canvases: new Set([canvas]), S, level, expr, rest, state, net, eyes: "open", mouth: null, timers: new Set(), sees: viewerSees()});
     this.paint();
   }
+  get canvas() { return [...this.canvases].at(-1); }
+  /** Another drawing of the same message joins the face as it plays. */
+  join(canvas) { for ( const c of this.canvases ) if ( this.started && !c.isConnected ) this.canvases.delete(c); this.canvases.add(canvas); this.paint(); }
   paint() {
-    if ( !this.canvas.isConnected && this.started ) return this.stop();
-    this.canvas.getContext("2d").putImageData(frameData(this.S, {expr: this.expr, eyes: this.eyes, mouth: this.mouth, level: this.level, sees: this.sees, state: this.state}), 0, 0);
+    const d = frameData(this.S, {expr: this.expr, eyes: this.eyes, mouth: this.mouth, level: this.level, sees: this.sees, state: this.state, net: this.net});
+    for ( const c of this.canvases ) c.getContext("2d").putImageData(d, 0, 0);
   }
   later(fn, ms) { const t = setTimeout(() => { this.timers.delete(t); if ( this.alive() ) fn(); }, ms); this.timers.add(t); }
-  alive() { if ( this.stopped ) return false; if ( this.started && !this.canvas.isConnected ) { this.stop(); return false; } return true; }
-  stop() { this.stopped = true; for ( const t of this.timers ) clearTimeout(t); this.timers.clear(); }
+  alive() { return !this.stopped; }
+  stop() { this.stopped = true; PLAYING.forEach((v, k) => { if ( v === this ) PLAYING.delete(k); }); for ( const t of this.timers ) clearTimeout(t); this.timers.clear(); }
   blinkLoop() {
     if ( this.level >= 7 ) return;
     this.later(() => {
@@ -139,30 +144,45 @@ function reactionOf(npc, pc) {
     step, level: healthLevel(npc?.system?.health)});
 }
 const PLAYED = new Set();
-/** A talk line in chat gets its speaker's face; a new line plays once on each screen, older ones show it still. */
+/** Faces now playing, by message: a second drawing of the message joins the one already playing. */
+const PLAYING = new Map();
+/** In the Net: the actor is jacked in (WoDX Otherworlds' status). */
+export const inNet = actor => !!actor?.statuses?.has?.(NET_STATUS);
+const NET_STATUS = "wodx-net";
+/** Plain speech from a token: no roll, no card of a WoDX module. */
+const isSpeech = msg => !msg.isRoll && !msg.rolls?.length && !Object.keys(msg.flags ?? {}).some(k => k.startsWith("wodx-"));
+/**
+ * A talk line in chat gets its speaker's face; so does anything said in the Net by a character jacked in, shown as its
+ * Net persona. A new line plays once on each screen, older ones show the face still.
+ */
 function onRender(msg, el) {
   const talk = msg.flags?.[NPC]?.talk;
   const mode = setting("talkingFaces") ?? "move";
-  if ( !talk || mode === "off" || !el || el.querySelector?.(".wodx-face64-wrap") ) return;
+  if ( mode === "off" || !el || el.querySelector?.(".wodx-face64-wrap") ) return;
   const tokDoc = game.scenes.get(msg.speaker?.scene)?.tokens?.get(msg.speaker?.token) ?? null;
   const npc = tokDoc?.actor ?? null;
   if ( !npc ) return;
+  const net = inNet(npc);
+  if ( !talk && !(net && isSpeech(msg)) ) return;
   const S = specOf(npc, tokDoc);
-  const pc = game.actors.get(talk.actor) ?? null;
-  const {expr, rest} = reactionOf(npc, pc);
+  const pc = talk ? game.actors.get(talk.actor) ?? null : null;
+  const {expr, rest} = talk ? reactionOf(npc, pc) : {expr: "neutral", rest: "neutral"};
   const level = healthLevel(npc.system?.health);
   const wrap = document.createElement("div");
   wrap.className = "wodx-face64-wrap";
   const c = Object.assign(document.createElement("canvas"), {width: P.N, height: P.N, className: "wodx-face64"});
-  c.setAttribute("role", "img"); c.setAttribute("aria-label", `${npc.name ?? "The speaker"}'s face`);
+  if ( net ) c.classList.add("wodx-face64-net");
+  c.setAttribute("role", "img"); c.setAttribute("aria-label", `${npc.name ?? "The speaker"}'s ${net ? "face in the Net" : "face"}`);
   wrap.append(c);
   const body = el.querySelector(".message-content") ?? el;
   body.prepend(wrap);
+  const live = PLAYING.get(msg.id);
+  if ( live && !live.stopped ) return live.join(c);
   const fresh = Date.now() - (msg.timestamp ?? 0) < 20000 && !PLAYED.has(msg.id);
-  const t = new Talker(c, S, {level, expr: fresh && mode === "move" ? expr : rest, rest, state: stateOf(npc)});
+  const t = new Talker(c, S, {level, expr: fresh && mode === "move" ? expr : rest, rest, state: stateOf(npc), net});
   if ( !(fresh && mode === "move") ) return;
-  PLAYED.add(msg.id);
-  t.play(talk.said ?? body.textContent ?? "");
+  PLAYED.add(msg.id); PLAYING.set(msg.id, t);
+  t.play(talk?.said ?? body.textContent ?? "");
 }
 
 /* ---- The Storyteller's switch for a Kindred's fangs ---- */
@@ -189,20 +209,43 @@ export async function pickFeatures(actor) {
   const states = Object.entries(HAND_STATES).map(([k, n]) => `<li><label><input type="checkbox" name="s" value="${k}"${own[k] ? " checked" : ""}> ${n}</label></li>`).join("");
   const content = `<p>Ticked features show on ${escH(actor.name)}'s talking face. Unticked NPCs roll theirs from what the sheet names (clan, kith, tribe, house).</p>
     ${searchBox("ul.wodx-face-feats", "Find a feature…", "Find a feature")}<ul class="wodx-face-feats" style="max-height:340px;overflow:auto;list-style:none;padding:0">${list}</ul>
-    <p><b>Showing now</b> (states the sheet does not track):</p><ul data-fixed style="list-style:none;padding:0">${states}</ul>`;
+    <p><b>Showing now</b> (states the sheet does not track):</p><ul data-fixed style="list-style:none;padding:0">${states}</ul>
+    <p><label>Colour in the Net <select name="net" data-fixed><option value="">By chance (${escH(P.NET_PALETTES[P.netPaletteOf({...S, net: ""})].name)})</option>
+    ${Object.entries(P.NET_PALETTES).map(([k, v]) => `<option value="${k}"${S.net === k ? " selected" : ""}>${escH(v.name)}</option>`).join("")}</select></label></p>`;
   const read = (b, name) => [...b.form.querySelectorAll(`input[name=${name}]:checked`)].map(i => i.value);
   const out = await foundry.applications.api.DialogV2.wait({window: {title: `Talking face: ${actor.name}`}, classes: ["wodx-dialog"], content, rejectClose: false,
-    buttons: [{action: "save", label: "Keep these", default: true, callback: (e, b) => ({f: read(b, "f"), s: read(b, "s")})},
-      {action: "roll", label: "Roll them by seed", callback: (e, b) => ({roll: true, s: read(b, "s")})}, {action: "cancel", label: "Cancel"}]});
+    buttons: [{action: "save", label: "Keep these", default: true, callback: (e, b) => ({f: read(b, "f"), s: read(b, "s"), net: b.form.querySelector("select[name=net]")?.value ?? ""})},
+      {action: "roll", label: "Roll them by seed", callback: (e, b) => ({roll: true, s: read(b, "s"), net: b.form.querySelector("select[name=net]")?.value ?? ""})}, {action: "cancel", label: "Cancel"}]});
   if ( !out || out === "cancel" ) return null;
   const state = Object.fromEntries(Object.keys(HAND_STATES).map(k => [k, out.s.includes(k)]));
-  if ( out.roll ) return actor.update({[`flags.${MOD}.face64.features`]: null, [`flags.${MOD}.face64.state`]: state});
-  return actor.update({[`flags.${MOD}.face64.features`]: out.f, [`flags.${MOD}.face64.state`]: state});
+  const net = P.NET_PALETTES[out.net] ? out.net : null;
+  if ( out.roll ) return actor.update({[`flags.${MOD}.face64.features`]: null, [`flags.${MOD}.face64.state`]: state, [`flags.${MOD}.face64.net`]: net});
+  return actor.update({[`flags.${MOD}.face64.features`]: out.f, [`flags.${MOD}.face64.state`]: state, [`flags.${MOD}.face64.net`]: net});
+}
+
+/* ---- The pixel face as the actor's portrait (the drawn portraits are retired, B2990) ---- */
+const FACE_DIR = () => `worlds/${game.world.id}/paperdoll/faces`;
+/** Draw the face at rest, four times its size with hard edges, upload it and make it the actor's portrait. Returns the path. */
+export async function facePortrait(actor) {
+  if ( !actor || !game.user?.isGM ) return null;
+  const S = specOf(actor), big = Object.assign(document.createElement("canvas"), {width: P.N * 4, height: P.N * 4});
+  const ctx = big.getContext("2d"); ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(drawCanvas(actor, {level: 0, net: false}), 0, 0, big.width, big.height);
+  const name = `${actor.id}-${P.seedOf(JSON.stringify([S.seed, S.line, S.fangs, S.features]))}.png`;
+  const FP = foundry.applications.apps.FilePicker.implementation;
+  try { await FP.createDirectory("data", FACE_DIR(), {}); } catch (e) { /* there already */ }
+  const blob = await new Promise(r => big.toBlob(r, "image/png"));
+  await FP.upload("data", FACE_DIR(), new File([blob], name, {type: "image/png"}), {}, {notify: false});
+  const path = `${FACE_DIR()}/${name}`;
+  await actor.update({img: path});
+  return path;
 }
 function featureOption(app, options) {
   const of = li => game.actors.get(li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId);
   options.push({name: "Talking face: features", icon: '<i class="fa-solid fa-face-grimace"></i>', condition: li => game.user.isGM && !!of(li),
     callback: li => pickFeatures(of(li))});
+  options.push({name: "Talking face: use as the portrait", icon: '<i class="fa-solid fa-image-portrait"></i>', condition: li => game.user.isGM && !!of(li),
+    callback: li => facePortrait(of(li)).then(p => p && ui.notifications.info(`${of(li)?.name}'s portrait is now the pixel face.`))});
 }
 
 export function startFaces() {
@@ -213,9 +256,9 @@ export function startFaces() {
 
 /** api.faces: draw a face, read its look, or play one in a canvas of your own. */
 export const faceApi = {
-  rules: P, features: FEATURES, spec: specOf, state: stateOf, canvas: drawCanvas, reaction: reactionOf, pickFeatures,
+  rules: P, features: FEATURES, spec: specOf, state: stateOf, canvas: drawCanvas, reaction: reactionOf, pickFeatures, portrait: facePortrait, inNet,
   play(canvas, actor, text, {expr = "neutral", rest = "neutral", tokDoc = null} = {}) {
     const S = specOf(actor, tokDoc); if ( !S || !canvas ) return null;
-    const t = new Talker(canvas, S, {level: healthLevel(actor.system?.health), expr, rest, state: stateOf(actor)}); t.play(text); return t;
+    const t = new Talker(canvas, S, {level: healthLevel(actor.system?.health), expr, rest, state: stateOf(actor), net: inNet(actor)}); t.play(text); return t;
   }
 };
