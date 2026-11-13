@@ -3156,4 +3156,8 @@ Reverse: move rows in CHART.
 Reverse: nothing to undo.
 
 ## B2548. Left open (2026-11-12)
-Not built: the closer view feeding trips and town maps outside Moravia; towns, ports and borders by era on the world grid; sea lanes and canals as such (Suez and Panama are crossed as a short land leg); clicking the map to pick a spot; the Yin and Yang Worlds, Arcadia and the High Umbra's own realms, which have no realm map yet; cities and haunted ground on the mirrored maps.
+Not built: the closer view feeding trips and town maps outside Moravia; towns, ports and borders by era on the world grid; sea lanes; the lesser canals (Kiel, Corinth, Erie, the Saint Lawrence Seaway, Volga to Don) and the old Nile to Red Sea canal of antiquity; clicking the map to pick a spot; the Yin and Yang Worlds, Arcadia and the High Umbra's own realms, which have no realm map yet; cities and haunted ground on the mirrored maps.
+
+## B2549. Canals and straits by year (2026-11-13)
+Ben: the Suez and Panama Canals did not exist in earlier eras, and travel paths must keep to that. A journey on the world map sails the Suez Canal only from 1869, and not from 1967 to 1974 when it lay shut; the Panama Canal only from 1914. Before those years, and while Suez is shut, the neck of land is land: the quickest way lands there, crosses and takes ship again, or goes the long way round, whichever is shorter in that year. The journey names any canal it passes with its opening year. The list (CANALS in world-map-rules.mjs) takes more canals as a line each. Found while checking: the one-degree grid left Panama open to ships in every year and closed Gibraltar, the Dardanelles and the mouth of the Gulf of Suez, so the Mediterranean, the Black Sea and the Red Sea's head were cut off. Those straits are now a ship's road in every age and Panama is land without its canal. The drawn map is unchanged.
+Reverse: empty CANALS, STRAITS and ISTHMUS; journeys then follow the bare grid.

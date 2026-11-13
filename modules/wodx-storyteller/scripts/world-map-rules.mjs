@@ -147,9 +147,38 @@ export function regionCentre(id) {
   return centreOf(best[0], best[1]);
 }
 
+/**
+ * The cut canals between the seas, each with the year it opened and the years it lay shut. Before its year (and
+ * while shut) the neck of land is land: a traveller lands, crosses and takes ship again, or sails the long way round.
+ * at: the squares the canal turns into a ship's road, as [lon, lat].
+ */
+export const CANALS = [
+  {id: "suez", name: "the Suez Canal", from: 1869, shut: [[1967, 1974]], at: [[32.5, 30.5]]},
+  {id: "panama", name: "the Panama Canal", from: 1914, shut: [], at: [[-79.5, 8.5]]}
+];
+/** Narrow straits the one-degree grid closes by accident: a ship's road in every age (Gibraltar, the Dardanelles, the mouth of the Gulf of Suez). */
+export const STRAITS = [[-5.5, 35.5], [26.5, 40.5], [33.5, 28.5]];
+/** Necks of land the grid opens by accident: land in every age unless a canal crosses them (Panama). */
+export const ISTHMUS = [[-79.5, 8.5], [-78.5, 8.5]];
+const keyOf = ([lon, lat]) => { const q = squareOf(lon, lat); return q.row * COLS + q.col; };
+const STRAIT_KEYS = new Set(STRAITS.map(keyOf)), ISTHMUS_KEYS = new Set(ISTHMUS.map(keyOf));
+const CANAL_AT = new Map(CANALS.flatMap(c => c.at.map(a => [keyOf(a), c])));
+/** Is a canal open to ships in a year? */
+export const canalOpen = (canal, year) => !!canal && Number(year) >= canal.from && !canal.shut.some(([a, b]) => Number(year) >= a && Number(year) <= b);
+/** The canal that crosses a square, open or not, or null. */
+export const canalAt = (col, row) => CANAL_AT.get(row * COLS + wrap(col)) ?? null;
+/** The ground of a square as a traveller of a year meets it: the map's ground, with straits open, necks of land closed and canals cut from their year on. */
+export function travelGround(col, row, year) {
+  const k = row * COLS + wrap(col), canal = CANAL_AT.get(k);
+  if ( canal ) return canalOpen(canal, year) ? "~" : isSea(groundAt(col, row)) ? "." : groundAt(col, row);
+  if ( STRAIT_KEYS.has(k) ) return "~";
+  if ( ISTHMUS_KEYS.has(k) ) return ".";
+  return groundAt(col, row);
+}
+
 /** Km a day across one square for a year: {speed, way}. Sea and lakes go by ship. */
 export function paceAt(col, row, year, ways = waysIn(year)) {
-  const g = groundAt(col, row);
+  const g = travelGround(col, row, ways.year);
   if ( g === "~" || g === "l" ) return {speed: ways.sea * (packIce(row) ? 0.04 : 1), way: "sea"};
   const region = regionAt(col, row);
   const railYear = region && !NO_RAIL.has(region) ? RAIL_FROM[region] ?? 1900 : Infinity;
@@ -173,7 +202,7 @@ export const PORT_DAYS = 1;
 
 /**
  * The journey between two spots in a year. from, to: {lon, lat}. Returns {km (great circle), surface: {days, km,
- * legs: [{way, km, days}], path: [[col, row]...]}, air: {days, km, words} | null, best: "surface" | "air", year}.
+ * legs: [{way, km, days}], path: [[col, row]...], canals: [{id, name, from}]}, air: {days, km, words} | null, best: "surface" | "air", year}.
  * The surface way is the quickest over the squares; air (from 1935) flies the great circle with a day at each end.
  */
 export function journey(from, to, {year = 1197} = {}) {
@@ -215,7 +244,8 @@ export function journey(from, to, {year = 1197} = {}) {
   }
   for ( const l of legs ) { l.km = Math.round(l.km); l.days = Math.round(l.days * 10) / 10; }
   const km = kmBetween(from, to);
-  const surface = {days: Math.max(start === goal ? 0.5 : 1, Math.round(dist[goal] * 10) / 10), km: Math.round(total), legs, path};
+  const canals = [...new Set(path.map(([c, r]) => canalAt(c, r)).filter(c => canalOpen(c, ways.year)))].map(c => ({id: c.id, name: c.name, from: c.from}));
+  const surface = {days: Math.max(start === goal ? 0.5 : 1, Math.round(dist[goal] * 10) / 10), km: Math.round(total), legs, path, canals};
   const air = ways.air && km > 400 ? {days: Math.round((2 + km / ways.air) * 10) / 10, km: Math.round(km), words: ways.airWords} : null;
   return {km: Math.round(km), year: ways.year, surface, air, best: air && air.days < surface.days ? "air" : "surface"};
 }
@@ -226,6 +256,7 @@ export function journeyLines(j) {
   const ways = waysIn(j.year), n = d => (d === 1 ? "1 day" : `${d} days`);
   const out = [`${j.km} km as the crow flies. In ${j.year}: about ${n(j.surface.days)} by land and sea${j.air ? `, or about ${n(j.air.days)} ${j.air.words}` : ""}.`];
   for ( const l of j.surface.legs ) if ( l.km >= 50 ) out.push(`${l.km} km ${WAY_WORDS(l.way, ways)}, ${n(l.days)}`);
+  for ( const c of j.surface.canals ?? [] ) out.push(`Through ${c.name}, open since ${c.from}`);
   return out;
 }
 

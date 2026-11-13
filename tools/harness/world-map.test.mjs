@@ -128,6 +128,50 @@ test("otherworlds chart: how far apart two places are", () => {
   assert.equal(CH.between("stygia", "nowhere"), null);
 });
 
+test("world map: the canals open in their year and not before", () => {
+  const through = (j, lon, lat) => { const q = WM.squareOf(lon, lat); return j.surface.path.some(([c, r]) => c === q.col && r === q.row) && WM.paceAt(q.col, q.row, j.year).way === "sea"; };
+  const bombay = {lon: 72.8, lat: 19};
+  for ( const year of [1197, 1600, 1868, 1970] ) {
+    const j = WM.journey(P.london, bombay, {year});
+    assert.deepEqual(j.surface.canals, [], `no Suez Canal in ${year}`);
+    assert.ok(!through(j, 32.5, 30.5), `no ship crosses the isthmus of Suez in ${year}`);
+  }
+  for ( const year of [1869, 1900, 1930] ) {
+    const j = WM.journey(P.london, bombay, {year});
+    assert.deepEqual(j.surface.canals.map(c => c.id), ["suez"], `through Suez in ${year}`);
+    assert.ok(through(j, 32.5, 30.5));
+    assert.ok(WM.journeyLines(j).includes("Through the Suez Canal, open since 1869"));
+  }
+  assert.ok(WM.journey(P.london, bombay, {year: 1869}).surface.days < WM.journey(P.london, bombay, {year: 1868}).surface.days);
+  for ( const year of [1600, 1855, 1913] ) {
+    const j = WM.journey(P.newYork, P.lima, {year});
+    assert.deepEqual(j.surface.canals, [], `no Panama Canal in ${year}`);
+    assert.ok(j.surface.legs.filter(l => l.way === "sea").length >= 2 || j.surface.km > 15000, `in ${year} the way to Lima lands and takes ship again, or rounds the Horn`);
+  }
+  for ( const year of [1914, 1930, 2020] ) assert.deepEqual(WM.journey(P.newYork, P.lima, {year}).surface.canals.map(c => c.id), ["panama"], `through Panama in ${year}`);
+  assert.equal(WM.canalOpen(WM.CANALS[0], 1967), false); assert.equal(WM.canalOpen(WM.CANALS[0], 1975), true); assert.equal(WM.canalOpen(null, 2000), false);
+});
+
+test("world map: no ship crosses Panama without the canal, by any neighbouring square", () => {
+  // every sea square beside the neck of land: the Caribbean ones and the Pacific ones must not touch in 1900
+  const sea = (c, r, y) => WM.paceAt(c, r, y).way === "sea";
+  const fill = (start, year, stop) => { const seen = new Set([start.join()]), todo = [start]; while ( todo.length ) { const [c, r] = todo.pop(); for ( let dr = -1; dr <= 1; dr++ ) for ( let dc = -1; dc <= 1; dc++ ) { const c2 = c + dc, r2 = r + dr, k = [c2, r2].join(); if ( seen.has(k) || !stop(c2, r2) || !sea(c2, r2, year) ) continue; seen.add(k); todo.push([c2, r2]); } } return seen; };
+  const carib = WM.squareOf(-80.5, 11.5), pacific = WM.squareOf(-80.5, 6.5);
+  const west = WM.squareOf(-100, 0).col, east = WM.squareOf(-76, 0).col, north = WM.squareOf(0, 22).row, south = WM.squareOf(0, 4).row;
+  const inBox = (c, r) => c >= west && c <= east && r >= north && r <= south;
+  assert.ok(sea(carib.col, carib.row, 1900) && sea(pacific.col, pacific.row, 1900));
+  assert.ok(!fill([carib.col, carib.row], 1900, inBox).has([pacific.col, pacific.row].join()), "the two seas do not meet in 1900");
+  assert.ok(fill([carib.col, carib.row], 1920, inBox).has([pacific.col, pacific.row].join()), "they meet through the canal in 1920");
+});
+
+test("world map: the straits are open in every age", () => {
+  const venice = {lon: 12.3, lat: 45.4}, odessa = {lon: 30.7, lat: 46.5}, lisbon = {lon: -9.1, lat: 38.7}, alexandria = {lon: 29.9, lat: 31.2};
+  for ( const [a, b] of [[venice, odessa], [lisbon, alexandria]] ) {
+    const j = WM.journey(a, b, {year: 1400});
+    assert.equal(j.surface.legs.filter(l => l.way === "sea" && l.km >= 50).length, 1, "one sea leg, no landing on the way");
+  }
+});
+
 test("world map: its regions are WoDX Chronicle's world regions, when that list is in the repo", {skip: !existsSync(new URL("../../modules/wodx-chronicle/scripts/world-rules.mjs", import.meta.url)) && "the world regions list is not merged yet"}, async () => {
   const {WORLD_REGIONS} = await import("../../modules/wodx-chronicle/scripts/world-rules.mjs");
   const unknown = W.REGION_IDS.filter(id => !WORLD_REGIONS[id]);

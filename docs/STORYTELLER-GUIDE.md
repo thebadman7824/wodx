@@ -330,7 +330,7 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 **The world map** in the Storyteller's hand shows the whole Earth by night, one square for about every 100 km. It makes nothing and changes nothing; it is for answering "where is that, and how long would it take to get there?"
 
 - **From** and **To** take a world region from the list, or a spot typed as north and east in degrees (49.2, 16.6 is Brno; south and west are negative). **Year** starts at the chronicle's year. Choose **Show**.
-- Under the map: where each spot lies (its ground, region and river), the distance, and how long the journey takes in that year by land and sea, leg by leg, and by air once there is air. The times are rough. A trip inside Moravia still uses Travel places, which knows the roads.
+- Under the map: where each spot lies (its ground, region and river), the distance, and how long the journey takes in that year by land and sea, leg by leg, and by air once there is air. The times are rough. Ships use the Suez Canal only from 1869 (not from 1967 to 1974, when it was shut) and the Panama Canal only from 1914; before that a journey crosses the neck of land on foot or by rail, or sails round, and the lines say when a canal is used. A trip inside Moravia still uses Travel places, which knows the roads.
 - **Look closer at From** shows that one square at about 5 km to a small square. It is made from the world map and is the same every time.
 - With WoDX Otherworlds on, **Show** also offers the Penumbra, the Shadowlands and the Near Dreaming (the same map as it looks from the other side) and the chart of the worlds, which gives every realm of Realm maps a spot. Where a realm sits on the chart is WoDX's own arrangement, not a rule.
 
