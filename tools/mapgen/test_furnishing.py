@@ -172,5 +172,48 @@ class PurposeTest(unittest.TestCase):
         self.assertEqual(U.kind_of_name("Bathroom 3"), "bath")
 
 
+class SetPieceTest(unittest.TestCase):
+    def test_writing_corner(self):
+        import setpieces as SP
+        got = {sp["id"]: sp for sp in SP.fitting("study", "work", None, "reform", [])}
+        self.assertIn("writing-corner", got)
+        parts = [(p[0], p[5]) for p in got["writing-corner"]["parts"]]
+        self.assertIn(("desk", "base"), parts)
+        self.assertIn(("seat", "face:base"), parts)
+        self.assertIn(("light", "on:base"), parts)
+        self.assertIn(("clutter", "on:base"), parts)
+
+    def test_trade_pieces(self):
+        import setpieces as SP
+        self.assertEqual(SP.fitting("shop", "front", "cloth merchant", "early", [])[0]["id"], "cloth-display")
+        self.assertEqual(SP.fitting("hall", "front", "vintner", "early", [])[0]["id"], "tasting-table")
+        self.assertNotIn("cloth-display", [s["id"] for s in SP.fitting("shop", "front", "baker", "early", [])])
+
+    def test_era_tied(self):
+        import setpieces as SP
+        self.assertIn("office-desk-computer", [s["id"] for s in SP.fitting("study", "work", None, "modern", [])])
+        self.assertNotIn("office-desk-computer", [s["id"] for s in SP.fitting("study", "work", None, "reform", [])])
+
+    def test_prefers_first(self):
+        import setpieces as SP
+        self.assertEqual(SP.fitting("hall", "front", None, "early", ["plate-display"])[0]["id"], "plate-display")
+
+    def test_purposes_name_real_set_pieces(self):
+        import purposes as U, setpieces as SP
+        ids = {sp["id"] for sp in SP.SET_PIECES}
+        for k, p in U.PURPOSES.items():
+            for side in p["side"]:
+                for want in side["prefers"]: self.assertIn(want, ids, (k, side["id"]))
+
+    def test_parts_inside_size(self):
+        import setpieces as SP
+        self.assertGreaterEqual(len(SP.SET_PIECES), 40)
+        for sp in SP.SET_PIECES:
+            w, h = sp["size"]
+            for piece, dx, dy, pw, ph, rule in sp["parts"]:
+                if rule.startswith("on:"): continue
+                self.assertTrue(0 <= dx and dx + pw <= w + 1e-9 and 0 <= dy and dy + ph <= h + 1e-9, (sp["id"], piece))
+
+
 if __name__ == "__main__":
     unittest.main()
