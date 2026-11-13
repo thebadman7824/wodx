@@ -243,7 +243,27 @@ export const COINS = {
     {from: 0, coin: "no coin: furs, wampum and barter", account: "goods in kind"},
     {from: 1608, coin: "the livre tournois and card money", account: "the livre"},
     {from: 1760, coin: "pounds, shillings and pence in Halifax currency, and Spanish dollars", account: "the pound"},
-    {from: 1858, coin: "the Canadian dollar and cent", account: "the dollar"}]}
+    {from: 1858, coin: "the Canadian dollar and cent", account: "the dollar"}]},
+  // B3190: lands under a wider region that paid in their own coin (a scene picks them in Where this scene stands)
+  philippine: {label: "The Philippines", rows: [
+    {from: 0, coin: "gold by weight and small gold piloncitos; rice and cloth", account: "the tahil of gold"},
+    {from: 1565, coin: "Mexican silver pesos and reales from the Manila galleons", account: "the peso"},
+    {from: 1857, coin: "the Philippine peso and centavo", account: "the peso"},
+    {from: 1903, coin: "the Philippine peso, two to the American dollar", account: "the peso"},
+    {from: 1967, coin: "the piso and sentimo", account: "the piso"}]},
+  indochinese: {label: "Indochina (Vietnam, Cambodia, Laos)", rows: [
+    {from: 0, coin: "copper cash of Đại Việt on strings; silver by weight", account: "the quan (string) of cash"},
+    {from: 1885, coin: "the French piastre and cent", account: "the piastre"},
+    {from: 1954, coin: "the đồng; the riel in Cambodia and the kip in Laos", account: "the đồng"},
+    {from: 1978, coin: "the đồng of a united Vietnam", account: "the đồng"}]},
+  balkan: {label: "The Balkans (Serbia, Bulgaria, Romania, Bosnia)", rows: [
+    {from: 0, coin: "Byzantine hyperpyra and copper", account: "the hyperpyron"},
+    {from: 1214, coin: "Serbian silver dinars; hyperpyra in Bulgaria", account: "the perper of twelve dinars"},
+    {from: 1459, coin: "the Ottoman akçe", account: "the akçe"},
+    {from: 1688, coin: "the kuruş and para", account: "the kuruş"},
+    {from: 1867, coin: "the Serbian dinar; the Romanian leu, and the Bulgarian lev from 1881", account: "the dinar"},
+    {from: 1920, coin: "the Yugoslav dinar; the leu and the lev beyond Yugoslavia", account: "the dinar"},
+    {from: 1994, coin: "the new dinar; the leu, the lev and the convertible mark beyond Serbia", account: "the dinar"}]}
 };
 
 export function coinsFor(year, region = "moravian") {
@@ -517,6 +537,37 @@ Object.assign(MONIES, {
     pick("french", "tournois", {from: 1608, to: 1759}),
     m("ca-pound", 1760, 1857, "pounds, shillings and pence (Halifax currency)", LSD, [[1760, 480], [1857, 1440]], 1817),
     m("cad", 1858, 2019, "Canadian dollars", [["dollar", "dollars", 100], ["cent", "cents", 1]], [[1858, 2000], [1900, 4000], [1950, 20000], [1970, 50000], [1990, 150000], [2004, 200000], [2019, 300000]]),
+    EB]}
+});
+
+/*
+ * B3190: the Philippines, Indochina and the Balkans had coin of their own though WoDX Chronicle files them under a
+ * wider region (the Malay world, mainland Southeast Asia, Hungary and the Balkans). A scene there names its money in
+ * Where this scene stands; the chronicle's money (Coins of the day) can name them too. History rounded for play, a
+ * house rule; the books name no coins or wages for these lands.
+ */
+Object.assign(MONIES, {
+  philippine: {label: "The Philippines", list: [
+    m("ph-gold", -99999, 1564, "gold by weight and piloncitos", [["tahil of gold", "tahils of gold", 16], ["mas", "mas", 1]], [[900, 4], [1197, 4], [1564, 4]], false),
+    pick("mexican", "mx-real", {from: 1565, to: 1856}),
+    m("ph-peso-es", 1857, 1902, "Philippine pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1857, 600], [1902, 800]], 1852),
+    m("ph-peso", 1903, 1966, "Philippine pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1903, 1500], [1940, 3000], [1950, 6000], [1966, 12000]]),
+    m("php", 1967, 2019, "piso", [["piso", "piso", 100], ["sentimo", "sentimo", 1]], [[1967, 15000], [1980, 60000], [1990, 250000], [2004, 600000], [2019, 1000000]]),
+    EB]},
+  indochinese: {label: "Indochina (Vietnam, Cambodia, Laos)", list: [
+    m("dv-cash", -99999, 1884, "copper cash of Đại Việt", [["quan", "quan", 600], ["mạch", "mạch", 60], ["cash", "cash", 1]], [[900, 1500], [1197, 1800], [1600, 2400], [1884, 3000]], false),
+    m("piastre", 1885, 1953, "French Indochinese piastres", [["piastre", "piastres", 100], ["cent", "cents", 1]], [[1885, 600], [1920, 1200], [1945, 3000], [1953, 15000]]),
+    m("dong-1", 1954, 1977, "đồng (the riel and the kip beyond Vietnam)", [["đồng", "đồng", 100], ["xu", "xu", 1]], [[1954, 6000], [1977, 30000]]),
+    m("vnd", 1978, 2019, "đồng (recut in 1985; house figures)", [["đồng", "đồng", 1]], [[1978, 100], [1986, 10000], [1990, 100000], [2004, 600000], [2019, 4000000]]),
+    EB]},
+  balkan: {label: "The Balkans (Serbia, Bulgaria, Romania, Bosnia)", list: [SHEKEL, ROMAN,
+    pick("ottoman", "nomisma", {to: 1213}),
+    m("rs-dinar", 1214, 1458, "Serbian silver dinars", [["perper", "perpers", 12], ["dinar", "dinars", 1]], [[1214, 60], [1458, 80]], false),
+    pick("ottoman", "akce", {from: 1459}),
+    pick("ottoman", "kurus", {to: 1866}),
+    m("rs-dinar-2", 1867, 1919, "Serbian dinars (the leu and the lev alongside)", [["dinar", "dinars", 100], ["para", "para", 1]], [[1867, 3000], [1914, 6000], [1919, 20000]], 1884),
+    m("yu-dinar", 1920, 1993, "Yugoslav dinars (recut in 1966; house figures)", [["dinar", "dinars", 100], ["para", "para", 1]], [[1920, 80000], [1940, 150000], [1965, 4000000], [1966, 40000], [1990, 5000000], [1993, 1e12]]),
+    m("rsd", 1994, 2019, "new dinars", [["dinar", "dinars", 100], ["para", "para", 1]], [[1994, 10000], [2004, 1500000], [2019, 5000000]]),
     EB]}
 });
 
