@@ -21,7 +21,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.59.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
+| wodx-chronicle | 0.68.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
 | wodx-otherworlds | 0.26.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.37.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.65.1 | The Actions menu for every line: powers, feeding, social actions, trade and effect keywords. [Changelog](../modules/wodx-actions/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
@@ -34,7 +34,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 | wodx-voices | 0.3.2 | Plot NPCs speak their prewritten lines aloud, each in a voice of its own, with emotion from the line and the mood; a Chatterbox voice server on the PC, then Kokoro offline, then browser speech. [Changelog](../modules/wodx-voices/CHANGELOG.md) | rothenstein-wodx (reads wodx-npc talk cards; setting off by default, off on Live) |
 | wodx-library | 0.23.1 | The Encyclopaedia, what a character could know, gear and goods by era and region, recipes and item uses. [Changelog](../modules/wodx-library/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-senses | 0.10.0 | Look, listen and smell from authored tables, the quiet interface and supernatural sight. [Changelog](../modules/wodx-senses/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-actions; reads wodx-npc, wodx-interactables and wodx-otherworlds when on) |
-| wodx-paperdoll | 0.25.1 | Pixel faces that blink, speak and react, with features by line; Net persona faces; the Figure builder for sprite tokens. [Changelog](../modules/wodx-paperdoll/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle; reads wodx-atmosphere when on) |
+| wodx-paperdoll | 0.25.2 | Pixel faces that blink, speak and react, with features by line; Net persona faces; the Figure builder for sprite tokens. [Changelog](../modules/wodx-paperdoll/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle; reads wodx-atmosphere when on) |
 | wodx-atmosphere | 0.16.0 | Weather, light from the clock, era music and mood regions, scene opening cards. [Changelog](../modules/wodx-atmosphere/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-solo | 0.3.0 | The Lone Chronicle, for one person playing alone: a hidden browser holds the Storyteller's seat, one switch sets every automation to act by itself, a watcher answers whatever waits for a Storyteller, and the player has a panel of their own. [Changelog](../modules/wodx-solo/CHANGELOG.md) | rothenstein-wodx for tests, switch off; later a solo world of its own (needs wodx-chronicle). Never on at a shared table; does nothing in rothenstein-live |
 

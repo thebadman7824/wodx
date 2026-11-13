@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3520
+Next free block: B3630
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -176,9 +176,10 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3492) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3601) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5501,6 +5502,41 @@ WoDX Chronicle. Everyone sees who rules, who keeps order and what a stranger sho
 
 Reverse: drop the wodxLaw button and checkYear calls.
 
+## B3493. The lands of Islam as the second law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The islamic family: the qadi's court by sharia, the ruler's court of complaints, each protected faith's own court; witnesses and oath; the muhtasib and the shurta; alms, poll tax and land tax; wine and apostasy on the books; police and prisons from 1800, written codes beside sharia from 1900, independent states from 1950. Regions add their own rulers and turning points: Anatolia, the Levant, Egypt, Arabia, the Maghreb, Persia and the Malay world (which starts with Hindu and Buddhist kingdoms and turns to the sultanates from 1400). Iberia's al-Andalus stays under Latin Christendom for now (the record follows the Christian kingdoms of the homeland's era); a finer split waits for its own row.
+
+Reverse: remove the islamic family and these region rows; the regions fall back to the custom stand-in.
+
+## B3494. Chinese imperial law as the third law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The chinese family: an emperor ruling through examined officials; the county magistrate as judge, tax collector and keeper of the peace; appeal up to the throne for every death sentence; clan elders and guilds first; confession needed before sentence, with beating allowed within limits; the bamboo, penal servitude, exile and death; families and neighbour groups answering for one another; failing parents and forbidden sects as crimes. China, Korea and mainland Southeast Asia (Buddhist and Hindu kingdoms beside Đại Việt's Chinese-model empire) add their own rows. Japan gets its own family.
+
+Reverse: remove the chinese family and these region rows; the regions fall back to the custom stand-in.
+
+## B3495. South Asia as the fourth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The south-asia family: kings who uphold dharma, Brahmins reading the dharma texts as counsel, caste councils and village assemblies, ordeals, fines, maiming and being put out of caste; caste rules and cow-killing on the books; the 1950 constitution makes one law for every citizen. India adds the Delhi Sultanate and Mughal qadis and the poll tax's dates, the Company, the Crown and the Penal Code, partition and the Emergency. Tibet and the Himalaya take their own rows (monastic lords, the Dalai Lama's government, Nepal's 1854 code, Chinese rule from 1950) and drop the caste rows.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3496. Africa south of the Sahara as the fifth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The african family: kings and chiefs with elders as assessors, lineage elders, masked societies and age sets; witnesses, oath and ordeal; fines and compensation, banishment, being sold into slavery, death. Colonial rule from 1885 (European courts above, native courts under the chiefs, the hut tax, separate law for Europeans and Africans) and independence from 1960. Four regions add their own rows. The sale of captives and colonial atrocities are stated as plain history in the Storyteller's warnings, with no game rewards attached.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3497. English common law as the sixth law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The common family for the British Isles: the dated rows run from the Angevin courts and the sheriff, through the jury, justices of the peace, the established church, the witch trials, the Commonwealth, constitutional monarchy, transportation, the 1735 Witchcraft Act (claiming powers as fraud), police from 1829, to the end of hanging in 1965 and the laws of the 1990s and 2000. The colonies of the empire use their own regions' rows (North America, Australia, India) rather than this family, because their law split from England's early.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3498. Orthodox and Russian law family (2026-11-13)
+Russia and the Aegean use the Orthodox family: the ruler's law beside the church's canons, then ministries and police, with region rows for the Rus, Muscovy, the tsars, the Soviet state and the Federation, and for Byzantium, Ottoman rule and modern Greece.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3499. Japanese law family (2026-11-13)
+Japan uses its own family: the shogun rules in the emperor's name through warrior courts, then the Tokugawa order, then the Meiji codes and the postwar constitution. New ids: jito, commoner-arms, leaving-country.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
 ## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
 WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
 
@@ -5535,3 +5571,13 @@ Reverse: none needed; add names as found.
 WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
 
 Reverse: edit the lists in data/people-algonquian.mjs.
+
+## B3600. Steppe and northern Asia law family (2026-11-13)
+Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3601. Americas law family (2026-11-13)
+The eight American regions use the Americas family: the first peoples' councils and custom, then each region's empire, colonial law and republic, with modern police from 1900. New ids: marshals, alcohol.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
