@@ -13,6 +13,7 @@ import crypto from "node:crypto";
 import https from "node:https";
 import http from "node:http";
 import {fileURLToPath} from "node:url";
+import {execFileSync} from "node:child_process";
 
 export const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO = path.resolve(HERE, "../..");
@@ -242,14 +243,40 @@ export function lockState(lane, cfg, now = Date.now(), alive = pidAlive) {
   if ( !lock ) return {held: false};
   const ageMin = (now - Date.parse(lock.since)) / 60000;
   if ( !alive(lock.pid) ) return {held: false, stale: "its process has ended", lock};
-  if ( ageMin > cfg.lockMaxMinutes ) return {held: false, stale: `older than ${cfg.lockMaxMinutes} minutes`, lock};
+  // B3089: a gate run sets a deadline and moves it on before each gate; a run past it has hung.
+  if ( lock.until && now > Date.parse(lock.until) ) return {held: false, stale: `past its deadline (${lock.until})`, overdue: true, lock};
+  // A lock with a deadline is judged by it alone, so a long nightly run that keeps moving it on is never taken over.
+  if ( !lock.until && ageMin > cfg.lockMaxMinutes ) return {held: false, stale: `older than ${cfg.lockMaxMinutes} minutes`, overdue: true, lock};
   return {held: true, lock};
+}
+/** Ends a gate run that hung past its lane lock's deadline, with its browser (B3089). Only a lock a gate run wrote
+ * (runner "run-gate") is acted on, and on Windows only when that process id is still a node process. */
+export function endOverdue(lock, {platform = process.platform, exec = execFileSync} = {}) {
+  if ( lock?.runner !== "run-gate" || !lock.pid || lock.pid === process.pid ) return false;
+  try {
+    if ( platform === "win32" ) {
+      const row = String(exec("tasklist", ["/FI", `PID eq ${lock.pid}`, "/FO", "CSV", "/NH"], {encoding: "utf8"}));
+      if ( !/^"node(\.exe)?"/im.test(row) ) return false;
+      exec("taskkill", ["/PID", String(lock.pid), "/T", "/F"], {stdio: "ignore"});
+    } else process.kill(lock.pid, "SIGKILL");
+    return true;
+  } catch { return false; }
+}
+/** Moves this process's lane lock deadline on (B3089). */
+export function extendLock(lane, until) {
+  const file = path.join(laneDir(lane), "lock.json");
+  const lock = readJson(file);
+  if ( lock?.pid !== process.pid ) return;
+  lock.until = new Date(until).toISOString();
+  const tmp = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(lock)); fs.renameSync(tmp, file);
 }
 export function acquireLock(lane, cfg, info) {
   const file = path.join(laneDir(lane), "lock.json");
   fs.mkdirSync(laneDir(lane), {recursive: true});
   const st = lockState(lane, cfg);
   if ( st.held ) return null;
+  if ( st.overdue && endOverdue(st.lock) ) console.log(`Ended the hung run on lane ${lane.id} (process ${st.lock.pid}, ${st.stale}).`);
   if ( st.stale ) fs.rmSync(file, {force: true});
   const lock = {pid: process.pid, since: new Date().toISOString(), ...info};
   try { fs.writeFileSync(file, JSON.stringify(lock), {flag: "wx"}); } catch { return null; }
