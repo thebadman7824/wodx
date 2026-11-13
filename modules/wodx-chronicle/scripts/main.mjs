@@ -179,7 +179,7 @@ Hooks.once("ready", async () => {
 
   age.listen();
   const api = {
-    // Chronicle 0.53.0: the age floor of 18 for anything romantic or sexual
+    // B3210: the age floor of 18 for anything romantic or sexual
     age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
@@ -218,7 +218,7 @@ Hooks.once("ready", async () => {
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
-    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather},
+    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,

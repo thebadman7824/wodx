@@ -120,9 +120,12 @@ export async function run({ maxItems = 90 } = {}) {
   // Close anything the run left open (a system window that came with a sheet)
   for (const [id, w] of Object.entries(ui.windows ?? {})) if (!openBefore.has(id)) { try { await w.close(); } catch (e) { /* gone */ } }
   const all = R.sheets.flatMap(s => [...(s.findings ?? []), ...s.tabs.flatMap(t => t.findings ?? [])]);
+  // Each finding with where it is, so a run can be read without the part files
+  R.list = R.sheets.flatMap(s => [...(s.findings ?? []).map(f => ({sheet: s.label, tab: s.first, ...f})),
+    ...s.tabs.flatMap(t => (t.findings ?? []).map(f => ({sheet: s.label, tab: t.tab, ...f})))]).slice(0, 200);
   R.findings = all.length; R.byKind = all.reduce((o, f) => { o[f.kind] = (o[f.kind] ?? 0) + 1; return o; }, {});
   R.finished = new Date().toISOString();
   R.pass = R.sheets.length > 0 && !R.errors.length && R.findings === 0;
   await save("gateuisnap-result.json", R);
-  return { pass: R.pass, sheets: R.sheets.length, parts: R.parts, errors: R.errors.length, findings: R.findings, byKind: R.byKind };
+  return { pass: R.pass, sheets: R.sheets.length, parts: R.parts, errors: R.errors.length, findings: R.findings, byKind: R.byKind, list: R.list };
 }

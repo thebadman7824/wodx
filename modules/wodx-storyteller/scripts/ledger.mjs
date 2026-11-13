@@ -196,7 +196,7 @@ export async function onDeath(dead, {deleted = false} = {}) {
   const heir = heirOf(dead.id);
   const c = chron();
   // 0.61.0: what they had is divided by the will and the law of the place and year
-  // 0.66.1: only a death recorded on the sheet; a sheet deleted (a stray copy, a gate's actor) has no estate to divide
+  // Fix: only a death recorded on the sheet; a sheet deleted (a stray copy, a gate's actor) has no estate to divide
   if ( !deleted ) { try { await Wills.onDeath(dead); } catch (e) { console.error(`${MOD} | estate`, e); } }
   for ( const row of L.inheritance(ledger(), dead.id, heir) ) {
     const e = row.entry;

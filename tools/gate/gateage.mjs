@@ -1,9 +1,9 @@
 /**
- * WoDX Chronicle 0.53.0, NPC 0.68.0, Actions 3.64.0 gate (the age floor of 18 for anything romantic or sexual), in
+ * The age floor gate (B3210-B3215: nothing romantic or sexual with anyone under 18; adoption by law), in
  * Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateage.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes actors and deletes them, and deletes its chat cards.
- *   1. Chronicle 0.53.0+, NPC 0.68.0+, Actions 3.64.0+, the API
+ *   1. the age floor and adoption are in the API
  *   2. who is a minor: a birth year 15 years back, a Kindred Embraced at 15 long ago, a resident child, the mark; an adult with no sign is not
  *   3. courting a minor is refused and no warmth is kept
  *   4. marrying a minor is refused, even with force
@@ -11,7 +11,9 @@
  *   6. a lover tie to a minor written straight to the sheet is not kept; a friend tie is
  *   7. Seduction of a minor target opens no window
  *   8. two adults still court and marry
- *   9. clean up
+ *   9. an adult takes in a child by the law here, with ties and a record on both sheets
+ *  10. a minor cannot adopt
+ *  11. clean up
  * Result: Data/wodx-gate/gateage-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -43,7 +45,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const cv = game.modules.get("wodx-chronicle").version, nv = game.modules.get("wodx-npc").version, av = game.modules.get("wodx-actions").version;
-      ok("1. Chronicle 0.53.0+, NPC 0.68.0+, Actions 3.64.0+, the API", newer(cv, "0.53.0") && newer(nv, "0.68.0") && newer(av, "3.64.0") && typeof chron().age?.minor === "function", {cv, nv, av});
+      ok("1. the age floor and adoption are in the API", typeof chron().age?.minor === "function" && typeof npc().hearts?.adopt === "function" && newer(av, "3.64.0"), {cv, nv, av});
     });
     await step("2. who is a minor", async () => {
       const now = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;

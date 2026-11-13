@@ -160,7 +160,7 @@ test("a short time skip over New Year is not a jump: ties and false heirs count 
   assert.match(src("modules/wodx-storyteller/scripts/wills.mjs"), /Math\.floor\(\(Number\(info\.to\) - Number\(info\.from\)\) \/ \(365\.25 \* 86400\)\)/);
 });
 
-test("deleting a sheet is not a death with an estate (Storyteller 0.66.1)", () => {
+test("deleting a sheet is not a death with an estate", () => {
   const l = src("modules/wodx-storyteller/scripts/ledger.mjs");
   assert.match(l, /onDeath\(actor, \{deleted: true\}\)/); assert.match(l, /if \( !deleted \) \{ try \{ await Wills\.onDeath\(dead\)/);
 });

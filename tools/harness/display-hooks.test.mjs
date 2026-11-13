@@ -150,3 +150,47 @@ test("B3130-B3133: Nightmares, a stranger in a crowd and codex research change t
   assert.deepEqual(DPR.deeperMods(), {dice: 0, diff: 0, parts: []});
   assert.ok(DPR.researchHelps("occult")); assert.ok(DPR.researchHelps("x", "Kindred Lore")); assert.ok(!DPR.researchHelps("brawl", "Brawl"));
 });
+
+/* ---- Batch B, Chronicle (B3160-B3163) ---- */
+import * as LST from "../../modules/wodx-chronicle/scripts/legend-standing-rules.mjs";
+import * as LGR from "../../modules/wodx-chronicle/scripts/legends-rules.mjs";
+import * as LNG from "../../modules/wodx-chronicle/scripts/languages-rules.mjs";
+
+test("B3160, B3161: Legends deeds suggest Renown and Status for player characters only", () => {
+  const lines = [
+    {id: "office:k:a:won:1", kind: "office", text: "Took the seat.", people: [{id: "a", name: "Ilse"}]},
+    {id: "ledger:1:broken", kind: "ledger", text: "Broken: a boon.", people: [{id: "b", name: "Jan"}, {id: "a", name: "Ilse"}]},
+    {id: "ledger:2:kept", kind: "ledger", text: "Kept: an oath.", people: [{id: "a", name: "Ilse"}, {id: "b", name: "Jan"}]},
+    ...LGR.deedLines([{id: "f1", at: 0, text: "The pack routed the bandits.", people: [{id: "a", name: "Ilse"}, {id: "n", name: "Bandit"}], won: true}])
+  ];
+  const s = LST.suggestionsFor(lines, {a: {pc: true, kind: "lupine"}, b: {pc: true, kind: "kindred"}, n: {pc: false, kind: "mortal"}});
+  assert.deepEqual(s.map(x => [x.actorId, x.trait, x.step]), [["a", "honor", 1], ["b", "status", -1], ["a", "honor", 1], ["a", "glory", 1]]);
+  assert.match(LST.suggestionText(s[1]), /-1 Status/);
+  assert.equal(LGR.normEntry({id: "deed:x", kind: "deed", won: 1}).won, true);
+  assert.equal(LGR.normEntry({id: "event:x", kind: "event", won: 1}).won, undefined);
+});
+
+test("B3162, B3163: the language allowance holds, and a kindred tongue gives a roll for the gist", () => {
+  assert.equal(LNG.allowance({linguistics: 0, merits: 0}), 1);
+  assert.equal(LNG.allowance({linguistics: 3}), 5);
+  assert.equal(LNG.allowance({merits: 2}), 3);
+  assert.ok(!LNG.listAllowed(["Czech"], ["Czech", "Latin"], 1));
+  assert.ok(LNG.listAllowed(["Czech", "Latin", "German"], ["Czech", "Latin"], 1));
+  assert.equal(LNG.kinOf([["Czech", "German"]], "Polish"), "Czech");
+  assert.equal(LNG.kinOf([["Czech"]], "Mandarin"), null);
+  assert.equal(LNG.GIST.difficulty, 7);
+});
+
+/* ---- Batch B, Combat and Storyteller (B3170, B3171) ---- */
+import * as AFR from "../../modules/wodx-combat/scripts/aftermath-rules.js";
+import * as WUR from "../../modules/wodx-storyteller/scripts/wrapup-rules.mjs";
+
+test("B3170, B3171: a fight becomes a deed and marks real danger for the experience draft", () => {
+  assert.ok(AFR.fightWon([{pc: true}, {pc: false, down: true}]));
+  assert.ok(!AFR.fightWon([{pc: true, down: true}, {pc: false, down: true}]));
+  assert.ok(!AFR.fightWon([{pc: true}, {pc: false}]));
+  assert.ok(!AFR.fightWon([{pc: false, down: true}]));
+  assert.equal(AFR.deedText({won: true, place: "Brno", pcs: ["Ilse"], foes: ["the bandits"]}), "Ilse fought against the bandits at Brno and won.");
+  const d = WUR.dangerFrom([{id: "c", rows: [{id: "a", pc: true, taken: 3}, {id: "b", pc: true, taken: 1}, {id: "c", pc: true, down: true}, {id: "n", pc: false, taken: 7}]}]);
+  assert.deepEqual([...d].sort(), ["a", "c"]);
+});

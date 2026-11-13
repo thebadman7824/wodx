@@ -97,3 +97,42 @@ export function parseInCommand(message, known = []) {
   const [first, ...words] = rest.split(/\s+/);
   return words.length ? {language: first, text: words.join(" ")} : null;
 }
+
+/* ------------------------------------------------------------------ */
+/*  B3162, B3163: the allowance holds, and a related language gives the gist                                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * How many languages a character may list: the native one, plus Linguistics (1, 2, 4, 8, 16) or the Language Merits.
+ * The Storyteller is never held to it.
+ */
+export const allowance = ({linguistics = 0, merits = 0} = {}) => 1 + linguisticsAllows(linguistics) + Math.max(0, Number(merits) || 0);
+/** May a player save this list? Only a longer list over the allowance is refused, so an old sheet is never cut. */
+export function listAllowed(before = [], after = [], allow = 1) {
+  return after.length <= Math.max(allow, before.length);
+}
+
+/** Families close enough that a speaker of one catches the gist of another. WoDX's own grouping. */
+export const FAMILIES = [
+  ["Latin", "French", "Italian", "Spanish", "Portuguese", "Romanian"],
+  ["Czech", "Slovak", "Polish", "Russian", "Serbian", "Old Church Slavonic"],
+  ["German", "Dutch", "Yiddish", "Afrikaans", "English"],
+  ["Swedish", "Danish", "Norse"],
+  ["Gaelic", "Welsh"],
+  ["Hebrew", "Arabic", "Amharic"],
+  ["Hindi", "Urdu", "Bengali", "Sanskrit"],
+  ["Mandarin", "Cantonese"],
+  ["Swahili", "Kikongo", "Zulu", "Xhosa"],
+  ["Malay", "Javanese", "Tagalog"],
+  ["Egyptian (ancient)", "Coptic"]
+];
+/** A language the reader knows that is kin to this one, or null. */
+export function kinOf(lists, language) {
+  const l = norm(language);
+  const fam = FAMILIES.find(f => f.some(x => norm(x) === l));
+  if ( !fam ) return null;
+  for ( const list of lists ) for ( const x of list ?? [] ) if ( norm(x) !== l && fam.some(f => norm(f) === norm(x)) ) return x;
+  return null;
+}
+/** The roll for the gist: Intelligence + Linguistics (Academics where there is no Linguistics), difficulty 7. */
+export const GIST = {difficulty: 7};

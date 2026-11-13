@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.53.0: the age floor at play (the rules are in age-rules.mjs). api.age.minor(actor) says whether a
+ * B3210: the age floor at play (the rules are in age-rules.mjs). api.age.minor(actor) says whether a
  * character is under 18 now; api.age.romance(...actors) is the check every romantic or sexual action calls first.
  * A world-wide guard also takes a lover, spouse or troth tie off a sheet when either end is a minor, whatever made it.
  */

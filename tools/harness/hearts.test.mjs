@@ -110,7 +110,7 @@ test("wiring: the month hook from Storyteller, the setting, the hooks and the AP
   for ( const k of ["purse: Money.purseOf", "pay: Money.pay", "transfer: Money.transfer", "money: Money.moneyNow", "rules: MoneyRules"] ) assert.ok(sm.includes(k), k);
 });
 
-// WoDX NPC 0.69.0: adoption of children and adults by the law of the place and year (B3173-B3175).
+// Adoption of children and adults by the law of the place and year (B3213-B3215).
 test("adoption follows the law of the region and year, and only an older adult may adopt", () => {
   for ( const r of Object.keys(H.REGION_ADOPTION) ) assert.ok(WR.WORLD_REGIONS[r], `${r} is a world region`);
   for ( const s of Object.values(H.SPHERE_ADOPTION) ) assert.ok(H.ADOPTION_KINDS[s.child], `${s.child} is an adoption kind`);

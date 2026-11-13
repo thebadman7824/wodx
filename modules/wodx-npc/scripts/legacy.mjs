@@ -132,7 +132,7 @@ export async function openWeb(opts = {}) {
   const dlg = new D({window: {title: "The web of ties", icon: "fa-solid fa-diagram-project", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog", "wnpc-web-dialog"],
     position: {width: 600, height: "auto"}, content: webHtml(state), buttons: [{action: "close", label: "Close", default: true}], rejectClose: false});
   await dlg.render(true);
-  // NPC 0.68.0: the dialog's content is cleaned of SVG, so the picture is drawn into its box after each render
+  // Fix: the dialog's content is cleaned of SVG, so the picture is drawn into its box after each render
   const picture = () => { const pic = dlg.element?.querySelector(".wnpc-web-pic"); if ( pic ) pic.innerHTML = webSvg(web(state)); };
   const redraw = () => { const box = dlg.element?.querySelector(".wnpc-web-wrap"); if ( box ) box.outerHTML = webHtml(state); picture(); };
   picture();

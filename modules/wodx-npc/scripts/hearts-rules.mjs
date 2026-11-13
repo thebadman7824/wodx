@@ -286,7 +286,7 @@ export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Adoption of children and adults (NPC 0.69.0, Ben 2026-11-13)        */
+/*  Adoption of children and adults (B3213, Ben 2026-11-13)        */
 /* ------------------------------------------------------------------ */
 
 /**

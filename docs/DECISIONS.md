@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3180
+Next free block: B3200
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -151,7 +151,10 @@ Next free block: B3180
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
-| B3170-B3179 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3170-B3172); adoption of children and adults by law (B3173-B3175) | Chronicle, NPC, Actions |
+| B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
+| B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
+| B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
+| B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4658,32 +4661,52 @@ WoDX Actions. The roll window lists the entries in the character's codex (WoDX S
 
 Reverse: Leave "Research from the codex" at None.
 
-## B3170. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
-WoDX Chronicle 0.53.0 (age-rules.mjs, age.mjs). Ben asked whether under-age characters are kept out of romantic and sexual situations; they were not. Now nothing romantic or sexual may involve anyone under 18: courting and warmth, a lover, spouse or troth tie, marriage, having a child, seduction, and the feeding that follows a seduction. The floor is the same in every era and region. The coming-of-age ages of older centuries stay in the lifepath only and never lower it, and the marriage law tables never model child marriage. This is a project rule, not a house rule of the books, and no setting turns it off.
+## B3150. Imported goods dated 1197 take the year they first turn up (2026-11-13)
+WoDX Library. The goods from the imported lists all came in dated 1197, the first year WoDX plays. 34 of them belong to later centuries and now start then: ravioli, lasagne, waffles and bratwurst 1300, pinot noir 1375, haggis 1400, lutefisk, orange juice, a gold locket and a bench vise 1500, whipped cream 1550, the haori 1550, the kilt 1590, pudding, salça, chardonnay, the yukata and cufflinks 1600, the plague robe 1619, the vegetable hosomaki 1750, chicory brew 1770, the hacksaw 1800, the glass terrarium 1829, zucchini, the bathrobe and beekeeping gloves 1850, pesto and spaghetti al pesto 1860, the water heater 1868, the black belt 1886, the honeydew melon and shorts 1900, the cheongsam 1920. The rest of the 441 are old enough for 1197 or are held to their lands by place rules. A house reading of history, rounded for play (data/goods-ways.mjs REDATED).
 
-Reverse: none. This stays.
+Reverse: empty REDATED.
 
-## B3171. Who counts as under 18 (2026-11-13)
-A character counts as a minor when any sign says so: a birth year that makes them under 18 in the year shown; for Kindred, being under 18 at the Embrace, and for the walking dead, being under 18 at death, because the body stopped there; a child role from the town's residents, the child behaviour or routine, or a child made by WoDX NPC that has no birth year; or the Storyteller's own mark (flags.wodx-chronicle.minor = true). A character with no sign counts as an adult, because most townsfolk carry no birth year. The Storyteller's mark can only make someone a minor. WoDX NPC 0.68.0 refuses courting, marriage and having a child, and WoDX Actions 3.63.0 refuses Seduction (and so the Siren's feeding after it) when either side is a minor, with a short note to whoever tried. Without the Chronicle check, these refuse rather than allow.
+## B3151. Goods old in one land and late in the rest (2026-11-13)
+WoDX Library. Koji, tofu, onigiri, sashimi, hosomaki and kombu are at home in East Asia and reach the rest of the world in the late 20th century; salça in Anatolia and the Levant; sandpaper in China (Europe from 1834), firecrackers in China (elsewhere from 1300), the fanning mill in China (Europe from 1720), the fire piston in Southeast Asia (Europe from 1802), the hammock in the Americas (Europe from 1550), sassafras and the tree spile in North America (Europe from 1600 and 1700). They use the same place rules as other goods (REDATED_WAYS).
 
-Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet its birth year.
+Reverse: empty REDATED_WAYS.
 
-## B3172. Romantic ties to a minor are never kept (2026-11-13)
-WoDX Chronicle 0.53.0 guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
+## B3160. Legends deeds suggest Renown and Status (2026-11-13)
+Desk item t5. When the Legends book gains a line naming a player character, WoDX suggests a change of standing in the approval queue. For a Garou, a seat won is +1 temporary Honor, a word kept +1 Honor, a word broken -1 Honor and a fight won +1 Glory. For Kindred, a seat won is +1 Status and a seat lost or a boon broken -1 Status. Others get a note that their standing rises or falls. Approving writes Garou Renown on the sheet; Status and standing are set by hand, with a whispered note. W20 gives Renown for deeds and V20 ties Status to office and prestation, but the deed-to-Renown table and the single points are WoDX's. The first build of an older chronicle suggests nothing. World setting "Legends suggest Renown and Status", on by default.
 
-Reverse: none.
+Reverse: Turn the setting off, or reject the suggestions.
 
-## B3173. Adoption of children and adults by the law of the place and year (2026-11-13, Ben approved)
-WoDX NPC 0.69.0 (hearts-rules.mjs SPHERE_ADOPTION, REGION_ADOPTION, adoptionLaw, canAdopt; hearts.mjs adopt). Each way of life has its own way of taking in a child: full adoption, fostering or wardship, or kafala, the Islamic guardianship in which the child keeps their own name. Adult adoption is allowed where the law allows it, as with the grown heir of a Japanese house or a French adult adoption after 1804. Dated changes by region follow the civil codes: Moravia 1811, France 1804 and 1923, England 1926, Soviet Russia's ban from 1918 to 1926, and others. From 2100 every way of life allows full adoption. These are readings of history in WoDX's own words, and the Storyteller may move a date.
+## B3161. Fights as deeds in the Legends book (2026-11-13)
+Desk item c2, Chronicle's part. A new kind of line, "Deeds in a fight", comes from api.legends.addDeed({id, at, text, people, won, place}), which WoDX Combat's after-action card will call. Deeds are kept in the world setting legendDeeds (the newest 500).
 
-Reverse: edit SPHERE_ADOPTION or REGION_ADOPTION.
+Reverse: Hide the line in the Legends window.
 
-## B3174. Who may adopt, and what the ties mean (2026-11-13)
-The one adopting must be an adult (the age floor of B3170) and, where both birth years are known, older than the one adopted. Full adoption and adult adoption make Parent and Child ties, so wills count the adopted one as a child and heir. Fostering, wardship and kafala make the new Guardian and Ward ties, which are family but not heirs by law; a will can still leave a ward a share. Each adoption is kept on both sheets (flags.wodx-npc.adoptions), a card goes to the owners, and the hook wodxAdopted is called.
+## B3162. The language allowance holds for players (2026-11-13)
+Desk item k3. A player cannot save a language list longer than the native language plus what Linguistics gives (1, 2, 4, 8, 16) or the Language Merits give (V20 pp. 484 to 485 printed). A list that is already longer is never cut. The Storyteller can always add more.
 
-Reverse: remove the ties by hand on the Relationships tab.
+Reverse: The Storyteller adds the language for the player.
 
-## B3175. Guardian and Ward tie kinds (2026-11-13)
-WoDX NPC 0.69.0 adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
+## B3163. The gist of a kindred tongue (2026-11-13)
+Desk item k3. Speech in a language the reader does not know, but that is kin to one they do (WoDX's grouping: Romance, Slavic, Germanic, Norse, Celtic, Semitic, Indic, Chinese, Bantu, Malay, Egyptian), shows a "Try for the gist" button. It rolls Intelligence + Linguistics (Academics where there is no Linguistics) at difficulty 7, once per character for each message. A success shows that reader the message for the rest of the session.
 
-Reverse: none needed.
+Reverse: Leave the button alone; the message stays unread.
+
+## B3170. Fights in the experience draft (2026-11-13)
+Desk item c2. WoDX Storyteller keeps the fights since the last wrap-up (api.noteFight, the newest 40). The end-of-night table lists them and ticks "Came through real danger" for each player character who took three health levels or more in one of them, or ended one down. The Storyteller can untick it. The list empties when experience is given. Three levels is WoDX's line for real danger.
+
+Reverse: Untick the box at the wrap-up.
+
+## B3171. The after-action card writes a deed (2026-11-13)
+Desk item c2. When a fight with a player character ends, WoDX Combat writes one deed in the Legends book (B3161): who fought whom, where, and "and won" when a player character is still up and every other fighter is down. Through B3160 a won fight then suggests Glory for Garou. It also notes each player character's harm for B3170.
+
+Reverse: Hide the line in the Legends window; reject the Glory suggestion.
+
+## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
+WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
+
+Reverse: remove philippine, indochinese and balkan from COINS and MONIES.
+
+## B3191. A scene names the money of a land under a wider region (2026-11-13)
+WoDX Chronicle. WoDX keeps the Philippines, Indochina and the Balkans under wider regions, following the standing rule that finer regions come only when a chronicle goes there. Where this scene stands has a Money here choice instead, and it holds the money of the place for prices, money changers and the coin of the place. The regions themselves are unchanged.
+
+Reverse: remove PLACE_MONIES and the money line of cleanPlace and regionHere.

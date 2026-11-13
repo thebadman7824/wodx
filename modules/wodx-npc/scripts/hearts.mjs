@@ -31,7 +31,7 @@ const card = (title, lines) => `<div class="vta-card wodx-x wnpc"><div class="vt
 /** Chronicle's age floor (18) for anything romantic or sexual; without Chronicle's age check nothing is allowed. */
 function ageCheck(...people) {
   const r = game.modules.get("wodx-chronicle")?.api?.age?.romance?.(...people);
-  const out = r ?? {ok: false, why: "The age check is not available (WoDX Chronicle 0.53.0 or later is needed)."};
+  const out = r ?? {ok: false, why: "The age check is not available (a WoDX Chronicle with the age floor is needed)."};
   if ( !out.ok ) ui.notifications?.warn?.(out.why);
   return out;
 }
@@ -65,7 +65,7 @@ export function hindranceFor(lover, loved) {
 export async function court(lover, loved, event, {successes = 0, botch = false, why = ""} = {}) {
   const a = actorOf(lover), b = actorOf(loved);
   if ( !game.user.isGM || !a || !b || a.id === b.id ) return null;
-  // NPC 0.68.0: never with anyone under 18, in any era (Chronicle's age floor)
+  // B3211: never with anyone under 18, in any era (Chronicle's age floor)
   const age = ageCheck(a, b);
   if ( !age.ok ) return {ok: false, why: age.why};
   const h = hindranceFor(a, b);
@@ -91,7 +91,7 @@ async function dropHandTie(a, b, role) {
 export async function marry(aLike, bLike, {region = regionNow(), year = yearNow(), witnesses = [], pay = null, force = false} = {}) {
   const a = actorOf(aLike), b = actorOf(bLike);
   if ( !game.user.isGM || !a || !b || a.id === b.id ) return null;
-  // NPC 0.68.0: no marriage with anyone under 18, whatever the law of the time said; force does not lift it
+  // B3211: no marriage with anyone under 18, whatever the law of the time said; force does not lift it
   const age = ageCheck(a, b);
   if ( !age.ok ) return {ok: false, why: [age.why]};
   const law = H.marriageLaw(region, year, sphereNow(region, year));
@@ -133,7 +133,7 @@ export async function divorce(aLike, bLike, {region = regionNow(), year = yearNo
 export async function haveChild(aLike, bLike, {name = "", sex = ""} = {}) {
   const a = actorOf(aLike), b = actorOf(bLike);
   if ( !game.user.isGM || !a || !b ) return null;
-  // NPC 0.68.0: parents are adults
+  // B3211: parents are adults
   const age = ageCheck(a, b);
   if ( !age.ok ) return {ok: false, why: age.why};
   const kid = H.childOf([lineOf(a), lineOf(b)], Math.random());
@@ -154,7 +154,7 @@ export function childAge(actorLike) {
   return {age, stage: H.childStage(age)};
 }
 
-/* ---- Adoption (NPC 0.69.0) ---- */
+/* ---- Adoption (B3213-B3214) ---- */
 export const adoptionLawHere = ({region = regionNow(), year = yearNow()} = {}) => H.adoptionLaw(region, year, sphereNow(region, year));
 /**
  * The Storyteller adopts `childLike` into `parentLike`'s family under the law of the place and year: a child is
@@ -169,7 +169,7 @@ export async function adopt(parentLike, childLike, {region = regionNow(), year =
   const age = game.modules.get("wodx-chronicle")?.api?.age;
   const born = a => { const v = a?.flags?.["wodx-creation"]?.chronology?.bornYear; return v === null || v === undefined || v === "" ? null : Number(v); };
   const can = H.canAdopt(law, {same: p.id === c.id, parentMinor: !!age?.minor?.(p), childMinor: !!age?.minor?.(c), parentBorn: born(p), childBorn: born(c)});
-  if ( !age ) can.why.push("The age check is not available (WoDX Chronicle 0.53.0 or later is needed).");
+  if ( !age ) can.why.push("The age check is not available (a WoDX Chronicle with the age floor is needed).");
   if ( !can.ok || !age ) { ui.notifications?.warn?.(can.why.join(" ")); return {ok: false, why: can.why, law}; }
   const [up, down] = can.kindInfo.tie;
   const rec = {id: foundry.utils.randomID(), at: game.time.worldTime, region, year, kind: can.kind, rite: law.rite, record: law.record, inherits: can.kindInfo.inherits, note: String(note ?? "").slice(0, 200)};

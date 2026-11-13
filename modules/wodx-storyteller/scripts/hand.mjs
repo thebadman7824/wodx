@@ -29,6 +29,8 @@ const LIVE_WORLDS = ["rothenstein-live"];
 export const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags?.wodx?.liveWorld;
 
 export function registerHandSettings() {
+  // B3170: fights since the last wrap-up, from WoDX Combat's after-action card
+  game.settings.register(MOD, "fightNotes", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "timer", {scope: "world", config: false, type: Object, default: WR.blankTimer(), onChange: () => TimerApp.refresh()});
   game.settings.register(MOD, "timerWarn", {name: "Session timer warning (minutes)", hint: "How long before the session's planned end the Storyteller is warned.",
     scope: "world", config: true, type: Number, default: 30, range: {min: 0, max: 120, step: 5}});
@@ -277,8 +279,21 @@ export class PreflightApp extends ApplicationV2 {
 /*  The end of the night                                               */
 /* ------------------------------------------------------------------ */
 
+/** Active GM: note a fight for the experience draft (B3170). */
+export async function noteFight(f = {}) {
+  if ( !game.user.isGM || game.users.activeGM?.id !== game.user.id ) return null;
+  const n = WR.normFight(f);
+  if ( !n.id ) return null;
+  const list = (C.setting("fightNotes") ?? []).filter(x => x?.id !== n.id);
+  list.push(n);
+  await game.settings.set(MOD, "fightNotes", list.slice(-WR.FIGHT_KEEP));
+  return n;
+}
+
 export async function wrapUpDialog() {
   if ( !game.user.isGM ) return null;
+  const fights = (C.setting("fightNotes") ?? []).map(WR.normFight);
+  const danger = WR.dangerFrom(fights);
   const have = {chronicle: !!C.chron()?.endScene, npc: !!C.npc()?.endSession, creation: !!api("wodx-creation")?.award};
   const steps = WR.steps(have);
   const pcs = C.pcs();
@@ -292,7 +307,7 @@ export async function wrapUpDialog() {
   const refs = [...new Set(lines.map(l => `${cap(l)}: ${WR.lineReasons(l, {early}).ref}`))];
   const head = reasons.map(r => `<th title="${esc(r.label)}">${esc(r.label.split(/[:,(]/)[0].trim())} (${r.xp})</th>`).join("");
   const rows = pcs.map(a => `<tr data-search-item data-search-text="${esc(a.name)}"><td>${esc(a.name)}</td>${reasons.map(r => own.get(a.id).some(x => x.key === r.key)
-    ? `<td><input type="checkbox" name="xp.${a.id}.${r.key}"${r.auto ? " checked" : ""} aria-label="${esc(`${a.name}: ${r.label}`)}"></td>`
+    ? `<td><input type="checkbox" name="xp.${a.id}.${r.key}"${r.auto || (r.key === "danger" && danger.has(a.id)) ? " checked" : ""} aria-label="${esc(`${a.name}: ${r.label}`)}"></td>`
     : `<td class="wodx-quiet" title="Not in this character's book">·</td>`).join("")}
     <td><input type="number" name="extra.${a.id}" value="0" style="width:4em" aria-label="${esc(`${a.name}: extra points`)}"></td></tr>`).join("");
   // Chronicle 0.46.0: what still waits for the Storyteller as the night ends (B2452)
@@ -302,6 +317,7 @@ export async function wrapUpDialog() {
     <ul data-fixed>${steps.map(s => `<li><label><input type="checkbox" name="step.${s.key}" checked> ${esc(s.label)}</label></li>`).join("")}</ul>
     ${have.creation && pcs.length ? `<h3>Experience</h3><p class="wodx-quiet">Tick what each character earned; the story-end columns are for the last session of a story. Nothing is given unless the experience step is ticked.</p>
       <ul class="wodx-quiet" data-fixed>${refs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+      ${fights.length ? `<p class="wodx-quiet">Fights since the last wrap-up: ${esc(fights.map(f => f.text).filter(Boolean).join("; "))}. "Came through real danger" is ticked for anyone who took three levels or more, or ended a fight down.</p>` : ""}
       ${pcs.length > 6 ? searchBox(".wst-wrap-xp tbody", "Find a character…", "Search characters") : ""}
       <div class="wst-scroll"><table class="wst-wrap-xp"><thead><tr><th>Character</th>${head}<th>Extra</th></tr></thead><tbody>${rows}</tbody></table></div>` : ""}
     <p class="wodx-quiet">Afterwards: back up the world from Foundry's Setup screen (Worlds, the world's menu, Back up), or on the server's own schedule.</p></form>`;
@@ -322,6 +338,7 @@ export async function wrapUpDialog() {
       given++;
     }
     done.push(`experience for ${given} character${given === 1 ? "" : "s"}`);
+    await game.settings.set(MOD, "fightNotes", []);
   }
   if ( d.step?.session || d.step?.factions ) {
     if ( d.step?.session ) { await C.endSession({factions: !!d.step?.factions}); done.push("the session marked as ended"); }

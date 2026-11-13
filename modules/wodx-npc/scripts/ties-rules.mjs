@@ -30,7 +30,7 @@ export const KINDS = {
   became: {label: "Became", back: "formerly", group: "blood"},
   parent: {label: "Parent", back: "child", group: "family", up: true},
   child: {label: "Child", back: "parent", group: "family"},
-  // NPC 0.69.0: a guardian and ward (fostering, wardship, kafala): family, but no heir by law
+  // B3215: a guardian and ward (fostering, wardship, kafala): family, but no heir by law
   guardian: {label: "Guardian", back: "ward", group: "family", up: true},
   ward: {label: "Ward", back: "guardian", group: "family"},
   sibling: {label: "Sibling", back: "sibling", group: "family"},

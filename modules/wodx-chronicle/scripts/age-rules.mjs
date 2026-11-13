@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.53.0: the age floor for anything romantic or sexual. Pure: no Foundry.
+ * B3210: the age floor for anything romantic or sexual. Pure: no Foundry.
  *
  * Nothing romantic or sexual (courting, a lover, spouse or troth tie, marriage, having a child, seduction and the
  * feeding that follows it) may involve anyone under ADULT_AGE. The floor is the same in every era and region: the

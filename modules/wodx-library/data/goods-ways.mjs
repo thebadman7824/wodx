@@ -168,6 +168,44 @@ export const WAYS = {
   "a krar": {"east-africa": null}, "a kantele": {scandinavia: null, russia: null}
 };
 
+/**
+ * Goods from the imported lists (cdda) came in dated 1197, the first year WoDX plays, though many belong to later
+ * centuries. Each takes the year it first turns up in the land it comes from (B3150); where it was old somewhere else
+ * long before, a place rule in REDATED_WAYS says so (B3151). A house reading of history, rounded for play.
+ */
+export const REDATED = {
+  // Food and drink
+  "a plate of ravioli": 1300, "a packet of lasagne sheets": 1300, "a waffle": 1300, "a bratwurst": 1300,
+  "a plate of haggis": 1400, "a plate of lutefisk": 1500, "a bottle of orange juice": 1500, "a jar of whipped cream": 1550,
+  "a bowl of pudding": 1600, "a jar of salca": 1600, "a bottle of chardonnay": 1600, "a bottle of pinot noir": 1375,
+  "a cup of chicory brew": 1770, "zucchini": 1850, "a jar of pesto": 1860, "a plate of spaghetti al pesto": 1860,
+  "a honeydew melon": 1900, "a vegetable hosomaki": 1750,
+  // Dress
+  "a haori": 1550, "a kilt": 1590, "a yukata": 1600, "a plague robe": 1619, "a bathrobe": 1850,
+  "a pair of beekeeping gloves": 1850, "a black belt": 1886, "a pair of shorts": 1900, "a cheongsam": 1920,
+  // Things
+  "a gold locket": 1500, "a bench vise": 1500, "a pair of cufflinks": 1600, "a hacksaw": 1800, "a glass terrarium": 1829,
+  "a water heater": 1868
+};
+
+/** Old in one land, late in the rest: the place rules for goods of the imported lists (B3151). */
+export const REDATED_WAYS = {
+  "a bag of koji": {sinic: null, japanese: null, "*": 1950},
+  "tofu": {sinic: null, japanese: null, theravada: null, malay: null, "*": 1960},
+  "a plate of tofu stirfry": {sinic: null, japanese: null, theravada: null, malay: null, "*": 1960},
+  "an onigiri": {japanese: null, "*": 1980}, "sashimi": {japanese: null, "*": 1980}, "a vegetable hosomaki": {japanese: null, "*": 1980},
+  "a bag of kombu": {japanese: null, korea: null, china: null, "*": 1980},
+  "a jar of salca": {anatolia: null, levant: null, "*": 1990},
+  "a sheet of sandpaper": {sinic: null, "*": 1834},
+  "a fire piston": {malay: null, theravada: null, "*": 1802},
+  "a fanning mill": {sinic: null, "*": 1720},
+  "a firecracker": {sinic: null, "*": 1300},
+  "a hammock": {mesoamerican: null, andean: null, caribbean: null, "*": 1550},
+  "a net hammock": {mesoamerican: null, andean: null, caribbean: null, "*": 1550},
+  "a sassafras root": {northern: null, "north-america-east": null, "*": 1600},
+  "a tree spile": {northern: null, "north-america-east": null, canada: null, "*": 1700}
+};
+
 /** The coin of the place: drawn as the local money's coins when the money is known (WoDX Storyteller). */
 export const LOCAL_COIN = "a coin of the place";
 
