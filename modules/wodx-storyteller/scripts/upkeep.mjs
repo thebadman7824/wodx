@@ -12,6 +12,7 @@
  *                   goes to the approval queue, and approving it starts a rumour.
  */
 import * as U from "./upkeep-rules.mjs";
+import * as CR from "./contagion-rules.mjs";
 import * as W from "./world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
@@ -235,9 +236,25 @@ export async function tiesDialog(actorId = null) {
 
 export const huntOf = scene => U.normHunt(scene?.flags?.[MOD]?.hunt ?? {});
 
+/**
+ * The sickness in the scene's town (B3436): a live outbreak in its market first (contagion.mjs, with phase, blood and a
+ * hunting difficulty shift), else the history of its own land for the year, else the old Europe list.
+ */
+export function outbreakHere(scene = canvas?.scene) {
+  try { const live = game.modules.get(MOD)?.api?.upkeep?.contagion?.here?.(scene); if ( live ) return live; } catch (e) { /* no contagion */ }
+  if ( !setting("plague") ) return null;
+  let region = null;
+  try { region = scene ? chron()?.world?.here?.(scene)?.id ?? null : null; } catch (e) { region = null; }
+  if ( region ) {
+    const h = CR.historicHere(region, yearNow());
+    return h ? {name: h.name, note: `${h.note} ${CR.DISEASES[h.disease].note}`, disease: h.disease, blood: CR.DISEASES[h.disease].blood, diff: 0} : null;
+  }
+  return U.outbreakFor(yearNow());
+}
+
 /** What WoDX Actions' Hunt asks: the ground set for the scene and the heat's extra difficulty. */
 export function huntHere(scene = canvas?.scene) {
-  const outbreak = setting("plague") ? U.outbreakFor(yearNow()) : null;
+  const outbreak = outbreakHere(scene);
   if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: 0, band: U.heatBand(0), outbreak};
   const h = huntOf(scene), heat = U.cooled(h.heat, h.since, now());
   // B3303: the hunters of the region add their stage's difficulty (at most +3 with the heat)

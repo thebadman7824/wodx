@@ -54,8 +54,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Markets and trade
 
-- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings).
-- Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `townTurn`, `townState`.
+- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt).
+- Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `townTurn`, `townState`, `contagion`, `contagionPeople`, `contagionState`.
 
 ## Battles, sieges and ships
 
