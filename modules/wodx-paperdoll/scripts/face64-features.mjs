@@ -7,6 +7,7 @@
  */
 import {FEATURES, H} from "./face64-rules.mjs";
 import "./face64-general.mjs";
+import "./face64-kindred.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -198,10 +199,13 @@ const ONE_OF = new Set(["Deathmark", "Headwear", "Metis"]);
 /** Lines whose named group is the whole look (a kith's mien, a breed's): always shown when the sheet names it. */
 const WHOLE = new Set(["changeling", "fera"]);
 const norm = s => String(s ?? "").toLowerCase();
+/** A group whose name sits inside a longer one: a True Brujah is not a Brujah. */
+const SHADOWED = {brujah: ["true brujah"]};
 /** Does the sheet's text (clan, kith, tribe, tradition and so on) name this group? */
 export function groupMatches(group, text) {
   const g = norm(group), t = norm(text);
   if ( !g || !t ) return false;
+  if ( (SHADOWED[g] ?? []).some(longer => t.includes(longer)) && !t.replaceAll(SHADOWED[g].find(l => t.includes(l)), "").includes(g) ) return false;
   const words = g.replace(/^(the|followers of|children of|harbingers of)\s+/, "").split(/\s+/);
   return t.includes(g) || words.every(w => w.length > 2 && t.includes(w.replace(/s$/, "")));
 }
@@ -212,6 +216,8 @@ export function featuresFor(line, text = "") {
 }
 /** The kith and breed looks drawn here are each the whole look: shown whenever the sheet names the group. */
 for ( const f of Object.values(FEATURES) ) if ( WHOLE.has(f.line) && !("core" in f) ) f.core = true;
+/** Clans whose strange flesh is the whole point always show it. */
+for ( const id of ["v-gargoyle", "v-samedi", "v-harbinger", "v-cappadocian"] ) if ( FEATURES[id] ) FEATURES[id].core = true;
 /** Pick up to n features from list in seeded order, one per slot. */
 function take(r, list, n, used, out) {
   const order = list.map(f => [r.next(), f]).sort((a, b) => a[0] - b[0]).map(p => p[1]);
@@ -225,9 +231,9 @@ function take(r, list, n, used, out) {
 }
 /**
  * The features a face shows when the Storyteller has ticked none: rolled from the seed, so that two faces seldom look
- * alike (Ben, 13 November 2026). A kith's or breed's whole look always shows when the sheet names it; then two to four
- * of the named group's own features (a clan, tribe, kith, house), one to three of the line's own, and one to three
- * everyday marks; never two in one slot (two things on one cheek); a wraith always bears one deathmark and a metis one
+ * alike (Ben, 13 November 2026). A kith's or breed's whole look (and a Gargoyle's stone, a Samedi's rot) always shows
+ * when the sheet names it; then two or three of the named group's own features (a clan, tribe, kith, house), one or two
+ * of the line's own, and up to two everyday marks; never two in one slot (two things on one cheek); a wraith always bears one deathmark and a metis one
  * deformity; one headwear at most, now and then. Form and state features of a named or general group are listed and
  * show only while their form is on. Objects of one era (spectacles, sunglasses) and a ghoul's flush are only ticked,
  * the flush also rolled when the sheet says ghoul.
@@ -241,9 +247,9 @@ export function rollFeatures(seed, line, text = "") {
   for ( const f of plain ) if ( f.core && named(f) ) { out.push(f.id); if ( f.slot ) used.add(f.slot); }
   for ( const f of plain ) if ( f.state && !f.core && (named(f) || (GENERAL.has(f.group) && f.line !== "all")) ) out.push(f.id);
   const loose = plain.filter(f => !f.core && !f.state);
-  take(r, loose.filter(f => f.line !== "all" && named(f)), 2 + Math.floor(r.next() * 3), used, out);
-  take(r, loose.filter(f => f.line !== "all" && !named(f) && GENERAL.has(f.group)), 1 + Math.floor(r.next() * 3), used, out);
-  take(r, loose.filter(f => f.line === "all"), 1 + Math.floor(r.next() * 3), used, out);
+  take(r, loose.filter(f => f.line !== "all" && named(f)), 2 + Math.floor(r.next() * 2), used, out);
+  take(r, loose.filter(f => f.line !== "all" && !named(f) && GENERAL.has(f.group)), 1 + Math.floor(r.next() * 2), used, out);
+  take(r, loose.filter(f => f.line === "all"), Math.floor(r.next() * 3), used, out);
   for ( const g of ONE_OF ) {
     const opts = featuresFor(line, text).filter(f => f.group === g && !f.tick);
     if ( !opts.length ) continue;

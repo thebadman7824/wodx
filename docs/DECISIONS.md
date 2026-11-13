@@ -139,7 +139,7 @@ Next free block: B3030
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
-| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3011) | Paperdoll |
+| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3012) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4234,7 +4234,12 @@ WoDX Paperdoll 0.19.0. Ben (13 November 2026): 100 features for anyone, 50 base 
 Reverse: Remove the import of face64-general.mjs from face64-features.mjs.
 
 ## B3011. A rolled face gets several features, one per slot (2026-11-13)
-An NPC with nothing ticked now rolls two to four features of its named group (clan, kith, tribe), one to three of its line's own and one to three everyday ones, in seeded order. Each feature may name a slot (an eye, a cheek, the neck, the head); a face never gets two in one slot, so a tattoo and a scar do not land on one cheek. A kith's or breed's whole look still always shows; a wraith still bears one deathmark and a metis one deformity; headwear still comes now and then, one at most. The harness checks that every feature shows, that no two features of a line look the same, and that 300 rolled mortals give 300 different faces.
+An NPC with nothing ticked now rolls two or three features of its named group (clan, kith, tribe), one or two of its line and up to two everyday ones, in seeded order. Each feature may name a slot (an eye, a cheek, the neck, the head); a face never gets two in one slot, so a tattoo and a scar do not land on one cheek. A kith's or breed's whole look still always shows; a wraith still bears one deathmark and a metis one deformity; headwear still comes now and then, one at most. The harness checks that every feature shows, that no two features of a line look the same, and that 300 rolled mortals give 300 different faces.
 
 Reverse: Restore the older rollFeatures (one chance per feature) from git history.
+
+## B3012. Vampire faces: 50 for any Kindred, 15 per clan and bloodline, 25 for the strange ones (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-kindred.mjs). Any Kindred: 51 (pallors, dead or fed lips, fangs, eyes, bites, veins, frost, collars and jewels of the night). Fifteen each for the thirteen clans of V20 and Caitiff, and for the bloodlines and Dark Ages lines the project uses: Baali, Salubri, Daughters of Cacophony, Kiasyd, True Brujah, Harbingers of Skulls, Cappadocian, Lamia, Nagaraja, Lhiannan, Noiad, Anda, Ahrimanes and Blood Brothers. Twenty-five or more for the clans whose strange flesh is their mark: Nosferatu (30), Gargoyle (25) and Samedi (25); a Gargoyle's stone, a Samedi's rot, a Harbinger's skull face and a Cappadocian's ashen face always show when the sheet names the clan. A True Brujah sheet no longer counts as Brujah. All drawn from the clans' looks in the books, in our own words; the rest invented to fit.
+
+Reverse: Remove the import of face64-kindred.mjs from face64-features.mjs.
 
