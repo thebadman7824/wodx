@@ -180,7 +180,7 @@ test("settlement: the journal says what the place is, in plain words, with nothi
   const folk = SR.proposeFolk(r), gone = r.households.find(h => !folk.some(f => f.household === h.id) && h.people.length > 2);
   const pages = SR.journalPages(r, SR.normReview(r, {struck: [gone.id], folk}));
   assert.deepEqual(pages.map(p => p.name), ["The place", "Households", "Ties", "Hidden folk"]);
-  assert.match(pages[0].html, /<strong>Steinfeld<\/strong> is a village of \d+ people in 112 households, as it stands in 1995\./);
+  assert.match(pages[0].html, new RegExp(`<strong>Steinfeld</strong> is a village of \\d+ people in ${r.households.length - 1} households, as it stands in 1995\\.`));   // the struck one left out
   assert.match(pages[0].html, /Mayor:/);
   assert.ok(!pages[1].html.includes(`>${gone.label.replace(/ household$/, "")}</strong> (${gone.wealth}): ${SR.peopleWords(gone)}<`) || r.households.filter(h => h.label === gone.label && SR.peopleWords(h) === SR.peopleWords(gone)).length > 1);
   for ( const f of folk ) assert.ok(pages[3].html.includes(f.label.replace(/'/g, "&#39;")), f.label);
