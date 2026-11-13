@@ -59,3 +59,37 @@ export function frameOf(st, grid) {
 
 /** The pixel box of a frame on its sheet. */
 export const rectOf = ({row, col}) => ({x: col * FRAME_W, y: row * FRAME_H, width: FRAME_W, height: FRAME_H});
+
+/**
+ * Attacks (B2580). Each sprite has an attack sheet per move it knows: six frames across, the four facings down, the
+ * same frame size as the walk sheet. The first move listed is the one a blow plays when nothing says otherwise.
+ */
+export const ACT_FRAMES = 6;
+/** How long each frame of an attack shows, in thousandths of a second: draw back, strike, hold. */
+export const ACT_MS = [110, 110, 110, 90, 140, 220];
+export const ACT_TOTAL = ACT_MS.reduce((a, b) => a + b, 0);
+export const ACTS = {
+  "kindred-elder-1888": ["claw", "cast"],
+  "garou-homid": ["claw"],
+  "garou-crinos": ["claw"],
+  "garou-lupus": ["bite"],
+  "townsman-1888": ["claw", "shot"],
+  "lady-1888": ["thrust"]
+};
+export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing"};
+export const actPath = (name, act) => `${FOLDER}/${name}.${act}.png`;
+/** The move a sprite plays: the one asked for if it knows it, else its first. Null when it knows none. */
+export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l[0] ?? null); };
+/** The frame of an attack so many thousandths of a second after it began; null once it is over. */
+export function actFrame(elapsed) {
+  if ( !(elapsed >= 0) ) return 0;
+  let t = 0;
+  for ( let i = 0; i < ACT_FRAMES; i++ ) { t += ACT_MS[i]; if ( elapsed < t ) return i; }
+  return null;
+}
+/** The facing that looks from one place toward another; the side wins a dead diagonal. */
+export const facingToward = (from, to, was = "down") => {
+  const dx = to.x - from.x, dy = to.y - from.y;
+  if ( dx === 0 && dy === 0 ) return was;
+  return Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
+};

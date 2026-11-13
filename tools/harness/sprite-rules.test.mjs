@@ -50,3 +50,36 @@ test("every sheet is in the module, at the size the rules cut frames from", () =
   const r = SR.rectOf({row: 3, col: 7});
   assert.deepEqual(r, {x: 672, y: 336, width: 96, height: 112});
 });
+
+test("an attack runs its six frames once and then ends", () => {
+  assert.equal(SR.actFrame(0), 0);
+  assert.equal(SR.actFrame(SR.ACT_MS[0]), 1);
+  assert.equal(SR.actFrame(SR.ACT_TOTAL - 1), SR.ACT_FRAMES - 1);
+  assert.equal(SR.actFrame(SR.ACT_TOTAL), null);
+  assert.equal(SR.actFrame(-5), 0);
+});
+
+test("every sprite knows an attack, and each attack sheet is on disk at six frames by four facings", () => {
+  for ( const name of Object.keys(SR.SHEETS) ) {
+    assert.ok(SR.ACTS[name]?.length, `${name} has an attack`);
+    for ( const act of SR.ACTS[name] ) {
+      assert.ok(SR.ACT_LABELS[act], `${act} has a name`);
+      const file = join(root, SR.actPath(name, act));
+      assert.ok(existsSync(file), `${file} is missing`);
+      const b = readFileSync(file);
+      assert.equal(b.readUInt32BE(16), SR.FRAME_W * SR.ACT_FRAMES, `${name}.${act} width`);
+      assert.equal(b.readUInt32BE(20), SR.FRAME_H * 4, `${name}.${act} height`);
+    }
+  }
+  assert.equal(SR.actOf("townsman-1888", "shot"), "shot");
+  assert.equal(SR.actOf("townsman-1888", "bite"), "claw");
+  assert.equal(SR.actOf("nobody", "bite"), null);
+});
+
+test("an attacker turns toward the one struck", () => {
+  assert.equal(SR.facingToward({x: 0, y: 0}, {x: 100, y: 10}), "right");
+  assert.equal(SR.facingToward({x: 0, y: 0}, {x: -100, y: 10}), "left");
+  assert.equal(SR.facingToward({x: 0, y: 0}, {x: 10, y: 100}), "down");
+  assert.equal(SR.facingToward({x: 0, y: 0}, {x: 10, y: -100}), "up");
+  assert.equal(SR.facingToward({x: 5, y: 5}, {x: 5, y: 5}, "left"), "left");
+});

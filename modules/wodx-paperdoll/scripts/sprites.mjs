@@ -5,7 +5,7 @@
  */
 import * as SR from "./sprite-rules.mjs";
 const MOD = "wodx-paperdoll";
-const states = new Map(), bases = new Map(), frames = new Map();
+const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map();
 let ticking = false;
 const on = () => { try { return game.settings.get(MOD, "sprites") !== false; } catch (e) { return true; } };
 
@@ -16,18 +16,19 @@ export function registerSpriteSettings() {
 
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
 
-function base(name) {
-  if ( bases.has(name) ) return bases.get(name);
-  bases.set(name, null);
+function base(name, act = null) {
+  const id = act ? `${name}.${act}` : name;
+  if ( bases.has(id) ) return bases.get(id);
+  bases.set(id, null);
   const load = foundry.canvas?.loadTexture ?? globalThis.loadTexture;
-  Promise.resolve(load(SR.sheetPath(name))).then(t => bases.set(name, crisp(t)), e => console.warn(`${MOD} | sprite sheet ${name}`, e));
+  Promise.resolve(load(act ? SR.actPath(name, act) : SR.sheetPath(name))).then(t => bases.set(id, crisp(t)), e => console.warn(`${MOD} | sprite sheet ${id}`, e));
   return null;
 }
 
-function frame(name, f) {
-  const b = base(name);
+function frame(name, f, act = null) {
+  const b = base(name, act);
   if ( !b ) return null;
-  const key = `${name}:${f.row}:${f.col}`;
+  const key = `${name}:${act ?? ""}:${f.row}:${f.col}`;
   if ( !frames.has(key) ) {
     const r = SR.rectOf(f);
     frames.set(key, new PIXI.Texture(b.baseTexture ?? b.source ?? b, new PIXI.Rectangle(r.x, r.y, r.width, r.height)));
@@ -43,19 +44,66 @@ function tick() {
     if ( !name || !SR.SHEETS[name] || !token.mesh ) continue;
     seen.add(token.id);
     const pos = {x: token.position.x, y: token.position.y};
-    const st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now);
+    let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now);
+    let tex = null;
+    const a = acts.get(token.id);
+    if ( a ) {
+      const col = st.moving ? null : SR.actFrame(now - a.start);
+      if ( col === null ) acts.delete(token.id);
+      else { st = {...st, facing: a.facing ?? st.facing}; tex = frame(name, {row: SR.ROW[st.facing] ?? SR.ROW.down, col}, a.act) ?? frame(name, SR.frameOf(st, grid)); }
+    }
     states.set(token.id, st);
-    const tex = frame(name, SR.frameOf(st, grid));
+    tex ??= frame(name, SR.frameOf(st, grid));
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
     else if ( !tex ) crisp(token.mesh.texture);
   }
-  for ( const id of states.keys() ) if ( !seen.has(id) ) states.delete(id);
+  for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); }
+}
+
+/** Every computer that sees the token starts the attack when the token's flag changes. */
+function onTokenUpdate(doc, change) {
+  const a = change?.flags?.[MOD]?.act;
+  if ( !a || !a.name || !on() ) return;
+  const name = doc.flags?.[MOD]?.sprite, act = SR.actOf(name, a.name);
+  if ( !act ) return;
+  base(name, act);
+  acts.set(doc.id, {act, facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: performance.now()});
+}
+
+/**
+ * Play an attack on a sprite token for everyone looking at the scene. `act` is one of the sprite's own moves (its
+ * first when left out or unknown); `toward` is a token, a token document or a point the figure turns to face.
+ * Returns the move played, or null when the token has no sprite or the sprite knows no attack.
+ */
+export async function play(tokenDoc, act = null, toward = null) {
+  tokenDoc = tokenDoc?.document ?? tokenDoc;
+  const name = tokenDoc?.flags?.[MOD]?.sprite, move = SR.actOf(name, act);
+  if ( !move ) return null;
+  const g = canvas.grid?.size ?? 0, o = toward?.document ?? toward;
+  const at = o && Number.isFinite(o.x) && Number.isFinite(o.y) ? {x: o.x + (o.width ?? 0) * g / 2, y: o.y + (o.height ?? 0) * g / 2} : null;
+  const me = {x: tokenDoc.x + (tokenDoc.width ?? 1) * g / 2, y: tokenDoc.y + (tokenDoc.height ?? 1) * g / 2};
+  const was = states.get(tokenDoc.id)?.facing ?? "down";
+  const facing = at ? SR.facingToward(me, at, was) : was;
+  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
+  return move;
+}
+
+/** A blow that lands plays the attacker's attack, turned toward the one struck. The active Storyteller's computer sends it. */
+function onDamage(actor, info) {
+  if ( !on() || !info?.attacker || game.users?.activeGM?.id !== game.user?.id ) return;
+  const toks = canvas.tokens?.placeables ?? [];
+  const from = toks.find(t => t.actor?.uuid === info.attacker && t.document.flags?.[MOD]?.sprite);
+  if ( !from ) return;
+  const to = toks.find(t => t.actor === actor) ?? toks.find(t => t.actor?.uuid === actor?.uuid);
+  play(from.document, null, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite attack`, e));
 }
 
 export function startSprites() {
   if ( ticking ) return;
   ticking = true;
   Hooks.on("renderTokenHUD", addHudButton);
+  Hooks.on("updateToken", onTokenUpdate);
+  Hooks.on("wodxDamageApplied", onDamage);
   Hooks.on("canvasReady", () => { states.clear(); canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
@@ -74,6 +122,7 @@ export async function clear(tokenDoc) {
   const prev = tokenDoc.flags?.[MOD]?.spritePrev;
   if ( prev ) await tokenDoc.update({texture: prev});
   await tokenDoc.unsetFlag(MOD, "sprite");
+  await tokenDoc.unsetFlag(MOD, "act");
   await tokenDoc.unsetFlag(MOD, "spritePrev");
   return tokenDoc;
 }
@@ -102,4 +151,4 @@ export function addHudButton(hud, html) {
   col.append(b);
 }
 
-export const spriteApi = {give, clear, pick, names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {give, clear, pick, play, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(id), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
