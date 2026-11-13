@@ -176,7 +176,7 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3493) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3494) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -5505,6 +5505,11 @@ Reverse: drop the wodxLaw button and checkYear calls.
 WoDX Chronicle, law-rules.mjs. The islamic family: the qadi's court by sharia, the ruler's court of complaints, each protected faith's own court; witnesses and oath; the muhtasib and the shurta; alms, poll tax and land tax; wine and apostasy on the books; police and prisons from 1800, written codes beside sharia from 1900, independent states from 1950. Regions add their own rulers and turning points: Anatolia, the Levant, Egypt, Arabia, the Maghreb, Persia and the Malay world (which starts with Hindu and Buddhist kingdoms and turns to the sultanates from 1400). Iberia's al-Andalus stays under Latin Christendom for now (the record follows the Christian kingdoms of the homeland's era); a finer split waits for its own row.
 
 Reverse: remove the islamic family and these region rows; the regions fall back to the custom stand-in.
+
+## B3494. Chinese imperial law as the third law family (2026-11-13)
+WoDX Chronicle, law-rules.mjs. The chinese family: an emperor ruling through examined officials; the county magistrate as judge, tax collector and keeper of the peace; appeal up to the throne for every death sentence; clan elders and guilds first; confession needed before sentence, with beating allowed within limits; the bamboo, penal servitude, exile and death; families and neighbour groups answering for one another; failing parents and forbidden sects as crimes. China, Korea and mainland Southeast Asia (Buddhist and Hindu kingdoms beside Đại Việt's Chinese-model empire) add their own rows. Japan gets its own family.
+
+Reverse: remove the chinese family and these region rows; the regions fall back to the custom stand-in.
 
 ## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
 WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
