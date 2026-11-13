@@ -63,6 +63,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
+| wodxCultFormed | npc | a following gathered around a character (B3242): {cult, founder} |
+| wodxCultNoticed | npc | a cult's exposure reached watched or moved (B3243), for anything that hunts cults: {cult, band} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |
 | wodxExpecting | npc | a pregnancy begun: {mother, other, record} (the record has the due time, season and year) |

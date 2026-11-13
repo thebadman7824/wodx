@@ -35,6 +35,7 @@ import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
+import {build as buildCults} from "./cults.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
 import * as FATES from "./fates.mjs";
@@ -49,7 +50,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.74.0";
+const VERSION = "0.75.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -857,6 +858,10 @@ const settlements = buildSettlements({MOD, esc, chron});
 const residents = buildResidents({MOD, esc, chron, settle: () => settlements});
 residents.hooks();
 settlements.hooks();
+/* B3240-B3249: cults and congregations that gather around a character */
+const cults = buildCults({MOD, esc, gmIds, isActiveGM, chron});
+cults.hooks();
+Hooks.on("wodxChronicleReady", () => cults.registerHandler());
 
 Hooks.once("init", () => {
   registerSettings();
@@ -880,6 +885,7 @@ Hooks.once("init", () => {
   HEARTS.listen();
   FAMILY.listen();
   STANDING.registerSettings();
+  cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
@@ -892,6 +898,7 @@ Hooks.once("init", () => {
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
     fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, rules: FATES.rules},
+    cults, openCults: cults.open,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
@@ -920,7 +927,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**
@@ -1002,6 +1009,9 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  // B3246: the character's following (awe by place, its cults, preach and gather)
+  tokens.tools.wodxCults = {name: "wodxCults", title: game.user.isGM ? "Cults and followings (awe by place, cults, preach)" : "Your following (where people speak of you, your cults, preach)", icon: "fa-solid fa-hands-praying", order: 112.5,
+    button: true, visible: game.user.isGM || game.settings.get(MOD, "cultsOn") === true, onChange: () => cults.open()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
   // NPC 0.61.0 (B2914): dress the selected characters for a part of the world
