@@ -161,7 +161,7 @@ Next free block: B3470
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
-| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
+| B3260-B3269 | Off-screen lives of supernatural NPCs, gate fixes (used B3260-B3267) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
@@ -4954,6 +4954,11 @@ Reverse: undo the sheet edits by hand; the card's text lists every one.
 WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the world setting brood, named by the people generator of the region where it can, and lived through later jumps like anyone else. api.fates.bring(id) makes a sheet for one (a Vampire with its sire in lineage and its Generation; a Werewolf, Mage or Changeling for the others). An NPC flagged wodx-npc.fates.keep is left out, so the Storyteller's plans for a character stand.
 
 Reverse: clear the brood setting.
+
+## B3267. An unfilled Path counts as 7 (2026-11-13)
+WoDX NPC, fates.mjs. A new Vampire sheet has Path and Humanity at 0 until someone fills them in. Read as 0, the torpor table (V20 pdf p. 291) would put such an NPC to sleep for a millennium, so off-screen lives take a 0 as the usual 7. A true rating of 0 is a vampire lost to the Beast and is rare among NPCs in play.
+
+Reverse: drop the `v > 0` test in personOf.
 
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
