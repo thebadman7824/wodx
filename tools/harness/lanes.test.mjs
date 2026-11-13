@@ -169,6 +169,7 @@ test("only a hung gate run that is still a node process is ended (B3089)", () =>
   assert.equal(L.endOverdue({runner: "run-gate", pid: 4242}, {platform: "win32", exec: other}), false, "a reused process id is left alone");
   assert.ok(!calls.includes("taskkill"));
   assert.equal(L.endOverdue({pid: 4242, gates: ["lanes.mjs deploy"]}, {platform: "win32", exec}), false, "a deploy lock is never ended");
+  assert.equal(L.endOverdue({pid: 4242, gates: ["gatefaces", "gateage"]}, {platform: "win32", exec}), true, "an older gate run's lock (no runner) is ended too");
 });
 
 test("run-gate has a gate limit, a window sweep, a whole-run watchdog and moves the lock deadline (B3089)", () => {
