@@ -20,6 +20,8 @@ const MOD = "wodx-storyteller";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = 11;
 const DAY = 86400, WEEK = 7 * DAY;
+/** Foundry may hand back a batch in any order: match each made actor by name. */
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -57,7 +59,7 @@ export async function run() {
     await game.settings.set(MOD, "powerState", P.rules.blankState());
     const sc = await Scene.create({name: "WoDX gate: places of power", width: 800, height: 600, padding: 0});
     scenes.push(sc);
-    const [mage, fae1, fae2] = await Actor.create([
+    const [mage, fae1, fae2] = await createActors([
       {name: "WoDX gate: power mage", type: "Mage", system: {quintessence: {temporary: 0}, paradox: {temporary: 0}, spheres: {prime: {value: 3}}}},
       {name: "WoDX gate: power keeper", type: "Changeling", system: {advantages: {glamour: {permanent: 6, temporary: 1}, banality: {permanent: 3, temporary: 0}}}},
       {name: "WoDX gate: power guest", type: "Changeling", system: {advantages: {glamour: {permanent: 6, temporary: 1}, banality: {permanent: 3, temporary: 0}}}}]);
