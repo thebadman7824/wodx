@@ -1786,3 +1786,8 @@ Ben's picks from the Improvement Desk (ia2) and the Stale Design Desk (e3). The 
 ## 2026-11-13: the faith calendar and the hunt; black powder (NPC 0.54.0, Actions 3.58.0, Combat 3.24.0, Chronicle 0.51.1)
 
 Two picks from the improvement desk of 13 November. fa1, the full version: a hunt reads the day of every faith's year where the scene stands, and each feast, fair, fast, day of rest, curfew and blackout changes the difficulty by name (B2710, B2711); the hunt window gained the odds before the roll. cb4: hand cannon, matchlock, wheellock and flintlock guns misfire on a botch and on any 1 in the wet, heavy rain puts out a match and wets the powder, and a gun with no lock named takes the year's lock (B2712 to B2714). Harness: hunt-calendar.test.mjs (13), powder.test.mjs (8). Testbed gate job jobs/hunt-powder-deploy-2026-11-13.md.
+
+
+## 2026-11-13: the character wizard (Creation 0.24.0)
+
+Ben asked whether a new player is guided through the sheet after the lifepath and prelude, as Darkness Weaver does. The 0.13.0 Build window was one page that counted. The wizard now walks the book's creation order a page at a time: the book, Attributes and Abilities by the player's priorities, the line's powers from pick lists, Backgrounds from the line's books, Virtues, Merits and Flaws at their cost, freebie points at the book's costs (Willpower, Humanity or a Road, Rage, Gnosis, Arete, Glamour too), and a last look. Before the First Night opens it from Build and from Merits and Flaws, and has a new check after the prelude (B2760 to B2766). The prelude's Willpower gain now reaches the sheet. Harness: wizard.test.mjs (10), first-night tests updated. Gate tools/gate/gatewizard.mjs (9 steps). Derived traits filled in for you come next.
