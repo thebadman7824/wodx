@@ -153,6 +153,22 @@ def room_names(path):
 
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
+RUG = re.compile(r"Rug_|Carpet", re.I)
+
+
+def seg_dist(x, y, a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    t = max(0, min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy or 1)))
+    return math.hypot(x - a[0] - t * dx, y - a[1] - t * dy)
+
+
+def wall_angle(o, segs):
+    """The direction of the wall nearest a piece; 0 when there is none within 4 squares (open ground)."""
+    best = min(segs, key=lambda s: seg_dist(o["cx"], o["cy"], *s), default=None)
+    if best is None or seg_dist(o["cx"], o["cy"], *best) > 4: return 0.0
+    return math.atan2(best[1][1] - best[0][1], best[1][0] - best[0][0])
+
+
 def check(path, sizes_path=None):
     m = json.load(open(path))
     names = room_names(path)
@@ -182,18 +198,21 @@ def check(path, sizes_path=None):
                 hit = seg_hits_poly(a, b, o["pts"])
                 if hit and not any(math.hypot(hit[0] - g[0], hit[1] - g[1]) <= g[2] + .05 for g in gaps):
                     found.append(("across a wall", o, "at %.1f, %.1f" % hit)); break
-            q = (o["rot"] / (math.pi / 2)) % 1
+            q = ((o["rot"] - wall_angle(o, segs)) / (math.pi / 2)) % 1    # square to the nearest wall (a town's houses stand at angles)
             if min(q, 1 - q) > .02 and not re.search(C.SEATS.pattern + "|Rug|Plant|Pot_", o["name"], re.I):
                 found.append(("askew", o, "turned %.0f degrees" % math.degrees(o["rot"])))
+            if RUG.search(o["name"]): continue                  # a rug lies on the floor: under furniture and doors is where it belongs
             for g in gaps:                                     # the generator's clear zone: the door's width, 1.1 deep each side
                 if g[3] != "door": continue
-                across = abs(math.sin(g[4])) > .5              # a door in a north-south wall
-                hw, hd = (1.05, g[2] - .02) if across else (g[2] - .02, 1.05)
-                xs = [p[0] for p in o["pts"]]; ys = [p[1] for p in o["pts"]]
-                if min(xs) < g[0] + hw and max(xs) > g[0] - hw and min(ys) < g[1] + hd and max(ys) > g[1] - hd:
+                c, sn = math.cos(g[4]), math.sin(g[4])          # in the door's own frame: u along its wall, v across it
+                us = [(p[0] - g[0]) * c + (p[1] - g[1]) * sn for p in o["pts"]]
+                vs = [-(p[0] - g[0]) * sn + (p[1] - g[1]) * c for p in o["pts"]]
+                hw = g[2] - .05                                 # a touch at the edge is not in the way
+                if min(us) < hw and max(us) > -hw and min(vs) < 1.0 and max(vs) > -1.0:
                     found.append(("in a doorway", o, "")); break
-        for i, o in enumerate(furn):
-            for p in furn[i + 1:]:
+        solid = [o for o in furn if not RUG.search(o["name"])]
+        for i, o in enumerate(solid):
+            for p in solid[i + 1:]:
                 if math.hypot(o["cx"] - p["cx"], o["cy"] - p["cy"]) > (o["w"] + o["h"] + p["w"] + p["h"]) / 2: continue
                 sh = area_overlap(o["pts"], p["pts"])
                 if sh > .2 * min(o["w"] * o["h"], p["w"] * p["h"]): found.append(("overlap", o, "with " + p["name"]))

@@ -15,7 +15,7 @@
  "layout": "organic",
  "walled": false,
  "era": "dark-ages",
- "population": 59,
+ "population": 67,
  "openings": [
   {
    "id": "tavern-1-double-0",
@@ -1541,14 +1541,14 @@
    "id": "byre-house-2-door-0",
    "label": "Farmhouse door",
    "c": [
-    84.818,
-    9.608,
-    85.818,
-    9.608
+    83.621,
+    9.714,
+    84.621,
+    9.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1561,14 +1561,14 @@
    "id": "byre-house-2-door-1",
    "label": "Farmhouse door",
    "c": [
-    84.818,
-    4.608,
-    85.818,
-    4.608
+    83.621,
+    4.714,
+    84.621,
+    4.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1581,14 +1581,14 @@
    "id": "byre-house-2-double-4",
    "label": "Farmhouse double",
    "c": [
-    87.318,
-    9.608,
-    89.318,
-    9.608
+    86.121,
+    9.714,
+    88.121,
+    9.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1601,14 +1601,14 @@
    "id": "byre-house-2-window-5",
    "label": "Farmhouse window",
    "c": [
-    79.818,
-    9.608,
-    80.818,
-    9.608
+    78.621,
+    9.714,
+    79.621,
+    9.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1621,14 +1621,14 @@
    "id": "byre-house-2-window-6",
    "label": "Farmhouse window",
    "c": [
-    78.818,
-    6.608,
-    78.818,
-    7.608
+    77.621,
+    6.714,
+    77.621,
+    7.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1641,14 +1641,14 @@
    "id": "byre-house-2-window-7",
    "label": "Farmhouse window",
    "c": [
-    80.818,
-    4.608,
-    81.818,
-    4.608
+    79.621,
+    4.714,
+    80.621,
+    4.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -1661,14 +1661,14 @@
    "id": "byre-house-2-window-8",
    "label": "Farmhouse window",
    "c": [
-    88.318,
-    4.608,
-    89.318,
-    4.608
+    87.121,
+    4.714,
+    88.121,
+    4.714
    ],
    "inside": [
-    84.818,
-    7.108
+    83.621,
+    7.214
    ],
    "barInside": true,
    "flags": {
@@ -2832,7 +2832,7 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 180.0
+   "rotation": 270.0
   },
   {
    "id": "byre-house-1-living-room-2",
@@ -2855,7 +2855,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     78.617,
-    20.502,
+    19.862,
     1.0,
     2.0
    ],
@@ -2870,7 +2870,7 @@
    "id": "byre-house-1-living-room-4",
    "label": "Chest (Living room)",
    "rect": [
-    77.617,
+    77.597,
     17.862,
     1.0,
     1.0
@@ -2888,8 +2888,8 @@
    "id": "byre-house-2-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
-    81.638,
-    7.408,
+    80.421,
+    7.534,
     2.0,
     2.0
    ],
@@ -2910,8 +2910,8 @@
    "id": "byre-house-2-living-room-2",
    "label": "Box bed (Living room)",
    "rect": [
-    78.998,
-    7.408,
+    77.801,
+    7.534,
     1.0,
     2.0
    ],
@@ -2926,8 +2926,8 @@
    "id": "byre-house-2-living-room-3",
    "label": "Box bed (Living room)",
    "rect": [
-    78.998,
-    5.408,
+    77.801,
+    5.534,
     1.0,
     2.0
    ],
@@ -2942,8 +2942,8 @@
    "id": "byre-house-2-living-room-4",
    "label": "Chest (Living room)",
    "rect": [
-    79.998,
-    8.428,
+    78.801,
+    8.534,
     1.0,
     1.0
    ],
@@ -2954,7 +2954,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
+   "rotation": 90.0
   },
   {
    "id": "well",
@@ -3418,20 +3418,20 @@
    "id": "byre-house-2",
    "label": "Farmhouse",
    "rect": [
-    78.818,
-    4.608,
+    77.621,
+    4.714,
     12.0,
     5.0
    ],
    "points": [
-    78.818,
-    4.608,
-    90.818,
-    4.608,
-    90.818,
-    9.608,
-    78.818,
-    9.608
+    77.621,
+    4.714,
+    89.621,
+    4.714,
+    89.621,
+    9.714,
+    77.621,
+    9.714
    ],
    "place": {
     "kind": "home"
@@ -3443,18 +3443,18 @@
    "rect": [
     42.432,
     69.338,
-    10.803,
-    10.744
+    10.881,
+    10.878
    ],
    "points": [
     49.168,
     69.338,
     42.432,
     72.469,
-    46.827,
-    80.082,
-    53.235,
-    76.382
+    46.904,
+    80.216,
+    53.313,
+    76.516
    ],
    "place": {
     "kind": "home",
@@ -3468,18 +3468,18 @@
    "rect": [
     49.373,
     66.703,
-    12.841,
-    15.78
+    12.811,
+    15.728
    ],
    "points": [
     54.836,
     66.703,
     49.373,
     69.243,
-    57.018,
-    82.483,
-    62.214,
-    79.483
+    56.988,
+    82.431,
+    62.184,
+    79.431
    ],
    "place": {
     "kind": "home",
@@ -3488,27 +3488,27 @@
    }
   },
   {
-   "id": "cottage-4-plot",
-   "label": "Yard of the cottage",
+   "id": "storehouse-1-plot",
+   "label": "Yard of the storehouse",
    "rect": [
-    54.903,
-    63.118,
-    10.987,
-    9.984
+    60.187,
+    66.193,
+    13.723,
+    11.503
    ],
    "points": [
-    62.55,
-    63.118,
-    54.903,
-    66.672,
-    58.615,
-    73.102,
-    65.889,
-    68.902
+    73.909,
+    71.737,
+    69.911,
+    66.193,
+    60.187,
+    71.807,
+    63.587,
+    77.696
    ],
    "place": {
-    "kind": "home",
-    "owner": "cottage-4",
+    "kind": "workplace",
+    "owner": "storehouse-1",
     "private": true
    }
   },
@@ -3517,19 +3517,21 @@
    "label": "Yard of the house and shop (draper)",
    "rect": [
     61.656,
-    45.007,
-    12.396,
-    10.54
+    44.962,
+    12.464,
+    10.585
    ],
    "points": [
     61.656,
     50.316,
     65.396,
     55.547,
-    74.051,
-    50.55,
-    70.851,
-    45.007
+    74.062,
+    50.543,
+    74.119,
+    50.486,
+    70.93,
+    44.962
    ],
    "place": {
     "kind": "home",
@@ -3542,54 +3544,25 @@
    "label": "Yard of the cottage",
    "rect": [
     51.036,
-    28.168,
-    14.455,
-    11.77
+    28.492,
+    13.424,
+    11.446
    ],
    "points": [
-    61.822,
-    28.168,
     51.608,
     34.065,
     51.036,
     35.462,
     54.236,
     39.938,
-    65.491,
-    33.44,
-    62.889,
-    28.934
+    64.46,
+    34.035,
+    61.26,
+    28.492
    ],
    "place": {
     "kind": "home",
     "owner": "cottage-6",
-    "private": true
-   }
-  },
-  {
-   "id": "cottage-7-plot",
-   "label": "Yard of the cottage",
-   "rect": [
-    65.574,
-    34.534,
-    15.479,
-    14.804
-   ],
-   "points": [
-    75.264,
-    49.338,
-    81.054,
-    43.531,
-    75.536,
-    38.014,
-    70.689,
-    34.534,
-    65.574,
-    39.649
-   ],
-   "place": {
-    "kind": "home",
-    "owner": "cottage-7",
     "private": true
    }
   },
@@ -3624,10 +3597,10 @@
    "id": "cottage-8-plot",
    "label": "Yard of the cottage",
    "rect": [
-    16.196,
-    64.738,
-    11.096,
-    13.217
+    16.232,
+    65.006,
+    11.06,
+    12.949
    ],
    "points": [
     16.382,
@@ -3636,10 +3609,10 @@
     77.955,
     27.292,
     75.133,
-    24.507,
-    64.738,
-    16.196,
-    66.965
+    24.579,
+    65.006,
+    16.232,
+    67.243
    ],
    "place": {
     "kind": "home",
@@ -3651,10 +3624,10 @@
    "id": "cottage-9-plot",
    "label": "Yard of the cottage",
    "rect": [
-    27.717,
-    17.29,
-    20.062,
-    22.07
+    27.08,
+    16.82,
+    20.699,
+    22.54
    ],
    "points": [
     38.429,
@@ -3663,10 +3636,10 @@
     34.754,
     38.419,
     18.543,
-    33.806,
-    17.29,
-    27.717,
-    20.806
+    32.072,
+    16.82,
+    27.08,
+    19.702
    ],
    "place": {
     "kind": "home",
@@ -3678,22 +3651,24 @@
    "id": "cottage-10-plot",
    "label": "Yard of the cottage",
    "rect": [
-    17.387,
-    20.462,
-    19.492,
-    23.13
+    16.858,
+    18.208,
+    20.021,
+    25.384
    ],
    "points": [
+    16.858,
+    24.246,
     27.891,
     43.355,
     29.839,
     43.592,
     36.879,
     40.123,
-    25.528,
-    20.462,
-    17.387,
-    25.162
+    24.226,
+    18.208,
+    17.279,
+    22.219
    ],
    "place": {
     "kind": "home",
@@ -3855,7 +3830,22 @@
      "role": "alehouse keeper"
     },
     {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
      "role": "elder"
+    },
+    {
+     "role": "servant"
     },
     {
      "role": "lodger"
@@ -3873,7 +3863,7 @@
      "role": "priest"
     },
     {
-     "role": "servant"
+     "role": "clerk"
     }
    ],
    "wealth": "middling"
@@ -3882,10 +3872,10 @@
    "id": "steinfeld-1197-7.cottage-2-household",
    "building": "cottage-2",
    "label": "Cottage household",
-   "trade": "labourer",
+   "trade": "herder",
    "people": [
     {
-     "role": "labourer"
+     "role": "herder"
     },
     {
      "role": "partner"
@@ -3900,13 +3890,16 @@
    "id": "steinfeld-1197-7.cottage-3-household",
    "building": "cottage-3",
    "label": "Cottage household",
-   "trade": "cottager",
+   "trade": "herder",
    "people": [
     {
-     "role": "cottager"
+     "role": "herder"
     },
     {
-     "role": "partner"
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -3918,10 +3911,13 @@
    "id": "steinfeld-1197-7.cottage-4-household",
    "building": "cottage-4",
    "label": "Cottage household",
-   "trade": "carter",
+   "trade": "cottager",
    "people": [
     {
-     "role": "carter"
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -3936,22 +3932,13 @@
    "id": "steinfeld-1197-7.cottage-5-household",
    "building": "cottage-5",
    "label": "Cottage household",
-   "trade": "cottager",
+   "trade": "herder",
    "people": [
     {
-     "role": "cottager"
+     "role": "herder"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -3975,6 +3962,15 @@
      "role": "child"
     },
     {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
      "role": "servant"
     }
    ],
@@ -3984,13 +3980,25 @@
    "id": "steinfeld-1197-7.cottage-6-household",
    "building": "cottage-6",
    "label": "Cottage household",
-   "trade": "herder",
+   "trade": "cottager",
    "people": [
     {
-     "role": "herder"
+     "role": "cottager"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
     }
    ],
    "wealth": "middling"
@@ -3999,13 +4007,10 @@
    "id": "steinfeld-1197-7.cottage-7-household",
    "building": "cottage-7",
    "label": "Cottage household",
-   "trade": "cottager",
+   "trade": "labourer",
    "people": [
     {
-     "role": "cottager"
-    },
-    {
-     "role": "child"
+     "role": "labourer"
     },
     {
      "role": "child"
@@ -4021,15 +4026,6 @@
    "people": [
     {
      "role": "carpenter"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -4038,10 +4034,19 @@
    "id": "steinfeld-1197-7.cottage-8-household",
    "building": "cottage-8",
    "label": "Cottage household",
-   "trade": "carter",
+   "trade": "cottager",
    "people": [
     {
-     "role": "carter"
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
     }
    ],
    "wealth": "middling"
@@ -4050,13 +4055,16 @@
    "id": "steinfeld-1197-7.cottage-9-household",
    "building": "cottage-9",
    "label": "Cottage household",
-   "trade": "carter",
+   "trade": "labourer",
    "people": [
     {
-     "role": "carter"
+     "role": "labourer"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -4071,6 +4079,27 @@
    "id": "steinfeld-1197-7.cottage-10-household",
    "building": "cottage-10",
    "label": "Cottage household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-11-household",
+   "building": "cottage-11",
+   "label": "Cottage household",
    "trade": "widowed spinner",
    "people": [
     {
@@ -4084,33 +4113,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "elder"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1197-7.cottage-11-household",
-   "building": "cottage-11",
-   "label": "Cottage household",
-   "trade": "herder",
-   "people": [
-    {
-     "role": "herder"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
     }
    ],
    "wealth": "middling"
@@ -4125,7 +4127,7 @@
      "role": "farmer"
     },
     {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -4135,6 +4137,12 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
     }
    ],
    "wealth": "poor"
@@ -4152,16 +4160,7 @@
      "role": "child"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
+     "role": "farmhand"
     }
    ],
    "wealth": "poor"

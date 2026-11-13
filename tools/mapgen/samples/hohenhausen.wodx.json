@@ -13,7 +13,7 @@
  },
  "kind": "village",
  "era": "dark-ages",
- "population": 82,
+ "population": 91,
  "openings": [
   {
    "id": "tavern-1-double-0",
@@ -820,13 +820,13 @@
    "label": "Cottage door",
    "c": [
     33.0,
-    11.5,
+    11.0,
     33.0,
-    12.5
+    12.0
    ],
    "inside": [
     35.5,
-    12.5
+    12.0
    ],
    "barInside": true,
    "flags": {
@@ -840,13 +840,13 @@
    "label": "Cottage window",
    "c": [
     33.0,
-    13.5,
+    13.0,
     33.0,
-    14.5
+    14.0
    ],
    "inside": [
     35.5,
-    12.5
+    12.0
    ],
    "barInside": true,
    "flags": {
@@ -860,13 +860,13 @@
    "label": "Cottage window",
    "c": [
     35.0,
-    9.5,
+    9.0,
     36.0,
-    9.5
+    9.0
    ],
    "inside": [
     35.5,
-    12.5
+    12.0
    ],
    "barInside": true,
    "flags": {
@@ -880,13 +880,13 @@
    "label": "Cottage window",
    "c": [
     38.0,
-    12.0,
+    11.5,
     38.0,
-    13.0
+    12.5
    ],
    "inside": [
     35.5,
-    12.5
+    12.0
    ],
    "barInside": true,
    "flags": {
@@ -899,13 +899,13 @@
    "id": "cottage-4-door-0",
    "label": "Cottage door",
    "c": [
-    44.5,
+    44.0,
     35.5,
-    44.5,
+    44.0,
     36.5
    ],
    "inside": [
-    42.0,
+    41.5,
     35.5
    ],
    "barInside": true,
@@ -919,13 +919,13 @@
    "id": "cottage-4-window-1",
    "label": "Cottage window",
    "c": [
-    44.5,
+    44.0,
     33.5,
-    44.5,
+    44.0,
     34.5
    ],
    "inside": [
-    42.0,
+    41.5,
     35.5
    ],
    "barInside": true,
@@ -939,13 +939,13 @@
    "id": "cottage-4-window-2",
    "label": "Cottage window",
    "c": [
-    41.5,
+    41.0,
     38.5,
-    42.5,
+    42.0,
     38.5
    ],
    "inside": [
-    42.0,
+    41.5,
     35.5
    ],
    "barInside": true,
@@ -959,13 +959,13 @@
    "id": "cottage-4-window-3",
    "label": "Cottage window",
    "c": [
-    39.5,
+    39.0,
     35.0,
-    39.5,
+    39.0,
     36.0
    ],
    "inside": [
-    42.0,
+    41.5,
     35.5
    ],
    "barInside": true,
@@ -980,13 +980,13 @@
    "label": "Cottage door",
    "c": [
     45.5,
-    12.5,
+    11.5,
     45.5,
-    13.5
+    12.5
    ],
    "inside": [
     43.0,
-    12.5
+    11.5
    ],
    "barInside": true,
    "flags": {
@@ -1000,13 +1000,13 @@
    "label": "Cottage window",
    "c": [
     45.5,
-    10.5,
+    9.5,
     45.5,
-    11.5
+    10.5
    ],
    "inside": [
     43.0,
-    12.5
+    11.5
    ],
    "barInside": true,
    "flags": {
@@ -1020,13 +1020,13 @@
    "label": "Cottage window",
    "c": [
     42.5,
-    15.5,
+    14.5,
     43.5,
-    15.5
+    14.5
    ],
    "inside": [
     43.0,
-    12.5
+    11.5
    ],
    "barInside": true,
    "flags": {
@@ -1040,13 +1040,13 @@
    "label": "Cottage window",
    "c": [
     40.5,
-    12.0,
+    11.0,
     40.5,
-    13.0
+    12.0
    ],
    "inside": [
     43.0,
-    12.5
+    11.5
    ],
    "barInside": true,
    "flags": {
@@ -1059,14 +1059,14 @@
    "id": "cottage-6-door-0",
    "label": "Cottage door",
    "c": [
-    27.5,
-    9.0,
-    27.5,
-    10.0
+    13.5,
+    29.5,
+    13.5,
+    30.5
    ],
    "inside": [
-    25.0,
-    9.0
+    11.0,
+    29.5
    ],
    "barInside": true,
    "flags": {
@@ -1079,14 +1079,14 @@
    "id": "cottage-6-window-1",
    "label": "Cottage window",
    "c": [
+    13.5,
     27.5,
-    7.0,
-    27.5,
-    8.0
+    13.5,
+    28.5
    ],
    "inside": [
-    25.0,
-    9.0
+    11.0,
+    29.5
    ],
    "barInside": true,
    "flags": {
@@ -1099,14 +1099,14 @@
    "id": "cottage-6-window-2",
    "label": "Cottage window",
    "c": [
-    24.5,
-    12.0,
-    25.5,
-    12.0
+    10.5,
+    32.5,
+    11.5,
+    32.5
    ],
    "inside": [
-    25.0,
-    9.0
+    11.0,
+    29.5
    ],
    "barInside": true,
    "flags": {
@@ -1119,14 +1119,14 @@
    "id": "cottage-6-window-3",
    "label": "Cottage window",
    "c": [
-    22.5,
     8.5,
-    22.5,
-    9.5
+    29.0,
+    8.5,
+    30.0
    ],
    "inside": [
-    25.0,
-    9.0
+    11.0,
+    29.5
    ],
    "barInside": true,
    "flags": {
@@ -1137,86 +1137,6 @@
   },
   {
    "id": "cottage-7-door-0",
-   "label": "Cottage door",
-   "c": [
-    12.5,
-    31.0,
-    12.5,
-    32.0
-   ],
-   "inside": [
-    10.0,
-    31.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-7-window-1",
-   "label": "Cottage window",
-   "c": [
-    12.5,
-    29.0,
-    12.5,
-    30.0
-   ],
-   "inside": [
-    10.0,
-    31.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-7-window-2",
-   "label": "Cottage window",
-   "c": [
-    9.5,
-    34.0,
-    10.5,
-    34.0
-   ],
-   "inside": [
-    10.0,
-    31.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-7-window-3",
-   "label": "Cottage window",
-   "c": [
-    7.5,
-    30.5,
-    7.5,
-    31.5
-   ],
-   "inside": [
-    10.0,
-    31.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-8-door-0",
    "label": "Cottage door",
    "c": [
     9.0,
@@ -1236,7 +1156,7 @@
    }
   },
   {
-   "id": "cottage-8-window-1",
+   "id": "cottage-7-window-1",
    "label": "Cottage window",
    "c": [
     11.0,
@@ -1256,7 +1176,7 @@
    }
   },
   {
-   "id": "cottage-8-window-2",
+   "id": "cottage-7-window-2",
    "label": "Cottage window",
    "c": [
     7.0,
@@ -1276,7 +1196,7 @@
    }
   },
   {
-   "id": "cottage-8-window-3",
+   "id": "cottage-7-window-3",
    "label": "Cottage window",
    "c": [
     9.5,
@@ -1287,6 +1207,226 @@
    "inside": [
     10.0,
     19.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-door-0",
+   "label": "Cottage door",
+   "c": [
+    28.0,
+    8.5,
+    28.0,
+    9.5
+   ],
+   "inside": [
+    25.5,
+    8.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-1",
+   "label": "Cottage window",
+   "c": [
+    28.0,
+    6.5,
+    28.0,
+    7.5
+   ],
+   "inside": [
+    25.5,
+    8.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-2",
+   "label": "Cottage window",
+   "c": [
+    25.0,
+    11.5,
+    26.0,
+    11.5
+   ],
+   "inside": [
+    25.5,
+    8.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-3",
+   "label": "Cottage window",
+   "c": [
+    23.0,
+    8.0,
+    23.0,
+    9.0
+   ],
+   "inside": [
+    25.5,
+    8.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-door-0",
+   "label": "Farmhouse door",
+   "c": [
+    13.0,
+    39.5,
+    13.0,
+    40.5
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-door-1",
+   "label": "Farmhouse door",
+   "c": [
+    8.0,
+    39.5,
+    8.0,
+    40.5
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-double-4",
+   "label": "Farmhouse double",
+   "c": [
+    13.0,
+    36.0,
+    13.0,
+    38.0
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-5",
+   "label": "Farmhouse window",
+   "c": [
+    13.0,
+    44.5,
+    13.0,
+    45.5
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-6",
+   "label": "Farmhouse window",
+   "c": [
+    10.0,
+    46.5,
+    11.0,
+    46.5
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-7",
+   "label": "Farmhouse window",
+   "c": [
+    8.0,
+    43.5,
+    8.0,
+    44.5
+   ],
+   "inside": [
+    10.5,
+    40.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-8",
+   "label": "Farmhouse window",
+   "c": [
+    8.0,
+    36.0,
+    8.0,
+    37.0
+   ],
+   "inside": [
+    10.5,
+    40.5
    ],
    "barInside": true,
    "flags": {
@@ -1376,16 +1516,16 @@
    }
   },
   {
-   "id": "byre-house-2-door-0",
+   "id": "byre-house-3-door-0",
    "label": "Farmhouse door",
    "c": [
-    56.5,
+    56.0,
     22.0,
-    57.5,
+    57.0,
     22.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1396,16 +1536,16 @@
    }
   },
   {
-   "id": "byre-house-2-door-1",
+   "id": "byre-house-3-door-1",
    "label": "Farmhouse door",
    "c": [
-    56.5,
+    56.0,
     17.0,
-    57.5,
+    57.0,
     17.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1416,16 +1556,16 @@
    }
   },
   {
-   "id": "byre-house-2-double-4",
+   "id": "byre-house-3-double-4",
    "label": "Farmhouse double",
    "c": [
-    59.0,
+    58.5,
     22.0,
-    61.0,
+    60.5,
     22.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1436,16 +1576,16 @@
    }
   },
   {
-   "id": "byre-house-2-window-5",
+   "id": "byre-house-3-window-5",
    "label": "Farmhouse window",
    "c": [
-    51.5,
+    51.0,
     22.0,
-    52.5,
+    52.0,
     22.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1456,16 +1596,16 @@
    }
   },
   {
-   "id": "byre-house-2-window-6",
+   "id": "byre-house-3-window-6",
    "label": "Farmhouse window",
    "c": [
-    50.5,
+    50.0,
     19.0,
-    50.5,
+    50.0,
     20.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1476,16 +1616,16 @@
    }
   },
   {
-   "id": "byre-house-2-window-7",
+   "id": "byre-house-3-window-7",
    "label": "Farmhouse window",
    "c": [
-    52.5,
+    52.0,
     17.0,
-    53.5,
+    53.0,
     17.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1496,16 +1636,16 @@
    }
   },
   {
-   "id": "byre-house-2-window-8",
+   "id": "byre-house-3-window-8",
    "label": "Farmhouse window",
    "c": [
-    60.0,
+    59.5,
     17.0,
-    61.0,
+    60.5,
     17.0
    ],
    "inside": [
-    56.5,
+    56.0,
     19.5
    ],
    "barInside": true,
@@ -1519,13 +1659,13 @@
    "id": "cottage-10-door-0",
    "label": "Cottage door",
    "c": [
-    17.5,
+    18.0,
     39.5,
-    17.5,
+    18.0,
     40.5
    ],
    "inside": [
-    20.0,
+    20.5,
     40.5
    ],
    "barInside": true,
@@ -1539,13 +1679,13 @@
    "id": "cottage-10-window-1",
    "label": "Cottage window",
    "c": [
-    17.5,
+    18.0,
     41.5,
-    17.5,
+    18.0,
     42.5
    ],
    "inside": [
-    20.0,
+    20.5,
     40.5
    ],
    "barInside": true,
@@ -1559,13 +1699,13 @@
    "id": "cottage-10-window-2",
    "label": "Cottage window",
    "c": [
-    19.5,
+    20.0,
     37.5,
-    20.5,
+    21.0,
     37.5
    ],
    "inside": [
-    20.0,
+    20.5,
     40.5
    ],
    "barInside": true,
@@ -1579,13 +1719,13 @@
    "id": "cottage-10-window-3",
    "label": "Cottage window",
    "c": [
-    22.5,
+    23.0,
     40.0,
-    22.5,
+    23.0,
     41.0
    ],
    "inside": [
-    20.0,
+    20.5,
     40.5
    ],
    "barInside": true,
@@ -1599,14 +1739,14 @@
    "id": "cottage-11-door-0",
    "label": "Cottage door",
    "c": [
-    33.0,
-    4.5,
-    33.0,
-    5.5
+    33.5,
+    4.0,
+    33.5,
+    5.0
    ],
    "inside": [
-    35.5,
-    5.5
+    36.0,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -1619,14 +1759,14 @@
    "id": "cottage-11-window-1",
    "label": "Cottage window",
    "c": [
-    33.0,
-    6.5,
-    33.0,
-    7.5
+    33.5,
+    6.0,
+    33.5,
+    7.0
    ],
    "inside": [
-    35.5,
-    5.5
+    36.0,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -1639,14 +1779,14 @@
    "id": "cottage-11-window-2",
    "label": "Cottage window",
    "c": [
-    35.0,
-    2.5,
-    36.0,
-    2.5
+    35.5,
+    2.0,
+    36.5,
+    2.0
    ],
    "inside": [
-    35.5,
-    5.5
+    36.0,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -1659,14 +1799,14 @@
    "id": "cottage-11-window-3",
    "label": "Cottage window",
    "c": [
-    38.0,
-    5.0,
-    38.0,
-    6.0
+    38.5,
+    4.5,
+    38.5,
+    5.5
    ],
    "inside": [
-    35.5,
-    5.5
+    36.0,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -1679,14 +1819,14 @@
    "id": "cottage-12-door-0",
    "label": "Cottage door",
    "c": [
-    13.0,
-    38.0,
-    13.0,
-    39.0
+    44.0,
+    42.5,
+    44.0,
+    43.5
    ],
    "inside": [
-    10.5,
-    38.0
+    41.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1699,14 +1839,14 @@
    "id": "cottage-12-window-1",
    "label": "Cottage window",
    "c": [
-    13.0,
-    36.0,
-    13.0,
-    37.0
+    44.0,
+    40.5,
+    44.0,
+    41.5
    ],
    "inside": [
-    10.5,
-    38.0
+    41.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1719,14 +1859,14 @@
    "id": "cottage-12-window-2",
    "label": "Cottage window",
    "c": [
-    10.0,
     41.0,
-    11.0,
-    41.0
+    45.5,
+    42.0,
+    45.5
    ],
    "inside": [
-    10.5,
-    38.0
+    41.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1739,14 +1879,14 @@
    "id": "cottage-12-window-3",
    "label": "Cottage window",
    "c": [
-    8.0,
-    37.5,
-    8.0,
-    38.5
+    39.0,
+    42.0,
+    39.0,
+    43.0
    ],
    "inside": [
-    10.5,
-    38.0
+    41.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1759,14 +1899,14 @@
    "id": "cottage-13-door-0",
    "label": "Cottage door",
    "c": [
-    46.0,
+    4.5,
+    27.5,
     5.5,
-    46.0,
-    6.5
+    27.5
    ],
    "inside": [
-    43.5,
-    5.5
+    4.5,
+    30.0
    ],
    "barInside": true,
    "flags": {
@@ -1779,14 +1919,14 @@
    "id": "cottage-13-window-1",
    "label": "Cottage window",
    "c": [
-    46.0,
+    2.5,
+    27.5,
     3.5,
-    46.0,
-    4.5
+    27.5
    ],
    "inside": [
-    43.5,
-    5.5
+    4.5,
+    30.0
    ],
    "barInside": true,
    "flags": {
@@ -1799,14 +1939,14 @@
    "id": "cottage-13-window-2",
    "label": "Cottage window",
    "c": [
-    43.0,
-    8.5,
-    44.0,
-    8.5
+    7.5,
+    29.5,
+    7.5,
+    30.5
    ],
    "inside": [
-    43.5,
-    5.5
+    4.5,
+    30.0
    ],
    "barInside": true,
    "flags": {
@@ -1819,14 +1959,14 @@
    "id": "cottage-13-window-3",
    "label": "Cottage window",
    "c": [
-    41.0,
+    4.0,
+    32.5,
     5.0,
-    41.0,
-    6.0
+    32.5
    ],
    "inside": [
-    43.5,
-    5.5
+    4.5,
+    30.0
    ],
    "barInside": true,
    "flags": {
@@ -1839,14 +1979,14 @@
    "id": "cottage-14-door-0",
    "label": "Cottage door",
    "c": [
-    44.5,
-    42.5,
-    44.5,
-    43.5
+    58.5,
+    26.5,
+    59.5,
+    26.5
    ],
    "inside": [
-    42.0,
-    42.5
+    58.5,
+    29.0
    ],
    "barInside": true,
    "flags": {
@@ -1859,14 +1999,14 @@
    "id": "cottage-14-window-1",
    "label": "Cottage window",
    "c": [
-    44.5,
-    40.5,
-    44.5,
-    41.5
+    56.5,
+    26.5,
+    57.5,
+    26.5
    ],
    "inside": [
-    42.0,
-    42.5
+    58.5,
+    29.0
    ],
    "barInside": true,
    "flags": {
@@ -1879,14 +2019,14 @@
    "id": "cottage-14-window-2",
    "label": "Cottage window",
    "c": [
-    41.5,
-    45.5,
-    42.5,
-    45.5
+    61.5,
+    28.5,
+    61.5,
+    29.5
    ],
    "inside": [
-    42.0,
-    42.5
+    58.5,
+    29.0
    ],
    "barInside": true,
    "flags": {
@@ -1899,14 +2039,14 @@
    "id": "cottage-14-window-3",
    "label": "Cottage window",
    "c": [
-    39.5,
-    42.0,
-    39.5,
-    43.0
+    58.0,
+    31.5,
+    59.0,
+    31.5
    ],
    "inside": [
-    42.0,
-    42.5
+    58.5,
+    29.0
    ],
    "barInside": true,
    "flags": {
@@ -1919,14 +2059,14 @@
    "id": "cottage-15-door-0",
    "label": "Cottage door",
    "c": [
-    59.5,
-    27.5,
-    60.5,
-    27.5
+    46.0,
+    4.5,
+    46.0,
+    5.5
    ],
    "inside": [
-    59.5,
-    30.0
+    43.5,
+    4.5
    ],
    "barInside": true,
    "flags": {
@@ -1939,14 +2079,14 @@
    "id": "cottage-15-window-1",
    "label": "Cottage window",
    "c": [
-    57.5,
-    27.5,
-    58.5,
-    27.5
+    46.0,
+    2.5,
+    46.0,
+    3.5
    ],
    "inside": [
-    59.5,
-    30.0
+    43.5,
+    4.5
    ],
    "barInside": true,
    "flags": {
@@ -1959,14 +2099,14 @@
    "id": "cottage-15-window-2",
    "label": "Cottage window",
    "c": [
-    62.5,
-    29.5,
-    62.5,
-    30.5
+    43.0,
+    7.5,
+    44.0,
+    7.5
    ],
    "inside": [
-    59.5,
-    30.0
+    43.5,
+    4.5
    ],
    "barInside": true,
    "flags": {
@@ -1979,14 +2119,14 @@
    "id": "cottage-15-window-3",
    "label": "Cottage window",
    "c": [
-    59.0,
-    32.5,
-    60.0,
-    32.5
+    41.0,
+    4.0,
+    41.0,
+    5.0
    ],
    "inside": [
-    59.5,
-    30.0
+    43.5,
+    4.5
    ],
    "barInside": true,
    "flags": {
@@ -2484,7 +2624,7 @@
    "label": "Hearth (Cottage)",
    "rect": [
     36.82,
-    9.68,
+    9.18,
     1.0,
     1.0
    ],
@@ -2505,7 +2645,7 @@
    "label": "Box bed (Cottage)",
    "rect": [
     33.18,
-    14.32,
+    13.82,
     2.0,
     1.0
    ],
@@ -2519,8 +2659,8 @@
    "id": "cottage-3-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    35.18,
-    14.32,
+    35.82,
+    13.82,
     2.0,
     1.0
    ],
@@ -2535,7 +2675,7 @@
    "label": "Chest (Cottage)",
    "rect": [
     33.18,
-    13.32,
+    12.82,
     1.0,
     1.0
    ],
@@ -2551,7 +2691,7 @@
    "id": "cottage-4-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    39.68,
+    39.18,
     37.32,
     1.0,
     1.0
@@ -2572,7 +2712,7 @@
    "id": "cottage-4-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    39.68,
+    39.18,
     32.68,
     2.0,
     1.0
@@ -2587,7 +2727,7 @@
    "id": "cottage-4-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    42.32,
+    41.18,
     32.68,
     2.0,
     1.0
@@ -2602,7 +2742,7 @@
    "id": "cottage-4-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    39.68,
+    39.18,
     33.68,
     1.0,
     1.0
@@ -2620,7 +2760,7 @@
    "label": "Hearth (Cottage)",
    "rect": [
     40.68,
-    14.32,
+    13.32,
     1.0,
     1.0
    ],
@@ -2640,8 +2780,8 @@
    "id": "cottage-5-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    40.68,
-    9.68,
+    43.32,
+    8.68,
     2.0,
     1.0
    ],
@@ -2655,8 +2795,8 @@
    "id": "cottage-5-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    43.32,
-    9.68,
+    41.32,
+    8.68,
     2.0,
     1.0
    ],
@@ -2671,7 +2811,7 @@
    "label": "Chest (Cottage)",
    "rect": [
     44.32,
-    10.7,
+    9.68,
     1.0,
     1.0
    ],
@@ -2687,8 +2827,8 @@
    "id": "cottage-6-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    22.68,
-    10.82,
+    8.68,
+    31.32,
     1.0,
     1.0
    ],
@@ -2708,8 +2848,8 @@
    "id": "cottage-6-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    25.32,
-    6.18,
+    8.68,
+    26.68,
     2.0,
     1.0
    ],
@@ -2723,8 +2863,8 @@
    "id": "cottage-6-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    22.7,
-    6.18,
+    11.3,
+    26.68,
     2.0,
     1.0
    ],
@@ -2738,8 +2878,8 @@
    "id": "cottage-6-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    22.68,
-    7.2,
+    8.68,
+    27.68,
     1.0,
     1.0
    ],
@@ -2753,74 +2893,6 @@
   },
   {
    "id": "cottage-7-cottage-0",
-   "label": "Hearth (Cottage)",
-   "rect": [
-    7.68,
-    32.82,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "cottage-7-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    10.32,
-    28.18,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-7-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    8.32,
-    28.18,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-7-cottage-4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    11.32,
-    29.18,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "cottage-8-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
     7.18,
@@ -2841,7 +2913,7 @@
    }
   },
   {
-   "id": "cottage-8-cottage-2",
+   "id": "cottage-7-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
     11.82,
@@ -2856,13 +2928,81 @@
    }
   },
   {
-   "id": "cottage-8-cottage-3",
+   "id": "cottage-7-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     11.82,
-    19.8,
+    19.82,
     1.0,
     2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-7-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    10.82,
+    17.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-8-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    23.18,
+    10.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-8-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    23.18,
+    5.68,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-8-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    25.82,
+    5.68,
+    2.0,
+    1.0
    ],
    "flags": {
     "hide": true,
@@ -2874,8 +3014,76 @@
    "id": "cottage-8-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
+    23.18,
+    6.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "byre-house-2-living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
     10.82,
-    20.82,
+    41.68,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "byre-house-2-living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    10.82,
+    45.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "byre-house-2-living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    8.82,
+    45.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "byre-house-2-living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    11.82,
+    44.3,
     1.0,
     1.0
    ],
@@ -2943,7 +3151,7 @@
    "label": "Chest (Cottage)",
    "rect": [
     53.32,
-    30.82,
+    30.8,
     1.0,
     1.0
    ],
@@ -2956,10 +3164,10 @@
    }
   },
   {
-   "id": "byre-house-2-living-room-0",
+   "id": "byre-house-3-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
-    53.32,
+    52.82,
     19.8,
     2.0,
     2.0
@@ -2977,11 +3185,11 @@
    }
   },
   {
-   "id": "byre-house-2-living-room-2",
+   "id": "byre-house-3-living-room-2",
    "label": "Box bed (Living room)",
    "rect": [
-    50.68,
-    19.82,
+    50.18,
+    19.8,
     1.0,
     2.0
    ],
@@ -2992,11 +3200,11 @@
    }
   },
   {
-   "id": "byre-house-2-living-room-3",
+   "id": "byre-house-3-living-room-3",
    "label": "Box bed (Living room)",
    "rect": [
-    50.68,
-    17.82,
+    50.18,
+    17.8,
     1.0,
     2.0
    ],
@@ -3007,10 +3215,10 @@
    }
   },
   {
-   "id": "byre-house-2-living-room-4",
+   "id": "byre-house-3-living-room-4",
    "label": "Chest (Living room)",
    "rect": [
-    51.7,
+    51.18,
     20.82,
     1.0,
     1.0
@@ -3027,7 +3235,7 @@
    "id": "cottage-10-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    21.32,
+    21.82,
     37.68,
     1.0,
     1.0
@@ -3048,7 +3256,7 @@
    "id": "cottage-10-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    17.7,
+    20.82,
     42.32,
     2.0,
     1.0
@@ -3063,7 +3271,7 @@
    "id": "cottage-10-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    20.32,
+    18.18,
     42.32,
     2.0,
     1.0
@@ -3078,7 +3286,7 @@
    "id": "cottage-10-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    21.32,
+    21.82,
     41.32,
     1.0,
     1.0
@@ -3095,8 +3303,8 @@
    "id": "cottage-11-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    36.82,
-    2.68,
+    37.32,
+    2.18,
     1.0,
     1.0
    ],
@@ -3116,8 +3324,8 @@
    "id": "cottage-11-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    35.82,
-    7.32,
+    33.68,
+    6.82,
     2.0,
     1.0
    ],
@@ -3131,8 +3339,8 @@
    "id": "cottage-11-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    33.18,
-    7.32,
+    36.32,
+    6.82,
     2.0,
     1.0
    ],
@@ -3146,8 +3354,8 @@
    "id": "cottage-11-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    36.82,
-    6.3,
+    37.32,
+    5.82,
     1.0,
     1.0
    ],
@@ -3163,8 +3371,8 @@
    "id": "cottage-12-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    8.18,
-    39.82,
+    39.18,
+    44.32,
     1.0,
     1.0
    ],
@@ -3184,8 +3392,8 @@
    "id": "cottage-12-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    8.18,
-    35.18,
+    39.18,
+    39.68,
     2.0,
     1.0
    ],
@@ -3199,8 +3407,8 @@
    "id": "cottage-12-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    10.8,
-    35.18,
+    41.18,
+    39.68,
     2.0,
     1.0
    ],
@@ -3214,8 +3422,8 @@
    "id": "cottage-12-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    11.82,
-    36.18,
+    39.18,
+    40.68,
     1.0,
     1.0
    ],
@@ -3231,8 +3439,8 @@
    "id": "cottage-13-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    41.18,
-    7.32,
+    6.32,
+    31.32,
     1.0,
     1.0
    ],
@@ -3252,10 +3460,10 @@
    "id": "cottage-13-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    41.18,
-    2.68,
-    2.0,
-    1.0
+    1.68,
+    27.68,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3267,10 +3475,10 @@
    "id": "cottage-13-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    43.82,
-    2.68,
-    2.0,
-    1.0
+    1.68,
+    29.68,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3282,8 +3490,8 @@
    "id": "cottage-13-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    41.18,
-    3.68,
+    2.68,
+    27.68,
     1.0,
     1.0
    ],
@@ -3299,8 +3507,8 @@
    "id": "cottage-14-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    39.68,
-    44.32,
+    60.32,
+    30.32,
     1.0,
     1.0
    ],
@@ -3320,10 +3528,10 @@
    "id": "cottage-14-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    42.32,
-    39.68,
-    2.0,
-    1.0
+    55.68,
+    26.68,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3335,10 +3543,10 @@
    "id": "cottage-14-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    39.68,
-    39.68,
-    2.0,
-    1.0
+    55.68,
+    29.32,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3350,8 +3558,8 @@
    "id": "cottage-14-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    39.68,
-    40.68,
+    56.68,
+    26.68,
     1.0,
     1.0
    ],
@@ -3367,8 +3575,8 @@
    "id": "cottage-15-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    61.32,
-    31.32,
+    41.18,
+    6.32,
     1.0,
     1.0
    ],
@@ -3388,10 +3596,10 @@
    "id": "cottage-15-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    56.68,
-    27.7,
-    1.0,
-    2.0
+    43.82,
+    1.68,
+    2.0,
+    1.0
    ],
    "flags": {
     "hide": true,
@@ -3403,10 +3611,10 @@
    "id": "cottage-15-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    56.68,
-    30.32,
-    1.0,
-    2.0
+    41.82,
+    1.68,
+    2.0,
+    1.0
    ],
    "flags": {
     "hide": true,
@@ -3418,8 +3626,8 @@
    "id": "cottage-15-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    57.68,
-    27.68,
+    44.82,
+    2.68,
     1.0,
     1.0
    ],
@@ -3559,7 +3767,7 @@
    "label": "Cottage",
    "rect": [
     33.0,
-    9.5,
+    9.0,
     5.0,
     6.0
    ],
@@ -3571,7 +3779,7 @@
    "id": "cottage-4",
    "label": "Cottage",
    "rect": [
-    39.5,
+    39.0,
     32.5,
     5.0,
     6.0
@@ -3585,7 +3793,7 @@
    "label": "Cottage",
    "rect": [
     40.5,
-    9.5,
+    8.5,
     5.0,
     6.0
    ],
@@ -3597,8 +3805,8 @@
    "id": "cottage-6",
    "label": "Cottage",
    "rect": [
-    22.5,
-    6.0,
+    8.5,
+    26.5,
     5.0,
     6.0
    ],
@@ -3610,10 +3818,10 @@
    "id": "cottage-7",
    "label": "Cottage",
    "rect": [
-    7.5,
-    28.0,
-    5.0,
-    6.0
+    7.0,
+    17.0,
+    6.0,
+    5.0
    ],
    "place": {
     "kind": "home"
@@ -3623,10 +3831,23 @@
    "id": "cottage-8",
    "label": "Cottage",
    "rect": [
-    7.0,
-    17.0,
-    6.0,
-    5.0
+    23.0,
+    5.5,
+    5.0,
+    6.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "byre-house-2",
+   "label": "Farmhouse",
+   "rect": [
+    8.0,
+    34.5,
+    5.0,
+    12.0
    ],
    "place": {
     "kind": "home"
@@ -3646,10 +3867,10 @@
    }
   },
   {
-   "id": "byre-house-2",
+   "id": "byre-house-3",
    "label": "Farmhouse",
    "rect": [
-    50.5,
+    50.0,
     17.0,
     12.0,
     5.0
@@ -3662,7 +3883,7 @@
    "id": "cottage-10",
    "label": "Cottage",
    "rect": [
-    17.5,
+    18.0,
     37.5,
     5.0,
     6.0
@@ -3675,8 +3896,8 @@
    "id": "cottage-11",
    "label": "Cottage",
    "rect": [
-    33.0,
-    2.5,
+    33.5,
+    2.0,
     5.0,
     6.0
    ],
@@ -3688,8 +3909,8 @@
    "id": "cottage-12",
    "label": "Cottage",
    "rect": [
-    8.0,
-    35.0,
+    39.0,
+    39.5,
     5.0,
     6.0
    ],
@@ -3701,10 +3922,10 @@
    "id": "cottage-13",
    "label": "Cottage",
    "rect": [
-    41.0,
-    2.5,
-    5.0,
-    6.0
+    1.5,
+    27.5,
+    6.0,
+    5.0
    ],
    "place": {
     "kind": "home"
@@ -3714,10 +3935,10 @@
    "id": "cottage-14",
    "label": "Cottage",
    "rect": [
-    39.5,
-    39.5,
-    5.0,
-    6.0
+    55.5,
+    26.5,
+    6.0,
+    5.0
    ],
    "place": {
     "kind": "home"
@@ -3727,10 +3948,10 @@
    "id": "cottage-15",
    "label": "Cottage",
    "rect": [
-    56.5,
-    27.5,
-    6.0,
-    5.0
+    41.0,
+    1.5,
+    5.0,
+    6.0
    ],
    "place": {
     "kind": "home"
@@ -3946,10 +4167,13 @@
      "role": "alehouse keeper"
     },
     {
-     "role": "partner"
+     "role": "child"
     },
     {
      "role": "child"
+    },
+    {
+     "role": "servant"
     }
    ]
   },
@@ -3986,7 +4210,7 @@
      "role": "child"
     },
     {
-     "role": "apprentice"
+     "role": "child"
     }
    ]
   },
@@ -4007,9 +4231,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "servant"
     }
    ]
   },
@@ -4023,7 +4244,16 @@
      "role": "carpenter"
     },
     {
+     "role": "partner"
+    },
+    {
      "role": "child"
+    },
+    {
+     "role": "elder"
+    },
+    {
+     "role": "apprentice"
     }
    ]
   },
@@ -4031,13 +4261,16 @@
    "id": "cottage-2-household",
    "building": "cottage-2",
    "label": "Cottage household",
-   "trade": "carter",
+   "trade": "widowed spinner",
    "people": [
     {
-     "role": "carter"
+     "role": "widowed spinner"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -4066,10 +4299,7 @@
      "role": "child"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "farmhand"
+     "role": "elder"
     }
    ]
   },
@@ -4077,10 +4307,24 @@
    "id": "cottage-3-household",
    "building": "cottage-3",
    "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    }
+   ]
+  },
+  {
+   "id": "cottage-4-household",
+   "building": "cottage-4",
+   "label": "Cottage household",
    "trade": "widowed spinner",
    "people": [
     {
      "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -4094,26 +4338,6 @@
    ]
   },
   {
-   "id": "cottage-4-household",
-   "building": "cottage-4",
-   "label": "Cottage household",
-   "trade": "carter",
-   "people": [
-    {
-     "role": "carter"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ]
-  },
-  {
    "id": "cottage-5-household",
    "building": "cottage-5",
    "label": "Cottage household",
@@ -4121,6 +4345,12 @@
    "people": [
     {
      "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -4137,6 +4367,9 @@
      "role": "widowed spinner"
     },
     {
+     "role": "partner"
+    },
+    {
      "role": "child"
     }
    ]
@@ -4145,25 +4378,13 @@
    "id": "cottage-7-household",
    "building": "cottage-7",
    "label": "Cottage household",
-   "trade": "labourer",
+   "trade": "carter",
    "people": [
     {
-     "role": "labourer"
+     "role": "carter"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "elder"
@@ -4174,26 +4395,6 @@
    "id": "cottage-8-household",
    "building": "cottage-8",
    "label": "Cottage household",
-   "trade": "widowed spinner",
-   "people": [
-    {
-     "role": "widowed spinner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
-    }
-   ]
-  },
-  {
-   "id": "cottage-9-household",
-   "building": "cottage-9",
-   "label": "Cottage household",
    "trade": "labourer",
    "people": [
     {
@@ -4201,6 +4402,9 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -4220,6 +4424,35 @@
      "role": "farmer"
     },
     {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "farmhand"
+    }
+   ]
+  },
+  {
+   "id": "cottage-9-household",
+   "building": "cottage-9",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
      "role": "child"
     },
     {
@@ -4234,19 +4467,33 @@
    ]
   },
   {
-   "id": "cottage-10-household",
-   "building": "cottage-10",
-   "label": "Cottage household",
-   "trade": "widowed spinner",
+   "id": "byre-house-3-household",
+   "building": "byre-house-3",
+   "label": "Farmhouse household",
+   "trade": "farmer",
    "people": [
     {
-     "role": "widowed spinner"
+     "role": "farmer"
     },
     {
      "role": "partner"
     },
     {
-     "role": "child"
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-10-household",
+   "building": "cottage-10",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -4260,10 +4507,10 @@
    "id": "cottage-11-household",
    "building": "cottage-11",
    "label": "Cottage household",
-   "trade": "cottager",
+   "trade": "widowed spinner",
    "people": [
     {
-     "role": "cottager"
+     "role": "widowed spinner"
     },
     {
      "role": "partner"
@@ -4273,23 +4520,15 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "elder"
     }
    ]
   },
   {
    "id": "cottage-12-household",
    "building": "cottage-12",
-   "label": "Cottage household",
-   "trade": "herder",
-   "people": [
-    {
-     "role": "herder"
-    }
-   ]
-  },
-  {
-   "id": "cottage-13-household",
-   "building": "cottage-13",
    "label": "Cottage household",
    "trade": "widowed spinner",
    "people": [
@@ -4301,6 +4540,20 @@
     },
     {
      "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-13-household",
+   "building": "cottage-13",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -4317,6 +4570,29 @@
    "id": "cottage-14-household",
    "building": "cottage-14",
    "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-15-household",
+   "building": "cottage-15",
+   "label": "Cottage household",
    "trade": "cottager",
    "people": [
     {
@@ -4327,26 +4603,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ]
-  },
-  {
-   "id": "cottage-15-household",
-   "building": "cottage-15",
-   "label": "Cottage household",
-   "trade": "herder",
-   "people": [
-    {
-     "role": "herder"
-    },
-    {
-     "role": "partner"
     }
    ]
   }

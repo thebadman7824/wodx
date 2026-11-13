@@ -59,6 +59,9 @@ class Palette:
         return self.worths.get(asset_name, 1)
 
 
+# a blue, green or purple flame is a sign of the uncanny, for a Storyteller to place, never in an ordinary room
+UNCANNY_FLAME = re.compile(r"(Blue|Purple|Green|Pink|Teal|Cyan|Skull).*(Lit|Flame|Fire)|(Brazier|Lantern|Torch|Sconce|Candle|Fire).*(Blue|Purple|Green|Pink|Teal|Cyan)", re.I)
+
 ORDER = ["medieval", "early", "reform", "industrial", "republic", "socialist", "modern", "future"]
 
 def _fits(e, band, region):
@@ -87,7 +90,7 @@ def choose(year, region, wealth, rng, catalogue):
         else:
             cands = [e for e in pool if e["piece"] == piece and e["kind"] == "objects"]
         # only pictures whose size is known (measured, or in the name): a guessed size draws them across walls
-        cands = [e for e in cands if e.get("sized", True)]
+        cands = [e for e in cands if e.get("sized", True) and not UNCANNY_FLAME.search(e["name"])]
         got = []
         for w in order:                                # own wealth first, then the nearest
             lo, hi = WORTH[w]
@@ -127,4 +130,11 @@ def portals(band, wealth):
     n = {"poor": 1, "middling": 1, "rich": 2, "noble": 3}.get(wealth, 1)
     return {"door": f"Door_Wood_{f}_A{n}_1x1.webp", "double": f"DoubleDoor_Wood_{f}_A{min(n, 2)}_2x1.webp",
             "doorway": f"Doorway_Wood_{f}_A.png", "arch": f"DoubleDoorway_Wood_{f}_A_Wide.png",
-            "window": "Metal_Window_A.png" if band in METAL_WINDOWS else f"Window_Wood_{f}_A{min(n, 2)}_1x1.webp"}
+            "window": "Metal_Window_A.png" if band in METAL_WINDOWS and _have("Metal_Window_A.png")
+            else f"Window_Wood_{f}_A{min(n, 2)}_1x1.webp"}
+
+
+def _have(name):
+    """True when the asset list loaded for this map holds the file (the metal window is in the older pack list only)."""
+    import ddcore
+    return any(a.endswith("/" + name) and "/textures/portals/" in a for a in ddcore.ASSETS)

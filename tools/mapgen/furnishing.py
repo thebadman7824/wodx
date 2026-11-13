@@ -102,7 +102,8 @@ def _drawn(entry, rect, piece, layer=100):
     aw, ah = entry["cells"]
     rot = 1 if aw != ah and (w > h) != (aw > ah) else 0
     ew, eh = (ah, aw) if rot else (aw, ah)
-    sc = max(.4, min(1.0, min(w / ew, h / eh)))          # never drawn past its own size
+    sc = min(1.0, min(w / ew, h / eh))                    # never drawn past its own size, nor past its spot
+    if sc < .5: return None                                 # a three-square bench squeezed into one square: not this one
     return {"asset": entry["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc, 3), "layer": layer, "piece": piece}
 
 
@@ -147,6 +148,9 @@ def _place(room, sp, pal, R):
             if prule == "base": return []
             continue
         it = _drawn(e, rect, piece, layer)
+        if it is None:
+            if prule == "base": return []
+            continue
         placed.append(it)
         if layer == 100: room.items.append(it)                 # so later parts and pieces keep clear of it
         if prule == "base": base_item = it
@@ -217,6 +221,12 @@ WALL_PIECES = {"store": ("store", "store", "chest", "shelf"), "ward": ("chest", 
                "work": ("store", "shelf", "chest", "store")}
 
 
+def _beside_any(room, r, e=.05):
+    """True when a spot touches one of the room's pieces (a sack by the oven, a basket by a chest)."""
+    x, y, w, h = r
+    return any(x <= i["x"] + i["w"] + e and i["x"] <= x + w + e and y <= i["y"] + i["h"] + e and i["y"] <= y + h + e for i in room.items)
+
+
 def _along_walls(room, pal, R, dense):
     """Small pieces against the walls (a chest, a barrel, a stool, a shelf) until the room looks lived in; each one
     keeps clear of doors, walkways and other pieces like any furniture (room.fits)."""
@@ -234,6 +244,15 @@ def _along_walls(room, pal, R, dense):
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc, "layer": 100,
                            "piece": order[k % len(order)]})
+    for k in range(10):                                        # a small room with no wall left: half-square things (a sack, a
+        if dense() or len(room.items) >= max(2, int(room.iw * room.ih / DENSE)): break   # bucket, a basket) by the walls
+        e = pal.pick(("store", "clutter")[k % 2], R)
+        if not e or max(e["cells"]) > 1: continue
+        spots = room.candidates(.5, .5, "wall") or [c for c in room.candidates(.5, .5, "free") if _beside_any(room, c[1:5])]
+        if not spots: break
+        _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
+        room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(.5 / max(e["cells"]), 3),
+                           "layer": 100, "piece": ("store", "clutter")[k % 2]})
     C.orient(room)
 
 
