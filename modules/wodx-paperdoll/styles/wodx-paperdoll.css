@@ -45,3 +45,4 @@
 .wodx-face64-wrap { float: left; margin: 0 8px 4px 0; line-height: 0; }
 .wodx-face64-wrap .wodx-face64 { width: 96px; height: 96px; image-rendering: pixelated; image-rendering: crisp-edges; border: 1px solid rgba(0, 0, 0, 0.55); border-radius: 3px; background: #1b1d21; }
 .chat-message .message-content:has(> .wodx-face64-wrap) { display: flow-root; min-height: 98px; }
+.wodx-face64-wrap .wodx-face64-net { border-color: rgba(120, 255, 170, 0.35); box-shadow: 0 0 6px rgba(120, 255, 170, 0.25); }
