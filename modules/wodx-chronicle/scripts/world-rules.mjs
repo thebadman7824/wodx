@@ -40,11 +40,11 @@ export const WORLD_REGIONS = {
   "poland-baltic": R("Poland and the Baltic (Kraków, Danzig, Vilnius, Riga)", "europe", 52.2, 21.0, "central-europe", "polish", {
     medieval: "polish 75, german 15, jewish 10", "early-modern": "polish 72, german 10, jewish 14, russian 4",
     industrial: "polish 72, jewish 14, german 8, russian 6", modern: "polish 100"}, EU),
-  "carpathians-balkans": R("Hungary, Transylvania and the Balkans", "europe", 47.5, 19.0, "central-europe", "moravian", {
+  "carpathians-balkans": R("Hungary, Transylvania and the Balkans", "europe", 47.5, 19.0, "central-europe", "hungarian", {
     medieval: "hungarian 45, romanian 20, serbian 20, german 10, jewish 5", modern: "hungarian 40, romanian 30, serbian 30"}, EU),
   "russia": R("The Rus and Russia (Novgorod, Kiev, Moscow)", "europe", 55.8, 37.6, "steppe", "russian", {
     medieval: "russian 100", industrial: "russian 90, jewish 5, turkish 5", modern: "russian 95, turkish 5"}, EU),
-  "aegean": R("Greece and Constantinople (the Byzantine lands)", "europe", 41.0, 29.0, "mediterranean", "ottoman", {
+  "aegean": R("Greece and Constantinople (the Byzantine lands)", "europe", 41.0, 29.0, "mediterranean", "greek", {
     medieval: "greek 88, italian 8, jewish 4", "early-modern": "greek 56, turkish 36, jewish 5, italian 3", modern: "greek 90, turkish 10"}, EU),
   // The Middle East and inner Asia
   "anatolia": R("Anatolia (Rum, the Ottoman heartland, Turkey)", "other", 39.9, 32.9, "mediterranean", "ottoman", {
@@ -63,7 +63,7 @@ export const WORLD_REGIONS = {
     industrial: "turkish 50, persian 25, russian 15, steppe 10", modern: "turkish 45, russian 30, persian 25"}),
   "siberia": R("Siberia (the taiga, Lake Baikal, the road to the Pacific)", "other", 52.3, 104.3, "boreal", "russian", {
     medieval: "steppe 100", "early-modern": "russian 55, steppe 45", industrial: "russian 80, steppe 15, polish 5", modern: "russian 88, steppe 12"}),
-  "tibet-himalaya": R("Tibet and the Himalaya (Lhasa, Kathmandu, Ladakh)", "other", 29.7, 91.1, "high-plateau", "chinese", {
+  "tibet-himalaya": R("Tibet and the Himalaya (Lhasa, Kathmandu, Ladakh)", "other", 29.7, 91.1, "high-plateau", "tibetan", {
     medieval: "tibetan 100", industrial: "tibetan 92, hindi 8", modern: "tibetan 80, chinese 14, hindi 6"}),
   // South and East Asia
   "india": R("India (Delhi, Bengal, the Deccan, the Tamil south)", "other", 28.6, 77.2, "monsoon", "indian", {
@@ -72,10 +72,10 @@ export const WORLD_REGIONS = {
   "china": R("China (the Middle Kingdom)", "other", 32.1, 118.8, "east-asia-humid", "chinese", {
     medieval: "chinese 92, steppe 8", "early-modern": "chinese 100", industrial: "chinese 97, english 3", modern: "chinese 100"}),
   "japan": R("Japan (Kyoto, Edo, the provinces)", "other", 35.0, 135.8, "east-asia-humid", "japanese", {medieval: "japanese 100"}),
-  "korea": R("Korea (Goryeo, Joseon)", "other", 37.6, 127.0, "north-east-asia", "chinese", {medieval: "korean 100"}),
-  "southeast-asia": R("Mainland Southeast Asia (Angkor, Ayutthaya, Đại Việt)", "other", 13.8, 100.5, "tropical-seasonal", "chinese", {
+  "korea": R("Korea (Goryeo, Joseon)", "other", 37.6, 127.0, "north-east-asia", "korean", {medieval: "korean 100"}),
+  "southeast-asia": R("Mainland Southeast Asia (Angkor, Ayutthaya, Đại Việt)", "other", 13.8, 100.5, "tropical-seasonal", "southeast-asian", {
     medieval: "vietnamese 50, thai 50", industrial: "vietnamese 45, thai 45, chinese 10"}),
-  "nusantara": R("The Malay world (Java, Malacca, the Spice Islands)", "other", -6.2, 106.8, "tropical-wet", "chinese", {
+  "nusantara": R("The Malay world (Java, Malacca, the Spice Islands)", "other", -6.2, 106.8, "tropical-wet", "malay", {
     medieval: "javanese 60, malay 40", "early-modern": "javanese 57, malay 38, dutch 3, chinese 2",
     industrial: "javanese 55, malay 35, chinese 6, dutch 4", modern: "javanese 58, malay 36, chinese 6"}),
   // Africa south of the Sahara
@@ -86,23 +86,23 @@ export const WORLD_REGIONS = {
     medieval: "swahili 55, amharic 30, arabic 15", industrial: "swahili 55, amharic 30, arabic 10, hindi 5"}),
   "southern-africa": R("Southern Africa (the Cape, the Highveld, Great Zimbabwe's heirs)", "other", -26.2, 28.0, "southern-africa", "southern-african", {
     medieval: "zulu 100", "early-modern": "zulu 90, dutch 10", industrial: "zulu 65, dutch 18, english 14, hindi 3"}),
-  "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "west-african", {
+  "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "kongo", {
     industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
   // The Americas
-  "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "american", {
+  "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
     "early-modern": "french 100", industrial: "english 55, french 35, irish 10", modern: "english 60, french 28, chinese 6, hindi 6"}, {from: 1608}),
   "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", null, {culture: "american", from: 1607}),
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
     "early-modern": "spanish 100", industrial: "anglo 68, hispanic 22, chinese 5, irish 5", modern: "anglo 70, hispanic 30"}, {...AM, from: 1598}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
     medieval: "nahua 100", "early-modern": "nahua 55, spanish 45", industrial: "spanish 85, nahua 15"}),
-  "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "mexican", {
+  "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
     "early-modern": "spanish 55, english 25, french 15, dutch 5", industrial: "spanish 50, english 30, french 20"}, {from: 1492}),
-  "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "mexican", {
+  "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "andean", {
     medieval: "quechua 100", "early-modern": "quechua 65, spanish 35", industrial: "spanish 60, quechua 40"}),
   "brazil": R("Brazil (Salvador, Rio de Janeiro, the Amazon)", "americas", -13.0, -38.5, "brazil-coast", "brazilian", {
     "early-modern": "portuguese 100", modern: "portuguese 92, italian 5, japanese 3"}, {from: 1500}),
-  "southern-cone": R("The southern cone (Buenos Aires, Santiago, Patagonia)", "americas", -34.6, -58.4, "australia-southeast", "mexican", {
+  "southern-cone": R("The southern cone (Buenos Aires, Santiago, Patagonia)", "americas", -34.6, -58.4, "australia-southeast", "platine", {
     "early-modern": "spanish 100", industrial: "spanish 65, italian 35", modern: "spanish 68, italian 32"}, {from: 1536}),
   // Oceania
   "australia": R("Australia (Sydney, Melbourne, the outback)", "other", -33.9, 151.2, "australia-southeast", "australian", {

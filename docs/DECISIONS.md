@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2650
+Next free block: B2660
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -116,6 +116,7 @@ Next free block: B2650
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
 | B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
+| B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3421,4 +3422,16 @@ Reverse: return no rows from curtainRows.
 ## B2644. Fights end by themselves when playing alone (2026-11-13, desk sp14)
 The switch now also sets WoDX Combat's End fights by themselves to Auto, so a fight ends a full turn after one side has nobody standing or present, and the after-action card follows. Turning the switch off puts back the old value. A fight that hangs anyway is ended from I am stuck.
 Reverse: drop the fightEnd row from PRESET in solo-rules.mjs.
+
+## B2650. Eleven more lands get their own money (2026-11-13, global rule)
+Korea, mainland Southeast Asia, the Malay world, Hungary with Transylvania and the Balkans, Greece, the Caribbean, the Andes, the River Plate with Chile, Kongo and central Africa, Tibet and the Himalaya, and Canada stop borrowing China's, Moravia's, the Ottoman lands', Mexico's or West Africa's money. Each has its own coins of the day, units and a one-dot wage from its first coin (or none) to the eurobuck. Where a land paid in a neighbour's coin in fact, the very same money is shared, so no changer stands between them in those years: the hyperpyron and akçe in Greece with Constantinople, pieces of eight in Havana and Potosí with New Spain, the renminbi in Lhasa from 1951, the livre tournois in New France. Every wage and date is history rounded for play, a house rule; the books name no coins for these lands. China, the Ottoman lands and Mexico now carry labels for themselves alone.
+Reverse: point the regions back in WORLD_REGIONS (modules/wodx-chronicle/scripts/world-rules.mjs); the new MONIES and COINS entries can stay unused.
+
+## B2651. Coin of the place in the purse (2026-11-13, global rule)
+A purse can hold coin of other lands beside home money (purse.foreign). Money by era in the hand has a last column: on a scene abroad a sum of home money is changed into the coin of the place, or back, at the changer's cut each way (B2536's figures); at home, coin of other lands can be ticked to change it home. Abroad, a price is paid first from coin of the place with no changer, and what it does not cover is charged to home money with the cut. Payments made at home (upkeep, a shop's till) never touch it. Coin of a land whose money goes out of use becomes an "Old money" keepsake item, as home coins do. The first time a player's character stands where another money is used, the Storyteller gets one card with what the purse holds and what changing it would give; back at home a card names any coin of other lands still carried. House rule; the books give no exchange rules.
+Reverse: switch off Money changers far from home in the settings, which stops the cards and the cut; the coin held stays in the purse.
+
+## B2652. A new chronicle pays in its homeland's money (2026-11-13)
+Start a chronicle sets WoDX Storyteller's money region (Coins of the day) to the chosen homeland's money when the homeland changes. A homeland changed later by hand still leaves money alone, as Chronicle's message says.
+Reverse: set Coins of the day back in the module settings.
 

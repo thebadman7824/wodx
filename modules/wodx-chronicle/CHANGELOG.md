@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.50.1 (eleven world regions pay in money of their own: Korea, mainland Southeast Asia, the Malay world, Hungary and the Balkans, Greece, the Caribbean, the Andes, the River Plate and Chile, Kongo and central Africa, Tibet and the Himalaya, Canada. B2650)
 - 0.50.0 (word travels by the region's own years: when print, the newspapers, the wireless, television and the internet reached each of the 44 world regions, from the court gazette of Song China before 1197 to television in South Africa in 1976; the rumour mill, Masquerade breaches and how long a secret stays fresh read the homeland's years; api rules media-rules REGION_MEDIA, mediaOf, mediaYear. B2570)
 - 0.49.0 (the holy days of the world: the Eastern church, the Muslim, Jewish and Hindu years, the Buddhist years of the south and of Tibet, and the lunar year of China, Korea and Japan, each with its feasts, fasts and nights of celebration; the Clock shows the year kept where the viewed scene stands and, to the Storyteller, the named days other faiths keep today; world setting Whose holy days the chronicle keeps; Where this scene stands can give a scene its own, for a quarter or a mission; api.church.faithOf and api.church.faiths)
 - 0.48.1 (the world's regions of 0.48.0 joined with the final era names and the era lock fix of 0.47.1; no other change)
