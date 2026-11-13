@@ -3013,6 +3013,57 @@
    }
   },
   {
+   "id": "chapel-1-chancel-f0",
+   "label": "Chest (Chancel)",
+   "rect": [
+    57.68,
+    2.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
+   "id": "chapel-1-nave-f0",
+   "label": "Chest (Nave)",
+   "rect": [
+    53.85,
+    7.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
+   "id": "chapel-1-nave-f4",
+   "label": "Chest (Nave)",
+   "rect": [
+    54.35,
+    2.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
    "id": "bakehouse-3-bakehouse-0",
    "label": "Oven (Bakehouse)",
    "rect": [
@@ -3063,6 +3114,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "bakehouse-3-bakehouse-f1",
+   "label": "Cupboard (Bakehouse)",
+   "rect": [
+    50.43,
+    9.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -3289,6 +3360,43 @@
    }
   },
   {
+   "id": "townhouse-4-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    14.68,
+    4.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
+   "id": "townhouse-4-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    16.32,
+    3.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "townhouse-4-shop-1",
    "label": "Crates (Shop)",
    "rect": [
@@ -3371,6 +3479,43 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    14.68,
+    12.32,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    16.32,
+    11.18,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
    }
   },
   {
@@ -3544,6 +3689,26 @@
    }
   },
   {
+   "id": "townhouse-14-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    50.68,
+    20.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "townhouse-14-shop-1",
    "label": "Crates (Shop)",
    "rect": [
@@ -3629,6 +3794,26 @@
    }
   },
   {
+   "id": "townhouse-18-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    12.57,
+    6.32,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "townhouse-18-shop-1",
    "label": "Crates (Shop)",
    "rect": [
@@ -3711,6 +3896,26 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "townhouse-21-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    59.82,
+    25.32,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -3916,6 +4121,40 @@
    }
   },
   {
+   "id": "workshop-5-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    10.82,
+    11.18,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    6.18,
+    14.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "workshop-8-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -3998,6 +4237,57 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "workshop-8-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    20.32,
+    23.07,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-8-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    20.57,
+    22.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-8-workshop-f5",
+   "label": "Chest (Workshop)",
+   "rect": [
+    17.68,
+    21.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
@@ -4086,6 +4376,40 @@
    }
   },
   {
+   "id": "workshop-9-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    4.82,
+    5.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-9-workshop-f2",
+   "label": "Chest (Workshop)",
+   "rect": [
+    1.18,
+    3.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "workshop-10-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4168,6 +4492,40 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "workshop-10-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    40.82,
+    31.18,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    38.18,
+    34.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
@@ -4256,6 +4614,40 @@
    }
   },
   {
+   "id": "workshop-11-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    47.68,
+    31.32,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    47.68,
+    28.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "workshop-15-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4338,6 +4730,40 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "workshop-15-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    28.68,
+    33.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-15-workshop-f5",
+   "label": "Chest (Workshop)",
+   "rect": [
+    30.57,
+    33.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
@@ -4426,6 +4852,40 @@
    }
   },
   {
+   "id": "workshop-17-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    57.18,
+    30.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-17-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    55.18,
+    34.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "storehouse-2-store-0",
    "label": "Crates (Store)",
    "rect": [
@@ -4487,6 +4947,57 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "storehouse-2-store-f0",
+   "label": "Chest (Store)",
+   "rect": [
+    7.98,
+    20.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "storehouse-2-store-f2",
+   "label": "Chest (Store)",
+   "rect": [
+    11.82,
+    22.5,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "storehouse-2-store-f3",
+   "label": "Chest (Store)",
+   "rect": [
+    7.18,
+    21.75,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
@@ -4558,6 +5069,26 @@
    }
   },
   {
+   "id": "cottage-6-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    16.68,
+    30.2,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-13-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -4623,6 +5154,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-13-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    5.07,
+    23.57,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -4694,6 +5245,26 @@
    }
   },
   {
+   "id": "cottage-16-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    9.18,
+    34.57,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-26-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -4759,6 +5330,46 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-26-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    40.32,
+    39.68,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
+   "id": "cottage-26-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    40.57,
+    41.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -4898,6 +5509,26 @@
    }
   },
   {
+   "id": "cottage-31-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    55.0,
+    39.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-36-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -4963,6 +5594,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-36-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    1.18,
+    32.82,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -5102,6 +5753,23 @@
    }
   },
   {
+   "id": "cottage-43-cottage-f3",
+   "label": "Chest (Cottage)",
+   "rect": [
+    22.68,
+    40.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "cottage-53-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5160,6 +5828,40 @@
     39.68,
     1.0,
     1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-53-cottage-f2",
+   "label": "Chest (Cottage)",
+   "rect": [
+    16.43,
+    43.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-53-cottage-f4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    16.57,
+    39.68,
+    0.75,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -5238,6 +5940,26 @@
    }
   },
   {
+   "id": "cottage-58-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    40.57,
+    49.82,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-62-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5303,6 +6025,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    46.68,
+    46.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -5374,6 +6116,26 @@
    }
   },
   {
+   "id": "cottage-64-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    5.93,
+    39.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-81-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5439,6 +6201,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-81-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    40.57,
+    56.82,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   }
  ],

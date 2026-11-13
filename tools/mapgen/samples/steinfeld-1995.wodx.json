@@ -2396,6 +2396,27 @@
    "rotation": 255.0
   },
   {
+   "id": "chapel-1-vestry-f1",
+   "label": "Cupboard (Vestry)",
+   "rect": [
+    38.443,
+    79.415,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 345.0
+  },
+  {
    "id": "workshop-1-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -2575,6 +2596,69 @@
    "rotation": 60.0
   },
   {
+   "id": "cottage-9-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    57.245,
+    51.846,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-9-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    61.244,
+    51.683,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-9-lean-to-f0",
+   "label": "Cupboard (Lean-to)",
+   "rect": [
+    53.647,
+    51.614,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "ghetto-house-1-living-room-0",
    "label": "Bed (Living room)",
    "rect": [
@@ -2589,6 +2673,27 @@
     "title": "Under the bed"
    },
    "rotation": 150.0
+  },
+  {
+   "id": "ghetto-house-1-living-room-f2",
+   "label": "Cupboard (Living room)",
+   "rect": [
+    64.113,
+    94.66,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 240.0
   },
   {
    "id": "ghetto-house-1-kitchen-0",
@@ -2664,6 +2769,48 @@
    "rotation": 330.0
   },
   {
+   "id": "sgraffito-house-1-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    42.679,
+    52.665,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "sgraffito-house-1-back-room-f5",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    47.681,
+    51.49,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "sgraffito-house-1-black-kitchen-0",
    "label": "Hearth (Black kitchen)",
    "rect": [
@@ -2682,6 +2829,27 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f2",
+   "label": "Cupboard (Hall)",
+   "rect": [
+    46.108,
+    54.545,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    },
    "rotation": 60.0
   },
@@ -2760,6 +2928,27 @@
    "rotation": 75.0
   },
   {
+   "id": "passage-house-1-chamber-f0",
+   "label": "Cupboard (Chamber)",
+   "rect": [
+    49.639,
+    84.4,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 75.0
+  },
+  {
    "id": "passage-house-1-room-2",
    "label": "Chest (Room)",
    "rect": [
@@ -2774,6 +2963,27 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "passage-house-1-room-f2",
+   "label": "Cupboard (Room)",
+   "rect": [
+    45.692,
+    88.564,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    },
    "rotation": 75.0
   },
@@ -2923,6 +3133,27 @@
    "rotation": 150.0
   },
   {
+   "id": "passage-house-2-chamber-f0",
+   "label": "Cupboard (Chamber)",
+   "rect": [
+    78.368,
+    88.152,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 240.0
+  },
+  {
    "id": "passage-house-2-room-2",
    "label": "Chest (Room)",
    "rect": [
@@ -2941,6 +3172,27 @@
    "rotation": 150.0
   },
   {
+   "id": "passage-house-2-room-f2",
+   "label": "Cupboard (Room)",
+   "rect": [
+    81.173,
+    83.231,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 240.0
+  },
+  {
    "id": "passage-house-2-passage-0",
    "label": "Crates (Passage)",
    "rect": [
@@ -2956,6 +3208,468 @@
     "title": "Behind the crates"
    },
    "rotation": 150.0
+  },
+  {
+   "id": "school-1-classroom-f6",
+   "label": "Cupboard (Classroom)",
+   "rect": [
+    77.634,
+    50.63,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-classroom-f7",
+   "label": "Cupboard (Classroom)",
+   "rect": [
+    76.768,
+    51.13,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-classroom-f8",
+   "label": "Cupboard (Classroom)",
+   "rect": [
+    75.902,
+    51.63,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-second-classroom-f0",
+   "label": "Cupboard (Second classroom)",
+   "rect": [
+    79.439,
+    57.382,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-second-classroom-f5",
+   "label": "Cupboard (Second classroom)",
+   "rect": [
+    84.139,
+    57.324,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "school-1-third-classroom-f0",
+   "label": "Cupboard (Third classroom)",
+   "rect": [
+    85.259,
+    67.463,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-third-classroom-f10",
+   "label": "Cupboard (Third classroom)",
+   "rect": [
+    83.275,
+    67.107,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "bata-house-1-living-room-f0",
+   "label": "Cupboard (Living room)",
+   "rect": [
+    36.125,
+    89.083,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "bata-house-2-living-room-f0",
+   "label": "Cupboard (Living room)",
+   "rect": [
+    99.099,
+    24.359,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "bata-house-2-neighbours-living-room-f0",
+   "label": "Cupboard (Neighbours' living room)",
+   "rect": [
+    100.459,
+    24.109,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-1-flat-f0",
+   "label": "Cupboard (Flat)",
+   "rect": [
+    100.82,
+    75.82,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-1-second-flat-f0",
+   "label": "Cupboard (Second flat)",
+   "rect": [
+    100.57,
+    80.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-1-third-flat-f0",
+   "label": "Cupboard (Third flat)",
+   "rect": [
+    97.68,
+    85.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-1-second-stair-core-f0",
+   "label": "Cupboard (Second stair core)",
+   "rect": [
+    101.82,
+    90.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-1-second-stair-core-f5",
+   "label": "Cupboard (Second stair core)",
+   "rect": [
+    99.82,
+    90.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-1-fourth-flat-f0",
+   "label": "Cupboard (Fourth flat)",
+   "rect": [
+    101.07,
+    93.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-flat-f0",
+   "label": "Cupboard (Flat)",
+   "rect": [
+    33.32,
+    101.68,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f0",
+   "label": "Cupboard (Second flat)",
+   "rect": [
+    41.32,
+    100.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-2-third-flat-f0",
+   "label": "Cupboard (Third flat)",
+   "rect": [
+    42.68,
+    104.32,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-2-second-stair-core-f0",
+   "label": "Cupboard (Second stair core)",
+   "rect": [
+    47.68,
+    99.68,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-2-second-stair-core-f5",
+   "label": "Cupboard (Second stair core)",
+   "rect": [
+    47.68,
+    101.68,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-2-fourth-flat-f0",
+   "label": "Cupboard (Fourth flat)",
+   "rect": [
+    50.68,
+    100.82,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 90.0
   },
   {
    "id": "cottage-12-cottage-0",
@@ -3388,6 +4102,27 @@
     "fillPlace": "home"
    },
    "rotation": 60.0
+  },
+  {
+   "id": "cottage-17-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    75.98,
+    32.646,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   },
+   "rotation": 330.0
   },
   {
    "id": "well",

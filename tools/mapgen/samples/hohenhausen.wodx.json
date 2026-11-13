@@ -2193,6 +2193,74 @@
    }
   },
   {
+   "id": "chapel-1-chancel-f0",
+   "label": "Chest (Chancel)",
+   "rect": [
+    43.07,
+    16.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
+   "id": "chapel-1-nave-f0",
+   "label": "Chest (Nave)",
+   "rect": [
+    39.77,
+    21.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
+   "id": "chapel-1-nave-f3",
+   "label": "Chest (Nave)",
+   "rect": [
+    40.67,
+    16.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
+   "id": "chapel-1-nave-f6",
+   "label": "Chest (Nave)",
+   "rect": [
+    36.58,
+    21.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
    "id": "cottage-1-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -2261,6 +2329,26 @@
    }
   },
   {
+   "id": "cottage-1-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    38.18,
+    26.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "smithy-1-forge-0",
    "label": "Hearth (Forge)",
    "rect": [
@@ -2299,6 +2387,40 @@
    }
   },
   {
+   "id": "smithy-1-forge-f0",
+   "label": "Chest (Forge)",
+   "rect": [
+    53.07,
+    7.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "smithy-1-forge-f2",
+   "label": "Chest (Forge)",
+   "rect": [
+    51.93,
+    3.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "smithy-1-smiths-room-0",
    "label": "Box bed (Smith's room)",
    "rect": [
@@ -2311,6 +2433,40 @@
     "hide": true,
     "hideKind": "bed",
     "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "smithy-1-smiths-room-f1",
+   "label": "Chest (Smith's room)",
+   "rect": [
+    53.18,
+    10.32,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "smithy-1-smiths-room-f3",
+   "label": "Chest (Smith's room)",
+   "rect": [
+    51.18,
+    9.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
@@ -2484,6 +2640,23 @@
    }
   },
   {
+   "id": "workshop-1-workshop-f4",
+   "label": "Chest (Workshop)",
+   "rect": [
+    17.68,
+    34.5,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "cottage-2-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -2549,6 +2722,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-2-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    16.82,
+    21.32,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -2756,6 +2949,26 @@
    }
   },
   {
+   "id": "cottage-4-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    39.18,
+    34.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-5-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -2821,6 +3034,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-5-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    41.82,
+    13.57,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -2892,6 +3125,26 @@
    }
   },
   {
+   "id": "cottage-6-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    12.57,
+    27.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-7-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -2960,6 +3213,26 @@
    }
   },
   {
+   "id": "cottage-7-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    7.18,
+    21.07,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-8-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -3025,6 +3298,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-8-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    27.07,
+    9.52,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -3164,6 +3457,26 @@
    }
   },
   {
+   "id": "cottage-9-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    53.57,
+    28.98,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "byre-house-3-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
@@ -3300,6 +3613,26 @@
    }
   },
   {
+   "id": "cottage-10-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    18.18,
+    37.68,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-11-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -3368,6 +3701,26 @@
    }
   },
   {
+   "id": "cottage-11-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    33.68,
+    5.32,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
+   }
+  },
+  {
    "id": "cottage-12-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -3433,6 +3786,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-12-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    41.07,
+    44.32,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
@@ -3637,6 +4010,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-15-cottage-f3",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    45.07,
+    5.52,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "hide": true,
+    "hideKind": "wardrobe",
+    "title": "Inside the cupboard"
    }
   },
   {
