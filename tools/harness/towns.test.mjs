@@ -200,3 +200,22 @@ test("talk and crowds follow the town (NPC, B3320, B3321)", async () => {
   assert.match(src("modules/wodx-npc/scripts/passersby.mjs"), /towns\?\.ofScene/);
   assert.match(src("modules/wodx-npc/scripts/overheard.mjs"), /towns\?\.ofScene/);
 });
+
+test("a rising or a sack costs the factions that hold the town (NPC, B3330)", async () => {
+  const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
+  const st = {factions: [
+    {id: "lord", name: "The lord", kind: "mortal", places: ["Scene.s1.Region.r1"], assets: {status: 3, retainers: 2, resources: 2}, standing: {}},
+    {id: "guild", name: "The guild", kind: "mortal", places: [], assets: {status: 2}, standing: {}},
+    {id: "prince", name: "The court", kind: "kindred", places: ["Scene.s1"], assets: {status: 4, retainers: 3}, standing: {}},
+    {id: "far", name: "Elsewhere", kind: "mortal", places: ["Scene.s9"], assets: {status: 3, retainers: 3}, standing: {}},
+    {id: "asleep", name: "Asleep", kind: "mortal", dormant: true, places: ["Scene.s1"], assets: {status: 3}, standing: {}}]};
+  assert.deepEqual(F.holdersInTown(st, ["s1"]).map(f => f.id), ["lord", "prince"]);
+  const r = F.townChanges(st, {sceneIds: ["s1"], taxers: ["guild"], kind: "rising"});
+  assert.deepEqual(r, [{op: "bg", faction: "lord", key: "status", delta: -1}, {op: "bg", faction: "lord", key: "retainers", delta: -1},
+    {op: "bg", faction: "guild", key: "status", delta: -1}, {op: "standing", faction: "lord", other: "guild", delta: -1}]);
+  assert.deepEqual(F.townChanges(st, {sceneIds: ["s1"], kind: "sack"}), [{op: "bg", faction: "lord", key: "resources", delta: -1}]);
+  assert.deepEqual(F.townChanges(st, {sceneIds: ["s2"], kind: "rising"}), []);
+  const f = src("modules/wodx-npc/scripts/factions.mjs");
+  assert.match(f, /Hooks\.on\("wodxTown"/);
+  assert.match(f, /F\.townChanges\(/);
+});
