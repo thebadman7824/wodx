@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3450
+Next free block: B3440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -146,7 +146,7 @@ Next free block: B3450
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3087) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3088) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -169,7 +169,6 @@ Next free block: B3450
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3437) | Storyteller |
-| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4646,6 +4645,11 @@ Step 6 of gateeffects counted every "WoDX gate" effect item waiting for approval
 
 Reverse: Count every "WoDX gate" effect item again in step 6.
 
+## B3088. A decision block claim is checked again before it counts (2026-11-13)
+Two threads claimed B3260-B3269 in the same minute and one claim was lost: the project files folder is a network share, where one session's lock and write can reach another session late. Each claim now also writes a file of its own in decision-blocks.json.d, which no other write replaces, so a claim dropped from the JSON still counts. After a 12 second pause the claim is read back; when another session holds an overlapping block that it took first (earlier time, then thread id), this one withdraws and claims the next block. The same rule decides in every session, so exactly one keeps the block.
+
+Reverse: Remove the claim files and the second check from tools/decisions/claim.mjs.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -5063,28 +5067,3 @@ Reverse: make huntHere read U.outbreakFor(yearNow()) again.
 ## B3437. Towns lose their dead to the sickness they caught (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs (towns that change over time, B3280). While sickness spreads between towns is on, the town turn takes each town's sickness from its own outbreak (contagion-rules townHit): the week's dead (the attack times that week's share times the death share) come off its people, and its unrest rises by a tenth for each step of pressure. The town turn's own outbreaks by year (TOWN_OUTBREAKS) then do not strike, so a town never has two plagues; plague brought by dated news still does. With sickness off, the town turn works as before.
 Reverse: pass no sickFor from towns.mjs.
-
-## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
-Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
-
-Reverse: Restore the shifter-only test in crinosSeen and the old note.
-
-## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
-Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
-
-Reverse: Drop dressed from deeperMods.
-
-## B3442. The figure's clothes are worn dress (2026-11-13)
-Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
-
-Reverse: Remove figurePieces from viewOf.
-
-## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
-Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
-
-Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
-
-## B3444. Reading a face (2026-11-13)
-Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
-
-Reverse: Remove readButton and readFace, and the lie tag from parseThen.
