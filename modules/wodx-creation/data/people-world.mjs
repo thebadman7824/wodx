@@ -11,6 +11,7 @@
  * get family names before they bore them by law.
  */
 import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {haudenosauneeTables} from "./people-haudenosaunee.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -115,12 +116,13 @@ const P = {
   steppe: {
     m: "Temür, Batu, Berke, Möngke, Chagatai, Jochi, Qaidu, Toghrul, Arslan, Bayan, Nogai, Subutai, Ögedei, Tolui, Qutlugh, Ulugh",
     f: "Börte, Sorghaghtani, Töregene, Khutulun, Chabi, Oghul, Alaqai, Checheyigen, Mandukhai, Altani, Bayalun, Orghana"},
+  // Raised to 300 names (B3311): older names (epics, kings, saints, poets) and newer ones, and 70 family names
   hindi: {
-    m: {old: "Arjun, Krishna, Ram, Vikram, Hari, Gopal, Govind, Shankar, Bhim, Prithvi, Jai, Pratap, Man, Udai, Narayan, Madhav, Keshav, Damodar",
-      new: "Mohan, Ravi, Suresh, Anil, Prakash, Deepak, Mahesh, Rajesh, Sanjay, Amit, Vijay, Ashok, Sunil, Rahul, Rohit, Arun, Manoj, Vikram"},
-    f: {old: "Sita, Lakshmi, Parvati, Radha, Padmini, Mira, Durga, Savitri, Ganga, Kamala, Rukmini, Yashoda, Tara, Uma, Gauri, Champa",
-      new: "Sunita, Anita, Kavita, Priya, Pooja, Neha, Rekha, Meena, Lata, Asha, Usha, Geeta, Shanti, Indira, Deepa, Anjali"},
-    fam: "Sharma, Verma, Gupta, Singh, Kumar, Mishra, Pandey, Yadav, Chauhan, Rathore, Agarwal, Joshi, Tiwari, Srivastava, Mehta, Kapoor"},
+    m: {old: "Arjun, Krishna, Ram, Vikram, Hari, Gopal, Govind, Shankar, Bhim, Prithvi, Jai, Pratap, Man, Udai, Narayan, Madhav, Keshav, Damodar, Raghunath, Mukund, Balram, Lakshman, Bharat, Shatrughan, Devdatta, Harsha, Chandragupta, Ashok, Samudra, Vishnudatta, Somnath, Bhoja, Hammir, Rana, Sangram, Kumbha, Jaswant, Ajit, Durgadas, Shivaji, Sambhaji, Baji, Tukaram, Eknath, Tulsidas, Surdas, Kabir, Raidas, Nanak, Gangadhar, Raghav, Murari, Mohan, Kishan, Shyam, Ghanshyam, Girdhar, Brijlal, Kanhaiya, Vasudev, Sadashiv, Trimbak, Mahadev, Rudra, Bholanath, Shivdas, Ramdas, Haridas, Gokul, Mathura, Jagannath, Jagat, Kunwar, Bhupat, Jodha, Rao, Dalpat, Indrajit, Kalyan, Chandra",
+      new: "Mohan, Ravi, Suresh, Anil, Prakash, Deepak, Mahesh, Rajesh, Sanjay, Amit, Vijay, Ashok, Sunil, Rahul, Rohit, Arun, Manoj, Vikram, Rakesh, Ramesh, Dinesh, Naresh, Mukesh, Ajay, Vinod, Pradeep, Sandeep, Rajiv, Sachin, Saurabh, Gaurav, Nitin, Vivek, Abhishek, Ankit, Aditya, Akash, Varun, Karan, Kunal, Nikhil, Pankaj, Pawan, Alok, Ashish, Hemant, Jitendra, Kamal, Lalit, Mayank, Narendra, Pramod, Rajendra, Satish, Shailesh, Subhash, Tarun, Umesh, Yogesh, Aarav, Vihaan, Ishaan, Reyansh, Ayaan, Dhruv, Kabir, Arnav, Shaurya, Atharv, Harsh"},
+    f: {old: "Sita, Lakshmi, Parvati, Radha, Padmini, Mira, Durga, Savitri, Ganga, Kamala, Rukmini, Yashoda, Tara, Uma, Gauri, Champa, Damayanti, Shakuntala, Draupadi, Kunti, Gandhari, Sulochana, Urmila, Mandavi, Ahilya, Jijabai, Tarabai, Lakshmibai, Rupmati, Jodhabai, Karnavati, Durgavati, Chand, Ratnavati, Sarasvati, Annapurna, Bhagirathi, Godavari, Narmada, Jamuna, Kaushalya, Sumitra, Kaikeyi, Mandodari, Anasuya, Arundhati, Lopamudra, Gargi, Maitreyi, Malati, Madhavi, Vasantasena, Chitralekha, Mrinalini, Vimala, Kusum, Phoolmati, Rajkumari, Sundari, Bhavani, Jamna, Kesar, Gulab, Chameli, Bela, Basanti, Sonbai, Hirabai, Ramabai, Anandibai",
+      new: "Sunita, Anita, Kavita, Priya, Pooja, Neha, Rekha, Meena, Lata, Asha, Usha, Geeta, Shanti, Indira, Deepa, Anjali, Suman, Seema, Nisha, Rita, Mamta, Archana, Vandana, Manju, Sarita, Sushma, Kiran, Poonam, Sapna, Shilpa, Swati, Preeti, Ritu, Jyoti, Rashmi, Shweta, Sonia, Divya, Nidhi, Ruchi, Komal, Megha, Payal, Pallavi, Shalini, Madhuri, Smita, Aarti, Bhavna, Garima, Monika, Radhika, Renu, Shobha, Vidya, Aadhya, Ananya, Diya, Ishita, Kavya, Myra, Saanvi, Tanvi, Riya, Aditi, Kriti, Sneha, Tanya, Isha, Pari"},
+    fam: "Sharma, Verma, Gupta, Singh, Kumar, Mishra, Pandey, Yadav, Chauhan, Rathore, Agarwal, Joshi, Tiwari, Srivastava, Mehta, Kapoor, Shukla, Dubey, Tripathi, Chaturvedi, Dwivedi, Upadhyay, Bajpai, Awasthi, Dixit, Saxena, Mathur, Bhatnagar, Nigam, Khanna, Malhotra, Chopra, Arora, Bhatia, Sethi, Tandon, Kohli, Ahuja, Jain, Bansal, Goyal, Mittal, Jindal, Garg, Singhal, Maheshwari, Thakur, Rawat, Negi, Bisht, Rajput, Sisodia, Bhati, Shekhawat, Solanki, Parmar, Jadeja, Chandel, Tomar, Bundela, Sinha, Prasad, Rai, Chaudhary, Patel, Desai, Shah, Trivedi, Vyas, Bhatt"},
   tamil: {
     m: "Murugan, Kumaran, Senthil, Arumugam, Raman, Selvam, Karthik, Ganesan, Velu, Rajan, Mani, Kannan, Sundaram, Perumal, Anand, Suresh",
     f: "Meenakshi, Lakshmi, Valli, Kamakshi, Parvathi, Selvi, Devi, Kala, Malar, Revathi, Saraswathi, Vasanthi, Kavitha, Priya, Andal, Thenmozhi"},
@@ -128,10 +130,13 @@ const P = {
   tibetan: {
     m: "Tenzin, Dorje, Tashi, Sonam, Lobsang, Karma, Ngawang, Jigme, Thubten, Dawa, Nyima, Pasang, Tsering, Phuntsok, Namgyal, Rinchen, Wangchuk, Gyaltsen, Kelsang, Jamyang",
     f: "Dolma, Lhamo, Yangchen, Dekyi, Choden, Drolkar, Tsomo, Pema, Diki, Yeshe, Lhakpa, Dechen, Yangzom, Tseten, Kunsang, Palmo, Chime, Sangmo"},
+  // Raised to 300 names (Ben 2026-11-13, B3310): given names old (with famous courtesy names) and new, a hundred surnames
   chinese: {
-    m: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Wenming, Zhiyuan, Dewei, Tianyou, Yongkang",
-    f: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Na, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying",
-    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, Deng, Lin, Gao, Luo"},
+    m: {old: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Boyan, Zhongda, Mengde, Kongming, Yunchang, Yide, Zilong, Bowen, Zijing, Shiyuan, Wenruo, Gongjin, Xuande, Zhongmou, Youlin, Jingsheng, Shouren, Tingyu, Yuanzhang, Zhengyi, Shanchang, Guofan, Hongzhang, Zongtang, Tongshu, Yanwu, Xiaoru, Jiguang, Chenggong, Sanzhong, Shijie, Youwei, Qichao, Sitong, Daoyuan, Yuanming, Taibai, Zimei, Dongpo, Anshi, Xiyan, Zhuxi, Yangming, Wenzheng, Shaoqing, Mengfu, Shengtan, Xueqin, Banqiao, Ziang, Hanqing, Shixiang, Zhiyuan, Tianyou, Dewei, Wenming, Qingyun, Shouyi, Jinghong, Chongguang, Fuxing, Guoliang, Yaozu, Bangyan, Rulin, Yanshou, Zhaoji",
+      new: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Ping, Lei, Bin, Gang, Peng, Bo, Chao, Hui, Kai, Xin, Yu, Hua, Jianguo, Jianhua, Guoqiang, Zhiqiang, Weidong, Hongwei, Haitao, Xiaodong, Xiaoming, Zhiwei, Jianjun, Yongqiang, Dongmei, Wenbin, Jianping, Xiaojun, Haibo, Zhihua, Guoming, Yuxuan, Zihao, Haoran, Yichen, Junjie, Zixuan, Yuhang, Jiahao, Mingyuan, Tianyi, Ruiqi, Shuai, Liang, Feng, Rui, Long, Kun, Fei, Jie, Xiang, Dong"},
+    f: {old: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying, Zhaojun, Diaochan, Xishi, Wenji, Qingzhao, Daiyu, Baochai, Xiangyun, Yuanchun, Tanchun, Xifeng, Qingwen, Xiren, Yingying, Hongniang, Liniang, Baiyu, Ruolan, Wanru, Yuzhen, Suzhen, Xiaoqing, Jinlian, Pinger, Cuiyun, Lihua, Yulan, Guilan, Shufen, Yuehua, Huifang, Lianyi, Yinping, Zhiruo, Mingyue, Ziyan, Yuyan, Ruyi, Jinzhi, Fengxian, Xiuying, Guizhi, Suyun",
+      new: "Mei, Lan, Fang, Ying, Juan, Hua, Yan, Na, Jing, Xia, Yun, Li, Min, Ping, Hong, Jie, Ling, Qian, Wei, Lei, Xiuying, Guilan, Yumei, Xiumei, Lihua, Shulan, Guizhen, Fengying, Haiyan, Xiaoyan, Hongmei, Lili, Yanping, Xiaohong, Jingjing, Tingting, Lina, Yanyan, Xue, Qiong, Rong, Dan, Ting, Yu, Xin, Shan, Yingying, Zihan, Yutong, Xinyi, Ruoxi, Yuxin, Siqi, Jiayi, Yiran, Mengyao, Shiyu, Xiaoyu, Yaxuan, Huimin, Lijuan, Hongyan, Yanhong"},
+    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, Lin, Gao, Luo, Zheng, Liang, Xie, Song, Tang, Han, Feng, Deng, Cao, Peng, Zeng, Xiao, Tian, Dong, Pan, Yuan, Cai, Jiang, Yu, Du, Ye, Cheng, Wei, Su, Lu, Ding, Ren, Shen, Yao, Jin, Fu, Zhong, Cui, Tan, Lü, Fan, Wan, Liao, Shi, Jia, Xia, Fang, Bai, Zou, Meng, Xiong, Qin, Qiu, Hou, Yin, Xue, Yan, Duan, Lei, Long, Tao, Mao, Hao, Gu, Gong, Shao, Qian, Kong, Mo, Chang, Kang, Hong, Wen, Niu, Zhuang, Ouyang, Sima, Zhuge, Shangguan, Ge, Lai, Mu, Qi, Ruan, Zuo, Bao"},
   japanese: {
     m: {old: "Tarō, Jirō, Saburō, Shirō, Gorō, Heizō, Genta, Kichibei, Jinbei, Sukezaemon, Tokubei, Yasuke, Matsukichi, Kanbei, Shinsuke, Gonbei",
       new: "Hiroshi, Takeshi, Kenji, Akira, Minoru, Shigeru, Isamu, Kiyoshi, Tadashi, Makoto, Satoshi, Daisuke, Kazuo, Yutaka, Noboru, Ichirō, Takashi, Tsuyoshi"},
@@ -229,12 +234,18 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
     const until = ERA_GROUPS.slice(ERA_GROUPS.indexOf(g) + 1).findIndex(x => WORLD_REGIONS[id].mix[x]);
     const era = ERA_GROUPS.slice(ERA_GROUPS.indexOf(g), until < 0 ? undefined : ERA_GROUPS.indexOf(g) + 1 + until);
     origins.push({id: "people.origin", name: `People: origin (${WORLD_REGIONS[id].label.replace(/ \(.*$/, "")}, ${g})`,
-      results: mix.map(([text, weight]) => ({text, weight})), era, culture: [cultureOf(id)]});
+      results: mix.map(([text, weight]) => ({text, weight})), era, culture: [cultureOf(id)], ...(WORLD_REGIONS[id].lend === false ? {lend: false} : {})});
   }
 }
 
-export const WORLD_PEOPLE_TABLES = [...origins, ...names];
+// Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120)
+const BUILT = {haudenosaunee: haudenosauneeTables()};
+export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
 export const GIVEN_ONLY = new Set(Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o));
 /** Every people named here. */
-export const WORLD_PEOPLES = Object.keys(P);
+export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
+/** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
+export const RAISED = ["chinese", "hindi"];
+/** Every distinct name a people of P has, given and family, all ages. */
+export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));

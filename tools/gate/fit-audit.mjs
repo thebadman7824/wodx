@@ -12,7 +12,9 @@
 export function audit(app) {
   const out = [];
   const say = (kind, el, msg) => out.push({kind, msg, el: (el.outerHTML || "").replace(/\s+/g, " ").slice(0, 110)});
-  const vis = el => { if (!el.getClientRects().length) return false; const s = getComputedStyle(el); return s.visibility !== "hidden" && Number(s.opacity) > 0.05; };
+  // Inside a closed <details> (not its summary) nothing is drawn, though newer browsers still give it a box
+  const folded = el => { const d = el.closest("details:not([open])"); return !!d && app.contains(d) && !el.closest("summary")?.parentElement?.isSameNode(d); };
+  const vis = el => { if (!el.getClientRects().length || folded(el)) return false; const s = getComputedStyle(el); return s.visibility !== "hidden" && Number(s.opacity) > 0.05; };
   const ar = app.getBoundingClientRect();
   const clipBox = el => { // the box an element is cut to, by ancestors that hide or scroll their overflow
     let box = {l: ar.left, t: ar.top, r: ar.right, b: ar.bottom}, scrollY = false, scrollX = false;

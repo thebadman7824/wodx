@@ -661,8 +661,18 @@ def layer_era(t, y0, era, share):
     if era == "mid-century":
         if y >= 1930 and k: place_blocks(t, "dept-store", max(1, k // 2), "core")
         if y >= 1930 and k: place_blocks(t, "bus-station", 1, "edge")
-        if y >= 1950 and k: place_blocks(t, "culture-house", 1, "edge")
+        # Outside the one-party lands (settle.py TRADE_PLAN, B3294) there is no house of culture, and the estate's
+        # blocks are the tower blocks of a market town's housing estate.
+        import settle as S
+        one_party = S.TRADE_PLAN.get(S.REGION, "western") != "western"
+        if y >= 1950 and k and one_party: place_blocks(t, "culture-house", 1, "edge")
         if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
+        if not one_party:
+            blocks = {b.key for b in t.blds if b.type == "panel-block"}
+            for b in t.blds:
+                if b.key in blocks: b.label = b.label.replace("Panel block", "Tower block")
+            for h in t.households:
+                if h["building"] in blocks: h["label"] = h["label"].replace("Panel block", "Tower block")
     if era == "modern" and y >= 1995 and k: place_blocks(t, "hypermarket", max(1, k // 2), "estate", fallback=False)
     if era == "modern" and y >= 2000 and k: place_blocks(t, "distribution-shed", max(1, k // 2), "estate", fallback=False)
     if era in ("mid-century", "modern", "future-darkness") and y >= 1960 and k: civic_set(t, k)

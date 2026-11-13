@@ -160,8 +160,10 @@ function onAttack(attacker, info = {}) {
   const to = info.target ? spriteTokenOf(info.target, info.targetToken) : null;
   play(from.document, move, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite attack`, e));
   // a miss: the one attacked ducks away as the blow comes, where this computer may move that token
-  if ( info.hit === false && !info.botch && to && may(to) && SR.hasAct(to.document.flags?.[MOD]?.sprite, "dodge") && !to.document.flags?.[MOD]?.act?.hold )
-    setTimeout(() => play(to.document, "dodge", from.document).catch(e => console.warn(`${MOD} | sprite dodge`, e)), 220);
+  // with the defence that was rolled (a block, a parry), else by ducking (B2615)
+  const meet = to ? SR.defenceFor(to.document.flags?.[MOD]?.sprite, info.defense) : null;
+  if ( info.hit === false && !info.botch && to && may(to) && meet && !to.document.flags?.[MOD]?.act?.hold )
+    setTimeout(() => play(to.document, meet, from.document).catch(e => console.warn(`${MOD} | sprite dodge`, e)), 220);
 }
 
 /** A power worked by a character plays its sprite's casting move, for any module that says so: Hooks.callAll("wodxPowerShown", actor, {target, power, group, kind, line}); the effect's look is read from those (SR.fxFor), or named outright as fx. */
@@ -213,6 +215,13 @@ function onFed(info = {}) {
   const toks = canvas.tokens?.placeables ?? [], by = toks.find(t => t.actor?.uuid === info.by?.uuid && t.document.flags?.[MOD]?.sprite);
   if ( by ) play(by.document, "feed", toks.find(t => t.actor?.uuid === info.vessel?.uuid)?.document ?? null).catch(() => null);
 }
+/** Work at a door, a lock or a device plays its move (B2616): Hooks.callAll("wodxInteractableWorked", {token, action, thing, scene, result}). */
+function onWorked(info = {}) {
+  if ( !on() || !mine() ) return;
+  const t = (canvas.tokens?.placeables ?? []).find(t => t.document.uuid === info.token), name = t?.document.flags?.[MOD]?.sprite;
+  const move = name ? SR.workFor(name, info.action) : null;
+  if ( move && !t.document.flags?.[MOD]?.act?.hold ) play(t.document, move).catch(() => null);
+}
 function onForm(actor) {
   if ( !on() || !mine() ) return;
   for ( const t of canvas.tokens?.placeables ?? [] ) if ( (t.actor === actor || (actor?.uuid && t.actor?.uuid === actor.uuid)) && t.document.flags?.[MOD]?.sprite ) play(t.document, "shift").catch(() => null);
@@ -262,6 +271,7 @@ export function startSprites() {
   Hooks.on("updateActor", onActorUpdate);
   Hooks.on("wodxFed", onFed);
   Hooks.on("wodxFormChanged", onForm);
+  Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
   loadOwn();
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
@@ -342,7 +352,7 @@ export function roster() {
   for ( const a of game.actors ?? [] ) {
     // a character with no portrait look yet gets the one its portrait would start from (the same seed, the same look)
     const L = a.flags?.[MOD]?.look ?? randomLook(a.id, {type: a.type ?? "", variant: a.system?.settings?.variant ?? ""}), c = L.colors ?? {};
-    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair, beard: !!L.face?.beard, year: Number.isFinite(y) ? y : undefined, figure: a.flags?.[MOD]?.figure ?? null,
+    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, kith: a.system?.kith === "custom" ? a.system?.custom?.kith : a.system?.kith, skin: c.skin, hair: c.hair, beard: !!L.face?.beard, year: Number.isFinite(y) ? y : undefined, figure: a.flags?.[MOD]?.figure ?? null,
       items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive), gear: !!i.flags?.["wodx-library"], natural: !!i.system?.isnatural}))}));
   }
   return {world: game.world.id, made: new Date().toISOString(), actors};
