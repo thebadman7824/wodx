@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.2.2 (13 November 2026, from the testbed UI check: the panel is wider, so its title shows whole, and Go on carries a play icon while the game is paused)
 - 0.2.1 (13 November 2026, from the first testbed gate: a player with no assigned character no longer acts through the first character they happen to own. The panel now takes the one assigned to them, then one of theirs on the scene they view, owned by them alone before a shared one. The gate assigns its own character to Player Test for the run and puts the old one back)
 - 0.2.0 (13 November 2026, step 2 of The Lone Chronicle, B2640 to B2644: the player's panel, a window of their own with Let time pass (ten minutes, an hour, until dusk, until dawn, sleep the day; the clock moves ten minutes at a time and stops when a fight starts, the game is paused, word comes or someone new arrives), Travel, Pause or go on, I am stuck (bring me a lead, free my token, end a hung fight or window) and Lift the curtain (tonight's log from the seat, after asking; the night is marked as seen). Every ask is done by the seat. The switch also sets fights to end by themselves. A moon button in the Token controls opens the panel, and it opens by itself when the player arrives)
 - 0.1.3 (the seat's reading of cards now lives in WoDX Chronicle, shared with the Waiting tray)

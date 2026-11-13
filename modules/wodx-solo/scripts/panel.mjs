@@ -259,7 +259,7 @@ export class SoloPanel extends ApplicationV2 {
     id: "wodx-solo-panel",
     classes: ["wodx", "wsolo-panel"],
     window: {title: R.NAME, icon: "fa-solid fa-moon", resizable: false},
-    position: {width: 230, height: "auto", top: 80, left: 120},
+    position: {width: 290, height: "auto", top: 80, left: 120},
     actions: {act: SoloPanel.#onAct}
   };
   static open() {
@@ -269,7 +269,12 @@ export class SoloPanel extends ApplicationV2 {
   async _renderHTML() {
     const div = document.createElement("div");
     div.className = "wsolo-buttons";
-    div.innerHTML = R.PANEL.map(b => `<button type="button" data-action="act" data-id="${b.id}"><i class="${b.icon}"></i> ${esc(b.id === "pause" ? (game.paused ? "Go on" : "Pause") : b.label)}</button>`).join("");
+    const paused = !!game.paused;
+    div.innerHTML = R.PANEL.map(b => {
+      const icon = b.id === "pause" && paused ? "fa-solid fa-play" : b.icon;
+      const label = b.id === "pause" ? (paused ? "Go on" : "Pause") : b.label;
+      return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
+    }).join("");
     return div;
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }
