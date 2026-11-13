@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.25.2 (Dressing a scene also mends a token that already wears its own sprite but not its true size, so a dragon placed again, or made from an actor that kept the sprite, takes its six squares; found on the testbed (B2618))
 - 0.25.1 (Portraits and talking faces read the one gender WoDX Chronicle keeps, so a gender written on the sheet or a nonbinary person from the People generator shows as such (B3500))
 - 0.25.0 (Creatures at their true size: every sprite is drawn on one scale with people, so a cow is bigger than a dog and an imp small beside a person; a creature too big for one square gets a token of 2 to 8 squares when given its sprite (a horse 2, a giant 3, a dragon 6), and gets its old size back when the sprite is taken off (B2618))
 - 0.24.0 (Children on the map: a character under 18 walks as a child, the same figure drawn shorter with a larger head, in four heights (2 to 6, 7 to 11, 12 to 14, 15 to 17) worked out from the birth year, or from the age at the Embrace or at death. The figure menu has a "Grown or a child" pick and dresses a child the same way as anyone else; "Grown" is not offered under 18, and a child figure picked for an older character marks them a minor, so nothing romantic can involve them (B3480-B3483))
