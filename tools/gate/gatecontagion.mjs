@@ -128,12 +128,13 @@ export async function run() {
       ok("9. a character catches it or throws it off, then rolls weekly", /catches|throws it off/.test(line9) && (!st9 || /sick with plague/.test(line9b)), {first: line9, then: line9b, sick: st9});
     } else { ok("9. a character catches it or throws it off, then rolls weekly", true, {skipped: "no player user in this world"}); R.notes.push("Step 9 skipped: no player user."); }
 
-    // 10. The approval queue
+    // 10. The approval queue (step 9's sure rolls can carry plague to Town, so clear it first)
+    if ( town("gate-ctown") ) await CO.end("gate-ctown", {immune: false});
     await C?.propose?.({type: `${MOD}.contagion`, key: "gate-contagion", title: "Gate: cholera reaches Town", detail: "Gate.", data: {market: "gate-ctown", disease: "cholera", source: "Gate.", scale: 1}});
     const entry = (C?.approvals?.pending?.() ?? []).find(p => !pendingBefore.has(p.id) && p.type === `${MOD}.contagion` && p.key === "gate-contagion");
     if ( entry ) await C.approvals.decide(entry.id, "approve");
     await sleep(400);
-    ok("10. approving starts it", !!entry && town("gate-ctown")?.disease === "cholera", {entry: !!entry});
+    ok("10. approving starts it", !!entry && town("gate-ctown")?.disease === "cholera", {entry: !!entry, town: town("gate-ctown")});
 
     // 11. Windows
     const cw = await peek(() => CO.open(), "wst-contagion");
