@@ -19,6 +19,7 @@ import {BANDS, LINES, MORTAL_EVENTS} from "../data/lifepaths.mjs";
 import {TURNING_EVENTS} from "../data/lifepaths-turnings.mjs";
 import {SPLATS} from "../data/lifepaths-splats.mjs";
 
+import * as D from "./lifepath-drill-rules.mjs";
 export {BANDS, LINES, SPLATS};
 export const VERSION = 1;
 /** Years from birth to each early scene. */
@@ -91,13 +92,20 @@ export function stagesFor(line) {
   return LINES[line]?.stages ?? LINES.mortal.stages;
 }
 
-/** A fresh lifepath. */
-export function newPath({line = "mortal", splat = null, birthYear, turnYear = null, seed = "wodx"} = {}) {
+/** The stages a path still draws scenes for: a path with a drill (0.17.0) has lived its mortal years there. */
+const DRILLED = new Set(["birth", "youth", "adult", "later"]);
+export function stagesOf(path) {
+  const all = stagesFor(path.line);
+  return path.drill ? all.filter(s => !DRILLED.has(s)) : all;
+}
+
+/** A fresh lifepath. drill: a finished drill-down (lifepath-drill-rules.mjs) that stands for the mortal years. */
+export function newPath({line = "mortal", splat = null, birthYear, turnYear = null, seed = "wodx", drill = null} = {}) {
   const L = LINES[line] ? line : "mortal";
   const b = num(birthYear) ?? 1200;
   let t = L === "mortal" ? null : (num(turnYear) ?? b + 25);
   if ( t !== null && t < b ) t = b;
-  return {v: VERSION, line: L, splat: splat || null, birthYear: b, turnYear: t, seed: String(seed), steps: [], rerolls: {}};
+  return {v: VERSION, line: L, splat: splat || null, birthYear: b, turnYear: t, seed: String(seed), steps: [], rerolls: {}, ...(drill ? {drill} : {})};
 }
 
 /** The year a stage is set in. Early scenes follow the birth year, but never pass the turning. */
@@ -114,6 +122,7 @@ export function yearOf(path, stage) {
 export function flagsOf(path, pool = allEvents()) {
   const flags = new Set([`line:${path.line}`]);
   if ( path.splat ) flags.add(`splat:${path.splat}`);
+  if ( path.drill ) for ( const f of D.flags(path.drill) ) flags.add(f);
   for ( const s of path.steps ) {
     const o = eventById(s.event, pool, path)?.options?.[s.option];
     for ( const f of [].concat(o?.f ?? []) ) flags.add(f);
@@ -164,8 +173,7 @@ export function weightOf(e, flags) {
 
 /** The scenes that could come next, with weights. A forced scene (the last choice named it) wins if it fits. */
 export function candidates(path, pool = allEvents()) {
-  const stages = stagesFor(path.line);
-  const stage = stages[path.steps.length];
+  const stage = stagesOf(path)[path.steps.length];
   if ( !stage ) return [];
   const year = yearOf(path, stage);
   const flags = flagsOf(path, pool);
@@ -200,7 +208,7 @@ export function rng(seed) {
 export function currentEvent(path, pool = allEvents()) {
   const list = candidates(path, pool);
   if ( !list.length ) return null;
-  const stage = stagesFor(path.line)[path.steps.length];
+  const stage = stagesOf(path)[path.steps.length];
   const rand = rng(`${path.seed}:${path.steps.length}:${stage}:${path.rerolls?.[path.steps.length] ?? 0}`);
   const total = list.reduce((s, c) => s + c.w, 0);
   let r = rand() * total;
@@ -210,7 +218,7 @@ export function currentEvent(path, pool = allEvents()) {
 
 /** The stage the path is on (null when done), and whether a scene exists for it. */
 export function stageNow(path) {
-  return stagesFor(path.line)[path.steps.length] ?? null;
+  return stagesOf(path)[path.steps.length] ?? null;
 }
 
 /**
@@ -271,6 +279,14 @@ export function parsePerson(p) {
  */
 export function summary(path, {nowYear = null, pool = allEvents()} = {}) {
   const story = [], gives = new Map(), people = [];
+  if ( path.drill ) {
+    for ( const s of D.story(path.drill) ) story.push({stage: s.stage, year: s.year, band: bandOf(s.year).label, title: s.title, choice: s.choice, text: s.text, drill: true});
+    for ( const g of D.pool(path.drill) ) gives.set(g.key, {...g, from: [...g.from]});
+    D.people(path.drill).forEach((p, i) => {
+      const alive = nowYear === null || (nowYear - p.year) <= PEOPLE_ALIVE_SPAN;
+      people.push({role: p.role, note: p.note, year: p.year, scene: p.scene, idx: `d${i}`, alive, pick: false, region: p.region});
+    });
+  }
   path.steps.forEach((s, idx) => {
     if ( !s.event ) return;
     const e = eventById(s.event, pool, path);
@@ -310,7 +326,7 @@ export function summaryHtml(sum, {name = "", keptKeys = null, splatLabel = ""} =
   const kept = sum.gives.filter(g => !keptKeys || keptKeys.includes(g.key));
   const gives = kept.length ? `<h3>Suggestions kept</h3><ul>${kept.map(g => `<li>${esc(KINDS[g.kind])}: ${esc(g.name)}</li>`).join("")}</ul>` : "";
   const people = sum.people.length ? `<h3>People from the past</h3><ul>${sum.people.map(p => `<li>${esc(p.name ? `${p.name}, ` : "")}${esc(p.role)}${p.note ? `: ${esc(p.note)}` : ""} (${p.year})</li>`).join("")}</ul>` : "";
-  return `${head}${story}${gives}${people}<p class="wodx-quiet">A lifepath spends no points. Buy what was kept with the creation points as usual.</p>`;
+  return `${head}${story}${gives}${people}<p class="wodx-quiet">A lifepath gives nothing beyond the book. What was kept is paid from the creation points.</p>`;
 }
 
 /** Problems in the tables (the harness runs this): missing text, options, unknown ids in next. */

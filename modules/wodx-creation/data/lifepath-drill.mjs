@@ -5,8 +5,11 @@
  *
  * Shapes (the rules are in scripts/lifepath-drill-rules.mjs):
  *   CONTINENTS [label, [region ids of Chronicle's WORLD_REGIONS]]
- *   ORIGINS    [base key, label, text, gives, from year, to year]
+ *   ORIGINS    [base key, label, text, gives, from year, to year,
+ *   ORIGINS    ... then [lines it is offered to], base key it follows (default its own key)
  *   the lists  [label, gives, {from, to, bases (only for these origins), not (never for these origins)}]
+ *   the marks  the same, then tone ("+" good, "-" hard, "0" neither) and "role|what they were to you" for a person.
+ *              Each stage shows five of them: two good, two hard, one neither (Ben, 13 November 2026).
  *   LOCAL      region id -> era group (M to 1499, E to 1788, I to 1945, N to 2022, F after) ->
  *              [the age's name, origins [[label, gives, base key]], a teen path [label, gives], a calling [label, gives]]
  * gives: "bg Allies|ab Crafts|merit Name|flaw Name|note Free text", as in data/lifepaths.mjs.
@@ -26,7 +29,7 @@ export const CONTINENTS = [
 export const ORIGINS = [
  ["orphan","Orphan or foundling","No parents you can name. Someone took you in, or no one did.","ab Streetwise|ab Survival|merit Iron Will|flaw Nightmares"],
  ["land","Born to the land","Farmers, herders or fishers, living by the seasons.","ab Animal Ken|ab Survival|ab Athletics"],
- ["bound","Born unfree","Serfs, slaves, bonded or indentured people. Your labour belonged to someone else.","ab Survival|ab Subterfuge|flaw Illiterate|flaw Enemy"],
+ ["bound","Born unfree","Serfs, slaves, bonded or indentured people. Your labour belonged to someone else.","ab Survival|ab Subterfuge|flaw Enemy"],
  ["trade","A craft or shop family","A workshop, a stall, a name known on one street.","ab Crafts|ab Streetwise|bg Contacts"],
  ["merchant","A trading house","Goods, ledgers and partners in other cities.","ab Finance|merit Language|bg Resources|bg Contacts"],
  ["noble","A ruling or noble house","Land, rank and a name that has to be defended.","bg Resources|bg Status|bg Retainers|ab Etiquette|ab Politics"],
@@ -39,9 +42,20 @@ export const ORIGINS = [
  ["labour","Mill, mine or factory hands","Shifts, whistles and a wage packet.","ab Crafts|ab Athletics|bg Allies",1760],
  ["prof","A salaried or professional family","Doctors, clerks, teachers, engineers.","ab Academics|ab Science|bg Resources",1800],
  ["corp","A company family","The firm houses you, schools you and owns the clinic you were born in.","ab Computer|ab Etiquette|bg Resources|bg Influence",2023],
- ["strange","A family that knew too much","Your kin served, feared or were bred by something that is not human.","ab Occult|bg Mentor|flaw Dark Secret|note Opens the hidden-world scenes of your line"]];
+ ["strange","A family that knew too much","Your kin served, feared or were bred by something that is not human.","ab Occult|bg Mentor|flaw Dark Secret|note Opens the hidden-world scenes of your line"],
+ ["wild","Born a wolf","You were a cub before you were anything else. The human world came later.","ab Survival|ab Alertness|ab Brawl",null,null,["werewolf"]],
+ ["metis","Born of two werewolves","Raised inside the sept, hidden from the human world and marked from birth.","ab Occult|ab Survival|bg Mentor|note A metis deformity, chosen with the Storyteller",null,null,["werewolf"],"strange"],
+ ["kin","Born to Kinfolk","Your family has bred with the Changing Breeds for generations and knows it.","ab Occult|ab Survival|bg Kinfolk|bg Allies",null,null,["werewolf"],"strange"],
+ ["revenant","A revenant family","The blood ran in your family before you were born.","ab Occult|ab Etiquette|bg Mentor|flaw Dark Secret",null,null,["revenant","ghoul"],"strange"],
+ ["ghoulhouse","A household that serves the undead","Your parents served a master who never aged, and so would you.","ab Etiquette|ab Subterfuge|bg Mentor",null,null,["ghoul","vampire"],"strange"],
+ ["marked","A family the fae had marked","Odd luck, odd guests, and a cradle someone watched.","ab Occult|ab Empathy|bg Dreamers",null,null,["changeling"],"strange"],
+ ["hunters","A line of hunters","Your family kept the old books and the old grudges.","ab Occult|ab Investigation|bg Mentor|flaw Enemy",null,null,["hunter"],"strange"],
+ ["gifted","A family with the gift","Hedge magic, second sight, or a library no one spoke of.","ab Occult|ab Academics|bg Library|bg Mentor",null,null,["mage"],"strange"]];
 // [label, gives, {from,to,bases}]
 export const HOME = [
+ ["The pack raised you","ab Survival|ab Brawl|bg Allies",{bases:["wild"]}],
+ ["One parent and a den","ab Stealth|ab Alertness",{bases:["wild"]}],
+ ["Taken by humans as a cub","ab Empathy|flaw Phobia",{bases:["wild"]}],
  ["A house of faith took you in","ab Academics|bg Mentor",{bases:["orphan"]}],
  ["Kin who did not want you","ab Subterfuge|flaw Enemy",{bases:["orphan"]}],
  ["The streets raised you","ab Streetwise|ab Larceny|bg Contacts",{bases:["orphan","under"]}],
@@ -54,20 +68,49 @@ export const HOME = [
  ["Fostered or sent to another household","ab Etiquette|bg Contacts"],
  ["Always moving","ab Survival|merit Language"]];
 export const CMARK = [
- ["A hungry year","merit Iron Will|ab Survival"],["A sickness that nearly took you","flaw Nightmares|ab Medicine"],["A death in the house","ab Empathy|flaw Nightmares"],
- ["A friend from the other side of things","bg Contacts|ab Empathy"],["Soldiers came through","ab Stealth|flaw Phobia"],["You saw something no one believed","ab Occult|ab Awareness|flaw Nightmares"],
- ["A gift everyone noticed","ab Performance|bg Fame"],["A secret you were told to keep","ab Subterfuge|flaw Dark Secret"],["Lessons, when others had none","ab Academics"],["A screen raised you","ab Computer",{from:1985}]];
+ ["A gift everyone noticed","ab Performance|bg Fame",{not:["wild"]},"+"],
+ ["Lessons, when others had none","ab Academics|bg Mentor",{not:["wild"]},"+","a teacher|who taught you more than was allowed"],
+ ["A friend from the other side of things","bg Contacts|ab Empathy",{},"+","a childhood friend|from a family yours would not speak to"],
+ ["Someone watched over you","bg Allies|merit Common Sense",{},"+","a guardian|who kept you out of worse"],
+ ["A lucky find","bg Resources|ab Alertness",{not:["wild"]},"+"],
+ ["A sickness that nearly took you","flaw Nightmares|ab Medicine",{},"-"],
+ ["A death in the house","flaw Shy|ab Empathy",{},"-"],
+ ["Soldiers came through","flaw Phobia|ab Stealth",{},"-"],
+ ["A secret you were told to keep","flaw Dark Secret|ab Subterfuge",{not:["wild"]},"-"],
+ ["A hungry year","flaw Short|ab Survival",{},"-"],
+ ["Someone hurt you and was never punished","flaw Vengeful|ab Intimidation",{},"-","the one who hurt you|and was never made to answer"],
+ ["You saw something no one believed","ab Occult|ab Awareness",{},"0"],
+ ["Long days alone","ab Alertness|ab Athletics",{},"0"],
+ ["A screen raised you","ab Computer",{from:1985,not:["wild"]},"0"],
+ ["Work before play","ab Crafts|ab Athletics",{not:["wild"]},"0"]];
 export const TPATH = [
+ ["Ran with the pack","ab Brawl|ab Survival|bg Allies",{bases:["wild"]}],
+ ["Lived at the edge of a human town","ab Stealth|ab Streetwise",{bases:["wild"]}],
+ ["Wandered alone","ab Survival|ab Alertness",{bases:["wild"]}],
  ["Apprenticed to a trade","ab Crafts|bg Mentor",{to:1950}],["School, and more school","ab Academics|ab Science",{from:1850}],["Worked the land or the boats","ab Survival|ab Athletics|ab Animal Ken"],
  ["Took vows or studied for the faith","ab Academics|ab Occult|bg Mentor"],["Carried arms too young","ab Melee|ab Brawl|flaw Nightmares"],["Ran with a gang","ab Streetwise|ab Brawl|bg Allies"],
  ["Served in a great household","ab Etiquette|ab Subterfuge|bg Contacts",{to:1945}],["Married or promised early","bg Allies|ab Empathy",{to:1920}],["Went on the road","ab Survival|merit Language"],
  ["Factory, mine or mill shifts","ab Crafts|merit Iron Will",{from:1760,to:1950}],["Trained to rule","ab Leadership|ab Politics|bg Status",{bases:["noble","corp"]}],["Lived online","ab Computer|bg Contacts",{from:1995}],
  ["Sold what you could steal","ab Larceny|ab Streetwise"]];
 export const TMARK = [
- ["A first love","ab Empathy"],["A rival who has not forgotten","flaw Enemy"],["Someone took an interest in you","bg Mentor"],["You ran away","ab Survival|ab Stealth"],
- ["You hurt someone badly","flaw Dark Secret|ab Intimidation"],["A war, a rising or a purge","ab Stealth|flaw Nightmares|bg Allies"],["A calling you could not explain","ab Occult|ab Awareness"],
- ["You were caught","flaw Enemy|ab Subterfuge"],["A debt was made in your name","flaw Enemy|bg Contacts"],["Someone powerful noticed you","bg Influence|bg Mentor"]];
+ ["Someone took an interest in you","bg Mentor|ab Academics",{},"+","a mentor|who saw something in you"],
+ ["A first love that ended kindly","ab Empathy|bg Allies",{},"+","a first love|who still thinks well of you"],
+ ["Someone powerful noticed you","bg Influence|bg Status",{not:["wild"]},"+","a patron|who remembers the favour"],
+ ["You won something that mattered","bg Fame|ab Athletics",{},"+"],
+ ["Friends who would bleed for you","bg Allies|ab Brawl",{},"+","a sworn friend|from the years when you had nothing else"],
+ ["A rival who has not forgotten","flaw Enemy|ab Subterfuge",{},"-","a rival|who has not forgotten"],
+ ["You hurt someone badly","flaw Dark Secret|ab Intimidation",{},"-"],
+ ["A war, a rising or a purge","flaw Nightmares|ab Stealth",{},"-"],
+ ["Beaten down until you learned to hit first","flaw Short Fuse|ab Brawl",{},"-"],
+ ["A debt was made in your name","flaw Enemy|bg Contacts",{not:["wild"]},"-","a creditor|who holds a debt in your name"],
+ ["A habit you could not shake","flaw Addiction|ab Streetwise",{not:["wild"]},"-"],
+ ["You ran away","ab Survival|ab Stealth",{},"0"],
+ ["A calling you could not explain","ab Occult|ab Awareness",{},"0"],
+ ["You kept your head down","ab Subterfuge|ab Alertness",{},"0"]];
 export const CALL = [
+ ["Led or followed a pack","ab Leadership|ab Brawl|bg Allies",{bases:["wild"]}],
+ ["Held a territory","ab Survival|ab Intimidation",{bases:["wild"]}],
+ ["Lived close to humans","ab Empathy|ab Stealth",{bases:["wild"]}],
  ["Worked a craft or kept a shop","ab Crafts|bg Resources"],["Farmed, herded or fished","ab Survival|ab Animal Ken"],["Soldiered","ab Melee|ab Leadership|bg Allies"],
  ["Traded far from home","ab Finance|merit Language|bg Contacts"],["Served the faith","ab Academics|ab Empathy|bg Status"],["Studied, taught or wrote","ab Academics|ab Expression|bg Mentor"],
  ["Healed the sick","ab Medicine|ab Empathy"],["Held office or kept the law","ab Law|ab Politics|bg Influence"],["Lived by crime","ab Larceny|ab Streetwise|bg Contacts"],
@@ -76,9 +119,23 @@ export const CALL = [
  ["Police, detective or agent work","ab Investigation|ab Firearms|bg Contacts",{from:1800}],["Engineer or scientist","ab Science|ab Technology",{from:1800}],["Journalist or broadcaster","ab Expression|ab Investigation|bg Contacts",{from:1850}],
  ["Office and company work","ab Finance|ab Computer|bg Resources",{from:1900}],["Net and data work","ab Computer|ab Technology",{from:1990}],["Hired gun on the streets","ab Firearms|ab Streetwise|bg Contacts",{from:2023}]];
 export const AMARK = [
- ["Married, or as good as","bg Allies"],["A child of your own","note A child"],["Came into money","bg Resources"],["Lost everything","merit Iron Will|flaw Enemy"],["Made a powerful friend","bg Allies|bg Influence"],
- ["Made an enemy for life","flaw Enemy"],["Went to war","ab Melee|flaw Nightmares|bg Allies"],["Crossed the world","merit Language|ab Survival"],["Did something that cannot come out","flaw Dark Secret"],
- ["Buried someone you loved","flaw Nightmares|ab Empathy"],["Brushed against the hidden world","ab Occult|ab Awareness|flaw Hunted"],["Became known","bg Fame|bg Status"],["Prison, exile or flight","ab Streetwise|flaw Hunted"],["A quiet stretch","ab Crafts"]];
+ ["Married, or as good as","bg Allies|ab Empathy",{not:["wild"]},"+","a spouse|who shares your name or your bed"],
+ ["Came into money","bg Resources",{not:["wild"]},"+"],
+ ["Made a powerful friend","bg Allies|bg Influence",{},"+","a powerful friend|who owes you more than money"],
+ ["Became known","bg Fame|bg Status",{not:["wild"]},"+"],
+ ["People came to rely on you","bg Retainers|ab Leadership",{},"+","a follower|who would not leave your side"],
+ ["A teacher late in life","bg Mentor|ab Academics",{not:["wild"]},"+"],
+ ["Lost everything","flaw Vengeful|ab Survival",{},"-"],
+ ["Made an enemy for life","flaw Enemy|ab Intimidation",{},"-","an enemy|made for life"],
+ ["Went to war","flaw Nightmares|ab Melee",{},"-"],
+ ["Did something that cannot come out","flaw Dark Secret|ab Subterfuge",{},"-"],
+ ["Buried someone you loved","flaw Soft-Hearted|ab Empathy",{},"-"],
+ ["Prison, exile or flight","flaw Hunted|ab Streetwise",{not:["wild"]},"-"],
+ ["An injury that never healed","flaw Lame|ab Medicine",{},"-"],
+ ["A child of your own","ab Empathy",{},"0","a child|of your own"],
+ ["Crossed the world","merit Language|ab Survival",{not:["wild"]},"0"],
+ ["Brushed against the hidden world","ab Occult|ab Awareness",{},"0"],
+ ["A quiet stretch","ab Crafts",{not:["wild"]},"0"]];
 // region: group: [age, origins [[label, gives, base]], teen [label, gives], adult [label, gives]]
 export const LOCAL = {
 "france": {
@@ -102,7 +159,7 @@ export const LOCAL = {
 "andes": {
  M: ["The Andes of the valley kingdoms and the rising Inca", [["An ayllu of herders and terrace farmers","ab Survival|ab Animal Ken|bg Allies","land"],["Weavers of fine cloth for the lords","ab Crafts|ab Etiquette","trade"],["Chosen as a child for the house of the Sun","ab Occult|ab Etiquette|bg Status","faith"]], ["Runner on the royal roads","ab Athletics|ab Survival"], ["Resettled by the Inca in a conquered valley","merit Language|ab Survival|bg Allies"]],
  E: ["The Andes of the conquest and the viceroyalty", [["A family owing labour to the Potosí mines","ab Athletics|ab Survival|flaw Enemy","bound"],["A headman's child between two worlds","merit Language|ab Politics|bg Status","noble"],["A Spanish grant-holder's house","bg Resources|bg Retainers|ab Ride","noble"]], ["Taught letters by friars","ab Academics|merit Language"], ["Kept the old rites in secret","ab Occult|ab Subterfuge|flaw Dark Secret"]],
- I: ["The Andes of the republics, guano and tin", [["Peons on a great estate","ab Survival|ab Animal Ken|flaw Illiterate","bound"],["Shopkeepers of Lima","ab Finance|bg Contacts","trade"],["Tin miners of the high plateau","ab Athletics|ab Crafts|bg Allies","labour"]], ["Conscripted for a border war","ab Firearms|flaw Nightmares"], ["Organised the miners","ab Leadership|ab Politics|flaw Enemy"]],
+ I: ["The Andes of the republics, guano and tin", [["Peons on a great estate","ab Survival|ab Animal Ken","bound"],["Shopkeepers of Lima","ab Finance|bg Contacts","trade"],["Tin miners of the high plateau","ab Athletics|ab Crafts|bg Allies","labour"]], ["Conscripted for a border war","ab Firearms|flaw Nightmares"], ["Organised the miners","ab Leadership|ab Politics|flaw Enemy"]],
  N: ["The Andes of reform, coups and insurgency", [["Highlanders come down to the shanty towns","ab Streetwise|merit Language|bg Allies","outsider"],["An officer's family","ab Leadership|bg Influence|ab Firearms","soldier"],["Coca growers","ab Survival|ab Subterfuge|bg Contacts","land"]], ["Recruited at school by the insurgents","ab Politics|ab Stealth|flaw Dark Secret"], ["Village patrol against the guerrillas","ab Firearms|ab Leadership|flaw Nightmares"]],
  F: ["The Andes of the lithium companies", [["A family of the lithium flats","ab Technology|ab Survival|flaw Enemy","labour"],["A water-holding clan of the high valleys","bg Resources|bg Allies|ab Politics","land"]], ["Guide for smugglers over the passes","ab Survival|ab Drive"], ["Company security, or the people it fights","ab Firearms|ab Stealth"]]},
 "levant": {
@@ -119,8 +176,19 @@ export const LOCAL = {
  F: ["The West of the free cities and dead highways", [["A nomad pack on the old interstates","ab Drive|ab Survival|bg Allies","wander"],["A free-city tower family","ab Computer|bg Resources|ab Etiquette","corp"]], ["Scavenger in the dust towns","ab Survival|ab Technology"], ["Convoy guard","ab Drive|ab Firearms|bg Allies"]]}
 };
 
-/** The chapters of adult life: [first year of age, label]. */
-export const CHAPTERS = [[18, "18 to 29"], [30, "30 to 44"], [45, "45 to 59"], [60, "60 and after"]];
+/** Later chapters of adult life start at these ages; the first starts at the coming of age. */
+export const CHAPTERS = [30, 45, 60];
+
+/**
+ * The coming of age by era group, and the regions that differ. A house reading of history, rounded for play: the age
+ * at which a person was commonly held to do adult work, marry or bear arms. The teenage years start at 12, or at 10
+ * where adult life starts at 14.
+ */
+export const COMING_OF_AGE = {M: 14, E: 15, I: 16, N: 18, F: 18};
+export const REGION_COMING_OF_AGE = {japan: {M: 15, E: 15}};
+
+/** Peoples whose plain name needs more than a capital letter. */
+export const PEOPLE_LABELS = {steppe: "Steppe peoples", arabic: "Arab", hindi: "Hindustani", anglo: "Anglo-American", norse: "Norse", jewish: "Jewish"};
 
 /** What brought a character from elsewhere to the chronicle's homeland. */
 export const ARRIVALS = ["Work, trade or study", "Flight from something at home", "Sent by someone you answer to", "Following a person", "Something called you here"];

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2590
+Next free block: B2610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -111,6 +111,8 @@ Next free block: B2590
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
+| B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
+| B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3273,3 +3275,42 @@ Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the
 When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
 Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 
+## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
+The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
+Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.
+
+## B2601. Coming of age moves with the era and the region (2026-11-13, Ben's pick on lp6; house reading of history)
+Adult life starts at 14 before 1500, 15 to 1788, 16 to 1945 and 18 after; the teenage years start at 10 where adult life starts at 14, else at 12. Japan keeps 15 before 1789. Regions may set their own in REGION_COMING_OF_AGE. These ages are WoDX's own reading, not a book rule.
+Reverse: set every value of COMING_OF_AGE to 18 and empty REGION_COMING_OF_AGE in data/lifepath-drill.mjs.
+
+## B2602. Five things marked those years (2026-11-13, Ben's note on lp5)
+Each stage has two picks. The second shows five options drawn from that stage's list: two good, two hard, one neither, with "Five others" to draw again. This is Claude's reading of "five choices per life stage, two positive, two negative, one neutral".
+Reverse: change MARK_SHAPE in lifepath-drill-rules.mjs.
+
+## B2603. Adult chapters (2026-11-13, desk lp7)
+A new chapter of adult life opens at coming of age, 30, 45 and 60. Each chapter is a calling and a mark.
+Reverse: change CHAPTERS in data/lifepath-drill.mjs.
+
+## B2604. Rewards go on the sheet at the book's cost (2026-11-13, desk lp12 and lp13; V20 creation totals and each line's own)
+At the end the ticked picks are written to the sheet: an Ability up one dot and never past the book's creation cap, a Background at one dot or up one, a Merit or Flaw at the cost in the book table (the least cost where the book gives a range), Flaws only up to the book's cap. Nothing is free: the creation check counts every dot and point. Flaws start unticked. Names not in the book table are left off and listed. The tongue of the land of birth costs nothing.
+Reverse: untick "Put what is ticked above on the sheet"; features made this way carry flags.wodx-creation.lifepath.
+
+## B2605. Own answers and young characters pass the Storyteller (2026-11-13, desk lp10 and lp23)
+A player's own answer on any step except continent and region, or a character younger than 12, sends the lifepath to the approval queue; the sheet changes when the Storyteller approves. A Storyteller's own lifepath waits for no one.
+Reverse: return [] from reviewReasons.
+
+## B2606. Births of a line's own kind (2026-11-13, desk lp19)
+Origins of a line (born a wolf, metis, Kinfolk family, revenant family, a ghoul household, a hunter's family and the like) are offered only when the character's line fits.
+Reverse: drop the rows with a line in ORIGINS.
+
+## B2607. A life lived elsewhere (2026-11-13, desk lp9 and lp11)
+Every stage after childhood can be set in another region. When the last home is not the chronicle's homeland, a last step asks what brought the character here.
+Reverse: drop the movable flag in stepsOf and the arrival step.
+
+## B2608. Local content comes region by region (2026-11-13, desk lp15, lp16 and lp22)
+The shared lists serve all 44 regions in every age. Local origins, teenage paths and callings exist for France, Japan, West Africa, the Andes, the Levant and western North America as samples; the other regions and the sorting of the older Bohemian scenes into Moravia's local content follow in later batches. Nothing was deleted.
+Reverse: empty LOCAL in data/lifepath-drill.mjs.
+
+## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
+A person from the past made into an NPC is named by the culture of the region where that part of life happened.
+Reverse: drop the culture argument in makePeople.
