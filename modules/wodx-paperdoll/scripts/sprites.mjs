@@ -191,7 +191,13 @@ function reactTo(actor, info, from) {
 /* A figure that is no longer out of the fight gets up (the Storyteller's computer): healing, or harm undone. */
 function onActorUpdate(actor, change) {
   if ( !on() || !mine() || change?.system?.health === undefined ) return;
-  if ( healthLevel(actor.system?.health) >= 7 ) return;
+  if ( healthLevel(actor.system?.health) >= 7 ) {
+    // a health track filled by hand (the sheet, a macro) sends no word of harm: the figure still goes down, a moment later so a real blow's own reaction comes first
+    setTimeout(() => { if ( healthLevel(actor.system?.health) < 7 ) return;
+      for ( const t of canvas.tokens?.placeables ?? [] ) { const f = t.document.flags?.[MOD] ?? {};
+        if ( t.actor === actor && f.sprite && !f.act?.hold && SR.hasAct(f.sprite, "fall") ) play(t.document, "fall").catch(() => null); } }, 900);
+    return;
+  }
   for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor === actor && t.document.flags?.[MOD]?.act?.hold ) rise(t.document).catch(() => null);
 }
 
