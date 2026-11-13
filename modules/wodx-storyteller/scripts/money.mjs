@@ -26,6 +26,8 @@ const days = since => (since === null || since === undefined ? null : Math.max(0
 export function registerMoneySettings() {
   game.settings.register(MOD, "money", {name: "Money by era", hint: "Once a month of game time, tell the Storyteller how each character lives on their Resources, and the coin of the day.",
     scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "changers", {name: "Money changers far from home", hint: "On a scene that stands in another region (the Clock, Where this scene stands), prices are charged to the purse in the coin of home with a money changer's cut on top, and the price is also named in the money of the place. Off: prices abroad are the same as at home.",
+    scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "moneyRegion", {name: "Coins of the day", hint: "Which land's coins to name (a house rule from history; the books name none).",
     scope: "world", config: true, type: String, default: "moravian", choices: Object.fromEntries(Object.entries(R.COINS).map(([k, v]) => [k, v.label]))});
   game.settings.register(MOD, "moneyMonth", {scope: "world", config: false, type: Number, default: -1});
@@ -265,9 +267,43 @@ export function priceSync(good, {place = {}, count = 1, market = null, tile = nu
   const n = Math.max(1, Math.round(num(count) > 1 ? num(count) : (hit.count || 1)));
   const mk = marketFor({market, tile, scene});
   const idx = mk ? MK.indexOf(mk, g.kind) : 1;
-  const each = Math.max(1, Math.round(R.priceOf({...g, value: tier}, yearNow(), region(), {place}) * idx));
+  const home = Math.max(1, Math.round(R.priceOf({...g, value: tier}, yearNow(), region(), {place}) * idx));
   const m = moneyNow();
-  return {each, total: each * n, count: n, index: idx, market: mk?.id ?? null, text: R.formatMoney(each * n, m), sell: R.sellPrice(each * n), fence: R.sellPrice(each * n, {fence: true}), money: m.id};
+  // Far from home the purse still pays in the coin of home, and a money changer takes a cut (0.56.0)
+  const away = g.kind === "coin" ? null : awayMoney(scene);
+  const ab = away ? R.priceAbroad(home, yearNow(), region(), away.region, {troubled: away.troubled}) : null;
+  const each = ab ? ab.total : home;
+  const out = {each, total: each * n, count: n, index: idx, market: mk?.id ?? null, text: R.formatMoney(each * n, m), sell: R.sellPrice(home * n), fence: R.sellPrice(home * n, {fence: true}), money: m.id};
+  if ( ab && ab.cut > 0 ) {
+    out.abroad = {region: away.region, label: away.label, share: ab.share, cut: ab.cut * n, local: ab.local * n, localText: R.formatMoney(ab.local * n, ab.localMoney), money: ab.localMoney.id};
+    out.text = `${out.text} (${out.abroad.localText} here, and the money changer's ${Math.round(ab.share * 100)} in the hundred)`;
+  }
+  return out;
+}
+
+/**
+ * The money of the place when a scene stands abroad and its land uses another money than home: {region (a money
+ * region), label, troubled}. Null at home, with the changers switched off, or where the money is the same.
+ */
+export function awayMoney(scene = null) {
+  try {
+    if ( setting("changers") === false ) return null;
+    const sc = (scene && typeof scene === "object") ? scene : (scene ? game.scenes.get(scene) : globalThis.canvas?.scene) ?? null;
+    const w = chron()?.world;
+    if ( !sc || !w?.isAbroad?.(sc) ) return null;
+    const here = w.here(sc), mr = here?.money;
+    if ( !mr || !R.MONIES[mr] || R.sameMoney(yearNow(), region(), mr) ) return null;
+    return {region: mr, label: here.label, troubled: sc.getFlag?.(MOD, "troubled") === true};
+  } catch (e) { return null; }
+}
+
+/** Change a sum from a purse into the coin of the place (or back): what the changer hands over. Changes no purse. */
+export function changeQuote(amount, {scene = null, back = false} = {}) {
+  const away = awayMoney(scene);
+  if ( !away ) return null;
+  const [from, to] = back ? [away.region, region()] : [region(), away.region];
+  const r = R.changeMoney(amount, yearNow(), from, to, {troubled: away.troubled});
+  return {...r, text: R.formatMoney(r.got, r.money), share: r.share};
 }
 
 /** The price of a good now, here (loads the goods list first). good: a goods entry or its name. */

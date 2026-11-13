@@ -471,5 +471,51 @@ export function convertSavings(amount, fromYear, toYear, region = "moravian") {
   return a > 0 ? Math.round((Number(amount) || 0) * b / a) : 0;
 }
 
+/* ---------------------------------------------------------------- money changers (0.56.0) */
+
+/**
+ * Money changers (Ben's pick on the Global World Desk, 2026-11-13; house figures, the books give none). A purse
+ * keeps the coin of home. Far from home a price is still charged to that purse, with a changer's cut on top:
+ * the share by age (the last year each share holds to), more where the land is troubled, never above `most`.
+ */
+export const CHANGER = {cut: [[1499, 0.06], [1799, 0.04], [1913, 0.02], [99999, 0.03]], troubled: 0.05, most: 0.15};
+
+/** Do two money regions use the same money in a year (so nobody needs a changer)? */
+export const sameMoney = (year, a, b) => moneyFor(year, a).id === moneyFor(year, b).id;
+
+/** The changer's share of a sum changed in a year: 0 where both lands use one money. */
+export function changerCut(year, {troubled = false, from = null, to = null} = {}) {
+  if ( from && to && sameMoney(year, from, to) ) return 0;
+  const y = Number(year) || 0;
+  const base = (CHANGER.cut.find(([until]) => y <= until) ?? CHANGER.cut[CHANGER.cut.length - 1])[1];
+  return Math.min(CHANGER.most, Math.round((base + (troubled ? CHANGER.troubled : 0)) * 100) / 100);
+}
+
+/** A sum in one region's money as the same buying power in another's (by the two wages), before any cut. */
+export function exchange(amount, year, from = "moravian", to = "moravian") {
+  const a = wageAt(year, from), b = wageAt(year, to);
+  return a > 0 ? Math.round((Number(amount) || 0) * b / a) : 0;
+}
+
+/**
+ * A price met far from home. homePrice: what the thing costs at home, in home money's smallest unit.
+ * Returns {total (charged to the purse, cut included), cut (the changer's part), share, local (the price in the
+ * money of the place, as the seller names it), localMoney}. Same money on both sides: no cut.
+ */
+export function priceAbroad(homePrice, year, home = "moravian", away = "moravian", {troubled = false} = {}) {
+  const price = Math.max(0, Math.round(Number(homePrice) || 0));
+  const share = changerCut(year, {troubled, from: home, to: away});
+  const cut = share > 0 ? Math.max(price > 0 ? 1 : 0, Math.round(price * share)) : 0;
+  const localMoney = moneyFor(year, away);
+  return {total: price + cut, cut, share, local: Math.max(price > 0 ? 1 : 0, exchange(price, year, home, away)), localMoney};
+}
+
+/** Money changed outright (a purse turned into the coin of the place, or back): what is handed over after the cut. */
+export function changeMoney(amount, year, from = "moravian", to = "moravian", {troubled = false} = {}) {
+  const gross = exchange(amount, year, from, to), share = changerCut(year, {troubled, from, to});
+  const cut = Math.round(gross * share);
+  return {gross, cut, got: gross - cut, share, money: moneyFor(year, to)};
+}
+
 /** Months to pay when the clock moves from one month count to another: every month, twelve at most. */
 export const monthsToPay = (paidMonth, month) => (paidMonth === null || paidMonth === undefined || paidMonth < 0) ? 1 : Math.max(0, Math.min(12, month - paidMonth));

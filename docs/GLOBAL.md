@@ -59,8 +59,18 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 Review desk for the scope calls below (eight questions, picks saved in its `verdicts` collection, one doc per question id): https://claude.ai/artifact/HoDkSxow9oYA5GttPzn1Nn
 
 - Timeline events for the Americas, Africa and Oceania in the Future Darkness branch (1990 to 2099), and a book check of the eight new cards that carry a World of Darkness reading.
-- Faith calendars, the spread of news and travel dates by region.
+- The spread of news and travel dates by region; NPC routines by faith (prayer times, the Sabbath, Friday prayer in place of Sunday Mass).
 - Passers-by, residents, clergy and trades by region.
 - Money: purses are not converted when a character travels; Korea, Southeast Asia and the Malay world borrow China's money, Hungary and the Balkans Moravia's, Greece the Ottoman lands', and the Caribbean and the Andes Mexico's.
 - Peoples WoDX has no names for yet: the first nations of North America and the Caribbean, Aboriginal Australians, the peoples of central Africa, the Maya, the Berbers, Armenians, Sephardi and Mizrahi Jews, Khmer, Filipinos, and the Inuit and other peoples of the far north.
 - Places that stand under a wider region for now and may want their own: the Philippines, Indochina, Central America, the Caucasus, Mongolia, Madagascar, the Horn of Africa, the Sahara, Ireland, Iceland, Alaska.
+
+## Ben's picks, 13 November 2026
+
+All eight scope calls on the Global World Desk took the recommended option (B2535).
+
+- Built: money changers abroad (Storyteller 0.56.0, B2536), the holy days of the great faiths by region (Chronicle 0.49.0, B2537), weather by region (Atmosphere 0.15.0, B2538).
+- Approved as they stand: the 511 plain-history timeline events for the Americas, Africa and Oceania.
+- Built from the PC's book check: 56 Future Darkness events for the Americas, Africa and Oceania, 1990 to 2023, from the Cyberpunk 2020 books (Deep Space for orbit).
+- Waiting on the PC's book check (job global-world-book-check-2026-11-13): the eight timeline cards with a World of Darkness reading (first pass in, the scan-only books in OCR); the hidden world of East Asia and Africa by the book.
+- Standing: peoples without names are added one at a time with source notes and a desk; finer regions only when a chronicle goes there.

@@ -117,7 +117,7 @@ export default {
       "id": "feastFast",
       "group": "rules",
       "name": "Feast and fast days",
-      "hint": "The church year shapes the night: on a night of revel the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly (before 1600) hunting in town is 1 harder. The Chronicle Clock always shows the day.",
+      "hint": "The holy days of the place shape the night: on a night of revel or celebration (Ramadan nights and the new year of the lunar calendar among them) the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly hunting in town is 1 harder. The Chronicle Clock always shows the day.",
       "default": true,
       "source": "House rule"
     },

@@ -1,5 +1,5 @@
 /**
- * The world's regions gate (Chronicle 0.48.0, Creation 0.16.0, Storyteller 0.54.0, Atmosphere 0.14.0), in
+ * The world's regions gate (Chronicle 0.48.0, Creation 0.16.0, Storyteller 0.54.0, Atmosphere 0.15.0, Chronicle 0.49.0), in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateworld.mjs?${Date.now()}`)).run()
  * Holds the world while it runs. Makes its own scene "WoDX gate: World" and deletes it after; puts the homeland,
@@ -72,8 +72,14 @@ export async function run() {
       const made = people(12, "egypt");
       const arabic = made.filter(p => p.origin === "arabic").length;
       const clim = atmo?.weather?.climate?.();
-      ok("a scene in Egypt", here.id === "egypt" && W.isAbroad() && d.latitude === 30 && d.ownPlace && ctx.culture === "egypt" && arabic >= 9 && made.every(p => p.name && !/[{}]/.test(p.name)) && (!atmo || clim === "hot-desert"),
-        {here: here.id, latitude: d.latitude, offset: d.offset, culture: ctx.culture, climate: clim, names: made.slice(0, 4).map(p => p.name)});
+      // Atmosphere 0.15.0: the scene abroad has its own weather, a scene at home keeps the homeland's
+      const other = game.scenes.find(x => x.id !== scene.id && !chron.place.of(x).region) ?? null;
+      const wx = atmo?.weather?.now?.(scene) ?? null, wxHome = other ? (atmo?.weather?.now?.(other) ?? null) : null;
+      const holy = chron.church.on(d, {scene, others: true});
+      const homeHoly = chron.church.on(d, {scene: null});
+      const own = !atmo || !wx || (wx.region === "egypt" && wx.climate === "hot-desert" && (!wxHome || (!wxHome.region && wxHome.climate !== "hot-desert")));
+      ok("a scene in Egypt", own && holy?.faith === "islamic" && holy.calendar === "The Muslim year" && !!homeHoly?.faith && Array.isArray(holy.others) && here.id === "egypt" && W.isAbroad() && d.latitude === 30 && d.ownPlace && ctx.culture === "egypt" && arabic >= 9 && made.every(p => p.name && !/[{}]/.test(p.name)) && (!atmo || clim === "hot-desert"),
+        {here: here.id, latitude: d.latitude, offset: d.offset, culture: ctx.culture, climate: clim, holy: holy ? {faith: holy.faith, label: holy.label} : null, homeHoly: homeHoly?.faith, weather: wx ? {region: wx.region, climate: wx.climate, label: wx.label} : null, home: wxHome ? {region: wxHome.region ?? null, climate: wxHome.climate} : null, names: made.slice(0, 4).map(p => p.name)});
     });
 
     await step("names in their own order", async () => {
