@@ -47,7 +47,7 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 | Start a chronicle (Storyteller setup) | Asked for Europe, the Americas or Elsewhere; the players' era primers describe Europe | Widened: asks for the homeland. Open: primers by region |
 | Lifepaths and Prelude (Creation, Chronicle pod) | Creation 0.21.0: the mortal years drill down from continent and region over all 44 world regions in every age, every region has its own ages, origins, teenage paths and callings, and a region can carry dated origins and marks; since Creation 0.21.0 every one of the 44 regions has dated ones, 1197 to 2022 | Done (Creation 0.22.0 adds orbit, the Moon and Mars for the future age) |
 | Factions and politics (NPC) | Sect and faction names are the books' Western ones; no Wan Kuei courts, Laibon, Ashirra or Bastet-held lands as factions | Open: review desk |
-| Goods and gear (Library) | Mostly European and North American goods | Open: review desk |
+| Goods and gear (Library) | Mostly European and North American goods | Widened: everyday goods know where they are at home, with goods of every way of life and the coin of the place, and containers fill by region (Library 0.19.0, Interactables 0.36.0, B2680 to B2682). Open: Gear by era, crafting and cookery lists by region |
 | Calendar (Chronicle) | Julian and Gregorian, with reform dates for a few lands; no Islamic, Hebrew, Chinese or other reckonings shown | Open: review desk |
 | Weather history (Atmosphere eraShift) | The Little Ice Age and 1816 as Europe and North America felt them, applied everywhere | Open, minor |
 | Encyclopaedia (Library) | Follows the books read so far; the Year of the Lotus, Ebony Kingdom and other world books are thin | Open: reading list on the review desk |

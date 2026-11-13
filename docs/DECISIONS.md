@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2680
+Next free block: B2690
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -120,6 +120,7 @@ Next free block: B2680
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
+| B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3500,3 +3501,19 @@ Reverse: put back the static import in realm-worlds.mjs and main.mjs.
 ## B2677. A map of the Storyteller module (2026-11-13, Stale Design Desk e2)
 modules/wodx-storyteller/README.md lists each part, its files, its settings and its api keys; tools/harness/storyteller-readme.test.mjs fails when a script or data file is missing from it or a setting named there is not registered. The module stays whole; look again at splitting past 100 scripts.
 Reverse: delete the README and its test.
+
+## B2680. Goods by way of life and region (2026-11-13, global rule)
+WoDX Library 0.19.0, data/goods-ways.mjs. Each everyday good can say where it is at home: a region id, one of WoDX Chronicle's 16 ways of life, or everywhere else, each with a first year, a span of years, or never. The region's own entry wins over its way of life. A good with no entry is at home everywhere, as before. 183 goods are placed: things of faith and dress stay with their faith or people (a rosary in Christendom and in the Jesuit years in Japan, a Quran in the lands of Islam and al-Andalus, a kimono in Japan, a ruff or a tricorne in Christendom until western dress spreads about 1900); no pork where Islam forbids it or before the Spanish brought pigs to the Americas; ale, gin and wine of Europe not in Muslim homes; tea, rice, maize, potatoes, coffee and cacao from the year each land had them, long before Europe where that is so. 80 goods of their own for the 16 ways of life (a prayer wheel, a kris, kola nuts, a knotted cord record, bark cloth, a seal-oil lamp and more). A house reading of history, rounded for play; the books give no lists.
+
+Reverse: delete WAYS entries or WAY_ROWS rows in goods-ways.mjs; with both empty the goods are as they were.
+
+## B2681. The coin of the place (2026-11-13)
+The coins of Europe (penny, groat, florin, pfennig, thaler, farthing, sovereign, dollar, Deutsche Mark, euro) stay in the lands that struck or used them. One good, a coin of the place, stands in everywhere from 600 BC, and is named in the local money when WoDX Storyteller knows it: the second unit of the region's money in that year (groschen in Moravia in 1350, dirhams in Cairo in 1300, reales in New Spain in 1800), so a find reads "7 dirhams". The Czech lands keep the koruna, so no euro notes there.
+
+Reverse: remove the coin entries from WAYS, and the LOCAL_COIN row.
+
+## B2682. Containers filled by region (2026-11-13)
+WoDX Interactables 0.36.0. Fill by place and era reads the scene's region (its own, or the homeland) and that region's way of life in the chronicle's year from WoDX Chronicle, and draws only goods at home there in that year; the window says which land it draws for. A land whose money is barter in that year (WoDX Storyteller) gets no coin of the place. With Chronicle off, or an old Library, it draws by era as before. Gear by era (weapons and armour) is not sorted by region yet.
+
+Reverse: clear the scene's region in Where this scene stands, or set Fill to Gear by era only.
+
