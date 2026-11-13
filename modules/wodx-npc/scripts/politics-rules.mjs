@@ -27,6 +27,7 @@
  */
 
 import {hooksFor, SECRET_KINDS} from "./secrets-rules.mjs";
+import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
 
 export const MAX_RANK = 5;
 export const MAX_VINCULUM = 10;
@@ -427,6 +428,54 @@ export const POLITIES = {
     titles: {master: ["Master of the circle", "Shaykh", "Pir"]},
     notes: "The Ahl-i-Batin, the Subtle Ones, seek the Unity behind all things and work unseen from the cities of the lands of Islam. They sit on the Council of Nine for a time and later keep apart. Used by default for a mages' faction in the Maghreb, Egypt, Arabia, the Levant, Persia, Anatolia or Central Asia that does not serve Reason. Arete stands in for standing (house rule).",
     eras: {}
+  },
+  // NPC 0.64.0 (B2970 to B2974): the Americas, the Pacific and the far north before the settlers, the Mokolé and the
+  // Nagah. WoDX's own words until the PC book pass (jobs/world-courts-book-check-2026-11-13.md, items 9 to 11).
+  "nunnehi-council": {
+    label: "A council of the Nunnehi", line: "changeling", kinds: ["fae"], from: null, to: null,
+    body: "The council", rank: "Standing", rankFrom: "title", blocs: "house", blocWord: "families", gathering: {name: "council", every: 4, meets: "The council gathers at the old dancing ground."},
+    offices: [
+      {key: "speaker", title: "Speaker of the council", seats: 1, fill: "backing", top: true},
+      {key: "keeper", title: "Keeper of the old ways", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a family", seats: 5, fill: "clan"},
+      {key: "guardian", title: "Guardian of the dreaming places", seats: 1, fill: "appoint"},
+      {key: "teller", title: "Teller of the old stories", seats: 1, fill: "appoint"}
+    ],
+    law: ["breaking a promise made to the land's people", "harming a dreaming place", "taking a child who was not given", "turning the people's dreams to fear", "dealings with the fae from over the sea"],
+    titles: {speaker: ["Speaker of the council", "Elder of the council", "Grandparent of the council"]},
+    notes: "The changelings of the Americas and the far north are fae of the land's own peoples, the Nunnehi, and keep none of Europe's houses or courts. Their families answer to a council and to the old ways. Used by default for a fae faction in the Americas or the far north before the settlers come; afterwards a fae faction keeps the court of its age, as the Kithain arrive.",
+    eras: {modern: "The Kithain came with the ships and took the cities; the Nunnehi keep the wild places and the reservations, and deal with the newcomers warily."}
+  },
+  "mokole-gathering": {
+    label: "A gathering of the Mokolé", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The gathering", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "streams", gathering: {name: "gathering", every: 4, meets: "The Mokolé gather by the water under the sun."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest who remembers", seats: 1, fill: "challenge", top: true},
+      {key: "keeper", title: "Keeper of the memory", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of a stream", seats: 5, fill: "clan"},
+      {key: "warden", title: "Warden of the waters", seats: 1, fill: "appoint"},
+      {key: "singer", title: "Singer of the old days", seats: 1, fill: "appoint"}
+    ],
+    law: ["letting the memory of the world be lost", "fouling the waters of the land", "showing the dragon to mortals", "serving corruption", "harming a hatchling of any breed"],
+    titles: {eldest: ["Eldest who remembers", "Old one of the river", "Grandparent of the waters"]},
+    notes: "The Mokolé, the dragon-kin, carry the memory of the world in their blood and keep it by water and sun. The tribe field on a sheet holds the stream, and each stream present has a voice. Used by default for a Garou faction in Australia before the settlers, where the Gumagan keep the land, and for any Garou faction whose name speaks of the Mokolé.",
+    eras: {modern: "From 1788 the wolves come with the settlers, and the Mokolé of Australia mourn the Bunyip the Garou destroyed."}
+  },
+  "nagah-nest": {
+    label: "A nest of the Nagah", line: "werewolf", kinds: ["garou"], from: null, to: null,
+    body: "The nest", rank: "Rank", rankFrom: "rank", blocs: "tribe", blocWord: "auspices", gathering: {name: "gathering", every: 4, meets: "The nest meets beneath the water."},
+    riseByChallenge: true, noKill: true,
+    offices: [
+      {key: "eldest", title: "Eldest of the nest", seats: 1, fill: "challenge", top: true},
+      {key: "judge", title: "Judge of the nest", seats: 1, fill: "appoint", judge: true},
+      {key: "voice", title: "Voice of an auspice", seats: 3, fill: "clan"},
+      {key: "keeper", title: "Keeper of the hidden waters", seats: 1, fill: "appoint"}
+    ],
+    law: ["letting a breed's crime against Gaia go unjudged", "showing the Nagah to the other changing breeds", "showing the serpent to mortals", "serving corruption", "betraying one's nest"],
+    titles: {eldest: ["Eldest of the nest", "Elder serpent", "Keeper of the nest"]},
+    notes: "The wereserpents let the other changing breeds think them dead, and work in small nests that judge those who break faith with Gaia. Picked by the Storyteller, or used by default for any Garou faction whose name speaks of the Nagah.",
+    eras: {}
   }
 };
 export const POLITY_LIST = Object.keys(POLITIES);
@@ -458,9 +507,26 @@ export const REGION_MAGES = {
   japan: "akashic-monastery", "southeast-asia": "akashic-monastery", nusantara: "akashic-monastery", india: "akashic-monastery", "tibet-himalaya": "akashic-monastery",
   maghreb: "batini-circle", egypt: "batini-circle", arabia: "batini-circle", levant: "batini-circle", persia: "batini-circle", anatolia: "batini-circle", "central-asia": "batini-circle"
 };
+/** NPC 0.64.0 (B2971): the shapeshifters' body a Garou faction keeps by region before the settlers come. */
+export const SETTLER_SHIFTERS = {australia: "mokole-gathering", mexico: "bastet-land"};
 /** A Garou faction whose name or notes name the Hengeyokai or a Bastet tribe keeps that body anywhere. */
-const HENGEYOKAI = /hengeyokai|beast court|kitsune|nagah|zhong lung|nezumi|tengu|same-bito|hakken|kumo/i;
+const HENGEYOKAI = /hengeyokai|beast court|kitsune|zhong lung|nezumi|tengu|same-bito|hakken|kumo/i;
 const BASTET = /bastet|werecat|simba|bagheera|\bkhan\b|balam|pumonca|swara|bubasti|ceilican|qualmi/i;
+/** NPC 0.64.0 (B2972, B2973): the wereserpents and the dragon-kin, by name anywhere. */
+const NAGAH = /nagah|\bnagas?\b|wereserpent|\bsesha\b/i;
+const MOKOLE = /mokol|gumagan|makara|piasa|werecroc|werelizard|dragon-kin/i;
+/**
+ * NPC 0.64.0 (B2970): the ways of life of the Americas, the Pacific and the far north before the settlers
+ * (wodx-chronicle world-rules SPHERES). Kindred keep no court there; a fae faction keeps a council of the Nunnehi in
+ * the Americas and the far north; a Garou faction keeps a gathering of the Mokolé in Australia and a Bastet land in
+ * Mesoamerica.
+ */
+export const BEFORE_SETTLERS = new Set(["mesoamerican", "andean", "polynesian", "northern"]);
+export const NO_KINDRED_COURT = new Set(["antarctica"]);
+/** Where the Nunnehi are the land's own fae: the Americas and the Arctic. */
+export const NUNNEHI_LANDS = new Set(["canada", "north-america-east", "north-america-west", "mexico", "caribbean", "andes", "brazil", "southern-cone", "arctic"]);
+const sphereOf = (r, y) => { try { return r ? sphereFor(r, y ?? 0) : null; } catch (e) { return null; } };
+export const beforeSettlers = (r, y) => !!r && r !== "moravia" && BEFORE_SETTLERS.has(sphereOf(r, y));
 let HOME_REGION = null;
 /** The chronicle's homeland region id, for factions that name no region of their own (null for none known). */
 export function setHomeRegion(r) { HOME_REGION = typeof r === "string" && r ? r : null; return HOME_REGION; }
@@ -469,16 +535,26 @@ export const homeRegion = () => HOME_REGION;
 export const regionOfFaction = (f, region = null) => (typeof f?.region === "string" && f.region) || region || HOME_REGION || null;
 export const DEFAULTS = {
   kindred: (y, f, region = null) => {
-    const k = REGION_COURTS[regionOfFaction(f, region)];
+    const r = regionOfFaction(f, region);
+    if ( NO_KINDRED_COURT.has(r) || beforeSettlers(r, y) ) return null;
+    const k = REGION_COURTS[r];
     return k && inYears(POLITIES[k], y) ? k : (y !== null && y < 1435 ? "dark-ages-court" : "camarilla");
   },
   garou: (y, f, region = null) => {
     const said = `${f?.name ?? ""} ${f?.notes ?? ""}`;
+    if ( NAGAH.test(said) ) return "nagah-nest";
+    if ( MOKOLE.test(said) ) return "mokole-gathering";
     if ( HENGEYOKAI.test(said) ) return "beast-court";
     if ( BASTET.test(said) ) return "bastet-land";
-    return REGION_SHIFTERS[regionOfFaction(f, region)] ?? "garou-sept";
+    const r = regionOfFaction(f, region);
+    if ( beforeSettlers(r, y) && SETTLER_SHIFTERS[r] ) return SETTLER_SHIFTERS[r];
+    return REGION_SHIFTERS[r] ?? "garou-sept";
   },
-  fae: y => (y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court"),
+  fae: (y, f, region = null) => {
+    const r = regionOfFaction(f, region), sp = beforeSettlers(r, y) ? sphereOf(r, y) : null;
+    if ( sp && NUNNEHI_LANDS.has(r) ) return "nunnehi-council";
+    return y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court";
+  },
   mages: (y, f, region = null) => (REASON.test(`${f?.name ?? ""} ${f?.notes ?? ""}`)
     ? (y === null || y >= 1897 ? "technocracy-construct" : y >= 1325 ? "order-of-reason" : "mage-fellowship")
     : REGION_MAGES[regionOfFaction(f, region)] ?? (y !== null && y < 1466 ? "mage-fellowship" : "tradition-chantry")),
