@@ -8,6 +8,8 @@ import catalogue as K
 FA_SHELF = "w4GH4hnv/textures/objects/Decor/Furniture/Shelves/Bookshelves/Bookshelf_Wood_Ashen_A_2x1.webp"
 TYGER_COUCH = "bsj2I8JP/textures/objects/ModernFurnature/Colorable/Couch01.png"
 FA_BARREL = "w4GH4hnv/textures/objects/Decor/Storage/Barrels/Barrel_Wood_Ashen_A_1x1.webp"
+import ddcore as _C
+needs_pack_table = unittest.skipUnless(__import__("os").path.exists(_C.PACK_TABLE), "needs the pack table (names of packs other than FA)")
 
 
 class CatalogueTest(unittest.TestCase):
@@ -18,6 +20,7 @@ class CatalogueTest(unittest.TestCase):
         self.assertNotIn("modern", t["bands"])
         self.assertEqual(t["cells"], (2, 1))
 
+    @needs_pack_table
     def test_no_inventions_before_their_age(self):
         for p, first in [("WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Field_Phone_Closed_01_A_Ashen.webp", "industrial"),
                          ("ae7QH77Z/textures/objects/TC_Town Hall Asset Pack_Grammophone.png", "industrial")]:
@@ -26,6 +29,7 @@ class CatalogueTest(unittest.TestCase):
             self.assertNotIn("medieval", t["bands"], p)
             self.assertIn(first, t["bands"], p)
 
+    @needs_pack_table
     def test_modern_couch(self):
         t = K.tag(TYGER_COUCH)
         self.assertEqual(t["piece"], "seat")
