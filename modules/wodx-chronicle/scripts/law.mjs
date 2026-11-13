@@ -10,6 +10,7 @@ import {MODULE_ID, esc, setting, setSetting, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as place from "./place.mjs";
+import {playerLine} from "./law-heat.mjs";
 
 export function registerLawSettings() {
   game.settings.register(MODULE_ID, "lawYear", {scope: "world", config: false, type: Number, default: 0});
@@ -36,19 +37,22 @@ function abilityDots(a, key) {
 /** The best of Law, Politics and Streetwise on an actor (B3492). */
 export const lawDots = actor => Math.max(abilityDots(actor, "law"), abilityDots(actor, "politics"), abilityDots(actor, "streetwise"));
 
-export function cardHTML(rec, {dots = 0, full = false} = {}) {
+export function cardHTML(rec, {dots = 0, full = false, mine = ""} = {}) {
   const secs = L.cardSections(rec, {dots, full});
   const body = secs.map(s => `<p><strong>${esc(s.title)}</strong></p><ul>${s.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>`).join("");
   const guess = rec.guess && full ? `<p><em>This land's own law is not written yet; a general picture stands in.</em></p>` : "";
   const since = full && rec.since?.year ? `<p class="hint">In force since ${esc(rec.since.year)}: ${esc(rec.since.note)}</p>` : "";
   const more = !full && secs.length < L.cardSections(rec, {full: true}).length ? `<p class="hint">Law, Politics or Streetwise would tell you more.</p>` : "";
-  return `<div class="wodx-card wodx-law"><h3>Law here, ${esc(rec.year)}</h3>${body}${guess}${since}${more}</div>`;
+  return `<div class="wodx-card wodx-law"><h3>Law here, ${esc(rec.year)}</h3>${body}${mine ? `<p><strong>${esc(mine)}</strong></p>` : ""}${guess}${since}${more}</div>`;
 }
 
 export async function card({scene = activeScene(), actor = null, full = game.user?.isGM} = {}) {
   const rec = here(scene);
   const who = actor ?? game.user?.character ?? null;
-  await ChatMessage.create({content: cardHTML(rec, {dots: lawDots(who), full: !!full}), speaker: {alias: "Chronicle"}, whisper: [game.user.id]});
+  const dots = lawDots(who);
+  let mine = "";
+  try { mine = dots >= 1 ? playerLine(who, scene) : ""; } catch (e) { mine = ""; }
+  await ChatMessage.create({content: cardHTML(rec, {dots, full: !!full, mine}), speaker: {alias: "Chronicle"}, whisper: [game.user.id]});
   return rec;
 }
 

@@ -28,9 +28,14 @@ import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
 import * as law from "./law.mjs";
+import * as lawHeat from "./law-heat.mjs";
 import * as release from "./release.mjs";
 import * as when from "./when.mjs";
 import * as referee from "./referee.mjs";
+import * as ticket from "./ticket.mjs";
+import * as ticketRules from "./ticket-rules.mjs";
+import * as roster from "./roster.mjs";
+import * as rosterRules from "./roster-rules.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
@@ -96,6 +101,9 @@ Hooks.once("init", () => {
   church.registerChurchSettings();
   // B3490: the law of the land
   law.registerLawSettings();
+  // B3606: the law's heat on criminals
+  lawHeat.registerHeatSettings();
+  lawHeat.registerHeatHooks();
   // Phase 7a: the generator core
   gen.registerGenSettings();
   // Dated events
@@ -148,6 +156,7 @@ Hooks.once("init", () => {
     onDown: () => { ClockApp.open(); return true; }
   });
   referee.registerRefereeKey();
+  roster.registerRosterKey();
 
   log(`Chronicle initialised; world time 0 is 1 January ${EPOCH_YEAR}`);
 });
@@ -173,6 +182,8 @@ Hooks.once("ready", async () => {
   playerHelp.installPlayerHelp();
   playerGuide.installGuide();
   automation.initAutomation();
+  ticket.registerTicket();
+  roster.registerRoster();
   waiting.initWaiting();
   await gen.ensureSeed();
 
@@ -214,9 +225,13 @@ Hooks.once("ready", async () => {
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     release: {check: release.check, current: release.current},
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
+    // B3520-B3523: a player's freeform action as one ruling ticket in the queue
+    ticket: {ask: ticket.askRuling, build: ticket.build, rules: ticketRules},
+    // B3534-B3536: a roster of characters for each player
+    roster: {open: roster.openRoster, of: roster.rosterOf, play: roster.play, askToAdd: roster.askToAdd, setAway: roster.setAway, rules: rosterRules},
     referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
       cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
-    law: {here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
+    law: {heat: {of: lawHeat.of, add: lawHeat.addDeed, arrest: lawHeat.arrest, lower: lawHeat.lowerHeat, amnesty: lawHeat.amnesty, state: lawHeat.state, rules: lawHeat.rules}, here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
@@ -337,6 +352,18 @@ async function onSocket(message) {
     case "player.panTo":
     case "player.findMeNone":
       await playerTools.onFindMeSocket(type, payload);
+      break;
+    case "ticket.propose":
+      // The Storyteller's client reads the sheets itself; the player sends only what they chose
+      if ( payload && isActiveGM() ) await ticket.build({actorId: String(payload.actorId ?? ""), targetId: payload.targetId ? String(payload.targetId) : null,
+        text: String(payload.text ?? ""), attr: String(payload.attr ?? ""), ability: String(payload.ability ?? ""), difficulty: Number(payload.difficulty) || 6,
+        power: String(payload.power ?? ""), witnesses: !!payload.witnesses, from: String(payload.from ?? "")});
+      break;
+    case "roster.add":
+      if ( payload && isActiveGM() ) await roster.build({user: String(payload.user ?? ""), name: String(payload.name ?? ""), why: String(payload.why ?? "")});
+      break;
+    case "roster.play":
+      await roster.onPlaySocket(payload ?? {});
       break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client

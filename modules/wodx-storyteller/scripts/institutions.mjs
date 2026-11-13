@@ -18,6 +18,7 @@ import * as Towns from "./towns.mjs";
 import * as Rumours from "./rumours.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
 
 const T_CLIMB = `${MOD}.climb`, T_LEVER = `${MOD}.lever`;
@@ -40,7 +41,9 @@ function townInfo(m) {
   const region = t?.region || (() => { try { const sc = (m.scenes ?? []).map(x => game.scenes.get(x)).find(Boolean); return chron()?.world?.here?.(sc)?.id ?? null; } catch (e) { return null; } })() || "moravia";
   let faith = "western";
   try { faith = faithFor(region, yearNow()) || "western"; } catch (e) { /* western */ }
-  return {town: m.id, name: m.name, people: Number(t?.people) || 1000, faith, year: yearNow()};
+  let law = "", order = null;
+  try { const l = lawOf(region, yearNow()); law = l.family; order = l.order; } catch (e) { /* no law of the land */ }
+  return {town: m.id, name: m.name, people: Number(t?.people) || 1000, faith, law, order, year: yearNow()};
 }
 
 /** Open what each town should have now, close what has had its day. Returns the events. */
@@ -58,7 +61,7 @@ export const byId = id => state().list.find(i => i.id === id) ?? null;
 /** The seats someone holds anywhere: [{inst, rank, title}]. */
 export function seatsOf(id) {
   const out = [];
-  for ( const i of state().list ) { if ( i.closed ) continue; const b = I.bestSeat(i, id); if ( b ) out.push({inst: i.id, name: i.name, kind: i.kind, rank: b.rank, title: I.ranksOf(i.kind, yearNow(), i.faith)[b.rank], pawn: b.pawn}); }
+  for ( const i of state().list ) { if ( i.closed ) continue; const b = I.bestSeat(i, id); if ( b ) out.push({inst: i.id, name: i.name, kind: i.kind, rank: b.rank, title: I.ranksOf(i.kind, yearNow(), i.faith, i.law)[b.rank], pawn: b.pawn}); }
   return out;
 }
 
@@ -72,7 +75,7 @@ export async function onClimbDone(a, t) {
   const pawn = t.target?.id ? game.actors.get(t.target.id) : null;
   const who = pawn ? {id: pawn.id, name: pawn.name, pawnOf: a.id} : {id: a.id, name: a.name};
   const have = I.bestSeat(inst, a.id);
-  const next = I.ranksOf(inst.kind, yearNow(), inst.faith)[have ? have.rank + 1 : 0] ?? "the top";
+  const next = I.ranksOf(inst.kind, yearNow(), inst.faith, inst.law)[have ? have.rank + 1 : 0] ?? "the top";
   await chron()?.propose?.({type: T_CLIMB, key: `climb:${inst.id}:${who.id}`, title: `${who.name} rises in ${inst.name}: ${next}`,
     detail: pawn ? `${pawn.name} climbs for ${a.name}, no higher than ${a.name}'s Influence.` : `${a.name}'s climb is done.`, data: {inst: inst.id, who, cap: pawn ? I.pawnCap(influenceOf(a)) : I.RANKS - 1}});
 }
@@ -85,7 +88,7 @@ async function approveClimb(e) {
   if ( r.why ) return ui.notifications?.warn?.(`${who?.name}: ${r.why}.`);
   s.list[k] = r.inst;
   await save(s);
-  const title = I.ranksOf(r.inst.kind, yearNow(), r.inst.faith)[r.to];
+  const title = I.ranksOf(r.inst.kind, yearNow(), r.inst.faith, r.inst.law)[r.to];
   await log({kind: "institution", actor: who.pawnOf || who.id, name: who.name, text: `${who.name} is now ${title} in ${r.inst.name}${r.bumped ? `, in place of ${r.bumped.name}` : ""}.`});
 }
 
@@ -172,12 +175,12 @@ export async function institutionsDialog() {
   const year = yearNow();
   const towns = new Map((Markets.state()?.markets ?? []).map(m => [m.id, m.name]));
   const block = i => {
-    const ranks = I.ranksOf(i.kind, year, i.faith);
+    const ranks = I.ranksOf(i.kind, year, i.faith, i.law);
     const seats = i.seats.filter(x => x.holder).sort((a, b) => b.rank - a.rank).map(x => `<li>${esc(ranks[x.rank])}: ${esc(x.holder.name)}${x.holder.pawnOf ? ` <small>(for ${esc(game.actors.get(x.holder.pawnOf)?.name ?? "someone")})</small>` : ""}</li>`).join("");
     const levers = mine.flatMap(id => { const b = I.bestSeat(i, id); return b ? I.leversFor(i.kind, b.rank).map(l => `<button type="button" data-lever="${esc(l.key)}" data-inst="${esc(i.id)}" data-actor="${esc(id)}">${esc(l.words)}</button>`) : []; }).join("");
     const share = I.control(i).slice(0, 3).map(c => `${esc(game.actors.get(c.who)?.name ?? c.who)} ${c.share}%`).join(", ");
     return `<details data-search-item data-search-text="${esc(`${i.name} ${towns.get(i.town) ?? ""}`)}"><summary><b>${esc(i.name)}</b>${share ? ` <small>(${share})</small>` : ""}</summary>
-      <ul data-fixed>${seats || "<li>No seats held yet.</li>"}</ul>${levers ? `<div class="wodx-buttons">${levers}</div>` : ""}</details>`;
+      ${game.user.isGM && I.KINDS[i.kind]?.hook ? `<p class="wst-hook"><small>${esc(I.KINDS[i.kind].hook)}</small></p>` : ""}<ul data-fixed>${seats || "<li>No seats held yet.</li>"}</ul>${levers ? `<div class="wodx-buttons">${levers}</div>` : ""}</details>`;
   };
   const open = s.list.filter(i => !i.closed);
   const wire = (ev, dlg) => {
@@ -192,7 +195,7 @@ export async function institutionsDialog() {
     });
   };
   return foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 620}, window: {title: "Institutions"}, classes: ["wodx-dialog", "wst-institutions"],
-    content: `<p>The church, the guilds, the council, the watch, the press and the rest in each town, and who holds their seats. Climb one with a downtime project (Climb an institution); a seat's levers ask the Storyteller first.</p>
+    content: `<p>The church, the guilds, the council, the watch, the courts, the press and the rest in each town, and who holds their seats. Climb one with a downtime project (Climb an institution); a seat's levers ask the Storyteller first.</p>
       <div class="wst-scroll">${[...towns.entries()].map(([id, name]) => { const l = open.filter(i => i.town === id); return l.length ? `<h4>${esc(name)}</h4>${l.map(block).join("")}` : ""; }).join("") || "<p>No towns yet: towns come from the markets.</p>"}</div>`,
     buttons: [{action: "close", label: "Close", default: true}]});
 }

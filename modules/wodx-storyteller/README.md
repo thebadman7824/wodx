@@ -30,9 +30,9 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The ledger and the clocks
 
-- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `clocks.mjs` and `clock-rules.mjs`.
-- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`.
-- API: `ledger`, `clocks`.
+- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `inherit.mjs` and `inherit-rules.mjs` (the Inheritance step: heir, items, places, money left, Ledger, rivals, ties), `levers.mjs` and `levers-rules.mjs` (crisis levers for a region, with a dated log and undo), `clocks.mjs` and `clock-rules.mjs`.
+- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`, `leverState`.
+- API: `ledger`, `clocks`, `levers`, `inheritance`.
 
 ## Travel and the maps
 

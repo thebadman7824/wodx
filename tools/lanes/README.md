@@ -32,6 +32,14 @@ A long list (`--touched` often gives 80 or more gates) goes faster and cleaner s
 ones it added; on lanes 2 and 3 it also deletes documents the gate left behind, so one gate's leftovers cannot fail
 the next (B3086). The two-browser gates (gatesolo, gatelookhand) are not in the map: run them by name, alone.
 
+No run can hang a lane (B3089). A dialog or other window a gate opened that waits more than 45 seconds is closed
+(`--step-timeout`), so the step waiting on it goes on; document sheets are left open. A gate gets 15 minutes
+(`--gate-timeout`, or its own in `gate-map-extra.json` "timeouts") and then fails; if the page itself stops answering,
+the browser is closed and a new one signs in for the next gate. Past the whole run's limit (`--max-minutes`) the runner
+closes its browser, frees the lane and exits with 5. The lane lock holds a deadline the runner moves on before each
+gate; a run that finds a lock past its deadline ends that hung run (only a gate run's own node process, with its
+browser) and takes the lane, so nobody has to end processes by hand.
+
 On drift nothing runs (exit 4) and the differences are printed and saved in `<lane>\wodx-lane\drift.json`.
 Changed documents are a warning only. After each gate the runner puts the clock and the pause back.
 
