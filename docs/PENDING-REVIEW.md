@@ -1128,6 +1128,18 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
 | 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
 
+## Approved by Ben, 13 November 2026, 21:12 UTC (places of power desk)
+
+Ben accepted every recommendation on the places of power desk (https://claude.ai/artifact/Rpg8GLzTRNYYuTf2HFHJ5F).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | How much a Node gives each week (B3451) | 4 Quintessence a dot to 1449, 3 to 1699, 2 to 2022 (the M20 suggestion), 1 in the World of Future Darkness; half free, half Tass; each Node can take its own rate | Change NODE_RATES in modules/wodx-storyteller/scripts/power-rules.mjs |
+| 2026-11-13 | How much a Node holds before it stops filling (B3452) | Four weeks of output | Change NODE_CAP_WEEKS |
+| 2026-11-13 | Chantry names by era (B3453) | Covenant before 1466, chantry after; Craftmasons' lodge before 1325, Order of Reason house to 1898, Construct from 1899 | Change chantryName |
+| 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
+| 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1198,8 +1210,3 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | How fast should towns change, and how often do disasters strike? (B3281 to B3284) | Unrest eases a tenth a week, prosperity a fiftieth; fire 1 in 900 a week for timber towns (more in the dry season), failed harvests 1 in 12 a year before 1750; riots from unrest 3.5, a rising after four weeks at the height | Change the numbers in modules/wodx-storyteller/scripts/town-rules.mjs |
 | 2026-11-13 | Which plagues reach which parts of the world? (B3283) | A rounded list from the Black Death to the 1918 influenza, with smallpox in the Americas and cholera and plague in Asia, each striking a town once | Edit TOWN_OUTBREAKS in town-rules.mjs |
 | 2026-11-13 | Should a failed harvest change the market by itself? (B3282) | Yes: bread short and half again as dear in that town's market, put back by the Towns card's Undo | Drop shortBread from towns.mjs |
-| 2026-11-13 | How much a Node gives each week (B3451) | 4 Quintessence a dot to 1449, 3 to 1699, 2 to 2022 (the M20 suggestion), 1 in the World of Future Darkness; half free, half Tass; each Node can take its own rate | Change NODE_RATES in modules/wodx-storyteller/scripts/power-rules.mjs |
-| 2026-11-13 | How much a Node holds before it stops filling (B3452) | Four weeks of output | Change NODE_CAP_WEEKS |
-| 2026-11-13 | Chantry names by era (B3453) | Covenant before 1466, chantry after; Craftmasons' lodge before 1325, Order of Reason house to 1898, Construct from 1899 | Change chantryName |
-| 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
-| 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
