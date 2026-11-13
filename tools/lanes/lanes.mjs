@@ -6,6 +6,7 @@
  *   node tools/lanes/lanes.mjs start    --lane 2          hidden server on the lane's port
  *   node tools/lanes/lanes.mjs stop     --lane 2          stops a server this tool started (never anything else)
  *   node tools/lanes/lanes.mjs deploy   --lane 2          mirrors the repo's modules and system into the lane, restarts, accepts
+ *                                      [--if-changed]    only when the lane's code or gates differ from the checkout; a busy lane is skipped
  *   node tools/lanes/lanes.mjs snapshot --from 1          copies a stopped lane's world to the shared known-good copy
  *   node tools/lanes/lanes.mjs reset    --lane 2 [--if-free]   backs the lane's world up, puts known-good back, restarts, accepts
  *   node tools/lanes/lanes.mjs accept   --lane 2          records the running world as the lane's clean fingerprint
@@ -123,7 +124,18 @@ try {
     case "stop": await stop(lane) || console.log(`Lane ${lane.id} was not running.`); break;
     case "accept": await accept(lane); break;
     case "deploy": {
-      lockOrDie(lane);
+      if ( flag("if-changed") ) {
+        const cache = path.join(laneDir(lane), "cache"), expected = expectedCode(repo, cache);
+        const gateSame = fs.readdirSync(path.join(repo, "tools", "gate")).every(f => {
+          const dst = path.join(lane.dataPath, "Data", "wodx-gate", f);
+          return fs.existsSync(dst) && fs.readFileSync(dst).equals(fs.readFileSync(path.join(repo, "tools", "gate", f)));
+        });
+        if ( !diffCode(expected, codeFingerprint(lane.dataPath, {only: new Set(Object.keys(expected)), cacheDir: cache})).length && gateSame ) {
+          console.log(`Lane ${lane.id} already runs this checkout; no deploy needed.`);
+          break;
+        }
+      }
+      lockOrDie(lane, flag("if-changed"));
       try { await stop(lane); deployFiles(lane); await start(lane); await accept(lane); } finally { releaseLock(lane); }
       break;
     }
