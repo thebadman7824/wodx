@@ -496,3 +496,58 @@ export function diffResources(system, flat, res) {
     }
     return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Beginner view (3.60.0, B2807 to B2811)                             */
+/* ------------------------------------------------------------------ */
+
+/** How many actions the front row holds. */
+export const FRONT_N = 5;
+/** The front row: the first actions of the Act band, in the line's own order (MENU_PLAN), at most n. */
+export function frontRow(g, n = FRONT_N) {
+    const act = g?.bands?.find(b => b.id === "act")?.buttons ?? g?.bands?.[0]?.buttons ?? [];
+    return act.slice(0, n);
+}
+
+/**
+ * What an action costs, in a few words, for the line under its button. Only actions whose cost is fixed are listed;
+ * the rest say nothing rather than guess (a power's own window shows its cost before the roll).
+ */
+export const COST = {
+    "action": "Costs nothing, unless you spend Willpower.",
+    "api:quickCheck": "Costs nothing.",
+    "api:withPerson": "Costs nothing, unless you use a power.",
+    "api:useDiscipline": "Blood or Willpower when the power asks for it.",
+    "api:feed": "Gains blood. The vessel may be hurt.",
+    "api:hunt": "Takes time in the night.",
+    "api:spendBlood": "Spends blood.",
+    "uses:willpower": "Spends Willpower.",
+    "api:frenzy": "Costs nothing. Willpower can hold the Beast back for a turn.",
+    "api:rotschreck": "Costs nothing. Willpower can hold the fear back for a turn.",
+    "api:seduction": "Costs nothing.",
+    "api:torpor": "Blood to rise early.",
+    "api:downtime": "Takes nights between stories."
+};
+/** The line shown under an action's button in Beginner view: what it does, then its cost when fixed. */
+export function actionLine(spec, desc = "") {
+    const d = String(desc ?? "").trim();
+    const c = COST[spec] ?? "";
+    return [d ? (/[.!?]$/.test(d) ? d : `${d}.`) : "", c].filter(Boolean).join(" ");
+}
+
+/**
+ * The plain first line of a roll card in Beginner view. verdict: {text, tone} from verdictOf. Says what the result
+ * means in a sentence; the dice and modifiers fold below it.
+ */
+export function plainLine(verdict) {
+    const t = String(verdict?.text ?? "").trim();
+    if (!t) return "";
+    if (/botch/i.test(t)) return "Botch: it goes wrong, worse than a plain failure.";
+    if (/^failure/i.test(t)) return "Failure: it does not work this time.";
+    const n = Number.parseInt(t, 10);
+    if (Number.isFinite(n) && n > 0) {
+        const how = n === 1 ? "barely" : n === 2 ? "well enough" : n === 3 ? "well" : n === 4 ? "very well" : "brilliantly";
+        return `Success: it works, ${how} (${n} success${n === 1 ? "" : "es"}).`;
+    }
+    return "";
+}

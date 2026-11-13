@@ -12,9 +12,13 @@
  *   6. Find anything finds the Clock, a setting (My view) and the Kindred's Feed action
  *   7. Actions: menuEntries lists the Kindred's menu with common checks; every spec is unique
  *   8. back to Full: the drawers are gone and the token menu is as before
+ *   9. Beginner Actions menu: a Common row of five, the groups folded behind Every action, a line under each button
+ *  10. a roll card says the result in a sentence first, with the dice folded
+ *  11. a weather card folds to one line for a Beginner player; a roll card does not
+ *  12. the Action window folds More options in Beginner view and opens it in Full view
  * Result: Data/wodx-gate/gateplayerview-result.json.
  */
-const N = 8;
+const N = 12;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R) {
@@ -89,6 +93,39 @@ export async function run() {
     const ents = await A.api.menuEntries(actor);
     const specs = ents.map(e => e.spec);
     ok("7. actions entries", ents.length > 10 && specs.some(s => s.startsWith("check:")) && new Set(specs).size === specs.length, {n: ents.length, sample: ents.slice(0, 6).map(e => e.label)});
+
+    // Step 2 of the desk (B2807 to B2811), still in the Beginner preview
+    const dlg = () => [...foundry.applications.instances.values()].filter(a => a.element?.querySelector?.(".wodx-menu2, form [name=diff]"));
+    A.api.menu({actor}); await sleep(1200);
+    const mw = dlg().find(a => a.element.querySelector(".wodx-menu2"));
+    const m2 = mw?.element.querySelector(".wodx-menu2");
+    const front = [...(m2?.querySelectorAll(".vta-front button[data-k]") ?? [])].map(b => b.dataset.k);
+    ok("9. beginner actions menu", front.length === 5 && m2.classList.contains("vta-folded") && !!m2.querySelector(".vta-all-toggle") && !!m2.querySelector(".vta-btn-line"),
+      {front, lines: m2?.querySelectorAll(".vta-btn-line").length ?? 0});
+    await mw?.close?.();
+
+    const msgs = [];
+    const el = id => ui.chat.element?.querySelector(`[data-message-id="${id}"]`) ?? document.querySelector(`#chat [data-message-id="${id}"]`);
+    const card = `<div class="vta-card wodx-x"><header class="vta-head"><h3>WoDX gate roll</h3><span class="vta-verdict good">2 successes</span></header><div class="vta-body"><div class="vta-sec"><b>Wits + Alertness</b>: 5 dice, diff 6<div class="vta-parts">gate</div><div class="vta-dice"><span class="vta-die hit">8</span></div><div class="vta-res good">2 successes</div></div></div></div>`;
+    msgs.push(await ChatMessage.create({content: card, whisper: [game.user.id], speaker: {alias: "WoDX gate"}}));
+    msgs.push(await ChatMessage.create({content: "<p>WoDX gate: a cold wind off the hills, and rain later in the night, heavy by the small hours.</p>", whisper: [game.user.id], speaker: {alias: "Weather"}}));
+    await sleep(800);
+    const rc = el(msgs[0].id), wc = el(msgs[1].id);
+    ok("10. plain roll card", /^Success: it works, well enough/.test(rc?.querySelector(".vta-plain")?.textContent ?? "") && !!rc?.querySelector("details.vta-fold .vta-dice"),
+      {plain: rc?.querySelector(".vta-plain")?.textContent});
+    ok("11. quieter chat", !!wc?.querySelector("details.wodx-world-fold > summary") && !rc?.querySelector("details.wodx-world-fold"), {summary: wc?.querySelector("details.wodx-world-fold > summary")?.textContent});
+    for ( const m of msgs ) await m.delete();
+
+    A.api.action({actor}); await sleep(1000);
+    let aw = dlg().find(a => a.element.querySelector("details.vta-more-opts"));
+    const begFold = aw ? !aw.element.querySelector("details.vta-more-opts").open : null;
+    await aw?.close?.();
+    V.preview("full"); await sleep(200);
+    A.api.action({actor}); await sleep(1000);
+    aw = dlg().find(a => a.element.querySelector("details.vta-more-opts"));
+    const fullOpen = aw ? aw.element.querySelector("details.vta-more-opts").open : null;
+    await aw?.close?.();
+    ok("12. more options", begFold === true && fullOpen === true, {begFold, fullOpen});
 
     V.preview("full"); await redraw();
     await canvas.hud.token.bind(tok); await sleep(600);

@@ -160,6 +160,7 @@ Hooks.once("ready", async () => {
   playerTools.installToolFilter();
   playerView.installViewFilter();
   playerView.installHudGroups();
+  playerView.installQuietChat();
   automation.initAutomation();
   waiting.initWaiting();
   await gen.ensureSeed();

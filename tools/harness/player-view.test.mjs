@@ -71,3 +71,37 @@ test("the Storyteller's window lists every drawer button", async () => {
   const src = (await import("node:fs")).readFileSync(join(root, "modules/wodx-chronicle/scripts/player-tools.mjs"), "utf8");
   for ( const name of Object.keys(R.TOOL_GROUP) ) assert.ok(src.includes(`"${name}"`), `${name} missing from PLAYER_TOOLS`);
 });
+
+const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
+
+test("actions front row: the line's first five acts, in its own order", () => {
+  const sections = [["Do", TR.MENU_PLAN.kindred.act.map(s => [s, s, "fa-x"])]];
+  const g = TR.groupMenu("kindred", sections);
+  assert.deepEqual(TR.frontRow(g).map(b => b.spec), TR.MENU_PLAN.kindred.act.slice(0, 5));
+  assert.deepEqual(TR.frontRow({bands: []}), []);
+});
+
+test("action line: what it does, then a fixed cost; no cost guessed", () => {
+  assert.equal(TR.actionLine("api:spendBlood", "Spend blood to heal"), "Spend blood to heal. Spends blood.");
+  assert.equal(TR.actionLine("api:somethingElse", "Does a thing."), "Does a thing.");
+  assert.equal(TR.actionLine("api:somethingElse", ""), "");
+});
+
+test("plain line on a roll card", () => {
+  assert.match(TR.plainLine({text: "BOTCH"}), /^Botch/);
+  assert.match(TR.plainLine({text: "Failure"}), /^Failure/);
+  assert.equal(TR.plainLine({text: "1 success"}), "Success: it works, barely (1 success).");
+  assert.equal(TR.plainLine({text: "3 successes: good"}), "Success: it works, well (3 successes).");
+  assert.equal(TR.plainLine(null), "");
+});
+
+test("quieter chat: world cards fold, rolls never", () => {
+  assert.equal(R.isWorldCard({flags: {"wodx-npc": {overheard: {a: 1}}}}), true);
+  assert.equal(R.isWorldCard({alias: "Weather"}), true);
+  assert.equal(R.isWorldCard({alias: "Weather", rolls: 1}), false);
+  assert.equal(R.isWorldCard({flags: {"wodx-atmosphere": {x: 1}}, html: '<div class="vta-dice"></div>'}), false);
+  assert.equal(R.isWorldCard({alias: "Marta"}), false);
+  assert.equal(R.oneLine("a b c"), "a b c");
+  const long = R.oneLine("word ".repeat(60));
+  assert.ok(long.endsWith("...") && long.length <= 94);
+});

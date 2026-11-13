@@ -190,6 +190,28 @@ function groupHud(root) {
 }
 
 /* -------------------------------------------- */
+/*  Quieter chat                                */
+/* -------------------------------------------- */
+
+/** In Beginner view, a player sees world cards as one line that opens on a click. The message is untouched. */
+export function installQuietChat() {
+  Hooks.on("renderChatMessageHTML", (m, el) => {
+    try {
+      if ( game.user.isGM && !preview ) return;
+      if ( currentView() !== "beginner" ) return;
+      const root = el?.[0] ?? el;
+      const body = root?.querySelector?.(".message-content");
+      if ( !body || body.querySelector(":scope > details.wodx-world-fold") ) return;
+      if ( !R.isWorldCard({flags: m.flags, alias: m.speaker?.alias ?? "", rolls: m.rolls?.length ?? 0, html: body.innerHTML}) ) return;
+      const d = document.createElement("details"); d.className = "wodx-world-fold";
+      const sum = document.createElement("summary"); sum.textContent = R.oneLine(body.textContent);
+      d.append(sum, ...body.childNodes);
+      body.append(d);
+    } catch (e) { console.warn("WoDX | quieter chat", e); }
+  });
+}
+
+/* -------------------------------------------- */
 /*  Find anything                               */
 /* -------------------------------------------- */
 

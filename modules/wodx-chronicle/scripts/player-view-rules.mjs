@@ -131,3 +131,26 @@ export function search(entries = [], q = "", limit = 40) {
 
 /** The kinds of thing Find anything lists, as shown beside each result. */
 export const KINDS = {tool: "Button", action: "Action", page: "Library and journals", setting: "Setting"};
+
+/* Quieter chat (B2810): world cards fold to one line for players in Beginner view. */
+export const WORLD_ALIASES = ["Weather", "The dawn"];
+/**
+ * Is this chat message a world card (weather, the dawn, overheard talk, an NPC's passing remark, an NPC routine)?
+ * Rolls and anything with dice are never folded. m: {flags, alias, rolls, html}.
+ */
+export function isWorldCard({flags = {}, alias = "", rolls = 0, html = ""} = {}) {
+  if ( rolls ) return false;
+  if ( /vta-dice|vta-res|vta-sec/.test(String(html)) ) return false;
+  const npc = flags?.["wodx-npc"] ?? {};
+  if ( npc.overheard || npc.bark || npc.routine ) return true;
+  if ( flags?.["wodx-atmosphere"] ) return true;
+  return WORLD_ALIASES.includes(String(alias));
+}
+/** The one line a folded card shows: its first words, cut at a word near n characters. */
+export function oneLine(text = "", n = 90) {
+  const t = String(text).replace(/\s+/g, " ").trim();
+  if ( t.length <= n ) return t;
+  const cut = t.slice(0, n);
+  const sp = cut.lastIndexOf(" ");
+  return `${(sp > n / 2 ? cut.slice(0, sp) : cut).replace(/[,;:.]$/, "")}...`;
+}

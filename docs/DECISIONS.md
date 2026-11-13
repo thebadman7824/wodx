@@ -3768,3 +3768,28 @@ The drawers are drawn again when the player's assigned character changes. A sele
 
 Reverse: The updateUser hook in player-view.mjs.
 
+## B2807. The Actions menu in Beginner view (2026-11-13)
+In a player's Beginner view the Actions menu opens on a Common row: the first five actions of the line's Act band, in the order the menu already uses (for a Kindred: Action, Common checks, the person beside you, a Discipline, Feed). Pinned and lately used come next. The other groups fold behind an Every action button; typing in the search shows them all at once. Full view is the menu as before.
+
+Reverse: frontRow and the beginner option of menuFor (profile-menus.js).
+
+## B2808. What each action does and costs (2026-11-13)
+In Beginner view each Actions menu button has a line under its name: the action's own description, then its cost where the cost is always the same (COST in theme-rules.js: spending blood, spending Willpower, the hunt's time, and so on). Where the cost depends on the power or the roll, the line says nothing about cost rather than guess; the power's own window shows it.
+
+Reverse: actionLine and COST in theme-rules.js.
+
+## B2809. Roll cards say the result first (2026-11-13)
+In Beginner view a roll card on the player's screen opens with what the result means in a sentence (a botch goes wrong worse than a failure; one success is barely, two well enough, three well, four very well, five or more brilliantly, close to V20's degrees of success). The dice and the modifiers fold under Dice and details. The chat message itself is untouched, so other players and the Storyteller see what they chose.
+
+Reverse: plainCards in wodx-actions main.js, plainLine in theme-rules.js.
+
+## B2810. Quieter chat for players (2026-11-13)
+In Beginner view a player sees world cards as one line that opens on a click: weather, the dawn, overheard talk, an NPC's passing remark and NPC routine reports. A message with a roll or dice is never folded, and nothing aimed at the player alone is matched by these rules.
+
+Reverse: isWorldCard in player-view-rules.mjs.
+
+## B2811. More options in the roll windows (2026-11-13)
+The Action window and the Common checks window keep the pool, difficulty and type of action in view and put bonus dice, multiple actions, specialty, Willpower, wound penalties, the Road aura, daytime, the automatic success and the description under More options: folded in Beginner view, open in Full view. The dramatic system still fills the pool and difficulty. Skipping the window from a quick-roll button comes with the quick rolls on the sheet (desk item b1).
+
+Reverse: The vta-more-opts details in action() and quickCheck() (wodx-actions main.js).
+
