@@ -8,3 +8,4 @@ The token sprites are drawn by these Python scripts (numpy and Pillow), outside 
 - items.py: matches every clothing, armor and weapon item of the Library tables to pieces of wear.py.
 
 A sheet is 8 walk frames across by 4 facings down (back, left, front, right), each frame 96 by 112 pixels. The sheets in modules/wodx-paperdoll/sprites were exported from here (docs/DECISIONS.md B2560).
+- batch.py: draws a sprite for every character on a roster the game writes (python3 batch.py <roster.json> <out folder>); proto_fx.py: the power effect sheets; proto_attacks.py: the six test figures' attack sheets.

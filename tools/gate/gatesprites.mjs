@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 10;
+const N = 11;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -112,6 +112,14 @@ export async function run() {
       await sleep(1200);
       ok("10. effect", fx === "mind-gaze" && !!lit && lit.width > 0 && Math.abs(lit.width - Math.abs(mesh?.width ?? 0)) < 1 && !after && own === "blood-bolt",
         {fx, lit, mesh: mesh ? {width: mesh.width, height: mesh.height} : null, after: after ?? null, own, other: A.fxFor?.({power: "Arms of the Abyss", group: "Obtenebration"})});
+    }
+    // 11. a sprite for every character: the roster is written for the batch, and what a batch drew is learned
+    {
+      const r = A.roster(), saved = await A.saveRoster(), back = saved ? await fetch(`${saved.path}?t=${Date.now()}`, {cache: "no-store"}).then(x => x.ok ? x.json() : null) : null;
+      const learned = await A.loadOwn(), kinds = {};
+      for ( const a of r.actors ) kinds[a.kind] = (kinds[a.kind] ?? 0) + 1;
+      ok("11. roster", r.actors.length === game.actors.size && back?.actors?.length === r.actors.length && Number.isInteger(learned),
+        {actors: r.actors.length, kinds, saved, learned, dressed: r.actors.filter(a => a.worn?.length).length, armed: r.actors.filter(a => a.held?.length).length, looks: r.actors.filter(a => a.look?.skin).length});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }

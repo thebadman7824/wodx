@@ -22,8 +22,15 @@ export const SHEETS = {
   "lady-1888": "Lady, 1888"
 };
 const FOLDER = "modules/wodx-paperdoll/sprites/proto";
-export const sheetPath = name => `${FOLDER}/${name}.png`;
-export const stillPath = name => `${FOLDER}/${name}-still.png`;
+/* A character's own sprite, drawn outside the game in batches (B2586): its sheets lie in the world's own folder under
+   the actor's id, and its name here is "own-" and that id. */
+const OWN = {};
+export const ownName = id => `own-${id}`;
+export const isOwn = name => Object.hasOwn(OWN, name);
+const stem = name => isOwn(name) ? `${OWN[name].folder}/${OWN[name].id}` : `${FOLDER}/${name}`;
+const stamp = name => isOwn(name) && OWN[name].key ? `?k=${OWN[name].key}` : "";
+export const sheetPath = name => `${stem(name)}.png${stamp(name)}`;
+export const stillPath = name => `${stem(name)}-still.png`;
 
 /** The facing for a move of (dx, dy), y growing downward. Near a diagonal the figure keeps the facing it had. */
 export function facingOf(dx, dy, was = "down") {
@@ -77,7 +84,7 @@ export const ACTS = {
   "lady-1888": ["thrust"]
 };
 export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing"};
-export const actPath = (name, act) => `${FOLDER}/${name}.${act}.png`;
+export const actPath = (name, act) => `${stem(name)}.${act}.png${stamp(name)}`;
 /** The move a sprite plays: the one asked for if it knows it, else its first. Null when it knows none. */
 export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l[0] ?? null); };
 /** The frame of an attack so many thousandths of a second after it began; null once it is over. */
@@ -148,4 +155,44 @@ export function fxFor(info = {}) {
   const words = `${info.power ?? ""} ${info.group ?? ""}`.toLowerCase();
   if ( words.trim() ) for ( const [re, fx] of FX_WORDS ) if ( re.test(words) ) return fx;
   return FX_KIND[info.kind] ?? FX_LINE[info.line] ?? "mind-glyph";
+}
+
+/* ---- a sprite for every character (B2586) ----
+ * The game writes a roster of its characters (rosterOf for each), tools/sprites/batch.py draws them outside the game,
+ * and the game learns the sheets from the manifest that the batch leaves beside them.
+ */
+/** Take in a batch's manifest: every sprite in it becomes "own-<actor id>". Returns how many were learned. */
+export function learn(folder, manifest) {
+  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; }
+  let n = 0;
+  for ( const [id, e] of Object.entries(manifest?.sprites ?? {}) ) {
+    if ( !/^[A-Za-z0-9]+$/.test(id) ) continue;
+    const name = ownName(id);
+    OWN[name] = {folder, id, key: /^[0-9a-f]+$/.test(e?.key ?? "") ? e.key : ""};
+    SHEETS[name] = String(e?.name ?? id);
+    ACTS[name] = (Array.isArray(e?.acts) ? e.acts : []).filter(a => Object.hasOwn(ACT_LABELS, a));
+    n++;
+  }
+  return n;
+}
+/** The sprites a token may be given by hand: the test figures, and the token's own character if it was drawn. */
+export const offered = actorId => Object.entries(SHEETS).filter(([k]) => !isOwn(k) || k === ownName(actorId));
+const POWERED = /vampire|werewolf|changing ?breed|mage|changeling|wraith|hunter|demon|mummy|exalted|spirit/i;
+/**
+ * One character for the roster, from plain facts: {id, name, type, skin, hair, items: [{name, type, worn}]}.
+ * Worn things that are not weapons are its dress, worn weapons are in its hands, and a creature is drawn as the
+ * animal its name says.
+ */
+export function rosterOf(c = {}) {
+  const items = (c.items ?? []).filter(i => i?.worn && i.name);
+  const arms = i => i.type === "Melee Weapon" || i.type === "Ranged Weapon";
+  const hex = v => /^[0-9a-f]{6}$/i.test(v ?? "") ? v.toLowerCase() : null;
+  const out = {id: String(c.id ?? ""), name: String(c.name ?? ""), kind: /^creature$/i.test(c.type ?? "") ? "animal" : "person"};
+  if ( out.kind === "person" ) {
+    out.look = {skin: hex(c.skin), hair: hex(c.hair)};
+    out.worn = items.filter(i => !arms(i)).map(i => i.name).sort();
+    out.held = items.filter(arms).map(i => i.name).sort();
+    out.powers = POWERED.test(c.type ?? "");
+  }
+  return out;
 }

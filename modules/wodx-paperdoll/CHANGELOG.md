@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.11.0 (a sprite for every character, drawn in batches outside the game: the game writes a roster of its characters with their skin and hair, what they wear and what they hold; tools/sprites/batch.py draws walk, still and attack sheets for each, people from their worn things and animals from their names; the game learns the sheets from the batch's manifest, offers a token its own character's sprite, and can dress a whole scene; not deployed)
 - 0.10.1 (shadow effects have a pale violet rim so they can be seen on a night map; found on the testbed; not deployed)
 - 0.10.0 (a power's effect fits the power: 84 effect sheets, twelve colours by seven shapes, laid over the figure's casting move; the look is read from the power's name and group, then its kind, then the character's line, so Dominate shows a violet gaze, Obtenebration rising shadow, a Gift pale green sparks, a wraith's Arcanos grey tendrils; the elder's casting sheet no longer carries a fixed blood bolt; not deployed)
 - 0.9.1 (sprite tokens play their casting move when a power is rolled from the Actions menu; attacks and powers rolled on a player's own computer now play too, sent by the computer that rolled them; not deployed)

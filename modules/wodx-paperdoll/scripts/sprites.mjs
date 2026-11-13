@@ -168,6 +168,7 @@ export function startSprites() {
   Hooks.on("wodxDamageApplied", onDamage);
   Hooks.on("wodxAttackRolled", onAttack);
   Hooks.on("wodxPowerShown", onPower);
+  loadOwn();
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
@@ -194,7 +195,7 @@ export async function clear(tokenDoc) {
 /** The Storyteller picks a sprite for a token from the token's own buttons (the figure icon). */
 export async function pick(tokenDoc) {
   const cur = tokenDoc.flags?.[MOD]?.sprite ?? "";
-  const opts = [["", "None, the token's own picture"], ...Object.entries(SR.SHEETS)].map(([v, l]) => `<option value="${v}"${v === cur ? " selected" : ""}>${l}</option>`).join("");
+  const opts = [["", "None, the token's own picture"], ...SR.offered(tokenDoc.actor?.id ?? tokenDoc.actorId)].map(([v, l]) => `<option value="${v}"${v === cur ? " selected" : ""}>${l}</option>`).join("");
   const content = `<p>The token shows a whole drawn figure that turns the way it moves and walks as it goes.</p><div class="form-group"><label for="wodx-sprite-pick">Sprite</label><select id="wodx-sprite-pick" name="sprite" data-fixed>${opts}</select></div>`;
   const name = await foundry.applications.api.DialogV2.wait({window: {title: `Sprite token: ${tokenDoc.name}`}, classes: ["wodx-dialog"], content, rejectClose: false,
     buttons: [{action: "ok", label: "Use this", default: true, callback: (ev, btn) => btn.form?.elements?.sprite?.value ?? ""}, {action: "cancel", label: "Cancel", callback: () => null}]});
@@ -215,4 +216,50 @@ export function addHudButton(hud, html) {
   col.append(b);
 }
 
-export const spriteApi = {give, clear, pick, play, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(id), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+/* ---- a sprite for every character (B2586): the roster out, the drawn sheets in ---- */
+const ownFolder = () => `worlds/${game.world.id}/wodx-sprites`;
+
+/** Learn the sheets the last batch drew for this world. Quietly nothing when no batch has run yet. */
+export async function loadOwn() {
+  try {
+    const r = await fetch(`${ownFolder()}/manifest.json?t=${Date.now()}`, {cache: "no-store"});
+    if ( !r.ok ) return SR.learn(ownFolder(), null);
+    const n = SR.learn(ownFolder(), await r.json());
+    bases.clear(); frames.clear();
+    return n;
+  } catch (e) { console.warn(`${MOD} | own sprites`, e); return 0; }
+}
+
+/** Every character of the world as the batch needs it. */
+export function roster() {
+  const actors = [];
+  for ( const a of game.actors ?? [] ) {
+    const c = a.flags?.[MOD]?.look?.colors ?? {};
+    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair,
+      items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive)}))}));
+  }
+  return {world: game.world.id, made: new Date().toISOString(), actors};
+}
+
+/** Write the roster where the batch reads it: the world's wodx-sprites folder. The Storyteller's computer only. */
+export async function saveRoster() {
+  if ( !game.user?.isGM ) return null;
+  const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker, r = roster();
+  try { await FP.createDirectory("data", ownFolder()); } catch (e) { /* already there */ }
+  await FP.upload("data", ownFolder(), new File([JSON.stringify(r, null, 1)], "roster.json", {type: "application/json"}), {}, {notify: false});
+  return {path: `${ownFolder()}/roster.json`, actors: r.actors.length};
+}
+
+/** Give every token of a scene its character's own sprite, where one was drawn and the token has none yet. */
+export async function dress(scene = canvas.scene) {
+  if ( !game.user?.isGM ) return 0;
+  let n = 0;
+  for ( const t of scene?.tokens ?? [] ) {
+    const name = SR.ownName(t.actorId);
+    if ( t.flags?.[MOD]?.sprite || !SR.isOwn(name) ) continue;
+    await give(t, name); n++;
+  }
+  return n;
+}
+
+export const spriteApi = {give, clear, pick, play, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(id), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
