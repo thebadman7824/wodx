@@ -1,6 +1,10 @@
 /**
  * Runs gates on whichever testbed lane is free, after a drift check.
  *   node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane 2] [--wait 30] [--repo <checkout>] [--channel msedge]
+ *   node tools/lanes/run-gate.mjs --touched [--base origin/main]   only the gates the checkout's changes need (B3083)
+ *   node tools/lanes/run-gate.mjs --all [--shard 1/2]              every gate in the map (the nightly full run), or
+ *                                                                 one share of them so two lanes split the list
+ *   --report <file>       also write each gate's line and the exit code to this file
  *
  * 1. Picks the first lane in lanes.json that is up and not locked (or the one --lane names) and locks it.
  *    --wait N keeps looking for N minutes when every lane is busy.
@@ -19,15 +23,31 @@ import path from "node:path";
 import {loadConfig, getLane, laneDir, laneUrl, acquireLock, releaseLock, pickLane, isUp, codeFingerprint, expectedCode,
   diffCode, diffRunning, WORLD_PROBE, worldFingerprint, diffWorld, readJson, writeJson, printDiffs, REPO} from "./lib.mjs";
 import {openGM} from "./browser.mjs";
+import {gateMap, touched, gatesFor, changedPaths} from "./gate-map.mjs";
+import fs from "node:fs";
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const valued = new Set(["lane", "wait", "repo", "channel"]);
-const gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
+const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report"]);
+let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
+if ( args.includes("--all") ) gates.push(...Object.keys(gateMap()));
+if ( args.includes("--touched") ) {
+  const t = touched(changedPaths(opt("base") ?? "origin/main", path.resolve(opt("repo") ?? REPO)));
+  const list = gatesFor(t.modules, t.gates);
+  console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
+  if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
+  gates.push(...list);
+}
+gates = [...new Set(gates)];
+const shard = /^(\d+)\/(\d+)$/.exec(opt("shard") ?? "");
+if ( shard ) gates = gates.filter((_, i) => i % +shard[2] === +shard[1] - 1);
 if ( !gates.length || gates.some(g => !/^[\w-]+$/.test(g)) ) {
-  console.error("Usage: node tools/lanes/run-gate.mjs <gate> [<gate> ...] [--lane N] [--wait minutes]");
+  console.error("Usage: node tools/lanes/run-gate.mjs <gate> [<gate> ...] | --touched | --all [--shard i/n] [--lane N] [--wait minutes]");
   process.exit(2);
 }
+const reportFile = opt("report");
+const report = line => { if ( reportFile ) fs.appendFileSync(reportFile, line + "\n"); };
+report(`==== ${new Date().toISOString()} ${gates.length} gate(s)${shard ? ` shard ${shard[0]}` : ""}`);
 const cfg = loadConfig();
 const repo = path.resolve(opt("repo") ?? REPO);
 const only = opt("lane") ? [String(opt("lane"))] : null;
@@ -76,6 +96,7 @@ try {
     printDiffs("Deployed files that do not match the repo", codeDiffs);
     printDiffs("World differences from the clean fingerprint", world.strict);
     code = 4;
+    report(`DRIFT on lane ${lane.id}: no gate was run (see ${path.join(laneDir(lane), "drift.json")})`);
   } else {
     console.log(`Lane ${lane.id} matches the repo and its clean fingerprint.`);
     for ( const gate of gates ) {
@@ -91,8 +112,9 @@ try {
         return {summary: typeof summary === "string" ? summary : JSON.stringify(summary ?? null), error, moved, back: game.time.worldTime === t0};
       }, gate);
       const clock = out.moved ? ` (clock moved ${out.moved}s, ${out.back ? "put back" : "NOT put back"})` : "";
-      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
+      if ( out.error ) { console.log(`${gate}: ERROR ${out.error}${clock}`); report(`${gate}: ERROR ${out.error}${clock}`); code = 1; continue; }
       console.log(`${gate}: ${out.summary}${clock}`);
+      report(`${gate}: ${out.summary}${clock}`);
       const m = /(\d+)\s*\/\s*(\d+)\s+passed/.exec(out.summary);
       if ( (m && m[1] !== m[2]) || !out.back ) code = 1;
     }
@@ -111,4 +133,5 @@ try {
   await browser?.close().catch(() => {});
   release();
 }
+report(`exit ${code} on lane ${lane.id}`);
 process.exit(code);
