@@ -163,7 +163,8 @@ export const OPS = {
   circ: {stage: "top", slot: "head", fn: (c, col, gem = null, y0 = 17) => { for ( let x = CX - 13; x <= CX + 13; x++ ) over(c.F, x, y0 + Math.round(Math.abs(x - CX) / 8), (x % 3) ? col : mix(col, [0, 0, 0], 0.3)); if ( gem ) c.F.put(CX, y0 - 1, gem); }},
   collar: {stage: "top", slot: "collar", fn: (c, col, style = "plain") => { const y0 = c.S.chin + 2; for ( let y = y0; y < 64; y++ ) for ( let x = 0; x < 64; x++ ) if ( c.F.kindAt(x, y) === "cloth" ) {
     const on = style === "plain" ? y < y0 + 3 : style === "stripe" ? (x + y) % 4 === 0 : style === "check" ? ((x >> 1) + (y >> 1)) % 2 === 0 : style === "trim" ? y === y0 + 1 || y === y0 + 2 : style === "dots" ? y < y0 + 4 && (x * 3 + y * 5) % 5 === 0 : style === "whole";
-    if ( on ) c.F.put(x, y, col); } }},
+    if ( style === "check" ) { const k = ((x >> 2) * 7 + Math.floor((y - y0) / 3) * 5) % 3; if ( k < 2 ) c.F.put(x, y, k ? mix(col, [20, 16, 24], 0.45) : col); }   // patches 4 by 3, never a 1-pixel chequer
+    else if ( on ) c.F.put(x, y, col); } }},
   brow: {stage: "top", slot: "brows", fn: (c, col, style = "heavy") => { for ( const [ex, sd] of EYES ) for ( let dx = -3; dx <= 3; dx++ ) {
     const y = style === "arched" ? EYE_Y - 4 - (Math.abs(dx) < 2 ? 1 : 0) : style === "slant" ? EYE_Y - 4 + Math.round(dx * sd * 0.5) : EYE_Y - 4;
     over(c.F, ex + dx, y, col); if ( style === "heavy" ) over(c.F, ex + dx, y - 1, col); } }},
