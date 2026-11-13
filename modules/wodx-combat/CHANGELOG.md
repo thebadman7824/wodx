@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.27.0 (When a fight ends, the after-action card also writes it into WoDX Chronicle's Legends book as a deed (won when a player character is still up and every other fighter is down) and notes each player character's harm for the end-of-night experience draft in WoDX Storyteller (B3171))
 - 3.26.0 (a night after bad dreams (the Nightmares Flaw, from WoDX Storyteller) takes a die from attacks (B2911); not deployed)
 - 3.25.0 (a Crippled arm, hand or leg adds +2 difficulty to attacks made with it; wounds that add up to three lethal or aggravated levels on one part get the maiming offer once; the Crippled effect comes off when the part heals. B2902, B2903)
 - 3.24.1 (the attack window no longer says "Black powder:" twice in front of each old gun; testbed run 2026-11-13: gatehuntpowder 8/8)

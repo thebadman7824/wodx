@@ -204,7 +204,7 @@ Hooks.once("ready", () => {
     tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     hand: {open: Hand.handDialog, run: Hand.runTool, tools: Hand.TOOLS, addTool: Hand.addTool, glance: () => Hand.GlanceApp.open(), call: Hand.callRoll, callDialog: Hand.callRollDialog,
-      answer: Hand.answerAsk, preflight: () => Hand.PreflightApp.open(), snapshot: Hand.snapshot, wrapUp: Hand.wrapUpDialog, timer: () => Hand.TimerApp.open(),
+      answer: Hand.answerAsk, preflight: () => Hand.PreflightApp.open(), snapshot: Hand.snapshot, wrapUp: Hand.wrapUpDialog, noteFight: Hand.noteFight, timer: () => Hand.TimerApp.open(),
       startTimer: Hand.startTimer, pauseTimer: Hand.pauseTimer, resumeTimer: Hand.resumeTimer, stopTimer: Hand.stopTimer, readTimer: Hand.readTimer, macros: Hand.makeMacros, sheetOf: Hand.sheetOf},
     between: {prep: Between.prepDialog, writePrep: Between.writePrep, prepSections: Between.prepSections, preload: Between.preload,
       kits: Between.kits, saveKit: Between.saveKit, removeKit: Between.removeKit, runKit: Between.runKit, kitsDialog: Between.kitsDialog,
