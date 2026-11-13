@@ -91,15 +91,28 @@ export async function run() {
     await toTurn(T.hero);
     // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
     await game.settings.set(MOD, "conductorGrace", 4);
+    // What the step starts from is written down, so a failure says why: who has the turn, a hold left over, harm, the conductor's own reason
+    const heroC = combat.combatants.find(c => c.tokenId === T.hero.id);
+    const heldBefore = !!heroC?.getFlag(MOD, "held");
+    if ( heldBefore ) await heroC.unsetFlag(MOD, "held");
     await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(1500);
-    const id = combat.combatant?.id;
+    if ( combat.combatant?.id !== heroC?.id ) { await settle(); await toTurn(T.hero); await game.settings.set(MOD, "turnConductor", "everyone"); await sleep(1500); }
+    const id = combat.combatant?.id, t0 = Date.now(), log = [];
+    const dmg = a => { const d = a?.system?.health?.damage ?? {}; return (Number(d.bashing) || 0) + (Number(d.lethal) || 0) + (Number(d.aggravated) || 0); };
+    const start = {turn: curName(), isHero: id === heroC?.id, owner: !!heroC?.actor?.hasPlayerOwner, heldBefore, damage: dmg(heroC?.actor), defeated: !!heroC?.isDefeated, why: CD().state().why ?? null};
     let sawCount = false;
-    const hk = Hooks.on("updateCombat", c => { if ( c.id === combat.id && c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true; });
+    const hk = Hooks.on("updateCombat", (c, ch) => { if ( c.id !== combat.id ) return;
+      if ( c.getFlag(MOD, "conductor")?.graceEndsAt ) sawCount = true;
+      if ( "turn" in ch || "round" in ch ) log.push({ms: Date.now() - t0, turn: c.combatant?.name, round: c.round, why: CD().state().why ?? null}); });
     try {
-      await C().quickAttack({attacker: T.hero, target: T.fighter});
+      let attack = null;
+      try { const r = await C().quickAttack({attacker: T.hero, target: T.fighter}); attack = r == null ? "nothing came back" : "done"; } catch (e) { attack = `failed: ${e.message}`; }
+      const attackMs = Date.now() - t0;
       const counting = await waitFor(() => sawCount || !!combat.getFlag(MOD, "conductor")?.graceEndsAt, 8000);
+      const whyMid = CD().state().why ?? null, flagMid = combat.getFlag(MOD, "conductor") ?? null;
       const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
-      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended, {counting, ended, nowTurn: curName()});
+      ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended,
+        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, grace: game.settings.get(MOD, "conductorGrace")});
     } finally { Hooks.off("updateCombat", hk); }
     await game.settings.set(MOD, "conductorGrace", 2);
     await game.settings.set(MOD, "turnConductor", "npc"); await sleep(600);
