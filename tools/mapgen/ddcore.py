@@ -28,6 +28,9 @@ def init(seed, asset_list):
     return R
 
 def asset(name, kind="objects"):
+    if "/textures/" in name:                       # a full path (the furnishing catalogue gives these)
+        USED.add(name.split("/")[0])
+        return "res://packs/" + name
     hits = [a for a in ASSETS if a.endswith("/" + name) and f"/textures/{kind}/" in a]
     if len(hits) > 1 and len({h.split("/")[0] for h in hits}) > 1:   # the same file in two packs: Forgotten Adventures first
         fa = [h for h in hits if h.split("/")[0] in PACKS]
@@ -94,6 +97,7 @@ class Room:
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
         self.furnish_list = list(furnish)
+        self.ctx = None               # a furnishing context (furnishing.context_for): palette, role, wealth...
         self.items, self.blocked = [], []
         inset = .18   # wall half-thickness plus a little air
         self.ix, self.iy, self.iw, self.ih = x + inset, y + inset, w - 2 * inset, h - 2 * inset
@@ -268,6 +272,10 @@ def kind_of(room):
 
 def dress(room):
     global R
+    if getattr(room, "ctx", None):                 # furnished by purpose, palette and room value (furnishing.py)
+        import furnishing
+        furnishing.fill_room(room)
+        return
     room.dressing, room.lights = [], []
     kind = kind_of(room)
     if room.iw < 1.5 or room.ih < 1.5: return
@@ -359,6 +367,10 @@ SEATS = re.compile(r"Chair|Stool|Armchair|Couch|Sofa|Throne", re.I)
 INSET = re.compile(r"Brick_Oven_.*_2x2")     # drawn 2 squares wide and 1 deep in a 2 by 2 square
 NO_FACE = re.compile(r"Table|Desk|Counter|Rug_|Stairs|Stair|Barrel|Keg|Sack|Crate|Basket|Plant|Pot_|Tree|Bush|Hay|Bucket|Firewood|Lift|StairUp", re.I)
 
+def drawn(it):
+    """(asset, scale) to draw a room item with: the palette's piece when furnishing chose one, else its own."""
+    return it.get("draw", it["asset"]), it.get("draw_scale", it["scale"])
+
 def centre(it):
     """Where a piece's picture goes: the middle of its square, moved to its wall when the picture is shallower."""
     nx, ny = it.get("nudge", (0, 0))
@@ -444,8 +456,9 @@ def light(cx, cy, rng, colour="ffeccd8b", intensity=.7):
     LIGHTS.append({"position": v2(*at(cx, cy)), "range": rng, "intensity": intensity, "color": colour,
                    "texture": "res://textures/lights/fragments.png", "shadows": True, "node_id": NID()})
 
-def wall_with_portals(points, texture, openings, loop, kinds=None):
-    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
+def wall_with_portals(points, texture, openings, loop, kinds=None, textures=None):
+    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t.
+    textures: {opening kind: asset} from the building's palette (the age's doors and windows), else PORTALS."""
     nid = NID()
     pts = points + ([points[0]] if loop else [])
     portals = []
@@ -456,7 +469,9 @@ def wall_with_portals(points, texture, openings, loop, kinds=None):
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
-                tex, width = PORTALS[(kinds or {}).get(kind, kind)]
+                k = (kinds or {}).get(kind, kind)
+                tex, width = PORTALS[k]
+                tex = (textures or {}).get(k) or tex
                 d = ((bx - ax) / L, (by - ay) / L)
                 portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,

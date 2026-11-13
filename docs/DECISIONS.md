@@ -111,7 +111,7 @@ Next free block: B2730
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
-| B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
+| B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
@@ -122,6 +122,7 @@ Next free block: B2730
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 | B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
+| B2700-B2709 | Letters that take the journey time across the world map, by the ways each land has in each year | Storyteller |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 <!-- decision-index:end -->
 
@@ -3311,6 +3312,33 @@ Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the
 When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
 Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 
+## B2590. Furnish for what a building is for (2026-11-13, Ben's ask)
+Each building type has a main purpose and side purposes, the other chances it gives its owner (tools/mapgen/purposes.py). A burgher palace is a home and a place of trade, and also shows wealth, makes rivals feel small and wins clients over, so its salon, dining hall and counting room are lifted one tier and prefer display set pieces. Rooms take a role (front, work, private, service) from their kind, else from how many doors they are from the street.
+Reverse: purposes.purpose_of returns the plain fill purpose with no side purposes.
+
+## B2591. One palette per building, by age, region and wealth (2026-11-13, after Cataclysm's palettes)
+furnishing.apply picks one palette per building: the age band of the year (the settlement ages), the world region and the owner's wealth choose the style and a set of assets for each kind of piece, plus walls, floors, doors and the kind of light (rushlight to electric). Pieces made to last (barrels, crates, stone) carry forward into later ages, never back. Inventions do not appear before their age (catalogue_rules.json "earliest": phones and gramophones from the industrial age, radios from the republic age, televisions and computers from the socialist age).
+Reverse: leave out --year; the old dress() runs.
+
+## B2592. Set pieces (2026-11-13, after Cataclysm's nested chunks)
+About sixty small arrangements (a bed with a chest at its foot, a long table with chairs, a counter with goods, an altar with candles) are placed whole, by room kind, role and trade. A corner piece may take a wall spot, and a small piece may shrink to three quarters to fit between walkways.
+Reverse: setpieces.SET_PIECES empty; rooms keep their walls and floors only.
+
+## B2593. Room value tiers (2026-11-13, after Dwarf Fortress)
+Each room's worth (the sum of its pieces on the 0-5 goods scale) names a tier: meagre, plain, decent, fine, grand, royal. Role, wealth and side purposes set a target tier; the fill adds set pieces until the room reaches it or is full. Thresholds rise for halls and fall for small rooms, and scale by age.
+Reverse: furnishing.target_tier returns "plain" for every room.
+
+## B2594. Assets tagged by file name only (2026-11-13)
+catalogue.py tags about 14,000 of 45,000 Dungeondraft assets from their paths alone (pack, folder and file name), since no pack is unpacked and no picture viewed. Fantasy and other-setting packs are skipped (elves, dwarves, magic, the Star Wars and HellScape packs). Ben's marks on the review desk override the tags.
+Reverse: delete catalogue_rules.json entries.
+
+## B2595. Left open (2026-11-13)
+Not built: windows, doors and rooms that differ by age beyond their finish (a room is named by its building type, and the types are already placed by age); a room's tier in the WoDX map file (optional in the design; the Foundry side reads nothing from it yet); grounds (trees, yards) by age; regional palettes beyond the fallback to Moravia where a region has no pack of its own; what else changes between ages besides furniture (proposal in the design doc, waiting on Ben).
+
+## B2596. Doors and windows follow the age (2026-11-13, Ben's go-ahead on the design's proposal)
+Every door, double door, doorway, arch and window takes the age's wood finish (Ashen to 1449, Light to 1780, Dark after), a finer door for a richer owner, and metal-framed windows from 1919 (palettes.portals, passed to wall_with_portals as textures). Widths stay those of ddcore.PORTALS.
+Reverse: leave the building's portal_tex unset; the Ashen set returns.
+
 
 ## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
 WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
@@ -3543,6 +3571,31 @@ Reverse: give FERA_ANIMAL a Mokole entry again and drop animal from bodyOf.
 ## B2694. False limbs by era (2026-11-13)
 A lasting change "A false limb" with a part named in its "Part lost" field draws that part again as a false limb, in wood and iron before 1900, steel and plastic to 2022, and chrome in the World of Future Darkness, by the chronicle's year. The rules are unchanged: the part still counts as lost.
 Reverse: drop fakes from dollOf in extras.mjs.
+## B2700. Letters take the world map's journey time (2026-11-13)
+WoDX Storyteller 0.59.0, from Improvement Desk item ms1 (Ben picked Build it as described). A letter records the part of the world it is sent from (the scene holding the sender's token, else the homeland) and where it is going (the recipient's scene, else what the sender picks). Between two parts of the world the time comes from the world map's journey between their middles for the year, with the known world: a land the homeland does not know yet cannot be written to. A messenger rides land legs at half the journey's days (a lone rider with fresh horses against a traveller with baggage) and takes sea legs at the ship's pace, or flies when an airliner is quicker. The post takes the journey (or air mail when flying is quicker) plus two days at the posts before 1840 and one after. Inside one land the old near and region times stand. House figures; the books give no delivery times.
+
+Reverse: send without the From and Where they are lists (letters-rules plan() with reach), as before 0.59.0.
+
+## B2701. When each land has a post, a telegraph and a telephone (2026-11-13)
+REGION_LINES gives each of the 44 world regions the year a letter post anyone may use, a telegraph office and a telephone line became common (a courier for officials only does not count). E-mail reads WoDX Chronicle's internet year for the region. A land's own year stands in place of the carrier's general year, so China's letter offices carry post from 1400 and Ottoman Greece has none before 1840. Between land masses a telegram needs the cable (America 1866, Australia 1872, across the Pacific 1902, the poles by wireless 1911) and a call needs the crossing (1927 over the Atlantic, 1930 to Australia); a call between two lands of one land mass needs the long lines of 1910. A traveller going that way can carry a letter to 1900. House readings of history, rounded.
+
+Reverse: edit REGION_LINES, CROSSINGS or LONG_CALLS in letters-rules.mjs.
+
+## B2702. Relays of riders and runners (2026-11-13)
+A messenger between two lands both inside the Mongol post (China, Central Asia, Persia, Russia, Siberia, Korea, Tibet, Anatolia) from 1235 to 1368 goes land legs at 0.3 of the journey's days, and inside the Inca roads (the Andes) from 1450 to 1533 at 0.25. House figures from the relay distances given in histories, rounded.
+
+Reverse: empty RELAYS in letters-rules.mjs.
+
+## B2703. Lost, put back, read on the way, and answered late (2026-11-13)
+Nothing is lost by a roll. The Storyteller's card shows a house chance in a hundred that such a letter goes astray (messenger 6, traveller 18, post 3, telegram 1 for a week on the way, growing with the square root of the weeks, at most 40), and Lost on the way, Put it back some days, Read on the way and Let it go; Letters on the way in the hand lists all of them. A letter read on the way arrives with its seal broken and pressed back. Write the answer on a letter for someone the Storyteller plays sends the reply back from that land to the sender's. The Storyteller can send as anyone they play (a faction, an elder, a ghoul) to a player character. Players see a letter for them only when it arrives, as before. The world map window lists how long a letter takes between the two places shown.
+
+Reverse: send with Let it go only; the card's other buttons and the hand tool can be ignored.
+
+## B2704. Letters in the World of Future Darkness (2026-11-13)
+On the World of Future Darkness branch a message over the Net arrives at once anywhere both ends can be reached, and is read by whoever watches the Net, as before 0.59.0; the far future keeps every other way the year has.
+
+Reverse: none needed; the Net stays off without the branch.
+
 ## B2720. Bring forward: things on the maps (2026-11-13, Improvement Desk ia2)
 WoDX Interactables 0.37.0, SWAPS and bringForward in interact-rules.mjs; WoDX Sheets 0.17.0 on the anachronism card. Ben's pick: a Bring forward button that swaps each map thing for its equal in the new era, in every era. Each kind out of its year steps to the nearest kind of its family that is in use, one way in time, until one fits: a motor car before 1900 becomes a carriage, a motorcycle a riding horse, a motorboat a rowing boat, a carriage after 1930 a motor car; an electric light before 1880 an oil or gas lamp, a lamp after 1950 an electric light; a radio a telephone, and before 1890 a bell (as does a telephone). A keypad, card reader or alarm before 1970 becomes a lock of the same grade, unless the door or container has a lock already. Fire sprinklers before 1874 and a live wire before 1880 have nothing like them; the card names them for the Storyteller to keep or take off. A title the Storyteller wrote stays; the kind's own label goes with the kind. The tile's picture is not changed. The card has one button for everything on it and one on each row, and the result card has Undo. A house reading; the books give no such lists.
 

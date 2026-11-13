@@ -20,6 +20,7 @@ import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
 import * as Letters from "./letters.mjs";
+import * as LettersRules from "./letters-rules.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
@@ -176,7 +177,7 @@ Hooks.once("ready", () => {
     siegeWorks: {rules: SiegeWorksRules, setup: SiegeWorks.setupDialog, mine: SiegeWorks.mineDialog, addEngine: SiegeWorks.addEngine, readyEngine: SiegeWorks.readyEngine,
       removeEngine: SiegeWorks.removeEngine, endMine: SiegeWorks.endMine, draw: SiegeWorks.draw},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
-    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
+    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver, list: Letters.lettersOnTheWay, delay: Letters.delayLetter, read: Letters.readOnTheWay, plan: Letters.planFor, regionOf: Letters.regionOfActor, rules: LettersRules},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
