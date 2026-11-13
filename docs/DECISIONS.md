@@ -127,6 +127,7 @@ Next free block: B2950
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
+| B2780-B2789 | Build this chronicle: the recipe, the builder's steps, the carry-over from an older world, anchors, and the rebuilt Rothenstein world rothenstein-x | Storyteller |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
@@ -3664,6 +3665,36 @@ Reverse: turn the world setting off; the item flag wodx-combat.powder holds the 
 WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus, caliver and tanegashima are matchlocks, Brown Bess a flintlock, a Colt Navy a percussion revolver, a Glock a cartridge gun). A gun that names none takes the lock most guns had that year: hand cannon before 1450, matchlock to 1700 (pistols wheellock from 1520), flintlock to 1840, percussion to 1870, then cartridges. A house reading of firearms history, global by default; the Storyteller names the lock on the sheet to change it.
 
 Reverse: name the lock in the weapon's name or description.
+
+## B2780. A chronicle is built from a recipe (2026-11-13)
+WoDX Storyteller 0.61.0, Rothenstein Rebuild Desk item r1 (Ben approved all). A recipe file (data/recipe-rothenstein.mjs) says what the chronicle is, and Build this chronicle makes it in a fresh world step by step: check the world, Start a chronicle with the recipe's settings, bring across the older world, mark the anchors; later phases add the town, the people, the factions and trade, the time spine, the characters and the run across every age. Each step finds what it made again by the flag flags.wodx-storyteller.built, so running it twice makes no copies. The builder lives in Storyteller because Start a chronicle, the clock and the world map are there.
+
+Reverse: stop using the builder; nothing runs by itself.
+
+## B2781. Where the builder may work (2026-11-13)
+Desk items r2 and x3. The recipe names its world (rothenstein-x). The builder refuses rothenstein-live always, even when forced, and any other world unless the call passes force. The toolbar button shows only in a world whose world.json carries flags.wodx.recipe, or where the builder has already run. In a world made for the recipe, the check step turns on the installed WoDX modules that are off, as Start a chronicle does in the template world.
+
+Reverse: remove flags.wodx.recipe from the world's world.json.
+
+## B2782. Anchors claim their places first (2026-11-13)
+Desk item r3. Anchor places are matched on scene names and anchor people on a part of an NPC's name, the shortest match first, the way Rothenstein's factions find their leaders. A matched scene gets flags.wodx-storyteller.anchor {key, kind} and, only when it has no kind of place yet, the NPC place kind from the recipe; a kind the Storyteller set is kept. A matched NPC gets the anchor key, home and faction. Anchors that match nothing are listed, not made up.
+
+Reverse: Undo on the anchors step.
+
+## B2783. What comes across from an older world (2026-11-13)
+Desk items x2 and p3. tools/gate/carryexport.mjs, run in rothenstein-wodx, sorts every document: chat, fights, users and fog stay behind, as does anything a gate made (the wodx-gate flag, names starting WoDX gate or Gate, a WoDX gate folder) and every player's character, which comes across only from a Live backup on Ben's word. Generated residents and passers-by, the Start a chronicle journals, the builder's own documents and the Legends book are made again. Everything else is carried. The export reads the world and changes nothing in it.
+
+Reverse: change classify() in recipe-rules.mjs and export again.
+
+## B2784. Carried documents keep their ids (2026-11-13)
+The carry step makes documents with their old ids (keepId), folders first and scenes last, so journal links, tokens tied to actors and folders still hold in the new world. A document whose id is already in the world is skipped. Scenes come across inactive. Undo deletes only the documents in the step's record that still carry the builder's flag, newest kind first, and never anything the Storyteller made by hand. Map art keeps its old paths, so the rothenstein-wodx folder must stay.
+
+Reverse: Undo on the carry step.
+
+## B2785. The Rothenstein recipe (2026-11-13)
+Desk items s1 to s4, w1 to w4, p1, p2, p4, x1 and x4. Homeland Moravia, opening 1 October 1197 at 21:00, every line but Demon, Mummy and Kindred of the East in the valley from the first night (those three come in through the away hubs and dated events, since the books place none in 12th-century Moravia). The town has seed 1197 and is rebuilt at 1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990 and 2030. One away hub per era: Constantinople, Cairo, Potosí and New Spain, Bengal, New York's Czech quarter, Hong Kong and a future arcology. The sleeper's origin is dated in the Classical age in Great Moravia. Caps for a slower machine: 40 residents shown, 24 passers-by and 30 moving sprites a scene. Twelve anchor places and eighteen anchor people from the authored chronicle.
+
+Reverse: edit data/recipe-rothenstein.mjs.
 
 ## B2760. A character wizard, one page per step (2026-11-13)
 WoDX Creation 0.24.0, Ben's ask of 13 November 2026 after a look at Darkness Weaver. The guided builder of 0.13.0 was one window; the wizard walks the book's creation order a page at a time with Back and Next: the book, Attributes, Abilities, the line's powers, Backgrounds, Virtues (lines that have them), Merits and Flaws, freebie points, and a last look. Each choice goes on the sheet at once, so the sheet, the creation check and Before the First Night agree. The record is flags.wodx-creation.wizard (book, priorities, the ledger of bought Traits, the page). Every line with creation totals works (17 books). The steps follow each book's character creation chapter (V20 pdf 92 to 94 / printed 84 to 86 and the pages in data/creation-totals.mjs).

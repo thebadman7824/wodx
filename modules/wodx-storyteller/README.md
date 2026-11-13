@@ -6,8 +6,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The open world
 
-- Files: `core.mjs`, `world-rules.mjs`, `apps.mjs` (the tracker and its windows), `setup.mjs` and `setup-rules.mjs` (Start a chronicle).
-- Settings: `log`, `personal`, `beats`, `convened`, `session`, `travelMinutes`, `encounters`, `encounterChance`, `encounterTable`, `soloLimit`, `dawnLead`, `beatsOn`, `setup`.
+- Files: `core.mjs`, `world-rules.mjs`, `apps.mjs` (the tracker and its windows), `setup.mjs` and `setup-rules.mjs` (Start a chronicle), `builder.mjs`, `recipe-rules.mjs` and `data/recipe-rothenstein.mjs` (Build this chronicle).
+- Settings: `log`, `personal`, `beats`, `convened`, `session`, `travelMinutes`, `encounters`, `encounterChance`, `encounterTable`, `soloLimit`, `dawnLead`, `beatsOn`, `setup`, `builder`.
 - API: `openTracker`, `travel`, `planTrip`, `convene`, `beats`, `endSession`, `report`, `setup`.
 
 ## The hand and the table
