@@ -209,9 +209,9 @@ test("a Nosferatu's great ears grow from the side of the head, joined to it, not
   let checked = 0;
   for ( let i = 0; i < 30; i++ ) {
     const S = P.roll(`ear${i}`, "nosferatu");
-    if ( S.ears === "plain" ) continue;
+    if ( !["bat", "long", "torn", "fin"].includes(S.ears) ) continue;
     checked++;
-    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "plain"}).rgba;
+    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "none"}).rgba;
     for ( const sd of [-1, 1] ) for ( const y of [30, 33, 36] ) {
       // just past the head's edge, three pixels in a row are ear, with no gap of background between
       const edge = 32 + sd * Math.round(P.H.headHw(y, [11, 31, 43, S.chin, S.w, S.jw, S.cw]));
@@ -219,6 +219,16 @@ test("a Nosferatu's great ears grow from the side of the head, joined to it, not
     }
   }
   assert.ok(checked >= 10);
+});
+
+test("Nosferatu ears vary: plain, stub, torn, drooping, finned, bare holes and odd pairs besides the bat's ears, each its own shape", () => {
+  const seen = new Set(), base = P.roll("earkinds", "nosferatu"), out = new Map();
+  for ( let i = 0; i < 80; i++ ) seen.add(P.roll(`ek${i}`, "nosferatu").ears);
+  for ( const k of ["bat", "long", "plain", "torn", "droop", "stub", "fin", "holes", "uneven"] ) {
+    assert.ok(seen.has(k), `${k} is rolled`);
+    const key = Buffer.from(P.drawFace({...base, ears: k}).rgba).toString("base64");
+    assert.ok(!out.has(key), `${k} draws unlike ${out.get(key)}`); out.set(key, k);
+  }
 });
 
 test("pointed ears grow from the side of the head at eye height, and a hood or veil hides every kind of ear", () => {

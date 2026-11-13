@@ -142,7 +142,7 @@ Next free block: B3060
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
-| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3049) | Paperdoll |
+| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4349,4 +4349,9 @@ Reverse: Remove the import of face64-demon.mjs from face64-features.mjs.
 WoDX Paperdoll 0.19.0 (face64-mummy.mjs). Any mummy: 50 (kohl, amulets of Egypt, natron and resin, Sekhem in the eyes, Hekau glyphs). Fifteen each for the Shemsu-heru, the Amenti, the Teomallki of the Andes, the Wu Tian of China, the Children of Apophis and the Bane mummies. Any Kuei-jin: 50 (jade, silk, talismans, yin chill and yang warmth). Fifteen each for the five Dharmas: Devil Tiger, Resplendent Crane, Thousand Whispers, Thrashing Dragon and Song of the Shadow. In our own words. A test now holds every line to these counts.
 
 Reverse: Remove the import of face64-mummy.mjs from face64-features.mjs.
+
+## B3050. Nosferatu ears of many kinds (2026-11-13)
+WoDX Paperdoll 0.19.0. Ben (13 November 2026): not every Nosferatu should have bat's ears. A Nosferatu face now rolls one of nine: bat's ears (the most common), long ears to the side, plain ears, torn ears with the tips bitten off, drooping ears, stubs, finned fans, bare holes with no ear, or a pair that does not match. Beards and goatees are drawn solid with a few lighter strands, so neither reads as a chequered patch.
+
+Reverse: Set the Nosferatu ear roll in face64-rules.mjs back to bat, bat, long.
 

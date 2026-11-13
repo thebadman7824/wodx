@@ -347,7 +347,7 @@ const PRE = {
   nosferatu(S, r) {
     S.skin = r.pick([[142, 156, 160], [154, 162, 148], [150, 140, 156], [138, 150, 140]]); S.cool = true; S.style = "bald"; S.beard = ""; S.sunk = true;
     S.iris = r.pick([[214, 200, 110], [200, 192, 112], [176, 184, 160], [160, 64, 48]]); S.white = [214, 212, 196]; S.bg = [40, 44, 50];
-    S.cloth = r.pick([[58, 50, 46], [52, 52, 46], [64, 52, 40]]); S.ears = r.pick(["bat", "bat", "long"]); S.thin = true; S.w = 15; S.jw = 11; S.cw = 4; S.chin = 55;
+    S.cloth = r.pick([[58, 50, 46], [52, 52, 46], [64, 52, 40]]); S.ears = r.pick(["bat", "bat", "bat", "long", "long", "plain", "torn", "droop", "stub", "fin", "holes", "uneven"]); S.thin = true; S.w = 15; S.jw = 11; S.cw = 4; S.chin = 55;
     S.tusks = r.pick([true, true, false]); S.ridge = r.chance(0.7); S.lines = r.pick([1, 2, 3]);
   },
   werewolf(S, r) { S.iris = r.pick([[200, 144, 26], [208, 160, 48]]); S.style = r.pick(["long", "short"]); S.bg = [44, 50, 44]; },
@@ -376,21 +376,48 @@ const BACK = {};
  */
 function nosEars(c) {
   const {F, R, S, shape} = c;
-  if ( S.ears === "plain" ) return;
-  const bat = S.ears === "bat";
-  for ( const sd of [-1, 1] ) {
+  if ( S.ears === "none" ) return;
+  if ( S.ears === "plain" ) return plainEars(c);
+  // Ben (13 November 2026): not every Nosferatu has bat's ears. Some keep plain ears, some have a stub, a torn or a
+  // drooping ear, a finned fan, bare holes, or two ears that do not match.
+  const sides = S.ears === "uneven" ? ["bat", "stub"] : [S.ears, S.ears];
+  sides.forEach((kind, i) => {
+    const sd = i ? 1 : -1;
+    if ( kind === "holes" ) {                                  // no ear at all, only the opening, ringed with gristle
+      for ( let y = 29; y <= 37; y++ ) {
+        const x = CX + sd * Math.round(headHw(y, shape)), rim = y === 29 || y === 37;
+        F.put(x, y, rim ? R.s1 : mix(R.s2, [20, 14, 18], 0.7)); F.put(x - sd, y, rim || y === 30 || y === 36 ? R.s2 : mix(R.s2, [20, 14, 18], 0.5));
+        if ( !rim ) F.put(x + sd, y, R.s1, "skin");                // a ridge of gristle round the hole
+      }
+      return;
+    }
     const top = 25, bot = 41, eTop = Math.round(headHw(top, shape)), eBot = Math.round(headHw(bot, shape));
-    const tip = bat ? [CX + sd * 29, 10] : [CX + sd * 30, 20], low = bat ? [CX + sd * 24, 32] : [CX + sd * 25, 33];
+    const SH = {
+      bat: [[29, 10], [24, 32]], long: [[30, 20], [25, 33]], torn: [[29, 10], [24, 32]], fin: [[30, 16], [27, 38]],
+      stub: [[23, 24], [22, 33]], droop: [[27, 44], [23, 39]],
+    }[kind] ?? [[29, 10], [24, 32]];
+    const tip = [CX + sd * SH[0][0], SH[0][1]], low = [CX + sd * SH[1][0], SH[1][1]];
     const a = [CX + sd * (eTop - 2), top], b = [CX + sd * (eBot - 2), bot];
     const ear = (x, y) => inTri([a, tip, low], x, y) || inTri([a, low, b], x, y);
     const mid = [(a[0] + low[0]) / 2, (a[1] + b[1]) / 2];
-    const hollow = (x, y) => inTri([[mid[0] + sd, a[1] + 4], [tip[0] - sd * 4, tip[1] + (bat ? 6 : 3)], [low[0] - sd * 2, low[1] - 1]], x, y)
-      || inTri([[mid[0] + sd, a[1] + 4], [low[0] - sd * 2, low[1] - 1], [mid[0] + sd, b[1] - 4]], x, y);
-    for ( let y = 4; y < 44; y++ ) for ( let x = 0; x < N; x++ ) {
-      if ( !ear(x, y) || F.kindAt(x, y) === "skin" ) continue;          // the head stays as it is; the ear joins it at the edge
-      F.put(x, y, hollow(x, y) ? R.s2 : (sd < 0 ? R.b : R.s1), "skin");   // drawn as skin, so one outline runs round head and ear together
+    const hollow = (x, y) => kind !== "stub" && (inTri([[mid[0] + sd, a[1] + 4], [tip[0] - sd * 4, tip[1] + (tip[1] < 20 ? 6 : 3) * Math.sign(36 - tip[1])], [low[0] - sd * 2, low[1] - 1]], x, y)
+      || inTri([[mid[0] + sd, a[1] + 4], [low[0] - sd * 2, low[1] - 1], [mid[0] + sd, b[1] - 4]], x, y));
+    // a torn ear has notches bitten out of its outer edge
+    const torn = (x, y) => kind === "torn" && (y < 16 || (Math.abs(x - CX) >= 25 && (y === 23 || y === 24)));
+    for ( let y = 4; y < 50; y++ ) for ( let x = 0; x < N; x++ ) {
+      if ( !ear(x, y) || torn(x, y) || F.kindAt(x, y) === "skin" ) continue;          // the head stays as it is; the ear joins it at the edge
+      const rib = kind === "fin" && (Math.abs(x - CX) + y) % 4 === 0;           // a fin's ribs fan out from the root
+      F.put(x, y, rib ? R.s2 : hollow(x, y) ? R.s2 : (sd < 0 ? R.b : R.s1), "skin");   // drawn as skin, so one outline runs round head and ear together
     }
     for ( let y = 31; y <= 34; y++ ) { const x = CX + sd * (Math.round(headHw(y, shape)) + 1); if ( F.kindAt(x, y) === "skin" ) F.put(x, y, mix(R.s2, [20, 14, 18], 0.5)); }   // the opening at the root
+  });
+}
+/** Ears, tucked into the head. */
+function plainEars(c) {
+  const {F, R, shape} = c, hw = Math.round(headHw(34, shape));
+  for ( const sd of [-1, 1] ) for ( let dy = 0; dy < 6; dy++ ) for ( const k of [1, 2] ) {
+    if ( k === 2 && (dy === 0 || dy === 5) ) continue;
+    F.put(CX + sd * (hw + k), 32 + dy, (k === 1 && dy > 0 && dy < 5) ? R.s2 : sd < 0 ? R.b : R.s1, "skin");
   }
 }
 const POST = {
@@ -609,13 +636,7 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   skin(F, R, shape, S.jw < 12 ? 6 : 7); cheeks(F, R, shape);
   if ( S.covered ) {}                   // a hood or veil hides the ears
   else if ( S.line === "nosferatu" ) nosEars(ctx);
-  else if ( S.ears === "plain" ) {      // ears, tucked into the head
-    const hw = Math.round(headHw(34, shape));
-    for ( const sd of [-1, 1] ) for ( let dy = 0; dy < 6; dy++ ) for ( const k of [1, 2] ) {
-      if ( k === 2 && (dy === 0 || dy === 5) ) continue;
-      F.put(CX + sd * (hw + k), 32 + dy, (k === 1 && dy > 0 && dy < 5) ? R.s2 : sd < 0 ? R.b : R.s1, "skin");
-    }
-  }
+  else if ( S.ears === "plain" ) plainEars(ctx);
   stage("skin", ctx);
   const lid = S.cool ? [26, 28, 40] : [30, 16, 22];
   for ( const [ex, sd] of [[26, -1], [38, 1]] ) {
