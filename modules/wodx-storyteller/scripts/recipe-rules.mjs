@@ -110,7 +110,7 @@ export function planSteps(have = {}) {
   return STEPS.map(s => {
     const row = {id: s.id, phase: s.phase, label: s.label, undo: s.undo};
     if ( done[s.id]?.at ) return {...row, state: "done", reason: ""};
-    if ( s.phase > PHASE_NOW ) return {...row, state: "later", reason: `Comes with phase ${s.phase}.`};
+    if ( s.phase > PHASE_NOW ) return {...row, state: "later", reason: "Not built yet: a later part of the rebuild."};
     const short = Object.entries(s.needs).filter(([id, v]) => !versionAtLeast(mods[id], v));
     if ( short.length ) { open = true; return {...row, state: "blocked", reason: short.map(([id, v]) => `${id} ${v} or later`).join(", ")}; }
     if ( open ) return {...row, state: "blocked", reason: "A step before it is not done."};
@@ -138,7 +138,7 @@ export function classify(e = {}) {
   const f = e.flags ?? {};
   if ( NEVER_CARRY.includes(e.type) ) return {verdict: "leave", reason: "Play records stay with the old world."};
   if ( f["wodx-gate"] || GATE_NAME.test(e.name ?? "") || /(^|\/)WoDX gate/i.test(e.folder ?? "") ) return {verdict: "leave", reason: "Made by a gate."};
-  if ( e.type === "Actor" && e.playerOwned ) return {verdict: "leave", reason: "A player's character comes across only from a Live backup, on Ben's word."};
+  if ( e.type === "Actor" && e.playerOwned ) return {verdict: "leave", reason: "A player's character comes across only from a Live backup, when the Storyteller asks for it."};
   const npc = f["wodx-npc"] ?? {};
   if ( npc.resident || npc.passerby || npc.passerbyBase || RUNTIME_FOLDER.test(e.folder ?? "") ) return {verdict: "rebuild", reason: "Generated people are made again from the town."};
   const st = f["wodx-storyteller"] ?? {};
