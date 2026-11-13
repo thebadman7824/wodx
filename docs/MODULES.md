@@ -23,7 +23,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 |---|---|---|---|
 | wodx-chronicle | 0.56.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
 | wodx-otherworlds | 0.25.1 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
-| wodx-creation | 0.33.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
+| wodx-creation | 0.34.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.64.0 | The Actions menu for every line: powers, feeding, social actions, trade and effect keywords. [Changelog](../modules/wodx-actions/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-combat | 3.27.0 | Fights: dice and health, the turn conductor, ways of moving (riding and a swimmer's load among them) and the body plan. [Changelog](../modules/wodx-combat/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-sheets | 0.19.0 | WoDX tabs and fixes on the line sheets, the anachronism check for sheets and maps, the Body tab, the Relationships tab with Followers, the features card and what changed since last session. [Changelog](../modules/wodx-sheets/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle, wodx-actions) |

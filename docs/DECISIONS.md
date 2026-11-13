@@ -155,6 +155,7 @@ Next free block: B3320
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
+| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
@@ -4731,6 +4732,11 @@ Reverse: Untick the box at the wrap-up.
 Desk item c2. When a fight with a player character ends, WoDX Combat writes one deed in the Legends book (B3161): who fought whom, where, and "and won" when a player character is still up and every other fighter is down. Through B3160 a won fight then suggests Glory for Garou. It also notes each player character's harm for B3170.
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
+
+## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
+Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
+
+Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.
 
 ## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
 WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
