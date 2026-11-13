@@ -1266,5 +1266,6 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
-| 2026-11-13 | Law of the land: bribe and catch figures (B3490-B3603) | Each law family and region row sets bribe (1 hard to 5 easy) and catch (0.25 in 1197 up to 0.7 with face matching), rounded by family and era. | Edit the bribe and catch values in law-rules.mjs FAMILIES and REGION_ROWS. |
+| 2026-11-13 | Law of the land: bribe and catch figures (B3490-B3603) | Each law family and region row sets bribe (1 cheap to 5 dangerous to try) and catch (0.25 in 1197 up to 0.7 with face matching), rounded by family and era. | Edit the bribe and catch values in law-rules.mjs FAMILIES and REGION_ROWS. |
 | 2026-11-13 | Offices of the law and the state (B3604-B3605) | Court from 1000 people, the ruler's officers and tax office from 2000, garrison, Holy Office and secret police from 5000; the last two only while the law lists inquisitors or secret police. Rank names by law family and year. | Edit KINDS, COURT, RULER, ARMY and TAX in institution-rules.mjs. |
+| 2026-11-13 | The law's heat (B3606-B3607) | Gravity theft 2, breaking in 2, forcing 1, fire 3, desecration 2 or 3, fight 1, breach 2; named culprit times 1.5; stages Asked after 2, Wanted 5, Manhunt 8 of 10; half-life 14, 60, 90 or 365 days by the age's keepers of order. | Edit GRAVITY, STAGES and halfLife in law-heat-rules.mjs. |
