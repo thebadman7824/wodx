@@ -11,7 +11,7 @@
 export const RULES = {
   eldest: {label: "To the eldest son", text: "Land and house go to the eldest son, else the eldest daughter, else the nearest kin; a widow keeps a third for life."},
   split: {label: "Shared among the children", text: "Shared equally among the children; a widow keeps a share for life."},
-  sons: {label: "Shared among the sons", text: "Shared equally among the sons; daughters have their dowries, a widow her keep."},
+  sons: {label: "Shared among the sons", text: "Shared equally among the sons; daughters have their dowries, and a widow is kept from it."},
   shares: {label: "Fixed shares", text: "Fixed shares by kinship: a son takes twice a daughter's share, a spouse an eighth with children or a quarter without, parents a sixth each. A will may dispose of a third at most."},
   joint: {label: "The joint family", text: "The family's property is held jointly by the sons from birth; on a death the share passes within the joint family."},
   house: {label: "The house goes on", text: "The head of the house passes everything to one heir, most often the eldest son or an adopted heir, who keeps the household."},

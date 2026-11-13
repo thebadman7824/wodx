@@ -15,6 +15,8 @@
 
 /** The kinds of link, and how each reads from the other end. group orders the Relationships tab. */
 import * as BR from "./bond-rules.mjs";
+import * as TRR from "./trust-rules.mjs";
+import * as HR from "./hearts-rules.mjs";
 
 export const KINDS = {
   sire: {label: "Sire", back: "childe", group: "blood", up: true},
@@ -49,6 +51,7 @@ export const KINDS = {
   owes: {label: "Owes", back: "owed", group: "debts"},
   owed: {label: "Is owed by", back: "owes", group: "debts"},
   ...BR.BOND_KINDS,
+  ...TRR.SIDE_KINDS,
   haven: {label: "Haven", back: null, group: "places"},
   other: {label: "Other", back: "other", group: "other"}
 };
@@ -149,6 +152,19 @@ export function edges(actors = [], {ledger = [], vinculum = {}} = {}) {
     if ( !e.from?.id || !e.to?.id ) continue;
     const what = e.kind === "boon" ? `${e.size ?? "minor"} boon${e.what ? `: ${e.what}` : ""}` : e.what || e.kind;
     add(e.from.id, who(e.to), "owes", {note: String(what).slice(0, 120), source: "ledger"});
+  }
+  // NPC 0.57.0: a hidden loyalty is a tie only the Storyteller sees, to the faction's leader when one is named
+  for ( const a of list ) {
+    const side = TRR.normSide(a.flags?.["wodx-npc"]?.trueSide);
+    if ( side?.leader?.id || side?.leader?.name ) add(a.id, side.leader, "spyFor", {note: `${side.name || side.faction}${side.note ? `; ${side.note}` : ""}`, source: "true side", hidden: true});
+  }
+  // NPC 0.57.0: how far the one at the from end trusts the other
+  for ( const e of out ) {
+    const t = e.to.id ? byId.get(e.from)?.flags?.["wodx-npc"]?.trust?.[e.to.id] : null;
+    if ( t && Number(t.value) ) e.trust = TRR.trustWord(Number(t.value));
+    // NPC 0.58.0: a romance's warmth on lover and spouse ties
+    const w = ["lover", "spouse"].includes(e.kind) && e.to.id ? byId.get(e.from)?.flags?.["wodx-npc"]?.warmth?.[e.to.id] : null;
+    if ( w ) e.warmth = HR.warmthWord(Number(w.value));
   }
   return out;
 }

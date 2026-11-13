@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2830
+Next free block: B2840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -129,7 +129,7 @@ Next free block: B2830
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2770-B2789 | Relationships across the centuries (parts 1 and 2): family lines, wills and estates by law, ties after a jump in time, bonds from the books (Ben approved the whole relationships desk) | NPC, Storyteller, Sheets, Actions |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
-| B2800-B2829 | Relationships (parts 3 to 6): trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
+| B2810-B2839 | Relationships (parts 3 to 6): trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3798,3 +3798,83 @@ Reverse: turn the setting off.
 A hunter who loses a cellmate rolls Willpower at difficulty 7 or loses a point of temporary Willpower. House rule; the hunter books give no single rule for it.
 
 Reverse: edit the cellmate line in cardsFor in bond-rules.mjs.
+
+## B2810. Trust beside attitude (2026-11-13)
+WoDX NPC 0.57.0 keeps trust one way, on the one who trusts, from -5 to +5. Attitude says how warmly someone regards a person; trust says how far they would rely on them. At 3 or more they share secrets, at 2 or more they take risks for the person. The Relationships tab shows the trust word beside each tie.
+
+Reverse: clear flags["wodx-npc"].trust on the actor.
+
+## B2811. What moves trust (2026-11-13)
+A boon paid or refused in the Ledger moves the holder's trust in the debtor (+1 or -2). Coming to someone's aid at a cost is +2; a kept promise or secret +1; a broken promise or a lie found -2; a broken oath -3; blackmail -3; a betrayal -4. House numbers.
+
+Reverse: edit TRUST_EVENTS in modules/wodx-npc/scripts/trust-rules.mjs.
+
+## B2812. Betrayal (2026-11-13)
+api.trust.betray(betrayer, victim, {kind, what}) records it on the victim, drops their trust by 4, drops an NPC victim's attitude by two steps, starts a rumour with the victim as first teller, and puts the NPC's revenge in the Ledger as a consequence due in a week. A betrayer at the second drink or more toward the victim is told to roll Willpower first (V20 Dark Ages p. 342). The card goes to the betrayer's owners and the Storyteller.
+
+Reverse: delete the Ledger consequence and the rumour; the trust log shows what moved.
+
+## B2813. Boons in every line (2026-11-13)
+Each line has its own word for a debt of honour and what defaulting costs: a boon (Kindred), a debt of honour (Garou, Honor Renown), a debt among the Awakened, an oath of service (Kithain), a favour of the Hierarchy, a debt in the cell, a debt of the cult, a pact debt, a debt of face, and a favour among mortals. An open boon can pass to a new holder; the debtor then owes them.
+
+Reverse: edit DEBT_WORDS in trust-rules.mjs.
+
+## B2814. Blackmail (2026-11-13)
+A found secret can be held over its keeper: a Ledger debt due each month, priced at the secret's weight times the victim's Resources (at least 1). The proof follows the era: a witness and a letter before 1840, photographs from 1840, tape from 1950, files on a server from 1995, the net from 2040. The victim pays (money moves and next month's debt opens), strikes back (a Ledger consequence in a week) or confesses first (the secret is laid bare and the hold ends). The hold is kept on the victim's sheet.
+
+Reverse: cancel the Ledger entry and clear flags["wodx-npc"].blackmail on the victim.
+
+## B2815. Hidden loyalties (2026-11-13)
+A character can secretly serve another faction: flags["wodx-npc"].trueSide {faction, name, leader, note}. It makes a hidden tie to the leader that only the Storyteller sees. Finding it out is recorded per finder.
+
+Reverse: api.trust.setSide(actor, null).
+
+## B2816. Powers that find a hidden loyalty (2026-11-13)
+For the Storyteller, the powers that can find a hidden side, with roll and difficulty: Auspex Telepathy and Aura Perception (V20), Truth of Gaia and Sense Wyrm (W20), Mind 1 (M20), Kenning (C20), Discern (Hunter: the Reckoning) and mortal Empathy for every line. Aura Perception, Kenning and Empathy show a lie, not the side. House reading of what each power shows.
+
+Reverse: edit LOYALTY_SENSES in trust-rules.mjs.
+
+## B2817. Warmth on a romance (2026-11-13)
+WoDX NPC 0.58.0 keeps a warmth track on the one who feels it: Wary, Cool, Warm, Fond, Devoted. Time together, a gift, help, a long talk, something bold, courting by custom, a kept promise and a won social roll warm it by one (a roll with three or more successes by two, a botch cools by one); a slight cools by one, cruelty or betrayal by two. The tab shows the word on lover and spouse ties. NPCs can court each other and the players through api.hearts.court.
+
+Reverse: clear flags["wodx-npc"].warmth.
+
+## B2818. Nature shapes what warms (2026-11-13)
+Each V20 archetype warms most to one kind of event (a Bon Vivant to gifts, a Caregiver to help, a Bravo to something bold, a Traditionalist to courting by custom): one more step when the event matches. House reading.
+
+Reverse: edit NATURE_LIKES in modules/wodx-npc/scripts/hearts-rules.mjs.
+
+## B2819. The supernatural truth in a romance (2026-11-13)
+A Kindred on a Path, or with Humanity 4 or less, can be loved no more than Fond; a wraith across the Shroud likewise. A Garou with Rage 5 or more makes a mortal lover uneasy (W20's Curse): time together warms half as fast; Kinfolk are not affected. Notes remind the Storyteller of the Delirium, the Mists and Paradox. House numbers.
+
+Reverse: edit hindrance in hearts-rules.mjs.
+
+## B2820. Marriage by the law of place and year (2026-11-13)
+Each way of life has its rite, its record, its money (dowry, mahr, bride wealth or gifts), whether more than one spouse and divorce are lawful. Dated rows by region change it: civil registers, divorce taken and given back (France 1792, 1816, 1884), one spouse only (Turkey 1926, China 1950, India 1955), registered partnerships and same-sex marriage from the year each became lawful. Western Christendom keeps parish registers from 1563. A marriage the law forbids is refused unless the Storyteller forces it, and the card says so. Spouse ties are made at both ends and a record kept on each sheet.
+
+Reverse: edit SPHERE_MARRIAGE and REGION_MARRIAGE in hearts-rules.mjs.
+
+## B2821. Divorce (2026-11-13)
+Only where the law of the place and year grants it; otherwise the answer is an annulment by the church or living apart. A divorce ends the record and removes the spouse ties.
+
+Reverse: add the spouse ties back by hand.
+
+## B2822. The marriage payment (2026-11-13)
+A dowry or bride wealth is a tenth of the payer's money, a mahr or betrothal gifts a twentieth, unless the Storyteller names a sum. It goes to the receiver's bank. House rule.
+
+Reverse: edit marriagePayment in hearts-rules.mjs.
+
+## B2823. Children (2026-11-13)
+Mortals, Kinfolk, ghouls, Garou, changelings, mages and hunters can have children; Kindred, wraiths, mummies, demons and Kuei-jin cannot. Two Garou have a metis (W20). A Garou with anyone else has a Kinfolk child who breeds true one time in ten (house). A changeling's child is mortal with fae blood; a mage's or hunter's child is mortal and may Awaken or take up the hunt. The child's sheet ties to both parents and records the birth year, so the family line and Pass the Years pick it up.
+
+Reverse: delete the child's sheet.
+
+## B2824. Households (2026-11-13)
+Each sheet can list who lives under its roof: spouse, child, kin, servant, ghoul, apprentice, retainer, ward. Each month the Storyteller's money run charges the keep, a share of a one-dot worker's wage per person (spouse half, child a quarter, servant six tenths, retainer eight tenths). A Kindred with mortals under the roof is warned of the Masquerade risk. House numbers.
+
+Reverse: clear flags["wodx-npc"].household.
+
+## B2825. Loved ones as a weak spot (2026-11-13)
+When a spouse, child, parent, sibling, childe, ward, apprentice, retainer, lover, or a friend at Fond or warmer is hurt, taken or dies, the one who loves them gets a card: a frenzy check for Kindred and Garou, Willpower for others, grief at difficulty 7 or 8 on a death with a Derangement on a botch for a great loss, and line notes (Banality, a Passion, degeneration). A captor's demands go in the Ledger. V20 and Revised rules only; no Touchstones. Setting "Cards for loved ones". The difficulties are house rules.
+
+Reverse: turn the setting off.

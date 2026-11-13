@@ -106,14 +106,14 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).
  */
-const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
+const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", "true side": "a hidden loyalty", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
 export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true, followers = false } = {}) {
   const groups = new Map();
   for ( const r of rows ) { if ( !groups.has(r.groupLabel) ) groups.set(r.groupLabel, []); groups.get(r.groupLabel).push(r); }
   const row = r => {
     const mine = !!r.hand && editable;
     const from = r.hand ? "" : r.source === "hand" ? "from their sheet" : FROM[r.source] ?? "";
-    const meta = [r.kindText, r.xpSpent !== null && r.xpSpent !== undefined ? `${r.xpSpent} XP spent` : "", from].filter(Boolean).join(", ");
+    const meta = [r.kindText, r.warmth ?? "", r.trust ?? "", r.xpSpent !== null && r.xpSpent !== undefined ? `${r.xpSpent} XP spent` : "", from].filter(Boolean).join(", ");
     const role = mine ? `<select class="wodx-tie-role-pick" aria-label="Role" data-fixed>${roles.map(([k, v]) => `<option value="${esc(k)}" ${k === r.kind ? "selected" : ""}>${esc(v)}</option>`).join("")}</select>` : esc(r.label);
     const marks = gm && (r.hidden || r.secret) ? ` <i class="fa-solid fa-eye-slash" title="${r.secret ? "A secret: players see it once found out" : "Only you see this"}"></i>` : "";
     const name = r.uuid ? `<a class="wodx-tie-name wodx-act${r.gone ? " wodx-missing" : ""}" data-act="tie-open">${esc(r.name)}</a>` : `<span class="wodx-tie-name">${esc(r.name)}</span>`;
