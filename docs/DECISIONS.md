@@ -4422,3 +4422,18 @@ Reverse: Remove the last line of lane-reset.cmd, or put a file named nightly-off
 tools/books/books.mjs reads the book texts from /mnt/project-files/book-text (copied from the PC's tools-env\text by a PC job, never put in the repository): a page by pdf or printed number, a search for words in order, and the 8-word overlap check of rule 5 over any WoDX files, squashing words the way the Encyclopaedia check does. A cloud thread can then check its own pages and wording without a PC job.
 
 Reverse: Send book checks to the PC helper again; delete tools/books.
+
+## B3007. Short Trait explanations in the wizard, one text per Trait (2026-11-13)
+WoDX Creation 0.29.0, the last item on Ben's ranked list for the wizard. Each Trait's name on the Attributes, Abilities, Virtues and freebie pages shows a line on hover, and each of those pages and the derived Traits have a folded "What these mean" list for touch screens. The text of the common Traits is the player view's hover help (WoDX Sheets beginner-rules.mjs, from the Player UI Desk), read when that file is there, so a Trait never has two different texts in WoDX. Until it is merged, those Traits show no text.
+
+Reverse: drop notesBlock and the title on #row in wizard.mjs.
+
+## B3008. The wizard's own notes cover the rest (2026-11-13)
+data/trait-notes.mjs holds the Traits the player view's help leaves out: Zeal, Mercy and Vision; Torment; Balance and Sekhem; Hun, P'o, Yin, Yang and Dharma; Vitality and Spite; a Path; and Meditation, Research, Esoterica, Gremayre and Lore. WoDX's own words, under 160 characters each.
+
+Reverse: empty NOTES.
+
+## B3009. Page refs only once checked (2026-11-13)
+A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
+
+Reverse: none needed; REFS starts empty.
