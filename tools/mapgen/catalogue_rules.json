@@ -380,7 +380,7 @@
   },
   "skip_folders": "Combat|Weapons|Creatures|Spells|Monster|Bones|Gore|Tokens|Vehicles|Cars|Nests|Effects|Overlays|Token Borders|Texture Borders",
   "skip_names": "(?<![A-Za-z])(Elf|Elven|Dwarf|Dwarven|Magic|Arcane|Orc|Goblin|Dragon|Rune|Runic|Wizard|Cult|Cultist|Demon|Infernal|Necro|Skeleton|Bones|Blood)",
-  "skip_packs": "Dwarven|Elven|Magic Dome|Cultists|Dragon Temple|Ice Lair|Dark Wizard|Arcane|Underdark|Death Mist|Thorns|Runes|Creeps|Crystals|Hall of Heroes",
+  "skip_packs": "Dwarven|Elven|Magic Dome|Cultists|Dragon Temple|Ice Lair|Dark Wizard|Arcane|Underdark|Death Mist|Thorns|Runes|Creeps|Crystals|Hall of Heroes|Star Wars|HellScape",
   "earliest": {
     "Phone|Gram+ophone|Typewriter|Sewing_?Machine|Light_?Bulb|Bulb_|Telegraph|Bicycle|Shower|Radiator": "industrial",
     "Neon|Radio|Fridge|Refrigerator|Vending|Electric_Fan": "republic",
