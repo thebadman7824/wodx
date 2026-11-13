@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.53.0 (B2700 to B2703): NPCs who talk to each other where a character can overhear them. The runtime;
+ * WoDX NPC 0.53.0 (B2750 to B2753): NPCs who talk to each other where a character can overhear them. The runtime;
  * overheard-rules.mjs has the rules and data/grammar/overheard.mjs the words.
  *
  * Only the active Storyteller's client runs it. When a player's character moves, and every half minute while the game
@@ -12,7 +12,7 @@
  *   flags.wodx-npc.overheard on a scene  {off, log: [{at, a, b, topic, lines, heard}]}: the scene's own switch and
  *                                        the record of what was heard there (the last 30), shown in the window
  *
- * Voices are shelved (B2700): text only, no sound.
+ * Voices are shelved (B2750): text only, no sound.
  */
 import * as OR from "./overheard-rules.mjs";
 import * as G from "./talk-grammar.mjs";

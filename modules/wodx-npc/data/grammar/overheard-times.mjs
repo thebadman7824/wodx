@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.53.0 (B2701): talk of the times, for NPCs overheard talking among themselves (scripts/overheard-rules.mjs).
+ * WoDX NPC 0.53.0 (B2751): talk of the times, for NPCs overheard talking among themselves (scripts/overheard-rules.mjs).
  * What people in a place are talking about in a year: a war, a plague, a new railway, a new ruler, the arcologies.
  * House writing, a rounded reading of history for play, not from any book. Each phrase is a noun phrase that reads
  * after "about" ("Any more word about the Hussites?").

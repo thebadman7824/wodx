@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2710
+Next free block: B2760
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -122,7 +122,7 @@ Next free block: B2710
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 | B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
-| B2700-B2709 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
+| B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3544,22 +3544,22 @@ Reverse: give FERA_ANIMAL a Mokole entry again and drop animal from bodyOf.
 A lasting change "A false limb" with a part named in its "Part lost" field draws that part again as a false limb, in wood and iron before 1900, steel and plastic to 2022, and chrome in the World of Future Darkness, by the chronicle's year. The rules are unchanged: the part still counts as lost.
 Reverse: drop fakes from dollOf in extras.mjs.
 
-## B2700. NPCs overheard talking among themselves (2026-11-13)
+## B2750. NPCs overheard talking among themselves (2026-11-13)
 WoDX NPC 0.53.0, from Improvement Desk item tg1 (Ben approved 13 November 2026). Two NPCs within the talking distance of each other (talkReach, 2 squares) make a short exchange, one line each, through the talk generator (talk-grammar.mjs) with the grammar in data/grammar/overheard.mjs. A character within earshot of either (overheardEarshot, 4 squares) hears it, unless a wall that stops sound stands between them and both speakers. The active Storyteller's client looks when a player's character moves and every 30 seconds while the game is not paused; a pair talks at most every 5 real minutes, a scene at most every 45 seconds, and then on a 35 per cent chance. No talk in a fight, from an animal, a sleeper or the fallen, or from an NPC marked no stock talk (or no remarks, except passers-by, whose shared actor carries that mark). Each character in earshot gets a whisper to its players and the Storyteller, with names as it knows them (Faces). The scene keeps the last 30 exchanges in flags.wodx-npc.overheard.log, shown in the Overheard talk window, which also switches a scene off and can make two talk now. Text only, because Voices is shelved. World setting overheard, off by default.
 
 Reverse: turn off "NPCs talk among themselves" in the module settings.
 
-## B2701. What they talk about, and talk of the times (2026-11-13)
+## B2751. What they talk about, and talk of the times (2026-11-13)
 Topics: a rumour one of the two has heard in WoDX Storyteller's rumour mill that a listener has not had (it then counts as heard, flags.wodx-npc.heard, as when an NPC tells it), talk of the times, a price (a goods kind short, gone or plentiful at the scene's market), who keeps order, a faction, a feast (WoDX Chronicle's calendar), the weather (WoDX Atmosphere) and work. Each is drawn by weight (secret 5, rumour 4, times 3, price, faction and feast 2, the rest 1) among those with something to say. Talk of the times (data/grammar/overheard-times.mjs) is a house reading of history by year: for each of the 44 world regions, for each way of life, and for everywhere, from 1197 to the World of Future Darkness; the most specific entries that fit speak (the region, then its way of life, then everywhere). Mortals talk of the world they can see: no metaplot of the game lines.
 
 Reverse: edit TIMES, or give a topic weight 0 in WEIGHTS (overheard-rules.mjs).
 
-## B2702. Who may talk of what (2026-11-13)
+## B2752. Who may talk of what (2026-11-13)
 Passers-by keep to street talk (the times, prices, the watch, feasts, the weather, work) as B975 asks: no rumours from the network and no factions. A faction everyone may know of comes up between anyone, the one that holds the scene first. A secret faction (Kindred, Garou and their like) comes up only between two of its own members, voices lowered: a clue for a character who stands close enough, as overheard talk is in Bloodlines.
 
 Reverse: drop "secret" from TOPICS, or filter it in factionTopic.
 
-## B2703. Words of each way of life (2026-11-13)
+## B2753. Words of each way of life (2026-11-13)
 The words that change with the place and the year are symbols by way of life (WoDX Chronicle sphereFor for the scene's region and year) and era band: a short oath, who keeps order (the yamen runners in Ming China, the kotwal's men in Delhi, the reeve's men in Brno, the corporate patrols in the future), the market (the souk, the night market, the great market of Tenochtitlan), how goods come in, and how word came (Chronicle mediaFor: at the well, a printed sheet, the paper, the wireless, online, the net). Money is the region's own that year from WoDX Storyteller (the small coin before 1900, the main one after). The staple at the market follows the way of life (bread, rice, millet, maize, potatoes, taro). The Storyteller's grammar journal can add overheard:<topic> and overheard:reply:<topic> lines.
 
 Reverse: edit SYMBOLS in data/grammar/overheard.mjs, or write lines in the "WoDX talk grammar" journal.

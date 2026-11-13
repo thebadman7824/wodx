@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.53.0 (B2700 to B2703): NPCs who talk to each other where a character can overhear. The pure part: no
+ * WoDX NPC 0.53.0 (B2750 to B2753): NPCs who talk to each other where a character can overhear. The pure part: no
  * Foundry here, so the harness can test it. scripts/overheard.mjs runs it on the active Storyteller's client.
  *
  * Two NPCs standing together on a scene make a short exchange: one opens on a topic, the other answers. The words come
@@ -11,7 +11,7 @@
  *
  * A character within earshot of either speaker hears it as a whisper; the Storyteller sees everything that was heard.
  * Passers-by keep to the generic topics (no rumours from the network, no factions: B975). A secret faction (Kindred,
- * Garou, a Tradition and their like) comes up only between two of its own members, voices lowered (B2702).
+ * Garou, a Tradition and their like) comes up only between two of its own members, voices lowered (B2752).
  */
 import {squaresBetween} from "./talk-rules.mjs";
 import {generate, mix, bandOf} from "./talk-grammar.mjs";

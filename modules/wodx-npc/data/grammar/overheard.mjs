@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.53.0 (B2700 to B2703): what two NPCs say to each other when a character is close enough to overhear,
+ * WoDX NPC 0.53.0 (B2750 to B2753): what two NPCs say to each other when a character is close enough to overhear,
  * for the talk generator (scripts/talk-grammar.mjs; the pairing is scripts/overheard-rules.mjs). House writing, not
  * from any book. Gender-neutral throughout.
  *
@@ -103,7 +103,7 @@ export const SYMBOLS = {
 const R = (id, when, say, boost = 0) => ({id, when, say: say.map(q), ...(boost ? {boost} : {})});
 
 export const RULES = {
-  /* a rumour from the Storyteller's rumour mill that one of them has heard (B2701) */
+  /* a rumour from the Storyteller's rumour mill that one of them has heard (B2751) */
   "overheard:rumour": [
     R("overheard.rumour", {}, ["Did you hear? {rumour}", "I heard it #ohHeard#: {rumour}", "Keep this to yourself. {rumour}"]),
     R("overheard.rumour.afraid", {mood: "afraid"}, ["I can't stop thinking about it. {rumour}", "Don't laugh. {rumour}"])
@@ -141,7 +141,7 @@ export const RULES = {
   "overheard:reply:watch": [
     R("overheard.reply.watch", {}, ["Keep your head down and they leave you alone.", "Hush. They've ears everywhere.", "#ohOath.cap#. They're worse than the thieves."])
   ],
-  /* a faction everyone may know of (never a secret one, B2702) */
+  /* a faction everyone may know of (never a secret one, B2752) */
   "overheard:faction": [
     R("overheard.faction", {}, ["Seen any of {faction} about? They were asking questions.", "Word is {faction} wants this whole street.",
       "I'd stay clear of anyone from {faction} for a while."])
@@ -149,7 +149,7 @@ export const RULES = {
   "overheard:reply:faction": [
     R("overheard.reply.faction", {}, ["Not my business, and not yours either.", "Let them. They never last.", "Keep your voice down. You don't know who's listening."])
   ],
-  /* two of the same secret faction, lowering their voices (B2702): a clue for a character in earshot */
+  /* two of the same secret faction, lowering their voices (B2752): a clue for a character in earshot */
   "overheard:secret": [
     R("overheard.secret", {}, ["Lower your voice. Is the word from {faction} still the same?", "Not a word to anyone outside {faction}. Not yet.",
       "{faction} won't wait much longer. Someone has to tell them."])

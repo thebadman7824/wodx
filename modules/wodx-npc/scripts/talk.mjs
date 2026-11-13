@@ -126,7 +126,7 @@ export function build(ctx) {
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
   /* NPC 0.45.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
-  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR, OVERHEARD); // 0.53.0: overheard talk (B2700)
+  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR, OVERHEARD); // 0.53.0: overheard talk (B2750)
   let GRAMMAR = BASE;
   /* NPC 0.45.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
   const GRAMMAR_JOURNAL = "WoDX talk grammar";

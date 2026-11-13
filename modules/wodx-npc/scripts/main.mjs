@@ -831,7 +831,7 @@ rivalry.hooks();
 /* 0.27.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
-/* 0.53.0: NPCs who talk among themselves where a character can overhear (B2700 to B2703) */
+/* 0.53.0: NPCs who talk among themselves where a character can overhear (B2750 to B2753) */
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});

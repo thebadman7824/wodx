@@ -1,5 +1,5 @@
 /**
- * NPCs who talk to each other where they can be overheard (NPC 0.53.0, B2700 to B2703), in rothenstein-wodx (the
+ * NPCs who talk to each other where they can be overheard (NPC 0.53.0, B2750 to B2753), in rothenstein-wodx (the
  * testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateoverheard.mjs?${Date.now()}`)).run()
  * Makes four scenes ("WoDX gate: Overheard Brno", "... Cairo" in Egypt, "... earshot", "... street") and their actors, and deletes them after. The world settings it touches are put back; the clock does not move.

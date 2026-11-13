@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* NPCs who talk among themselves where a character can overhear (NPC 0.53.0, B2700 to B2703) */
+/* NPCs who talk among themselves where a character can overhear (NPC 0.53.0, B2750 to B2753) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
