@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2960
+Next free block: B2970
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -134,6 +134,7 @@ Next free block: B2960
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
+| B2960-B2969 | Kindred courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (used B2960-B2962) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4088,3 +4089,18 @@ Reverse: Use Close instead of Go.
 Ben asked whether a disclaimer would help before the repository is made public. The Dark Pack Agreement asks for its legal notice, its logo and a statement that the work is not official World of Darkness material. README.md and a new NOTICE.md carry all three plus the third-party credits; the system fork's settings sidebar adds the unofficial line beside the notice upstream already shows (7.3.2-wodx.10). A notice does not make copying lawful, so book text and art are checked separately on the public repository review desk.
 
 Reverse: Take the line out of module/ui/settings-sidebar.js and drop NOTICE.md and the README paragraph.
+
+## B2960. The court a Kindred faction keeps, by where it stands (2026-11-13)
+WoDX NPC 0.62.0: a faction now has a region (one of the 44 world regions, or the chronicle's homeland when left empty). A Kindred faction of three or more that names no polity keeps the court of its land: a council of the Laibon in West, East, Central and Southern Africa; a court of the Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia; a court of the Kuei-jin in China, Japan, Korea, mainland Southeast Asia and the Malay world. Every other region keeps the Dark Ages court before 1435 and the Camarilla after, as before. A polity picked by hand still wins. India, Central Asia, Tibet and the Americas before the colonies are left on the European default for now.
+
+Reverse: empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2961. A council of the Laibon (2026-11-13)
+The Elder of the land holds the top seat by challenge; a Speaker of the old law judges; each legacy present has a voice (the sheet's clan field holds the legacy); a Warden of the roads and a Keeper of the tales are appointed. The council meets every fourth inner turn. Its law: feeding where the elder forbids, harm to a guest, bringing foreign Kindred's quarrels onto the land, an Embrace the legacy will not own, shaming the elders before the living. Seat names and law are WoDX's own words for the Kindred of the Ebony Kingdom; a book check is queued and may rename them. House rule.
+
+Reverse: delete "laibon-council" from POLITIES in politics-rules.mjs (factions that picked it fall back to their kind's default).
+
+## B2962. A court of the Ashirra (2026-11-13)
+The Amir holds the top seat by challenge; a Qadi judges; a Wazir, a Muhtasib of the night and a Keeper of the guest house are appointed, and each clan present has a voice. The court sits in majlis every second inner turn. Its law: a broken oath sworn before God, harm to a guest under one's roof, hunting in another's quarter, an Embrace without the Amir's leave, aid to the Sabbat. Titles and law are WoDX's own words; a book check is queued. House rule.
+
+Reverse: delete "ashirra" from POLITIES in politics-rules.mjs.

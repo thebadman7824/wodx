@@ -342,3 +342,56 @@ test("an Inquisition cell has a rector appointed above it and officers it elects
   assert.equal(PO.polityFor({...h, polity: "council-of-faith"}, 1600), "hunter-society", "after 1499 the society of its age");
   assert.equal(PO.POLITIES["council-of-faith"].offices.find(o => o.key === "councillor").fill, "clan");
 });
+
+// WoDX NPC 0.62.0: the courts of Africa, the lands of Islam and East Asia by region (B2960 to B2962).
+test("a Kindred faction keeps the court of its land: by its own region, else the homeland", () => {
+  const k = extra => F.normFaction({id: "k", name: "K", kind: "kindred", members: ["a", "b", "c"], ...extra});
+  try {
+    PO.setHomeRegion(null);
+    assert.equal(PO.polityFor(k(), 1600), "camarilla", "no region known: the courts of Europe");
+    assert.equal(PO.polityFor(k({region: "west-africa"}), 1600), "laibon-council");
+    assert.equal(PO.polityFor(k({region: "southern-africa"}), 1250), "laibon-council", "every age");
+    assert.equal(PO.polityFor(k({region: "egypt"}), 1300), "ashirra");
+    assert.equal(PO.polityFor(k({region: "persia"}), 2010), "ashirra");
+    assert.equal(PO.polityFor(k({region: "japan"}), 1700), "kuei-jin-court");
+    assert.equal(PO.polityFor(k({region: "moravia"}), 1300), "dark-ages-court");
+    assert.equal(PO.polityFor(k({region: "india"}), 1700), "camarilla", "a land with no court of its own keeps Europe's for now");
+    assert.equal(PO.polityFor(k(), 1600, {region: "levant"}), "ashirra", "a region passed by the caller");
+    PO.setHomeRegion("central-africa");
+    assert.equal(PO.homeRegion(), "central-africa");
+    assert.equal(PO.polityFor(k(), 1600), "laibon-council", "no region of its own: the homeland's");
+    assert.equal(PO.polityFor(k({region: "british-isles"}), 1600), "camarilla", "its own region wins over the homeland");
+    assert.equal(PO.polityFor(k({polity: "camarilla"}), 1600), "camarilla", "the Storyteller's pick wins");
+    assert.equal(PO.polityFor(k({polity: "none"}), 1600), null);
+    assert.equal(PO.polityFor(k({members: ["a", "b"]}), 1600), null, "two are a coterie, not a court");
+    assert.equal(PO.polityFor(F.normFaction({id: "g", kind: "garou", members: ["a", "b", "c"]}), 1600), "garou-sept", "other kinds keep their polity");
+    PO.setHomeRegion(42);
+    assert.equal(PO.homeRegion(), null, "a bad homeland is ignored");
+  } finally { PO.setHomeRegion(null); }
+});
+
+test("a faction keeps its region, cleaned, and every court region is a world region", async () => {
+  assert.equal(F.normFaction({id: "a", region: "egypt"}).region, "egypt");
+  assert.equal(F.normFaction({id: "a", region: "Egypt; drop"}).region, "");
+  assert.equal(F.normFaction({id: "a"}).region, "");
+  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  for ( const [r, key] of Object.entries(PO.REGION_COURTS) ) {
+    assert.ok(W.WORLD_REGIONS[r], `${r} is a world region`);
+    assert.ok(PO.POLITIES[key], `${key} is a polity`);
+  }
+});
+
+test("the Laibon and Ashirra courts seat their legacies and clans and hear their own law", () => {
+  const ppl = {a: {name: "A", clan: "Osebo", status: 3}, b: {name: "B", clan: "Guruhi", status: 2}, c: {name: "C", clan: "Akunanse", status: 1}};
+  for ( const key of ["laibon-council", "ashirra"] ) {
+    const P = PO.POLITIES[key];
+    assert.equal(P.line, "vampire");
+    assert.ok(P.offices.some(o => o.fill === "clan"), `${key} gives each bloc a voice`);
+    assert.notEqual(PO.topOffice(key).key, PO.judgeOffice(key).key, `${key}: the judge is not the top seat`);
+    assert.ok(P.titles[PO.topOffice(key).key].length >= 3, `${key} offers names for its top seat`);
+    const f = F.normFaction({id: "x", name: "X", kind: "kindred", polity: key, leader: "a", members: ["a", "b", "c"]});
+    const out = PO.innerTurn(f, {polity: key, info: ppl, rand: stream(11), turn: 0});
+    assert.ok(out.lines.length, key);
+    if ( key === "laibon-council" ) assert.ok(!out.lines.some(l => /\bclans\b/.test(l)), "the Laibon speak of legacies");
+  }
+});

@@ -301,7 +301,41 @@ export const POLITIES = {
       {key: "wu", title: "Voice of a wu", seats: 5, fill: "clan"}
     ],
     law: ["straying from one's Dharma before the court", "harming the court's mortals", "dealing with the Kin-jin", "shaming the Ancestor"],
-    notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). The Storyteller picks this polity, for Asia."
+    notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). Used by default for a Kindred faction in China, Japan, Korea, Southeast Asia or the Malay world; the Storyteller may pick it anywhere else."
+  },
+  // NPC 0.62.0 (B2960 to B2962): the Kindred courts of Africa and of the lands of Islam. Offices, law and titles are
+  // WoDX's own words; the book pass over Kindred of the Ebony Kingdom and the Ashirra pages is queued for the PC
+  // (jobs/world-courts-book-check-2026-11-13.md) and may rename seats.
+  "laibon-council": {
+    label: "A council of the Laibon", line: "vampire", kinds: ["kindred"], from: null, to: null,
+    body: "The council", rank: "Status", blocs: "clan", blocWord: "legacies", gathering: {name: "council", every: 4, meets: "The council of the land gathers."},
+    offices: [
+      {key: "elder", title: "Elder of the land", seats: 1, fill: "challenge", top: true},
+      {key: "lawspeaker", title: "Speaker of the old law", seats: 1, fill: "appoint", judge: true},
+      {key: "legacy", title: "Voice of a legacy", seats: 5, fill: "clan"},
+      {key: "warden", title: "Warden of the roads", seats: 1, fill: "appoint"},
+      {key: "lorekeeper", title: "Keeper of the tales", seats: 1, fill: "appoint"}
+    ],
+    law: ["feeding where the elder forbids it", "harm to a guest given shelter", "bringing the quarrels of foreign Kindred onto the land", "an Embrace the legacy will not own", "shaming the elders before the living"],
+    titles: {elder: ["Elder of the land", "Chief", "Mother of the land", "Father of the land"]},
+    notes: "The Kindred of Africa south of the Sahara follow their legacies rather than the sects of Europe. A council of elders holds a land together, each legacy speaks for its own, and foreign Kindred are guests at best (Kindred of the Ebony Kingdom). Used by default for a Kindred faction in West, East, Central or Southern Africa.",
+    eras: {modern: "From the nineteenth century foreign Kindred follow the colonial powers into the port cities, and the council must deal with them or drive them out."}
+  },
+  ashirra: {
+    label: "A court of the Ashirra", line: "vampire", kinds: ["kindred"], from: null, to: null,
+    body: "The court", rank: "Status", blocs: "clan", gathering: {name: "majlis", every: 2, meets: "The Amir sits in majlis."},
+    offices: [
+      {key: "amir", title: "Amir", seats: 1, fill: "challenge", top: true},
+      {key: "qadi", title: "Qadi", seats: 1, fill: "appoint", judge: true},
+      {key: "wazir", title: "Wazir", seats: 1, fill: "appoint"},
+      {key: "voice", title: "Voice of a clan", seats: 5, fill: "clan"},
+      {key: "muhtasib", title: "Muhtasib of the night", seats: 1, fill: "appoint"},
+      {key: "host", title: "Keeper of the guest house", seats: 1, fill: "appoint"}
+    ],
+    law: ["a broken oath sworn before God", "harm to a guest under one's roof", "hunting in another's quarter", "an Embrace without the Amir's leave", "aid to the Sabbat"],
+    titles: {amir: ["Amir", "Sultan", "Shaykh", "Malik"]},
+    notes: "The Kindred of the lands of Islam keep a sect of their own, the Ashirra, open to Kindred of any clan who hold to the faith; a city's Ashirra gather around an Amir in a majlis, and hospitality is law. Used by default for a Kindred faction in the Maghreb, Egypt, Arabia, the Levant, Persia or Anatolia.",
+    eras: {modern: "In the modern nights the Ashirra deal with the Camarilla as equals and keep the Sabbat out where they can."}
   }
 };
 export const POLITY_LIST = Object.keys(POLITIES);
@@ -309,8 +343,24 @@ export const POLITY_LIST = Object.keys(POLITIES);
 /** A mages' faction whose name or notes say it serves Reason keeps the Order's polity, else the Traditions'. */
 const REASON = /technocra|order of reason|union|construct|daedalean|craftmason|cosian|high guild|celestial master|void seeker|artificer|ksirafai|iteration x|progenitor|syndicate|void engineer|new world order/i;
 /** The polity a kind of faction keeps by default in a year, when it has three or more members (B1101, B1110). */
+/**
+ * NPC 0.62.0 (B2960): where in the world a Kindred faction keeps a court of its own kind by default. A faction's own
+ * region (f.region) wins; else the chronicle's homeland, set by the runtime with setHomeRegion. Regions are the ids
+ * of WORLD_REGIONS in wodx-chronicle/scripts/world-rules.mjs. Everywhere else keeps the courts of Europe.
+ */
+export const REGION_COURTS = {
+  "west-africa": "laibon-council", "east-africa": "laibon-council", "central-africa": "laibon-council", "southern-africa": "laibon-council",
+  maghreb: "ashirra", egypt: "ashirra", arabia: "ashirra", levant: "ashirra", persia: "ashirra", anatolia: "ashirra",
+  china: "kuei-jin-court", japan: "kuei-jin-court", korea: "kuei-jin-court", "southeast-asia": "kuei-jin-court", nusantara: "kuei-jin-court"
+};
+let HOME_REGION = null;
+/** The chronicle's homeland region id, for factions that name no region of their own (null for none known). */
+export function setHomeRegion(r) { HOME_REGION = typeof r === "string" && r ? r : null; return HOME_REGION; }
+export const homeRegion = () => HOME_REGION;
+/** The region a faction stands in: its own, else the one given, else the homeland. */
+export const regionOfFaction = (f, region = null) => (typeof f?.region === "string" && f.region) || region || HOME_REGION || null;
 export const DEFAULTS = {
-  kindred: y => (y !== null && y < 1435 ? "dark-ages-court" : "camarilla"),
+  kindred: (y, f, region = null) => REGION_COURTS[regionOfFaction(f, region)] ?? (y !== null && y < 1435 ? "dark-ages-court" : "camarilla"),
   garou: () => "garou-sept",
   fae: y => (y === null || y >= 1969 ? "noble-fief" : y >= 1350 ? "commoner-freehold" : "fae-court"),
   mages: (y, f) => (REASON.test(`${f?.name ?? ""} ${f?.notes ?? ""}`)
@@ -320,9 +370,9 @@ export const DEFAULTS = {
 };
 const inYears = (p, y) => y === null || ((p.from === null || y >= p.from) && (p.to === null || y <= p.to));
 /** The polity a faction follows in a year: its own pick when that exists then, else the default for its kind. */
-export function polityFor(f, year = null, {memberCount = null} = {}) {
+export function polityFor(f, year = null, {memberCount = null, region = null} = {}) {
   const y = Number.isFinite(Number(year)) && year !== null ? Number(year) : null;
-  const byKind = () => { const k = DEFAULTS[f?.kind]?.(y, f); return k && inYears(POLITIES[k], y) ? k : null; };
+  const byKind = () => { const k = DEFAULTS[f?.kind]?.(y, f, region); return k && inYears(POLITIES[k], y) ? k : null; };
   if ( f?.polity === "none" ) return null;
   if ( f?.polity && POLITIES[f.polity] ) {
     if ( inYears(POLITIES[f.polity], y) ) return f.polity;
@@ -601,7 +651,7 @@ const live = (info, id) => info?.[id] ? info[id].alive !== false : true;
  *         turn, year, era ("revolt" | "future" | null)}
  */
 export function innerTurn(f, ctx = {}) {
-  const key = ctx.polity, P = POLITIES[key], body = P?.body ?? "The court", here = body.toLowerCase(), blocs = BLOC_WORDS[P?.blocs] ?? "clans";
+  const key = ctx.polity, P = POLITIES[key], body = P?.body ?? "The court", here = body.toLowerCase(), blocs = P?.blocWord ?? BLOC_WORDS[P?.blocs] ?? "clans";
   const rand = ctx.rand ?? Math.random, info = ctx.info ?? {}, turn = ctx.turn ?? 0;
   const out = {changes: [], lines: [], groups: [], gathering: false};
   if ( !P ) return out;
