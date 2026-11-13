@@ -1800,6 +1800,8 @@ Then the same check on the towns (B2637, B2638): the village, town, angled villa
 
 Evening fix: the remade Kessler map had lost the living room's wooden floor (Ben found it). The furnishing gives a room the age's floor by texture path, and the farm writer only looked floors up by their old short names, so the floor was dropped; the map check never looked at floors. Fixed in ddfarm.py; the check now flags a named room with no floor (beaten earth is allowed only for beasts, courts and pre-1781 cottages and workshops) and, with --against, anything an earlier version had (floors, walls, doors, lights) that has gone. The plan picture draws floored rooms light and bare ground dark. Poor and medieval houses get plain floors in the age's wood finish (no marble); from 1781 earth floors give way to the age's floor except where beasts stand.
 
+The map preview (tools/mapgen/render_preview.py) draws a map with the slim packs' own pictures, shrunk to a quarter: terrain blend, floors, paths and fences, objects by layer at real size and turn with shadows, walls cut for doors and windows, then light. Ben agreed to copying the pictures out of the 8 slim packs; the copy stays private in project files. `check_map.py --preview out.png` draws it and counts any picture the slim packs lack as a problem. Unit test test_render_preview.py, run from furnishing.test.mjs.
+
 
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 

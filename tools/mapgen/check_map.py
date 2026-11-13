@@ -326,9 +326,18 @@ def main():
     ap.add_argument("map"); ap.add_argument("--sizes"); ap.add_argument("--png"); ap.add_argument("--json")
     ap.add_argument("--strict", action="store_true")
     ap.add_argument("--against", help="an earlier version of the same map: nothing it had (floors, walls, doors, lights) may go missing")
+    ap.add_argument("--preview", help="also draw the map with the packs' own pictures (render_preview.py) to this PNG; "
+                                      "a picture the slim packs do not have counts as a problem")
     a = ap.parse_args()
     res = check(a.map, a.sizes)
     if a.against: res["found"] += lost_since(a.against, a.map)
+    if a.preview:
+        import render_preview as R
+        if os.path.isdir(R.PICTURES):
+            pv = R.render(a.map, a.preview)
+            res["found"] += [("picture not in the packs", {"name": m.rsplit("/", 1)[-1], "cx": 0, "cy": 0}, m) for m in pv["missing"]]
+        else:
+            print(f"  no preview: the pack pictures are not at {R.PICTURES}")
     kinds = {}
     for kind, o, why in res["found"]: kinds.setdefault(kind, []).append((o, why))
     guessed = sorted({o["name"] for _, _, _, objs, _ in res["levels"] for o in objs if o["how"] == "guessed" and o["room"] is not None})
