@@ -358,6 +358,67 @@ export function datedParts(f = {}, {wall = false} = {}) {
   }
   return {name: String(f.title ?? "").trim().slice(0, 80) || name, parts, goods};
 }
+/*
+ * Interactables 0.37.0: Bring forward (B2720). What a thing on a map turns into when its kind is out of the year: the
+ * nearest kind of the same family that is in use then. Each step is one way in time ("early": not made yet, so the
+ * older thing; "late": no longer made, so the newer one), followed until a kind fits the year, so a radio in 1850
+ * becomes a telephone and then a bell. A kind with no step has nothing like it in that year and is left for the
+ * Storyteller. The keypad family drops to the mechanical lock of the same grade.
+ */
+export const SWAPS = {
+  light: {switch: {early: "lamp"}, lamp: {late: "switch"}},
+  mount: {car: {early: "carriage"}, motorbike: {early: "horse"}, motorboat: {early: "boat"}, carriage: {late: "car"}},
+  watch: {radio: {early: "phone"}, phone: {early: "bell"}}
+};
+const FAMILY = {
+  light: {flag: "lightKind", list: LIGHTS, span: k => [k === "switch" ? ELECTRIC_FROM : null, ANTIQUE_AFTER.light[k] ?? null]},
+  mount: {flag: "mountKind", list: MOUNTS, span: k => [MOUNTS[k]?.from ?? null, ANTIQUE_AFTER.mount[k] ?? null]},
+  watch: {flag: "watchKind", list: WATCHES, span: k => [WATCHES[k]?.from ?? null, null]}
+};
+const yearStatus = ([from, until], y) => (Number.isFinite(from) && y < from ? "early" : Number.isFinite(until) && y > until ? "late" : "ok");
+/** The kind a family's kind becomes in a year: itself when it fits, another kind, or null when nothing fits. */
+export function swapKind(family, kind, year) {
+  const F = FAMILY[family], y = Number(year) || 0;
+  if ( !F || !F.list[kind] || !y ) return kind ?? null;
+  let k = kind;
+  for ( let i = 0; i < 6; i++ ) {
+    const st = yearStatus(F.span(k), y);
+    if ( st === "ok" ) return k;
+    k = SWAPS[family]?.[k]?.[st] ?? null;
+    if ( !k ) return null;
+  }
+  return null;
+}
+/**
+ * What Bring forward changes on one wall or tile for a year. f: its flags.wodx-interactables; keys: the dated parts to
+ * change (as datedParts names them), all of them when left out. Returns {patch: {flag: value}, was: {flag: old value},
+ * swaps: [{key, from, to}], none: [{key, label}]}: the patch goes into the flags, and was puts them back.
+ */
+export function bringForward(f = {}, {wall = false, year = 0, keys = null} = {}) {
+  const y = Number(year) || 0, out = {patch: {}, was: {}, swaps: [], none: []};
+  if ( !y ) return out;
+  const want = key => !keys || keys.includes(key);
+  const set = (flag, value) => { if ( !(flag in out.was) ) out.was[flag] = f[flag] ?? null; out.patch[flag] = value; };
+  const d = datedParts(f, {wall});
+  for ( const p of d.parts ) {
+    if ( !want(p.key) || yearStatus([p.from, p.until], y) === "ok" ) continue;
+    if ( p.key === "electronic" ) {
+      const grade = f.electronic, lock = LOCKS[f.lock] ? f.lock : "none";
+      set("electronic", "none");
+      if ( lock === "none" && LOCKS[grade] ) set("lock", grade);
+      out.swaps.push({key: p.key, from: p.label, to: `${LOCKS[lock !== "none" ? lock : grade]?.label ?? "Good"} lock`});
+      continue;
+    }
+    const family = p.key === "hazard" ? null : p.key, F = FAMILY[family];
+    const old = F ? (F.list[f[F.flag]] ? f[F.flag] : Object.keys(F.list)[0]) : null;
+    const next = F ? swapKind(family, old, y) : null;
+    if ( !next || next === old ) { out.none.push({key: p.key, label: p.label}); continue; }
+    set(F.flag, next);
+    if ( String(f.title ?? "").trim() === F.list[old].label ) set("title", "");
+    out.swaps.push({key: p.key, from: F.list[old].label, to: F.list[next].label});
+  }
+  return out;
+}
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
