@@ -296,8 +296,11 @@ export async function upkeepChooser() {
     content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources and what they have, the markets and their prices, the long tasks under way, the havens and who knows where they are, hardship on the road, or the bodies left behind.</p>",
     buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
       ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
+      // B3277: the Wyrm corruption window sits beside the Gauntlet's
+      ...(game.modules.get("wodx-otherworlds")?.api?.corruption ? [{action: "corruption", label: "Wyrm corruption"}] : []),
       {action: "money", label: "Money"}, {action: "markets", label: "Markets"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
   if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
+  if ( pick === "corruption" ) return game.modules.get("wodx-otherworlds")?.api?.corruption?.dialog?.();
   if ( pick === "hardship" ) return game.modules.get(MOD)?.api?.hardship?.open?.();
   if ( pick === "remains" ) return game.modules.get(MOD)?.api?.remains?.open?.();
   if ( pick === "havens" ) return game.modules.get(MOD)?.api?.havens?.open?.();

@@ -237,7 +237,7 @@ export async function corruptionDialog() {
   }).join("");
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 900}, window: {title: "Wyrm corruption"}, classes: ["wodx-dialog", "wow-corruption"],
     content: `${scenes.length > 5 ? searchBox("table.wow-corruption-t", "Search places…", "Search places") : ""}<div class="wow-scroll"><table class="wow-corruption-t"><thead><tr><th>Place</th><th>Level</th><th>State</th><th>What feeds it</th><th>Change</th></tr></thead><tbody>${rows}</tbody></table></div>
-      <p class="hint">Give a place a level (0 to 10) to start tracking it. Each week what feeds it may deepen the taint, Banes breed once it is blighted (4+), and a blighted place with Banes can spread to the places linked to it. A tended caern, or a place cleansed in the last four weeks, holds it off. A Hellhole (10) never falls below 7. People who stay in a blighted place take on taint. Setting: ${esc(mode())}. House rules on W20.</p>`,
+      <p class="hint">Opened from Upkeep. Give a place a level (0 to 10) to start tracking it. Each week what feeds it may deepen the taint, Banes breed once it is blighted (4+), and a blighted place with Banes can spread to the places linked to it. A tended caern, or a place cleansed in the last four weeks, holds it off. A Hellhole (10) never falls below 7. People who stay in a blighted place take on taint. Setting: ${esc(mode())}. House rules on W20.</p>`,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))},
       {action: "week", label: "Run a week now", callback: () => "week"}, {action: "cancel", label: "Cancel"}]});
   if ( res === "week" ) return run({force: true});
