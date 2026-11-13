@@ -159,9 +159,9 @@ def build():
     blds = build_rooms()
     walls, patterns, objects, paths = [], [], [], []
     for b in blds:
-        walls.append(wall_with_portals(b.outline, b.t["wall"], b.openings, True))
+        walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
         for a, c in b.partitions:
-            walls.append(wall_with_portals([a, c], b.t["wall"], b.openings, False))
+            walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
     for b in blds:
         for r in b.rooms:
             if B.FLOORS.get(r.floor):
@@ -170,7 +170,7 @@ def build():
             for it in r.items:
                 # a turned item: the asset's own size turned a quarter
                 rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
-                objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
+                objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
             objects.extend(C.dressing_objects(r, False))
     # yard: fences, well, woodpile, block, haystack, sty, garden crops
     def fence_box(x, y, w, h, gap_side, g0, g1):

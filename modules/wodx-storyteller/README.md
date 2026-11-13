@@ -25,7 +25,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 - Files: `night.mjs`, `night-rules.mjs`, `pacing-rules.mjs`, `data/night-tables.mjs`, `rumours.mjs` and `rumour-rules.mjs`, `letters.mjs` and `letters-rules.mjs`.
 - Settings: `nightDraw`, `nightDrawn`, `aidCount`, `rumours`, `rumourNetwork`, `rumourGarble`, `letters`.
-- API: `night`.
+- API: `night`; `letters` (open, send, set, deliver, list, delay, read, plan).
+- Letters between lands (0.59.0): `letters-rules.mjs` REGION_LINES (post, telegraph, telephone years for each world region), CROSSINGS (cables and calls between land masses), RELAYS, worldPlan, lostChance, letterTimes. The window loads the world map rules only when the two ends are in different lands.
 
 ## The ledger and the clocks
 
