@@ -141,6 +141,7 @@ Next free block: B3060
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
+| B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3045) | Paperdoll |
 <!-- decision-index:end -->
 
@@ -4288,6 +4289,16 @@ Reverse: schtasks /Delete /TN "WoDX lane reset" /F.
 lanes.mjs deploy stops the lane's server (only one this tool started), backs up each package folder, mirrors the repo's modules and system and the gate scripts into the lane, checks every file against the repo, starts the server again and records a new clean fingerprint. The PC's existing deploy scripts keep serving lane 1.
 
 Reverse: deploy by hand and run lanes.mjs accept.
+
+## B3030. Changes from outside accounts are turned away (2026-11-13, Ben)
+The repo is public, and Ben asked that any attempt by an outside account to add or remove anything be rejected automatically. Only thebadman7824 (and Claude sessions, which push as that account) may change WoDX. .github/workflows/outside-guard.yml closes and locks every pull request or issue opened by any other account, with one short note. It runs on pull_request_target but never checks out or runs the pull request's code, and the job is skipped for Ben's own work, so it costs no runner time on normal days. Outsiders already cannot push: Ben is the only collaborator. The Checks workflow also skips outside pull requests, so their code never runs on a runner. tools/harness/outside-guard.test.mjs checks the condition and dry-runs the script against a fake gh.
+
+Reverse: delete outside-guard.yml, or add the account to its allow list and to ALLOWED in the test.
+
+## B3031. Repo settings only Ben can set (2026-11-13)
+The cloud sessions' GitHub access refuses writes to repo settings, so these are left for Ben in the GitHub page: Settings, Moderation options, Interaction limits, "Limit to prior collaborators" for 6 months (it lapses and must be set again); Settings, Actions, General, "Require approval for all external contributors"; Settings, Branches, a rule on main that blocks force pushes and deletion, with no review requirement (a review rule would stop Claude merging its own pull requests). The workflow in B3030 works without any of them.
+
+Reverse: undo each setting on the same page.
 
 ## B3040. Many more face features, drawn with a shared kit (2026-11-13)
 WoDX Paperdoll 0.19.0. Ben (13 November 2026): 100 features for anyone, 50 base features per line, 15 more per sub-splat (each clan, tribe, auspice, Tradition, guild, kith, creed, house and the like), and 25 for splats whose strange looks are the point (Nosferatu, Gargoyles); the aim is "little chance that two NPCs or players will look the same". Features are drawn with a small kit (face64-kit.mjs): named spots that follow each head's shape, small glyphs for tattoos and brands, and slots. This first batch brings the features for anyone to 140 (scars, marks, tattoos, jewellery, eyewear and masks, headwear, hair, beards, health, paint and powder, collars), more than the 100 asked, since more variety serves the aim. Objects of one era (sunglasses, a peaked cap, a cigarette) are only ticked, never rolled. The lines follow in batches.

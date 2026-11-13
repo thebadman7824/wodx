@@ -1,0 +1,45 @@
+name: Outside contributions
+
+# Ben's rule (2026-11-13, decision B3030): WoDX takes no changes from outside accounts.
+# Any pull request or issue opened by an account other than the owner is closed and locked
+# with a short note. This workflow never checks out or runs the pull request's code: it only
+# reads the event and calls the GitHub API, so pull_request_target is safe here.
+# The job is skipped (no runner, no minutes) for the owner's own pull requests and issues,
+# which includes every pull request a Claude session opens as Ben.
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  reject:
+    # Allowed accounts. Keep in step with ALLOWED in tools/harness/outside-guard.test.mjs.
+    if: >-
+      !contains(fromJSON('["thebadman7824"]'),
+        github.event_name == 'issues' && github.event.issue.user.login || github.event.pull_request.user.login)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Close and lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event_name == 'issues' && github.event.issue.number || github.event.pull_request.number }}
+          KIND: ${{ github.event_name == 'issues' && 'issue' || 'pull request' }}
+        run: |
+          body="Thanks for your interest. WoDX is a personal project and does not take outside pull requests, issues or changes, so this $KIND has been closed automatically."
+          gh api -X POST "repos/$REPO/issues/$NUMBER/comments" -f body="$body" > /dev/null
+          if [ "$KIND" = "issue" ]; then
+            gh api -X PATCH "repos/$REPO/issues/$NUMBER" -f state=closed -f state_reason=not_planned > /dev/null
+          else
+            gh api -X PATCH "repos/$REPO/pulls/$NUMBER" -f state=closed > /dev/null
+          fi
+          gh api -X PUT "repos/$REPO/issues/$NUMBER/lock" -f lock_reason=off-topic > /dev/null || true
+          echo "Closed $KIND #$NUMBER"
