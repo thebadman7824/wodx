@@ -168,7 +168,7 @@ Next free block: B3440
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
-| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3437) | Storyteller |
+| B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5067,3 +5067,7 @@ Reverse: make huntHere read U.outbreakFor(yearNow()) again.
 ## B3437. Towns lose their dead to the sickness they caught (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs (towns that change over time, B3280). While sickness spreads between towns is on, the town turn takes each town's sickness from its own outbreak (contagion-rules townHit): the week's dead (the attack times that week's share times the death share) come off its people, and its unrest rises by a tenth for each step of pressure. The town turn's own outbreaks by year (TOWN_OUTBREAKS) then do not strike, so a town never has two plagues; plague brought by dated news still does. With sickness off, the town turn works as before.
 Reverse: pass no sickFor from towns.mjs.
+
+## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
+WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
+Reverse: remove the sickDiff field and the named carrier in main.js.
