@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3200
+Next free block: B3210
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -155,6 +155,7 @@ Next free block: B3200
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
+| B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4710,3 +4711,13 @@ Reverse: remove philippine, indochinese and balkan from COINS and MONIES.
 WoDX Chronicle. WoDX keeps the Philippines, Indochina and the Balkans under wider regions, following the standing rule that finer regions come only when a chronicle goes there. Where this scene stands has a Money here choice instead, and it holds the money of the place for prices, money changers and the coin of the place. The regions themselves are unchanged.
 
 Reverse: remove PLACE_MONIES and the money line of cleanPlace and regionHere.
+
+## B3200. A generated chapel is adopted as the house of worship of the place (2026-11-13)
+WoDX Interactables. On adoption, a region the generator tagged as a church takes the faith the scene keeps. That is the scene's own faith in Where this scene stands, else its region's faith in the chronicle's year (WoDX Chronicle faithFor). Western and Eastern Christians get a church; Islam a mosque; the Jewish year a synagogue; Hindu, Buddhist, Chinese and local faiths a temple. A plain label (Chapel, Church, Castle chapel) changes with it, a name of its own stays, and the adoption notes say what was retagged. NPC routines, clergy words and Senses already read these kinds. The building itself is still drawn as a chapel inside (altar and pews); interiors for other faiths are a later map task.
+
+Reverse: drop worshipFor from plan in adopt-rules.mjs.
+
+## B3201. The town generator can name the faith itself (2026-11-13)
+Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
+
+Reverse: remove the --faith argument.

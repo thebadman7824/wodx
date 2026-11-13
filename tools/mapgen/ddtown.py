@@ -610,6 +610,8 @@ def main():
     ap.add_argument("--at", help="organic layout only: where the town stands on the country map, as town, or town:km:DIR (brno:12:NE). The landform and the river then come from the country there, unless --land or --river says otherwise")
     ap.add_argument("--plan", action="store_true", help="organic layout only: add the street plan (centre lines of the ways, the river and the brooks) to each sidecar, for ddwarren.py to lay sewers and culverts under")
     ap.add_argument("--settle", action="store_true", help="organic layout only: also write <name>.settlement.json, the record of the whole place (households, trades, ties) that WoDX NPC's Settlements window reviews; household ids then carry the settlement's id")
+    ap.add_argument("--faith", choices=("western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"),
+                    help="the faith the town's house of worship keeps (B3200); WoDX Interactables adopts the chapel as a church, mosque, synagogue or temple. Left out, the faith of the scene's region decides on adoption")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
@@ -659,6 +661,9 @@ def main():
                 if r.get("label") == "Pod station" and not any(x["mode"] == "hire:pod" for x in stops): stops.append({"mode": "hire:pod", "region": r["id"], "label": "Pod station"})
             sc["transit"] = stops
         if a.plan and a.layout == "organic": sc["plan"] = street_plan(t, pt)
+        if a.faith:
+            for r in sc.get("regions", []):
+                if r.get("place", {}).get("kind") == "church": r["place"]["faith"] = a.faith
         if settled:
             sc["settlement"] = {"id": settled["id"], "name": t.name, "year": t.year or 1197}
             settled["parts"].append({"id": pt["id"], "name": sc["name"], "map": mapname, "sidecar": f"{stem}.wodx.json", "household_ids": [h["id"] for h in sc["households"]]})
