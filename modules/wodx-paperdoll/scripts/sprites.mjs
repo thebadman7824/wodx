@@ -62,8 +62,10 @@ function tick() {
 
 /** Every computer that sees the token starts the attack when the token's flag changes. */
 function onTokenUpdate(doc, change) {
-  const a = change?.flags?.[MOD]?.act;
-  if ( !a || !a.name || !on() ) return;
+  // the change carries only the fields that differ (often just the counter), so the move is read from the token itself
+  if ( !change?.flags?.[MOD]?.act || !on() ) return;
+  const a = doc.flags?.[MOD]?.act;
+  if ( !a?.name ) return;
   const name = doc.flags?.[MOD]?.sprite, act = SR.actOf(name, a.name);
   if ( !act ) return;
   base(name, act);
