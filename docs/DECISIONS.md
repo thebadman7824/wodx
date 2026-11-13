@@ -171,7 +171,7 @@ Next free block: B3470
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
-| B3460-B3469 | Town generator buildings by region (used B3460) | tools |
+| B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5159,3 +5159,8 @@ Reverse: remove the sickDiff field and the named carrier in main.js.
 tools/mapgen regiontrades.first_group_ok, from the Japan 1830 hand check. Outside Christendom a generated town gets no charnel house, cemetery chapel, monastery library or Protestant prayer house. A Jewish quarter and its synagogue appear only in Christendom and the lands of Islam. The hospital, museum, savings bank, gendarmerie, public library, grand hotel, waterworks, dance hall, goods shed and counting house come only once the region's trades have left the old ones (its industrial, colonial or later age: Japan from 1868, India from 1857). Moravia and the rest of Christendom are unchanged. Samurai retainers and sake brewers now also live in ordinary homes in Japan, not only in rich ones.
 
 Reverse: let first_group_ok return true everywhere.
+
+## B3461. The sample settlement records carry band and tradeAge (2026-11-13)
+tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
+
+Reverse: nothing to reverse; the samples follow the generator.
