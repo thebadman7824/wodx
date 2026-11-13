@@ -60,7 +60,7 @@ export async function run() {
     await step("2. who is a minor", async () => {
       const now = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
       R.notes.push({year: now});
-      [adultA, adultB, teen, oldChilde, resChild, marked, plain] = await Actor.createDocuments([
+      const docs = await Actor.createDocuments([
         {name: "Gate Age Adult Ana", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}, sex: "female"}}},
         {name: "Gate Age Adult Bo", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 32}, sex: "male"}}},
         {name: "Gate Age Teen", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 15}}}},
@@ -68,6 +68,10 @@ export async function run() {
         {name: "Gate Age Resident Child", type: "Mortal", flags: {"wodx-npc": {resident: {role: "child"}}}},
         {name: "Gate Age Marked", type: "Mortal", flags: {"wodx-chronicle": {minor: true}}},
         {name: "Gate Age Plain", type: "Mortal"}]);
+      // Created documents are found by name: the order they come back in is not relied on
+      const by = n => docs.find(d => d.name === n);
+      [adultA, adultB, teen, oldChilde, resChild, marked, plain] = ["Gate Age Adult Ana", "Gate Age Adult Bo", "Gate Age Teen", "Gate Age Old Childe", "Gate Age Resident Child", "Gate Age Marked", "Gate Age Plain"].map(by);
+      R.notes.push({created: docs.map(d => ({name: d.name, born: d.flags?.["wodx-creation"]?.chronology?.bornYear ?? null, role: d.flags?.["wodx-npc"]?.resident?.role ?? null, mark: d.flags?.["wodx-chronicle"]?.minor ?? null}))});
       made.push(adultA, adultB, teen, oldChilde, resChild, marked, plain);
       // Embraced 300 years ago at 15: the body stopped at 15
       const engine = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine();
