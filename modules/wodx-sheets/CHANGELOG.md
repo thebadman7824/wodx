@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.21.0 (An optional Gender line under the name on every character sheet, in the player's own words. For a player character it describes and changes nothing in play (B3501))
 - 0.20.2 (On dark sheets the Show all button under the Abilities takes the same clear background as the sheet's other buttons)
 - 0.20.1 (In Beginner view the Show all button under the Abilities has the same frame and colours as the other WoDX buttons, so it reads on every line's sheet, light or dark (it was too faint on most dark sheets))
 - 0.20.0 (The Relationships tab shows Family news to the owner (a pregnancy's due season, rest after a birth, a child's age and caps, a proposal on its way), a lover, spouse or troth tie has a button to start a pregnancy (the Storyteller) or ask for one, and a lover or friendly tie has a button to propose marriage (B3220, B3229))

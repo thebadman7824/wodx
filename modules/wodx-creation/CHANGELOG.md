@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.36.0 (The People generator makes 1 person in 100 nonbinary when asked for anyone, and can be asked for nonbinary people; everyone it made before keeps the same sex and name (B3503))
 - 0.35.0 (Arab world names raised to over 300 (B3312): 82 older and 70 newer men's names, 70 older and 70 newer women's names, 40 older bynames of city, tribe and trade and 64 newer family names. "ibn" and "bint" keep the same share in each age)
 - 0.34.0 (Elders: a character changed before 1197 is asked about the ages before it too (to 800 BCE, to 476, to 1196), not one long Middle Ages, and the years after the change draw the dated marks of the land the character came from, from 59 new marks before 1197 across 17 regions taken from the approved prologue timeline (Great Moravia and the Slavic mission, Rome and Carthage, Athens, the Nile, the Silk Road, the longships and more) as well as the later dated marks (B3180))
 - 0.33.0 (North Indian (Hindi) names raised to over 300 (B3311): 80 older and 70 newer men's names, 70 older and 70 newer women's names, and 70 family names across the Brahmin, Kayastha, merchant, Rajput, hill and Gujarati lines)
