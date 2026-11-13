@@ -180,6 +180,7 @@ Next free block: B3630
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
+| B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3609) | Chronicle |
 <!-- decision-index:end -->
@@ -5658,6 +5659,46 @@ Reverse: remove the updateActor hook in roster.mjs.
 WoDX Chronicle. A player's "Ask to add a character" names who and why. It never passes on its own (NEVER_AUTO). Approving opens a pick of sheets the player does not own yet; the chosen one is given to the player as owner.
 
 Reverse: take the player's ownership off the sheet.
+
+## B3540. A peek opens the Penumbra on the peeker's own map (2026-11-13)
+WoDX Senses. A successful peek (WoDX Otherworlds) turns on the sight "The Penumbra" for that player alone: the map's reflection from its .wodx.json, Banes from the scene's Wyrm corruption, a web veil for the era's webbing when the map has no file, and spirit tokens ringed by the peeker's standing with their court. The physical map is dimmed, since a peeker cannot perceive their own side (W20 pdf 313). The peek holds for ten minutes of game time or until the player steps the sight off (house rule). Ben approved the desk item as suggested.
+
+Reverse: remove "penumbra" from OTHER and the wodxCrossing handler in otherworld-sight.mjs.
+
+## B3541. A mage's sights cost the casting roll (2026-11-13)
+WoDX Senses. Prime, Time, Entropy and Correspondence at rank 1 roll Arete at difficulty 4 (highest Sphere + 3, coincidental, M20 pdf 502). Successes set the hold by the duration chart (M20 pdf 504): house readings make a turn one game minute, a scene one hour, a story one week. A botch says the Storyteller may call for Paradox; nothing is added by itself.
+
+Reverse: HOLD and mageRoll in otherworld-sight-rules.mjs.
+
+## B3542. Dark Ages mages see through a fitting Pillar (2026-11-13)
+WoDX Senses. House reading of the Pillar domains: Prime through Primus, Galdrar or Wise One; Time through Al-Anbiya or Autumn; Entropy through Forlog, Uri-El, Winter or Al-Anbiya; Correspondence through Al-Hajj or Fara. The roll is WoDX Actions' castPlan for a simple first-level spell.
+
+Reverse: DA_PILLARS.
+
+## B3543. Time sight reads the place's echoes (2026-11-13)
+WoDX Senses. The active Storyteller's client keeps up to 80 echoes on each scene (flags.wodx-senses.echoes) from map events that leave a mark (breaking, forcing, fights, loud noise, the uncanny), wounds, Gauntlet crossings and magick. Time 1 sees the last day (house reading of Time Sense, M20 pdf 523); Time 2 or more sees all of them (Postcognition).
+
+Reverse: echoesSeen and the four hooks in setupOtherSight.
+
+## B3544. Chimerical sight (2026-11-13)
+WoDX Senses. Changelings, and mortals the Storyteller enchants, see other changelings' fae mien (a picture set on the actor, else the pixel face drawn as the fae see it), freeholds and the Near Dreaming dressed, and a grey wash that grows with the place's Banality past 4; a person at Banality 8 or more is ringed "dull and grey" (house rules on C20 pdf 46-47). Enchantment lasts one day per Glamour point spent; a kinain always sees.
+
+Reverse: chimerical in OTHER; enchant and tiesDialog.
+
+## B3545. Vulgar magick strains the place (2026-11-13)
+WoDX Senses, WoDX Actions. WoDX Actions calls wodxMagickWorked after an M20 casting. Vulgar magick leaves a strain mark for Prime sight for 30 days, 60 when witnessed, twice as long on a botch (house rule).
+
+Reverse: remove the hook line in m20.js and strainDays.
+
+## B3546. The view from the Shadowlands (2026-11-13)
+WoDX Senses. A wraith player sees the living scene greyed and worn (Wraith 20th pdf 85), heavier in 1914 to 1918 (house rule), with Fetters lit: a Fetter tied to a token, tile or note in the new window, else a thing whose name is the Fetter's name. Other wraiths' tokens show to a wraith even when hidden. When the wraith stands in the Shadowlands level, WoDX Otherworlds' own decay is left in place.
+
+Reverse: shroud in OTHER and its branch in drawOther.
+
+## B3547. A character's own eyes (2026-11-13)
+WoDX Senses. Without choosing a sight, a peeker sees the Penumbra, a wraith the Shadowlands view and a changeling or enchanted mortal the chimerical world. A client setting ("My character's own eyes") turns this off for those who want only the sights they pick.
+
+Reverse: autoSight and the otherAuto setting.
 
 ## B3570. Herd pools by district (2026-11-13)
 WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
