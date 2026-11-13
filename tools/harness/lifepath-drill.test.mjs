@@ -457,3 +457,15 @@ test("the years after the change: each line has its own ways, drawn first", asyn
   assert.equal(D.sinceOwn("demon", 1500, 1700).length, 0);
   assert.equal(D.sinceOwn("mortal", 1500, 1700).length, 0);
 });
+
+test("B3180: elders get the ages before 1197, and their land's dated marks feed those ages", () => {
+  assert.deepEqual(D.sinceSpans(-300, 1250).map(x => [x.group, x.from, x.to]), [["B", -299, 476], ["C", 477, 1196], ["M", 1197, 1250]]);
+  const s = D.newSince({turnYear: 500, nowYear: 1200, line: "vampire", seed: "elder", region: "moravia"});
+  assert.equal(s.region, "moravia");
+  const c = D.sinceCurrent(s);
+  assert.equal(c.id, "s-C");
+  assert.equal(c.options.length, 5);
+  const pool = D.datedMarks("moravia", 477, 1196).map(m => m[0]);
+  assert.ok(pool.includes("Heard the brothers from Thessaloniki preach in your own tongue"));
+  assert.equal(D.newSince({turnYear: 500, nowYear: 1200, region: "nowhere"}).region, null);
+});

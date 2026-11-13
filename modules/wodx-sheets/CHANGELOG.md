@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.20.0 (The Relationships tab shows Family news to the owner (a pregnancy's due season, rest after a birth, a child's age and caps, a proposal on its way), a lover, spouse or troth tie has a button to start a pregnancy (the Storyteller) or ask for one, and a lover or friendly tie has a button to propose marriage (B3220, B3229))
 - 0.19.0 (in a player's Beginner view: a Quick rolls row at the top of Core with four common checks and the line's powers, a click rolls at once and Shift+click opens the window, the player can add or take away checks; Abilities at zero fold behind Show all; Settings, Effects, Body and the Wiki link sit behind a More tab button and the power tabs follow Core; hover help in plain words on Attributes, Abilities, Virtues and pools, and the first sentence of a power's own description. Full view draws the sheet as before. 0.18.0 and 0.18.1 are taken by the relationships work. B2822-B2825; the Possessions tab says what the character carries in one line, in the coin of the place and year, with every coin folded under it in Beginner view)
 - 0.18.1 (the Relationships tab shows how far a character trusts each person, the warmth of a romance, and names the source of a hidden loyalty or a past life (WoDX NPC 0.57.0))
 - 0.18.0 (the Relationships tab says under each bond what it does in play, and where it came from: the pack name, a Fetter, the Vinculum or the family line; B2840; not deployed)
