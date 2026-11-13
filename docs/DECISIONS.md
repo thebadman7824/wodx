@@ -3316,6 +3316,13 @@ The picture in the window is quick: ready layers laid over each other and tinted
 Not yet: build and height, beards, a facing other than the front in the quick picture, and asking for a batch from inside the game.
 Reverse: remove the two header buttons in main.mjs; a kept figure is the flag figure on the actor.
 
+## B2588. Sprites take blows, dodge, fall and die, and run and sneak (2026-11-13, Ben's asks)
+
+Every sprite has six more sheets, made from its own walk sheet by tools/sprites/proto_attacks.py (extras), so people, beasts and the war form all have them: taking a blow, dodging, falling, dying, running and going low. Combat 3.22.1 adds the condition the harm left (the fight rules' own word) to wodxDamageApplied. Paperdoll then plays, a moment after the attacker's strike: the blow taken; a fall when the character is out of the fight (unconscious, torpor, or the last health level filled); the death when the rules say dead or Final Death. A fall or a death holds its last frame on every screen, and across reloads, until the character's health is better than Incapacitated again or api.sprites.rise(token) is called. A missed attack makes the one attacked dodge.
+How a figure dies is drawn by its kind: a Cainite crumbles from the head down to a heap of ash, a wraith or spirit thins and drifts up, anything else falls, lies still and greys. A Garou returning to its breed form in death is not shown yet.
+Going: a token that crawls uses the low sheet; one that covers more than six squares in one stretch uses the running sheet. These two are the walk leaned forward or pressed low, a first version; true run and crouch poses are open, as are climbing, swimming, riding and flying.
+Reverse: remove the reactTo call in onDamage and the dodge in onAttack (sprites.mjs); the sheets are harmless without them.
+
 ## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
 The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
 Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.

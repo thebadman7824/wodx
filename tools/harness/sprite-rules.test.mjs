@@ -119,7 +119,7 @@ test("a power's look comes from what it is, then its kind, then the character's 
 test("a character's own sprite: the roster entry, the manifest learned, the paths and what is offered", () => {
   const e = SR.rosterOf({id: "abc123", name: "Sir Test", type: "Vampire", skin: "C8A080", hair: "nope",
     items: [{name: "Broadsword", type: "Melee Weapon", worn: true}, {name: "Class Three", type: "Armor", worn: true}, {name: "Cloak", type: "Item", worn: false}]});
-  assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true});
+  assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true, death: "ash"});
   assert.deepEqual(SR.rosterOf({id: "w1", name: "Wolf", type: "Creature"}), {id: "w1", name: "Wolf", kind: "animal"});
   assert.equal(SR.rosterOf({id: "m", name: "M", type: "Mortal"}).powers, false);
   const n = SR.learn("worlds/t/wodx-sprites", {sprites: {abc123: {name: "Sir Test", key: "0123abcd", acts: ["claw", "swing", "dance"]}, "bad/../id": {name: "x"}, w1: {name: "Wolf", acts: ["bite"]}}});
@@ -136,4 +136,33 @@ test("a character's own sprite: the roster entry, the manifest learned, the path
   assert.ok(off.includes(own) && off.includes("lady-1888") && !off.includes(SR.ownName("w1")));
   assert.equal(SR.learn("x", null), 0);
   assert.ok(!SR.isOwn(own) && !SR.SHEETS[own], "a new manifest forgets the old one");
+});
+
+test("reactions, deaths and ways of going (B2588)", async () => {
+  const {existsSync} = await import("node:fs");
+  assert.equal(SR.reactFor(null, 2), "hit");
+  assert.equal(SR.reactFor("ok", 7), "fall");
+  assert.equal(SR.reactFor("torpor", 0), "fall");
+  assert.equal(SR.reactFor("unconscious"), "fall");
+  assert.equal(SR.reactFor("dead", 7), "die");
+  assert.equal(SR.reactFor("finaldeath"), "die");
+  for ( const name of ["kindred-elder-1888", "garou-homid", "garou-crinos", "garou-lupus", "townsman-1888", "lady-1888"] ) {
+    for ( const m of [...SR.REACTS, ...SR.GAITS] ) assert.ok(existsSync(new URL(`../../${SR.actPath(name, m)}`, import.meta.url)), `${name}.${m}`);
+    for ( const m of SR.REACTS ) assert.ok(SR.hasAct(name, m) && SR.ACT_LABELS[m]);
+    assert.ok(!SR.REACTS.includes(SR.actOf(name, null)), "the move played by default is an attack");
+    assert.ok(!SR.REACTS.includes(SR.moveFor(name, {weapon: "Club"})));
+  }
+  assert.ok(SR.HOLD.every(m => SR.REACTS.includes(m)));
+  assert.equal(SR.gaitFor("lady-1888", {action: "crawl"}), "sneak");
+  assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 9}), "run");
+  assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 3}), null);
+  assert.equal(SR.gaitFor("lady-1888", {action: "fly", squares: 9}), null);
+  assert.equal(SR.gaitFor("nobody", {action: "crawl"}), null);
+  assert.equal(SR.rosterOf({id: "v", name: "V", type: "Vampire"}).death, "ash");
+  assert.equal(SR.rosterOf({id: "w", name: "W", type: "Wraith"}).death, "fade");
+  assert.equal(SR.rosterOf({id: "m", name: "M", type: "Mortal"}).death, "die");
+  SR.learn("worlds/t/wodx-sprites", {sprites: {a1: {name: "A", acts: ["claw", "hit", "fall", "die"], gaits: ["run", "sneak", "moonwalk"]}}});
+  assert.deepEqual(SR.GAIT[SR.ownName("a1")], ["run", "sneak"]);
+  assert.equal(SR.actOf(SR.ownName("a1"), "nothing"), "claw");
+  SR.learn("x", null);
 });

@@ -75,18 +75,45 @@ export const ACT_FRAMES = 6;
 /** How long each frame of an attack shows, in thousandths of a second: draw back, strike, hold. */
 export const ACT_MS = [110, 110, 110, 90, 140, 220];
 export const ACT_TOTAL = ACT_MS.reduce((a, b) => a + b, 0);
+/* Besides its attacks, every sprite can take a blow, dodge, fall and die (B2588): those sheets are made from its walk. */
+export const REACTS = ["hit", "dodge", "fall", "die"];
+/** Moves whose last frame stays on the map until the figure is helped up. */
+export const HOLD = ["fall", "die"];
 export const ACTS = {
-  "kindred-elder-1888": ["claw", "cast"],
-  "garou-homid": ["claw"],
-  "garou-crinos": ["claw"],
-  "garou-lupus": ["bite"],
-  "townsman-1888": ["claw", "shot"],
-  "lady-1888": ["thrust"]
+  "kindred-elder-1888": ["claw", "cast", ...REACTS],
+  "garou-homid": ["claw", ...REACTS],
+  "garou-crinos": ["claw", ...REACTS],
+  "garou-lupus": ["bite", ...REACTS],
+  "townsman-1888": ["claw", "shot", ...REACTS],
+  "lady-1888": ["thrust", ...REACTS]
 };
-export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing"};
+export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing",
+  hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die"};
 export const actPath = (name, act) => `${stem(name)}.${act}.png${stamp(name)}`;
 /** The move a sprite plays: the one asked for if it knows it, else its first. Null when it knows none. */
-export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l[0] ?? null); };
+export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l.find(m => !REACTS.includes(m)) ?? null); };
+/** A move the sprite must really have (a reaction is never swapped for an attack). */
+export const hasAct = (name, act) => (ACTS[name] ?? []).includes(act);
+/**
+ * What a figure does when harm reaches it: it dies when the fight rules say dead or Final Death, falls when they say
+ * it is out of the fight (unconscious, torpor, or the last health level filled), and otherwise takes the blow.
+ */
+export function reactFor(condition, level = 0) {
+  if ( condition === "dead" || condition === "finaldeath" ) return "die";
+  if ( condition === "unconscious" || condition === "torpor" || condition === "incapacitated" || level >= 7 ) return "fall";
+  return "hit";
+}
+/* Ways of going (B2588): a sheet like the walk, for running and for going low. */
+export const GAITS = ["run", "sneak"];
+export const GAIT = Object.fromEntries(Object.keys(ACTS).map(k => [k, [...GAITS]]));
+/** The sheet a moving figure uses: low when it crawls or sneaks, running when it covers a long stretch at once, else its walk (null). */
+export function gaitFor(name, {action = "walk", squares = 0} = {}) {
+  const has = GAIT[name] ?? [];
+  if ( action === "crawl" && has.includes("sneak") ) return "sneak";
+  if ( (action === "walk" || !action) && squares > RUN_SQUARES && has.includes("run") ) return "run";
+  return null;
+}
+export const RUN_SQUARES = 6;
 /** The frame of an attack so many thousandths of a second after it began; null once it is over. */
 export function actFrame(elapsed) {
   if ( !(elapsed >= 0) ) return 0;
@@ -115,7 +142,7 @@ export function moveFor(name, blow = {}) {
     : blow.ranged ? ["shot", "thrust", "swing"]
     : blow.brawl ? ["claw", "bite", "swing"]
     : POINTED.test(blow.weapon ?? "") ? ["thrust", "swing", "claw"] : ["swing", "thrust", "claw"];
-  return want.find(m => has.includes(m)) ?? (blow.power ? null : has[0]);
+  return want.find(m => has.includes(m)) ?? (blow.power ? null : has.find(m => !REACTS.includes(m)) ?? null);
 }
 
 /* ---- what a power looks like (B2585) ----
@@ -163,7 +190,7 @@ export function fxFor(info = {}) {
  */
 /** Take in a batch's manifest: every sprite in it becomes "own-<actor id>". Returns how many were learned. */
 export function learn(folder, manifest) {
-  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; }
+  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; }
   let n = 0;
   for ( const [id, e] of Object.entries(manifest?.sprites ?? {}) ) {
     if ( !/^[A-Za-z0-9]+$/.test(id) ) continue;
@@ -171,6 +198,7 @@ export function learn(folder, manifest) {
     OWN[name] = {folder, id, key: /^[0-9a-f]+$/.test(e?.key ?? "") ? e.key : ""};
     SHEETS[name] = String(e?.name ?? id);
     ACTS[name] = (Array.isArray(e?.acts) ? e.acts : []).filter(a => Object.hasOwn(ACT_LABELS, a));
+    GAIT[name] = (Array.isArray(e?.gaits) ? e.gaits : []).filter(g => GAITS.includes(g));
     n++;
   }
   return n;
@@ -193,6 +221,8 @@ export function rosterOf(c = {}) {
     out.worn = items.filter(i => !arms(i)).map(i => i.name).sort();
     out.held = items.filter(arms).map(i => i.name).sort();
     out.powers = POWERED.test(c.type ?? "");
+    // how it dies: a Cainite crumbles to ash, a wraith or a spirit fades, anything else falls and lies still
+    out.death = /vampire/i.test(c.type ?? "") ? "ash" : /wraith|spirit/i.test(c.type ?? "") ? "fade" : "die";
     // a figure the player put together (B2587) is what is drawn: its skin, hair and pieces, not the things marked as worn
     const f = c.figure;
     if ( f && typeof f === "object" ) {
