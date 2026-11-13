@@ -24,7 +24,13 @@ const ownersOf = a => game.users.filter(u => u.isGM || a.testUserPermission?.(u,
 const card = (title, lines) => `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(title)}</b></p>${lines.map(l => `<p>${esc(l)}</p>`).join("")}</div></div>`;
 const dateOf = t => getEngine().timeToDate(Number(t) || 0);
 const yearNow = () => dateOf(game.time.worldTime).year;
-const sexOf = a => { const s = String(a?.flags?.["wodx-creation"]?.sex ?? a?.system?.sex ?? "").toLowerCase(); return /^m/.test(s) ? "m" : /^f/.test(s) ? "f" : ""; };
+// One gender for every module (B3500): WoDX Chronicle reads every record, and gives "" for a player character (B3502)
+const sexOf = a => {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender;
+  if ( g?.forRules ) return g.rules.letter(g.forRules(a));
+  if ( a?.hasPlayerOwner ) return "";
+  const s = String(a?.flags?.["wodx-creation"]?.sex ?? a?.flags?.["wodx-creation"]?.people?.sex ?? a?.system?.sex ?? "").toLowerCase(); return /^m(ale)?$/.test(s) ? "m" : /^f(emale)?$/.test(s) ? "f" : "";
+};
 const stamina = a => { const s = a?.system?.attributes?.stamina; return Math.max(1, Number(s?.total ?? s?.value) || 1); };
 const regionNow = () => { try { return chron()?.world?.homeland?.() || "moravia"; } catch (e) { return "moravia"; } };
 const sphereNow = (region, year) => { try { return chron()?.world?.rules?.sphereFor?.(region, year) ?? "latin"; } catch (e) { return "latin"; } };

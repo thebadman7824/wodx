@@ -67,7 +67,8 @@ export function settle({law, kin = {}, will = null} = {}) {
   const out = [];
   const add = (p, share, why) => { if ( !p || share <= 0 ) return; const hit = out.find(o => (p.id && o.id === p.id) || (!p.id && o.name === p.name)); if ( hit ) { hit.share += share; hit.why += `; ${why}`; } else out.push({id: p.id ?? null, name: p.name ?? "", share, why}); };
   const kids = [...(kin.children ?? [])].sort((a, b) => (a.born ?? 0) - (b.born ?? 0));
-  const sons = kids.filter(k => k.sex === "male"), daughters = kids.filter(k => k.sex !== "male");
+  // "any": a player character, whose gender has no bearing on play, takes a son's place under every law (B3502)
+  const sons = kids.filter(k => k.sex === "male" || k.sex === "any"), daughters = kids.filter(k => k.sex !== "male" && k.sex !== "any");
   const w = will ? normWill(will) : {heirs: []};
   // How much a will may give away under this law
   const cap = law.key === "shares" ? 1 / 3 : law.key === "civil" ? 0.5 : law.key === "state" ? 0 : law.key === "joint" ? 0.25 : 1;

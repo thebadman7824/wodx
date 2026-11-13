@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.65.1 (The Seed of Lilith: a player character vessel always resists at 7, whatever their gender; a Storyteller character's recorded sex now counts even without a passer-by's tags (B3502))
 - 3.65.0 (Hunting in a sick town: when WoDX Storyteller's sickness is spreading or at its height in the scene's town, the Hunt offers "The sick are everywhere" at one less difficulty (change it or set 0 to overrule), and a vampire who becomes a carrier there carries that town's sickness by name, so it can bring it to a clean town (B3438))
 - 3.64.0 (Seduction refuses a target under 18 and opens no window (B3212))
 - 3.63.0 (The rolls read what other WoDX modules leave on a character: a night after bad dreams (the Nightmares Flaw) takes its die from every roll, a character dressed as a stranger can tick "Blending into a crowd" for one more difficulty, open fire in a mood region makes frenzy and Rotschreck harder, and an entry in the character's codex can be spent once as research for one off the difficulty of an Occult, Academics or lore roll (B3130 to B3133))

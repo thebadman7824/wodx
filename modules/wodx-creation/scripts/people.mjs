@@ -129,7 +129,7 @@ export class PeopleApp extends ApplicationV2 {
         <form class="wodx-people-form">
           <div class="wodx-field"><label>How many</label><input type="number" name="count" min="1" max="12" value="${o.count}"></div>
           <div class="wodx-field"><label>What</label>${sel("kind", [["mortal", "Mortals"], ["ghoul", "Ghouls"]], o.kind)}</div>
-          <div class="wodx-field"><label>Sex</label>${sel("sex", [["any", "Any"], ["female", "Female"], ["male", "Male"]], o.sex)}</div>
+          <div class="wodx-field"><label>Sex</label>${sel("sex", [["any", "Any"], ["female", "Female"], ["male", "Male"], ["nonbinary", "Nonbinary"]], o.sex)}</div>
           <div class="wodx-field wide"><label>Trade</label>${searchBox("select[name=trade]", "Search trades…", "Search trades")}${sel("trade", [["any", "Any trade"], ...trades.map(t => [t, t])], o.trade, false)}</div>
           ${o.kind === "ghoul" ? `<div class="wodx-field wide"><label>Domitor</label>${searchBox("select[name=domitorId]", "Search Kindred…", "Search Kindred")}${sel("domitorId", [["", "None: independent ghouls"], ...kindred.map(a => [a.id, a.name])], o.domitorId, false)}</div>` : ""}
         </form>

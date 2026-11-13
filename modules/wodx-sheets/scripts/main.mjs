@@ -456,6 +456,28 @@ function nameHeaderButtons(app, html) {
   }
 }
 Hooks.on("renderActorSheet", nameHeaderButtons);
+
+// Gender (B3501): an optional line under the name. For a player character it describes and changes nothing in play;
+// what is written is kept by WoDX Chronicle (api.gender), which every module reads.
+function genderField(app, html) {
+  const el = html?.[0] ?? html ?? app?.element?.[0], actor = app?.actor ?? app?.document;
+  const gen = game.modules.get("wodx-chronicle")?.api?.gender;
+  if (!actor || !gen || !el?.querySelector) return;
+  const nameBox = el.querySelector('.bioInformationArea input[name="name"], .bioInformationArea input.sheet-infoValues')?.closest(".bioInformationArea");
+  if (!nameBox || nameBox.parentElement?.querySelector(".wodx-gender-field")) return;
+  const can = actor.isOwner && !!nameBox.querySelector('input[name="name"]');
+  const div = document.createElement("div");
+  div.className = "bioInformationArea floating-label-group wodx-gender-field";
+  const input = document.createElement("input");
+  input.type = "text"; input.className = "sheet-infoValues"; input.value = gen.of(actor); input.autocomplete = "off"; input.maxLength = 40;
+  input.placeholder = "Optional"; input.setAttribute("aria-label", "Gender (optional)"); input.readOnly = !can;
+  input.dataset.tooltip = actor.hasPlayerOwner ? "Optional. It describes the character and changes nothing in play." : "Optional. For a character the Storyteller runs, female or male follows the era's laws and customs.";
+  const label = document.createElement("span"); label.className = "floating-label"; label.textContent = "Gender";
+  div.append(input, label);
+  input.addEventListener("change", ev => { ev.stopPropagation(); gen.set(actor, input.value).catch(e => console.warn("WoDX Sheets | gender", e)); });
+  nameBox.after(div);
+}
+Hooks.on("renderActorSheet", genderField);
 Hooks.on("renderItemSheet", nameHeaderButtons);
 
 // Sheet tools (B2837): one labelled button that lists the title bar's icon buttons with their names
@@ -528,6 +550,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.20.2", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.21.0", extras: X, rules: SR, sheetFor, viewFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });
