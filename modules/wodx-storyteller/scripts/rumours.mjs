@@ -1,4 +1,5 @@
 import * as RR from "./rumour-rules.mjs";
+import * as T from "./tale-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {nightNow} from "./night.mjs";
@@ -20,6 +21,9 @@ export function registerRumourSettings() {
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "rumourGarble", {name: "Rumours change in the telling", hint: "Each time someone passes a rumour on, it may twist a little. The rumour mill counts the twists for you to play; the words stay yours.",
     scope: "world", config: true, type: Boolean, default: false});
+  // B3350: public deeds become tales that change as they are retold
+  game.settings.register(MOD, "tales", {name: "Deeds become tales", hint: "What characters do in public (a standing won or lost, a boon kept or broken) starts a tale that NPCs pass on and retell their own way. NPCs meet a character with the version they heard in mind.",
+    scope: "world", config: true, type: Boolean, default: true});
 }
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
 const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
@@ -56,6 +60,68 @@ export async function startRumour({text, tellers = [], big = false, source = nul
   return r;
 }
 
+/** B3351: how each knower of a tale leans toward the one it is about (their attitude in WoDX NPC, or a gossip's Nature). */
+const GOSSIP_NATURES = /^(celebrant|bon vivant|conniver|child|gallant|jester|bravo)/i;
+function leaningsFor(r) {
+  const out = {};
+  if ( !r.about ) return out;
+  for ( const id of r.knownBy ) {
+    const a = game.actors.get(id);
+    let att = null;
+    try { const x = npc()?.attitude?.of?.(id, r.about); att = x?.met ? x.step : null; } catch (e) { att = null; }
+    out[id] = T.leaningOf({att, gossip: GOSSIP_NATURES.test(String(a?.system?.nature ?? "")) || /harp(y|ies)|galliard/i.test(String(a?.name ?? ""))});
+  }
+  return out;
+}
+
+const fameOf = a => { for ( const i of a?.items ?? [] ) if ( i.type === "Feature" && /^fame\b/i.test(i.name ?? "") ) return Number(i.system?.value) || 0; return Number(a?.system?.backgrounds?.fame?.value) || 0; };
+
+/**
+ * B3350, B3353: start a tale about a character's deed. did: what they did ("broke a boon to the Prince"); tone -3..3;
+ * where: a place name; crowd: done in front of many. Tellers: the ones named, else people near, one more for each dot of
+ * Fame. Returns the rumour, or null when tales are off.
+ */
+export async function startTale({about, did, where = null, tone = 0, tellers = [], crowd = false, truth = "true", big = false} = {}) {
+  if ( !game.user.isGM || setting("tales") === false ) return null;
+  const a = game.actors.get(about?.id ?? about);
+  if ( !a || !String(did ?? "").trim() ) return null;
+  const tale = T.normTale({who: a.name, did, where: where === null ? (canvas?.scene?.name ?? "") : where, tone, how: T.HOW[String(T.normTale({tone}).tone)]});
+  let first = (tellers ?? []).filter(id => isNpc(game.actors.get(id)));
+  const want = T.firstTellers({fame: fameOf(a), crowd});
+  if ( first.length < want ) {
+    const net = contacts();
+    const here = all(canvas?.scene?.tokens).map(t => t.actorId).filter(x => isNpc(game.actors.get(x)) && !first.includes(x));
+    const pool = [...here, ...Object.keys(net).filter(x => net[x].length && !first.includes(x) && !here.includes(x)).sort()];
+    first = [...first, ...pool.slice(0, want - first.length)];
+  }
+  const r = await startRumour({text: T.taleText(tale), tellers: first, big, source: first[0] ?? null, about: a.id, truth});
+  if ( !r ) return null;
+  let out = r;
+  await mutate("rumours", cur => ({value: RR.normRumours(cur).map(x => x.id === r.id ? (out = RR.normRumour({...x, tale, versions: [tale], heardAs: Object.fromEntries(first.map(id => [id, 0]))})) : x)}));
+  return out;
+}
+
+/** B3352: the first-meeting shift an NPC carries from the tales they heard about a character (-1, 0, +1). */
+export const toneFor = (npcId, charId) => T.toneFor(rumours(), npcId, charId);
+/** B3354: what is said about a character, grouped by the knowers' first faction. */
+export function aboutView(charId) {
+  const facs = (() => { try { return npc()?.factions?.state?.()?.factions ?? []; } catch (e) { return []; } })();
+  const groupOf = id => facs.find(f => f.leader === id || (f.members ?? []).includes(id))?.name ?? "the town";
+  return T.aboutView(rumours(), charId, groupOf);
+}
+
+/** B3354: the players' window, What they say about you. */
+export async function aboutDialog(charLike = null) {
+  const ch = game.actors.get(charLike?.id ?? charLike) ?? game.user.character ?? all(game.actors).find(a => a.isOwner && isPC(a));
+  if ( !ch ) return ui.notifications.warn("No character to look at.");
+  const rows = aboutView(ch.id);
+  const tone = t => (t <= -2 ? "dark" : t < 0 ? "unkind" : t >= 2 ? "glowing" : t > 0 ? "kind" : "plain");
+  return foundry.applications.api.DialogV2.prompt({window: {title: `What they say about ${ch.name}`}, classes: ["wodx-dialog", "wst-about"],
+    content: `<p>The tales going round about ${esc(ch.name)}, as each part of the town tells them, and how many have heard each version.</p>
+      ${rows.map(g => `<h4>${esc(g.community)} (${g.heard})</h4><ul data-fixed>${g.versions.map(v => `<li>${esc(v.text)} <small>(${tone(v.tone)}, ${v.count})</small></li>`).join("")}</ul>`).join("") || "<p>Nobody is talking about them that the character knows of.</p>"}`,
+    ok: {label: "Close"}});
+}
+
 /** Work through the nights since each rumour last moved. once: just one more night for each, now. */
 let ticking = Promise.resolve();
 export function tick({force = false, once = null} = {}) {
@@ -66,13 +132,15 @@ export function tick({force = false, once = null} = {}) {
     const net = contacts();
     const moved = [];
     const year = yearNow(), future = futureOn(), region = homeNow(), twist = setting("rumourGarble") ? Media.TWIST_CHANCE : 0;
+    const taleTwist = setting("tales") !== false ? Media.TWIST_CHANCE : twist;
     await mutate("rumours", cur => {
       const list = RR.normRumours(cur).map(r => {
         if ( once && r.id !== once ) return r;
         const nights = once ? [(r.night ?? at.jdn) + 1] : RR.nightsDue(r, at.jdn);
         let x = r;
         for ( const n of nights ) {
-          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: RR.heatAfterDoubt(Media.rumourHeat(year, {big: r.big, future, region}), x.doubt), twist});
+          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: RR.heatAfterDoubt(Media.rumourHeat(year, {big: r.big, future, region}), x.doubt),
+            twist: x.tale ? taleTwist : twist, leanings: x.tale ? leaningsFor(x) : {}});
           x = {...rumour, night: once ? r.night : n, log: [...rumour.log, ...(heard.length ? [{night: n, heard: heard.length, label: once ? "by hand" : ""}] : [])].slice(-40)};
           if ( heard.length ) moved.push(r.id);
         }
@@ -90,7 +158,19 @@ export async function removeRumour(id) { return mutate("rumours", cur => ({value
 /** What one character has heard. */
 export const heardBy = actorId => rumours().filter(r => r.knownBy.includes(actorId));
 
+/** B3350: a boon or a promise kept or broken where a player character is the debtor becomes a tale. */
+async function onBoon({entry, status} = {}) {
+  if ( !isActiveGM() || !entry?.from?.id || !["kept", "broken"].includes(status) ) return;
+  const a = game.actors.get(entry.from.id);
+  if ( !isPC(a) ) return;
+  const what = entry.kind === "boon" ? "a boon" : entry.kind === "oath" ? "an oath" : "a promise";
+  const to = entry.to?.name ? ` to ${entry.to.name}` : "";
+  await startTale({about: a.id, did: status === "kept" ? `kept ${what}${to}` : `broke ${what}${to}`, tone: status === "kept" ? 1 : -2,
+    tellers: entry.to?.id && isNpc(game.actors.get(entry.to.id)) ? [entry.to.id] : [], where: ""});
+}
+
 export function registerRumourHooks() {
+  Hooks.on("wodxBoonSettled", p => { onBoon(p).catch(e => console.error(`${MOD} | tales`, e)); });
   Hooks.on("updateWorldTime", () => { if ( !skipping() ) tick(); });
   Hooks.on("wodxSkipEnd", () => { if ( !chron()?.isHeld?.() ) tick({force: true}); });
 }

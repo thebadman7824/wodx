@@ -32,6 +32,8 @@ export async function moveTrust(who, other, event, why = "") {
   if ( !game.user.isGM || !a || !(o?.id ?? other) ) return null;
   const t = TRR.moveTrust(a.flags?.[MOD]?.trust, o?.id ?? other, event, {at: game.time.worldTime, why});
   await a.setFlag(MOD, "trust", t);
+  // B3346: an NPC also remembers what was done
+  if ( !a.hasPlayerOwner && o ) { try { await api()?.memory?.fromTrust?.(a, o, event, why); } catch (e) { /* memory may be off */ } }
   return t[o?.id ?? other];
 }
 async function onSettled({entry, status} = {}) {

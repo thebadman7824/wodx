@@ -3,6 +3,7 @@
  * night by night. Who talks to whom comes from the chronicle itself (the same faction, or tokens on the same scene).
  * No book gives rules for this; every number here is a house reading. No Foundry here.
  */
+import * as T from "./tale-rules.mjs";
 
 /** Each night a knower passes it to this many of their contacts who have not heard. */
 export const HEAT = 2;
@@ -46,7 +47,10 @@ export function normRumour(r = {}) {
     // 0.62.0: who it came from, who it is about, how true it is, and how much it has been denied
     source: r.source ? String(r.source) : null, about: r.about ? String(r.about) : null,
     truth: TRUTH[r.truth] ? r.truth : "unknown", doubt: Math.max(0, Math.min(3, Math.trunc(Number(r.doubt) || 0))),
-    log: Array.isArray(r.log) ? r.log.slice(-40) : []
+    log: Array.isArray(r.log) ? r.log.slice(-40) : [],
+    // B3350: a tale made from a deed, every version told so far and which one each knower heard
+    ...(r.tale ? {tale: T.normTale(r.tale), versions: (Array.isArray(r.versions) && r.versions.length ? r.versions : [r.tale]).slice(0, T.MAX_VERSIONS).map(T.normTale),
+      heardAs: Object.fromEntries(Object.entries(r.heardAs ?? {}).filter(([k, v]) => k && Number.isInteger(v) && v >= 0).map(([k, v]) => [k, Math.min(v, T.MAX_VERSIONS - 1)]))} : {})
   };
 }
 export const normRumours = list => (Array.isArray(list) ? list : []).map(normRumour).filter(r => r.id && r.text);
@@ -58,7 +62,7 @@ export const live = r => !r.ended && r.quiet < QUIET_NIGHTS;
  * telling changes the tale, counted on the rumour for the Storyteller (0: garbling off).
  * Returns the rumour after the night and the ids who heard it new.
  */
-export function spreadNight(rumour, contacts, rand, {heat = HEAT, twist = 0} = {}) {
+export function spreadNight(rumour, contacts, rand, {heat = HEAT, twist = 0, leanings = {}} = {}) {
   const r = normRumour(rumour);
   if ( !live(r) ) return {rumour: r, heard: []};
   const knows = new Set(r.knownBy);
@@ -73,7 +77,14 @@ export function spreadNight(rumour, contacts, rand, {heat = HEAT, twist = 0} = {
       const [id] = fresh.splice(i, 1);
       knows.add(id); heard.push(id);
       if ( heat === Infinity ) queue.push(id);
-      if ( twist > 0 && rand() < twist ) r.twists += 1;
+      const twisted = twist > 0 && rand() < twist;
+      if ( twisted ) r.twists += 1;
+      // B3351: a tale passes on as the teller heard it, and a twist retells it by the teller's leaning
+      if ( r.tale ) {
+        const from = r.heardAs[teller] ?? 0;
+        if ( twisted ) { const x = T.twistFor(r.versions, from, leanings[teller] ?? "stranger", rand); r.versions = x.versions; r.heardAs[id] = x.index; }
+        else r.heardAs[id] = from;
+      }
     }
   }
   r.knownBy = [...knows];

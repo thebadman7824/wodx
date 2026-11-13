@@ -57,10 +57,16 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
     // NPC 0.32.0: what they wear and how they are (WoDX Library's look); traits and look each to two steps, together to three
     const lk = lookFor(npc, ch);
     const tD = Number(t?.delta) || 0, lD = Number(lk?.delta) || 0;
-    if ( !tD && !lD ) return seed;
+    // B3352: the version of a tale they heard about the character, one step at most
+    let hD = 0;
+    try { hD = ch ? Number(game.modules.get("wodx-storyteller")?.api?.rumours?.toneFor?.(npc.id, ch.id)) || 0 : 0; } catch (e) { hD = 0; }
+    if ( !tD && !lD && !hD ) return seed;
     const L = lookApi();
     const delta = L ? L.rules.combine(tD, lD) : tD + lD;
-    return AT.withTraits(seed, {delta, names: [...(tD ? t.names ?? [] : []), ...(lD ? lk.names ?? [] : [])]});
+    const looked = (tD || lD) ? AT.withTraits(seed, {delta, names: [...(tD ? t.names ?? [] : []), ...(lD ? lk.names ?? [] : [])]}) : seed;
+    if ( !hD ) return looked;
+    const heard = AT.withTraits(looked, {delta: hD});
+    return {...heard, from: looked.from ? `${looked.from}, and a tale they heard` : "a tale they heard"};
   }
   function baseSeed(npc, charId) {
     let standing = {};

@@ -34,6 +34,11 @@ export async function deed(actorLike, {community = "town", delta = 1, text = "",
   if ( !game.user.isGM || !a ) return null;
   const d = SR.normDeed({id: foundry.utils.randomID(), community, delta, text, region: region ?? homeland(), at: game.time.worldTime});
   await a.setFlag(MOD, "deeds", [...(a.flags?.[MOD]?.deeds ?? []), d].slice(-60));
+  // B3350: a player character's public deed starts a tale in WoDX Storyteller's rumour mill
+  if ( a.hasPlayerOwner && d.text ) {
+    try { await game.modules.get("wodx-storyteller")?.api?.rumours?.tale?.({about: a.id, did: d.text, tone: Math.max(-3, Math.min(3, Math.round(Number(d.delta) || 0)))}); }
+    catch (e) { /* the rumour mill may be off */ }
+  }
   return d;
 }
 const FAST = ["net", "email", "telephone", "telegraph", "post", "messenger", "traveller"];

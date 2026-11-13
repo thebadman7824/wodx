@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.42.0";
+const VERSION = "0.43.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1874,7 +1874,7 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
   game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
-  game.modules.get(MOD).api.caseBoard = setupCase();
+  game.modules.get(MOD).api.caseBoard = setupCase({characterFor});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

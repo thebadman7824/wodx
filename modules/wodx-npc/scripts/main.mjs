@@ -35,11 +35,15 @@ import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
+import {build as buildCults} from "./cults.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
+import * as FATES from "./fates.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
+import * as MEMORY from "./memory.mjs";
 import * as HEARTS from "./hearts.mjs";
+import * as FAMILY from "./family.mjs";
 import * as STANDING from "./standing.mjs";
 import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
@@ -47,7 +51,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.69.0";
+const VERSION = "0.76.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -841,7 +845,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); });
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -855,10 +859,15 @@ const settlements = buildSettlements({MOD, esc, chron});
 const residents = buildResidents({MOD, esc, chron, settle: () => settlements});
 residents.hooks();
 settlements.hooks();
+/* B3240-B3249: cults and congregations that gather around a character */
+const cults = buildCults({MOD, esc, gmIds, isActiveGM, chron});
+cults.hooks();
+Hooks.on("wodxChronicleReady", () => cults.registerHandler());
 
 Hooks.once("init", () => {
   registerSettings();
   routines.registerSettings();
+  MEMORY.registerSettings();
   factions.registerSettings();
   orders.registerSettings();
   Faces.registerFaceSettings();
@@ -869,12 +878,17 @@ Hooks.once("init", () => {
   wanted.registerSettings();
   KIN.registerSettings();
   KIN.listen();
+  FATES.registerSettings();
+  FATES.listen();
   BONDS.registerSettings();
   BONDS.listen();
   TRUST.listen();
+  MEMORY.listen();
   HEARTS.registerSettings();
   HEARTS.listen();
+  FAMILY.listen();
   STANDING.registerSettings();
+  cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
@@ -886,10 +900,16 @@ Hooks.once("init", () => {
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
+    fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
+    cults, openCults: cults.open,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
+    memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+    family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
+      makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
+      propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
     hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
@@ -911,7 +931,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**
@@ -987,12 +1007,17 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => orders.openOrders()};
   tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
     button: true, visible: true, onChange: () => followers.openFollowers()};
+  tokens.tools.wodxRemembered = {name: "wodxRemembered", title: "Who remembers you (people who have not forgotten what you did)", icon: "fa-solid fa-brain", order: 109.6,
+    button: true, visible: !game.user.isGM, onChange: () => MEMORY.rememberedDialog()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  // B3246: the character's following (awe by place, its cults, preach and gather)
+  tokens.tools.wodxCults = {name: "wodxCults", title: game.user.isGM ? "Cults and followings (awe by place, cults, preach)" : "Your following (where people speak of you, your cults, preach)", icon: "fa-solid fa-hands-praying", order: 112.5,
+    button: true, visible: game.user.isGM || game.settings.get(MOD, "cultsOn") === true, onChange: () => cults.open()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
   // NPC 0.61.0 (B2914): dress the selected characters for a part of the world

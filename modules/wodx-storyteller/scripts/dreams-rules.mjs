@@ -50,7 +50,10 @@ export function normDream(d = {}) {
     at: Number.isFinite(at) ? at : null,
     released: !!d.released,
     releasedAt: !blank(d.releasedAt) && Number.isFinite(Number(d.releasedAt)) ? Number(d.releasedAt) : null,
-    journalId: d.journalId ? String(d.journalId) : null
+    journalId: d.journalId ? String(d.journalId) : null,
+    // B3369: a dream of what is coming (omen-rules.mjs): its kind, who and where for the reading, and whether it lies
+    omen: d.omen && typeof d.omen === "object" ? {kind: String(d.omen.kind ?? "change").slice(0, 20), who: String(d.omen.who ?? "").slice(0, 80),
+      where: String(d.omen.where ?? "").slice(0, 120), what: String(d.omen.what ?? "").slice(0, 300), lie: !!d.omen.lie} : null
   };
 }
 export const normDreams = list => (Array.isArray(list) ? list : []).map(normDream).filter(d => d.id && d.actorId);

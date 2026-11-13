@@ -62,7 +62,7 @@ export function readRecord(raw) {
   const count = o => Object.fromEntries(Object.entries(plain(o) ? o : {}).slice(0, 200).map(([k, v]) => [str(k, 60), Number(v) || 0]));
   const year = Math.round(Number(d.year)) || 0;
   return {ok: true, errors, data: {format: FORMAT, version: 1, id, name: str(d.name || id, 120), seed: Number(d.seed) || 0, kind: str(d.kind, 20) || "village", label: str(d.label, 40),
-    year, era: str(d.era, 40), age: str(d.age, 20), region: str(d.region, 40) || "moravia", walled: !!d.walled, country: plain(d.country) ? {at: str(d.country.at, 60), town: str(d.country.town, 60), land: str(d.country.land, 40)} : null,
+    year, era: str(d.era, 40), age: str(d.age, 20), tradeAge: str(d.tradeAge, 20), region: str(d.region, 40) || "moravia", walled: !!d.walled, country: plain(d.country) ? {at: str(d.country.at, 60), town: str(d.country.town, 60), land: str(d.country.land, 40)} : null,
     population: households.reduce((s, h) => s + h.people.length, 0), maps, layers: (Array.isArray(d.layers) ? d.layers : []).map(l => str(l, 40)).slice(0, 60),
     buildings: count(d.buildings), notables, households, ties}};
 }
@@ -274,3 +274,14 @@ export function journalPages(rec, review) {
 
 /** The entry kept on the journal: the record, the review, and when it was entered. */
 export const entryOf = flags => (plain(flags?.[NPC]?.settlement) && plain(flags[NPC].settlement.record) ? flags[NPC].settlement : null);
+
+/**
+ * What the record's buildings and trades follow, in plain words (B3293). Records before B3290 always came from the
+ * Bohemian tables; since then the households of a record from another region take that region's trades.
+ */
+export function regionWords(rec, label) {
+  if ( !rec?.region || rec.region === "moravia" ) return "Its buildings, trades and offices are those of Moravia and the Bohemian crown lands.";
+  const where = label || rec.region;
+  if ( !rec.tradeAge ) return `Its buildings, trades and offices are those of ${where}. For a place elsewhere in the world, change the trades by hand after seeding.`;
+  return `Its trades and offices are those of ${where} in ${rec.year}; its buildings are drawn from the Bohemian crown lands. Change any trade by hand after seeding.`;
+}

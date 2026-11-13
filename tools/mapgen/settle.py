@@ -9,6 +9,10 @@ committee and the co-operative farm, the commuters, and the contract workers of 
 Everything here is a house rule for WoDX (PENDING-REVIEW): the ages, the trades in each, the share of each kind of
 household and the ties. The ages follow the Bohemian crown lands: the school reform of 1774 and the Toleration and
 serfdom patents of 1781, the end of the guilds in 1859, the republic of 1918, February 1948, November 1989.
+
+A town elsewhere in the world (--region, B3290 to B3293) keeps those ages for its buildings and furnishings, but its
+households take the region's own turning years (regiontrades.YEARS), the trade lists of its way of life
+(regiontrades.LISTS) and its names (regiontrades.RENAMES, from 1197), and its buildings their local names.
 """
 import json, math, random, re
 
@@ -29,16 +33,17 @@ def since(age, first):
 # ------------------------------------------------------------------ trades
 # What the head of a household does, by the kind of building and the age. Each list is drawn from in turn, so a town
 # gets a spread before any trade comes twice.
-SMITH = {"reform": "smith", "industrial": "smith", "republic": "smith", "socialist": "machine fitter", "modern": "car mechanic", "future": "repair technician"}
-BAKER = {"reform": "baker", "industrial": "baker", "republic": "baker", "socialist": "baker", "modern": "baker", "future": "baker"}
-INN = {"reform": "innkeeper", "industrial": "innkeeper", "republic": "innkeeper", "socialist": "pub manager", "modern": "publican", "future": "bartender"}
-FARM = {"reform": "farmer", "industrial": "farmer", "republic": "farmer", "socialist": "co-operative farm worker", "modern": "farmer", "future": "farm technician"}
+SMITH = {"reform": "smith", "industrial": "smith", "republic": "smith", "socialist": "machine fitter", "modern": "car mechanic", "future": "repair technician", "postwar": "motor mechanic"}
+BAKER = {"reform": "baker", "industrial": "baker", "republic": "baker", "socialist": "baker", "modern": "baker", "future": "baker", "postwar": "baker"}
+INN = {"reform": "innkeeper", "industrial": "innkeeper", "republic": "innkeeper", "socialist": "pub manager", "modern": "publican", "future": "bartender", "postwar": "publican"}
+FARM = {"reform": "farmer", "industrial": "farmer", "republic": "farmer", "socialist": "co-operative farm worker", "modern": "farmer", "future": "farm technician", "postwar": "farmer"}
 CRAFT = {
     "reform": ["weaver", "carpenter", "cooper", "shoemaker", "tailor", "potter", "tanner", "wheelwright", "linen bleacher", "glazier"],
     "industrial": ["carpenter", "shoemaker", "tailor", "tinsmith", "cooper", "wheelwright", "locksmith", "bookbinder", "saddler", "clockmaker"],
     "republic": ["carpenter", "shoemaker", "tailor", "locksmith", "electrician", "motor mechanic", "printer", "plumber", "upholsterer", "radio repairer"],
     "socialist": ["joiner", "machine fitter", "electrician", "plumber", "shoe repairer", "television repairer", "tailor", "welder"],
     "modern": ["joiner", "electrician", "plumber", "car mechanic", "builder", "computer repairer", "tiler", "locksmith"],
+    "postwar": ["carpenter", "electrician", "plumber", "motor mechanic", "television repairer", "tailor", "shoe repairer", "welder", "printer"],
     "future": ["repair technician", "printer operator", "drone mechanic", "electrician", "salvager", "implant fitter"],
 }
 SHOP = {
@@ -47,6 +52,7 @@ SHOP = {
     "republic": ["grocer", "butcher", "draper", "chemist", "tobacconist", "stationer", "confectioner", "ironmonger", "hairdresser", "photographer"],
     "socialist": ["shop manager", "butcher", "greengrocer", "hairdresser", "chemist", "newsagent", "shop assistant"],
     "modern": ["shopkeeper", "butcher", "hairdresser", "pharmacist", "newsagent", "florist", "phone shop keeper", "estate agent"],
+    "postwar": ["grocer", "butcher", "chemist", "newsagent", "hairdresser", "greengrocer", "draper", "hardware dealer", "florist"],
     "future": ["shopkeeper", "pharmacist", "street vendor", "pawnbroker", "phone shop keeper", "hairdresser"],
 }
 # Ordinary homes, by how well the house is kept: (trade, weight)
@@ -68,6 +74,10 @@ HOME = {
                "middling": [("office worker", 5), ("factory worker", 3), ("teacher", 2), ("driver", 2), ("nurse", 2), ("builder", 2), ("shop assistant", 2), ("pensioner", 4),
                             ("programmer", 1), ("student", 1)],
                "poor": [("pensioner", 5), ("warehouse worker", 3), ("unemployed", 3), ("cleaner", 2), ("labourer", 2), ("care worker", 1)]},
+    "postwar": {"rich": [("factory owner", 2), ("physician", 2), ("lawyer", 2), ("manager", 3), ("engineer", 2)],
+                "middling": [("factory worker", 5), ("clerk", 4), ("teacher", 2), ("driver", 2), ("nurse", 2), ("shop assistant", 2), ("farmer", 2), ("pensioner", 2),
+                             ("railwayman", 1)],
+                "poor": [("factory worker", 4), ("labourer", 3), ("pensioner", 3), ("cleaner", 2), ("unemployed", 1), ("washerwoman", 1)]},
     "future": {"rich": [("company manager", 3), ("physician", 2), ("lawyer", 1), ("data broker", 2), ("landlord", 2)],
                "middling": [("contract worker", 5), ("technician", 3), ("nurse", 2), ("teacher", 1), ("driver", 1), ("security guard", 2), ("pensioner", 3), ("programmer", 2)],
                "poor": [("day contractor", 5), ("unemployed", 4), ("pensioner", 3), ("warehouse worker", 2), ("salvager", 2), ("cleaner", 2), ("courier", 2)]},
@@ -107,6 +117,8 @@ NOTABLES = {
                   ("district doctor", 1, "middling"), ("Party secretary", 1, "middling"), ("postal clerk", 1, "middling"), ("journalist", 2, "middling")],
     "modern": [("mayor", 0, "middling"), ("schoolteacher", 0, "middling"), ("police officer", 1, "middling"), ("doctor", 1, "rich"), ("postal clerk", 1, "middling"),
                ("journalist", 2, "middling")],
+    "postwar": [("mayor", 0, "rich"), ("schoolteacher", 0, "middling"), ("police officer", 0, "middling"), ("postmaster", 1, "middling"), ("doctor", 1, "rich"),
+                ("notary", 2, "rich"), ("journalist", 2, "middling")],
     "future": [("district manager", 0, "rich"), ("security guard", 0, "middling"), ("teacher", 1, "middling"), ("clinic medic", 1, "middling"), ("journalist", 2, "poor")],
 }
 # Trades that go out to work, and the kind of building that takes them on (the tie "works at")
@@ -123,10 +135,13 @@ COMP = {
     "republic": dict(partner=.78, kids=(0, 1, 1, 2, 2, 3), elder=.2, servant={"rich": .6, "middling": .08}, apprentice=.3, lodger=.15, alone=.08),
     "socialist": dict(partner=.8, kids=(0, 1, 2, 2, 2, 3), elder=.2, servant={}, apprentice=0, lodger=.03, alone=.12),
     "modern": dict(partner=.65, kids=(0, 0, 1, 1, 2, 2, 3), elder=.08, servant={}, apprentice=0, lodger=.06, alone=.2),
+    "postwar": dict(partner=.8, kids=(0, 1, 2, 2, 3, 3, 4), elder=.15, servant={"rich": .3}, apprentice=.2, lodger=.05, alone=.08),
     "future": dict(partner=.55, kids=(0, 0, 0, 1, 1, 2), elder=.1, servant={}, apprentice=0, lodger=.2, alone=.3),
 }
 ALONE = re.compile(r"pensioner|widow|student|unemployed")
 CRAFTS = {t for ts in CRAFT.values() for t in ts} | {"smith", "baker"}
+SHOPS = {t for ts in SHOP.values() for t in ts}
+RT_TRADES = None          # the crafts and shops of every way of life, filled below once regiontrades is read
 
 
 def _draw(R, pairs):
@@ -154,29 +169,35 @@ def lived_in(b, types):
     return d.get("place") in ("home", "tavern") or d.get("role") in ("home", "shop", "inn")
 
 
-def trade_for(b, old, age, R, turn, types):
-    """The trade of the household in building b in this age. old: the trade the generator gave it."""
+def trade_for(b, old, age, R, turn, types, tb=None):
+    """The trade of the household in building b in this age. old: the trade the generator gave it. tb: the tables
+    (tables()); left out, the Bohemian tables of the age."""
+    tb = tb or tables_of(age)
     if KEEPS.search(old or ""): return old
     key = b.type if b.type in BY_TYPE else _base(b.type) if _base(b.type) in BY_TYPE else None
     if key:
         v = BY_TYPE[key]
-        if isinstance(v, dict): return v[age]
+        if isinstance(v, dict): return tb[BY_KEY[key]]
         if v: return v
     wealth = getattr(b, "wealth", None) or "middling"
     role = "shop" if b.type == "townhouse" else "craft" if b.type == "workshop" else _role(b, types)
     if role == "craft":
         turn["craft"] += 1
-        return CRAFT[age][(turn["craft"] - 1) % len(CRAFT[age])]
+        return tb["craft"][(turn["craft"] - 1) % len(tb["craft"])]
     if role == "shop":
         turn["shop"] += 1
-        return SHOP[age][(turn["shop"] - 1) % len(SHOP[age])]
-    if role == "inn": return INN[age]
-    return _draw(R, HOME[age].get(wealth) or HOME[age]["middling"])
+        return tb["shop"][(turn["shop"] - 1) % len(tb["shop"])]
+    if role == "inn": return tb["inn"]
+    return _draw(R, tb["home"].get(wealth) or tb["home"]["middling"])
 
 
-def roles_for(trade, b, age, R):
+def tables_of(age):
+    return dict(craft=CRAFT[age], shop=SHOP[age], home=HOME[age], notables=NOTABLES[age], inn=INN[age], farm=FARM[age], smith=SMITH[age], baker=BAKER[age], comp=COMP[age])
+
+
+def roles_for(trade, b, age, R, tb=None):
     """The people of one household, as roles, for the age."""
-    c = COMP[age]
+    c = (tb or {}).get("comp") or COMP[age]
     wealth = getattr(b, "wealth", None) or "middling"
     if ALONE.search(trade) and R.random() < .5: return [trade]
     if R.random() < c["alone"]: return [trade]
@@ -186,7 +207,7 @@ def roles_for(trade, b, age, R):
     if R.random() < c["elder"]: roles.append("elder")
     if R.random() < c["servant"].get(wealth, 0): roles.append("servant")
     if trade in CRAFTS and R.random() < c["apprentice"]: roles.append("apprentice")
-    if trade in ("farmer",) and age in ("reform", "industrial", "republic") and R.random() < .35: roles.append("farmhand")
+    if trade in ("farmer", (tb or {}).get("farm")) and age in ("reform", "industrial", "republic", "colonial") and R.random() < .35: roles.append("farmhand")
     if R.random() < c["lodger"] * (1.5 if wealth == "poor" else 1): roles.append("lodger")
     return roles
 
@@ -194,31 +215,39 @@ def roles_for(trade, b, age, R):
 def repeople(t, types):
     """From 1781, every household gets the trade and the make-up of the town's year. Earlier towns are left as the
     medieval generator made them. Its own random source, so the map itself is the same with or without this."""
-    age = age_of(t.year)
-    if not since(age, "reform"): return age
+    band = age_of(t.year)
+    if not since(band, "reform"):                        # the medieval households keep their roles, under local names (B3297)
+        if REGION != "moravia":
+            for h in t.households:
+                h["trade"] = local(h.get("trade", ""), t.year)
+                h["people"] = [{**p, "role": local(p["role"], t.year)} for p in h["people"]]
+        return band
+    age, tb = tables(t.year)                             # the region's trade age and tables (B3295, B3296)
     R = random.Random(f"{t.seed}:{t.year}:people")
     byk = {b.key: b for b in t.blds}
     turn = {"craft": 0, "shop": 0}
     for h in t.households:
         b = byk.get(h["building"])
         if not b: continue
-        if b.label == "Almshouse" and age in ("reform", "industrial", "republic"): continue
+        if b.label == "Almshouse" and band in ("reform", "industrial", "republic"): continue
         if b.label == "Railway station":
             continue
         if not lived_in(b, types):                            # a keeper on the premises, and the staff who come in
             if any(o is not h and o["building"] == h["building"] and o.get("kept") for o in t.households): h["drop"] = True; continue
             trade = KEEPER.get(_base(b.type), "caretaker")
-            if trade == "gendarme" and since(age, "socialist"): trade = "police officer"
+            if trade == "gendarme" and since(band, "socialist"): trade = "police officer"
+            trade = local(trade, t.year)
             lo, hi = STAFFED.get(_base(b.type), (0, 2))
             h["trade"], h["people"], h["kept"] = trade, [{"role": trade}] + [{"role": "staff"}] * R.randint(lo, hi), True
             h["wealth"] = getattr(b, "wealth", None) or h.get("wealth") or "middling"
             continue
-        trade = trade_for(b, h.get("trade", ""), age, R, turn, types)
+        trade = trade_for(b, h.get("trade", ""), age, R, turn, types, tb)
         if KEEPS.search(trade) and trade == h.get("trade"):
             roles = [p["role"] for p in h["people"]]
-            if re.search(r"priest", trade): roles = [trade] + (["housekeeper"] if since(age, "industrial") and R.random() < .6 else [r for r in roles[1:] if r in ("servant", "clerk")])
+            if re.search(r"priest", trade): roles = [trade] + (["housekeeper"] if since(band, "industrial") and R.random() < .6 else [r for r in roles[1:] if r in ("servant", "clerk")])
         else:
-            roles = roles_for(trade, b, age, R)
+            roles = roles_for(trade, b, age, R, tb)
+            roles[0] = trade = local(trade, t.year)
         h["trade"], h["people"] = trade, [{"role": r} for r in roles]
         h["wealth"] = getattr(b, "wealth", None) or h.get("wealth") or "middling"
     t.households[:] = [h for h in t.households if not h.pop("drop", False)]
@@ -230,15 +259,16 @@ def repeople(t, types):
              and byk[h["building"]].type not in BY_TYPE and types.get(byk[h["building"]].type, {}).get("flats", 1) == 1]
     R.shuffle(homes)
     t.notables = []
-    for trade, least, wealth in NOTABLES[age]:
+    for trade, least, wealth in tb["notables"]:
         if k < least: continue
         pick = next((h for h in homes if h.get("wealth") == wealth), None) or (homes[0] if homes else None)
         if not pick: break
         homes.remove(pick)
-        pick["trade"] = trade
-        pick["people"] = [{"role": r} for r in roles_for(trade, byk[pick["building"]], age, R)]
+        roles = roles_for(trade, byk[pick["building"]], age, R, tb)
+        roles[0] = trade = local(trade, t.year)
+        pick["trade"], pick["people"] = trade, [{"role": r} for r in roles]
         t.notables.append({"role": trade, "household": pick["id"]})
-    return age
+    return band
 
 
 # ------------------------------------------------------------------ ties
@@ -278,7 +308,7 @@ def ties(t, types):
     for h in hs: by_trade.setdefault(h["trade"], []).append(h)
     for trade, group in by_trade.items():
         if len(group) < 2 or len(group) > 6 or trade in ("pensioner", "unemployed", "labourer", "day labourer", "cottager"): continue
-        if not (trade in CRAFTS or any(trade in v for v in SHOP.values()) or any(trade == v for v in INN.values()) or trade in ("alehouse keeper", "smith", "baker")
+        if not (trade in CRAFTS or trade in SHOPS or trade in RT_TRADES or any(trade in v for v in SHOP.values()) or any(trade == v for v in INN.values()) or trade in ("alehouse keeper", "smith", "baker")
                 or re.search(r"draper|spicer|cutler|saddler|glover|butcher|fishmonger|goldsmith|mercer|salter|carpenter|cooper|weaver|potter|tanner|cobbler|chandler|wheelwright|turner|dyer", trade)): continue
         for a, b in zip(group, group[1:]):
             if R.random() < .5: add(a, b, "rival", f"both in the {trade}'s trade")
@@ -320,11 +350,110 @@ def stamp(t):
     return sid
 
 
-# The part of the world these tables describe. The building types, the ages and their boundaries, the trades and the
-# offices are those of Moravia and the Bohemian crown lands. WoDX covers the whole world: another region needs its own
-# building types (buildings.py, eratypes.py, latertypes.py), ages (AGES) and trade tables, and is not built yet.
+# The part of the world the town stands in (a WoDX Chronicle region id, --region). The buildings are those of Moravia
+# and the Bohemian crown lands wherever the town stands; from 1781 the trades follow the region (B3290 to B3293):
+# who ruled it in the years after 1918 (TRADE_PLAN) and the way of life its towns follow (LOCAL). The ages
+# themselves (AGES) stay one band of years everywhere, since they also pick the look of the furnishings.
 REGION = "moravia"
-REGIONS = (REGION,)
+
+# Chronicle's REGION_SPHERE (world-rules.mjs), in the same words: [(from year, way of life)]. A harness test keeps
+# the two the same.
+_L, _I, _O = [(-9999, "latin")], [(-9999, "islamic")], [(-9999, "orthodox")]
+def _settled(own, year, to="latin"): return [(-9999, own), (year, to)]
+REGION_SPHERE = {
+    "moravia": _L, "german-lands": _L, "british-isles": _L, "france": _L, "iberia": _L, "italy": _L, "low-countries": _L,
+    "scandinavia": _L, "poland-baltic": _L, "carpathians-balkans": _L,
+    "russia": _O, "aegean": [(-9999, "orthodox"), (1453, "islamic"), (1830, "orthodox")], "siberia": _settled("northern", 1600, "orthodox"),
+    "anatolia": _I, "levant": _I, "egypt": _I, "arabia": _I, "maghreb": _I, "persia": _I, "central-asia": _I,
+    "tibet-himalaya": [(-9999, "tibetan")], "india": [(-9999, "indic")], "china": [(-9999, "sinic")], "korea": [(-9999, "sinic")],
+    "japan": [(-9999, "japanese")], "southeast-asia": [(-9999, "theravada")], "nusantara": [(-9999, "malay")],
+    "west-africa": [(-9999, "sahel")], "east-africa": [(-9999, "swahili")], "southern-africa": _settled("bantu", 1652),
+    "central-africa": [(-9999, "bantu")],
+    "canada": _settled("northern", 1608), "north-america-east": _settled("northern", 1607), "north-america-west": _settled("northern", 1769),
+    "mexico": _settled("mesoamerican", 1521), "caribbean": _settled("mesoamerican", 1492), "andes": _settled("andean", 1533),
+    "brazil": _settled("andean", 1500), "southern-cone": _settled("andean", 1536), "australia": _settled("northern", 1788),
+    "aotearoa": _settled("polynesian", 1840), "pacific-islands": _settled("polynesian", 1820), "arctic": [(-9999, "latin"), (1450, "northern"), (1721, "latin")],
+    "antarctica": _L,
+}
+REGIONS = tuple(REGION_SPHERE)
+
+
+def sphere_for(region, year):
+    """The way of life a region's towns follow in a year (Chronicle sphereFor); an unknown region follows Moravia's."""
+    out = None
+    for f, s in REGION_SPHERE.get(region, _L):
+        if (year or 1197) >= f or out is None: out = s
+    return out
+
+
+import regiontrades as RT
+
+RT_TRADES = {t for L in RT.LISTS.values() for p in L.values() for k in ("craft", "shop") for t in p[k]}
+CRAFTS |= {t for L in RT.LISTS.values() for p in L.values() for t in p["craft"]}
+
+
+def trade_age(year, region=None):
+    """The key of the trade tables for a year in a region (regiontrades.YEARS, B3295): its own turning years from 1781,
+    with a colonial age where a foreign power ruled. Before 1781 the age of the band (the medieval households)."""
+    if (year or 1197) < 1781: return age_of(year)
+    return RT.trade_age(region or REGION, year)
+
+
+def one_party(region=None):
+    return RT.one_party(region or REGION)
+
+
+# Outside the Bohemian lands, whatever the way of life (B3292)
+OUTSIDE = {"national committee chairman": "council chairman", "national committee official": "council official", "reeve": "headman",
+           "linen bleacher": "dyer"}
+SOVIET = {"co-operative farm worker": "collective farm worker", "co-operative farm chairman": "collective farm chairman",
+          "national committee chairman": "village soviet chairman", "national committee official": "soviet official", "works director": "factory director"}
+
+
+def local(trade, year, region=None):
+    """A trade under the name the town's region and way of life give it, at any year from 1197 (B3297)."""
+    region = region or REGION
+    if region == "moravia": return trade
+    if region in RT.SOVIET and trade in SOVIET: return SOVIET[trade]
+    trade = OUTSIDE.get(trade, trade)
+    return RT.RENAMES.get(sphere_for(region, year), {}).get(trade, trade)
+
+
+BY_KEY = {"smithy": "smith", "bakehouse": "baker", "tavern": "inn", "pub": "inn", "post-inn": "inn", "counter-bar": "inn", "cdda-bar": "inn", "byre-house": "farm"}
+
+
+def tables(year, region=None):
+    """(trade age, the tables a town's households are drawn from): the Bohemian tables of the age, or the way of
+    life's own lists (regiontrades.LISTS, B3296); a colonial age takes the offices a colonial power brings."""
+    region = region or REGION
+    age = trade_age(year, region)
+    gen = ("industrial" if (year or 0) >= 1851 else "reform") if age == "colonial" else age
+    tb = dict(craft=CRAFT[gen], shop=SHOP[gen], home=HOME[gen], notables=NOTABLES[gen], inn=INN[gen], farm=FARM[gen], smith=SMITH[gen], baker=BAKER[gen], comp=COMP[gen])
+    own = RT.lists_for(sphere_for(region, year), age, year) if region != "moravia" else None
+    if own: tb.update({k: own[k] for k in ("craft", "shop", "home", "notables", "inn", "farm", "smith", "baker")})
+    if age == "colonial": tb["notables"] = tb["notables"][:1] + RT.COLONIAL
+    return age, tb
+
+
+def relabel(t, faith=None, region=None):
+    """Gives each building and household the name its way of life uses (B3298): same footprint, same furnishing. The
+    chapel takes the name of the faith (--faith, or the way of life's own)."""
+    region = region or REGION
+    if region == "moravia": return 0
+    sphere = sphere_for(region, t.year)
+    names = {**RT.OUTSIDE_BUILDINGS, **RT.BUILDINGS.get(sphere, {})}
+    worship = RT.FAITH_WORSHIP.get(faith) if faith else RT.WORSHIP.get(sphere)
+    n = 0
+    for b in t.blds:
+        base, sep, rest = b.label.partition(" (")
+        new = worship if base in ("Chapel", "Church") and worship else names.get(base, base)
+        if sep: rest = local(rest.rstrip(")"), t.year, region) + ")"
+        label = new + sep + rest
+        if label == b.label: continue
+        for h in t.households:
+            if h["building"] == b.key and h.get("label", "").startswith(b.label): h["label"] = label + h["label"][len(b.label):]
+        b.label, n = label, n + 1
+    return n
 
 
 def record(t, parts_index, types, era, where=None):
@@ -345,7 +474,7 @@ def record(t, parts_index, types, era, where=None):
         k = b.label.split(" (")[0]
         kinds[k] = kinds.get(k, 0) + 1
     return {"format": "wodx-settlement", "version": 1, "id": settlement_id(t), "name": t.name, "seed": t.seed, "kind": t.size, "label": t.cfg["label"],
-            "year": t.year or 1197, "era": era, "age": age_of(t.year), "region": REGION, "walled": bool(getattr(t, "wall", None)), "country": where,
+            "year": t.year or 1197, "era": era, "age": trade_age(t.year), "band": age_of(t.year), "region": REGION, "tradeAge": trade_age(t.year), "walled": bool(getattr(t, "wall", None)), "country": where,
             "population": sum(len(h["people"]) for h in hs), "whole": [t.cols, t.rows],
             "maps": [{"id": p["id"], "name": p["name"], "map": p["map"], "sidecar": p["sidecar"], "households": len(p["household_ids"])} for p in parts_index],
             "layers": list(getattr(t, "layers", [])), "buildings": dict(sorted(kinds.items())), "trades": dict(sorted(trades.items(), key=lambda kv: (-kv[1], kv[0]))),

@@ -66,6 +66,22 @@ export const AREA_CROWD = {slums: 1.3, lower: 1.1, market: 1, merchant: 0.7, pat
 export const DENSITY = {quiet: {label: "Quiet", mult: 0.5}, normal: {label: "Normal", mult: 1}, busy: {label: "Busy", mult: 1.6}};
 export const MAX_CAP = 16;
 
+/**
+ * How a town's condition thins or fills its streets (B3321; WoDX Storyteller's towns, api.upkeep.towns.ofScene):
+ * plague keeps people indoors, anger and ruin empty the street, good times fill it. 1 with no town.
+ */
+export function townCrowd(view) {
+  if ( !view || typeof view !== "object" ) return 1;
+  let m = 1;
+  if ( view.plague ) m *= 0.5;
+  if ( (view.marks ?? []).includes("famine") ) m *= 0.8;
+  if ( Number(view.unrest) >= 4.5 ) m *= 0.6;
+  else if ( Number(view.unrest) >= 3.5 ) m *= 0.8;
+  if ( Number(view.prosperity) <= 1 ) m *= 0.8;
+  else if ( Number(view.prosperity) >= 4 ) m *= 1.2;
+  return Math.round(m * 100) / 100;
+}
+
 /** How many passers-by the street holds now. */
 export function crowdSize({year, hour, area = "market", density = "normal", max = 8, place = "street"} = {}) {
   const age = ageOf(year), band = bandOf(hour);

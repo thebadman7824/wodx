@@ -8,7 +8,8 @@ decisions B3080 to B3085).
     node tools/decisions/claim.mjs --thread <thread id> --feature "what the work is"
 
 It prints a block such as B3090-B3099 and records it in `/mnt/project-files/registry/decision-blocks.json`, which every
-thread sees at once. Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
+thread sees at once. A claim takes about 12 seconds: it is read back after a pause and moves up a block if another
+thread took the same one a moment earlier (B3088). Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
 The coordinator claims the block when it starts a thread and names it in the first message; a thread that finds none
 there claims its own.
 
@@ -39,7 +40,7 @@ clashes with other branches more likely. So:
 
 On the PC, from the branch's checkout:
 
-    node tools/lanes/run-gate.mjs --touched           the gates the branch's changes need (drift check first)
+    node tools/lanes/run-gate.mjs --touched --lanes 2,3   the gates the branch's changes need, split over lanes 2 and 3
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
 
 A Paperdoll-only change runs the Paperdoll gates, not the Relationships ones. A change to WoDX Chronicle or the system

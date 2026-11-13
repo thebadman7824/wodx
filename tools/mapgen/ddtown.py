@@ -612,9 +612,14 @@ def main():
     ap.add_argument("--settle", action="store_true", help="organic layout only: also write <name>.settlement.json, the record of the whole place (households, trades, ties) that WoDX NPC's Settlements window reviews; household ids then carry the settlement's id")
     ap.add_argument("--faith", choices=("western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"),
                     help="the faith the town's house of worship keeps (B3200); WoDX Interactables adopts the chapel as a church, mosque, synagogue or temple. Left out, the faith of the scene's region decides on adoption")
+    ap.add_argument("--region", default="moravia", help="organic layout only: the WoDX Chronicle region the town stands in; from 1781 the households take its trades (settle.py, B3290). --at needs moravia")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
+    import settle
+    if a.region not in settle.REGIONS: raise SystemExit(f"--region must be one of: {', '.join(settle.REGIONS)}")
+    if a.at and a.region != "moravia": raise SystemExit("--at reads the Moravian country map; leave out --region or use moravia")
+    settle.REGION = a.region
     where = None
     if a.at:
         import country
@@ -632,6 +637,7 @@ def main():
         import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
         if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
         t = Town(a.seed, a.size, a.name, not a.day).make()
+    if a.layout == "organic": settle.relabel(t, a.faith)   # local building names (B3298)
     base = slug(t.name)
     settled = None
     if a.settle:

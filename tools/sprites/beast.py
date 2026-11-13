@@ -4,7 +4,7 @@ import crinos as K
 from rig import ramp
 S,SH=K.S,K.SH
 def kind(**k):
-    d=dict(s=1.0,heavy=1.0,bl=1.0,ll=1.0,ox=47,fur=(104,96,88),belly=None,head=(18,-37),hr=4.2,mz=7.5,mzr=2.8,ear=('prick',5.5),tail='brush',teeth=False,mane=None,antlers=None,horns=None,tusks=False,wd=1.0,furry=1.0,longface=0,eye=K.EYE,hump=0,neckr=1.0,snout=None,stripe=None,spots=None,humpx=0)
+    d=dict(s=1.0,heavy=1.0,bl=1.0,ll=1.0,ox=47,fur=(104,96,88),belly=None,head=(18,-37),hr=4.2,mz=7.5,mzr=2.8,ear=('prick',5.5),tail='brush',teeth=False,mane=None,antlers=None,horns=None,tusks=False,wd=1.0,furry=1.0,longface=0,eye=K.EYE,hump=0,neckr=1.0,snout=None,stripe=None,spots=None,humpx=0,wings=None,horn1=None,beak=None,spines=None,headfur=None,nonose=False,earcol=None)
     d.update(k); return d
 KINDS=dict(
  wolf=kind(),
@@ -46,7 +46,52 @@ KINDS=dict(
  hare=kind(s=.5,heavy=1.15,fur=(140,116,88),belly=(214,200,180),ear=('prick',8.5),tail='stub',mz=3.5,mzr=2.4,ll=.8,head=(14,-33),furry=.5,eye=(20,16,16)),
  chimpanzee=kind(s=.95,heavy=1.15,ll=.95,bl=.8,fur=(40,36,36),head=(13,-37),hr=4.4,mz=2.6,mzr=3.0,ear=('round',2.6),tail='none',furry=.9,snout=(170,130,110),eye=(30,22,20),neckr=1.1),
  alligator=kind(s=1.25,heavy=.9,ll=.36,bl=1.45,ox=46,fur=(70,84,60),belly=(170,170,120),head=(17,-27),hr=3.2,mz=12,mzr=2.6,ear=('none',0),tail='brush',furry=0,wd=1.5,teeth=True,eye=(200,190,60),neckr=1.0),
+ # beasts of legend (monster.py names them): proportions after the old bestiaries, not after cartoons
+ dragon=kind(s=1.5,heavy=1.15,ll=.82,bl=1.12,ox=45,fur=(62,84,58),belly=(176,160,104),head=(17,-40),hr=3.6,mz=8.5,mzr=2.6,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.62,horns=(196,186,150),wings=((84,60,60),'bat',1.25),spines=(40,52,40),spots=(40,58,42),teeth=True,eye=(236,170,40),nonose=True),
+ dragon_mist=kind(s=1.4,heavy=1.0,ll=.84,bl=1.14,ox=45,fur=(170,180,190),belly=(214,220,226),head=(17,-40),hr=3.4,mz=8.5,mzr=2.4,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.58,horns=(226,228,232),wings=((150,160,176),'bat',1.2),spines=(140,150,164),teeth=True,eye=(190,230,240),nonose=True),
+ gryphon=kind(s=1.35,heavy=1.15,ll=.98,ox=44,fur=(176,136,80),head=(17,-37),hr=4.2,mz=5.5,mzr=2.8,ear=('prick',3.2),tail='tuft',mane=(226,220,204),headfur=(226,220,204),furry=.3,beak=(214,170,60),wings=((120,90,60),'feather',1.2),eye=(236,190,60)),
+ sphinx=kind(s=1.35,heavy=1.2,ll=.95,ox=44,fur=(196,160,104),head=(16,-37),hr=4.4,mz=1.6,mzr=2.6,ear=('none',0),tail='tuft',mane=(40,34,40),headfur=(170,124,90),furry=.2,wings=((150,120,84),'feather',1.0),eye=(40,30,26),nonose=True),
+ unicorn=kind(s=1.5,heavy=.9,ll=1.16,bl=1.1,ox=40,longface=1,fur=(236,236,232),head=(19,-40),hr=3.7,mz=9.5,mzr=2.9,ear=('prick',3.6),tail='tuft',mane=(214,214,222),furry=.15,neckr=.95,horn1=(226,206,150),eye=(60,70,120)),
+ salamander=kind(s=.5,heavy=.9,ll=.36,bl=1.4,ox=47,fur=(226,110,30),belly=(250,206,90),head=(17,-27),hr=3.2,mz=6,mzr=2.6,ear=('none',0),tail='brush',furry=0,wd=1.5,spots=(250,220,110),eye=(40,20,10),nonose=True),
+ basilisk=kind(s=.62,heavy=.85,ll=.4,bl=1.45,ox=47,fur=(70,96,60),belly=(190,180,110),head=(17,-29),hr=3.0,mz=6.5,mzr=2.4,ear=('none',0),tail='brush',furry=0,wd=1.5,spines=(200,170,60),spots=(40,60,40),eye=(250,230,90),nonose=True),
+ stone_dog=kind(s=1.0,heavy=1.3,fur=(122,122,126),wings=((96,96,102),'bat',.7),ear=('prick',4),tail='stub',furry=0,mz=6,mzr=3.2,hr=4.8,eye=(236,150,40),teeth=True),
+ rock_cat=kind(s=1.3,heavy=1.2,ll=.95,ox=44,wings=((100,94,90),'bat',.45),fur=(128,120,112),head=(17,-35),hr=4.6,mz=4.6,mzr=3.0,ear=('prick',3.4),tail='thin',furry=0,spots=(96,90,86),eye=(236,50,40),teeth=True),
+ zephyr=kind(s=1.18,heavy=.82,ll=1.2,bl=1.08,ox=42,longface=1,fur=(206,212,220),head=(19,-40),hr=3.6,mz=9,mzr=2.8,ear=('prick',3.6),tail='horse',mane=(236,238,242),furry=.15,neckr=.9,eye=(60,90,130)),
+ familiar=kind(s=.5,heavy=1.0,fur=(30,28,34),ear=('prick',4.5),tail='thin',mz=3.2,mzr=2.6,head=(15,-35),furry=.4,ll=.9,eye=(230,60,40)),
+ drake=kind(s=1.2,heavy=1.1,ll=.8,bl=1.12,ox=45,fur=(110,70,50),belly=(190,160,110),head=(17,-37),hr=3.4,mz=8,mzr=2.4,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.6,horns=(200,190,160),wings=((120,70,60),'bat',1.0),spines=(80,50,40),teeth=True,eye=(236,170,40),nonose=True),
+ dragon_red=kind(s=1.62,heavy=1.2,ll=.82,bl=1.12,ox=45,fur=(140,40,30),belly=(210,170,100),head=(17,-40),hr=3.6,mz=8.5,mzr=2.6,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.62,horns=(220,206,170),wings=((110,30,30),'bat',1.3),spines=(80,20,20),teeth=True,eye=(250,200,60),nonose=True),
+ pegasus=kind(s=1.5,heavy=.9,ll=1.16,bl=1.1,ox=40,longface=1,fur=(240,240,236),head=(19,-40),hr=3.7,mz=9.5,mzr=2.9,ear=('prick',3.6),tail='horse',mane=(220,220,226),furry=.15,neckr=.95,wings=((244,242,236),'feather',1.2),eye=(60,70,120)),
+ nightmare=kind(s=1.6,heavy=1.0,ll=1.14,bl=1.12,ox=38,longface=1,fur=(24,22,26),head=(19,-40),hr=3.9,mz=10,mzr=3.1,ear=('prick',3.6),tail='horse',mane=(120,20,20),furry=.15,neckr=1.05,eye=(250,60,30)),
+ manticore=kind(s=1.4,heavy=1.2,ll=.95,ox=44,fur=(196,110,60),head=(17,-36),hr=4.8,mz=2.0,mzr=3.0,ear=('round',2.4),tail='brush',mane=(110,50,30),headfur=(206,160,130),furry=.3,spines=(70,40,30),eye=(40,30,26),teeth=True,nonose=True),
+ chimera=kind(s=1.4,heavy=1.2,ll=.95,ox=44,fur=(176,130,70),head=(17,-36),hr=5.0,mz=5,mzr=3.2,ear=('round',2.4),tail='thin',mane=(110,70,40),horns=(140,120,96),furry=.3,eye=(200,160,60),teeth=True),
+ peryton=kind(s=1.3,heavy=.9,ll=1.12,ox=44,fur=(70,130,120),head=(18,-36),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(196,180,150),wings=((60,120,110),'feather',1.1),furry=.3,neckr=.8,eye=(30,22,20)),
+ mammoth=kind(s=1.8,heavy=1.5,ll=.9,bl=1.05,ox=44,fur=(96,70,50),head=(17,-33),hr=5.4,mz=7,mzr=3.2,ear=('flop',4),tail='tuft',furry=1.5,tusks=True,hump=4,neckr=1.4,eye=(20,16,14),snout=(96,70,50)),
+ dinosaur=kind(s=1.7,heavy=1.2,ll=.95,bl=1.3,ox=46,fur=(90,100,60),belly=(170,170,120),head=(18,-36),hr=4.0,mz=9,mzr=3.2,ear=('none',0),tail='brush',furry=0,teeth=True,eye=(220,180,40),neckr=1.0,nonose=True),
+ toad=kind(s=.6,heavy=1.4,ll=.45,bl=.9,fur=(90,110,60),belly=(190,180,120),head=(16,-26),hr=4.2,mz=4,mzr=3.0,ear=('none',0),tail='none',furry=0,spots=(60,80,40),eye=(220,180,40),nonose=True),
+ raccoon_dog=kind(s=.6,heavy=1.15,fur=(120,96,70),belly=(196,180,150),ear=('round',3),tail='brush',mz=4.5,mzr=2.4,head=(16,-34),furry=1.1,stripe=None,eye=(30,24,20),snout=(60,48,40)),
+ ox_horn=kind(s=1.45,heavy=1.45,ll=.9,bl=1.1,ox=42,fur=(110,90,70),head=(17,-31),hr=4.8,mz=6.5,mzr=3.4,ear=('flop',3),tail='tuft',horn1=(226,216,190),furry=.3,hump=3,neckr=1.4,eye=(20,16,14)),
+ fae_cattle=kind(s=1.36,heavy=1.3,ll=.92,bl=1.12,ox=42,fur=(236,232,224),head=(17,-30),hr=4.4,mz=6.5,mzr=3.2,ear=('flop',3),tail='tuft',earcol=(170,44,40),horns=(226,216,190),furry=.2,neckr=1.2,snout=(214,176,160),eye=(150,40,36)),
 )
+
+def _wing_side(cv,a,P,r,bob,ph,dark):
+    """one wing seen from the side: (colour, 'bat' or 'feather', size). The far one is drawn dark, behind the body."""
+    col,kd,sz=a['wings']; wp=ramp(col); fl=math.sin(ph)*3.5; rt=P(4,-29+bob); el=P(-1,-29-8*sz+bob-fl*.5); tip=P(-9-4*sz,-29-11*sz+bob-fl); g='wing%d'%dark
+    if kd=='bat':
+        for (x,y) in ((-12-3*sz,-29-3*sz-fl*.6),(-9-2*sz,-27+sz-fl*.3),(-4,-26+sz)):
+            cv.capsule(el,P(x,y+bob),r(2.2),r(1.6),ramp=[wp[0],wp[0],wp[1],wp[2],wp[3]],dark=dark,g=g+'m')
+        cv.capsule(rt,el,r(1.5),r(1.2),ramp=wp,dark=dark,g=g); cv.capsule(el,tip,r(1.2),r(.6),ramp=wp,dark=dark,g=g)
+    else:
+        cv.capsule(rt,el,r(2.6),r(2.4),ramp=wp,dark=dark,g=g); cv.capsule(el,tip,r(2.6),r(1.2),ramp=wp,dark=dark,g=g)
+        cv.capsule(el,P(-10-3*sz,-28-2*sz+bob-fl*.6),r(2.8),r(1.4),ramp=wp,dark=dark,g=g); cv.capsule(rt,P(-7-2*sz,-27+bob-fl*.3),r(2.6),r(1.6),ramp=wp,dark=dark,g=g)
+def _wings_front(cv,a,P,r,bob,ph,dark):
+    col,kd,sz=a['wings']; wp=ramp(col); fl=math.sin(ph)*3
+    for sg in (-1,1):
+        rt=P(sg*4,-27+bob); el=P(sg*(9+3*sz),-30-6*sz+bob-fl*.5); tip=P(sg*(13+6*sz),-27-2*sz+bob-fl); g='wing%d'%sg
+        if kd=='bat':
+            for (x,y) in ((12+5*sz,-22),(9+3*sz,-20),(6+sz,-21)): cv.capsule(el,P(sg*x,y+bob-fl*.4),r(2.0),r(1.5),ramp=[wp[0],wp[0],wp[1],wp[2],wp[3]],dark=dark,g=g+'m')
+            cv.capsule(rt,el,r(1.5),r(1.2),ramp=wp,dark=dark,g=g); cv.capsule(el,tip,r(1.2),r(.6),ramp=wp,dark=dark,g=g)
+        else:
+            cv.capsule(rt,el,r(2.6),r(2.4),ramp=wp,dark=dark,g=g); cv.capsule(el,tip,r(2.6),r(1.2),ramp=wp,dark=dark,g=g); cv.capsule(el,P(sg*(11+4*sz),-21+bob-fl*.5),r(2.6),r(1.4),ramp=wp,dark=dark,g=g)
 def side(a,f):
     cv=K.Cv(); ph=f/8*2*math.pi; s=a['s']; hv=a['heavy']; rp=ramp(a['fur']) if not isinstance(a['fur'],list) else a['fur']; bp=ramp(a['belly']) if a['belly'] else [tuple(min(255,int(c*1.22+10)) for c in t) for t in rp]
     P=lambda x,y:(a['ox']+x*a['bl']*s,87+y*a['ll']*s); r=lambda v:v*s*hv; rl=lambda v:v*s*(.6+.4*hv); bob=-abs(math.sin(ph))*.6/a['ll']; fu=a['furry']*s
@@ -66,6 +111,7 @@ def side(a,f):
         if t=='tuft': cv.capsule(P(-24,-13+bob+wag*1.5),P(-24,-11+bob+wag*1.5),r(1.4),r(1.2),ramp=ramp(a['mane'] or tuple(int(c*.5) for c in a['fur'])),g='tuft')
     elif t=='horse': cv.capsule(P(-14.5,-27+bob),P(-17-wag,-10+bob),r(2.2),r(1.3),ramp=ramp(a['mane']),g='tail')
     elif t=='stub': cv.capsule(P(-15,-27+bob),P(-17,-25+bob),max(.7,r(1.2)),max(.6,r(.9)),ramp=rp,g='tail')
+    if a['wings']: _wing_side(cv,a,P,r,bob,ph+.6,1)
     fore(ph+math.pi,1,'f1'); hind(ph,1,'h1')
     cv.capsule(P(7,-25+bob),P(-9,-24.5+bob),r(7),r(5.6),ramp=rp,fur=1.2*fu,seed=5,g='body')
     if a['hump']: cv.capsule(P(6+a['humpx'],-28-a['hump']+bob),P(-1+a['humpx'],-27+bob-(a['hump']*.5 if a['humpx'] else 0)),r(4.5),r(4),ramp=rp,fur=1.2*fu,seed=20,g='body')
@@ -76,14 +122,22 @@ def side(a,f):
         if a['tail']=='horse': cv.capsule(P(7,-31+bob),P(hx-3.5,hy-1),r(1.8),r(1.6),ramp=mr,g='mane')
         else: cv.capsule(P(10,-27+bob),P(hx-2.5,hy+1),r(6.2),r(5.6),ramp=mr,fur=1.8*s,seed=21,g='mane')
     hind(ph+math.pi,0,'h0'); fore(ph,0,'f0')
-    hr=a['hr']; cv.capsule(P(hx,hy),P(hx+1.5,hy),r(hr),r(hr-.4),ramp=rp,fur=.8*fu,seed=8,g='head')
-    mz=a['mz']; mp=ramp(a['snout']) if a['snout'] else rp
-    cv.capsule(P(hx+2,hy+.5),P(hx+2+mz,hy+2.5),r(a['mzr']),r(a['mzr']*.6),ramp=mp,g='head'); cv.capsule(P(hx+2,hy+2.4),P(hx+.5+mz,hy+3.8),r(1.5),r(1.0),ramp=bp if not a['snout'] else mp,g='jaw')
+    if a['wings']: _wing_side(cv,a,P,r,bob,ph,0)
+    if a['spines']:
+        for x in range(-12,9,3): cv.capsule(P(x,-30+bob-(1 if x>-10 else 0)),P(x-1,-33+bob),max(.7,r(.9)),max(.4,r(.4)),ramp=ramp(a['spines']),g='spine')
+    hp=ramp(a['headfur']) if a['headfur'] else rp
+    hr=a['hr']; cv.capsule(P(hx,hy),P(hx+1.5,hy),r(hr),r(hr-.4),ramp=hp,fur=.8*fu if not a['headfur'] else 0,seed=8,g='head')
+    mz=a['mz']; mp=ramp(a['beak']) if a['beak'] else ramp(a['snout']) if a['snout'] else hp
+    if a['beak']: cv.capsule(P(hx+2,hy+.3),P(hx+2+mz*.7,hy+1.2),r(a['mzr']*.8),r(a['mzr']*.45),ramp=mp,g='beak'); cv.capsule(P(hx+2+mz*.7,hy+1.2),P(hx+2+mz*.75,hy+3.4),r(a['mzr']*.4),r(.5),ramp=mp,g='beak')
+    else: cv.capsule(P(hx+2,hy+.5),P(hx+2+mz,hy+2.5),r(a['mzr']),r(a['mzr']*.6),ramp=mp,g='head'); cv.capsule(P(hx+2,hy+2.4),P(hx+.5+mz,hy+3.8),r(1.5),r(1.0),ramp=bp if not (a['snout'] or a['headfur']) else mp,g='jaw')
     ek,el=a['ear']
     if ek=='prick': cv.capsule(P(hx-1.5,hy-3),P(hx-2.5,hy-3-el),max(.7,r(1.7)),max(.4,r(.5)),ramp=rp,g='ear')
-    elif ek=='flop': cv.capsule(P(hx-1.5,hy-2.5),P(hx-3,hy-2.5+el),max(.8,r(1.8)),max(.6,r(1.3)),ramp=[rp[0],rp[0],rp[1],rp[2],rp[3]],g='ear')
+    elif ek=='flop': cv.capsule(P(hx-1.5,hy-2.5),P(hx-3,hy-2.5+el),max(.8,r(1.8)),max(.6,r(1.3)),ramp=ramp(a['earcol']) if a['earcol'] else [rp[0],rp[0],rp[1],rp[2],rp[3]],g='ear')
     elif ek=='round': cv.capsule(P(hx-1.5,hy-hr+.5),P(hx-1.6,hy-hr-.2),max(.8,r(el*.7)),max(.8,r(el*.7)),ramp=rp,g='ear')
-    px=cv.px; q=P(hx+3+mz,hy+1.6); px(q[0],q[1],K.NOSE); q=P(hx+3.4,hy-1.4); px(q[0],q[1],a['eye'])
+    px=cv.px; q=P(hx+3+mz,hy+1.6)
+    if not (a['beak'] or a['nonose']): px(q[0],q[1],K.NOSE)
+    q=P(hx+3.4,hy-1.4); px(q[0],q[1],a['eye'])
+    if a['horn1']: cv.capsule(P(hx+3,hy-hr+.8),P(hx+7.5,hy-hr-6.5),max(.8,r(.9)),.5,ramp=ramp(a['horn1']),g='horn1')
     if a['teeth']:
         for x in (4,6,8):
             if x<mz+2: q=P(hx+x,hy+3.2); px(q[0],q[1],K.TOOTH)
@@ -107,7 +161,7 @@ def front(a,f,back=False):
     def ears(dark):
         for sg in (-1,1):
             if ek=='prick': cv.capsule(P(sg*hr*.65,hy-hr*.6),P(sg*hr*.95,hy-hr*.6-el),max(.7,r(1.7)),max(.4,r(.5)),ramp=rp,dark=dark,g='ear%d'%sg)
-            elif ek=='flop': cv.capsule(P(sg*hr*.9,hy-hr*.4),P(sg*(hr+1.6),hy-hr*.4+el),max(.8,r(1.6)),max(.6,r(1.2)),ramp=[rp[0],rp[0],rp[1],rp[2],rp[3]],dark=dark,g='ear%d'%sg)
+            elif ek=='flop': cv.capsule(P(sg*hr*.9,hy-hr*.4),P(sg*(hr+1.6),hy-hr*.4+el),max(.8,r(1.6)),max(.6,r(1.2)),ramp=ramp(a['earcol']) if a['earcol'] else [rp[0],rp[0],rp[1],rp[2],rp[3]],dark=dark,g='ear%d'%sg)
             elif ek=='round': cv.capsule(P(sg*hr*.75,hy-hr*.8),P(sg*hr*.8,hy-hr*.85),max(.8,r(el*.7)),max(.8,r(el*.7)),ramp=rp,dark=dark,g='ear%d'%sg)
             if a['horns']: hn=ramp(a['horns']); cv.capsule(P(sg*hr*.5,hy-hr*.8),P(sg*(hr+2),hy-hr-1.5),max(.7,r(1.0)),max(.5,r(.7)),ramp=hn,g='horn%d'%sg); cv.capsule(P(sg*(hr+2),hy-hr-1.5),P(sg*(hr+2.6),hy-hr-4),max(.6,r(.7)),max(.4,r(.4)),ramp=hn,g='horn%d'%sg)
             if a['antlers']:
@@ -119,7 +173,12 @@ def front(a,f,back=False):
     if back:
         if hy<-36: cv.capsule(P(0,hy+3),P(0,-27+bob),r(4.0)*a['neckr'],r(5.0),ramp=rp,dark=1,g='neckb')
         cv.capsule(P(0,hy+2),P(0,hy+4),r(hr),r(hr+.2),ramp=rp,fur=.8*fu,seed=9,dark=1,g='head'); ears(1)
+        if a['horn1']: cv.capsule(P(0,hy-hr+3),P(0,hy-hr-4.5),max(.8,r(.9)),.5,ramp=ramp(a['horn1']),g='horn1')
+    if a['wings'] and not back: _wings_front(cv,a,P,r,bob,ph,1)
     cv.capsule(P(0,-25+bob),P(0,-18+bob),r(7.2),r(6.2),ramp=rp,fur=1.2*fu,seed=10,g='body')
+    if a['wings'] and back: _wings_front(cv,a,P,r,bob,ph,0)
+    if a['spines'] and back:
+        for y in range(-30,-17,3): cv.capsule(P(0,y+bob),P(0,y-2+bob),max(.7,r(.9)),max(.4,r(.4)),ramp=ramp(a['spines']),g='spine')
     if a['hump'] and back: cv.capsule(P(0,-28-a['hump']+bob),P(0,-26+bob),r(4.6),r(5),ramp=rp,g='body')
     if not back: cv.capsule(P(0,-22+bob),P(0,-16+bob),r(3.2),r(2.6),ramp=bp,fur=.8*fu,seed=11,g='body')
     for sgn,p in ((-1,ph+math.pi),(1,ph)):
@@ -134,11 +193,14 @@ def front(a,f,back=False):
         cv.capsule(P(-4.5,hy+3.5),P(4.5,hy+3.5),r(4.2)*a['neckr'],r(4.2)*a['neckr'],ramp=rp,fur=1.6*fu,seed=16,g='body')
         if hy<-36: cv.capsule(P(0,hy+3),P(0,-27+bob),r(4.4)*a['neckr'],r(5.4),ramp=rp,g='body')
         if a['mane'] and a['tail']!='horse': cv.capsule(P(0,hy-1),P(0,hy+3),r(hr+2.6),r(hr+2.2),ramp=ramp(a['mane']),fur=1.8*s,seed=22,g='mane')
-        cv.capsule(P(0,hy-.5),P(0,hy+1),r(hr),r(hr-.4),ramp=rp,fur=.8*fu,seed=17,g='head'); ears(0)
+        hp=ramp(a['headfur']) if a['headfur'] else rp
+        cv.capsule(P(0,hy-.5),P(0,hy+1),r(hr),r(hr-.4),ramp=hp,fur=.8*fu if not a['headfur'] else 0,seed=17,g='head'); ears(0)
+        if a['horn1']: cv.capsule(P(0,hy-hr+1),P(0,hy-hr-6.5),max(.8,r(.9)),.5,ramp=ramp(a['horn1']),g='horn1')
         if a['mane'] and a['tail']=='horse': cv.capsule(P(0,hy-hr),P(0,hy-hr+2.5),r(1.6),r(1.3),ramp=ramp(a['mane']),g='mane')
-        mzl=min(a['mz']*.55,5.5) if not a['longface'] else a['mz']*.8; mp=ramp(a['snout']) if a['snout'] else bp
+        mzl=min(a['mz']*.55,5.5) if not a['longface'] else a['mz']*.8; mp=ramp(a['beak']) if a['beak'] else ramp(a['snout']) if a['snout'] else hp if a['headfur'] else bp
         cv.capsule(P(0,hy+1),P(0,hy+1+mzl),r(a['mzr']*.9),r(a['mzr']*.7),ramp=mp,g='muz')
-        q=P(0,hy+2+mzl); px(q[0],q[1],K.NOSE)
+        q=P(0,hy+2+mzl)
+        if not (a['beak'] or a['nonose']): px(q[0],q[1],K.NOSE)
         for sg in (-1,1):
             q=P(sg*hr*.5,hy-1); px(q[0],q[1],a['eye'])
             if a['teeth']: q=P(sg*1.2,hy+3+mzl); px(q[0],q[1],K.TOOTH)
@@ -157,8 +219,26 @@ def bite(a,i):
                 x=int(round(x0+2-abs(k)*.5+q)); y=int(round(y0+k))
                 if 0<=x<S and 0<=y<SH: out[y,x]=(*col,255)
     return out
+_FIT={}
+def fit(a):
+    """the kind set in the middle of its frame and, if it is longer than the frame, made just small enough to fit, so nothing is cut off"""
+    key=id(a)
+    if key in _FIT: return _FIT[key]
+    a2=dict(a)
+    for _ in range(8):
+        al=np.zeros((SH,S),bool)
+        for f in range(8): al|=side(a2,f)[...,3]>0
+        for f in range(8): al|=front(a2,f)[...,3]>0
+        ys,xs=np.nonzero(al)
+        if not len(xs): break
+        x0,x1,y0=xs.min(),xs.max(),ys.min(); w=x1-x0+1
+        if x0>=3 and x1<=S-4 and y0>=3: break
+        a2['ox']=a2['ox']+round((S-1)/2-(x0+x1)/2)
+        if w>S-6 or y0<3: a2['s']=a2['s']*min((S-6)/(w+2) if w>S-6 else 1,1-(3-y0)/max(1,87+K.YO-y0) if y0<3 else 1)
+    _FIT[key]=a2; return a2
 def sheet(a):
     if isinstance(a,str): a=KINDS[a]
+    a=fit(a)
     sh=np.zeros((4*SH,8*S,4),np.uint8)
     for f in range(8):
         r=side(a,f)
