@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.57.0 (One gender for every module: api.gender reads every place a gender was kept (the People generator, babies born in play, wills, the portrait, the sheet's own line) and gives rules only female, male or nothing. For a player character it always gives nothing, because a player's gender has no bearing on play (B3500, B3502))
 - 0.56.2 (Your following (the WoDX NPC cults window) is listed in Player buttons and goes in the Me and mine drawer (B3246))
 - 0.56.1 (The Player buttons window lists the new player buttons: What they say about you, Institutions (WoDX Storyteller) and Who remembers you (WoDX NPC), so each can be hidden per player)
 - 0.56.0 (The age floor: nothing romantic or sexual with anyone under 18, in any era or region. api.age.minor and api.age.romance, and a lover, spouse or troth tie to or from a minor is not kept on a sheet (B3210-B3212))
