@@ -262,8 +262,9 @@ function beard(F, H, shape, my, kind, open) {
       const lips = (Math.abs(y - my) <= 1 && d <= 4) || (open && y >= my - 1 && y <= my + 3 && d <= 4);
       if ( lips ) continue;
       if ( kind === "stubble" ) { if ( (y > my + 1 || d > 5 || y === my - 2) && (x * 3 + y * 5) % 4 === 0 && y < chin - 1 ) F.put(x, y, mix(F.get(x, y), H.s1, 0.3)); }   // sparse, so it reads as shadow, not a chequered patch
-      else if ( kind === "full" ) { if ( y > my + 2 || d > 5 || (y === my - 2 && d < 5) ) F.put(x, y, (x * 3 + y) % 4 ? H.s1 : H.b); }
-      else if ( kind === "goatee" ) { if ( d < 4 && (y > my + 3 || y === my - 2) ) F.put(x, y, (x + y) % 3 ? H.b : H.hi); }
+      // Solid hair with a few scattered lighter strands (a hash, not a lattice), so a beard never reads as a chequer
+      else if ( kind === "full" ) { if ( y > my + 2 || d > 5 || (y === my - 2 && d < 5) ) F.put(x, y, (x * 7 + y * 13) % 11 === 0 ? H.hi : (d > hw - 2 ? H.s1 : H.b)); }
+      else if ( kind === "goatee" ) { if ( d < 4 && (y > my + 3 || y === my - 2) ) F.put(x, y, (x * 7 + y * 13) % 11 === 0 ? H.hi : (d === 3 ? H.s1 : H.b)); }
     }
   }
 }
