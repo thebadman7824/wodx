@@ -154,3 +154,8 @@ test("wiring: settings, hooks, approval types, the tree's buttons and the APIs",
   assert.ok(atLeast(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.55.0"));
   assert.ok(atLeast(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.62.0"));
 });
+
+test("a short time skip over New Year is not a jump: ties and false heirs count whole years of time (NPC 0.67.1, Storyteller 0.65.1)", () => {
+  assert.match(src("modules/wodx-npc/scripts/kin.mjs"), /\(Number\(info\.to\) - Number\(info\.from\)\) \/ YEAR_SECONDS >= 1/);
+  assert.match(src("modules/wodx-storyteller/scripts/wills.mjs"), /Math\.floor\(\(Number\(info\.to\) - Number\(info\.from\)\) \/ \(365\.25 \* 86400\)\)/);
+});
