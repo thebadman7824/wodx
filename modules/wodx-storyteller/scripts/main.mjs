@@ -38,6 +38,7 @@ import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
 import * as SpendRules from "./spend-rules.mjs";
+import * as ProjectRules from "./projects-rules.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
 import * as HavenRules from "./haven-rules.mjs";
@@ -204,7 +205,7 @@ Hooks.once("ready", () => {
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
       clockRow: Spend.clockRow, bindClockRow: el => Spend.bindClockRow(el, () => A.conveneDialog()), rules: SpendRules},
-    tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
+    tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules, budget: Tasks.budgetOf, projects: ProjectRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     hand: {open: Hand.handDialog, run: Hand.runTool, tools: Hand.TOOLS, addTool: Hand.addTool, glance: () => Hand.GlanceApp.open(), call: Hand.callRoll, callDialog: Hand.callRollDialog,
       answer: Hand.answerAsk, preflight: () => Hand.PreflightApp.open(), snapshot: Hand.snapshot, wrapUp: Hand.wrapUpDialog, noteFight: Hand.noteFight, timer: () => Hand.TimerApp.open(),

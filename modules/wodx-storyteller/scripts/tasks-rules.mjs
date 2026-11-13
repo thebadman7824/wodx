@@ -16,6 +16,13 @@ export const INTERVALS = {hour: {label: "Each hour", s: HOUR}, day: {label: "Eac
 /** Rolls made in one clock change; more wait for the next change. */
 export const MAX_ROLLS = 60;
 
+/** How long one roll takes, in seconds: the interval, stretched when a project gets fewer nights than it needs (B3341). */
+export function intervalS(t) {
+  const base = INTERVALS[t?.interval]?.s ?? DAY;
+  const want = Number(KINDS[t?.kind]?.week) || 0, got = Math.round(Number(t?.nights) || 0);
+  return got > 0 && want > got ? Math.round(base * want / got) : base;
+}
+
 export const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
 
 /**
@@ -23,19 +30,30 @@ export const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulat
  * house: true marks a suggestion the books do not set.
  */
 export const KINDS = {
-  craft: {label: "Make or mend something", attr: "dexterity", ability: "crafts", diff: 6, interval: "day", goal: 5, delicate: false, house: true,
+  craft: {label: "Make or mend something", attr: "dexterity", ability: "crafts", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "Complex repairs take 10 minutes per success needed (V20 p. 264); the time for making things is the Storyteller's."},
-  research: {label: "Research in books or records", attr: "intelligence", ability: "occult", diff: 6, interval: "week", goal: 5, delicate: false, house: true,
+  research: {label: "Research in books or records", attr: "intelligence", ability: "occult", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 3,
     ref: "Occult research can run a month or half a year (V20 p. 246)."},
-  train: {label: "Learn from a teacher", attr: "intelligence", ability: "", diff: 6, interval: "week", goal: 5, delicate: false, house: true,
+  train: {label: "Learn from a teacher", attr: "intelligence", ability: "", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 3,
     ref: "A new trait needs a teacher and study as well as the experience, from a short course to years for a first dot of Thaumaturgy; no time is fixed (V20 p. 123)."},
-  fetish: {label: "Make a fetish or talen", attr: "wits", ability: "rituals", diff: 10, interval: "day", goal: 1, delicate: true, house: false,
+  fetish: {label: "Make a fetish or talen", attr: "wits", ability: "rituals", diff: 10, interval: "day", goal: 1, delicate: true, house: false, week: 1,
     ref: "The Rite of the Fetish: Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, one more for each extra success (W20 pp. 213, 227-228)."},
-  wonder: {label: "Make a wonder or talisman", attr: "intelligence", ability: "occult", diff: 7, interval: "week", goal: 10, delicate: true, house: true,
+  wonder: {label: "Make a wonder or talisman", attr: "intelligence", ability: "occult", diff: 7, interval: "week", goal: 10, delicate: true, house: true, week: 4,
     ref: "Dark Ages: Mage gives no general rule for making a wonder; a creature part lowers the difficulty by 2 (p. 191)."},
-  build: {label: "Put up a building", attr: "dexterity", ability: "crafts", diff: 6, interval: "week", goal: 6, delicate: false, house: true,
+  build: {label: "Put up a building", attr: "dexterity", ability: "crafts", diff: 6, interval: "week", goal: 6, delicate: false, house: true, week: 0,
     ref: "Built in stages, each an extended action; workers each add a die and each stage is paid for as it starts (house rule)."},
-  other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true,
+  // B3340: downtime projects. week: the nights a week the kind needs for its full pace (B3341, house figures).
+  business: {label: "Build a business", attr: "manipulation", ability: "finance", diff: 7, interval: "week", goal: 10, delicate: false, house: true, week: 4,
+    ref: "Resources rise by a story award, not by themselves (V20 pdf 123; house rule B850); this is the work that earns it."},
+  court: {label: "Court someone slowly", attr: "charisma", ability: "empathy", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 2, target: true,
+    ref: "Each roll that succeeds is time well spent; a botch is a slight (WoDX NPC hearts). Never with anyone under 18."},
+  language: {label: "Learn a language", attr: "intelligence", ability: "linguistics", diff: 6, interval: "week", goal: 12, delicate: false, house: true, week: 3,
+    ref: "A new language comes with Linguistics dots (V20 pdf 116); the time to learn one is the Storyteller's."},
+  track: {label: "Track someone down", attr: "perception", ability: "investigation", diff: 7, interval: "day", goal: 6, delicate: false, house: true, week: 3, target: true,
+    ref: "Perception + Investigation (V20 pdf 272)."},
+  herd: {label: "Gather a herd or a flock", attr: "charisma", ability: "streetwise", diff: 7, interval: "week", goal: 10, delicate: false, house: true, week: 3,
+    ref: "Herd rises by a story award (V20 pdf 122; house rule B850); this is the work that earns it."},
+  other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
 
@@ -57,7 +75,7 @@ export function normTask(t = {}) {
     dice: Math.max(0, Math.round(n(t.dice))), diff: clampDiff(t.diff ?? k.diff), specialty: !!t.specialty,
     goal: Math.max(1, Math.round(n(t.goal) || k.goal)), interval, delicate: t.delicate === undefined ? k.delicate : !!t.delicate,
     total: Math.max(0, Math.round(n(t.total))), rolls: Math.max(0, Math.round(n(t.rolls))),
-    started, next: t.next === undefined || t.next === null ? started + INTERVALS[interval].s : n(t.next),
+    started, next: t.next === undefined || t.next === null ? started + intervalS({kind, interval, nights: t.nights}) : n(t.next),
     status: ["open", "paused", "done", "ruined"].includes(t.status) ? t.status : "open",
     note: String(t.note ?? ""), log: Array.isArray(t.log) ? t.log.slice(-20) : [],
     needs: String(t.needs ?? "").slice(0, 1000).trim(), workshop: WORKSHOPS[t.workshop] ? t.workshop : "", makes: String(t.makes ?? "").slice(0, 120).trim(),
@@ -74,7 +92,13 @@ export function normTask(t = {}) {
     wait: Math.max(0, Math.min(3650, Math.round(n(t.wait)))), waitWord: String(t.waitWord ?? "").slice(0, 40),
     strength: !!t.strength, impure: !!t.impure, leaves: strs(t.leaves), teaches: String(t.teaches ?? "").slice(0, 40),
     // 0.42.0: followers who help (WoDX NPC), and an errand a follower runs for its master
-    helpers: strs(t.helpers).slice(0, 6), errand: String(t.errand ?? "").slice(0, 20), master: String(t.master ?? "").slice(0, 40)
+    helpers: strs(t.helpers).slice(0, 6), errand: String(t.errand ?? "").slice(0, 20), master: String(t.master ?? "").slice(0, 40),
+    // B3340-B3342: downtime projects. nights: a week given out of the budget (0: not counted, as older tasks are);
+    // target: who it is aimed at; complications drawn so far; trouble false: the Storyteller turned them off
+    nights: Math.max(0, Math.min(7, Math.round(n(t.nights)))),
+    target: t.target && typeof t.target === "object" && t.target.id ? {id: String(t.target.id).slice(0, 40), name: String(t.target.name ?? "").slice(0, 80)} : null,
+    complications: Array.isArray(t.complications) ? t.complications.slice(-10).map(c => ({key: String(c?.key ?? "").slice(0, 20), text: String(c?.text ?? "").slice(0, 300), at: n(c?.at), botch: !!c?.botch})) : [],
+    trouble: t.trouble !== false
   };
 }
 
@@ -135,7 +159,7 @@ export function countFaces(faces, diff, {specialty = false} = {}) {
 export function dueRolls(task, now) {
   const t = normTask(task);
   if ( t.status !== "open" || now < t.next ) return 0;
-  return 1 + Math.floor((now - t.next) / INTERVALS[t.interval].s);
+  return 1 + Math.floor((now - t.next) / intervalS(t));
 }
 
 /** One interval's roll. A botch loses every success; in a delicate task the work is ruined. */
@@ -143,7 +167,7 @@ export function stepTask(task, roll, at) {
   const t = normTask(task);
   if ( t.status !== "open" ) return t;
   t.rolls += 1;
-  t.next += INTERVALS[t.interval].s;
+  t.next += intervalS(t);
   if ( roll.botch ) {
     t.total = 0;
     if ( t.delicate ) t.status = "ruined";
@@ -166,7 +190,7 @@ export function resumeTask(task, now) {
   const t = normTask(task);
   if ( t.status !== "paused" ) return t;
   t.status = "open";
-  t.next = now + INTERVALS[t.interval].s;
+  t.next = now + intervalS(t);
   t.waits = "";
   return t;
 }
