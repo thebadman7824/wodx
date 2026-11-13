@@ -53,7 +53,7 @@ export async function betray(byLike, ofLike, {kind = "other", what = ""} = {}) {
   await moveTrust(of, by, "betrayed", what || b.label);
   // Attitude is an NPC's toward a character
   if ( !of.hasPlayerOwner ) { try { await api()?.attitude?.apply?.(of, by, {delta: b.attitude, why: b.label}); } catch (e) { /* attitude may be off */ } }
-  try { await st()?.rumours?.start?.({text: b.rumour, tellers: [of.id]}); } catch (e) { /* rumours may be off */ }
+  try { await st()?.rumours?.start?.({text: b.rumour, tellers: [of.id], source: of.id, about: by.id, truth: "true"}); } catch (e) { /* rumours may be off */ }
   if ( b.revenge ) {
     try {
       await st()?.ledger?.save?.({kind: "consequence", what: `${of.name} means to pay ${by.name} back for the betrayal (${b.label.toLowerCase()})`,

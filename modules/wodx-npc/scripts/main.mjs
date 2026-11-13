@@ -40,12 +40,13 @@ import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
 import * as HEARTS from "./hearts.mjs";
+import * as STANDING from "./standing.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.58.0";
+const VERSION = "0.59.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -872,6 +873,7 @@ Hooks.once("init", () => {
   TRUST.listen();
   HEARTS.registerSettings();
   HEARTS.listen();
+  STANDING.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
@@ -887,7 +889,10 @@ Hooks.once("init", () => {
       answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
     hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
-      takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules}};
+      takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
+    standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,
+      rankShift: STANDING.rankShift, feuds: STANDING.feuds, startFeud: STANDING.startFeud, endFeud: STANDING.endFeud, feudKilling: STANDING.feudKilling, feudLaw: STANDING.feudLawHere,
+      feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules}};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */

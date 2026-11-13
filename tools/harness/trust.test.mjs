@@ -88,7 +88,7 @@ test("trust shows on a tie, and the Relationships tab prints it", () => {
 test("wiring: the Ledger hook, rumours, attitude, the hold on the victim and the API", () => {
   const t = src("modules/wodx-npc/scripts/trust.mjs"), main = src("modules/wodx-npc/scripts/main.mjs");
   assert.match(t, /Hooks\.on\("wodxBoonSettled"/);
-  assert.match(t, /rumours\?\.start\?\.\(\{text: b\.rumour, tellers: \[of\.id\]\}\)/);
+  assert.match(t, /rumours\?\.start\?\.\(\{text: b\.rumour, tellers: \[of\.id\], source: of\.id, about: by\.id/);
   assert.match(t, /attitude\?\.apply\?\.\(of, by, \{delta: b\.attitude/);
   assert.match(t, /flags\.\$\{MOD\}\.blackmail\.\$\{entry\.id\}/);
   assert.match(t, /secrets\?\.expose\?\./);

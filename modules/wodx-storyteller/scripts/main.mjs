@@ -165,7 +165,7 @@ Hooks.once("ready", () => {
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
-    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},

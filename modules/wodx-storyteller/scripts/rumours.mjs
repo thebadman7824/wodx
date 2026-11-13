@@ -34,12 +34,14 @@ export function contacts() {
   const groups = [];
   try { for ( const f of npc()?.factions?.state?.()?.factions ?? [] ) groups.push([f.leader, ...(f.members ?? [])].filter(id => isNpc(game.actors.get(id)))); } catch (e) { /* no factions */ }
   for ( const s of all(game.scenes) ) groups.push(all(s.tokens).map(t => t.actorId).filter(id => isNpc(game.actors.get(id))));
+  // 0.62.0: NPCs tell their friends, lovers, kin and servants too (WoDX NPC's ties)
+  try { groups.push(...RR.tiePairs(npc()?.ties?.edges?.() ?? [], id => isNpc(game.actors.get(id)))); } catch (e) { /* ties off */ }
   return RR.buildContacts({groups});
 }
 const rand = key => chron()?.gen?.random?.(key) ?? Math.random;
 
 /** Start a rumour. tellers: actor ids who know it first; none given, one is picked (the scene in view first). */
-export async function startRumour({text, tellers = [], big = false} = {}) {
+export async function startRumour({text, tellers = [], big = false, source = null, about = null, truth = "unknown"} = {}) {
   if ( !game.user.isGM || !String(text ?? "").trim() ) return null;
   const id = foundry.utils.randomID();
   let first = (tellers ?? []).filter(Boolean);
@@ -49,7 +51,7 @@ export async function startRumour({text, tellers = [], big = false} = {}) {
     if ( t ) first = [t];
   }
   const at = await nightNow();
-  const r = RR.normRumour({id, text, started: game.time?.worldTime ?? 0, night: at.jdn, knownBy: first, big: !!big, log: [{night: at.jdn, heard: first.length, label: at.label}]});
+  const r = RR.normRumour({id, text, started: game.time?.worldTime ?? 0, night: at.jdn, knownBy: first, big: !!big, source: source ?? first[0] ?? null, about, truth, log: [{night: at.jdn, heard: first.length, label: at.label}]});
   await mutate("rumours", cur => ({value: [...RR.normRumours(cur), r]}));
   return r;
 }
@@ -70,7 +72,7 @@ export function tick({force = false, once = null} = {}) {
         const nights = once ? [(r.night ?? at.jdn) + 1] : RR.nightsDue(r, at.jdn);
         let x = r;
         for ( const n of nights ) {
-          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: Media.rumourHeat(year, {big: r.big, future, region}), twist});
+          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: RR.heatAfterDoubt(Media.rumourHeat(year, {big: r.big, future, region}), x.doubt), twist});
           x = {...rumour, night: once ? r.night : n, log: [...rumour.log, ...(heard.length ? [{night: n, heard: heard.length, label: once ? "by hand" : ""}] : [])].slice(-40)};
           if ( heard.length ) moved.push(r.id);
         }
@@ -148,3 +150,13 @@ export class RumoursApp extends ApplicationV2 {
   static async #onEnd(event, target) { await endRumour(target.dataset.id); }
   static async #onRemove(event, target) { await removeRumour(target.dataset.id); }
 }
+
+/** 0.62.0: someone denies a rumour or works to stop it: each denial slows how fast it spreads (at most three). */
+export async function doubtRumour(id, {by = null} = {}) {
+  if ( !game.user.isGM ) return null;
+  let out = null;
+  await mutate("rumours", cur => ({value: RR.normRumours(cur).map(r => r.id === id ? (out = {...r, doubt: Math.min(3, r.doubt + 1), log: [...r.log, {denied: by ?? true}]}) : r)}));
+  return out;
+}
+/** 0.62.0: the rumours about a character, with who started them and how true they are, for the Storyteller. */
+export const rumoursAbout = actorId => rumours().filter(r => r.about === actorId);

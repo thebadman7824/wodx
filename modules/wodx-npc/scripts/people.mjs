@@ -2,6 +2,7 @@ import * as TR from "./ties-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as OP from "./opinion-rules.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import * as STANDING from "./standing.mjs";
 import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
@@ -73,7 +74,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
       return `<section class="wnpc-tree-line"><h3>${esc(L.label)}</h3><ul class="wnpc-tree">${inner}</ul></section>`;
     }).join("");
     const side = t.side?.length ? `<section class="wnpc-tree-line"><h3>Also</h3><ul data-fixed>${t.side.map(s => `<li>${esc(s.label)}: ${nodeHtml(s)}</li>`).join("")}</ul></section>` : "";
-    const kinPart = KIN.treeSection(actor);
+    const kinPart = STANDING.sheetLine(actor) + KIN.treeSection(actor);
     return `<div class="wnpc-tree-wrap">${lines || side || kinPart ? `${lines}${side}${kinPart}` : `<p>No family, blood or teaching ties are recorded for ${esc(actor.name)} yet.</p>`}
       <p class="wodx-quiet">From the lineage WoDX keeps, each sheet's Sire box and Relationships tab, and Allies and Retainers. A tie that is still a secret shows as Unknown until it is found out.</p></div>`;
   }

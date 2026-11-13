@@ -3905,3 +3905,48 @@ Reverse: clear flags["wodx-npc"].household.
 When a spouse, child, parent, sibling, childe, ward, apprentice, retainer, lover, or a friend at Fond or warmer is hurt, taken or dies, the one who loves them gets a card: a frenzy check for Kindred and Garou, Willpower for others, grief at difficulty 7 or 8 on a death with a Derangement on a botch for a great loss, and line notes (Banality, a Passion, degeneration). A captor's demands go in the Ledger. V20 and Revised rules only; no Touchstones. Setting "Cards for loved ones". The difficulties are house rules.
 
 Reverse: turn the setting off.
+
+## B2826. Standing by community (2026-11-13)
+WoDX NPC 0.59.0 works out a character's standing with each community (the Kindred, the Garou, the Awakened, the fae courts, the Restless Dead, the hunters, and mortal town, faith, trades, law, rulers and underworld) from the deeds recorded on the sheet, -5 to +5. Mortal communities take the name of the way of life and century (the mosque and the ulama, the watch and the courts, business and the unions). For the supernatural ones the books' own tracks stay on the sheet (Status, Renown); this is the talk that goes with them.
+
+Reverse: clear flags["wodx-npc"].deeds.
+
+## B2827. News of a deed travels at the era's speed (2026-11-13)
+A deed counts at once where it was done. Elsewhere it counts only once the fastest way of the year (the letters' carriers: rider, post, telegraph, telephone, e-mail, the net) could have carried the news there. A small deed (1) stays local, a big one (2) reaches the same part of the world, a great one (3) every land the news can reach. House reading.
+
+Reverse: edit reaches in modules/wodx-npc/scripts/standing-rules.mjs.
+
+## B2828. Gossip along ties (2026-11-13)
+WoDX Storyteller 0.62.0: the rumour mill also passes rumours between NPCs joined by a friend, lover, spouse, kin, ally, contact, rival, mentor or master-and-servant tie, besides factions and shared scenes. A rumour keeps its source, its subject and how true it is (true, half true, false, not known), for the Storyteller. Each denial takes one off how many people a knower tells each night, at most three.
+
+Reverse: edit GOSSIP_TIES and heatAfterDoubt in modules/wodx-storyteller/scripts/rumour-rules.mjs.
+
+## B2829. Rank ladders by way of life and century (2026-11-13)
+Ladders lowest first: medieval Western Christendom from serf to prince, then early modern, industrial and modern class ladders; the Orthodox, Islamic, Indian, Chinese and Japanese ladders until each one's modern turn (1861, 1923, 1947, 1912, 1871); a customary ladder elsewhere until 1950; a future ladder from 2050. A jump in time carries a rank to the same share of the new ladder. A reading of history, rounded.
+
+Reverse: edit LADDERS and ladderFor in standing-rules.mjs.
+
+## B2830. What rank does (2026-11-13)
+WoDX Actions 3.61.0: a social roll against an NPC two or more steps below (by share of the ladder) is one easier, two or more above one harder. A match across three steps or more before 1900, five or more later, brings the families' objection. Titles (+2), a good marriage, wealth and rewarded deeds (+1) raise rank; a poor match, ruin (-1) and disgrace (-2) lower it. House numbers.
+
+Reverse: edit rankShift, matchObjection and RANK_EVENTS in standing-rules.mjs.
+
+## B2831. Feuds that heirs inherit (2026-11-13)
+A feud is between two sides, each a family name, a family line, a clan, a tribe, a house or kith, or a faction. Anyone who belongs to a side is in the feud, so children and descendants inherit it. A killing raises its heat (2 to 3). It ends by payment, marriage, a duel or a sworn truce.
+
+Reverse: end the feud.
+
+## B2832. Feud law by place and year (2026-11-13)
+Private feud was lawful in the Empire and Bohemian lands until the Eternal Peace of 1495, in France until 1258, Scandinavia until about 1300, Russia until about 1500, Britain until about 1600; Italy and the Balkans keep the vendetta by custom long after; blood money settles a killing where Islamic law runs; elsewhere custom; after 1950 the law forbids it except blood money. A duel is offered as a settlement before 1900 or where feud is not outlawed. A reading of history, rounded.
+
+Reverse: edit FEUD_LAW, feudLaw and settlements in standing-rules.mjs.
+
+## B2833. Feuds in the rivalry check (2026-11-13)
+Each live feud is a rivalry row between its two sides, at its heat (Hostile, or Hunts at heat 3), and feuding people know each other on sight. So two NPCs of feuding houses who meet may come to blows through the rivalry check and WoDX Combat's fight starter, as the other rivalries do.
+
+Reverse: end the feud, or turn off "Rivalries start fights".
+
+## B2834. Rank and feuds on the family tree (2026-11-13)
+The family and lineage tree shows the character's rank in the year and the feuds they are in, above the family line.
+
+Reverse: remove the sheetLine call in people.mjs.
