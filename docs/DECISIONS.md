@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2970
+Next free block: B2980
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -135,6 +135,7 @@ Next free block: B2970
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 | B2960-B2969 | Courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (B2960-B2962); the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashic Brotherhood and Ahl-i-Batin (B2963-B2968) (used B2960-B2968) | NPC |
+| B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4134,4 +4135,30 @@ Reverse: delete "wu-lung-court" and "akashic-monastery" from POLITIES and their 
 A mages' faction of three or more in the Maghreb, Egypt, Arabia, the Levant, Persia, Anatolia or Central Asia that does not serve Reason keeps a circle of the Ahl-i-Batin, in every year: a Master of the circle who also judges, a keeper of the node, a keeper of the hidden books and two watchers. Its law includes showing the hidden to those not ready and acting against the Unity. When the Subtle Ones sit on the Council and when they leave it is left to the book check; for now the circle stands whatever the year. House rule.
 
 Reverse: delete "batini-circle" from POLITIES and its rows from REGION_MAGES.
+
+## B2970. No Kindred court before the settlers (2026-11-13)
+WoDX NPC 0.64.0: where a region still follows a way of life from before the settlers (Mesoamerica, the Andes, Polynesia and the far north in WoDX Chronicle's world rules, so Mexico before 1521, the Caribbean before 1492, Australia before 1788 and Siberia before 1600), a Kindred faction keeps no court by default: the Kindred of Europe have not come, and the few undead of the land answer to no prince. Antarctica never has one by default. The Storyteller can still pick any polity. After the settler year the court of the age applies, as in Europe. House rule.
+
+Reverse: empty NO_KINDRED_COURT and drop the beforeSettlers test in DEFAULTS.kindred, modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2971. Shapeshifters before the settlers (2026-11-13)
+A Garou faction in Australia before 1788 keeps a gathering of the Mokolé (the Gumagan); one in Mesoamerica before 1521 keeps a land held by the Bastet (the Balam). North and South America keep Garou septs, for the tribes of the land. After the settler year each region keeps what it had before this change. House rule.
+
+Reverse: empty SETTLER_SHIFTERS in politics-rules.mjs.
+
+## B2972. A gathering of the Mokolé (2026-11-13)
+The Eldest who remembers holds the top seat by challenge, a Keeper of the memory judges, each stream present has a voice (from the sheet's tribe field), and a Warden of the waters and a Singer of the old days are appointed. Its law turns on keeping the memory of the world and the waters. Used by default as in B2971 and for any Garou faction whose name or notes name the Mokolé or one of their streams. WoDX's own words; a book check of the Mokolé breedbook is queued.
+
+Reverse: delete "mokole-gathering" from POLITIES and the MOKOLE test in DEFAULTS.garou.
+
+## B2973. A nest of the Nagah (2026-11-13)
+The Eldest of the nest holds the top seat by challenge, a Judge of the nest judges, each auspice present has a voice, and a Keeper of the hidden waters is appointed. Its law turns on judging the breeds and staying hidden from them. Never a regional default, since the Nagah hide; used when the Storyteller picks it or a Garou faction's name or notes name the Nagah. WoDX's own words; a book check of the Nagah breedbook is queued.
+
+Reverse: delete "nagah-nest" from POLITIES and the NAGAH test in DEFAULTS.garou.
+
+## B2974. A council of the Nunnehi (2026-11-13)
+A fae faction in the Americas or the Arctic before the settlers keeps a council of the Nunnehi: a Speaker of the council chosen by backing, a Keeper of the old ways who judges, a voice for each family, a Guardian of the dreaming places and a Teller of the old stories. After the settler year a fae faction keeps the court of its age. Polynesia and Siberia keep the European default for now. WoDX's own words; a book check of the Nunnehi book is queued.
+
+Reverse: delete "nunnehi-council" from POLITIES and the Nunnehi line in DEFAULTS.fae.
+
 

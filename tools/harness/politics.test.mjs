@@ -454,3 +454,49 @@ test("the new courts seat their breeds, tribes and blocs and hear their own law"
   assert.ok(!PO.innerTurn(F.normFaction({id: "x", kind: "garou", polity: "beast-court", leader: "a", members: ["a", "b", "c"]}),
     {polity: "beast-court", info: ppl, rand: stream(3), turn: 0}).lines.some(l => /\btribes\b/.test(l)), "a Beast Court speaks of breeds");
 });
+
+// WoDX NPC 0.64.0 (B2970 to B2974): before the settlers, the Mokolé and the Nagah.
+test("before the settlers: no Kindred court, the Nunnehi for fae, the Mokolé and the Bastet for Garou", () => {
+  const f = (kind, region, name = "") => F.normFaction({id: "x", kind, region, name, members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(f("kindred", "mexico"), 1500), null, "Tenochtitlan before 1521 has no prince");
+  assert.equal(PO.polityFor(f("kindred", "mexico"), 1521), "camarilla", "the settlers bring the court of the age");
+  assert.equal(PO.polityFor(f("kindred", "caribbean"), 1491), null);
+  assert.equal(PO.polityFor(f("kindred", "australia"), 1787), null);
+  assert.equal(PO.polityFor(f("kindred", "australia"), 1900), "camarilla");
+  assert.equal(PO.polityFor(f("kindred", "antarctica"), 2010), null, "never a court on the ice");
+  assert.equal(PO.polityFor(f("kindred", "pacific-islands"), 1700), null);
+  assert.equal(PO.polityFor(f("kindred", "british-isles"), 1300), "dark-ages-court", "Europe unchanged");
+  assert.equal(PO.polityFor(F.normFaction({id: "x", kind: "kindred", region: "mexico", polity: "camarilla", members: ["a", "b", "c"]}), 1500), "camarilla", "a pick still wins");
+  assert.equal(PO.polityFor(f("fae", "andes"), 1400), "nunnehi-council");
+  assert.equal(PO.polityFor(f("fae", "arctic"), 1500), "nunnehi-council");
+  assert.equal(PO.polityFor(f("fae", "andes"), 1700), "commoner-freehold", "after the settlers, the court of the age");
+  assert.equal(PO.polityFor(f("fae", "siberia"), 1500), "commoner-freehold", "the Nunnehi stay in the Americas");
+  assert.equal(PO.polityFor(f("fae", "france"), 1300), "fae-court");
+  assert.equal(PO.polityFor(f("garou", "australia"), 1700), "mokole-gathering");
+  assert.equal(PO.polityFor(f("garou", "australia"), 1800), "garou-sept");
+  assert.equal(PO.polityFor(f("garou", "mexico"), 1400), "bastet-land");
+  assert.equal(PO.polityFor(f("garou", "mexico"), 1600), "garou-sept");
+  assert.equal(PO.polityFor(f("garou", "north-america-east"), 1500), "garou-sept", "the tribes of the land keep septs");
+});
+
+test("the Nagah and the Mokolé by name, ahead of the regional default", () => {
+  const g = (region, name) => F.normFaction({id: "x", kind: "garou", region, name, members: ["a", "b", "c"]});
+  assert.equal(PO.polityFor(g("india", "A nest of the Nagah"), 1600), "nagah-nest");
+  assert.equal(PO.polityFor(g("west-africa", "The Mokole of the delta"), 1600), "mokole-gathering");
+  assert.equal(PO.polityFor(g("china", "Zhong Lung of the river"), 1600), "beast-court", "the dragons of the East sit in the Beast Courts");
+  assert.equal(PO.polityFor(g("japan", "Kitsune"), 1600), "beast-court");
+  const ppl = {a: {name: "A", tribe: "Gumagan", house: "Cherokee", rank: 3, title: 3}, b: {name: "B", tribe: "Piasa", house: "Inuit", rank: 2, title: 2}, c: {name: "C", tribe: "Makara", rank: 1}};
+  for ( const key of ["nunnehi-council", "mokole-gathering", "nagah-nest"] ) {
+    const P = PO.POLITIES[key];
+    assert.ok(P.titles?.[PO.topOffice(key).key]?.length >= 3, key);
+    assert.ok(P.law.length >= 5, key);
+    assert.ok(!/—/.test(JSON.stringify(P)) && !/\b(he|she|him|her|his|hers)\b/i.test(JSON.stringify(P)), key);
+    const out = PO.innerTurn(F.normFaction({id: "x", kind: P.kinds[0], polity: key, leader: "a", members: ["a", "b", "c"]}), {polity: key, info: ppl, rand: stream(5), turn: 0});
+    assert.ok(out.lines.length, key);
+  }
+});
+
+test("every region named by the new tables is a world region", async () => {
+  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  for ( const r of [...PO.NO_KINDRED_COURT, ...PO.NUNNEHI_LANDS, ...Object.keys(PO.SETTLER_SHIFTERS)] ) assert.ok(W.WORLD_REGIONS[r], r);
+});
