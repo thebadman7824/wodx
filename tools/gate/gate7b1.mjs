@@ -40,6 +40,13 @@ export async function run() {
     for ( let n = 0; n < 10; n++ ) { const k = `${combat.round}:${combat.turn}`; await sleep(1500); if ( k === `${combat.round}:${combat.turn}` ) return; }
   };
 
+  // A hard blow in an earlier step can leave the hero dazed (no action next turn, by the rules), and the conductor then rightly passes the
+  // hero's turn over. The steps that need the hero to act take such states off first, and say which they found.
+  const NO_ACTION = ["dazed", "incapacitated", "torpor", "staked", "immobilized"];
+  const fit = async tok => { const cd = game.modules.get("wodx-chronicle")?.api?.conditions, had = NO_ACTION.filter(id => cd?.hasCondition?.(tok.actor, id));
+    for ( const id of had ) await cd.setCondition(tok.actor, id, false);
+    await C().setDamage(tok.actor, zero); return had; };
+
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
     for ( const role of ["hero", "fighter", "runner"] ) {
@@ -95,6 +102,7 @@ export async function run() {
     for ( const k of ["nextTurn", "nextRound"] ) { own[k] = Object.hasOwn(combat, k) ? combat[k] : null; const f = combat[k].bind(combat); combat[k] = (...a) => { note(k); return f(...a); }; }
     try {
     await settle();
+    const cleared = await fit(T.hero);
     await toTurn(T.hero);
     // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
     await game.settings.set(MOD, "conductorGrace", 4);
@@ -119,7 +127,7 @@ export async function run() {
       const whyMid = CD().state().why ?? null, flagMid = combat.getFlag(MOD, "conductor") ?? null;
       const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
       ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended,
-        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, moves, t0: t0 - w0, grace: game.settings.get(MOD, "conductorGrace")});
+        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, moves, cleared, t0: t0 - w0, grace: game.settings.get(MOD, "conductorGrace")});
     } finally { Hooks.off("updateCombat", hk); }
     } finally { for ( const k of ["nextTurn", "nextRound"] ) { if ( own[k] ) combat[k] = own[k]; else delete combat[k]; } }
     await game.settings.set(MOD, "conductorGrace", 2);
@@ -129,6 +137,7 @@ export async function run() {
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
     await settle();
+    await fit(T.hero);
     // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
     const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
     await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
