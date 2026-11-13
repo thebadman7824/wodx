@@ -237,7 +237,7 @@ export async function tiesDialog(actorId = null) {
 export const huntOf = scene => U.normHunt(scene?.flags?.[MOD]?.hunt ?? {});
 
 /**
- * The sickness in the scene's town (B3266): a live outbreak in its market first (contagion.mjs, with phase, blood and a
+ * The sickness in the scene's town (B3436): a live outbreak in its market first (contagion.mjs, with phase, blood and a
  * hunting difficulty shift), else the history of its own land for the year, else the old Europe list.
  */
 export function outbreakHere(scene = canvas?.scene) {

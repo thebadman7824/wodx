@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Sickness that spreads from town to town and person to person (Storyteller, B3260-B3266) */
+/* Sickness that spreads from town to town and person to person (Storyteller, B3430-B3436) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
@@ -162,7 +162,7 @@ test("a sick character rolls each week: the rating as damage on a failure, a slo
   assert.ok(R.exposeChance({...R.newOutbreak({market: "a", disease: "plague"}), week: 9}) > 0.5);
 });
 
-test("the town turn takes its sickness from the towns' own outbreaks when they spread (B3267)", async () => {
+test("the town turn takes its sickness from the towns' own outbreaks when they spread (B3437)", async () => {
   const TR = await imp("modules/wodx-storyteller/scripts/town-rules.mjs");
   const o = {...R.newOutbreak({market: "brno", disease: "plague"}), week: 9};
   const h = R.townHit(o);

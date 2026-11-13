@@ -1,11 +1,11 @@
 /**
- * Sickness that spreads between towns (WoDX Storyteller, B3260-B3266), in Foundry, in rothenstein-wodx only, as
+ * Sickness that spreads between towns (WoDX Storyteller, B3430-B3436), in Foundry, in rothenstein-wodx only, as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gatecontagion.mjs?${Date.now()}`)).run()
  * It keeps the world's markets, caravans, sickness state and the settings it touches, makes two linked markets on two
  * scenes of its own (one with a passers-by crowd) and one living character, and puts everything back at the end. The
  * clock never moves: weeks are run by hand.
- *   1. the modules: Storyteller with api.upkeep.contagion (B3260) and its settings
+ *   1. the modules: Storyteller with api.upkeep.contagion (B3430) and its settings
  *   2. starting plague in a town puts it in the state, the log and the rumour-free card
  *   3. a market week moves it a week on, with a Sickness card and Undo
  *   4. at its height the town's medicine is dear, food short and its crowd quiet

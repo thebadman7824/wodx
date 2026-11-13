@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller (B3260-B3266): sickness in the towns (rules in contagion-rules.mjs).
+ * WoDX Storyteller (B3430-B3436): sickness in the towns (rules in contagion-rules.mjs).
  *
  * A town is a market. Once a week, right after the market turn (market-turn.mjs), every sick town moves a week along
  * its outbreak; its prices, supply and passers-by follow how hard it presses; and it may pass the sickness along its

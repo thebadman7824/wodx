@@ -11,7 +11,7 @@
  * 0.49.0: the same run ages what factions have laid on the markets and lets them move again (market-moves.mjs),
  * reckons every trader's week, and sends the goods that linked markets trade out as caravans (caravans.mjs).
  * B3110: then every venture characters have put money into pays its share or takes its loss (ventures.mjs).
- * B3260: last, sickness moves on in the towns and spreads along the links and with the caravans that left (contagion.mjs).
+ * B3430: last, sickness moves on in the towns and spreads along the links and with the caravans that left (contagion.mjs).
  */
 import * as R from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
@@ -132,7 +132,7 @@ export async function run({force = false, reason = ""} = {}) {
   try { await Moves.after({pre, weeks, live: due.due === 1 && !due.skipped, pcMarkets: pcs, stamp}); } catch (e) { console.error(`${MOD} | market moves`, e); }
   // B3110: ventures pay their share or lose part of their value once the markets have moved
   try { await Ventures.weekRun({weeks, stamp}); } catch (e) { console.error(`${MOD} | ventures`, e); }
-  // B3260: sickness in the towns, after the markets have moved
+  // B3430: sickness in the towns, after the markets have moved
   try { await Contagion.weekRun({weeks, left: departed}); } catch (e) { console.error(`${MOD} | contagion`, e); }
   return {changes: suggest ? [] : r.changes, queued, skipped: due.skipped};
 }

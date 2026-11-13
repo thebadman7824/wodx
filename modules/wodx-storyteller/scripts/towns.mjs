@@ -109,7 +109,7 @@ function withNewTowns(st, markets) {
 const ev = e => `${e.name ?? e.town}: ${e.text}`;
 
 /** Run the weeks that are due. force: one week now whatever the clock says. Returns {events, queued} or null. */
-/** B3267: when sickness spreads between towns, each town's own sickness this week (contagion.mjs), else undefined. */
+/** B3437: when sickness spreads between towns, each town's own sickness this week (contagion.mjs), else undefined. */
 function sickFor() {
   const co = game.modules.get(MOD)?.api?.upkeep?.contagion;
   if ( !co?.on?.() ) return undefined;

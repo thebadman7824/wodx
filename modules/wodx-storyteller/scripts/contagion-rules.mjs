@@ -1,25 +1,25 @@
 /**
- * WoDX Storyteller (B3260-B3266): sickness that spreads from town to town and from person to person. Pure rules, no
+ * WoDX Storyteller (B3430-B3436): sickness that spreads from town to town and from person to person. Pure rules, no
  * Foundry calls.
  *
  *   Diseases   Each has a toxin rating (health levels a week, bashing or lethal) and a Stamina difficulty to resist it,
  *              from the M20 toxin table (M20 p. 442) where the book lists the disease, and set beside the nearest
- *              listed one where it does not (B3261). blood: the sickness rides in the blood, so a vampire who drinks
+ *              listed one where it does not (B3431). blood: the sickness rides in the blood, so a vampire who drinks
  *              it can carry it on to later vessels (V20 p. 303; V20 Dark Ages p. 357).
  *   Towns      A town is a market (market-rules.mjs). An outbreak there runs a fixed number of weeks: few fall sick at
  *              first, most around the first third, then it wanes. attack is the share of the town that falls sick
- *              over the whole outbreak, death the share of the sick who die (B3262).
+ *              over the whole outbreak, death the share of the sick who die (B3432).
  *   Spread     Each week a town in the grip of it may pass it along every trade link and with every caravan that
  *              leaves it. Quarantine (the market cut off) cuts the chance to a sixth; summer or winter favours some
  *              sicknesses; railways and then aircraft carry it faster. A town that has just come through one sickness
- *              does not take the same one again for two years (B3263).
+ *              does not take the same one again for two years (B3433).
  *   History    Outbreaks the history books record, by region and year, from 1197 to 2022, so a chronicle anywhere on
  *              earth meets the sicknesses of its own time and land. Peoples who had never met smallpox, measles or
- *              influenza suffer far worse in the first century after contact (B3264).
+ *              influenza suffer far worse in the first century after contact (B3434).
  *   People     A living character in a sick town may be exposed each week and then rolls Stamina against the
  *              difficulty; once sick, a failed weekly roll deals the rating as damage (M20 p. 442) until the course
- *              runs out or two rolls in a row succeed. Slow sicknesses strike once a month (B3265).
- * The shares, chances, weeks and courses are the Storyteller's to change; WoDX starts from these (B3262-B3265).
+ *              runs out or two rolls in a row succeed. Slow sicknesses strike once a month (B3435).
+ * The shares, chances, weeks and courses are the Storyteller's to change; WoDX starts from these (B3432-B3435).
  */
 
 export const STATE_VERSION = 1;
@@ -339,7 +339,7 @@ export function huntHit(o) {
 }
 
 /**
- * What the town's people feel this week, for the town turn (towns.mjs, B3267): {name, dead (the week's share of the
+ * What the town's people feel this week, for the town turn (towns.mjs, B3437): {name, dead (the week's share of the
  * people who die of it), pressure (0 to 1)}, or null while it has not yet begun or is over.
  */
 export function townHit(o) {
@@ -386,7 +386,7 @@ export const strikesThisWeek = x => { const n = normIllness(x); return !!n && (!
 /**
  * Outbreaks the histories record: id, disease, name, note, at: [[region, year], ...] (when it reached each land), last
  * (years it lingers in a land), scale (share of the usual attack). Drawn from general history; where the year of
- * arrival in a land is uncertain, the commonly cited one is used (B3264).
+ * arrival in a land is uncertain, the commonly cited one is used (B3434).
  */
 export const HISTORY = [
   {id: "black-death", disease: "plague", name: "The Great Mortality", last: 4, note: "The Black Death comes on the trade roads and the ships.",

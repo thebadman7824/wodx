@@ -243,7 +243,7 @@ export function risingWords(year) {
 /* ------------------------------------------------------------------ */
 
 /**
- * One week for every town. sickFor(market): when sickness spreads between towns (B3267), the town's own sickness this
+ * One week for every town. sickFor(market): when sickness spreads between towns (B3437), the town's own sickness this
  * week ({name, dead, pressure} or null), which then stands in for the outbreaks by year; leave it out for those.
  * markets: the markets state's list; ctxFor(market) gives the market pressures (see
  * pressures); regionOf(town) the town's world region; latOf(town, region) its latitude (seasons turn south of the
@@ -261,7 +261,7 @@ export function weekTowns(state, markets = [], {year = 1197, month = 1, latOf = 
     const t = st.towns[m.id], rand = randFor(m.id), ctx = ctxFor(m) ?? {};
     const region = regionOf(t), lat = latOf(t, region);
     const say = (kind, text, big, effect = {}) => events.push({town: m.id, name: m.name, kind, text, big: !!big, effect});
-    // B3267: with sickness spreading between towns (contagion.mjs), the town's sickness is the one it has caught
+    // B3437: with sickness spreading between towns (contagion.mjs), the town's sickness is the one it has caught
     const sick = typeof sickFor === "function" ? sickFor(m) : undefined;
     if ( sick !== undefined ) {
       t.struck = sick ? {key: `sick:${m.id}`, name: sick.name, weeks: 1, share: num(sick.dead)} : (String(t.struck?.key ?? "").startsWith("sick:") ? null : t.struck);
