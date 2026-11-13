@@ -54,8 +54,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Markets and trade
 
-- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house).
-- Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`.
+- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `power.mjs` and `power-rules.mjs` (Nodes, chantries and freeholds).
+- Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `placesOfPower`, `powerState`.
 
 ## Battles, sieges and ships
 
