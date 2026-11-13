@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2950
+Next free block: B2960
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -131,6 +131,7 @@ Next free block: B2950
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
+| B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3814,3 +3815,8 @@ Reverse: Return null from addedUpOffer in body-rules.js; delete the healCrippled
 Desk item t4. A living tile's rule has "While it holds, also": walls inside its square block movement and sight, doors inside it are locked, or lights inside it are on. When the rule stops holding they open, unlock or go out; a door that WoDX did not lock is left alone.
 
 Reverse: Set "While it holds, also" to "Nothing else" on the tile.
+
+## B2950. An unofficial fan work notice before the repository goes public (2026-11-13)
+Ben asked whether a disclaimer would help before the repository is made public. The Dark Pack Agreement asks for its legal notice, its logo and a statement that the work is not official World of Darkness material. README.md and a new NOTICE.md carry all three plus the third-party credits; the system fork's settings sidebar adds the unofficial line beside the notice upstream already shows (7.3.2-wodx.10). A notice does not make copying lawful, so book text and art are checked separately on the public repository review desk.
+
+Reverse: Take the line out of module/ui/settings-sidebar.js and drop NOTICE.md and the README paragraph.
