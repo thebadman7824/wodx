@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2830
+Next free block: B2840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -128,7 +128,8 @@ Next free block: B2830
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
-| B2800-B2829 | The Player UI Desk: Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
+| B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
+| B2810-B2839 | The Player UI Desk: Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3733,82 +3734,106 @@ The face follows the health track with the ladder Ben approved for the portraits
 
 Reverse: Take the health level out of the face in face64.mjs.
 
-## B2800. Beginner and Full views (2026-11-13)
+## B2800. Features on the talking face (2026-11-13)
+WoDX Paperdoll 0.17.0. Ben asked (13 November 2026) for every facial feature a game line could have, from a book check, with invented ones put to a desk. The face features desk showed 110 drafts on faces of their own line; Ben approved every recommendation ("I like them. Proceed as you have recommended."), building 102 as drawn and 8 with the changes the desk named (a hat seated on the brow, darker veins of age, larger Setite scales, a tear drop, a lower topknot, soft shadow tendrils for the Lasombra, a veil that shows the forehead, a Firmament demon's extra eyes spread over brow and cheeks). The features live in face64-features.mjs; each is drawn in stages around the face's own (colours first, behind the head, on the skin, on the face, on top). Sources are tagged books, everyday or new on the desk; page references follow the PC book check.
+
+Reverse: Clear S.features (tick none and keep, or empty FEATURES).
+
+## B2801. How an NPC gets its features (2026-11-13)
+Ben's pick on the desk: the Storyteller ticks them (Actors menu, Talking face: features, with a search box), and an NPC with none ticked rolls them by seed from what its sheet names. A feature of a group the sheet names (clan, kith, tribe, breed, tradition, house) comes six times in ten; a changeling's kith mien and a shifter breed's look always; a ghoul's flush only when the sheet says ghoul; a line's general marks about one time in seven; everyday marks about one in sixteen, at most two; a wraith always bears exactly one deathmark, a metis one deformity, anyone at most one headwear. Spectacles are never rolled, only ticked, since they belong to some eras only.
+
+Reverse: Roll them by seed in the window, or change rollFeatures in face64-features.mjs.
+
+## B2802. Form and power features show only in that state (2026-11-13)
+Ben's pick on the desk. The Beast in the eyes and Garou Rage show in frenzy; Glabro's brow and teeth while the sheet's Glabro form is on; a demon's visage (Radiance halo, Firmament eyes, Forge iron, Patterns lines, Awakenings glow, horns, Torment eyes) while its apocalyptic form has risen in this scene and hour; tears of blood when the face grieves or fears. A demon shintai, a Paradox backlash and catharsis have no sheet field, so the Storyteller ticks them under Showing now.
+
+Reverse: Remove a feature's state in face64-features.mjs.
+
+## B2803. Who sees the hidden features (2026-11-13)
+Ben's pick on the desk: only those the rules let see them, and the Storyteller. A changeling kith's mien keeps to the fae sight of B2795; a hunter's Second Sight keeps to the imbued. Every other feature is plain flesh and shows to all.
+
+Reverse: Change viewerSees in face64.mjs or the mien() wrapper in face64-features.mjs.
+
+## B2804. The face still moves only at the eyes and mouth (2026-11-13)
+With any feature on, blinking and speaking change only the eyes, brows and mouth rows, so a feature never flickers while the face talks; tested for all 110.
+
+Reverse: None needed; a harness test guards it.
+## B2810. Beginner and Full views (2026-11-13)
 Ben approved the Player UI Desk (13 November 2026, every item, in the desk's order). Each player has a view: Beginner or Full. The player's own pick (My view) wins, then the Storyteller's pick for that player (Player toolbar buttons), then the world default, which is Full so nobody's screen changes until someone picks. The Storyteller always sees Full. Nothing is removed in either view.
 
 Reverse: Set Players' view when nobody has picked one to Full and clear the picks, or remove player-view.mjs from main.mjs.
 
-## B2801. Toolbar drawers (2026-11-13)
+## B2811. Toolbar drawers (2026-11-13)
 In Beginner view a player's WoDX token buttons sit in five drawers: Right now (talk, notice, sight, case board), Me and mine (experience, followers, orders, factions, gear), Time and tasks (clock, out on your own, let time pass, letters, downtime, long tasks, clocks, property, solo), Beyond the world (step sideways, peek, read the soul, the spirits, otherworld rolls, the Net), Help and story (Library, Legends). X-card, Find my character and Find anything stay on the bar. A WoDX button not in the list stays on the bar too, so a new button is never lost. Buttons the Storyteller hid stay hidden.
 
 Reverse: TOOL_GROUP in player-view-rules.mjs.
 
-## B2802. Buttons that fit the character (2026-11-13)
+## B2812. Buttons that fit the character (2026-11-13)
 In each drawer, buttons that do not fit the character's line or year go under More instead of first: stepping sideways is for shapeshifters and spirits, peeking also for mages, the spirit courts for Garou, mages and spirits, otherworld rolls for Garou, mages, changelings, wraiths and spirits, My sight for Kindred, ghouls, Garou and wraiths, Read the Soul for every line but plain mortals and beasts, and the Net from 1990. With no character every button counts as fitting. The line is the one the Actions menu reads.
 
 Reverse: TOOL_LINES and TOOL_YEARS in player-view-rules.mjs.
 
-## B2803. Find anything (2026-11-13)
+## B2813. Find anything (2026-11-13)
 Ctrl+K, or the magnifier on the token bar, opens one search over every token button the player may use (drawers included), the character's Actions menu entries with the common checks and dramatic systems, every journal page the player can read, and every setting the player can change. Every word typed must match; matches at the start of a name come first; 40 at most. It is in both views and for the Storyteller too. Actions gains api.menuEntries and api.runSpec for it.
 
 Reverse: Remove the wodxFind tool and the findAnything key in player-view.mjs.
 
-## B2804. Token menu groups (2026-11-13)
+## B2814. Token menu groups (2026-11-13)
 In Beginner view the WoDX buttons on the token menu sit behind four buttons: Act (attacks, use, sprites and the rest), Move (room to move, burden, poses, carrying), Look (perception, use or search), Talk (faces and talk). The Actions book stays on its own, and Foundry's own buttons and other modules' buttons are not touched. A press opens the group beside it; a second press closes it.
 
 Reverse: hudGroupOf in player-view-rules.mjs, or Full view.
 
-## B2805. The Storyteller's window lists every player button (2026-11-13)
+## B2815. The Storyteller's window lists every player button (2026-11-13)
 Player toolbar buttons gains a View row (World default, Beginner or Full for each player) and the 11 player buttons it did not list: Library, Gear by era, What do I notice, My sight, Talk, Give an order, Followers, Factions, Case board, Solo panel, and Find anything (always shown, like the X-card).
 
 Reverse: PLAYER_TOOLS in player-tools.mjs.
 
-## B2806. Drawers follow the character (2026-11-13)
+## B2816. Drawers follow the character (2026-11-13)
 The drawers are drawn again when the player's assigned character changes. A selected token counts first, then the assigned character.
 
 Reverse: The updateUser hook in player-view.mjs.
 
-## B2807. The Actions menu in Beginner view (2026-11-13)
+## B2817. The Actions menu in Beginner view (2026-11-13)
 In a player's Beginner view the Actions menu opens on a Common row: the first five actions of the line's Act band, in the order the menu already uses (for a Kindred: Action, Common checks, the person beside you, a Discipline, Feed). Pinned and lately used come next. The other groups fold behind an Every action button; typing in the search shows them all at once. Full view is the menu as before.
 
 Reverse: frontRow and the beginner option of menuFor (profile-menus.js).
 
-## B2808. What each action does and costs (2026-11-13)
+## B2818. What each action does and costs (2026-11-13)
 In Beginner view each Actions menu button has a line under its name: the action's own description, then its cost where the cost is always the same (COST in theme-rules.js: spending blood, spending Willpower, the hunt's time, and so on). Where the cost depends on the power or the roll, the line says nothing about cost rather than guess; the power's own window shows it.
 
 Reverse: actionLine and COST in theme-rules.js.
 
-## B2809. Roll cards say the result first (2026-11-13)
+## B2819. Roll cards say the result first (2026-11-13)
 In Beginner view a roll card on the player's screen opens with what the result means in a sentence (a botch goes wrong worse than a failure; one success is barely, two well enough, three well, four very well, five or more brilliantly, close to V20's degrees of success). The dice and the modifiers fold under Dice and details. The chat message itself is untouched, so other players and the Storyteller see what they chose.
 
 Reverse: plainCards in wodx-actions main.js, plainLine in theme-rules.js.
 
-## B2810. Quieter chat for players (2026-11-13)
+## B2820. Quieter chat for players (2026-11-13)
 In Beginner view a player sees world cards as one line that opens on a click: weather, the dawn, overheard talk, an NPC's passing remark and NPC routine reports. A message with a roll or dice is never folded, and nothing aimed at the player alone is matched by these rules.
 
 Reverse: isWorldCard in player-view-rules.mjs.
 
-## B2811. More options in the roll windows (2026-11-13)
+## B2821. More options in the roll windows (2026-11-13)
 The Action window and the Common checks window keep the pool, difficulty and type of action in view and put bonus dice, multiple actions, specialty, Willpower, wound penalties, the Road aura, daytime, the automatic success and the description under More options: folded in Beginner view, open in Full view. The dramatic system still fills the pool and difficulty. Skipping the window from a quick-roll button comes with the quick rolls on the sheet (desk item b1).
 
 Reverse: The vta-more-opts details in action() and quickCheck() (wodx-actions main.js).
 
-## B2812. Quick rolls on the first tab (2026-11-13)
+## B2822. Quick rolls on the first tab (2026-11-13)
 In Beginner view the Core tab opens with a Quick rolls row: four common checks to start (Notice something, React in time, Read a person, Keep going) and a Your powers button for every line with powers of its own (the line's power entry in the Actions menu: Disciplines, Gifts, Arcanoi, magick and so on). A click rolls the check at once at its own difficulty; Shift+click opens the Common checks window first. The owner can add any common check from the row's list and right-click one to take it off, eight at most, kept on the character. The full trait grid stays below.
 
 Reverse: quickList and QUICK_DEFAULT in wodx-sheets beginner-rules.mjs; quickCheck's direct option in wodx-actions.
 
-## B2813. Abilities at zero fold away (2026-11-13)
+## B2823. Abilities at zero fold away (2026-11-13)
 In Beginner view the Abilities the character has no dots in fold behind a Show all button that counts them. Show all stays open for that character until the page is reloaded. Attributes, Backgrounds and powers never fold. Giving a folded Ability its first dot needs Show all, or the Creation wizard's experience window.
 
 Reverse: foldZero in wodx-sheets beginner.mjs.
 
-## B2814. Fewer tabs at a time (2026-11-13)
+## B2824. Fewer tabs at a time (2026-11-13)
 In Beginner view the sheet's Settings, Effects and Body tabs and the system's Wiki link sit behind a More button at the end of the tab row, and the line's power tabs come straight after Core. An open tucked tab keeps the row open. Full view keeps the system's order.
 
 Reverse: tabOrder and TUCKED_TABS in wodx-sheets beginner-rules.mjs.
 
-## B2815. Hover help in our own words (2026-11-13)
+## B2825. Hover help in our own words (2026-11-13)
 In Beginner view each Attribute, Ability, Virtue and pool on the sheet carries a short line on hover, written for WoDX in plain words (no book text), and a power shows the first sentence of its own description. Before 1450 Humanity's line names the Road of Humanity. Ben asked (13 November) that these lines avoid the common signs of machine writing; the harness checks them for dashes and stock phrases.
 
 Reverse: HELP in wodx-sheets beginner-rules.mjs.

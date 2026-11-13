@@ -1,5 +1,5 @@
 /**
- * The sheet in a player's Beginner view (Sheets 0.19.0, B2812 to B2815). Drawn after every render, on this screen only:
+ * The sheet in a player's Beginner view (Sheets 0.19.0, B2822 to B2825). Drawn after every render, on this screen only:
  *   - a quick roll row at the top of Core: common checks the player can add to and take from, and the line's powers;
  *     a click rolls at once, Shift+click opens the roll window first
  *   - Abilities at zero fold behind Show all
@@ -33,7 +33,7 @@ export function decorate(sheet, html) {
   try { hoverHelp(root, actor); } catch (e) { console.warn("WoDX Sheets | help", e); }
 }
 
-/* Quick rolls (B2812) */
+/* Quick rolls (B2822) */
 function quickRow(root, actor, editable) {
   const core = root.querySelector(".tab.core");
   if ( !core || core.querySelector(".wodx-quickrolls") ) return;
@@ -73,7 +73,7 @@ function quickRow(root, actor, editable) {
   });
 }
 
-/* Abilities at zero fold behind Show all (B2813) */
+/* Abilities at zero fold behind Show all (B2823) */
 function foldZero(root, actor) {
   const rows = [];
   for ( const lab of root.querySelectorAll(".tab.core label.vrollable[data-ability], .tab.core label.wodx-missing") ) {
@@ -102,7 +102,7 @@ function foldZero(root, actor) {
   area.append(btn);
 }
 
-/* Fewer tabs at a time (B2814) */
+/* Fewer tabs at a time (B2824) */
 function tuckTabs(root, actor) {
   const nav = root.querySelector("nav.sheet-tabs[data-group='primary']");
   if ( !nav || nav.querySelector(".wodx-tab-more") ) return;
@@ -129,7 +129,7 @@ function tuckTabs(root, actor) {
   });
 }
 
-/* Hover help in plain words (B2815) */
+/* Hover help in plain words (B2825) */
 function hoverHelp(root, actor) {
   const year = yearNow();
   for ( const el of root.querySelectorAll("label.vrollable, .sheet-banner-text, .headlineNormal, label") ) {

@@ -1,5 +1,5 @@
 /**
- * The sheet in a player's Beginner view (Sheets 0.19.0, B2812 to B2815). Pure rules, tested by the harness.
+ * The sheet in a player's Beginner view (Sheets 0.19.0, B2822 to B2825). Pure rules, tested by the harness.
  * Nothing is taken off the sheet: zero-dot Abilities fold behind Show all, rarely used tabs sit behind More, and every
  * quick roll is also on the sheet and in the Actions menu.
  */

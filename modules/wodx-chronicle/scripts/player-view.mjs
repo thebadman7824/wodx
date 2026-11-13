@@ -1,5 +1,5 @@
 /**
- * Beginner and Full views (B2800 to B2806). In Beginner view a player's WoDX toolbar buttons sit in five labelled
+ * Beginner and Full views (B2810 to B2816). In Beginner view a player's WoDX toolbar buttons sit in five labelled
  * drawers, the WoDX token menu buttons sit behind Act, Move, Look and Talk, and Find anything (Ctrl+K) searches every
  * button, action, journal page and setting. Full view is the layout as it was. Nothing is taken away in either view;
  * the Storyteller's per-player hides still apply first. The rules are in player-view-rules.mjs.

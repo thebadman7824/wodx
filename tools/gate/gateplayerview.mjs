@@ -1,6 +1,6 @@
 /**
  * Beginner and Full views, toolbar drawers, token menu groups and Find anything (WoDX Chronicle 0.52.0, Actions 3.60.0,
- * B2800 to B2806), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * B2810 to B2816), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayerview.mjs?${Date.now()}`)).run()
  * The Storyteller previews the Beginner view (this session only) and the gate puts Full back. It makes one Kindred
  * actor and one token on the viewed scene and deletes both.
@@ -98,7 +98,7 @@ export async function run() {
     const specs = ents.map(e => e.spec);
     ok("7. actions entries", ents.length > 10 && specs.some(s => s.startsWith("check:")) && new Set(specs).size === specs.length, {n: ents.length, sample: ents.slice(0, 6).map(e => e.label)});
 
-    // Step 2 of the desk (B2807 to B2811), still in the Beginner preview
+    // Step 2 of the desk (B2817 to B2821), still in the Beginner preview
     const dlg = () => [...foundry.applications.instances.values()].filter(a => a.element?.querySelector?.(".wodx-menu2, form [name=diff]"));
     A.api.menu({actor}); await sleep(1200);
     const mw = dlg().find(a => a.element.querySelector(".wodx-menu2"));
@@ -131,7 +131,7 @@ export async function run() {
     await aw?.close?.();
     ok("12. more options", begFold === true && fullOpen === true, {begFold, fullOpen});
 
-    // Step 3 of the desk: the sheet (B2812 to B2815)
+    // Step 3 of the desk: the sheet (B2822 to B2825)
     const SH = game.modules.get("wodx-sheets");
     V.preview("beginner"); await sleep(200);
     await actor.sheet.render(true); await sleep(1500);

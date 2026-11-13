@@ -388,12 +388,12 @@ async function post(actor, title, body, rolls = [], data = null) {
 }
 
 /** Show a card written without the 3.6 layout (notices, whispers, older messages) in it. Changes the page, not the message. */
-/** 3.60.0 (B2800): this player's view from WoDX Chronicle; Full when Chronicle is off or older. */
+/** 3.60.0 (B2810): this player's view from WoDX Chronicle; Full when Chronicle is off or older. */
 function beginner() {
     try { return game.modules.get("wodx-chronicle")?.api?.playerView?.current?.() === "beginner"; } catch (e) { return false; }
 }
 /**
- * 3.60.0 (B2809): in Beginner view a roll card opens with what the result means in a sentence, and the dice and the
+ * 3.60.0 (B2819): in Beginner view a roll card opens with what the result means in a sentence, and the dice and the
  * modifiers fold under it. Only this player's screen changes; the message is untouched.
  */
 function plainCards(el) {
@@ -810,7 +810,7 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky"))
         });
     };
-    // 3.60.0 (B2812): a quick roll from the sheet rolls at once with the check's own difficulty, no window
+    // 3.60.0 (B2822): a quick roll from the sheet rolls at once with the check's own difficulty, no window
     if (direct) {
         const c = CK.byKey(check);
         if (!c) return ui.notifications.warn(`WoDX Actions: no common check called ${check}.`);
@@ -2592,7 +2592,7 @@ export async function menu({ actor: a } = {}) {
                     const b = ev.target?.closest?.("button[data-k]");
                     if (b && ev.altKey && (ev.key === "p" || ev.key === "P")) { ev.preventDefault(); pin(b); }
                 });
-                // 3.60.0 (B2807): in Beginner view the groups fold behind Every action; the search still finds them all
+                // 3.60.0 (B2817): in Beginner view the groups fold behind Every action; the search still finds them all
                 const tog = root.querySelector("button.vta-all-toggle");
                 tog?.addEventListener("click", () => {
                     const wrap = root.querySelector(".wodx-menu2");
@@ -2844,7 +2844,7 @@ Hooks.once("init", () => {
     EFX.setup();
     SX.registerBehavior();
     P.register();
-    // 3.59.0 (B2803): the menu's entries for Chronicle's Find anything, and running one of them, as the menu does
+    // 3.59.0 (B2813): the menu's entries for Chronicle's Find anything, and running one of them, as the menu does
     API.menuEntries = async actor => {
         if (!actor) return [];
         const legacy = !setting("profileMenu");

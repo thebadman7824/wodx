@@ -29,7 +29,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"},
   {name: "wodxClocks", label: "Progress clocks", module: "WoDX Storyteller"},
   {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"},
-  // 0.52.0 (B2805): the player buttons this window did not list before
+  // 0.52.0 (B2815): the player buttons this window did not list before
   {name: "wodxFind", label: "Find anything", module: "WoDX Chronicle", locked: true},
   {name: "wodxLibrary", label: "The Library", module: "WoDX Library"},
   {name: "wodxGear", label: "Gear by era", module: "WoDX Library"},

@@ -353,7 +353,7 @@ function wodxSheet(Base, type) {
     activateListeners(html) {
       super.activateListeners(html);
       try { X.listen(this, html[0] ?? html); } catch (e) { console.error("WoDX Sheets | extras", e); }
-      // 0.19.0 (B2812 to B2815): the sheet in a player's Beginner view
+      // 0.19.0 (B2822 to B2825): the sheet in a player's Beginner view
       try { BG.decorate(this, html); } catch (e) { console.error("WoDX Sheets | beginner", e); }
       if (this.wodxId) listeners(this, html[0] ?? html);
     }

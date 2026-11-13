@@ -83,7 +83,7 @@ Hooks.once("init", () => {
   effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
-  // B2800: Beginner and Full views, Find anything
+  // B2810: Beginner and Full views, Find anything
   playerView.registerPlayerViewSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();

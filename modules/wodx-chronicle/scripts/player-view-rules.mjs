@@ -1,5 +1,5 @@
 /**
- * Beginner and Full views for players (B2800 to B2806). Pure rules: no Foundry calls here, so the harness can test
+ * Beginner and Full views for players (B2810 to B2816). Pure rules: no Foundry calls here, so the harness can test
  * them. The view only changes where things are shown; every button and action stays reachable, in a drawer, a token
  * menu group, or the Find anything search.
  */
@@ -132,7 +132,7 @@ export function search(entries = [], q = "", limit = 40) {
 /** The kinds of thing Find anything lists, as shown beside each result. */
 export const KINDS = {tool: "Button", action: "Action", page: "Library and journals", setting: "Setting"};
 
-/* Quieter chat (B2810): world cards fold to one line for players in Beginner view. */
+/* Quieter chat (B2820): world cards fold to one line for players in Beginner view. */
 export const WORLD_ALIASES = ["Weather", "The dawn"];
 /**
  * Is this chat message a world card (weather, the dawn, overheard talk, an NPC's passing remark, an NPC routine)?

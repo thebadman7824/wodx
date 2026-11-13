@@ -981,6 +981,12 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 |---|---|---|---|
 | 2026-11-13 | Realm maps follow the books' layout notes (B2632): the Tempest keeps Stygia at its heart though Wraith 20th sets the Labyrinth at the centre, and its travel times do not match the book's | Keep the Tempest and the Labyrinth as separate maps, as they are; in lore the Tempest surrounds the Labyrinth (B2633). Up is north and a book's above and below laid out across the map stand as built | Redraw the Tempest round the Labyrinth in realm-worlds-rules.mjs |
 
+## Approved by Ben, 13 November 2026, 13:12 UTC (face features desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Which of 110 drafted face features to build, how NPCs get them, when form features show, who sees hidden ones (B2800-B2804) | All as recommended: build all, 8 with the named changes; Storyteller ticks, else rolled from clan, kith, tribe or house; form features only in that state; hidden ones only to those the rules allow | See B2800-B2804 in docs/DECISIONS.md |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1057,13 +1063,13 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 | 2026-11-13 | How does a talking face react to the character it speaks to? (B2793) | A swaying social roll first (charmed, persuaded or fooled smile, intimidated afraid, bribed smirk), then frenzy, the NPC's set mood, its attitude (Hostile angry, Distrusted smirk, Welcome smile), else at rest; from Injured down it rests in pain | Change reactionFor in modules/wodx-paperdoll/scripts/face64-rules.mjs |
 | 2026-11-13 | Who sees a changeling's horns and a hunter's sigil on a talking face? (B2795) | The Storyteller, and a player whose own character is a changeling (for the mien) or a hunter (for the sigil); other lines' marks show to all | Change viewerSees in modules/wodx-paperdoll/scripts/face64.mjs |
 | 2026-11-13 | When does a talking face play? (B2792) | Once on each screen, for a line less than 20 seconds old; older lines show the face still; each player can pick Moving, Still or Off | Change the 20 second window in onRender, face64.mjs |
-| 2026-11-13 | Which view do players get when nobody has picked one? (B2800) | Full, so no screen changes until the Storyteller or the player picks Beginner | Set Players' view when nobody has picked one to Beginner (WoDX Chronicle settings) |
-| 2026-11-13 | Which lines does each Beyond the world button fit? (B2802) | Step sideways: Garou and spirits; Peek: also mages; spirit courts: Garou, mages, spirits; otherworld rolls: those plus changelings and wraiths; Read the Soul: every line but mortals and beasts; the Net from 1990. A button that does not fit is only moved under More | Edit TOOL_LINES and TOOL_YEARS in modules/wodx-chronicle/scripts/player-view-rules.mjs |
-| 2026-11-13 | Which token menu group does each WoDX button join? (B2804) | Move: room, burden, poses, carrying a light; Look: perception and use or search; Talk: faces; Act: the rest; the Actions book stays apart | Edit hudGroupOf in player-view-rules.mjs |
-| 2026-11-13 | Ctrl+K for Find anything (B2803) | Ctrl+K, changeable in Configure Controls | Rebind it under Configure Controls, WoDX Chronicle |
-| 2026-11-13 | What does the plain line on a roll card say? (B2809) | Botch: worse than a failure; failure: it does not work this time; 1 success barely, 2 well enough, 3 well, 4 very well, 5 or more brilliantly | Edit plainLine in modules/wodx-actions/scripts/theme-rules.js |
-| 2026-11-13 | Which actions get a cost on their line? (B2808) | Only those whose cost never changes (blood spent, Willpower spent, the hunt's time, torpor, downtime); a power's cost shows in its own window | Edit COST in theme-rules.js |
-| 2026-11-13 | Which chat cards fold for a player in Beginner view? (B2810) | Weather, the dawn, overheard talk, NPC remarks, NPC routines; never rolls | Edit isWorldCard in player-view-rules.mjs |
-| 2026-11-13 | Which quick rolls does a new character start with? (B2812) | Notice something, React in time, Read a person, Keep going, plus Your powers for lines with powers | Edit QUICK_DEFAULT in modules/wodx-sheets/scripts/beginner-rules.mjs |
-| 2026-11-13 | Do the sheet changes (quick rolls, folding, More tabs, hover help) show in Full view too? (B2812-B2815) | No, Beginner view only; Full keeps the sheet as it was | Call BG.decorate without the beginner() test in wodx-sheets beginner.mjs |
-| 2026-11-13 | The hover help wording for 60 traits (B2815) | Written in plain words; please read the list and say where it is off | Edit HELP in beginner-rules.mjs |
+| 2026-11-13 | Which view do players get when nobody has picked one? (B2810) | Full, so no screen changes until the Storyteller or the player picks Beginner | Set Players' view when nobody has picked one to Beginner (WoDX Chronicle settings) |
+| 2026-11-13 | Which lines does each Beyond the world button fit? (B2812) | Step sideways: Garou and spirits; Peek: also mages; spirit courts: Garou, mages, spirits; otherworld rolls: those plus changelings and wraiths; Read the Soul: every line but mortals and beasts; the Net from 1990. A button that does not fit is only moved under More | Edit TOOL_LINES and TOOL_YEARS in modules/wodx-chronicle/scripts/player-view-rules.mjs |
+| 2026-11-13 | Which token menu group does each WoDX button join? (B2814) | Move: room, burden, poses, carrying a light; Look: perception and use or search; Talk: faces; Act: the rest; the Actions book stays apart | Edit hudGroupOf in player-view-rules.mjs |
+| 2026-11-13 | Ctrl+K for Find anything (B2813) | Ctrl+K, changeable in Configure Controls | Rebind it under Configure Controls, WoDX Chronicle |
+| 2026-11-13 | What does the plain line on a roll card say? (B2819) | Botch: worse than a failure; failure: it does not work this time; 1 success barely, 2 well enough, 3 well, 4 very well, 5 or more brilliantly | Edit plainLine in modules/wodx-actions/scripts/theme-rules.js |
+| 2026-11-13 | Which actions get a cost on their line? (B2818) | Only those whose cost never changes (blood spent, Willpower spent, the hunt's time, torpor, downtime); a power's cost shows in its own window | Edit COST in theme-rules.js |
+| 2026-11-13 | Which chat cards fold for a player in Beginner view? (B2820) | Weather, the dawn, overheard talk, NPC remarks, NPC routines; never rolls | Edit isWorldCard in player-view-rules.mjs |
+| 2026-11-13 | Which quick rolls does a new character start with? (B2822) | Notice something, React in time, Read a person, Keep going, plus Your powers for lines with powers | Edit QUICK_DEFAULT in modules/wodx-sheets/scripts/beginner-rules.mjs |
+| 2026-11-13 | Do the sheet changes (quick rolls, folding, More tabs, hover help) show in Full view too? (B2822-B2825) | No, Beginner view only; Full keeps the sheet as it was | Call BG.decorate without the beginner() test in wodx-sheets beginner.mjs |
+| 2026-11-13 | The hover help wording for 60 traits (B2825) | Written in plain words; please read the list and say where it is off | Edit HELP in beginner-rules.mjs |

@@ -498,7 +498,7 @@ export function diffResources(system, flat, res) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Beginner view (3.60.0, B2807 to B2811)                             */
+/*  Beginner view (3.60.0, B2817 to B2821)                             */
 /* ------------------------------------------------------------------ */
 
 /** How many actions the front row holds. */

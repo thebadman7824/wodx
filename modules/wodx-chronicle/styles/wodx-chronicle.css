@@ -104,7 +104,7 @@
 /* ...and a pick in a table column keeps room for a short entry in full */
 :is(.application.wodx, .application.wodx-dialog) td > select { min-width: 9.5em; }
 
-/* 0.52.0 (B2800 to B2806): Beginner view drawers, token menu groups and Find anything */
+/* 0.52.0 (B2810 to B2816): Beginner view drawers, token menu groups and Find anything */
 .wodx-drawer {
   position: fixed; z-index: 100; min-width: 240px; max-width: min(360px, calc(100vw - 80px));
   max-height: calc(100vh - 16px); overflow: auto; padding: 8px; display: grid; gap: 4px;
