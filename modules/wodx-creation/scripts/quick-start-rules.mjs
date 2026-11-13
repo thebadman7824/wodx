@@ -137,8 +137,11 @@ export function quickBuild(conceptId, traits = {}, L = {}, {kind = ""} = {}) {
   });
   Object.assign(updates, vals);
   // Virtues, when the line has them: each in use starts with its free dot
-  if ( Number.isFinite(L.virtues) && traits.virtues?.length ) {
-    const rows = traits.virtues;
+  // A new sheet can show no Virtue yet (all at 0 and none switched on): then the three of the Road of Humanity
+  const fresh = [["conscience", "Conscience"], ["selfcontrol", "Self-Control"], ["courage", "Courage"]]
+    .map(([k, label]) => ({path: `system.advantages.virtues.${k}.permanent`, label, value: 0, min: 1, max: 5}));
+  if ( Number.isFinite(L.virtues) ) {
+    const rows = traits.virtues?.length ? traits.virtues : fresh;
     const byKey = Object.fromEntries(rows.map(t => [key(t.label), t.path]));
     const list = [];
     for ( const v of c.virtues ) { const hit = String(v).split("|").map(key).find(k => byKey[k] && !list.includes(byKey[k])); if ( hit ) list.push(byKey[hit]); }

@@ -214,6 +214,11 @@ test("quick start: every concept spends the book's allotments exactly, in 1197 a
       assert.ok(Q.CONCEPTS[id].label && !/\b(he|she|his|her|him|man|woman)\b/i.test(Q.CONCEPTS[id].label), id);
     }
   }
+  // A new sheet with every Virtue at 0 and none switched on still gets its Virtues (the testbed's fresh Kindred)
+  const bare = sheet(MODERN); bare.advantages.virtues = {conscience: {permanent: 0}, selfcontrol: {permanent: 0}, courage: {permanent: 0}};
+  const fresh = Q.quickBuild("soldier", BR.traitGroups(bare), TT.TOTALS.v20, {kind: "kindred"});
+  assert.equal(fresh.unspent, 0);
+  assert.equal(Object.entries(fresh.updates).filter(([k]) => k.includes(".virtues.")).reduce((a, [, v]) => a + v, 0) - 3, TT.TOTALS.v20.virtues);
   const soldier = Q.quickBuild("soldier", BR.traitGroups(sheet(DA)), TT.TOTALS.vtda20, {kind: "kindred"}).updates;
   assert.ok(soldier["system.abilities.archery.value"] >= 2, "a 1197 soldier shoots a bow");
   const soldier99 = Q.quickBuild("soldier", BR.traitGroups(sheet(MODERN)), TT.TOTALS.v20, {kind: "kindred"}).updates;
