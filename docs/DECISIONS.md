@@ -162,6 +162,7 @@ Next free block: B3470
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
 | B3260-B3269 | Off-screen lives of supernatural NPCs, gate fixes (used B3260-B3267) | NPC |
+| B3270-B3279 | Spreading Wyrm corruption across places and people (used B3270-B3277) | Otherworlds, Storyteller |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
@@ -4959,6 +4960,46 @@ Reverse: clear the brood setting.
 WoDX NPC, fates.mjs. A new Vampire sheet has Path and Humanity at 0 until someone fills them in. Read as 0, the torpor table (V20 pdf p. 291) would put such an NPC to sleep for a millennium, so off-screen lives take a 0 as the usual 7. A true rating of 0 is a vampire lost to the Beast and is rare among NPCs in play.
 
 Reverse: drop the `v > 0` test in personOf.
+
+## B3270. Corruption of a place: a level 0 to 10 in five bands (2026-11-13)
+WoDX Otherworlds. A tracked scene holds a corruption level: clean (0), tainted (1-3), blighted (4-6), foul (7-9) and hellhole (10). The bands follow W20's picture of the Penumbra, where pollution and misery stain the spirit landscape and Wyrm-spirits breed until culled (pdf p. 314, printed 312), and of Blights and Hellholes, which can outlast the clean-up of the place they mirror (pdf p. 316-317, printed 314-315). A Hellhole never drops below 7 again. The level and band are a house reading. Scene flag `wodx-otherworlds.corruption`; only scenes the Storyteller sets up take part.
+
+Reverse: stop tracking the place in the Wyrm corruption window, or switch the setting off.
+
+## B3271. A weekly turn: sources feed it, Banes breed, unfed taint fades slowly (2026-11-13)
+WoDX Otherworlds. Once a week of world time (and after a time skip, ten years at most) each source adds weight: Bane nest 2, cult 1, Black Spiral hive 3, tainted works 1, place of suffering 1 (for a year and a day), Pentex concern 2 (from 1913, the year the WoDX timeline first shows a Pentex forerunner, a Ruhr chemical firm). Three or more Banes add 1. The chance to rise a step is 10% per weight point, times the era factor, at most 90%. A blighted place breeds one Bane every four weeks per band past tainted, up to three per band. A tainted place with nothing feeding it loses a step after 13 quiet weeks; a blighted one never heals by itself. House rules.
+
+Reverse: change the weights in `SOURCES` or the chances in `riseChance` (corruption-rules.mjs).
+
+## B3272. Spreading along links, held off by caerns and wards (2026-11-13)
+WoDX Otherworlds. A blighted place with Banes may spread one step down each link each week (5% per band past tainted, times the era factor, at most 60%), only into a place at least three levels cleaner. A tended caern, or a place cleansed in the last four weeks, does not take it. Links are set in the window and run both ways. House rule.
+
+Reverse: clear the links, or lower `spreadChance`.
+
+## B3273. The Wyrm grows stronger with the centuries (2026-11-13)
+WoDX Otherworlds. Every chance is multiplied by an era factor: 0.5 before 1750, 1 to 1899, 1.5 to 1999, 2 to 2022, 2.5 in the World of Future Darkness. It reads W20's premise that the Apocalypse draws nearer as industry spreads; the numbers are a house reading. Sources other than Pentex exist in every era, so a 1197 chronicle has Bane nests, cults, hives and battlefields.
+
+Reverse: edit `eraFactor`.
+
+## B3274. Cleansing and culling (2026-11-13)
+WoDX Otherworlds. The Rite of Cleansing needs one success, its difficulty set by the depth of the taint and one lower at dawn, and it only pains those whose taint is innate (W20 pdf p. 205-206, printed 203-204). For a place WoDX sets the difficulty by band (tainted 6, blighted 7, foul 8, hellhole 9); a success lifts one step and wards the place for four weeks. For a person the difficulty is 5 plus the taint step, and one success lifts all of it. A pack's culling removes Banes. The players roll; the Storyteller records the result in the window. House readings.
+
+Reverse: edit `BANDS[].cleanse` and `cleansePersonDifficulty`.
+
+## B3275. People take on taint; a Bane riding someone is only proposed (2026-11-13)
+WoDX Otherworlds. A linked actor with a token in a blighted place gains a step of taint every 12 weeks (foul 6, hellhole 3), werebeasts half as fast, up to three steps (touched, tainted, ripe). At ripe the approval queue asks whether a Bane takes them; approving marks them ridden (fomor). Innate taint (set by hand for fomori and Black Spiral Dancers) never moves, and Sense Wyrm finds vampires, the ridden and anyone with a step of taint. Actor flag `wodx-otherworlds.taint`. House rule.
+
+Reverse: clear the actor flag; deny the proposal.
+
+## B3276. Pentex grows through the 20th century; band changes move the Gauntlet (2026-11-13)
+WoDX Otherworlds. Once a year from 1913 each place with a Pentex concern may open another in a linked place without one (25% a year to 1945, 35% to 1999, 45% after), through the approval queue only. When a place rises into blighted or worse, the existing Gauntlet drift proposal asks for +1 (taint); when it falls back out of blighted, it asks for -1 (mend). World setting `wyrmCorruption`: off (default), suggest, auto; Live stays off until Ben says otherwise. House rules.
+
+Reverse: deny the proposals; set the setting to off.
+
+## B3277. The Wyrm corruption window opens from Upkeep (2026-11-13)
+WoDX Storyteller. The Upkeep chooser gets a Wyrm corruption button beside The Gauntlet over time, shown only when WoDX Otherworlds offers the window, so the window is reachable without a macro.
+
+Reverse: remove the button in upkeep.mjs.
 
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
