@@ -294,4 +294,4 @@ export function installPanel(helpers) {
   if ( !game.user.isGM && H.isOn() && H.get("panel") !== false ) setTimeout(() => SoloPanel.open(), 1000);
 }
 
-export const panelApi = {open: () => SoloPanel.open(), passTime, togglePause, unstick, curtain, busy: () => waiting};
+export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, busy: () => waiting};
