@@ -185,3 +185,18 @@ test("English common law (B3497)", () => {
   assert.match(at(1655).rule.form, /commonwealth/);
   assert.match(at(1700).rule.form, /constitutional/);
 });
+
+test("Orthodox and Russian law (B3498)", () => {
+  const ru = y => L.lawOf("russia", y), ae = y => L.lawOf("aegean", y);
+  assert.equal(ru(1300).family, "orthodox");
+  assert.equal(ae(1300).family, "orthodox");
+  assert.ok(ru(1300).warn.some(w => /Golden Horde/.test(w)) && !ru(1500).warn.some(w => /Golden Horde/.test(w)));
+  assert.ok(ru(1700).warn.some(w => /runaway serf/.test(w)) && !ru(1870).warn.some(w => /runaway serf/.test(w)));
+  assert.ok(ru(1870).proof.includes("jury") && !ru(1930).proof.includes("jury"));
+  assert.ok(ru(1940).punish.includes("camp") && !ru(1970).punish.includes("camp"));
+  assert.ok(ru(1950).proof.includes("party") && !ru(2000).proof.includes("party"));
+  assert.ok(!ru(2000).punish.includes("hanging"));
+  assert.ok(!ae(1197).proof.includes("ordeal"), "Roman law in the east");
+  assert.ok(ae(1600).courts.some(c => /qadi/.test(c)) && !ae(1900).courts.some(c => /qadi/.test(c)));
+  assert.ok(ae(1970).order.includes("secret-police"));
+});
