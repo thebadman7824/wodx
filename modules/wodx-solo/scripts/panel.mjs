@@ -223,6 +223,7 @@ async function choose(title, choices, intro = "") {
 }
 
 const ACTIONS = {
+  next() { ask("ask.time", {choice: R.NEXT.wait}); ui.notifications.info(`${R.NEXT.label} ${R.NEXT.hint}`); },
   async time() {
     const pick = await choose("Let time pass", R.WAITS, "The clock moves ten minutes at a time and stops if something happens.");
     if ( pick ) { ask("ask.time", {choice: pick}); ui.notifications.info(`${R.WAITS[pick].label}.`); }
@@ -255,6 +256,7 @@ function showCurtain({rows = []} = {}) {
 
 /** The panel: a small window of buttons for the one person playing. */
 export class SoloPanel extends ApplicationV2 {
+  static moreOpen = false;
   static DEFAULT_OPTIONS = {
     id: "wodx-solo-panel",
     classes: ["wodx", "wsolo-panel"],
@@ -270,11 +272,16 @@ export class SoloPanel extends ApplicationV2 {
     const div = document.createElement("div");
     div.className = "wsolo-buttons";
     const paused = !!game.paused;
-    div.innerHTML = R.PANEL.map(b => {
+    const rest = R.PANEL.map(b => {
       const icon = b.id === "pause" && paused ? "fa-solid fa-play" : b.icon;
       const label = b.id === "pause" ? (paused ? "Go on" : "Pause") : b.label;
       return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
     }).join("");
+    // One main button; the rest under More, open once the player has opened it (B2831)
+    div.innerHTML = `<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
+      <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain</summary><div class="wsolo-buttons">${rest}</div></details>`;
+    div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }

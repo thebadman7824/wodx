@@ -45,3 +45,7 @@
 .wodx-face64-wrap { float: left; margin: 0 8px 4px 0; line-height: 0; }
 .wodx-face64-wrap .wodx-face64 { width: 96px; height: 96px; image-rendering: pixelated; image-rendering: crisp-edges; border: 1px solid rgba(0, 0, 0, 0.55); border-radius: 3px; background: #1b1d21; }
 .chat-message .message-content:has(> .wodx-face64-wrap) { display: flow-root; min-height: 98px; }
+
+/* The smaller parts under More (B2833) */
+.wodx-figure .wodx-figure-more { list-style: none; }
+.wodx-figure .wodx-figure-more > details > summary { cursor: pointer; opacity: 0.85; padding: 2px 0; }

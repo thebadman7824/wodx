@@ -172,3 +172,19 @@ export function lookFor(year) {
   if ( !Number.isFinite(y) || y <= 0 ) return LOOKS[3];
   return LOOKS.find(l => y <= l.until) ?? LOOKS[LOOKS.length - 1];
 }
+
+/**
+ * The starter layout (Interactables 0.38.0, B2832): three note cards across the top as column heads, Who, Where and
+ * What we know, so a new board shows where things go. They are ordinary notes; move, change or take them off.
+ */
+export const STARTER = [
+  {title: "Who", text: "The people in this: drop them below."},
+  {title: "Where", text: "The places: drop scenes and maps below."},
+  {title: "What we know", text: "Clues and what they tell us."}
+];
+export function starterBoard(board = emptyBoard()) {
+  let b = normalize(board);
+  const gap = Math.floor((BOARD_W - 3 * CARD_W) / 4);
+  STARTER.forEach((s, i) => { b = addCard(b, {kind: "note", title: s.title, text: s.text, x: gap + i * (CARD_W + gap), y: 20}).board; });
+  return b;
+}

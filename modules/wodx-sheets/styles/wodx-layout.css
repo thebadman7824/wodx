@@ -88,3 +88,10 @@
 .wod20.wod-sheet.wodx-beginner.wodx-zero-shown .wodx-zero, .wod20.wod-sheet .wodx-beginner.wodx-zero-shown .wodx-zero { display: revert-layer; }
 .wod20.wod-sheet .wodx-showall { display: block; width: auto; margin: 6px auto; padding: 2px 10px; }
 .wod20.wod-sheet nav.sheet-tabs:not(.wodx-tabs-open) > .wodx-tucked { display: none; }
+
+/* Sheet tools (B2837): the one header button with words, and its list */
+.wod20.window-app .window-header a.header-button.wodx-sheet-tools.wodx-worded { font-size: 12px; display: inline-flex; gap: 4px; align-items: center; }
+.wod20.window-app .window-header a.header-button.wodx-sheet-tools > i { font-size: 13px; }
+.wodx-sheet-tools-list { position: fixed; z-index: 1000; display: flex; flex-direction: column; gap: 2px; padding: 4px; min-width: 180px;
+  background: var(--color-bg, #1e1b18); border: 1px solid var(--color-border-light-2, #8886); border-radius: 4px; box-shadow: 0 2px 10px #0008; }
+.wodx-sheet-tools-list button { text-align: left; justify-content: flex-start; white-space: nowrap; height: auto; padding: 3px 8px; }

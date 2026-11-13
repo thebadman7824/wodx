@@ -134,3 +134,13 @@
 .wodx-now .wodx-now-stuck { display: flex; flex-wrap: wrap; gap: 4px; }
 .wodx-now .wodx-now-stuck button { flex: 1 1 auto; font-size: 0.9em; }
 .wodx-now p { margin: 0; }
+
+/* First-time tips and the preferences window (B2835, B2836) */
+.wodx .window-content > .wodx-tip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 6px; padding: 6px 8px;
+  border: 1px solid var(--color-border-highlight, #c9593f); border-radius: 4px; background: color-mix(in srgb, var(--color-border-highlight, #c9593f) 10%, transparent); }
+.wodx .window-content > .wodx-tip p { margin: 0; flex: 1 1 240px; }
+.wodx .window-content > .wodx-tip .wodx-tip-buttons { display: flex; gap: 4px; align-items: center; }
+.wodx .window-content > .wodx-tip button { width: auto; flex: 0 0 auto; padding: 2px 8px; height: auto; }
+.wodx-prefs .wodx-body { display: grid; grid-template-rows: auto 1fr; height: 100%; gap: 6px; }
+.wodx-prefs .wodx-scroll { overflow: auto; }
+.wodx-prefs .wodx-prefs-presets button { width: auto; flex: 0 0 auto; }

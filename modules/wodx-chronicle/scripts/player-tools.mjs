@@ -32,6 +32,8 @@ export const PLAYER_TOOLS = [
   // 0.52.0 (B2815): the player buttons this window did not list before
   {name: "wodxFind", label: "Find anything", module: "WoDX Chronicle", locked: true},
   {name: "wodxNow", label: "What can I do now?", module: "WoDX Chronicle", locked: true},
+  {name: "wodxPrefs", label: "My WoDX preferences", module: "WoDX Chronicle"},
+  {name: "wodxGlossary", label: "Glossary", module: "WoDX Chronicle"},
   {name: "wodxLibrary", label: "The Library", module: "WoDX Library"},
   {name: "wodxGear", label: "Gear by era", module: "WoDX Library"},
   {name: "wodxSenses", label: "What do I notice?", module: "WoDX Senses"},

@@ -31,12 +31,12 @@ export const ON_BAR = new Set(["wodxXCard", "wodxFindMe", "wodxFind", "wodxNow"]
 /** Which drawer each WoDX player button goes in. A WoDX button not listed here stays on the bar. */
 export const TOOL_GROUP = {
   wodxTalk: "now", wodxSenses: "now", wodxSight: "now", wodxCaseBoard: "now",
-  wodxCreation: "mine", wodxFollowers: "mine", wodxOrders: "mine", wodxFactions: "mine", wodxGear: "mine",
+  wodxCreation: "mine", wodxPrefs: "mine", wodxFollowers: "mine", wodxOrders: "mine", wodxFactions: "mine", wodxGear: "mine",
   wodxClock: "time", wodxOnYourOwn: "time", wodxPassTime: "time", wodxLetters: "time", wodxDowntime: "time",
   wodxTasks: "time", wodxClocks: "time", wodxProperty: "time", wodxSolo: "time",
   wodxStepSideways: "beyond", wodxPeek: "beyond", wodxSoul: "beyond", wodxSpirits: "beyond", wodxOtherRolls: "beyond",
   wodxJack: "beyond",
-  wodxLibrary: "help", wodxLegends: "help"
+  wodxLibrary: "help", wodxGlossary: "help", wodxLegends: "help"
 };
 
 /**
@@ -246,3 +246,37 @@ export const STUCK_ROW = [
 /** The Actions entry that uses the line's own powers, out of the entries the menu lists (the same words as Sheets). */
 const POWER_SPEC = /usediscipline|usegift|usearcanos|hunterpower|cast|cantrip|hekau|usecharm|uselore|useedge|chi|shintai|numina/i;
 export function powerFrom(specs = []) { return specs.find(s => POWER_SPEC.test(String(s))) ?? null; }
+
+/* My WoDX preferences (B2836): one window for the player's own settings, with three presets. */
+
+/** What a preset touches: the screen and sound effects. Reading aids (text size, colour-blind colours, the quiet interface, odds) are never changed. */
+const FX = /colour on the map|sound|cue|dread|card when|frame|heartbeat|decay|looks of|motion|map effects|talking faces|music|scent trails|sight on my map|state on my screen|frenzy and/i;
+const KEEP = /text size|colour-blind|quiet interface|odds|words under|targeting|voice|folder|address|my view/i;
+export const PRESETS = {
+  light: {label: "Light", hint: "Fewer effects and sounds; good for a slow machine."},
+  standard: {label: "Standard", hint: "Everything as WoDX ships it."},
+  full: {label: "Full", hint: "Every effect and sound on."}
+};
+const LESS = /^(off|none|no|never|reduced|less|low|quiet|minimal|still)$/i;
+const MORE = /^(full|all|on|always|more|high|rich|everything)$/i;
+
+/** Is this setting one the presets change? s: {name, type ("Boolean", "String", "Number"), choices}. */
+export const presetTouches = (s = {}) => FX.test(String(s.name ?? "")) && !KEEP.test(String(s.name ?? ""));
+
+/**
+ * The value a preset gives one setting, or undefined to leave it. s: {name, type, choices (object or null), default}.
+ * Light turns a switch off and picks the quietest choice, Full the opposite, Standard the default.
+ */
+export function presetValue(s = {}, preset = "standard") {
+  if ( !presetTouches(s) ) return undefined;
+  if ( preset === "standard" ) return s.default;
+  const light = preset === "light";
+  if ( s.type === "Boolean" ) return !light;
+  if ( s.choices && typeof s.choices === "object" ) {
+    const keys = Object.keys(s.choices);
+    const want = light ? LESS : MORE;
+    return keys.find(k => want.test(k)) ?? keys.find(k => want.test(String(s.choices[k]).split(/[\s(,:]/)[0])) ?? undefined;
+  }
+  if ( s.type === "Number" && /volume/i.test(String(s.name)) ) return light ? 0 : undefined;
+  return undefined;
+}

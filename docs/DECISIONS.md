@@ -3858,3 +3858,43 @@ The hub says how many needed steps are left and names the next one, which is out
 
 Reverse: R.checklist in wodx-creation first-night.mjs.
 
+## B2830. The purse in one line (2026-11-13)
+The Possessions tab opens with one line, "You carry 3 groschen and some pence", in the coin of the place and year from WoDX Storyteller's purse, with what is put by. The exact sum is on the line's hover and on the fold below it, which holds the coins, the two numbers and Add coins as before. The fold starts closed in Beginner view and open in Full view.
+
+Reverse: purseLine in wodx-sheets extras-rules.mjs and the details in extras-html.mjs.
+
+## B2831. The solo panel's main button (2026-11-13)
+The Lone Chronicle's panel opens on one button, What happens next?, which runs the clock until something happens, an hour at most, with the same stops as Wait an hour. Time, travel, pause, I am stuck and the curtain sit under More, which stays open once the player opens it.
+
+Reverse: NEXT in wodx-solo solo-rules.mjs and the More fold in panel.mjs.
+
+## B2832. The case board's starter layout (2026-11-13)
+A new case board starts with three note cards across the top, Who, Where and What we know, as column heads. An empty board offers the same layout in one click. They are ordinary notes, to move, change or take off.
+
+Reverse: emptyBoard in place of starterBoard in wodx-interactables case.mjs newBoard.
+
+## B2833. The figure menu shows the main parts first (2026-11-13)
+The figure menu lists body, legs, feet, the cloak or coat, head and face first. Neck, hands, belt, what is pinned on and what is carried sit under More, which opens by itself when one of them is worn or picked.
+
+Reverse: MAIN_SLOTS in wodx-paperdoll figure-rules.mjs.
+
+## B2834. A plain-words glossary (2026-11-13)
+The Library holds WoDX · Glossary: 82 terms in our own words, one page per letter, each marked with the lines that use it and, where it differs, the word or the age it belongs to (Cainite before the modern nights, the Order of Reason before the Technocracy, the Imbued from 1999). The tips, the manual and a Glossary button open it.
+
+Reverse: drop ensureGlossary from the Library's ready hook.
+
+## B2835. A ? and a first-time tip on WoDX windows (2026-11-13)
+Every WoDX window gets a ? in its title bar that opens its page in the manual (How to use WoDX); a window without a page of its own opens Getting started. The first time a player opens one of nine main windows (Find anything, What can I do now?, preferences, the wizard, the lifepath, Before the First Night, the case board, the solo panel, the figure menu) a two-line tip says what it is for, with Got it, Never show tips and a link to the Glossary. Closing the window counts as seen. A new manual page, Finding your way, covers the drawers and these helps.
+
+Reverse: installPlayerHelp in wodx-chronicle main.mjs.
+
+## B2836. My WoDX preferences (2026-11-13)
+One window, from a toolbar button (in the Me and mine drawer) and from Configure Settings, lists every WoDX setting that belongs to the player alone, by module, each changeable on its own. Three presets set many at once: Light turns off the screen and sound effects and picks the quietest choice, Full turns them on, Standard puts the shipped defaults back. Reading aids (text size, colour-blind colours, the quiet interface, the odds, My view) are never changed by a preset.
+
+Reverse: PrefsApp in wodx-chronicle player-help.mjs.
+
+## B2837. Sheet tools, a labelled list of the title bar (2026-11-13)
+The sheet's title bar keeps its icon buttons (layout pass, 12 November) and gains Sheet tools, which opens the same buttons as a short list with their names. Its words show in Beginner view; in Full view it is an icon like the others, so the sheet's name still fits. A player's own setting shows it in both views, in Beginner view only, or not at all.
+
+Reverse: sheetToolsButton in wodx-sheets main.mjs.
+

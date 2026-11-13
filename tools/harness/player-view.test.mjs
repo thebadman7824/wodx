@@ -243,3 +243,41 @@ test("First Night checklist: the next step and the count left", () => {
   assert.equal(FN.checklist(end).next, "lifepath", "with every needed step done, an optional one is offered to the player");
   assert.equal(FN.checklist(end, {gm: true}).next, "signoff");
 });
+
+const GL = await import(join(root, "modules/wodx-library/data/glossary.mjs"));
+const XR = await import(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs"));
+const CR = await import(join(root, "modules/wodx-interactables/scripts/case-rules.mjs"));
+const FR = await import(join(root, "modules/wodx-paperdoll/scripts/figure-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-solo/scripts/solo-rules.mjs"));
+
+test("step 6: purse line, starter board, figure slots, solo main button, presets", () => {
+  assert.equal(XR.purseLine("3 groschen 7 pence"), "3 groschen and some pence");
+  assert.equal(XR.purseLine("12 dollars"), "12 dollars");
+  assert.equal(XR.purseLine("1,200 yen 5 sen"), "1,200 yen and some sen");
+  const b = CR.starterBoard();
+  assert.deepEqual(b.cards.map(c => c.title), ["Who", "Where", "What we know"]);
+  assert.ok(b.cards.every(c => c.kind === "note" && c.y === 20));
+  assert.ok(FR.MAIN_SLOTS.every(k => FR.SLOTS[k]) && FR.MAIN_SLOTS.includes("body") && FR.MAIN_SLOTS.includes("face"));
+  assert.ok(SR.WAITS[SR.NEXT.wait], "What happens next? uses a wait the panel knows");
+  const boolFx = {name: "Era sound cues", type: "Boolean", default: true};
+  assert.equal(R.presetValue(boolFx, "light"), false);
+  assert.equal(R.presetValue(boolFx, "full"), true);
+  assert.equal(R.presetValue(boolFx, "standard"), true);
+  assert.equal(R.presetValue({name: "WoDX text size", type: "String", choices: {small: "Small", large: "Large"}}, "light"), undefined, "reading aids are left alone");
+  assert.equal(R.presetValue({name: "Colour-blind safe colours", type: "Boolean"}, "light"), undefined);
+  assert.equal(R.presetValue({name: "WoDX motion", type: "String", choices: {full: "Full", reduced: "Reduced"}, default: "full"}, "light"), "reduced");
+  assert.ok(R.TOOL_GROUP.wodxPrefs && R.TOOL_GROUP.wodxGlossary);
+});
+
+test("glossary: own short words, every line and age marked, no dashes or gendered words", () => {
+  const seen = new Set();
+  for ( const [term, lines, era, text] of GL.GLOSSARY ) {
+    assert.ok(!seen.has(term), `${term} twice`); seen.add(term);
+    assert.ok(lines && text.length > 10 && text.length < 200, term);
+    assert.doesNotMatch(`${term} ${era} ${text}`, /—|\b(he|she|his|her|him|himself|herself)\b/i, term);
+    assert.doesNotMatch(text, /\bdelve|\btapestry|\bunleash|\bembark|\bnot just\b/i, term);
+  }
+  assert.ok(GL.GLOSSARY.length >= 60);
+  const letters = GL.byLetter();
+  assert.ok(letters.get("R").some(e => e[0] === "Rötschreck"), "an accented word files under its plain letter");
+});
