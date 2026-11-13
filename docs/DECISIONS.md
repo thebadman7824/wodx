@@ -113,7 +113,7 @@ Next free block: B2630
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 | B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
-| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins | Creation |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3372,3 +3372,6 @@ Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or dro
 A world setting (wodx-creation.lifepathLimits) holds the regions a character may come from (none marked means all) and the kinds of origin left out. The Storyteller sets it from a fold-out on the lifepath's first screen. The chronicle's own land is always open, and a stage cannot be moved to a closed region. Lifepaths already written are not changed.
 Reverse: clear the setting with "Keep these limits" and nothing marked, or return null from limitsNow.
 
+## B2622. Dated lifepath content for every region (2026-11-13, Ben: "Continue")
+Each of the 44 world regions has its own dated origins (open only in a span of birth years) and dated marks (offered when a life stage overlaps the years they happened), in WoDX's own words from general history, 1197 to 2022. Each mark is good, hard or neither, and at most one of each tone is put in front on a first draw, as for Moravia. The years after 2022 have no dated content yet. Files: modules/wodx-creation/data/lifepath-events-europe.mjs, -asia.mjs, -world.mjs.
+Reverse: remove a region's block from its file, or drop the Object.assign line in lifepath-local-events.mjs to keep Moravia only.
