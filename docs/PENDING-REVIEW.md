@@ -1147,3 +1147,5 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | When the nightly lane reset runs, and which lanes (B3023) | 04:40 PC time, lanes 2 and 3 only; lane 1 is never reset by the task | Run register-lane-reset.ps1 with another -At, or set autoReset in lanes.json |
 | 2026-11-13 | How long lane backups are kept (B3023) | All kept: a reset backs up a lane's world only when it differs from the known-good copy, and removing backups needs your word | Say how many to keep |
 | 2026-11-13 | Leftover test documents on a lane (B3021) | A warning, not a stop, since many older gates leave their test folders; settings, modules and the clock do stop a run | Say to make documents stop a run too |
+| 2026-11-13 | Demon Torment by House after the book check (B3005) | Devils 4 and Defilers 3 (they were swapped); the rest as before | The old values in TORMENT_BY_HOUSE |
+| 2026-11-13 | Changeling seeming in the derived Traits (B3006) | Childling +1 Glamour, grump +1 Willpower, wilder told to add one by hand; this replaces the earlier "not applied" row | Empty SEEMING_BONUS |
