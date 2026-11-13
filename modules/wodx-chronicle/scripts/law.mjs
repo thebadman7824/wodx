@@ -11,6 +11,7 @@ import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as place from "./place.mjs";
 import {playerLine} from "./law-heat.mjs";
+import {playerMarks} from "./law-punish.mjs";
 
 export function registerLawSettings() {
   game.settings.register(MODULE_ID, "lawYear", {scope: "world", config: false, type: Number, default: 0});
@@ -51,7 +52,7 @@ export async function card({scene = activeScene(), actor = null, full = game.use
   const who = actor ?? game.user?.character ?? null;
   const dots = lawDots(who);
   let mine = "";
-  try { mine = dots >= 1 ? playerLine(who, scene) : ""; } catch (e) { mine = ""; }
+  try { mine = [dots >= 1 ? playerLine(who, scene) : "", ...(who ? playerMarks(who, rec.region, rec.year) : [])].filter(Boolean).join(" "); } catch (e) { mine = ""; }
   await ChatMessage.create({content: cardHTML(rec, {dots, full: !!full, mine}), speaker: {alias: "Chronicle"}, whisper: [game.user.id]});
   return rec;
 }

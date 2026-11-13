@@ -1277,3 +1277,4 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-13 | Banality grey, dull people, enchantment length for chimerical sight (B3544) | Grey wash from Banality 5 up; a person at 8 or more ringed dull; one day of enchantment per Glamour point | banalityGrey, dullPerson, enchantUntil in otherworld-sight-rules.mjs |
 | 2026-11-13 | How long vulgar magick strains a place for Prime sight (B3545) | 30 days, 60 when witnessed, doubled on a botch | strainDays in otherworld-sight-rules.mjs |
 | 2026-11-13 | The wraith's view of the living world in the Great War years (B3546) | Heavier grey and sepia in 1914 to 1918 | shroudFilter in otherworld-sight-rules.mjs |
+| 2026-11-13 | Sentences and their marks (B3610-B3611) | Tiers by gravity (light up to 2, middle up to 5); sentence lengths as in B3610; records a register before 1880, a file to 1969, a database from 1970. | Edit TIERS, MARKS and recordKind in law-punish-rules.mjs. |
