@@ -526,12 +526,17 @@ function wounds(c, level) {
  * TALK_MOUTHS. sees = {fae, sigil}: whether the viewer may see a changeling's mien and a hunter's sigil.
  * Returns {rgba, expr, eyes, mouth, shut} where rgba is 64 by 64 RGBA bytes.
  */
-/** Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), top(c)}}. */
+/**
+ * Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), top(c), state}}. A
+ * feature with a state shows only while opts.state[state] is on (a form, frenzy, a visage); "tears" is on while the face
+ * grieves or fears.
+ */
 export const FEATURES = {};
 
-export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}} = {}) {
+export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}, state = {}} = {}) {
   level = Math.max(0, Math.min(7, Math.round(Number(level) || 0)));
-  const feats = (S.features ?? []).map(id => FEATURES[id]).filter(Boolean);
+  const on = {...state, tears: expr === "sorrow" || expr === "fear"};
+  const feats = (S.features ?? []).map(id => FEATURES[id]).filter(f => f && (!f.state || on[f.state]));
   if ( feats.some(f => f.tone) ) { S = {...S}; for ( const f of feats ) f.tone?.(S); }
   const stage = (k, c) => { for ( const f of feats ) f[k]?.(c); };
   if ( !EXPRESSIONS.includes(expr) ) expr = "neutral";
