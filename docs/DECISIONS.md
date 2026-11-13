@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3510
+Next free block: B3490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -176,7 +176,6 @@ Next free block: B3510
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5479,23 +5478,3 @@ Reverse: none advised; this guards the age floor.
 WoDX Paperdoll, tools/sprites/batch.py. A beard from the portrait look is not drawn in the three youngest bands; 15 to 17 keep it.
 
 Reverse: remove the beardless() check in batch.person.
-
-## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
-WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
-
-Reverse: point each sexOf back at its own flag.
-
-## B3501. An optional Gender line on the sheet (2026-11-13)
-WoDX Sheets. Under the name, in the player's own words, at most 40 letters. Ben asked for it to be optional (2026-11-13).
-
-Reverse: remove genderField in modules/wodx-sheets/scripts/main.mjs.
-
-## B3502. A player character's gender has no bearing on play (2026-11-13)
-All modules, through api.gender.forRules, which gives nothing for any character a player owns. Ben's ruling (2026-11-13): "Let players perform any action, regardless of gender... it should have no bearing on gameplay." So for a player character: marriage law never refuses on sex, either partner may carry a child, the Seed of Lilith is resisted at 7, and under inheritance laws that favour sons a player character takes a son's place. Characters the Storyteller runs keep the rules that follow their sex.
-
-Reverse: drop the player check in forRules, sexForWill and the Seed of Lilith roll.
-
-## B3503. The People generator makes 1 in 100 nonbinary (2026-11-13)
-WoDX Creation. Ben's ruling (2026-11-13). The share is read from the same draw that picked female or male, so everyone generated before keeps their sex, name and every later draw; a nonbinary person's name comes from the list of the draw's side, and kin take the family name in that list's form. The generator can also be asked for nonbinary people. Text about them stays gender-neutral, as for everyone.
-
-Reverse: set NONBINARY_HALF to 0 in people-rules.mjs.
