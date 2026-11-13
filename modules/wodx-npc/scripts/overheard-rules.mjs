@@ -24,9 +24,9 @@ export {TOPICS};
 /** Defaults the world settings start from: squares between the two speakers, squares a listener may stand off. */
 export const DEFAULTS = {reach: 2, earshot: 4, pairGap: 5 * 60 * 1000, sceneGap: 45 * 1000, chance: 0.35, logMax: 30};
 /** Topics a passer-by may talk about: generic street talk only (NPC 0.27.0, B975). */
-export const PASSERBY_TOPICS = ["times", "price", "watch", "feast", "weather", "work"];
+export const PASSERBY_TOPICS = ["times", "town", "price", "watch", "feast", "weather", "work"];
 /** How often each topic comes up when its subject is there to talk about. */
-export const WEIGHTS = {secret: 5, rumour: 4, times: 3, price: 2, faction: 2, feast: 2, weather: 1, watch: 1, work: 1};
+export const WEIGHTS = {secret: 5, rumour: 4, times: 3, town: 3, price: 2, faction: 2, feast: 2, weather: 1, watch: 1, work: 1};
 
 const lc = v => String(v ?? "").trim().toLowerCase();
 
@@ -157,13 +157,32 @@ export function moneyWord(units = [], year = 2000) {
   return old ? u[u.length === 2 ? 1 : u.length - 2][1] : u[0][1];
 }
 
+/** Blows a town still talks about in the year they struck and the one after (WoDX Storyteller's towns). */
+export const TOWN_BLOWS = ["sack", "rising", "plague", "fire", "flood", "storm", "quake", "famine", "riot"];
+/**
+ * What the town's talk turns on (B3320), from api.upkeep.towns.ofScene: a recent blow, a plague or famine now, else
+ * its mood (angry, grim, thriving). An ordinary town gives nothing, and the other topics fill in.
+ */
+export function townTopic(view, year) {
+  if ( !view || typeof view !== "object" ) return null;
+  const y = Number(year) || 0;
+  if ( view.plague ) return "plague";
+  if ( (view.marks ?? []).includes("famine") ) return "famine";
+  const recent = (view.scars ?? []).filter(s => TOWN_BLOWS.includes(s?.kind) && y - Number(s.year) <= 1 && y >= Number(s.year)).at(-1);
+  if ( recent ) return recent.kind;
+  if ( view.mood === "angry" ) return "angry";
+  if ( view.mood === "grim" ) return "grim";
+  if ( view.mood === "cheerful" ) return "thriving";
+  return null;
+}
+
 /**
  * The facts both speakers share: where and when, and what there is to talk about.
  *   {year, region, future, rumour, market, factions, sceneId, a, b, feast, weather, units, seed}
  * Returns {year, era, region, sphere, media, times, good, supply, faction, secret, feast, weather, money, rumour}.
  */
 export function sharedFacts({year = null, region = DEFAULT_REGION, future = false, rumour = null, market = null, factions = [], sceneId = null, a = null, b = null,
-  feast = "", weather = null, units = null, seed = 0} = {}) {
+  feast = "", weather = null, units = null, town = null, seed = 0} = {}) {
   const y = Number.isFinite(Number(year)) && year !== null ? Number(year) : 2000;
   const reg = regionOf(region) ? region : DEFAULT_REGION;
   const sphere = sphereFor(reg, y);
@@ -180,13 +199,15 @@ export function sharedFacts({year = null, region = DEFAULT_REGION, future = fals
   const money = moneyWord(units, y);
   if ( money ) out.money = money;
   if ( String(rumour ?? "").trim() ) out.rumour = String(rumour).trim();
+  const tk = townTopic(town, y);
+  if ( tk ) out.town = tk;
   return out;
 }
 
 /** The topics there is something to say about, by weight. passerby: either speaker is a passer-by. */
 export function topicsFor(shared = {}, {passerby = false} = {}) {
   const has = {secret: !!shared.secret && !!shared.faction, rumour: !!shared.rumour, times: !!shared.times, price: !!shared.good, faction: !!shared.faction && !shared.secret,
-    feast: !!shared.feast, weather: !!shared.weather, watch: true, work: true};
+    feast: !!shared.feast, weather: !!shared.weather, town: !!shared.town, watch: true, work: true};
   return TOPICS.filter(t => has[t] && (!passerby || PASSERBY_TOPICS.includes(t))).map(t => [t, WEIGHTS[t] ?? 1]);
 }
 
