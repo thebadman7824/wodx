@@ -126,7 +126,10 @@ Next free block: B2830
 | B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
-| B2770-B2829 | Relationships across the centuries: family lines, wills and estates by law, ties after a jump in time, then bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers and past lives (Ben approved the whole relationships desk) | NPC, Storyteller, Sheets, Actions, Chronicle |
+| B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
+| B2770-B2789 | Relationships across the centuries (parts 1 and 2): family lines, wills and estates by law, ties after a jump in time, bonds from the books (Ben approved the whole relationships desk) | NPC, Storyteller, Sheets, Actions |
+| B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
+| B2800-B2829 | Relationships (parts 3 to 6): trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3648,7 +3651,7 @@ WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a nigh
 Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
 
 ## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
-WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check 2026-11-13: V20 (printed p. 272, pdf 280) lets a botched shot jam or burst the gun, cleared with Wits + Firearms (printed p. 104), and V20 Dark Ages (printed pp. 344, 348) a weapon break or jam; no book with text has a rain, wet powder or musket reload rule, so the wet is a house reading (Sorcerer's Crusade's firearms chart still needs OCR).
 
 Reverse: turn the world setting off.
 
@@ -3662,6 +3665,74 @@ WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus
 
 Reverse: name the lock in the weapon's name or description.
 
+## B2760. A character wizard, one page per step (2026-11-13)
+WoDX Creation 0.24.0, Ben's ask of 13 November 2026 after a look at Darkness Weaver. The guided builder of 0.13.0 was one window; the wizard walks the book's creation order a page at a time with Back and Next: the book, Attributes, Abilities, the line's powers, Backgrounds, Virtues (lines that have them), Merits and Flaws, freebie points, and a last look. Each choice goes on the sheet at once, so the sheet, the creation check and Before the First Night agree. The record is flags.wodx-creation.wizard (book, priorities, the ledger of bought Traits, the page). Every line with creation totals works (17 books). The steps follow each book's character creation chapter (V20 pdf 92 to 94 / printed 84 to 86 and the pages in data/creation-totals.mjs).
+
+Reverse: open Build from the creation check instead (api.check); the Build window of 0.13.0 is kept.
+
+## B2761. The player picks the priorities, and they hold still (2026-11-13)
+The Attributes and Abilities pages ask which group is primary, secondary and tertiary. Until the player chooses, the order the sheet suggests is shown (most dots first, ties in the book's order), and it is saved when the first dot is spent there, so later dots do not move the allotments around. The creation check (checkCreation) now takes an order; without one it still finds the cheapest fit.
+
+Reverse: clear flags.wodx-creation.wizard.order.
+
+## B2762. Early pages spend inside the allotment; the freebie page charges the book's cost (2026-11-13)
+On the pages for Attributes, Abilities, powers, Backgrounds and Virtues a + is open only while the dot costs nothing (the allotment has room, no Ability above the book's cap). On the freebie page every dot shows its price and is open while the points left cover it; a dot inside an allotment not yet used up is free there too. The price is the creation check's own, so Mummy's Rebirth dots still soak up overage first.
+
+Reverse: spend on the sheet and use the creation check.
+
+## B2763. The freebie points in full (2026-11-13)
+Budget: the book's freebies (and the Rebirth's), plus Flaw points up to the book's cap (7), plus the prelude's gains to Abilities and Backgrounds. Spent: dots past the allotments, Merit points, and Traits bought on the freebie page (Willpower, Humanity or a Road, Rage, Gnosis, Arete to 3, Glamour, where the line's costs name them). Costs the wizard cannot reach on the sheet (Chi, Hun and P'o, Foundation, Sekhem and the like) go in "Anything else", a count the player keeps. Flaws past the cap give nothing and the build no longer counts as matching; before, the hub let any build within the freebies plus 7 pass and did not charge Merits.
+
+Reverse: buildState in first-night.mjs back to checkCreation's ok.
+
+## B2764. What the pages offer (2026-11-13)
+Disciplines: the clan's three for the era first (V20 Dark Ages lists before 1500, the V20 lists after, from data/vampire.mjs), then the rest at freebie cost; a ghoul or revenant starts with Potence. Spheres are the sheet's own nine. Arcanoi, Arts, Realms and Hekau paths are offered by name; Gifts and Lores, and a Kindred of the East Discipline, are written in. Pillars, Dominions and Hunter edges have no Trait on the sheet and are counted by hand. Backgrounds come from the trait table by the line's books (V20 core, V20 Dark Ages, W20 core and Changing Breeds, M20 core and Book of Secrets, Wraith 20, C20, Hunters Hunted II, Demon: The Fallen, Mummy, Kindred of the East, Orpheus); the Dark Ages Werewolf and Mage take the W20 and M20 core lists, a house choice. Merits and Flaws come from the trait table held by the line's kind, with the book's cost; where the book gives a range the player names the points, else the lowest. Anything can still be written in by name. The name lists wait for the PC book check.
+
+Reverse: edit POWER_NAMES and BG_BOOKS in scripts/wizard-rules.mjs.
+
+## B2765. A check after the prelude (2026-11-13)
+Before the First Night has a step after the prelude, "Check after the prelude": done when the prelude step is and the build still matches the book. The prelude's gains (up to 3 freebie points, B1612) are paid from the prelude's own points, so a gain to an Ability or a Background does not push the build over; its Willpower gain is not in the totals at all. Sign-off waits for the new step. Build and Merits and Flaws open the wizard.
+
+Reverse: take "recheck" out of STEPS in first-night-rules.mjs.
+
+## B2766. The prelude's Willpower gain reaches the sheet (2026-11-13)
+The prelude runner read Willpower at system.willpower, which the system does not have, so the gain always said the sheet had none. It now reads and writes system.advantages.willpower.permanent.
+
+Reverse: none needed.
+## B2790. Talking faces drawn on a 64 pixel grid (2026-11-13)
+WoDX Paperdoll 0.16.0. Ben approved the look on 13 November 2026 ("I like this very much. Proceed with this.") after samples at 96 and 64 pixels; he picked 64 as enough detail while far easier to draw. A face is drawn pixel by pixel in the browser from a seed (face64-rules.mjs): head, hair, eyes, brows, nose, mouth, beard and clothes, with four tones of each colour and an outline only where one part meets another. Nothing is baked or uploaded, so a face costs nothing until it is shown. The layered Lorelei portraits and the earlier vector drawings stay as they were.
+
+Reverse: Turn the client setting Talking faces to Off.
+
+## B2791. Whose face, and which (2026-11-13)
+The line comes from the sheet: the actor type, the variant, the clan (Nosferatu get their own face) and the kind WoDX Combat gives it, else mortal. The seed is the actor, or the token for an unlinked token, so passers-by made from one actor still differ. The face is drawn as a woman or a man when the Paperdoll look or WoDX Creation says so; otherwise the seed decides lashes and facial hair. flags.wodx-paperdoll.face64.seed and .line override both.
+
+Reverse: Set flags.wodx-paperdoll.face64.seed or .line on the actor.
+
+## B2792. A face that moves (2026-11-13)
+When an NPC speaks to a character through WoDX NPC's Talk, the line in chat gets the speaker's face, shown at 96 pixels with hard edges. A new line plays once on each screen: the mouth follows the words as they come (open vowels wide, lip sounds nearly shut, closed at commas and full stops), the face blinks every two to six seconds, holds its reaction for a little over two seconds after the line and settles to rest. A line older than 20 seconds, or one already played, shows the face still. Only the eyes, brows and mouth change between frames. Each player picks Moving, Still or Off.
+
+Reverse: Set the client setting Talking faces to Still or Off.
+
+## B2793. How the face reacts (2026-11-13)
+In this order: a social roll that swayed the NPC and has not run out (charmed, persuaded or fooled smile; intimidated looks afraid; bribed smirks), then frenzy (anger), then the mood the Storyteller set on the NPC's behaviour (angry, afraid, sad, glad, wary), then the NPC's attitude toward that character (Hostile or worse angry, Distrusted smirks, Welcome or better smiles), else at rest. From Injured down the face rests in pain. Incapacitated: eyes shut, jaw slack, no speech. House reading; no book sets faces.
+
+Reverse: Change reactionFor in face64-rules.mjs.
+
+## B2794. Kindred fangs only by choice (2026-11-13)
+Ben's ruling (13 November 2026): visible fangs are an option for Kindred, not every Kindred shows them, and none by default. The Storyteller turns them on for one actor from the Actors list menu (Talking face: show fangs). With fangs on they show in an open mouth while speaking or snarling, and their tips rest on the lip at rest.
+
+Reverse: Pick Talking face: hide fangs.
+
+## B2795. Marks only some can see (2026-11-13)
+A changeling's horns and the glamour about them are the fae mien, seen only by the Storyteller and by a viewer whose own character is a changeling (C20). A hunter's sigil is seen only by the Storyteller and by the imbued (HtR). Other lines' marks (a mage's lit eyes, a demon's seal, a Garou's scars and tooth cord, a mummy's kohl and collar, a wraith's Deathmark, jade eyes) are drawn for everyone, as the other faces already do.
+
+Reverse: Change viewerSees in face64.mjs.
+
+## B2796. Wounds on the talking face (2026-11-13)
+The face follows the health track with the ladder Ben approved for the portraits on 10 November 2026: no bandages; each level keeps the wounds before it and adds its own (a bruise, a nick over the brow, a black eye and split lip, an open cheek, bleeding nose and scalp, a second bruise and one eye swollen shut at Crippled, both eyes shut and the jaw slack at Incapacitated); pallor takes all the skin.
+
+Reverse: Take the health level out of the face in face64.mjs.
 ## B2770. Family lines that outlive the character (2026-11-13, relationships desk c1, Ben approved)
 WoDX NPC 0.55.0 (kin-rules.mjs, kin.mjs). A family line hangs from one character and starts from the mortal kin the Relationships tab knows (parent, child, sibling, spouse, kin). It is kept in the world setting wodx-npc.familyLines and grows when the clock jumps: members marry, have children and die by the life table of their century and way of life, and most never get a sheet. The family and lineage tree lists the living members with what each knows of the founder (an undying founder becomes a family story, then a likeness in a family Bible or photographs, then a legend). The Storyteller can bring any living member into play as a Mortal tied to the founder as Descendant and Ancestor.
 
