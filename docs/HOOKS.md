@@ -48,6 +48,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
+| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
 | wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
@@ -58,7 +59,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
-| wodxTown | storyteller | something happened to a town (a fire, flood, storm, earthquake, famine, plague, riot, rising or sack): {town (market id), kind, text, big} |
+| wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |

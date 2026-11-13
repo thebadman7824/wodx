@@ -1086,3 +1086,43 @@ export function battleChanges(state, battle) {
   }
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  A town rises (B3330, WoDX Storyteller's towns)                     */
+/* ------------------------------------------------------------------ */
+
+/** The factions that hold a place in a town: a place on one of its scenes, or the scene itself. */
+export function holdersInTown(state, sceneIds = []) {
+  const pre = sceneIds.map(id => `Scene.${id}`);
+  return (state?.factions ?? []).filter(f => !f.dormant && (f.places ?? []).some(p => pre.some(s => p === s || String(p).startsWith(`${s}.`))));
+}
+
+/**
+ * What a rising in a town does to the factions there: each that holds a place in it loses a dot of Status and one
+ * of Retainers (the town has turned on its masters and their men are beaten or gone over); a faction that laid a tax
+ * on the town's market loses a dot of Status too, and every holder thinks worse of it. A sack costs a holder a dot of
+ * Resources. Hidden factions keep their dots: the town rose against its mortal masters, not against what it cannot
+ * see. Returns the changes for the approval queue.
+ */
+export function townChanges(state, {sceneIds = [], taxers = [], kind = "rising"} = {}) {
+  const out = [], seen = new Set();
+  const add = c => { const k = JSON.stringify(c); if ( !seen.has(k) ) { seen.add(k); out.push(c); } };
+  const holders = holdersInTown(state, sceneIds).filter(f => !HIDDEN_KINDS.has(f.kind));
+  const byId = id => (state?.factions ?? []).find(f => f.id === id && !f.dormant) ?? null;
+  for ( const f of holders ) {
+    if ( kind === "rising" ) {
+      if ( (f.assets?.status ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "status", delta: -1});
+      if ( (f.assets?.retainers ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "retainers", delta: -1});
+    }
+    if ( kind === "sack" && (f.assets?.resources ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "resources", delta: -1});
+  }
+  if ( kind === "rising" ) {
+    for ( const id of taxers ) {
+      const t = byId(id);
+      if ( !t || HIDDEN_KINDS.has(t.kind) ) continue;
+      if ( (t.assets?.status ?? 0) > 0 ) add({op: "bg", faction: t.id, key: "status", delta: -1});
+      for ( const h of holders ) if ( h.id !== t.id && standingOf(h, t.id) > STANDING.min ) add({op: "standing", faction: h.id, other: t.id, delta: -1});
+    }
+  }
+  return out;
+}
