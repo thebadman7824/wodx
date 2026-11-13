@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.55.0 and Storyteller 0.61.0 gate (family lines, ties after a jump in time, wills and estates), in
+ * WoDX NPC 0.55.0 and Storyteller 0.62.0 gate (family lines, ties after a jump in time, wills and estates), in
  * Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatekin.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes four actors and deletes them, and puts back the family lines setting.
- *   1. NPC 0.55.0+, Storyteller 0.61.0+, the APIs and the setting
+ *   1. NPC 0.55.0+, Storyteller 0.62.0+, the APIs and the setting
  *   2. a family line starts from the sibling and spouse on the Relationships tab
  *   3. growing it 80 years makes births and deaths, and the living know a story of the founder
  *   4. a living member brought into play is the founder's Descendant at both ends
@@ -45,7 +45,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const v = game.modules.get("wodx-npc").version, sv = game.modules.get("wodx-storyteller").version;
-      ok("1. NPC 0.55.0+, Storyteller 0.61.0+, the APIs and the setting", newer(v, "0.55.0") && newer(sv, "0.61.0") && typeof npc().kin?.start === "function"
+      ok("1. NPC 0.55.0+, Storyteller 0.62.0+, the APIs and the setting", newer(v, "0.55.0") && newer(sv, "0.62.0") && typeof npc().kin?.start === "function"
         && typeof ST()?.wills?.estate === "function" && game.settings.settings.has("wodx-npc.tiesAgeing"), {v, sv});
     });
 

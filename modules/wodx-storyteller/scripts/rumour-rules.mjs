@@ -11,13 +11,13 @@ export const QUIET_NIGHTS = 3;
 /** At most this many nights are worked through at once (a long time skip). */
 export const MAX_NIGHTS = 60;
 
-/** How true a rumour is (Storyteller 0.62.0), for the Storyteller's eyes. */
+/** How true a rumour is (Storyteller 0.63.0), for the Storyteller's eyes. */
 export const TRUTH = {true: "True", half: "Half true", false: "False", unknown: "Not known"};
-/** The tie kinds along which NPCs pass gossip (Storyteller 0.62.0): friends, lovers, kin, those who serve and are served. */
+/** The tie kinds along which NPCs pass gossip (Storyteller 0.63.0): friends, lovers, kin, those who serve and are served. */
 export const GOSSIP_TIES = ["friend", "lover", "spouse", "sibling", "parent", "child", "kin", "ally", "contact", "retainer", "patron", "apprentice", "mentor", "rival"];
 /** Pairs of NPCs a tie of these kinds joins, as two-person groups for buildContacts. */
 export const tiePairs = (edges = [], isNpc = () => true) => (edges ?? []).filter(e => GOSSIP_TIES.includes(e.kind) && e.from && e.to?.id && isNpc(e.from) && isNpc(e.to.id)).map(e => [e.from, e.to.id]);
-/** Each denial a character makes takes one off how many a knower tells each night (Storyteller 0.62.0). */
+/** Each denial a character makes takes one off how many a knower tells each night (Storyteller 0.63.0). */
 export const heatAfterDoubt = (heat, doubt = 0) => (heat === Infinity ? (doubt ? 3 - Math.min(2, doubt) : Infinity) : Math.max(0, heat - (Number(doubt) || 0)));
 
 /** Who talks to whom: shared faction membership or a shared scene. Returns {id: [ids]}, each list sorted. */

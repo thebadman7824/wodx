@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.58.0, Storyteller 0.61.1, Sheets 0.18.1 gate (courtship, marriage and law, children, households, loved
+ * WoDX NPC 0.58.0, Storyteller 0.62.1, Sheets 0.18.1 gate (courtship, marriage and law, children, households, loved
  * ones), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatehearts.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes actors and deletes them, and deletes its chat cards and Ledger entries.
- *   1. NPC 0.58.0+, Storyteller 0.61.1+, Sheets 0.18.1+, the API and the setting
+ *   1. NPC 0.58.0+, Storyteller 0.62.1+, Sheets 0.18.1+, the API and the setting
  *   2. courting: a gift to a Bon Vivant warms by two; a Kindred on a Path stays at Fond or below
  *   3. the law here and now, and a courting custom
  *   4. marry: spouse ties at both ends and a record on each sheet; a second spouse is refused where the law allows one
@@ -44,7 +44,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const v = game.modules.get("wodx-npc").version, sv = game.modules.get("wodx-storyteller").version, hv = game.modules.get("wodx-sheets").version;
-      ok("1. NPC 0.58.0+, Storyteller 0.61.1+, Sheets 0.18.1+, the API and the setting", newer(v, "0.58.0") && newer(sv, "0.61.1") && newer(hv, "0.18.1")
+      ok("1. NPC 0.58.0+, Storyteller 0.62.1+, Sheets 0.18.1+, the API and the setting", newer(v, "0.58.0") && newer(sv, "0.62.1") && newer(hv, "0.18.1")
         && typeof npc().hearts?.marry === "function" && game.settings.get("wodx-npc", "heartCards") === true, {v, sv, hv});
     });
     await step("2. court", async () => {

@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.59.0, Storyteller 0.62.0, Actions 3.61.0 gate (standing, gossip along ties, rank, feuds), in Foundry, in
+ * WoDX NPC 0.59.0, Storyteller 0.63.0, Actions 3.61.0 gate (standing, gossip along ties, rank, feuds), in Foundry, in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatestanding.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes actors, a rumour and a feud, and removes them all.
- *   1. NPC 0.59.0+, Storyteller 0.62.0+, Actions 3.61.0+, the API
+ *   1. NPC 0.59.0+, Storyteller 0.63.0+, Actions 3.61.0+, the API
  *   2. a deed counts at home at once; far away only after the news could get there
  *   3. two NPC friends are contacts in the rumour mill; a rumour keeps its source, subject and truth; a denial counts
  *   4. rank: a knight's word on the ladder of the year, and a serf defers (rank shift -1)
@@ -42,7 +42,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const v = game.modules.get("wodx-npc").version, sv = game.modules.get("wodx-storyteller").version, av = game.modules.get("wodx-actions").version;
-      ok("1. NPC 0.59.0+, Storyteller 0.62.0+, Actions 3.61.0+, the API", newer(v, "0.59.0") && newer(sv, "0.62.0") && newer(av, "3.61.0") && typeof npc().standing?.deed === "function" && typeof st().rumours.doubt === "function", {v, sv, av});
+      ok("1. NPC 0.59.0+, Storyteller 0.63.0+, Actions 3.61.0+, the API", newer(v, "0.59.0") && newer(sv, "0.63.0") && newer(av, "3.61.0") && typeof npc().standing?.deed === "function" && typeof st().rumours.doubt === "function", {v, sv, av});
     });
     await step("2. deeds", async () => {
       [hero] = await Actor.createDocuments([{name: "Gate Stand Hero", type: "Mortal"}]);

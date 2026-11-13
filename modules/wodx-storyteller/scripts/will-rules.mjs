@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.61.0: wills and inheritance by the law of the place and year (B2773-B2775). Pure: no Foundry.
+ * WoDX Storyteller 0.62.0: wills and inheritance by the law of the place and year (B2773-B2775). Pure: no Foundry.
  *
  * A will is kept on the testator's sheet (flags["wodx-storyteller"].will): who gets what share, a note, and whether
  * the wealth is held through false heirs (the way the undying keep their fortunes from one century to the next).

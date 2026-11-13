@@ -981,6 +981,20 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 |---|---|---|---|
 | 2026-11-13 | Realm maps follow the books' layout notes (B2632): the Tempest keeps Stygia at its heart though Wraith 20th sets the Labyrinth at the centre, and its travel times do not match the book's | Keep the Tempest and the Labyrinth as separate maps, as they are; in lore the Tempest surrounds the Labyrinth (B2633). Up is north and a book's above and below laid out across the map stand as built | Redraw the Tempest round the Labyrinth in realm-worlds-rules.mjs |
 
+## Approved by Ben, 13 November 2026, 12:51 UTC (Rothenstein Rebuild Desk)
+
+Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1Tka1ZXWt2JikAg1X): "Approve on all recommendations." Phase 1 is built as B2780-B2785; the later phases take their own rows as they land.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | How to rebuild the Rothenstein chronicle (r1) | A repeatable builder makes a fresh world from one recipe file, step by step with Undo, and the rebuilt world doubles as the era-crossing integration test (B2780) | Stop using Build this chronicle; rothenstein-wodx is unchanged |
+| 2026-11-13 | Where it lives (r2), and Live (x3) | A new world rothenstein-x on the PC testbed beside rothenstein-wodx; the builder never works in rothenstein-live, and goes to Live only as a second world after a playtest and Ben's go-ahead (B2781) | Delete rothenstein-x on Ben's word; nothing else changes |
+| 2026-11-13 | Authored and generated content (r3) | Anchors claim their places first and a scene's own kind of place is kept; generated content fills the rest; authored lines always win (B2782) | Undo the anchors step |
+| 2026-11-13 | What carries over (x2) and Ben's Live characters (p3) | Carry the scenes, journals, cast, items, tables, playlists and macros; rebuild residents, passers-by, the wizard's journals and the Legends book; leave gate fixtures, chat, fights and player characters, which come from the newest Live backup only on Ben's word (B2783) | Change classify() in recipe-rules.mjs and run the export again |
+| 2026-11-13 | Which lines are present on the first night (w4) | Vampire, Werewolf, Mage, Changeling, Wraith, Hunter and mortals in the valley from 1197; Demon, Mummy and Kindred of the East come in through the away hubs (Cairo, Hong Kong) and dated events, since the books place none in 12th-century Moravia (B2785) | Add the lines to lines in data/recipe-rothenstein.mjs |
+| 2026-11-13 | The mystery, the prologue, the opening arc and the start year (s1 to s4) | Keep What Sleeps Beneath Rothenstein as written and stretch it across the eras; date the sleeper's origin in the Classical age in Great Moravia; keep Sessio I to X as the 1197 opening; start in 1197 (recipe, phase 5) | Change spine and opening in the recipe |
+| 2026-11-13 | How the town ages, the reach abroad and other regions' tables (w1 to w3) | One seed, rebuilt at 1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990 and 2030 with heirs; one away hub per era on another continent; each hub waits for its own region's settlement tables (recipe, phases 2 and 5) | Change ages and reach in the recipe |
+| 2026-11-13 | Relationships, origins, play modes, caps and order (p1, p2, p4, x1, x4) | A slot for relationships until that desk lands; Rothenstein origins in the wizard and lifepath; table and solo play with the middle automation level; caps of 40 residents shown, 24 passers-by and 30 moving sprites a scene; priority 1 under the era-crossing test gap, phases 0 to 8 in order (recipe, phases 3, 6 and 7) | Change caps in the recipe; the rest are later steps |
 ## Approved by Ben, 13 November 2026, 13:12 UTC (face features desk)
 
 | Date | Question | Choice made | How to reverse it |

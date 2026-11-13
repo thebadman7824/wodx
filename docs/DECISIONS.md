@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2880
+Next free block: B2960
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -128,9 +128,12 @@ Next free block: B2880
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 | B2770-B2779 | Relationships across the centuries (part 1): family lines, wills and estates by law, ties after a jump in time (Ben approved the whole relationships desk; used B2770-B2775) | NPC, Storyteller, Sheets, Actions |
+| B2780-B2789 | Build this chronicle: the recipe, the builder's steps, the carry-over from an older world, anchors, and the rebuilt Rothenstein world rothenstein-x | Storyteller |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
+| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
+| B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3666,6 +3669,36 @@ WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus
 
 Reverse: name the lock in the weapon's name or description.
 
+## B2780. A chronicle is built from a recipe (2026-11-13)
+WoDX Storyteller 0.61.0, Rothenstein Rebuild Desk item r1 (Ben approved all). A recipe file (data/recipe-rothenstein.mjs) says what the chronicle is, and Build this chronicle makes it in a fresh world step by step: check the world, Start a chronicle with the recipe's settings, bring across the older world, mark the anchors; later phases add the town, the people, the factions and trade, the time spine, the characters and the run across every age. Each step finds what it made again by the flag flags.wodx-storyteller.built, so running it twice makes no copies. The builder lives in Storyteller because Start a chronicle, the clock and the world map are there.
+
+Reverse: stop using the builder; nothing runs by itself.
+
+## B2781. Where the builder may work (2026-11-13)
+Desk items r2 and x3. The recipe names its world (rothenstein-x). The builder refuses rothenstein-live always, even when forced, and any other world unless the call passes force. The toolbar button shows only in a world whose world.json carries flags.wodx.recipe, or where the builder has already run. In a world made for the recipe, the check step turns on the installed WoDX modules that are off, as Start a chronicle does in the template world.
+
+Reverse: remove flags.wodx.recipe from the world's world.json.
+
+## B2782. Anchors claim their places first (2026-11-13)
+Desk item r3. Anchor places are matched on scene names and anchor people on a part of an NPC's name, the shortest match first, the way Rothenstein's factions find their leaders. A matched scene gets flags.wodx-storyteller.anchor {key, kind} and, only when it has no kind of place yet, the NPC place kind from the recipe; a kind the Storyteller set is kept. A matched NPC gets the anchor key, home and faction. Anchors that match nothing are listed, not made up.
+
+Reverse: Undo on the anchors step.
+
+## B2783. What comes across from an older world (2026-11-13)
+Desk items x2 and p3. tools/gate/carryexport.mjs, run in rothenstein-wodx, sorts every document: chat, fights, users and fog stay behind, as does anything a gate made (the wodx-gate flag, names starting WoDX gate or Gate, a WoDX gate folder) and every player's character, which comes across only from a Live backup on Ben's word. Generated residents and passers-by, the Start a chronicle journals, the builder's own documents and the Legends book are made again. Everything else is carried. The export reads the world and changes nothing in it.
+
+Reverse: change classify() in recipe-rules.mjs and export again.
+
+## B2784. Carried documents keep their ids (2026-11-13)
+The carry step makes documents with their old ids (keepId), folders first and scenes last, so journal links, tokens tied to actors and folders still hold in the new world. A document whose id is already in the world is skipped. Scenes come across inactive. Undo deletes only the documents in the step's record that still carry the builder's flag, newest kind first, and never anything the Storyteller made by hand. Map art keeps its old paths, so the rothenstein-wodx folder must stay.
+
+Reverse: Undo on the carry step.
+
+## B2785. The Rothenstein recipe (2026-11-13)
+Desk items s1 to s4, w1 to w4, p1, p2, p4, x1 and x4. Homeland Moravia, opening 1 October 1197 at 21:00, every line but Demon, Mummy and Kindred of the East in the valley from the first night (those three come in through the away hubs and dated events, since the books place none in 12th-century Moravia). The town has seed 1197 and is rebuilt at 1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990 and 2030. One away hub per era: Constantinople, Cairo, Potosí and New Spain, Bengal, New York's Czech quarter, Hong Kong and a future arcology. The sleeper's origin is dated in the Classical age in Great Moravia. Caps for a slower machine: 40 residents shown, 24 passers-by and 30 moving sprites a scene. Twelve anchor places and eighteen anchor people from the authored chronicle.
+
+Reverse: edit data/recipe-rothenstein.mjs.
+
 ## B2760. A character wizard, one page per step (2026-11-13)
 WoDX Creation 0.24.0, Ben's ask of 13 November 2026 after a look at Darkness Weaver. The guided builder of 0.13.0 was one window; the wizard walks the book's creation order a page at a time with Back and Next: the book, Attributes, Abilities, the line's powers, Backgrounds, Virtues (lines that have them), Merits and Flaws, freebie points, and a last look. Each choice goes on the sheet at once, so the sheet, the creation check and Before the First Night agree. The record is flags.wodx-creation.wizard (book, priorities, the ledger of bought Traits, the page). Every line with creation totals works (17 books). The steps follow each book's character creation chapter (V20 pdf 92 to 94 / printed 84 to 86 and the pages in data/creation-totals.mjs).
 
@@ -3776,12 +3809,12 @@ WoDX NPC 0.55.0. When the clock jumps a year or more (a time skip or Pass the ye
 Reverse: turn the setting off.
 
 ## B2773. Wills (2026-11-13, relationships desk c2, Ben approved)
-WoDX Storyteller 0.61.0 (wills.mjs). A will sits on the sheet (flags.wodx-storyteller.will): heirs from the Relationships tab or by name, each with a share, a note, and "held through false heirs". The Will button on the family and lineage tree opens it. The will's main living heir is the heir the Ledger passes open debts and oaths to, ahead of a heir Pass the years made or one named in the Ledger.
+WoDX Storyteller 0.62.0 (wills.mjs). A will sits on the sheet (flags.wodx-storyteller.will): heirs from the Relationships tab or by name, each with a share, a note, and "held through false heirs". The Will button on the family and lineage tree opens it. The will's main living heir is the heir the Ledger passes open debts and oaths to, ahead of a heir Pass the years made or one named in the Ledger.
 
 Reverse: clear the will on the sheet.
 
 ## B2774. Estates divided by the law of the place and year (2026-11-13)
-WoDX Storyteller 0.61.0 (will-rules.mjs). On a death, one approval card divides the dead person's money by the will and by the law of the homeland that year; approving it moves the money to each heir's bank. The laws are nine ways (to the eldest son with a widow's third, shared among children, among sons, fixed shares with a will of a third at most, the joint family, the house goes on, civil law, the state takes it, local custom) set by way of life with dated rows for regions that differ: civil codes in France 1804, the Low Countries 1811, the Bohemian lands 1812, Italy 1865, Iberia 1889, the German lands 1900, the British Isles 1926, Anatolia 1926, China 1931, Japan 1947, India 1956; Russia's state years 1918 to 1922. A house reading of history, rounded for play.
+WoDX Storyteller 0.62.0 (will-rules.mjs). On a death, one approval card divides the dead person's money by the will and by the law of the homeland that year; approving it moves the money to each heir's bank. The laws are nine ways (to the eldest son with a widow's third, shared among children, among sons, fixed shares with a will of a third at most, the joint family, the house goes on, civil law, the state takes it, local custom) set by way of life with dated rows for regions that differ: civil codes in France 1804, the Low Countries 1811, the Bohemian lands 1812, Italy 1865, Iberia 1889, the German lands 1900, the British Isles 1926, Anatolia 1926, China 1931, Japan 1947, India 1956; Russia's state years 1918 to 1922. A house reading of history, rounded for play.
 
 Reverse: reject the estate card and divide by hand, or edit BY_SPHERE and BY_REGION in will-rules.mjs.
 
@@ -3917,7 +3950,7 @@ A deed counts at once where it was done. Elsewhere it counts only once the faste
 Reverse: edit reaches in modules/wodx-npc/scripts/standing-rules.mjs.
 
 ## B2865. Gossip along ties (2026-11-13)
-WoDX Storyteller 0.62.0: the rumour mill also passes rumours between NPCs joined by a friend, lover, spouse, kin, ally, contact, rival, mentor or master-and-servant tie, besides factions and shared scenes. A rumour keeps its source, its subject and how true it is (true, half true, false, not known), for the Storyteller. Each denial takes one off how many people a knower tells each night, at most three.
+WoDX Storyteller 0.63.0: the rumour mill also passes rumours between NPCs joined by a friend, lover, spouse, kin, ally, contact, rival, mentor or master-and-servant tie, besides factions and shared scenes. A rumour keeps its source, its subject and how true it is (true, half true, false, not known), for the Storyteller. Each denial takes one off how many people a knower tells each night, at most three.
 
 Reverse: edit GOSSIP_TIES and heatAfterDoubt in modules/wodx-storyteller/scripts/rumour-rules.mjs.
 
@@ -3975,3 +4008,33 @@ Reverse: turn the setting off.
 The Storyteller sees everything. Players see their own ties; a hidden tie (a hidden loyalty, a past life) shows to a character only once they found it out; trust and warmth on a tie show only to the owners of the one who feels them. NPC resisting rolls stay Storyteller-only as before.
 
 Reverse: edit visibleTo and feelingsFor in modules/wodx-npc/scripts/ties-rules.mjs.
+
+## B2900. Aura Perception shows only what a reading showed (2026-11-13)
+Display-Only Systems Desk item k1, Ben's pick: deepen. With Aura Perception in use, a ring shows round a creature only after the character has Read the Soul of that token (WoDX Otherworlds, Perception + Empathy at difficulty 8), and only as much as the successes showed: one success the shade alone (pale or bright), two or more the colour. A botch shows a false colour. A reading holds for one hour of game time. World setting "Aura Perception needs Read the Soul", on by default. Lifesight is unchanged.
+
+Reverse: Turn the setting off, or change AURA_READ_SECONDS and ringFor in wodx-senses/scripts/sight-rules.mjs.
+
+## B2901. Loud noise overwhelms Heightened Senses (2026-11-13)
+Desk item k1. The book warns that sudden loud noise or bright light can overwhelm heightened senses (page to pin in the book check). House reading: a loud noise from Interactables heard by the character, or a gun fired within 30 yards, gives the Storyteller a card asking for Willpower at difficulty 6; a failure leaves the character stunned and deafened for one turn. World setting "Loud noise overwhelms Heightened Senses", on by default.
+
+Reverse: Turn the setting off, or change OVERLOAD and GUN in sight-rules.mjs.
+
+## B2902. A crippled part counts on the attack (2026-11-13)
+Desk item c3. The Crippled effect from the maiming card used to state +2 difficulty without applying it. Attacks now add it (VtDA20 p. 348): an arm or hand for weapons, fists, claws and throws, a leg for kicks; bites are not affected.
+
+Reverse: Return 0 from crippledAttackDiff in wodx-combat/scripts/body-rules.js.
+
+## B2903. Wounds that add up to a maiming (2026-11-13)
+Desk item c3. When the lethal and aggravated levels recorded on one part reach three, the same three a single maiming blow needs (B1204), the Storyteller gets the same offer once for that part. The Crippled effect comes off by itself when the part's lethal and aggravated levels have healed, and the part can be offered again later. House rule, with hit locations on.
+
+Reverse: Return null from addedUpOffer in body-rules.js; delete the healCrippled hook in body.js to keep effects until removed by hand.
+
+## B2904. Living tiles switch walls, doors and lights (2026-11-13)
+Desk item t4. A living tile's rule has "While it holds, also": walls inside its square block movement and sight, doors inside it are locked, or lights inside it are on. When the rule stops holding they open, unlock or go out; a door that WoDX did not lock is left alone.
+
+Reverse: Set "While it holds, also" to "Nothing else" on the tile.
+
+## B2950. An unofficial fan work notice before the repository goes public (2026-11-13)
+Ben asked whether a disclaimer would help before the repository is made public. The Dark Pack Agreement asks for its legal notice, its logo and a statement that the work is not official World of Darkness material. README.md and a new NOTICE.md carry all three plus the third-party credits; the system fork's settings sidebar adds the unofficial line beside the notice upstream already shows (7.3.2-wodx.10). A notice does not make copying lawful, so book text and art are checked separately on the public repository review desk.
+
+Reverse: Take the line out of module/ui/settings-sidebar.js and drop NOTICE.md and the README paragraph.

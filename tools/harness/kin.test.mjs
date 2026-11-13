@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX NPC 0.55.0 and Storyteller 0.61.0: family lines, ties after a jump in time, wills and estates (B2770-B2775).
+// WoDX NPC 0.55.0 and Storyteller 0.62.0: family lines, ties after a jump in time, wills and estates (B2770-B2775).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
@@ -152,5 +152,5 @@ test("wiring: settings, hooks, approval types, the tree's buttons and the APIs",
   assert.match(led, /Wills\.willHeir\(deadId\)/); assert.match(led, /Wills\.onDeath\(dead\)/);
   const atLeast = (v, w) => { const a = v.split(".").map(Number), b = w.split(".").map(Number); for ( let i = 0; i < 3; i++ ) if ( a[i] !== b[i] ) return a[i] > b[i]; return true; };
   assert.ok(atLeast(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.55.0"));
-  assert.ok(atLeast(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.61.0"));
+  assert.ok(atLeast(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.62.0"));
 });

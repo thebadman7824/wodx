@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.61.0: wills, estates by the law of the place and year, and wealth held through false heirs
+ * WoDX Storyteller 0.62.0: wills, estates by the law of the place and year, and wealth held through false heirs
  * (B2773-B2775). The rules are in will-rules.mjs.
  *
  *   A will lives on the testator's sheet, flags["wodx-storyteller"].will {heirs: [{id, name, share}], note, hidden, made}.

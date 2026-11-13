@@ -311,6 +311,37 @@ export function maimOffer(loc, {levels = 0, type = "bashing", aimed = false} = {
   return {part: loc.id, label: loc.label, stops: LOSS_TEXT[loc.type] ?? "", cripple: true, aimed: !!loc.aimed || aimed};
 }
 
+/**
+ * Combat 3.25.0 (B2902): a crippled part counts on the roll. A part marked "Crippled" (the effect the maiming card
+ * makes) adds +2 difficulty to an attack made with it (VtDA20 p. 348): an arm or hand for weapons, fists, claws and
+ * throws, a leg for a kick. parts: the crippled part ids; weapon {name, ranged}. Returns the difficulty to add.
+ */
+export const CRIPPLE_DIFF = 2;
+export function crippledAttackDiff(parts = [], weapon = {}) {
+  const name = lc(weapon?.name);
+  if ( /\bbite\b|\bgore\b|\bhorns?\b/.test(name) ) return 0;
+  const kick = /\bkick|\bstomp|\btrample/.test(name);
+  const hit = (parts ?? []).some(id => kick ? /^leg/.test(id) : /^(arm|hand)/.test(id));
+  return hit ? CRIPPLE_DIFF : 0;
+}
+
+/**
+ * B2903: wounds that add up. When the recorded lethal and aggravated levels on one part reach the same three that a
+ * single maiming blow needs, the Storyteller gets the same offer once (house rule, as B1204). byPart: woundsByPart's
+ * map; offered: part ids already offered; part: the part just hit, {id, type, side}. Returns an offer or null.
+ */
+export function addedUpOffer(byPart = {}, offered = [], part = null, {thisBlow = 0} = {}) {
+  if ( !part?.id || (offered ?? []).includes(part.id) || thisBlow >= 3 ) return null;
+  const w = byPart[part.id] ?? {};
+  const levels = (w.l ?? 0) + (w.a ?? 0);
+  return maimOffer({id: part.id, type: part.type, label: partLabel(part)}, {levels, type: "lethal"});
+}
+
+/** B2903: which crippled parts have healed: no lethal or aggravated level is left on them. */
+export function healedParts(crippled = [], byPart = {}) {
+  return (crippled ?? []).filter(id => !((byPart[id]?.l ?? 0) + (byPart[id]?.a ?? 0)));
+}
+
 /* -------------------------------------------------------------- */
 /*  Gear in a new shape (house rule B1205)                          */
 /* -------------------------------------------------------------- */
