@@ -15,6 +15,7 @@
  *   setKind(actor, key|"auto")             override the detected profile (flag world.wodx.profile)
  *   pickKind(actor)                        dialog to choose the profile
  *   reload({actor, weaponId})             fill a ranged weapon and post the turns it takes (house rule "Count shots")
+ *   lightMatch({actor, weaponId})         light a matchlock's match again after heavy rain put it out (house rule "Black powder")
  *   menu / macros keep working from v1.x
  */
 
@@ -33,6 +34,7 @@ import * as BodyRules from "./body-rules.js";
 import * as AA from "./aftermath.js";
 import * as FTime from "./fight-time.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import * as PW from "./powder-rules.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -79,6 +81,9 @@ function registerSettings() {
     game.settings.register(MOD, "countShots", { name: "Count shots and reloads (house rule)",
         hint: "Each shot uses one round from a ranged weapon that has a capacity on its sheet; an empty weapon must be reloaded first (one turn for a firearm, V20 p. 278; a crossbow takes longer). Bows and slings are never counted.",
         scope: "world", config: true, type: Boolean, default: false });
+    s("blackPowder", "Black powder misfires and wet powder",
+        "Matchlocks, wheellocks and flintlocks misfire on a botch, and on any 1 in rain or standing in water; heavy rain puts out a match and a misfire there wets the powder until the gun is reloaded. A gun that names no lock takes the lock of the year. Percussion caps and cartridges use the plain botch rule.",
+        Boolean, true);
     s("movementLimit", "Movement in a fight",
         "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
         String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
@@ -527,7 +532,9 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     const cm = conditionMods(attacker, target);
     // The Blinded condition already puts +2 difficulty in "extra difficulty"; the box would count it twice
     const blindCounted = !!chronicle()?.conditions?.hasCondition?.(attacker, "blinded");
-    const condNotes = cm.notes.length ? `<div class="vtc-note wodx-conditions"><b>Conditions:</b><ul>${cm.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+    // 3.24.0: black powder in the wet (WoDX Atmosphere's weather), for each old gun on the sheet
+    const powder = powderNotes(attacker, weapons);
+    const condNotes = (powder.html) + (cm.notes.length ? `<div class="vtc-note wodx-conditions"><b>Conditions:</b><ul>${cm.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "");
     const kinds = setting("showKindMenus");
     const boosts = R.BOOSTS.map(bo => {
         const r = P.resource(attacker, bo.res);
@@ -732,6 +739,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
         throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
     }
+    // ---- Black powder (3.24.0): wet powder or a match out in heavy rain will not fire
+    const gun = powderOn() ? PW.gunLock(w, yearNow()) : null;
+    const wet = gun?.black ? powderWet(attackerTok ?? attacker) : null;
+    if (gun?.black) {
+        const fire = PW.canFire(gun, powderState(attacker, w), wet, { covered: !!fd.powderCovered });
+        if (!fire.ok) throw new Error(`${attacker.name}'s ${w.name} cannot fire: ${fire.why}.`);
+    }
     // ---- Feral Claws, grown when chosen: 1 blood, an effect that lasts the scene (the Storyteller ends it)
     if (w?.grow) {
         if (blood(attacker) < 1 && setting("spendResources")) throw new Error(`${attacker.name} has no blood to grow claws.`);
@@ -779,6 +793,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (w?.ranged && w.shots?.counted && countShots()) {
         const left = await spendShot(attacker, w);
         if (left !== null) log.push(`${w.name}: ${left} of ${w.shots.max} round${w.shots.max === 1 ? "" : "s"} left.`);
+    }
+    // ---- Black powder: a misfire fires nothing and the charge is spent; heavy rain can wet the powder or put out the match
+    if (gun?.black) {
+        const mf = PW.misfire(gun, atk.faces, atk.botch, wet, { covered: !!fd.powderCovered });
+        if (mf.misfire) {
+            atk.successes = 0;
+            atk.misfire = true;
+            log.push(`Misfire: ${esc(mf.why)}. Nothing is fired.${mf.wetPowder ? " The powder is wet: clean the gun and load it again before it will fire." : ""}${mf.matchOut ? " The match is out." : ""}`);
+            if (mf.wetPowder || mf.matchOut) await setPowderState(attacker, w, { wet: mf.wetPowder || undefined, matchOut: mf.matchOut || undefined });
+        }
     }
 
     // ---- Defense
@@ -974,6 +998,11 @@ function attackUsable(attacker, w, distance, reachD = distance) {
     if (w.id === "unarmed:claw" && !w.natural && !w.grow && !shifter)
         return discipline(attacker, "Vicissitude") >= 3 ? "no claws grown (sculpt bone talons first)" : "no claws (Protean 2, a shape with claws, or bone talons)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
+    // 3.24.0: wet powder, or a match out in heavy rain
+    if (w.ranged && powderOn()) {
+        const g = PW.gunLock(w, yearNow());
+        if (g?.black) { const f = PW.canFire(g, powderState(attacker, w), powderWet(attacker)); if (!f.ok) return f.why; }
+    }
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
         if (!w.ranged && !AU.inReach(reachD ?? distance, unit)) return "out of reach";
@@ -1444,6 +1473,7 @@ const MACROS = [
     { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" },
     { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
     { name: "WoDX: Reload", img: "icons/weapons/ammunition/bullets-cartridge-shell-gray.webp", command: "game.wodxCombat.reload();" },
+    { name: "WoDX: Light the match", img: "icons/svg/fire.svg", command: "game.wodxCombat.lightMatch();" },
     { name: "WoDX: Soak Policy", img: "icons/svg/shield.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.setSoakPolicy(a); else ui.notifications.warn('Select a token first.');" }
 ];
 
@@ -1474,7 +1504,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.23.0", reload, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.24.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1795,6 +1825,53 @@ function bindHints(root, { attacker, target, attackerTok, targetTok }) {
 function darkAgesNow() {
     try { const y = Number(chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) && y > 0 && y < 1450; } catch (e) { return false; }
 }
+/* ---- Black powder (3.24.0) ---- */
+function powderOn() { try { return setting("blackPowder") !== false; } catch (e) { return true; } }
+function yearNow() {
+    try { const y = Number(chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) ? y : 0; } catch (e) { return 0; }
+}
+/** The wet where a token stands: Atmosphere's weather on an outdoor scene, or a swimmer or wader in water. */
+function powderWet(tokOrActor) {
+    const tok = tokOrActor?.document ?? tokOrActor?.getActiveTokens?.()[0]?.document ?? null;
+    const scene = tok?.parent ?? canvas?.scene ?? null;
+    let tags = [], indoor = false, sky = null, intensity = null;
+    try {
+        const atm = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+        const wx = atm?.now?.() ?? null;
+        indoor = atm?.isOutdoor ? !atm.isOutdoor(scene) : false;
+        if (wx) { tags = wx.tags ?? []; sky = wx.sky ?? null; intensity = wx.intensity ?? null; if (!tags.length && ["rain", "drizzle", "sleet", "hail"].includes(wx.precip)) tags = ["rain"]; }
+    } catch (e) { tags = []; }
+    const water = String(tok?.movementAction ?? "") === "swim";
+    return PW.wetness({ tags, indoor, water, sky, intensity });
+}
+function powderState(actor, w) { try { return actor.items.get(w.id)?.getFlag?.(MOD, "powder") ?? {}; } catch (e) { return {}; } }
+async function setPowderState(actor, w, patch) {
+    const item = actor.items.get(w.id);
+    if (!item || !(actor.isOwner || game.user.isGM)) return;
+    const now = item.getFlag(MOD, "powder") ?? {};
+    await item.setFlag(MOD, "powder", { ...now, ...Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined)) });
+}
+/** Light the match of a matchlock again (a turn, with a flame at hand). */
+export async function lightMatch({ actor: a = null, weaponId = null } = {}) {
+    const { attacker: actor } = resolveTokens(a, null);
+    if (!actor) return null;
+    const w = weaponList(actor).find(x => x.id === weaponId) ?? weaponList(actor).find(x => powderState(actor, x).matchOut);
+    if (!w) return ui.notifications.info(`${actor.name} has no match to light.`);
+    await setPowderState(actor, w, { matchOut: false });
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${esc(actor.name)} lights the match of ${esc(w.name)}</b>: a turn, with a flame at hand.</div>` });
+    return { weapon: w.id };
+}
+/** The attack window's lines for each black-powder gun on the sheet, and the "kept covered" box. */
+function powderNotes(attacker, weapons) {
+    if (!powderOn()) return { html: "" };
+    const year = yearNow();
+    const guns = weapons.map(w => ({ w, g: PW.gunLock(w, year) })).filter(x => x.g?.black);
+    if (!guns.length) return { html: "" };
+    const wet = powderWet(attacker);
+    const lines = guns.map(({ w, g }) => `<li>${esc(w.name)} (${esc(g.label)}${g.named ? "" : ", the year's lock"}): ${esc(PW.powderNote(g, wet, powderState(attacker, w)))}</li>`);
+    return { html: `<div class="vtc-note wodx-powder"><b>Black powder:</b><ul>${lines.join("")}</ul>
+      ${wet.wet ? `<label><input type="checkbox" name="powderCovered"/> Powder and match kept covered (an oilcloth, a cap over the lock, a roof)</label>` : ""}</div>` };
+}
 function archeryOf(actor) {
     try { return Math.max(num(ability(actor, "archery").value), num(secondaryAbility(actor, null, "Archery")?.value)); } catch (e) { return 0; }
 }
@@ -1829,8 +1906,12 @@ export async function reload({ actor: a = null, weaponId = null } = {}) {
     if (!item) return null;
     const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(actor) });
     await item.update({ "system.clip.value": w.shots.max });
+    // 3.24.0: loading dry powder clears wet powder; the match still has to be lit
+    const pw = item.getFlag?.(MOD, "powder") ?? null;
+    const dried = !!pw?.wet;
+    if (dried) await item.setFlag(MOD, "powder", { ...pw, wet: false });
     const how = t.turns === 1 ? "one full turn, with concentration; it can be one of several actions" : `${t.turns} turns`;
-    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${w.shots.max} round${w.shots.max === 1 ? "" : "s"}): ${how} (${t.ref}).</div>` });
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${w.shots.max} round${w.shots.max === 1 ? "" : "s"}): ${how} (${t.ref}).${dried ? " The wet powder is drawn and dry powder loaded." : ""}</div>` });
     return { weapon: w.id, turns: t.turns, rounds: w.shots.max };
 }
 

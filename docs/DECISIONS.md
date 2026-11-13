@@ -123,6 +123,7 @@ Next free block: B2760
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 | B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
 | B2700-B2709 | Letters that take the journey time across the world map, by the ways each land has in each year | Storyteller |
+| B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 <!-- decision-index:end -->
@@ -3083,7 +3084,7 @@ WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names chang
 Reverse: put the old names back in data/eras.json and the kits.
 
 ## B2513. The prologue looks at the whole world (2026-11-12, Ben: WoDX is global, not only Moravia)
-WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
+WoDX Storyteller 0.54.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
 
@@ -3631,3 +3632,28 @@ Reverse: drop "secret" from TOPICS, or filter it in factionTopic.
 The words that change with the place and the year are symbols by way of life (WoDX Chronicle sphereFor for the scene's region and year) and era band: a short oath, who keeps order (the yamen runners in Ming China, the kotwal's men in Delhi, the reeve's men in Brno, the corporate patrols in the future), the market (the souk, the night market, the great market of Tenochtitlan), how goods come in, and how word came (Chronicle mediaFor: at the well, a printed sheet, the paper, the wireless, online, the net). Money is the region's own that year from WoDX Storyteller (the small coin before 1900, the main one after). The staple at the market follows the way of life (bread, rice, millet, maize, potatoes, taro). The Storyteller's grammar journal can add overheard:<topic> and overheard:reply:<topic> lines.
 
 Reverse: edit SYMBOLS in data/grammar/overheard.mjs, or write lines in the "WoDX talk grammar" journal.
+## B2710. The faith calendar changes the hunt (2026-11-13, Ben's pick fa1 on the improvement desk, the full version)
+WoDX NPC 0.54.0 (hunt-calendar-rules.mjs), Actions 3.58.0, Chronicle 0.51.1. Under the Feast and fast days house rule, a hunt reads the day of the town's own faith (WoDX Chronicle church.on for the scene) in every faith's year: a fair -1, a night of revel -1 after dark (Ramadan nights among them), a fast kept strictly +1, Good Friday, Great Friday and Yom Kippur +2 kept strictly and +1 by custom, and by day in the market or merchant streets a holy day or the day of rest +1 (the Muslim Friday only at the noon prayer). The total is held to 2 either way. The hunt window shows each change by name in a number the Storyteller can change, and faction hunts use the same changes in place of the single feast-or-fast step. A house reading for play; the books give no such table.
+
+Reverse: turn the Feast and fast days house rule off, or set the number in the hunt window to 0.
+
+## B2711. Curfews, blackouts and the faiths of a quarter (2026-11-13)
+WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a night of revel) to dawn until 1800 by default, later in the lands that kept one longer (China to 1912, Japan to 1868, the Ottoman and Persian cities to the 1850s to 1880s, Korea also 1945 to 1982), never in lands settled late; it counts +1, or 0 where the night's empty streets already count it. Wartime blackouts by region (Britain 1915 to 1918 and 1939 to 1945, Japan 1942 to 1945 and so on) count +1 after dark. A faith kept by a tenth or more of the scene's residents is listed with no step, as its own quarter's change for the Storyteller to count there. Indoor hunts skip the curfew and blackout.
+
+Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
+
+## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+
+Reverse: turn the world setting off.
+
+## B2713. Wet powder and the match (2026-11-13)
+WoDX Combat 3.24.0. Heavy rain (a downpour or a storm) puts out a matchlock's or hand cannon's match unless it is kept covered, and a misfire there wets the powder: the gun will not fire until it is reloaded with dry powder (Reload clears it). A match put out is lit again with the WoDX: Light the match macro (a turn, with a flame at hand). The automatic attack skips a gun that cannot fire.
+
+Reverse: turn the world setting off; the item flag wodx-combat.powder holds the state.
+
+## B2714. The lock of a gun by its name, else by the year (2026-11-13)
+WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus, caliver and tanegashima are matchlocks, Brown Bess a flintlock, a Colt Navy a percussion revolver, a Glock a cartridge gun). A gun that names none takes the lock most guns had that year: hand cannon before 1450, matchlock to 1700 (pistols wheellock from 1520), flintlock to 1840, percussion to 1870, then cartridges. A house reading of firearms history, global by default; the Storyteller names the lock on the sheet to change it.
+
+Reverse: name the lock in the weapon's name or description.
+

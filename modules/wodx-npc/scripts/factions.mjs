@@ -18,6 +18,7 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import {calendarFor} from "./hunt-calendar.mjs";
 import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
@@ -546,7 +547,14 @@ export function build(ctx) {
   function huntingFor(actor, placeId) {
     const s = state(), era = eraInfo();
     const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
-    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality, {churchStep: churchStep()});
+    // The faith calendar of the town (0.54.0, B2710): each feast, fast, curfew or blackout named; the old single step as a fallback
+    let scene = null;
+    try { scene = fromUuidSync(placeId); } catch (e) { scene = null; }
+    if ( scene && scene.documentName !== "Scene" ) scene = scene.parent?.documentName === "Scene" ? scene.parent : null;
+    scene ??= canvas?.scene ?? null;
+    const calendar = calendarFor(scene, {area: place.kind ?? "market"});
+    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality,
+      calendar.active ? {calendar} : {churchStep: churchStep()});
   }
   async function huntDialog(actor = canvas?.tokens?.controlled?.[0]?.actor ?? null) {
     if ( !game.user.isGM ) return null;
@@ -586,7 +594,8 @@ export function build(ctx) {
     const tres = h.trespass ? `<p>This is ${esc(h.trespass.name)}'s domain: a trespass, at +${h.trespass.security} for its security (V20 p. 113).</p>` : "";
     const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: actor.hasPlayerOwner ? undefined : gmIds(), rolls: rolls.map(r => r.roll),
       content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(actor.name)} hunts at ${esc(n.place(placeId))}</h3>
-        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church && !h.calendar?.length ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : h.calendar?.length ? `, the calendar ${h.church > 0 ? "+" : h.church < 0 ? "−" : "±"}${Math.abs(h.church)}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        ${h.calendar?.length ? `<p class="wodx-quiet">The calendar: ${h.calendar.map(c => esc(`${c.n > 0 ? "+" : c.n < 0 ? "−" : "±"}${Math.abs(c.n)} ${c.why}`)).join("; ")}.</p>` : ""}
         <p>${rolls.map(r => `[${r.dice.join(" ")}]`).join(" ")}</p><p><b>${esc(verdict)}</b></p>${tres}</div>`});
     // A trespass the holder notices (a botch, or a holder with Domain security watching) sours its standing: queued
     if ( h.trespass && (botch || (last && h.trespass.security > 0 && last.net <= h.trespass.security)) ) {
