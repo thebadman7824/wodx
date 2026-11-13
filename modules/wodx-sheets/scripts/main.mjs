@@ -15,6 +15,7 @@ import MortalActorSheet from "../../../systems/worldofdarkness/module/actor/temp
 import WraithActorSheet from "../../../systems/worldofdarkness/module/actor/template/wraith-actor-sheet.js";
 import DemonActorSheet from "../../../systems/worldofdarkness/module/actor/template/demon-actor-sheet.js";
 import MummyActorSheet from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
+import * as BG from "./beginner.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
@@ -352,6 +353,8 @@ function wodxSheet(Base, type) {
     activateListeners(html) {
       super.activateListeners(html);
       try { X.listen(this, html[0] ?? html); } catch (e) { console.error("WoDX Sheets | extras", e); }
+      // 0.19.0 (B2812 to B2815): the sheet in a player's Beginner view
+      try { BG.decorate(this, html); } catch (e) { console.error("WoDX Sheets | beginner", e); }
       if (this.wodxId) listeners(this, html[0] ?? html);
     }
     async _onDropItem(event, data) {
@@ -475,6 +478,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.17.0", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.19.0", extras: X, rules: SR, sheetFor, viewFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

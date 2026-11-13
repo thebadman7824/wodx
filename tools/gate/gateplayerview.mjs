@@ -16,9 +16,13 @@
  *  10. a roll card says the result in a sentence first, with the dice folded
  *  11. a weather card folds to one line for a Beginner player; a roll card does not
  *  12. the Action window folds More options in Beginner view and opens it in Full view
+ *  13. Sheets 0.19.0: the Kindred's Core tab opens with Quick rolls (four checks and Your powers) in Beginner view
+ *  14. a quick roll rolls at once (one new chat card, no window); zero Abilities fold behind Show all, which opens them
+ *  15. the More tab button tucks Settings and Effects, and opens them; the power tab follows Core
+ *  16. hover help on Dexterity; Full view shows the sheet with none of these
  * Result: Data/wodx-gate/gateplayerview-result.json.
  */
-const N = 12;
+const N = 16;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R) {
@@ -126,6 +130,42 @@ export async function run() {
     const fullOpen = aw ? aw.element.querySelector("details.vta-more-opts").open : null;
     await aw?.close?.();
     ok("12. more options", begFold === true && fullOpen === true, {begFold, fullOpen});
+
+    // Step 3 of the desk: the sheet (B2812 to B2815)
+    const SH = game.modules.get("wodx-sheets");
+    V.preview("beginner"); await sleep(200);
+    await actor.sheet.render(true); await sleep(1500);
+    let sh = actor.sheet.element?.[0] ?? actor.sheet.element;
+    const qr = [...(sh?.querySelectorAll(".wodx-quickrolls button.wodx-quick") ?? [])];
+    ok("13. quick rolls", !foundry.utils.isNewerVersion("0.19.0", SH?.version ?? "0") && qr.length === 5 && !!sh.querySelector(".wodx-quick-power"),
+      {sheets: SH?.version, buttons: qr.map(b => b.textContent.trim())});
+    const nMsg = game.messages.size, nApps = foundry.applications.instances.size;
+    qr[0]?.click(); await sleep(1500);
+    const rolled = game.messages.contents.slice(nMsg);
+    const show = sh?.querySelector(".wodx-showall");
+    const zero = sh?.querySelector(".wodx-zero");
+    const hidden = zero ? getComputedStyle(zero).display === "none" : null;
+    show?.click(); await sleep(100);
+    const shownNow = zero ? getComputedStyle(zero).display !== "none" : null;
+    ok("14. quick roll and Show all", rolled.length === 1 && foundry.applications.instances.size === nApps && hidden === true && shownNow === true,
+      {cards: rolled.length, hidden, shownNow, show: show?.textContent});
+    for ( const m of rolled ) await m.delete();
+    const nav = sh?.querySelector("nav.sheet-tabs[data-group='primary']");
+    const set = nav?.querySelector("[data-tab='settings']");
+    const tuckedHidden = set ? getComputedStyle(set).display === "none" : null;
+    nav?.querySelector(".wodx-tab-more")?.click(); await sleep(100);
+    const tuckedShown = set ? getComputedStyle(set).display !== "none" : null;
+    const tabs = [...(nav?.children ?? [])].map(x => x.dataset.tab ?? "");
+    ok("15. more tabs", tuckedHidden === true && tuckedShown === true && tabs[tabs.indexOf("core") + 1] === "discipline", {tabs});
+    const dex = [...(sh?.querySelectorAll("label") ?? [])].find(l => /^\s*Dexterity\s*$/i.test(l.textContent));
+    const help = dex?.dataset.tooltip ?? "";
+    await actor.sheet.close(); await sleep(300);
+    V.preview("full"); await sleep(200);
+    await actor.sheet.render(true); await sleep(1500);
+    sh = actor.sheet.element?.[0] ?? actor.sheet.element;
+    const plainFull = !sh?.querySelector(".wodx-quickrolls, .wodx-showall, .wodx-tab-more");
+    await actor.sheet.close();
+    ok("16. hover help, and Full view untouched", /dodge/i.test(help) && plainFull, {help, plainFull});
 
     V.preview("full"); await redraw();
     await canvas.hud.token.bind(tok); await sleep(600);

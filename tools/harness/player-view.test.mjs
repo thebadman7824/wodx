@@ -105,3 +105,48 @@ test("quieter chat: world cards fold, rolls never", () => {
   const long = R.oneLine("word ".repeat(60));
   assert.ok(long.endsWith("...") && long.length <= 94);
 });
+
+const SB = await import(join(root, "modules/wodx-sheets/scripts/beginner-rules.mjs"));
+const CKR = await import(join(root, "modules/wodx-actions/scripts/checks-rules.js"));
+
+test("sheet quick rolls: defaults are real checks; the player's own list wins; at most eight", () => {
+  const known = new Set(CKR.CHECKS.map(c => c.key));
+  for ( const k of SB.QUICK_DEFAULT ) assert.ok(known.has(k), k);
+  assert.deepEqual(SB.quickList(undefined, known), SB.QUICK_DEFAULT);
+  assert.deepEqual(SB.quickList(["search", "nope", "search"], known), ["search"]);
+  assert.deepEqual(SB.quickList([], known), [], "an emptied row stays empty");
+  assert.equal(SB.toggleQuick(Array(8).fill(0).map((_, i) => `k${i}`), "x"), null);
+  assert.deepEqual(SB.toggleQuick(["a", "b"], "a"), ["b"]);
+});
+
+test("sheet: the line's power button comes from the Actions menu order", () => {
+  assert.equal(SB.powerSpec("kindred", TR.MENU_PLAN), "api:useDiscipline");
+  assert.equal(SB.powerSpec("lupine", TR.MENU_PLAN), "api:useGift");
+  assert.equal(SB.powerSpec("wraith", TR.MENU_PLAN), "api:useArcanos");
+  assert.equal(SB.powerSpec("mage", TR.MENU_PLAN), "cast");
+  assert.equal(SB.powerSpec("mortal", TR.MENU_PLAN), null);
+});
+
+test("sheet tabs: powers after Core, settings, effects, body and links tucked last, nothing lost", () => {
+  const tabs = ["bio", "core", "settings", "discipline", "combat", "gear", "wodxties", "wodxbody", "effect", "note", ""];
+  const {order, tucked} = SB.tabOrder(tabs);
+  assert.deepEqual([...order].sort((a, b) => a - b), tabs.map((_, i) => i));
+  assert.deepEqual(order.slice(0, 3).map(i => tabs[i]), ["bio", "core", "discipline"]);
+  assert.deepEqual(tucked.map(i => tabs[i]).sort(), ["", "effect", "settings", "wodxbody"]);
+  assert.deepEqual(order.slice(-4), tucked);
+});
+
+test("hover help: plain words, no dashes or stock phrases, era wording for Humanity", () => {
+  for ( const [k, v] of Object.entries(SB.HELP) ) {
+    assert.ok(v.length < 160, k);
+    assert.doesNotMatch(v, /—|\bdelve|\btapestry|\bin today's|\bnot just\b|\bunleash|\bembark/i, k);
+    assert.doesNotMatch(v, /\b(he|she|his|her|him)\b/i, k);
+  }
+  assert.match(SB.helpFor("Dexterity"), /dodge/);
+  assert.match(SB.helpFor("Animal Ken"), /animals/);
+  assert.match(SB.helpFor("Humanity", {year: 1197}), /Road of Humanity/);
+  assert.doesNotMatch(SB.helpFor("Humanity", {year: 1999}), /Road/);
+  assert.equal(SB.helpFor("Nothing here"), "");
+  assert.equal(SB.firstSentence("<p>Calls a mist. It lasts a scene.</p>"), "Calls a mist. It lasts a scene.", "a very short first sentence takes the next one too");
+  assert.equal(SB.firstSentence("<p>The Kindred calls a mist. It lasts a scene.</p>"), "The Kindred calls a mist.");
+});

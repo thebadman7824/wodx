@@ -757,7 +757,7 @@ function checkPoolText(actor, c) {
     return { pick, text: `${a.label} ${a.value}${pick.ability ? ` + ${pick.abilityName} ${ab?.value ?? 0}` : ""}${how}` };
 }
 
-export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "" } = {}) {
+export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "", direct = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor();
@@ -798,7 +798,7 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             return { ...fd, preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple", multi: 0, retries: 0, ignoreWounds: false, aura: false, auto: false };
         });
     };
-    return dialog("Common checks", content, "Roll", fd => {
+    const roll = fd => {
         const c = CK.byKey(fd.check);
         if (!c) return null;
         const { pick } = checkPoolText(actor, c);
@@ -809,7 +809,15 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0],
             ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky"))
         });
-    }, { render, width: 460 });
+    };
+    // 3.60.0 (B2812): a quick roll from the sheet rolls at once with the check's own difficulty, no window
+    if (direct) {
+        const c = CK.byKey(check);
+        if (!c) return ui.notifications.warn(`WoDX Actions: no common check called ${check}.`);
+        if (!checkPoolText(actor, c).pick) return ui.notifications.warn(`${actor.name} has nothing to roll for ${c.label}.`);
+        return roll({ check: c.key, diff: c.diff, bonus: num(preBonus), extraDiff: num(preDiff), desc: preDesc });
+    }
+    return dialog("Common checks", content, "Roll", roll, { render, width: 460 });
 }
 
 function opponentPool(target, spec, fd, actor = null) {

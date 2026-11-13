@@ -3793,3 +3793,23 @@ The Action window and the Common checks window keep the pool, difficulty and typ
 
 Reverse: The vta-more-opts details in action() and quickCheck() (wodx-actions main.js).
 
+## B2812. Quick rolls on the first tab (2026-11-13)
+In Beginner view the Core tab opens with a Quick rolls row: four common checks to start (Notice something, React in time, Read a person, Keep going) and a Your powers button for every line with powers of its own (the line's power entry in the Actions menu: Disciplines, Gifts, Arcanoi, magick and so on). A click rolls the check at once at its own difficulty; Shift+click opens the Common checks window first. The owner can add any common check from the row's list and right-click one to take it off, eight at most, kept on the character. The full trait grid stays below.
+
+Reverse: quickList and QUICK_DEFAULT in wodx-sheets beginner-rules.mjs; quickCheck's direct option in wodx-actions.
+
+## B2813. Abilities at zero fold away (2026-11-13)
+In Beginner view the Abilities the character has no dots in fold behind a Show all button that counts them. Show all stays open for that character until the page is reloaded. Attributes, Backgrounds and powers never fold. Giving a folded Ability its first dot needs Show all, or the Creation wizard's experience window.
+
+Reverse: foldZero in wodx-sheets beginner.mjs.
+
+## B2814. Fewer tabs at a time (2026-11-13)
+In Beginner view the sheet's Settings, Effects and Body tabs and the system's Wiki link sit behind a More button at the end of the tab row, and the line's power tabs come straight after Core. An open tucked tab keeps the row open. Full view keeps the system's order.
+
+Reverse: tabOrder and TUCKED_TABS in wodx-sheets beginner-rules.mjs.
+
+## B2815. Hover help in our own words (2026-11-13)
+In Beginner view each Attribute, Ability, Virtue and pool on the sheet carries a short line on hover, written for WoDX in plain words (no book text), and a power shows the first sentence of its own description. Before 1450 Humanity's line names the Road of Humanity. Ben asked (13 November) that these lines avoid the common signs of machine writing; the harness checks them for dashes and stock phrases.
+
+Reverse: HELP in wodx-sheets beginner-rules.mjs.
+
