@@ -162,7 +162,7 @@ Next free block: B3440
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
-| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
@@ -4975,6 +4975,31 @@ Reverse: show the old sentence for every record.
 tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from 1950 gets no house of culture, and its estate blocks from 1958 are named Tower block (the grands ensembles and council estates of a market town) instead of Panel block; the building itself stays the same. The settlement record's age is now the trade age (postwar in France in 1965), with the furnishing band kept as band.
 
 Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
+
+## B3295. Each region its own turning years, with a colonial age (2026-11-13)
+tools/mapgen regiontrades.py YEARS, Ben's pick C on the Town Households desk. From 1781 each of the 44 regions has its own years for the industrial trades, the years between the wars, a colonial age under a foreign power, the socialist years and the post-war years (Japan industrial from 1868, India colonial 1857 to 1946, Korea colonial 1910 to 1945, Mexico colonial until 1821). Socialist years also in the Caribbean from 1959, mainland Southeast Asia from 1975 and East Africa from 1974, by the region's main state (pick B on the third question). The colonial age keeps the town's own head and adds a mission teacher, a police constable, a district officer, a customs clerk, a plantation overseer and a doctor. The age bands that pick the furnishings stay the Bohemian ones.
+
+Reverse: point every region at the Bohemian years.
+
+## B3296. Full trade lists for each way of life (2026-11-13)
+tools/mapgen regiontrades.py LISTS, pick B. The lands of Islam, India, China and Korea, Japan, mainland Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast, southern and central Africa, Polynesia and the far north each have their own crafts, shops, homes by standing, offices, innkeeper, farmer, smith and baker: once for the old trades (before about 1880) and once for the later ones. The socialist, present-day and future trades stay the shared tables with renames. Western Christendom and the Eastern church keep the Bohemian tables.
+
+Reverse: empty LISTS.
+
+## B3297. The same renames from 1197 (2026-11-13)
+tools/mapgen settle.py, pick A. A medieval town outside Moravia keeps the generator's roles under its way of life's names: no alehouse keeper in Cairo (a caravanserai keeper), rice farmers in Kyoto.
+
+Reverse: leave medieval households as the generator made them.
+
+## B3298. Buildings named by way of life (2026-11-13)
+tools/mapgen settle.relabel, pick B. Same footprint and furnishing, local name: a caravanserai for the alehouse in the lands of Islam, a shophouse and an inn in East Asia, a beer hall in southern Africa, and the chapel named for the faith (mosque, temple, synagogue, shrine; --faith wins). Gendarmerie post, Baťa house and Sgraffito house take plain names outside the Bohemian lands. Furnishing by region is not built.
+
+Reverse: drop relabel from ddtown.py.
+
+## B3299. A seeded goods draw in the fill tests (2026-11-13)
+tools/harness fill.test.mjs. Every draw in the file takes a seeded random source, so a draw that failed once on GitHub and then passed can no longer change between runs.
+
+Reverse: drop the rng arguments.
 
 ## B3300. One hunter pressure per world region (2026-11-13)
 WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
