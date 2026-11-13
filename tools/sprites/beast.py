@@ -4,14 +4,14 @@ import crinos as K
 from rig import ramp
 S,SH=K.S,K.SH
 def kind(**k):
-    d=dict(s=1.0,heavy=1.0,bl=1.0,ll=1.0,ox=47,fur=(104,96,88),belly=None,head=(18,-37),hr=4.2,mz=7.5,mzr=2.8,ear=('prick',5.5),tail='brush',teeth=False,mane=None,antlers=None,horns=None,tusks=False,wd=1.0,furry=1.0,longface=0,eye=K.EYE,hump=0,neckr=1.0,snout=None,stripe=None)
+    d=dict(s=1.0,heavy=1.0,bl=1.0,ll=1.0,ox=47,fur=(104,96,88),belly=None,head=(18,-37),hr=4.2,mz=7.5,mzr=2.8,ear=('prick',5.5),tail='brush',teeth=False,mane=None,antlers=None,horns=None,tusks=False,wd=1.0,furry=1.0,longface=0,eye=K.EYE,hump=0,neckr=1.0,snout=None,stripe=None,spots=None,humpx=0)
     d.update(k); return d
 KINDS=dict(
  wolf=kind(),
  hound=kind(s=.9,fur=(150,118,84),belly=(196,176,146),ear=('flop',5),tail='thin',furry=.3,heavy=.92,eye=(40,30,26)),
  mastiff=kind(s=1.05,heavy=1.25,fur=(132,104,76),ear=('flop',4),tail='thin',furry=.3,mz=6,mzr=3.3,hr=4.8,eye=(40,30,26)),
- cat=kind(s=.45,heavy=1.0,fur=(88,80,76),ear=('prick',4.5),tail='thin',mz=3.2,mzr=2.6,head=(15,-35),furry=.4,ll=.9,eye=(190,200,90)),
- rat=kind(s=.26,heavy=1.2,fur=(86,74,66),ear=('round',3.5),tail='thin',mz=6,ll=.55,head=(15,-26),furry=.4,eye=(20,16,16)),
+ cat=kind(s=.5,heavy=1.0,fur=(88,80,76),ear=('prick',4.5),tail='thin',mz=3.2,mzr=2.6,head=(15,-35),furry=.4,ll=.9,eye=(190,200,90)),
+ rat=kind(s=.4,heavy=1.2,fur=(86,74,66),ear=('round',3.5),tail='thin',mz=6,ll=.55,head=(15,-26),furry=.4,eye=(20,16,16)),
  horse=kind(s=1.62,heavy=.95,ll=1.16,bl=1.12,ox=38,longface=1,fur=(112,76,48),head=(19,-40),hr=3.9,mz=10,mzr=3.1,ear=('prick',3.6),tail='horse',mane=(40,30,26),furry=.15,neckr=1.05,eye=(30,22,20)),
  pony=kind(s=1.25,heavy=1.08,ll=1.06,bl=1.1,ox=40,longface=1,fur=(150,128,96),head=(18,-39),hr=4.0,mz=9,mzr=3.1,ear=('prick',3.6),tail='horse',mane=(60,46,34),furry=.2,neckr=1.1,eye=(30,22,20)),
  bear=kind(s=1.45,heavy=1.5,ll=.82,ox=44,fur=(84,60,42),head=(17,-31),hr=5.0,mz=5.5,mzr=3.0,ear=('round',2.4),tail='none',furry=1.1,hump=2.5,eye=(20,16,14),neckr=1.3),
@@ -25,6 +25,27 @@ KINDS=dict(
  lion=kind(s=1.35,heavy=1.2,ll=.95,ox=44,fur=(186,150,96),head=(17,-36),hr=5.0,mz=5,mzr=3.2,ear=('round',2.4),tail='tuft',mane=(120,84,48),furry=.3,eye=(190,160,60),teeth=True),
  tiger=kind(s=1.4,heavy=1.2,ll=.92,ox=44,fur=(200,128,56),belly=(226,216,200),head=(17,-35),hr=5.0,mz=5,mzr=3.2,ear=('round',2.4),tail='thin',furry=.3,stripe=(40,32,30),eye=(190,180,80),teeth=True),
  panther=kind(s=1.15,heavy=1.05,ll=.95,fur=(44,42,48),head=(17,-35),hr=4.6,mz=4.6,mzr=3.0,ear=('round',2.4),tail='thin',furry=.2,eye=(190,200,90)),
+ # kinds for the animal actors the worlds hold (pixel-sprites/animal-actors.md)
+ dog_small=kind(s=.5,fur=(170,140,100),belly=(214,196,166),ear=('flop',4),tail='thin',furry=.5,mz=5,head=(16,-35),eye=(40,30,26)),
+ dog_medium=kind(s=.74,fur=(120,92,64),belly=(190,170,140),ear=('flop',4.5),tail='thin',furry=.4,mz=6.5,eye=(40,30,26)),
+ wolf_alpha=kind(s=1.14,heavy=1.08,fur=(80,76,74),furry=1.2,teeth=True),
+ wolf_cub=kind(s=.52,heavy=1.1,fur=(112,104,96),hr=5.0,mz=5,ll=.85,ear=('prick',4.5),head=(16,-35)),
+ wolf_winter=kind(s=1.08,fur=(214,216,220),furry=1.3,eye=(120,170,210)),
+ bobcat=kind(s=.66,heavy=1.1,fur=(160,124,88),belly=(214,200,176),ear=('prick',5),tail='stub',mz=3.4,mzr=2.8,head=(15,-35),furry=.8,spots=(84,62,44),eye=(190,200,90)),
+ leopard=kind(s=1.15,heavy=1.05,ll=.95,fur=(204,160,88),belly=(230,218,196),head=(17,-35),hr=4.6,mz=4.6,mzr=3.0,ear=('round',2.4),tail='thin',furry=.2,spots=(52,40,32),eye=(190,200,90),teeth=True),
+ horse_large=kind(s=1.76,heavy=1.1,ll=1.14,bl=1.12,ox=37,longface=1,fur=(84,60,44),head=(19,-40),hr=4.0,mz=10,mzr=3.3,ear=('prick',3.6),tail='horse',mane=(30,24,22),furry=.2,neckr=1.15,eye=(30,22,20)),
+ warhorse=kind(s=1.72,heavy=1.12,ll=1.14,bl=1.12,ox=37,longface=1,fur=(52,46,46),head=(19,-41),hr=4.0,mz=10,mzr=3.3,ear=('prick',3.6),tail='horse',mane=(20,18,18),furry=.2,neckr=1.2,eye=(30,22,20)),
+ mule=kind(s=1.42,heavy=1.0,ll=1.1,bl=1.1,ox=40,longface=1,fur=(108,90,74),belly=(190,176,156),head=(18,-38),hr=4.0,mz=9.5,mzr=3.2,ear=('prick',6.5),tail='horse',mane=(40,32,28),furry=.2,neckr=1.05,eye=(30,22,20)),
+ camel=kind(s=1.6,heavy=.95,ll=1.32,bl=1.05,ox=40,longface=1,fur=(196,160,110),head=(19,-39),hr=3.3,mz=7,mzr=2.7,ear=('round',1.6),tail='tuft',furry=.5,hump=6,humpx=-6,neckr=.62,eye=(30,22,20)),
+ cow=kind(s=1.36,heavy=1.35,ll=.9,bl=1.12,ox=42,fur=(150,96,60),belly=(226,214,196),head=(17,-30),hr=4.4,mz=6.5,mzr=3.2,ear=('flop',3),tail='tuft',horns=(206,196,170),furry=.2,neckr=1.2,snout=(214,176,160),eye=(20,16,14)),
+ pig_small=kind(s=.6,heavy=1.35,ll=.68,fur=(214,170,160),head=(15,-26),hr=4.2,mz=5.5,mzr=2.8,ear=('flop',3.5),tail='stub',furry=.1,eye=(20,16,14),neckr=1.3),
+ pig_large=kind(s=1.05,heavy=1.5,ll=.66,fur=(196,150,140),head=(15,-26),hr=4.4,mz=6,mzr=3.0,ear=('flop',3.5),tail='stub',furry=.1,eye=(20,16,14),neckr=1.3),
+ boar_giant=kind(s=1.42,heavy=1.45,ll=.76,ox=44,fur=(52,46,44),head=(15,-27),hr=4.6,mz=8.5,mzr=2.8,ear=('prick',3.2),tail='stub',tusks=True,furry=1.6,hump=3,eye=(150,40,30),neckr=1.35),
+ deer=kind(s=1.08,heavy=.78,ll=1.22,ox=45,fur=(150,112,76),belly=(214,198,168),head=(16,-41),hr=3.3,mz=6,mzr=2.2,longface=1,ear=('prick',4.5),tail='stub',furry=.3,neckr=.8,eye=(30,22,20)),
+ white_hart=kind(s=1.34,heavy=.8,ll=1.25,ox=44,fur=(226,226,222),head=(16,-41),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(214,200,150),furry=.3,neckr=.85,eye=(120,170,210)),
+ hare=kind(s=.5,heavy=1.15,fur=(140,116,88),belly=(214,200,180),ear=('prick',8.5),tail='stub',mz=3.5,mzr=2.4,ll=.8,head=(14,-33),furry=.5,eye=(20,16,16)),
+ chimpanzee=kind(s=.95,heavy=1.15,ll=.95,bl=.8,fur=(40,36,36),head=(13,-37),hr=4.4,mz=2.6,mzr=3.0,ear=('round',2.6),tail='none',furry=.9,snout=(170,130,110),eye=(30,22,20),neckr=1.1),
+ alligator=kind(s=1.25,heavy=.9,ll=.36,bl=1.45,ox=46,fur=(70,84,60),belly=(170,170,120),head=(17,-27),hr=3.2,mz=12,mzr=2.6,ear=('none',0),tail='brush',furry=0,wd=1.5,teeth=True,eye=(200,190,60),neckr=1.0),
 )
 def side(a,f):
     cv=K.Cv(); ph=f/8*2*math.pi; s=a['s']; hv=a['heavy']; rp=ramp(a['fur']) if not isinstance(a['fur'],list) else a['fur']; bp=ramp(a['belly']) if a['belly'] else [tuple(min(255,int(c*1.22+10)) for c in t) for t in rp]
@@ -47,7 +68,7 @@ def side(a,f):
     elif t=='stub': cv.capsule(P(-15,-27+bob),P(-17,-25+bob),max(.7,r(1.2)),max(.6,r(.9)),ramp=rp,g='tail')
     fore(ph+math.pi,1,'f1'); hind(ph,1,'h1')
     cv.capsule(P(7,-25+bob),P(-9,-24.5+bob),r(7),r(5.6),ramp=rp,fur=1.2*fu,seed=5,g='body')
-    if a['hump']: cv.capsule(P(6,-28-a['hump']+bob),P(-1,-27+bob),r(4.5),r(4),ramp=rp,fur=1.2*fu,seed=20,g='body')
+    if a['hump']: cv.capsule(P(6+a['humpx'],-28-a['hump']+bob),P(-1+a['humpx'],-27+bob-(a['hump']*.5 if a['humpx'] else 0)),r(4.5),r(4),ramp=rp,fur=1.2*fu,seed=20,g='body')
     cv.capsule(P(2,-20+bob),P(-6,-21+bob),r(3.2),r(2.6),ramp=bp,fur=.8*fu,seed=6,g='body')
     cv.capsule(P(9,-28+bob),P(hx-2,hy+2),r(5.2)*a['neckr'],r(4.0)*a['neckr'],ramp=rp,fur=1.6*fu,seed=7,g='body')
     if a['mane']:
@@ -74,10 +95,11 @@ def side(a,f):
         for (x0,y0,x1,y1) in ((0,0,-2,-7),(-2,-7,-1,-12),(-1,-4,2.5,-7),(-2,-7,-5,-10),(-1.5,-9.5,1.5,-12.5)): cv.capsule(P(b0[0]+x0,b0[1]+y0),P(b0[0]+x1,b0[1]+y1),max(.6,r(.7)),max(.5,r(.5)),ramp=an,g='antler')
     cv.outline(); stripes(cv,a,rp); return cv.c
 def stripes(cv,a,rp):
-    if not a['stripe'] or rp not in cv.ramps: return
+    if not (a['stripe'] or a['spots']) or rp not in cv.ramps: return
     sel=cv.rid==cv.ramps.index(rp); ys,xs=np.nonzero(sel)
     for y,x in zip(ys,xs):
-        if (x+y//4)%5==0 and K.hsh(x,y//5)>.3: cv.c[y,x,:3]=a['stripe']
+        if a['stripe'] and (x+y//4)%5==0 and K.hsh(x,y//5)>.3: cv.c[y,x,:3]=a['stripe']
+        if a['spots'] and (x%3==0 and y%3==(x//3)%2) and K.hsh(x,y)>.25: cv.c[y,x,:3]=a['spots']
 def front(a,f,back=False):
     cv=K.Cv(); ph=f/8*2*math.pi; s=a['s']; hv=a['heavy']; rp=ramp(a['fur']); bp=ramp(a['belly']) if a['belly'] else [tuple(min(255,int(c*1.22+10)) for c in t) for t in rp]
     P=lambda x,y:(48+x*s*(.7+.3*hv),87+y*a['ll']*s); r=lambda v:v*s*hv; rl=lambda v:v*s*(.6+.4*hv); bob=-abs(math.sin(ph))*.6/a['ll']; fu=a['furry']*s; px=cv.px
