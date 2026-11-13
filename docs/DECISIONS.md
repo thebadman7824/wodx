@@ -3663,7 +3663,7 @@ WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus
 Reverse: name the lock in the weapon's name or description.
 
 ## B2790. Talking faces drawn on a 64 pixel grid (2026-11-13)
-WoDX Paperdoll 0.15.0. Ben approved the look on 13 November 2026 ("I like this very much. Proceed with this.") after samples at 96 and 64 pixels; he picked 64 as enough detail while far easier to draw. A face is drawn pixel by pixel in the browser from a seed (face64-rules.mjs): head, hair, eyes, brows, nose, mouth, beard and clothes, with four tones of each colour and an outline only where one part meets another. Nothing is baked or uploaded, so a face costs nothing until it is shown. The layered Lorelei portraits and the earlier vector drawings stay as they were.
+WoDX Paperdoll 0.16.0. Ben approved the look on 13 November 2026 ("I like this very much. Proceed with this.") after samples at 96 and 64 pixels; he picked 64 as enough detail while far easier to draw. A face is drawn pixel by pixel in the browser from a seed (face64-rules.mjs): head, hair, eyes, brows, nose, mouth, beard and clothes, with four tones of each colour and an outline only where one part meets another. Nothing is baked or uploaded, so a face costs nothing until it is shown. The layered Lorelei portraits and the earlier vector drawings stay as they were.
 
 Reverse: Turn the client setting Talking faces to Off.
 

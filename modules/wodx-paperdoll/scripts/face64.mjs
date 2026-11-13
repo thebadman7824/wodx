@@ -2,7 +2,7 @@ import * as P from "./face64-rules.mjs";
 import {healthLevel} from "./doll-rules.mjs";
 
 /**
- * WoDX Paperdoll 0.15.0: talking faces (B2790-B2796). When an NPC speaks to a character through WoDX NPC's Talk, the
+ * WoDX Paperdoll 0.16.0: talking faces (B2790-B2796). When an NPC speaks to a character through WoDX NPC's Talk, the
  * line in chat carries the speaker's face, drawn on a 64 by 64 pixel grid and shown large with hard pixel edges. The face
  * blinks by itself, its mouth moves while the line types out, and it reacts to the character it speaks to (a social
  * roll that swayed it, frenzy, its set mood, its attitude, pain), then settles. Nothing is baked or uploaded: a face is

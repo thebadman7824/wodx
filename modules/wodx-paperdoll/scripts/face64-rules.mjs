@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll: talking faces, drawn pixel by pixel on a 64 by 64 grid (Paperdoll 0.15.0, B2790-B2796).
+ * WoDX Paperdoll: talking faces, drawn pixel by pixel on a 64 by 64 grid (Paperdoll 0.16.0, B2790-B2796).
  *
  * Pure rules, no Foundry: a face is rolled from a seed and a line (Kindred, Garou, Mage and the rest), then drawn
  * with an expression, an eye state, a mouth shape and a level on the health track. Only the eyes, brows and mouth
