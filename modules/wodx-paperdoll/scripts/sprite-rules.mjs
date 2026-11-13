@@ -179,7 +179,7 @@ export function learn(folder, manifest) {
 export const offered = actorId => Object.entries(SHEETS).filter(([k]) => !isOwn(k) || k === ownName(actorId));
 const POWERED = /vampire|werewolf|changing ?breed|mage|changeling|wraith|hunter|demon|mummy|exalted|spirit/i;
 /**
- * One character for the roster, from plain facts: {id, name, type, skin, hair, items: [{name, type, worn}]}.
+ * One character for the roster, from plain facts: {id, name, type, skin, hair, figure, items: [{name, type, worn}]}.
  * Worn things that are not weapons are its dress, worn weapons are in its hands, and a creature is drawn as the
  * animal its name says.
  */
@@ -193,6 +193,16 @@ export function rosterOf(c = {}) {
     out.worn = items.filter(i => !arms(i)).map(i => i.name).sort();
     out.held = items.filter(arms).map(i => i.name).sort();
     out.powers = POWERED.test(c.type ?? "");
+    // a figure the player put together (B2587) is what is drawn: its skin, hair and pieces, not the things marked as worn
+    const f = c.figure;
+    if ( f && typeof f === "object" ) {
+      const pair = p => hex(p.c) ? [String(p.n), hex(p.c)] : String(p.n);
+      const order = ["legs", "feet", "body", "belt", "neck", "over", "hands", "face", "head", "extra"];
+      out.look = {skin: hex(f.skin) ?? out.look.skin, hair: hex(f.hair) ?? out.look.hair, hairStyle: ["short", "long", "bun", "bald"].includes(f.hairStyle) ? f.hairStyle : "short"};
+      out.worn = order.filter(s => f.slots?.[s]?.n).map(s => pair(f.slots[s]));
+      out.held = ["hand", "offhand"].filter(s => f.slots?.[s]?.n).map(s => String(f.slots[s].n));
+      out.figure = true;
+    }
   }
   return out;
 }

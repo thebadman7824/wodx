@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 11;
+const N = 12;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -120,6 +120,25 @@ export async function run() {
       for ( const a of r.actors ) kinds[a.kind] = (kinds[a.kind] ?? 0) + 1;
       ok("11. roster", r.actors.length === game.actors.size && back?.actors?.length === r.actors.length && Number.isInteger(learned),
         {actors: r.actors.length, kinds, saved, learned, dressed: r.actors.filter(a => a.worn?.length).length, armed: r.actors.filter(a => a.held?.length).length, looks: r.actors.filter(a => a.look?.skin).length});
+    }
+    // 12. the figure menu: it opens for a character, shows the pieces and the quick picture, a piece can be put on and kept, and the roster then draws that figure
+    {
+      const PD = game.modules.get("wodx-paperdoll").api, actor = docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === "townsman-1888")?.actor;
+      const had = actor.flags?.["wodx-paperdoll"]?.figure ?? null;
+      const app = await PD.figure.open(actor); await sleep(600);
+      const el = app.element, count = () => el.querySelectorAll(".wodx-figure-piece").length, first = count();
+      const lit = () => { const c = el.querySelector("canvas.wodx-figure-pic"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0; for ( let i = 3; i < d.length; i += 4 ) if ( d[i] ) n++; return n; };
+      const bare = lit();
+      el.querySelectorAll(".wodx-figure-piece")[1]?.click(); await sleep(500);
+      const worn = app.element.querySelector(".wodx-figure-piece.on span:last-child")?.textContent ?? "", dressed = (() => { const c = app.element.querySelector("canvas.wodx-figure-pic"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0; for ( let i = 3; i < d.length; i += 4 ) if ( d[i] ) n++; return n; })();
+      app.element.querySelector('[data-action="slot"][data-slot="hand"]')?.click(); await sleep(500);
+      const hands = app.element.querySelectorAll(".wodx-figure-piece").length, search = !!app.element.querySelector("input.wodx-search");
+      app.element.querySelector('[data-action="save"]')?.click(); await sleep(700);
+      const kept = actor.flags?.["wodx-paperdoll"]?.figure ?? null, entry = A.roster().actors.find(a => a.id === actor.id);
+      await app.close();
+      if ( had ) await actor.setFlag("wodx-paperdoll", "figure", had); else await actor.unsetFlag("wodx-paperdoll", "figure");
+      ok("12. figure menu", first > 5 && bare > 300 && dressed >= bare && !!kept?.slots?.body && entry?.figure === true && entry.worn.length === 1 && hands > 5 && search,
+        {pieces: first, bare, dressed, worn, hands, search, kept, entry: entry ? {worn: entry.worn, held: entry.held, look: entry.look} : null, putBack: !actor.flags?.["wodx-paperdoll"]?.figure === !had});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }

@@ -235,7 +235,7 @@ export function roster() {
   const actors = [];
   for ( const a of game.actors ?? [] ) {
     const c = a.flags?.[MOD]?.look?.colors ?? {};
-    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair,
+    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, skin: c.skin, hair: c.hair, figure: a.flags?.[MOD]?.figure ?? null,
       items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive)}))}));
   }
   return {world: game.world.id, made: new Date().toISOString(), actors};
