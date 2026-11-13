@@ -13,7 +13,7 @@
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {LOCAL_EVENTS} from "../data/lifepath-local-events.mjs";
-import {OFFWORLD, OFFWORLD_AGE, SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
+import {OFFWORLD, OFFWORLD_AGE, OFFWORLD_NOT, SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
   PEOPLE_LABELS} from "../data/lifepath-drill.mjs";
 
 export {CONTINENTS, CHAPTERS, ARRIVALS};
@@ -182,7 +182,8 @@ export const datedOrigins = (regionId, year) => (LOCAL_EVENTS[regionId]?.origins
 /** The origins open in a region and year for a line: the line's own births, the local ones, then the shared list. */
 export function originsFor(regionId, year, line = "mortal") {
   const L = localOf(regionId, year);
-  const rows = ORIGINS.filter(o => (!o[4] || year >= o[4]) && (!o[5] || year <= o[5]));
+  const off = OFFWORLD[regionId] ? OFFWORLD_NOT : [];
+  const rows = ORIGINS.filter(o => (!o[4] || year >= o[4]) && (!o[5] || year <= o[5]) && !off.includes(o[7] ?? o[0]));
   const row = o => opt(o[1], o[3], {text: o[2], base: o[7] ?? o[0], ...(o[6] ? {line: true} : {})});
   return [
     ...rows.filter(o => o[6]?.includes(line)).map(row),

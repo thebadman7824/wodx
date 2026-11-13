@@ -36,6 +36,8 @@ export const CONTINENTS = [
  * stage) is no earlier than the land's first year. Years follow WoDX's future timeline (docs/research/era-timelines/r3).
  */
 export const OFFWORLD_AGE = 2023;
+/** General kinds of origin that make no sense off the Earth (a land's own origins of these kinds still show). */
+export const OFFWORLD_NOT = ["land", "noble", "wander", "wild"];
 export const OFFWORLD = {
  "orbit": {label: "Orbit and the high colonies", from: 1999},
  "luna": {label: "The Moon", from: 2009},
