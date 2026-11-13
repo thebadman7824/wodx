@@ -176,6 +176,7 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3492) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -5484,6 +5485,21 @@ Reverse: none advised; this guards the age floor.
 WoDX Paperdoll, tools/sprites/batch.py. A beard from the portrait look is not drawn in the three youngest bands; 15 to 17 keep it.
 
 Reverse: remove the beardless() check in batch.person.
+
+## B3490. The law of the land is one record per region and year (2026-11-13)
+WoDX Chronicle, law-rules.mjs and law.mjs. Ben picked every recommendation on the Law and Rule by Era desk (https://claude.ai/artifact/GbMVYd8otWsMuxnDt8XVyD, db collection picks). Each region belongs to a law family, a list of dated rows; a row sets, adds or drops parts of the record, and a row with an end year has no effect after it. A region may add its own rows after its family's. Other systems read the record through api.law (here, of, changes).
+
+Reverse: remove law-rules.mjs, law.mjs, the lawYear setting and the api.law entry.
+
+## B3491. Latin Christendom first, with Moravia and Bohemia's own rows (2026-11-13)
+WoDX Chronicle. The first family written is Latin Christendom (custom, lord's and church courts, ordeal fading after 1215, papal inquisitors, learned procedure, sumptuary and labour laws, the Reformation, the witch trials 1560-1680, absolutism, the Enlightenment, codes and police from 1800, equal citizens from 1850). Moravia adds the Přemyslid and Habsburg crown, Brno and Magdeburg town law (1243), the Jihlava mining court (1249), the Hussite wars, the Renewed Land Ordinance (1628), toleration and the serfdom patent (1781), the Austrian codes, the Republic (1918), the Protectorate, the Party state 1948-1989, abolition of the death penalty (1990), the Czech Republic and the EU. The death penalty ends on each land's own date, not at a family-wide one. Other families follow one per PR; until then a region uses the custom stand-in, marked a guess.
+
+Reverse: drop the latin family or the moravia rows; regions fall back to the custom stand-in.
+
+## B3492. The Law here card and its house figures (2026-11-13)
+WoDX Chronicle. Everyone sees who rules, who keeps order and what a stranger should know; each dot of the best of Law, Politics or Streetwise opens one more section (crimes, courts, proof, punishments, what is owed, bending the law); the Storyteller sees all, plus the row in force. Bribe tier (1 to 5) and catch chance are house figures. A clock jump whispers the Storyteller the rows crossed in the homeland's law (setting lawYear remembers the year last seen).
+
+Reverse: drop the wodxLaw button and checkYear calls.
 
 ## B3500. One gender, kept by WoDX Chronicle (2026-11-13)
 WoDX Chronicle, api.gender (gender-rules.mjs). The gender was kept in five places and each module read only one, so marriage law and wills could not see the sex the People generator rolled (a generated son counted as a daughter). Now one reader takes them in order: the sheet's own line (flags.wodx-chronicle.gender), the People generator, a baby born in play, wills, the system's field, the portrait. It gives "female", "male", "nonbinary", the writer's own words, or nothing.
