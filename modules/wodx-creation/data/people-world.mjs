@@ -129,10 +129,13 @@ const P = {
   tibetan: {
     m: "Tenzin, Dorje, Tashi, Sonam, Lobsang, Karma, Ngawang, Jigme, Thubten, Dawa, Nyima, Pasang, Tsering, Phuntsok, Namgyal, Rinchen, Wangchuk, Gyaltsen, Kelsang, Jamyang",
     f: "Dolma, Lhamo, Yangchen, Dekyi, Choden, Drolkar, Tsomo, Pema, Diki, Yeshe, Lhakpa, Dechen, Yangzom, Tseten, Kunsang, Palmo, Chime, Sangmo"},
+  // Raised to 300 names (Ben 2026-11-13, B3310): given names old (with famous courtesy names) and new, a hundred surnames
   chinese: {
-    m: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Wenming, Zhiyuan, Dewei, Tianyou, Yongkang",
-    f: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Na, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying",
-    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, Deng, Lin, Gao, Luo"},
+    m: {old: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Guang, Ping, Zhong, De, Wen, Shan, Long, Bo, Feng, Boyan, Zhongda, Mengde, Kongming, Yunchang, Yide, Zilong, Bowen, Zijing, Shiyuan, Wenruo, Gongjin, Xuande, Zhongmou, Youlin, Jingsheng, Shouren, Tingyu, Yuanzhang, Zhengyi, Shanchang, Guofan, Hongzhang, Zongtang, Tongshu, Yanwu, Xiaoru, Jiguang, Chenggong, Sanzhong, Shijie, Youwei, Qichao, Sitong, Daoyuan, Yuanming, Taibai, Zimei, Dongpo, Anshi, Xiyan, Zhuxi, Yangming, Wenzheng, Shaoqing, Mengfu, Shengtan, Xueqin, Banqiao, Ziang, Hanqing, Shixiang, Zhiyuan, Tianyou, Dewei, Wenming, Qingyun, Shouyi, Jinghong, Chongguang, Fuxing, Guoliang, Yaozu, Bangyan, Rulin, Yanshou, Zhaoji",
+      new: "Wei, Ming, Jun, Jian, Hao, Qiang, Tao, Yong, Ping, Lei, Bin, Gang, Peng, Bo, Chao, Hui, Kai, Xin, Yu, Hua, Jianguo, Jianhua, Guoqiang, Zhiqiang, Weidong, Hongwei, Haitao, Xiaodong, Xiaoming, Zhiwei, Jianjun, Yongqiang, Dongmei, Wenbin, Jianping, Xiaojun, Haibo, Zhihua, Guoming, Yuxuan, Zihao, Haoran, Yichen, Junjie, Zixuan, Yuhang, Jiahao, Mingyuan, Tianyi, Ruiqi, Shuai, Liang, Feng, Rui, Long, Kun, Fei, Jie, Xiang, Dong"},
+    f: {old: "Mei, Lan, Fang, Ying, Xiu, Juan, Hua, Yan, Jing, Xia, Yun, Qing, Lian, Zhen, Yue, Hui, Xiulan, Meiling, Yufen, Shuzhen, Guiying, Zhaojun, Diaochan, Xishi, Wenji, Qingzhao, Daiyu, Baochai, Xiangyun, Yuanchun, Tanchun, Xifeng, Qingwen, Xiren, Yingying, Hongniang, Liniang, Baiyu, Ruolan, Wanru, Yuzhen, Suzhen, Xiaoqing, Jinlian, Pinger, Cuiyun, Lihua, Yulan, Guilan, Shufen, Yuehua, Huifang, Lianyi, Yinping, Zhiruo, Mingyue, Ziyan, Yuyan, Ruyi, Jinzhi, Fengxian, Xiuying, Guizhi, Suyun",
+      new: "Mei, Lan, Fang, Ying, Juan, Hua, Yan, Na, Jing, Xia, Yun, Li, Min, Ping, Hong, Jie, Ling, Qian, Wei, Lei, Xiuying, Guilan, Yumei, Xiumei, Lihua, Shulan, Guizhen, Fengying, Haiyan, Xiaoyan, Hongmei, Lili, Yanping, Xiaohong, Jingjing, Tingting, Lina, Yanyan, Xue, Qiong, Rong, Dan, Ting, Yu, Xin, Shan, Yingying, Zihan, Yutong, Xinyi, Ruoxi, Yuxin, Siqi, Jiayi, Yiran, Mengyao, Shiyu, Xiaoyu, Yaxuan, Huimin, Lijuan, Hongyan, Yanhong"},
+    fam: "Wang, Li, Zhang, Liu, Chen, Yang, Huang, Zhao, Wu, Zhou, Xu, Sun, Ma, Zhu, Hu, Guo, Lin, Gao, Luo, Zheng, Liang, Xie, Song, Tang, Han, Feng, Deng, Cao, Peng, Zeng, Xiao, Tian, Dong, Pan, Yuan, Cai, Jiang, Yu, Du, Ye, Cheng, Wei, Su, Lu, Ding, Ren, Shen, Yao, Jin, Fu, Zhong, Cui, Tan, Lü, Fan, Wan, Liao, Shi, Jia, Xia, Fang, Bai, Zou, Meng, Xiong, Qin, Qiu, Hou, Yin, Xue, Yan, Duan, Lei, Long, Tao, Mao, Hao, Gu, Gong, Shao, Qian, Kong, Mo, Chang, Kang, Hong, Wen, Niu, Zhuang, Ouyang, Sima, Zhuge, Shangguan, Ge, Lai, Mu, Qi, Ruan, Zuo, Bao"},
   japanese: {
     m: {old: "Tarō, Jirō, Saburō, Shirō, Gorō, Heizō, Genta, Kichibei, Jinbei, Sukezaemon, Tokubei, Yasuke, Matsukichi, Kanbei, Shinsuke, Gonbei",
       new: "Hiroshi, Takeshi, Kenji, Akira, Minoru, Shigeru, Isamu, Kiyoshi, Tadashi, Makoto, Satoshi, Daisuke, Kazuo, Yutaka, Noboru, Ichirō, Takashi, Tsuyoshi"},
@@ -241,3 +244,7 @@ export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT
 export const GIVEN_ONLY = new Set(Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o));
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
+/** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
+export const RAISED = ["chinese"];
+/** Every distinct name a people of P has, given and family, all ages. */
+export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));
