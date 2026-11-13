@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3200
+Next free block: B3160
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -152,7 +152,6 @@ Next free block: B3200
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
-| B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4668,13 +4667,3 @@ Reverse: empty REDATED.
 WoDX Library. Koji, tofu, onigiri, sashimi, hosomaki and kombu are at home in East Asia and reach the rest of the world in the late 20th century; salça in Anatolia and the Levant; sandpaper in China (Europe from 1834), firecrackers in China (elsewhere from 1300), the fanning mill in China (Europe from 1720), the fire piston in Southeast Asia (Europe from 1802), the hammock in the Americas (Europe from 1550), sassafras and the tree spile in North America (Europe from 1600 and 1700). They use the same place rules as other goods (REDATED_WAYS).
 
 Reverse: empty REDATED_WAYS.
-
-## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
-WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
-
-Reverse: remove philippine, indochinese and balkan from COINS and MONIES.
-
-## B3191. A scene names the money of a land under a wider region (2026-11-13)
-WoDX Chronicle. WoDX keeps the Philippines, Indochina and the Balkans under wider regions, following the standing rule that finer regions come only when a chronicle goes there. Where this scene stands has a Money here choice instead, and it holds the money of the place for prices, money changers and the coin of the place. The regions themselves are unchanged.
-
-Reverse: remove PLACE_MONIES and the money line of cleanPlace and regionHere.
