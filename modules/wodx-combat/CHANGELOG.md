@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.22.1 (the word that harm was applied also says what it left the character as, out of the fight, dead or at Final Death, so the map can show a fall or a death; not deployed)
 - 3.22.0 (every attack rolled, hit or miss, tells other modules who struck at whom and with what kind of weapon, so sprite tokens can play the blow; nothing changes in the fight itself)
 - 3.21.0 (fights end by themselves: when one side has nobody left standing for a full turn, Suggest gives you a card with End the fight and Auto ends it)
 - 3.20.1 (after the book check: in the saddle no Ability counts for more dots than the rider has in Ride, V20 Dark Ages p. 399, and the attack line says so; the mounted charge's page is 399)

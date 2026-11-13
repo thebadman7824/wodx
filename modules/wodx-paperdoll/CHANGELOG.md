@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.13.0 (sprite tokens react: a figure that is harmed takes the blow, one put out of the fight falls and stays down on the map until it is healed or helped up, and one that dies plays its death, a Cainite crumbling to ash at Final Death; a missed attack is dodged; figures lean into a run over a long stretch and go low when they crawl; every sprite has these sheets, made from its own walk; not deployed)
 - 0.12.0 (the figure menu: a Figure button on a character's sheet opens a window where the player puts the whole walking figure together, skin, hair and how it is worn, and a piece for each of twelve places from the 458 wardrobe pieces the rig draws, with a search box, the pieces of the chronicle's year first, and a dye for any piece; a quick picture shows the figure as it is built, and the walking sprite is drawn from the kept choice with the next batch; not deployed)
 - 0.11.0 (a sprite for every character, drawn in batches outside the game: the game writes a roster of its characters with their skin and hair, what they wear and what they hold; tools/sprites/batch.py draws walk, still and attack sheets for each, people from their worn things and animals from their names; the game learns the sheets from the batch's manifest, offers a token its own character's sprite, and can dress a whole scene; not deployed)
 - 0.10.1 (shadow effects have a pale violet rim so they can be seen on a night map; found on the testbed; not deployed)
