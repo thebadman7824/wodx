@@ -461,6 +461,12 @@ export async function decorate(sheet, html) {
     const notes = gear.querySelector(".sheet-gearArea, .editor")?.outerHTML ?? "";
     const view = XR.possessions(items, { look, era: eraId(), year: yearNow() });
     const money = { coins: XR.moneyOf(items), inUse: coinsNow(), carried: actor.system?.money?.carried ?? 0, bank: actor.system?.money?.bank ?? 0 };
+    // The purse in one line (B2830), in the coin of the place and year when WoDX Storyteller keeps the purse
+    try {
+      const pu = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep?.money?.purse?.(actor) : null;
+      if ( pu?.text?.carried ) { money.full = pu.text.carried; money.line = XR.purseLine(pu.text.carried); }
+    } catch (e) { /* the plain numbers stay */ }
+    money.folded = !!game.modules.get("wodx-chronicle")?.api?.playerView && game.modules.get("wodx-chronicle").api.playerView.current?.() === "beginner";
     gear.innerHTML = XH.possessionsHtml(view, { money, editable, gearNotes: notes });
   }
   // The Ties tab, beside Gear in the full menu

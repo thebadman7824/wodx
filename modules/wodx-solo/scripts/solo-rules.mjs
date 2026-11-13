@@ -102,6 +102,13 @@ export function stallReport(entries = [], since = 0) {
  * What the panel offers in step 2 of the plan (B2640). The oracle, the Leads page and the trouble dial come in step 3
  * and the director in step 4, so they are not on it yet.
  */
+/**
+ * The panel's one main button (Solo 0.3.0, B2831): the clock runs until something happens, an hour at most, with
+ * the same stops as Wait an hour. The other buttons sit under More.
+ */
+export const NEXT = {id: "next", label: "What happens next?", icon: "fa-solid fa-forward", wait: "hour",
+  hint: "The clock runs until something happens, an hour at most."};
+
 export const PANEL = [
   {id: "time", label: "Let time pass", icon: "fa-solid fa-hourglass-half"},
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},

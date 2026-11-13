@@ -388,6 +388,36 @@ async function post(actor, title, body, rolls = [], data = null) {
 }
 
 /** Show a card written without the 3.6 layout (notices, whispers, older messages) in it. Changes the page, not the message. */
+/** 3.62.0 (B2810): this player's view from WoDX Chronicle; Full when Chronicle is off or older. */
+function beginner() {
+    try { return game.modules.get("wodx-chronicle")?.api?.playerView?.current?.() === "beginner"; } catch (e) { return false; }
+}
+/**
+ * 3.62.0 (B2819): in Beginner view a roll card opens with what the result means in a sentence, and the dice and the
+ * modifiers fold under it. Only this player's screen changes; the message is untouched.
+ */
+function plainCards(el) {
+    if (!el?.querySelectorAll || !beginner()) return;
+    for (const card of el.querySelectorAll(".vta-card")) {
+        if (card.querySelector(".vta-plain")) continue;
+        const secs = [...card.querySelectorAll(".vta-sec")].filter(s => s.querySelector(":scope > .vta-dice, :scope > .vta-parts"));
+        if (!secs.length) continue;
+        const vEl = card.querySelector(".vta-head .vta-verdict");
+        const plain = TR.plainLine(vEl ? { text: vEl.textContent } : TR.verdictOf(card.innerHTML));
+        if (plain) {
+            const p = document.createElement("p"); p.className = "vta-plain"; p.textContent = plain;
+            const head = card.querySelector(".vta-head");
+            if (head) head.after(p); else card.prepend(p);
+        }
+        for (const s of secs) {
+            const d = document.createElement("details"); d.className = "vta-fold";
+            const sum = document.createElement("summary"); sum.textContent = "Dice and details";
+            d.append(sum, ...s.querySelectorAll(":scope > .vta-parts, :scope > .vta-dice"));
+            s.append(d);
+        }
+    }
+}
+
 function upgradeCards(m, el) {
     if (!el?.querySelectorAll) return;
     for (const card of el.querySelectorAll(".vta-card:not(.wodx-x)")) {
@@ -598,6 +628,7 @@ export async function action({ actor: a, preset = "" } = {}) {
         <div class="form-group"><label>Opponent pool</label><select name="oppPool">${opts([["preset", "As the dramatic system says"], ["same", "The same Attribute + Ability, from the target's sheet"], ["willpower", "Willpower"], ["manual", "Manual dice"]], "preset")}</select></div>
         <div class="form-group"><label>Manual dice / difficulty</label><input type="number" name="oppDice" value="3" style="width:4em"/> <input type="number" name="oppDiff" value="6" style="width:4em"/></div>
       </fieldset>
+      <details class="vta-more-opts"${beginner() ? "" : " open"}><summary>More options</summary>
       <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
       <div class="form-group"><label>Multiple actions: action # / retries</label>
         <select name="multi">${opts([[0, "Only action"], [1, "1st of several"], [2, "2nd"], [3, "3rd"]], 0)}</select> <input type="number" name="retries" value="0" min="0" style="width:4em"/></div>
@@ -609,6 +640,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
+      </details>
     </form>`;
     const render = root => {
         const form = root.querySelector("form");
@@ -725,7 +757,7 @@ function checkPoolText(actor, c) {
     return { pick, text: `${a.label} ${a.value}${pick.ability ? ` + ${pick.abilityName} ${ab?.value ?? 0}` : ""}${how}` };
 }
 
-export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "" } = {}) {
+export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "", direct = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor();
@@ -737,12 +769,14 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
       <p class="vta-note vta-check-pool"></p>
       <p class="vta-note vta-check-note"></p>
       <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${first.diff}" min="2" max="10"/></div>
+      <details class="vta-more-opts"${beginner() ? "" : " open"}><summary>More options</summary>
       <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="${num(preBonus)}" style="width:4em"/> <input type="number" name="extraDiff" value="${num(preDiff)}" style="width:4em"/></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label>Description</label><input type="text" name="desc" value="${esc(preDesc)}"/></div>
+      </details>
       <p class="vta-note">For a roll against someone, an extended roll or teamwork, use Any roll. Wound penalties apply.</p>
     </form>`;
     const render = root => {
@@ -764,7 +798,7 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             return { ...fd, preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple", multi: 0, retries: 0, ignoreWounds: false, aura: false, auto: false };
         });
     };
-    return dialog("Common checks", content, "Roll", fd => {
+    const roll = fd => {
         const c = CK.byKey(fd.check);
         if (!c) return null;
         const { pick } = checkPoolText(actor, c);
@@ -775,7 +809,15 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0],
             ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky"))
         });
-    }, { render, width: 460 });
+    };
+    // 3.62.0 (B2822): a quick roll from the sheet rolls at once with the check's own difficulty, no window
+    if (direct) {
+        const c = CK.byKey(check);
+        if (!c) return ui.notifications.warn(`WoDX Actions: no common check called ${check}.`);
+        if (!checkPoolText(actor, c).pick) return ui.notifications.warn(`${actor.name} has nothing to roll for ${c.label}.`);
+        return roll({ check: c.key, diff: c.diff, bonus: num(preBonus), extraDiff: num(preDiff), desc: preDesc });
+    }
+    return dialog("Common checks", content, "Roll", roll, { render, width: 460 });
 }
 
 function opponentPool(target, spec, fd, actor = null) {
@@ -2517,7 +2559,7 @@ export async function menu({ actor: a } = {}) {
     const recent = own && quick.recent.length ? quick.recent : (recentAll[kind] ?? []);
     let html;
     if (legacy) html = `<div class="vta-menu">${MENU.map(([k, i, l]) => `<button type="button" data-k="api:${k}"><i class="fas ${i}"></i> ${l}</button>`).join("")}</div>`;
-    else html = (await pm().menuFor(actor, { recent, pinned: quick.pinned, isGM: game.user.isGM })).html;
+    else html = (await pm().menuFor(actor, { recent, pinned: quick.pinned, isGM: game.user.isGM, beginner: beginner() })).html;
     const prev = P.setLine(kind);
     let r;
     try {
@@ -2549,6 +2591,13 @@ export async function menu({ actor: a } = {}) {
                 root.addEventListener("keydown", ev => {
                     const b = ev.target?.closest?.("button[data-k]");
                     if (b && ev.altKey && (ev.key === "p" || ev.key === "P")) { ev.preventDefault(); pin(b); }
+                });
+                // 3.62.0 (B2817): in Beginner view the groups fold behind Every action; the search still finds them all
+                const tog = root.querySelector("button.vta-all-toggle");
+                tog?.addEventListener("click", () => {
+                    const wrap = root.querySelector(".wodx-menu2");
+                    const open = wrap?.classList.toggle("vta-folded") === false;
+                    tog.setAttribute("aria-expanded", String(open));
                 });
                 root.querySelector("button.vta-kind")?.addEventListener("click", async () => {
                     close();
@@ -2713,7 +2762,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.61.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.62.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -2795,13 +2844,36 @@ Hooks.once("init", () => {
     EFX.setup();
     SX.registerBehavior();
     P.register();
+    // 3.59.0 (B2813): the menu's entries for Chronicle's Find anything, and running one of them, as the menu does
+    API.menuEntries = async actor => {
+        if (!actor) return [];
+        const legacy = !setting("profileMenu");
+        const html = legacy ? MENU.map(([k, , l]) => `<button type="button" data-k="api:${k}">${l}</button>`).join("")
+            : (await pm().menuFor(actor, { recent: [], pinned: [], isGM: game.user.isGM })).html;
+        const box = document.createElement("div"); box.innerHTML = html;
+        const seen = new Set(); const out = [];
+        for (const b of box.querySelectorAll("button[data-k]")) {
+            const spec = b.dataset.k; if (!spec || seen.has(spec)) continue; seen.add(spec);
+            out.push({ spec, label: b.textContent.trim(), hint: b.dataset.hint || b.title || "" });
+        }
+        const extras = [...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, hint: c.note || "" })),
+            ...Object.entries(PRESETS).filter(([k]) => k && !k.startsWith("check-")).map(([k, p]) => ({ spec: `preset:${k}`, label: p.label, hint: p.note || "" }))];
+        for (const x of extras) if (!seen.has(x.spec)) { seen.add(x.spec); out.push(x); }
+        return out;
+    };
+    API.runSpec = async (spec, actor) => {
+        if (!actor || !spec) return;
+        const was = P.setLine(P.detectProfile(actor));
+        LEDGER.delete(actor.id);
+        try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); } finally { P.setLine(was); }
+    };
     game.wodxActions = API;
     game.wodx ??= {};
     game.wodx.actions = API;
     const mod = game.modules.get(MOD);
     if (mod) mod.api = API;
     // 6e: every WoDX card shown in the one layout, the ones written before 3.6 and the notices too (before the buttons are bound)
-    Hooks.on("renderChatMessageHTML", (m, el) => { try { upgradeCards(m, el?.[0] ?? el); } catch (e) { console.warn("WoDX | card layout", e); } });
+    Hooks.on("renderChatMessageHTML", (m, el) => { try { upgradeCards(m, el?.[0] ?? el); plainCards(el?.[0] ?? el); } catch (e) { console.warn("WoDX | card layout", e); } });
     // 6e: what each sheet update changes, for the card that reports it
     Hooks.on("preUpdateActor", (actor, changes, options, userId) => { if (!userId || userId === game.user.id) recordChanges(actor, changes); });
     Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
