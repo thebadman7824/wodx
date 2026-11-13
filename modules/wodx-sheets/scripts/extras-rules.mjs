@@ -169,6 +169,20 @@ export const CURRENCIES = {
     {from: 2050, to: 99999, denoms: ["Eurodollar"]}
   ]}
 };
+/** The setting's choice that follows WoDX Storyteller's money of the place (Sheets 0.15.2, B2653). */
+export const CHRONICLE_COINS = "chronicle";
+
+/**
+ * Coin names from a WoDX Storyteller money ({units: [[one, many, worth]...]}, biggest first): smallest first, each
+ * capitalised ("gulden, kreuzer" gives ["Kreuzer", "Gulden"]). None is marked of account, so every one can be added
+ * as carried.
+ */
+export function coinsFromMoney(money) {
+  const units = Array.isArray(money?.units) ? money.units : [];
+  const names = units.map(u => String(u?.[0] ?? "").trim()).filter(Boolean).reverse();
+  return names.length ? [...new Set(names.map(n => n[0].toUpperCase() + n.slice(1)))] : null;
+}
+
 /** The coins in use in a year for a place. */
 export function coinsAt(place = "german", year = 0) {
   const c = CURRENCIES[place] ?? CURRENCIES.german, y = Number(year) || 1197;

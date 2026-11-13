@@ -3435,3 +3435,7 @@ Reverse: switch off Money changers far from home in the settings, which stops th
 Start a chronicle sets WoDX Storyteller's money region (Coins of the day) to the chosen homeland's money when the homeland changes. A homeland changed later by hand still leaves money alone, as Chronicle's message says.
 Reverse: set Coins of the day back in the module settings.
 
+## B2653. The sheet's coin names for every region (2026-11-13, global rule)
+WoDX Sheets' Coin of which land setting gains a choice, The chronicle's money. With it, the Possessions tab's coins of the time and Add coins name the units of WoDX Storyteller's money of the place: the Storyteller's money region at home, the region's own money on a scene abroad, smallest unit first. Without WoDX Storyteller, or with another choice, the sheet keeps its own lists for the German lands, England and the United States. The default stays the German lands, so Live sees no change until the setting is picked.
+Reverse: pick another land in the setting; CHRONICLE_COINS and coinsFromMoney in extras-rules.mjs can stay.
+

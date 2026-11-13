@@ -181,3 +181,16 @@ test("coin of the place: money gone out of use there becomes a keepsake, and the
   assert.equal(await M.arrival(tok), null);
   settings.changers = true;
 });
+
+test("the sheet's coin names follow the chronicle's money in every region (Sheets 0.15.2, B2653)", async () => {
+  const X = await imp("modules/wodx-sheets/scripts/extras-rules.mjs");
+  assert.deepEqual(X.coinsFromMoney(R.moneyFor(1700, "moravian")), ["Kreuzer", "Gulden"]);
+  assert.deepEqual(X.coinsFromMoney(R.moneyFor(1750, "korean")), ["Mun", "Jeon", "Nyang"]);
+  assert.equal(X.coinsFromMoney({units: []}), null);
+  for ( const region of Object.keys(R.MONIES) ) for ( const y of [1197, 1500, 1800, 1950, 2050] ) {
+    const c = X.coinsFromMoney(R.moneyFor(y, region));
+    assert.ok(c?.length && c.every(n => n && n[0] === n[0].toUpperCase()), `${region} ${y}`);
+  }
+  assert.equal(X.CHRONICLE_COINS, "chronicle");
+  assert.ok(!X.CURRENCIES[X.CHRONICLE_COINS]);
+});

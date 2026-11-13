@@ -10,7 +10,8 @@
  *   4. paid at home the coin of the place is untouched; at home it changes back by its money id
  *   5. arrival: one card the first time a character stands where another money is used, none the second time
  *   6. Money by era shows the change column on a scene abroad
- *   7. every other WoDX module still answers
+ *   7. the sheet's coin names follow the chronicle's money abroad and at home (Sheets 0.15.2, B2653; setting put back)
+ *   8. every other WoDX module still answers
  * Result: Data/wodx-gate/gatemoneyabroad-result.json.
  */
 async function save(R, name) {
@@ -101,6 +102,19 @@ export async function run() {
       for ( const app of foundry.applications.instances.values() ) if ( app.element?.classList?.contains("wst-money") ) await app.close();
       await p;
       ok("Money by era shows the change column abroad", into && hint, {into, hint, found: !!el});
+    });
+    await step("the sheet's coin names follow the chronicle's money", async () => {
+      const ex = game.modules.get("wodx-sheets")?.api?.extras, was = game.settings.get("wodx-sheets", "coinPlace");
+      try {
+        await game.settings.set("wodx-sheets", "coinPlace", "chronicle");
+        const abroad = ex.coinsNow(kyoto), home = ex.coinsNow(null);
+        const wantAbroad = R0.moneyFor(year, "japanese").units.map(u => u[0]).reverse();
+        const homeM = R0.moneyFor(year, game.settings.get("wodx-storyteller", "moneyRegion")).units.map(u => u[0]).reverse();
+        const lc = l => (l ?? []).map(x => String(x).toLowerCase()).join(",");
+        await game.settings.set("wodx-sheets", "coinPlace", "german");
+        const german = ex.coinsNow(kyoto);
+        ok("the sheet's coin names follow the chronicle's money", lc(abroad) === lc(wantAbroad) && lc(home) === lc(homeM) && lc(german) !== lc(abroad), {abroad, home, german});
+      } finally { await game.settings.set("wodx-sheets", "coinPlace", was); }
     });
     await step("every other WoDX module still answers", async () => {
       const ids = ["wodx-chronicle", "wodx-storyteller", "wodx-npc", "wodx-creation", "wodx-actions", "wodx-combat", "wodx-interactables", "wodx-senses", "wodx-atmosphere", "wodx-otherworlds", "wodx-library", "wodx-sheets"];
