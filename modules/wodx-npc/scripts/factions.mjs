@@ -96,7 +96,7 @@ export function build(ctx) {
   const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
   // 0.49.0: a breach spreads by the homeland's years for the papers, the wireless and the rest
   const homeNow = () => { try { const h = game.modules.get("wodx-chronicle")?.api?.world?.homeland?.(); return (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { return null; } };
-  // 0.61.0: the homeland tells a Kindred faction with no region of its own which court it keeps (B2960)
+  // 0.62.0: the homeland tells a Kindred faction with no region of its own which court it keeps (B2960)
   const worldRegions = () => { try { return game.modules.get("wodx-chronicle")?.api?.world?.regions ?? {}; } catch (e) { return {}; } };
   function eraInfo() {
     PO.setHomeRegion(homeNow());

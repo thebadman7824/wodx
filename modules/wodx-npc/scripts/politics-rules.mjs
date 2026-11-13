@@ -303,7 +303,7 @@ export const POLITIES = {
     law: ["straying from one's Dharma before the court", "harming the court's mortals", "dealing with the Kin-jin", "shaming the Ancestor"],
     notes: "Courts of the Middle Kingdom: an Ancestor, mandarins, and wu as the court's blocs (KotE pdf 24, 28-30, 39-41, 88-89; the printed page numbers differ). Used by default for a Kindred faction in China, Japan, Korea, Southeast Asia or the Malay world; the Storyteller may pick it anywhere else."
   },
-  // NPC 0.61.0 (B2960 to B2962): the Kindred courts of Africa and of the lands of Islam. Offices, law and titles are
+  // NPC 0.62.0 (B2960 to B2962): the Kindred courts of Africa and of the lands of Islam. Offices, law and titles are
   // WoDX's own words; the book pass over Kindred of the Ebony Kingdom and the Ashirra pages is queued for the PC
   // (jobs/world-courts-book-check-2026-11-13.md) and may rename seats.
   "laibon-council": {
@@ -344,7 +344,7 @@ export const POLITY_LIST = Object.keys(POLITIES);
 const REASON = /technocra|order of reason|union|construct|daedalean|craftmason|cosian|high guild|celestial master|void seeker|artificer|ksirafai|iteration x|progenitor|syndicate|void engineer|new world order/i;
 /** The polity a kind of faction keeps by default in a year, when it has three or more members (B1101, B1110). */
 /**
- * NPC 0.61.0 (B2960): where in the world a Kindred faction keeps a court of its own kind by default. A faction's own
+ * NPC 0.62.0 (B2960): where in the world a Kindred faction keeps a court of its own kind by default. A faction's own
  * region (f.region) wins; else the chronicle's homeland, set by the runtime with setHomeRegion. Regions are the ids
  * of WORLD_REGIONS in wodx-chronicle/scripts/world-rules.mjs. Everywhere else keeps the courts of Europe.
  */

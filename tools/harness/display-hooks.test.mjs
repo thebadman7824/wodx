@@ -84,3 +84,58 @@ test("B2904: living tiles switch walls, doors and lights", () => {
   assert.equal(L.linkedChange("light", true, "light", {hidden: false}), null);
   assert.match(L.ruleWords({mode: "show", when: ["fast"], also: "lock"}), /doors inside it are locked while it holds/);
 });
+
+/* ---- Batch C (B2910-B2915) ---- */
+import * as GO from "../../modules/wodx-storyteller/scripts/go-rules.mjs";
+import * as DR from "../../modules/wodx-storyteller/scripts/dreams-rules.mjs";
+import * as MK from "../../modules/wodx-otherworlds/scripts/mark-rules.mjs";
+import * as WT from "../../modules/wodx-npc/scripts/wanted-rules.mjs";
+import {moodRule} from "../../modules/wodx-atmosphere/scripts/mood.mjs";
+
+test("B2910: Go turns a journey into days, meetings and seconds", () => {
+  const j = {surface: {days: 12, legs: []}, air: {days: 1, words: "by air"}};
+  const p = GO.goPlan(j, {chance: 50, rand: () => 0.1});
+  assert.equal(p.days, 12); assert.equal(p.seconds, 12 * 86400); assert.equal(p.meetings.length, GO.MAX_MEETINGS);
+  assert.equal(GO.goPlan(j, {way: "air", chance: 50, rand: () => 0.2}).meetings.length, 0); // a quarter of 50 is 12.5
+  assert.equal(GO.goPlan({unknown: "x"}), null);
+  assert.equal(GO.goPlan(j, {chance: 0}).meetings.length, 0);
+  assert.match(GO.goLines(p, {from: "Moravia", to: "The British Isles", names: ["Ilse"]})[0], /^Ilse goes from Moravia/);
+});
+
+test("B2911: tied dreams wait for the sleep; Nightmares costs a die on a failure", () => {
+  assert.equal(DR.normDream({id: "a", actorId: "x", source: "nonsense"}).source, "");
+  const list = [{id: "a", actorId: "x", source: "auspex"}, {id: "b", actorId: "x"}, {id: "c", actorId: "y", source: "nightmares"}];
+  assert.deepEqual(DR.tiedDue(list, 100, 50).map(d => d.id), ["a", "c"]);
+  assert.deepEqual(DR.tiedDue(list, 100, 150), []);
+  assert.deepEqual(DR.tiedDue(list, 100, 50, d => d.actorId === "x").map(d => d.id), ["a"]);
+  assert.equal(DR.nightmareResult(0).lose, 1); assert.equal(DR.nightmareResult(2).lose, 0); assert.equal(DR.nightmareResult(3, true).lose, 1);
+  assert.equal(DR.nextSleep(100, 50), 100); assert.equal(DR.nextSleep(100, 100), 86500);
+});
+
+test("B2912, B2913: marks and mood rules move the Gauntlet and Shroud, two steps at most", () => {
+  const g = MK.groundShift(["loom", "loom", "relic"], []);
+  assert.equal(g.gauntlet, -2); assert.equal(g.notes.length, 2);
+  assert.equal(MK.groundShift(["blight"], [{name: "Factory", rule: {gauntlet: 3}}]).gauntlet, 2);
+  assert.equal(MK.groundShift(["thin"], [{name: "Wake", rule: {shroud: -1, banality: 1}}]).shroud, -2);
+  assert.equal(MK.shiftRating(0, -1), 0); assert.equal(MK.shiftRating(null, 1), null); assert.equal(MK.shiftRating(3, -2, {min: 2}), 2);
+  assert.deepEqual(moodRule({gauntlet: 9, shroud: "-1", fire: -2}), {gauntlet: 3, shroud: -1, banality: 0, fire: 0});
+});
+
+test("B2914: a foreigner's description lasts longer and survives new clothes", () => {
+  const marks = {station: 2, dress: ["a fur hat"], foreign: true};
+  const d = WT.writeDesc({id: "d", of: "a", marks, at: 0, scene: "s", year: 1400});
+  const plain = WT.writeDesc({id: "e", of: "a", marks: {...marks, foreign: false}, at: 0, scene: "s", year: 1400});
+  const day = 86400;
+  assert.ok(WT.strength(d, 10 * day) > WT.strength(plain, 10 * day));
+  assert.equal(WT.matchOf(d, {station: 2, dress: ["a cloak"], foreign: true}).level, "partial");
+  assert.equal(WT.matchOf(d, {station: 2, dress: ["a cloak"], foreign: false}).level, "none");
+  assert.ok(WT.isForeign("europe", "asia")); assert.ok(!WT.isForeign("europe", "europe")); assert.ok(!WT.isForeign(null, "asia"));
+});
+
+test("B2915: realm Go rolls the realm's dangers each day", async () => {
+  const RW = await import("../../modules/wodx-otherworlds/scripts/realm-worlds-rules.mjs");
+  const p = RW.goPlan({days: 2.5, squares: 10}, {hazards: ["a storm", "a hunter"], rand: () => 0.05});
+  assert.equal(p.chance, 20); assert.equal(p.meetings.length, 3); assert.ok(["a storm", "a hunter"].includes(p.meetings[0].what));
+  assert.equal(RW.goPlan({hidden: true}), null);
+  assert.equal(RW.goPlan({days: 0.2, squares: 3}, {rand: () => 0.99}).seconds, Math.round(0.2 * 86400));
+});

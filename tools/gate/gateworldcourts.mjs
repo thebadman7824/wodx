@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.61.0 gate (Kindred courts beyond Europe), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.62.0 gate (Kindred courts beyond Europe), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateworldcourts.mjs?${Date.now()}`)).run()
  * The gate never moves the clock and never changes the homeland. It makes six Kindred NPCs and deletes them, and puts
  * back the factions record, the faction settings, the approval queue and its chat cards.
- *   1. WoDX NPC 0.61.0+: the region courts, the homeland hook, the two new polities
+ *   1. WoDX NPC 0.62.0+: the region courts, the homeland hook, the two new polities
  *   2. the homeland is read from WoDX Chronicle when the faction rules look at the world
  *   3. a Kindred faction standing in West Africa keeps a council of the Laibon, one in Egypt a court of the Ashirra,
  *      one in Japan a court of the Kuei-jin, one in the British Isles the court of its age; a hand-picked polity wins
@@ -54,7 +54,7 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version;
-      ok("1. WoDX NPC 0.61.0+, the region courts and the two new polities", newer(v, "0.61.0") && !!PO().REGION_COURTS && typeof PO().setHomeRegion === "function"
+      ok("1. WoDX NPC 0.62.0+, the region courts and the two new polities", newer(v, "0.62.0") && !!PO().REGION_COURTS && typeof PO().setHomeRegion === "function"
         && !!PO().POLITIES["laibon-council"] && !!PO().POLITIES.ashirra, {v});
     });
 

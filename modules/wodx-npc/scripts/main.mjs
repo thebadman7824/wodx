@@ -47,7 +47,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.61.0";
+const VERSION = "0.62.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -995,6 +995,9 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => factions.openFactions()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
+  // NPC 0.61.0 (B2914): dress the selected characters for a part of the world
+  tokens.tools.wodxDress = {name: "wodxDress", title: "Dress for a part of the world (a stranger's clothes are noticed)", icon: "fa-solid fa-shirt", order: 114.5,
+    button: true, visible: true, onChange: () => wanted.dress.dialog()};
   tokens.tools.wodxOverheard = {name: "wodxOverheard", title: "Overheard talk (NPCs who talk among themselves on this scene)", icon: "fa-solid fa-ear-listen", order: 113.5,
     button: true, visible: game.user.isGM, onChange: () => overheard.open()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,

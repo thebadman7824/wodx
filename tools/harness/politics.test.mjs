@@ -343,7 +343,7 @@ test("an Inquisition cell has a rector appointed above it and officers it elects
   assert.equal(PO.POLITIES["council-of-faith"].offices.find(o => o.key === "councillor").fill, "clan");
 });
 
-// WoDX NPC 0.61.0: the courts of Africa, the lands of Islam and East Asia by region (B2960 to B2962).
+// WoDX NPC 0.62.0: the courts of Africa, the lands of Islam and East Asia by region (B2960 to B2962).
 test("a Kindred faction keeps the court of its land: by its own region, else the homeland", () => {
   const k = extra => F.normFaction({id: "k", name: "K", kind: "kindred", members: ["a", "b", "c"], ...extra});
   try {

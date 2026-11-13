@@ -152,7 +152,7 @@ export function normFaction(f = {}) {
     fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null,
     // NPC 0.25.0: politics inside the faction (politics-rules.mjs)
     polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics),
-    // NPC 0.61.0: the world region it stands in ("" = the chronicle's homeland), for the courts of its land (B2960)
+    // NPC 0.62.0: the world region it stands in ("" = the chronicle's homeland), for the courts of its land (B2960)
     region: typeof f.region === "string" && /^[a-z][a-z-]{0,39}$/.test(f.region) ? f.region : ""
   };
 }
