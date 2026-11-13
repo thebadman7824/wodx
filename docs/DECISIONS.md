@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3210
+Next free block: B3320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -155,9 +155,9 @@ Next free block: B3210
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
-| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4719,11 +4719,6 @@ Desk item c2. When a fight with a player character ends, WoDX Combat writes one 
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
 
-## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
-Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
-
-Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.
-
 ## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
 WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
 
@@ -4743,3 +4738,8 @@ Reverse: drop worshipFor from plan in adopt-rules.mjs.
 Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
 
 Reverse: remove the --faith argument.
+
+## B3310. Chinese names raised to 300 (2026-11-13)
+WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
+
+Reverse: put back the old 22-name lists in data/people-world.mjs.
