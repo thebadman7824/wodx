@@ -17,7 +17,6 @@ import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
 import * as worldsChartRules from "./worlds-chart-rules.mjs";
 import * as realmWorlds from "./realm-worlds.mjs";
-import * as realmWorldsRules from "./realm-worlds-rules.mjs";
 import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
@@ -68,7 +67,7 @@ Hooks.once("ready", () => {
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
     realmWorlds: {open: realmWorlds.realmWorldsDialog, view: realmWorlds.view, closer: realmWorlds.closerDialog, places: realmWorlds.foundDialog, mapOf: realmWorlds.mapOf,
-      found: realmWorlds.found, setFound: realmWorlds.setFound, visits: realmWorlds.visits, newVisit: realmWorlds.newVisit, rules: realmWorldsRules},
+      found: realmWorlds.found, setFound: realmWorlds.setFound, visits: realmWorlds.visits, newVisit: realmWorlds.newVisit, load: realmWorlds.load, get rules() { return realmWorlds.loaded(); }},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
       dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules,
       drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},

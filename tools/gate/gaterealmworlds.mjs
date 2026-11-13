@@ -16,9 +16,10 @@
  *   6. the tool is among the token controls' tools and the window opens with its picture, Realm, From, To and Year,
  *      shows another realm after Show, and closes
  *   7. the world map window has the button "Realms past the near worlds"
+ *   8. on first use: Otherworlds main.mjs no longer imports the realm world rules, and api.realmWorlds.load() gives them (0.23.2)
  * Result: Data/wodx-gate/gaterealmworlds-result.json.
  */
-const N = 7;
+const N = 8;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const within = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error(`${what} did not finish in ${ms / 1000} s`)), ms))]);
 
@@ -34,7 +35,9 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
-  const S = game.modules.get("wodx-storyteller"), O = game.modules.get("wodx-otherworlds"), RWs = O?.api?.realmWorlds, RW = RWs?.rules;
+  const S = game.modules.get("wodx-storyteller"), O = game.modules.get("wodx-otherworlds"), RWs = O?.api?.realmWorlds;
+  // Otherworlds 0.23.2: the rules and places load on first use
+  const loadedBefore = !!RWs?.rules, RW = RWs?.load ? await RWs.load() : RWs?.rules;
   const wins = sel => [...document.querySelectorAll("dialog.application, .application.dialog, .window-app.dialog")].find(el => el.querySelector(sel));
   const findWin = () => wins("img.wow-realm-world");
   const closeAll = async () => { for ( let i = 0; i < 4; i++ ) { const w = findWin() ?? wins("img.wst-world-map"); if ( !w ) break; w.querySelector('button[data-action="close"]')?.click(); await sleep(400); } };
@@ -89,6 +92,9 @@ export async function run() {
     wm?.querySelector('button[data-action="close"]')?.click();
     await within(pw, 15000, "The world map window"); await sleep(300);
     ok("7. from the world map", button, {button});
+    // Otherworlds 0.23.2 (B2676): main.mjs no longer imports the realm world rules, so they load only on first use
+    const mainText = await (await fetch(`/modules/wodx-otherworlds/scripts/main.mjs?${Date.now()}`)).text();
+    ok("8. on first use", !/realm-worlds-rules\.mjs/.test(mainText) && RWs.rules === RW && typeof RW?.build === "function", {loadedBefore});
   } catch (err) {
     R.errors.push(String(err?.stack ?? err));
     try { await closeAll(); await game.settings.set("wodx-otherworlds", "realmWorlds", before); } catch (e) { /* nothing left to close */ }

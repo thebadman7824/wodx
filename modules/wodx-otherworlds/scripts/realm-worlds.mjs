@@ -5,7 +5,17 @@
  * for the realms that change on every visit. It reads and draws only, but for the world setting "realmWorlds" (the
  * found places and the visit counts). The rules are in realm-worlds-rules.mjs.
  */
-import * as RW from "./realm-worlds-rules.mjs";
+let RW = null, loading = null;
+/** Otherworlds 0.23.2 (B2676): the rules and the realm places (about 115 KB) load the first time a window here opens
+ * or load() is called, not when the world starts. The other calls read them only after that first load. */
+export function load() {
+  if ( RW ) return Promise.resolve(RW);
+  loading ??= import("./realm-worlds-rules.mjs").then(m => (RW = m)).catch(err => { loading = null; throw err; });
+  return loading;
+}
+/** The rules once loaded, else null. */
+export const loaded = () => RW;
+const need = () => { if ( !RW ) throw new Error("WoDX Otherworlds: the realm world maps are not loaded yet; await api.realmWorlds.load() first"); return RW; };
 import {REALMS, LINES} from "./realm-maps-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -26,17 +36,20 @@ export const visits = id => Math.max(0, Math.round(Number(store().visits[id])) |
 
 /** The map a state {realm, year, season, which} asks for. */
 export function mapOf(state = {}) {
+  need();
   const id = RW.REALM_IDS.includes(state.realm) ? state.realm : RW.REALM_IDS[0];
   return RW.build(id, {year: Math.round(Number(state.year)) || yearNow(), season: state.season, which: state.which, visit: visits(id)});
 }
 const foundKey = map => (map.kind === "each" ? `${map.id}:${map.turn}` : map.id);
 /** The places the chronicle has found on a map. A map made anew starts with nothing found. */
 export function found(map) {
+  need();
   const f = store().found[foundKey(map)];
   return f && f.seed === map.seed ? RW.normFound(map, f.list) : [];
 }
 /** GM: set the found places of a map. Returns the new list. */
 export async function setFound(map, list) {
+  await load();
   if ( !game.user.isGM ) return found(map);
   const s = store(), clean = RW.normFound(map, list);
   s.found[foundKey(map)] = {seed: map.seed, list: clean};
@@ -45,6 +58,7 @@ export async function setFound(map, list) {
 }
 /** GM: a new visit to a realm whose map changes on every visit. Returns the new count. */
 export async function newVisit(id) {
+  await load();
   if ( !game.user.isGM || RW.kindOf(id) !== "visit" ) return visits(id);
   const s = store();
   s.visits[id] = visits(id) + 1;
@@ -71,6 +85,7 @@ const realmOptions = cur => LINES.map(line => { const ids = RW.REALM_IDS.filter(
 
 export async function realmWorldsDialog(start = {}) {
   if ( !game.user.isGM ) return null;
+  await load();
   const {DialogV2} = foundry.applications.api;
   let state = {realm: RW.REALM_IDS[0], from: null, to: null, year: yearNow(), season: 0, which: "", eyes: "home", ...start};
   for ( let guard = 0; guard < 100; guard++ ) {
@@ -110,6 +125,7 @@ export async function realmWorldsDialog(start = {}) {
 
 /** One square of a realm's map and the squares round it, closer. */
 export async function closerDialog(state = {}) {
+  await load();
   const v = view(state), map = v.map, p = map.places[v.from];
   if ( !p ) return null;
   const c = RW.closer(map, p.x, p.y);
@@ -123,6 +139,7 @@ export async function closerDialog(state = {}) {
 /** The places of a realm's map, each with a tick: ticked places are found by the chronicle. */
 export async function foundDialog(state = {}) {
   if ( !game.user.isGM ) return null;
+  await load();
   const map = mapOf(state), mine = found(map);
   const content = `<div style="max-height:70vh;overflow-y:auto"><p>Travellers who reach ${esc(map.label)} know ${esc(map.places[map.gate]?.name ?? "where they stand")}. Tick each other place the chronicle has found: by going there, by a guide, a map or a spirit's word. A journey can end only at a found place.</p>
     <ul class="wow-found" data-fixed style="list-style:none;padding:0;margin:0">${map.places.filter(p => p.i !== map.gate).map(p => `<li><label><input type="checkbox" name="found.${p.i}"${mine.includes(p.i) ? " checked" : ""}> ${esc(p.label)}${p.what ? ` <span class="wodx-quiet">${esc(p.what)} (${esc(p.ref)})</span>` : ""}</label></li>`).join("")}</ul></div>`;
