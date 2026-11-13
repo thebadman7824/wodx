@@ -294,6 +294,30 @@ export const FAMILIES = {
       add: {warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
     {from: 1900, note: "Modern courts, police and prisons", add: {order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade", "sedition"]}, drop: {order: ["clan-elders"]}, set: {catch: 0.45}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}}
+  ]},
+
+  // The Pacific and Australia: chiefs and tapu, the custom of the land's first peoples, then colonial and national law (B3602)
+  pacific: {label: "The Pacific and Australia", rows: [
+    {from: 0, note: "Chiefs and elders; sacred restrictions and their keepers", set: {
+      rule: {form: "Chiefdoms and the custom of the first peoples", ruler: "The chiefs or the elders", council: "The elders and the priests"},
+      courts: ["The chief's judgment", "Elders keeping the custom of the people"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 1, catch: 0.35},
+      add: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
+      add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}}
+  ]},
+
+  // The far north: the custom of the Inuit and the Sámi, Norse Greenland, then Danish, Norwegian, Russian and Canadian law (B3603)
+  north: {label: "The far north", rows: [
+    {from: 0, note: "The Inuit and the Sámi keep their own custom", set: {
+      rule: {form: "Bands and families under their own custom", ruler: "The elders and the best hunters", council: "The gathering of families"},
+      courts: ["The community's judgment: song duels, shaming, and in the end exile"], proof: ["witnesses"], punish: ["banishment", "fine"],
+      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 1, catch: 0.4},
+      add: {warn: ["One who will not share in hard times may be left behind"]}},
+    {from: 1721, note: "Danish mission and trade in Greenland; Norwegian, Swedish and Russian law over the Sámi", set: {rule: {form: "Colonies and northern provinces", ruler: "The Danish, Norwegian, Swedish or Russian crown"}}, add: {courts: ["The crown's courts in the trading posts"]}},
+    {from: 1920, note: "The Svalbard treaty; the state's police reach the north", add: {order: ["police"], punish: ["prison"]}},
+    {from: 1979, note: "Home rule in Greenland", set: {rule: {form: "Self-governing lands under the crown", ruler: "The home government in Nuuk"}}}
   ]}
 };
 
@@ -312,6 +336,29 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  australia: [
+    {from: 0, note: "The peoples of the land keep their own law, carried in story and ceremony", set: {rule: {ruler: "The elders of each people"}}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]},
+      add: {warn: ["Each people's law, carried in story and ceremony, binds who may go where and know what"]}},
+    {from: 1788, note: "New South Wales: a penal colony under British law", set: {rule: {form: "British colonies", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts under British law"], order: ["police"], punish: ["flogging", "hard-labour"],
+      warn: ["Convicts serve their sentences in chains or assigned to free settlers"]}},
+    {from: 1868, note: "The last convict ship", drop: {warn: ["Convicts serve their sentences in chains or assigned to free settlers"], punish: ["flogging"]}},
+    {from: 1901, note: "The Commonwealth of Australia", set: {rule: {form: "A federal dominion under the crown", ruler: "The Prime Minister", council: "Parliament"}}},
+    {from: 1985, note: "The death penalty abolished", drop: {punish: ["hanging"]}},
+    {from: 1910, to: 1970, note: "Children of the first peoples taken from their families", add: {warn: ["Aboriginal children are taken from their families by law"]}}
+  ],
+  aotearoa: [
+    {from: 1300, note: "The Māori: chiefs, tapu and the balancing of wrongs (utu)", set: {rule: {ruler: "The rangatira, the chiefs of each tribe"}}},
+    {from: 1840, note: "The Treaty of Waitangi and British rule", set: {rule: {form: "A British colony, later a dominion", ruler: "The governor, later the Prime Minister", council: "Parliament in Wellington"}}, add: {courts: ["Colonial courts under British law", "The Native Land Court (1865)"], order: ["police"]}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1961, note: "Hanging for murder abolished", drop: {punish: ["hanging"]}},
+    {from: 1975, note: "The Waitangi Tribunal hears the treaty's breaches", add: {courts: ["The Waitangi Tribunal"]}}
+  ],
+  "pacific-islands": [
+    {from: 0, note: "Chiefs and priests; the kapu system in Hawaiʻi", set: {rule: {ruler: "The high chiefs of each island"}}},
+    {from: 1810, note: "The Kingdom of Hawaiʻi; the kapu system ends (1819)", set: {rule: {ruler: "The King of Hawaiʻi, and the high chiefs elsewhere"}}},
+    {from: 1819, note: "The kapu system ends in Hawaiʻi", drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1880, note: "Colonial rule: France in Tahiti (1880), the United States in Hawaiʻi (1898), Germany and later New Zealand in Samoa", set: {rule: {form: "Colonies and territories", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts"]}},
+    {from: 1962, note: "Independence for Samoa (1962), Fiji (1970) and others", set: {rule: {form: "Independent states and territories", ruler: "Each state's head"}}}
+  ],
   mexico: [
     {from: 1428, note: "The Triple Alliance of the Mexica: the tlatoani's judges and strict sentences", set: {rule: {form: "An empire of tribute", ruler: "The Huey Tlatoani of Tenochtitlan", council: "The council of nobles"}},
       add: {courts: ["The tlatoani's judges in Tenochtitlan"], warn: ["Drunkenness in public is punished by death, save for the old"]}},

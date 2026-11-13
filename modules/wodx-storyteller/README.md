@@ -30,9 +30,9 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The ledger and the clocks
 
-- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `clocks.mjs` and `clock-rules.mjs`.
-- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`.
-- API: `ledger`, `clocks`.
+- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `inherit.mjs` and `inherit-rules.mjs` (the Inheritance step: heir, items, places, money left, Ledger, rivals, ties), `levers.mjs` and `levers-rules.mjs` (crisis levers for a region, with a dated log and undo), `clocks.mjs` and `clock-rules.mjs`.
+- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`, `leverState`.
+- API: `ledger`, `clocks`, `levers`, `inheritance`.
 
 ## Travel and the maps
 
@@ -54,7 +54,7 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Markets and trade
 
-- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt), `power.mjs`, `power-rules.mjs` and `caern-rules.mjs` (caerns, B3470-B3476; Nodes, chantries and freeholds).
+- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt), `power.mjs`, `power-rules.mjs` and `caern-rules.mjs` (caerns, B3470-B3476; Nodes, chantries and freeholds), `herds.mjs` and `herd-rules.mjs` (herd pools by district, B3570-B3573), `sites.mjs` and `site-rules.mjs` (holy ground shared by several claims, B3580-B3585).
 - Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `townTurn`, `townState`, `contagion`, `contagionPeople`, `contagionState`, `placesOfPower`, `powerState`.
 
 ## Battles, sieges and ships
