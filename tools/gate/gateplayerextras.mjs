@@ -2,7 +2,7 @@
  * The Player UI Desk's steps 6 and 7 (B2830 to B2838), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateplayerextras.mjs?${Date.now()}`)).run()
  * It makes one Vampire actor and deletes it, and puts back every WoDX setting of this screen it touches.
- *   1. the modules: Chronicle 0.52.0, Sheets 0.19.0, Solo 0.3.0, Interactables 0.41.0, Paperdoll 0.19.0, Library 0.22.0 or later
+ *   1. the modules: Chronicle 0.52.0, Sheets 0.19.0, Solo 0.3.0, Interactables 0.41.0, Paperdoll 0.20.0, Library 0.22.0 or later
  *   2. the Possessions tab says "You carry ..." in one line; the coins fold is open in Full view and closed in Beginner view
  *   3. the solo panel opens on What happens next?, with the five other buttons under More
  *   4. a new case board's rules lay out Who, Where and What we know; the figure menu lists the main parts first, the rest under More
@@ -36,7 +36,7 @@ export async function run() {
   let actor = null;
   try {
     ok("1. modules", at("wodx-chronicle", "0.52.0") && at("wodx-sheets", "0.19.0") && at("wodx-solo", "0.3.0") && at("wodx-interactables", "0.41.0")
-      && at("wodx-paperdoll", "0.19.0") && at("wodx-library", "0.22.0"), {versions: ["wodx-chronicle", "wodx-sheets", "wodx-solo", "wodx-interactables", "wodx-paperdoll", "wodx-library"].map(m => `${m} ${game.modules.get(m)?.version}`)});
+      && at("wodx-paperdoll", "0.20.0") && at("wodx-library", "0.22.0"), {versions: ["wodx-chronicle", "wodx-sheets", "wodx-solo", "wodx-interactables", "wodx-paperdoll", "wodx-library"].map(m => `${m} ${game.modules.get(m)?.version}`)});
 
     actor = await Actor.create({name: "WoDX gate: extras", type: "Vampire"});
     V.preview("full");

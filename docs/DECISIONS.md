@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3020
+Next free block: B3070
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -141,6 +141,10 @@ Next free block: B3020
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
+| B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
+| B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
+| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
+| B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4406,3 +4410,108 @@ Reverse: empty LAND_FAE_LANDS.
 The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
 
 Reverse: edit the note in factions.mjs.
+
+## B3020. Three testbed lanes on one licence (2026-11-13)
+Ben lifted the one-testbed rule and asked for three lanes. The Foundry EULA (Terms item 2) allows installs on several computers while only one hosted instance is reachable by anyone but the licence owner, and the FAQ (License Questions, example 3) names a second instance on the same computer for personal testing as allowed. Live stays the only instance players reach; lanes 1 (port 30000, the existing testbed), 2 (30020) and 3 (30030) and the solo world (30010) stay local, with UPnP off and no router forward. Lanes 2 and 3 keep their user-data folders on D:\WoDX, since C: is tight.
+
+Reverse: mark a lane "disabled": true in tools/lanes/lanes.json, or remove its row.
+
+## B3021. A gate refuses to run on drift (2026-11-13)
+Before each run, tools/lanes/run-gate.mjs compares every file and version of every package the repo holds with the lane's Data folder, the versions the running server reports with the repo's (a lane not restarted after a deploy still runs old code), and the world's active modules, every world setting and the clock with the lane's clean fingerprint. Any difference stops the run and lists itself, in the console and in <lane>/wodx-lane/drift.json. Documents a gate left behind are listed as a warning only, since many older gates leave their test folders. Settings that change on their own can be listed in ignoreSettings. The first setup (2026-11-13) found five: oh-you-dead.writerLease, wodx-actions.sky, wodx-atmosphere.applied, wodx-actions.healClock and wodx-actions.lastGmReady (the last two change whenever a GM client is ready). The LevelDB files of compendium packs (CURRENT, MANIFEST-n, n.log, n.ldb) are left out of the file check, since a running server compacts them by itself; the package version and every other file still count.
+
+Reverse: run the PC's older headless runner, which has no check.
+
+## B3022. One gate run per lane; the runner takes the first free lane (2026-11-13)
+Each lane has a lock file holding the run's process id. A lock whose process has ended, or older than three hours, no longer counts. run-gate.mjs takes the first lane in lanes.json order that is up and free; --lane picks one, --wait keeps looking. The runner puts the clock and the pause back after every gate, and fails a gate whose clock it could not put back.
+
+Reverse: lockMaxMinutes in lanes.json; --lane 1 for the old single-lane behaviour.
+
+## B3023. Lanes 2 and 3 reset each night from a shared known-good copy (2026-11-13)
+A Windows task at 04:40 PC time puts the known-good copy of rothenstein-wodx back on lanes 2 and 3, skipping a lane that is busy. The lane's world is copied to the backups folder first, unless it already matches the known-good copy, and no backup is ever removed. Lane 1 is never reset by the task, since Ben plays in it; lanes.mjs reset refuses lane 1 without --allow-lane-1. The known-good copy is taken with lanes.mjs snapshot from a stopped lane, and the copy it replaces is backed up first.
+
+Reverse: schtasks /Delete /TN "WoDX lane reset" /F.
+
+## B3024. Deploys to a lane go through lanes.mjs (2026-11-13)
+lanes.mjs deploy stops the lane's server (only one this tool started), backs up each package folder, mirrors the repo's modules and system and the gate scripts into the lane, checks every file against the repo, starts the server again and records a new clean fingerprint. The PC's existing deploy scripts keep serving lane 1.
+
+Reverse: deploy by hand and run lanes.mjs accept.
+
+## B3030. Changes from outside accounts are turned away (2026-11-13, Ben)
+The repo is public, and Ben asked that any attempt by an outside account to add or remove anything be rejected automatically. Only thebadman7824 (and Claude sessions, which push as that account) may change WoDX. .github/workflows/outside-guard.yml closes and locks every pull request or issue opened by any other account, with one short note. It runs on pull_request_target but never checks out or runs the pull request's code, and the job is skipped for Ben's own work, so it costs no runner time on normal days. Outsiders already cannot push: Ben is the only collaborator. The Checks workflow also skips outside pull requests, so their code never runs on a runner. tools/harness/outside-guard.test.mjs checks the condition and dry-runs the script against a fake gh.
+
+Reverse: delete outside-guard.yml, or add the account to its allow list and to ALLOWED in the test.
+
+## B3031. Repo settings only Ben can set (2026-11-13)
+The cloud sessions' GitHub access refuses writes to repo settings, so these are left for Ben in the GitHub page: Settings, Moderation options, Interaction limits, "Limit to prior collaborators" for 6 months (it lapses and must be set again); Settings, Actions, General, "Require approval for all external contributors"; Settings, Branches, a rule on main that blocks force pushes and deletion, with no review requirement (a review rule would stop Claude merging its own pull requests). The workflow in B3030 works without any of them.
+
+Reverse: undo each setting on the same page.
+
+## B3040. Many more face features, drawn with a shared kit (2026-11-13)
+WoDX Paperdoll 0.19.0. Ben (13 November 2026): 100 features for anyone, 50 base features per line, 15 more per sub-splat (each clan, tribe, auspice, Tradition, guild, kith, creed, house and the like), and 25 for splats whose strange looks are the point (Nosferatu, Gargoyles); the aim is "little chance that two NPCs or players will look the same". Features are drawn with a small kit (face64-kit.mjs): named spots that follow each head's shape, small glyphs for tattoos and brands, and slots. This first batch brings the features for anyone to 140 (scars, marks, tattoos, jewellery, eyewear and masks, headwear, hair, beards, health, paint and powder, collars), more than the 100 asked, since more variety serves the aim. Objects of one era (sunglasses, a peaked cap, a cigarette) are only ticked, never rolled. The lines follow in batches.
+
+Reverse: Remove the import of face64-general.mjs from face64-features.mjs.
+
+## B3041. A rolled face gets several features, one per slot (2026-11-13)
+An NPC with nothing ticked now rolls two or three features of its named group (clan, kith, tribe), one or two of its line and up to two everyday ones, in seeded order. Each feature may name a slot (an eye, a cheek, the neck, the head); a face never gets two in one slot, so a tattoo and a scar do not land on one cheek. A kith's or breed's whole look still always shows; a wraith still bears one deathmark and a metis one deformity; headwear still comes now and then, one at most. The harness checks that every feature shows, that no two features of a line look the same, and that 300 rolled mortals give 300 different faces.
+
+Reverse: Restore the older rollFeatures (one chance per feature) from git history.
+
+## B3042. Vampire faces: 50 for any Kindred, 15 per clan and bloodline, 25 for the strange ones (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-kindred.mjs). Any Kindred: 51 (pallors, dead or fed lips, fangs, eyes, bites, veins, frost, collars and jewels of the night). Fifteen each for the thirteen clans of V20 and Caitiff, and for the bloodlines and Dark Ages lines the project uses: Baali, Salubri, Daughters of Cacophony, Kiasyd, True Brujah, Harbingers of Skulls, Cappadocian, Lamia, Nagaraja, Lhiannan, Noiad, Anda, Ahrimanes and Blood Brothers. Twenty-five or more for the clans whose strange flesh is their mark: Nosferatu (30), Gargoyle (25) and Samedi (25); a Gargoyle's stone, a Samedi's rot, a Harbinger's skull face and a Cappadocian's ashen face always show when the sheet names the clan. A True Brujah sheet no longer counts as Brujah. All drawn from the clans' looks in the books, in our own words; the rest invented to fit.
+
+Reverse: Remove the import of face64-kindred.mjs from face64-features.mjs.
+
+## B3043. Werewolf and other Changing Breed faces: 50 for the line, 15 per tribe, auspice, breed and Fera kind (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-garou.mjs, face64-fera.mjs). Any Garou: 50 (scars of battle, fur and claws, Rage, Gaia's marks, fetishes, pack paint). Fifteen each for the thirteen tribes of W20 and the Black Spiral Dancers, Croatan, White Howlers and Bunyip, for each auspice, and for homid and lupus breeds; 25 for metis, one deformity still always shown. Any of the other Changing Breeds: 50, shown when the sheet names a breed; fifteen each for Ajaba, Ananasi, Apis, Bastet, Camazotz, Corax, Grondr, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin and Rokea, counting the whole look each already had. Drawn from the books' descriptions in our own words, the rest invented to fit. Stubble is drawn sparser and fainter, so it no longer reads as a chequered patch on the chin.
+
+Reverse: Remove the imports of face64-garou.mjs and face64-fera.mjs from face64-features.mjs.
+
+## B3044. Mage faces: 50 for any of the Awakened, 15 per Tradition, Convention and faction (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-mage.mjs). Any mage: 50 (the Avatar's glint, foci worn as charms, sigils, Paradox scars and white locks, Resonance in the air). Fifteen each for the nine Traditions of M20 (Akashic Brotherhood, Celestial Chorus, Cult of Ecstasy, Dreamspeakers, Euthanatos, Order of Hermes, Sons of Ether, Verbena, Virtual Adepts), the Hollow Ones, the five Conventions (Iteration X, New World Order, Progenitors, Syndicate, Void Engineers), Marauders, Nephandi, Orphans, and the Ahl-i-Batin and Taftani the courts already use. Most mages look like anyone else, so these are small signs, in our own words. Eye colours on a mage are drawn after the Avatar's light, so they show.
+
+Reverse: Remove the import of face64-mage.mjs from face64-features.mjs.
+
+## B3045. Wraith faces: 50 for any wraith, 15 per guild and faction (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-wraith.mjs). Any wraith: 50 (cold eyes, grave mist and dust, cracks in the Corpus, fetters worn at the throat, the edge of a moliated mask), beside the deathmark every wraith already bears. Fifteen each for the fifteen guilds of Wraith 20th (Artificers, Chanteurs, Harbingers, Haunters, Masquers, Mnemoi, Monitors, Oracles, Pardoners, Proctors, Puppeteers, Sandmen, Solicitors, Spooks, Usurers) and for the Hierarchy, Heretics, Renegades and Spectres, in our own words.
+
+Reverse: Remove the import of face64-wraith.mjs from face64-features.mjs.
+
+## B3046. Changeling faces: 50 for any changeling, 15 per kith and court (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-changeling.mjs). Any changeling: 50 (Glamour shimmer, eyes and hair of colours no one dyes, flowers and leaves, treasures worn as charms, cold iron burns, a grey edge of Banality). Fifteen each for the eleven kiths of C20 (Boggan, Clurichaun, Eshu, Nocker, Pooka, Redcap, Satyr, Selkie, Sidhe, Sluagh, Troll), counting the mien each already had, and for the Seelie and Unseelie Courts; an Unseelie sheet no longer counts as Seelie. In our own words.
+
+Reverse: Remove the import of face64-changeling.mjs from face64-features.mjs.
+
+## B3047. Hunter faces: 50 for any hunter, 15 per creed and order (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-hunter.mjs). Any hunter: 50 (the wear of long nights, claw and bite scars, stitches and plasters, holy symbols and safe-house keys). Fifteen each for the nine creeds of Hunter: the Reckoning (Avengers, Defenders, Innocents, Judges, Martyrs, Redeemers, Visionaries, Hermits, Wayward), and for the inquisitors of the Dark Ages, the Society of Leopold and the Arcanum, who cover the eras before 1999. In our own words.
+
+Reverse: Remove the import of face64-hunter.mjs from face64-features.mjs.
+
+## B3048. Demon faces: 50 for any of the Fallen, 15 per house and faction (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-demon.mjs). Any demon: 50 marks on the host's own face (old eyes, a broken halo, sigils of a true name, the scar of how the host died, things kept from the host's life); the apocalyptic form keeps its visage features. Fifteen each for the seven houses (Devils, Scourges, Malefactors, Fiends, Defilers, Devourers, Slayers, also matched by their old names such as Namaru) and the five factions (Faustians, Cryptics, Luciferans, Reconcilers, Raveners). In our own words.
+
+Reverse: Remove the import of face64-demon.mjs from face64-features.mjs.
+
+## B3049. Mummy and Kuei-jin faces: 50 for the line, 15 per kind and Dharma (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-mummy.mjs). Any mummy: 50 (kohl, amulets of Egypt, natron and resin, Sekhem in the eyes, Hekau glyphs). Fifteen each for the Shemsu-heru, the Amenti, the Teomallki of the Andes, the Wu Tian of China, the Children of Apophis and the Bane mummies. Any Kuei-jin: 50 (jade, silk, talismans, yin chill and yang warmth). Fifteen each for the five Dharmas: Devil Tiger, Resplendent Crane, Thousand Whispers, Thrashing Dragon and Song of the Shadow. In our own words. A test now holds every line to these counts.
+
+Reverse: Remove the import of face64-mummy.mjs from face64-features.mjs.
+
+## B3050. Nosferatu ears of many kinds (2026-11-13)
+WoDX Paperdoll 0.19.0. Ben (13 November 2026): not every Nosferatu should have bat's ears. A Nosferatu face now rolls one of nine: bat's ears (the most common), long ears to the side, plain ears, torn ears with the tips bitten off, drooping ears, stubs, finned fans, bare holes with no ear, or a pair that does not match. Beards and goatees are drawn solid with a few lighter strands, so neither reads as a chequered patch.
+
+Reverse: Set the Nosferatu ear roll in face64-rules.mjs back to bat, bat, long.
+
+## B3060. The GitHub check runs in parallel (2026-11-13, Ben)
+Ben (13 November 2026) approved speeding up the check that runs on every pull request and every push to main. The mock-Foundry harness used to run all its files one after another in one job, about four minutes. It now runs in five jobs side by side (SHARDS in .github/workflows/checks.yml). tools/harness/shard.mjs gives each job a share of the files by past run time (tools/harness/shard-times.json: wall time per file, loading included, refreshed from the TIMES line each shard prints); a file with no recorded time counts as the median. Inside a job the files still run one at a time with --test-concurrency=1, as before, so nothing that relied on that order changes. The quality checks run in their own job at the same time. The harness packages are cached by package.json, so most runs skip npm install; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD stays set. A change that only touches docs/ or Markdown runs just the harness files that read docs (shard.mjs --docs: the decision index, the modules table, versions, path case and the like) instead of the whole harness. The last job, "checks", is the one result to look at: it adds up the shards' test counts and passes when every job that ran passed, so a skipped job still counts as green. shard.test.mjs checks that every test file lands in exactly one shard. The outside-account rule (B3030) is kept: for an outside pull request none of these jobs run.
+
+Reverse: Restore the single-job checks.yml from before this change (git history) and delete shard.mjs, shard.test.mjs, shard-times.json and times-reporter.mjs.
+
+## B3005. Starting values corrected after the book check (2026-11-13)
+The PC's book check (gates/derived-traits-2026-11-13.md) found two House values swapped: Devils start at 4 Torment and Defilers at 3. The W20 tribe values and the Dark Ages names Fenrir and Warders of Men matched; the Dark Ages book gives the Children of Gaia 3 Willpower, not 4, so the Dark Ages Werewolf line reads that first.
+
+Reverse: the old values in TORMENT_BY_HOUSE; empty DARK_AGES_TRIBE_WILLPOWER.
+
+## B3006. The seeming changes a Changeling's start (2026-11-13)
+Read from the sheet's seeming: a childling starts with 1 more Glamour, a grump with 1 more Willpower. A wilder adds 1 to either, the player's pick, so the wizard leaves both at 4 and says so. Banality is not changed. With no seeming written, the wizard says what each one adds.
+
+Reverse: empty SEEMING_BONUS in derived-rules.mjs.
