@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.67.0 (Law of the land: the steppe family for Central Asia and Siberia (clan custom and the khan's court, the Great Yassa, the Chagatai, Timurid and Uzbek khans, Russian conquest, fur tribute and exile, Soviet republics and the Gulag, independence))
 - 0.66.0 (Law of the land: the Japanese family (the shogunate's warrior courts and the Goseibai Shikimoku, warring-state house law, the sword hunt, the Tokugawa order, the ban on Christianity and the closed country, the Meiji codes, the thought police, the postwar constitution))
 - 0.65.0 (Law of the land: the Orthodox and Russian family for Russia and the Aegean (the prince's law and the canons, the Mongol yoke, tsars, serfdom, the 1864 courts, the Soviet state, the Gulag; Byzantium, the Ottoman millet, the Greek kingdom and the junta))
 - 0.64.0 (Law of the land, English common law (B3497): the king's justices, shire and manor courts and the sheriff; the jury after the ordeal ends; justices of the peace; burning for heresy (1401 to 1676); the established church and its penalties until Catholic emancipation; the witch trials; the Commonwealth; the Bill of Rights; transportation (1718 to 1868); the Witchcraft Act of 1735 (fraud, not witchcraft, until 1951); the Bow Street Runners and London's police; the anatomists' claim on hanged murderers (1752 to 1832); fingerprints; the end of hanging (1965); cameras, computer and terrorism law. The British Isles add Scotland, Wales and Ireland)
