@@ -142,7 +142,7 @@ Next free block: B3060
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
-| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3046) | Paperdoll |
+| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3047) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4334,4 +4334,9 @@ Reverse: Remove the import of face64-wraith.mjs from face64-features.mjs.
 WoDX Paperdoll 0.19.0 (face64-changeling.mjs). Any changeling: 50 (Glamour shimmer, eyes and hair of colours no one dyes, flowers and leaves, treasures worn as charms, cold iron burns, a grey edge of Banality). Fifteen each for the eleven kiths of C20 (Boggan, Clurichaun, Eshu, Nocker, Pooka, Redcap, Satyr, Selkie, Sidhe, Sluagh, Troll), counting the mien each already had, and for the Seelie and Unseelie Courts; an Unseelie sheet no longer counts as Seelie. In our own words.
 
 Reverse: Remove the import of face64-changeling.mjs from face64-features.mjs.
+
+## B3047. Hunter faces: 50 for any hunter, 15 per creed and order (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-hunter.mjs). Any hunter: 50 (the wear of long nights, claw and bite scars, stitches and plasters, holy symbols and safe-house keys). Fifteen each for the nine creeds of Hunter: the Reckoning (Avengers, Defenders, Innocents, Judges, Martyrs, Redeemers, Visionaries, Hermits, Wayward), and for the inquisitors of the Dark Ages, the Society of Leopold and the Arcanum, who cover the eras before 1999. In our own words.
+
+Reverse: Remove the import of face64-hunter.mjs from face64-features.mjs.
 

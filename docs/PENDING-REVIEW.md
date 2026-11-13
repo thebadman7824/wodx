@@ -1123,6 +1123,7 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | Which Mage groups get their own face features? (B3044) | Nine Traditions, Hollow Ones, five Conventions, Marauders, Nephandi, Orphans, Ahl-i-Batin and Taftani at 15 each | Add rows to face64-mage.mjs |
 | 2026-11-13 | Which Wraith groups get their own face features? (B3045) | The fifteen guilds, Hierarchy, Heretics, Renegades and Spectres at 15 each | Add rows to face64-wraith.mjs |
 | 2026-11-13 | Which Changeling groups get their own face features? (B3046) | The eleven kiths and the Seelie and Unseelie Courts at 15 each | Add rows to face64-changeling.mjs |
+| 2026-11-13 | Which Hunter groups get their own face features? (B3047) | The nine creeds, inquisitors, the Society of Leopold and the Arcanum at 15 each | Add rows to face64-hunter.mjs |
 | 2026-11-13 | Does pressing Set in the wizard keep dots bought with freebies or the prelude? (B3001) | Yes: the book value plus every bought or prelude dot | Pass bought: {} in derivedFor |
 | 2026-11-13 | Garou starting Willpower by tribe, with Fenrir and the Warders of Men read as the Get of Fenris and the Glass Walkers (B3002) | The W20 core values; waits for the book check | Empty WILLPOWER_BY_TRIBE |
 | 2026-11-13 | Demon starting Torment by House (B3003) | 3 for Devils, Scourges, Malefactors and Fiends; 4 for Defilers, Devourers and Slayers; waits for the book check | Empty TORMENT_BY_HOUSE |

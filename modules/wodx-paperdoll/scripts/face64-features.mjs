@@ -13,6 +13,7 @@ import "./face64-fera.mjs";
 import "./face64-mage.mjs";
 import "./face64-wraith.mjs";
 import "./face64-changeling.mjs";
+import "./face64-hunter.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
