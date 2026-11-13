@@ -1,0 +1,4 @@
+---
+bump: minor
+---
+Sickness in the towns: eighteen sicknesses rated by M20 p. 442, from plague and the sweating sickness to cholera, the great influenza, HIV, the coronavirus and the Future Darkness bioplague, each kept to its years and lands. A market is a town: an outbreak there runs week by week with the market turn, raises the price of medicine and food, thins the crowd and makes feeding easier, and spreads along trade links and with caravans, less under quarantine. History offers the outbreaks of each land and year from 1197 to 2022 in the approval queue, worse where a people first meets them. Living characters in a sick town may catch it and roll Stamina each week; sick characters and vampire carriers (V20 p. 303) can carry it to a clean town. One Undo card a week; the Sickness window is in the Markets window (B3260-B3266).
