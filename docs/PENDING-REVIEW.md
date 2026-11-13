@@ -1156,6 +1156,11 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | What happens to a caern whose moot is not held (B3471)? | A month without one: lapsed, Gnosis gone, Gauntlet drift +1; a level lost every 3 months of lapse; dead at 0 | Change LAPSE_MONTHS in caern-rules.mjs |
+| 2026-11-13 | How does a caern grow (B3472)? | 13 full moots in a row, then a rite with 100 Gnosis raises it a level; 200 to reach level 5 | Change RISE_MOOTS or riseCost |
+| 2026-11-13 | How often do raids come, and who settles them (B3473)? | Monthly Wyrm/Weaver odds by era (3%/1% before 1500 up to 10%/9% after 2022), doubled for a lapsed caern (Wyrm) or an urban one (Weaver); the sept rolls for itself after 7 days | Change RAID_ODDS or RAID_GRACE_DAYS, or untick raids |
+| 2026-11-13 | What does a caern war do (B3474)? | Storyteller starts it; half Garou plus best rank at 6, ties to the defenders; a taken caern changes sept, offices empty, a level lost | Change caernWar |
+| 2026-11-13 | How is a lost caern taken back (B3475)? | Three successes at 7; back at level 1, lapsed, needing a moot | Change reclaim |
 
 | 2026-11-13 | Which court does a Kindred faction outside Europe keep by default? (B2960) | Laibon in Africa south of the Sahara, Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia, Kuei-jin in East and Southeast Asia; India, Central Asia, Tibet and the pre-colonial Americas keep the European default | Empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs |
 | 2026-11-13 | What are the seats and law of a Laibon council and an Ashirra court? (B2961, B2962) | WoDX's own words (Elder of the land, Speaker of the old law, Voice of a legacy; Amir, Qadi, Wazir, Muhtasib of the night), pending the PC book check | Edit "laibon-council" and "ashirra" in POLITIES |

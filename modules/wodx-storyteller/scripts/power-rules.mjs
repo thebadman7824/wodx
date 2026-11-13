@@ -18,7 +18,9 @@
  *              rank cost the freehold a rank; lost ranks come back one a month if the balefire rests, one a season if
  *              it is harvested every day. Swearing the oath invests Glamour equal to the rating; a destroyed freehold
  *              gives its keeper that much Banality. Untended freeholds in a dull place fade (house rule, B3454).
+ *   Caern      W20 (caern-rules.mjs, B3470-B3476): the Garou kind on the same register.
  */
+import * as C from "./caern-rules.mjs";
 
 export const DAY = 86400;
 export const WEEK = 7 * DAY;
@@ -309,11 +311,11 @@ export function freeholdRights(freehold) {
 /*  The register of places                                              */
 /* ------------------------------------------------------------------ */
 
-export const KINDS = {node: "Node", chantry: "Chantry", freehold: "Freehold"};
+export const KINDS = {node: "Node", chantry: "Chantry", freehold: "Freehold", caern: "Caern"};
 export function blankState() { return {v: 1, list: []}; }
 export function normPlace(p = {}) {
   const kind = KINDS[p.kind] ? p.kind : "node";
-  const body = kind === "node" ? normNode(p) : kind === "chantry" ? normChantry(p) : normFreehold(p);
+  const body = kind === "node" ? normNode(p) : kind === "chantry" ? normChantry(p) : kind === "caern" ? C.normCaern(p) : normFreehold(p);
   return {...body, id: str(p.id || "", 40), name: str(p.name || KINDS[kind], 120), scene: p.scene ? str(p.scene, 64) : null,
     keepers: (Array.isArray(p.keepers) ? p.keepers : []).map(k => str(k, 64)).filter(Boolean).slice(0, 20),
     node: kind === "chantry" && p.node ? str(p.node, 40) : null,
@@ -330,8 +332,8 @@ export const logLine = (p, t, text) => ({...p, log: [...(p.log ?? []), {t: num(t
  * Everything the clock does to the places since they were last looked at.
  * @returns {{state, lines: string[]}}  lines only for things the Storyteller should hear about
  */
-export function tick(state, now, {year = 2000, banalityOf = () => null} = {}) {
-  const st = normState(state), lines = [];
+export function tick(state, now, {year = 2000, banalityOf = () => null, rand = Math.random} = {}) {
+  const st = normState(state), lines = [], drift = [];
   const list = st.list.map(p => {
     if ( p.kind === "node" ) {
       const r = accrueNode(p, now, year);
@@ -352,14 +354,22 @@ export function tick(state, now, {year = 2000, banalityOf = () => null} = {}) {
       }
       return q;
     }
+    if ( p.kind === "caern" ) {
+      const r = C.caernTime(p, now, {year, rand});
+      let q = {...p, ...r.caern};
+      for ( const l of r.lines ) { lines.push(`${p.name}: ${l}`); q = logLine(q, now, l); }
+      for ( const k of r.drift ) drift.push({id: p.id, scene: p.scene, kind: k});
+      return q;
+    }
     return p;
   });
-  return {state: {...st, list}, lines};
+  return {state: {...st, list}, lines, drift};
 }
 
 /** One line for a place, for lists and cards. */
 export function describe(p, {year = 2000} = {}) {
   const x = normPlace(p);
+  if ( x.kind === "caern" ) return C.describeCaern(x, {year});
   if ( x.kind === "node" ) {
     const w = nodeWeekly(x, year), cap = nodeCap(x, year);
     return `${x.name}: Node ${x.rating} (caern level ${caernOf(x.rating)}), ${NODE_SIDES[x.side].label.split(" (")[0].toLowerCase()}; ${w.quint} Quintessence and ${w.tass} Tass a week; holds ${x.store.quint}/${cap.quint} and ${x.store.tass}/${cap.tass} Tass.`;
