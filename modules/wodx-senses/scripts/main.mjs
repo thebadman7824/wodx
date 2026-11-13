@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.8.1";
+const VERSION = "0.9.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -431,11 +431,11 @@ function channelLines(sense, pw, ctx, gathered) {
     }
     if ( ch === "unnatural" ) { if ( superN.length ) add("any", superN); continue; }
     if ( ch === "sphere-life" ) { if ( living.length ) add("living", living); const k = near.filter(p => p.kind === "kindred"); if ( k.length ) add("kindred", k); continue; }
-    if ( ch === "sphere-spirit" ) { const s = near.filter(p => ["spirit", "wraith"].includes(p.kind)); if ( s.length ) add("spirit", s); if ( ["caern", "church"].includes(ctx.place.kind) ) add("place", []); continue; }
+    if ( ch === "sphere-spirit" ) { const s = near.filter(p => ["spirit", "wraith"].includes(p.kind)); if ( s.length ) add("spirit", s); if ( ctx.place.kind === "caern" || R.WORSHIP.includes(ctx.place.kind) ) add("place", []); continue; }
     if ( ch === "sphere-entropy" ) { add("any", []); const k = near.filter(p => p.kind === "kindred"); if ( k.length ) add("kindred", k); continue; }
     if ( ch === "sphere-prime" ) { const m = near.filter(p => p.kind === "mage"); if ( m.length ) add("mage", m); if ( ctx.place.kind === "caern" ) add("place", []); continue; }
     if ( ch === "chimerical" ) { const f = near.filter(p => p.kind === "fae"); if ( f.length ) add("fae", f); if ( ctx.place.chimerical ) add("place", []); continue; }
-    if ( ch === "restless" ) { const g = near.filter(p => ["wraith", "spirit"].includes(p.kind)); if ( g.length ) add("dead", g); if ( ["graveyard", "church"].includes(ctx.place.kind) ) add("place", []); continue; }
+    if ( ch === "restless" ) { const g = near.filter(p => ["wraith", "spirit"].includes(p.kind)); if ( g.length ) add("dead", g); if ( ctx.place.kind === "graveyard" || R.WORSHIP.includes(ctx.place.kind) ) add("place", []); continue; }
     if ( ch === "deathsight" ) { const h = near.filter(p => p.hurt && !["wraith", "spirit"].includes(p.kind)); if ( h.length ) add("hurt", h); continue; }
     if ( ch === "lifesight" ) { if ( living.length ) add("living", living); if ( living.some(p => p.hurt) ) add("hurt", living.filter(p => p.hurt)); continue; }
   }

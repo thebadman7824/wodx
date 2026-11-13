@@ -435,7 +435,7 @@ PLACES.none = {label: "Nobody passes", crowd: 0, people: {}, animals: {...NONE}}
  * The kind of place is WoDX NPC's own place tag (flags.wodx-npc.place.kind, PLACE_KINDS in routine-rules.mjs), the one
  * Interactables, Atmosphere and the Masquerade read; this is the crowd each kind draws. A haven or a chantry draws nobody.
  */
-export const CROWD_OF_KIND = {street: "street", market: "square", church: "church", tavern: "tavern", castle: "interior", home: "home",
+export const CROWD_OF_KIND = {street: "street", market: "square", church: "church", mosque: "church", synagogue: "church", temple: "church", tavern: "tavern", castle: "interior", home: "home",
   workplace: "workplace", gate: "street", haven: "none", wilds: "road", caern: "road", alley: "alley", yard: "yard", docks: "docks", park: "park", sewer: "sewer", hospital: "hospital", station: "station", elysium: "elysium", chantry: "none", other: "street"};
 /** The crowd profile for a kind of place (a PLACE_KINDS key, or a crowd profile key). */
 export const placeOf = key => PLACES[CROWD_OF_KIND[key] ?? key] ?? PLACES.street;

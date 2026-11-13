@@ -29,7 +29,9 @@ export function eraBand(year) {
 }
 
 /** Place kinds (as WoDX NPC tags them) that are indoors unless the Storyteller says otherwise. */
-export const INDOOR_KINDS = ["home", "workplace", "church", "tavern", "haven", "castle"];
+export const INDOOR_KINDS = ["home", "workplace", "church", "mosque", "synagogue", "temple", "tavern", "haven", "castle"];
+/** The houses of worship of every faith (WoDX NPC 0.50.0 gave each its own kind of place). */
+export const WORSHIP = ["church", "mosque", "synagogue", "temple"];
 export function isIndoor(place = {}) {
   if ( place.io === "in" ) return true;
   if ( place.io === "out" ) return false;

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2660
+Next free block: B2670
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -118,6 +118,7 @@ Next free block: B2660
 | B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books | Otherworlds |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
+| B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3455,3 +3456,14 @@ Reverse: pick another land in the setting; CHRONICLE_COINS and coinsFromMoney in
 ## B2631. Named places from the book lookup stand on the realm maps (2026-11-13)
 The PC read the books for each of the 34 realms and gave back 229 named places with pages, 95 notes on how the realms lie and 83 on how they change, all in our own words. 188 places went onto the maps, each with a line on what it is and its page; the window shows that line for the two ends of a journey and in Found places, and never for a place not yet found. Left out: beings and weather, roads and gates the maps already have, places the catalogue already names, and places that lie outside the realm (the outposts and conquered lands of the Yellow Springs, the other Dark Kingdoms, the Egyptian Shadowlands). A named place stands on firm ground while the map has room. The notes on lie and change are kept with each map and can be opened in the window; the maps do not yet follow them place by place, and the dated changes (Yomi 1945 and 1998, the Yellow Springs 1945, 1949 and 1997) are not yet steps of the maps. The lookup also put three page refs right: the Far Dreaming and the Deep Dreaming are Changeling 20th pdf 55 and 307 to 308, and Enoch no longer cites Sins of the Blood. One finding is left for Ben: The Thousand Hells calls Ti Yu, the Earth Prison, a made copy that belongs to the Yellow Springs, while Dark Kingdom of Jade, which the realm maps follow, sets the hells round it; nothing was moved.
 Reverse: empty PLACES in modules/wodx-otherworlds/scripts/realm-places.mjs.
+## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
+A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
+Reverse: set Daily prayers to Not kept on an NPC, or return blocksOf in modules/wodx-npc/scripts/routine-rules.mjs to forFaith alone; PRAYERS can stay unused.
+
+## B2661. Ramadan's nights in NPC routines (2026-11-13, global rule)
+In the month of Ramadan, by the counted Muslim year of WoDX Chronicle's faith years, a Muslim NPC who keeps the prayers eats a meal before dawn (140 to 85 minutes before sunrise), breaks the fast at home from sunset for 85 minutes, goes to the night prayers at the mosque (115 to 190 minutes after sunset) and is out in the streets for the late night that follows, until about five hours after sunset. Evenings at the coffee house or bathhouse wait until the month is over. The working day is left as it is.
+Reverse: drop RAMADAN from withPrayers in routine-rules.mjs.
+
+## B2662. Houses of worship of their own kind (2026-11-13, global rule)
+Mosque, Synagogue or prayer house, and Temple, pagoda or monastery of the faiths of Asia join Church as kinds of place. The church role in a routine looks for the house of the NPC's own faith first (mosque for Islam, synagogue for the Jewish year, temple for the faiths of India, China, Tibet and Southeast Asia), then for a place tagged plainly as a church, so places tagged before this keep working. A Christian is never sent to a mosque, synagogue or temple. Scene names with mosque, masjid, madrasa, synagogue, temple, pagoda, stupa, gompa, vihara or mandir are guessed to their kind; "Temple Church" stays a church. Passers-by, residents, rumours, container fills, the Penumbra and Shadowlands treat the three as churches; WoDX Senses has lines of its own for each. This replaces the 2026-11-13 choice in PENDING-REVIEW to add no separate kind.
+Reverse: tag such places as Church again; WORSHIP_KINDS and the Senses tables can stay.
