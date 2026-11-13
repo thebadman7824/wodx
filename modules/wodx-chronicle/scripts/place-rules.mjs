@@ -15,6 +15,11 @@ import {regionOf} from "./world-rules.mjs";
 
 export const OFFSET_MIN = -12, OFFSET_MAX = 14;
 /** The years a scene can be told to keep (faith-rules.mjs FAITHS). */
+/**
+ * Money of a land that stands under a wider region (B3191): a scene in Manila pays in pesos though the Philippines are
+ * filed under the Malay world. The ids are WoDX Storyteller's money lists; the label is shown in Where this scene stands.
+ */
+export const PLACE_MONIES = {philippine: "The Philippines", indochinese: "Indochina (Vietnam, Cambodia, Laos)", balkan: "The Balkans (Serbia, Bulgaria, Romania, Bosnia)"};
 export const PLACE_FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
 
 /** A stored place kept clean: {latitude: number|null, offset: number}. */
@@ -29,11 +34,13 @@ export function cleanPlace(p = {}) {
   if ( regionOf(p?.region) ) out.region = p.region;
   // Whose holy days the scene keeps, when it differs from its region's (a quarter, a mission, a court in exile)
   if ( p?.faith && PLACE_FAITHS.includes(p.faith) ) out.faith = p.faith;
+  // B3191: the money of a land under a wider region
+  if ( p?.money && Object.hasOwn(PLACE_MONIES, p.money) ) out.money = p.money;
   return out;
 }
 
 /** Does the scene keep its own place? */
-export const hasOwnPlace = p => { const c = cleanPlace(p); return c.latitude !== null || c.offset !== 0 || !!c.region || !!c.faith; };
+export const hasOwnPlace = p => { const c = cleanPlace(p); return c.latitude !== null || c.offset !== 0 || !!c.region || !!c.faith || !!c.money; };
 
 /** The latitude and the world time to use for a scene: {latitude, time, own}. */
 export function placeTime(p, worldTime, homeLatitude) {

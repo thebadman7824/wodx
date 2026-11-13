@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.68.0 (Money of their own for the Philippines, Indochina and the Balkans (B3190). Gold by weight, galleon pesos, Philippine pesos and the piso. Đại Việt cash, the French piastre and the đồng. Serbian dinars, the akçe and kuruş, then Serbian and Yugoslav dinars. Each runs from 1197 to 2019 with wages, and each can be named in Coins of the day)
 - 0.67.0 (The end-of-night experience table remembers the fights since the last wrap-up, sent by WoDX Combat's after-action card: it lists them, and ticks "Came through real danger" for each player character who took three health levels or more in a fight or ended one down. The list empties when experience is given (B3170))
 - 0.66.0 (Crafting and cookery by region (B3100-B3101): Cook, brew or mix and Make something show what is made in the land of the character's scene first, with a Lands choice for every land; missing ingredients are bought from what that land has)
 - 0.65.1 (false heirs count whole years of time passed, so a short time skip over New Year no longer counts as a year)
