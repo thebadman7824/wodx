@@ -62,8 +62,8 @@ export async function run() {
       if ( has(`${m}.${k}`) ) await game.settings.set(m, k, v);
 
     const own = player ? {default: 0, [player.id]: 3} : {default: 0};
-    const [pc] = await Actor.create([{name: "WoDX gate: patron", type: "Vampire", ownership: own}]);
-    const [rival] = await Actor.create([{name: "WoDX gate: rival", type: "Mortal", ownership: {default: 0}}]);
+    const pc = await Actor.create({name: "WoDX gate: patron", type: "Vampire", ownership: own});
+    const rival = await Actor.create({name: "WoDX gate: rival", type: "Mortal", ownership: {default: 0}});
     actors.push(pc, rival);
     const scene = await Scene.create({name: "WoDX gate: world systems", width: 800, height: 600, padding: 0});
     scenes.push(scene);
