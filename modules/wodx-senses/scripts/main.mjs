@@ -645,6 +645,7 @@ export async function describePlace({scene = canvas?.scene, point = null} = {}) 
 /* ------------------------------------------------------------------ */
 
 async function onButton(msg, action) {
+  if ( action === "ties" ) return OW.tiesDialog();
   const a = msg.flags?.[MOD]?.answer;
   if ( !a ) return;
   const lines = a.sections.flatMap(s => s.lines);

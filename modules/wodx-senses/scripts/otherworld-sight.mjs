@@ -327,10 +327,12 @@ function mien(layer, t) {
 let said = "";
 export async function sayLines(sight, a, lines) {
   const key = `${a?.id}:${sight}:${canvas?.scene?.id}:${lines.join("|").replace(/\d+/g, "")}`;
-  if ( !lines.length || key === said ) return;
+  const ties = sight === "shroud" || sight === "chimerical";
+  if ( (!lines.length && !ties) || key === said ) return;
   said = key;
+  // A wraith ties Fetters and a changeling sets a mien picture from this card (button data-wsn="ties")
   await ChatMessage.create({whisper: [game.user.id], speaker: {alias: "WoDX Senses"},
-    content: `<div class="wodx-card"><h3>${esc(O.OTHER[sight]?.label ?? "Sight")}</h3>${lines.slice(0, 20).map(l => `<p>${esc(l)}</p>`).join("")}</div>`});
+    content: `<div class="wodx-card"><h3>${esc(O.OTHER[sight]?.label ?? "Sight")}</h3>${lines.slice(0, 20).map(l => `<p>${esc(l)}</p>`).join("")}${ties ? `<button type="button" data-wsn="ties">${sight === "shroud" ? "Tie my Fetters to things on the map" : "My fae mien and who is enchanted"}</button>` : ""}</div>`});
 }
 
 /* ---------------- echoes and strain (the active Storyteller keeps them) ---------------- */

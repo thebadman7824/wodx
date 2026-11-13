@@ -115,7 +115,8 @@ test("wiring: the sight button steps through the new sights, Actions says when m
   const sight = src("modules/wodx-senses/scripts/sight.mjs"), main = src("modules/wodx-senses/scripts/main.mjs"), m20 = src("modules/wodx-actions/scripts/m20.js");
   assert.match(sight, /OW\.otherSightsOf\(a\)/);
   assert.match(sight, /OW\.rollFor\(a, next\)/);
-  assert.match(sight, /wodxSightTies/);
+  assert.match(sight, /wodxSightTies[\s\S]*?visible: game\.user\.isGM/);
+  assert.match(main, /action === "ties"/);
   assert.match(main, /type === "keep"/);
   assert.match(m20, /Hooks\.callAll\("wodxMagickWorked", actor, \{ kind: fd\.kind/);
   const ow = src("modules/wodx-senses/scripts/otherworld-sight.mjs");

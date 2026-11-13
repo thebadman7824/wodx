@@ -158,7 +158,7 @@ export function setupSight(helpers) {
     if ( !tokens?.tools ) return;
     tokens.tools.wodxSight = {name: "wodxSight", title: "My sight (Heightened Senses, Aura Perception, Lifesight, a mage's Sphere sights, the Penumbra while peeking; press again for the next, then off)",
       icon: "fa-solid fa-eye-low-vision", order: 122, button: true, visible: true, onChange: () => cycleSight()};
-    tokens.tools.wodxSightTies = {name: "wodxSightTies", title: "Sight: enchant the selected (Storyteller), tie a wraith's Fetters, set a changeling's fae mien",
-      icon: "fa-solid fa-link", order: 123, button: true, visible: true, onChange: () => OW.tiesDialog()};
+    tokens.tools.wodxSightTies = {name: "wodxSightTies", title: "Sight: enchant the selected, tie a wraith's Fetters, set a changeling's fae mien (players open it from their sight card)",
+      icon: "fa-solid fa-link", order: 123, button: true, visible: game.user.isGM, onChange: () => OW.tiesDialog()};
   });
 }

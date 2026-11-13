@@ -113,7 +113,7 @@ export function build(ctx) {
             const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
             if (["vulgar", "witnessed"].includes(fd.kind)) ctx.revealed?.(actor, { secret: "mage", event: "worked vulgar magick" })?.catch?.(e => console.error("WoDX |", e));
             // B3545: other modules hear that magick was worked (WoDX Senses marks vulgar strain for Prime sight)
-            Hooks.callAll("wodxMagickWorked", actor, { kind: fd.kind, highest: plan.highest, botch: !!r.botch, spheres: used.map(x => x.sphere), age: sg.age.key });
+            Hooks.callAll("wodxMagickWorked", actor, { kind: fd.kind, highest: plan.highest, age: sg.age.key, botch: !!r.botch, spheres: used.map(x => x.sphere) });
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
         }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
