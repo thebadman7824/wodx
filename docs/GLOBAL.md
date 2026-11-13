@@ -34,7 +34,7 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 | A scene far from home (Chronicle) | Latitude and hour only | Widened: the scene's region too |
 | Languages (Chronicle), voices | 30 tongues, few from outside Europe and the Near East; made-up speech had five sound sets | Widened: 71 tongues, 21 sound sets, 37 voice languages |
 | Households (NPC) | Feminine family names for Czech and German only; "son of" names for Hebrew only | Widened: any people's listed feminine form; ibn and bint, bin and binti |
-| Era timelines, 1197 to 2099 | 2,859 events: Europe 2,089, Middle East 571, Asia 561, Moravia 238; the Americas 8 and Africa 88, all in the prologues; Oceania none | Open, next in this thread |
+| Era timelines, 1197 to 2099 | 2,859 events: Europe 2,089, Middle East 571, Asia 561, Moravia 238; the Americas 8 and Africa 88, all in the prologues; Oceania none | Widened for 1197 to 2009: 519 more events (the Americas 235, Africa 177, Oceania 107, a new region), waiting for review. Open: Future Darkness, to be written against the Cyberpunk 2020 timeline |
 | Prologue timelines | Being widened in the prologue thread | In hand elsewhere |
 | Country map and town generator (Storyteller, tools/mapgen) | The country map's bounds are 12 to 20 east and 47.4 to 51.2 north; towns, roads, rails and airfields are Moravia's | In hand in the maps thread, with a rough world map asked for by Ben |
 | Settlement generator (NPC settlement, tools/mapgen ddsettle) | Towns, buildings and street names follow Moravia only | Open in the maps thread: other regions are listed in its decision B2529 |
@@ -56,9 +56,9 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 
 ## Open, not built yet
 
-- Timeline events for the Americas, Africa and Oceania in every era from 1197.
+- Timeline events for the Americas, Africa and Oceania in the Future Darkness branch (1990 to 2099), and a book check of the eight new cards that carry a World of Darkness reading.
 - Faith calendars, the spread of news and travel dates by region.
 - Passers-by, residents, clergy and trades by region.
 - Money: purses are not converted when a character travels; Korea, Southeast Asia and the Malay world borrow China's money, Hungary and the Balkans Moravia's, Greece the Ottoman lands', and the Caribbean and the Andes Mexico's.
-- Peoples WoDX has no names for yet: the first nations of North America and the Caribbean, Aboriginal Australians, the peoples of central Africa, the Maya, the Berbers, Armenians, Sephardi and Mizrahi Jews, Tibetans, Khmer, Filipinos, and the far north.
-- Regions not in the list yet: central Africa, Siberia and the Arctic, Tibet and the Himalaya, the Philippines, the southern cone of South America, Canada as its own region.
+- Peoples WoDX has no names for yet: the first nations of North America and the Caribbean, Aboriginal Australians, the peoples of central Africa, the Maya, the Berbers, Armenians, Sephardi and Mizrahi Jews, Khmer, Filipinos, and the Inuit and other peoples of the far north.
+- Places that stand under a wider region for now and may want their own: the Philippines, Indochina, Central America, the Caucasus, Mongolia, Madagascar, the Horn of Africa, the Sahara, Ireland, Iceland, Alaska.

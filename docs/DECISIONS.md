@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2530
+Next free block: B2540
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -105,6 +105,7 @@ Next free block: B2530
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
 | B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
+| B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 <!-- decision-index:end -->
 
 ## The decisions

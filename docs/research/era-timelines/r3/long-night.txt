@@ -305,3 +305,33 @@
 1407|W|vam|EU|Paris|death,crown|Kindred and the murder in the rue Vieille-du-Temple|Parisian Kindred whisper that the Duke of Orleans's killers had help; no one names whose.
 1413|H|mor|EU|Paris|uprising|The Cabochiens|Paris butchers and skinners rise and terrorise the court.
 1432|W|mag|EU|Ghent|art,occult|The painter's light|Van Eyck's oils catch the light so truly that Ecstatics and the craftsmen of the Order of Reason both claim the method.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1350|H|mor|AM|Cahokia|migration|Cahokia abandoned|The last people leave the mound city on the Mississippi; no later nation claims to have built it.
+1375|H|mor|AM|Tenochtitlan|crown|The first king of the Mexica|Acamapichtli becomes the first tlatoani of Tenochtitlan, still a tributary of the Tepanecs.
+1375|H|mor|AM|Lambayeque|war,empire|Chimor takes the north coast|The Chimu conquer the Lambayeque valleys and carry their goldsmiths back to Chan Chan.
+1408|H|mor|AM|Greenland|faith|The last word from Greenland|A wedding at Hvalsey church is the last written record of the Norse in Greenland.
+1418|H|mor|AM|Texcoco|war,crown|Texcoco falls|The Tepanecs kill the king of Texcoco, and the young prince Nezahualcoyotl flees into the hills.
+1428|H|mor|AM|Tenochtitlan|war,treaty,empire|The Triple Alliance|Tenochtitlan, Texcoco and Tlacopan destroy Azcapotzalco and divide the tribute of the valley among themselves.
+1431|H|mor|AM|Texcoco|crown,learning,law|The poet king|Nezahualcoyotl is crowned in Texcoco and gives it law courts, archives and gardens.
+1438|H|mor|AM|Cuzco|war,empire,crown|Pachacuti|A prince of Cuzco beats back the Chanka, takes the name Pachacuti and begins the Inca conquests.
+1440|H|mor|AM|Tenochtitlan|crown,empire|Moctezuma the elder|Moctezuma Ilhuicamina becomes ruler of the Mexica and carries their wars to the Gulf coast.
+1441|H|mor|AM|Mayapan|uprising,war|Mayapan destroyed|The Xiu lords rise against the Cocom and burn Mayapan; Yucatan breaks into quarrelling provinces.
+1446|H|mor|AM|Tenochtitlan|famine|Locusts in the valley|Locusts strip the fields of the Valley of Mexico.
+1449|H|mor|AM|Tenochtitlan|flood,building|The lake floods the city|Lake Texcoco floods Tenochtitlan, and Nezahualcoyotl designs a dike nine miles long to hold it back.
+1348|H|mor|AF|Tunis|plague,death|The plague in the Maghreb|The pestilence reaches Tunis and kills the parents and teachers of the young Ibn Khaldun.
+1352|H|mor|AF|Walata|travel,trade|Ibn Battuta crosses the Sahara|The traveller rides with a salt caravan to Mali and writes down the court of Mansa Sulayman.
+1380|H|mor|AF|Kano|faith,crown|Kano takes Islam|By the Kano Chronicle King Yaji accepts Islam from Wangara traders about this time and builds a mosque.
+1390|H|mor|AF|Mbanza Kongo|founding,crown|The kingdom of Kongo|By tradition Lukeni lua Nimi crosses the Congo river about this year and founds the kingdom of Kongo.
+1400|H|mor|AF|Great Zimbabwe|trade,building|Great Zimbabwe at its height|Perhaps eighteen thousand people live around the stone enclosures, trading gold for Chinese porcelain and Persian glass.
+1400|H|mor|AF|Gao|crown,empire|Songhai slips from Mali|The Sunni rulers of Gao stop paying tribute to a weakened Mali.
+1415|H|mor|AF|Malindi|travel,trade,sea|A giraffe for the emperor|Envoys of Malindi send a giraffe to the Ming court with the treasure fleet, and the fleet later visits the Swahili coast.
+1430|H|mor|AF|Zambezi|founding,crown|The Mutapa state|A prince of Great Zimbabwe moves north to the Zambezi about this year and founds the Mutapa kingdom.
+1433|H|mor|AF|Timbuktu|war|The Tuareg take Timbuktu|Tuareg riders take Timbuktu from Mali.
+1434|H|mor|AF|Cape Bojador|exploration,sea|Cape Bojador rounded|Gil Eanes sails past the cape that sailors believed marked the end of the world and comes back.
+1440|H|mor|AF|Benin City|crown,building,art|Ewuare the Great|Ewuare becomes Oba of Benin, rebuilds the city with walls and wide streets and makes the palace guilds of brass casters.
+1444|H|mor|AF|Senegal River|exploration,trade|The Portuguese reach the Senegal|Portuguese ships pass the desert coast and reach the green land south of the Senegal river.
+1445|H|mor|AF|Ethiopia|battle,faith|Zara Yaqob at Gomit|The Ethiopian emperor Zara Yaqob defeats the sultan of Adal at Gomit.
+1400|H|mor|OC|Aotearoa|famine,migration|The moa are gone|The giant birds of Aotearoa are hunted out within a few generations, and the people turn to the sea, fern root and the kumara.
+1400|H|mor|OC|Chatham Islands|migration,sea|Rekohu settled|Voyagers from Aotearoa settle the Chatham Islands and in time become the Moriori.
+1400|H|mor|OC|Rapa Nui|building,famine|The last palms|The forest of Rapa Nui is nearly gone, and the islanders mulch their gardens with stone.
+1420|H|mor|OC|Oahu|law,crown|The land divisions of Oahu|By tradition the chief Mailikukahi divides Oahu into districts running from the mountain to the sea.
