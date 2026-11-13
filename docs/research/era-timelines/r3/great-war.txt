@@ -314,7 +314,7 @@
 1916-4|H|mor|AM|Buenos Aires|law,crown|Yrigoyen elected|Argentina's first election by secret and universal male vote brings the Radical leader to power.
 1917-2|H|mor|AM|Queretaro|law,revolution|Mexico's constitution|The revolution's constitution gives the nation the land and the oil and limits the church.
 1917-3|H|mor|AM|San Juan|law,empire|Puerto Ricans made citizens|An act of Congress makes Puerto Ricans citizens of the United States weeks before conscription begins.
-1917-4|H|mor|AM|Washington|war|America enters the war|The United States declares war on Germany.
+1917-5|H|mor|AM|Washington|war|The draft|Congress passes the Selective Service Act, and millions of American men register for the army.
 1917-7|H|mor|AM|East St. Louis|massacre,persecution,industry|The East St. Louis riots|White mobs kill dozens of black residents and burn their homes; ten thousand march in silence down Fifth Avenue.
 1917-10|H|mor|AM|Rio de Janeiro|war,sea|Brazil at war|Brazil declares war on Germany after its ships are sunk, the only South American state to fight.
 1917-12|H|mor|AM|Halifax|disaster,sea,death|The Halifax explosion|A munitions ship blows up in Halifax harbour and kills about two thousand people.

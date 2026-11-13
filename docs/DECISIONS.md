@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2590
+Next free block: B2610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -111,6 +111,8 @@ Next free block: B2590
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
+| B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
+| B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3239,6 +3241,16 @@ Reverse: untick the land.
 ## B2553. Left open (2026-11-13)
 Not built: years before 1197 use the same from-of-old lists, so the prologue eras show too much as known; the Norse voyages to Vinland and other finds that were lost again; a share of the map for the players (the window is the Storyteller's); an expedition as a thing to play (ships, crews, a roll to find a coast); knowledge by faction or by supernatural kind rather than by homeland; Travel places inside one country, which needs no such rule.
 
+
+## B2554. India is hidden from Europe until 1498; lands open by year (2026-11-13, Ben's call)
+Ben decided the two questions B2550 and B2551 left with him. India is beyond Europe's known world until 1498, as in the games, and not reachable by the Levant and the Red Sea before then; with it, the lands reached past it by sea open only when Europe's ships get there (Southeast Asia 1509, the islands of Nusantara 1511). China stays known from 1245 by the roads across Asia. India in turn learns of Europe in 1498, as before. North Africa, the Near East, East Asia and Africa keep their own old knowledge of India. Lands open by their exact year as the chronicle's clock moves, not in a block at the start of an era. This replaces the sentence on India in B2551.
+Reverse: put india, southeast-asia and nusantara back to their earlier years in Europe's row of CIRCLES.
+
+
+## B2555. Nothing beyond India opens before India (2026-11-13, Ben's call)
+Ben: China and the lands with it should not open to Europe until India opens. China is beyond Europe's known world until 1513, when Europe's ships first reach it, and Tibet and the Himalaya until 1624; with Southeast Asia 1509, Nusantara 1511, Japan 1543 and Korea 1593, every land east of India now opens after 1498. The roads across Asia no longer carry a chronicle from Europe to China before then. East Asia in turn learns of Europe in 1513, not 1290. North Africa, the Near East and Central Asia stay known to Europe from of old, and keep their own old knowledge of India and China. A chronicle that travels the old roads early marks the land found under Discoveries. This replaces the years for China and Tibet in B2550 and the sentence on China in B2554.
+Reverse: put china back to 1245 and tibet-himalaya to 1330 in Europe's row of CIRCLES, and Europe to 1290 in East Asia's.
+
 ## B2560. Sprite tokens, a prototype (2026-11-13)
 Ben chose on the sprite desk (12 November): whole drawn figures on the map, busts kept for sheets and chat, facing and a walk cycle, drawn by our own code in the paperdoll module, and a testbed prototype first. Paperdoll 0.7.0 holds six sheets (Kindred elder 1888, Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888), each 8 walk frames by 4 facings at 96 by 112 pixels, drawn outside the game by our own rig and shaded with five tones, a dark outline and one light. No outside art. A token that carries the flag "sprite" shows the frame for its facing and for the ground it has covered: one square is one walk cycle. The Storyteller gives or removes a sprite from the walking-figure button among the token's own buttons; the token's old picture is kept and put back. The figure is drawn twice the square, so a person stands a little over one square tall with the feet low in the square. The world setting "Sprite tokens walk and turn" turns the movement off.
 Reverse: remove the sprite from each token with the same button, or turn the setting off; delete modules/wodx-paperdoll/sprites and scripts/sprites.mjs with sprite-rules.mjs.
@@ -3277,3 +3289,43 @@ Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 ## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
 WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
 Reverse: remove the hook call in Combat's attack and the two listeners in sprites.mjs.
+
+## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
+The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
+Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.
+
+## B2601. Coming of age moves with the era and the region (2026-11-13, Ben's pick on lp6; house reading of history)
+Adult life starts at 14 before 1500, 15 to 1788, 16 to 1945 and 18 after; the teenage years start at 10 where adult life starts at 14, else at 12. Japan keeps 15 before 1789. Regions may set their own in REGION_COMING_OF_AGE. These ages are WoDX's own reading, not a book rule.
+Reverse: set every value of COMING_OF_AGE to 18 and empty REGION_COMING_OF_AGE in data/lifepath-drill.mjs.
+
+## B2602. Five things marked those years (2026-11-13, Ben's note on lp5)
+Each stage has two picks. The second shows five options drawn from that stage's list: two good, two hard, one neither, with "Five others" to draw again. This is Claude's reading of "five choices per life stage, two positive, two negative, one neutral".
+Reverse: change MARK_SHAPE in lifepath-drill-rules.mjs.
+
+## B2603. Adult chapters (2026-11-13, desk lp7)
+A new chapter of adult life opens at coming of age, 30, 45 and 60. Each chapter is a calling and a mark.
+Reverse: change CHAPTERS in data/lifepath-drill.mjs.
+
+## B2604. Rewards go on the sheet at the book's cost (2026-11-13, desk lp12 and lp13; V20 creation totals and each line's own)
+At the end the ticked picks are written to the sheet: an Ability up one dot and never past the book's creation cap, a Background at one dot or up one, a Merit or Flaw at the cost in the book table (the least cost where the book gives a range), Flaws only up to the book's cap. Nothing is free: the creation check counts every dot and point. Flaws start unticked. Names not in the book table are left off and listed. The tongue of the land of birth costs nothing.
+Reverse: untick "Put what is ticked above on the sheet"; features made this way carry flags.wodx-creation.lifepath.
+
+## B2605. Own answers and young characters pass the Storyteller (2026-11-13, desk lp10 and lp23)
+A player's own answer on any step except continent and region, or a character younger than 12, sends the lifepath to the approval queue; the sheet changes when the Storyteller approves. A Storyteller's own lifepath waits for no one.
+Reverse: return [] from reviewReasons.
+
+## B2606. Births of a line's own kind (2026-11-13, desk lp19)
+Origins of a line (born a wolf, metis, Kinfolk family, revenant family, a ghoul household, a hunter's family and the like) are offered only when the character's line fits.
+Reverse: drop the rows with a line in ORIGINS.
+
+## B2607. A life lived elsewhere (2026-11-13, desk lp9 and lp11)
+Every stage after childhood can be set in another region. When the last home is not the chronicle's homeland, a last step asks what brought the character here.
+Reverse: drop the movable flag in stepsOf and the arrival step.
+
+## B2608. Local content comes region by region (2026-11-13, desk lp15, lp16 and lp22)
+The shared lists serve all 44 regions in every age. Local origins, teenage paths and callings exist for France, Japan, West Africa, the Andes, the Levant and western North America as samples; the other regions and the sorting of the older Bohemian scenes into Moravia's local content follow in later batches. Nothing was deleted.
+Reverse: empty LOCAL in data/lifepath-drill.mjs.
+
+## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
+A person from the past made into an NPC is named by the culture of the region where that part of life happened.
+Reverse: drop the culture argument in makePeople.

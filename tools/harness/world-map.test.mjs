@@ -188,14 +188,14 @@ test("known world: every region has a circle, and what is known only grows", () 
 });
 
 test("known world: Europe learns of the Americas, and the Americas of Europe, in their years", () => {
-  assert.equal(D.knownYear("moravia", "caribbean"), 1492); assert.equal(D.knownYear("iberia", "mexico"), 1517); assert.equal(D.knownYear("moravia", "india"), D.OLD);
+  assert.equal(D.knownYear("moravia", "caribbean"), 1492); assert.equal(D.knownYear("iberia", "mexico"), 1517); assert.equal(D.knownYear("moravia", "india"), 1498); assert.equal(D.knownYear("moravia", "nusantara"), 1511); assert.equal(D.knownYear("moravia", "china"), 1513); assert.equal(D.knownYear("china", "moravia"), 1513); assert.equal(D.knownYear("moravia", "tibet-himalaya"), 1624); assert.equal(D.knownYear("india", "moravia"), 1498); assert.equal(D.knownYear("egypt", "india"), D.OLD);
   assert.equal(D.knownYear("moravia", "southern-africa"), 1488); assert.equal(D.knownYear("british-isles", "australia"), 1606);
   assert.equal(D.knownYear("mexico", "iberia"), 1492); assert.equal(D.knownYear("andes", "france"), 1500); assert.equal(D.knownYear("mexico", "north-america-west"), D.OLD);
   assert.equal(D.knownYear("china", "mexico"), 1587, "seventy years after Europe's ships");
   assert.equal(D.knownYear("egypt", "caribbean"), 1512); assert.equal(D.knownYear("aotearoa", "pacific-islands"), D.OLD); assert.equal(D.knownYear("aotearoa", "france"), 1767);
   assert.equal(D.knownYear("antarctica", "caribbean"), 1492);
   assert.ok(!D.isKnown("moravia", "caribbean", 1300)); assert.ok(D.isKnown("moravia", "caribbean", 1300, ["caribbean"]), "found by the chronicle itself");
-  assert.deepEqual(D.unknownRegions("moravia", 1500, W.REGION_IDS).slice(0, 2), [{id: "southern-cone", year: 1516}, {id: "mexico", year: 1517}]);
+  assert.deepEqual(D.unknownRegions("moravia", 1500, W.REGION_IDS).slice(0, 2), [{id: "southeast-asia", year: 1509}, {id: "nusantara", year: 1511}]);
   assert.deepEqual(D.normFound(["caribbean", "atlantis", "caribbean"], W.REGION_IDS), ["caribbean"]);
 });
 
@@ -215,7 +215,11 @@ test("known world: a journey keeps to the known world", () => {
   assert.equal(walled.noWay, true, "Mexico alone is found, but the islands and coasts before it are not");
   assert.match(WM.journeyLines(walled)[0], /no known way leads there/);
   assert.ok(go("moravia", "iberia", "brazil", 1300, ["brazil"]).surface, "the open sea to a found coast is open");
-  assert.ok(go("moravia", "iberia", "india", 1197).surface, "India is reached by the old roads and the Red Sea");
+  assert.equal(go("moravia", "iberia", "india", 1197).unknown, "india", "India is hidden from Europe"); assert.equal(go("moravia", "iberia", "india", 1497).unknown, "india");
+  assert.ok(go("moravia", "iberia", "india", 1498).surface, "India opens in 1498"); assert.ok(go("egypt", "egypt", "india", 1197).surface, "Egypt has always known the way");
+  assert.equal(go("moravia", "iberia", "china", 1300).unknown, "china", "China does not open before India"); assert.ok(go("moravia", "iberia", "china", 1513).surface);
+  for ( const id of W.REGION_IDS ) if ( !["india", ...D.CIRCLES.europe.members, ...D.CIRCLES["near-east"].members, "arctic"].includes(id) ) assert.ok(D.knownYear("moravia", id) >= 1444, `${id} is not known to Europe from of old`);
+  for ( const id of ["china", "southeast-asia", "nusantara", "japan", "korea", "tibet-himalaya"] ) assert.ok(D.knownYear("moravia", id) > D.knownYear("moravia", "india"), `${id} opens after India`);
   assert.equal(go("mexico", "mexico", "iberia", 1400).unknown, "iberia", "nor does Mexico know of Spain");
   assert.equal(go("china", "china", "mexico", 1500).unknown, "mexico");
   assert.ok(go("pacific-islands", "pacific-islands", "aotearoa", 1300).surface);
