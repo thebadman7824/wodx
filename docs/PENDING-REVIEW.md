@@ -987,7 +987,7 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 |---|---|---|---|
 | 2026-11-13 | Which of 110 drafted face features to build, how NPCs get them, when form features show, who sees hidden ones (B2800-B2804) | All as recommended: build all, 8 with the named changes; Storyteller ticks, else rolled from clan, kith, tribe or house; form features only in that state; hidden ones only to those the rules allow | See B2800-B2804 in docs/DECISIONS.md |
 
-## Waiting for review
+## Approved by Ben, 13 November 2026, 14:16 UTC (all pending items)
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1082,3 +1082,8 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 | 2026-11-13 | Sheet tools shows its words only in Beginner view (B2837) | In Full view it is an icon like the others, so the sheet's name fits | The sheetTools setting, or wodx-worded in main.mjs |
 | 2026-11-13 | Is the first-night tour offered to every new player? (B2838) | Yes, once, with Not now; the Storyteller can turn the offer off in the world settings | guideOffer setting |
 | 2026-11-13 | Which WoDX systems only display something, and which should get a deeper hook? (Display-Only Systems Desk, https://claude.ai/artifact/YRakoSn7dnDipi27K8p3Ug) | 36 systems listed across what is on main, open PRs and planned work. Recommended: deepen 19 (talking faces as a tell, face marks in witness memory and the Masquerade, Delirium from monster sprites, dress and local looks in social and crowd rolls, aura tints only after the Read the Soul roll, codex entries as research, languages counted, Go buttons on the world and realm maps, reflection marks read by the crossing, living tiles that switch walls and doors, Legends suggesting Renown and Status, dreams tied to powers and Flaws, elder lifepaths from the prologue timeline, rules on mood regions, after-action card into experience and Legends, crippled limbs on the damage doll, furnished containers), leave 14 as display, park 3 (voices, animated scenes, ASCII portraits). Nothing is built until Ben picks. | Pick another option on the desk; nothing to undo, since nothing was built. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
