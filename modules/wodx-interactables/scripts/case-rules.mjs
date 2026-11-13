@@ -174,7 +174,7 @@ export function lookFor(year) {
 }
 
 /**
- * The starter layout (Interactables 0.38.0, B2832): three note cards across the top as column heads, Who, Where and
+ * The starter layout (Interactables 0.39.0, B2832): three note cards across the top as column heads, Who, Where and
  * What we know, so a new board shows where things go. They are ordinary notes; move, change or take them off.
  */
 export const STARTER = [
