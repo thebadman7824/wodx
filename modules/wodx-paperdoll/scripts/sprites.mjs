@@ -288,13 +288,16 @@ export async function give(tokenDoc, name) {
   const fl = tokenDoc.flags?.[MOD] ?? {};
   const t = tokenDoc.texture ?? {};
   const prev = fl.spritePrev ?? {src: t.src, scaleX: t.scaleX, scaleY: t.scaleY, anchorX: t.anchorX, anchorY: t.anchorY, fit: t.fit};
-  return tokenDoc.update({texture: {src: SR.stillPath(name), ...SR.TOKEN}, flags: {[MOD]: {sprite: name, spritePrev: prev}}});
+  // a creature bigger than a person takes the squares its true size needs, and gives them back with clear() (B2618)
+  const size = SR.squaresOf(name), prevSize = fl.spritePrevSize ?? (size ? {width: tokenDoc.width, height: tokenDoc.height} : null);
+  return tokenDoc.update({texture: {src: SR.stillPath(name), ...SR.TOKEN}, ...(size ?? prevSize ?? {}), flags: {[MOD]: {sprite: name, spritePrev: prev, ...(prevSize ? {spritePrevSize: prevSize} : {})}}});
 }
 
 /** Take the sprite off again and put the old picture back. */
 export async function clear(tokenDoc) {
-  const prev = tokenDoc.flags?.[MOD]?.spritePrev;
-  if ( prev ) await tokenDoc.update({texture: prev});
+  const prev = tokenDoc.flags?.[MOD]?.spritePrev, size = tokenDoc.flags?.[MOD]?.spritePrevSize;
+  if ( prev ) await tokenDoc.update({texture: prev, ...(size ?? {})});
+  await tokenDoc.unsetFlag(MOD, "spritePrevSize");
   await tokenDoc.unsetFlag(MOD, "sprite");
   await tokenDoc.unsetFlag(MOD, "act");
   await tokenDoc.unsetFlag(MOD, "spritePrev");

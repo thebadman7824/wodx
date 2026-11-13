@@ -8,7 +8,7 @@ from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
 import proto_attacks as PA, monster as M, child as Ch
 S,SH=Wr.S,Wr.SH
-VERSION=10
+VERSION=11
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -93,7 +93,69 @@ def acts_for(a,held):
     out.append(('claw',None,None))   # the weapon's own move comes first: it is the one played when nothing says which
     if a.get('powers'): out.append(('cast',None,None))
     return out
+# ---- true sizes (B2618) -------------------------------------------------------------------------------------------------
+# Every creature is drawn on one scale with people: a person stands 1.75 m. One too big for a frame on that scale is drawn
+# smaller and given a token of 2, 3 or more squares, so that on the map it is as much bigger than a person as it should be.
+# The size is the longest of its length and height, in metres: from its kind's own drawing for the animals of the world,
+# from the size the books give it, else from the size of its look below.
+PERSON_M=1.75; ROOM=88
+SIZE_WORD=dict(tiny=.4,small=1.0,man=1.8,large=3.0,huge=6.0,vast=12.0)   # the longest side, in metres, of a creature the books call so
+LOOK_M=dict(dragon=12,dragon_mist=10,dragon_red=12,dragon_east=10,drake=5,gryphon=3,sphinx=3.5,manticore=3.5,chimera=3.5,peryton=2.2,
+ mammoth=5,dinosaur=6,alligator=4,coatl=4,sea_serpent=12,worm_giant=10,roc=9,firebird=1.6,vulture=1.0,
+ spider_giant=2.2,spider_squid=2.6,spider_crystal=1.6,spider_rust=1.6,mantis=2.0,insect=1.0,slug=1.2,
+ giant=5,oni=2.8,imp=.6,el_bronze=3,el_stone=2.6,el_earth=2.6,el_metal=2.4,angel=2.0,belteroth=2.4,
+ **{'tentacles:'+c:6 for c in ('water','violet','green','blood','shadow','oil')},**{'whale:'+c:12 for c in ('water','grey')},
+ **{'fish:'+c:.8 for c in ('water','green','metal')},**{'shark:grey':4})
+MUL=1.0
+_PPM=None
+def ppm():
+    """pixels to the metre on a 1-square token: a plain person's height over 1.75 m"""
+    global _PPM
+    if _PPM is None:
+        sh,_,_=_draw({'id':'scale','name':'scale','kind':'person','items':[]}); _PPM=_dims(sh[''])[1]/PERSON_M
+    return _PPM
+def _dims(walk):
+    """the longest side length and the tallest height of the standing figure, over its front and side"""
+    L=H=0
+    for r in (2,3):
+        ys,xs=np.nonzero(walk[r*112:(r+1)*112,0:96,3])
+        if len(xs): L=max(L,xs.max()-xs.min()+1); H=max(H,ys.max()-ys.min()+1)
+    return L,H
+def true_m(a,label,sh):
+    """how big this creature truly is, in metres, or None to leave it as drawn"""
+    if not label or label.startswith('person') or re.search(r'wisp|swarm|geomid|plant|ribbon',label): return None
+    key=label.split(':',1)[1] if ':' in label else label
+    if label.startswith('book:'):
+        w=M.book_size(a.get('animal') or a.get('name') or '')
+        if w in SIZE_WORD: return PERSON_M if (w=='man' and label.startswith('book:person')) else SIZE_WORD[w]
+    if key in LOOK_M: return LOOK_M[key]
+    nm=a.get('animal') or a.get('name') or ''
+    if re.search(r'\b(giant|great|huge|dire|monstrous)\b',nm,re.I) and not label.startswith(('book:','monster:')):   # a giant spider, a dire wolf
+        return max(2.0,max(_dims(sh['']))/ppm()*3) if key not in B.KINDS else max(_dims(sh['']))*B.KINDS[key]['s']/B.fit(B.KINDS[key])['s']/ppm()*1.6
+    if key in B.KINDS:   # a beast of the world: the size its kind was drawn for, before it was fitted to the frame
+        k=B.KINDS[key]; f=B.fit(k); return max(_dims(sh[''])) *k['s']/f['s']/ppm()
+    return None
+def squares_for(m):
+    """the token's size in squares, and the pixels the creature's longest side takes in its frame"""
+    for n in (1,2,3,4,5,6,8):
+        if m*ppm()/n<=ROOM: return n,m*ppm()/n
+    return 8,ROOM
 def draw(a):
+    """the creature at its true size, with the token squares it needs (B2618)"""
+    global MUL
+    sh,label,notes=_draw1(a); m=true_m(a,label,sh) if sh else None
+    if not m: return sh,label,notes,1
+    n,want=squares_for(m); cur=max(_dims(sh['']))
+    if abs(want/cur-1)<.05: return sh,label,notes,n
+    try:
+        MUL=want/cur; B.MUL=M.MUL=MUL
+        for _ in range(4):
+            sh2,_,_=_draw1(a); got=max(_dims(sh2['']))
+            if got<=ROOM+4 and abs(got/want-1)<.08: break
+            MUL*=want/max(1,got); B.MUL=M.MUL=MUL
+        return sh2,label,notes,n
+    finally: MUL=1.0; B.MUL=M.MUL=1.0
+def _draw1(a):
     """draw() with the one-pixel gaps closed on every solid figure (not on glows, swarms and figures of lines, which are meant to show through)"""
     sh,label,notes=_draw(a)
     if sh and not re.search(r'wisp|swarm|geomid',label or ''): sh={k:PA.seal(v) for k,v in sh.items()}
@@ -110,6 +172,7 @@ def _draw(a):
             p=M.PEOPLE[m[1]]; post=dict(p['post'])
             if book and book[2]!=1: post['scale']=round(post.get('scale',1)*book[2],2)
             sheets=PA.person_sheets(p['spec'],p['acts']+[('claw',None,None)]); sheets.update(PA.extras(sheets[''],'fade' if post.get('alpha',1)<1 else p['death']))
+            if MUL!=1: post['scale']=post.get('scale',1)*MUL
             sc=post.get('scale',1)
             if sc>1:   # a big figure is drawn only as big as its frame holds, so no move cuts off its head or hands
                 caps={k:_cap(v) for k,v in sheets.items()}; base=min(c for k,c in caps.items() if k not in ('jump','fly'))
@@ -122,7 +185,7 @@ def _draw(a):
         if not k: return None,None,['no animal look for this name']
         if k in B.KINDS:
             walk=B.sheet(B.KINDS[k])
-        else: walk=Cr.sheet(k)
+        else: walk=Cr.sheet(dict(Cr.KINDS[k],big=Cr.KINDS[k].get('big',1)*MUL) if MUL!=1 else k)   # grown about its own feet
         return {'':walk,'bite':PA.lunge(walk,'bite'),**PA.extras(walk,'die')},k,[]
     spec,held,worn,notes=person(a)
     up,post=M.fae(a,Wr.fig(**spec)); spec.update(up); ghost=post.get('alpha',1)<1
@@ -140,13 +203,13 @@ def run(roster,out,every=False):
         if not i: continue
         k=key(a); was=(old.get('sprites') or {}).get(i)
         if was and was.get('key')==k and not every and os.path.exists(os.path.join(out,i+'.png')): man['sprites'][i]=was; skipped+=1; continue
-        try: sheets,label,notes=draw(a)
-        except Exception as e: sheets,label,notes=None,None,['could not be drawn: %s'%e]
+        try: sheets,label,notes,sq=draw(a)
+        except Exception as e: sheets,label,notes,sq=None,None,['could not be drawn: %s'%e],1
         if not sheets: report.append((a.get('name'),notes)); continue
         for act,sh in sheets.items():
             Image.fromarray(np.ascontiguousarray(sh),'RGBA').save(os.path.join(out,i+('.'+act if act else '')+'.png'),optimize=True)
         walk=sheets['']; Image.fromarray(np.ascontiguousarray(walk[2*SH:3*SH,0:S]),'RGBA').save(os.path.join(out,i+'-still.png'))
-        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,'acts':[m for m in sheets if m and m not in PA.GAITS+PA.WAYS],'gaits':[m for m in sheets if m in PA.GAITS+PA.WAYS],'notes':notes}; drawn+=1
+        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,'acts':[m for m in sheets if m and m not in PA.GAITS+PA.WAYS],'gaits':[m for m in sheets if m in PA.GAITS+PA.WAYS],'squares':sq,'notes':notes}; drawn+=1
         if notes: report.append((a.get('name'),notes))
     json.dump(man,open(mf,'w'),indent=1,sort_keys=True)
     return drawn,skipped,report

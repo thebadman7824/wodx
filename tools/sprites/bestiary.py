@@ -139,10 +139,10 @@ if __name__ == '__main__':
     for r in rows:
         k, sc = look_of(r); r['key'] = k; r['scale'] = round(sc, 2); by[k].append(r)
         n = norm(r['name'])
-        if n and n not in table: table[n] = [k, r['scale']]
+        if n and n not in table: table[n] = [k, r['scale'], (r.get('size') or '').strip().lower()]
         for alias in re.findall(r'\(([^)]*)\)', r['name']):
             a = norm(alias)
-            if len(a) > 3 and a not in table: table[a] = [k, r['scale']]
+            if len(a) > 3 and a not in table: table[a] = [k, r['scale'], (r.get('size') or '').strip().lower()]
     here = os.path.dirname(os.path.abspath(__file__))
     json.dump(dict(sorted(table.items())), open(os.path.join(here, 'bestiary-looks.json'), 'w'), indent=0, separators=(',', ':'))
     out = ['# Creature roster and sprite looks (book check, 2026-11-13)', '', '%d creatures from %d hand-checked lines, drawn with %d shared looks. Each look below lists every creature it draws; sizes are scaled per creature.' % (len(table), len(rows), len(by)), '']
