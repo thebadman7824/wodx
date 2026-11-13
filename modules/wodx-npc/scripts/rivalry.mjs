@@ -18,7 +18,10 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
   const kindOf = actor => C()?.getKind?.(actor) ?? "mortal";
   const factionState = () => { try { return factions?.state?.() ?? null; } catch (e) { return null; } };
   const baseOf = a => (a?.isToken ? (a.baseActor ?? game.actors.get(a.id) ?? a) : a);
-  const rows = () => RV.rowsInUse(setting("rivalryRows") ?? {});
+  // NPC 0.59.0: live feuds are rivalry rows too
+  const feudApi = () => { try { return game.modules.get(MOD).api?.standing ?? null; } catch (e) { return null; } };
+  const rows = () => [...RV.rowsInUse(setting("rivalryRows") ?? {}), ...(feudApi()?.feudRows?.() ?? [])];
+  const feudSides = actor => { try { return feudApi()?.feudSidesOf?.(baseOf(actor)) ?? []; } catch (e) { return []; } };
 
   function registerSettings() {
     game.settings.register(MOD, "rivalries", {
@@ -40,7 +43,7 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
     const s = actor?.system ?? {};
     const sheet = Object.fromEntries(Object.keys(RV.SHEET_SIDES).map(k => [k, typeof s[k] === "string" ? s[k] : (typeof s[k]?.value === "string" ? s[k].value : "")]));
     const variant = [s.settings?.variant, ...(s.variant && typeof s.variant === "object" ? Object.values(s.variant) : [s.variant])].filter(v => typeof v === "string");
-    const written = String(savedProfile(baseOf(actor))?.sides ?? "").split(/[,\n]/).map(x => x.trim()).filter(Boolean);
+    const written = [...String(savedProfile(baseOf(actor))?.sides ?? "").split(/[,\n]/).map(x => x.trim()).filter(Boolean), ...feudSides(actor)];
     return {line: kindOf(actor), sheet, variant, factions: factionsOf(actor).map(f => ({name: f.name, kind: f.kind})), written};
   }
   /** Every side of an actor, with its master's when it is a follower (a ghoul's domitor). */
@@ -53,7 +56,8 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
   const typedSides = actor => String(savedProfile(baseOf(actor))?.openSides ?? "").split(/[,\n]/).map(x => x.trim().toLowerCase()).filter(Boolean);
   // NPC 0.32.0: a habit, livery or uniform actually worn shows its side too (WoDX Library's look)
   const wornSides = actor => { try { return game.modules.get("wodx-library")?.api?.look?.of?.(baseOf(actor))?.sides ?? []; } catch (e) { return []; } };
-  const openSides = actor => [...new Set([...typedSides(actor), ...wornSides(actor)])];
+  // Feuding families know each other on sight
+  const openSides = actor => [...new Set([...typedSides(actor), ...wornSides(actor), ...feudSides(actor)])];
   const disc = (a, n) => { const it = a?.items?.find?.(i => i.type === "Power" && String(i.system?.type ?? "").includes("discipline") && i.name.trim().toLowerCase().startsWith(n)); return it ? num(it.system?.value) : 0; };
   const pool = (a, rule) => num(a?.system?.attributes?.[rule.attr]?.value) + num(a?.system?.abilities?.[rule.ability]?.value ?? a?.system?.abilities?.[rule.ability.replace("-", "")]?.value);
   const sensed = new Map();

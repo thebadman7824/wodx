@@ -6,8 +6,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The open world
 
-- Files: `core.mjs`, `world-rules.mjs`, `apps.mjs` (the tracker and its windows), `setup.mjs` and `setup-rules.mjs` (Start a chronicle).
-- Settings: `log`, `personal`, `beats`, `convened`, `session`, `travelMinutes`, `encounters`, `encounterChance`, `encounterTable`, `soloLimit`, `dawnLead`, `beatsOn`, `setup`.
+- Files: `core.mjs`, `world-rules.mjs`, `apps.mjs` (the tracker and its windows), `setup.mjs` and `setup-rules.mjs` (Start a chronicle), `builder.mjs`, `recipe-rules.mjs` and `data/recipe-rothenstein.mjs` (Build this chronicle).
+- Settings: `log`, `personal`, `beats`, `convened`, `session`, `travelMinutes`, `encounters`, `encounterChance`, `encounterTable`, `soloLimit`, `dawnLead`, `beatsOn`, `setup`, `builder`.
 - API: `openTracker`, `travel`, `planTrip`, `convene`, `beats`, `endSession`, `report`, `setup`.
 
 ## The hand and the table
@@ -30,7 +30,7 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The ledger and the clocks
 
-- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `clocks.mjs` and `clock-rules.mjs`.
+- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `clocks.mjs` and `clock-rules.mjs`.
 - Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`.
 - API: `ledger`, `clocks`.
 

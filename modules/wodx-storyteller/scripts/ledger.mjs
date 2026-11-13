@@ -1,4 +1,5 @@
 import * as L from "./ledger-rules.mjs";
+import * as Wills from "./wills.mjs";
 import {MOD, esc, chron, npc, isActiveGM, setting, mutate as mutateSetting, log, isPC, pcs} from "./core.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -178,8 +179,10 @@ export function bindVeilUndo(msg, el) {
 
 const lineageOf = a => a?.flags?.[CREATION]?.lineage ?? {};
 const diedOf = a => a?.flags?.[CREATION]?.chronology?.died;
-/** The dead's heir: one Pass the Years made (heirOf), or one named in the ledger window. */
+/** The dead's heir: the will's main heir (0.61.0), one Pass the Years made (heirOf), or one named in the ledger window. */
 export function heirOf(deadId) {
+  const willed = Wills.willHeir(deadId);
+  if ( willed ) return willed;
   const named = ledger().heirs?.[deadId];
   if ( named && game.actors.get(named) ) return game.actors.get(named);
   return game.actors.find(a => lineageOf(a)?.family?.heirOf?.id === deadId && (diedOf(a) === undefined || diedOf(a) === null)) ?? null;
@@ -192,6 +195,8 @@ export async function onDeath(dead) {
   seen.add(dead.id);
   const heir = heirOf(dead.id);
   const c = chron();
+  // 0.61.0: what they had is divided by the will and the law of the place and year
+  try { await Wills.onDeath(dead); } catch (e) { console.error(`${MOD} | estate`, e); }
   for ( const row of L.inheritance(ledger(), dead.id, heir) ) {
     const e = row.entry;
     await c?.propose?.({type: T.inherit, key: `inherit:${e.id}`,

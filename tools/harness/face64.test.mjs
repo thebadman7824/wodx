@@ -131,3 +131,50 @@ test("reactions: a sway first, then frenzy, mood, attitude, and pain at rest", (
   assert.equal(P.reactionFor({level: 7, sway: "charmed"}).expr, "slack");
   for ( const e of [P.reactionFor({sway: "fooled"}).expr, P.reactionFor({mood: "wary"}).expr] ) assert.ok(P.EXPRESSIONS.includes(e));
 });
+
+const F = await import(join(root, "modules/wodx-paperdoll/scripts/face64-features.mjs"));
+const BASE_LINE = {fera: "werewolf", all: "mortal"};
+const ALL_ON = {frenzy: true, glabro: true, visage: true, shintai: true, paradox: true, catharsis: true};
+
+test("every extra feature draws on a face of its line, and only while its state is on", () => {
+  const ids = Object.keys(F.FEATURES);
+  assert.ok(ids.length >= 110, `${ids.length} features`);
+  for ( const id of ids ) {
+    const f = F.FEATURES[id], line = BASE_LINE[f.line] ?? f.line;
+    let changed = 0;
+    for ( const seed of ["f1", "f2", "f3"] ) {
+      const S = P.roll(seed, line, {kith: "pooka"}), opts = {sees: {fae: true, sigil: true}, state: ALL_ON, expr: f.state === "tears" ? "sorrow" : "neutral"};
+      const with_ = P.drawFace({...S, features: [id]}, opts).rgba;
+      assert.equal(with_.length, 64 * 64 * 4);
+      assert.ok(with_.every((v, i) => i % 4 !== 3 || v === 255), `${id}: no see-through pixels`);
+      changed = Math.max(changed, diff(P.drawFace(S, opts).rgba, with_).length);
+      if ( f.state && f.state !== "tears" ) assert.equal(diff(P.drawFace(S, {...opts, state: {}}).rgba, P.drawFace({...S, features: [id]}, {...opts, state: {}}).rgba).length, 0, `${id} hides out of ${f.state}`);
+    }
+    assert.ok(changed >= 2, `${id} changes the face (${changed} pixels)`);
+  }
+});
+
+test("blinking and speaking still change only the eyes, brows and mouth on a face with features", () => {
+  for ( const id of Object.keys(F.FEATURES) ) {
+    const f = F.FEATURES[id], line = BASE_LINE[f.line] ?? f.line, S = {...P.roll("anim", line), features: [id]}, opts = {sees: {fae: true, sigil: true}, state: ALL_ON};
+    const base = P.drawFace(S, opts).rgba;
+    for ( const o of [{eyes: "shut"}, {mouth: "talk2"}] ) {
+      const out = diff(base, P.drawFace(S, {...opts, ...o}).rgba).filter(([x, y]) => !(x >= 14 && x <= 50 && ((y >= 18 && y <= 38) || (y >= 39 && y <= 52))));
+      assert.equal(out.length, 0, `${id} ${JSON.stringify(o)} changed ${JSON.stringify(out.slice(0, 4))}`);
+    }
+  }
+});
+
+test("rolled features: the same seed gives the same, the sheet's group brings its own, a wraith bears one deathmark", () => {
+  assert.deepEqual(F.rollFeatures("x", "kindred", "Gangrel"), F.rollFeatures("x", "kindred", "Gangrel"));
+  const gangrel = Array.from({length: 20}, (_, i) => F.rollFeatures(`g${i}`, "kindred", "Gangrel")).flat();
+  assert.ok(gangrel.some(id => id.startsWith("v-gangrel")));
+  assert.ok(!Array.from({length: 40}, (_, i) => F.rollFeatures(`t${i}`, "kindred", "Toreador")).flat().some(id => id.startsWith("v-gangrel") || id.startsWith("v-tzimisce")), "no clan features without the clan");
+  for ( let i = 0; i < 20; i++ ) assert.equal(F.rollFeatures(`w${i}`, "wraith").filter(id => F.FEATURES[id].group === "Deathmark").length, 1);
+  for ( let i = 0; i < 20; i++ ) assert.equal(F.rollFeatures(`m${i}`, "werewolf", "Metis Fianna").filter(id => F.FEATURES[id].group === "Metis").length, 1);
+  assert.deepEqual(F.rollFeatures("s", "changeling", "Sidhe").filter(id => id.startsWith("c-")), ["c-sidhe"]);
+  for ( let i = 0; i < 60; i++ ) { const r = F.rollFeatures(`p${i}`, "mortal"); assert.ok(!r.includes("a-ghoul") && !r.includes("a-spectacles")); assert.ok(r.filter(id => F.FEATURES[id].group === "Headwear").length <= 1); }
+  assert.ok(F.rollFeatures("gh", "mortal", "ghoul").includes("a-ghoul"));
+  assert.equal(F.groupMatches("Followers of Set", "Vampire Followers of Set"), true);
+  assert.equal(F.groupMatches("Sidhe", "Boggan"), false);
+});
