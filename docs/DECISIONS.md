@@ -176,7 +176,7 @@ Next free block: B3520
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
-| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3498) | Chronicle |
+| B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -5528,6 +5528,11 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 
 ## B3498. Orthodox and Russian law family (2026-11-13)
 Russia and the Aegean use the Orthodox family: the ruler's law beside the church's canons, then ministries and police, with region rows for the Rus, Muscovy, the tsars, the Soviet state and the Federation, and for Byzantium, Ottoman rule and modern Greece.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3499. Japanese law family (2026-11-13)
+Japan uses its own family: the shogun rules in the emperor's name through warrior courts, then the Tokugawa order, then the Meiji codes and the postwar constitution. New ids: jito, commoner-arms, leaving-country.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
 
