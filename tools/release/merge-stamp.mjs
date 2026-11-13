@@ -135,22 +135,9 @@ export function stampTable(src, mod, version, what) {
 /** Add a claimed block's index row and sections to docs/DECISIONS.md text. */
 export function stampDecisions(src, frag) {
   const r = blockRange(frag.meta.block), nums = sectionNumbers(frag.body);
-  const used = nums.length ? ` (used B${Math.min(...nums)}${nums.length > 1 ? `-B${Math.max(...nums)}` : ""})` : "";
-  const row = `| ${frag.meta.block} | ${frag.meta.feature}${used} | ${frag.meta.modules} |`;
   const [head, rest] = src.split("<!-- decision-index:end -->");
   if ( rest === undefined ) throw new Error("docs/DECISIONS.md has no decision index markers");
   const [pre, index] = head.split("<!-- decision-index:start -->");
-  const lines = index.split("\n");
-  const rowAt = l => blockRange(/^\| (B\d+(?:-B\d+)?) \|/.exec(l)?.[1]);
-  const same = lines.findIndex(l => { const x = rowAt(l); return x && x.lo === r.lo; });
-  if ( same >= 0 ) lines[same] = row;
-  else {
-    for ( const l of lines ) { const x = rowAt(l); if ( x && x.lo <= r.hi && r.lo <= x.hi ) throw new Error(`${frag.meta.block} overlaps the index row ${l.slice(0, 40)}`); }
-    let at = lines.findIndex(l => { const x = rowAt(l); return x && x.lo > r.lo; });
-    if ( at < 0 ) { at = lines.length; while ( at > 0 && !lines[at - 1].startsWith("|") ) at--; }
-    lines.splice(at, 0, row);
-  }
-  let top = pre.replace(/^Next free block: B(\d+)$/m, (s, n) => `Next free block: B${Math.max(+n, r.hi + 1)}`);
   let body = rest;
   if ( frag.body ) {
     const first = Math.min(...nums);
@@ -160,6 +147,21 @@ export function stampDecisions(src, frag) {
     if ( after ) body = body.slice(0, after.index) + text + body.slice(after.index);
     else body = body.replace(/\s*$/, "\n\n") + text.replace(/\n\n$/, "\n");
   }
+  // The numbers used in the block: this fragment's and any the block already had (a block can take more decisions later).
+  const inBlock = sectionNumbers(body).filter(n => n >= r.lo && n <= r.hi);
+  const used = inBlock.length ? ` (used B${Math.min(...inBlock)}${inBlock.length > 1 ? `-B${Math.max(...inBlock)}` : ""})` : "";
+  const row = `| ${frag.meta.block} | ${frag.meta.feature}${used} | ${frag.meta.modules} |`;
+  const lines = index.split("\n");
+  const rowAt = l => blockRange(/^\| (B\d+(?:-B\d+)?) \|/.exec(l)?.[1]);
+  const same = lines.findIndex(l => { const x = rowAt(l); return x && x.lo === r.lo && x.hi === r.hi; });
+  if ( same >= 0 ) lines[same] = row;
+  else {
+    for ( const l of lines ) { const x = rowAt(l); if ( x && x.lo <= r.hi && r.lo <= x.hi ) throw new Error(`${frag.meta.block} overlaps the index row ${l.slice(0, 40)}`); }
+    let at = lines.findIndex(l => { const x = rowAt(l); return x && x.lo > r.lo; });
+    if ( at < 0 ) { at = lines.length; while ( at > 0 && !lines[at - 1].startsWith("|") ) at--; }
+    lines.splice(at, 0, row);
+  }
+  const top = pre.replace(/^Next free block: B(\d+)$/m, (s, n) => `Next free block: B${Math.max(+n, r.hi + 1)}`);
   return `${top}<!-- decision-index:start -->${lines.join("\n")}<!-- decision-index:end -->${body}`;
 }
 
