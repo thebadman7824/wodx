@@ -116,12 +116,13 @@ const P = {
   steppe: {
     m: "Temür, Batu, Berke, Möngke, Chagatai, Jochi, Qaidu, Toghrul, Arslan, Bayan, Nogai, Subutai, Ögedei, Tolui, Qutlugh, Ulugh",
     f: "Börte, Sorghaghtani, Töregene, Khutulun, Chabi, Oghul, Alaqai, Checheyigen, Mandukhai, Altani, Bayalun, Orghana"},
+  // Raised to 300 names (B3311): older names (epics, kings, saints, poets) and newer ones, and 70 family names
   hindi: {
-    m: {old: "Arjun, Krishna, Ram, Vikram, Hari, Gopal, Govind, Shankar, Bhim, Prithvi, Jai, Pratap, Man, Udai, Narayan, Madhav, Keshav, Damodar",
-      new: "Mohan, Ravi, Suresh, Anil, Prakash, Deepak, Mahesh, Rajesh, Sanjay, Amit, Vijay, Ashok, Sunil, Rahul, Rohit, Arun, Manoj, Vikram"},
-    f: {old: "Sita, Lakshmi, Parvati, Radha, Padmini, Mira, Durga, Savitri, Ganga, Kamala, Rukmini, Yashoda, Tara, Uma, Gauri, Champa",
-      new: "Sunita, Anita, Kavita, Priya, Pooja, Neha, Rekha, Meena, Lata, Asha, Usha, Geeta, Shanti, Indira, Deepa, Anjali"},
-    fam: "Sharma, Verma, Gupta, Singh, Kumar, Mishra, Pandey, Yadav, Chauhan, Rathore, Agarwal, Joshi, Tiwari, Srivastava, Mehta, Kapoor"},
+    m: {old: "Arjun, Krishna, Ram, Vikram, Hari, Gopal, Govind, Shankar, Bhim, Prithvi, Jai, Pratap, Man, Udai, Narayan, Madhav, Keshav, Damodar, Raghunath, Mukund, Balram, Lakshman, Bharat, Shatrughan, Devdatta, Harsha, Chandragupta, Ashok, Samudra, Vishnudatta, Somnath, Bhoja, Hammir, Rana, Sangram, Kumbha, Jaswant, Ajit, Durgadas, Shivaji, Sambhaji, Baji, Tukaram, Eknath, Tulsidas, Surdas, Kabir, Raidas, Nanak, Gangadhar, Raghav, Murari, Mohan, Kishan, Shyam, Ghanshyam, Girdhar, Brijlal, Kanhaiya, Vasudev, Sadashiv, Trimbak, Mahadev, Rudra, Bholanath, Shivdas, Ramdas, Haridas, Gokul, Mathura, Jagannath, Jagat, Kunwar, Bhupat, Jodha, Rao, Dalpat, Indrajit, Kalyan, Chandra",
+      new: "Mohan, Ravi, Suresh, Anil, Prakash, Deepak, Mahesh, Rajesh, Sanjay, Amit, Vijay, Ashok, Sunil, Rahul, Rohit, Arun, Manoj, Vikram, Rakesh, Ramesh, Dinesh, Naresh, Mukesh, Ajay, Vinod, Pradeep, Sandeep, Rajiv, Sachin, Saurabh, Gaurav, Nitin, Vivek, Abhishek, Ankit, Aditya, Akash, Varun, Karan, Kunal, Nikhil, Pankaj, Pawan, Alok, Ashish, Hemant, Jitendra, Kamal, Lalit, Mayank, Narendra, Pramod, Rajendra, Satish, Shailesh, Subhash, Tarun, Umesh, Yogesh, Aarav, Vihaan, Ishaan, Reyansh, Ayaan, Dhruv, Kabir, Arnav, Shaurya, Atharv, Harsh"},
+    f: {old: "Sita, Lakshmi, Parvati, Radha, Padmini, Mira, Durga, Savitri, Ganga, Kamala, Rukmini, Yashoda, Tara, Uma, Gauri, Champa, Damayanti, Shakuntala, Draupadi, Kunti, Gandhari, Sulochana, Urmila, Mandavi, Ahilya, Jijabai, Tarabai, Lakshmibai, Rupmati, Jodhabai, Karnavati, Durgavati, Chand, Ratnavati, Sarasvati, Annapurna, Bhagirathi, Godavari, Narmada, Jamuna, Kaushalya, Sumitra, Kaikeyi, Mandodari, Anasuya, Arundhati, Lopamudra, Gargi, Maitreyi, Malati, Madhavi, Vasantasena, Chitralekha, Mrinalini, Vimala, Kusum, Phoolmati, Rajkumari, Sundari, Bhavani, Jamna, Kesar, Gulab, Chameli, Bela, Basanti, Sonbai, Hirabai, Ramabai, Anandibai",
+      new: "Sunita, Anita, Kavita, Priya, Pooja, Neha, Rekha, Meena, Lata, Asha, Usha, Geeta, Shanti, Indira, Deepa, Anjali, Suman, Seema, Nisha, Rita, Mamta, Archana, Vandana, Manju, Sarita, Sushma, Kiran, Poonam, Sapna, Shilpa, Swati, Preeti, Ritu, Jyoti, Rashmi, Shweta, Sonia, Divya, Nidhi, Ruchi, Komal, Megha, Payal, Pallavi, Shalini, Madhuri, Smita, Aarti, Bhavna, Garima, Monika, Radhika, Renu, Shobha, Vidya, Aadhya, Ananya, Diya, Ishita, Kavya, Myra, Saanvi, Tanvi, Riya, Aditi, Kriti, Sneha, Tanya, Isha, Pari"},
+    fam: "Sharma, Verma, Gupta, Singh, Kumar, Mishra, Pandey, Yadav, Chauhan, Rathore, Agarwal, Joshi, Tiwari, Srivastava, Mehta, Kapoor, Shukla, Dubey, Tripathi, Chaturvedi, Dwivedi, Upadhyay, Bajpai, Awasthi, Dixit, Saxena, Mathur, Bhatnagar, Nigam, Khanna, Malhotra, Chopra, Arora, Bhatia, Sethi, Tandon, Kohli, Ahuja, Jain, Bansal, Goyal, Mittal, Jindal, Garg, Singhal, Maheshwari, Thakur, Rawat, Negi, Bisht, Rajput, Sisodia, Bhati, Shekhawat, Solanki, Parmar, Jadeja, Chandel, Tomar, Bundela, Sinha, Prasad, Rai, Chaudhary, Patel, Desai, Shah, Trivedi, Vyas, Bhatt"},
   tamil: {
     m: "Murugan, Kumaran, Senthil, Arumugam, Raman, Selvam, Karthik, Ganesan, Velu, Rajan, Mani, Kannan, Sundaram, Perumal, Anand, Suresh",
     f: "Meenakshi, Lakshmi, Valli, Kamakshi, Parvathi, Selvi, Devi, Kala, Malar, Revathi, Saraswathi, Vasanthi, Kavitha, Priya, Andal, Thenmozhi"},
@@ -245,6 +246,6 @@ export const GIVEN_ONLY = new Set(Object.entries(P).filter(([, p]) => !p.child &
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
-export const RAISED = ["chinese"];
+export const RAISED = ["chinese", "hindi"];
 /** Every distinct name a people of P has, given and family, all ages. */
 export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));
