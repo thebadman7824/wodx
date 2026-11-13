@@ -167,6 +167,7 @@ Next free block: B3440
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 <!-- decision-index:end -->
@@ -5055,6 +5056,26 @@ Reverse: make townCrowd return 1.
 WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
 
 Reverse: drop the wodxTown hook in factions.mjs.
+
+## B3340. Downtime projects are long tasks with more to them (2026-11-13)
+WoDX Storyteller. Ben picked all eight player world systems on the desk (https://claude.ai/artifact/2xgc6aoeS8Fz4CrJuMhMWA), downtime projects first as the engine the others run on. A project is a long task (tasks-rules.mjs) with nights a week, a target and complications, so the clock, the cards, Undo, recipes, buildings and helpers all keep working. Five new kinds: business, court, language, track, herd. Older tasks have nights 0 and run exactly as before.
+
+Reverse: drop the five kinds and the nights, target, complications and trouble fields from normTask; intervalS falls back to the plain interval.
+
+## B3341. A weekly budget of nights (2026-11-13)
+WoDX Storyteller. Each character has 7 nights or days a week for projects, 6 for a vampire, who loses one to the hunt; the Storyteller can set a character's own figure (flag projectBudget). Each kind has the nights a week it needs for full pace; fewer stretch each roll in proportion. When the projects given nights add up past the budget, the newest pause with a note. House figures; logged in PENDING-REVIEW.
+
+Reverse: edit BUDGET, HUNT_NIGHTS and each kind's week; set nights to 0 to leave a project out.
+
+## B3342. Complications (2026-11-13)
+WoDX Storyteller. Each roll of a project can draw a complication from a table by kind and year (1 in 10, always on a botch), skipping the last three it had where there is a choice. It goes to the Storyteller only, as a card, a log line marked for attention and the hook wodxProjectComplication, and is kept on the project. It is the start of a scene and changes nothing by itself. The Storyteller can turn complications off for a project.
+
+Reverse: set TROUBLE_CHANCE to 0 and stop drawing on a botch in drawTrouble.
+
+## B3343. What a finished project leaves (2026-11-13)
+WoDX Storyteller. Backgrounds never rise by themselves (B850): a finished business or herd puts a line on the log asking the Storyteller to award a dot of Resources or Herd; a language, a track or research asks the Storyteller to say what came of it. A courting project calls WoDX NPC's api.hearts.court each roll: a success is time spent together, a botch a slight. The hearts api refuses anyone under 18 (B3211).
+
+Reverse: edit outcomeOf and courtEvent in projects-rules.mjs, or drop courtRoll from tasks.mjs.
 
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
