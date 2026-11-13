@@ -452,11 +452,12 @@ export async function propertyDialog() {
     });
   };
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 700}, window: {title: "Property and building", resizable: true}, classes: ["wodx-dialog", "wst-own-dlg"],
-    content, buttons: [{action: "make", label: "Make something"}, {action: "cook", label: "Cook, brew or mix"}, {action: "build", label: "Put up a building"},
+    content, buttons: [{action: "make", label: "Make something"}, {action: "cook", label: "Cook, brew or mix"}, {action: "build", label: "Put up a building"}, {action: "ventures", label: "Ventures"},
       ...(game.user.isGM ? [{action: "tag", label: "Tag a place on this scene"}] : []), {action: "close", label: "Close", default: true}]});
   if ( res === "make" ) return craftDialog();
   if ( res === "cook" ) return game.modules.get(MOD)?.api?.cookery?.open?.();
   if ( res === "build" ) return buildDialog();
+  if ( res === "ventures" ) return game.modules.get(MOD)?.api?.upkeep?.ventures?.open?.();
   if ( res === "tag" && canvas?.scene ) { const d = await pickPlace(canvas.scene); if ( d ) await editHolding(d); return propertyDialog(); }
 }
 
