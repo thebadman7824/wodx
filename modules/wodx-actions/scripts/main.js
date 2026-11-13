@@ -1235,6 +1235,7 @@ export async function hunt({ actor: a } = {}) {
       <p class="vta-note wodx-style-note">${esc([style?.note, styleKey ? styleData[styleKey].clash : ""].filter(Boolean).join(" "))}</p>
       <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), area)}</select></div>
       ${here?.outbreak ? `<p class="vta-note"><b>${esc(here.outbreak.name)}.</b> ${esc(here.outbreak.note)} The sick are easy to find, and blood taken from them can carry the sickness to the next vessel.</p>` : ""}
+      ${here?.outbreak?.diff ? `<div class="form-group"><label>The sick are everywhere</label><input type="number" name="sickDiff" value="${here.outbreak.diff}" max="0"/></div>` : ""}
       ${here?.extra ? `<div class="form-group"><label>Heat here (${esc(here.band.name)})</label><input type="number" name="heat" value="${here.extra}" min="0"/></div>` : ""}
       ${poolSelectors(actor, "", { attr: style?.attr ?? "wits", ability: (style ? abId(style.ability) : "") || (findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "") })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
@@ -1327,7 +1328,7 @@ async function huntNight(scene, area, year) {
 function huntBuilt(actor, fd) {
     const pool = readPool(actor, fd.attr, fd.ability);
     const fame = Number(fd.fame) || 0, domain = Number(fd.domain) || 0, herd = Number(fd.herd) || 0, faith = Number(fd.faithDiff) || 0;
-    const hp = R.huntingPool({ area: fd.area, fame, domain, herd, calendar: faith, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) + (Number(fd.palateDiff) || 0) + (Number(fd.nightDiff) || 0) });
+    const hp = R.huntingPool({ area: fd.area, fame, domain, herd, calendar: faith, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) + (Number(fd.palateDiff) || 0) + (Number(fd.nightDiff) || 0) + (Number(fd.sickDiff) || 0) });
     const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: hp.bonusDice, baseDifficulty: hp.difficulty,
         woundPenalty: woundPenalty(actor) });
@@ -1335,7 +1336,7 @@ function huntBuilt(actor, fd) {
     const parts = [`${R.HUNTING_GROUNDS[fd.area]?.label ?? fd.area} ${R.HUNTING_GROUNDS[fd.area]?.diff ?? 6}`,
         fame || domain ? `Fame/Domain –${fame + domain} (min 3)` : "", herd ? `Herd +${herd} dice` : "",
         faith ? `feasts, fasts and curfews ${sign(faith)}${fd.faithWhy ? ` (${fd.faithWhy})` : ""}` : "",
-        Number(fd.nightDiff) ? `the night ${sign(Number(fd.nightDiff))}` : "", Number(fd.heat) ? `heat +${Number(fd.heat)}` : "",
+        Number(fd.nightDiff) ? `the night ${sign(Number(fd.nightDiff))}` : "", Number(fd.heat) ? `heat +${Number(fd.heat)}` : "", Number(fd.sickDiff) ? `the sick ${sign(Number(fd.sickDiff))}` : "",
         Number(fd.palateDiff) ? `palate +${Number(fd.palateDiff)}` : "", Number(fd.inhuman) ? `other ${sign(Number(fd.inhuman))}` : ""].filter(Boolean);
     return { pool, hp, built, parts };
 }
@@ -1483,7 +1484,11 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             out = R.diseaseOutcome(spot, res);
         }
         if (out.carrier) {
-            if (setting("applyChanges")) await updateActor(actor, { [`flags.${MOD}.carrier`]: { since: game.time?.worldTime ?? 0, what: "a blood-borne disease" } });
+            // B3438: name the town's sickness when it rides in the blood (WoDX Storyteller's contagion), so the carrier can bring it to a clean town
+            let sick = null;
+            try { sick = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(canvas?.scene)?.outbreak ?? null; } catch (e) { sick = null; }
+            const named = sick?.blood && sick.disease ? { disease: sick.disease, what: sick.name } : { what: "a blood-borne disease" };
+            if (setting("applyChanges")) await updateActor(actor, { [`flags.${MOD}.carrier`]: { since: game.time?.worldTime ?? 0, ...named } });
             html += `<div class="vta-warn">${esc(actor.name)} now carries the sickness and can pass it to later vessels${out.why === "botch" ? " (a botch on spotting it)" : ""}.</div>`;
         } else html += `<div class="vta-res">${esc(actor.name)} misses the sickness but throws it off.</div>`;
     }
@@ -2342,6 +2347,11 @@ export async function seduction({ actor: a, target: t, onDone = null, shift = 0 
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor(t);
+    // B3212: never with anyone under 18, in any era (WoDX Chronicle's age floor)
+    if (target) {
+        const age = game.modules.get("wodx-chronicle")?.api?.age?.romance?.(actor, target) ?? { ok: false, why: "The age check is not available (a WoDX Chronicle with the age floor is needed)." };
+        if (!age.ok) { ui.notifications.warn(age.why); return null; }
+    }
     const g = k => target ? attr(target, k) : 2;
     const content = `<form>
       <p>${esc(actor.name)} seduces ${target ? `<b>${esc(target.name)}</b>` : "a mortal (no target: Attributes 2)"}.</p>
@@ -2773,7 +2783,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.63.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.65.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

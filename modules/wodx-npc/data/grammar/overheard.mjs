@@ -181,6 +181,24 @@ export const RULES = {
   "overheard:reply:work": [
     R("overheard.reply.work", {}, ["Nothing. They're letting people go.", "Try #ohMarket#. Someone always needs a back.", "Same as ever. Work, sleep, work."])
   ],
+  /* how the town is doing: its last blow or its mood (WoDX Storyteller's towns, B3320) */
+  "overheard:town": [
+    R("overheard.town.plague", {town: "plague"}, ["Two more houses marked on our street.", "They're burying them faster than the priests can pray.", "Keep away from the lower town. The sickness is there."]),
+    R("overheard.town.fire", {town: "fire"}, ["You can still smell the smoke from the fire.", "Whole families out on the street since the fire.", "They say the fire started in a bakehouse."]),
+    R("overheard.town.flood", {town: "flood"}, ["The water's gone down, but the mud's still in every house by the river.", "We lost the whole cellar to the flood."]),
+    R("overheard.town.storm", {town: "storm"}, ["Half the boats are still on the bottom after that storm.", "The storm took our roof clean off."]),
+    R("overheard.town.quake", {town: "quake"}, ["I still feel the ground move when I lie down.", "Every wall on our street is cracked since the shaking."]),
+    R("overheard.town.famine", {town: "famine"}, ["There's no bread to be had. Not at any price.", "My children ate grass soup again last night.", "Whoever's hoarding the grain wants hanging."]),
+    R("overheard.town.riot", {town: "riot"}, ["Did you see the storehouse after the riot? Picked clean.", "They broke every window on the square.", "There'll be hangings for that riot, you watch."]),
+    R("overheard.town.rising", {town: "rising"}, ["Whose side are you on, now it's come to this?", "They hold the town hall. Nobody knows what happens next.", "Stay indoors after dark. Both sides are out."]),
+    R("overheard.town.sack", {town: "sack"}, ["They took everything that wasn't nailed down. Then the nails.", "I hid in the well while they went through the house.", "Half the town's dead or gone since they came over the walls."]),
+    R("overheard.town.angry", {town: "angry"}, ["People are angry. It won't take much now.", "Somebody's going to do something stupid soon.", "One more tax and the whole street goes up."]),
+    R("overheard.town.grim", {town: "grim"}, ["Another shop shut on our street.", "Nobody has two coins to rub together any more.", "Everyone with sense is leaving."]),
+    R("overheard.town.thriving", {town: "thriving"}, ["Have you seen the new houses going up by the gate?", "Money everywhere this year. Even I've got some.", "My cousin moved here for the work. Half the village followed."])
+  ],
+  "overheard:reply:town": [
+    R("overheard.reply.town", {}, ["Don't I know it.", "It'll be worse before it's better.", "Keep your head down and it'll pass.", "#ohOath.cap#. Who'd have thought."])
+  ],
   /* an answer when nothing fits the topic */
   "overheard:reply": [
     R("overheard.reply", {}, ["Hm.", "That's how it is.", "#ohOath.cap#. What can you do.", "If you say so."])
@@ -188,4 +206,4 @@ export const RULES = {
 };
 
 export const OVERHEARD = {rules: RULES, symbols: SYMBOLS};
-export const TOPICS = ["rumour", "times", "price", "watch", "faction", "secret", "feast", "weather", "work"];
+export const TOPICS = ["rumour", "times", "town", "price", "watch", "faction", "secret", "feast", "weather", "work"];

@@ -21,9 +21,7 @@ const origins = [
   t("people.origin", "People: origin (Bohemia, medieval)", [w("czech", 62), w("german", 30), w("jewish", 8)], {era: MED, culture: BOH}),
   t("people.origin", "People: origin (Bohemia, early modern)", [w("czech", 60), w("german", 32), w("jewish", 8)], {era: EM, culture: BOH}),
   t("people.origin", "People: origin (Bohemia, industrial)", [w("czech", 63), w("german", 31), w("jewish", 6)], {era: IND, culture: BOH}),
-  t("people.origin", "People: origin (Czechia, modern)", [w("czech", 88), w("slovak", 12)], {era: MOD, culture: BOH}),
-  t("people.origin", "People: origin (the Americas, 19th century)", [w("anglo", 80), w("hispanic", 20)], {era: IND, culture: AM}),
-  t("people.origin", "People: origin (the Americas, modern)", [w("anglo", 78), w("hispanic", 22)], {era: MOD, culture: AM})
+  t("people.origin", "People: origin (Czechia, modern)", [w("czech", 88), w("slovak", 12)], {era: MOD, culture: BOH})
 ];
 
 /* ---------------- Given names ---------------- */

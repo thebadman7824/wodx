@@ -123,7 +123,7 @@ function webHtml(opts) {
   const people = w.nodes.map(n => `<li data-search-item><a data-open="${esc(n.id)}">${esc(n.name)}</a> <a data-only="${esc(n.id)}" title="Only their ties">(centre)</a></li>`).join("");
   return `<div class="wnpc-web-wrap"><div class="wnpc-web-filters" data-fixed>${groupBoxes}</div>
     <p><label>Year <input type="number" name="year" value="${opts.year ?? ""}" placeholder="any" style="width:6em"></label> ${opts.only ? `<a data-only="">Show everyone</a>` : ""}</p>
-    ${webSvg(w)}<p class="wodx-quiet">${w.nodes.length} people, ${w.links.length} ties.</p>
+    <div class="wnpc-web-pic"></div><p class="wodx-quiet">${w.nodes.length} people, ${w.links.length} ties.</p>
     ${searchBox(".wnpc-web-people", "Find a person…")}<ul class="wnpc-web-people">${people}</ul></div>`;
 }
 export async function openWeb(opts = {}) {
@@ -132,7 +132,10 @@ export async function openWeb(opts = {}) {
   const dlg = new D({window: {title: "The web of ties", icon: "fa-solid fa-diagram-project", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog", "wnpc-web-dialog"],
     position: {width: 600, height: "auto"}, content: webHtml(state), buttons: [{action: "close", label: "Close", default: true}], rejectClose: false});
   await dlg.render(true);
-  const redraw = () => { const box = dlg.element?.querySelector(".wnpc-web-wrap"); if ( box ) box.outerHTML = webHtml(state); };
+  // Fix: the dialog's content is cleaned of SVG, so the picture is drawn into its box after each render
+  const picture = () => { const pic = dlg.element?.querySelector(".wnpc-web-pic"); if ( pic ) pic.innerHTML = webSvg(web(state)); };
+  const redraw = () => { const box = dlg.element?.querySelector(".wnpc-web-wrap"); if ( box ) box.outerHTML = webHtml(state); picture(); };
+  picture();
   dlg.element?.addEventListener("change", ev => {
     if ( ev.target.name === "g" ) state.groups = [...dlg.element.querySelectorAll("input[name=g]:checked")].map(x => x.value);
     if ( ev.target.name === "year" ) state.year = ev.target.value === "" ? null : Number(ev.target.value);

@@ -143,11 +143,13 @@ export async function marketsDialog() {
       const el = dialog.element ?? dialog;
       el.querySelectorAll?.("button[data-market]").forEach(b => b.addEventListener("click", () => { picked = b.dataset.market; dialog.close(); }));
     },
-    buttons: [{action: "add", label: "New market"}, ...(st.markets.length ? [{action: "week", label: "Run a week now"}, {action: "caravans", label: "Caravans"}, {action: "ventures", label: "Ventures"}] : []), {action: "close", label: "Close"}]});
+    buttons: [{action: "add", label: "New market"}, ...(st.markets.length ? [{action: "week", label: "Run a week now"}, {action: "caravans", label: "Caravans"}, {action: "ventures", label: "Ventures"}, {action: "towns", label: "Towns"}, {action: "sickness", label: "Sickness"}] : []), {action: "close", label: "Close"}]});
   if ( picked ) return editMarket(picked);
   if ( res === "add" ) return editMarket(null);
   if ( res === "caravans" ) return game.modules.get(MOD)?.api?.upkeep?.caravans?.open?.();
+  if ( res === "towns" ) return game.modules.get(MOD)?.api?.upkeep?.towns?.open?.();
   if ( res === "ventures" ) return game.modules.get(MOD)?.api?.upkeep?.ventures?.open?.();
+  if ( res === "sickness" ) return game.modules.get(MOD)?.api?.upkeep?.contagion?.open?.();
   if ( res === "week" ) return game.modules.get(MOD)?.api?.upkeep?.marketTurn?.run?.({force: true, reason: "a week (run by hand)"});
 }
 
