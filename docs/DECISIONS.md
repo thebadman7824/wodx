@@ -134,7 +134,7 @@ Next free block: B2970
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
-| B2960-B2969 | Kindred courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (used B2960-B2962) | NPC |
+| B2960-B2969 | Courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (B2960-B2962); the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashic Brotherhood and Ahl-i-Batin (B2963-B2968) (used B2960-B2968) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4104,3 +4104,34 @@ Reverse: delete "laibon-council" from POLITIES in politics-rules.mjs (factions t
 The Amir holds the top seat by challenge; a Qadi judges; a Wazir, a Muhtasib of the night and a Keeper of the guest house are appointed, and each clan present has a voice. The court sits in majlis every second inner turn. Its law: a broken oath sworn before God, harm to a guest under one's roof, hunting in another's quarter, an Embrace without the Amir's leave, aid to the Sabbat. Titles and law are WoDX's own words; a book check is queued. House rule.
 
 Reverse: delete "ashirra" from POLITIES in politics-rules.mjs.
+
+## B2963. Kindred courts for India, Central Asia and Tibet (2026-11-13)
+WoDX NPC 0.63.0: a Kindred faction in India keeps a court of the Ravnos up to 1999 and the court of its age after (the clan's fall in the summer of 1999); one in Central Asia keeps a court of the Ashirra; one in Tibet and the Himalaya a court of the Kuei-jin. The pre-colonial Americas, Oceania and the far north still keep the European default. House rule, pending the PC book check.
+
+Reverse: take india, central-asia and tibet-himalaya out of REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B2964. A court of the Ravnos (2026-11-13)
+The Eldest of the land holds the top seat by challenge; a Keeper of the duties judges; up to three clans present have a voice; a Watcher of the roads and a Teller of the old lines are appointed. Its law: forsaking the duty of one's line, betraying a kinsman of the blood to outsiders, feeding on a holy one, dealings with the Kuei-jin, an Embrace the Eldest will not own. The polity ends in 1999, and a faction that picked it keeps the court of its age after. Seats and law are WoDX's own words; a book check is queued. House rule.
+
+Reverse: delete "ravnos-court" from POLITIES and india from REGION_COURTS.
+
+## B2965. A Beast Court of the Hengeyokai (2026-11-13)
+A Garou faction of three or more in China, Japan, Korea, mainland Southeast Asia, the Malay world, India or Tibet keeps a Beast Court, and so does any Garou faction whose name or notes name the Hengeyokai or one of their breeds, anywhere. A Lord of the court holds the top seat by challenge, a Keeper of the mandate judges, each breed present has a voice (from the sheet's tribe field), and a Warden of the borders and a Master of the rites are appointed. Challenges end at submission, as in a sept. Seats and law are WoDX's own words; a book check of Hengeyokai: Shapeshifters of the East is queued. House rule.
+
+Reverse: delete "beast-court" from POLITIES, its rows from REGION_SHIFTERS and the HENGEYOKAI test in DEFAULTS.garou.
+
+## B2966. A land held by the Bastet (2026-11-13)
+A Garou faction of three or more in West, East, Central or Southern Africa keeps a land held by the Bastet, since few wolves are left there; so does any Garou faction whose name or notes name a Bastet tribe, anywhere. The Holder of the land holds the top seat by challenge, a Keeper of secrets judges, each tribe present has a voice, and a Watcher of the borders and a Teller of tales are appointed. Its law turns on secrets and den-realms. WoDX's own words; a book check of the Bastet breedbook is queued. House rule.
+
+Reverse: delete "bastet-land" from POLITIES, its rows from REGION_SHIFTERS and the BASTET test in DEFAULTS.garou.
+
+## B2967. The Wu Lung and the Akashic Brotherhood by region (2026-11-13)
+A mages' faction of three or more that does not serve Reason keeps a court of the Wu Lung in China and Korea, and a monastery of the Akashic Brotherhood in Japan, mainland Southeast Asia, the Malay world, India and Tibet, in every year. A faction that serves Reason keeps the Order of Reason or the Technocracy as before. The Wu Lung court is led by a Master of the mandate who also judges, with ministers, a keeper of the node and a scribe; the monastery by its Master, with elders of the hall and keepers of the node and records. WoDX's own words pending the book check. House rule.
+
+Reverse: delete "wu-lung-court" and "akashic-monastery" from POLITIES and their rows from REGION_MAGES.
+
+## B2968. A circle of the Ahl-i-Batin (2026-11-13)
+A mages' faction of three or more in the Maghreb, Egypt, Arabia, the Levant, Persia, Anatolia or Central Asia that does not serve Reason keeps a circle of the Ahl-i-Batin, in every year: a Master of the circle who also judges, a keeper of the node, a keeper of the hidden books and two watchers. Its law includes showing the hidden to those not ready and acting against the Unity. When the Subtle Ones sit on the Council and when they leave it is left to the book check; for now the circle stands whatever the year. House rule.
+
+Reverse: delete "batini-circle" from POLITIES and its rows from REGION_MAGES.
+

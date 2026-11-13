@@ -1,12 +1,15 @@
 /**
- * WoDX NPC 0.62.0 gate (Kindred courts beyond Europe), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.62.0 and 0.63.0 gate (courts beyond Europe), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateworldcourts.mjs?${Date.now()}`)).run()
  * The gate never moves the clock and never changes the homeland. It makes six Kindred NPCs and deletes them, and puts
  * back the factions record, the faction settings, the approval queue and its chat cards.
- *   1. WoDX NPC 0.62.0+: the region courts, the homeland hook, the two new polities
+ *   1. WoDX NPC 0.63.0+: the region courts, the homeland hook, the eight new polities
  *   2. the homeland is read from WoDX Chronicle when the faction rules look at the world
  *   3. a Kindred faction standing in West Africa keeps a council of the Laibon, one in Egypt a court of the Ashirra,
  *      one in Japan a court of the Kuei-jin, one in the British Isles the court of its age; a hand-picked polity wins
+ *   3b. (0.63.0) India keeps the Ravnos until 1999, Central Asia the Ashirra, Tibet the Kuei-jin; Garou keep a Beast
+ *      Court in Japan and a Bastet land in East Africa; mages keep the Wu Lung in China, the Akashics in Tibet and the
+ *      Ahl-i-Batin in Persia, and a Technocracy faction keeps Reason
  *   4. two faction turns with politics on: the leader of the Laibon council is Elder of the land, each legacy a voice;
  *      the Ashirra court's leader is Amir
  *   5. the faction window shows Where it stands with the homeland and all 44 regions, marked as a fixed list
@@ -54,8 +57,9 @@ export async function run() {
 
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version;
-      ok("1. WoDX NPC 0.62.0+, the region courts and the two new polities", newer(v, "0.62.0") && !!PO().REGION_COURTS && typeof PO().setHomeRegion === "function"
-        && !!PO().POLITIES["laibon-council"] && !!PO().POLITIES.ashirra, {v});
+      const want = ["laibon-council", "ashirra", "ravnos-court", "beast-court", "bastet-land", "wu-lung-court", "akashic-monastery", "batini-circle"];
+      ok("1. WoDX NPC 0.63.0+, the region courts and the eight new polities", newer(v, "0.63.0") && !!PO().REGION_COURTS && !!PO().REGION_SHIFTERS && !!PO().REGION_MAGES
+        && typeof PO().setHomeRegion === "function" && want.every(k => !!PO().POLITIES[k]), {v, missing: want.filter(k => !PO().POLITIES[k])});
     });
 
     await step("2. homeland", async () => {
@@ -71,6 +75,20 @@ export async function run() {
       const picked = PO().polityFor({...k("egypt"), polity: "camarilla"}, Math.max(year, 1435));
       ok("3. Laibon, Ashirra, Kuei-jin and the court of its age by region; a pick wins",
         JSON.stringify(keys) === JSON.stringify(["laibon-council", "ashirra", "kuei-jin-court", year < 1435 ? "dark-ages-court" : "camarilla"]) && picked === "camarilla", {year, keys, picked});
+    });
+
+    await step("3b. Asia and Africa", async () => {
+      const f = (kind, region, name = "") => ({kind, region, name, members: ["a", "b", "c"]});
+      const got = {
+        india1700: PO().polityFor(f("kindred", "india"), 1700), india2005: PO().polityFor(f("kindred", "india"), 2005),
+        centralAsia: PO().polityFor(f("kindred", "central-asia"), 1700), tibet: PO().polityFor(f("kindred", "tibet-himalaya"), 1700),
+        garouJapan: PO().polityFor(f("garou", "japan"), 1700), garouEastAfrica: PO().polityFor(f("garou", "east-africa"), 1700),
+        magesChina: PO().polityFor(f("mages", "china"), 1700), magesTibet: PO().polityFor(f("mages", "tibet-himalaya"), 1700),
+        magesPersia: PO().polityFor(f("mages", "persia"), 1700), technocracy: PO().polityFor(f("mages", "china", "Iteration X Construct"), 1990)
+      };
+      const want = {india1700: "ravnos-court", india2005: "camarilla", centralAsia: "ashirra", tibet: "kuei-jin-court", garouJapan: "beast-court",
+        garouEastAfrica: "bastet-land", magesChina: "wu-lung-court", magesTibet: "akashic-monastery", magesPersia: "batini-circle", technocracy: "technocracy-construct"};
+      ok("3b. the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashics and Ahl-i-Batin by region", JSON.stringify(got) === JSON.stringify(want), {got});
     });
 
     const people = [["Gate Elder", "Osebo", 4], ["Gate Guest", "Guruhi", 2], ["Gate Teller", "Akunanse", 1],

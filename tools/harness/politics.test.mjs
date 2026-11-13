@@ -355,7 +355,9 @@ test("a Kindred faction keeps the court of its land: by its own region, else the
     assert.equal(PO.polityFor(k({region: "persia"}), 2010), "ashirra");
     assert.equal(PO.polityFor(k({region: "japan"}), 1700), "kuei-jin-court");
     assert.equal(PO.polityFor(k({region: "moravia"}), 1300), "dark-ages-court");
-    assert.equal(PO.polityFor(k({region: "india"}), 1700), "camarilla", "a land with no court of its own keeps Europe's for now");
+    assert.equal(PO.polityFor(k({region: "india"}), 1700), "ravnos-court", "India keeps the Ravnos (0.63.0)");
+    assert.equal(PO.polityFor(k({region: "india"}), 2005), "camarilla", "after the Ravnos fall of 1999, the court of its age");
+    assert.equal(PO.polityFor(k({region: "brazil"}), 1700), "camarilla", "a land with no court of its own keeps Europe's");
     assert.equal(PO.polityFor(k(), 1600, {region: "levant"}), "ashirra", "a region passed by the caller");
     PO.setHomeRegion("central-africa");
     assert.equal(PO.homeRegion(), "central-africa");
@@ -364,7 +366,8 @@ test("a Kindred faction keeps the court of its land: by its own region, else the
     assert.equal(PO.polityFor(k({polity: "camarilla"}), 1600), "camarilla", "the Storyteller's pick wins");
     assert.equal(PO.polityFor(k({polity: "none"}), 1600), null);
     assert.equal(PO.polityFor(k({members: ["a", "b"]}), 1600), null, "two are a coterie, not a court");
-    assert.equal(PO.polityFor(F.normFaction({id: "g", kind: "garou", members: ["a", "b", "c"]}), 1600), "garou-sept", "other kinds keep their polity");
+    assert.equal(PO.polityFor(F.normFaction({id: "g", kind: "garou", members: ["a", "b", "c"]}), 1600), "bastet-land", "a Garou faction in central Africa: the Bastet (0.63.0)");
+    assert.equal(PO.polityFor(F.normFaction({id: "g", kind: "hunters", members: ["a", "b", "c"]}), 1600), "hunter-society", "other kinds keep their polity");
     PO.setHomeRegion(42);
     assert.equal(PO.homeRegion(), null, "a bad homeland is ignored");
   } finally { PO.setHomeRegion(null); }
@@ -375,7 +378,7 @@ test("a faction keeps its region, cleaned, and every court region is a world reg
   assert.equal(F.normFaction({id: "a", region: "Egypt; drop"}).region, "");
   assert.equal(F.normFaction({id: "a"}).region, "");
   const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
-  for ( const [r, key] of Object.entries(PO.REGION_COURTS) ) {
+  for ( const [r, key] of [...Object.entries(PO.REGION_COURTS), ...Object.entries(PO.REGION_SHIFTERS), ...Object.entries(PO.REGION_MAGES)] ) {
     assert.ok(W.WORLD_REGIONS[r], `${r} is a world region`);
     assert.ok(PO.POLITIES[key], `${key} is a polity`);
   }
@@ -394,4 +397,60 @@ test("the Laibon and Ashirra courts seat their legacies and clans and hear their
     assert.ok(out.lines.length, key);
     if ( key === "laibon-council" ) assert.ok(!out.lines.some(l => /\bclans\b/.test(l)), "the Laibon speak of legacies");
   }
+});
+
+// WoDX NPC 0.63.0 (B2963 to B2968): the rest of the courts beyond Europe.
+test("India, Central Asia and Tibet keep courts of their own for Kindred", () => {
+  const k = (o = {}) => F.normFaction({id: "k", kind: "kindred", members: ["a", "b", "c"], ...o});
+  assert.equal(PO.polityFor(k({region: "india"}), 1500), "ravnos-court");
+  assert.equal(PO.polityFor(k({region: "india"}), 1999), "ravnos-court", "the fall comes in the summer of 1999");
+  assert.equal(PO.polityFor(k({region: "india"}), 2000), "camarilla");
+  assert.equal(PO.polityFor(k({region: "india"}), 1300), "ravnos-court", "before the Camarilla too");
+  assert.equal(PO.polityFor(k({region: "india", polity: "ravnos-court"}), 2010), "camarilla", "a pick past its time gives way to the court of its age");
+  assert.equal(PO.polityFor(k({region: "central-asia"}), 1250), "ashirra");
+  assert.equal(PO.polityFor(k({region: "tibet-himalaya"}), 1800), "kuei-jin-court");
+});
+
+test("a Garou faction in Asia keeps a Beast Court, in Africa a land of the Bastet, and its name can say which", () => {
+  const g = (o = {}) => F.normFaction({id: "g", kind: "garou", members: ["a", "b", "c"], ...o});
+  for ( const r of ["china", "japan", "korea", "southeast-asia", "nusantara", "india", "tibet-himalaya"] ) assert.equal(PO.polityFor(g({region: r}), 1700), "beast-court", r);
+  for ( const r of ["west-africa", "east-africa", "central-africa", "southern-africa"] ) assert.equal(PO.polityFor(g({region: r}), 1700), "bastet-land", r);
+  assert.equal(PO.polityFor(g({region: "egypt"}), 1700), "garou-sept", "north Africa keeps its septs");
+  assert.equal(PO.polityFor(g({region: "british-isles"}), 1700), "garou-sept");
+  assert.equal(PO.polityFor(g({region: "north-america-west", name: "The Simba pride of the hills"}), 1700), "bastet-land", "a Bastet tribe named");
+  assert.equal(PO.polityFor(g({region: "british-isles", name: "Kitsune of the old shrine"}), 1700), "beast-court", "a Hengeyokai breed named");
+  assert.equal(PO.polityFor(g({region: "japan", polity: "garou-sept"}), 1700), "garou-sept", "a pick wins");
+  try {
+    PO.setHomeRegion("japan");
+    assert.equal(PO.polityFor(g(), 1700), "beast-court", "the homeland's");
+  } finally { PO.setHomeRegion(null); }
+});
+
+test("a mages' faction keeps the Wu Lung, the Akashic Brotherhood or the Ahl-i-Batin by region; Reason keeps Reason", () => {
+  const m = (o = {}) => F.normFaction({id: "m", kind: "mages", members: ["a", "b", "c"], ...o});
+  assert.equal(PO.polityFor(m({region: "china"}), 1300), "wu-lung-court");
+  assert.equal(PO.polityFor(m({region: "korea"}), 1990), "wu-lung-court");
+  for ( const r of ["japan", "southeast-asia", "nusantara", "india", "tibet-himalaya"] ) assert.equal(PO.polityFor(m({region: r}), 1700), "akashic-monastery", r);
+  for ( const r of ["maghreb", "egypt", "arabia", "levant", "persia", "anatolia", "central-asia"] ) assert.equal(PO.polityFor(m({region: r}), 1700), "batini-circle", r);
+  assert.equal(PO.polityFor(m({region: "china", name: "Iteration X Construct"}), 1990), "technocracy-construct");
+  assert.equal(PO.polityFor(m({region: "france"}), 1700), "tradition-chantry");
+  assert.equal(PO.polityFor(m({region: "france"}), 1300), "mage-fellowship");
+});
+
+test("the new courts seat their breeds, tribes and blocs and hear their own law", () => {
+  const ppl = {a: {name: "A", tribe: "Khan", sect: "Akashic Brotherhood", clan: "Ravnos", status: 3, rank: 4, arete: 4},
+    b: {name: "B", tribe: "Kitsune", sect: "Wu Lung", clan: "Assamite", status: 2, rank: 2, arete: 2},
+    c: {name: "C", tribe: "Zhong Lung", sect: "Ahl-i-Batin", clan: "Kuei-jin", status: 1, rank: 1, arete: 1}};
+  for ( const key of ["ravnos-court", "beast-court", "bastet-land", "wu-lung-court", "akashic-monastery", "batini-circle"] ) {
+    const P = PO.POLITIES[key];
+    assert.ok(P.titles?.[PO.topOffice(key).key]?.length >= 3, `${key} offers names for its top seat`);
+    assert.ok(P.law.length >= 5, `${key} has five laws`);
+    assert.ok(/Used by default/.test(P.notes), `${key} says where it is used`);
+    assert.ok(!/—/.test(JSON.stringify(P)) && !/\b(he|she|him|her|his|hers)\b/i.test(JSON.stringify(P)), `${key}: no em-dashes or gendered words`);
+    const f = F.normFaction({id: "x", name: "X", kind: P.kinds[0], polity: key, leader: "a", members: ["a", "b", "c"]});
+    const out = PO.innerTurn(f, {polity: key, info: ppl, rand: stream(7), turn: 0});
+    assert.ok(out.lines.length, key);
+  }
+  assert.ok(!PO.innerTurn(F.normFaction({id: "x", kind: "garou", polity: "beast-court", leader: "a", members: ["a", "b", "c"]}),
+    {polity: "beast-court", info: ppl, rand: stream(3), turn: 0}).lines.some(l => /\btribes\b/.test(l)), "a Beast Court speaks of breeds");
 });
