@@ -76,11 +76,11 @@ export const ACT_FRAMES = 6;
 export const ACT_MS = [110, 110, 110, 90, 140, 220];
 export const ACT_TOTAL = ACT_MS.reduce((a, b) => a + b, 0);
 /* Besides its attacks, every sprite can take a blow, dodge, fall and die (B2588): those sheets are made from its walk. */
-export const REACTS = ["hit", "dodge", "fall", "die"];
+export const REACTS = ["hit", "dodge", "fall", "die", "block", "parry"];
 /** Moves whose last frame stays on the map until the figure is helped up. */
 export const HOLD = ["fall", "die", "sit", "kneel"];
 /* Things a figure does that are not blows (B2610): it sits or kneels and stays so, looks about, speaks, feeds, changes form. Made from its walk. */
-export const POSES = ["sit", "kneel", "search", "talk", "feed", "shift"];
+export const POSES = ["sit", "kneel", "search", "talk", "feed", "shift", "pick"];
 /** Poses a figure leaves by itself as soon as it walks off. */
 export const STAY = ["sit", "kneel"];
 const OWN_MOVES = [...REACTS, ...POSES];
@@ -93,10 +93,10 @@ export const ACTS = {
   "lady-1888": ["thrust", ...OWN_MOVES]
 };
 export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", shot: "Fire", thrust: "Thrust", bite: "Bite", swing: "Swing",
-  hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die",
-  sit: "Sit down", kneel: "Kneel", search: "Look about", talk: "Speak", feed: "Feed", shift: "Change form"};
+  hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die", block: "Block", parry: "Parry",
+  sit: "Sit down", kneel: "Kneel", search: "Look about", talk: "Speak", feed: "Feed", shift: "Change form", pick: "Work at a lock"};
 /** How much longer than a blow a move takes: looking about and feeding are slow, speech and a change of form unhurried. */
-export const ACT_SLOW = {search: 2.6, feed: 2.2, talk: 1.8, shift: 1.7, sit: 1.2, kneel: 1.2};
+export const ACT_SLOW = {search: 2.6, pick: 2.6, feed: 2.2, talk: 1.8, shift: 1.7, sit: 1.2, kneel: 1.2};
 export const actPath = (name, act) => `${stem(name)}.${act}.png${stamp(name)}`;
 /** The move a sprite plays: the one asked for if it knows it, else its first. Null when it knows none. */
 export const actOf = (name, want) => { const l = ACTS[name] ?? []; return l.includes(want) ? want : (l.find(m => !OWN_MOVES.includes(m)) ?? null); };
@@ -113,16 +113,33 @@ export function reactFor(condition, level = 0) {
   if ( condition === "unconscious" || condition === "torpor" || condition === "incapacitated" || level >= 7 ) return "fall";
   return "hit";
 }
+/**
+ * How the one attacked meets a blow that did not land (B2615): with the defence the fight rules rolled when the sprite
+ * has that move, else by ducking away. Null when it has neither.
+ */
+export function defenceFor(name, defense = "") {
+  const d = String(defense ?? "").toLowerCase();
+  if ( (d === "block" || d === "parry") && hasAct(name, d) ) return d;
+  return hasAct(name, "dodge") ? "dodge" : null;
+}
+/** The move for work done at a door, a lock or a device (B2616): fine work at the lock, a blow for force; null for anything else. */
+export function workFor(name, action = "") {
+  const a = String(action ?? "");
+  if ( ["pick", "hack", "disarm", "key", "unlock", "jam"].includes(a) ) return hasAct(name, "pick") ? "pick" : null;
+  if ( ["smash", "breakIt", "breach", "force", "heave"].includes(a) ) return actOf(name, null);
+  if ( ["listen", "search", "look"].includes(a) ) return hasAct(name, "search") ? "search" : null;
+  return null;
+}
 /* Ways of going (B2588): a sheet like the walk, for running and for going low. */
-export const GAITS = ["run", "sneak", "climb", "swim", "fly", "ride"];
+export const GAITS = ["run", "sneak", "climb", "swim", "fly", "ride", "jump", "crawl"];
 export const GAIT = Object.fromEntries(Object.keys(ACTS).map(k => [k, [...GAITS]]));
 /** The sheet a moving figure uses: low when it crawls or sneaks, running when it covers a long stretch at once, else its walk (null). */
 export function gaitFor(name, {action = "walk", squares = 0, riding = false} = {}) {
   const has = GAIT[name] ?? [];
   // in the saddle the mount does the going; then the way the token itself is moved (B2611)
   if ( riding && has.includes("ride") ) return "ride";
-  if ( ["climb", "swim", "fly"].includes(action) ) return has.includes(action) ? action : null;
-  if ( action === "crawl" && has.includes("sneak") ) return "sneak";
+  if ( ["climb", "swim", "fly", "jump"].includes(action) ) return has.includes(action) ? action : null;
+  if ( action === "crawl" ) return has.includes("crawl") ? "crawl" : has.includes("sneak") ? "sneak" : null;
   if ( (action === "walk" || !action) && squares > RUN_SQUARES && has.includes("run") ) return "run";
   return null;
 }
@@ -232,6 +249,10 @@ export function rosterOf(c = {}) {
   const hex = v => /^[0-9a-f]{6}$/i.test(v ?? "") ? v.toLowerCase() : null;
   const out = {id: String(c.id ?? ""), name: String(c.name ?? ""), kind: /^creature$/i.test(c.type ?? "") ? "animal" : "person"};
   if ( out.kind === "person" ) {
+    // what it is, for the looks of the fae and of ghosts (B2614): the sheet's line and, for a changeling, its kith
+    if ( c.type ) out.line = String(c.type);
+    const kith = String(c.kith ?? "").split(".").pop().trim();
+    if ( kith && kith !== "custom" ) out.kith = kith.toLowerCase();
     out.look = {skin: hex(c.skin), hair: hex(c.hair), ...(c.beard ? {beard: true} : {})};
     if ( Number.isFinite(c.year) ) out.year = c.year;
     out.worn = items.filter(i => !arms(i)).map(i => i.name).sort();

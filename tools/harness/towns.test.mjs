@@ -173,3 +173,49 @@ test("the town wiring: settings, hooks, approval, windows", () => {
   const shown = (t + src("modules/wodx-storyteller/scripts/town-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3\d\d\d|house rule/i);
 });
+
+test("talk and crowds follow the town (NPC, B3320, B3321)", async () => {
+  const O = await imp("modules/wodx-npc/scripts/overheard-rules.mjs");
+  const P = await imp("modules/wodx-npc/scripts/passerby-rules.mjs");
+  const {OVERHEARD} = await imp("modules/wodx-npc/data/grammar/overheard.mjs");
+  const t = TR.normTown({id: "brno", people: 1000});
+  assert.equal(O.townTopic(TR.view(t), 1400), null, "an ordinary town gives nothing");
+  assert.equal(O.townTopic(TR.view({...t, struck: {key: "x", name: "Plague", weeks: 3, share: 0.01}}), 1400), "plague");
+  const burned = TR.view({...t, scars: [{kind: "fire", year: 1400, month: 7, text: "A fire"}]});
+  assert.equal(O.townTopic(burned, 1401), "fire");
+  assert.equal(O.townTopic(burned, 1403), null, "old blows are forgotten");
+  assert.equal(O.townTopic(TR.view({...t, unrest: 4}), 1400), "angry");
+  assert.equal(O.townTopic(TR.view({...t, prosperity: 4.5}), 1400), "thriving");
+  assert.ok(O.PASSERBY_TOPICS.includes("town") && O.TOPICS.includes("town"));
+  for ( const k of [...O.TOWN_BLOWS, "angry", "grim", "thriving"] ) {
+    const shared = {...O.sharedFacts({year: 1400, region: "moravia", seed: 3}), town: k};
+    const x = O.exchange({a: {facts: {}}, b: {facts: {}}, shared, grammar: OVERHEARD, seed: 5, topic: "town"});
+    assert.ok(x && x.lines.length === 2 && !O.unfilled(x.lines[0].say), k);
+    assert.ok(!/—|\b(he|she|him|her|his|hers)\b/i.test(x.lines.map(l => l.say).join(" ")), k);
+  }
+  assert.equal(P.townCrowd(null), 1);
+  assert.equal(P.townCrowd(TR.view(t)), 1);
+  assert.ok(P.townCrowd({plague: "Plague", unrest: 4.8, prosperity: 1}) < 0.3);
+  assert.equal(P.townCrowd({prosperity: 4.2, unrest: 1}), 1.2);
+  assert.match(src("modules/wodx-npc/scripts/passersby.mjs"), /towns\?\.ofScene/);
+  assert.match(src("modules/wodx-npc/scripts/overheard.mjs"), /towns\?\.ofScene/);
+});
+
+test("a rising or a sack costs the factions that hold the town (NPC, B3330)", async () => {
+  const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
+  const st = {factions: [
+    {id: "lord", name: "The lord", kind: "mortal", places: ["Scene.s1.Region.r1"], assets: {status: 3, retainers: 2, resources: 2}, standing: {}},
+    {id: "guild", name: "The guild", kind: "mortal", places: [], assets: {status: 2}, standing: {}},
+    {id: "prince", name: "The court", kind: "kindred", places: ["Scene.s1"], assets: {status: 4, retainers: 3}, standing: {}},
+    {id: "far", name: "Elsewhere", kind: "mortal", places: ["Scene.s9"], assets: {status: 3, retainers: 3}, standing: {}},
+    {id: "asleep", name: "Asleep", kind: "mortal", dormant: true, places: ["Scene.s1"], assets: {status: 3}, standing: {}}]};
+  assert.deepEqual(F.holdersInTown(st, ["s1"]).map(f => f.id), ["lord", "prince"]);
+  const r = F.townChanges(st, {sceneIds: ["s1"], taxers: ["guild"], kind: "rising"});
+  assert.deepEqual(r, [{op: "bg", faction: "lord", key: "status", delta: -1}, {op: "bg", faction: "lord", key: "retainers", delta: -1},
+    {op: "bg", faction: "guild", key: "status", delta: -1}, {op: "standing", faction: "lord", other: "guild", delta: -1}]);
+  assert.deepEqual(F.townChanges(st, {sceneIds: ["s1"], kind: "sack"}), [{op: "bg", faction: "lord", key: "resources", delta: -1}]);
+  assert.deepEqual(F.townChanges(st, {sceneIds: ["s2"], kind: "rising"}), []);
+  const f = src("modules/wodx-npc/scripts/factions.mjs");
+  assert.match(f, /Hooks\.on\("wodxTown"/);
+  assert.match(f, /F\.townChanges\(/);
+});

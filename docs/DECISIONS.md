@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3320
+Next free block: B3340
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -163,6 +163,8 @@ Next free block: B3320
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
+| B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3468,6 +3470,26 @@ Reverse: take the four names out of GAITS in sprite-rules.mjs.
 Feeding (wodxFed) plays the feeding move toward the vessel; a change of form (wodxFormChanged) plays the blur; a line spoken in character from a token plays the speech mark. Whoever may move a sprite token has a button on it for sitting, kneeling, looking about and standing up. One who sits or kneels still takes a blow and still falls, and healing does not stand them up; only a fall or a death is undone by healing.
 Reverse: remove the three Hooks.on lines and the pose button in sprites.mjs.
 
+## B2613. Looks for monsters on sprite tokens (2026-11-13, Ben's ask)
+Every creature of legend in the world has a look, drawn after what its own entry says of it (the page is in the entry's notes) and not after cartoons: a basilisk is a small serpent with a cock's head, a mist dragon the size of a cat, a custodes a great spider, the Black Monk a monk like any other, the Star Daemon a turning ribbon of light and shadow, a blood rose a hedge that sways and does not walk. Four-legged ones use the beast rig with wings, a single horn, a beak or spines; those on two legs are figures with their own size and marks (tools/sprites/monster.py). Two creatures share the name Basilisk and get the same look.
+Reverse: remove monster.py and the call in batch.py draw(); those creatures go back to having no sprite.
+
+## B2614. The fae are drawn in their fae mien, and ghosts as ghosts (2026-11-13, Ben's ask)
+A changeling's sprite shows its kith: size and build, ears, horns, a tail, a redcap's cap, a satyr's legs, a troll's blue skin. The kith comes from the sheet (the roster carries line and kith), else from the name. A wraith or a spirit is pale and half seen, and drifts instead of stepping. This is how the token looks to everyone; whether mortals at the table see the fae mien stays with the Storyteller's telling.
+Reverse: remove the fae() call in batch.py draw().
+
+## B2615. Block, parry, jump, crawl (2026-11-13, Ben's ask)
+A blow that does not land is met with the defence the fight rules rolled: a block or a parry with a spark, else the dodge as before (wodxAttackRolled now names the defence). A token moved with the jump or crawl action leaps over its shadow or goes flat to the ground.
+Reverse: take block and parry out of REACTS and jump and crawl out of GAITS in sprite-rules.mjs.
+
+## B2616. Working at a lock shows on the map (2026-11-13, Ben's ask)
+Interactables says when work is done at a door, a lock or a device (wodxInteractableWorked: token, action, result). A sprite stoops to the lock for fine work (picking, a key, disarming), strikes for force, and looks about when it listens or searches.
+Reverse: remove the Hooks.on line for wodxInteractableWorked in sprites.mjs.
+
+## B2617. Creatures of the books share looks by body plan (2026-11-13, Ben's ask for a book check)
+The creature pages of the books were read on the PC and each monster, spirit and creature written down in WoDX's own words: its body plan, size, how it moves and a few look words, with the book and page. Creatures close enough in body plan and look share one look, as the master and the messenger share a figure: a wisp in one of twenty colours for lights, flames and smoke, a swarm, a crawler, a flyer, a four-legged kind, or a figure of its own size (corpse, skeleton, giant, angel, oni, an elemental of stone, fire, water and so on). tools/sprites/bestiary.py writes the table (bestiary-looks.json, each name and alias to a look and a size) and roster.md (which creatures share which look). The batch draws a creature by name from that table when no look of its own fits; the creatures that have their own look (the dragon, the gryphon, the troll and the rest of B2613) keep it.
+Reverse: delete bestiary-looks.json; book_look() then finds nothing and the batch draws as before.
+
 ## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
 A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
 Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or drop #withSince in lifepath.mjs.
@@ -4919,3 +4941,18 @@ Reverse: put back the old 22-name lists in data/people-world.mjs.
 WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
 
 Reverse: put back the old lists in data/people-world.mjs.
+
+## B3320. Overheard talk of the town (2026-11-13)
+WoDX NPC, overheard-rules.mjs townTopic and the grammar's overheard:town. From api.upkeep.towns.ofScene (Storyteller B3280): plague or famine now first, then the last blow (sack, rising, fire, flood, storm, earthquake, famine, riot) in its year and the next, then the mood (angry, grim, thriving); an ordinary town gives nothing. Weight 3, as the talk of the times, and passers-by may use it, since it is street talk.
+
+Reverse: drop "town" from TOPICS and PASSERBY_TOPICS.
+
+## B3321. The town's condition thins or fills the street (2026-11-13)
+WoDX NPC, passerby-rules.mjs townCrowd: plague halves the crowd, famine takes a fifth, unrest from 3.5 a fifth and from 4.5 two fifths, a ruined or poor town a fifth; a thriving or rich town adds a fifth, never past the scene's most. House rules.
+
+Reverse: make townCrowd return 1.
+
+## B3330. A rising costs the town's masters; a sack costs their purse (2026-11-13)
+WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
+
+Reverse: drop the wodxTown hook in factions.mjs.
