@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3010
+Next free block: B3030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -139,6 +139,7 @@ Next free block: B3010
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
+| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3011) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4226,3 +4227,14 @@ Reverse: empty TORMENT_BY_HOUSE.
 V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls and revenants start at 1. The result stops at the sheet's blood pool for the Generation. The wizard never rolls without the button.
 
 Reverse: remove the blood action.
+
+## B3010. Many more face features, drawn with a shared kit (2026-11-13)
+WoDX Paperdoll 0.19.0. Ben (13 November 2026): 100 features for anyone, 50 base features per line, 15 more per sub-splat (each clan, tribe, auspice, Tradition, guild, kith, creed, house and the like), and 25 for splats whose strange looks are the point (Nosferatu, Gargoyles); the aim is "little chance that two NPCs or players will look the same". Features are drawn with a small kit (face64-kit.mjs): named spots that follow each head's shape, small glyphs for tattoos and brands, and slots. This first batch brings the features for anyone to 140 (scars, marks, tattoos, jewellery, eyewear and masks, headwear, hair, beards, health, paint and powder, collars), more than the 100 asked, since more variety serves the aim. Objects of one era (sunglasses, a peaked cap, a cigarette) are only ticked, never rolled. The lines follow in batches.
+
+Reverse: Remove the import of face64-general.mjs from face64-features.mjs.
+
+## B3011. A rolled face gets several features, one per slot (2026-11-13)
+An NPC with nothing ticked now rolls two to four features of its named group (clan, kith, tribe), one to three of its line's own and one to three everyday ones, in seeded order. Each feature may name a slot (an eye, a cheek, the neck, the head); a face never gets two in one slot, so a tattoo and a scar do not land on one cheek. A kith's or breed's whole look still always shows; a wraith still bears one deathmark and a metis one deformity; headwear still comes now and then, one at most. The harness checks that every feature shows, that no two features of a line look the same, and that 300 rolled mortals give 300 different faces.
+
+Reverse: Restore the older rollFeatures (one chance per feature) from git history.
+
