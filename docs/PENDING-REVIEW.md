@@ -1266,3 +1266,5 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-13 | Law of the land: bribe and catch figures (B3490-B3603) | Each law family and region row sets bribe (1 hard to 5 easy) and catch (0.25 in 1197 up to 0.7 with face matching), rounded by family and era. | Edit the bribe and catch values in law-rules.mjs FAMILIES and REGION_ROWS. |
+| 2026-11-13 | Offices of the law and the state (B3604-B3605) | Court from 1000 people, the ruler's officers and tax office from 2000, garrison, Holy Office and secret police from 5000; the last two only while the law lists inquisitors or secret police. Rank names by law family and year. | Edit KINDS, COURT, RULER, ARMY and TAX in institution-rules.mjs. |
