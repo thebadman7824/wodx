@@ -24,6 +24,8 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerPerceptionSettings, setupPerception, refreshScreen} from "./perception.mjs";
 import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
 import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
+import * as OW from "./otherworld-sight.mjs";
+import * as OR from "./otherworld-sight-rules.mjs";
 
 
 const MOD = "wodx-senses";
@@ -730,7 +732,7 @@ Hooks.once("init", () => {
   registerSight();
   setupSight({powerDots});
   const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
-  const api = {perception, sight: {cycle: cycleSight, colourSafe}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  const api = {perception, sight: {cycle: cycleSight, colourSafe, ties: OW.tiesDialog, enchant: OW.enchant, tieFetter: OW.tieFetter, traits: OW.traitsOf, rollFor: OW.rollFor, now: OW.sightNow, draw: OW.drawOther, filter: OW.filterFor, rules: OR}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });
@@ -745,6 +747,7 @@ Hooks.once("ready", async () => {
     if ( msg?.type === "ask" && isActiveGM() ) {
       try { await answer(msg.payload); } catch (e) { console.error(`${MOD} |`, e); }
     }
+    if ( msg?.type === "keep" ) await OW.onKeep(msg.payload ?? {});
   });
 });
 

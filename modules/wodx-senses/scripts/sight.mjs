@@ -5,12 +5,15 @@
  */
 import * as S from "./sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
+import * as O from "./otherworld-sight-rules.mjs";
+import * as OW from "./otherworld-sight.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
-let H = null, layer = null, pending = null;
+let H = null, layer = null, pending = null, lastFilter = null;
 
 export function registerSight() {
+  OW.registerOtherSight();
   game.settings.register(MOD, "sightMap", {
     name: "Supernatural sight on my map", hint: "While my character uses Heightened Senses, Aura Perception or Lifesight, my own map shows it. Turn this off on a slow machine; chat answers are the same either way.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawSight()
@@ -42,19 +45,28 @@ function myCharacter() {
 const profileOf = a => { try { return detectProfile(a); } catch (e) { return "mortal"; } };
 export function sightsOf(a) {
   if ( !a ) return [];
-  return S.sightsFor({auspex: H?.powerDots?.(a, /^(auspex|aura perception)$/i) ?? 0,
-    heightenedGift: profileOf(a) === "lupine" && (H?.powerDots?.(a, /^heightened senses$/i) ?? 0) > 0, profile: profileOf(a)});
+  return [...S.sightsFor({auspex: H?.powerDots?.(a, /^(auspex|aura perception)$/i) ?? 0,
+    heightenedGift: profileOf(a) === "lupine" && (H?.powerDots?.(a, /^heightened senses$/i) ?? 0) > 0, profile: profileOf(a)}), ...OW.otherSightsOf(a)];
 }
-export const sightOf = a => { const s = a?.flags?.[MOD]?.sight; return S.SIGHTS[s] ? s : null; };
+const chosenOf = a => { const s = a?.flags?.[MOD]?.sight; return S.SIGHTS[s] || O.OTHER[s] ? s : null; };
+/** The sight in use: the one chosen (a mage's only while it holds), else the character's own eyes (B3540). */
+export const sightOf = a => (a ? OW.sightNow(a, chosenOf(a)) : null);
 
 /** Step to the next sight the character has, or off. */
 export async function cycleSight(a = myCharacter()) {
   if ( !a?.isOwner ) { ui.notifications.warn("Select your character's token first."); return null; }
   const have = sightsOf(a);
   if ( !have.length ) { ui.notifications.info(`${a.name} has no sight to use.`); return null; }
-  const next = S.nextSight(sightOf(a), have);
-  await a.update({[`flags.${MOD}.sight`]: next});
-  ui.notifications.info(next ? `${a.name}: ${S.SIGHTS[next].label}` : `${a.name}: ordinary sight`);
+  const cur = chosenOf(a), next = S.nextSight(cur, have);
+  // Stepping off the Penumbra ends the peek (B3540)
+  const up = {[`flags.${MOD}.sight`]: next};
+  if ( cur === "penumbra" || (next !== "penumbra" && a.flags?.[MOD]?.peek) ) up[`flags.${MOD}.-=peek`] = null;
+  await a.update(up);
+  // A mage's sight costs the casting roll unless it still holds (B3541)
+  if ( O.OTHER[next]?.roll && !O.holding(a.flags?.[MOD]?.hold, next, game.time.worldTime) ) await OW.rollFor(a, next);
+  const label = S.SIGHTS[next]?.label ?? O.OTHER[next]?.label;
+  const own = sightOf(a);
+  ui.notifications.info(next ? `${a.name}: ${label}` : `${a.name}: ${own && O.OTHER[own] ? O.OTHER[own].label.toLowerCase() : "ordinary sight"}`);
   return next;
 }
 
@@ -66,12 +78,15 @@ export function drawSight() {
     try {
       const board = document.getElementById("board");
       const a = myCharacter(), sight = setting("sightMap") === false ? null : sightOf(a);
-      if ( board ) board.style.filter = sight ? S.SIGHTS[sight].filter : "";
+      // Only put back a filter this sight set, so WoDX Otherworlds' own looks stay
+      const want = !sight ? "" : S.SIGHTS[sight]?.filter ?? OW.filterFor(sight, a);
+      if ( board && want !== null && (want || board.style.filter === lastFilter) ) { board.style.filter = want; lastFilter = want; }
       if ( !canvas?.ready ) return;
       const parent = canvas.interface ?? canvas.stage;
       if ( !layer || layer.destroyed || layer.parent !== parent ) { layer = new PIXI.Graphics(); layer.eventMode = "none"; layer.zIndex = 49; parent.addChild(layer); }
       layer.clear();
       for ( const c of [...layer.children] ) c.destroy();
+      if ( sight && O.OTHER[sight] ) { const lines = OW.drawOther(layer, sight, a); OW.sayLines(sight, a, lines).catch(e => console.warn(`${MOD} | sight lines`, e)); return; }
       if ( !sight || !S.SIGHTS[sight].rings ) return;
       const safe = !!setting("colourSafe"), words = setting("ringWords") !== false;
       const needsRead = sight === "aura" && setting("auraNeedsRead") !== false, reads = a?.flags?.[MOD]?.auraReads ?? {};
@@ -123,6 +138,7 @@ function near(a, b, units) {
 
 export function setupSight(helpers) {
   H = helpers;
+  OW.setupOtherSight();
   Hooks.on("wodxAuraRead", ev => { noteAuraRead(ev).then(() => drawSight()).catch(e => console.warn(`${MOD} | aura read`, e)); });
   Hooks.on("wodxInteractablesNoise", ev => {
     if ( !S.overwhelms(ev) || canvas?.scene?.id !== ev?.scene ) return;
@@ -140,7 +156,9 @@ export function setupSight(helpers) {
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.find?.(c => c.name === "token");
     if ( !tokens?.tools ) return;
-    tokens.tools.wodxSight = {name: "wodxSight", title: "My sight (Heightened Senses, Aura Perception, Lifesight; press again for the next, then off)",
+    tokens.tools.wodxSight = {name: "wodxSight", title: "My sight (Heightened Senses, Aura Perception, Lifesight, a mage's Sphere sights, the Penumbra while peeking; press again for the next, then off)",
       icon: "fa-solid fa-eye-low-vision", order: 122, button: true, visible: true, onChange: () => cycleSight()};
+    tokens.tools.wodxSightTies = {name: "wodxSightTies", title: "Sight: enchant the selected (Storyteller), tie a wraith's Fetters, set a changeling's fae mien",
+      icon: "fa-solid fa-link", order: 123, button: true, visible: true, onChange: () => OW.tiesDialog()};
   });
 }
