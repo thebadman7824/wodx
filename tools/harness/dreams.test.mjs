@@ -6,7 +6,7 @@ import * as D from "../../modules/wodx-storyteller/scripts/dreams-rules.mjs";
 /* WoDX Storyteller 0.6.0: dreams and visions you write. */
 test("a dream is kept clean, and one with no character is dropped", () => {
   const d = D.normDream({id: "a", actorId: "x", title: "  ", text: "Water.", at: "100"});
-  assert.deepEqual(d, {id: "a", actorId: "x", title: "A dream", text: "Water.", at: 100, source: "", released: false, releasedAt: null, journalId: null});
+  assert.deepEqual(d, {id: "a", actorId: "x", title: "A dream", text: "Water.", at: 100, source: "", released: false, releasedAt: null, journalId: null, omen: null});
   assert.equal(D.normDream({id: "b", actorId: "x", at: "soon"}).at, null);
   assert.equal(D.normDreams([{id: "a", actorId: "x"}, {id: "b"}, {actorId: "y"}, null].filter(Boolean)).length, 1);
   assert.deepEqual(D.normDreams("nope"), []);

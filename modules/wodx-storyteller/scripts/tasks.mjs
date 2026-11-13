@@ -88,6 +88,10 @@ export async function saveTask(a, data) {
   if ( !old && t.kind === "climb" && t.institution ) {
     try { const I = game.modules.get(MOD).api.upkeep.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
   }
+  // B3359: works on a haven need the successes the upgrade asks
+  if ( !old && t.kind === "upgrade" && t.upgrade ) {
+    try { const u = game.modules.get(MOD).api.havenWorks.rules.upgrade(t.upgrade); if ( u ) t.goal = u.goal; } catch (e) { /* works off */ }
+  }
   await a.update({[`flags.${MOD}.tasks.${id}`]: t});
   return t;
 }
@@ -283,6 +287,11 @@ export async function editTask(actorId = null, taskId = null) {
   // B3357: the institutions to climb
   let insts = [];
   try { insts = (game.modules.get(MOD)?.api?.upkeep?.institutions?.state?.()?.list ?? []).filter(i => !i.closed); } catch (e) { insts = []; }
+  // B3359: the havens this character owns and the works open to them
+  let homes = [];
+  try { const HW = game.modules.get(MOD)?.api?.havenWorks; homes = (HW?.ownedBy?.(a) ?? []).map(({scene, haven}) => ({id: scene.id, name: haven.name || scene.name, ups: HW.openFor(scene)})); } catch (e) { homes = []; }
+  const upOpts = homes.flatMap(hm => hm.ups.map(u => ({v: `${hm.id}|${u.key}`, l: `${hm.name}: ${u.name}`})));
+  if ( t.haven && t.upgrade && !upOpts.some(o => o.v === `${t.haven}|${t.upgrade}`) ) upOpts.unshift({v: `${t.haven}|${t.upgrade}`, l: t.name || t.upgrade});
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: `${taskId ? "Change" : "New"} long task: ${a.name}`}, classes: ["wodx-dialog", "wst-task-edit"],
     content: `<div class="form-group"><label>Kind</label><select name="kind" data-fixed>${kinds}</select></div>
       <div class="form-group"><label>What it is</label><input type="text" name="name" value="${esc(taskId ? t.name : "")}" placeholder="A silver reliquary, the parish records, a fetish of the wolf"></div>
@@ -297,7 +306,10 @@ export async function editTask(actorId = null, taskId = null) {
       <p class="hint">Out of ${budgetOf(a)} a week for every project together; 0 leaves it out of the budget.${wk ? ` This kind goes at full pace with ${wk}; fewer stretch each roll.` : ""}</p>
       ${people.length > 5 ? searchBox("select[name=target]", "Search people…", "Search people") : ""}
       <div class="form-group"><label>Aimed at</label><select name="target">${targets}</select></div>
+      ${insts.length > 5 ? searchBox("select[name=institution]", "Search institutions…", "Search institutions") : ""}
       ${insts.length ? `<div class="form-group"><label>Institution (to climb)</label><select name="institution"><option value="">None</option>${insts.map(i => opt(i.id, i.name, i.id === t.institution)).join("")}</select></div>` : ""}
+      ${upOpts.length > 5 ? searchBox("select[name=works]", "Search works…", "Search works") : ""}
+      ${upOpts.length ? `<div class="form-group"><label>Works on a haven</label><select name="works"><option value="">None</option>${upOpts.map(o => opt(o.v, o.l, o.v === `${t.haven}|${t.upgrade}`)).join("")}</select></div>` : ""}
       ${game.user.isGM ? `<div class="form-group"><label>Complications</label><input type="checkbox" name="trouble"${t.trouble ? " checked" : ""}></div>` : ""}
       <div class="form-group"><label>Specialty applies</label><input type="checkbox" name="specialty"${t.specialty ? " checked" : ""}></div>
       <div class="form-group"><label>Delicate (a botch ruins it)</label><input type="checkbox" name="delicate"${t.delicate ? " checked" : ""}></div>
@@ -311,7 +323,7 @@ export async function editTask(actorId = null, taskId = null) {
   return saveTask(a, {id: taskId, kind: res.kind, name: res.name, attr: res.attr, ability: res.ability, dice: num(res.dice),
     diff: num(res.diff), goal: num(res.goal), interval: res.interval, specialty: !!res.specialty, delicate: !!res.delicate, note: res.note,
     needs: res.needs ?? "", workshop: res.workshop ?? "", makes: res.makes ?? "", waits: "",
-    nights: num(res.nights), institution: res.institution ?? "", target: res.target ? {id: res.target, name: game.actors.get(res.target)?.name ?? ""} : null,
+    nights: num(res.nights), institution: res.institution ?? "", haven: String(res.works ?? "").split("|")[0] ?? "", upgrade: String(res.works ?? "").split("|")[1] ?? "", target: res.target ? {id: res.target, name: game.actors.get(res.target)?.name ?? ""} : null,
     ...(game.user.isGM ? {trouble: !!res.trouble} : {})});
 }
 
