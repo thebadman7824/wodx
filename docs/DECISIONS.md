@@ -139,7 +139,7 @@ Next free block: B3030
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
-| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3012) | Paperdoll |
+| B3010-B3029 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3010-B3013) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4242,4 +4242,9 @@ Reverse: Restore the older rollFeatures (one chance per feature) from git histor
 WoDX Paperdoll 0.19.0 (face64-kindred.mjs). Any Kindred: 51 (pallors, dead or fed lips, fangs, eyes, bites, veins, frost, collars and jewels of the night). Fifteen each for the thirteen clans of V20 and Caitiff, and for the bloodlines and Dark Ages lines the project uses: Baali, Salubri, Daughters of Cacophony, Kiasyd, True Brujah, Harbingers of Skulls, Cappadocian, Lamia, Nagaraja, Lhiannan, Noiad, Anda, Ahrimanes and Blood Brothers. Twenty-five or more for the clans whose strange flesh is their mark: Nosferatu (30), Gargoyle (25) and Samedi (25); a Gargoyle's stone, a Samedi's rot, a Harbinger's skull face and a Cappadocian's ashen face always show when the sheet names the clan. A True Brujah sheet no longer counts as Brujah. All drawn from the clans' looks in the books, in our own words; the rest invented to fit.
 
 Reverse: Remove the import of face64-kindred.mjs from face64-features.mjs.
+
+## B3013. Werewolf and other Changing Breed faces: 50 for the line, 15 per tribe, auspice, breed and Fera kind (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-garou.mjs, face64-fera.mjs). Any Garou: 50 (scars of battle, fur and claws, Rage, Gaia's marks, fetishes, pack paint). Fifteen each for the thirteen tribes of W20 and the Black Spiral Dancers, Croatan, White Howlers and Bunyip, for each auspice, and for homid and lupus breeds; 25 for metis, one deformity still always shown. Any of the other Changing Breeds: 50, shown when the sheet names a breed; fifteen each for Ajaba, Ananasi, Apis, Bastet, Camazotz, Corax, Grondr, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin and Rokea, counting the whole look each already had. Drawn from the books' descriptions in our own words, the rest invented to fit. Stubble is drawn sparser and fainter, so it no longer reads as a chequered patch on the chin.
+
+Reverse: Remove the imports of face64-garou.mjs and face64-fera.mjs from face64-features.mjs.
 

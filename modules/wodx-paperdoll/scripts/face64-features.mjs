@@ -8,6 +8,8 @@
 import {FEATURES, H} from "./face64-rules.mjs";
 import "./face64-general.mjs";
 import "./face64-kindred.mjs";
+import "./face64-garou.mjs";
+import "./face64-fera.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -212,7 +214,11 @@ export function groupMatches(group, text) {
 /** Features a line may show at all: its own, the Kindred's for Nosferatu, anyone's, and the shifters' when the sheet names them. */
 export function featuresFor(line, text = "") {
   return Object.values(FEATURES).filter(f => f.line === line || f.line === "all" || (line === "nosferatu" && f.line === "kindred")
-    || (f.line === "fera" && groupMatches(f.group, text)));
+    || (f.line === "fera" && (f.group === "all" ? feraNamed(text) : groupMatches(f.group, text))));
+}
+/** Does the sheet name any of the other Changing Breeds? Their shared features then show too. */
+function feraNamed(text) {
+  return [...new Set(Object.values(FEATURES).filter(f => f.line === "fera" && f.group !== "all").map(f => f.group))].some(g => groupMatches(g, text));
 }
 /** The kith and breed looks drawn here are each the whole look: shown whenever the sheet names the group. */
 for ( const f of Object.values(FEATURES) ) if ( WHOLE.has(f.line) && !("core" in f) ) f.core = true;

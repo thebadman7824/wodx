@@ -261,7 +261,7 @@ function beard(F, H, shape, my, kind, open) {
       // A beard never covers the lips, nor an open mouth
       const lips = (Math.abs(y - my) <= 1 && d <= 4) || (open && y >= my - 1 && y <= my + 3 && d <= 4);
       if ( lips ) continue;
-      if ( kind === "stubble" ) { if ( (y > my + 1 || d > 5 || y === my - 2) && (x + y) % 2 === 0 ) F.put(x, y, mix(F.get(x, y), H.s1, 0.38)); }
+      if ( kind === "stubble" ) { if ( (y > my + 1 || d > 5 || y === my - 2) && (x * 3 + y * 5) % 4 === 0 && y < chin - 1 ) F.put(x, y, mix(F.get(x, y), H.s1, 0.3)); }   // sparse, so it reads as shadow, not a chequered patch
       else if ( kind === "full" ) { if ( y > my + 2 || d > 5 || (y === my - 2 && d < 5) ) F.put(x, y, (x * 3 + y) % 4 ? H.s1 : H.b); }
       else if ( kind === "goatee" ) { if ( d < 4 && (y > my + 3 || y === my - 2) ) F.put(x, y, (x + y) % 3 ? H.b : H.hi); }
     }

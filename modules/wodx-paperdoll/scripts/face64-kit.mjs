@@ -41,7 +41,7 @@ export const GLYPHS = {
   sun: ["#.#.#", ".###.", "##.##", ".###.", "#.#.#"], moon: ["##.", ".##", ".##", "##."], flame: [".#.", "##.", "###", ".#."],
   leaf: [".##", "###", "##."], rose: ["##", "##", ".#", "##"], skull: ["###", "#.#", ".#."], fang: ["#.#", "#.#", ".#."],
   paw: ["#.#", ".#.", "###"], hook: ["#.", "#.", "##"], rune1: ["#.#", "##.", "#.."], rune2: ["##", "#.", "##", ".#"], rune3: ["#.#", "###", "#.#"],
-  rune4: [".#", "##", ".#", "##"], hand: ["#.#.#", "#####", ".###."], arrow: [".#.", "###", ".#.", ".#."], web: ["#.#.#", ".###.", "##.##", ".###.", "#.#.#"],
+  rune4: [".#", "##", ".#", "##"], hand: ["#.#.#", "#####", ".###."], arrow: [".#.", "###", "#.#", ".#.", ".#."], web: ["#.#.#", ".###.", "##.##", ".###.", "#.#.#"],
   snake: ["##.", "..#", ".#.", "#..", ".##"], tree: [".#.", "###", ".#.", "#.#"], wing: ["#..", "##.", "###"], drop: [".#.", "###", ".#."],
   bars: ["#.#.#", "#.#.#"], lines3: ["#.#.#", "#.#.#", "#.#.#"], dots3: ["#.#.#"], vbar: ["#", "#", "#"], spiral2: ["###.", "..#.", "#.#.", "###."],
   hourglass: ["###", ".#.", "###"], scales: ["#...#", "#####", "..#.."], bird: ["#.#", ".#."], lotus: ["#.#.#", "#####", ".###."], ouro: [".##.", "#..#", "#.##", ".##."],
@@ -119,7 +119,7 @@ const seeded = (c, tag) => H.rng(H.seedOf(`${c.S.seed}|${tag}`));
  * Each step is [op, ...args]. Spots are names (see spot) or [x, y]. Colours are [r, g, b].
  * tone stage: skin col a | hair col a | bg col a | iris col
  * skin stage: t spot rx ry col a | sp n col a [x0 y0 x1 y1] | vein spot col n dir | crack spot col n | tex kind spot rx ry col | sunk col
- * top stage:  g glyph spot col [dx dy] | l [[x y]...] col | dot spot col | glow col | whites col | pupil kind | lips col a | aura col a |
+ * top stage:  g glyph spot col [dx dy] | gx (the same, over hair and cloth too) | shades col | l [[x y]...] col | dot spot col | glow col | whites col | pupil kind | lips col a | aura col a |
  *             motes col n | pend glyph col | neck [cols] | ear col style | circ col gem | collar col style | brow col style | fangs n | hairg glyph col x y |
  *             streak col side | halo col | tears col
  */
@@ -137,6 +137,8 @@ export const OPS = {
     if ( on ) tint(c.F, x, y, col, 0.6); }); }},
   sunk: {stage: "skin", slot: "under", fn: (c, col) => { for ( const [ex] of EYES ) for ( let dx = -3; dx <= 3; dx++ ) { tint(c.F, ex + dx, EYE_Y + 2, col, 0.5); tint(c.F, ex + dx, EYE_Y - 2, col, 0.25); } }},
   g: {stage: "top", fn: (c, name, s, col, dx = 0, dy = 0) => { const [x, y] = at(c, s, dx, dy); glyph(c.F, name, x, y, col); }},
+  gx: {stage: "top", fn: (c, name, s, col, dx = 0, dy = 0) => { const [x, y] = at(c, s, dx, dy); glyph(c.F, name, x, y, col, false); }},
+  shades: {stage: "top", slot: "eyes", fn: (c, col) => { for ( const [ex] of EYES ) for ( let dx = -3; dx <= 3; dx++ ) for ( let dy = -1; dy <= 1; dy++ ) c.F.put(ex + dx, EYE_Y + dy, dy === -1 && dx === -2 ? mix(col, [255, 255, 255], 0.4) : col); for ( let x = CX - 2; x <= CX + 2; x++ ) c.F.put(x, EYE_Y - 1, mix(col, [0, 0, 0], 0.3)); }},
   l: {stage: "top", fn: (c, pts, col) => { for ( let i = 0; i + 1 < pts.length; i++ ) line(...pts[i], ...pts[i + 1], (x, y) => { if ( !(y === EYE_Y && c.eyes === "open" && EYES.some(([ex]) => Math.abs(x - ex) <= 2)) ) paint(c.F, x, y, col); }); }},
   dot: {stage: "top", fn: (c, s, col) => { const [x, y] = at(c, s), k = c.F.kindAt(x, y); c.F.put(x, y, col); if ( k === "skin" || k === "neck" ) paint(c.F, x + 1, y, mix(col, c.R.b, 0.4)); else c.F.put(x, y + 1, mix(col, [0, 0, 0], 0.3)); }},
   glow: {stage: "top", slot: "eyeGlow", fn: (c, col) => { if ( c.eyes === "shut" ) return; for ( const [ex] of EYES ) glow(c.F, ex, EYE_Y, col, 3, 0.5); }},
