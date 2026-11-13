@@ -1138,6 +1138,7 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | Which Mummy and Kuei-jin groups get their own face features? (B3049) | Shemsu-heru, Amenti, Teomallki, Wu Tian, Children of Apophis, Bane mummies; the five Dharmas; 15 each | Add rows to face64-mummy.mjs |
 | 2026-11-13 | Which ear kinds a Nosferatu may roll, and how often (B3050) | Bat 3 in 12, long 2 in 12, plain, torn, drooping, stub, finned, holes and odd pair 1 in 12 each | Change the pick list in face64-rules.mjs |
 | 2026-11-13 | How often a changeling shows a fae mien skin (B3051) | One in three, to fae sight only | Change the chance in face64-rules.mjs |
+| 2026-11-13 | Eye, hair, head and nose variety (B3052) | 18 eye colours, 22 hair colours, crown and chin curves, nine noses | Change IRISES, HAIRS, NOSES or the cf and ce picks in face64-rules.mjs |
 | 2026-11-13 | Does pressing Set in the wizard keep dots bought with freebies or the prelude? (B3001) | Yes: the book value plus every bought or prelude dot | Pass bought: {} in derivedFor |
 | 2026-11-13 | Garou starting Willpower by tribe, with Fenrir and the Warders of Men read as the Get of Fenris and the Glass Walkers (B3002) | The W20 core values; waits for the book check | Empty WILLPOWER_BY_TRIBE |
 | 2026-11-13 | Demon starting Torment by House (B3003) | 3 for Devils, Scourges, Malefactors and Fiends; 4 for Defilers, Devourers and Slayers; waits for the book check | Empty TORMENT_BY_HOUSE |

@@ -562,6 +562,6 @@ table("kindred", "vs", [
   ["ribbon", "Samedi", "A purple funeral ribbon", [["collar", [100, 40, 120], "trim"]]],
   ["cross-pend", "Samedi", "A grave cross of bone", [["pend", "latin", BONE]]],
   ["mould", "Samedi", "Mould at the hairline", [["sp", 12, [140, 160, 120], 0.6, [18, 14, 46, 22]]]],
-  ["ear-gone", "Samedi", "An ear rotted away", [["t", "lobeL", 1, 3, [40, 30, 30], 0.8]]],
+  ["ear-gone", "Samedi", "An ear rotted away", [["t", "lobeL", 1, 3, [40, 30, 30], 0.8], ["g", "dot", "lobeL", [46, 30, 30], 0, -2], ["g", "dot", "lobeL", [46, 30, 30], 0, -3], ["g", "dot", "lobeL", [60, 40, 36], 1, -4]]],
   ["bone-chin", "Samedi", "Bone at the chin", [["t", "chin", 2, 1, BONE, 0.7]]],
 ]);
