@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3090
+Next free block: B3100
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -146,6 +146,7 @@ Next free block: B3090
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4437,3 +4438,12 @@ Reverse: empty NOTES.
 A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
 
 Reverse: none needed; REFS starts empty.
+## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
+WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
+
+Reverse: revert the titles and notes in POLITIES in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B3091. India leaves the Beast Courts' lands (2026-11-13)
+The Hengeyokai book says the Beast Courts do not fully count India as theirs, so a Garou faction in India now keeps a Garou sept by default; the Storyteller can still pick a Beast Court there. The year the Ahl-i-Batin left the Council was not found in M20 and needs Lore of the Traditions or Sorcerers Crusade, which the PC does not hold as text; the circle's notes stay as they are.
+
+Reverse: put india: "beast-court" back in REGION_SHIFTERS.
