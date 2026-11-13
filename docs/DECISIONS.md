@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2770
+Next free block: B2800
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -127,6 +127,7 @@ Next free block: B2770
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
+| B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3648,7 +3649,7 @@ WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a nigh
 Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
 
 ## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
-WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check 2026-11-13: V20 (printed p. 272, pdf 280) lets a botched shot jam or burst the gun, cleared with Wits + Firearms (printed p. 104), and V20 Dark Ages (printed pp. 344, 348) a weapon break or jam; no book with text has a rain, wet powder or musket reload rule, so the wet is a house reading (Sorcerer's Crusade's firearms chart still needs OCR).
 
 Reverse: turn the world setting off.
 
@@ -3696,3 +3697,37 @@ Reverse: take "recheck" out of STEPS in first-night-rules.mjs.
 The prelude runner read Willpower at system.willpower, which the system does not have, so the gain always said the sheet had none. It now reads and writes system.advantages.willpower.permanent.
 
 Reverse: none needed.
+## B2790. Talking faces drawn on a 64 pixel grid (2026-11-13)
+WoDX Paperdoll 0.16.0. Ben approved the look on 13 November 2026 ("I like this very much. Proceed with this.") after samples at 96 and 64 pixels; he picked 64 as enough detail while far easier to draw. A face is drawn pixel by pixel in the browser from a seed (face64-rules.mjs): head, hair, eyes, brows, nose, mouth, beard and clothes, with four tones of each colour and an outline only where one part meets another. Nothing is baked or uploaded, so a face costs nothing until it is shown. The layered Lorelei portraits and the earlier vector drawings stay as they were.
+
+Reverse: Turn the client setting Talking faces to Off.
+
+## B2791. Whose face, and which (2026-11-13)
+The line comes from the sheet: the actor type, the variant, the clan (Nosferatu get their own face) and the kind WoDX Combat gives it, else mortal. The seed is the actor, or the token for an unlinked token, so passers-by made from one actor still differ. The face is drawn as a woman or a man when the Paperdoll look or WoDX Creation says so; otherwise the seed decides lashes and facial hair. flags.wodx-paperdoll.face64.seed and .line override both.
+
+Reverse: Set flags.wodx-paperdoll.face64.seed or .line on the actor.
+
+## B2792. A face that moves (2026-11-13)
+When an NPC speaks to a character through WoDX NPC's Talk, the line in chat gets the speaker's face, shown at 96 pixels with hard edges. A new line plays once on each screen: the mouth follows the words as they come (open vowels wide, lip sounds nearly shut, closed at commas and full stops), the face blinks every two to six seconds, holds its reaction for a little over two seconds after the line and settles to rest. A line older than 20 seconds, or one already played, shows the face still. Only the eyes, brows and mouth change between frames. Each player picks Moving, Still or Off.
+
+Reverse: Set the client setting Talking faces to Still or Off.
+
+## B2793. How the face reacts (2026-11-13)
+In this order: a social roll that swayed the NPC and has not run out (charmed, persuaded or fooled smile; intimidated looks afraid; bribed smirks), then frenzy (anger), then the mood the Storyteller set on the NPC's behaviour (angry, afraid, sad, glad, wary), then the NPC's attitude toward that character (Hostile or worse angry, Distrusted smirks, Welcome or better smiles), else at rest. From Injured down the face rests in pain. Incapacitated: eyes shut, jaw slack, no speech. House reading; no book sets faces.
+
+Reverse: Change reactionFor in face64-rules.mjs.
+
+## B2794. Kindred fangs only by choice (2026-11-13)
+Ben's ruling (13 November 2026): visible fangs are an option for Kindred, not every Kindred shows them, and none by default. The Storyteller turns them on for one actor from the Actors list menu (Talking face: show fangs). With fangs on they show in an open mouth while speaking or snarling, and their tips rest on the lip at rest.
+
+Reverse: Pick Talking face: hide fangs.
+
+## B2795. Marks only some can see (2026-11-13)
+A changeling's horns and the glamour about them are the fae mien, seen only by the Storyteller and by a viewer whose own character is a changeling (C20). A hunter's sigil is seen only by the Storyteller and by the imbued (HtR). Other lines' marks (a mage's lit eyes, a demon's seal, a Garou's scars and tooth cord, a mummy's kohl and collar, a wraith's Deathmark, jade eyes) are drawn for everyone, as the other faces already do.
+
+Reverse: Change viewerSees in face64.mjs.
+
+## B2796. Wounds on the talking face (2026-11-13)
+The face follows the health track with the ladder Ben approved for the portraits on 10 November 2026: no bandages; each level keeps the wounds before it and adds its own (a bruise, a nick over the brow, a black eye and split lip, an open cheek, bleeding nose and scalp, a second bruise and one eye swollen shut at Crippled, both eyes shut and the jaw slack at Incapacitated); pallor takes all the skin.
+
+Reverse: Take the health level out of the face in face64.mjs.

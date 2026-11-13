@@ -66,10 +66,12 @@ export async function run() {
     const actor = game.actors.find(a => a.type === "Vampire") ?? game.actors.contents[0];
     const place = "gate-church-place";
     const hunt = () => npc.api.huntingFor(actor, place);
+    // At 20:00, before the curfew bell (from NPC 0.54.0 the curfew adds its own named step at night, B2711)
+    await game.time.set(at(1300, 3, 15, 20)); await sleep(400);
     const inLent = hunt();
-    await game.time.set(at(1300, 7, 6)); await sleep(400); // a plain weekday in ordinary time
+    await game.time.set(at(1300, 7, 6, 20)); await sleep(400); // a plain weekday in ordinary time
     const plain = hunt();
-    await game.time.set(at(1300, 12, 24)); await sleep(400);
+    await game.time.set(at(1300, 12, 24, 20)); await sleep(400);
     const revel = hunt();
     ok("5. hunting", !!actor && revel.difficulty === plain.difficulty - 1 && inLent.difficulty === plain.difficulty + 1,
       {actor: actor?.name, plain: plain.difficulty, revel: revel.difficulty, lent: inLent.difficulty});

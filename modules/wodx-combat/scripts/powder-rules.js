@@ -1,7 +1,7 @@
 /**
  * WoDX Combat 3.24.0: black powder, misfires and wet powder (B2712 to B2714). Pure, harness-tested.
  *
- * V20 has one rule for every gun: a botched attack goes badly wrong, and a firearm reloads in a turn
+ * V20 has one rule for every gun: a botched shot can jam or burst it (printed p. 272, pdf 280), and a firearm reloads in a turn
  * (V20 p. 278). The books for the earlier ages treat the old locks as slow and chancy in the wet. WoDX reads that as
  * follows (house rule "Black powder"; the Storyteller can overrule any line):
  *

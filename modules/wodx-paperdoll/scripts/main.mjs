@@ -1,5 +1,6 @@
 import * as D from "./doll-rules.mjs";
 import {registerSpriteSettings, startSprites, spriteApi} from "./sprites.mjs";
+import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
 import {makeFigureApp} from "./figure.mjs";
 import * as FG from "./figure-rules.mjs";
 import {SKIN_LIST, HAIR} from "./face-rules.mjs";
@@ -13,7 +14,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.14.1";
+export const VERSION = "0.16.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -373,10 +374,12 @@ Hooks.once("init", () => {
   active = true;
   registerSettings();
   registerSpriteSettings();
+  registerFaceSettings();
+  startFaces();
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi, faces: faceApi};
   startSprites();
   if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
 });
