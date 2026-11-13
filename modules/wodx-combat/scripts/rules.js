@@ -267,6 +267,7 @@ export function attackPool(p) {
     if (p.flank === "flank") add("Flank", 1);
     if (p.flank === "rear") add("Rear", 2);
     add("Extra dice", p.extraDice || 0);
+    add("Nightmares", -(p.nightmareDice || 0));
     if (p.woundPenalty) add("Wounds", p.woundPenalty); // negative number
     if (p.multiIndex > 0) {
         add("Multiple actions", -p.multiIndex);
