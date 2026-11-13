@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.68.0 (Law of the land: the Americas family for all eight American regions (the peoples' own councils and the Great Law, the Mexica and the Inca, the viceroyalties and the Holy Office, the slave codes, the colonies under common and French law, the republics, Prohibition, the Wild West, the juntas))
 - 0.67.0 (Law of the land: the steppe family for Central Asia and Siberia (clan custom and the khan's court, the Great Yassa, the Chagatai, Timurid and Uzbek khans, Russian conquest, fur tribute and exile, Soviet republics and the Gulag, independence))
 - 0.66.0 (Law of the land: the Japanese family (the shogunate's warrior courts and the Goseibai Shikimoku, warring-state house law, the sword hunt, the Tokugawa order, the ban on Christianity and the closed country, the Meiji codes, the thought police, the postwar constitution))
 - 0.65.0 (Law of the land: the Orthodox and Russian family for Russia and the Aegean (the prince's law and the canons, the Mongol yoke, tsars, serfdom, the 1864 courts, the Soviet state, the Gulag; Byzantium, the Ottoman millet, the Greek kingdom and the junta))

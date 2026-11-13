@@ -226,3 +226,20 @@ test("The steppe and northern Asia (B3600)", () => {
   assert.ok(si(1700).taxes.some(t => /fur tribute/.test(t)) && !si(1970).taxes.some(t => /fur tribute/.test(t)));
   assert.ok(si(1940).warn.some(w => /Gulag/.test(w)) && !si(1970).warn.some(w => /Gulag/.test(w)));
 });
+
+test("The Americas (B3601)", () => {
+  const ne = y => L.lawOf("north-america-east", y), mx = y => L.lawOf("mexico", y), an = y => L.lawOf("andes", y);
+  for ( const r of ["canada", "north-america-east", "north-america-west", "mexico", "caribbean", "andes", "brazil", "southern-cone"] ) {
+    assert.equal(L.lawOf(r, 1300).family, "americas", r);
+    assert.ok(L.lawOf(r, 1300).order.includes("clan-elders"), r);
+    assert.ok(!L.lawOf(r, 1950).order.includes("clan-elders"), r);
+  }
+  assert.match(mx(1450).rule.ruler, /Tlatoani/);
+  assert.ok(mx(1600).order.includes("inquisitors") && !mx(1850).order.includes("inquisitors"));
+  assert.match(an(1500).rule.ruler, /Inca/);
+  assert.ok(ne(1692).warn.some(w => /Salem/.test(w)) && !ne(1693).warn.some(w => /Salem/.test(w)));
+  assert.ok(ne(1800).warn.some(w => /enslaved/.test(w)) && !ne(1870).warn.some(w => /enslaved/.test(w)));
+  assert.ok(ne(1925).crimes.includes("alcohol") && !ne(1940).crimes.includes("alcohol"));
+  assert.ok(L.lawOf("north-america-west", 1870).order.includes("marshals"));
+  assert.ok(ne(2000).punish.includes("hanging") && !L.lawOf("canada", 2000).punish.includes("hanging"));
+});
