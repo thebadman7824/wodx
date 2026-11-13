@@ -179,6 +179,7 @@ Next free block: B3630
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
+| B3560-B3569 | Notes gaps g15 to g20: the Blood Hunt, broken fae oaths, the Beast at the wheel, low Humanity, long torpor, diablerie's marks (used B3560-B3566) | Actions, Paperdoll |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600) | Chronicle |
 <!-- decision-index:end -->
 
@@ -5571,6 +5572,41 @@ Reverse: none needed; add names as found.
 WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
 
 Reverse: edit the lists in data/people-algonquian.mjs.
+
+## B3560. The Blood Hunt in the form of its age and sect (2026-11-13)
+WoDX Actions. A lord's hunt before the Camarilla (the dated camarilla event, 1435), the Prince's Blood Hunt after, the Sabbat's Wild Hunt and the barons' hunt from 1493, a hunt by whoever rules where no sect holds the city (V20 pp. 24, 28, 510; V20 Dark Ages p. 37). The hunt is written to the Prestation journal, sets WoDX NPC's Kindred to Hunted toward the target, starts a big rumour, and takes the target's Status (V20 p. 493). Final Death ends it; lifting it puts the attitudes and Status back. House figures in docs/PENDING-REVIEW.md.
+
+Reverse: remove the Blood Hunt menu entry and debts-marks.js's hunt functions.
+
+## B3561. Broken oaths pay the oath's own price (2026-11-13)
+WoDX Actions. Changeling oaths are kept on the character (flag c20oaths) with the C20 sample oath's cost (pp. 264-267), Done Deal's botches or bane (p. 204), the oathbreaker rule (p. 188) and the Banality trigger (p. 174). Dark Ages fae oaths break with the punishment the oath names (Dark Ages: Fae pp. 109-110). The card goes to everyone bound.
+
+Reverse: remove the Oaths menu entries.
+
+## B3562. The Beast takes the token (2026-11-13)
+WoDX Actions. Setting beastToken: off, a card each turn (default), or WoDX NPC's planner on auto for a player's frenzied vampire, undoable from the plan card. A Willpower point takes the turn back (V20 p. 310).
+
+Reverse: set beastToken to off.
+
+## B3563. Low Humanity: bearing, seeming alive, the hour of rising (2026-11-13)
+WoDX Actions. A Social roll on a mortal takes the bearing (V20 p. 310) when its aura box was left off, and notes the blood to seem alive (8 − Humanity, V20 p. 269). The Nightfall card gives each vampire's rising, earlier at higher ratings (V20 p. 311; V20 Dark Ages p. 113), with WoDX's steps between.
+
+Reverse: drop the bearingMods call in buildPool and the rising line in dusk().
+
+## B3564. Waking from a long torpor (2026-11-13)
+WoDX Actions. After a sleep longer than 70 years: a card of the dated events slept through, tongues kept as old forms after 100 years, and Abilities of the age behind until caught up (house). V20 torpor (p. 283) only; fifth edition's Fog of Ages is left out.
+
+Reverse: drop the wake calls in torpor().
+
+## B3565. Diablerie's marks (2026-11-13)
+WoDX Actions. Black veins for the Generation gap in years (at least one), shown to Aura Perception; a taint for a month per Generation, felt on Perception at 12 − Humanity, not by Path followers (V20 pp. 294-295). Optional setting diablerieSoul, off: a victim of Willpower 10 and much stronger blood (V20 p. 295, V20 Dark Ages p. 356, given there as a rumour) may push through; the nightly Willpower roll is a house rule.
+
+Reverse: leave diablerieSoul off; the veins note returns to the plain line in diablerieStep.
+
+## B3566. Low Humanity on the pixel face (2026-11-13)
+WoDX Paperdoll. stateOf adds lowHumanity from the Humanity rating; drawFace pales and sinks the face at 3-2 and gives it an angry set at 1-0 (V20 p. 311). Humanity only.
+
+Reverse: remove lowHumanity from stateOf.
 
 ## B3600. Steppe and northern Asia law family (2026-11-13)
 Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
