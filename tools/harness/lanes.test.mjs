@@ -85,7 +85,7 @@ test("compendium LevelDB files are left out; other pack files still count", () =
 
 test("lanes.json ignores the settings that change on their own", () => {
   const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
-  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
+  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
 });
 
 test("the hash cache gives the same answer and sees edits", () => {
