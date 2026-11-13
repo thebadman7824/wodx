@@ -44,7 +44,7 @@ export async function run() {
 
     await step("versions and api", async () => {
       const v = id => game.modules.get(id)?.version;
-      ok("versions and api", !foundry.utils.isNewerVersion("0.50.1", v("wodx-chronicle")) && !foundry.utils.isNewerVersion("0.58.0", v("wodx-storyteller"))
+      ok("versions and api", !foundry.utils.isNewerVersion("0.50.1", v("wodx-chronicle")) && !foundry.utils.isNewerVersion("0.58.1", v("wodx-storyteller"))
         && typeof money()?.change === "function" && typeof money()?.foreign === "function" && typeof money()?.arrival === "function",
         {chron: v("wodx-chronicle"), st: v("wodx-storyteller")});
     });

@@ -441,7 +441,8 @@ export async function payDay(a, month) {
  */
 export async function arrival(token) {
   if ( !isActiveGM() || !setting("money") || setting("changers") === false ) return null;
-  const a = token?.actor, scene = token?.parent;
+  // The base actor, so an unlinked token (its own synthetic actor) still shares one mark and one purse (0.58.1)
+  const a = (token?.actorId ? game.actors?.get?.(token.actorId) : null) ?? token?.actor, scene = token?.parent;
   if ( !a || !isPC(a) || !scene ) return null;
   const f = a.flags?.[MOD]?.money ?? {}, away = awayMoney(scene), y = yearNow();
   const localM = away ? R.moneyFor(y, away.region) : null;

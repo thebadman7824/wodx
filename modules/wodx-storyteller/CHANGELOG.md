@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.58.1 (the card for another land's money reads and marks the character itself, so a character with unlinked tokens gets it once, not once per token; testbed gate step 5)
 - 0.58.0 (every land its own money: Korea, mainland Southeast Asia, the Malay world, Hungary and the Balkans, Greece, the Caribbean, the Andes, the River Plate and Chile, Kongo, Tibet and Canada each get their own coins, units and wages from their first coin (or none) to the eurobuck, sharing a neighbour's money only where they did in fact (pieces of eight in Havana and Potosí, the akçe in Ottoman Greece, the renminbi in Lhasa, the livre in New France). A purse can hold coin of the place: Money by era changes it at the changer's cut each way, and abroad it pays first with no changer. A card tells the Storyteller the first time a character stands where another money is used, and again on coming home with coin of other lands. Coin of a money that goes out of use becomes a keepsake. Start a chronicle sets the money from the homeland. B2650 to B2652)
 - 0.57.3 (the world map window has a button, Realms past the near worlds, that opens WoDX Otherworlds' realm world maps in the year shown)
 - 0.57.2 (the known world: China is hidden from Europe until 1513 and Tibet until 1624, so nothing beyond India opens before India does; East Asia learns of Europe in 1513. B2555)
