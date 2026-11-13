@@ -157,11 +157,17 @@ def _reskin(room, pal, R):
     for it in room.items:
         piece = K.piece_of(it["asset"])
         if not piece: continue
-        e = pal.pick(piece, R)
-        if not e: continue
-        d = _drawn(e, (it["x"], it["y"], it["w"], it["h"]), piece)
-        it["draw"], it["draw_scale"], it["draw_rot"] = d["asset"], d["scale"], d["rot"]
-        it.setdefault("angle", math.pi / 2 if d["rot"] else 0.0)
+        r, w, h = it.get("rot", 0), it["w"], it["h"]
+        for _try in range(6):                                  # a picture that fits the square under the item's own turn
+            e = pal.pick(piece, R)
+            if not e: break
+            aw, ah = e["cells"]
+            fw, fh = (ah, aw) if r else (aw, ah)
+            if aw != ah and abs(w - h) > 1e-6 and (fw > fh) != (w > h): continue
+            fit = min(w / fw, h / fh)
+            if fit < .4: continue
+            it["draw"], it["draw_scale"], it["draw_rot"] = e["path"], round(min(1.6, fit), 3), r
+            break
 
 
 def _wall_lights(room, pal, tier, R):
@@ -181,7 +187,6 @@ def fill_room(room):
     pal = ctx["palette"]
     room.dressing, room.lights = [], []
     keep_R, R = C.R, random.Random(f"{room.name}|{room.x:.2f}|{room.y:.2f}")
-    C.R = R                                                    # room.candidates draws its noise from ddcore.R
     kind = U.kind_of_name(room.name)
     room.kind, room.full = kind, False
     target = target_tier(ctx["role"], ctx["wealth"], ctx["lifts"], ctx["show_off"], ctx["band"], kind)
@@ -189,6 +194,7 @@ def fill_room(room):
     n0 = len(room.items)
     saved = room.blocked
     try:
+        C.R = R                                                # room.candidates draws its noise from ddcore.R
         _reskin(room, pal, R)
         if room.iw < 1.5 or room.ih < 1.5 or kind in NO_FILL:
             room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
@@ -236,6 +242,16 @@ FLOOR_KIND = {"kitchen": "kitchen", "store": "store", "worship": "worship", "sle
               "bath": "kitchen", "cell": "store", "work": "store"}
 
 
+MATERIALS = [("timber", r"PlasterWood"), ("stonewood", r"StoneWood"), ("wood", r"Wood|Log|Plank"), ("stone", r"Stone|Castle|Rock"),
+             ("brick", r"Brick"), ("render", r"Solid|Plaster|Stucco|Tyger|Concrete")]
+
+
+def material(wall):
+    """The building material a wall texture stands for (timber frame, wood, stone, brick, render), or None."""
+    name = (wall or "").rsplit("/", 1)[-1]
+    return next((m for m, rx in MATERIALS if re.search(rx, name, re.I)), None)
+
+
 def catalogue():
     """The catalogue of every asset the map may use (ddcore.ASSETS, the lists given with --assets), built once."""
     if not _CATALOGUE: _CATALOGUE.extend(K.build(C.ASSETS))
@@ -256,9 +272,16 @@ def apply(b, year, region="moravia", wealth=None, trade=None, seed=0):
         C.orient(r)
         f = pal.floor.get(FLOOR_KIND.get(U.kind_of_name(r.name), "living"))
         if f and r.floor not in (None, "earth"): r.floor = f
-    if pal and pal.wall:
-        b.wall_tex = pal.wall
-        if local is not b: local.wall_tex = pal.wall
+    own = getattr(b, "wall_tex", None) or getattr(local, "t", {}).get("wall")
+    wall = pal.wall if pal else None
+    ok = lambda w: w and material(w) == material(own) and ("Castle" not in w or wealth == "noble")
+    if pal and not ok(wall):                                   # another wall of the age in the building's own material
+        band = pal.key[0]
+        same = sorted(e["path"] for e in catalogue() if e["kind"] == "walls" and band in e["bands"] and ok(e["path"]))
+        wall = same[random.Random(f"{seed}|{local.type}|{year}").randrange(len(same))] if same else None
+    if wall:
+        b.wall_tex = wall                                      # the age's look, the building's own material
+        if local is not b: local.wall_tex = wall
     if pal and pal.portals:                                    # the age's doors and windows
         b.portal_tex = pal.portals
         if local is not b: local.portal_tex = pal.portals

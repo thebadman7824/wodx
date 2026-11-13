@@ -20,6 +20,13 @@ class CatalogueTest(unittest.TestCase):
         self.assertNotIn("modern", t["bands"])
         self.assertEqual(t["cells"], (2, 1))
 
+    def test_fa_later_pieces_leave_the_middle_ages(self):
+        for p in ("w4GH4hnv/textures/objects/Decor/Furniture/Seating/Couches/Couch_Sectional_Fabric_Colorable_A_2x2.png",
+                  "w4GH4hnv/textures/objects/Lightsources/Street_Lamps/Lamp_Metal_Blue_A1_1x1.webp"):
+            t = K.tag(p)
+            self.assertIsNotNone(t, p)
+            self.assertNotIn("medieval", t["bands"], p)
+
     @needs_pack_table
     def test_no_inventions_before_their_age(self):
         for p, first in [("WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Field_Phone_Closed_01_A_Ashen.webp", "industrial"),
@@ -267,6 +274,34 @@ def _furnished(type_key, year, wealth="rich", facing="S", seed=1, trade=None):
 
 @unittest.skipUnless(__import__("os").path.exists(CAT_PATH), "needs the catalogue")
 class FillTest(unittest.TestCase):
+    def test_palette_wall_keeps_the_building_material(self):
+        import furnishing as F, ddcore as C
+        old = C.ASSETS
+        B = _all_types()
+        for wall, wealth in (("Wood_Ashen_A.png", "poor"), ("PlasterWood_Ashen_A.png", "middling"), ("Stone_A.png", "poor")):
+            for y in (1197, 1650, 1890, 1995):
+                C.R.seed(4)
+                b = B.place("t", "cottage", 0, 0, "S")
+                b.wall_tex = wall
+                F._CATALOGUE[:] = _cat()
+                F.apply(b, y, "moravia", wealth, None, 0)
+                self.assertEqual(F.material(b.wall_tex), F.material(wall), (wall, y, b.wall_tex))
+                if wealth != "noble": self.assertNotIn("Castle", b.wall_tex)
+
+    def test_swapped_pictures_keep_to_their_squares(self):
+        import catalogue as K2
+        by = {e["path"]: e for e in _cat()}
+        for tk in ("capsule-tower", "bata-house", "burgher-palace"):
+            if tk not in _all_types().TYPES: continue
+            b = _furnished(tk, 1890)
+            for r in b.rooms:
+                for it in r.items:
+                    if "draw" not in it: continue
+                    self.assertEqual(it["draw_rot"], it.get("rot", 0), (tk, it["asset"], it["draw"]))
+                    aw, ah = by[it["draw"]]["cells"]
+                    ew, eh = (ah, aw) if it["draw_rot"] else (aw, ah)
+                    self.assertGreaterEqual(min(it["w"] / ew, it["h"] / eh), .4 - 1e-9, (tk, it["draw"]))
+
     def test_court_with_four_doors_is_not_bare(self):
         b = _furnished("burgher-palace", 1890, "rich")
         court = next(r for r in b.rooms if r.name == "Court")

@@ -384,7 +384,7 @@
   "earliest": {
     "Phone|Gram+ophone|Typewriter|Sewing_?Machine|Light_?Bulb|Bulb_|Telegraph|Bicycle|Shower|Radiator": "industrial",
     "Neon|Radio|Fridge|Refrigerator|Vending|Electric_Fan": "republic",
-    "Television|\\bTV\\b|Computer|Microwave|Monitor|Printer|Plastic": "socialist",
-    "Lamp_?Post|Lamppost|Piano": "early"
+    "Television|(?<![A-Za-z])TV(?![A-Za-z])|Computer|Microwave|Monitor|Printer|Plastic|Sectional": "socialist",
+    "Lamp_?p?ost|Street_?Lamps?|Piano": "early"
   }
 }

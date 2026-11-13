@@ -70,7 +70,7 @@ def tag(path):
     if m and style == "fa":
         w = RULES["wood"][m.group(1).capitalize()]
         bands, style = list(w["bands"]), w["style"]
-    first = next((BANDS.index(b) for rx, b in _EARLIEST if rx.search(stem)), 0)
+    first = next((BANDS.index(b) for rx, b in _EARLIEST if rx.search(stem) or rx.search("/".join(parts[3:-1]))), 0)
     if first:
         later = [b for b in bands if BANDS.index(b) >= first]
         bands = later or BANDS[first:first + 2]                       # a pack of an older age still lends its piece later

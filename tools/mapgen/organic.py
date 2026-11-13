@@ -1264,7 +1264,7 @@ class OrganicTown(T.Town):
             if not overlaps(b.rect, win) or not (self.mine(b, pt) or T.inside(b.rect[0], b.rect[1], win, .01) and T.inside(b.rect[0] + b.rect[2], b.rect[1] + b.rect[3], win, .01)): continue
             if getattr(b, "palette", None) is None:            # furnished by purpose, era palette and room value
                 import furnishing as F
-                F.apply(b, self.year or 1197, getattr(self, "region", None) or "moravia", getattr(b, "wealth", None), getattr(b, "trade", None), 0)
+                F.apply(b, self.year or 1197, getattr(self, "region", None) or "moravia", getattr(b, "wealth", None), getattr(b, "trade", None), self.seed)
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
             pk = b.t.get("portals")                            # a later era's doors and windows
