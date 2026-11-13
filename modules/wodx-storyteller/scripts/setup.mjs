@@ -8,6 +8,7 @@
  * second run never makes a copy. "Show me first" lists the plan without changing anything.
  */
 import * as S from "./setup-rules.mjs";
+import * as MR from "./money-rules.mjs";
 import {MOD} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -84,6 +85,10 @@ export async function runSetup(opts = {}) {
     await world.setHomeland(land.id, {latitude: typed ? Number(opts.latitude) : land.lat});
     opts = {...opts, region: land.part, latitude: typed ? opts.latitude : land.lat};
     done.push("homeland");
+  }
+  // 0.58.0: a new chronicle pays in its homeland's money (B2652); the Storyteller can still change it in the settings
+  if ( done.includes("homeland") && land?.money && MR.MONIES[land.money] && game.settings.get(MOD, "moneyRegion") !== land.money ) {
+    await game.settings.set(MOD, "moneyRegion", land.money); done.push("money");
   }
   if ( opts.region && getC("region") !== opts.region ) { await game.settings.set("wodx-chronicle", "region", opts.region); done.push("region"); }
   if ( Number.isFinite(Number(opts.latitude)) && Number(opts.latitude) !== getC("latitude") ) { await game.settings.set("wodx-chronicle", "latitude", Number(opts.latitude)); done.push("latitude"); }

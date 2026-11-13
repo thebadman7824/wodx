@@ -129,7 +129,7 @@ export const COINS = {
     {from: 1535, coin: "kopek and denga; the silver rouble from 1704", account: "the rouble"},
     {from: 1918, coin: "the Soviet rouble", account: "the rouble"},
     {from: 1992, coin: "the Russian rouble", account: "the rouble"}]},
-  ottoman: {label: "Constantinople, Anatolia and Greece", rows: [
+  ottoman: {label: "Constantinople and Anatolia", rows: [
     {from: 0, coin: "the gold hyperpyron, silver and copper folles", account: "the nomisma"},
     {from: 1300, coin: "the silver akçe; the gold sultani from 1477", account: "the akçe"},
     {from: 1688, coin: "kuruş and para", account: "the kuruş"},
@@ -150,7 +150,7 @@ export const COINS = {
     {from: 1200, coin: "silver tanka and copper jital", account: "the tanka"},
     {from: 1540, coin: "rupee, anna and pie; the gold mohur", account: "the rupee"},
     {from: 1957, coin: "the rupee and paisa", account: "the rupee"}]},
-  chinese: {label: "China, Korea and Southeast Asia", rows: [
+  chinese: {label: "China", rows: [
     {from: 0, coin: "copper cash on strings; silver by weight", account: "the string of a thousand cash, or the tael"},
     {from: 1889, coin: "the silver yuan (dollar) and copper cents", account: "the yuan"},
     {from: 1949, coin: "the renminbi yuan", account: "the yuan"}]},
@@ -171,7 +171,7 @@ export const COINS = {
     {from: 1652, coin: "the Cape rixdollar and stuiver", account: "the rixdollar"},
     {from: 1825, coin: "pounds, shillings and pence", account: "the pound"},
     {from: 1961, coin: "the rand and cent", account: "the rand"}]},
-  mexican: {label: "Spanish America (Mexico, the Caribbean, Peru)", rows: [
+  mexican: {label: "Mexico and New Spain", rows: [
     {from: 0, coin: "no coin: cacao beans and cotton cloaks in Mexico, labour and cloth in the Andes", account: "the cotton cloak (quachtli)"},
     {from: 1521, coin: "the silver real and the peso (piece of eight)", account: "the peso"},
     {from: 1863, coin: "the peso and centavo", account: "the peso"}]},
@@ -186,7 +186,64 @@ export const COINS = {
     {from: 1966, coin: "the dollar and cent", account: "the dollar"}]},
   pacific: {label: "The Pacific islands", rows: [
     {from: 0, coin: "no coin: gifts and barter", account: "goods in kind"},
-    {from: 1820, coin: "the dollar and cent", account: "the dollar"}]}
+    {from: 1820, coin: "the dollar and cent", account: "the dollar"}]},
+  korean: {label: "Korea", rows: [
+    {from: 0, coin: "hemp cloth and rice; silver by weight, and Chinese cash in the towns", account: "the bolt of cloth"},
+    {from: 1678, coin: "copper sangpyeong tongbo cash", account: "the nyang"},
+    {from: 1892, coin: "the yang, then the won of the Korean Empire", account: "the yang"},
+    {from: 1910, coin: "the yen of the Bank of Chōsen", account: "the yen"},
+    {from: 1946, coin: "the won; the hwan from 1953", account: "the won"},
+    {from: 1962, coin: "the won (the North keeps its own won)", account: "the won"}]},
+  "southeast-asian": {label: "Mainland Southeast Asia", rows: [
+    {from: 0, coin: "silver and gold by weight, rice and cloth; Chinese copper cash in Đại Việt", account: "the tael of silver"},
+    {from: 1350, coin: "bullet ticals of Ayutthaya and cowries; copper cash in Đại Việt", account: "the tical"},
+    {from: 1885, coin: "the tical; the French piastre in Indochina", account: "the tical"},
+    {from: 1904, coin: "the baht and satang; the piastre, then the đồng, the riel and the kip in Indochina", account: "the baht"}]},
+  malay: {label: "The Malay world", rows: [
+    {from: 0, coin: "gold mas and silver by weight", account: "the tahil"},
+    {from: 1300, coin: "Chinese copper picis, tin coins in Malacca, and Spanish reals in the ports", account: "the string of picis"},
+    {from: 1817, coin: "the Netherlands Indies guilder; Straits dollars in Malaya, pesos in the Philippines", account: "the guilder"},
+    {from: 1946, coin: "the rupiah; the ringgit and the peso beyond Indonesia", account: "the rupiah"}]},
+  hungarian: {label: "Hungary, Transylvania and the Balkans", rows: [
+    {from: 0, coin: "silver by weight, then Hungarian denars", account: "the mark of silver"},
+    {from: 1325, coin: "gold forints and silver denars; Venetian ducats on the coast", account: "the forint"},
+    {from: 1527, coin: "forints and krajcár; the Ottoman akçe in the conquered lands", account: "the forint"},
+    {from: 1892, coin: "the korona and fillér; the dinar and the leu across the Balkans", account: "the korona"},
+    {from: 1927, coin: "the pengő and fillér", account: "the pengő"},
+    {from: 1947, coin: "the forint and fillér; the dinar, the leu and the lev beyond Hungary", account: "the forint"}]},
+  greek: {label: "Greece", rows: [
+    {from: 0, coin: "the gold hyperpyron and copper folles", account: "the hyperpyron"},
+    {from: 1453, coin: "the silver akçe; Venetian ducats on the islands", account: "the akçe"},
+    {from: 1688, coin: "the kuruş and para", account: "the kuruş"},
+    {from: 1832, coin: "the drachma and lepta", account: "the drachma"},
+    {from: 2002, coin: "the euro and cent", account: "the euro"}]},
+  caribbean: {label: "The Caribbean", rows: [
+    {from: 0, coin: "no coin: gifts and barter", account: "goods in kind"},
+    {from: 1492, coin: "the Spanish real and the piece of eight; pounds and livres on the English and French islands", account: "the peso"},
+    {from: 1857, coin: "the Cuban peso; the Jamaican pound, the gourde and the dollar on other islands", account: "the peso"}]},
+  andean: {label: "The Andes", rows: [
+    {from: 0, coin: "no coin: labour, cloth and goods in kind", account: "the bale of cloth"},
+    {from: 1533, coin: "the silver real and the piece of eight from Potosí", account: "the peso"},
+    {from: 1863, coin: "the sol; the boliviano in Bolivia", account: "the sol"},
+    {from: 1986, coin: "the inti", account: "the inti"},
+    {from: 1991, coin: "the new sol", account: "the sol"}]},
+  platine: {label: "The River Plate and Chile", rows: [
+    {from: 0, coin: "no coin: barter", account: "goods in kind"},
+    {from: 1536, coin: "the silver real and the piece of eight", account: "the peso"},
+    {from: 1881, coin: "the Argentine peso; the Chilean peso across the Andes", account: "the peso"}]},
+  kongo: {label: "Kongo and central Africa", rows: [
+    {from: 0, coin: "nzimbu shells from Luanda and raffia cloth", account: "the raffia cloth"},
+    {from: 1885, coin: "the Congo franc", account: "the franc"},
+    {from: 1961, coin: "the Congolese franc, the zaire from 1967, the franc again from 1997", account: "the franc"}]},
+  tibetan: {label: "Tibet and the Himalaya", rows: [
+    {from: 0, coin: "silver by weight, bricks of tea and barley", account: "the srang of silver"},
+    {from: 1640, coin: "silver tangka, struck in Nepal and in Lhasa from 1791", account: "the srang"},
+    {from: 1951, coin: "the renminbi; the Nepalese rupee across the mountains", account: "the yuan"}]},
+  canadian: {label: "Canada", rows: [
+    {from: 0, coin: "no coin: furs, wampum and barter", account: "goods in kind"},
+    {from: 1608, coin: "the livre tournois and card money", account: "the livre"},
+    {from: 1760, coin: "pounds, shillings and pence in Halifax currency, and Spanish dollars", account: "the pound"},
+    {from: 1858, coin: "the Canadian dollar and cent", account: "the dollar"}]}
 };
 
 export function coinsFor(year, region = "moravian") {
@@ -312,7 +369,7 @@ export const MONIES = {
     m("rur", 1992, 1997, "roubles", [["rouble", "roubles", 100], ["kopek", "kopeks", 1]], [[1992, 300000], [1997, 80000000]]),
     m("rub", 1998, 2019, "roubles", [["rouble", "roubles", 100], ["kopek", "kopeks", 1]], [[1998, 80000], [2008, 1200000], [2019, 3000000]]),
     EB]},
-  ottoman: {label: "Constantinople, Anatolia and Greece", list: [SHEKEL, ROMAN,
+  ottoman: {label: "Constantinople and Anatolia", list: [SHEKEL, ROMAN,
     m("nomisma", 900, 1299, "Byzantine money", [["hyperpyron", "hyperpyra", 288], ["miliaresion", "miliaresia", 24], ["follis", "folles", 1]], [[900, 288], [1197, 300], [1299, 320]], false),
     m("akce", 1300, 1687, "akçe", [["sultani", "sultanis", 60], ["akçe", "akçe", 1]], [[1300, 40], [1453, 90], [1550, 150], [1600, 300], [1687, 450]], false),
     m("kurus", 1688, 1843, "kuruş and para", [["kuruş", "kuruş", 120], ["para", "para", 3], ["akçe", "akçe", 1]], [[1688, 500], [1750, 800], [1800, 2400], [1843, 12000]], false),
@@ -336,7 +393,7 @@ export const MONIES = {
     m("rupee", 1540, 1956, "rupees, annas and pies", [["rupee", "rupees", 192], ["anna", "annas", 12], ["pie", "pies", 1]], [[1540, 288], [1600, 300], [1700, 576], [1800, 768], [1900, 1536], [1920, 3000], [1947, 6000], [1956, 9000]], 1770),
     m("inr", 1957, 2019, "rupees", [["rupee", "rupees", 100], ["paisa", "paise", 1]], [[1957, 5000], [1970, 10000], [1990, 60000], [2004, 200000], [2019, 900000]]),
     EB]},
-  chinese: {label: "China, Korea and Southeast Asia", list: [
+  chinese: {label: "China", list: [
     m("cash", -99999, 1888, "copper cash", [["string of cash", "strings of cash", 1000], ["cash", "cash", 1]], [[-221, 300], [900, 2000], [1197, 3000], [1400, 1000], [1600, 1200], [1800, 2000], [1888, 3500]], 1000),
     m("yuan", 1889, 1948, "silver yuan", [["yuan", "yuan", 100], ["fen", "fen", 1]], [[1889, 400], [1911, 700], [1930, 1500], [1937, 1500], [1945, 5000000], [1948, 1e12]]),
     m("rmb", 1949, 2019, "renminbi", [["yuan", "yuan", 100], ["jiao", "jiao", 10], ["fen", "fen", 1]], [[1949, 3000], [1978, 4500], [1990, 15000], [2004, 60000], [2019, 220000]]),
@@ -363,7 +420,7 @@ export const MONIES = {
     m("za-pound", 1825, 1960, "pounds, shillings and pence", LSD, [[1825, 360], [1870, 480], [1900, 720], [1930, 960], [1960, 2400]]),
     m("rand", 1961, 2019, "rand", [["rand", "rand", 100], ["cent", "cents", 1]], [[1961, 2000], [1980, 10000], [1994, 60000], [2004, 120000], [2019, 350000]]),
     EB]},
-  mexican: {label: "Spanish America (Mexico, the Caribbean, Peru)", list: [
+  mexican: {label: "Mexico and New Spain", list: [
     m("cacao", -99999, 1520, "cacao beans and cotton cloaks", [["cotton cloak", "cotton cloaks", 100], ["cacao bean", "cacao beans", 1]], [[1197, 600], [1520, 600]], false),
     m("mx-real", 1521, 1862, "pesos and reales", [["peso", "pesos", 96], ["real", "reales", 12], ["grano", "granos", 1]], [[1521, 200], [1600, 384], [1700, 400], [1800, 480], [1862, 600]], false),
     m("mx-peso", 1863, 1992, "pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1863, 800], [1900, 1000], [1920, 3000], [1950, 15000], [1970, 80000], [1982, 800000], [1992, 40000000]]),
@@ -380,6 +437,88 @@ export const MONIES = {
     EB]},
   pacific: {label: "The Pacific islands", else: "american", list: [{...BARTER, to: 1819}]}
 };
+
+/* ---------------------------------------------------------------- every land its own money (0.58.0) */
+
+/*
+ * Storyteller 0.58.0 (B2650): the lands that borrowed a neighbour's money now have their own. Korea, mainland
+ * Southeast Asia, the Malay world, Hungary and the Balkans, Greece, the Caribbean, the Andes, the River Plate,
+ * Kongo, Tibet and Canada. Where a land paid in a neighbour's coin in fact (pieces of eight in Havana and Potosí,
+ * the akçe in Ottoman Greece, the renminbi in Lhasa, the livre in New France) the very same money is shared, so no
+ * changer stands between them in those years. Every figure is history rounded for play, a house rule; the books
+ * name no coins or wages for these lands.
+ */
+const pick = (region, id, over = {}) => ({...MONIES[region].list.find(x => x.id === id), ...over});
+Object.assign(MONIES, {
+  korean: {label: "Korea", list: [
+    m("ko-cloth", -99999, 1677, "hemp cloth, rice and silver", [["bolt of cloth", "bolts of cloth", 40], ["mal of rice", "mal of rice", 1]], [[900, 40], [1197, 40], [1677, 60]], false),
+    m("sangpyeong", 1678, 1891, "copper sangpyeong cash", [["nyang", "nyang", 100], ["jeon", "jeon", 10], ["mun", "mun", 1]], [[1678, 300], [1800, 500], [1891, 1500]], false),
+    m("ko-yang", 1892, 1909, "yang and won of the Korean Empire", [["yang", "yang", 100], ["fun", "fun", 1]], [[1892, 1500], [1909, 3000]], 1897),
+    m("ko-yen", 1910, 1945, "Korean yen", [["yen", "yen", 100], ["sen", "sen", 1]], [[1910, 2000], [1935, 3000], [1945, 15000]]),
+    m("ko-won-1", 1946, 1952, "won (the first)", [["won", "won", 100], ["jeon", "jeon", 1]], [[1946, 100000], [1952, 5000000]]),
+    m("hwan", 1953, 1961, "hwan", [["hwan", "hwan", 100], ["jeon", "jeon", 1]], [[1953, 200000], [1961, 1500000]]),
+    m("krw", 1962, 2019, "won", [["won", "won", 1]], [[1962, 3000], [1970, 15000], [1980, 150000], [1990, 400000], [2004, 1200000], [2019, 2000000]]),
+    EB]},
+  "southeast-asian": {label: "Mainland Southeast Asia", list: [
+    m("sea-silver", -99999, 1349, "silver by weight, rice and cloth", [["tael of silver", "taels of silver", 100], ["measure of rice", "measures of rice", 1]], [[900, 60], [1197, 70], [1349, 80]], false),
+    m("tical", 1350, 1903, "bullet ticals and fuang", [["tical", "ticals", 8], ["fuang", "fuang", 1]], [[1350, 8], [1600, 12], [1800, 24], [1903, 80]], false),
+    m("baht", 1904, 2019, "baht", [["baht", "baht", 100], ["satang", "satang", 1]], [[1904, 1000], [1950, 30000], [1970, 60000], [1990, 300000], [2004, 600000], [2019, 1000000]]),
+    EB]},
+  malay: {label: "The Malay world", list: [
+    m("mas", -99999, 1299, "gold mas and silver by weight", [["tahil of gold", "tahils of gold", 16], ["mas", "mas", 1]], [[900, 4], [1197, 4], [1299, 4]], false),
+    m("picis", 1300, 1816, "Chinese copper picis on strings", [["string of picis", "strings of picis", 200], ["picis", "picis", 1]], [[1300, 1500], [1600, 3000], [1816, 6000]], false),
+    m("ni-guilder", 1817, 1945, "Netherlands Indies guilders", [["guilder", "guilders", 100], ["cent", "cents", 1]], [[1817, 300], [1900, 600], [1940, 1200], [1945, 5000]], 1828),
+    m("rupiah", 1946, 2019, "rupiah (recut in 1965; house figures)", [["rupiah", "rupiah", 1]], [[1946, 30], [1960, 500], [1966, 3000], [1990, 100000], [2004, 700000], [2019, 3000000]]),
+    EB]},
+  hungarian: {label: "Hungary, Transylvania and the Balkans", list: [SHEKEL, ROMAN,
+    m("hu-denar", 900, 1324, "silver by weight, then Hungarian denars", [["mark of silver", "marks of silver", 400], ["denar", "denars", 2], ["obol", "obols", 1]], [[900, 60], [1197, 100], [1324, 140]], false),
+    m("hu-gold", 1325, 1526, "gold forints and silver denars", [["forint", "forints", 200], ["denar", "denars", 2], ["obol", "obols", 1]], [[1325, 200], [1450, 300], [1526, 400]], false),
+    m("hu-forint-cm", 1527, 1857, "forints and krajcár", [["forint", "forints", 60], ["krajcár", "krajcár", 1]], [[1527, 60], [1700, 180], [1857, 600]], 1841),
+    m("hu-forint-oe", 1858, 1891, "forints and krajcár (Austrian standard)", [["forint", "forints", 100], ["krajcár", "krajcár", 1]], [[1858, 1200], [1891, 1800]]),
+    m("korona", 1892, 1926, "korona and fillér", [["korona", "korona", 100], ["fillér", "fillér", 1]], [[1892, 4000], [1914, 7000], [1918, 15000], [1926, 3000000]]),
+    m("pengo", 1927, 1946, "pengő and fillér", [["pengő", "pengő", 100], ["fillér", "fillér", 1]], [[1927, 8000], [1938, 10000], [1944, 30000], [1946, 1e15]]),
+    m("huf", 1947, 2019, "forints and fillér", [["forint", "forints", 100], ["fillér", "fillér", 1]], [[1947, 30000], [1960, 150000], [1980, 500000], [1990, 1200000], [2004, 10000000], [2019, 30000000]]),
+    EB]},
+  greek: {label: "Greece", list: [SHEKEL, ROMAN,
+    pick("ottoman", "nomisma", {to: 1452}),
+    pick("ottoman", "akce", {from: 1453}),
+    pick("ottoman", "kurus", {to: 1831}),
+    m("drachma-1", 1832, 1953, "drachmas and lepta", [["drachma", "drachmas", 100], ["lepton", "lepta", 1]], [[1832, 3000], [1900, 6000], [1920, 30000], [1940, 300000], [1953, 1e8]], 1841),
+    m("grd", 1954, 2001, "new drachmas", [["drachma", "drachmas", 100], ["lepton", "lepta", 1]], [[1954, 60000], [1970, 300000], [1980, 1200000], [1990, 8000000], [2001, 20000000]]),
+    EURO([[2002, 90000], [2019, 110000]]), EB]},
+  caribbean: {label: "The Caribbean", list: [{...BARTER, to: 1491},
+    pick("mexican", "mx-real", {from: 1492, to: 1856}),
+    m("cu-peso", 1857, 2019, "pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1857, 1500], [1900, 3000], [1950, 8000], [1960, 10000], [1990, 15000], [2019, 40000]]),
+    EB]},
+  andean: {label: "The Andes", list: [
+    m("andes-cloth", -99999, 1532, "cloth, labour and goods in kind", [["bale of cloth", "bales of cloth", 100], ["measure of maize", "measures of maize", 1]], [[1197, 600], [1532, 600]], false),
+    pick("mexican", "mx-real", {from: 1533}),
+    m("sol", 1863, 1985, "soles", [["sol", "soles", 100], ["centavo", "centavos", 1]], [[1863, 1000], [1900, 1500], [1950, 30000], [1970, 300000], [1985, 5e7]]),
+    m("inti", 1986, 1990, "intis", [["inti", "intis", 100], ["céntimo", "céntimos", 1]], [[1986, 50000], [1990, 5e9]]),
+    m("pen", 1991, 2019, "new soles", [["sol", "soles", 100], ["céntimo", "céntimos", 1]], [[1991, 15000], [2004, 50000], [2019, 100000]]),
+    EB]},
+  platine: {label: "The River Plate and Chile", list: [{...BARTER, to: 1535},
+    pick("mexican", "mx-real", {from: 1536, to: 1880}),
+    m("ar-peso", 1881, 1969, "pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1881, 3000], [1914, 10000], [1950, 50000], [1969, 2000000]]),
+    m("ar-peso-2", 1970, 1991, "pesos (recut four times; house figures)", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1970, 50000], [1980, 5000000], [1991, 1e8]]),
+    m("ars", 1992, 2019, "pesos", [["peso", "pesos", 100], ["centavo", "centavos", 1]], [[1992, 50000], [2004, 80000], [2019, 1500000]]),
+    EB]},
+  kongo: {label: "Kongo and central Africa", list: [
+    m("nzimbu", -99999, 1884, "nzimbu shells and raffia cloth", [["raffia cloth", "raffia cloths", 100], ["nzimbu shell", "nzimbu shells", 1]], [[1197, 600], [1600, 800], [1884, 1200]], false),
+    m("cg-franc", 1885, 1960, "Congo francs", [["franc", "francs", 100], ["centime", "centimes", 1]], [[1885, 1000], [1920, 3000], [1950, 30000], [1960, 60000]], 1909),
+    m("cd-franc", 1961, 2019, "zaires and Congolese francs (recut often; house figures)", [["franc", "francs", 100], ["centime", "centimes", 1]], [[1961, 300000], [1990, 1e8], [2019, 1e7]]),
+    EB]},
+  tibetan: {label: "Tibet and the Himalaya", list: [
+    m("tea-brick", -99999, 1639, "silver by weight, tea bricks and barley", [["srang of silver", "srang of silver", 100], ["brick of tea", "bricks of tea", 10], ["measure of barley", "measures of barley", 1]], [[900, 60], [1197, 60], [1639, 80]], false),
+    m("tangka", 1640, 1950, "tangka, srang and sho", [["srang", "srang", 100], ["sho", "sho", 10], ["skar", "skar", 1]], [[1640, 100], [1800, 200], [1900, 400], [1950, 1500]], false),
+    pick("chinese", "rmb", {from: 1951}),
+    EB]},
+  canadian: {label: "Canada", list: [{...BARTER, to: 1607},
+    pick("french", "tournois", {from: 1608, to: 1759}),
+    m("ca-pound", 1760, 1857, "pounds, shillings and pence (Halifax currency)", LSD, [[1760, 480], [1857, 1440]], 1817),
+    m("cad", 1858, 2019, "Canadian dollars", [["dollar", "dollars", 100], ["cent", "cents", 1]], [[1858, 2000], [1900, 4000], [1950, 20000], [1970, 50000], [1990, 150000], [2004, 200000], [2019, 300000]]),
+    EB]}
+});
 
 /** The money in use in a region and year (falls back to another region's list where this one has nothing yet). */
 export function moneyFor(year, region = "moravian") {
@@ -519,3 +658,37 @@ export function changeMoney(amount, year, from = "moravian", to = "moravian", {t
 
 /** Months to pay when the clock moves from one month count to another: every month, twelve at most. */
 export const monthsToPay = (paidMonth, month) => (paidMonth === null || paidMonth === undefined || paidMonth < 0) ? 1 : Math.max(0, Math.min(12, month - paidMonth));
+
+/* ---------------------------------------------------------------- coin of the place in the purse (0.58.0) */
+
+/**
+ * Storyteller 0.58.0 (B2651): a purse can hold coin of other lands beside the coin of home, changed at a money
+ * changer when a character travels. purse.foreign = {[money id]: {region (money region), amount (smallest unit)}}.
+ * Abroad, a price is paid first from coin of the place, with no changer; what that coin cannot cover is still
+ * charged to home money with the cut. House rule; the books give no exchange rules.
+ */
+export function cleanForeign(foreign) {
+  const out = {};
+  for ( const [id, f] of Object.entries(foreign && typeof foreign === "object" ? foreign : {}) ) {
+    const amount = Math.max(0, Math.round(Number(f?.amount) || 0));
+    if ( amount > 0 && f?.region && MONIES[f.region] ) out[id] = {region: f.region, amount};
+  }
+  return out;
+}
+
+/**
+ * Pay a price met abroad, part from coin of the place. homeAmount: the price charged to home money, the cut
+ * included (as priceAbroad's total). held: coin of the place in the purse. Returns {local (coin of the place
+ * spent), home (home money still owed, cut included)}.
+ */
+export function splitAbroad(homeAmount, held, year, home = "moravian", away = "moravian", {troubled = false} = {}) {
+  const amt = Math.max(0, Math.round(Number(homeAmount) || 0)), have = Math.max(0, Math.round(Number(held) || 0));
+  if ( !amt || !have || sameMoney(year, home, away) ) return {local: 0, home: amt};
+  const share = changerCut(year, {troubled, from: home, to: away});
+  const need = Math.max(1, exchange(Math.round(amt / (1 + share)), year, home, away));
+  if ( have >= need ) return {local: need, home: 0};
+  return {local: have, home: Math.ceil(amt * (1 - have / need))};
+}
+
+/** Coin of other lands whose money has gone out of use by this year: [money id...] (they become keepsakes). */
+export const staleForeign = (foreign, year) => Object.entries(cleanForeign(foreign)).filter(([id, f]) => moneyFor(year, f.region).id !== id).map(([id]) => id);
