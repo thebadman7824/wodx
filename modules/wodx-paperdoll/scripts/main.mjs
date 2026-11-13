@@ -86,9 +86,13 @@ export async function featuresFor(look, mood = "own") {
 }
 
 /* ---- What a character shows now ---- */
-// The sex WoDX Creation rolled for a person it made, read straight from the flags (the module may be off)
+// The gender WoDX Chronicle holds for every module (B3500); the sex WoDX Creation rolled when that module is off
+export const faceGender = actor => {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender?.of?.(actor) ?? actor?.flags?.["wodx-creation"]?.people?.sex ?? "";
+  return {female: "woman", male: "man", nonbinary: "nonbinary"}[g] ?? "";
+};
 const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? "",
-  gender: {female: "woman", male: "man"}[actor?.flags?.["wodx-creation"]?.people?.sex] ?? ""});
+  gender: faceGender(actor)});
 const lookOf = actor => actor?.flags?.[MOD]?.look ? D.normalize(actor.flags[MOD].look) : null;
 function atmosphere() { const m = game.modules.get("wodx-atmosphere"); return m?.active ? m : null; }
 /** The ring: the era kit's frame. When WoDX Atmosphere draws frames round this token, the picture leaves it out. */

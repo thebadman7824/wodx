@@ -1642,7 +1642,9 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     // Lamia: the Seed of Lilith (V20 printed p. 423; V20 Dark Ages pdf p. 92)
     if (rule?.lamia && living && drunk > 0) {
         if (rule.lamia === "v20") {
-            const d = KF.lamiaDifficulty(tags);
+            // a player character's gender has no bearing on play (B3502): 7, as for anyone whose sex isn't known
+            const gen = game.modules.get("wodx-chronicle")?.api?.gender, gs = vesselActor ? (gen?.forRules?.(vesselActor) ?? "") : "";
+            const d = vesselActor?.hasPlayerOwner ? KF.lamiaDifficulty([]) : KF.lamiaDifficulty(gs ? [...tags, gs] : tags);
             const r = await rollPool(vesselActor ? attr(vesselActor, "stamina") : 2, d);
             rolls.push(r.roll);
             html += rollBlock(`The Seed of Lilith: the vessel's Stamina (${d})`, r);

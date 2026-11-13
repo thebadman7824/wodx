@@ -43,6 +43,7 @@ import * as automation from "./automation.mjs";
 import * as automationRules from "./automation-rules.mjs";
 import * as waiting from "./waiting.mjs";
 import * as age from "./age.mjs";
+import * as gender from "./gender.mjs";
 import * as waitingRules from "./waiting-rules.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
@@ -181,6 +182,8 @@ Hooks.once("ready", async () => {
   const api = {
     // B3210: the age floor of 18 for anything romantic or sexual
     age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
+    // B3500: one gender for every module; forRules is "" for every player character
+    gender: {of: gender.of, forRules: gender.forRules, isPlayer: gender.isPlayer, set: gender.set, rules: gender.rules},
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
     world: {regions: worldRules.WORLD_REGIONS, regionOf: worldRules.regionOf, homeland: place.homeland, setHomeland, here: place.regionHere, isAbroad: place.isAbroad, rules: worldRules},

@@ -77,7 +77,13 @@ export const courtship = ({region = regionNow(), year = yearNow()} = {}) => H.co
 
 /* ---- Marriage ---- */
 export const lawHere = ({region = regionNow(), year = yearNow()} = {}) => H.marriageLaw(region, year, sphereNow(region, year));
-const sexOf = a => { const s = String(a?.flags?.["wodx-creation"]?.sex ?? a?.system?.sex ?? "").toLowerCase(); return /^m/.test(s) ? "m" : /^f/.test(s) ? "f" : ""; };
+// One gender for every module (B3500): WoDX Chronicle reads every record, and gives "" for a player character (B3502)
+const sexOf = a => {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender;
+  if ( g?.forRules ) return g.rules.letter(g.forRules(a));
+  if ( a?.hasPlayerOwner ) return "";
+  const s = String(a?.flags?.["wodx-creation"]?.sex ?? a?.flags?.["wodx-creation"]?.people?.sex ?? a?.system?.sex ?? "").toLowerCase(); return /^m(ale)?$/.test(s) ? "m" : /^f(emale)?$/.test(s) ? "f" : "";
+};
 const marriagesOf = a => (actorOf(a)?.flags?.[MOD]?.marriages ?? []).filter(m => !m.ended);
 async function addHandTie(a, b, role) {
   const ties = foundry.utils.deepClone(a.flags?.["wodx-sheets"]?.ties ?? []);
