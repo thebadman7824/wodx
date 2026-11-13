@@ -1,0 +1,10 @@
+# Sprite rig
+
+The token sprites are drawn by these Python scripts (numpy and Pillow), outside the game. Own art: capsule limbs, five-tone ramps, a dark outline, one light from the top left. No outside art.
+
+- crinos.py: the canvas class (Cv) and the Crinos.
+- rig.py: people and humanoid forms. wear.py: the same figure with layered clothes, armor and things in the hand.
+- wolf.py, beast.py: four-legged animals on one rig.
+- items.py: matches every clothing, armor and weapon item of the Library tables to pieces of wear.py.
+
+A sheet is 8 walk frames across by 4 facings down (back, left, front, right), each frame 96 by 112 pixels. The sheets in modules/wodx-paperdoll/sprites were exported from here (docs/DECISIONS.md B2560).

@@ -361,3 +361,10 @@
 2020|F|mor|AF|Nairobi|science,crown|Africa builds the road to orbit|Most of the world's spaceports and orbital yards stand along Africa's equator and one space worker in three is African; the Pan-African Confederation, allied to Europe, claims to speak for the continent, while the Free Africa Foundation and the warlords of the south say otherwise.
 2020|F|mor|AF|Tunis|empire,money|The Maghreb answers to Brussels|The states of North Africa are run in all but name from the European Community.
 2020|F|mor|AM|Sacramento|law,science|Every Californian numbered|California gives each citizen a single identity number, and nothing can be bought, rented or signed without it.
+# Orbit as it touches these regions, from Deep Space (pdf 7, 9, 10; read from OCR 2026-11-13).
+1998|F|mor|AF|Kinshasa|migration,science|The Hireout|The European Space Agency begins hiring whole townships out of central Africa, lifting them to orbit and training them as construction crews; within a generation two in three of the people living off the Earth come from those families.
+2017|F|mor|AM|Houston|exploration,science|The Americans leave for Mars|The American space agency sends its own crew to Mars, eight years behind the Europeans and Soviets; it lands two years later.
+2019|F|mor|AF|Kilimanjaro|uprising,revolution|The Highriders break free|The orbital workers at the L-5 colony, most of them children of the Hireout, beat the European forces sent against them and declare themselves a free people; a sister colony is put under martial law.
+2021|F|mor|AM|Houston|building,exploration|Chryse Base|The American base on the Chryse plain of Mars is finished.
+2022|F|mor|AF|Kilimanjaro|war,revolution|The seven-hour war|A second orbital colony declares its independence, and after a war of about seven hours the Europeans let it go and keep only the Crystal Palace and one station.
+2023|F|mor|AM|Houston|exploration,science|A crew for Jupiter|The Americans begin regular flights to Mars and send a crewed survey to Jupiter; it arrives two years later, amid talk of steady radio signals from the planet.

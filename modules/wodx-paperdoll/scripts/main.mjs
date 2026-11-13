@@ -1,4 +1,5 @@
 import * as D from "./doll-rules.mjs";
+import {registerSpriteSettings, startSprites, spriteApi} from "./sprites.mjs";
 import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
 
 /**
@@ -9,7 +10,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.6.4";
+export const VERSION = "0.7.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -153,7 +154,7 @@ export async function bake(actor, {force = false} = {}) {
   const byScene = new Map();
   const add = raw => {
     const t = raw?.document ?? raw, sc = t?.parent;
-    if ( t?.documentName !== "Token" || !t.id || sc?.documentName !== "Scene" || !t.actorLink || t.texture?.src === path ) return;
+    if ( t?.documentName !== "Token" || !t.id || sc?.documentName !== "Scene" || !t.actorLink || t.texture?.src === path || t.flags?.[MOD]?.sprite ) return;
     if ( !byScene.has(sc.id) ) byScene.set(sc.id, {scene: sc, ids: new Set()});
     byScene.get(sc.id).ids.add(t.id);
   };
@@ -352,9 +353,11 @@ Hooks.once("init", () => {
   if ( !game.world?.flags?.wodx ) return;
   active = true;
   registerSettings();
+  registerSpriteSettings();
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi};
+  startSprites();
   if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
 });

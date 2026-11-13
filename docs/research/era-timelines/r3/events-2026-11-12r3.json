@@ -117224,5 +117224,131 @@
 "ref": "Future Darkness branch history, a house reading",
 "branch": "future",
 "links": []
+},
+{
+"id": "r3-future-darkness-359",
+"era": "future-darkness",
+"year": 1998,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Kinshasa",
+"tags": [
+"migration",
+"science"
+],
+"title": "The Hireout",
+"text": "The European Space Agency begins hiring whole townships out of central Africa, lifting them to orbit and training them as construction crews; within a generation two in three of the people living off the Earth come from those families.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-360",
+"era": "future-darkness",
+"year": 2017,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Houston",
+"tags": [
+"exploration",
+"science"
+],
+"title": "The Americans leave for Mars",
+"text": "The American space agency sends its own crew to Mars, eight years behind the Europeans and Soviets; it lands two years later.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-361",
+"era": "future-darkness",
+"year": 2019,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Kilimanjaro",
+"tags": [
+"uprising",
+"revolution"
+],
+"title": "The Highriders break free",
+"text": "The orbital workers at the L-5 colony, most of them children of the Hireout, beat the European forces sent against them and declare themselves a free people; a sister colony is put under martial law.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-362",
+"era": "future-darkness",
+"year": 2021,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Houston",
+"tags": [
+"building",
+"exploration"
+],
+"title": "Chryse Base",
+"text": "The American base on the Chryse plain of Mars is finished.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-363",
+"era": "future-darkness",
+"year": 2022,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Africa",
+"place": "Kilimanjaro",
+"tags": [
+"war",
+"revolution"
+],
+"title": "The seven-hour war",
+"text": "A second orbital colony declares its independence, and after a war of about seven hours the Europeans let it go and keep only the Crystal Palace and one station.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
+},
+{
+"id": "r3-future-darkness-364",
+"era": "future-darkness",
+"year": 2023,
+"month": null,
+"kind": "branch",
+"lines": [
+"Mortals"
+],
+"region": "Americas",
+"place": "Houston",
+"tags": [
+"exploration",
+"science"
+],
+"title": "A crew for Jupiter",
+"text": "The Americans begin regular flights to Mars and send a crewed survey to Jupiter; it arrives two years later, amid talk of steady radio signals from the planet.",
+"ref": "Future Darkness branch history, a house reading",
+"branch": "future",
+"links": []
 }
 ]
