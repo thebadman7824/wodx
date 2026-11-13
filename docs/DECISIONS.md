@@ -179,6 +179,7 @@ Next free block: B3630
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
+| B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3602) | Chronicle |
 <!-- decision-index:end -->
 
@@ -5571,6 +5572,76 @@ Reverse: none needed; add names as found.
 WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the Lenape). al-kin lenape-clan: the Lenape family slot before the 19th century is the clan from the mother; New England and Powhatan names stand alone. al-women same: a woman whose name was not written down is "A woman of the Turtle clan" (Lenape) or "A woman of Pokanoket" (the town, New England and Powhatan). al-later staged: as the Haudenosaunee (B3122), with family names from the Delaware, Mashpee, Aquinnah, Brothertown, Mohegan, Narragansett and Virginia rolls since the 18th century (house reading of common names on those rolls).
 
 Reverse: edit the lists in data/people-algonquian.mjs.
+
+## B3570. Herd pools by district (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
+
+Reverse: turn off the herdPools setting.
+
+## B3571. How big a district's herd is (2026-11-13)
+WoDX Storyteller. House rule: the town's people (Towns over time) times the district's share (slums a quarter, lower-class three tenths, market a fifth, merchant-class 15 in 100, patrolled a tenth), one feeding a month for each hundred, never fewer than two. A district with no town uses 3,000 people before 1450, 8,000 to 1799, 40,000 to 1913, 150,000 to 2022 and 200,000 after.
+
+Reverse: change AREA_SHARE, PEOPLE_PER_FEEDING or DEFAULT_PEOPLE in herd-rules.mjs.
+
+## B3572. What over-hunting does to the hunt (2026-11-13)
+WoDX Storyteller. House rule: past the pool the district is Thinning (+1 difficulty), past half again Over-hunted (+2), past double Stripped (+3). The difficulty goes into the heat field WoDX Actions' Hunt already shows, with the herd's stage named beside the heat band.
+
+Reverse: change STAGES in herd-rules.mjs.
+
+## B3573. The harm over-hunting brings (2026-11-13)
+WoDX Storyteller. House rule: every stage sends the Storyteller a card. Over-hunted: a vessel dies (the Storyteller names who), the ground takes a hunt's heat and a rumour starts in the words of the age. Stripped: two die, a botch's heat, a big rumour and the region's hunters get a response's pressure.
+
+Reverse: change harmFor in herd-rules.mjs.
+
+## B3580. Holy ground shared by several claims (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g13 as suggested. A site ties places on the places of power register (caern, Node, freehold, chantry) and an Elysium to one strength; each place keeps its own rules. Rules in site-rules.mjs.
+
+Reverse: turn off the holyGround setting.
+
+## B3581. How strong holy ground is (2026-11-13)
+WoDX Storyteller. House rule: ten points a level of the strongest place (caern level, a Node's caern level, a freehold's rank), times 1.5 to 1450, 1.25 to 1700, 1 to 1900, 0.8 to 2022 and 0.6 after; each step of the scene's Gauntlet drift takes a tenth off or puts one back. It wells up two points a level a week, by the same factor.
+
+Reverse: change ERA_STRENGTH, maxFor or weeklyFor in site-rules.mjs.
+
+## B3582. Drawing on shared ground (2026-11-13)
+WoDX Storyteller. House rule: Quintessence from meditation, Tass, Glamour by the balefire and the Opened Caern's gain each take a point of strength a point drawn, never more than is left. Below half every role gives half; at nothing, nothing.
+
+Reverse: change WEAK and allow in site-rules.mjs, or remove the Sites.gate calls in power.mjs.
+
+## B3583. Each holder hears of a draw (2026-11-13)
+WoDX Storyteller. Every keeper of another role on the site, the Keeper of Elysium and the Storyteller get a whispered card of each draw: who drew, how much, and what is left.
+
+Reverse: remove the card in sites.mjs onDraw.
+
+## B3584. A moot feeds the ground (2026-11-13)
+WoDX Storyteller. House rule: a moot at a caern on a site gives the site half the Gnosis the sept gave.
+
+Reverse: change mootGift in site-rules.mjs.
+
+## B3585. Quarrels over shared ground (2026-11-13)
+WoDX Storyteller. House rule: each draw on a weak site counts against every other claim on it; at three for a pair, the quarrel goes to the approval queue. Approving starts a rumour and logs it, and the pair can make a treaty or fight; the count starts again. The claims (who holds each role, and for which faction) are read by api.upkeep.sites.claimsIn for faction politics, with the hooks wodxSiteDraw and wodxSiteQuarrel.
+
+Reverse: change QUARREL_AT in site-rules.mjs.
+
+## B3590. Day jobs for mortal agents (2026-11-13)
+WoDX NPC. Ben approved notes gap g14 as suggested. Six jobs (watch a place, scrub the records, stir up a crowd, buy up a debt, sabotage the works, hide a body) run as long tasks on WoDX Storyteller's clock. Rules in day-jobs-rules.mjs.
+
+Reverse: remove the Day jobs button from the Followers window.
+
+## B3591. The powers a job works through (2026-11-13)
+WoDX NPC. House rule: guilds, lords and moneylenders to 1799, mercenary companies to 1699, the garrison 1700 to 1829, printers 1500 to 1829, the police from 1830, the press 1830 to 1949, broadcast media 1950 to 2022, the networks after, banks and officials from 1800, industry 1800 to 1969, corporations from 1900, technology firms from 1970; the Church, the streets and the underworld always. Each touches one sphere of Influence of its age; the Church, the lords, the guilds and the mercenaries take local names by the land's faith.
+
+Reverse: change CHANNELS or LOCAL in day-jobs-rules.mjs.
+
+## B3592. Who rolls a day job (2026-11-13)
+WoDX NPC. A follower rolls its own Attribute and Ability for the job. A Background dot with no character behind it rolls the master's Manipulation plus the dots, since V20 lets Influence stand in for an Ability (V20 p. 115). Difficulty 6; goals of 3 or 4 successes, by the hour or the day.
+
+Reverse: change jobTask in day-jobs-rules.mjs.
+
+## B3593. How factions react to a day job (2026-11-13)
+WoDX NPC. House rule: the faction aimed at, else the one holding the most Influence in the sphere (never the master's own). A done scrub, stir or sabotage proposes that it lose a dot of the sphere (approval queue); any ruined job moves its regard for the master a step down; a ruined body-hiding reports a breach.
+
+Reverse: change reaction in day-jobs-rules.mjs.
 
 ## B3600. Steppe and northern Asia law family (2026-11-13)
 Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.

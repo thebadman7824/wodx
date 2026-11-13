@@ -1,5 +1,0 @@
----
-bump: minor
-what: Adds Day jobs: send an ally, contact, retainer, ghoul or a dot of Influence to watch, scrub records, stir a crowd, buy a debt, sabotage or hide a body, through the powers of the age; factions react.
----
-Day jobs for a character's mortal agents (B3590-B3596). A Day jobs window, opened from the Followers window or api.openDayJobs: pick a follower who serves the character or a dot of Allies, Contacts, Retainers or Influence, a job (watch a place, scrub the records, stir up a crowd, buy up a debt, sabotage the works, hide a body), the power of the age it works through (guilds, the Church, lords and mercenary companies early on; police, press, banks, technology firms and corporations later, with local names by the land's faith) and the place. The job runs as a long task on WoDX Storyteller's clock: on the follower's own sheet, or the master's Manipulation plus the dots for a Background. When it ends a card says how it went and the faction holding that sphere reacts: a lost dot of Influence through the approval queue, a worse regard for the master, or a breach for a body found. Hook out wodxDayJobDone.
