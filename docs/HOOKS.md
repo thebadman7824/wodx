@@ -60,7 +60,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
-| wodxTown | storyteller | something happened to a town (a fire, flood, storm, earthquake, famine, plague, riot, rising or sack): {town (market id), kind, text, big} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |
