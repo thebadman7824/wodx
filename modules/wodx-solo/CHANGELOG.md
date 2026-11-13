@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.3.0 (13 November 2026: the panel has one main button, What happens next?, which runs the clock until something happens, an hour at most; time, travel, pause, I am stuck and the curtain sit under More)
 - 0.2.3 (13 November 2026: the panel is 340 px wide, since the title was still cut at 290 beside the window's header buttons)
 - 0.2.2 (13 November 2026, from the testbed UI check: the panel is wider, so its title shows whole, and Go on carries a play icon while the game is paused)
 - 0.2.1 (13 November 2026, from the first testbed gate: a player with no assigned character no longer acts through the first character they happen to own. The panel now takes the one assigned to them, then one of theirs on the scene they view, owned by them alone before a shared one. The gate assigns its own character to Player Test for the run and puts the old one back)

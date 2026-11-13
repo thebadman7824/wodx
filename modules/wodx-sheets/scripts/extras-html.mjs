@@ -46,12 +46,16 @@ function rowHtml(r, editable) {
  */
 export function possessionsHtml(view, { money, editable = true, gearNotes = "" } = {}) {
   const coins = money.coins.length ? money.coins.map(c => `<span class="wodx-coin"><b>${c.count}</b> ${esc(c.denom)}</span>`).join("") : `<span class="wodx-quiet">No coin carried as things.</span>`;
+  const carriedWords = money.line ?? `${money.carried}${money.inUse?.length ? ` (${money.inUse[0]})` : ""}`;
   const moneyBox = `<div class="wodx-money">
+    <p class="wodx-purse-line"${money.full ? ` title="${esc(money.full)}"` : ""}>You carry <b>${esc(carriedWords)}</b>${Number(money.bank) ? `, with <b>${esc(money.bank)}</b> put by` : ""}.</p>
+    <details class="wodx-purse-more"${money.folded ? "" : " open"}><summary>Every coin${money.full ? ` (${esc(money.full)})` : ""}</summary>
     <div class="wodx-money-coins">${coins}</div>
     <div class="wodx-money-sums">${editable
       ? `<label>Carried <input type="number" name="system.money.carried" data-dtype="Number" value="${esc(money.carried)}"></label><label>Put by <input type="number" name="system.money.bank" data-dtype="Number" value="${esc(money.bank)}"></label>`
       : `<span>Carried: <b>${esc(money.carried)}</b></span><span>Put by: <b>${esc(money.bank)}</b></span>`}</div>
     <div class="wodx-quiet">Coin of the time: ${money.inUse.map(esc).join(", ")}.${editable ? ` <a class="wodx-act" data-act="add-coins">Add coins</a>` : ""}</div>
+    </details>
   </div>`;
   const groups = view.groups.map(g => `<div class="wodx-poss-group" data-group="${esc(g.id)}">
     <div class="wodx-poss-head splatFont" data-drop-loose="1">${esc(g.label)}</div>

@@ -16,20 +16,20 @@
 .wod-theme-dark.wod20 :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes) { background: var(--darkmode-area10-background); border-radius: 10px; }
 
 /* ---- 3. WoDX fields and buttons on a sheet: one shade, one size, readable in both modes ---- */
-.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features, .wodx-quickrolls) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
   color: inherit; height: 28px; min-height: 28px; line-height: 1.3; padding: 2px 6px; border: 1px solid rgba(127,127,127,.6); border-radius: 3px; background: rgba(255,255,255,.55); box-sizing: border-box;
 }
 .wod20.wod-sheet .wodx-st-notes textarea { height: auto; min-height: 110px; }
-.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search, .wodx-head, .wodx-strip, .wodx-changes, .wodx-features, .wodx-quickrolls) :is(input:not([type=checkbox], [type=radio]), select, textarea) {
   color: var(--darkmode-textcolor-dark); background: var(--darkmode-background-dark);
 }
 .wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-list-search) ::placeholder { color: inherit; opacity: .6; }
-.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn) {
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features, .wodx-quickrolls) :is(button, a.wodx-btn) {
   flex: 0 0 auto; width: auto; min-height: 28px; line-height: 1.3; padding: 2px 10px; white-space: nowrap; cursor: pointer;
   color: inherit; opacity: 1; border: 1px solid rgba(127,127,127,.7); border-radius: 3px; background: rgba(127,127,127,.18); display: inline-flex; align-items: center; gap: 5px;
 }
-.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn):hover { background: rgba(127,127,127,.35); }
-.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features) :is(button, a.wodx-btn) { color: var(--darkmode-textcolor-dark); }
+.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features, .wodx-quickrolls) :is(button, a.wodx-btn):hover { background: rgba(127,127,127,.35); }
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-possessions, .wodx-ties, .wodx-body, .wodx-st-notes, .wodx-changes, .wodx-features, .wodx-quickrolls) :is(button, a.wodx-btn) { color: var(--darkmode-textcolor-dark); }
 /* A bar of search, filter and buttons wraps instead of squeezing */
 .wod20 .wodx-poss-bar { flex-wrap: wrap; gap: 6px; }
 .wod20 .wodx-poss-bar .wodx-search { flex: 1 1 220px; }
@@ -78,3 +78,20 @@
 /* ---- 6. WoDX tab buttons (Relationships, Body): the same tile as the line's own tab buttons ---- */
 .wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon { display: flex; flex: 0 0 30px; align-items: center; justify-content: center; width: 30px; height: 30px; min-height: 30px; box-sizing: border-box; border-radius: 3px; opacity: 1; background: var(--wodx-tab-tile, rgb(121, 8, 19)); color: var(--wodx-tab-glyph, #fff); }
 .wod20.wod-sheet nav.sheet-tabs .wodx-tab-icon > i { font-size: 18px; line-height: 1; opacity: 1; color: inherit; }
+
+/* ---- 0.19.0 (B2822 to B2825): the sheet in a player's Beginner view ---- */
+.wod20.wod-sheet .wodx-quickrolls { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 4px 0 8px; }
+.wod20.wod-sheet .wodx-quickrolls .wodx-quick-head { font-weight: 600; margin-right: 4px; }
+.wod20.wod-sheet .wodx-quickrolls button { flex: 0 1 auto; width: auto; min-height: 26px; line-height: 1.3; padding: 2px 8px; white-space: normal; }
+.wod20.wod-sheet .wodx-quickrolls select { flex: 0 1 220px; min-width: 140px; width: auto; }
+.wod20.wod-sheet.wodx-beginner .wodx-zero, .wod20.wod-sheet .wodx-beginner .wodx-zero { display: none; }
+.wod20.wod-sheet.wodx-beginner.wodx-zero-shown .wodx-zero, .wod20.wod-sheet .wodx-beginner.wodx-zero-shown .wodx-zero { display: revert-layer; }
+.wod20.wod-sheet .wodx-showall { display: block; width: auto; margin: 6px auto; padding: 2px 10px; }
+.wod20.wod-sheet nav.sheet-tabs:not(.wodx-tabs-open) > .wodx-tucked { display: none; }
+
+/* Sheet tools (B2837): the one header button with words, and its list */
+.wod20.window-app .window-header a.header-button.wodx-sheet-tools.wodx-worded { font-size: 12px; display: inline-flex; gap: 4px; align-items: center; }
+.wod20.window-app .window-header a.header-button.wodx-sheet-tools > i { font-size: 13px; }
+.wodx-sheet-tools-list { position: fixed; z-index: 1000; display: flex; flex-direction: column; gap: 2px; padding: 4px; min-width: 180px;
+  background: var(--color-bg, #1e1b18); border: 1px solid var(--color-border-light-2, #8886); border-radius: 4px; box-shadow: 0 2px 10px #0008; }
+.wodx-sheet-tools-list button { text-align: left; justify-content: flex-start; white-space: nowrap; height: auto; padding: 3px 8px; }

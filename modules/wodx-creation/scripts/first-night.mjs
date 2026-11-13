@@ -345,15 +345,20 @@ export class FirstNightApp extends ApplicationV2 {
         gm && ticked ? `<button type="button" data-action="undo" data-step="${s.key}">Undo</button>` : ""
       ].join("");
       const state = s.state === "done" ? `<i class="fa-solid fa-check"></i> Done${s.byAuto ? " (the sheet shows it)" : ""}` : s.state === "waiting" ? "Waiting for the Storyteller" : s.optional ? "Optional" : "Open";
-      return `<li class="wodx-fn-step wodx-fn-${s.state}"><div><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span></div>
-        <div class="wodx-quiet">${esc(s.hint)}</div>${extra[s.key] ? `<div>${extra[s.key]}</div>` : ""}<div class="wodx-buttons">${btns}</div></li>`;
+      const isNext = s.key === list.next;
+      const inner = `<div class="wodx-quiet">${esc(s.hint)}</div>${extra[s.key] ? `<div>${extra[s.key]}</div>` : ""}<div class="wodx-buttons">${btns}</div>`;
+      // Done steps fold to one line; the next step is marked (B2829)
+      if ( s.state === "done" ) return `<li class="wodx-fn-step wodx-fn-done"><details><summary><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span></summary>${inner}</details></li>`;
+      return `<li class="wodx-fn-step wodx-fn-${s.state}${isNext ? " wodx-fn-next" : ""}"${isNext ? ' aria-current="step"' : ""}><div><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span>${isNext ? ' <span class="wodx-tag">Next</span>' : ""}</div>
+        ${inner}</li>`;
     };
+    const list = R.checklist(states, {gm});
     const dial = Object.entries(R.DIAL).map(([k, v]) => `<option value="${k}" ${k === rec.dial ? "selected" : ""}>${esc(v.label)}</option>`).join("");
     const hook = rec.hook ? `<p><b>Story hook:</b> ${esc(rec.hook.text)} <span class="wodx-quiet">${rec.hook.used ? "brought in" : rec.hook.agreed ? `agreed, ${rec.hook.sessions} session${rec.hook.sessions === 1 ? "" : "s"} so far` : "waiting for the Storyteller"}</span>
       ${gm && rec.hook.agreed && !rec.hook.used ? `<button type="button" data-action="hookUsed">It came into play</button>` : ""}</p>` : "";
     const shown = gm ? this.forecast : R.playerView(this.forecast);
     const late = !rec.signed && underWay(pcs().filter(x => x.id !== a.id).map(x => x.flags?.[MODULE_ID]?.[FLAG]));
-    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last.${late ? " The chronicle is already under way: the forecast reads the current year, and the prelude can be short." : ""}</p>
+    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last. <b>${list.left ? `${list.left} of ${list.total} left.` : "Every step is done."}</b>${list.next ? ` Next: ${esc(R.stepByKey(list.next)?.label ?? "")}.` : ""}${late ? " The chronicle is already under way: the forecast reads the current year, and the prelude can be short." : ""}</p>
         ${gm ? `<button type="button" data-action="troupe"><i class="fa-solid fa-users"></i> The whole troupe</button>` : ""}</div>
       <div class="wodx-scroll">
         <ol class="wodx-fn-steps">${states.map(card).join("")}</ol>

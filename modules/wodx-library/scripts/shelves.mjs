@@ -180,5 +180,27 @@ export async function ensureChangelog() {
   return ensureJournal("changelog", "WoDX · What's new", [{name: "What's new", type: "text", sort: 100, text: {content: news, format: 1}},
     {name: "In this world", type: "text", sort: 200, text: {content: list, format: 1}}], S.hashOf({CHANGES, build}));
 }
+/** The plain-words glossary (0.22.0, B2834): one page per letter, each term with who uses it and when it belongs. */
+export async function ensureGlossary() {
+  const {GLOSSARY, byLetter} = await import("../data/glossary.mjs");
+  const pages = [...byLetter(GLOSSARY)].map(([L, list], i) => ({name: L, type: "text", sort: (i + 1) * 100, text: {format: 1,
+    content: `<dl class="wodx-glossary">${list.map(([term, lines, era, text]) => `<dt id="wodx-g-${esc(term.toLowerCase().replace(/[^a-z]+/g, "-"))}"><b>${esc(term)}</b> <span class="wodx-quiet">(${esc(lines === "all" ? "every line" : lines)})</span></dt><dd>${esc(text)}${era ? ` <i>${esc(era)}</i>` : ""}</dd>`).join("")}</dl>`}}));
+  return ensureJournal("glossary", "WoDX · Glossary", pages, S.hashOf(GLOSSARY));
+}
+/** Open the glossary, at a term's letter when one is given. */
+export async function openGlossary(term = "") {
+  const j = await ensureGlossary();
+  if ( !j ) return ui.notifications.info("The glossary is made when the Storyteller next loads the world.");
+  const L = String(term).replace(/^The /i, "").trim()[0]?.toUpperCase();
+  const page = L ? j.pages.find(p => p.name === L) : null;
+  return j.sheet?.render(true, page ? {pageId: page.id} : {});
+}
+/** Open the manual at a page by its name (the ? on a WoDX window, B2835). */
+export async function openManualPage(name = "") {
+  const j = await ensureManual();
+  if ( !j ) return null;
+  const page = j.pages.find(p => p.name === name) ?? null;
+  return j.sheet?.render(true, page ? {pageId: page.id} : {});
+}
 export const openManual = async () => (await ensureManual())?.sheet?.render(true);
 export const openChangelog = async () => (await ensureChangelog())?.sheet?.render(true);
