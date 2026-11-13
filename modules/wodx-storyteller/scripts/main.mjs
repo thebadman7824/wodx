@@ -50,6 +50,9 @@ import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
 import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
+import * as WorldMap from "./world-map.mjs";
+import * as WorldMapRules from "./world-map-rules.mjs";
+import * as DiscoveryRules from "./discovery-rules.mjs";
 import * as Teleport from "./teleport.mjs";
 import * as Own from "./owners.mjs";
 import * as Cook from "./cookery.mjs";
@@ -118,6 +121,8 @@ Hooks.once("init", () => {
   Hand.registerHandKeys();
   Between.registerBetweenSettings();
   Between.registerBetweenTools();
+  WorldMap.registerWorldMapSettings();
+  WorldMap.registerWorldMapTools();
   Teleport.registerTeleportKeys();
   Teleport.registerTeleportHooks();
   Own.registerOwnerHooks();
@@ -146,7 +151,7 @@ Hooks.once("ready", () => {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
     travel: C.travel, planTrip: C.planTrip, travelPlaces: C.travelPlaces, setTravel: C.setTravel, solo: C.solo,
-    tripContext: C.tripContext, tripWords: C.tripWords, roads: Road, country: Country,
+    tripContext: C.tripContext, tripWords: C.tripWords, roads: Road, country: Country, worldMap: {open: WorldMap.worldMapDialog, view: WorldMap.view, closer: WorldMap.closerDialog, rules: WorldMapRules, discovery: DiscoveryRules, known: WorldMap.knownNow, found: WorldMap.found, setFound: WorldMap.setFound, discoveries: WorldMap.discoveriesDialog},
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,

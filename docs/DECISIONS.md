@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2540
+Next free block: B2560
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -106,6 +106,8 @@ Next free block: B2540
 | B2510-B2519 | Seven prologue eras, World of Darkness era names, a world-wide prologue and 300 events each | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
 | B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
+| B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
+| B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3150,3 +3152,64 @@ Reverse: pick a climate by hand in the settings.
 The list of tongues to learn grows from 30 to 71, speech a character cannot follow has 21 sound sets, and spoken lines look for 37 browser languages (Voices 0.3.2). NPC 0.48.1: a household's women take the listed feminine family name of their people, and kin of a household named "son of" are named for its master in that people's words.
 
 Reverse: trim LANGUAGES and SOUNDS in languages-rules.mjs; drop the FEMININE lookup in kinFamily.
+## B2540. The whole Earth as one coarse grid (2026-11-12, Ben asked for a rough map of the Earth made the way Daggerfall makes its land)
+WoDX Storyteller 0.55.0 carries the world as 360 by 180 squares, one for each degree (about 100 km at the equator): each square's ground (sea, lake, ice, mountains, plateau, desert, tundra, plain, wetland, other land), the great rivers, and the named ranges, deserts and seas. tools/mapgen/world/build_world.py makes it from Natural Earth, which is in the public domain; nothing comes from a game. It is the far view only. WoDX is global (Ben, 2026-11-12), so this is the base every region's maps and trips can stand on.
+
+Reverse: remove "The world map" from the hand; nothing else reads the grid yet.
+
+## B2541. Every land square has a world region (2026-11-12)
+Each land square carries one of 44 region ids, the ids of WoDX Chronicle's world regions. That list gives a region one city and no borders, so the grid is the one place borders are kept. Modern countries are used only to cut the land up, with the large ones split where their regions part (Russia at the Urals, the United States at 100 west, Canada and Alaska's north to the Arctic, Tibet out of China, northern Chile to the Andes). A house reading; the squares can be re-cut in build_world.py.
+
+Reverse: nothing to undo.
+
+## B2542. Journeys across the world by year (2026-11-12, house rule)
+A journey between two spots takes the quickest way over the squares. By land: 40 km a day on horseback or with a caravan, 55 by coach and post road from 1650, 350 by motor road from 1925 and 650 from 1960, slowed by the ground (mountains to 45 percent, desert 70, tundra and wetland 50, ice 12). By rail where the railway has reached the region (from 1830 in Britain to 1930 in Persia; 550 km a day, 900 from 1950; a third of that where lines are few). By sea: 90 km a day coasting, 150 under sail from 1450, 380 by steam from 1840, 650 by liner from 1900, with a day lost each time a journey takes ship or lands, and no road through the pack ice. By air from 1935 in hops (3,200 km a day) and by jet from 1958, with two days for the ends. All of it is a house reading of history rounded for a journey told in a sentence; no book gives it. Trips inside Moravia keep the country map (B2330s), which knows its roads.
+
+Reverse: change waysIn, RAIL_FROM and GROUND_PACE in world-map-rules.mjs.
+
+## B2543. The closer view of one square (2026-11-12)
+Any square can be looked at closer: 22 by 22 small squares of about 5 km, made from the square and its eight neighbours plus steady noise, so coasts and ranges run on across squares and the same square is the same every time. It uses the country map's lands (plain, vale, hills, upland, mountain) plus sea, lake, ice, desert, tundra and marsh, and a great river's course. It is shown in the window only: feeding it to the trip planner and to the town generator's --at outside Moravia is the next step, not built.
+
+Reverse: nothing to undo.
+
+## B2544. Maps are drawn as night (2026-11-12)
+The world map and the closer view use the night palette, as every WoDX top-down map does.
+
+Reverse: change NIGHT in world-map-rules.mjs.
+
+## B2545. The otherworlds that lie over the Earth (2026-11-12, house reading)
+The Penumbra, the Shadowlands and the Near Dreaming are the living world seen from the other side, so WoDX Otherworlds 0.20.0 draws them as the world map in another dress. The Penumbra is bright where the ground is wild and dim where it is ploughed and built over; the Shadowlands are grey with black rivers; the Near Dreaming is bright. The dress follows the ground only: the grid does not know cities, battlefields or caerns, so those are not marked.
+
+Reverse: remove a row from MIRRORS in worlds-chart-rules.mjs.
+
+## B2546. The chart of the worlds (2026-11-12, our own arrangement)
+Realms with no place on the globe sit on one chart: rings from the living world outward (lying over the world, the near realms, the far realms, the deep) and four sides (the spirit wilds, the high and far reaches, the Dreaming, the lands of the dead), each behind its barrier (the Gauntlet, the Mists, the Shroud). All 34 realms of the realm maps catalogue have a spot. The books describe these places from inside each game line and give no one geography, so which ring and side a realm takes is our own arrangement for a readable chart, with the usual order where lines clash (Wraith, then Werewolf, then Mage). It is not a rule and nothing reads it for play.
+
+Reverse: move rows in CHART.
+
+## B2547. Steps on the chart (2026-11-12, house rule)
+"How far" between two places on the chart is one step for each ring crossed, going back through the living world when the two lie on different sides. It is for the Storyteller's sense of distance only.
+
+Reverse: nothing to undo.
+
+## B2548. Left open (2026-11-12)
+Not built: the closer view feeding trips and town maps outside Moravia; towns, ports and borders by era on the world grid; sea lanes; the lesser canals (Kiel, Corinth, Erie, the Saint Lawrence Seaway, Volga to Don) and the old Nile to Red Sea canal of antiquity; clicking the map to pick a spot; the Yin and Yang Worlds, Arcadia and the High Umbra's own realms, which have no realm map yet; cities and haunted ground on the mirrored maps.
+
+## B2549. Canals and straits by year (2026-11-13)
+Ben: the Suez and Panama Canals did not exist in earlier eras, and travel paths must keep to that. A journey on the world map sails the Suez Canal only from 1869, and not from 1967 to 1974 when it lay shut; the Panama Canal only from 1914. Before those years, and while Suez is shut, the neck of land is land: the quickest way lands there, crosses and takes ship again, or goes the long way round, whichever is shorter in that year. The journey names any canal it passes with its opening year. The list (CANALS in world-map-rules.mjs) takes more canals as a line each. Found while checking: the one-degree grid left Panama open to ships in every year and closed Gibraltar, the Dardanelles and the mouth of the Gulf of Suez, so the Mediterranean, the Black Sea and the Red Sea's head were cut off. Those straits are now a ship's road in every age and Panama is land without its canal. The drawn map is unchanged.
+Reverse: empty CANALS, STRAITS and ISTHMUS; journeys then follow the bare grid.
+
+## B2550. The known world, by homeland and year (2026-11-13)
+Ben: simulate the discovery of India and the Americas the way the Europa Universalis games handle the ages of discovery, so that players who begin in Europe cannot travel to the Americas at once unless they find a way of their own. Each world region belongs to one of ten circles of knowledge (Europe; North Africa, the Near East and Central Asia; India; East Asia and the islands; Africa south of the desert; North America and the far north; Mexico and the Caribbean; South America; the Pacific islands; Australia). A circle knows its own regions from of old and each other region from a year on: for Europe the Caribbean from 1492, the North American coast and Canada 1497, the Cape 1488 and the East African coast 1498, Brazil 1500, Mexico 1517, the Pacific islands 1521, the Andes 1526, Japan 1543, Australia 1606, Aotearoa 1642, the southern ice 1820; China from 1245 and the Indies from 1292 by the old roads. It runs every way round: Mexico knows nothing of Europe before 1492, the Andes before 1500, the Pacific islands before 1767, Australia before 1788. A circle that has met Europe's ships learns what they find some years after them (20 to 70). From 1900 every part of the world knows every other. The years are a house reading of history, coarse on purpose, in one table (CIRCLES in discovery-rules.mjs). No game book is the source and nothing is taken from the computer games but the idea. Following the global rule, the homeland decides whose knowledge counts: a chronicle that begins in Mexico or China has its own unknown world.
+Reverse: choose "The whole world, known or not" in the world map window, or empty CIRCLES' years.
+
+## B2551. Charted land and water (2026-11-13)
+On the world map a land square is charted when its region is known. A square of sea is charted when a known region's shore lies no more than six squares further off than the nearest shore of all. So the waters along an unknown coast are closed (no ship rounds the Cape before 1488, and the coast of West Africa closes a few days' sail south of Morocco before 1444), while the open sea between a known coast and a newly found one is open (the Atlantic in 1492). A journey cannot end in an uncharted land and cannot cross uncharted squares; it says so in plain words, with the year the land becomes commonly known. India is known to Europe from of old and is reached by the Levant and the Red Sea; what 1498 opens is the sea road round Africa. The map draws the uncharted world dark.
+Reverse: pass no knowledge to journey() and it crosses the whole world as before.
+
+## B2552. The chronicle's own discoveries (2026-11-13)
+"Discoveries" in the world map window lists the lands still beyond the known world in the year, each with a tick. A ticked land is known to the chronicle whatever the year: found by a voyage, a map, a spirit's word or any other way the story gives. The list is kept in the world (setting "discovered") and only the Storyteller can change it. A land found alone may still have no way to it, when the coasts and islands before it are unknown; the window says so and the Storyteller ticks those too. Nothing rolls for discovery: it is the story's to give.
+Reverse: untick the land.
+
+## B2553. Left open (2026-11-13)
+Not built: years before 1197 use the same from-of-old lists, so the prologue eras show too much as known; the Norse voyages to Vinland and other finds that were lost again; a share of the map for the players (the window is the Storyteller's); an expedition as a thing to play (ships, crews, a roll to find a coast); knowledge by faction or by supernatural kind rather than by homeland; Travel places inside one country, which needs no such rule.

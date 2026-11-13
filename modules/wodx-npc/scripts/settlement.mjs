@@ -70,7 +70,7 @@ export function build({MOD, esc, chron}) {
         ${off ? `<p class="wodx-warn">The chronicle stands in ${y}; this record is of ${rec.year}. Its trades and households are those of ${rec.year}.</p>` : ""}
         <p class="wodx-quiet">Trades: ${s.trades.slice(0, 14).map(([t, k]) => `${esc(t)} ${k}`).join(", ")}${s.trades.length > 14 ? ", and others" : ""}.</p>
         <h3>Hidden folk</h3>
-        ${rv.folk.length ? `<ul class="wnpc-set-folk" style="list-style:none;padding:0;margin:0">${folkRows}</ul>` : `<p class="wodx-quiet">The draw put nobody but mortals here. Draw again for another.</p>`}
+        ${rv.folk.length ? `<ul class="wnpc-set-folk" data-fixed style="list-style:none;padding:0;margin:0">${folkRows}</ul>` : `<p class="wodx-quiet">The draw put nobody but mortals here. Draw again for another.</p>`}
         <p class="wodx-quiet">A house rule draws these from the number of people; untick any, or draw again. Nothing is made until the residents are seeded.</p>
         <h3>Ties between households</h3>${tieRows || `<p class="wodx-quiet">The record has none.</p>`}
         <h3>Households</h3><p class="wodx-quiet">Untick a household to leave its building empty.</p>
