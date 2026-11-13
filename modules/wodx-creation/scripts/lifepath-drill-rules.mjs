@@ -6,7 +6,7 @@
  * {step id: n}, placeName}. The steps run continent, region, your people (where more than one lives there), origin,
  * then two picks for childhood, the teenage years and each chapter of adult life the character is old enough for,
  * then what brought the character to the chronicle's homeland when the last home is elsewhere. The first pick of a
- * stage is a full list; the second shows five things that marked those years: two good, two hard, one neither.
+ * stage and the second each show five things: two good, two hard, one neither, with five others on request.
  * Every list reads the region the stage happened in, the year of that stage and the origin picked. age is the age at
  * the turn for the changed, or the age when play starts for mortals. The coming of age moves with era and region.
  */
@@ -119,17 +119,27 @@ const opt = (label, g, extra = {}) => ({id: slug(label), label, g: g ?? "", text
 const shared = (list, year, base) => list.filter(o => fitsRow(o[2], year, base)).map(o => opt(o[0], o[1]));
 
 /** Five things that marked a stage: two good, two hard, one neither, drawn by the drill's seed and the re-rolls. */
-export function fiveOf(list, year, base, seed) {
+export function fiveOf(list, year, base, seed, {fits = fitsMark, lead = null} = {}) {
   const rand = rng(seed);
-  const fit = list.filter(o => fitsMark(o[2], year, base));
+  const fit = list.filter(o => fits(o[2], year, base));
   const by = t => shuffled(fit.filter(o => o[3] === t), rand);
   const pools = {"+": by("+"), "-": by("-"), "0": by("0")};
   const out = [];
   for ( const [t, n] of Object.entries(MARK_SHAPE) ) out.push(...pools[t].splice(0, n));
   const rest = [...pools["+"], ...pools["-"], ...pools["0"]];
   while ( out.length < 5 && rest.length ) out.push(rest.shift());
+  // lead: a row of this land and age takes the "neither" place (or the last place) on the first draw
+  if ( lead ) { const i = out.findIndex(o => o[3] === "0"); out.splice(i < 0 ? out.length - 1 : i, 1, lead); }
   const order = ["+", "0", "-"];
-  return out.sort((a, b) => order.indexOf(a[3]) - order.indexOf(b[3])).map(o => opt(o[0], o[1], {tone: o[3], ...(o[4] ? {p: o[4]} : {})}));
+  return out.sort((a, b) => order.indexOf(a[3]) - order.indexOf(b[3])).map(o => opt(o[0], o[1], {tone: o[3], ...(o[4] ? {p: o[4]} : {}), ...(o[5] ? {local: true} : {})}));
+}
+
+/** Every way a stage could have been spent in a year for an origin (the list the five are drawn from). kind: child, teen, adult. */
+export function pathPool(kind, year, base, regionId = null) {
+  const list = kind === "child" ? HOME : kind === "teen" ? TPATH : CALL;
+  const L = regionId ? localOf(regionId, year) : null;
+  const local = kind === "teen" ? L?.teen : kind === "adult" ? L?.adult : null;
+  return [...(local && base !== "wild" ? [opt(local[0], local[1], {tone: "0", local: true})] : []), ...list.filter(o => fitsRow(o[2], year, base)).map(o => opt(o[0], o[1], {tone: o[3]}))];
 }
 
 /** The origins open in a region and year for a line: the line's own births, the local ones, then the shared list. */
@@ -179,9 +189,11 @@ export function stepsOf(drill) {
     const [first, second, title, local] = st.kind === "child" ? [HOME, CMARK, "Childhood", null]
       : st.kind === "teen" ? [TPATH, TMARK, "Teenage years", L?.teen] : [CALL, AMARK, `Adult life, ${st.label}`, L?.adult];
     const lead = st.kind === "child" ? "who raised you" : st.kind === "teen" ? "what you were set to" : "how you lived";
-    steps.push({...common, id: `${st.id}-path`, kind: `${st.kind}-path`, title: `${title}: ${lead}`, movable: st.kind !== "child",
-      options: [...(local && base !== "wild" ? [opt(local[0], local[1], {local: true})] : []), ...shared(first, year, base)]});
-    if ( !P[`${st.id}-path`] ) return out();
+    const pid = `${st.id}-path`, turn = drill.rerolls?.[pid] ?? 0;
+    steps.push({...common, id: pid, kind: `${st.kind}-path`, title: `${title}: ${lead}`, movable: st.kind !== "child", five: true,
+      options: fiveOf(first, year, base, `${drill.seed}:${pid}:${here}:${turn}`,
+        {fits: fitsRow, lead: local && base !== "wild" && turn === 0 ? [local[0], local[1], {}, "0", null, true] : null})});
+    if ( !P[pid] ) return out();
     const id = `${st.id}-mark`;
     steps.push({...common, id, kind: `${st.kind}-mark`, title: `${title}: what marked those years`, five: true,
       options: fiveOf(second, year, base, `${drill.seed}:${id}:${drill.rerolls?.[id] ?? 0}`)});
@@ -420,6 +432,13 @@ export function lint({table = null, backgrounds = null} = {}) {
     for ( const base of ["trade", "wild"] ) for ( const [t, n] of Object.entries(MARK_SHAPE) ) {
       const have = list.filter(o => o[3] === t && fitsMark(o[2], 1200, base)).length;
       if ( have < n ) bad.push(`${name}: only ${have} "${t}" marks for ${base} in 1200`);
+    }
+  }
+  for ( const [name, list] of Object.entries({HOME, TPATH, CALL}) ) {
+    for ( const o of list ) if ( !TONES[o[3]] ) bad.push(`${name} ${o[0]}: no tone`);
+    for ( const base of bases ) for ( const y of [1200, 1550, 1700, 1900, 2000, 2100] ) for ( const [t, n] of Object.entries(MARK_SHAPE) ) {
+      const have = list.filter(o => o[3] === t && fitsRow(o[2], y, base)).length;
+      if ( have < n ) bad.push(`${name}: only ${have} "${t}" for ${base} in ${y}`);
     }
   }
   for ( const [rid, groups] of Object.entries(LOCAL) ) {
