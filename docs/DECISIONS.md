@@ -179,9 +179,8 @@ Next free block: B3630
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
-| B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3602) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3603) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5574,86 +5573,6 @@ WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the
 
 Reverse: edit the lists in data/people-algonquian.mjs.
 
-## B3520. A ruling for an unclear action is a ticket in the approval queue (2026-11-13)
-WoDX Chronicle. Ben's Notes Gaps Desk item g1, built as suggested. A player ticks "ask for a ruling" in Ask the Storyteller and names what the character does, an Attribute and Ability, an expected difficulty, an optional power and whether mortals can see it. Only those choices travel by socket; the Storyteller's client reads both sheets itself and refuses a ticket for a character the player does not own. The ticket shows the pool, the crossover referee's cases for the power (B-numbers and pages from data/crossover.mjs) and the risks.
-
-Reverse: untick nothing; the old Ask the Storyteller request still works. Remove ticket.mjs and its registerTicket() call in main.mjs.
-
-## B3521. The risks a ticket names, by line and the era's book (2026-11-13)
-WoDX Chronicle, ticket-rules.mjs risksFor(). Mage: Paradox if vulgar (M20); under the Dark Ages books, the Dark Ages mage book's own rules, since M20 Paradox does not apply there. Kindred: a sin against Humanity or a Path (V20), or against the Road (V20 Dark Ages). Changeling: Banality (C20). Garou: Rage, frenzy and the Delirium (W20). Wraith: Angst (Wraith 20th). Hunter: Conviction. Demon: Torment. Witnesses add a line for the Masquerade, the Veil or the Consensus. The risks are reminders for the Storyteller; nothing is rolled or applied by them. A ticket is in NEVER_AUTO beside a player's request, so no standing rule or Light-touch mode passes or holds it.
-
-Reverse: edit risksFor() in ticket-rules.mjs.
-
-## B3522. Change difficulty and Complication on the ticket (2026-11-13)
-WoDX Chronicle. The approval queue lets a kind put its own controls on its card (handler.controls and handler.control, approvals.updatePending). The ticket's Change difficulty moves the player's difficulty 1 to 3 either way from the first one, kept inside 2 to 10; a new change replaces the last. Complication draws a foreshadowing from WoDX Storyteller's story aids for the character (at most three kept), or a short line of WoDX's own when Storyteller is off. Approving whispers the player and the Storyteller a card with a Roll button for the pool at the ruled difficulty. House rule "Pause the game while a ruling waits" (off by default) pauses the game when a ticket arrives and lifts the pause when it is decided.
-
-Reverse: turn the house rule off; set the Change difficulty back to "as asked".
-
-## B3523. The 2022 cap covers lifepaths and the main timeline only (2026-11-13)
-Ben's pick on g7 of the Notes Gaps Desk: delete nothing. The Future Darkness branch stays off by default (house rule futureBranch) and keeps its events to 2098 and the Time of Future Judgement in 2099. The standing rule that dated events stop at 2022 applies to lifepaths and the main timeline, not to the optional future branch.
-
-Reverse: none needed; a record of Ben's choice.
-
-## B3524. Crisis levers write into each system's own regional record (2026-11-13)
-WoDX Storyteller, Notes Gaps Desk g2, built as suggested. One window per region (Crisis levers for a region, in the Storyteller's hand). Plague strength (0.5 to 2 times) scales the weekly attack rate of the region's outbreaks, and only those running now. Hunter pressure (0 to 10) adds or takes away points in the hunters' record for the region, as a "manual" change so the witch-trial factor does not double it. Wyrm spread (0 to 3 times) is the region's rate in WoDX Otherworlds. Gauntlet, Shroud and Banality (up to 2 either way) move drift at every place in the region; drift still stays inside -3 to +3 and only places with that rating change. A slider shows only when its system runs. Every change is dated, written to the chronicle log with an optional reason, and kept with what it did, so "Take back the last change" reverses it exactly.
-
-Reverse: take back each change from the window, or clear wodx-storyteller.leverState.
-
-## B3525. Wyrm spread rate per region (2026-11-13)
-WoDX Otherworlds. corruptionState.rates holds a rate per region (missing means 1). It multiplies riseChance and spreadChance and nothing else; 0 holds the region's corruption where it is. A place's region is WoDX Chronicle's world.here().
-
-Reverse: set the rate back to 1, which removes it.
-
-## B3526. A lever step on drift (2026-11-13)
-WoDX Otherworlds. Drift kind "lever" carries its own track (value, banality or shroud) and step in the log, so undo reverses the right track. It is the only drift kind with a step set at the time.
-
-Reverse: undo the step in The Gauntlet over time, or from the levers window.
-
-## B3527. Hunters in the era's words on the lever (2026-11-13)
-WoDX Storyteller, house wording. Before 1231 the lever reads "zealots and witch-finders"; from the Inquisition's founding in 1231 to 1750 "the Inquisition and the witch-hunters"; after that plain "Hunter pressure". The hunters system's own stages and who hunts in each region are unchanged.
-
-Reverse: edit huntersLabel() in levers-rules.mjs.
-
-## B3528. A binding card for a player character, with no hold on the token (2026-11-13)
-WoDX Actions, Notes Gaps Desk g3 in Ben's smaller form. The keywords that bind are Fear, Sway, Bind, Possess and Hold (Dominate's commands, Presence's awe and dread, Mind's sway, a hold). When one is applied to an actor with a player owner, on its own or from the approval queue, the owners and the Storyteller get a card: the power and its command, who laid it, how long it lasts (the effect's own duration) and the resist roll from the keyword (Willpower at 6 or 7, Strength for a hold), "where the power's own book allows a resistance roll". The token is not held or moved; the Storyteller rules on what the player tries.
-
-Reverse: remove the bindingCard() call in applyItem (effects.js).
-
-## B3530. The Inheritance step moves what the estate card does not (2026-11-13)
-WoDX Storyteller, Notes Gaps Desk g6, built as suggested. A death recorded on the sheet now also queues "the Inheritance step"; approving opens it, and the Storyteller's hand has it for someone who leaves play alive. The heir list puts the will's heir first, then the Ledger's named heir, the heir Pass the Years made, the dead's kin from WoDX NPC ties, then everyone living. Ticked parts: carried items (the system's Item, Fetish, Armor and weapon types; traits and powers stay), places whose owner record names the dead, the money left in purse and bank (unticked when an estate card divides money by the will and the law, B2773), the dead's side of every open Ledger entry (older per-entry cards for the dead are set aside so the heir chosen here wins), and ties.
-
-Reverse: untick a part; give items and places back by hand.
-
-## B3531. Rivals' grudges pass to the heir (2026-11-13)
-WoDX Storyteller, house rule. Any NPC whose regard for the dead is -2 or worse looks on the heir the same way, unless they already think worse of the heir. Feuds already pass by family name and line (WoDX NPC standing), so they need nothing here.
-
-Reverse: untick Rivals; mend regard in the NPC window.
-
-## B3532. Ties pass marked as known through the dead (2026-11-13)
-WoDX Storyteller. The dead's hand-made ties (WoDX Sheets) are copied to the heir with "Known through" and the dead's name, without the heir's own tie to the dead and without doubling a tie the heir has.
-
-Reverse: remove the ties on the heir's Relationships tab.
-
-## B3533. The dead as a past self: Ancestors and Past Lives (2026-11-13)
-WoDX Storyteller and NPC. A Garou or Kinfolk heir of the dead's blood (kin by ties, or the heir Pass the Years made) with the Ancestors Background (W20), or a mage heir with Past Lives or Avatar (M20), gets the dead as a past life in WoDX NPC (flags pastLives) with the dead's ties, so NPC's recall can reach them. NPC's past-self Backgrounds gain Ancestors for the werewolf line beside Avatar, Remembrance and Memoriam; the recall roll is the same house roll (B2873).
-
-Reverse: delete the past life on the heir's sheet; drop the Ancestors row in legacy-rules.mjs.
-
-## B3534. A roster of characters for each player (2026-11-13)
-WoDX Chronicle, Notes Gaps Desk g5, built as suggested. My characters lists every actor the player owns. The tie uses the books' names: ghoul (a domitor or the ghoul flag), Kinfolk, and from the main character's tie role on the sheet: retainer, apprentice, thrall, follower; anyone else is an ally. State: dead (a death year on the chronology), in torpor (WoDX Actions' torpor flag), away (set by the Storyteller from the roster for a long journey), else awake. Play makes it the user's character and selects its token; if Foundry refuses the player that change, the Storyteller's client makes it.
-
-Reverse: none needed; the window changes nothing until used.
-
-## B3535. The roster opens when the played character falls (2026-11-13)
-WoDX Chronicle. On the player's own client, when the played character goes from awake to torpor, dead or away, a notice names it and, if the player owns anyone playable, the roster opens to pick another.
-
-Reverse: remove the updateActor hook in roster.mjs.
-
-## B3536. A new roster entry waits on the Storyteller (2026-11-13)
-WoDX Chronicle. A player's "Ask to add a character" names who and why. It never passes on its own (NEVER_AUTO). Approving opens a pick of sheets the player does not own yet; the chosen one is given to the player as owner.
-
-Reverse: take the player's ownership off the sheet.
-
 ## B3570. Herd pools by district (2026-11-13)
 WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
 
@@ -5736,5 +5655,10 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 
 ## B3602. Pacific and Australia law family (2026-11-13)
 Australia, Aotearoa and the Pacific islands use the Pacific family: chiefs and sacred restrictions, the first peoples' own law, then colonial and national courts; each region's death penalty ends on its real date.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3603. Far north law family (2026-11-13)
+The Arctic uses the far north family: the community's own judgment, then the crowns' courts in the trading posts and the state's police. With this, all regions but Antarctica have their own law family.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.

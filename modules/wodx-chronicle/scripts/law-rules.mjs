@@ -306,6 +306,18 @@ export const FAMILIES = {
     {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
       add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}}
+  ]},
+
+  // The far north: the custom of the Inuit and the Sámi, Norse Greenland, then Danish, Norwegian, Russian and Canadian law (B3603)
+  north: {label: "The far north", rows: [
+    {from: 0, note: "The Inuit and the Sámi keep their own custom", set: {
+      rule: {form: "Bands and families under their own custom", ruler: "The elders and the best hunters", council: "The gathering of families"},
+      courts: ["The community's judgment: song duels, shaming, and in the end exile"], proof: ["witnesses"], punish: ["banishment", "fine"],
+      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 1, catch: 0.4},
+      add: {warn: ["One who will not share in hard times may be left behind"]}},
+    {from: 1721, note: "Danish mission and trade in Greenland; Norwegian, Swedish and Russian law over the Sámi", set: {rule: {form: "Colonies and northern provinces", ruler: "The Danish, Norwegian, Swedish or Russian crown"}}, add: {courts: ["The crown's courts in the trading posts"]}},
+    {from: 1920, note: "The Svalbard treaty; the state's police reach the north", add: {order: ["police"], punish: ["prison"]}},
+    {from: 1979, note: "Home rule in Greenland", set: {rule: {form: "Self-governing lands under the crown", ruler: "The home government in Nuuk"}}}
   ]}
 };
 
