@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3440
+Next free block: B3450
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -171,6 +171,7 @@ Next free block: B3440
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5153,3 +5154,28 @@ Reverse: pass no sickFor from towns.mjs.
 ## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
+
+## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
+Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
+
+Reverse: Restore the shifter-only test in crinosSeen and the old note.
+
+## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
+Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
+
+Reverse: Drop dressed from deeperMods.
+
+## B3442. The figure's clothes are worn dress (2026-11-13)
+Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
+
+Reverse: Remove figurePieces from viewOf.
+
+## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
+Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
+
+Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
+
+## B3444. Reading a face (2026-11-13)
+Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
+
+Reverse: Remove readButton and readFace, and the lie tag from parseThen.
