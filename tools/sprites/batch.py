@@ -22,7 +22,7 @@ ARMOUR_LIKE=[(r'plate|harness|cuirass.*steel','Class Five'),(r'hauberk.*coif|coi
 HELM_LIKE=[(r'great helm|helm\b|bascinet|sallet',('helm','steel')),(r'helmet|nasal|kettle|cap of',('helmet','steel')),(r'coif',('coif','steel'))]
 SHIELD_LIKE=[(r'kite|heater|tower','Standard Shield'),(r'buckler|target','Buckler'),(r'pavise|war shield','War Shield'),(r'shield','Small Shield')]
 WEAPON_LIKE=[(r'longsword|great ?sword|claymore|zweih','bastard'),(r'sword|blade\b|spatha|sabre|saber','sword'),(r'dagger|misericorde|rondel|stiletto|dirk|scalpel','dagger'),(r'knife|seax','knife'),
- (r'cudgel|club|baton|truncheon','club'),(r'axe\b|\bax\b','axe'),(r'spear|glaive|partisan','spear'),(r'staff','staff'),(r'bow\b','bow'),(r'mace','mace'),(r'hammer','warhammer'),(r'pistol','pistol'),(r'rifle|carbine','rifle'),(r'shotgun','shotgun'),(r'revolver','revolver')]
+ (r'cudgel|club|baton|truncheon|torch','club'),(r'sickle|billhook','knife'),(r'axe\b|\bax\b','axe'),(r'spear|glaive|partisan','spear'),(r'staff','staff'),(r'bow\b','bow'),(r'mace','mace'),(r'hammer','warhammer'),(r'pistol','pistol'),(r'rifle|carbine','rifle'),(r'shotgun','shotgun'),(r'revolver','revolver')]
 def like(name,table):
     n=name.lower()
     for pat,k in table:

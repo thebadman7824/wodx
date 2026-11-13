@@ -213,7 +213,7 @@ export class LifepathApp extends ApplicationV2 {
           <div class="form-group"><label>Line</label><select name="line" data-fixed>${lines}</select></div>
           <div class="form-group"><label>${esc(L.splatLabel)}</label>${searchBox("select[name=splat]", "Search…", `Search ${L.splatLabel}`)}
             <select name="splat"><option value="">Not chosen yet</option>${splats.map(x => `<option value="${x.key}" ${x.key === s.splat ? "selected" : ""}>${esc(x.label)}${x.house ? " (house reading)" : ""}</option>`).join("")}</select></div>
-          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="1100" max="2290" value="${s.birthYear}"></div>
+          <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="1100" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.</p></div>
           ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="1100" max="2300" value="${s.turnYear}"></div>`}
           ${open.ok ? "" : `<p class="wodx-warn">${esc(open.note)} The turn will be set to ${open.from}.</p>`}
         </form>

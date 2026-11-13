@@ -266,7 +266,7 @@ test("every world region has its own ages, origins, teenage path and calling in 
 test("dated content: Moravia's origins by year of birth and marks by the years they happened", () => {
   assert.ok(D.datedOrigins("moravia", 1940).some(o => /occupation/.test(o[0])));
   assert.equal(D.datedOrigins("moravia", 1300).length, 0);
-  assert.equal(D.datedOrigins("france", 1940).length, 0);
+  assert.equal(D.datedOrigins("nowhere", 1940).length, 0);
   assert.ok(D.originsFor("moravia", 1940).filter(o => o.local).length >= 4, "dated origins beside the age's own");
   assert.ok(D.datedMarks("moravia", 1425, 1430).some(m => /Hussite/.test(m[0])));
   assert.ok(D.datedMarks("moravia", 1410, 1420).some(m => /Hussite/.test(m[0])), "a stage that only touches the years still counts");
@@ -362,4 +362,29 @@ test("no gendered words and no option id twice in a step", () => {
     }
     for ( const k of ["child", "teen", "adult"] ) for ( const b of ["trade", "orphan", "wild", "noble"] ) for ( const o of D.pathPool(k, y, b, rid) ) assert.ok(!words.test(o.label), o.label);
   }
+});
+
+test("dated content: every region of the world has origins and marks of its own years", async () => {
+  const {LOCAL_EVENTS} = await import("../../modules/wodx-creation/data/lifepath-local-events.mjs");
+  const {CONTINENTS} = await import("../../modules/wodx-creation/data/lifepath-drill.mjs");
+  const ids = CONTINENTS.flatMap(c => c[1]);
+  assert.equal(ids.length, 44);
+  const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|wives|husband|brother|sister|boy|girl|man|woman|men|women)\b/i;
+  for ( const id of ids ) {
+    const E = LOCAL_EVENTS[id];
+    assert.ok(E?.origins?.length >= 1 && E?.marks?.length >= 12, `${id} has dated content`);
+    for ( const t of ["+", "-", "0"] ) assert.ok(E.marks.filter(m => m[3] === t).length >= 1, `${id} has "${t}" marks`);
+    for ( const m of E.marks ) { assert.ok(!words.test(`${m[0]} ${m[4] ?? ""}`), m[0]); assert.ok(!m[4] || m[4].split("|").length === 2, m[0]); }
+    for ( const o of E.origins ) assert.ok(!words.test(o[0]), o[0]);
+  }
+  assert.ok(D.datedMarks("japan", 1940, 1946).some(m => /flash/.test(m[0])));
+  assert.ok(D.datedMarks("west-africa", 1320, 1330).some(m => /pilgrimage/.test(m[0])));
+  assert.ok(D.datedOrigins("andes", 1500).some(o => /four quarters/.test(o[0])));
+  assert.equal(D.datedMarks("antarctica", 1200, 1800).length, 0);
+  let d = D.newDrill({birthYear: 1840, age: 30, line: "mortal", seed: 5});
+  d = D.pick(d, "continent", D.current(d).options.find(o => /South America/.test(o.label)).id);
+  d = D.pick(d, "region", "brazil");
+  let own = 0;
+  for ( let i = 0; i < 40 && D.current(d); i++ ) { const st = D.current(d); const o = st.options.find(x => x.local && /-mark$/.test(st.id)) ?? st.options[0]; if ( o.local && /-mark$/.test(st.id) ) own++; d = D.pick(d, st.id, o.id); }
+  assert.ok(D.done(d) && own >= 2, "a life in Brazil meets Brazil's own years");
 });

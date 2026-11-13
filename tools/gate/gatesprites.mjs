@@ -127,7 +127,7 @@ export async function run() {
     }
     // 12. the figure menu: it opens for a character, shows the pieces and the quick picture, a piece can be put on and kept, and the roster then draws that figure
     {
-      const PD = game.modules.get("wodx-paperdoll").api, actor = docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === "townsman-1888")?.actor;
+      const PD = game.modules.get("wodx-paperdoll").api, actor = docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === "townsman-1888")?.baseActor;
       const had = actor.flags?.["wodx-paperdoll"]?.figure ?? null;
       const app = await PD.figure.open(actor); await sleep(600);
       const el = app.element, count = () => el.querySelectorAll(".wodx-figure-piece").length, first = count();
