@@ -12,6 +12,8 @@
  *   apps.mjs         the tracker, "Out on your own", and the dialogs
  */
 import * as C from "./core.mjs";
+import * as Wills from "./wills.mjs";
+import * as WillRules from "./will-rules.mjs";
 import * as A from "./apps.mjs";
 import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
@@ -83,6 +85,7 @@ Hooks.once("init", () => {
   C.registerSettings();
   Led.registerLedgerSettings();
   Led.registerLedgerHooks();
+  Wills.listen();
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
   Night.registerNightSettings();
@@ -134,7 +137,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -157,6 +160,7 @@ Hooks.once("ready", () => {
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
+    wills: {of: Wills.willOf, save: Wills.saveWill, open: Wills.willDialog, estate: Wills.estateOf, law: Wills.lawAt, kin: Wills.kinOf, rules: WillRules},
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
@@ -164,7 +168,7 @@ Hooks.once("ready", () => {
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
-    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},

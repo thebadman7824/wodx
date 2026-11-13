@@ -1001,6 +1001,32 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 |---|---|---|---|
 | 2026-11-13 | Which of 110 drafted face features to build, how NPCs get them, when form features show, who sees hidden ones (B2800-B2804) | All as recommended: build all, 8 with the named changes; Storyteller ticks, else rolled from clan, kith, tribe or house; form features only in that state; hidden ones only to those the rules allow | See B2800-B2804 in docs/DECISIONS.md |
 
+## Approved by Ben, 13 November 2026, 14:16 UTC (all pending items)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Life tables for family lines: marrying age, children, how many grow up, age of death by century and way of life, and years of great dying (B2771) | Seven periods from medieval to the far future, other ways of life a few decades behind the West, the Black Death, the Thirty Years' War, the sickness after the conquest, the world wars and the 1918 influenza | Edit LIFE, SPHERE_SHIFT and DYING in modules/wodx-npc/scripts/kin-rules.mjs |
+| 2026-11-13 | Does a character with few known kin get a family line anyway? (B2771) | Yes: unnamed brothers and sisters fill it to two, for the Storyteller to name | Remove the filler loop in newLine in kin-rules.mjs |
+| 2026-11-13 | Who inherits when there is no will, by place and year? (B2774) | Nine ways of dividing an estate, set by way of life with dated civil codes by region (France 1804 to India 1956) | Edit BY_SPHERE and BY_REGION in modules/wodx-storyteller/scripts/will-rules.mjs |
+| 2026-11-13 | How do the undying keep their wealth from century to century? (B2775) | Through false heirs: one Intelligence + Finance roll at difficulty 6 each 40 years; a failure leaves a trail, a botch becomes a secret | Change FALSE_HEIR in will-rules.mjs, or untick the will's box |
+| 2026-11-13 | How strong is a Sabbat Vinculum as a bond? (B2841) | 8 to 10 counts as a full blood bond toward that packmate, 5 to 7 as a second drink | Change vinculumStep in modules/wodx-npc/scripts/bond-rules.mjs |
+| 2026-11-13 | What does losing a cellmate cost a hunter? (B2846) | Willpower at difficulty 7, or lose a point of temporary Willpower | Edit the cellmate line in cardsFor in bond-rules.mjs |
+| 2026-11-13 | How does a Fetter on a wraith's sheet find the person it is? (B2844) | By the item's exact name matching a character, or an id set on the item | Rename the Fetter item |
+| 2026-11-13 | How far does each event move trust? (B2848) | Aid at a cost +2, a kept promise, boon or secret +1, a refused boon, broken promise or lie -2, a broken oath or blackmail -3, a betrayal -4, on a -5 to +5 scale | Edit TRUST_EVENTS in modules/wodx-npc/scripts/trust-rules.mjs |
+| 2026-11-13 | What does a blackmailer charge each month? (B2851) | The secret's weight (1 or 2) times the victim's Resources, at least 1 | Edit blackmailPrice in trust-rules.mjs |
+| 2026-11-13 | What can each line's powers show about a hidden loyalty? (B2853) | Telepathy, Truth of Gaia, Mind 1 and Discern can show the side; Aura Perception, Kenning and Empathy show only a lie | Edit LOYALTY_SENSES in trust-rules.mjs |
+| 2026-11-13 | How fast does a romance warm, and what slows it? (B2854, B2856) | One step per event, two for a big social win; a Kindred on a Path or at Humanity 4 or less caps at Fond; a high-Rage Garou warms a mortal half as fast | Edit WARMTH_EVENTS and hindrance in modules/wodx-npc/scripts/hearts-rules.mjs |
+| 2026-11-13 | How big is a dowry, mahr or bride wealth? (B2859) | A tenth of the payer's money for a dowry or bride wealth, a twentieth for a mahr or gifts | Edit marriagePayment in hearts-rules.mjs |
+| 2026-11-13 | How often does a Garou's child with a mortal breed true? (B2860) | One time in ten | Edit childOf in hearts-rules.mjs |
+| 2026-11-13 | What does a household cost each month? (B2861) | A share of a one-dot wage per person: spouse half, child a quarter, servant or ghoul six tenths, retainer eight tenths | Edit HOUSEHOLD_ROLES in hearts-rules.mjs |
+| 2026-11-13 | What does harm to a loved one call for? (B2862) | Frenzy at 6 or 7 for Kindred and Garou, Willpower 6 or 7 for others; grief at 7 or 8 on a death, a Derangement on a botch for a spouse, child, lover or childe | Edit weakSpotChecks in hearts-rules.mjs |
+| 2026-11-13 | How far does news of a deed travel? (B2864) | A small deed stays local, a big one reaches the same part of the world, a great one every land the news can reach, each at the year's fastest way | Edit reaches in modules/wodx-npc/scripts/standing-rules.mjs |
+| 2026-11-13 | How much does each denial slow a rumour? (B2865) | One fewer person told by each knower a night, at most three denials | Edit heatAfterDoubt in modules/wodx-storyteller/scripts/rumour-rules.mjs |
+| 2026-11-13 | How much does rank change a social roll? (B2867) | One easier against an NPC two or more steps below, one harder two or more above | Edit rankShift in standing-rules.mjs |
+| 2026-11-13 | When was private feud lawful in each land? (B2869) | Empire and Bohemia until 1495, France 1258, Scandinavia about 1300, Russia about 1500, Britain about 1600; vendetta by custom in Italy and the Balkans; blood money in Islamic law | Edit FEUD_LAW in standing-rules.mjs |
+| 2026-11-13 | How hard is it to recall a past life? (B2873) | The Background's dots at difficulty 8, one less per two dots, at least 5; one success recalls it | Edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs |
+| 2026-11-13 | Should scene ideas from ties come every game week? (B2875) | Yes, one approval card a week; approved ideas go in the Ledger | Turn off "Scene ideas from ties" |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

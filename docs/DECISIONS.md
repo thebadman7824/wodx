@@ -127,9 +127,11 @@ Next free block: B2960
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 | B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
+| B2770-B2779 | Relationships across the centuries (part 1): family lines, wills and estates by law, ties after a jump in time (Ben approved the whole relationships desk; used B2770-B2775) | NPC, Storyteller, Sheets, Actions |
 | B2780-B2789 | Build this chronicle: the recipe, the builder's steps, the carry-over from an older world, anchors, and the rebuilt Rothenstein world rothenstein-x | Storyteller |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
+| B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 <!-- decision-index:end -->
@@ -3790,6 +3792,222 @@ Reverse: Change viewerSees in face64.mjs or the mien() wrapper in face64-feature
 With any feature on, blinking and speaking change only the eyes, brows and mouth rows, so a feature never flickers while the face talks; tested for all 110.
 
 Reverse: None needed; a harness test guards it.
+
+## B2770. Family lines that outlive the character (2026-11-13, relationships desk c1, Ben approved)
+WoDX NPC 0.55.0 (kin-rules.mjs, kin.mjs). A family line hangs from one character and starts from the mortal kin the Relationships tab knows (parent, child, sibling, spouse, kin). It is kept in the world setting wodx-npc.familyLines and grows when the clock jumps: members marry, have children and die by the life table of their century and way of life, and most never get a sheet. The family and lineage tree lists the living members with what each knows of the founder (an undying founder becomes a family story, then a likeness in a family Bible or photographs, then a legend). The Storyteller can bring any living member into play as a Mortal tied to the founder as Descendant and Ancestor.
+
+Reverse: do not keep a line (the tree's Keep a family line button), or clear wodx-npc.familyLines.
+
+## B2771. Life tables, years of great dying and the kin a line starts with (2026-11-13)
+Seven periods from medieval to the far future give marrying age, children per couple, the share who grow up and the age of death; a way of life other than Western Christendom starts each period some decades later (SPHERE_SHIFT). Years of great dying add deaths: the Black Death, the Thirty Years' War in the Bohemian and German lands, the sickness after the conquest in the Americas, the two world wars and the 1918 influenza. A line keeps fourteen living members in sight (the founder's own descendants and the oldest branches first); a line left with no one picks up a branch that moved away. A character with fewer than two known kin starts with unnamed brothers and sisters. All of it is a house reading of history, rounded for play.
+
+Reverse: edit LIFE, SPHERE_SHIFT, DYING and KEEP_LIVING in kin-rules.mjs.
+
+## B2772. Ties after a jump in time (2026-11-13, relationships desk c3, Ben approved)
+WoDX NPC 0.55.0. When the clock jumps a year or more (a time skip or Pass the years), one approval card lists, for each player character, the people tied to them who died in the gap, the mortals who would now be old, blood bonds fading, Ledger entries that came due, and what each family line did. Approving it grows the family lines; rejecting leaves them as they were. Pass the years still decides each sheet's own changes. Setting "Ties after a jump in time", on by default.
+
+Reverse: turn the setting off.
+
+## B2773. Wills (2026-11-13, relationships desk c2, Ben approved)
+WoDX Storyteller 0.62.0 (wills.mjs). A will sits on the sheet (flags.wodx-storyteller.will): heirs from the Relationships tab or by name, each with a share, a note, and "held through false heirs". The Will button on the family and lineage tree opens it. The will's main living heir is the heir the Ledger passes open debts and oaths to, ahead of a heir Pass the years made or one named in the Ledger.
+
+Reverse: clear the will on the sheet.
+
+## B2774. Estates divided by the law of the place and year (2026-11-13)
+WoDX Storyteller 0.62.0 (will-rules.mjs). On a death, one approval card divides the dead person's money by the will and by the law of the homeland that year; approving it moves the money to each heir's bank. The laws are nine ways (to the eldest son with a widow's third, shared among children, among sons, fixed shares with a will of a third at most, the joint family, the house goes on, civil law, the state takes it, local custom) set by way of life with dated rows for regions that differ: civil codes in France 1804, the Low Countries 1811, the Bohemian lands 1812, Italy 1865, Iberia 1889, the German lands 1900, the British Isles 1926, Anatolia 1926, China 1931, Japan 1947, India 1956; Russia's state years 1918 to 1922. A house reading of history, rounded for play.
+
+Reverse: reject the estate card and divide by hand, or edit BY_SPHERE and BY_REGION in will-rules.mjs.
+
+## B2775. Wealth held through false heirs (2026-11-13)
+An undying owner whose will is held through false heirs passes it to themselves under a new name once every 40 years. Each jump in time that long brings one card; approving it rolls Intelligence + Finance at difficulty 6 for each passing. A failure leaves a trail someone may follow; a botch adds a secret on the owner (WoDX NPC secrets) for others to find. House rule.
+
+Reverse: untick "held through false heirs" on the will, or change FALSE_HEIR in will-rules.mjs.
+
+
+## B2840. Bonds from the books as relationships (2026-11-13, relationships desk r1 to r9, Ben approved)
+WoDX NPC 0.56.0 (bond-rules.mjs, bonds.mjs), Sheets 0.18.0. New tie kinds in a group of their own, Oaths, packs and circles: packmate, cabal, familiar, sworn and holder of the oath, troth, Dreamer, Fetter, cellmate, pact and pact thrall, cult and cultist, wu. Each reads back from the other end, can be made by hand on the Relationships tab, and carries a line saying what it does in play, which the tab shows under the tie. The blood bond, the ghoul's need and the Kinfolk tie, which WoDX already kept, get their lines too. The ghoul's monthly drink and the neglect of Fetters and Passions stay with Storyteller upkeep, which already tends them.
+
+Reverse: remove the kinds from BOND_KINDS in bond-rules.mjs; hand ties already made fall back to Other.
+
+## B2841. The Vinculum as a bond step (2026-11-13)
+A Sabbat Vinculum of 8 to 10 counts as a full blood bond toward that packmate, 5 to 7 as a second drink, less as nothing. It runs one way, as faction politics keeps it (thrall>regnant). House reading of V20 p. 297.
+
+Reverse: change vinculumStep in bond-rules.mjs.
+
+## B2842. The regnant's easier Social rolls (2026-11-13)
+WoDX Actions 3.59.0. A regnant's Persuade, Intimidate, Deceive, Bribe and Charm against a thrall are 1 easier at the second drink and 2 at the third (V20 Dark Ages p. 342, as WoDX Actions' Blood Oath stages already say), read from the lineage, Actions' own oaths and the Vinculum. The card names it.
+
+Reverse: remove bondShift in social.js.
+
+## B2843. Packmates from the pack name (2026-11-13)
+Every sheet sharing a pack name (any case) is a packmate of the others, with the pack's totem as the note. A Garou pack's totem ban binds the whole pack (W20).
+
+Reverse: clear the pack name on the sheet.
+
+## B2844. Fetters that name someone (2026-11-13)
+A wraith's Fetter item whose name is exactly the name of a character in the world, or whose flags.wodx-npc.tie holds that character's id, is a Fetter tie to them, with its rating as the note.
+
+Reverse: rename the Fetter item.
+
+## B2845. Cards for bonds (2026-11-13)
+When a thrall at the second drink or more rolls an attack on the regnant (WoDX Combat), the thrall's owners and the Storyteller get a card: the blow needed a Willpower roll first (V20 Dark Ages p. 342). When someone is hurt, a wraith whose Fetter they are is told. When someone dies or their sheet is deleted, the wraith whose Fetter they were faces a Fetter's Harrowing (Wraith 20th p. 309), and their pack, cell, cabal, wu, the changeling whose Dreamer they were and the mage whose familiar they were are told. Setting "Cards for bonds", on by default.
+
+Reverse: turn the setting off.
+
+## B2846. Losing a cellmate (2026-11-13)
+A hunter who loses a cellmate rolls Willpower at difficulty 7 or loses a point of temporary Willpower. House rule; the hunter books give no single rule for it.
+
+Reverse: edit the cellmate line in cardsFor in bond-rules.mjs.
+
+## B2847. Trust beside attitude (2026-11-13)
+WoDX NPC 0.57.0 keeps trust one way, on the one who trusts, from -5 to +5. Attitude says how warmly someone regards a person; trust says how far they would rely on them. At 3 or more they share secrets, at 2 or more they take risks for the person. The Relationships tab shows the trust word beside each tie.
+
+Reverse: clear flags["wodx-npc"].trust on the actor.
+
+## B2848. What moves trust (2026-11-13)
+A boon paid or refused in the Ledger moves the holder's trust in the debtor (+1 or -2). Coming to someone's aid at a cost is +2; a kept promise or secret +1; a broken promise or a lie found -2; a broken oath -3; blackmail -3; a betrayal -4. House numbers.
+
+Reverse: edit TRUST_EVENTS in modules/wodx-npc/scripts/trust-rules.mjs.
+
+## B2849. Betrayal (2026-11-13)
+api.trust.betray(betrayer, victim, {kind, what}) records it on the victim, drops their trust by 4, drops an NPC victim's attitude by two steps, starts a rumour with the victim as first teller, and puts the NPC's revenge in the Ledger as a consequence due in a week. A betrayer at the second drink or more toward the victim is told to roll Willpower first (V20 Dark Ages p. 342). The card goes to the betrayer's owners and the Storyteller.
+
+Reverse: delete the Ledger consequence and the rumour; the trust log shows what moved.
+
+## B2850. Boons in every line (2026-11-13)
+Each line has its own word for a debt of honour and what defaulting costs: a boon (Kindred), a debt of honour (Garou, Honor Renown), a debt among the Awakened, an oath of service (Kithain), a favour of the Hierarchy, a debt in the cell, a debt of the cult, a pact debt, a debt of face, and a favour among mortals. An open boon can pass to a new holder; the debtor then owes them.
+
+Reverse: edit DEBT_WORDS in trust-rules.mjs.
+
+## B2851. Blackmail (2026-11-13)
+A found secret can be held over its keeper: a Ledger debt due each month, priced at the secret's weight times the victim's Resources (at least 1). The proof follows the era: a witness and a letter before 1840, photographs from 1840, tape from 1950, files on a server from 1995, the net from 2040. The victim pays (money moves and next month's debt opens), strikes back (a Ledger consequence in a week) or confesses first (the secret is laid bare and the hold ends). The hold is kept on the victim's sheet.
+
+Reverse: cancel the Ledger entry and clear flags["wodx-npc"].blackmail on the victim.
+
+## B2852. Hidden loyalties (2026-11-13)
+A character can secretly serve another faction: flags["wodx-npc"].trueSide {faction, name, leader, note}. It makes a hidden tie to the leader that only the Storyteller sees. Finding it out is recorded per finder.
+
+Reverse: api.trust.setSide(actor, null).
+
+## B2853. Powers that find a hidden loyalty (2026-11-13)
+For the Storyteller, the powers that can find a hidden side, with roll and difficulty: Auspex Telepathy and Aura Perception (V20), Truth of Gaia and Sense Wyrm (W20), Mind 1 (M20), Kenning (C20), Discern (Hunter: the Reckoning) and mortal Empathy for every line. Aura Perception, Kenning and Empathy show a lie, not the side. House reading of what each power shows.
+
+Reverse: edit LOYALTY_SENSES in trust-rules.mjs.
+
+## B2854. Warmth on a romance (2026-11-13)
+WoDX NPC 0.58.0 keeps a warmth track on the one who feels it: Wary, Cool, Warm, Fond, Devoted. Time together, a gift, help, a long talk, something bold, courting by custom, a kept promise and a won social roll warm it by one (a roll with three or more successes by two, a botch cools by one); a slight cools by one, cruelty or betrayal by two. The tab shows the word on lover and spouse ties. NPCs can court each other and the players through api.hearts.court.
+
+Reverse: clear flags["wodx-npc"].warmth.
+
+## B2855. Nature shapes what warms (2026-11-13)
+Each V20 archetype warms most to one kind of event (a Bon Vivant to gifts, a Caregiver to help, a Bravo to something bold, a Traditionalist to courting by custom): one more step when the event matches. House reading.
+
+Reverse: edit NATURE_LIKES in modules/wodx-npc/scripts/hearts-rules.mjs.
+
+## B2856. The supernatural truth in a romance (2026-11-13)
+A Kindred on a Path, or with Humanity 4 or less, can be loved no more than Fond; a wraith across the Shroud likewise. A Garou with Rage 5 or more makes a mortal lover uneasy (W20's Curse): time together warms half as fast; Kinfolk are not affected. Notes remind the Storyteller of the Delirium, the Mists and Paradox. House numbers.
+
+Reverse: edit hindrance in hearts-rules.mjs.
+
+## B2857. Marriage by the law of place and year (2026-11-13)
+Each way of life has its rite, its record, its money (dowry, mahr, bride wealth or gifts), whether more than one spouse and divorce are lawful. Dated rows by region change it: civil registers, divorce taken and given back (France 1792, 1816, 1884), one spouse only (Turkey 1926, China 1950, India 1955), registered partnerships and same-sex marriage from the year each became lawful. Western Christendom keeps parish registers from 1563. A marriage the law forbids is refused unless the Storyteller forces it, and the card says so. Spouse ties are made at both ends and a record kept on each sheet.
+
+Reverse: edit SPHERE_MARRIAGE and REGION_MARRIAGE in hearts-rules.mjs.
+
+## B2858. Divorce (2026-11-13)
+Only where the law of the place and year grants it; otherwise the answer is an annulment by the church or living apart. A divorce ends the record and removes the spouse ties.
+
+Reverse: add the spouse ties back by hand.
+
+## B2859. The marriage payment (2026-11-13)
+A dowry or bride wealth is a tenth of the payer's money, a mahr or betrothal gifts a twentieth, unless the Storyteller names a sum. It goes to the receiver's bank. House rule.
+
+Reverse: edit marriagePayment in hearts-rules.mjs.
+
+## B2860. Children (2026-11-13)
+Mortals, Kinfolk, ghouls, Garou, changelings, mages and hunters can have children; Kindred, wraiths, mummies, demons and Kuei-jin cannot. Two Garou have a metis (W20). A Garou with anyone else has a Kinfolk child who breeds true one time in ten (house). A changeling's child is mortal with fae blood; a mage's or hunter's child is mortal and may Awaken or take up the hunt. The child's sheet ties to both parents and records the birth year, so the family line and Pass the Years pick it up.
+
+Reverse: delete the child's sheet.
+
+## B2861. Households (2026-11-13)
+Each sheet can list who lives under its roof: spouse, child, kin, servant, ghoul, apprentice, retainer, ward. Each month the Storyteller's money run charges the keep, a share of a one-dot worker's wage per person (spouse half, child a quarter, servant six tenths, retainer eight tenths). A Kindred with mortals under the roof is warned of the Masquerade risk. House numbers.
+
+Reverse: clear flags["wodx-npc"].household.
+
+## B2862. Loved ones as a weak spot (2026-11-13)
+When a spouse, child, parent, sibling, childe, ward, apprentice, retainer, lover, or a friend at Fond or warmer is hurt, taken or dies, the one who loves them gets a card: a frenzy check for Kindred and Garou, Willpower for others, grief at difficulty 7 or 8 on a death with a Derangement on a botch for a great loss, and line notes (Banality, a Passion, degeneration). A captor's demands go in the Ledger. V20 and Revised rules only; no Touchstones. Setting "Cards for loved ones". The difficulties are house rules.
+
+Reverse: turn the setting off.
+
+## B2863. Standing by community (2026-11-13)
+WoDX NPC 0.59.0 works out a character's standing with each community (the Kindred, the Garou, the Awakened, the fae courts, the Restless Dead, the hunters, and mortal town, faith, trades, law, rulers and underworld) from the deeds recorded on the sheet, -5 to +5. Mortal communities take the name of the way of life and century (the mosque and the ulama, the watch and the courts, business and the unions). For the supernatural ones the books' own tracks stay on the sheet (Status, Renown); this is the talk that goes with them.
+
+Reverse: clear flags["wodx-npc"].deeds.
+
+## B2864. News of a deed travels at the era's speed (2026-11-13)
+A deed counts at once where it was done. Elsewhere it counts only once the fastest way of the year (the letters' carriers: rider, post, telegraph, telephone, e-mail, the net) could have carried the news there. A small deed (1) stays local, a big one (2) reaches the same part of the world, a great one (3) every land the news can reach. House reading.
+
+Reverse: edit reaches in modules/wodx-npc/scripts/standing-rules.mjs.
+
+## B2865. Gossip along ties (2026-11-13)
+WoDX Storyteller 0.63.0: the rumour mill also passes rumours between NPCs joined by a friend, lover, spouse, kin, ally, contact, rival, mentor or master-and-servant tie, besides factions and shared scenes. A rumour keeps its source, its subject and how true it is (true, half true, false, not known), for the Storyteller. Each denial takes one off how many people a knower tells each night, at most three.
+
+Reverse: edit GOSSIP_TIES and heatAfterDoubt in modules/wodx-storyteller/scripts/rumour-rules.mjs.
+
+## B2866. Rank ladders by way of life and century (2026-11-13)
+Ladders lowest first: medieval Western Christendom from serf to prince, then early modern, industrial and modern class ladders; the Orthodox, Islamic, Indian, Chinese and Japanese ladders until each one's modern turn (1861, 1923, 1947, 1912, 1871); a customary ladder elsewhere until 1950; a future ladder from 2050. A jump in time carries a rank to the same share of the new ladder. A reading of history, rounded.
+
+Reverse: edit LADDERS and ladderFor in standing-rules.mjs.
+
+## B2867. What rank does (2026-11-13)
+WoDX Actions 3.61.0: a social roll against an NPC two or more steps below (by share of the ladder) is one easier, two or more above one harder. A match across three steps or more before 1900, five or more later, brings the families' objection. Titles (+2), a good marriage, wealth and rewarded deeds (+1) raise rank; a poor match, ruin (-1) and disgrace (-2) lower it. House numbers.
+
+Reverse: edit rankShift, matchObjection and RANK_EVENTS in standing-rules.mjs.
+
+## B2868. Feuds that heirs inherit (2026-11-13)
+A feud is between two sides, each a family name, a family line, a clan, a tribe, a house or kith, or a faction. Anyone who belongs to a side is in the feud, so children and descendants inherit it. A killing raises its heat (2 to 3). It ends by payment, marriage, a duel or a sworn truce.
+
+Reverse: end the feud.
+
+## B2869. Feud law by place and year (2026-11-13)
+Private feud was lawful in the Empire and Bohemian lands until the Eternal Peace of 1495, in France until 1258, Scandinavia until about 1300, Russia until about 1500, Britain until about 1600; Italy and the Balkans keep the vendetta by custom long after; blood money settles a killing where Islamic law runs; elsewhere custom; after 1950 the law forbids it except blood money. A duel is offered as a settlement before 1900 or where feud is not outlawed. A reading of history, rounded.
+
+Reverse: edit FEUD_LAW, feudLaw and settlements in standing-rules.mjs.
+
+## B2870. Feuds in the rivalry check (2026-11-13)
+Each live feud is a rivalry row between its two sides, at its heat (Hostile, or Hunts at heat 3), and feuding people know each other on sight. So two NPCs of feuding houses who meet may come to blows through the rivalry check and WoDX Combat's fight starter, as the other rivalries do.
+
+Reverse: end the feud, or turn off "Rivalries start fights".
+
+## B2871. Rank and feuds on the family tree (2026-11-13)
+The family and lineage tree shows the character's rank in the year and the feuds they are in, above the family line.
+
+Reverse: remove the sheetLine call in people.mjs.
+
+## B2872. Past lives and returning souls (2026-11-13)
+WoDX NPC 0.60.0: a reborn soul (a mage's Avatar, a fae soul, a wraith remembering) can carry past selves on the sheet, each with ties. A tie reaches someone still in the world: the person themselves when they are undying, or a living descendant on a family line that came after them. The tie stays hidden until the character recalls it, then shows to that character's players.
+
+Reverse: clear flags["wodx-npc"].pastLives.
+
+## B2873. Recalling a past life (2026-11-13)
+The roll is the Background's dots (Avatar or Past Lives for mages, Remembrance for changelings, Memoriam for wraiths) at difficulty 8, one less for each two dots, at least 5. One success recalls that life's ties. House rule.
+
+Reverse: edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs.
+
+## B2874. Lines of teaching (2026-11-13)
+Teaching records what was taught (each line's own powers: Disciplines, Gifts, Spheres, Arts, Arcanoi, Edges, Hekau, Lores, Numina and Abilities), for how long and what is owed (a Ledger debt), and makes the mentor tie. The line runs up through mentors and down through students. How each age teaches is shown: master and apprentice, guilds and universities, schools, the net. When a teacher dies, the students are told their Mentor Background is gone; what was taught stays.
+
+Reverse: clear flags["wodx-npc"].taught on the teacher.
+
+## B2875. The web of ties and scene ideas (2026-11-13)
+A window shows every tie as a circle of people with coloured links, filtered by group, by one person and by the year (who was alive then); players see no hidden or secret ties there. Once a game week the Storyteller gets one approval card of scene ideas from ties: boons and debts due, hostages held, feuds at their hottest, matches the families object to, descendants who could come asking. Approved ideas go in the Ledger as consequences due in a week. Setting "Scene ideas from ties".
+
+Reverse: turn the setting off.
+
+## B2876. Who sees what (2026-11-13)
+The Storyteller sees everything. Players see their own ties; a hidden tie (a hidden loyalty, a past life) shows to a character only once they found it out; trust and warmth on a tie show only to the owners of the one who feels them. NPC resisting rolls stay Storyteller-only as before.
+
+Reverse: edit visibleTo and feelingsFor in modules/wodx-npc/scripts/ties-rules.mjs.
 
 ## B2900. Aura Perception shows only what a reading showed (2026-11-13)
 Display-Only Systems Desk item k1, Ben's pick: deepen. With Aura Perception in use, a ring shows round a creature only after the character has Read the Soul of that token (WoDX Otherworlds, Perception + Empathy at difficulty 8), and only as much as the successes showed: one success the shade alone (pale or bright), two or more the colour. A botch shows a false colour. A reading holds for one hour of game time. World setting "Aura Perception needs Read the Soul", on by default. Lifesight is unchanged.

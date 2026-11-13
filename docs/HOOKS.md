@@ -7,7 +7,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
-| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
+| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
@@ -53,6 +54,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxCaravan | storyteller | a caravan between linked markets: {phase (left, arrived or lost), caravan, changes} |
 | wodxMarketMove | storyteller | a faction's move on a market was carried out: {move (type tax, monopoly, smuggle or raid; faction; goods; rate), market} |
 | wodxTraderBroke | storyteller | a trader's shop shut: {market, actor} |
