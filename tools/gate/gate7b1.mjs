@@ -35,7 +35,11 @@ export async function run() {
 
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
-    for ( const role of ["hero", "fighter", "runner"] ) T[role] = canvas.tokens.placeables.find(t => t.document.getFlag(NPC, "gateRole") === role);
+    for ( const role of ["hero", "fighter", "runner"] ) {
+      // the arena may hold more than one token marked with a role (older test figures): the one that is in the fight is meant
+      const marked = canvas.tokens.placeables.filter(t => t.document.getFlag(NPC, "gateRole") === role);
+      T[role] = marked.find(t => combat?.combatants.some(c => c.tokenId === t.id)) ?? marked[0];
+    }
     // No fight left from gate 7b: make one on the arena with the three gate tokens, marked so it is cleaned up after
     if ( !combat && sc && T.hero && T.fighter && T.runner ) {
       made = combat = await Combat.create({scene: sc.id, active: true, flags: {[NPC]: {gateFight: true, gate7b1Made: true}}});
