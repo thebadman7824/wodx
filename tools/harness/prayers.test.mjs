@@ -96,7 +96,8 @@ test("the prayer leader leads all five at the mosque", () => {
 
 test("who keeps the prayers: the Western church, the night folk and the Storyteller's own hours are left alone", () => {
   for ( const y of [1250, 1700, 1950] ) assert.deepEqual(merchant(y, {faith: "western", region: "moravia"}), merchant(y));
-  for ( const f of ["jewish", "orthodox", "hindu", "chinese"] ) assert.ok(!merchant(1500, {faith: f, region: "india"}).some(x => x.prayer), f);
+  assert.ok(!merchant(1500, {faith: "orthodox", region: "russia"}).some(x => x.prayer), "the Eastern church keeps no daily rite here");
+  for ( const f of ["jewish", "hindu", "chinese"] ) assert.ok(!merchant(1500, {faith: f, region: "india"}).some(x => x.prayer && R.PRAYERS.some(p => p.key === x.prayer)), `${f}: not the five prayers`);
   for ( const tpl of ["neonate", "elder", "garou"] ) assert.deepEqual(R.blocksOf({}, tpl, 1300, EGYPT), R.blocksOf({}, tpl, 1300));
   const own = [{from: 0, to: 24, place: "home", activity: "rest", when: "any", days: null, feast: "any", label: ""}];
   assert.equal(R.blocksOf({blocks: own}, "civilian", 1300, EGYPT), own);
@@ -145,4 +146,39 @@ test("the senses have lines for the new houses of worship in every era", () => {
     for ( const era of Object.keys(SR.ERA_BANDS) ) assert.ok(SR.placeLines(T, {kind: k}, s, {era, part: "day", sky: "clear", indoor: true}).some(l => !l.n), `${k} ${s} ${era}`);
   }
   assert.ok(SR.INDOOR_KINDS.includes("mosque") && SR.WORSHIP.includes("temple"));
+});
+
+// WoDX NPC 0.65.0 (B2980 to B2982): the daily worship of the other faiths.
+test("a Jewish NPC goes to the morning and evening services, and the rabbi's routine leads them", () => {
+  const b = merchant(1500, {faith: "jewish", region: "moravia"});
+  const sh = b.find(x => x.prayer === "shacharit"), mi = b.find(x => x.prayer === "mincha");
+  assert.ok(sh && mi);
+  assert.equal(sh.place, "church");
+  assert.ok(!sh.days.includes(5) && !mi.days.includes(5) && !mi.days.includes(4), "not on the Sabbath, nor its eve for the evening");
+  assert.equal(b.indexOf(sh) < b.findIndex(x => !x.prayer), true, "laid first, so they win");
+  const lead = R.withWorship([{from: 6, to: 8, place: "church", activity: "pray", when: "any", days: null, feast: "any", label: "The offices"}], "jewish");
+  assert.ok(lead.filter(x => x.prayer).every(x => /^Leads /.test(x.label)));
+});
+
+test("the faiths of India, the Buddhist south, Tibet and China keep their daily rites; their clergy keep their offices", () => {
+  const want = {hindu: ["puja", "lamp"], theravada: ["alms"], tibetan: ["kora"], chinese: ["incense"]};
+  for ( const [faith, keys] of Object.entries(want) ) {
+    const got = merchant(1700, {faith, region: "india"}).filter(x => x.prayer).map(x => x.prayer);
+    assert.deepEqual(got, keys, faith);
+    const clergy = R.withWorship([{from: 6, to: 8, place: "church", activity: "pray", when: "any", days: null, feast: "any", label: "The offices"}], faith);
+    assert.equal(clergy.filter(x => x.prayer).length, 0, `${faith}: the clergy's own hours stand`);
+  }
+  assert.equal(merchant(1700, {faith: "western", region: "moravia"}).some(x => x.prayer), false);
+});
+
+test("daily worship is not kept openly under the campaigns against religion, unless asked", () => {
+  assert.equal(merchant(1970, {faith: "chinese", region: "china"}).some(x => x.prayer), false, "the Cultural Revolution");
+  assert.equal(merchant(1990, {faith: "chinese", region: "china"}).some(x => x.prayer), true);
+  assert.equal(merchant(1960, {faith: "jewish", region: "russia"}).some(x => x.prayer), false);
+  assert.equal(merchant(1960, {faith: "jewish", region: "russia"}, {prayers: "five"}).some(x => x.prayer), true, "Kept wins");
+  assert.equal(merchant(1700, {faith: "hindu", region: "india"}, {prayers: "none"}).some(x => x.prayer), false);
+  const own = [{from: 0, to: 24, place: "home", activity: "rest", when: "any", days: null, feast: "any", label: ""}];
+  assert.equal(R.blocksOf({blocks: own}, "civilian", 1700, {faith: "hindu", region: "india"}), own, "the Storyteller's own hours stand");
+  assert.equal(R.blocksOf({blocks: own, prayers: "five"}, "civilian", 1700, {faith: "hindu", region: "india"}).filter(x => x.prayer).length, 2);
+  for ( const rows of Object.values(R.DAILY_WORSHIP) ) for ( const w of rows ) assert.ok(!/—/.test(w.label) && !/\b(he|she|his|her)\b/i.test(w.label), w.key);
 });

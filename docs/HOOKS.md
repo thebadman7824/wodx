@@ -7,12 +7,14 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
-| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
+| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss) |
+| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
+| wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
 | wodxEndScene | chronicle | actions, storyteller |
@@ -25,7 +27,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxFed | actions | paperdoll (a sprite token leans in to feed), npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
 | wodxFormChanged | actions | actions, paperdoll (a sprite token blurs as it changes) |
 | wodxHunted | actions | storyteller |
-| wodxInteractablesNoise | interactables | senses |
+| wodxInteractablesNoise | interactables | senses (who heard it; a loud noise heard by a character with Heightened Senses in use asks for Willpower) |
 | wodxItemsTaken | interactables | chronicle (feeds a Ravnos vice of theft), storyteller (marks things taken from someone else's container as stolen) |
 | wodxMapEvent | chronicle, interactables, npc | npc, otherworlds, storyteller |
 | wodxNpcTurnDone | combat, npc | combat |
@@ -52,6 +54,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxCaravan | storyteller | a caravan between linked markets: {phase (left, arrived or lost), caravan, changes} |
 | wodxMarketMove | storyteller | a faction's move on a market was carried out: {move (type tax, monopoly, smuggle or raid; faction; goods; rate), market} |
 | wodxTraderBroke | storyteller | a trader's shop shut: {market, actor} |

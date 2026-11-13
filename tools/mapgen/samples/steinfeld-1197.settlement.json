@@ -12,7 +12,7 @@
  "region": "moravia",
  "walled": false,
  "country": null,
- "population": 59,
+ "population": 67,
  "whole": [
   96,
   103
@@ -38,14 +38,13 @@
   "Workshop": 1
  },
  "trades": {
-  "carter": 3,
   "cottager": 3,
+  "herder": 3,
+  "labourer": 3,
   "farmer": 2,
-  "herder": 2,
   "alehouse keeper": 1,
   "carpenter": 1,
   "draper": 1,
-  "labourer": 1,
   "priest": 1,
   "widowed spinner": 1
  },
@@ -60,7 +59,12 @@
    "wealth": "middling",
    "people": [
     "alehouse keeper",
+    "partner",
+    "child",
+    "child",
+    "child",
     "elder",
+    "servant",
     "lodger"
    ],
    "map": "",
@@ -78,7 +82,7 @@
    "wealth": "middling",
    "people": [
     "priest",
-    "servant"
+    "clerk"
    ],
    "map": "",
    "at": [
@@ -91,10 +95,10 @@
    "building": "cottage-2",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "labourer",
+   "trade": "herder",
    "wealth": "middling",
    "people": [
-    "labourer",
+    "herder",
     "partner",
     "child"
    ],
@@ -109,11 +113,12 @@
    "building": "cottage-3",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "cottager",
+   "trade": "herder",
    "wealth": "middling",
    "people": [
-    "cottager",
-    "partner",
+    "herder",
+    "child",
+    "child",
     "child"
    ],
    "map": "",
@@ -127,10 +132,11 @@
    "building": "cottage-4",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "carter",
+   "trade": "cottager",
    "wealth": "middling",
    "people": [
-    "carter",
+    "cottager",
+    "partner",
     "child",
     "elder"
    ],
@@ -145,14 +151,11 @@
    "building": "cottage-5",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "cottager",
+   "trade": "herder",
    "wealth": "middling",
    "people": [
-    "cottager",
+    "herder",
     "partner",
-    "child",
-    "child",
-    "child",
     "child"
    ],
    "map": "",
@@ -172,6 +175,9 @@
     "draper",
     "partner",
     "child",
+    "child",
+    "child",
+    "child",
     "servant"
    ],
    "map": "",
@@ -185,11 +191,15 @@
    "building": "cottage-6",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "herder",
+   "trade": "cottager",
    "wealth": "middling",
    "people": [
-    "herder",
-    "partner"
+    "cottager",
+    "partner",
+    "child",
+    "child",
+    "child",
+    "elder"
    ],
    "map": "",
    "at": [
@@ -202,11 +212,10 @@
    "building": "cottage-7",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "cottager",
+   "trade": "labourer",
    "wealth": "middling",
    "people": [
-    "cottager",
-    "child",
+    "labourer",
     "child"
    ],
    "map": "",
@@ -223,10 +232,7 @@
    "trade": "carpenter",
    "wealth": "middling",
    "people": [
-    "carpenter",
-    "partner",
-    "child",
-    "child"
+    "carpenter"
    ],
    "map": "",
    "at": [
@@ -239,10 +245,13 @@
    "building": "cottage-8",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "carter",
+   "trade": "cottager",
    "wealth": "middling",
    "people": [
-    "carter"
+    "cottager",
+    "partner",
+    "child",
+    "elder"
    ],
    "map": "",
    "at": [
@@ -255,11 +264,12 @@
    "building": "cottage-9",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "carter",
+   "trade": "labourer",
    "wealth": "middling",
    "people": [
-    "carter",
+    "labourer",
     "partner",
+    "child",
     "child",
     "child"
    ],
@@ -274,14 +284,13 @@
    "building": "cottage-10",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "widowed spinner",
+   "trade": "labourer",
    "wealth": "middling",
    "people": [
-    "widowed spinner",
-    "partner",
+    "labourer",
     "child",
     "child",
-    "elder"
+    "child"
    ],
    "map": "",
    "at": [
@@ -294,14 +303,13 @@
    "building": "cottage-11",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "herder",
+   "trade": "widowed spinner",
    "wealth": "middling",
    "people": [
-    "herder",
+    "widowed spinner",
     "partner",
     "child",
-    "child",
-    "elder"
+    "child"
    ],
    "map": "",
    "at": [
@@ -318,10 +326,12 @@
    "wealth": "poor",
    "people": [
     "farmer",
+    "partner",
     "child",
     "child",
     "child",
-    "child"
+    "child",
+    "elder"
    ],
    "map": "",
    "at": [
@@ -339,15 +349,12 @@
    "people": [
     "farmer",
     "child",
-    "child",
-    "child",
-    "child",
-    "elder"
+    "farmhand"
    ],
    "map": "",
    "at": [
-    84.8,
-    7.1
+    83.6,
+    7.2
    ]
   }
  ],

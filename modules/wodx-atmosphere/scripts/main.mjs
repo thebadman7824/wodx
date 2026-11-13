@@ -25,7 +25,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.15.0";
+const VERSION = "0.16.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -1160,7 +1160,7 @@ Hooks.once("init", () => {
 /** Load the calendar and publish the API (at ready; the harness calls it by itself). */
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
-  const api = {version: VERSION, open: () => AtmosphereApp.open(), opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
+  const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},

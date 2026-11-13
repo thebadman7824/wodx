@@ -1,5 +1,5 @@
 /**
- * WoDX Creation 0.25.0: the years after the change, by line. Each line has its own ways those years went, drawn
+ * WoDX Creation 0.27.0: the years after the change, by line. Each line has its own ways those years went, drawn
  * before the shared list (SINCE in lifepath-drill.mjs) on a first draw: one of each tone comes first, as the dated
  * marks of a land do. Rows: [label, gives, {from, to} (years the row can be lived in; empty means any), tone, person].
  * Written in WoDX's own words from the Revised or 20th anniversary books of each line; years follow WoDX's timeline.

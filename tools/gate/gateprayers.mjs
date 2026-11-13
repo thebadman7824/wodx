@@ -9,6 +9,8 @@
  *   3. at the hour of the dawn prayer (by the describer's own sunrise) the merchant prays at home
  *   4. the church role of a Muslim NPC finds the mosque; a Brno merchant's finds no mosque
  *   5. a Western NPC keeps the hours as written, with no prayers
+ *   5b. (NPC 0.65.0) a Jewish merchant goes to the synagogue's two services, a Hindu one keeps the shrine at dawn and
+ *       dusk, and Beijing in 1970 keeps no rite by default
  *   6. Senses has lines for the mosque, the synagogue and the temple
  *   7. a routine tick runs
  *   8. every other WoDX module still answers
@@ -79,6 +81,11 @@ export async function run() {
     await step("a Western NPC keeps its hours", async () => {
       const k = r().keepOf(m2), b = r().blocksFor(m2);
       ok("a Western NPC keeps its hours", k.faith !== "islamic" && !b.some(x => x.prayer), {keep: k});
+    });
+    await step("the other faiths' daily worship", async () => {
+      const keys = (keep, y = 1700) => RR.blocksOf({preset: "merchant"}, "civilian", y, keep).filter(x => x.prayer).map(x => x.prayer);
+      const got = {jewish: keys({faith: "jewish", region: "moravia"}), hindu: keys({faith: "hindu", region: "india"}), china1970: keys({faith: "chinese", region: "china"}, 1970)};
+      ok("the other faiths' daily worship", typeof RR.withWorship === "function" && JSON.stringify(got) === JSON.stringify({jewish: ["shacharit", "mincha"], hindu: ["puja", "lamp"], china1970: []}), {got});
     });
     await step("Senses has lines for the houses of worship", async () => {
       const kinds = game.modules.get("wodx-senses")?.api?.tables?.places?.kinds ?? {};

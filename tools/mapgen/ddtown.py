@@ -94,6 +94,12 @@ def clip(rect, win):
 
 def inside(x, y, win, pad=0): return win[0] - pad <= x < win[0] + win[2] + pad and win[1] - pad <= y < win[1] + win[3] + pad
 
+def on_map(o, win):
+    """True when an object's middle lies on the part's map (its position is already relative to the part)."""
+    x, y = (float(v) / C.CELL for v in re.findall(r"-?[\d.]+", o["position"].split("(", 1)[1])[:2])
+    return 0 <= x <= win[2] and 0 <= y <= win[3]
+
+
 class Town:
     def __init__(self, seed, size, name=None, night=True):
         self.R = C.R
@@ -418,11 +424,14 @@ class Town:
             for r in b.rooms:
                 if B.floor_tex(r.floor):
                     patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))
+                n0 = len(objects)
                 objects.extend(C.dressing_objects(r, True))
                 for it in r.items:
                     rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
                     objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
                 objects.extend(C.dressing_objects(r, False))
+                if not self.mine(b, pt):                       # a neighbour's house at the edge: only what is on this map
+                    objects[n0:] = [o for o in objects[n0:] if on_map(o, win)]
         for g in self.gardens:
             x, y, w, h = g["rect"]
             if not inside(x + w / 2, y + h / 2, win, 2): continue
@@ -618,6 +627,8 @@ def main():
         import organic
         t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls], {"random": None, "yes": True, "no": False}[a.river], a.year, a.part, None if a.land == "random" else a.land).make()
     else:
+        import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
+        if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
         t = Town(a.seed, a.size, a.name, not a.day).make()
     base = slug(t.name)
     settled = None
