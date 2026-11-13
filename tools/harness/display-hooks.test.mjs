@@ -139,3 +139,14 @@ test("B2915: realm Go rolls the realm's dangers each day", async () => {
   assert.equal(RW.goPlan({hidden: true}), null);
   assert.equal(RW.goPlan({days: 0.2, squares: 3}, {rand: () => 0.99}).seconds, Math.round(0.2 * 86400));
 });
+
+/* ---- Batch B (B3130-B3133) ---- */
+import * as DPR from "../../modules/wodx-actions/scripts/deeper-rules.js";
+
+test("B3130-B3133: Nightmares, a stranger in a crowd and codex research change the roll", () => {
+  assert.equal(DPR.nightmareDice([{flags: {"wodx-storyteller": {diceLess: 1}}}, {disabled: true, flags: {"wodx-storyteller": {diceLess: 3}}}, {}]), 1);
+  const m = DPR.deeperMods({nightmares: 1, crowd: 1, research: true});
+  assert.equal(m.dice, -1); assert.equal(m.diff, 0); assert.equal(m.parts.length, 3);
+  assert.deepEqual(DPR.deeperMods(), {dice: 0, diff: 0, parts: []});
+  assert.ok(DPR.researchHelps("occult")); assert.ok(DPR.researchHelps("x", "Kindred Lore")); assert.ok(!DPR.researchHelps("brawl", "Brawl"));
+});

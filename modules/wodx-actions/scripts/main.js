@@ -64,6 +64,7 @@ import * as SOR from "./social-rules.js";
 import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
+import * as DH from "./deeper-hooks.js";
 import * as KF from "./feeding-rules.js";
 import * as HN from "./hunt-night-rules.js";
 import { calendarFor } from "../../wodx-npc/scripts/hunt-calendar.mjs";
@@ -269,6 +270,8 @@ function isResponsibleGM() {
 async function onSocket(p) {
     if (!isResponsibleGM()) return;
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
+    // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)
+    if (p.action === "research") { const pg = await fromUuid(p.uuid); if (pg?.documentName === "JournalEntryPage") await pg.setFlag(MOD, "researchUsed", true); return; }
     const doc = await fromUuid(p.uuid);
     const actor = doc?.actor ?? doc;
     if (!actor) return;
@@ -635,7 +638,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
-      ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
+      ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
@@ -773,7 +776,7 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
       <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="${num(preBonus)}" style="width:4em"/> <input type="number" name="extraDiff" value="${num(preDiff)}" style="width:4em"/></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
-      ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
+      ${TH.ticksHtml(actor, esc)}${DH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label>Description</label><input type="text" name="desc" value="${esc(preDesc)}"/></div>
       </details>
@@ -807,7 +810,7 @@ export async function quickCheck({ actor: a, check = "notice", extraDiff: preDif
             preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple",
             bonus: num(fd.bonus), extraDiff: num(fd.extraDiff), multi: 0, retries: 0, specialty: !!fd.specialty, wp: !!fd.wp,
             ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0],
-            ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky"))
+            ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky" || k === "research"))
         });
     };
     // 3.62.0 (B2822): a quick roll from the sheet rolls at once with the check's own difficulty, no window
@@ -859,6 +862,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const mv = kinds.length ? game.wodxCombat?.movement?.rollMods?.(actor, kinds) : null;
         if (mv?.diff) tm = { ...tm, diff: (tm.diff ?? 0) + mv.diff, parts: [...(tm.parts ?? []), ...mv.parts.map(x => `${x}, house rule`)] };
     } catch (e) { /* WoDX Combat is off */ }
+    // B3130 to B3133: Nightmares, a stranger in a crowd, research from the codex
+    try {
+        const dm = DH.modsFor(actor, fd, pool);
+        if (dm.parts.length) tm = { ...tm, dice: (tm.dice ?? 0) + dm.dice, diff: (tm.diff ?? 0) + dm.diff, parts: [...(tm.parts ?? []), ...dm.parts] };
+    } catch (e) { console.warn("WoDX Actions | deeper hooks", e); }
     return R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -905,6 +913,7 @@ async function resolveAction(actor, target, fd) {
     }
     let r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
     const rolls = [...helperRolls, r.roll];
+    try { await DH.afterRoll(actor, fd, pool); } catch (e) { console.warn("WoDX Actions | research", e); }
     let body = "";
     // Lucky (V20 p. 493 printed): a failed roll, botches too, is rolled again, three times a story
     if (fd.lucky && (r.botch || !r.successes) && fd.mode !== "extended") {
@@ -1049,8 +1058,10 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         if (fd.prov === "atrocity") diff = 9 - v.conscience.value;
         if (fd.prov === "custom") diff = fd.diff;
         const tm = TH.traitMods(actor, ["frenzy"]);
-        diff = R.clampDifficulty(diff + fd.mod + tm.diff);
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0, traitDice: tm.dice, traitParts: tm.parts });
+        // B3132: open fire in a mood region makes the Beast harder to hold
+        const fire = DH.fireStep(actor);
+        diff = R.clampDifficulty(diff + fd.mod + tm.diff + fire);
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
     });
 }
 
@@ -1073,7 +1084,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
-        const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod);
+        const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod + DH.fireStep(actor));  // B3132
         return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, total: 0 });
     });
 }
@@ -2762,7 +2773,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.62.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.63.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
