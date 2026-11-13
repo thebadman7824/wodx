@@ -83,7 +83,10 @@ export async function run() {
       const dlg = await npc().openTree(founder);
       await sleep(300);
       const html = dlg?.element?.innerHTML ?? "";
-      ok("5. the tree shows the family line, Bring into play and the Will button", /Family line/.test(html) && /data-kin-bring/.test(html) && /data-kin-will/.test(html));
+      // The tree lists the members living in the clock's year; Bring into play shows for those not yet in play
+      const unplayed = npc().kin.descendants(founder).filter(m => !m.actorId).length;
+      ok("5. the tree shows the family line, Bring into play and the Will button", /Family line/.test(html) && (unplayed ? /data-kin-bring/.test(html) : true) && /data-kin-will/.test(html),
+        {line: /Family line/.test(html), bring: /data-kin-bring/.test(html), will: /data-kin-will/.test(html), unplayed, length: html.length});
       await dlg?.close?.();
     });
 

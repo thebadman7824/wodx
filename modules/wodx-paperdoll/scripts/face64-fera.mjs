@@ -75,7 +75,7 @@ table("fera", "fb", [
   ["aja-dark", "Ajaba", "Sun-dark skin", [["skin", [90, 60, 40], 0.3]]],
   ["aja-sloped", "Ajaba", "A sloped, heavy brow", [["brow", [50, 40, 30], "slant"]]],
   ["aja-hunger", "Ajaba", "A hungry glint", [["glow", [220, 180, 80]]]],
-  ["aja-blood", "Ajaba", "Old blood in the mane", [["sp", 12, [130, 30, 30], 0.75, [16, 10, 48, 24]]]],
+  ["aja-blood", "Ajaba", "Old blood in the mane", [["sp", 24, [130, 30, 30], 0.75, [14, 8, 50, 30]]]],
   ["aja-ash", "Ajaba", "Ash smeared under the eyes", [["t", "underL", 3, 1, [60, 56, 50], 0.65], ["t", "underR", 3, 1, [60, 56, 50], 0.65], ["brow", [40, 30, 20], "plain"]]],
   ["aja-heat", "Ajaba", "Heat-shimmer about them", [["aura", [230, 190, 120], 0.3]]],
   // Ananasi (spider)

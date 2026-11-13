@@ -293,3 +293,19 @@ test("each line has 50 features of its own and each clan, tribe, kith, creed and
   }
   for ( const g of ["nosferatu|Nosferatu", "kindred|Gargoyle", "kindred|Samedi", "werewolf|Metis"] ) assert.ok((n[g] ?? 0) >= 25, `${g}: ${n[g]}`);
 });
+
+test("more eyes, hair, head shapes and noses: every nose kind and head curve is rolled and draws its own face", () => {
+  const seen = {nose: new Set(), cf: new Set(), ce: new Set(), iris: new Set(), hair: new Set()};
+  for ( let i = 0; i < 600; i++ ) { const S = P.roll(`v${i}`, "mortal"); for ( const k of ["nose", "cf", "ce"] ) seen[k].add(S[k]); seen.iris.add(S.iris.join()); seen.hair.add(S.hair.join()); }
+  assert.ok(seen.nose.size >= 9, `${seen.nose.size} noses`);
+  assert.ok(seen.cf.size >= 5 && seen.ce.size >= 5, "head curves");
+  assert.ok(seen.iris.size >= 15, `${seen.iris.size} eye colours`);
+  assert.ok(seen.hair.size >= 20, `${seen.hair.size} hair colours`);
+  const base = {...P.roll("nose-test", "mortal"), beard: "", style: "bald", features: []};
+  const looks = new Set();
+  for ( const nose of seen.nose ) looks.add(Buffer.from(P.drawFace({...base, nose}, {}).rgba).toString("base64"));
+  assert.equal(looks.size, seen.nose.size, "each nose kind looks different");
+  const heads = new Set();
+  for ( const cf of [1.4, 4.4] ) for ( const ce of [0.38, 0.66] ) heads.add(Buffer.from(P.drawFace({...base, cf, ce}, {}).rgba).toString("base64"));
+  assert.equal(heads.size, 4, "crown and chin curves each change the head");
+});

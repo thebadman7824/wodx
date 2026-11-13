@@ -8,7 +8,7 @@ export const FOLDER = "modules/wodx-paperdoll/sprites/figure";
 /** The places a piece can go, in the order the menu lists them. */
 export const SLOTS = {body: "Body", legs: "Legs", feet: "Feet", over: "Cloak or coat over all", head: "Head", face: "Face", neck: "Neck", hands: "Hands", belt: "Belt",
   extra: "Pinned on", hand: "In the hand", offhand: "On the other arm"};
-/** The slots shown first (Paperdoll 0.21.0, B2833): the body, the clothes and the face; the rest sit under More. */
+/** The slots shown first (B2833): the body, the clothes and the face; the rest sit under More. */
 export const MAIN_SLOTS = ["body", "legs", "feet", "over", "head", "face"];
 
 /** The order the layers are laid down in the quick picture, undermost first. */
