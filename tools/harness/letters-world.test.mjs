@@ -1,5 +1,5 @@
 /**
- * Letters that take the journey time across the world map (Storyteller 0.59.0, B2690 to B2694).
+ * Letters that take the journey time across the world map (Storyteller 0.59.0, B2700 to B2704).
  */
 import test from "node:test";
 import assert from "node:assert/strict";

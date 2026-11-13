@@ -7,7 +7,7 @@
  * clock reaches its time, a letter for a player character is whispered to that character's players; one for someone
  * else is whispered to the Storyteller to answer.
  *
- * Storyteller 0.59.0 (B2690 to B2694): the letter goes from the part of the world the sender stands in to the part
+ * Storyteller 0.59.0 (B2700 to B2704): the letter goes from the part of the world the sender stands in to the part
  * the other stands in, and takes the world map's journey time for the year (the known world included). The
  * Storyteller can send as anyone they play (a faction, an elder, a ghoul), sees every letter on the way in
  * "Letters on the way" (the hand), and can lose one, put it back some days or have it read on the way. An answer to a

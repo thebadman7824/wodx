@@ -1,5 +1,5 @@
 /**
- * Letters that take the journey time across the world map (WoDX Storyteller 0.59.0, B2690 to B2694), in Foundry, in
+ * Letters that take the journey time across the world map (WoDX Storyteller 0.59.0, B2700 to B2704), in Foundry, in
  * rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateletters.mjs?${Date.now()}`)).run()
  * It makes one actor and three letters, moves the clock to deliver one, and puts the letters setting, the chat, the

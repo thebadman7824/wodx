@@ -77,7 +77,7 @@ export function view(state = {}) {
   if ( known ) { const n = map.places.length - known.size; lines.push(n ? `${n} of the ${map.places.length} places here are not yet found.` : "Every place here is found."); }
   const title = `${map.label}, ${year}${state.which && map.kind === "each" ? `: ${state.which}` : ""}`;
   return {map, from, to, known, journey: j, picture: RW.svg(map, {known, path: j?.path ?? null, title}), lines,
-    note: `The places are the realm's own, from the books. Where they lie and how long the way takes are not: ${map.ours[0].toLowerCase()}${map.ours.slice(1)}`};
+    note: `The places are the realm's own, from the books, and stand where the books say they lie when the books say so. The rest of the arrangement and how long the way takes are not from the books: ${map.ours[0].toLowerCase()}${map.ours.slice(1)}`};
 }
 
 const realmOptions = cur => LINES.map(line => { const ids = RW.REALM_IDS.filter(id => REALMS[id].line === line);
@@ -97,7 +97,7 @@ export async function realmWorldsDialog(start = {}) {
       ${v.lines.map(l => `<p style="margin:0.15rem 0">${esc(l)}</p>`).join("")}
       ${map.layout.length || map.change.length ? `<details class="wow-realm-books"><summary>What the books say of how it lies and how it changes</summary>
         ${[...map.layout, ...map.change].map(([note, ref]) => `<p style="margin:0.15rem 0">${esc(note)}. <span class="wodx-quiet">${esc(ref)}</span></p>`).join("")}
-        <p class="wodx-quiet">The map does not yet follow these notes place by place.</p></details>` : ""}
+        <p class="wodx-quiet">The map follows these notes where one flat map can; a book's above and below is laid out across the map.</p></details>` : ""}
       <div class="form-group"><label>Realm</label>${searchBox("select[name=realm]", "Find a realm…", "Search realms")}<select name="realm">${realmOptions(map.id)}</select></div>
       <div class="form-group"><label>Shown</label><select name="eyes" data-fixed><option value="home"${state.eyes === "all" ? "" : " selected"}>What the chronicle has found</option><option value="all"${state.eyes === "all" ? " selected" : ""}>The whole realm</option></select></div>
       <div class="form-group"><label>From</label><select name="from" data-fixed>${places(v.from)}</select></div>

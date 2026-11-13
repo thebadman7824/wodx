@@ -7,7 +7,7 @@
  * intercepted by a roll. A reply to someone the Storyteller plays is the Storyteller's own to write.
  * House figures: the books give no delivery times. The telephone date matches WoDX NPC's alarm carriers.
  *
- * Storyteller 0.59.0 (B2690 to B2694): a letter goes from one part of the world to another (WoDX Chronicle's world
+ * Storyteller 0.59.0 (B2700 to B2704): a letter goes from one part of the world to another (WoDX Chronicle's world
  * regions) and takes the world map's journey time for the year, by the way the sender picks: a messenger (riders,
  * relays, ships, a courier by air), a traveller going that way, the post, a telegram, a call, an e-mail or the Net,
  * each only where and when that land has it. The Storyteller sees what is on the way and can lose it, delay it or
@@ -47,7 +47,7 @@ export const CARRIERS = {
 };
 
 /**
- * Storyteller 0.59.0 (B2690): the year each way of sending reached each part of the world (WoDX Chronicle's world
+ * Storyteller 0.59.0 (B2700): the year each way of sending reached each part of the world (WoDX Chronicle's world
  * regions). Columns: post, telegraph, telephone. post: a letter post anyone may use (a state courier for officials
  * only does not count: they send by messenger). telegraph: an office in the towns, joined to the next land.
  * telephone: lines in the towns. null: never there in WoDX. E-mail reads the internet year of WoDX Chronicle's
@@ -137,7 +137,7 @@ export function plan(how, reach, year, {future = false, region = null, internet 
 const relayOf = (a, b, year) => RELAYS.find(r => r.regions.includes(a) && r.regions.includes(b) && year >= r.from && year <= r.to) ?? null;
 
 /**
- * Storyteller 0.59.0 (B2690): a letter from one part of the world to another, on the world map's journey for the
+ * Storyteller 0.59.0 (B2700): a letter from one part of the world to another, on the world map's journey for the
  * year. how: carrier id; from, to: world region ids; year; j: the world map's journey(from's middle, to's middle,
  * {year, known}); internet: {from, to} years the internet reached each end (WoDX Chronicle's REGION_MEDIA).
  * Same part of the world: plan() with reach (near or region). Returns {ok, why, seconds, days, words: [lines]}.

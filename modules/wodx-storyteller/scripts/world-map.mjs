@@ -84,7 +84,7 @@ export function view(state) {
   if ( a ) lines.push(`From: ${WM.describe(a, {regionLabel}).words}.`);
   if ( b && j ) lines.push(`To: ${WM.describe(b, {regionLabel}).words}.`);
   if ( j ) lines.push(...WM.journeyLines(j));
-  // Storyteller 0.59.0 (B2693): how long a letter takes between the two parts of the world in the year
+  // Storyteller 0.59.0 (B2703): how long a letter takes between the two parts of the world in the year
   const fromR = a && WM.describe(a).region, toR = b && WM.describe(b).region;
   if ( j?.surface && fromR && toR && fromR !== toR ) {
     const times = LR.letterTimes({from: fromR, to: toR, year, j, future: (() => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } })(),
