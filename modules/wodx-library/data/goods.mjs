@@ -17,7 +17,7 @@
  * changes, "4>1600:2>1850:1" (tier 4, from 1600 tier 2, from 1850 tier 1). source defaults by category.
  */
 
-import {WAYS, WAY_ROWS, LOCAL_COIN, inUseAt, firstYearAt} from "./goods-ways.mjs";
+import {WAYS, WAY_ROWS, LOCAL_COIN, REDATED, REDATED_WAYS, inUseAt, firstYearAt} from "./goods-ways.mjs";
 export {WAYS, LOCAL_COIN, inUseAt, firstYearAt};
 
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
@@ -2621,7 +2621,8 @@ export function splitContainer(name) {
 
 
 /** Library 0.19.0: every row, the goods of each way of life last (goods-ways.mjs). */
-export const ALL_ROWS = [...ROWS, ...WAY_ROWS.map(r => r.slice(0, 7))];
+/** B3150: the imported goods that belong to later centuries take their own first year. */
+export const ALL_ROWS = [...ROWS.map(r => (REDATED[r[0]] ? [r[0], r[1], REDATED[r[0]], ...r.slice(3)] : r)), ...WAY_ROWS.map(r => r.slice(0, 7))];
 const WHERE = Object.fromEntries(WAY_ROWS.map(r => [r[0], r[7]]));
 
 export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) => {
@@ -2630,7 +2631,7 @@ export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) 
   const split = splitContainer(name);
   const g = {id: slug(RENAMED[name] ?? name), name: split?.name ?? name, was: RENAMED[name] ?? null, former: split ? name : null,
     container: split?.container ?? null, kind, from, to, eras, conceal, small: conceal === "P" || conceal === "J",
-    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
+    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? REDATED_WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
   g.values = Object.fromEntries(eras.map(e => [e, valueAt(g, Math.max(ERA_YEARS[e][0], from))]));
   g.value = eras.length ? g.values[eras[0]] : valueAt(g, from);
   const [use, kindStacks] = BEHAVIOUR_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind] ?? ["kept", false];
