@@ -90,12 +90,40 @@ export async function play(tokenDoc, act = null, toward = null) {
   return move;
 }
 
-/** A blow that lands plays the attacker's attack, turned toward the one struck. The active Storyteller's computer sends it. */
+const lately = new Map();
+const mine = () => game.users?.activeGM?.id === game.user?.id;
+const spriteTokenOf = (actor, uuid = null) => {
+  const toks = canvas.tokens?.placeables ?? [];
+  return (uuid ? toks.find(t => t.document.uuid === uuid) : null) ?? toks.find(t => t.actor === actor) ?? toks.find(t => actor?.uuid && t.actor?.uuid === actor.uuid) ?? null;
+};
+
+/** Every attack rolled in a fight, hit or miss, plays the move that fits the weapon. The active Storyteller's computer sends it. */
+function onAttack(attacker, info = {}) {
+  if ( !on() || !mine() ) return;
+  const from = spriteTokenOf(attacker, info.attackerToken), name = from?.document.flags?.[MOD]?.sprite;
+  const move = name ? SR.moveFor(name, info) : null;
+  if ( !move ) return;
+  lately.set(from.id, performance.now());
+  const to = info.target ? spriteTokenOf(info.target, info.targetToken) : null;
+  play(from.document, move, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite attack`, e));
+}
+
+/** A power worked by a character plays its sprite's casting move, for any module that says so: Hooks.callAll("wodxPowerShown", actor, {target}). */
+function onPower(actor, info = {}) {
+  if ( !on() || !mine() ) return;
+  const from = spriteTokenOf(actor, info.token), name = from?.document.flags?.[MOD]?.sprite;
+  const move = name ? SR.moveFor(name, {power: true}) : null;
+  if ( !move ) return;
+  const to = info.target ? spriteTokenOf(info.target, info.targetToken) : null;
+  play(from.document, move, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite power`, e));
+}
+
+/** Harm that names an attacker but came without an attack roll just before (an older Combat, harm applied by hand) still plays the attack. */
 function onDamage(actor, info) {
-  if ( !on() || !info?.attacker || game.users?.activeGM?.id !== game.user?.id ) return;
+  if ( !on() || !info?.attacker || !mine() ) return;
   const toks = canvas.tokens?.placeables ?? [];
   const from = toks.find(t => t.actor?.uuid === info.attacker && t.document.flags?.[MOD]?.sprite);
-  if ( !from ) return;
+  if ( !from || performance.now() - (lately.get(from.id) ?? -Infinity) < 4000 ) return;
   const to = toks.find(t => t.actor === actor) ?? toks.find(t => t.actor?.uuid === actor?.uuid);
   play(from.document, null, to?.document ?? null).catch(e => console.warn(`${MOD} | sprite attack`, e));
 }
@@ -106,6 +134,8 @@ export function startSprites() {
   Hooks.on("renderTokenHUD", addHudButton);
   Hooks.on("updateToken", onTokenUpdate);
   Hooks.on("wodxDamageApplied", onDamage);
+  Hooks.on("wodxAttackRolled", onAttack);
+  Hooks.on("wodxPowerShown", onPower);
   Hooks.on("canvasReady", () => { states.clear(); canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }

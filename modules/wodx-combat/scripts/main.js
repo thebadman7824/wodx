@@ -871,6 +871,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     html = await addFlavor(html, fkey, { attacker: attacker.name, target: target?.name ?? "the enemy" },
         { style: F.attackStyle(w), group: target ? F.targetGroup(P.detectProfile(target)) : null });
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
+    // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
+    Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
 
     // ---- Apply
     if (setting("autoApply")) {

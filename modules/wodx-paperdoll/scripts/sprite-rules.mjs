@@ -93,3 +93,20 @@ export const facingToward = (from, to, was = "down") => {
   if ( dx === 0 && dy === 0 ) return was;
   return Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
 };
+
+/**
+ * The move for a blow (B2582): what the fight says about the weapon, matched to the moves the sprite knows. A bite
+ * wants "bite", a ranged weapon "shot", bare hands and claws "claw", a pointed weapon "thrust", any other "swing".
+ * A sprite that lacks the move plays the nearest it has, in the order given; its first move last.
+ */
+const POINTED = /spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|foil|estoc|trident|needle/i;
+export function moveFor(name, blow = {}) {
+  const has = ACTS[name] ?? [];
+  if ( !has.length ) return null;
+  const want = blow.power ? ["cast"]
+    : blow.bite ? ["bite", "claw"]
+    : blow.ranged ? ["shot", "thrust", "swing"]
+    : blow.brawl ? ["claw", "bite", "swing"]
+    : POINTED.test(blow.weapon ?? "") ? ["thrust", "swing", "claw"] : ["swing", "thrust", "claw"];
+  return want.find(m => has.includes(m)) ?? (blow.power ? null : has[0]);
+}

@@ -3273,3 +3273,7 @@ Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the
 When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
 Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 
+
+## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
+WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
+Reverse: remove the hook call in Combat's attack and the two listeners in sprites.mjs.
