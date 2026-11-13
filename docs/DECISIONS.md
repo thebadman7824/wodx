@@ -160,7 +160,7 @@ Next free block: B3320
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
-| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
@@ -4868,11 +4868,6 @@ Reverse: drop the renames; every region uses the Bohemian names.
 WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
 
 Reverse: show the old sentence for every record.
-
-## B3294. Buildings and the record's age outside the one-party lands (2026-11-13)
-tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from 1950 gets no house of culture, and its estate blocks from 1958 are named Tower block (the grands ensembles and council estates of a market town) instead of Panel block; the building itself stays the same. The settlement record's age is now the trade age (postwar in France in 1965), with the furnishing band kept as band.
-
-Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
