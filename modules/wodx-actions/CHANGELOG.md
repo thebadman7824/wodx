@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.67.0 (Silver fetishes cost Gnosis: a made klaive takes one die and a grand klaive two from a silver-fearing shapechanger's Gnosis when waking fetishes or reading a summoned spirit (W20 pdf 227 to 228; B3636))
 - 3.66.1 (Casting magick (M20) now calls the hook wodxMagickWorked(actor, {kind, highest, botch, spheres, age}), so other modules can hear of it; WoDX Senses uses it to mark vulgar strain for Prime sight (B3545))
 - 3.66.0 (Binding card (B3528): when a Fear, Sway, Bind, Possess or Hold result lands on a player character (from Dominate, Presence, Mind, the Arts or any power with those keywords, applied on its own or approved), that character's players get a card naming the command, who laid it, how long it lasts and the resist roll where the power's book allows one. Nothing holds the token. Other modules can send the same card through the effects api (bindingCard))
 - 3.65.1 (The Seed of Lilith: a player character vessel always resists at 7, whatever their gender; a Storyteller character's recorded sex now counts even without a passer-by's tags (B3502))
