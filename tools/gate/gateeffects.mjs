@@ -95,12 +95,16 @@ export async function run() {
 
     await step("6 queued item", async () => {
       const T = game.modules.get("wodx-chronicle").api;
+      // Items an earlier run left in the queue are cleared first, and only the item this run makes is counted.
+      const mine = e => e.type === "wodx-actions.effect" && String(e.title ?? "").includes("WoDX gate");
+      const pending = () => { const l = T.approvals.pending(); return Array.isArray(l) ? l : []; };
+      for ( const e of pending().filter(mine) ) { try { await T.approvals.decide?.(e.id, "reject", "gate clean-up (earlier run)"); } catch {} }
+      const before = new Set(pending().map(e => e.id));
       const m = await ChatMessage.create({content: "<div class='wodx-effects'>WoDX gate queued keyword</div>", whisper: [game.user.id],
         flags: {[MOD]: {kind: "effects", caster: caster.name, items: [item("fear", E.spend(2, 2, {}), {}, "queue")]}}});
       msgs.push(m);
       for ( let i = 0; i < 20 && !m.flags?.[MOD]?.done; i++ ) await new Promise(r => setTimeout(r, 150));
-      const list = T.approvals.pending();
-      queued = (Array.isArray(list) ? list : []).filter(e => e.type === "wodx-actions.effect" && String(e.title ?? "").includes("WoDX gate"));
+      queued = pending().filter(e => mine(e) && !before.has(e.id));
       ok("6 queued item", !!m.flags?.[MOD]?.done && queued.length === 1, {queued: queued.length});
     });
 

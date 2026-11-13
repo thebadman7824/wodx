@@ -146,7 +146,7 @@ Next free block: B3320
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3087) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -155,10 +155,13 @@ Next free block: B3320
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
+| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
-| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
+| B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
+| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
@@ -4605,6 +4608,17 @@ Reverse: empty NOTES.
 A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
 
 Reverse: none needed; REFS starts empty.
+
+## B3086. Each gate in a batch starts from the world as it was (2026-11-13)
+The first long --touched runs (87 to 143 gates on one lane) failed about 30 gates that pass alone: earlier gates left 26 to 28 world settings changed, solo mode on, and venture and builder state behind. run-gate.mjs now puts back every world setting a gate changed and removes the ones it added, after each gate; on lanes that are reset every night (2 and 3) it also deletes the documents the gate left. Lane 1, where Ben plays, keeps its documents. --lanes 2,3 splits a long list over two lanes side by side. The two-browser gates (gatesolo, gatelookhand) leave the map, so --touched and --all no longer run them in a batch; they run by name, alone.
+
+Reverse: Remove the settings and documents step from run-gate.mjs and the two names from notGates in gate-map-extra.json.
+
+## B3087. The effects gate clears its own leftovers from the approval queue (2026-11-13)
+Step 6 of gateeffects counted every "WoDX gate" effect item waiting for approval, so items an earlier run left behind made it fail (4 found on the testbed). It now rejects those leftovers first and counts only the item it makes itself.
+
+Reverse: Count every "WoDX gate" effect item again in step 6.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -4721,6 +4735,11 @@ Desk item c2. When a fight with a player character ends, WoDX Combat writes one 
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
 
+## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
+Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
+
+Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.
+
 ## B3190. The Philippines, Indochina and the Balkans pay in their own coin (2026-11-13)
 WoDX Storyteller. Three money lists join the others. In the Philippines: gold by weight and piloncitos, then Mexican pesos from the galleons (1565, the same money as Mexico, so no changer stands between them), Philippine pesos (1857, with a bank from 1852), the peso at two to the dollar (1903), and the piso (1967). In Indochina: the copper cash of Đại Việt in quan of 600, then the French piastre (1885), the đồng with the riel and the kip (1954), and the đồng of a united Vietnam (1978). In the Balkans: Byzantine coin, then Serbian silver dinars (1214), the Ottoman akçe (1459) and kuruş, Serbian dinars with the leu and the lev (1867), the Yugoslav dinar (1920), and the new dinar (1994). Wages are history rounded for play, a house rule; the books name no coins or wages for these lands.
 
@@ -4771,6 +4790,101 @@ WoDX NPC adds Guardian and Ward to the family group. They can be set by hand on 
 
 Reverse: none needed.
 
+## B3220. Pregnancy is a state on the clock, started by the Storyteller (2026-11-13, Ben approved)
+WoDX NPC (family-rules.mjs, family.mjs). A pregnancy is kept on the sheet of the one who carries the child, found from the sexes on the sheets, with a due time about nine months on. The Storyteller starts it from the Relationships tab or api.family.conceive; a player asks from a lover, spouse or troth tie, and the ask waits in the approval queue. Both must be adults (B3210), and the lines must be able to have children (the child rules of B2854 onward). Nothing about conception is ever shown: the sheet says only "Expecting, due in spring".
+
+Reverse: api.family.end clears a pregnancy.
+
+## B3221. The birth roll by century, and rest by custom (2026-11-13, Ben approved)
+At the due time the active Storyteller's client rolls Stamina of the one giving birth plus the Medicine of whoever attends (3 for a midwife or physician, 4 for a hospital) against 8 before 1700, 7 to 1850, 6 to 1930, 5 to 1970 and 4 after. No one skilled adds 1, a physician from 1700 takes 1 off, and a hospital from 1930 sets 4. This is a house reading of the history of medicine, not a book rule. Any success goes well, no success is a hard birth (2 bashing health levels and about 2 more months of rest, for the Storyteller to apply), and a botch is a loss, told only to the Storyteller and gently. A pregnancy set as safe has no roll. Rest after the birth follows the custom: lying-in until the churching in Christendom before 1900, the forty days in the lands of Islam, sitting the month in the Sinic way of life, and parental leave from 1970.
+
+Reverse: set a pregnancy as safe, or pass api.family.birth an outcome.
+
+## B3222. Supernatural pregnancies are story hooks only (2026-11-13, Ben approved)
+When a parent is a ghoul, mage, Garou, changeling, Kinfolk or hunter, the Storyteller's card carries a story idea (a frenzy near the birth, the sept learning of a metis, the Dreaming noticing a Kinain child). None of them is a rule or rolls anything. Kindred, wraiths, mummies, demons in their own bodies and Kuei-jin cannot have children, as the child rules already say; any exception is the Storyteller's story call, never a button.
+
+Reverse: none needed.
+
+## B3223. A child is a child sheet (2026-11-13, Ben approved)
+WoDX NPC. A birth makes a child sheet, and the Storyteller can make any sheet one (api.family.makeChild). It carries the Storyteller's minor mark, so the age floor of B3210 holds even with no birth year, and the mark comes off at 18. Attributes are held to 1 until 7, 2 until 13 and 3 until 18, and filled toward 3, then 6, then the 15 dots of a grown mortal; Abilities to 1 before 10, 2 before 14 and 3 before 18; Willpower 1, 2, 3, then 4. House numbers. The Relationships tab shows the age and the caps.
+
+Reverse: unset flags.wodx-npc.childSheet and the minor mark by hand.
+
+## B3224. Growing up across the years, one card per child (2026-11-13, Ben approved)
+When a skip moves the clock by whole years and a child passes an age band (7, 10, 13, 14, 18), one approval card per child sets what the years brought: a scene from the lifepath's childhood or teen years (with one of its choices and the Abilities it gives, within the age's cap), schooling or work, and a Nature from 13. Approving applies it; turning it down leaves the sheet as it was.
+
+Reverse: turn the card down.
+
+## B3225. No lifepath scene about love for a child (2026-11-13)
+Growing up never offers a lifepath scene about love, courting or marriage (the first love of the teen years among them), by the age floor.
+
+Reverse: none. This stays.
+
+## B3226. Coming of age at 18 (2026-11-13, Ben approved)
+At 18 the card says the child is grown: the minor mark comes off, the sheet keeps its history, and the Storyteller may make them a player character through the character wizard.
+
+Reverse: none needed.
+
+## B3227. Schooling and work by century, region and way of life (2026-11-13, Ben approved)
+Before schooling was compulsory a child is an apprentice, page or novice in Christendom before 1500, then goes to a parish school, a guild or service; the kuttab in the lands of Islam; the clan school in the Sinic way of life; the temple school (terakoya) in Japan from 1600; the teacher's house in India; or learns at the family's side elsewhere. Compulsory school starts on its year by region (Moravia 1774, Prussia 1763, France 1882, England 1880, Japan 1872, and others; 1960 where no year is known), then the modern school day from 1950, computers from 1990, and the net from 2023. Readings of history; the Storyteller may move a date.
+
+Reverse: edit COMPULSORY in family-rules.mjs.
+
+## B3228. Players play children only where the Storyteller turns it on (2026-11-13, Ben approved)
+A world setting, "Players may play children", off by default. While it is off, a player cannot make or own a character under 18, a player cannot set their own character's birth year to make them a child, and a newborn's sheet is shown to the parents' players without being theirs. When it is on, a child character still never takes part in anything romantic or sexual (B3210).
+
+Reverse: turn the setting on.
+
+## B3229. A player can propose marriage (2026-11-13, Ben approved)
+From a lover, troth, friend, ally, contact, patron or other tie on the Relationships tab. Both must be adults and free to marry under the law of the place and year. An NPC answers by their warmth to the one asking: Devoted says yes, Fond rolls the asker's Charisma + Empathy at difficulty 6, anything lower says no. A player character's player answers on a card.
+
+Reverse: none needed.
+
+## B3230. The families' say (2026-11-13, Ben approved)
+The courting custom of the place and year names who must agree: the families under arranged matches, matchmakers and miai, the parents in the age of calling, the couple with the families' blessing in the age of dating, and the couple alone after. Where the families must agree, a rank gap draws the rank ladder's objection onto the wedding card for the Storyteller. A feud between the two sides blocks the match until it is settled.
+
+Reverse: settle the feud.
+
+## B3231. The banns or the contract, then the wedding card (2026-11-13, Ben approved)
+After a yes the clock counts the waiting: three Sundays of banns in Latin Christendom from 1215 (a betrothal before), the banns in the Orthodox church, the nikah contract and the mahr in the lands of Islam, a go-between and a lucky day in the Sinic and Japanese ways of life, an auspicious day in India, and a civil notice wherever marriage is civil. Then the wedding card goes to the Storyteller's approval queue with the rite, the record and the payment; approving it marries them under the existing marriage rules.
+
+Reverse: turn the wedding card down.
+
+## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
+WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
+
+Reverse: set Towns change over time to Off; the state stays and nothing else reads it.
+
+## B3281. Prosperity and unrest drift back to a town's ordinary level; pressures hold it away (2026-11-13)
+Prosperity 0 to 5 (3 getting by), unrest 0 to 5 (1 grumbling). Each week unrest eases a tenth of the way back to 1 and prosperity a fiftieth of the way back to 3, so a lasting pressure holds a town at its own level and a one-off blow wears off over a year or so. Pressures: no bread +0.3 unrest, short +0.08, dear bread and fuel up to +0.2, a tax a quarter of its rate, famine +0.15, plague +0.1, siege or cut off +0.1 unrest and -0.06 prosperity. People grow 0.2 in the hundred a year before 1750, 0.8 to 1950, 0.4 to 2022, nothing after, plus or minus 0.4 a year per step of prosperity from getting by. House rules.
+
+Reverse: change UNREST_EASE, PROSPERITY_EASE, pressures or naturalGrowth in town-rules.mjs.
+
+## B3282. Disasters by the town's make and ground (2026-11-13)
+Fire each week: 1 in 900 for timber towns, 1 in 3000 for stone, two and a half times in the dry season (June to September, turned south of the equator), halved from 1850 and again from 1950; a town is timber before 1700 unless the Storyteller says. Floods only on a town marked as on a river, in spring; storms only on a coast; earthquakes only on unsteady ground. A failed harvest once a year at harvest time: 1 in 12 before 1750, 1 in 30 to 1880, 1 in 80 to 1950, none after; it brings famine for 26 weeks and makes bread short and half again as dear in the town's market. House rules.
+
+Reverse: change fireChance, harvestChance or rollDisasters in town-rules.mjs.
+
+## B3283. Plague years by region of the world (2026-11-13)
+TOWN_OUTBREAKS: the Black Death (Europe and the Near East), its return, smallpox in Mexico and the Caribbean and the Andes, the great sickness of 1545, plague in the war years and the Great Plague, cholera from 1817 in Asia and from 1830 in Europe and beyond, the third plague in China and India, and influenza everywhere from 1918. Each strikes a town at most once, with a weekly chance while it runs, and kills a share of the people over its weeks (a third for the Black Death, a few in the hundred for cholera and influenza). The Hunt's own outbreak list is left as it is. A rounded reading of history, not a book rule.
+
+Reverse: edit or empty TOWN_OUTBREAKS.
+
+## B3284. Riots and risings (2026-11-13)
+From unrest 3.5 a riot may break out each week (15 in the hundred per step above 3, half at most), with six weeks of rest after one; it costs 0.3 prosperity and lets off 1.2 unrest. Unrest at 4.5 or more for four weeks may become a rising (one in five a week): a whole step of prosperity and 2.5 unrest. From unrest 4 a few people leave each week for the linked town that does best, or leave the land. Words follow the age (a revolt before 1500, barricades 1789 to 1990, mass protests after) and the cause (bread, the tax).
+
+Reverse: change riotChance, RIOT_REST, RISING_AFTER or RISING_CHANCE.
+
+## B3285. News and battles land at once (2026-11-13)
+A dated event with market news reaches every town at once (plague, famine, war, siege, a crash, a collapse, good times; NEWS_EFFECT). A battle at a town (its place matches the market's name or one of its scenes) lands when it ends: a siege taken by storm is a sack (two steps of prosperity, about an eighth of the people dead or fled), a siege lifted costs a little, a field battle a little more; each battle once.
+
+Reverse: drop the wodxEventFired and wodxBattle hooks in towns.mjs.
+
+## B3286. Who sees it and what waits (2026-11-13)
+Auto: the week lands with one Undo card for the Storyteller; a town where a player character stands and something happened waits whole in the approval queue. Suggest: every changed town waits. Big events start a true rumour from the town's traders, a line in the log and the wodxTown hook. A new town takes its people from a settlement record of the same name, else 400 plus 200 a scene plus 100 a trader.
+
+Reverse: change land() in towns.mjs.
+
 ## B3290. The town generator takes a region (2026-11-13)
 tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
 
@@ -4790,6 +4904,11 @@ Reverse: drop the renames; every region uses the Bohemian names.
 WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
 
 Reverse: show the old sentence for every record.
+
+## B3294. Buildings and the record's age outside the one-party lands (2026-11-13)
+tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from 1950 gets no house of culture, and its estate blocks from 1958 are named Tower block (the grands ensembles and council estates of a market town) instead of Panel block; the building itself stays the same. The settlement record's age is now the trade age (postwar in France in 1965), with the furnishing band kept as band.
+
+Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.

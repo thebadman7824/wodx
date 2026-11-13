@@ -33,6 +33,7 @@ import * as Turn from "./market-turn.mjs";
 import * as Moves from "./market-moves.mjs";
 import * as Caravans from "./caravans.mjs";
 import * as Ventures from "./ventures.mjs";
+import * as Towns from "./towns.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
@@ -107,6 +108,7 @@ Hooks.once("init", () => {
   Moves.registerMoveSettings();
   Caravans.registerCaravanSettings();
   Ventures.registerVentureSettings();
+  Towns.registerTownSettings();
   Tasks.registerTaskSettings();
   Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
@@ -142,7 +144,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Towns.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -158,6 +160,7 @@ Hooks.once("ready", () => {
   Moves.setupMoves().catch(e => console.error("WoDX | market moves", e));
   Caravans.setupCaravans().catch(e => console.error("WoDX | caravans", e));
   Ventures.setupVentures().catch(e => console.error("WoDX | ventures", e));
+  Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -196,7 +199,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), towns: Towns.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
