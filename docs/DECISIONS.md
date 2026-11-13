@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2980
+Next free block: B2990
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -136,6 +136,7 @@ Next free block: B2980
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 | B2960-B2969 | Courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (B2960-B2962); the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashic Brotherhood and Ahl-i-Batin (B2963-B2968) (used B2960-B2968) | NPC |
 | B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
+| B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4161,4 +4162,17 @@ A fae faction in the Americas or the Arctic before the settlers keeps a council 
 
 Reverse: delete "nunnehi-council" from POLITIES and the Nunnehi line in DEFAULTS.fae.
 
+## B2980. Daily worship of the other faiths (2026-11-13)
+WoDX NPC 0.65.0: a ready routine whose people keep a faith other than Islam with a daily rite gets it laid over the hours, first so it wins, as the five prayers are: for the Jewish year the morning service at the synagogue from ten to fifty minutes after sunrise on every day but the Sabbath, and the afternoon and evening services together around sunset on the days before Friday's eve; for the faiths of India worship at the household shrine at sunrise and the evening lamp at sunset; for the Buddhist south food given to the monks on their morning round, in the street; for Tibet the walk round the temple at dawn; for China incense at the household altar. The Western and Eastern churches get nothing new. A routine with hours of its own gets them only when Daily prayers and worship is set to Kept. House reading of the hours, rounded for play.
 
+Reverse: empty DAILY_WORSHIP in modules/wodx-npc/scripts/routine-rules.mjs.
+
+## B2981. Who leads the daily services (2026-11-13)
+The routine that serves the house of worship (daily prayer there with no set days) leads the synagogue's two services. For the other four faiths the clergy keep their own offices, already named for the faith, and nothing is laid over them.
+
+Reverse: drop the leader branch in withWorship.
+
+## B2982. When daily worship is not kept openly (2026-11-13)
+By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Soviet campaign against religion), in China from 1966 to 1976 (the Cultural Revolution) and in Tibet from 1959 to 1979. Set to Kept, an NPC keeps it anyway, in secret as far as the Storyteller plays it.
+
+Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
