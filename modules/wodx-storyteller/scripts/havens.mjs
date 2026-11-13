@@ -104,11 +104,12 @@ export async function havensDialog() {
   const rows = list.map(({scene, haven: h}) => `<tr><td>${esc(h.name || scene.navName || scene.name)}<br><small>${esc(scene.navName || scene.name)}</small></td>
     <td>${esc(h.owners.map(nm).join(", ") || "nobody")}</td><td>${h.security}</td>
     <td>${h.known.length ? esc(h.known.map(k => k.who).join(", ")) : "<i>nobody else</i>"}</td>
-    <td><button type="button" data-wst-haven="edit" data-scene="${scene.id}">Change</button> <button type="button" data-wst-haven="expose" data-scene="${scene.id}">Someone knows…</button></td></tr>`).join("");
+    <td><button type="button" data-wst-haven="edit" data-scene="${scene.id}">Change</button> <button type="button" data-wst-haven="expose" data-scene="${scene.id}">Someone knows…</button> <button type="button" data-wst-haven="works" data-scene="${scene.id}">Works…</button></td></tr>`).join("");
   const wire = (ev, dlg) => {
     for ( const b of dlg?.element?.querySelectorAll?.("[data-wst-haven]") ?? [] ) b.addEventListener("click", async () => {
       dlg.close();
       if ( b.dataset.wstHaven === "edit" ) await editHaven(b.dataset.scene);
+      else if ( b.dataset.wstHaven === "works" ) await game.modules.get(MOD)?.api?.havenWorks?.open?.(b.dataset.scene);
       else await exposeDialog(b.dataset.scene);
       havensDialog();
     });

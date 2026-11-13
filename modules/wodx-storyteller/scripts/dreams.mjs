@@ -27,7 +27,7 @@ export async function saveDream(raw) {
   await mutate("dreams", cur => {
     const list = D.normDreams(cur);
     const i = list.findIndex(x => x.id === d.id);
-    if ( i >= 0 ) list[i] = {...list[i], ...d, released: list[i].released, journalId: list[i].journalId, releasedAt: list[i].releasedAt};
+    if ( i >= 0 ) list[i] = {...list[i], ...d, released: list[i].released, journalId: list[i].journalId, releasedAt: list[i].releasedAt, omen: d.omen ?? list[i].omen ?? null};
     else list.push(d);
     return {value: list};
   });
@@ -57,7 +57,7 @@ export async function releaseDream(id) {
     flags: {[MOD]: {dream: d.id, actorId: d.actorId}}});
   const gms = [...(game.users ?? [])].filter(u => u.isGM).map(u => u.id);
   await ChatMessage.create({whisper: [...who.map(u => u.id), ...gms], speaker: {alias: "A dream"},
-    content: `<div class="wodx-card wstory wstory-dream"><p><strong>${esc(actor?.name ?? "Someone")} dreams.</strong></p><p>@UUID[${journal.uuid}]{${esc(d.title)}}</p></div>`});
+    content: `<div class="wodx-card wstory wstory-dream"><p><strong>${esc(actor?.name ?? "Someone")} dreams.</strong></p><p>@UUID[${journal.uuid}]{${esc(d.title)}}</p>${d.omen ? `<p><button type="button" data-wst-read-dream="${esc(d.id)}">Try to read it</button></p>` : ""}</div>`});
   await mutate("dreams", cur => ({value: D.normDreams(cur).map(x => x.id === id ? {...x, released: true, releasedAt: now(), journalId: journal.id} : x)}));
   return journal;
 }

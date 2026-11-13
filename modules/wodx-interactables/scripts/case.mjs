@@ -12,6 +12,7 @@
  * browser's tools. Keep anything truly secret in the Storyteller's own notes.
  */
 import * as C from "./case-rules.mjs";
+import * as Inv from "./investigation.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
@@ -80,7 +81,8 @@ export class CaseBoardApp extends ApplicationV2 {
     window: {title: "Case board", icon: "fa-solid fa-diagram-project", resizable: true},
     position: {width: 900, height: 680},
     actions: {note: CaseBoardApp.#onNote, newBoard: CaseBoardApp.#onNew, makeOpen: CaseBoardApp.#onMakeOpen,
-      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine, starter: CaseBoardApp.#onStarter}
+      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine, starter: CaseBoardApp.#onStarter,
+      theories: CaseBoardApp.#onTheories, search: CaseBoardApp.#onSearch, evidence: CaseBoardApp.#onEvidence}
   };
   static #instance;
   boardId = null;
@@ -135,6 +137,9 @@ export class CaseBoardApp extends ApplicationV2 {
         <svg class="wix-case-lines" width="${C.BOARD_W}" height="${C.BOARD_H}" aria-hidden="true">${lines}</svg>${cards}
         ${b.cards.length ? "" : `<p class="wodx-quiet wix-case-empty">Nothing pinned yet. <button type="button" data-action="starter"><i class="fa-solid fa-table-columns"></i> Lay out Who, Where and What we know</button></p>`}</div></div>
       <footer class="form-footer wodx-footer"><button type="button" data-action="note"><i class="fa-solid fa-note-sticky"></i> Add a note</button>
+        <button type="button" data-action="theories"><i class="fa-solid fa-lightbulb"></i> Theories</button>
+        <button type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i> Search here for traces</button>
+        ${gm ? `<button type="button" data-action="evidence"><i class="fa-solid fa-droplet"></i> Evidence here</button>` : ""}
         ${gm ? `<button type="button" data-action="newBoard"><i class="fa-solid fa-plus"></i> Start another board</button>${j.id !== openBoard()?.id ? `<button type="button" data-action="makeOpen"><i class="fa-solid fa-thumbtack"></i> Make this the open case</button>` : ""}` : ""}</footer>`;
     div.querySelector("select[name=board]")?.addEventListener("change", ev => { this.boardId = ev.target.value; this.linking = null; this.render(); });
     this.#wireDrag(div, j);
@@ -242,6 +247,10 @@ export class CaseBoardApp extends ApplicationV2 {
     }
   }
 
+  static async #onTheories() { if ( this.journal ) await Inv.theoriesDialog(this.journal); }
+  static async #onSearch() { await Inv.searchScene(); }
+  static async #onEvidence() { await Inv.evidenceDialog(); }
+
   static async #onLine(ev, target) {
     const j = this.journal, id = target.closest("[data-id]")?.dataset.id;
     const l = boardOf(j).links.find(k => k.id === id);
@@ -255,6 +264,7 @@ export class CaseBoardApp extends ApplicationV2 {
 }
 
 export function registerCaseSettings() {
+  Inv.registerInvestigationSettings();
   game.settings.register(MOD, "caseBoard", {scope: "world", config: false, type: String, default: ""});
   game.settings.register(MOD, "caseClues", {
     name: "Found clues go on the case board", hint: "A clue looked at or examined through Interact is pinned to the open case board, with what the finder learned.",
@@ -263,7 +273,10 @@ export function registerCaseSettings() {
 }
 
 /** Wire it up: the token tool for everyone, the Storyteller's hand, and redraws when the board changes. */
-export function setupCase() {
+export function setupCase({characterFor = null} = {}) {
+  const inquiry = Inv.setupInvestigation({characterFor, change, openBoard, boardOf});
+  Inv.registerInvestigationHooks();
+  Hooks.once("ready", () => game.socket?.on?.(`module.${MOD}`, msg => { if ( msg?.action === "judgeTheory" || msg?.action === "evidenceFound" ) Inv.onSocket(msg)?.catch?.(e => console.error(`${MOD} | investigation`, e)); }));
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.find?.(c => c.name === "token");
     if ( !tokens?.tools ) return;
@@ -282,5 +295,5 @@ export function setupCase() {
     };
     if ( game.user.isGM && !add() ) setTimeout(add, 2000);
   });
-  return {open: id => CaseBoardApp.open(id), openBoard, newBoard, change, pinClue, boards, rules: C};
+  return {open: id => CaseBoardApp.open(id), openBoard, newBoard, change, pinClue, boards, rules: C, inquiry};
 }

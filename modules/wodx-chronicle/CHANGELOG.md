@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.56.1 (The Player buttons window lists the new player buttons: What they say about you, Institutions (WoDX Storyteller) and Who remembers you (WoDX NPC), so each can be hidden per player)
 - 0.56.0 (The age floor: nothing romantic or sexual with anyone under 18, in any era or region. api.age.minor and api.age.romance, and a lover, spouse or troth tie to or from a minor is not kept on a sheet (B3210-B3212))
 - 0.55.0 (Eastern North America and Canada have people before the colonies (B3120): the Haudenosaunee alone in the medieval age, then a share (a quarter in the early modern age, a twentieth in the industrial, a fiftieth in the modern). Eastern North America now has mixes of its own and lends none of them to the West; a table may be marked lend: false in gen-core)
 - 0.54.0 (Where this scene stands has a Money here choice (B3191). A scene in Manila, Hanoi or Belgrade pays in the money of that land, even though the region it is filed under (the Malay world, mainland Southeast Asia, Hungary and the Balkans) has another)

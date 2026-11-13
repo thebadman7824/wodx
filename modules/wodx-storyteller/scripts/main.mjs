@@ -33,6 +33,10 @@ import * as Turn from "./market-turn.mjs";
 import * as Moves from "./market-moves.mjs";
 import * as Caravans from "./caravans.mjs";
 import * as Ventures from "./ventures.mjs";
+import * as Inst from "./institutions.mjs";
+import * as Works from "./haven-works.mjs";
+import * as Omens from "./omens.mjs";
+import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
@@ -111,12 +115,20 @@ Hooks.once("init", () => {
   Moves.registerMoveSettings();
   Caravans.registerCaravanSettings();
   Ventures.registerVentureSettings();
+  Inst.registerInstitutionSettings();
+  Works.registerWorksSettings();
+  Omens.registerOmenSettings();
+  Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
   Tasks.registerTaskSettings();
   Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
+  Inst.registerInstitutionHooks();
+  Works.registerWorksHooks();
+  Omens.registerOmenHooks();
+  Patron.registerPatronageHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
@@ -149,7 +161,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -184,7 +196,7 @@ Hooks.once("ready", () => {
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
-    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    rumours: {tale: Rumours.startTale, toneFor: Rumours.toneFor, aboutView: Rumours.aboutView, openAbout: Rumours.aboutDialog, open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     clocks: {open: () => Clocks.ClocksApp.open(), list: Clocks.clocks, visible: Clocks.visibleClocks, save: Clocks.saveClock, remove: Clocks.removeClock,
       step: Clocks.stepClock, show: Clocks.showClock, tick: Clocks.tick, rules: ClockRules},
@@ -206,11 +218,14 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
+    havenWorks: Works.api(),
+    omens: Omens.api(),
+    patronage: Patron.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
@@ -308,6 +323,12 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => PassTime.passTimeDialog()};
   tokens.tools.wodxLetters = {name: "wodxLetters", title: "Send a letter or message (it travels as the era allows)", icon: "fa-solid fa-envelope", order: 108,
     button: true, visible: true, onChange: () => Letters.openLetters()};
+  tokens.tools.wodxTales = {name: "wodxTales", title: "What they say about you (the tales going round about your character)", icon: "fa-solid fa-comments", order: 108.5,
+    button: true, visible: !game.user.isGM, onChange: () => Rumours.aboutDialog()};
+  tokens.tools.wodxArtists = {name: "wodxArtists", title: "Artists and patrons (who makes art, who pays for it, and what is in fashion)", icon: "fa-solid fa-palette", order: 109.3,
+    button: true, visible: game.user.isGM, onChange: () => Patron.artistsDialog()};
+  tokens.tools.wodxInstitutions = {name: "wodxInstitutions", title: "Institutions (the church, guilds, council, watch, press and more, and who holds their seats)", icon: "fa-solid fa-landmark", order: 109.2,
+    button: true, visible: true, onChange: () => Inst.institutionsDialog()};
   tokens.tools.wodxTasks = {name: "wodxTasks", title: "Downtime and long tasks (projects that take days or weeks: research, a business, courting, making things, training)", icon: "fa-solid fa-hourglass-half", order: 109,
     button: true, visible: true, onChange: () => Tasks.tasksDialog()};
   tokens.tools.wodxProperty = {name: "wodxProperty", title: "Property and building (what you own, making things, putting up a building)", icon: "fa-solid fa-house-flag", order: 126,
