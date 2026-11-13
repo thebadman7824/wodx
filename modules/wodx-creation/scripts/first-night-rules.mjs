@@ -34,6 +34,7 @@ export const STEPS = [
   {key: "meritsFlaws", label: "Merits and Flaws", hint: `Flaws give at most ${FLAW_CAP} freebie points; the Storyteller agrees to each.`, auto: true},
   {key: "fit", label: "Fit with the year and place", hint: "The clan, language and gear against the chronicle's year."},
   {key: "prelude", label: "Prelude", hint: "The life before and the change, played or written."},
+  {key: "recheck", label: "Check after the prelude", hint: "The book's totals again, with what the prelude gave.", auto: true},
   {key: "forecast", label: "Trouble ahead", hint: "What the choices will cost later. Read it together."},
   {key: "signoff", label: "Sign-off", hint: "The Storyteller signs the character off for the first night.", gm: true, last: true}
 ];
@@ -67,7 +68,9 @@ export const hookDue = hook => !!hook?.agreed && !hook.used && (Number(hook.sess
 
 /**
  * What the sheet shows for the steps the hub can tell. view: {concept, nature, demeanor, lifepath (bool),
- * build: {ok, freebiesLeft} | null, flawPoints, flawsApproved (bool), sessionZero (bool)}.
+ * build: {ok, freebiesLeft} | null, flawPoints, flawsApproved (bool), sessionZero (bool), recheck: {ok} | null}.
+ * The check after the prelude (0.24.0) is done when the prelude is and the build still matches the book with the
+ * prelude's gains paid from its own points.
  */
 export function autoDone(view = {}) {
   const out = {};
@@ -76,6 +79,7 @@ export function autoDone(view = {}) {
   out.build = !!view.build?.ok;
   out.meritsFlaws = (Number(view.flawPoints) || 0) <= FLAW_CAP && !!view.flawsApproved;
   out.sessionZero = !!view.sessionZero;
+  out.recheck = !!view.recheck?.ok;
   return out;
 }
 

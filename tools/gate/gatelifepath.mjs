@@ -46,7 +46,7 @@ export async function run() {
       {name: "WoDX gate: Lifepath Mortal", type: "Mortal"}]);
     made.push(vamp, mortal);
 
-    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.24.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
+    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.25.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
       && atLeast(game.modules.get("wodx-storyteller")?.version, "0.34.1"), {creation: game.modules.get(M).version, storyteller: game.modules.get("wodx-storyteller")?.version}));
 
     await step("2 sheet button", async () => {

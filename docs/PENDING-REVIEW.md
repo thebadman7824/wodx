@@ -981,6 +981,18 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 |---|---|---|---|
 | 2026-11-13 | Realm maps follow the books' layout notes (B2632): the Tempest keeps Stygia at its heart though Wraith 20th sets the Labyrinth at the centre, and its travel times do not match the book's | Keep the Tempest and the Labyrinth as separate maps, as they are; in lore the Tempest surrounds the Labyrinth (B2633). Up is north and a book's above and below laid out across the map stand as built | Redraw the Tempest round the Labyrinth in realm-worlds-rules.mjs |
 
+## Approved by Ben, 13 November 2026, 13:12 UTC (face features desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Which of 110 drafted face features to build, how NPCs get them, when form features show, who sees hidden ones (B2800-B2804) | All as recommended: build all, 8 with the named changes; Storyteller ticks, else rolled from clan, kith, tribe or house; form features only in that state; hidden ones only to those the rules allow | See B2800-B2804 in docs/DECISIONS.md |
+
+## Approved by Ben, 13 November 2026, 14:16 UTC (all pending items)
+
+| Date | Question | Choice | How to reverse |
+|---|---|---|---|
+| 2026-11-13 | Lifepath: the years after the change by line (Ben: "Yes. Do this.", B2624) | 139 ways of spending an age for the twelve lines that change, written from general knowledge of each line's books in WoDX's own words (no page check yet); one of each tone comes first on a first draw; the years on age-bound rows are Claude's reading of the timeline | Edit or empty a line's list in modules/wodx-creation/data/lifepath-since-lines.mjs |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1050,4 +1062,11 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 | 2026-11-13 | Does a faith kept by part of the town change the hunt? (B2711) | Only in its own quarter: listed by name with no step, for the Storyteller to count there | Change the minor-faith step from 0 in huntCalendar |
 | 2026-11-13 | How often does an old gun misfire in the wet? (B2712, Ben's pick cb4) | On any 1 in rain, sleet, hail or water, as the desk item set out (about 41% with five dice); on a botch in any weather; powder kept covered counts as dry | Change misfire() in modules/wodx-combat/scripts/powder-rules.js, or turn the Black powder setting off |
 | 2026-11-13 | Which lock does a gun with no lock in its name have? (B2714) | The lock most guns had that year: hand cannon to 1450, matchlock to 1700 (pistols wheellock from 1520), flintlock to 1840, percussion to 1870, then cartridges, the same in every land for now | Name the lock on the sheet, or edit lockForYear() |
-| 2026-11-13 | Lifepath: the years after the change by line (Ben: "Yes. Do this.", B2624) | 139 ways of spending an age for the twelve lines that change, written from general knowledge of each line's books in WoDX's own words (no page check yet); one of each tone comes first on a first draw; the years on age-bound rows are Claude's reading of the timeline | Edit or empty a line's list in modules/wodx-creation/data/lifepath-since-lines.mjs |
+| 2026-11-13 | When do the wizard's priorities lock? (B2761) | When the first Attribute or Ability dot is spent on that page; the player can still change the rank afterwards and the count follows | Clear flags.wodx-creation.wizard.order on the character |
+| 2026-11-13 | Which Backgrounds do the Dark Ages Werewolf and Mage lines offer? (B2764) | The W20 core and M20 core lists, since the trait table has no Dark Ages list for them; anything else can be written in | Edit BG_BOOKS in modules/wodx-creation/scripts/wizard-rules.mjs |
+| 2026-11-13 | Should the hub's Build step fail a sheet that charges Merits or goes past 7 Flaw points? (B2763) | Yes: Merits now cost their points and Flaws count only to the cap, so some sheets that passed before show points too many | buildState in first-night.mjs back to checkCreation's ok |
+| 2026-11-13 | Does sign-off wait for a check after the prelude? (B2765) | Yes, a new step after the prelude; it ticks itself when the prelude is done and the build still fits | Take "recheck" out of STEPS in first-night-rules.mjs |
+| 2026-11-13 | How does a talking face react to the character it speaks to? (B2793) | A swaying social roll first (charmed, persuaded or fooled smile, intimidated afraid, bribed smirk), then frenzy, the NPC's set mood, its attitude (Hostile angry, Distrusted smirk, Welcome smile), else at rest; from Injured down it rests in pain | Change reactionFor in modules/wodx-paperdoll/scripts/face64-rules.mjs |
+| 2026-11-13 | Who sees a changeling's horns and a hunter's sigil on a talking face? (B2795) | The Storyteller, and a player whose own character is a changeling (for the mien) or a hunter (for the sigil); other lines' marks show to all | Change viewerSees in modules/wodx-paperdoll/scripts/face64.mjs |
+| 2026-11-13 | When does a talking face play? (B2792) | Once on each screen, for a line less than 20 seconds old; older lines show the face still; each player can pick Moving, Still or Off | Change the 20 second window in onRender, face64.mjs |
+| 2026-11-13 | Which WoDX systems only display something, and which should get a deeper hook? (Display-Only Systems Desk, https://claude.ai/artifact/YRakoSn7dnDipi27K8p3Ug) | 36 systems listed across what is on main, open PRs and planned work. Recommended: deepen 19 (talking faces as a tell, face marks in witness memory and the Masquerade, Delirium from monster sprites, dress and local looks in social and crowd rolls, aura tints only after the Read the Soul roll, codex entries as research, languages counted, Go buttons on the world and realm maps, reflection marks read by the crossing, living tiles that switch walls and doors, Legends suggesting Renown and Status, dreams tied to powers and Flaws, elder lifepaths from the prologue timeline, rules on mood regions, after-action card into experience and Legends, crippled limbs on the damage doll, furnished containers), leave 14 as display, park 3 (voices, animated scenes, ASCII portraits). Nothing is built until Ben picks. | Pick another option on the desk; nothing to undo, since nothing was built. |
