@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3320
+Next free block: B3340
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -160,9 +160,13 @@ Next free block: B3320
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
+| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
-| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
+| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
+| B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3468,6 +3472,26 @@ Reverse: take the four names out of GAITS in sprite-rules.mjs.
 Feeding (wodxFed) plays the feeding move toward the vessel; a change of form (wodxFormChanged) plays the blur; a line spoken in character from a token plays the speech mark. Whoever may move a sprite token has a button on it for sitting, kneeling, looking about and standing up. One who sits or kneels still takes a blow and still falls, and healing does not stand them up; only a fall or a death is undone by healing.
 Reverse: remove the three Hooks.on lines and the pose button in sprites.mjs.
 
+## B2613. Looks for monsters on sprite tokens (2026-11-13, Ben's ask)
+Every creature of legend in the world has a look, drawn after what its own entry says of it (the page is in the entry's notes) and not after cartoons: a basilisk is a small serpent with a cock's head, a mist dragon the size of a cat, a custodes a great spider, the Black Monk a monk like any other, the Star Daemon a turning ribbon of light and shadow, a blood rose a hedge that sways and does not walk. Four-legged ones use the beast rig with wings, a single horn, a beak or spines; those on two legs are figures with their own size and marks (tools/sprites/monster.py). Two creatures share the name Basilisk and get the same look.
+Reverse: remove monster.py and the call in batch.py draw(); those creatures go back to having no sprite.
+
+## B2614. The fae are drawn in their fae mien, and ghosts as ghosts (2026-11-13, Ben's ask)
+A changeling's sprite shows its kith: size and build, ears, horns, a tail, a redcap's cap, a satyr's legs, a troll's blue skin. The kith comes from the sheet (the roster carries line and kith), else from the name. A wraith or a spirit is pale and half seen, and drifts instead of stepping. This is how the token looks to everyone; whether mortals at the table see the fae mien stays with the Storyteller's telling.
+Reverse: remove the fae() call in batch.py draw().
+
+## B2615. Block, parry, jump, crawl (2026-11-13, Ben's ask)
+A blow that does not land is met with the defence the fight rules rolled: a block or a parry with a spark, else the dodge as before (wodxAttackRolled now names the defence). A token moved with the jump or crawl action leaps over its shadow or goes flat to the ground.
+Reverse: take block and parry out of REACTS and jump and crawl out of GAITS in sprite-rules.mjs.
+
+## B2616. Working at a lock shows on the map (2026-11-13, Ben's ask)
+Interactables says when work is done at a door, a lock or a device (wodxInteractableWorked: token, action, result). A sprite stoops to the lock for fine work (picking, a key, disarming), strikes for force, and looks about when it listens or searches.
+Reverse: remove the Hooks.on line for wodxInteractableWorked in sprites.mjs.
+
+## B2617. Creatures of the books share looks by body plan (2026-11-13, Ben's ask for a book check)
+The creature pages of the books were read on the PC and each monster, spirit and creature written down in WoDX's own words: its body plan, size, how it moves and a few look words, with the book and page. Creatures close enough in body plan and look share one look, as the master and the messenger share a figure: a wisp in one of twenty colours for lights, flames and smoke, a swarm, a crawler, a flyer, a four-legged kind, or a figure of its own size (corpse, skeleton, giant, angel, oni, an elemental of stone, fire, water and so on). tools/sprites/bestiary.py writes the table (bestiary-looks.json, each name and alias to a look and a size) and roster.md (which creatures share which look). The batch draws a creature by name from that table when no look of its own fits; the creatures that have their own look (the dragon, the gryphon, the troll and the rest of B2613) keep it.
+Reverse: delete bestiary-looks.json; book_look() then finds nothing and the batch draws as before.
+
 ## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
 A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
 Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or drop #withSince in lifepath.mjs.
@@ -4850,6 +4874,41 @@ After a yes the clock counts the waiting: three Sundays of banns in Latin Christ
 
 Reverse: turn the wedding card down.
 
+## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
+WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
+
+Reverse: turn the setting off, or remove FATES from main.mjs.
+
+## B3261. Yearly chances are house readings (2026-11-13)
+WoDX NPC. The books give no tables for how often the undead die, sleep or sire. WoDX uses small yearly chances by line (RATES in fates-rules.mjs): a vampire 0.4% a year, three times that in the first fifty years after the Embrace; torpor 0.5% a year, more after 300 years; Garou 3% a year and dying of age at 55 to 80; mages 1.2% and Arete rising slowly to 6; changelings 1% and 0.8% lost to Banality; wraiths 0.4% destroyed, 0.3% to Oblivion, 0.05% Transcend; hunters 5%. A mummy slain rises again after 1 to 12 years. Torpor lasts by Humanity or Path (V20 pdf p. 291; the V20 Dark Ages table in wodx-creation/data/time.mjs); a torpor shorter than a year is over within the year.
+
+Reverse: edit RATES. Logged in PENDING-REVIEW.
+
+## B3262. Embrace and diablerie by sect (2026-11-13)
+WoDX NPC. The Third Tradition makes a Camarilla sire wait for an elder's leave (V20 pdf pp. 31-32), so Camarilla Embraces are rarest (0.5% a year) and the Sabbat's most common (2%); anarchs 1%, the rest 0.6%. The sheet's sect is read first; with none, a vampire before 1435 belongs to a feudal court and after it to the Camarilla. Diablerie is 0.06% a year, eight times that in the Sabbat and half in the Camarilla; it takes a simulated vampire of lower Generation about a third of the time, else a stranger, and lowers the diablerist's Generation by one only when the victim's was lower (V20 pdf p. 302). The 15th Generation cannot sire (V20 pdf p. 38); WoDX stops siring at 14th. A childe is one Generation thinner than the sire. At most 40 new ones in a jump, and those made in a jump do not sire until the next one.
+
+Reverse: edit EMBRACE, DIABLERIE_SECT, LAST_SIRING or BROOD_CAP.
+
+## B3263. Dangerous ages (2026-11-13)
+WoDX NPC. ERA_DANGER multiplies the death chance in the Inquisition's long hunt (1231-1480), the Black Death (1347-1351), the Anarch Revolt (1394-1493, vampires), the Shattering's long Banality (1350-1968, changelings), the Great War and the Second World War. These are house readings of the books' history, global rather than by region for now.
+
+Reverse: edit ERA_DANGER.
+
+## B3264. Off by default (2026-11-13)
+WoDX NPC. The world setting "Off-screen lives of supernatural NPCs" (npcFates) starts off, so Live is unchanged until the Storyteller turns it on. Short skips (under a year) only wake sleepers whose years are up.
+
+Reverse: change the default.
+
+## B3265. What approving writes (2026-11-13)
+WoDX NPC. Torpor: the Torpor condition and chronology.torpor {from, to} in world time. Waking: both cleared. Death: chronology.died and cause "off-screen", and the sheet moves to WoDX · The Dead (as Pass the Years files the dead). Diablerie: system.generation (keeping the Generation background's change). Rank: system.renown.rank; Arete: system.advantages.arete.permanent. A seat the dead held empties through the faction politics already in place, which fill it at the next gathering.
+
+Reverse: undo the sheet edits by hand; the card's text lists every one.
+
+## B3266. Brood records (2026-11-13)
+WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the world setting brood, named by the people generator of the region where it can, and lived through later jumps like anyone else. api.fates.bring(id) makes a sheet for one (a Vampire with its sire in lineage and its Generation; a Werewolf, Mage or Changeling for the others). An NPC flagged wodx-npc.fates.keep is left out, so the Storyteller's plans for a character stand.
+
+Reverse: clear the brood setting.
+
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
 
@@ -4905,6 +4964,41 @@ WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the
 
 Reverse: show the old sentence for every record.
 
+## B3294. Buildings and the record's age outside the one-party lands (2026-11-13)
+tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from 1950 gets no house of culture, and its estate blocks from 1958 are named Tower block (the grands ensembles and council estates of a market town) instead of Panel block; the building itself stays the same. The settlement record's age is now the trade age (postwar in France in 1965), with the furnishing band kept as band.
+
+Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
+
+## B3300. One hunter pressure per world region (2026-11-13)
+WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
+
+Reverse: switch off the setting "Hunters across the region"; nothing else reads the pressure.
+
+## B3301. What feeds it (2026-11-13)
+A hunting ground going Watched +1 or Hunted +2, a breach with witnesses that spreads +1, a new description of a culprit +1 (WoDX NPC descriptions, read each turn), an approved era response to a hot place +1, and +1 each turn while the Veil track stands at Hunted or worse and the region is already at Rumours. In lands of the Western church from 1450 to 1650 (the witch trials) every rise is half as large again, rounded up.
+
+Reverse: change POINTS or WITCH_TRIALS in hunters-rules.mjs.
+
+## B3302. Who hunts, by faith, year and line (2026-11-13)
+Bodies by the faith a region keeps (WoDX Chronicle faithFor) and the year, under WoDX's hunter lines (B42): bishops' courts and friars in Western and Eastern church lands to 1230; the Inquisition 1231-1833 (V20 p. 370); the Society of Leopold from 1834 (V20 p. 370; The Hunters Hunted II pp. 117-127); the sayyadin in Islamic lands to 1452 and the Ikhwan al-Safa from 1453 (The Hunters Hunted II pp. 152-153); the Judges everywhere, infernalists first (pp. 154-155); the Arcanum everywhere from 1885 (V20 p. 375, The Hunters Hunted II pp. 133-141; the year is a house reading); a state security service from 1947 (the FBI's Special Affairs Division and Project Twilight in North America, V20 p. 375, The Hunters Hunted II pp. 128-131); the imbued from 1999, or 2023 on the Future Darkness branch. Lands with no named body get local hunters. The Society and the Arcanum come to other lands once a region reaches Investigating. The Arcanum learns but never raids.
+
+Reverse: edit BODIES in hunters-rules.mjs.
+
+## B3303. Hunting is harder where the hunters move (2026-11-13)
+Hunting and Purge add +1 to hunting difficulty across the region, on top of a place's heat, at most +3 in all (upkeep.mjs huntHere).
+
+Reverse: set diff 0 on those stages.
+
+## B3304. Files on culprits and the hunters' moves (2026-11-13)
+Each region keeps a file on every culprit it hears of, in five levels (Nothing, A killer, What it is, Who and where, How to end it), 4 progress a level. From Watching on, each turn adds 1, 2 or 3 progress by stage, doubled for the Ikhwan al-Safa, the Judges and the Arcanum. At Investigating an investigator comes; at Hunting and Purge the hunters move against the culprit with the thickest file (level 2 or more); at Purge a crackdown. Each move goes to the approval queue and is not repeated in a region for 28 days. Approving starts a rumour and logs it; an investigator also sends every description of a culprit on file round the whole town.
+
+Reverse: the approval queue lets the Storyteller refuse any move; Forget in the window drops a file.
+
+## B3305. Word follows a culprit (2026-11-13)
+When a culprit with a file of level 2 or more stands in another region, that region's hunters hear after 60 days before 1500, 30 to 1849, 7 to 1979, 2 to 1999 and at once from 2000; their file starts one level lower and their pressure rises by one.
+
+Reverse: change TRAIL in hunters-rules.mjs.
+
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
 
@@ -4914,3 +5008,18 @@ Reverse: put back the old 22-name lists in data/people-world.mjs.
 WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
 
 Reverse: put back the old lists in data/people-world.mjs.
+
+## B3320. Overheard talk of the town (2026-11-13)
+WoDX NPC, overheard-rules.mjs townTopic and the grammar's overheard:town. From api.upkeep.towns.ofScene (Storyteller B3280): plague or famine now first, then the last blow (sack, rising, fire, flood, storm, earthquake, famine, riot) in its year and the next, then the mood (angry, grim, thriving); an ordinary town gives nothing. Weight 3, as the talk of the times, and passers-by may use it, since it is street talk.
+
+Reverse: drop "town" from TOPICS and PASSERBY_TOPICS.
+
+## B3321. The town's condition thins or fills the street (2026-11-13)
+WoDX NPC, passerby-rules.mjs townCrowd: plague halves the crowd, famine takes a fifth, unrest from 3.5 a fifth and from 4.5 two fifths, a ruined or poor town a fifth; a thriving or rich town adds a fifth, never past the scene's most. House rules.
+
+Reverse: make townCrowd return 1.
+
+## B3330. A rising costs the town's masters; a sack costs their purse (2026-11-13)
+WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (Storyteller B3280). A faction holds a town when one of its places is a scene of the town's market or a region on one. A rising: each mortal holder -1 Status and -1 Retainers; a taxing faction -1 Status, and each holder -1 standing toward it. A sack: each mortal holder -1 Resources. Kindred, Garou, mages, fae and spirits keep their dots, since the town rose against masters it can see. Always through the approval queue, unless the faction mode is Off. House rules.
+
+Reverse: drop the wodxTown hook in factions.mjs.

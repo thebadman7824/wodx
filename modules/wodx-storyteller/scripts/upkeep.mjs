@@ -17,6 +17,7 @@ import * as W from "./world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Hunters from "./hunters.mjs";
 
 export const T_BETWEEN = `${MOD}.between`;
 export const T_HEAT = `${MOD}.heat`;
@@ -256,7 +257,10 @@ export function huntHere(scene = canvas?.scene) {
   const outbreak = outbreakHere(scene);
   if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: 0, band: U.heatBand(0), outbreak};
   const h = huntOf(scene), heat = U.cooled(h.heat, h.since, now());
-  return {area: h.area, heat, extra: U.heatDifficulty(heat), band: U.heatBand(heat), outbreak};
+  // B3303: the hunters of the region add their stage's difficulty (at most +3 with the heat)
+  let extra = U.heatDifficulty(heat);
+  try { extra = Hunters.rulesHuntExtra(extra, scene); } catch (e) { /* hunters off */ }
+  return {area: h.area, heat, extra, band: U.heatBand(heat), outbreak};
 }
 
 export async function addHeat(scene, kind, {who = null} = {}) {
@@ -267,6 +271,7 @@ export async function addHeat(scene, kind, {who = null} = {}) {
   if ( r.crossed ) {
     await ChatMessage.create({content: `<div class="wodx-card wst-heat"><h3>${esc(scene.navName || scene.name)}: ${esc(band.name)}</h3><p>Heat ${r.before} to ${r.heat}. ${esc(band.note)}${band.diff ? ` Hunting here is +${band.diff} difficulty.` : ""}</p></div>`,
       whisper: gmIds(), speaker: {alias: "Hunting grounds"}});
+    if ( r.heat > r.before ) Hunters.onHeat(scene, band.name, {who}).catch(e => console.error(`${MOD} | hunters`, e)); // B3301
   }
   if ( band.name === "Hunted" && (r.responded === null || r.responded < r.since - U.HEAT.coolDays * U.DAY) ) {
     const resp = U.responseFor(yearNow());
@@ -282,6 +287,7 @@ async function approveHeat(entry) {
   await scene.update({[`flags.${MOD}.hunt.responded`]: now()});
   const place = scene.navName || scene.name;
   try { await game.modules.get(MOD)?.api?.rumours?.start?.({text: `Something is killing people at ${place}. ${entry.data.who} are asking questions.`}); } catch (e) { console.error(`${MOD} |`, e); }
+  Hunters.add(Hunters.regionAt(scene), "response", {why: `${entry.data.who} answer the deaths at ${place}`}).catch(e => console.error(`${MOD} | hunters`, e)); // B3301
   await log({kind: "heat", attention: "A hunting ground is hot", place: scene.id, text: `${entry.data.who} answer the deaths at ${place}. ${entry.data.text}`});
 }
 
@@ -313,9 +319,10 @@ export async function upkeepChooser() {
     content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources and what they have, the markets and their prices, the long tasks under way, the havens and who knows where they are, hardship on the road, or the bodies left behind.</p>",
     buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
       ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
-      {action: "money", label: "Money"}, {action: "markets", label: "Markets"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+      {action: "money", label: "Money"}, {action: "markets", label: "Markets"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "hunters", label: "Hunters across the region"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
   if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
   if ( pick === "hardship" ) return game.modules.get(MOD)?.api?.hardship?.open?.();
+  if ( pick === "hunters" ) return Hunters.open();
   if ( pick === "remains" ) return game.modules.get(MOD)?.api?.remains?.open?.();
   if ( pick === "havens" ) return game.modules.get(MOD)?.api?.havens?.open?.();
   if ( pick === "tasks" ) return game.modules.get(MOD)?.api?.tasks?.open?.();

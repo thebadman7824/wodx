@@ -108,6 +108,8 @@ export function build(ctx) {
     const year = Number(wc.year) || null, rum = rumourOf(a, b, listeners);
     let market = null, factions = [], units = null;
     try { market = st()?.upkeep?.markets?.of?.({scene}) ?? null; } catch (e) { market = null; }
+    let town = null;
+    try { town = st()?.upkeep?.towns?.ofScene?.(scene) ?? null; } catch (e) { town = null; }
     try { factions = game.modules.get(MOD)?.api?.factions?.state?.()?.factions ?? []; } catch (e) { factions = []; }
     try {
       const reg = chron()?.world?.regionOf?.(region);
@@ -115,7 +117,7 @@ export function build(ctx) {
       if ( rules?.moneyFor && year ) units = rules.moneyFor(year, reg?.money ?? "moravian")?.units ?? null;
     } catch (e) { units = null; }
     const shared = OR.sharedFacts({year, region: region ?? undefined, future: TK.eraBand(year, wc.branch ?? "") === "future", rumour: rum?.text ?? null, market, factions,
-      sceneId: scene?.id, a: baseActor(a)?.id, b: baseActor(b)?.id, feast: wc.feast ?? "", weather: weatherKey(), units, seed});
+      sceneId: scene?.id, a: baseActor(a)?.id, b: baseActor(b)?.id, feast: wc.feast ?? "", weather: weatherKey(), units, town, seed});
     return {shared, rumourId: rum?.id ?? null};
   }
 

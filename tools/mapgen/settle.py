@@ -434,7 +434,7 @@ def record(t, parts_index, types, era, where=None):
         k = b.label.split(" (")[0]
         kinds[k] = kinds.get(k, 0) + 1
     return {"format": "wodx-settlement", "version": 1, "id": settlement_id(t), "name": t.name, "seed": t.seed, "kind": t.size, "label": t.cfg["label"],
-            "year": t.year or 1197, "era": era, "age": age_of(t.year), "region": REGION, "tradeAge": trade_age(t.year), "walled": bool(getattr(t, "wall", None)), "country": where,
+            "year": t.year or 1197, "era": era, "age": trade_age(t.year), "band": age_of(t.year), "region": REGION, "tradeAge": trade_age(t.year), "walled": bool(getattr(t, "wall", None)), "country": where,
             "population": sum(len(h["people"]) for h in hs), "whole": [t.cols, t.rows],
             "maps": [{"id": p["id"], "name": p["name"], "map": p["map"], "sidecar": p["sidecar"], "households": len(p["household_ids"])} for p in parts_index],
             "layers": list(getattr(t, "layers", [])), "buildings": dict(sorted(kinds.items())), "trades": dict(sorted(trades.items(), key=lambda kv: (-kv[1], kv[0]))),

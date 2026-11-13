@@ -13,7 +13,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
+| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
 | wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
@@ -25,6 +25,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place), npc (passers-by scatter), storyteller (a fight goes in the log for the pacing note) |
 | wodxFirstNightSigned | creation | chronicle (the owner gets the opening goals to pick) |
 | wodxFed | actions | paperdoll (a sprite token leans in to feed), npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
+| wodxInteractableWorked | interactables | paperdoll (a sprite token stoops to the lock, strikes the door or looks about) |
 | wodxFormChanged | actions | actions, paperdoll (a sprite token blurs as it changes) |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses (who heard it; a loud noise heard by a character with Heightened Senses in use asks for Willpower) |
@@ -47,6 +48,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
+| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
 | wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
@@ -57,7 +59,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
-| wodxTown | storyteller | something happened to a town (a fire, flood, storm, earthquake, famine, plague, riot, rising or sack): {town (market id), kind, text, big} |
+| wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
 | wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |

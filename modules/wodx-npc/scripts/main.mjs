@@ -37,6 +37,7 @@ import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
+import * as FATES from "./fates.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
 import * as HEARTS from "./hearts.mjs";
@@ -48,7 +49,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.71.0";
+const VERSION = "0.74.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -842,7 +843,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); });
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -870,6 +871,8 @@ Hooks.once("init", () => {
   wanted.registerSettings();
   KIN.registerSettings();
   KIN.listen();
+  FATES.registerSettings();
+  FATES.listen();
   BONDS.registerSettings();
   BONDS.listen();
   TRUST.listen();
@@ -888,6 +891,7 @@ Hooks.once("init", () => {
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
+    fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, rules: FATES.rules},
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
