@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.57.2 (the known world: China is hidden from Europe until 1513 and Tibet until 1624, so nothing beyond India opens before India does; East Asia learns of Europe in 1513. B2555)
 - 0.57.1 (the known world: India is hidden from Europe until 1498, and the lands beyond it by sea until 1509 and 1511; China stays known by the roads across Asia. B2554)
 - 0.57.0 (travel by the region's own years: the railway, the tram, the motorway, the car, lit roads and streets, paved country roads and post roads for each of the 44 world regions (Cuba's railway in 1837, Italy's autostrada in 1924, Lhasa's railway in 2006, none on the ice); a trip by distance, the ways offered when acting alone and the road's encounter chance read the region the trip starts in; rumours spread by the homeland's years. B2571)
 - 0.56.0 (money changers: a price asked on a scene far from home is worked in the local money by what a day's labour earns in each place, and the money changer's cut is added (6 in the hundred to 1499, 4 to 1799, 2 to 1913, 3 after; 5 more where the scene is marked troubled); purses keep the home money; world setting Money changers abroad; api.upkeep.money.changeQuote and api.upkeep.money.awayMoney)
