@@ -75,34 +75,40 @@ export const clanName = c => `of the ${c} clan`;
 export const CLAN = /^of the (.+) clan$/;
 
 /**
- * The tables. Medieval: own names and the clan. Early modern (1500 to 1799): about a third of men also carry a church
- * name before the own name, women by church name or clan (era groups are coarser than 1700, B3122). Industrial and
- * modern: a church given name and a family name.
+ * The tables for a people named this way (B3122, and the Algonquian coast, B3510). Medieval: own names and the clan
+ * (none where clans are not recorded). Early modern (1500 to 1799): about a third of men also carry a church name
+ * before the own name, women by church name or as "A woman" of a clan or town (era groups are coarser than 1700).
+ * Industrial and modern: a church given name and a family name. spec: {men, women, clans, towns, church, modern, family}.
  */
-export function haudenosauneeTables() {
+export function stagedTables(O, {men: menS, women: womenS, clans: clanS = null, towns = null, church = HN_CHURCH, modern = HN_MODERN, family}) {
   const OLD = ["medieval"], EM = ["early-modern"], NEW = ["industrial"], MOD = ["modern"];
-  const men = split(HN_MEN), women = split(HN_WOMEN);
-  const clans = split(HN_CLANS).map(c => ({text: clanName(c)}));
-  const nativeM = tbl(`names.native.male.${O}`, "Names: haudenosaunee own names, male", men.map(text => ({text})));
-  const nativeF = tbl(`names.native.female.${O}`, "Names: haudenosaunee own names, female", women.map(text => ({text})));
-  // "A woman of the Wolf clan" where no own name was recorded: weighted so the few recorded names do not repeat in a town
-  const woman = {text: "A woman", weight: women.length * 3};
-  const churchM = split(HN_CHURCH.male), churchF = split(HN_CHURCH.female);
-  return [
+  const men = split(menS), women = split(womenS ?? "");
+  const nativeM = tbl(`names.native.male.${O}`, `Names: ${O} own names, male`, men.map(text => ({text})));
+  const nativeF = tbl(`names.native.female.${O}`, `Names: ${O} own names, female`, women.map(text => ({text})));
+  // "A woman of the Wolf clan" (or "A woman of Pokanoket") where no own name was recorded: weighted so the few
+  // recorded names do not repeat in a town
+  const share = Math.max(3, women.length * 3);
+  const woman = clanS ? [{text: "A woman", weight: share}]
+    : split(towns ?? "").map((t, i, all) => ({text: `A woman of ${t}`, weight: Math.max(1, Math.round(share / all.length))}));
+  const churchM = split(church.male);
+  const out = [
     nativeM, nativeF,
-    tbl(`names.male.${O}`, "Names: haudenosaunee, male (medieval)", men.map(text => ({text})), OLD),
-    tbl(`names.female.${O}`, "Names: haudenosaunee, female (medieval)", [...women.map(text => ({text})), woman], OLD),
-    tbl(`names.male.${O}`, "Names: haudenosaunee, male (early modern)",
+    tbl(`names.male.${O}`, `Names: ${O}, male (medieval)`, men.map(text => ({text})), OLD),
+    tbl(`names.female.${O}`, `Names: ${O}, female (medieval)`, [...women.map(text => ({text})), ...woman], OLD),
+    tbl(`names.male.${O}`, `Names: ${O}, male (early modern)`,
       [{text: `{names.native.male.${O}}`, weight: 2 * churchM.length}, ...churchM.map(c => ({text: `${c} {names.native.male.${O}}`}))], EM),
-    tbl(`names.female.${O}`, "Names: haudenosaunee, female (early modern)",
-      [{text: `{names.native.female.${O}}`, weight: women.length}, woman, ...plain(HN_CHURCH.female, 2)], EM),
-    tbl(`names.male.${O}`, "Names: haudenosaunee, male (industrial)", plain(HN_CHURCH.male), NEW),
-    tbl(`names.female.${O}`, "Names: haudenosaunee, female (industrial)", plain(HN_CHURCH.female), NEW),
-    tbl(`names.male.${O}`, "Names: haudenosaunee, male (modern)", plain(HN_MODERN.male), MOD),
-    tbl(`names.female.${O}`, "Names: haudenosaunee, female (modern)", plain(HN_MODERN.female), MOD),
-    ...["male", "female"].flatMap(sex => [
-      tbl(`names.family.${sex}.${O}`, `Family names: haudenosaunee, ${sex} (clan)`, clans, [...OLD, ...EM]),
-      tbl(`names.family.${sex}.${O}`, `Family names: haudenosaunee, ${sex}`, plain(HN_FAMILY), [...NEW, ...MOD])
-    ])
+    tbl(`names.female.${O}`, `Names: ${O}, female (early modern)`,
+      [...(women.length ? [{text: `{names.native.female.${O}}`, weight: women.length}] : []), ...woman, ...plain(church.female, 2)], EM),
+    tbl(`names.male.${O}`, `Names: ${O}, male (industrial)`, plain(church.male), NEW),
+    tbl(`names.female.${O}`, `Names: ${O}, female (industrial)`, plain(church.female), NEW),
+    tbl(`names.male.${O}`, `Names: ${O}, male (modern)`, plain(modern.male), MOD),
+    tbl(`names.female.${O}`, `Names: ${O}, female (modern)`, plain(modern.female), MOD)
   ];
+  for ( const sex of ["male", "female"] ) {
+    if ( clanS ) out.push(tbl(`names.family.${sex}.${O}`, `Family names: ${O}, ${sex} (clan)`, split(clanS).map(c => ({text: clanName(c)})), [...OLD, ...EM]));
+    out.push(tbl(`names.family.${sex}.${O}`, `Family names: ${O}, ${sex}`, plain(family), [...NEW, ...MOD]));
+  }
+  return out;
 }
+
+export const haudenosauneeTables = () => stagedTables(O, {men: HN_MEN, women: HN_WOMEN, clans: HN_CLANS, family: HN_FAMILY});
