@@ -49,6 +49,8 @@ export async function run() {
       [mage] = await Actor.createDocuments([{name: "Gate Kaspar Fates", type: "Mage", system: {advantages: {arete: {permanent: 2}}}, flags: {"wodx-creation": {chronology: {bornYear: 1170}}}}]);
       [kept] = await Actor.createDocuments([{name: "Gate Kept Fates", type: "Vampire", system: {generation: 8}, flags: {"wodx-npc": {fates: {keep: true}}}}]);
       made.push(vamp, wolf, mage, kept);
+      // A new Mage sheet starts at Arete 1 whatever the create data says, so set it after
+      await mage.update({"system.advantages.arete.permanent": 2});
       const pv = npc().fates.personOf(vamp, 1200), pw = npc().fates.personOf(wolf, 1200), pm = npc().fates.personOf(mage, 1200);
       const checks = {vampLine: pv.line === "vampire", vampGeneration: pv.generation === 9, vampSect: /sabbat/i.test(pv.sectText), vampRoad: pv.road === 7,
         wolfLine: pw.line === "garou", wolfRank: pw.rise === 1, mageLine: pm.line === "mage", mageArete: pm.rise === 2};
