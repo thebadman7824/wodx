@@ -321,3 +321,16 @@ export function seedCards(items = [], standing = []) {
   return out;
 }
 export const STANDING_WORD = {"-3": "Hunted", "-2": "Hostile", "-1": "Distrusted", "1": "Tolerated", "2": "Welcome", "3": "Honoured"};
+
+/**
+ * The hub as a checklist (Creation 0.25.0, B2829): the next step to do, and how many are left. A step counts as left
+ * when it is open and not optional; the next is the first open one this person can do (sign-off is the Storyteller's,
+ * and a step waiting for the Storyteller is not the player's next). Returns {next: key or null, left, total}.
+ */
+export function checklist(states = [], {gm = false} = {}) {
+  const needed = states.filter(s => !s.optional);
+  const left = needed.filter(s => s.state !== "done").length;
+  const can = s => s.state === "open" && (gm || !(s.gm || s.last));
+  const next = (needed.find(can) ?? states.find(can))?.key ?? null;
+  return {next, left, total: needed.length};
+}

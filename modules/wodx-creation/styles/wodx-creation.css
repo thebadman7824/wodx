@@ -62,3 +62,10 @@
 .wodx-wizard .wodx-wz-warn { color: var(--color-level-warning, #c9593f); }
 .wodx-wizard .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .wodx-wizard .wodx-buttons button { flex: 0 0 auto; width: auto; }
+
+/* Creation 0.25.0: the hub as a checklist (B2829), the quick start (B2827), the short lifepath (B2828) */
+.application.wodx-first-night .wodx-fn-done { padding: 0.2rem 0.6rem; }
+.application.wodx-first-night .wodx-fn-done > details > summary { cursor: pointer; }
+.application.wodx-first-night .wodx-fn-next { border-width: 2px; border-color: var(--color-warm-2, #c9593f); background: color-mix(in srgb, var(--color-warm-2, #c9593f) 8%, transparent); }
+.application.wodx-first-night .wodx-tag { font-size: 0.75rem; padding: 0 0.35rem; border-radius: 3px; border: 1px solid currentColor; }
+.wodx-lifepath .wodx-lp-paragraph { line-height: 1.45; }

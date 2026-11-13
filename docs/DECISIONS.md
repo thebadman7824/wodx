@@ -3843,3 +3843,18 @@ A question-mark button on every player's toolbar, in both views, opens a short w
 
 Reverse: take wodxNow out of installViewFilter in wodx-chronicle player-view.mjs.
 
+## B2827. A quick start in the character wizard (2026-11-13)
+The wizard's first page offers twelve concepts (soldier or guard, scholar, thief, noble or courtier, healer, hunter or woodsman, merchant or trader, priest or holy one, street tough, artisan, performer, investigator). One click spends the book's Attribute, Ability and Virtue allotments the way that concept would, on the Traits the sheet itself shows, so a 1197 soldier gets Archery and Ride and a 1999 one Firearms and Drive. A line with an Ability of its own (Primal-Urge, Kenning, Awareness) gets it first. Concept, Nature and Demeanor are filled in when empty. Powers, Backgrounds, Merits, Flaws and freebies stay the player's own choice, and every dot can be changed on the wizard's pages; the step-by-step path is as before. On a sheet with dots already, the player is asked first. The desk said "from the archetypes that already exist"; no table of starting builds existed, so the concepts are new, and the Nature and Demeanor come from the usual archetypes.
+
+Reverse: take the Quick start block off the book page in wodx-creation wizard.mjs.
+
+## B2828. Short and long lifepaths (2026-11-13)
+The lifepath's first page asks Short or Long; Short is the default. Short asks only where the character comes from (continent, region, people, origin, arrival); the dice tell the rest of the drill, the scenes of the turn and the ages after it, from the same region and year tables, by the lifepath's own seed. The story is shown as one paragraph, with the step-by-step list folded under it, and the end page keeps, drops and pays for the suggestions exactly as the long path does. Back changes any step.
+
+Reverse: set short to false in LifepathApp's setup in wodx-creation lifepath.mjs.
+
+## B2829. Before the First Night as a checklist (2026-11-13)
+The hub says how many needed steps are left and names the next one, which is outlined and tagged Next. Done steps fold to one line and open on a click. For a player the next step is never sign-off or a step waiting for the Storyteller. Steps can still be done in any order.
+
+Reverse: R.checklist in wodx-creation first-night.mjs.
+

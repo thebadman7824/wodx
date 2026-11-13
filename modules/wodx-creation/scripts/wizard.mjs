@@ -10,6 +10,7 @@ import {TOTALS} from "./totals-rules.mjs";
 import {totalsView, lineFor, CreationCheckApp} from "./totals-check.mjs";
 import * as B from "./first-night-build-rules.mjs";
 import * as W from "./wizard-rules.mjs";
+import * as Q from "./quick-start-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
 
@@ -45,7 +46,7 @@ export class WizardApp extends ApplicationV2 {
     window: {title: "Character wizard", icon: "fa-solid fa-wand-magic-sparkles", resizable: true},
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
-      removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub}
+      removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub, quick: WizardApp.#onQuick}
   };
 
   static openFor(actor, page = null) {
@@ -179,7 +180,11 @@ export class WizardApp extends ApplicationV2 {
         ${L.virtues !== undefined ? `<li>Virtues ${L.virtues}</li>` : ""}
         <li>Freebie points ${L.freebies}${L.rebirth ? ` plus ${L.rebirth.freebies} from the Rebirth` : ""}, and up to ${L.flaws ?? 7} more from Flaws</li>
       </ul>
-      <p class="wodx-quiet">Concept, Nature and Demeanor${L.sheet === "Vampire" ? ", clan" : ""} go on the sheet first. Starting values: ${esc(L.start.join("; "))}.</p>`;
+      <p class="wodx-quiet">Concept, Nature and Demeanor${L.sheet === "Vampire" ? ", clan" : ""} go on the sheet first. Starting values: ${esc(L.start.join("; "))}.</p>
+      <h3>Quick start</h3>
+      <p>Pick what the character was before the story, and the wizard spends the Attributes, Abilities${L.virtues !== undefined ? " and Virtues" : ""} for you. You can change any of it on the next pages, and still choose the ${esc((L.powers ?? []).map(p => p.label).join(" and ") || "powers")}, Backgrounds and freebies yourself.</p>
+      <div class="wodx-wz-add"><select name="quick-concept" aria-label="Concept for the quick start" data-fixed>${Object.entries(Q.CONCEPTS).map(([k, c]) => `<option value="${k}">${esc(c.label)}</option>`).join("")}</select>
+        <button type="button" data-action="quick"><i class="fa-solid fa-bolt"></i> Fill in a starting build</button></div>`;
   }
 
   #groups(kind, ctx) {
@@ -350,6 +355,32 @@ export class WizardApp extends ApplicationV2 {
     this.page = el.dataset.page;
     const w = wizardOf(this.actor);
     if ( w.page !== this.page ) { w.page = this.page; await saveWizard(this.actor, w); }
+    this.render();
+  }
+
+  /** The quick start (B2827): one concept's build written to the sheet, then the last look. */
+  static async #onQuick() {
+    const a = this.actor, L = TOTALS[this.lineId];
+    const id = this.element.querySelector("select[name=quick-concept]")?.value;
+    const traits = B.traitGroups(a.system ?? {});
+    const built = L && Q.quickBuild(id, traits, L, {kind: W.LINE_KIND[this.lineId] ?? ""});
+    if ( !built ) return;
+    const spent = Object.values(traits).flat().some(t => t.value > t.min);
+    if ( spent ) {
+      const yes = await foundry.applications.api.DialogV2.confirm({window: {title: "Quick start"}, rejectClose: false,
+        content: "<p>This sets every Attribute, Ability and Virtue on the sheet again, from the concept. Powers, Backgrounds, Merits and Flaws stay as they are. Go on?</p>"});
+      if ( !yes ) return;
+    }
+    const up = {...built.updates};
+    const s = a.system ?? {};
+    const arch = Q.archetypesFor(id);
+    if ( typeof s.concept === "string" && !s.concept.trim() ) up["system.concept"] = Q.CONCEPTS[id].label;
+    if ( typeof s.nature === "string" && !s.nature.trim() ) up["system.nature"] = arch.nature;
+    if ( typeof s.demeanor === "string" && !s.demeanor.trim() ) up["system.demeanor"] = arch.demeanor;
+    await a.update(up);
+    const w = wizardOf(a); w.order = built.order; w.page = "review"; await saveWizard(a, w);
+    this.page = "review";
+    ui.notifications.info(`${Q.CONCEPTS[id].label}: a starting build is on the sheet. Change anything you like.`);
     this.render();
   }
 

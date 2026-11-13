@@ -178,3 +178,68 @@ test("What can I do now: the moment is read right and only usable things are off
   assert.equal(R.STUCK_ROW.length, 3);
   assert.ok(R.ON_BAR.has("wodxNow"));
 });
+
+const Q = await import(join(root, "modules/wodx-creation/scripts/quick-start-rules.mjs"));
+const BR = await import(join(root, "modules/wodx-creation/scripts/first-night-build-rules.mjs"));
+const TT = await import(join(root, "modules/wodx-creation/scripts/totals-rules.mjs"));
+const LS = await import(join(root, "modules/wodx-creation/scripts/lifepath-short-rules.mjs"));
+const LD = await import(join(root, "modules/wodx-creation/scripts/lifepath-drill-rules.mjs"));
+const LR = await import(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs"));
+const FN = await import(join(root, "modules/wodx-creation/scripts/first-night-rules.mjs"));
+
+function sheet(abilities) {
+  const ab = (names, type) => Object.fromEntries(names.map(n => [n, {type, value: 0, label: n}]));
+  return {attributes: Object.fromEntries(["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"].map(k => [k, {value: 1}])),
+    abilities: {...ab(abilities.talent, "talent"), ...ab(abilities.skill, "skill"), ...ab(abilities.knowledge, "knowledge")},
+    advantages: {virtues: {conscience: {permanent: 1}, selfcontrol: {permanent: 1}, courage: {permanent: 1}}}};
+}
+const DA = {talent: ["alertness", "athletics", "awareness", "brawl", "dodge", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge"],
+  skill: ["animalken", "archery", "commerce", "crafts", "etiquette", "melee", "performance", "ride", "stealth", "survival"],
+  knowledge: ["academics", "hearthwisdom", "investigation", "law", "medicine", "occult", "politics", "seneschal", "theology", "enigmas"]};
+const MODERN = {talent: ["alertness", "athletics", "awareness", "brawl", "dodge", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge"],
+  skill: ["animalken", "crafts", "drive", "etiquette", "firearms", "melee", "performance", "security", "stealth", "survival"],
+  knowledge: ["academics", "computer", "finance", "investigation", "law", "medicine", "occult", "politics", "science", "technology"]};
+
+test("quick start: every concept spends the book's allotments exactly, in 1197 and in 1999", () => {
+  for ( const [line, abil] of [["vtda20", DA], ["v20", MODERN]] ) {
+    const L = TT.TOTALS[line], traits = BR.traitGroups(sheet(abil));
+    for ( const id of Object.keys(Q.CONCEPTS) ) {
+      const r = Q.quickBuild(id, traits, L, {kind: "kindred"});
+      assert.equal(r.unspent, 0, `${line} ${id}`);
+      const sum = part => Object.entries(r.updates).filter(([k]) => k.includes(part)).reduce((a, [, v]) => a + v, 0);
+      assert.equal(sum(".attributes.") - 9, L.attributes.reduce((a, b) => a + b, 0), `${line} ${id} attributes`);
+      assert.equal(sum(".abilities."), L.abilities.reduce((a, b) => a + b, 0), `${line} ${id} abilities`);
+      assert.equal(sum(".virtues.") - 3, L.virtues, `${line} ${id} virtues`);
+      assert.ok(Object.entries(r.updates).filter(([k]) => k.includes(".abilities.")).every(([, v]) => v <= L.abilityCap), `${line} ${id} cap`);
+      assert.ok(Q.CONCEPTS[id].label && !/\b(he|she|his|her|him|man|woman)\b/i.test(Q.CONCEPTS[id].label), id);
+    }
+  }
+  const soldier = Q.quickBuild("soldier", BR.traitGroups(sheet(DA)), TT.TOTALS.vtda20, {kind: "kindred"}).updates;
+  assert.ok(soldier["system.abilities.archery.value"] >= 2, "a 1197 soldier shoots a bow");
+  const soldier99 = Q.quickBuild("soldier", BR.traitGroups(sheet(MODERN)), TT.TOTALS.v20, {kind: "kindred"}).updates;
+  assert.ok(soldier99["system.abilities.firearms.value"] >= 2, "a 1999 soldier shoots a gun");
+  assert.equal(Q.archetypesFor("thief").nature, "Rogue");
+});
+
+test("short lifepath: the dice tell the rest, and the story reads as one paragraph", () => {
+  for ( const [line, by, ty] of [["mortal", 1170, 1197], ["vampire", 1960, 1999], ["werewolf", 1500, 1530]] ) {
+    let d = LD.newDrill({birthYear: by, age: ty - by, line, seed: `t${line}`, now: ty});
+    let asked = 0;
+    for ( let g = 0; g < 20 && !LD.done(d); g++ ) { d = LS.rollDrill(d); if ( LD.done(d) ) break; assert.ok(LS.SHORT_ASK.has(LD.current(d).id)); asked++; d = LD.surprise(d); }
+    assert.ok(asked >= 2 && asked <= 6, `${line}: ${asked} questions`);
+    const p = LS.rollPath(LR.newPath({line, splat: null, birthYear: by, turnYear: line === "mortal" ? null : ty, seed: d.seed, drill: d}));
+    assert.ok(LR.done(p), line);
+    const text = LS.paragraph(LR.summary(p, {nowYear: ty}).story);
+    assert.match(text, new RegExp(`^Born in ${by}`));
+    assert.doesNotMatch(text, /\n|—/);
+  }
+});
+
+test("First Night checklist: the next step and the count left", () => {
+  const st = [{key: "sessionZero", state: "done"}, {key: "ties", state: "waiting"}, {key: "lifepath", state: "open", optional: true},
+    {key: "build", state: "open"}, {key: "signoff", state: "open", gm: true, last: true}];
+  assert.deepEqual(FN.checklist(st), {next: "build", left: 3, total: 4});
+  const end = st.map(s => (s.key === "signoff" || s.optional ? s : {...s, state: "done"}));
+  assert.equal(FN.checklist(end).next, "lifepath", "with every needed step done, an optional one is offered to the player");
+  assert.equal(FN.checklist(end, {gm: true}).next, "signoff");
+});
