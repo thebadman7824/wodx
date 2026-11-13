@@ -219,3 +219,20 @@ test("a rising or a sack costs the factions that hold the town (NPC, B3330)", as
   assert.match(f, /Hooks\.on\("wodxTown"/);
   assert.match(f, /F\.townChanges\(/);
 });
+
+test("the town at each settlement age, for the rebuild (B3420)", () => {
+  const t = TR.normTown({id: "brno", people: 9000, history: [{year: 1300, people: 4000, prosperity: 3, unrest: 1}, {year: 1400, people: 9000, prosperity: 4, unrest: 2}, {year: 1900, people: 120000, prosperity: 3, unrest: 3}],
+    scars: [{kind: "plague", year: 1348, text: "The Black Death"}, {kind: "fire", year: 1500, text: "A fire"}]});
+  const r = TR.townAtAges(t, [1420, 1197, 1990]);
+  assert.deepEqual(r.map(a => a.year), [1197, 1420, 1990]);
+  assert.equal(r[0].people, 4000, "an age before the history takes its first line");
+  assert.equal(r[1].people, 9000);
+  assert.equal(r[1].size, "city");
+  assert.deepEqual(r[1].scars.map(s => s.kind), ["plague"]);
+  assert.deepEqual(r[2].scars.map(s => s.kind), ["fire"]);
+  assert.equal(r[2].size, "city");
+  assert.equal(TR.generatorSize(500, 1300), "village");
+  assert.equal(TR.generatorSize(2000000, 1990), "metropolis");
+  assert.equal(TR.townAtAges(null, [1197])[0].size, null);
+  assert.match(src("modules/wodx-storyteller/scripts/towns.mjs"), /atAges/);
+});

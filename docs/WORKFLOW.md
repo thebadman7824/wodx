@@ -8,7 +8,8 @@ decisions B3080 to B3085).
     node tools/decisions/claim.mjs --thread <thread id> --feature "what the work is"
 
 It prints a block such as B3090-B3099 and records it in `/mnt/project-files/registry/decision-blocks.json`, which every
-thread sees at once. Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
+thread sees at once. A claim takes about 12 seconds: it is read back after a pause and moves up a block if another
+thread took the same one a moment earlier (B3088). Use only numbers from that block. `--size 30` claims a bigger one; `--list` shows every claim.
 The coordinator claims the block when it starts a thread and names it in the first message; a thread that finds none
 there claims its own.
 
