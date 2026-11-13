@@ -1,5 +1,5 @@
 /**
- * Places of power, the pure part (B3260-B3266). No Foundry in here.
+ * Places of power, the pure part (B3450-B3456). No Foundry in here.
  *
  * Mage Nodes and their Tass, chantries, and Changeling freeholds with their balefires, so that those two lines get the
  * same running loop as blood upkeep for Vampire and caerns for Werewolf.
@@ -7,17 +7,17 @@
  *   Node       M20 pp. 320-321 (printed 319-320): the Background rating sets how much Quintessence wells up each week,
  *              half free for meditation and half as Tass. The Storyteller sets the weekly rate; the book suggests 2 a
  *              dot for an industrial-era game, 5 to 10 for high fantasy, 1 or 2 where magic is dying. WoDX picks the
- *              rate by year (house rule, B3261). The supply is finite: a drained Node must fill again, so untapped
- *              energy only builds up to a cap (B3262). Absorbing through the Avatar (p. 333 / 332): no more than the
+ *              rate by year (house rule, B3451). The supply is finite: a drained Node must fill again, so untapped
+ *              energy only builds up to a cap (B3452). Absorbing through the Avatar (p. 333 / 332): no more than the
  *              Avatar rating a turn without Prime 1, Tass needs Prime 3, and the Avatar rating caps what is held.
  *   Chantry    M20 pp. 309-310 (printed 308-309): a pooled Background; the pool sets the size; a member who quits or
- *              dies takes their points with them, and a fractured group loses all. The name follows the era (B3263).
+ *              dies takes their points with them, and a fractured group loses all. The name follows the era (B3453).
  *   Freehold   C20 pp. 170, 312-314 (printed 169, 311-313): Holdings 1 to 5, Glamour equal to the rank for a night's
  *              dreaming by the balefire (capped by each sleeper's Glamour rating; an oathcircle splits it, at least 1
  *              each; a Glade gives only to the first sleeper). Reaving with Banality at 7; every two successes over the
  *              rank cost the freehold a rank; lost ranks come back one a month if the balefire rests, one a season if
  *              it is harvested every day. Swearing the oath invests Glamour equal to the rating; a destroyed freehold
- *              gives its keeper that much Banality. Untended freeholds in a dull place fade (house rule, B3264).
+ *              gives its keeper that much Banality. Untended freeholds in a dull place fade (house rule, B3454).
  */
 
 export const DAY = 86400;
@@ -35,7 +35,7 @@ const str = (v, n = 120) => String(v ?? "").slice(0, n);
 /*  Nodes and Tass                                                     */
 /* ------------------------------------------------------------------ */
 
-/** Quintessence a week for each dot, by year (house rule B3261, from the book's range on M20 p. 320). */
+/** Quintessence a week for each dot, by year (house rule B3451, from the book's range on M20 p. 320). */
 export const NODE_RATES = [
   {to: 1449, perDot: 4, label: "the Mythic Age: wellsprings run full"},
   {to: 1699, perDot: 3, label: "the Renaissance and the Order of Reason's rise"},
@@ -47,7 +47,7 @@ export function nodeRateFor(year) {
   return NODE_RATES.find(r => y <= r.to) ?? NODE_RATES[NODE_RATES.length - 1];
 }
 
-/** Weeks of output a Node can hold before it stops building up (house rule B3262). */
+/** Weeks of output a Node can hold before it stops building up (house rule B3452). */
 export const NODE_CAP_WEEKS = 4;
 
 /** Who holds the Node: mystic Nodes thin the Gauntlet, Technocratic ones thicken it (M20 p. 320). */
@@ -162,10 +162,10 @@ export const CHANTRY_TIERS = [
   {min: 71, max: 100, label: "Stronghold"},
   {min: 101, max: Infinity, label: "Power center"}
 ];
-/** M20 p. 309 gives 21-30 and 30-70; a pool of 30 is read as a small sanctuary (B3263). */
+/** M20 p. 309 gives 21-30 and 30-70; a pool of 30 is read as a small sanctuary (B3453). */
 export const chantryTier = pool => CHANTRY_TIERS.find(t => int(pool) >= t.min && int(pool) <= t.max) ?? CHANTRY_TIERS[0];
 
-/** What the stronghold is called in the year (M20 p. 308: covenants first, chantries and Constructs by the 1900s; B3263). */
+/** What the stronghold is called in the year (M20 p. 308: covenants first, chantries and Constructs by the 1900s; B3453). */
 export function chantryName(year, side = "mystic") {
   const y = num(year);
   if ( side === "tech" ) return y >= 1899 ? "Construct" : y >= 1325 ? "Order of Reason house" : "Craftmasons' lodge";
@@ -209,7 +209,7 @@ export const FREEHOLD_FORMS = {
   nunnehi: {label: "Nunnehi lodge", note: "Sacred ground shaped by the dreams of the people who care for it."}
 };
 
-/** Fae ages (C20 pp. 35-39) for the freehold's era words and the fading threshold (house rule B3264). */
+/** Fae ages (C20 pp. 35-39) for the freehold's era words and the fading threshold (house rule B3454). */
 export const FAE_AGES = [
   {to: 1229, label: "before the Shattering", fade: 9, note: "Freeholds are many and bright; the Dreaming and the world still mingle."},
   {to: 1399, label: "the Shattering", fade: 6, note: "Trods close and freeholds vanish; the Black Death feeds the Dreaming's dark."},
@@ -218,7 +218,7 @@ export const FAE_AGES = [
 ];
 export function faeAgeFor(year) { const y = num(year); return FAE_AGES.find(a => y <= a.to) ?? FAE_AGES[FAE_AGES.length - 1]; }
 
-/** Days a freehold may go without its keeper before it is untended (house rule B3264). */
+/** Days a freehold may go without its keeper before it is untended (house rule B3454). */
 export const FREEHOLD_TEND_DAYS = 30;
 
 export function blankFreehold() {
@@ -254,7 +254,7 @@ export function noteHarvest(freehold, now) {
   const recent = f.lastHarvest !== null && num(now) - f.lastHarvest <= 2 * DAY;
   return {...f, lastHarvest: num(now), daily: recent ? f.daily + 1 : 1, lastTended: num(now)};
 }
-/** Harvested on (nearly) every night lately: at least 20 nights running counts as daily (house reading, B3265). */
+/** Harvested on (nearly) every night lately: at least 20 nights running counts as daily (house reading, B3455). */
 export const harvestedDaily = (f, now) => { const x = normFreehold(f); return x.daily >= 20 && x.lastHarvest !== null && num(now) - x.lastHarvest <= 2 * DAY; };
 
 /** Reaving (C20 p. 313 / 312): Banality dice at 7; successes are Glamour; every two over the rank cost a rank. */
@@ -268,7 +268,7 @@ export function reave(freehold, successes) {
 
 /**
  * Time passing for a freehold: lost ranks come back (one a month resting, one a season harvested daily), and an
- * untended freehold in a dull place fades a rank a season (house rule B3264). Returns {freehold, regained, faded}.
+ * untended freehold in a dull place fades a rank a season (house rule B3454). Returns {freehold, regained, faded}.
  */
 export function freeholdTime(freehold, now, {year = 2000, banality = null} = {}) {
   let f = normFreehold(freehold);

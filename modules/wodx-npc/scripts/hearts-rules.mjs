@@ -284,3 +284,86 @@ export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
   }
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Adoption of children and adults (B3213, Ben 2026-11-13)        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * How each way of life takes in another's child or makes an adult its own, before the law changes. child: what taking
+ * in a child is ("adoption" makes a son or daughter and heir; "fostering" a ward with no right to inherit; "kafala"
+ * the Islamic guardianship, a ward who keeps their own name and inherits only by bequest); adult: whether an adult can
+ * be adopted (an heir made, a name carried on); rite and record: how it is done and kept. Readings of history in
+ * WoDX's own words; the Storyteller may move a date.
+ */
+export const SPHERE_ADOPTION = {
+  latin: {child: "fostering", adult: false, rite: "taking the child in before the priest, often with godparents", record: "the parish and the family"},
+  orthodox: {child: "adoption", adult: true, rite: "a church blessing of the adoption", record: "the parish book"},
+  islamic: {child: "kafala", adult: false, rite: "kafala, guardianship before the qadi; the child keeps their own name", record: "the qadi's register"},
+  indic: {child: "adoption", adult: false, rite: "the giving and taking of a son (dattaka) before the priest", record: "the family and the priest"},
+  sinic: {child: "adoption", adult: true, rite: "an heir taken from the same clan, entered before the ancestors", record: "the clan register"},
+  japanese: {child: "adoption", adult: true, rite: "adoption into the house (yoshi), often of a grown heir or a son-in-law", record: "the house register"},
+  theravada: {child: "adoption", adult: true, rite: "taking in before the elders and the monks", record: "the village"},
+  tibetan: {child: "adoption", adult: true, rite: "taking in before the family and the lama", record: "the family"},
+  malay: {child: "kafala", adult: false, rite: "taking in a child (anak angkat); the child keeps their own name", record: "the kadi"},
+  sahel: {child: "kafala", adult: false, rite: "fostering by kin, kafala before the imam", record: "the families"},
+  swahili: {child: "kafala", adult: false, rite: "kafala before the kadi", record: "the kadi"},
+  bantu: {child: "adoption", adult: true, rite: "taking in before the elders, by the lineage's custom", record: "the elders"},
+  mesoamerican: {child: "adoption", adult: true, rite: "taking in before the elders", record: "the elders"},
+  andean: {child: "adoption", adult: true, rite: "taking in by the ayllu's custom", record: "the ayllu"},
+  polynesian: {child: "adoption", adult: true, rite: "customary adoption between kin (whangai, hanai)", record: "the families"},
+  northern: {child: "adoption", adult: true, rite: "taking in by the band's custom, often to replace one lost", record: "the band"}
+};
+/** Dated changes by region: legal adoption under a code (child and adult), applied in order. */
+export const REGION_ADOPTION = {
+  "france": [[1804, {adult: true, rite: "adoption of an adult before the court (the Civil Code)", record: "the civil register"}], [1923, {child: "adoption", rite: "adoption before the court", record: "the civil register"}]],
+  "moravia": [[1811, {child: "adoption", adult: true, rite: "adoption by contract approved by the court (the Civil Code of 1811)", record: "the court and the civil register"}]],
+  "german-lands": [[1900, {child: "adoption", adult: true, rite: "adoption by contract approved by the court (the Civil Code)", record: "the civil register"}]],
+  "italy": [[1865, {adult: true, rite: "adoption of an adult before the court", record: "the civil register"}], [1967, {child: "adoption"}]],
+  "iberia": [[1889, {child: "adoption", adult: true, rite: "adoption before a judge", record: "the civil register"}]],
+  "low-countries": [[1956, {child: "adoption", rite: "adoption before the court", record: "the civil register"}]],
+  "british-isles": [[1926, {child: "adoption", rite: "an adoption order of the court", record: "the adopted children register"}]],
+  "scandinavia": [[1917, {child: "adoption", adult: true, rite: "adoption by royal or court order", record: "the civil register"}]],
+  "russia": [[1918, {child: "fostering", adult: false, rite: "guardianship (the Soviet code forbade adoption)"}], [1926, {child: "adoption", rite: "adoption by the guardianship office", record: "the civil register"}]],
+  "north-america-east": [[1851, {child: "adoption", adult: true, rite: "adoption decreed by a probate court", record: "the court"}]],
+  "north-america-west": [[1870, {child: "adoption", adult: true, rite: "adoption decreed by a court", record: "the court"}]],
+  "canada": [[1873, {child: "adoption", rite: "adoption by court order", record: "the court"}]],
+  "australia": [[1896, {child: "adoption", rite: "adoption by court order", record: "the court"}]],
+  "aotearoa": [[1881, {child: "adoption", rite: "adoption by court order, beside whangai by custom", record: "the court"}]],
+  "india": [[1956, {child: "adoption", rite: "adoption under the Hindu Adoptions Act", record: "the registrar"}]],
+  "japan": [[1898, {record: "the family register (koseki)"}]],
+  "china": [[1950, {child: "adoption", rite: "adoption registered with the state", record: "the civil register"}]],
+  "korea": [[1960, {child: "adoption", record: "the family register"}]],
+  "mexico": [[1917, {child: "adoption", adult: false, rite: "adoption before a judge", record: "the civil register"}]],
+  "brazil": [[1916, {child: "adoption", adult: true, rite: "adoption by public deed", record: "the civil register"}]],
+  "southern-cone": [[1948, {child: "adoption", rite: "adoption before a judge", record: "the civil register"}]],
+  "southern-africa": [[1923, {child: "adoption", rite: "adoption by court order", record: "the court"}]]
+};
+export const ADOPTION_KINDS = {
+  adoption: {label: "Adoption", tie: ["parent", "child"], inherits: true, note: "A son or daughter in full, and an heir."},
+  fostering: {label: "Fostering or wardship", tie: ["guardian", "ward"], inherits: false, note: "Raised as family, with no right to inherit; a will can still leave them a share."},
+  kafala: {label: "Kafala", tie: ["guardian", "ward"], inherits: false, note: "The guardian raises the child, who keeps their own name and lineage; a bequest of up to a third is allowed."},
+  adult: {label: "Adoption of an adult", tie: ["parent", "child"], inherits: true, note: "An heir made, a name and house carried on."}
+};
+/** The law of adoption in a region and year. From 2100 every way of life allows full adoption of children and adults. */
+export function adoptionLaw(region, year, sphere = "latin") {
+  const base = {...(SPHERE_ADOPTION[sphere] ?? SPHERE_ADOPTION.latin)};
+  for ( const [from, change] of REGION_ADOPTION[region] ?? [] ) if ( Number(year) >= from ) Object.assign(base, change);
+  if ( Number(year) >= 2100 ) Object.assign(base, {child: base.child === "kafala" ? "kafala" : "adoption", adult: true, record: "the net's register"});
+  return base;
+}
+/**
+ * Can this adoption go ahead, and of what kind? who: {parentMinor, childMinor, parentBorn, childBorn, same}. An adult
+ * is adopted only where the law allows it; the one adopting must be an adult and, where both births are known, older.
+ * Returns {ok, why: [], kind, kindInfo}.
+ */
+export function canAdopt(law, {parentMinor = false, childMinor = false, parentBorn = null, childBorn = null, same = false} = {}) {
+  const why = [];
+  if ( same ) why.push("No one can adopt themselves.");
+  if ( parentMinor ) why.push("The one adopting must be an adult.");
+  const pb = Number(parentBorn), cb = Number(childBorn);
+  if ( parentBorn !== null && childBorn !== null && Number.isFinite(pb) && Number.isFinite(cb) && pb >= cb ) why.push("The one adopting must be older than the one adopted.");
+  const kind = childMinor ? law.child : "adult";
+  if ( !childMinor && !law.adult ) why.push("The law here does not allow an adult to be adopted.");
+  return {ok: !why.length, why, kind, kindInfo: ADOPTION_KINDS[kind] ?? ADOPTION_KINDS.fostering};
+}

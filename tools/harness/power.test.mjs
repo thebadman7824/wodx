@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Places of power: Nodes and Tass, chantries, freeholds and balefires (Storyteller, B3260-B3266) */
+/* Places of power: Nodes and Tass, chantries, freeholds and balefires (Storyteller, B3450-B3456) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
@@ -140,7 +140,7 @@ test("the wiring: settings, clock, upkeep chooser, api; plain words players may 
   assert.match(p, /system\.quintessence\.temporary/);
   assert.match(p, /system\.advantages\.glamour\.temporary/);
   const shown = (p + src("modules/wodx-storyteller/scripts/power-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
-  assert.doesNotMatch(shown, /B32\d\d|house rule/i);
+  assert.doesNotMatch(shown, /B3[24]\d\d|house rule/i);
   assert.doesNotMatch(shown, /—/);
   assert.doesNotMatch(shown, /\b(he|she|him|her|his|hers)\b/);
 });

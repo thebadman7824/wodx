@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller (B3260-B3266): places of power. Rules in power-rules.mjs.
+ * WoDX Storyteller (B3450-B3456): places of power. Rules in power-rules.mjs.
  *
  * The Storyteller keeps a register of Mage Nodes, chantries (Constructs) and Changeling freeholds, each tied to a
  * scene and to the characters who keep it. Once a game hour (and after a time skip) the active Storyteller's client

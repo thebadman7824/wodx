@@ -27,6 +27,11 @@ The nightly task resets lanes 2 and 3 and then runs `nightly.mjs`: pull main, de
 (`lanes.mjs deploy --if-changed`), every gate split across the two lanes, lines in nightly-gates.log. A file named
 `nightly-off` here turns the full run off. B3083, B3084.
 
+A long list (`--touched` often gives 80 or more gates) goes faster and cleaner split over lanes 2 and 3:
+`run-gate.mjs --touched --lanes 2,3`. After each gate the runner puts back the world settings it changed and removes
+ones it added; on lanes 2 and 3 it also deletes documents the gate left behind, so one gate's leftovers cannot fail
+the next (B3086). The two-browser gates (gatesolo, gatelookhand) are not in the map: run them by name, alone.
+
 On drift nothing runs (exit 4) and the differences are printed and saved in `<lane>\wodx-lane\drift.json`.
 Changed documents are a warning only. After each gate the runner puts the clock and the pause back.
 
