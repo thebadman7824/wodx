@@ -413,7 +413,8 @@ test("India, Central Asia and Tibet keep courts of their own for Kindred", () =>
 
 test("a Garou faction in Asia keeps a Beast Court, in Africa a land of the Bastet, and its name can say which", () => {
   const g = (o = {}) => F.normFaction({id: "g", kind: "garou", members: ["a", "b", "c"], ...o});
-  for ( const r of ["china", "japan", "korea", "southeast-asia", "nusantara", "india", "tibet-himalaya"] ) assert.equal(PO.polityFor(g({region: r}), 1700), "beast-court", r);
+  for ( const r of ["china", "japan", "korea", "southeast-asia", "nusantara", "tibet-himalaya"] ) assert.equal(PO.polityFor(g({region: r}), 1700), "beast-court", r);
+  assert.equal(PO.polityFor(g({region: "india"}), 1700), "garou-sept", "the Beast Courts do not fully count India as theirs");
   for ( const r of ["west-africa", "east-africa", "central-africa", "southern-africa"] ) assert.equal(PO.polityFor(g({region: r}), 1700), "bastet-land", r);
   assert.equal(PO.polityFor(g({region: "egypt"}), 1700), "garou-sept", "north Africa keeps its septs");
   assert.equal(PO.polityFor(g({region: "british-isles"}), 1700), "garou-sept");
@@ -544,4 +545,20 @@ test("the Hsien in East Asia and the land's own fae in the Pacific and Siberia b
 test("the Hsien and land-fae tables name world regions", async () => {
   const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
   for ( const r of [...PO.HSIEN_LANDS, ...PO.LAND_FAE_LANDS] ) assert.ok(W.WORLD_REGIONS[r], r);
+});
+
+// WoDX NPC: the courts' seats after the book check (B3090).
+test("the courts beyond Europe carry the books' own titles", () => {
+  const title = (k, o) => PO.officeTitle(k, o);
+  assert.equal(title("laibon-council", "elder"), "Magaji of the domain");
+  assert.equal(PO.POLITIES["laibon-council"].gathering.name, "kholo");
+  assert.equal(title("laibon-council", "lawspeaker"), "Keeper of the Tenets");
+  assert.equal(title("ashirra", "amir"), "Sultan");
+  assert.equal(title("ashirra", "imam"), "Imam");
+  assert.equal(title("ashirra", "qadi"), "Qadi");
+  assert.deepEqual(["brahmins", "kshatriyas", "vaisyas"].map(o => title("ravnos-court", o)), ["Voice of the Brahmins", "Voice of the Kshatriyas", "Voice of the Vaisyas"]);
+  assert.match(title("beast-court", "keeper"), /Nagah/);
+  assert.equal(title("bastet-land", "holder"), "Holder of the Den-Realm");
+  assert.equal(title("nunnehi-council", "voice"), "Voice of a tribe");
+  assert.ok(!JSON.stringify(PO.POLITIES).includes("Zarad"), "Zarad is a Makara auspice, not a court");
 });

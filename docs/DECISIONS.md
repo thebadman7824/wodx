@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3090
+Next free block: B3120
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -142,10 +142,12 @@ Next free block: B3090
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
-| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
+| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
+| B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4358,6 +4360,16 @@ WoDX Paperdoll 0.19.0. Ben (13 November 2026): not every Nosferatu should have b
 
 Reverse: Set the Nosferatu ear roll in face64-rules.mjs back to bat, bat, long.
 
+## B3051. More skin tones, fae mien skins and visage skins (2026-11-13)
+WoDX Paperdoll 0.20.0. Ben asked how many skin tones there were and whether any were fantastical. Everyday skin goes from 8 tones to 24, light to deep, each with a warm, golden, olive, ruddy or cool undertone. One changeling in three rolls a fae mien skin (blue, green, lavender, silver, bark, rose, teal, gold, slate or coral), mixed over the mortal skin and seen only with fae sight. Ten rarer skins anyone may roll or be given (face64-skins.mjs): albinism, three kinds of vitiligo, blue-grey, jaundiced, ruddy, ashen, sunburnt and a wide birthmark. Half of demons take one of 15 visage skins, shown only in the apocalyptic form. Every NPC's everyday skin may change, since the tone is picked from a longer list.
+
+Reverse: Restore the 8-tone SKINS list, drop FAE_SKINS and the import of face64-skins.mjs.
+
+## B3052. More eye colours, hair colours, head shapes and noses (2026-11-13, Ben)
+WoDX Paperdoll. Ben asked for more eye and hair colours, head shapes and noses. Natural eyes go from 5 colours to 18 (browns, ambers, hazels, greens, greys and blues) and natural hair from 8 to 22 (black, blue-black, browns, chestnut, auburn, copper, strawberry, golden, ash and platinum blond, salt and pepper, grey and white). The head now rolls a crown curve (broad and flat to narrow and domed) and a chin curve (pointed to square) on top of wider ranges of width, jaw, chin depth and chin width. Every face rolls one of nine noses: straight, broad, narrow, hooked, button, long, flat, upturned and crooked; Nosferatu keep their slits. Goatees taper to the chin instead of drawing a square. Every NPC's rolled face may change, since the rolls draw from longer lists. With it: the patchwork, hide and fur collars draw patches 4 pixels wide instead of a 1 or 2 pixel chequer, and rolling a face's features is fast again (about 1 ms, down from about 170 ms).
+
+Reverse: Restore the 5 IRISES and 8 HAIRS, the old width picks, drop S.cf, S.ce and S.nose (headHw and nose() fall back to the old shapes).
+
 ## B3060. The GitHub check runs in parallel (2026-11-13, Ben)
 Ben (13 November 2026) approved speeding up the check that runs on every pull request and every push to main. The mock-Foundry harness used to run all its files one after another in one job, about four minutes. It now runs in five jobs side by side (SHARDS in .github/workflows/checks.yml). tools/harness/shard.mjs gives each job a share of the files by past run time (tools/harness/shard-times.json: wall time per file, loading included, refreshed from the TIMES line each shard prints); a file with no recorded time counts as the median. Inside a job the files still run one at a time with --test-concurrency=1, as before, so nothing that relied on that order changes. The quality checks run in their own job at the same time. The harness packages are cached by package.json, so most runs skip npm install; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD stays set. A change that only touches docs/ or Markdown runs just the harness files that read docs (shard.mjs --docs: the decision index, the modules table, versions, path case and the like) instead of the whole harness. The last job, "checks", is the one result to look at: it adds up the shards' test counts and passes when every job that ran passed, so a skipped job still counts as green. shard.test.mjs checks that every test file lands in exactly one shard. The outside-account rule (B3030) is kept: for an outside pull request none of these jobs run.
 
@@ -4422,3 +4434,43 @@ Reverse: Remove the last line of lane-reset.cmd, or put a file named nightly-off
 tools/books/books.mjs reads the book texts from /mnt/project-files/book-text (copied from the PC's tools-env\text by a PC job, never put in the repository): a page by pdf or printed number, a search for words in order, and the 8-word overlap check of rule 5 over any WoDX files, squashing words the way the Encyclopaedia check does. A cloud thread can then check its own pages and wording without a PC job.
 
 Reverse: Send book checks to the PC helper again; delete tools/books.
+
+## B3007. Short Trait explanations in the wizard, one text per Trait (2026-11-13)
+WoDX Creation 0.29.0, the last item on Ben's ranked list for the wizard. Each Trait's name on the Attributes, Abilities, Virtues and freebie pages shows a line on hover, and each of those pages and the derived Traits have a folded "What these mean" list for touch screens. The text of the common Traits is the player view's hover help (WoDX Sheets beginner-rules.mjs, from the Player UI Desk), read when that file is there, so a Trait never has two different texts in WoDX. Until it is merged, those Traits show no text.
+
+Reverse: drop notesBlock and the title on #row in wizard.mjs.
+
+## B3008. The wizard's own notes cover the rest (2026-11-13)
+data/trait-notes.mjs holds the Traits the player view's help leaves out: Zeal, Mercy and Vision; Torment; Balance and Sekhem; Hun, P'o, Yin, Yang and Dharma; Vitality and Spite; a Path; and Meditation, Research, Esoterica, Gremayre and Lore. WoDX's own words, under 160 characters each.
+
+Reverse: empty NOTES.
+
+## B3009. Page refs only once checked (2026-11-13)
+A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
+
+Reverse: none needed; REFS starts empty.
+## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
+WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
+
+Reverse: revert the titles and notes in POLITIES in modules/wodx-npc/scripts/politics-rules.mjs.
+
+## B3091. India leaves the Beast Courts' lands (2026-11-13)
+The Hengeyokai book says the Beast Courts do not fully count India as theirs, so a Garou faction in India now keeps a Garou sept by default; the Storyteller can still pick a Beast Court there. The year the Ahl-i-Batin left the Council was not found in M20 and needs Lore of the Traditions or Sorcerers Crusade, which the PC does not hold as text; the circle's notes stay as they are.
+
+Reverse: put india: "beast-court" back in REGION_SHIFTERS.
+
+## B3110. Putting money into a venture (2026-11-13, Improvement Desk mk1)
+WoDX Storyteller, venture-rules.mjs and ventures.mjs. A character, or an NPC the Storyteller picks, puts money from the purse into a caravan, a workshop or a trading house on a market the Storyteller has set up, with a kind of goods and, for a trading house, a trader. The words follow the year and the way of life of the market's region (Chronicle's spheres): a commenda share in 1250 in Western Christendom, a qirad partnership in the lands of Islam, a share with a banking house on hundi credit in India, a za stake in Japan before 1600 and the licensed guild after, a junk or prahu voyage in the Malay world, a camel caravan in the Sahel, a dhow on the monsoon on the Swahili coast; joint-stock shares from 1600 in the West; the exchange from 1800 in the West and from 1850 elsewhere; shares and funds after 1946; a shell company or a crypto fund in the World of Future Darkness. Players open it from Property and building, the Storyteller also from the Markets window. A player's request goes by socket and is done only for a character the player owns.
+Reverse: switch off the world setting ventures; standing ventures then neither earn nor lose.
+
+## B3111. What a venture earns and loses (2026-11-13)
+Each weekly market turn, after the markets and the factions have moved, a venture pays a share of its value into the purse (the bank where the era has banks): a caravan 0.6, a trading house 0.4 and a workshop 0.3 in the hundred a week, times 1 before 1450, 0.85 to 1599, 0.7 to 1799, 0.5 to 1945, 0.35 after and 0.4 in the World of Future Darkness. Its goods' supply and price on that market move it (a glut halves it, nothing to sell cuts it to 0.3, short supply adds a fifth, the price index by its square root), taxes take their share and a monopoly 15 in the hundred; a caravan earns nothing while every road out is closed, a trading house nothing while its shop is shut. A bad week (3 in the hundred for a medieval caravan down to 0.2 for a modern workshop) takes 15 to 25 in the hundred of the value and pays nothing. With caravans running, a caravan venture loses by the real caravans instead: a caravan of its market lost on the road takes 30 in the hundred. A raid on the market takes 10 from its workshops and houses, a trader going broke 60 from a house that backs that trader. Under 5 in the hundred of what was put in, the venture is gone. Taking money out before its time loses 25 in the hundred before 1450, 15 to 1599, 10 to 1799, 4 to 1945, 2 after, 1 in the future. The week's card has an Undo; each player is told of their own.
+Reverse: change BASE, AGE_RETURN, RISK, BAD_SHARE, LOSS or EXIT_CUT in venture-rules.mjs.
+
+## B3112. Resources and Influence for ventures (2026-11-13)
+Resources sets the most a character can put in at once: a year's allowance by Resources, a month's plain wage with none. A character holds as many open ventures as Resources plus Influence, one at least. Each dot of Influence takes a tenth off any loss, a seat another tenth, half at most. Influence is read from a background Feature named Influence, as Resources is. Holding a stake never adds a Background dot by itself; the Storyteller may still let it count when Resources is bought.
+Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
+
+## B3113. A large stake, a rival and a seat (2026-11-13)
+A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
+Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.

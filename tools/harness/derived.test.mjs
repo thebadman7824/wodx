@@ -116,3 +116,35 @@ test("the wizard's Virtues page sets the derived Traits on the sheet", async () 
   assert.match(app.element.textContent, /Willpower: the sheet has 2, the book gives 4/);
   await app.close();
 });
+
+/* WoDX Creation 0.29.0: short Trait explanations (B3007 to B3009) */
+const T = await import(join(root, "modules/wodx-creation/data/trait-notes.mjs"));
+
+test("Trait notes: the player view's help comes first, the wizard's own notes fill the rest", () => {
+  const help = label => (/^strength$/i.test(label) ? "From the sheet help." : "");
+  assert.equal(T.traitNote("Strength", "v20", {help}).text, "From the sheet help.");
+  assert.match(T.traitNote("Torment", "demon", {help}).text, /Abyss/);
+  assert.match(T.traitNote("Sekhem", "mummy").text, /Hekau/);
+  assert.equal(T.traitNote("Nothing Here", "v20").text, "");
+  assert.equal(T.traitNote("Torment", "demon", {help: () => { throw new Error("x"); }}).text.length > 0, true);
+  for ( const [k, v] of Object.entries(T.NOTES) ) {
+    assert.equal(k, T.noteKey(k), k);
+    assert.ok(v.length < 160 && !/—/.test(v), k);
+  }
+  assert.match(T.traitNote("Strength", "v20", {group: "attributes"}).ref, /^pdf 104/);
+  assert.equal(T.traitNote("Strength", "ghoul", {group: "attributes"}).ref, T.traitNote("Strength", "v20", {group: "attributes"}).ref);
+  assert.match(T.traitNote("Torment", "demon").ref, /^pdf 161/);
+  for ( const [line, refs] of Object.entries(T.REFS) ) {
+    assert.ok(TOTALS[line], line);
+    for ( const r of Object.values(refs) ) assert.match(r, /^pdf \d+/);
+  }
+});
+
+test("the wizard shows what a Mummy's Balance and Sekhem mean", async () => {
+  const a = await Actor.create({name: "Notes Mummy", type: "Mummy", system: {}});
+  const app = await api().wizard(a, "review");
+  const html = app.element.innerHTML;
+  await app.close();
+  assert.equal(api().wizardLedger(a).line, "mummy");
+  assert.match(html, /What these mean[\s\S]*Sekhem<\/dt><dd>The life force/);
+});

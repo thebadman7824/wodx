@@ -92,8 +92,10 @@ export async function run() {
     await step("8. sheet", async () => {
       await pc.update({"flags.wodx-sheets.ties": [{uuid: `Actor.${ana.id}`, role: "friend"}]});
       await pc.sheet.render(true);
-      await sleep(900);
-      const html = pc.sheet.element?.innerHTML ?? "";
+      await sleep(1500);
+      // Sheets are Application V1: element is a jQuery object
+      const el = pc.sheet.element?.[0] ?? pc.sheet.element;
+      const html = el?.querySelector?.(".tab.wodxties")?.innerHTML ?? el?.innerHTML ?? "";
       ok("8. the Relationships tab shows the trust word", /Inclined to trust/.test(html));
       await pc.sheet.close();
     });

@@ -48,9 +48,32 @@ export const EYES_STATES = ["open", "half", "shut"];
 export const TALK_MOUTHS = ["talk1", "talk2", "talk3"];
 const OPEN_MOUTHS = new Set(["anger", "fear", "slack", ...TALK_MOUTHS]);
 
-const SKINS = [[236, 200, 170], [222, 178, 142], [198, 150, 112], [170, 118, 84], [150, 96, 70], [118, 74, 52], [88, 56, 42], [206, 160, 120]];
-const HAIRS = [[34, 26, 26], [70, 44, 28], [104, 62, 36], [150, 104, 52], [196, 160, 92], [120, 48, 30], [150, 150, 150], [60, 56, 64]];
-const IRISES = [[90, 120, 160], [96, 140, 84], [110, 76, 44], [70, 52, 40], [120, 130, 140]];
+/**
+ * Everyday skin, 24 tones (Ben, 13 November 2026, from 8): light to deep, each with warm, golden, olive, ruddy or cool
+ * undertones, so that two people seldom share one.
+ */
+const SKINS = [
+  [244, 214, 190], [238, 204, 178], [236, 200, 170], [232, 196, 160], [228, 190, 168], [226, 186, 150],
+  [222, 178, 142], [214, 172, 130], [210, 168, 140], [206, 160, 120], [200, 158, 110], [198, 150, 112],
+  [186, 140, 100], [180, 132, 96], [176, 128, 88], [170, 118, 84], [160, 112, 74], [150, 96, 70],
+  [140, 92, 62], [128, 82, 58], [118, 74, 52], [104, 66, 48], [88, 56, 42], [72, 46, 36],
+];
+/** A fae mien's skin, seen only with fae sight: one changeling in three wears one. */
+export const FAE_SKINS = [[120, 160, 220], [110, 176, 120], [190, 160, 220], [200, 204, 216], [150, 120, 90], [220, 180, 200], [100, 190, 190], [230, 210, 140], [150, 150, 170], [200, 110, 90]];
+/** Natural hair, 22 colours (Ben, 13 November 2026, from 8): black to white through browns, reds and blonds. */
+const HAIRS = [
+  [20, 18, 22], [34, 26, 26], [30, 30, 44], [52, 36, 30], [70, 44, 28], [88, 58, 38], [104, 62, 36], [124, 84, 52],
+  [150, 104, 52], [120, 48, 30], [150, 64, 34], [184, 92, 44], [196, 120, 70], [176, 140, 84], [196, 160, 92], [216, 186, 120],
+  [230, 214, 170], [186, 176, 150], [150, 150, 150], [110, 108, 112], [200, 200, 204], [60, 56, 64],
+];
+/** Natural eyes, 18 colours (from 5): browns, ambers, hazels, greens, greys and blues. */
+const IRISES = [
+  [70, 52, 40], [52, 36, 28], [96, 62, 36], [110, 76, 44], [140, 96, 40], [170, 120, 50], [120, 110, 60], [110, 130, 70],
+  [96, 140, 84], [70, 150, 110], [60, 120, 90], [120, 130, 140], [150, 160, 170], [100, 130, 160], [90, 120, 160], [70, 110, 190],
+  [120, 170, 210], [100, 90, 120],
+];
+/** Noses, nine kinds (from one). */
+export const NOSES = ["straight", "broad", "narrow", "hooked", "button", "long", "flat", "upturned", "crooked"];
 const CLOTHS = [[70, 84, 66], [86, 64, 54], [60, 66, 90], [92, 84, 70], [54, 50, 58]];
 
 /**
@@ -78,9 +101,10 @@ export function lineOf({type = "", variant = "", clan = "", kind = ""} = {}) {
 export function roll(seed, line = "mortal", {sex = "", fangs = false, kith = ""} = {}) {
   const r = rng(seedOf(`${seed}|face64`));
   const S = {line: LINES[line] ? line : "mortal", seed: String(seed), skin: r.pick(SKINS), hair: r.pick(HAIRS), style: r.pick(["long", "short", "short", "back", "bald"]),
-    beard: r.pick(["", "", "stubble", "full", "goatee"]), w: r.pick([13, 14, 14, 15]), jw: r.pick([10, 11, 12, 12, 13]), chin: r.pick([53, 54, 54, 55]), cw: r.pick([4, 5, 5, 6]),
+    beard: r.pick(["", "", "stubble", "full", "goatee"]), w: r.pick([12, 13, 14, 14, 15, 16]), jw: r.pick([9, 10, 11, 12, 12, 13, 14]), chin: r.pick([52, 53, 54, 54, 55, 56]), cw: r.pick([3, 4, 5, 5, 6, 7]),
     iris: r.pick(IRISES), cloth: r.pick(CLOTHS), brow: r.pick([27, 28, 28]), lash: r.chance(0.5), bg: [46, 44, 58], cool: false, sunk: false,
     white: [236, 230, 220], ears: "plain", thin: false, fangs: !!fangs, kith: String(kith ?? "").toLowerCase()};
+  S.cf = r.pick([1.4, 2, 2.6, 2.6, 3.4, 4.4]); S.ce = r.pick([0.38, 0.45, 0.5, 0.5, 0.58, 0.66]); S.nose = r.pick(NOSES);   // head shapes and noses (Ben, 13 November 2026)
   if ( sex === "woman" ) S.lash = true;
   else if ( sex === "man" ) S.lash = false;
   (PRE[S.line] ?? (() => {}))(S, r);
@@ -123,12 +147,13 @@ class Grid {
 }
 
 /* ---------------- shapes ---------------- */
-function headHw(y, [top, eye, jaw, chin, w, jw, cw]) {
+function headHw(y, [top, eye, jaw, chin, w, jw, cw, cf = 2.6, ce = 0.5]) {
   if ( y < top || y > chin ) return -1;
-  if ( y <= eye ) return w * Math.sqrt(Math.max(0, 1 - ((eye - y) / (eye - top + 0.5)) ** 2));
+  // ce shapes the crown (lower is broad and flat-topped, higher is narrow and domed); cf the chin's turn (low is pointed, high is square)
+  if ( y <= eye ) return w * Math.max(0, 1 - ((eye - y) / (eye - top + 0.5)) ** 2) ** ce;
   if ( y <= jaw ) return w - (w - jw) * ((y - eye) / (jaw - eye));
   // the jaw holds its width and turns late into a chin that stands out (squarer since 13 November 2026: Ben found the chins weak)
-  const f = (y - jaw) / (chin - jaw); return jw - (jw - Math.max(cw, 5)) * f ** 2.6;
+  const f = (y - jaw) / (chin - jaw); return jw - (jw - Math.max(cw, 5)) * f ** cf;
 }
 function skin(F, R, shape, neck) {
   const [top, eye, , chin] = shape, L = [-0.30, -0.42, 0.86];
@@ -202,16 +227,27 @@ function brow(F, ex, by, side, col, expr) {
     if ( i < 3 && expr !== "fear" ) F.put(x, by + o + 1, mix(col, [0, 0, 0], 0.2));
   });
 }
-function nose(F, R, y0, y1, slits = false) {
+function nose(F, R, y0, y1, slits = false, kind = "straight") {
   if ( slits ) {
     for ( let y = y1 - 3; y < y1; y++ ) { F.put(CX - 1, y, R.ol); F.put(CX + 1, y, R.ol); }
     for ( let x = CX - 2; x <= CX + 2; x++ ) F.put(x, y1 + 1, R.s1);
     return;
   }
-  for ( let y = y0; y < y1 - 1; y++ ) { F.put(CX - 1, y, R.hi); F.put(CX + 1, y, R.s1); }
-  F.put(CX, y1 - 2, R.hi); F.put(CX - 1, y1 - 1, R.hi); F.put(CX - 3, y1 - 1, R.s1); F.put(CX + 3, y1 - 1, R.s2);
-  F.put(CX - 2, y1, R.ol); F.put(CX + 2, y1, R.ol);
-  for ( const x of [CX - 1, CX, CX + 1] ) F.put(x, y1, R.s2);
+  if ( kind === "button" || kind === "upturned" ) y1 -= 1;
+  if ( kind === "long" ) y1 += 1;
+  const half = {broad: 4, flat: 4, narrow: 2}[kind] ?? 3;          // how far the nostrils spread
+  const bridge = {button: 3, upturned: 3, flat: 4}[kind] ?? 0;     // a short or soft bridge starts lower
+  for ( let y = y0 + bridge; y < y1 - 1; y++ ) {
+    const dx = kind === "crooked" && y > y0 + 3 ? 1 : 0;
+    if ( kind !== "flat" ) F.put(CX - 1 + dx, y, R.hi);
+    F.put(CX + 1 + dx, y, R.s1);
+  }
+  if ( kind === "hooked" ) { F.put(CX + 1, y0 + 3, R.hi); F.put(CX + 2, y0 + 4, R.s1); F.put(CX + 1, y1 - 1, R.s2); }   // a bump on the bridge and a tip that hangs
+  F.put(CX, y1 - 2, R.hi); F.put(CX - 1, y1 - 1, R.hi); F.put(CX - half, y1 - 1, R.s1); F.put(CX + half, y1 - 1, R.s2);
+  if ( kind === "broad" || kind === "flat" ) { F.put(CX - half + 1, y1 - 1, R.s1); F.put(CX + half - 1, y1 - 1, R.s2); }
+  F.put(CX - half + 1, y1, R.ol); F.put(CX + half - 1, y1, R.ol);
+  if ( kind === "upturned" ) { F.put(CX - 1, y1, R.ol); F.put(CX + 1, y1, R.ol); F.put(CX, y1, R.s2); }
+  else for ( const x of [CX - 1, CX, CX + 1] ) F.put(x, y1, R.s2);
 }
 function lipsClosed(F, R, my, lip, thin) {
   const dark = mix(lip, [30, 8, 18], 0.7), w = 4;
@@ -264,7 +300,8 @@ function beard(F, H, shape, my, kind, open) {
       if ( kind === "stubble" ) { if ( (y > my + 1 || d > 5 || y === my - 2) && (x * 3 + y * 5) % 4 === 0 && y < chin - 1 ) F.put(x, y, mix(F.get(x, y), H.s1, 0.3)); }   // sparse, so it reads as shadow, not a chequered patch
       // Solid hair with a few scattered lighter strands (a hash, not a lattice), so a beard never reads as a chequer
       else if ( kind === "full" ) { if ( y > my + 2 || d > 5 || (y === my - 2 && d < 5) ) F.put(x, y, (x * 7 + y * 13) % 11 === 0 ? H.hi : (d > hw - 2 ? H.s1 : H.b)); }
-      else if ( kind === "goatee" ) { if ( d < 4 && (y > my + 3 || y === my - 2) ) F.put(x, y, (x * 7 + y * 13) % 11 === 0 ? H.hi : (d === 3 ? H.s1 : H.b)); }
+      else if ( kind === "goatee" ) { if ( (y === my - 2 && d < 4) || (y > my + 3 && d < Math.max(2, 4 - Math.floor((y - my - 3) / 3))) )   // tapers to the chin, never a square box
+         F.put(x, y, (x * 7 + y * 13) % 11 === 0 ? H.hi : (d === 3 ? H.s1 : H.b)); }
     }
   }
 }
@@ -361,6 +398,7 @@ const PRE = {
     S.iris = r.pick([[138, 176, 48], [200, 160, 32], [58, 154, 106]]); S.bg = [52, 44, 60]; S.style = r.pick(["long", "short"]);
     // Satyrs and trolls bear horns in their fae mien; another kith only when the seed says so and no kith is known
     S.horns = /satyr|troll/.test(S.kith) || (!S.kith && r.chance(0.5)); S.hornDark = r.chance(0.5); S.hornLen = r.pick([10, 12, 13]);
+    if ( r.chance(0.35) ) S.faeSkin = r.pick(FAE_SKINS);
   },
   hunter(S, r) { S.style = r.pick(["short", "back", "bald"]); S.beard = r.pick(["stubble", "stubble", ""]); S.bg = [48, 46, 40]; },
   mummy(S, r) { S.skin = r.pick([[168, 117, 79], [152, 103, 74], [181, 130, 90], [141, 90, 62]]); S.hair = [24, 20, 24]; S.style = r.pick(["short", "long", "bald"]); S.beard = ""; S.cloth = [226, 216, 196]; S.bg = [58, 48, 36]; },
@@ -624,8 +662,10 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( !EXPRESSIONS.includes(expr) ) expr = "neutral";
   if ( level >= 7 ) { expr = "slack"; eyes = "shut"; mouth = null; }      // Incapacitated: eyes shut, jaw slack, no speech
   const mouthKind = TALK_MOUTHS.includes(mouth) ? mouth : expr;
-  const skinCol = level ? mix(S.skin, [176, 180, 170], Math.min(0.5, level * 0.07)) : S.skin;    // pallor takes all the skin
-  const F = new Grid(S.bg), shape = [TOP, EYE, JAW, S.chin, S.w, S.jw, S.cw];
+  const seen = {fae: true, sigil: true, ...sees};
+  const baseSkin = S.faeSkin && seen.fae ? mix(S.skin, S.faeSkin, 0.55) : S.skin;   // the mien's colour, to fae sight only
+  const skinCol = level ? mix(baseSkin, [176, 180, 170], Math.min(0.5, level * 0.07)) : baseSkin;    // pallor takes all the skin
+  const F = new Grid(S.bg), shape = [TOP, EYE, JAW, S.chin, S.w, S.jw, S.cw, S.cf ?? 2.6, S.ce ?? 0.5];
   const R = ramp(skinCol, S.cool), H = hramp(S.hair), C = ramp(S.cloth, true);
   const r = rng(seedOf(`${S.seed}|marks`));
   const ctx = {F, R, H, C, S, r, shape, sees: {fae: true, sigil: true, ...sees}, eyes, mouthKind, expr, level};
@@ -645,7 +685,7 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
     if ( S.lash && state !== "shut" ) F.put(ex + 4 * sd, EYE_Y - 1, [30, 16, 22]);
     if ( S.line !== "nosferatu" || !S.ridge ) brow(F, ex, S.brow, sd, S.style === "bald" && S.line === "nosferatu" ? R.s2 : H.s2, expr);
   }
-  nose(F, R, 31, 40, S.line === "nosferatu");
+  nose(F, R, 31, 40, S.line === "nosferatu", S.nose);
   const lip = S.thin ? R.s2 : mix(R.b, [150, 44, 60], S.lash ? 0.5 : 0.3);
   drawMouth(F, R, MOUTH_Y, lip, mouthKind, {fangs: S.fangs && S.line === "kindred", thin: S.thin});
   if ( S.beard ) beard(F, H, shape, MOUTH_Y, S.beard, OPEN_MOUTHS.has(mouthKind));

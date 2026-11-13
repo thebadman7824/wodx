@@ -12,8 +12,8 @@
  *      Ahl-i-Batin in Persia, and a Technocracy faction keeps Reason
  *   3c. (0.64.0) before the settlers: no Kindred court in Mexico in 1500, the Nunnehi for fae in the Andes, the Mokolé
  *      in Australia before 1788; the Nagah and the Mokolé by name
- *   4. two faction turns with politics on: the leader of the Laibon council is Elder of the land, each legacy a voice;
- *      the Ashirra court's leader is Amir
+ *   4. two faction turns with politics on: the leader of the Laibon council is the magaji, each legacy a voice in the kholo;
+ *      the Ashirra court's leader is Sultan
  *   5. the faction window shows Where it stands with the homeland and all 44 regions, marked as a fixed list
  *   6. clean up
  * Result: Data/wodx-gate/gateworldcourts-result.json.
@@ -139,7 +139,7 @@ export async function run() {
       await sleep(500);
       const L = fac("gateLaibon"), A = fac("gateAshirra");
       const voices = (L?.politics?.offices?.legacy ?? []).map(id => game.actors.get(id)?.system?.clan);
-      ok("4. the Elder of the land and the Amir hold the top seats; one voice a legacy", L?.region === "west-africa" && L.politics.offices.elder?.[0] === ids[0]
+      ok("4. the magaji and the Sultan hold the top seats; one voice a legacy", L?.region === "west-africa" && L.politics.offices.elder?.[0] === ids[0]
         && A?.politics?.offices?.amir?.[0] === ids[3] && new Set(voices).size === voices.length && L.politics.inner >= 1 && A.politics.inner >= 1,
       {laibon: L?.politics?.offices, ashirra: A?.politics?.offices});
     });

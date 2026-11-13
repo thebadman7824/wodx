@@ -19,6 +19,7 @@ export const T = {aged: `${MOD}.ties-aged`};
 
 const yearAt = t => getEngine().timeToDate(Number(t) || 0).year;
 const yearNow = () => yearAt(game.time.worldTime);
+const YEAR_SECONDS = 365.25 * 86400;
 const homeland = () => { try { return chron()?.world?.homeland?.() ?? "moravia"; } catch (e) { return "moravia"; } };
 const sphereOf = (region, year) => { try { return chron()?.world?.rules?.sphereFor?.(region, year) ?? "latin"; } catch (e) { return "latin"; } };
 const chronology = a => a?.flags?.["wodx-creation"]?.chronology ?? {};
@@ -154,7 +155,8 @@ export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
   try { if ( !game.settings.get(MOD, "tiesAgeing") ) return; } catch (e) { return; }
   const fromYear = yearAt(info.from), toYear = yearAt(info.to);
-  if ( !(toYear - fromYear >= 1) ) return;
+  // NPC 0.67.1: a whole year of time must pass; a short skip over New Year is not a jump
+  if ( !((Number(info.to) - Number(info.from)) / YEAR_SECONDS >= 1) ) return;
   const rep = await reportFor(info.from, info.to);
   if ( !rep.rows.length && !rep.grown.length ) return;
   const detail = rep.rows.map(r => `${r.name}: ${r.lines.join(" ")}`).join("\n").slice(0, 1900);

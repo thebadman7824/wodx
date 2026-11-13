@@ -1802,3 +1802,11 @@ Then the same check on the towns (B2637, B2638): the village, town, angled villa
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 
 The character wizard now works out each line's derived Traits on its Virtues page and the last look (scripts/derived-rules.mjs, pure): Humanity or a Path or a Road, Willpower, Rage, Gnosis, Arete, Quintessence, Corpus, Pathos, Glamour, Banality, Faith, Torment, Balance and Sekhem, with freebie and prelude dots on top, a Set button for each and Set all, and a Roll it button for a vampire's starting blood. Amulets added to the Hekau paths after the book check. Harness derived.test.mjs (7). Gate gatewizard.mjs step 10. Version 0.26.0, since two open changes hold 0.25.0.
+
+## 2026-11-13: short Trait explanations in the wizard (Creation 0.29.0, B3007-B3009)
+
+Hover a Trait's name in the character wizard, or open "What these mean", for a line on what it is for. Common Traits use the player view's hover help from WoDX Sheets (shown once PR 846 merges); data/trait-notes.mjs covers the line Traits it leaves out. Page refs come from the PC's book check. Harness derived.test.mjs now 9 tests.
+
+## 2026-11-13: page refs on the wizard's Trait notes (Creation 0.29.1)
+
+REFS in data/trait-notes.mjs filled from the PC's book lookup (gates/trait-notes-refs-2026-11-13.json). Not found yet: Yin, Yang, Dharma, Balance, Hunter Conviction, Talents and Skills, and most Mummy pages (the OCR lost them).

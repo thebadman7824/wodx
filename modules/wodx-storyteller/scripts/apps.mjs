@@ -197,6 +197,7 @@ export function answer(r, type) {
   if ( !r.ok ) return ui.notifications.warn(r.why ?? "That could not be done.");
   if ( r.waiting ) return ui.notifications.info(type === "travel" ? `Waiting for the Storyteller: ${r.why}` : "Recorded; the Storyteller will decide what it changes.");
   if ( type === "solo" && r.pastDawn ) return ui.notifications.warn("That runs past dawn.");
+  if ( type === "venture" ) return ui.notifications.info("Done at the Storyteller's table.");
   ui.notifications.info(type === "travel" ? "On your way." : "Recorded.");
 }
 
