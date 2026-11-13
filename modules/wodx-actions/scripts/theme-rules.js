@@ -39,7 +39,7 @@ export const MENU_PLAN = {
         act: ["action", "api:quickCheck", "api:withPerson", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad"],
-        st: ["api:newNight", "api:boons", "api:masquerade", "api:skyAndSun", "api:endStory"],
+        st: ["api:newNight", "api:boons", "api:bloodHunt", "api:masquerade", "api:skyAndSun", "api:endStory"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
@@ -166,6 +166,9 @@ export const DESC = {
     "api:sunAndHaven": "Is the haven safe from the coming sun?",
     "api:torpor": "Sink into torpor, or rise from it",
     "api:boons": "Prestation: boons owed and owing, kept in the journal",
+    "api:bloodHunt": "Call or lift a Blood Hunt: hunters, rumour, Status (Storyteller)",
+    "api:diablerieMarks": "The black veins and the taint a diablerist bears, and who feels it",
+    "api:oaths": "Swear an oath, or break one and pay its price",
     "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade",
     "api:skyAndSun": "Set the sky and the light on this scene (cloud, shade, indoors)",
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
