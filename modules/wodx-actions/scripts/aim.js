@@ -19,8 +19,12 @@ let open = null;
 export function taken() { const o = open; open = null; return o; }
 export function dropped() { open = null; }
 export function aim(root, { actor, lib = "none", power = () => null, onPick = () => {}, cast = null } = {}) {
-    const mine = open = { actor, target: null };
+    const mine = open = { actor, target: null, kind: lib === "none" ? null : lib, power: null };
     const pick = a => { mine.target = a ?? null; return onPick(a); };
+    // which power the window has chosen, kept as the choice changes (read once the window is gone)
+    const note = () => { try { const p = power(root); mine.power = p ? { name: p.n ?? p.name ?? null, group: p.d ?? p.group ?? p.list ?? p.arcanos ?? p.lore ?? null } : null; } catch (e) { /* the window's own business */ } };
+    note();
+    root?.addEventListener?.("change", note); root?.addEventListener?.("input", note);
     const A = api();
     if (!A || !root) return null;
     try {

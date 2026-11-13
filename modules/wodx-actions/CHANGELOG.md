@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.57.1 (the word that a power was rolled now carries the power's name, its Discipline, Gift list or the like, its kind and the character's line, so the map can show an effect that fits it; not deployed)
 - 3.57.0 (a power rolled from its window says so to the other modules, with who worked it and at whom, so a sprite token plays its casting move; every line's power window does this, a cancelled window does not; not deployed)
 - 3.56.1 (inquisitor-era hunters cover the seven prologue eras as they did the two old ones)
 - 3.56.0 (the approval queue knows magic that reaches it is never small)

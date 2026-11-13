@@ -12,7 +12,7 @@
  *   6. the token's buttons hold the walking-figure button
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
-const N = 8;
+const N = 10;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -97,6 +97,21 @@ export async function run() {
       const cast = A.playing(el.id)?.act;
       await sleep(1200);
       ok("9. power", cast === "cast" && !A.playing(el.id), {sprite: el.flags?.["wodx-paperdoll"]?.sprite, cast, actions: game.modules.get("wodx-actions")?.version, sends: typeof game.modules.get("wodx-actions")?.api?.version});
+    }
+    // 10. the effect fits the power: Dominate shows the gaze of the mind, laid over the figure and gone when the move ends
+    {
+      const by = n => docs.find(d => d.flags?.["wodx-paperdoll"]?.sprite === n), tm = by("townsman-1888"), el = by("kindred-elder-1888");
+      Hooks.callAll("wodxPowerShown", el.actor, {target: tm.actor, token: el.uuid, targetToken: tm.uuid, power: "Command", group: "Dominate", kind: "disc", line: "kindred"});
+      await sleep(450);
+      const fx = el.flags?.["wodx-paperdoll"]?.act?.fx, lit = A.glowing?.(el.id), mesh = el.object?.mesh;
+      await sleep(1200);
+      const after = A.glowing?.(el.id);
+      await A.play(el, "cast", tm);
+      await sleep(450);
+      const own = el.flags?.["wodx-paperdoll"]?.act?.fx;
+      await sleep(1200);
+      ok("10. effect", fx === "mind-gaze" && !!lit && lit.width > 0 && Math.abs(lit.width - Math.abs(mesh?.width ?? 0)) < 1 && !after && own === "blood-bolt",
+        {fx, lit, mesh: mesh ? {width: mesh.width, height: mesh.height} : null, after: after ?? null, own, other: A.fxFor?.({power: "Arms of the Abyss", group: "Obtenebration"})});
     }
     R.notes.push("The Sprite test tokens are left on the scene for Ben.");
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }

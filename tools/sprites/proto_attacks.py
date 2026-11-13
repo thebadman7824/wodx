@@ -6,7 +6,7 @@ from PIL import Image
 import wear as Wr
 S,SH=Wr.S,Wr.SH
 PEOPLE={
- 'kindred-elder-1888':(dict(skin=(214,208,204),hair=('#16120e','short'),top=('#1c1a20','longcoat'),under='#d8d4c8',neck=('cravat','#5a1a1e'),legs=('#1c1a20','trousers'),feet=('#121012','shoe')),[('claw',None,None),('cast',None,('blood','bolt'))]),
+ 'kindred-elder-1888':(dict(skin=(214,208,204),hair=('#16120e','short'),top=('#1c1a20','longcoat'),under='#d8d4c8',neck=('cravat','#5a1a1e'),legs=('#1c1a20','trousers'),feet=('#121012','shoe')),[('claw',None,None),('cast',None,None)]),
  'garou-homid':(dict(skin=(172,130,96),hair=('#16120e','long'),top=('#5a5a52','shirt'),legs=('#3a4a66','trousers'),feet=('#3a2e26','boot')),[('claw',None,None)]),
  'townsman-1888':(dict(skin=(206,170,140),hair=('#3a2a1c','short'),top=('#26262c','suit'),under='#d8d4c8',neck=('tie','#3a3a40'),legs=('#26262c','trousers'),feet=('#16120e','shoe'),hat=('bowler','#1e1c1c'),beard='#3a2a1c'),[('claw',None,None),('shot','revolver',None)]),
  'lady-1888':(dict(skin=(226,190,160),hair=('#5a3a20','bun'),top=('#4a3460','gown'),legs=('#4a3460','robe'),feet=('#16120e','shoe'),neck=('collar','#d8d4c8')),[('thrust','dagger',None)]),

@@ -3298,6 +3298,11 @@ A power rolled from any line's power window in Actions sends wodxPowerShown with
 
 wodxAttackRolled and wodxPowerShown are heard only on the computer that rolled. That computer writes the move to the token when its user owns the token, so a player's own attacks and powers play on every screen. Harm applied without an attack roll is still sent by the active Storyteller's computer.
 
+## B2585. A power's effect fits the power (2026-11-13, Ben's ask on supernatural attacks)
+
+The effect of a power is no longer drawn into a figure's casting sheet. It is its own sheet, a colour and a shape (twelve colours, seven shapes, 84 sheets drawn by tools/sprites/proto_fx.py), laid over the token while the casting move plays. The look is chosen in sprite-rules.mjs (fxFor): first from telling words in the power's name and its group (fire, shadow, the mind, blood, the dead, dreams and so on), then from the power's kind (a Discipline, a Gift, an Arcanos, an Evocation, Hekau, a Horror, an Edge, Numina), then from the character's line. A module may name a look outright in wodxPowerShown as fx. These looks are a first rule of presentation, not book text; any of them can be changed in the one table.
+Reverse: drop the fx field from the token's act flag in play(), and restore the elder's casting sheet from tools/sprites/proto_attacks.py with its power set.
+
 ## B2600. The mortal years of a lifepath are a drill-down (2026-11-13, Ben's ask and desk picks)
 The lifepath window opens on continent, then region (all 44 world regions), then "your people" where more than one people lives there or none is named, then origin, then one pair of steps per life stage: how those years were spent and what marked them. The drill is stored inside the path (path.drill), so the summary, the prelude scenes, the lifepath threads and the first-night forecast read it without change. The old birth, youth, adult and later scenes step aside when a drill is present; the turn, the splat's scene and the first years after follow as before. Records kept before 0.17.0 read as they did.
 Reverse: in LifepathApp, start with R.newPath without a drill; stagesOf then returns every stage again.

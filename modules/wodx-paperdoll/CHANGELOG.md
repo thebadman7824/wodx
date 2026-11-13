@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.10.0 (a power's effect fits the power: 84 effect sheets, twelve colours by seven shapes, laid over the figure's casting move; the look is read from the power's name and group, then its kind, then the character's line, so Dominate shows a violet gaze, Obtenebration rising shadow, a Gift pale green sparks, a wraith's Arcanos grey tendrils; the elder's casting sheet no longer carries a fixed blood bolt; not deployed)
 - 0.9.1 (sprite tokens play their casting move when a power is rolled from the Actions menu; attacks and powers rolled on a player's own computer now play too, sent by the computer that rolled them; not deployed)
 - 0.9.0 (sprite tokens play every attack rolled in a fight, hit or miss, with the move that fits the weapon: a shot for ranged weapons, a thrust for pointed ones, a swing for the rest, hands and claws, a bite; needs WoDX Combat 3.22.0 for misses and weapons; a hook other modules can call to show a power being worked; not deployed)
 - 0.8.1 (fix: the same attack played twice in a row toward the same side did nothing the second time; found on the testbed; not deployed)
