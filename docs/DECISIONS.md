@@ -147,6 +147,7 @@ Next free block: B3120
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
+| B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
 <!-- decision-index:end -->
 
@@ -4453,6 +4454,21 @@ Reverse: revert the titles and notes in POLITIES in modules/wodx-npc/scripts/pol
 The Hengeyokai book says the Beast Courts do not fully count India as theirs, so a Garou faction in India now keeps a Garou sept by default; the Storyteller can still pick a Beast Court there. The year the Ahl-i-Batin left the Council was not found in M20 and needs Lore of the Traditions or Sorcerers Crusade, which the PC does not hold as text; the circle's notes stay as they are.
 
 Reverse: put india: "beast-court" back in REGION_SHIFTERS.
+
+## B3100. Cook, brew or mix and Make something keep to the land of the scene (2026-11-13)
+WoDX Storyteller. Both windows list first what is at home in the region and way of life of the character's scene in the chronicle's year (the same place rules as goods, data/goods-ways.mjs). Things from other lands stay hidden behind a Lands choice ("Every land"), marked "from another land", since a traveller may carry the know-how and the ingredients. A scene with no region shows everything, as before.
+
+Reverse: drop the where argument from listFor and makeable and the Lands select.
+
+## B3101. Ingredients are bought where they grow (2026-11-13)
+WoDX Library and Storyteller. When a character buys what a recipe is missing, the good comes from those to be had in the scene's land (membersOf with a place); with none, the window says no one there sells it. Maize, corn kernels, cornmeal and corn cobs are old in Mexico (from 3000 BCE), the Andes (2000 BCE) and North America (1000), and reach the rest of the world on the books' date. Six raw goods are added for the recipes of B3102: sorghum, millet, maguey sap, kava root, areca nuts and betel leaves, each at home where it grows. A house reading of history, rounded for play.
+
+Reverse: remove the MAIZE entries and the six rows from goods-ways.mjs, and call membersOf without a place.
+
+## B3102. Recipes for the brews, quids and dishes of other lands (2026-11-13)
+WoDX Library. Sorghum or millet beer (3 days fermenting), maize beer (5 days), pulque from maguey sap (2 days, no brewhouse), kava pounded and steeped, a whipped cacao drink, and a folded betel quid now have recipes instead of counting as raw. Chuño (potatoes frozen and dried over 10 days), rice crackers, yak butter, tsampa (roasted barley flour), injera (with the flatbreads), pemmican and dried fish, fermented cabbage and drinking chocolate (from 1500 BCE, from cacao) join the methods they belong to. Kola nuts, dried dates, rock salt, cloves, turmeric and quinoa are raw. Figures follow the nearest book-free method of each family; the books give no such recipes (house rule).
+
+Reverse: remove the new METHODS and GROUPS from data/recipes.mjs and put the names back in RAW.
 
 ## B3110. Putting money into a venture (2026-11-13, Improvement Desk mk1)
 WoDX Storyteller, venture-rules.mjs and ventures.mjs. A character, or an NPC the Storyteller picks, puts money from the purse into a caravan, a workshop or a trading house on a market the Storyteller has set up, with a kind of goods and, for a trading house, a trader. The words follow the year and the way of life of the market's region (Chronicle's spheres): a commenda share in 1250 in Western Christendom, a qirad partnership in the lands of Islam, a share with a banking house on hundi credit in India, a za stake in Japan before 1600 and the licensed guild after, a junk or prahu voyage in the Malay world, a camel caravan in the Sahel, a dhow on the monsoon on the Swahili coast; joint-stock shares from 1600 in the West; the exchange from 1800 in the West and from 1850 elsewhere; shares and funds after 1946; a shell company or a crypto fund in the World of Future Darkness. Players open it from Property and building, the Storyteller also from the Markets window. A player's request goes by socket and is done only for a character the player owns.
