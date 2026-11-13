@@ -117,7 +117,7 @@ export default {
       "id": "feastFast",
       "group": "rules",
       "name": "Feast and fast days",
-      "hint": "The holy days of the place shape the night: on a night of revel or celebration (Ramadan nights and the new year of the lunar calendar among them) the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly hunting in town is 1 harder. The Chronicle Clock always shows the day.",
+      "hint": "The holy days of the place shape the night: on a night of revel or celebration (Ramadan nights and the new year of the lunar calendar among them) or a fair the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly hunting in town is 1 harder, on Good Friday or Yom Kippur 2 harder; by day a holy day or the day of rest shuts the market. The curfew of the older towns and the wartime blackouts make a hunt 1 harder. The hunt window lists each change by name. The Chronicle Clock always shows the day.",
       "default": true,
       "source": "House rule"
     },

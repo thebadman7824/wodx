@@ -227,10 +227,14 @@ export const HUNTING_GROUNDS = {
     patrolled: { label: "Heavily patrolled area", diff: 8 }
 };
 
-/** Hunting roll (p. 334): Fame and Domain lower difficulty (min 3); Herd adds dice. */
-export function huntingPool({ area = "market", fame = 0, domain = 0, herd = 0, inhuman = 0 }) {
+/**
+ * Hunting roll (p. 334): Fame and Domain lower difficulty (min 3); Herd adds dice. calendar (Actions 3.58.0): the faith
+ * calendar's step, -2 to +2 (a feast makes it easier, a fast or a curfew harder); an easier night still stops at 3.
+ */
+export function huntingPool({ area = "market", fame = 0, domain = 0, herd = 0, inhuman = 0, calendar = 0 }) {
     const base = HUNTING_GROUNDS[area]?.diff ?? 6;
-    const diff = Math.max(3, base - fame - domain) + inhuman;
+    const cal = Math.max(-2, Math.min(2, Math.round(Number(calendar) || 0)));
+    const diff = Math.max(3, base - fame - domain + cal) + inhuman;
     return { difficulty: diff, bonusDice: herd };
 }
 

@@ -751,9 +751,11 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
  *   own places). In a domain another faction holds, the intruder's difficulty rises by that domain's security (V20
  *   p. 113) and the intrusion is a trespass the holder may answer (the Tradition of Domain).
  *   churchStep: the night's step from WoDX Chronicle's feast and fast days (-1, 0 or +1), for places in town only.
+ *   calendar: the faith calendar's changes (hunt-calendar-rules.mjs huntCalendar, NPC 0.54.0, B2710); when given it
+ *     replaces churchStep, and its named changes come back as calendar for the card.
  *   hunter: {factions: [faction ids], herd (own dots), domain (own dots), fame}
  */
-export function huntingAt(state, place, hunter = {}, morality = "roads", {churchStep = 0} = {}) {
+export function huntingAt(state, place, hunter = {}, morality = "roads", {churchStep = 0, calendar = null} = {}) {
   const area = areaOf(place, morality);
   const holder = holderOf(state, place?.id);
   const mine = holder && (hunter.factions ?? []).includes(holder.id);
@@ -764,11 +766,13 @@ export function huntingAt(state, place, hunter = {}, morality = "roads", {church
   const herdDice = Math.max(Number(hunter.herd) || 0, herdFac);
   let difficulty = Math.max(3, area.difficulty - domainDots - fame);
   // Feast and fast days (WoDX Chronicle): a night of revel is 1 easier in town, a strict fast 1 harder; not in the wilds
-  const church = ["wilds", "caern"].includes(place?.kind) ? 0 : Math.sign(Number(churchStep) || 0);
+  const wild = ["wilds", "caern"].includes(place?.kind);
+  const church = wild ? 0 : calendar ? Math.max(-2, Math.min(2, Math.round(Number(calendar.n) || 0))) : Math.sign(Number(churchStep) || 0);
   if ( church ) difficulty = Math.min(10, Math.max(3, difficulty + church));
+  const named = wild || !calendar ? [] : (calendar.changes ?? []);
   const trespass = holder && !mine ? {faction: holder.id, name: holder.name, security: holder.assets.security, secret: holder.secret} : null;
   if ( trespass ) difficulty = Math.min(10, difficulty + trespass.security);
-  return {area, holder: holder?.id ?? null, domainDots, fame, herdDice, church, difficulty, trespass};
+  return {area, holder: holder?.id ?? null, domainDots, fame, herdDice, church, calendar: named, difficulty, trespass};
 }
 
 /* ------------------------------------------------------------------ */

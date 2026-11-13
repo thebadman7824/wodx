@@ -1262,16 +1262,19 @@ class OrganicTown(T.Town):
         bw = (win[0] - 2, win[1] - 2, win[2] + 4, win[3] + 4)
         for b in self.blds:                                    # each building whole, on its own part only
             if not overlaps(b.rect, win) or not (self.mine(b, pt) or T.inside(b.rect[0], b.rect[1], win, .01) and T.inside(b.rect[0] + b.rect[2], b.rect[1] + b.rect[3], win, .01)): continue
+            if getattr(b, "palette", None) is None:            # furnished by purpose, era palette and room value
+                import furnishing as F
+                F.apply(b, self.year or 1197, getattr(self, "region", None) or "moravia", getattr(b, "wealth", None), getattr(b, "trade", None), self.seed)
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
             pk = b.t.get("portals")                            # a later era's doors and windows
-            walls.append(wall_with_portals(b.outline, wt, ops, True, pk))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
+            walls.append(wall_with_portals(b.outline, wt, ops, True, pk, getattr(b, "portal_tex", None)))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk, getattr(b, "portal_tex", None)))
             for r in b.rooms:
-                if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
+                if B.floor_tex(r.floor): patterns.append(pattern(b.room_poly(r), B.floor_tex(r.floor), b.theta))
                 objects.extend(b.dressing_world(r, True))
                 for it, cx, cy, rot in b.items_world(r, picture=True):
-                    objects.append(obj(it["asset"], cx, cy, rot, it["scale"], 100))
+                    objects.append(obj(C.drawn(it)[0], cx, cy, rot, C.drawn(it)[1], 100))
                 objects.extend(b.dressing_world(r, False))
         for pl in self.plots:                                  # plot fences: the sides and back, open to the street
             if not overlaps(pl["rect"], win, 2): continue

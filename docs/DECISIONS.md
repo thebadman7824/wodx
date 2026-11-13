@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2700
+Next free block: B2760
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -111,7 +111,7 @@ Next free block: B2700
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
-| B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
+| B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
@@ -122,6 +122,10 @@ Next free block: B2700
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 | B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
+| B2700-B2709 | Letters that take the journey time across the world map, by the ways each land has in each year | Storyteller |
+| B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
+| B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
+| B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3080,7 +3084,7 @@ WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names chang
 Reverse: put the old names back in data/eras.json and the kits.
 
 ## B2513. The prologue looks at the whole world (2026-11-12, Ben: WoDX is global, not only Moravia)
-WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
+WoDX Storyteller 0.54.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
 
@@ -3310,6 +3314,33 @@ Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the
 When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
 Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 
+## B2590. Furnish for what a building is for (2026-11-13, Ben's ask)
+Each building type has a main purpose and side purposes, the other chances it gives its owner (tools/mapgen/purposes.py). A burgher palace is a home and a place of trade, and also shows wealth, makes rivals feel small and wins clients over, so its salon, dining hall and counting room are lifted one tier and prefer display set pieces. Rooms take a role (front, work, private, service) from their kind, else from how many doors they are from the street.
+Reverse: purposes.purpose_of returns the plain fill purpose with no side purposes.
+
+## B2591. One palette per building, by age, region and wealth (2026-11-13, after Cataclysm's palettes)
+furnishing.apply picks one palette per building: the age band of the year (the settlement ages), the world region and the owner's wealth choose the style and a set of assets for each kind of piece, plus walls, floors, doors and the kind of light (rushlight to electric). Pieces made to last (barrels, crates, stone) carry forward into later ages, never back. Inventions do not appear before their age (catalogue_rules.json "earliest": phones and gramophones from the industrial age, radios from the republic age, televisions and computers from the socialist age).
+Reverse: leave out --year; the old dress() runs.
+
+## B2592. Set pieces (2026-11-13, after Cataclysm's nested chunks)
+About sixty small arrangements (a bed with a chest at its foot, a long table with chairs, a counter with goods, an altar with candles) are placed whole, by room kind, role and trade. A corner piece may take a wall spot, and a small piece may shrink to three quarters to fit between walkways.
+Reverse: setpieces.SET_PIECES empty; rooms keep their walls and floors only.
+
+## B2593. Room value tiers (2026-11-13, after Dwarf Fortress)
+Each room's worth (the sum of its pieces on the 0-5 goods scale) names a tier: meagre, plain, decent, fine, grand, royal. Role, wealth and side purposes set a target tier; the fill adds set pieces until the room reaches it or is full. Thresholds rise for halls and fall for small rooms, and scale by age.
+Reverse: furnishing.target_tier returns "plain" for every room.
+
+## B2594. Assets tagged by file name only (2026-11-13)
+catalogue.py tags about 14,000 of 45,000 Dungeondraft assets from their paths alone (pack, folder and file name), since no pack is unpacked and no picture viewed. Fantasy and other-setting packs are skipped (elves, dwarves, magic, the Star Wars and HellScape packs). Ben's marks on the review desk override the tags.
+Reverse: delete catalogue_rules.json entries.
+
+## B2595. Left open (2026-11-13)
+Not built: windows, doors and rooms that differ by age beyond their finish (a room is named by its building type, and the types are already placed by age); a room's tier in the WoDX map file (optional in the design; the Foundry side reads nothing from it yet); grounds (trees, yards) by age; regional palettes beyond the fallback to Moravia where a region has no pack of its own; what else changes between ages besides furniture (proposal in the design doc, waiting on Ben).
+
+## B2596. Doors and windows follow the age (2026-11-13, Ben's go-ahead on the design's proposal)
+Every door, double door, doorway, arch and window takes the age's wood finish (Ashen to 1449, Light to 1780, Dark after), a finer door for a richer owner, and metal-framed windows from 1919 (palettes.portals, passed to wall_with_portals as textures). Widths stay those of ddcore.PORTALS.
+Reverse: leave the building's portal_tex unset; the Ashen set returns.
+
 
 ## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
 WoDX Combat 3.22.0 calls `wodxAttackRolled` after each attack card (attacker, target, the weapon's name, ranged, brawl, bite, hit, botch). Paperdoll 0.9.0 plays the attacker's sprite move for it, hit or miss: a bite for a bite, a shot for a ranged weapon, hand or claw for brawling, a thrust for a pointed weapon by name, a swing for the rest; a sprite that lacks the move plays the nearest it knows. Harm applied with an attacker but no attack roll in the last four seconds still plays the first move (B2581). Any module can show a power being worked with `Hooks.callAll("wodxPowerShown", actor, {target})`; no module calls it yet, so powers rolled from the sheet do not play.
@@ -3479,6 +3510,10 @@ Reverse: empty PLACES in modules/wodx-otherworlds/scripts/realm-places.mjs.
 Ben approved the recommendations of 13 November. Ti Yu, the Earth Prison, stays at the heart of Yomi, as Dark Kingdom of Jade has it, and Yomi's note now says the Kuei-jin hold it to be a copy made for the Yellow Springs (The Thousand Hells pdf 6 to 10). The maps follow the layout notes of the book lookup where one flat map can: a table of hints (HINTS in realm-worlds-rules.mjs) ties a place to a part of the map (centre, inner, middle, outer, edge, a compass side) or to another place, and a place with a hint is put on a square that fits, also when a shifting realm is made anew. Travellers arrive where the books say in Malfeas (the Central Duchy courtyard), a Battleground (the Signpost), the Summer Country (the Forest of Longing) and Erebus (Cerberus at the border). Our own reading: up is north; a book's above and below is laid out across the map (the CyberRealm's Computer Web north and its Pit south, the Dream Zone's descent from west to east). Not followed, because the map's own plan says otherwise: the Tempest keeps Stygia at its heart, where Wraith 20th sets the Labyrinth at the centre. B2558 said the books give no distances; the lookup found some. The Far Shores lie about an hour from one another by byway, and the Far Shores map now takes about seven hours to cross, not 50 days. The Tempest's own times (Stygia to the nearest Necropolis port 2 hours, to the Labyrinth a week, to the Far Shores two weeks, by major byway) are shown with the map's notes, and the map's times do not match them yet.
 Reverse: empty HINTS and ARRIVE in realm-worlds-rules.mjs; take the last sentence off Yomi's era note in realm-maps-rules.mjs.
 
+## B2633. The Tempest and the Labyrinth stay separate maps (2026-11-13, Ben's call)
+In the books the Tempest surrounds the Labyrinth (Wraith 20th), and the lore keeps that: the Labyrinth lies at the heart of the storm. For play the two keep the maps they have, each its own realm world map, and the Tempest keeps Stygia at its heart with the travel times it has now. Ben, 13 November 2026: keep them separate, as they are.
+Reverse: redraw the Tempest round the Labyrinth in SPEC and MARKS of realm-worlds-rules.mjs.
+
 ## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
 A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
 Reverse: set Daily prayers to Not kept on an NPC, or return blocksOf in modules/wodx-npc/scripts/routine-rules.mjs to forFaith alone; PRAYERS can stay unused.
@@ -3558,3 +3593,87 @@ Reverse: give FERA_ANIMAL a Mokole entry again and drop animal from bodyOf.
 ## B2694. False limbs by era (2026-11-13)
 A lasting change "A false limb" with a part named in its "Part lost" field draws that part again as a false limb, in wood and iron before 1900, steel and plastic to 2022, and chrome in the World of Future Darkness, by the chronicle's year. The rules are unchanged: the part still counts as lost.
 Reverse: drop fakes from dollOf in extras.mjs.
+## B2700. Letters take the world map's journey time (2026-11-13)
+WoDX Storyteller 0.59.0, from Improvement Desk item ms1 (Ben picked Build it as described). A letter records the part of the world it is sent from (the scene holding the sender's token, else the homeland) and where it is going (the recipient's scene, else what the sender picks). Between two parts of the world the time comes from the world map's journey between their middles for the year, with the known world: a land the homeland does not know yet cannot be written to. A messenger rides land legs at half the journey's days (a lone rider with fresh horses against a traveller with baggage) and takes sea legs at the ship's pace, or flies when an airliner is quicker. The post takes the journey (or air mail when flying is quicker) plus two days at the posts before 1840 and one after. Inside one land the old near and region times stand. House figures; the books give no delivery times.
+
+Reverse: send without the From and Where they are lists (letters-rules plan() with reach), as before 0.59.0.
+
+## B2701. When each land has a post, a telegraph and a telephone (2026-11-13)
+REGION_LINES gives each of the 44 world regions the year a letter post anyone may use, a telegraph office and a telephone line became common (a courier for officials only does not count). E-mail reads WoDX Chronicle's internet year for the region. A land's own year stands in place of the carrier's general year, so China's letter offices carry post from 1400 and Ottoman Greece has none before 1840. Between land masses a telegram needs the cable (America 1866, Australia 1872, across the Pacific 1902, the poles by wireless 1911) and a call needs the crossing (1927 over the Atlantic, 1930 to Australia); a call between two lands of one land mass needs the long lines of 1910. A traveller going that way can carry a letter to 1900. House readings of history, rounded.
+
+Reverse: edit REGION_LINES, CROSSINGS or LONG_CALLS in letters-rules.mjs.
+
+## B2702. Relays of riders and runners (2026-11-13)
+A messenger between two lands both inside the Mongol post (China, Central Asia, Persia, Russia, Siberia, Korea, Tibet, Anatolia) from 1235 to 1368 goes land legs at 0.3 of the journey's days, and inside the Inca roads (the Andes) from 1450 to 1533 at 0.25. House figures from the relay distances given in histories, rounded.
+
+Reverse: empty RELAYS in letters-rules.mjs.
+
+## B2703. Lost, put back, read on the way, and answered late (2026-11-13)
+Nothing is lost by a roll. The Storyteller's card shows a house chance in a hundred that such a letter goes astray (messenger 6, traveller 18, post 3, telegram 1 for a week on the way, growing with the square root of the weeks, at most 40), and Lost on the way, Put it back some days, Read on the way and Let it go; Letters on the way in the hand lists all of them. A letter read on the way arrives with its seal broken and pressed back. Write the answer on a letter for someone the Storyteller plays sends the reply back from that land to the sender's. The Storyteller can send as anyone they play (a faction, an elder, a ghoul) to a player character. Players see a letter for them only when it arrives, as before. The world map window lists how long a letter takes between the two places shown.
+
+Reverse: send with Let it go only; the card's other buttons and the hand tool can be ignored.
+
+## B2704. Letters in the World of Future Darkness (2026-11-13)
+On the World of Future Darkness branch a message over the Net arrives at once anywhere both ends can be reached, and is read by whoever watches the Net, as before 0.59.0; the far future keeps every other way the year has.
+
+Reverse: none needed; the Net stays off without the branch.
+
+## B2720. Bring forward: things on the maps (2026-11-13, Improvement Desk ia2)
+WoDX Interactables 0.37.0, SWAPS and bringForward in interact-rules.mjs; WoDX Sheets 0.17.0 on the anachronism card. Ben's pick: a Bring forward button that swaps each map thing for its equal in the new era, in every era. Each kind out of its year steps to the nearest kind of its family that is in use, one way in time, until one fits: a motor car before 1900 becomes a carriage, a motorcycle a riding horse, a motorboat a rowing boat, a carriage after 1930 a motor car; an electric light before 1880 an oil or gas lamp, a lamp after 1950 an electric light; a radio a telephone, and before 1890 a bell (as does a telephone). A keypad, card reader or alarm before 1970 becomes a lock of the same grade, unless the door or container has a lock already. Fire sprinklers before 1874 and a live wire before 1880 have nothing like them; the card names them for the Storyteller to keep or take off. A title the Storyteller wrote stays; the kind's own label goes with the kind. The tile's picture is not changed. The card has one button for everything on it and one on each row, and the result card has Undo. A house reading; the books give no such lists.
+
+Reverse: remove a step from SWAPS (that kind is then named as having nothing like it), or press Undo on the result card.
+
+## B2721. Bring forward: goods in containers (2026-11-13)
+WoDX Sheets 0.17.0, goodsSwap in anachronism-rules.mjs. A line in a container that is out of its year becomes an everyday good of WoDX Library in use that year where the scene stands (its region and that region's way of life, from WoDX Chronicle; goods found everywhere when the scene has no region): first one that names the same thing (a tallow candle becomes a votive candle), else one of the same kind (coin for coin, food for food) sharing most words with the old name; then the closest in worth, used and carried the same way, and the longest in use. The count stays: 4 banknotes in 1300 in Moravia become 4 silver pennies. Gear by era lines and world items are left as they are and named on the card.
+
+Reverse: press Undo on the result card; or drop the goods part of bringForward in anachronism.mjs.
+
+## B2722. The weekly build log archive (2026-11-13, Stale Design Desk e3)
+tools/docs/archive-build-log.mjs. Every Monday, the docs/BUILD-LOG.md entries more than a month old move to docs/archive/build-log-<year>-<month>.md by the month of each entry, beside the PENDING-REVIEW archive. A move, not a deletion: each entry is written to its archive file before it leaves the log, an entry already there is not copied twice, and the log keeps a line at the top saying where the older entries are. An entry is a ## or ### heading and its lines, dated by its heading or by the entry above. A Monday scheduled task runs it (07:37 UTC) and also moves the PENDING-REVIEW approved sections more than a week old, as that file says. The first entries are due to move on 14 December 2026.
+
+Reverse: copy the archive files' entries back to the top of BUILD-LOG.md (they are in date order), and turn the Monday scheduled task off.
+
+## B2750. NPCs overheard talking among themselves (2026-11-13)
+WoDX NPC 0.53.0, from Improvement Desk item tg1 (Ben approved 13 November 2026). Two NPCs within the talking distance of each other (talkReach, 2 squares) make a short exchange, one line each, through the talk generator (talk-grammar.mjs) with the grammar in data/grammar/overheard.mjs. A character within earshot of either (overheardEarshot, 4 squares) hears it, unless a wall that stops sound stands between them and both speakers. The active Storyteller's client looks when a player's character moves and every 30 seconds while the game is not paused; a pair talks at most every 5 real minutes, a scene at most every 45 seconds, and then on a 35 per cent chance. No talk in a fight, from an animal, a sleeper or the fallen, or from an NPC marked no stock talk (or no remarks, except passers-by, whose shared actor carries that mark). Each character in earshot gets a whisper to its players and the Storyteller, with names as it knows them (Faces). The scene keeps the last 30 exchanges in flags.wodx-npc.overheard.log, shown in the Overheard talk window, which also switches a scene off and can make two talk now. Text only, because Voices is shelved. World setting overheard, off by default.
+
+Reverse: turn off "NPCs talk among themselves" in the module settings.
+
+## B2751. What they talk about, and talk of the times (2026-11-13)
+Topics: a rumour one of the two has heard in WoDX Storyteller's rumour mill that a listener has not had (it then counts as heard, flags.wodx-npc.heard, as when an NPC tells it), talk of the times, a price (a goods kind short, gone or plentiful at the scene's market), who keeps order, a faction, a feast (WoDX Chronicle's calendar), the weather (WoDX Atmosphere) and work. Each is drawn by weight (secret 5, rumour 4, times 3, price, faction and feast 2, the rest 1) among those with something to say. Talk of the times (data/grammar/overheard-times.mjs) is a house reading of history by year: for each of the 44 world regions, for each way of life, and for everywhere, from 1197 to the World of Future Darkness; the most specific entries that fit speak (the region, then its way of life, then everywhere). Mortals talk of the world they can see: no metaplot of the game lines.
+
+Reverse: edit TIMES, or give a topic weight 0 in WEIGHTS (overheard-rules.mjs).
+
+## B2752. Who may talk of what (2026-11-13)
+Passers-by keep to street talk (the times, prices, the watch, feasts, the weather, work) as B975 asks: no rumours from the network and no factions. A faction everyone may know of comes up between anyone, the one that holds the scene first. A secret faction (Kindred, Garou and their like) comes up only between two of its own members, voices lowered: a clue for a character who stands close enough, as overheard talk is in Bloodlines.
+
+Reverse: drop "secret" from TOPICS, or filter it in factionTopic.
+
+## B2753. Words of each way of life (2026-11-13)
+The words that change with the place and the year are symbols by way of life (WoDX Chronicle sphereFor for the scene's region and year) and era band: a short oath, who keeps order (the yamen runners in Ming China, the kotwal's men in Delhi, the reeve's men in Brno, the corporate patrols in the future), the market (the souk, the night market, the great market of Tenochtitlan), how goods come in, and how word came (Chronicle mediaFor: at the well, a printed sheet, the paper, the wireless, online, the net). Money is the region's own that year from WoDX Storyteller (the small coin before 1900, the main one after). The staple at the market follows the way of life (bread, rice, millet, maize, potatoes, taro). The Storyteller's grammar journal can add overheard:<topic> and overheard:reply:<topic> lines.
+
+Reverse: edit SYMBOLS in data/grammar/overheard.mjs, or write lines in the "WoDX talk grammar" journal.
+## B2710. The faith calendar changes the hunt (2026-11-13, Ben's pick fa1 on the improvement desk, the full version)
+WoDX NPC 0.54.0 (hunt-calendar-rules.mjs), Actions 3.58.0, Chronicle 0.51.1. Under the Feast and fast days house rule, a hunt reads the day of the town's own faith (WoDX Chronicle church.on for the scene) in every faith's year: a fair -1, a night of revel -1 after dark (Ramadan nights among them), a fast kept strictly +1, Good Friday, Great Friday and Yom Kippur +2 kept strictly and +1 by custom, and by day in the market or merchant streets a holy day or the day of rest +1 (the Muslim Friday only at the noon prayer). The total is held to 2 either way. The hunt window shows each change by name in a number the Storyteller can change, and faction hunts use the same changes in place of the single feast-or-fast step. A house reading for play; the books give no such table.
+
+Reverse: turn the Feast and fast days house rule off, or set the number in the hunt window to 0.
+
+## B2711. Curfews, blackouts and the faiths of a quarter (2026-11-13)
+WoDX NPC 0.54.0. A town keeps a night curfew from 21:00 (from midnight on a night of revel) to dawn until 1800 by default, later in the lands that kept one longer (China to 1912, Japan to 1868, the Ottoman and Persian cities to the 1850s to 1880s, Korea also 1945 to 1982), never in lands settled late; it counts +1, or 0 where the night's empty streets already count it. Wartime blackouts by region (Britain 1915 to 1918 and 1939 to 1945, Japan 1942 to 1945 and so on) count +1 after dark. A faith kept by a tenth or more of the scene's residents is listed with no step, as its own quarter's change for the Storyteller to count there. Indoor hunts skip the curfew and blackout.
+
+Reverse: edit CURFEW_YEARS and BLACKOUT_YEARS in modules/wodx-npc/scripts/hunt-calendar-rules.mjs.
+
+## B2712. Black powder misfires (2026-11-13, Ben's pick cb4 on the improvement desk)
+WoDX Combat 3.24.0 (powder-rules.js), world setting Black powder misfires and wet powder, on. Hand cannon, matchlock, wheellock and flintlock guns misfire on a botch, as V20's botch rule has it, and on any 1 in rain, sleet or hail on an outdoor scene (WoDX Atmosphere's weather) or when swimming. A misfire fires nothing: the attack misses and the charge is spent. Percussion caps and cartridges keep the plain V20 botch rule. Powder kept covered counts as dry (a box in the attack window). Book check pending on the PC for the older ages' own firearm notes.
+
+Reverse: turn the world setting off.
+
+## B2713. Wet powder and the match (2026-11-13)
+WoDX Combat 3.24.0. Heavy rain (a downpour or a storm) puts out a matchlock's or hand cannon's match unless it is kept covered, and a misfire there wets the powder: the gun will not fire until it is reloaded with dry powder (Reload clears it). A match put out is lit again with the WoDX: Light the match macro (a turn, with a flame at hand). The automatic attack skips a gun that cannot fire.
+
+Reverse: turn the world setting off; the item flag wodx-combat.powder holds the state.
+
+## B2714. The lock of a gun by its name, else by the year (2026-11-13)
+WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus, caliver and tanegashima are matchlocks, Brown Bess a flintlock, a Colt Navy a percussion revolver, a Glock a cartridge gun). A gun that names none takes the lock most guns had that year: hand cannon before 1450, matchlock to 1700 (pistols wheellock from 1520), flintlock to 1840, percussion to 1870, then cartridges. A house reading of firearms history, global by default; the Storyteller names the lock on the sheet to change it.
+
+Reverse: name the lock in the weapon's name or description.
+

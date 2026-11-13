@@ -93,3 +93,58 @@ export const MAP_ROWS = 60;
 
 /** Is the check on? "on", "off", or "auto": on everywhere but the Live world until the Storyteller turns it on there. */
 export const isOn = (mode, live) => mode === "on" || (mode !== "off" && !live);
+
+/* -------------------------------------------------------------- */
+/*  Bring forward (0.17.0, B2721)                                  */
+/* -------------------------------------------------------------- */
+
+const STOP = new Set(["a", "an", "the", "of", "and", "or", "with", "in", "for", "to", "some", "pair", "set"]);
+const words = n => new Set(String(n ?? "").toLowerCase().split(/[^a-z0-9]+/).filter(w => w && !STOP.has(w)));
+/** The thing a name names: its last word before "of", "with" or "for" ("a tallow candle", "a lamp of animal fat"). */
+const head = n => { const w = String(n ?? "").toLowerCase().split(/\s+(?:of|with|for|in|from)\s+/)[0].split(/[^a-z0-9]+/).filter(Boolean); return w[w.length - 1] ?? ""; };
+const inYear = (g, y) => (!Number.isFinite(g.from) || g.from <= y) && (!Number.isFinite(g.to) || y <= g.to);
+/**
+ * The everyday good that takes a line's place in a year: a good in use that year where the scene stands (inUse(good,
+ * year); by default only goods found everywhere), naming the same thing (a tallow candle becomes a votive candle), else of the same kind (food for food,
+ * coin for coin) sharing most words with the old name; then as close in worth as can be, used and carried the same way, and the longest in use. goods: WoDX Library's GOODS; valueOf(good, year)
+ * -> its tier then. Returns the new line, with the count kept ("7 silver pennies" stays 7), or null when nothing of
+ * its kind is in use that year or the line is not an everyday good.
+ */
+export function goodsSwap(line, goods = [], year = 0, valueOf = () => 0, inUse = (g, y) => !g.ways && inYear(g, y)) {
+  const y = Number(year) || 0, {ref, count} = lineOf(line), key = ref.toLowerCase();
+  if ( !y || !key ) return null;
+  const old = goods.find(g => [g.name, g.was, g.former].some(n => n && n.toLowerCase() === key));
+  if ( !old || inUse(old, y) ) return null;
+  const at = Math.min(Math.max(y, old.from ?? y), old.to ?? y), worth = Number(valueOf(old, at)) || 0, ow = words(old.name), oh = head(old.name);
+  let best = null;
+  for ( const g of goods ) {
+    if ( g === old || g.localCoin || !inUse(g, y) ) continue;
+    const shared = [...words(g.name)].filter(w => ow.has(w)).length, same = g.kind === old.kind, like = head(g.name) === oh;
+    if ( !same && !like ) continue;
+    const span = (Number.isFinite(g.to) ? g.to : 2099) - (Number.isFinite(g.from) ? g.from : -10000);
+    const score = [like ? 0 : 1, same ? 0 : 1, -shared, Math.abs((Number(valueOf(g, y)) || 0) - worth), g.use === old.use ? 0 : 1, g.conceal === old.conceal ? 0 : 1, -span, g.name];
+    if ( !best || cmp(score, best.score) < 0 ) best = {g, score};
+  }
+  if ( !best ) return null;
+  return count > 1 ? `${best.g.name} (${count})` : best.g.name;
+}
+function cmp(a, b) {
+  for ( let i = 0; i < a.length; i++ ) {
+    if ( a[i] === b[i] ) continue;
+    return typeof a[i] === "string" ? a[i].localeCompare(b[i]) : a[i] - b[i];
+  }
+  return 0;
+}
+/** Change one container's lines for a year: [{from, to}] for each swapped line, and the new text. */
+export function swapLines(text, swap = () => null, only = null) {
+  const lines = String(text ?? "").split(/\r?\n/), swaps = [], none = [];
+  const want = l => !only || only.includes(String(l ?? "").trim().toLowerCase());
+  const out = lines.map(l => {
+    if ( !l.trim() || !want(l) ) return l;
+    const to = swap(l.trim());
+    if ( to ) { swaps.push({from: l.trim(), to}); return to; }
+    if ( only ) none.push(l.trim());
+    return l;
+  });
+  return {text: out.join("\n"), swaps, none};
+}

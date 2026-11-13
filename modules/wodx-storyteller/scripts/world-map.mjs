@@ -22,6 +22,8 @@ export function load() {
 export const loaded = () => WM;
 const need = () => { if ( !WM ) throw new Error("WoDX Storyteller: the world map is not loaded yet; await api.worldMap.load() first"); return WM; };
 import * as D from "./discovery-rules.mjs";
+import * as LR from "./letters-rules.mjs";
+import {mediaYear} from "../../wodx-chronicle/scripts/media-rules.mjs";
 import * as C from "./core.mjs";
 import {addTool} from "./hand.mjs";
 
@@ -82,6 +84,13 @@ export function view(state) {
   if ( a ) lines.push(`From: ${WM.describe(a, {regionLabel}).words}.`);
   if ( b && j ) lines.push(`To: ${WM.describe(b, {regionLabel}).words}.`);
   if ( j ) lines.push(...WM.journeyLines(j));
+  // Storyteller 0.59.0 (B2703): how long a letter takes between the two parts of the world in the year
+  const fromR = a && WM.describe(a).region, toR = b && WM.describe(b).region;
+  if ( j?.surface && fromR && toR && fromR !== toR ) {
+    const times = LR.letterTimes({from: fromR, to: toR, year, j, future: (() => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } })(),
+      internet: {from: mediaYear("internet", fromR), to: mediaYear("internet", toR)}});
+    if ( times.length ) lines.push(`A letter: ${times.map(t => `${t.label.toLowerCase()} ${LR.wayWords(t.seconds).replace(/^in /, "")}`).join("; ")}.`);
+  }
   if ( j?.unknown ) { const y = D.knownYear(home, j.unknown); lines.push(`${regionLabel(j.unknown)} is first known in ${regionLabel(home)} in ${y}. Mark it under Discoveries if the chronicle finds it sooner.`); }
   if ( j?.noWay ) lines.push("Both ends are known, but not the lands and waters between. Mark the lands on the way under Discoveries, or show the whole world.");
   if ( known ) { const n = WM.REGION_IDS.length - known.size; lines.push(n ? `${n} of the ${WM.REGION_IDS.length} parts of the world are still beyond what ${regionLabel(home)} knows in ${year}.` : `Every part of the world is known in ${regionLabel(home)} by ${year}.`); }
