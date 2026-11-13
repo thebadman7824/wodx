@@ -143,6 +143,8 @@ test("hunters: Storyteller wiring (setting, api, Upkeep button, heat feed, appro
   assert.match(u, /rulesHuntExtra/);
   assert.match(h, /"hunterPressure"/);
   assert.match(h, /wodxHunterStage/);
+  assert.match(h, /Hooks\.on\("wodxCultNoticed"/);
+  assert.equal(H.addPressure({}, "cultMoved", 0).after, 2);
   assert.match(h, /registerHandler\?\.\(T_HUNTERS/);
   // Players never see the files: every card is whispered to the Storytellers
   for ( const m2 of h.matchAll(/ChatMessage\.create\(\{[^]*?\}\)/g) ) assert.match(m2[0], /whisper: gmIds\(\)/);
