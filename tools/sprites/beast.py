@@ -58,6 +58,18 @@ KINDS=dict(
  rock_cat=kind(s=1.3,heavy=1.2,ll=.95,ox=44,wings=((100,94,90),'bat',.45),fur=(128,120,112),head=(17,-35),hr=4.6,mz=4.6,mzr=3.0,ear=('prick',3.4),tail='thin',furry=0,spots=(96,90,86),eye=(236,50,40),teeth=True),
  zephyr=kind(s=1.18,heavy=.82,ll=1.2,bl=1.08,ox=42,longface=1,fur=(206,212,220),head=(19,-40),hr=3.6,mz=9,mzr=2.8,ear=('prick',3.6),tail='horse',mane=(236,238,242),furry=.15,neckr=.9,eye=(60,90,130)),
  familiar=kind(s=.5,heavy=1.0,fur=(30,28,34),ear=('prick',4.5),tail='thin',mz=3.2,mzr=2.6,head=(15,-35),furry=.4,ll=.9,eye=(230,60,40)),
+ drake=kind(s=1.2,heavy=1.1,ll=.8,bl=1.12,ox=45,fur=(110,70,50),belly=(190,160,110),head=(17,-37),hr=3.4,mz=8,mzr=2.4,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.6,horns=(200,190,160),wings=((120,70,60),'bat',1.0),spines=(80,50,40),teeth=True,eye=(236,170,40),nonose=True),
+ dragon_red=kind(s=1.62,heavy=1.2,ll=.82,bl=1.12,ox=45,fur=(140,40,30),belly=(210,170,100),head=(17,-40),hr=3.6,mz=8.5,mzr=2.6,longface=1,ear=('none',0),tail='brush',furry=0,neckr=.62,horns=(220,206,170),wings=((110,30,30),'bat',1.3),spines=(80,20,20),teeth=True,eye=(250,200,60),nonose=True),
+ pegasus=kind(s=1.5,heavy=.9,ll=1.16,bl=1.1,ox=40,longface=1,fur=(240,240,236),head=(19,-40),hr=3.7,mz=9.5,mzr=2.9,ear=('prick',3.6),tail='horse',mane=(220,220,226),furry=.15,neckr=.95,wings=((244,242,236),'feather',1.2),eye=(60,70,120)),
+ nightmare=kind(s=1.6,heavy=1.0,ll=1.14,bl=1.12,ox=38,longface=1,fur=(24,22,26),head=(19,-40),hr=3.9,mz=10,mzr=3.1,ear=('prick',3.6),tail='horse',mane=(120,20,20),furry=.15,neckr=1.05,eye=(250,60,30)),
+ manticore=kind(s=1.4,heavy=1.2,ll=.95,ox=44,fur=(196,110,60),head=(17,-36),hr=4.8,mz=2.0,mzr=3.0,ear=('round',2.4),tail='brush',mane=(110,50,30),headfur=(206,160,130),furry=.3,spines=(70,40,30),eye=(40,30,26),teeth=True,nonose=True),
+ chimera=kind(s=1.4,heavy=1.2,ll=.95,ox=44,fur=(176,130,70),head=(17,-36),hr=5.0,mz=5,mzr=3.2,ear=('round',2.4),tail='thin',mane=(110,70,40),horns=(140,120,96),furry=.3,eye=(200,160,60),teeth=True),
+ peryton=kind(s=1.3,heavy=.9,ll=1.12,ox=44,fur=(70,130,120),head=(18,-36),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(196,180,150),wings=((60,120,110),'feather',1.1),furry=.3,neckr=.8,eye=(30,22,20)),
+ mammoth=kind(s=1.8,heavy=1.5,ll=.9,bl=1.05,ox=44,fur=(96,70,50),head=(17,-33),hr=5.4,mz=7,mzr=3.2,ear=('flop',4),tail='tuft',furry=1.5,tusks=True,hump=4,neckr=1.4,eye=(20,16,14),snout=(96,70,50)),
+ dinosaur=kind(s=1.7,heavy=1.2,ll=.95,bl=1.3,ox=46,fur=(90,100,60),belly=(170,170,120),head=(18,-36),hr=4.0,mz=9,mzr=3.2,ear=('none',0),tail='brush',furry=0,teeth=True,eye=(220,180,40),neckr=1.0,nonose=True),
+ toad=kind(s=.6,heavy=1.4,ll=.45,bl=.9,fur=(90,110,60),belly=(190,180,120),head=(16,-26),hr=4.2,mz=4,mzr=3.0,ear=('none',0),tail='none',furry=0,spots=(60,80,40),eye=(220,180,40),nonose=True),
+ raccoon_dog=kind(s=.6,heavy=1.15,fur=(120,96,70),belly=(196,180,150),ear=('round',3),tail='brush',mz=4.5,mzr=2.4,head=(16,-34),furry=1.1,stripe=None,eye=(30,24,20),snout=(60,48,40)),
+ ox_horn=kind(s=1.45,heavy=1.45,ll=.9,bl=1.1,ox=42,fur=(110,90,70),head=(17,-31),hr=4.8,mz=6.5,mzr=3.4,ear=('flop',3),tail='tuft',horn1=(226,216,190),furry=.3,hump=3,neckr=1.4,eye=(20,16,14)),
  fae_cattle=kind(s=1.36,heavy=1.3,ll=.92,bl=1.12,ox=42,fur=(236,232,224),head=(17,-30),hr=4.4,mz=6.5,mzr=3.2,ear=('flop',3),tail='tuft',earcol=(170,44,40),horns=(226,216,190),furry=.2,neckr=1.2,snout=(214,176,160),eye=(150,40,36)),
 )
 

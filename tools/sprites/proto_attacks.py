@@ -59,7 +59,7 @@ def _lean(src,px,sgn):
     if not len(ys): return fr
     top=ys.min()
     for y in range(SH):
-        d=int(round(sgn*px*max(0,FEET-y)/max(1,FEET-top))); row=src[y]
+        d=int(round(sgn*px*max(0,FEET-y)/max(1,FEET-top))); d=max(-px,min(px,d)); row=src[y]
         if d>0: fr[y,d:]=row[:S-d]
         elif d<0: fr[y,:S+d]=row[-d:]
         else: fr[y]=row

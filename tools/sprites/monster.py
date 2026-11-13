@@ -82,7 +82,91 @@ def _own(fn):
         r=fn(f,'s')
         for row,im in ((0,fn(f,'b')),(1,r[:,::-1]),(2,fn(f,'f')),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
     return sh
+
+# ---- shapes shared by many creatures of the books (B2617): a glow, a swarm, a floating figure of lines, a mass of tentacles, a fish --------
+COL=dict(fire=[(150,40,10),(230,110,30),(250,200,90),(255,246,200)],balefire=[(30,70,20),(90,170,40),(170,230,90),(230,255,190)],
+ lightning=[(40,60,120),(110,150,230),(200,220,255),(255,255,255)],shadow=[(6,4,12),(24,18,40),(52,40,80),(90,76,120)],moon=[(70,80,110),(150,160,190),(214,220,236),(250,250,255)],
+ water=[(20,50,90),(50,110,170),(120,180,220),(210,236,250)],ice=[(80,120,150),(160,200,220),(220,240,250),(255,255,255)],smoke=[(40,40,44),(90,90,96),(150,150,156),(200,200,206)],
+ oil=[(4,4,6),(22,20,26),(52,48,60),(110,100,130)],blood=[(60,4,8),(130,16,22),(196,40,44),(240,120,110)],light=[(150,130,60),(230,210,120),(250,240,190),(255,255,240)],
+ green=[(20,60,30),(50,130,60),(120,200,110),(210,250,200)],violet=[(40,20,70),(100,60,160),(170,130,220),(236,220,255)],earth=[(50,40,30),(100,80,60),(150,124,96),(200,180,150)],
+ insect=[(20,16,12),(60,48,30),(100,84,50),(150,130,90)],bird=[(14,14,18),(44,44,52),(80,80,90),(130,130,140)],sand=[(120,96,60),(180,150,100),(220,196,140),(246,230,190)],
+ crystal=[(70,110,140),(140,190,220),(210,236,250),(255,255,255)],jade=[(20,80,50),(60,150,100),(140,210,160),(220,250,230)],metal=[(50,54,62),(110,116,128),(170,176,188),(230,234,240)],
+ rust=[(70,30,16),(130,66,30),(180,110,60),(220,170,110)],grey=[(50,50,54),(100,100,106),(150,150,156),(210,210,216)])
+def _rgba(c,a): return (*c,a)
+def _wisp(col):
+    def fn(f,view):
+        c=np.zeros((SH,S,4),np.uint8); ph=f/8*2*math.pi; P=COL[col]; cy=FEET-30+math.sin(ph)*2.5; cx=48
+        for y in range(SH):
+            for x in range(S):
+                d=math.hypot((x-cx)*1.0,(y-cy)*1.15); wob=1+.18*math.sin(math.atan2(y-cy,x-cx)*3+ph*2)
+                r=12*wob
+                if d<r:
+                    t=d/r; i=0 if t>.85 else 1 if t>.6 else 2 if t>.3 else 3; c[y,x]=_rgba(P[i],int(255*(.55+.45*(1-t))))
+                elif d<r+3 and (x*7+y*3+f)%5==0: c[y,x]=_rgba(P[1],110)
+        for k in range(5):   # a trail of motes below
+            yy=int(cy+14+k*2.4); xx=int(cx+math.sin(ph+k)*3)
+            if yy<SH: c[yy,xx]=_rgba(P[2],200-k*30)
+        for y,w in ((FEET,4),(FEET+1,3)):
+            for x in range(cx-w,cx+w+1):
+                if not c[y,x,3]: c[y,x]=(10,10,16,70)
+        return c
+    return fn
+def _swarm(col):
+    def fn(f,view):
+        c=np.zeros((SH,S,4),np.uint8); P=COL[col]; rng=np.random.default_rng(11)
+        for k in range(150):
+            a=rng.uniform(0,2*math.pi); r=abs(rng.normal(0,8)); sp=rng.uniform(.6,1.6)
+            x=int(48+math.cos(a+f*.35*sp)*r*1.3); y=int(FEET-24+math.sin(a+f*.35*sp)*r*.9+math.sin(f+k)*1.2)
+            if 0<=x<S and 0<=y<SH: c[y,x]=_rgba(P[k%3],235)
+            if col=='bird' and k%9==0 and 0<x<S-1: c[y-1,x-1]=c[y-1,x+1]=_rgba(P[1],235)
+        return c
+    return fn
+def _geomid(col):
+    def fn(f,view):
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,FEET-30+math.sin(ph)*2
+        pts=[(math.cos(ph*.5+i*math.pi/3)*10,math.sin(i*math.pi/3)*10) for i in range(6)]
+        for i in range(6):
+            a=(cx+pts[i][0],cy+pts[i][1]); b=(cx+pts[(i+1)%6][0],cy+pts[(i+1)%6][1]); cv.capsule(a,b,1.0,1.0,ramp=P,g='e%d'%i); cv.capsule(a,(cx,cy),.6,.6,ramp=P,g='s%d'%i)
+        cv.capsule((cx,cy),(cx,cy),2.2,2.2,ramp=P,g='c'); cv.outline()
+        for y,w in ((FEET,5),(FEET+1,3)):
+            for x in range(cx-w,cx+w+1):
+                if not cv.c[y,x,3]: cv.c[y,x]=(10,10,16,80)
+        return cv.c
+    return fn
+def _tentacles(col):
+    def fn(f,view):
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cx,cy=48,FEET-30
+        for j in range(8):
+            a=j/8*2*math.pi; prev=(cx,cy+4)
+            for t in range(1,9):
+                r=t*3.0; q=(cx+math.cos(a+math.sin(ph+t*.5+j)*.35)*r*1.3,cy+6+math.sin(a)*r*.5+t*1.6)
+                if q[1]>FEET: q=(q[0],FEET)
+                cv.capsule(prev,q,max(.6,2.2-t*.2),max(.5,2.0-t*.2),ramp=P,g='t%d'%j); prev=q
+        cv.capsule((cx,cy),(cx,cy+3),8,7,ramp=P,g='body')
+        for sg in (-1,1): cv.px(cx+sg*3,cy+1,(250,230,90))
+        cv.outline(); return cv.c
+    return fn
+def _fish(col,kind='fish'):
+    def fn(f,view):
+        cv=K.Cv(); P=[(0,0,0)]+COL[col]; ph=f/8*2*math.pi; cy=FEET-12; L={'fish':16,'shark':26,'whale':34}[kind]
+        if view=='s':
+            pts=[(48-L/2+i*L/10,cy+math.sin(ph+i*.6)*(1.2*(1-i/10))) for i in range(11)]
+            for i in range(10): r=[1,1.6,2.4,3.2,3.8,4.0,3.8,3.4,2.8,2.0][i]*(L/22); cv.capsule(pts[i],pts[i+1],r,r,ramp=P,g='b')
+            t=pts[0]; cv.capsule(t,(t[0]-4,t[1]-4),1.2,.6,ramp=P,g='tail'); cv.capsule(t,(t[0]-4,t[1]+4),1.2,.6,ramp=P,g='tail')
+            if kind=='shark': m=pts[5]; cv.capsule(m,(m[0]-2,m[1]-7),1.4,.5,ramp=P,g='fin')
+            if kind=='whale' and col=='grey': h=pts[-1]; cv.capsule(h,(h[0]+9,h[1]-1),.6,.4,ramp=[(0,0,0),(200,190,170),(230,224,210),(250,246,236),(255,255,255)],g='tusk')
+            cv.outline(); e=pts[-2]; cv.px(e[0]+1,e[1]-1,(20,16,16))
+        else:
+            r=L/22*4; cv.capsule((48,cy-1),(48,cy+1),r,r,ramp=P,g='b'); cv.outline()
+            if view=='f':
+                for sg in (-1,1): cv.px(48+sg*2,cy-1,(20,16,16))
+        for x in range(28,68):   # the water it moves in
+            if (x+f)%4<2: cv.c[FEET-int(r if view!='s' else 6),x]=(150,190,214,150) if not cv.c[FEET-6,x,3] else cv.c[FEET-6,x]
+        return cv.c
+    return fn
 OWN=dict(plant=_plant,ribbon=_ribbon)
+for _c in COL: OWN['wisp:'+_c]=_wisp(_c); OWN['swarm:'+_c]=_swarm(_c); OWN['geomid:'+_c]=_geomid(_c); OWN['tentacles:'+_c]=_tentacles(_c)
+for _c,_k in (('water','fish'),('grey','shark'),('grey','whale'),('water','whale'),('green','fish'),('metal','fish')): OWN['%s:%s'%(_k,_c)]=_fish(_c,_k)
 # ---- monsters that go on two legs: a figure for wear.py -------------------------------------------------------------------------
 def P(post=None,acts=(),death='die',**spec): return dict(spec=spec,post=post or {},acts=list(acts),death=death)
 SPRITE=lambda cloth:P(dict(scale=.55,lift=14),skin=(236,222,206),hair=('#d8c890','long'),top=(cloth,'tunic'),legs=(cloth,'tights'),feet=(cloth,'shoe'),thin=.9,marks=dict(ears=('long',None),wings=('#cfe4ec','fly')))
@@ -95,25 +179,63 @@ PEOPLE={
  'monk':P(acts=[('cast',None,None)],skin=(206,176,150),hair=('#6a625c','short'),top=('#17161a','robe'),legs=('#17161a','trousers'),feet=('#2a2422','sandal'),belt='leather'),
  'huntsman':P(acts=[('shot','bow',None),('cast',None,None)],skin=(214,180,150),hair=('#2a1c14','long'),top=('#6a1c22','coat'),under='#e0d8c8',legs=('#2a2a34','breeches'),hose='#d8d0c0',feet=('#1c1616','boot'),hat=('beret','#2a2a34'),over=('cloak','#23301f'),held='bow'),
  'belteroth':P(dict(scale=1.12,lift=10,alpha=.82),acts=[('cast',None,None)],skin=(34,32,44),hair=('#16141c','bald'),top=('#000000','bare'),legs=('#1c1a24','tights'),feet=('#000000','bare'),thin=.95,eyes=(190,214,236),marks=dict(wings=('#2a2836','bat'))),
+ 'corpse':P(dict(wash=((110,120,96),.25)),skin=(150,150,124),hair=('#3a3a30','long'),top=('#4a4436','tunic'),legs=('#3a3428','breeches'),hose='#3a3428',feet=('#000000','bare'),thin=.86,eyes=(220,220,170),marks=dict(teeth=True)),
+ 'skeleton':P(skin=(222,214,190),hair=('#000000','bald'),top=('#000000','bare'),legs=('#000000','briefs'),feet=('#000000','bare'),thin=.62,eyes=(20,16,16),marks=dict(teeth=True)),
+ 'figure':P(skin=(206,176,150),hair=('#3a2a1c','long'),top=('#3c3c4a','robe'),legs=('#3c3c4a','trousers'),feet=('#2a2422','shoe')),
+ 'ghostfig':P(dict(GHOST),skin=(206,206,206),hair=('#808088','long'),top=('#6a6a72','robe'),legs=('#6a6a72','trousers'),feet=('#000000','bare')),
+ 'imp':P(dict(scale=.55),skin=(170,52,40),hair=('#2a1010','bald'),top=('#000000','bare'),legs=('#000000','briefs'),feet=('#000000','bare'),thin=.9,eyes=(250,220,60),marks=dict(horns=('#2a2020','goat'),tail=('#a03a2a','devil'),ears=('point',None))),
+ 'oni':P(dict(scale=1.25),acts=[('swing','club',None)],skin=(176,56,44),hair=('#141010','long'),top=('#000000','bare'),legs=('#c8b07a','loin'),feet=('#000000','bare'),sw=8.4,thin=1.16,held='club',marks=dict(horns=('#e0d6b0','nub'),tusks=True)),
+ 'angel':P(dict(lift=4),acts=[('cast',None,None)],skin=(236,222,206),hair=('#e8d8a0','long'),top=('#ecebe6','robe'),legs=('#ecebe6','trousers'),feet=('#000000','bare'),marks=dict(wings=('#f4f2ea','fly'))),
+ 'birdman':P(skin=(60,56,64),hair=('#141418','short'),top=('#2a2a34','robe'),legs=('#2a2a34','trousers'),feet=('#c8a040','bare'),marks=dict(wings=('#1c1c22','fly'),nose='#c8a040')),
+ 'giant':P(dict(scale=1.42),acts=[('swing','club',None)],skin=(196,160,128),hair=('#5a3a20','long'),beard='#5a3a20',top=('#6a5a40','tunic'),legs=('#4a3a2a','breeches'),hose='#4a3a2a',feet=('#3a2a1a','wrap'),sw=8.4,thin=1.15,held='club'),
+ 'fishfolk':P(skin=(96,140,110),hair=('#1c3a30','bald'),top=('#3a5a4a','robe'),legs=('#3a5a4a','trousers'),feet=('#000000','bare'),eyes=(220,220,120),marks=dict(ears=('long','#4a7a60'))),
+ 'el_stone':P(dict(scale=1.15),skin=(130, 126, 120),hair=('#000000','bald'),top=('#000000','bare'),legs=('#827e78','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_earth':P(dict(scale=1.2),skin=(120, 96, 70),hair=('#000000','bald'),top=('#000000','bare'),legs=('#786046','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_fire':P(dict(scale=1.0, alpha=.82),skin=(236, 120, 40),hair=('#000000','bald'),top=('#000000','bare'),legs=('#ec7828','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_water':P(dict(scale=1.0, alpha=.82),skin=(80, 140, 200),hair=('#000000','bald'),top=('#000000','bare'),legs=('#508cc8','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_ice':P(dict(scale=1.0, alpha=.82),skin=(190, 226, 240),hair=('#000000','bald'),top=('#000000','bare'),legs=('#bee2f0','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_metal':P(dict(scale=1.1),skin=(150, 156, 168),hair=('#000000','bald'),top=('#000000','bare'),legs=('#969ca8','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_glass':P(dict(scale=1.0, alpha=.82),skin=(190, 220, 230),hair=('#000000','bald'),top=('#000000','bare'),legs=('#bedce6','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_jade':P(dict(scale=1.0),skin=(90, 170, 120),hair=('#000000','bald'),top=('#000000','bare'),legs=('#5aaa78','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_bronze':P(dict(scale=1.4),skin=(176, 130, 70),hair=('#000000','bald'),top=('#000000','bare'),legs=('#b08246','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_shadow':P(dict(scale=1.0, alpha=.82),skin=(30, 24, 44),hair=('#000000','bald'),top=('#000000','bare'),legs=('#1e182c','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_light':P(dict(scale=1.0, alpha=.82),skin=(250, 240, 190),hair=('#000000','bald'),top=('#000000','bare'),legs=('#faf0be','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_plant':P(dict(scale=1.1),skin=(80, 120, 60),hair=('#000000','bald'),top=('#000000','bare'),legs=('#50783c','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
+ 'el_clay':P(dict(scale=1.16),skin=(156, 124, 92),hair=('#000000','bald'),top=('#000000','bare'),legs=('#9c7c5c','briefs'),feet=('#000000','bare'),sw=8.0,thin=1.1,eyes=(250,240,200)),
  'sprite_master':SPRITE('#5a3a7a'),'sprite_scholar':SPRITE('#6a6a72'),'sprite_squire':SPRITE('#2e5a34'),'sprite_messenger':SPRITE('#3c5a8a'),'sprite':SPRITE('#7a5a3a'),
 }
 # name of the creature, then what draws it: ('beast', kind) | ('critter', kind) | ('person', key) | ('own', key), with what to do after
 MONSTERS=[
- (r'mist dragon',('beast','dragon_mist',dict(scale=.46,alpha=.9))),(r'dragon|wyrm|drake',('beast','dragon',{})),(r'gryphon|griffin|griffon',('beast','gryphon',{})),(r'sphinx',('beast','sphinx',{})),
- (r'unicorn',('beast','unicorn',dict(scale=.88))),(r'zephyr',('beast','zephyr',{})),(r'salamander',('beast','salamander',{})),(r'basilisk|cockatrice',('critter','basilisk',{})),
- (r'stone dog',('beast','stone_dog',{})),(r'rock cat',('beast','rock_cat',{})),(r'razor bat',('critter','razor_bat',{})),(r'fae cattle|faerie cattle',('beast','fae_cattle',{})),
+ (r'^mist dragon$',('beast','dragon_mist',dict(scale=.46,alpha=.9))),(r'^(the )?dragon$',('beast','dragon',{})),(r'^(gryphon|griffin|griffon)$',('beast','gryphon',{})),(r'^sphinx$',('beast','sphinx',{})),
+ (r'^unicorn$',('beast','unicorn',dict(scale=.88))),(r'^zephyr$',('beast','zephyr',{})),(r'^fire salamander$',('beast','salamander',{})),(r'^basilisk$',('critter','basilisk',{})),
+ (r'stone dog',('beast','stone_dog',{})),(r'rock cat',('beast','rock_cat',{})),(r'razor bat',('critter','razor_bat',{})),(r'^(fae|faerie) cattle$',('beast','fae_cattle',{})),
  (r'custodes',('critter','spider_giant',{})),(r"t'arrkel",('critter','spider_squid',{})),(r'^familiar',('beast','familiar',{})),(r'^spite$',('beast','cat',{})),
  (r'blood rose',('own','plant',{})),(r'star daemon|star demon',('own','ribbon',{})),
- (r'master sprite',('person','sprite_master')),(r'scholar sprite',('person','sprite_scholar')),(r'squire sprite',('person','sprite_squire')),(r'messenger sprite',('person','sprite_messenger')),(r'sprite',('person','sprite')),
- (r'^troll',('person','troll')),(r'golem',('person','golem')),(r'gnome',('person','gnome')),(r'jenny green',('person','jenny')),(r'^kaiser',('person','kaiser')),(r'black monk',('person','monk')),
+ (r'master sprite',('person','sprite_master')),(r'scholar sprite',('person','sprite_scholar')),(r'squire sprite',('person','sprite_squire')),(r'messenger sprite',('person','sprite_messenger')),(r'^sprite$',('person','sprite')),
+ (r'^troll$',('person','troll')),(r'^golem$',('person','golem')),(r'gnome$',('person','gnome')),(r'jenny green',('person','jenny')),(r'^kaiser',('person','kaiser')),(r'black monk',('person','monk')),
  (r'huntsman',('person','huntsman')),(r'belteroth',('person','belteroth')),
 ]
 def monster(name):
     n=str(name or '').lower().strip()
     for pat,what in MONSTERS:
         if re.search(pat,n): return what
+# the creatures of the books (B2617): bestiary-looks.json, made by bestiary.py from the hand-checked roster, names each one's shared look
+import json as _json, os as _os
+_TABLE=None
+def _norm(n): return re.sub(r'[^a-z0-9]','',re.sub(r'\(.*?\)','',str(n or '').lower()))
+def book_look(name):
+    """('person', key, scale) or (rig, key, post) for a creature named in the books, else None"""
+    global _TABLE
+    if _TABLE is None:
+        p=_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'bestiary-looks.json'); _TABLE=_json.load(open(p)) if _os.path.exists(p) else {}
+    n=_norm(name); hit=_TABLE.get(n) or (_TABLE.get(n.rstrip('s')) if n.endswith('s') else None)
+    if not hit: return None
+    key,sc=hit; rig,rest=key.split(':',1)
+    if rig=='person': return ('person',rest,sc)
+    return (rig,rest,{'scale':sc} if sc!=1 else {})
 def walk(what):
     """the walk sheet of a monster that is not a person"""
     k,key,p=what
     sh=B.sheet(B.KINDS[key]) if k=='beast' else Cr.sheet(Cr.KINDS[key]) if k=='critter' else _own(OWN[key])
+    if p.get('scale') and p['scale']>1.0 and k!='own': p=dict(p,scale=min(p['scale'],1.25))   # a big beast stays inside its frame
     return post(sh,**p)

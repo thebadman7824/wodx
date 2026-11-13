@@ -8,7 +8,7 @@ from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
 import proto_attacks as PA, monster as M
 S,SH=Wr.S,Wr.SH
-VERSION=7
+VERSION=8
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -84,11 +84,16 @@ def draw(a):
     """{'' : walk sheet, move: sheet}, label of what was drawn, notes; None when nothing fits"""
     kind=a.get('kind') or 'person'
     if kind=='animal':
-        name=a.get('animal') or a.get('name') or ''; m=M.monster(name)
+        name=a.get('animal') or a.get('name') or ''; m=M.monster(name); book=None
+        if not m and not animal(name): m=book=M.book_look(name)   # a creature of the books (B2617)
         if m and m[0]=='person':   # a monster that goes on two legs is drawn as a figure, with its own marks and size
-            p=M.PEOPLE[m[1]]; sheets=PA.person_sheets(p['spec'],p['acts']+[('claw',None,None)]); sheets.update(PA.extras(sheets[''],p['death']))
-            return {k:M.post(v,**p['post']) for k,v in sheets.items()},'monster:'+m[1],[]
-        if m: walk=M.walk(m); return {'':walk,'bite':PA.lunge(walk,'bite'),**PA.extras(walk,'fade' if m[1]=='ribbon' else 'die')},'monster:'+m[1],[]
+            p=M.PEOPLE[m[1]]; post=dict(p['post'])
+            if book and book[2]!=1: post['scale']=round(post.get('scale',1)*book[2],2)
+            sheets=PA.person_sheets(p['spec'],p['acts']+[('claw',None,None)]); sheets.update(PA.extras(sheets[''],'fade' if post.get('alpha',1)<1 else p['death']))
+            return {k:M.post(v,**post) for k,v in sheets.items()},('book:' if book else 'monster:')+m[1],[]
+        if m:
+            walk=M.walk(m); soft=m[0]=='own' and not m[1].startswith(('plant','fish','shark','whale'))
+            return {'':walk,'bite':PA.lunge(walk,'bite'),**PA.extras(walk,'fade' if soft or m[1]=='ribbon' else 'die')},('book:' if book else 'monster:')+m[1],[]
         k=animal(name)
         if not k: return None,None,['no animal look for this name']
         if k in B.KINDS:
