@@ -385,6 +385,7 @@ def orient(room):
     mx, my = room.ix + room.iw / 2, room.iy + room.ih / 2
     for it in room.items + getattr(room, "dressing", []):
         if it.get("layer", 100) != 100 or "spin" in it: continue
+        it.pop("nudge", None)                                        # worked out again: the picture may have changed
         a = it["asset"]
         cx, cy = it["x"] + it["w"] / 2, it["y"] + it["h"] / 2
         if SEATS.search(a) and it["w"] == it["h"] or re.search(r"Chair|Stool", a, re.I):
@@ -405,7 +406,7 @@ def orient(room):
         side = next((d for d in order if t[d] and (it["w"] == it["h"] or (d in "NS") == (not it["rot"]))), None)
         if side:
             it["angle"] = {"N": 0.0, "S": math.pi, "W": -math.pi / 2, "E": math.pi / 2}[side]
-            if INSET.search(a):                                      # the picture is half its square deep: move it to the wall
+            if INSET.search(drawn(it)[0]):                           # the picture is half its square deep: move it to the wall
                 it["nudge"] = {"N": (0, -.5), "S": (0, .5), "W": (-.5, 0), "E": (.5, 0)}[side]
 
 def snap(angle, rot):
