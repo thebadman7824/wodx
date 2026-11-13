@@ -43,8 +43,8 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Upkeep, havens, bodies and long tasks
 
-- Files: `upkeep.mjs` and `upkeep-rules.mjs` (between nights, ties, hunting grounds and heat), `havens.mjs` and `haven-rules.mjs`, `body.mjs` and `body-rules.mjs` (lasting changes to a body), `remains.mjs` and `remains-rules.mjs` (bodies left behind), `tasks.mjs` and `tasks-rules.mjs` (long tasks over the clock), `spend.mjs` and `spend-rules.mjs` (time spent on long actions).
-- Settings: `betweenNights`, `ties`, `heat`, `plague`, `tieDay`, `remains`, `longTasks`, `timeApart`.
+- Files: `upkeep.mjs` and `upkeep-rules.mjs` (between nights, ties, hunting grounds and heat), `havens.mjs` and `haven-rules.mjs`, `body.mjs` and `body-rules.mjs` (lasting changes to a body), `remains.mjs` and `remains-rules.mjs` (bodies left behind), `hunters.mjs` and `hunters-rules.mjs` (hunters across a region: pressure, files on culprits, word that follows them), `tasks.mjs` and `tasks-rules.mjs` (long tasks over the clock), `spend.mjs` and `spend-rules.mjs` (time spent on long actions).
+- Settings: `betweenNights`, `ties`, `heat`, `plague`, `tieDay`, `remains`, `hunterPressure`, `hunterState`, `longTasks`, `timeApart`.
 - API: `upkeep`.
 
 ## Money, holdings and making things
