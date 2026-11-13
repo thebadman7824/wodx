@@ -51,22 +51,26 @@ export const ORIGINS = [
  ["marked","A family the fae had marked","Odd luck, odd guests, and a cradle someone watched.","ab Occult|ab Empathy|bg Dreamers",null,null,["changeling"],"strange"],
  ["hunters","A line of hunters","Your family kept the old books and the old grudges.","ab Occult|ab Investigation|bg Mentor|flaw Enemy",null,null,["hunter"],"strange"],
  ["gifted","A family with the gift","Hedge magic, second sight, or a library no one spoke of.","ab Occult|ab Academics|bg Library|bg Mentor",null,null,["mage"],"strange"]];
-// [label, gives, {from,to,bases}]
+// [label, gives, {from,to,bases,not}, tone]: "+" a good start, "-" a hard one, "0" neither
 export const HOME = [
- ["The pack raised you","ab Survival|ab Brawl|bg Allies",{bases:["wild"]}],
- ["One parent and a den","ab Stealth|ab Alertness",{bases:["wild"]}],
- ["Taken by humans as a cub","ab Empathy|flaw Phobia",{bases:["wild"]}],
- ["A house of faith took you in","ab Academics|bg Mentor",{bases:["orphan"]}],
- ["Kin who did not want you","ab Subterfuge|flaw Enemy",{bases:["orphan"]}],
- ["The streets raised you","ab Streetwise|ab Larceny|bg Contacts",{bases:["orphan","under"]}],
- ["A stranger with reasons of their own","bg Mentor|flaw Dark Secret",{bases:["orphan","strange"]}],
- ["An orphanage or poorhouse","ab Brawl|merit Iron Will",{bases:["orphan"],from:1600}],
- ["Nurses, tutors and servants more than parents","ab Etiquette|bg Retainers",{bases:["noble","corp","merchant"]}],
- ["Both parents and a full house","bg Allies|ab Empathy",{not:["orphan"]}],
- ["One parent, and work from the day you could walk","ab Crafts|merit Light Sleeper",{not:["orphan"]}],
- ["Grandparents and their stories","ab Occult|ab Expression",{not:["orphan"]}],
- ["Fostered or sent to another household","ab Etiquette|bg Contacts"],
- ["Always moving","ab Survival|merit Language"]];
+ ["The pack raised you","ab Survival|ab Brawl|bg Allies",{bases:["wild"]},"+"],
+ ["Born to the lead pair","ab Leadership|ab Brawl",{bases:["wild"]},"+"],
+ ["One parent and a den","ab Stealth|ab Alertness",{bases:["wild"]},"0"],
+ ["Taken by humans as a cub","ab Empathy|flaw Phobia",{bases:["wild"]},"-"],
+ ["A hard winter thinned the litter","ab Survival|flaw Nightmares",{bases:["wild"]},"-"],
+ ["A house of faith took you in","ab Academics|bg Mentor",{bases:["orphan"]},"+"],
+ ["A family that chose you","bg Allies|ab Empathy",{bases:["orphan"]},"+"],
+ ["Kin who did not want you","ab Subterfuge|flaw Enemy",{bases:["orphan"]},"-"],
+ ["The streets raised you","ab Streetwise|ab Larceny|bg Contacts",{bases:["orphan","under"]},"-"],
+ ["A stranger with reasons of their own","bg Mentor|flaw Dark Secret",{bases:["orphan","strange"]},"0"],
+ ["An orphanage or poorhouse","ab Brawl|merit Iron Will",{bases:["orphan"],from:1600},"-"],
+ ["Nurses, tutors and servants more than parents","ab Etiquette|bg Retainers",{bases:["noble","corp","merchant"]},"+"],
+ ["Both parents and a full house","bg Allies|ab Empathy",{not:["orphan"]},"+"],
+ ["Grandparents and their stories","ab Occult|ab Expression",{not:["orphan"]},"+"],
+ ["One parent, and work from the day you could walk","ab Crafts|merit Light Sleeper",{not:["orphan"]},"-"],
+ ["A house where no one was safe","ab Alertness|flaw Nightmares",{not:["orphan"]},"-"],
+ ["Fostered or sent to another household","ab Etiquette|bg Contacts",{},"0"],
+ ["Always moving","ab Survival|merit Language",{},"0"]];
 export const CMARK = [
  ["A gift everyone noticed","ab Performance|bg Fame",{not:["wild"]},"+"],
  ["Lessons, when others had none","ab Academics|bg Mentor",{not:["wild"]},"+","a teacher|who taught you more than was allowed"],
@@ -84,14 +88,16 @@ export const CMARK = [
  ["A screen raised you","ab Computer",{from:1985,not:["wild"]},"0"],
  ["Work before play","ab Crafts|ab Athletics",{not:["wild"]},"0"]];
 export const TPATH = [
- ["Ran with the pack","ab Brawl|ab Survival|bg Allies",{bases:["wild"]}],
- ["Lived at the edge of a human town","ab Stealth|ab Streetwise",{bases:["wild"]}],
- ["Wandered alone","ab Survival|ab Alertness",{bases:["wild"]}],
- ["Apprenticed to a trade","ab Crafts|bg Mentor",{to:1950}],["School, and more school","ab Academics|ab Science",{from:1850}],["Worked the land or the boats","ab Survival|ab Athletics|ab Animal Ken"],
- ["Took vows or studied for the faith","ab Academics|ab Occult|bg Mentor"],["Carried arms too young","ab Melee|ab Brawl|flaw Nightmares"],["Ran with a gang","ab Streetwise|ab Brawl|bg Allies"],
- ["Served in a great household","ab Etiquette|ab Subterfuge|bg Contacts",{to:1945}],["Married or promised early","bg Allies|ab Empathy",{to:1920}],["Went on the road","ab Survival|merit Language"],
- ["Factory, mine or mill shifts","ab Crafts|merit Iron Will",{from:1760,to:1950}],["Trained to rule","ab Leadership|ab Politics|bg Status",{bases:["noble","corp"]}],["Lived online","ab Computer|bg Contacts",{from:1995}],
- ["Sold what you could steal","ab Larceny|ab Streetwise"]];
+ ["Ran with the pack","ab Brawl|ab Survival|bg Allies",{bases:["wild"]},"+"],
+ ["Learned from an old hunter","ab Survival|bg Mentor",{bases:["wild"]},"+"],
+ ["Lived at the edge of a human town","ab Stealth|ab Streetwise",{bases:["wild"]},"0"],
+ ["Wandered alone","ab Survival|ab Alertness",{bases:["wild"]},"-"],
+ ["Driven off your range","ab Stealth|flaw Enemy",{bases:["wild"]},"-"],
+ ["Apprenticed to a trade","ab Crafts|bg Mentor",{to:1950},"+"],["School, and more school","ab Academics|ab Science",{from:1850},"+"],["Worked the land or the boats","ab Survival|ab Athletics|ab Animal Ken",{},"0"],
+ ["Took vows or studied for the faith","ab Academics|ab Occult|bg Mentor",{},"+"],["Carried arms too young","ab Melee|ab Brawl|flaw Nightmares",{},"-"],["Ran with a gang","ab Streetwise|ab Brawl|bg Allies",{},"-"],
+ ["Served in a great household","ab Etiquette|ab Subterfuge|bg Contacts",{to:1945},"0"],["Married or promised early","bg Allies|ab Empathy",{to:1920},"0"],["Went on the road","ab Survival|merit Language",{},"0"],
+ ["Factory, mine or mill shifts","ab Crafts|merit Iron Will",{from:1760,to:1950},"-"],["Trained to rule","ab Leadership|ab Politics|bg Status",{bases:["noble","corp"]},"+"],["Lived online","ab Computer|bg Contacts",{from:1995},"0"],
+ ["Sold what you could steal","ab Larceny|ab Streetwise",{},"-"]];
 export const TMARK = [
  ["Someone took an interest in you","bg Mentor|ab Academics",{},"+","a mentor|who saw something in you"],
  ["A first love that ended kindly","ab Empathy|bg Allies",{},"+","a first love|who still thinks well of you"],
@@ -108,16 +114,18 @@ export const TMARK = [
  ["A calling you could not explain","ab Occult|ab Awareness",{},"0"],
  ["You kept your head down","ab Subterfuge|ab Alertness",{},"0"]];
 export const CALL = [
- ["Led or followed a pack","ab Leadership|ab Brawl|bg Allies",{bases:["wild"]}],
- ["Held a territory","ab Survival|ab Intimidation",{bases:["wild"]}],
- ["Lived close to humans","ab Empathy|ab Stealth",{bases:["wild"]}],
- ["Worked a craft or kept a shop","ab Crafts|bg Resources"],["Farmed, herded or fished","ab Survival|ab Animal Ken"],["Soldiered","ab Melee|ab Leadership|bg Allies"],
- ["Traded far from home","ab Finance|merit Language|bg Contacts"],["Served the faith","ab Academics|ab Empathy|bg Status"],["Studied, taught or wrote","ab Academics|ab Expression|bg Mentor"],
- ["Healed the sick","ab Medicine|ab Empathy"],["Held office or kept the law","ab Law|ab Politics|bg Influence"],["Lived by crime","ab Larceny|ab Streetwise|bg Contacts"],
- ["Performed for a living","ab Performance|ab Expression|bg Fame"],["Went to sea","ab Survival|ab Athletics|merit Language"],["Kept a house and raised a family","ab Empathy|bg Allies"],
- ["Ruled land and people","ab Leadership|bg Retainers|bg Status"],["Wandered with no trade","ab Survival|ab Streetwise"],["Factory, railway or dock work","ab Crafts|ab Brawl|bg Allies",{from:1760}],
- ["Police, detective or agent work","ab Investigation|ab Firearms|bg Contacts",{from:1800}],["Engineer or scientist","ab Science|ab Technology",{from:1800}],["Journalist or broadcaster","ab Expression|ab Investigation|bg Contacts",{from:1850}],
- ["Office and company work","ab Finance|ab Computer|bg Resources",{from:1900}],["Net and data work","ab Computer|ab Technology",{from:1990}],["Hired gun on the streets","ab Firearms|ab Streetwise|bg Contacts",{from:2023}]];
+ ["Led or followed a pack","ab Leadership|ab Brawl|bg Allies",{bases:["wild"]},"+"],
+ ["Held a territory","ab Survival|ab Intimidation",{bases:["wild"]},"+"],
+ ["Lived close to humans","ab Empathy|ab Stealth",{bases:["wild"]},"0"],
+ ["Hunted by humans","ab Stealth|ab Survival|flaw Enemy",{bases:["wild"]},"-"],
+ ["Lost your pack","ab Survival|flaw Nightmares",{bases:["wild"]},"-"],
+ ["Worked a craft or kept a shop","ab Crafts|bg Resources",{},"+"],["Farmed, herded or fished","ab Survival|ab Animal Ken",{},"0"],["Soldiered","ab Melee|ab Leadership|bg Allies",{},"-"],
+ ["Traded far from home","ab Finance|merit Language|bg Contacts",{},"+"],["Served the faith","ab Academics|ab Empathy|bg Status",{},"0"],["Studied, taught or wrote","ab Academics|ab Expression|bg Mentor",{},"+"],
+ ["Healed the sick","ab Medicine|ab Empathy",{},"0"],["Held office or kept the law","ab Law|ab Politics|bg Influence",{},"+"],["Lived by crime","ab Larceny|ab Streetwise|bg Contacts",{},"-"],
+ ["Performed for a living","ab Performance|ab Expression|bg Fame",{},"0"],["Went to sea","ab Survival|ab Athletics|merit Language",{},"0"],["Kept a house and raised a family","ab Empathy|bg Allies",{},"0"],
+ ["Ruled land and people","ab Leadership|bg Retainers|bg Status",{},"+"],["Wandered with no trade","ab Survival|ab Streetwise",{},"-"],["Factory, railway or dock work","ab Crafts|ab Brawl|bg Allies",{from:1760},"-"],
+ ["Police, detective or agent work","ab Investigation|ab Firearms|bg Contacts",{from:1800},"0"],["Engineer or scientist","ab Science|ab Technology",{from:1800},"+"],["Journalist or broadcaster","ab Expression|ab Investigation|bg Contacts",{from:1850},"0"],
+ ["Office and company work","ab Finance|ab Computer|bg Resources",{from:1900},"0"],["Net and data work","ab Computer|ab Technology",{from:1990},"0"],["Hired gun on the streets","ab Firearms|ab Streetwise|bg Contacts",{from:2023},"-"]];
 export const AMARK = [
  ["Married, or as good as","bg Allies|ab Empathy",{not:["wild"]},"+","a spouse|who shares your name or your bed"],
  ["Came into money","bg Resources",{not:["wild"]},"+"],

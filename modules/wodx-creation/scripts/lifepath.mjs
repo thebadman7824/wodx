@@ -240,7 +240,7 @@ export class LifepathApp extends ApplicationV2 {
       <div class="wodx-top"><p><strong>${esc(step.title)}</strong>, ${step.year}${span}${step.age ? `: ${esc(step.age)}` : land ? `: ${esc(land)}` : ""}. <span class="wodx-quiet">Choice ${n + 1}.</span></p>
         ${info.closed && step.stage ? `<p class="wodx-quiet">${esc(info.closed)}</p>` : ""}</div>
       <div class="wodx-scroll">${move}${place}
-        ${step.five ? `<p class="wodx-quiet">Five things that could have marked those years: two good, two hard, one neither. Pick one.</p>` : ""}
+        ${step.five ? `<p class="wodx-quiet">${/-mark$/.test(step.id) ? "Five things that could have marked those years" : "Five ways those years could have gone"}: two good, two hard, one neither. Pick one, or draw five others.</p>` : ""}
         ${step.kind === "region" ? `<div class="form-group"><label>Find a region</label>${searchBox(".wodx-lp-options .wodx-lp-option", "Search…", "Search the regions")}</div>` : ""}
         <div class="wodx-lp-options">${opts}</div>${own}</div>
       <footer class="wodx-footer"><div class="wodx-buttons">

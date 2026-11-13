@@ -78,8 +78,11 @@ test("Ben's example: Europe, France, orphan, then childhood, teens and adult lif
   d = D.pick(d, "origin", "orphan-or-foundling");
   assert.equal(d.picks.origin.base, "orphan");
   const home = D.current(d);
-  assert.ok(home.options.some(o => o.label.startsWith("A house of faith")), "an orphan's homes");
-  assert.ok(!home.options.some(o => o.label.startsWith("Both parents")), "no parents for an orphan");
+  assert.equal(home.options.length, 5, "five homes to choose from");
+  const homes = D.pathPool("child", 1700, "orphan").map(o => o.label);
+  assert.ok(homes.some(l => l.startsWith("A house of faith")), "an orphan's homes");
+  assert.ok(!homes.some(l => l.startsWith("Both parents")), "no parents for an orphan");
+  assert.ok(home.options.every(o => homes.includes(o.label)));
   d = walk(d);
   assert.ok(D.done(d));
   const keys = Object.keys(d.picks).filter(k => k !== "people");
@@ -93,7 +96,7 @@ test("what marked those years: five things, two good, two hard, one neither, and
   for ( const [rid, y] of [["france", 1700], ["japan", 1300], ["west-africa", 1990], ["andes", 2100]] ) {
     const d = walk(start(rid, y, 45));
     const marks = D.stepsOf(d).steps.filter(s => s.five);
-    assert.ok(marks.length >= 3, "a mark step for each stage");
+    assert.equal(marks.length, D.stagesFor(45, D.comingOfAge(rid, y)).length * 2, "both picks of every stage show five");
     for ( const s of marks ) {
       assert.equal(s.options.length, 5, `${rid} ${y} ${s.id}`);
       const tones = s.options.map(o => o.tone).sort().join("");
@@ -102,6 +105,9 @@ test("what marked those years: five things, two good, two hard, one neither, and
   }
   let d = start("france", 1700, 30);
   while ( !D.current(d).five ) d = D.pick(d, D.current(d).id, D.current(d).options[0].id);
+  assert.equal(D.current(d).id, "c-path", "the first pick of a stage shows five too");
+  const teen = D.stepsOf(walk(start("france", 1700, 30))).steps.find(x => x.id === "t-path");
+  assert.ok(teen.options.some(o => o.local), "the land's own path is among the first five");
   const before = D.current(d).options.map(o => o.id).join();
   const again = D.reroll(d, D.current(d).id);
   assert.equal(D.current(again).options.length, 5);
@@ -110,10 +116,14 @@ test("what marked those years: five things, two good, two hard, one neither, and
 });
 
 test("lists follow the year: no factory before 1760, no net before 1990", () => {
-  const labels = (y, age, step) => { let d = walk(start("british-isles", y, age)); return D.stepsOf(d).steps.find(s => s.id === step).options.map(o => o.label); };
-  assert.ok(!labels(1300, 30, "a0-path").some(l => /Factory|Net and data|Office/.test(l)));
-  assert.ok(labels(1850, 30, "a0-path").some(l => /Factory/.test(l)));
-  assert.ok(labels(1990, 30, "a0-path").some(l => /Net and data/.test(l)));
+  const labels = y => D.pathPool("adult", y, "trade", "british-isles").map(o => o.label);
+  assert.ok(!labels(1300).some(l => /Factory|Net and data|Office/.test(l)));
+  assert.ok(labels(1850).some(l => /Factory/.test(l)));
+  assert.ok(labels(1990).some(l => /Net and data/.test(l)));
+  for ( let i = 0; i < 30; i++ ) {
+    const d = walk(start("british-isles", 1270, 30, {seed: `y${i}`}), i);
+    for ( const st of D.stepsOf(d).steps ) for ( const o of st.options ) assert.ok(!/Factory|Net and data|Office|School, and more/.test(o.label), o.label);
+  }
   assert.ok(!D.originsFor("france", 1300).some(o => o.base === "corp" || o.base === "labour"));
   assert.ok(D.originsFor("france", 2050).some(o => o.base === "corp"));
 });
@@ -245,5 +255,6 @@ test("no gendered words and no option id twice in a step", () => {
       assert.equal(new Set(ids).size, ids.length, `${rid} ${y} ${s.id}: an option id twice`);
       for ( const o of s.options ) assert.ok(!words.test(`${o.label} ${o.text} ${String(o.p ?? "")}`), `${rid} ${y}: "${o.label}"`);
     }
+    for ( const k of ["child", "teen", "adult"] ) for ( const b of ["trade", "orphan", "wild", "noble"] ) for ( const o of D.pathPool(k, y, b, rid) ) assert.ok(!words.test(o.label), o.label);
   }
 });

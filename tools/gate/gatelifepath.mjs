@@ -46,7 +46,7 @@ export async function run() {
       {name: "WoDX gate: Lifepath Mortal", type: "Mortal"}]);
     made.push(vamp, mortal);
 
-    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.17.0") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
+    await step("1 api", async () => ok("1 api", atLeast(game.modules.get(M).version, "0.17.1") && typeof api()?.lifepath === "function" && !!api()?.lifepathRules
       && atLeast(game.modules.get("wodx-storyteller")?.version, "0.34.1"), {creation: game.modules.get(M).version, storyteller: game.modules.get("wodx-storyteller")?.version}));
 
     await step("2 sheet button", async () => {
@@ -132,7 +132,7 @@ export async function run() {
       const rec = flag(m2);
       const items = game.actors.get(m2.id).items.filter(i => i.flags?.[M]?.lifepath);
       const card = game.messages.contents.some(m => m.timestamp >= t0 && m.content?.includes("Put on the sheet"));
-      ok("9 drill-down to the sheet", first && five >= 1 && end && !!rec?.path?.drill?.picks?.region && items.length > 0 && items.every(i => i.type === "Feature") && card,
+      ok("9 drill-down to the sheet", first && five >= 4 && end && !!rec?.path?.drill?.picks?.region && items.length > 0 && items.every(i => i.type === "Feature") && card,
         {first, five, search, end, region: rec?.path?.drill?.picks?.region?.id, items: items.map(i => i.name), card});
     });
 

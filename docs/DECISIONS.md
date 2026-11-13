@@ -3294,7 +3294,7 @@ Adult life starts at 14 before 1500, 15 to 1788, 16 to 1945 and 18 after; the te
 Reverse: set every value of COMING_OF_AGE to 18 and empty REGION_COMING_OF_AGE in data/lifepath-drill.mjs.
 
 ## B2602. Five things marked those years (2026-11-13, Ben's note on lp5)
-Each stage has two picks. The second shows five options drawn from that stage's list: two good, two hard, one neither, with "Five others" to draw again. This is Claude's reading of "five choices per life stage, two positive, two negative, one neutral".
+Each stage has two picks. The second shows five options drawn from that stage's list: two good, two hard, one neither, with "Five others" to draw again. This is Claude's reading of "five choices per life stage, two positive, two negative, one neutral". Ben, 13 November 2026 02:25Z: "The first choice should also get five choices", so since Creation 0.17.1 the first pick of each stage shows five the same way; a path of the land and age takes the "neither" place on the first draw.
 Reverse: change MARK_SHAPE in lifepath-drill-rules.mjs.
 
 ## B2603. Adult chapters (2026-11-13, desk lp7)
