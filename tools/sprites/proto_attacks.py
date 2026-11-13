@@ -142,7 +142,19 @@ def pose(walk,kind,lunged=None):
         ys,xs=np.nonzero(src[...,3]); wide=len(xs) and (xs.max()-xs.min())>(ys.max()-ys.min())*1.1
         for i in range(6):
             if kind in('sit','kneel'):
-                k=([1,.86,.7,.56,.48,.48] if kind=='sit' else [1,.9,.8,.7,.64,.64])[i]; fr=_squash(src,(1+k)/2) if wide else _fold(src,k)
+                k=([1,.8,.6,.42,.3,.3] if kind=='sit' else [1,.9,.8,.7,.62,.62])[i]; fr=_squash(src,(1+k)/2) if wide else _fold(src,k)
+                if kind=='sit' and not wide and i>=2:
+                    # seated on the ground: seen from the side the legs lie out in front, seen from front or back the knees spread
+                    yy=np.nonzero(src[...,3].any(1))[0]; hip=int(yy.min()+(FEET-yy.min())*.56); n=max(1,int(round((FEET-hip)*k))); band=fr[FEET-n:FEET+1].copy(); d=[0,0,3,5,7,7][i]
+                    if ux:
+                        out=np.zeros_like(band)
+                        for j in range(band.shape[0]): out[j]=np.roll(band[j],ux*int(round(d*(j+1)/band.shape[0])),axis=0)
+                        for j in range(max(0,band.shape[0]-3),band.shape[0]):   # the shins and feet reach forward along the ground
+                            for e in range(1,d+1): sh2=np.roll(band[j],ux*(int(round(d*(j+1)/band.shape[0]))+e),axis=0); m=out[j,:,3]==0; out[j][m]=sh2[m]
+                        band=out
+                    else:
+                        l=np.roll(band,-2,axis=1); r=np.roll(band,2,axis=1); m=band[...,3]==0; band[m]=l[m]; m=band[...,3]==0; band[m]=r[m]
+                    fr[FEET-n:FEET+1]=band
             elif kind=='search':
                 fr=_move(_squash(src,.85) if wide else _lean(_fold(src,.72),3,ux or (1 if i%2 else -1)),[0,-2,-2,2,2,0][i] if not ux else 0,0)
             elif kind=='talk':
