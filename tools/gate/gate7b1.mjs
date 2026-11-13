@@ -87,6 +87,13 @@ export async function run() {
   });
 
   await step("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", async () => {
+    // Every time the fight is moved on during this step, what the conductor knew at that moment is written down (who, its reason, its counters)
+    const moves = [], w0 = Date.now(), own = {};
+    const note = how => { const c = CD().state(), cc = combat.combatant; moves.push({ms: Date.now() - w0, how, from: cc?.name, round: combat.round, level: game.settings.get(MOD, "turnConductor"),
+      why: c.why ?? null, key: c.key ?? null, sameTurn: c.combatantId === cc?.id, actions: c.actions, spent: c.actionSpent, grace: c.graceEndsAt ? c.graceEndsAt - Date.now() : null, timer: c.timerEndsAt ? c.timerEndsAt - Date.now() : null,
+      npcDone: c.npcDone, held: !!cc?.getFlag(MOD, "held"), owner: !!cc?.actor?.hasPlayerOwner, defeated: !!cc?.isDefeated}); };
+    for ( const k of ["nextTurn", "nextRound"] ) { own[k] = Object.hasOwn(combat, k) ? combat[k] : null; const f = combat[k].bind(combat); combat[k] = (...a) => { note(k); return f(...a); }; }
+    try {
     await settle();
     await toTurn(T.hero);
     // A longer grace for this step, and a hook that sees the countdown even if it starts and ends between two looks
@@ -112,8 +119,9 @@ export async function run() {
       const whyMid = CD().state().why ?? null, flagMid = combat.getFlag(MOD, "conductor") ?? null;
       const ended = await waitFor(() => combat.combatant?.id !== id, 20000);
       ok("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", counting && ended,
-        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, grace: game.settings.get(MOD, "conductorGrace")});
+        {counting, ended, nowTurn: curName(), start, attack, attackMs, whyMid, flagMid, log, moves, t0: t0 - w0, grace: game.settings.get(MOD, "conductorGrace")});
     } finally { Hooks.off("updateCombat", hk); }
+    } finally { for ( const k of ["nextTurn", "nextRound"] ) { if ( own[k] ) combat[k] = own[k]; else delete combat[k]; } }
     await game.settings.set(MOD, "conductorGrace", 2);
     await game.settings.set(MOD, "turnConductor", "npc"); await sleep(600);
     for ( const t of Object.values(T) ) await C().setDamage(t.actor, zero);
