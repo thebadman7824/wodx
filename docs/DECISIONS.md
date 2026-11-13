@@ -169,7 +169,7 @@ Next free block: B3470
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
-| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3358) | Storyteller, NPC |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
@@ -5165,6 +5165,71 @@ Reverse: set TROUBLE_CHANCE to 0 and stop drawing on a botch in drawTrouble.
 WoDX Storyteller. Backgrounds never rise by themselves (B850): a finished business or herd puts a line on the log asking the Storyteller to award a dot of Resources or Herd; a language, a track or research asks the Storyteller to say what came of it. A courting project calls WoDX NPC's api.hearts.court each roll: a success is time spent together, a botch a slight. The hearts api refuses anyone under 18 (B3211).
 
 Reverse: edit outcomeOf and courtEvent in projects-rules.mjs, or drop courtRoll from tasks.mjs.
+
+## B3346. NPCs keep notes of what was done to them (2026-11-13)
+WoDX NPC. Second of the eight player world systems Ben picked. Each NPC keeps up to 24 notes per character (kind, signed weight, date, words, whether it was done to their face) in flags["wodx-npc"].memory. Notes come from every attitude change (wodxAttitude) and every trust event an NPC feels (trust.mjs), and the Storyteller can add any with api.memory.remember. Attitude and trust stay as they are; memory is the long record behind them. The weights are house figures.
+
+Reverse: turn off the world setting "NPCs remember and bear grudges", or drop the wodxAttitude listener and the fromTrust call.
+
+## B3347. Nature sets how long a note lasts (2026-11-13)
+WoDX NPC. Each V20 Archetype maps to a temper: unforgiving (a wrong never fades), proud (20 years to half), even (5), kind (1 year for a wrong, 20 for a kindness), fickle (half a year for both). Undying NPCs therefore keep a Judge's grudge for centuries. House reading of the Archetypes, logged in PENDING-REVIEW.
+
+Reverse: edit TEMPERS and NATURE_TEMPER in memory-rules.mjs.
+
+## B3348. A grudge acts once a season, with the Storyteller's leave (2026-11-13)
+WoDX NPC. Every 91 days of world time the active Storyteller's client weighs each NPC's grudges. One of 5 or more, with the means, picks the first fitting move: call in a boon owed, spread an unkind tale, spoil a venture, tip off the hunters of the region, turn on a household member, or do harm (unforgiving tempers only); each move rests for two seasons. Every move goes to the approval queue (wodx-npc.grudge). Approving a tale starts a rumour; approving a tip adds hunter pressure; the rest are told to the Storyteller to play. Seats come from institutions (B3355): an NPC holding a seat of the third rank or higher can work against the character there.
+
+Reverse: drop turn() from the listeners, or raise GRUDGE_AT.
+
+## B3349. Heirs inherit grudges; players see a word (2026-11-13)
+WoDX NPC. When a death is recorded on an NPC's sheet, each grudge of 5 or more passes to the NPC heirs (Creation's heirOf or the Storyteller will) as a hidden note at half weight. Each character keeps flags["wodx-npc"].remembered with a short word per NPC built only from notes done to their face, shown in the players' Who remembers you window.
+
+Reverse: drop onDeath from memory.mjs and the wodxRemembered tool.
+
+## B3350. Public deeds become tales with slots (2026-11-13)
+WoDX Storyteller, WoDX NPC. Third of the eight player world systems Ben picked. A tale is {who, did, where, how, tone -3..3} carried on a rumour, with every version told and which version each knower heard. A player character's standing deed (api.standing.deed with words) and a boon, oath or promise they kept or broke (wodxBoonSettled) start one. The rumour's text is the first version's words. Rumours without a tale work as before. World setting "Deeds become tales", on by default; when on, tales twist at the age's twist chance even with "Rumours change in the telling" off, since their words are generated.
+
+Reverse: turn the setting off; drop the deed call in standing.mjs and onBoon in rumours.mjs.
+
+## B3351. How a teller twists a tale (2026-11-13)
+WoDX Storyteller. A twist retells the version the teller heard by their leaning toward the subject: a gossip (a Celebrant, Bon Vivant, Conniver, Child, Gallant, Jester or Bravo Nature, or a Harpy or Galliard by name) moves the tone one step further from 0; one with a hostile attitude lowers it; a friendly one raises it; anyone else gets the place or the name vague. At most eight versions; past that the hearer gets the closest one already told. House reading.
+
+Reverse: edit retell and leaningOf in tale-rules.mjs, or GOSSIP_NATURES in rumours.mjs.
+
+## B3352. What an NPC heard colours the first meeting (2026-11-13)
+WoDX NPC. The tones of every version an NPC heard about a character add up; -2 or worse starts the first meeting one step colder, 2 or better one step warmer, after traits and looks. Once they have met, attitude moves only by how they are treated, as before.
+
+Reverse: drop the hD lines in attitude.mjs seedFor.
+
+## B3353. Fame and a crowd widen a tale's start (2026-11-13)
+WoDX Storyteller. A tale starts with one teller, one more per dot of Fame (V20 pdf 122) up to five, and two more if done before a crowd: those named, then NPCs on the scene, then anyone with contacts.
+
+Reverse: edit firstTellers in tale-rules.mjs.
+
+## B3354. What they say about you (2026-11-13)
+WoDX Storyteller. A players' window lists the tales about their character still going round, grouped by the first faction of each knower (else the town), each version with how many heard it and whether it is kind or unkind. It shows the words heard, never who told them.
+
+Reverse: drop the wodxTales tool and aboutDialog.
+
+## B3355. Towns hold institutions by year, faith and size (2026-11-13)
+WoDX Storyteller. Fourth of the eight player world systems Ben picked. Each market's town gets: a house of worship always (its name and ranks by the region's faith: parish and diocese, eparchy, mosque and madrasa, synagogue, temple, monastery, clan hall, shrine), a town council and a watch from 300 people, a guild from 800 people until 1859 (the Habsburg trade law ended guild control that year), a press from 1488 (printing in Moravia) and 2,000 people, a university from 1348 (Prague) and 10,000, a bank from 1400 and 5,000, a company from 1860 and 5,000. The watch is called the police from 1850; the press is a print shop, a newspaper from 1848 and a news site from 1995. Rounded history in WoDX's own words; the sizes are house figures.
+
+Reverse: edit KINDS and WORSHIP in institution-rules.mjs, or turn off "Towns have institutions to climb".
+
+## B3356. Five ranks, sixteen seats, levers by rank (2026-11-13)
+WoDX Storyteller. Each institution has one seat at the top and 2, 3, 4 and 6 below. Each rank from the second opens levers (records, denounce, sanctuary and inquiry for worship; permits, prices and expulsion for a guild; papers, licences, curfews and taxes for the council; files, a blind eye, raids and arrests for the watch; rumours, stories, keeping a story out and campaigns for the press; and the like for a university, bank and company). Pulling one asks the Storyteller. The press and the pulpit start a tale about the one aimed at (B3350); the rest are told to the Storyteller and fire wodxLever.
+
+Reverse: edit the levers in KINDS; drop the startTale calls in institutions.mjs.
+
+## B3357. Climbing is a downtime project; pawns stop at Influence (2026-11-13)
+WoDX Storyteller. A new project kind, Climb an institution (Manipulation + Politics, difficulty 7, weekly), needs 5 successes for the first rank and 3 more for each rank above. Finished, it asks the Storyteller for the next seat; when that rank is full, the newest holder there drops a rank if a seat is free below, or loses the seat. A pawn named as the project's target (a ghoul, a retainer) climbs for the character and can hold no rank above the character's Influence (V20 pdf 122). Climbing complications have their own rows.
+
+Reverse: drop the climb kind and onClimbDone.
+
+## B3358. The month in an institution (2026-11-13)
+WoDX Storyteller. Every 30 days of world time each institution turns: an empty seat fills half the time with an NPC from the town's scenes (with their faction), a seat of the third rank or higher meets a scandal 1 month in 24 (an NPC loses the seat), and a seat above the bottom is contested 1 month in 12. Events on a player character's seat wait in the approval queue for the Storyteller to play and leave the seat alone. Control is each faction's share of seats weighted by rank.
+
+Reverse: edit MONTH in institution-rules.mjs.
 
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.

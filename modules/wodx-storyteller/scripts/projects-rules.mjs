@@ -111,6 +111,11 @@ export const TROUBLE = {
     {key: "ill", text: "One of the flock falls ill."},
     {key: "preacher", text: "A preacher warns the neighbourhood against the gatherings."}
   ],
+  climb: [
+    {key: "rival", text: "A rival for the same seat starts asking questions about the character's past."},
+    {key: "patron", text: "The one who could raise the character wants a favour first."},
+    {key: "rule", text: "An old rule of the house is found that bars the character from the seat."}
+  ],
   fetish: [{key: "spirit", text: "The spirit asked to enter the fetish wants something first."}],
   wonder: [{key: "flaw", text: "The work takes on a flaw that only shows when it is used."}]
 };
@@ -156,6 +161,7 @@ export function outcomeOf(task, targetName = "") {
     case "track": return {text: `The trail leads to ${who}. The Storyteller says where ${who === "them" ? "they are" : "they are found"}.`, background: ""};
     case "court": return {text: `The long courtship of ${who} has run its course. Where it stands now is in the warmth between them.`, background: ""};
     case "train": return {text: "The teaching is done. The experience can now be spent on what was taught.", background: ""};
+    case "climb": return {text: "The climb is done. The Storyteller is asked for the next seat.", background: ""};
     case "research": return {text: "The research is done. The Storyteller says what was found.", background: ""};
     default: return {text: "The project is finished.", background: ""};
   }
