@@ -25,6 +25,23 @@ export const MATCH_CELLS = 0.5;
 /** The tile flags a feature may carry, and which of them mark its kind. */
 export const TILE_KINDS = ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"];
 const OPENING_KEYS = new Set(["kind", "material", "build", "lock", "electronic", "keyName", "barred", "stuck", "wall"]);
+/**
+ * Houses of worship by the faith of the place (B3200): the town generator draws a chapel, and a scene in Cairo, Lhasa
+ * or a Jewish quarter adopts it as a mosque, a temple or a synagogue. Faiths are WoDX Chronicle's (faith-rules.mjs).
+ */
+export const WORSHIP_KIND = {western: "church", orthodox: "church", islamic: "mosque", jewish: "synagogue", hindu: "temple", theravada: "temple",
+  tibetan: "temple", chinese: "temple", own: "temple"};
+const WORSHIP_WORD = {church: "Church", mosque: "Mosque", synagogue: "Synagogue", temple: "Temple"};
+const WORSHIP_LABEL = /^(castle )?(chapel|church|mosque|synagogue|temple)$/i;
+/** A region's place and label, tagged for the faith (its own, else the scene's). Other places are left as they are. */
+export function worshipFor(place, label, faith = null) {
+  if ( !place || !WORSHIP_WORD[place.kind] ) return {place, label, changed: false};
+  const f = WORSHIP_KIND[place.faith] ? place.faith : (WORSHIP_KIND[faith] ? faith : null);
+  if ( !f ) return {place, label, changed: false};
+  const kind = WORSHIP_KIND[f], changed = kind !== place.kind;
+  const named = changed && WORSHIP_LABEL.test(label ?? "") ? String(label).replace(/(chapel|church|mosque|synagogue|temple)$/i, w => (w[0] === w[0].toUpperCase() ? WORSHIP_WORD[kind] : WORSHIP_WORD[kind].toLowerCase())) : label;
+  return {place: {...place, kind, faith: f}, label: named, changed};
+}
 const PLACE_KINDS = new Set(["home", "workplace", "church", "mosque", "synagogue", "temple", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "elysium", "chantry", "other"]);
 /** Region behaviours a sidecar may ask for, by its short name: the full type comes from WoDX NPC. */
 export const BEHAVIORS = {trigger: `${NPC}.trigger`, alertZone: `${NPC}.alertZone`, reaction: `${NPC}.reaction`};
@@ -82,7 +99,8 @@ export function parseSidecar(input) {
   for ( const r of Array.isArray(d.regions) ? d.regions : [] ) {
     if ( !fresh("region", r) ) continue;
     if ( !isRect(r.rect) || !onMap(r.rect, r.rect[2], r.rect[3]) ) { errors.push(`${r.id}: its area is not on the map.`); continue; }
-    const place = plain(r.place) && PLACE_KINDS.has(r.place.kind) ? {kind: r.place.kind, owner: String(r.place.owner ?? "").slice(0, 80), private: !!r.place.private} : null;
+    const place = plain(r.place) && PLACE_KINDS.has(r.place.kind) ? {kind: r.place.kind, owner: String(r.place.owner ?? "").slice(0, 80), private: !!r.place.private,
+      ...(WORSHIP_KIND[r.place.faith] ? {faith: r.place.faith} : {})} : null;
     const behaviors = (Array.isArray(r.behaviors) ? r.behaviors : []).filter(b => {
       if ( plain(b) && BEHAVIORS[b.type] ) return true;
       errors.push(`${r.id}: a behaviour of an unknown type was left out.`); return false;
@@ -229,13 +247,18 @@ export function plan(sc, scene, fr, types = new Set()) {
   const feats = sc.features.filter(f => !have.has(`tiles:${f.id}`));
   const tiles = feats.map(f => tileData(f, fr));
   const lights = feats.filter(f => f.light && !have.has(`lights:${f.id}.light`)).map(f => ({data: lightData(f, fr), featureId: f.id}));
-  const regions = [];
-  for ( const r of sc.regions.filter(x => !have.has(`regions:${x.id}`)) ) {
+  const regions = [], tagged = [];
+  for ( const r0 of sc.regions.filter(x => !have.has(`regions:${x.id}`)) ) {
+    // B3200: a house of worship takes the faith of the place
+    const w = worshipFor(r0.place, r0.label, scene.faith ?? null);
+    const r = w.place === r0.place ? r0 : {...r0, place: w.place, label: w.label};
+    if ( w.changed ) tagged.push(`${r0.label} as a ${w.place.kind}`);
     const {data, skipped} = regionData(r, fr, types);
     if ( skipped.length && !data.behaviors.length && !r.place ) { notes.push(`${r.label}: left out, because WoDX NPC is off and it only has NPC behaviours.`); continue; }
     if ( skipped.length ) notes.push(`${r.label}: made without its ${skipped.join(", ")} behaviour, because WoDX NPC is off. Add it by hand later.`);
     regions.push(data);
   }
+  if ( tagged.length ) notes.push(`Houses of worship follow the faith kept here: ${tagged.join(", ")}.`);
   const already = sc.openings.length - todo.length + sc.features.length - feats.length;
   if ( already ) notes.push(`${already} ${already === 1 ? "thing was" : "things were"} adopted before and ${already === 1 ? "is" : "are"} left as ${already === 1 ? "it is" : "they are"}.`);
   // The scene's own kind of place stays if the Storyteller already set one, or cleared it after an earlier adoption

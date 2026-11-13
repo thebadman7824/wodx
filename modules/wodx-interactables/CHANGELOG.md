@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.42.0 (Houses of worship by the faith of the place (B3200-B3201). Adopting a generated town now tags its chapel for the faith the scene keeps (the scene's own, or its region's in the chronicle's year): a mosque in Cairo, a temple in Lhasa or Kyoto, a synagogue for a Jewish quarter, a church at home. The town generator can also set the faith itself with --faith)
 - 0.41.0 (a new case board starts with three column heads, Who, Where and What we know, and an empty board offers the same layout in one click; they are ordinary notes)
 - 0.40.0 (Fill by place and era draws gear that is at home where the scene stands, by WoDX Library 0.21.0's gear by region (B3072); 0.39.0 is taken by the Player UI branch)
 - 0.38.0 (a living tile can also block walls, lock doors or light lamps inside its square while its rule holds: stalls that close a lane by day, the church shut on a fast day, lanterns on a night of revel. B2904)
