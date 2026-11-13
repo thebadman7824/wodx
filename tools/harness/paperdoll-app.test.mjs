@@ -21,7 +21,7 @@ function fakeActor() {
   return a;
 }
 
-test("the sheet gets a Figure button for an owner of a character with a health track; the drawn Paperdoll button is retired (B2980)", async () => {
+test("the sheet gets a Figure button for an owner of a character with a health track; the drawn Paperdoll button is retired (B2990)", async () => {
   const a = fakeActor(), buttons = [];
   await Hooks.callAll("getActorSheetHeaderButtons", {actor: a}, buttons);
   assert.equal(M.DRAWN_FACES_RETIRED, true);

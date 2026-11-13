@@ -534,7 +534,7 @@ function wounds(c, level) {
 export const FEATURES = {};
 
 /**
- * The Net (B2982): a character jacked in shows its own face redrawn as a persona on a screen, the heir of the ASCII
+ * The Net (B2992): a character jacked in shows its own face redrawn as a persona on a screen, the heir of the ASCII
  * portraits in the pixel style: the same features in a few tones of one phosphor colour, scanlines, a faint rain of data
  * behind, one row slipped sideways. The colour is the persona's, rolled by seed unless set by hand.
  */

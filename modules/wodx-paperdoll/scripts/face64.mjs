@@ -223,7 +223,7 @@ export async function pickFeatures(actor) {
   return actor.update({[`flags.${MOD}.face64.features`]: out.f, [`flags.${MOD}.face64.state`]: state, [`flags.${MOD}.face64.net`]: net});
 }
 
-/* ---- The pixel face as the actor's portrait (the drawn portraits are retired, B2980) ---- */
+/* ---- The pixel face as the actor's portrait (the drawn portraits are retired, B2990) ---- */
 const FACE_DIR = () => `worlds/${game.world.id}/paperdoll/faces`;
 /** Draw the face at rest, four times its size with hard edges, upload it and make it the actor's portrait. Returns the path. */
 export async function facePortrait(actor) {

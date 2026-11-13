@@ -128,14 +128,18 @@ export const blocksOf = (routine, template, year = null, keep = null, {prayers =
   const y = Number(year) || 0;
   if ( Array.isArray(routine?.blocks) && routine.blocks.length ) {
     // NPC 0.50.0: the Storyteller's own hours stand; the five prayers are laid over them only when asked for
-    if ( !prayers || routine?.prayers !== "five" || keep?.faith !== "islamic" || NO_WEEK.has(template) ) return routine.blocks;
-    return withPrayers(routine.blocks, {...keep, year: y});
+    if ( !prayers || routine?.prayers !== "five" || NO_WEEK.has(template) ) return routine.blocks;
+    if ( keep?.faith === "islamic" ) return withPrayers(routine.blocks, {...keep, year: y});
+    return DAILY_WORSHIP[keep?.faith] ? withWorship(routine.blocks, keep.faith) : routine.blocks;
   }
   const key = PRESETS[routine?.preset] ? routine.preset : DEFAULT_PRESET[template];
   const blocks = presetBlocks(key, routine?.age || ageOf(year));
   if ( !keep?.faith || NO_WEEK.has(template) ) return blocks;
   const turned = forFaith(blocks, {...keep, year: y});
-  if ( !prayers || keep.faith !== "islamic" || !keepsPrayers(routine?.prayers, keep.region, y) ) return turned;
+  if ( !prayers ) return turned;
+  // NPC 0.65.0 (B2980): the other faiths' daily worship, as the five prayers
+  if ( keep.faith !== "islamic" ) return keepsWorship(routine?.prayers, keep.faith, keep.region, y) ? withWorship(turned, keep.faith) : turned;
+  if ( !keepsPrayers(routine?.prayers, keep.region, y) ) return turned;
   return withPrayers(turned, {...keep, year: y});
 };
 
@@ -283,7 +287,7 @@ export const RAMADAN = [
 ];
 /** Years a region's Muslims do not keep the prayers openly by default: [from, to]. */
 export const PRAYERS_HIDDEN = {"central-asia": [[1929, 1990]]};
-export const PRAYER_MODES = {"": "As their faith and land keep", five: "The five daily prayers and Ramadan", none: "Not kept"};
+export const PRAYER_MODES = {"": "As their faith and land keep", five: "Kept (the five prayers and Ramadan for Islam, the daily services or rites of other faiths)", none: "Not kept"};
 /** Are the prayers kept? mode: the routine's own pick ("five", "none" or none). */
 export function keepsPrayers(mode, region = null, year = 0) {
   if ( mode === "five" ) return true;
@@ -303,6 +307,55 @@ export function withPrayers(blocks, {year = 0} = {}) {
     label: leader && p.key === "tarawih" ? "Leads the night prayers of Ramadan" : p.label, prayer: p.key}));
   const rest = blocks.map(b => (b.activity === "drink" && !b.ramadan ? {...b, ramadan: "not"} : b));
   return [...pray, ...fast, ...rest];
+}
+/* ------------------------------------------------------------------ */
+/*  Daily worship of the other faiths (NPC 0.65.0, B2980 to B2982)     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The daily worship of the faiths that keep it outside Islam, laid over a ready routine the way the five prayers are:
+ *   jewish     the morning service at the synagogue after sunrise and the afternoon and evening services together at
+ *              sunset, on the six days before the Sabbath (the Sabbath service is already in the week); the routine
+ *              that serves the synagogue leads both
+ *   hindu      worship at the household shrine at sunrise and the evening lamp at sunset
+ *   theravada  food given to the monks on their morning round, in the street
+ *   tibetan    the walk round the temple at sunrise
+ *   chinese    incense at the household altar at sunrise
+ * The clergy of the last four keep their own offices and get nothing laid over. Under campaigns against religion
+ * (WORSHIP_HIDDEN) it is not kept openly by default. A house reading, rounded for play; the books give no such table.
+ */
+export const DAILY_WORSHIP = {
+  jewish: [
+    {key: "shacharit", sun: "sunrise", off: [10, 50], from: 6, to: 7, place: "church", label: "The morning service", days: [0, 1, 2, 3, 4, 6], leads: true},
+    {key: "mincha", sun: "sunset", off: [-25, 20], from: 18, to: 19, place: "church", label: "The afternoon and evening services", days: [0, 1, 2, 3, 6], leads: true}
+  ],
+  hindu: [
+    {key: "puja", sun: "sunrise", off: [-10, 15], from: 6, to: 7, place: "home", label: "Worship at the household shrine"},
+    {key: "lamp", sun: "sunset", off: [0, 15], from: 18, to: 19, place: "home", label: "The evening lamp at the shrine"}
+  ],
+  theravada: [{key: "alms", sun: "sunrise", off: [15, 40], from: 6, to: 7, place: "street", label: "Gives food to the monks on their round"}],
+  tibetan: [{key: "kora", sun: "sunrise", off: [0, 40], from: 6, to: 7, place: "church", label: "Walks the circuit round the temple"}],
+  chinese: [{key: "incense", sun: "sunrise", off: [0, 10], from: 6, to: 7, place: "home", label: "Incense at the household altar"}]
+};
+/** Years a region's people do not keep their daily worship openly by default: [from, to]. */
+export const WORSHIP_HIDDEN = {
+  "russia": [[1929, 1990]], "central-asia": [[1929, 1990]], "china": [[1966, 1976]], "tibet-himalaya": [[1959, 1979]]
+};
+/** Is a faith's daily worship kept? mode as keepsPrayers. */
+export function keepsWorship(mode, faith, region = null, year = 0) {
+  if ( !DAILY_WORSHIP[faith] || mode === "none" ) return false;
+  if ( mode === "five" ) return true;
+  const y = Number(year) || 0;
+  return !(WORSHIP_HIDDEN[region] ?? []).some(([a, b]) => y >= a && y <= b);
+}
+/** The daily worship blocks of a faith laid over a routine's blocks (first, so they win). */
+export function withWorship(blocks, faith) {
+  const rows = DAILY_WORSHIP[faith];
+  if ( !Array.isArray(blocks) || !rows ) return blocks;
+  const leader = leads(blocks);
+  const B0 = {when: "any", days: null, feast: "any"};
+  return [...rows.filter(w => !leader || w.leads).map(w => ({...B0, from: w.from, to: w.to, sun: w.sun, off: [...w.off], days: w.days ? [...w.days] : null,
+    place: w.place, activity: "pray", label: leader ? `Leads ${w.label.replace(/^The /, "the ")}` : w.label, prayer: w.key})), ...blocks];
 }
 const hoursOf = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s ?? "")); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
 /** The hours [start, end] a sun block runs on a day (end may pass 24). */

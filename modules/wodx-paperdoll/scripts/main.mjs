@@ -29,7 +29,7 @@ function registerSettings() {
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return undefined; } };
 const enabled = () => active && setting("on") !== false;
 /**
- * The drawn paperdoll portrait faces are retired for good (Ben, 13 November 2026, B2980): the pixel faces replace them.
+ * The drawn paperdoll portrait faces are retired for good (Ben, 13 November 2026, B2990): the pixel faces replace them.
  * Their code and every baked picture stay as they are; nothing is deleted. The Figure builder for sprite tokens stays on.
  */
 export const DRAWN_FACES_RETIRED = true;
