@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3300
+Next free block: B3210
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -157,7 +157,6 @@ Next free block: B3300
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
-| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4738,23 +4737,3 @@ Reverse: drop worshipFor from plan in adopt-rules.mjs.
 Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
 
 Reverse: remove the --faith argument.
-
-## B3290. The town generator takes a region (2026-11-13)
-tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
-
-Reverse: drop --region; every town is peopled from the Bohemian tables again.
-
-## B3291. Whose trades from 1919 follow who ruled (2026-11-13)
-tools/mapgen settle.py TRADE_PLAN, a house reading for review. Moravia keeps its tables. Poland and the Baltic, the Carpathians and Balkans and China take the socialist trades from 1948 to 1989; Russia, Central Asia and Siberia take them from 1919 to 1989 with no first republic. Every other region takes new post-war trades from 1948 to 1989: mayor, police officer, notary, factory owner, motor mechanic, television repairer and the like, with no national committee, Party secretary or co-operative farm. The age boundaries by region wait on the review desk.
-
-Reverse: every region takes the Bohemian years and trades.
-
-## B3292. Trades renamed by way of life (2026-11-13)
-tools/mapgen settle.py LOCAL, OUTSIDE and SOVIET. Only names that need no study: farmers grow rice in China, Korea, Japan, mainland Southeast Asia and the Malay world and barley in Tibet; in the lands of Islam there are no brewers, publicans or bars (cafés, tea houses and caravanserais instead); outside the Bohemian lands the reeve is a headman and the national committee a council; under the Soviets the farm is collective and the village has a soviet. Full trade lists for each way of life wait on the review desk.
-
-Reverse: drop the renames; every region uses the Bohemian names.
-
-## B3293. The Settlements review says whose trades a record follows (2026-11-13)
-WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
-
-Reverse: show the old sentence for every record.
