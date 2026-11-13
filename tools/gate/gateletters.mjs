@@ -5,7 +5,7 @@
  * It makes one actor and three letters, moves the clock to deliver one, and puts the letters setting, the chat, the
  * actor and the clock back as they were.
  *   1. the modules: Storyteller 0.59.0 or later with api.letters.plan, list, delay, read and rules
- *   2. times by the world map: Moravia to China by messenger in 1300 takes over 60 days, the Atlantic post is far
+ *   2. times by the world map: Moravia to China by messenger in 1600 takes over 60 days (China is known to Europe from 1513), the Atlantic post is far
  *      quicker by steam in 1880 than under sail in 1700, and a telegram cannot cross the Atlantic in 1860
  *   3. each land's own years and the known world: no post in the Aegean in 1600, no letter to the Caribbean in 1400
  *   4. a letter between lands is stored with both lands, a chance of going astray and a due time a day or more away
@@ -39,7 +39,7 @@ export async function run() {
     ok("1. modules", S?.active && !foundry.utils.isNewerVersion("0.59.0", S.version) && typeof Lt?.plan === "function" && typeof Lt?.list === "function"
       && typeof Lt?.delay === "function" && typeof Lt?.read === "function" && !!Lt?.rules?.REGION_LINES, {storyteller: S?.version});
 
-    const china = await Lt.plan("messenger", {from: "moravia", to: "china", year: 1300});
+    const china = await Lt.plan("messenger", {from: "moravia", to: "china", year: 1600});
     const sail = await Lt.plan("post", {from: "british-isles", to: "north-america-east", year: 1700}), steam = await Lt.plan("post", {from: "british-isles", to: "north-america-east", year: 1880});
     const wire = await Lt.plan("telegraph", {from: "british-isles", to: "north-america-east", year: 1860});
     ok("2. world map times", china.ok && china.days > 60 && sail.ok && steam.ok && steam.days < sail.days / 2 && !wire.ok, {china: china.days, sail: sail.days, steam: steam.days, wire: wire.why});
