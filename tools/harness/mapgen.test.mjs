@@ -33,6 +33,9 @@ test("mapgen: the farmstead still comes out the same from its seed", {skip}, () 
   // Dungeondraft crashes on load (World.LoadEmbedded) unless "embedded" is an object
   const map = JSON.parse(readFileSync(join(dir, readdirSync(dir).find(f => f.endsWith(".dungeondraft_map"))), "utf8"));
   assert.ok(map.world.embedded && typeof map.world.embedded === "object" && !Array.isArray(map.world.embedded), "world.embedded must be {}");
+  // looked at as Dungeondraft draws it: no bare room, no piece across a wall, in a doorway, askew or on another piece
+  const check = run([join(gen, "check_map.py"), join(dir, "kessler-steading.dungeondraft_map")], dir);
+  assert.match(check, /: \d+ rooms, 0 problems/, check);
 });
 
 const slug = s => s.toLowerCase().replace(/ü/g, "u").replace(/ö/g, "o").replace(/ä/g, "a").replace(/[^a-z0-9]+/g, "-");

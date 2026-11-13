@@ -39,11 +39,16 @@ export function buildMenu(fig, cat, ui, lists) {
   const year = ui.allYears ? null : ui.year ?? null;
   const swatches = (name, list, cur) => `<div class="wodx-figure-swatches" role="radiogroup" aria-label="${esc(cap(name))}">${list.map(([h, l]) =>
     `<button type="button" data-action="colour" data-what="${name}" data-hex="${h}" class="wodx-figure-swatch${h === cur ? " on" : ""}" style="background:#${h}" data-tooltip="${esc(l)}" aria-label="${esc(l)}" aria-pressed="${h === cur}"></button>`).join("")}</div>`;
-  const slots = Object.entries(F.SLOTS).map(([k, label]) => {
+  const slotLi = ([k, label]) => {
     const p = fig.slots[k];
     return `<li><button type="button" data-action="slot" data-slot="${k}" class="wodx-figure-slot${k === ui.slot ? " on" : ""}" aria-pressed="${k === ui.slot}">
       <span class="wodx-figure-slot-name">${esc(label)}</span><span class="wodx-figure-slot-has">${esc(p ? cap(p.n.replace(/^an? /, "")) : "Nothing")}</span></button></li>`;
-  }).join("");
+  };
+  // The body, the clothes and the face first; the smaller parts under More, open when one of them is picked (B2833)
+  const all = Object.entries(F.SLOTS);
+  const main = all.filter(([k]) => F.MAIN_SLOTS.includes(k)), rest = all.filter(([k]) => !F.MAIN_SLOTS.includes(k));
+  const restOpen = rest.some(([k]) => k === ui.slot || fig.slots[k]);
+  const slots = `${main.map(slotLi).join("")}${rest.length ? `<li class="wodx-figure-more"><details${restOpen ? " open" : ""}><summary>More: ${esc(rest.map(([, l]) => l.toLowerCase()).join(", "))}</summary><ul class="wodx-figure-slots" data-fixed>${rest.map(slotLi).join("")}</ul></details></li>` : ""}`;
   const cur = fig.slots[ui.slot], list = F.piecesFor(cat, ui.slot, year);
   if ( cur && !list.some(e => e.n === cur.n) ) { const e = F.pieceOf(cat, cur.n); if ( e ) list.unshift(e); }
   const pieces = [`<li><button type="button" data-action="wear" data-name="" class="wodx-figure-piece${cur ? "" : " on"}"><span class="wodx-figure-thumb none"></span><span>Nothing</span></button></li>`,

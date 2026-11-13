@@ -2,7 +2,7 @@
   "id": "wodx-paperdoll",
   "title": "WoDX Paperdoll",
   "description": "World of Darkness Expanded: paperdoll tokens. Each player builds a character's look in a window on the sheet: face shape, eyes, brows, nose, mouth, hair, beard, colours and the era's clothes, drawn in the Lorelei style. The token shows head, shoulders and chest inside the era's ring, with every garment fitted to that face. The face follows the health track (bruises, a split lip, a black eye, cuts, a bandage) and the mood with it, and snarls in frenzy. Pictures are baked once on the Storyteller's computer, so slow machines pay nothing and players need no upload rights. Carried things are not drawn. Faces: Lorelei by Lisa Wischofsky (CC0) through DiceBear (MIT). Lasting changes the Storyteller records with WoDX Storyteller (a reshaped face, ridges on the brow, a demon's glowing eyes, scars) show on the face. Private use only; not for distribution or sale.",
-  "version": "0.15.0",
+  "version": "0.22.0",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "relationships": {

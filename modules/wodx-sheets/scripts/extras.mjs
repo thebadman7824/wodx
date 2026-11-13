@@ -298,7 +298,9 @@ function relationsOf(actor, editable) {
   const own = owner ? (api.secrets?.of?.(actor) ?? []).map(s => ({ text: s.text || api.secrets.rules.SECRET_KINDS[s.kind]?.label || "" })).filter(s => s.text) : [];
   let regard = "";
   try { regard = gm && !actor.hasPlayerOwner ? api.opinion?.regardHtml?.(actor) ?? "" : ""; } catch (e) { regard = ""; }
-  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
+  let family = [];
+  try { family = owner ? api.family?.lines?.(actor) ?? [] : []; } catch (e) { family = []; }
+  return XH.relationsHtml(rows, { editable, gm, roles: TR.HAND_ROLES.map(k => [k, TR.KINDS[k]?.label ?? k]), known, own, regard, family, couples: !!api.family?.conceive, tree: !!api.openTree, followers: !!api.openFollowers && (gm || actor.hasPlayerOwner) });
 }
 
 
@@ -461,6 +463,12 @@ export async function decorate(sheet, html) {
     const notes = gear.querySelector(".sheet-gearArea, .editor")?.outerHTML ?? "";
     const view = XR.possessions(items, { look, era: eraId(), year: yearNow() });
     const money = { coins: XR.moneyOf(items), inUse: coinsNow(), carried: actor.system?.money?.carried ?? 0, bank: actor.system?.money?.bank ?? 0 };
+    // The purse in one line (B2830), in the coin of the place and year when WoDX Storyteller keeps the purse
+    try {
+      const pu = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep?.money?.purse?.(actor) : null;
+      if ( pu?.text?.carried ) { money.full = pu.text.carried; money.line = XR.purseLine(pu.text.carried); }
+    } catch (e) { /* the plain numbers stay */ }
+    money.folded = !!game.modules.get("wodx-chronicle")?.api?.playerView && game.modules.get("wodx-chronicle").api.playerView.current?.() === "beginner";
     gear.innerHTML = XH.possessionsHtml(view, { money, editable, gearNotes: notes });
   }
   // The Ties tab, beside Gear in the full menu
@@ -652,6 +660,15 @@ export function listen(sheet, root) {
       if ( a.dataset.act === "tie-remove" && editable ) return setTies(actor, list => list.filter(t => t.uuid !== uuid));
       if ( a.dataset.act === "tie-hide" && editable && game.user.isGM ) return setTies(actor, list => list.map(t => t.uuid === uuid ? { ...t, hidden: !t.hidden } : t));
       if ( a.dataset.act === "tie-tree" ) return npcApi()?.openTree?.(actor);
+      if ( a.dataset.act === "tie-propose" && editable ) {
+        const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
+        return other?.documentName === "Actor" ? npcApi()?.family?.propose?.(actor, other) : null;
+      }
+      if ( a.dataset.act === "tie-child" && editable ) {
+        const other = await fromUuid(a.closest("[data-open-uuid]")?.dataset.openUuid || uuid);
+        if ( other?.documentName !== "Actor" ) return;
+        return game.user.isGM ? npcApi()?.family?.conceive?.(actor, other) : npcApi()?.family?.askChild?.(actor, other);
+      }
       if ( a.dataset.act === "tie-followers" ) return npcApi()?.openFollowers?.(actor);
       if ( a.dataset.act === "tie-secrets" && game.user.isGM ) return npcApi()?.openSecrets?.(actor);
     });

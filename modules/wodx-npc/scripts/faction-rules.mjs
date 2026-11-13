@@ -151,7 +151,9 @@ export function normFaction(f = {}) {
     risesOn: f.risesOn ? String(f.risesOn).slice(0, 60) : null, endsOn: f.endsOn ? String(f.endsOn).slice(0, 60) : null,
     fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null,
     // NPC 0.25.0: politics inside the faction (politics-rules.mjs)
-    polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics)
+    polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics),
+    // NPC 0.62.0: the world region it stands in ("" = the chronicle's homeland), for the courts of its land (B2960)
+    region: typeof f.region === "string" && /^[a-z][a-z-]{0,39}$/.test(f.region) ? f.region : ""
   };
 }
 const yearOrNull = v => (v === null || v === undefined || String(v).trim() === "" || !Number.isFinite(Number(v)) ? null : Math.round(Number(v)));

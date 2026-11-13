@@ -26,6 +26,7 @@ const WEST_DRESS = {latin: null, orthodox: null, "*": 1900};
 const JEW = {latin: null, orthodox: null, islamic: null, india: 1000, "*": 1900};
 const MUSLIM = {islamic: null, sahel: 1050, swahili: 1000, malay: 1400, india: 1200, "central-asia": null, iberia: [700, 1500], "carpathians-balkans": 1400, china: 1300, "*": 1950};
 const BUDDHIST = {tibetan: null, theravada: null, sinic: null, japanese: null, india: [-500, 1250], malay: [-9999, 1500], "central-asia": [-200, 900], "*": 1960};
+const MAIZE = {"*": null, mesoamerican: -3000, andean: -2000, "north-america-east": 1000, "north-america-west": 1000};
 const HINDU = {indic: null, malay: [-9999, 1500], "southeast-asia": [-9999, 1400], "*": 1960};
 const NO_PORK = {"*": null, islamic: false, sahel: false, swahili: false, malay: [-9999, 1450], mesoamerican: false, andean: false, northern: false};
 /* The Americas, the Pacific and the far north before the settlers had no coin, sheep or cattle from the Old World. */
@@ -116,6 +117,8 @@ export const WAYS = {
   "a cake of drinking chocolate": {"*": null, mesoamerican: -1500},
   "a bag of maize meal": {"*": null, mesoamerican: -3000, andean: -2000, "north-america-east": 1000, "north-america-west": 1000},
   "a sack of potatoes": {"*": null, andean: -3000},
+  // Maize is old in the Americas, new elsewhere (B3101)
+  "a bag of corn kernels": MAIZE, "a corn cob": MAIZE, "a corn on the cob": MAIZE, "a bag of cornmeal": MAIZE,
   "a sack of seed potatoes": {"*": null, andean: -3000},
   "a corn tortilla": {mesoamerican: -1500, mexico: 1521, "north-america-west": 1800, "*": 1960},
   "a flour tortilla": {mexico: null, "north-america-west": 1800, "*": 1960},
@@ -163,6 +166,44 @@ export const WAYS = {
   "a senet set": {egypt: [-9999, 1300]},
   "a board for nine men's morris": {latin: null},
   "a krar": {"east-africa": null}, "a kantele": {scandinavia: null, russia: null}
+};
+
+/**
+ * Goods from the imported lists (cdda) came in dated 1197, the first year WoDX plays, though many belong to later
+ * centuries. Each takes the year it first turns up in the land it comes from (B3150); where it was old somewhere else
+ * long before, a place rule in REDATED_WAYS says so (B3151). A house reading of history, rounded for play.
+ */
+export const REDATED = {
+  // Food and drink
+  "a plate of ravioli": 1300, "a packet of lasagne sheets": 1300, "a waffle": 1300, "a bratwurst": 1300,
+  "a plate of haggis": 1400, "a plate of lutefisk": 1500, "a bottle of orange juice": 1500, "a jar of whipped cream": 1550,
+  "a bowl of pudding": 1600, "a jar of salca": 1600, "a bottle of chardonnay": 1600, "a bottle of pinot noir": 1375,
+  "a cup of chicory brew": 1770, "zucchini": 1850, "a jar of pesto": 1860, "a plate of spaghetti al pesto": 1860,
+  "a honeydew melon": 1900, "a vegetable hosomaki": 1750,
+  // Dress
+  "a haori": 1550, "a kilt": 1590, "a yukata": 1600, "a plague robe": 1619, "a bathrobe": 1850,
+  "a pair of beekeeping gloves": 1850, "a black belt": 1886, "a pair of shorts": 1900, "a cheongsam": 1920,
+  // Things
+  "a gold locket": 1500, "a bench vise": 1500, "a pair of cufflinks": 1600, "a hacksaw": 1800, "a glass terrarium": 1829,
+  "a water heater": 1868
+};
+
+/** Old in one land, late in the rest: the place rules for goods of the imported lists (B3151). */
+export const REDATED_WAYS = {
+  "a bag of koji": {sinic: null, japanese: null, "*": 1950},
+  "tofu": {sinic: null, japanese: null, theravada: null, malay: null, "*": 1960},
+  "a plate of tofu stirfry": {sinic: null, japanese: null, theravada: null, malay: null, "*": 1960},
+  "an onigiri": {japanese: null, "*": 1980}, "sashimi": {japanese: null, "*": 1980}, "a vegetable hosomaki": {japanese: null, "*": 1980},
+  "a bag of kombu": {japanese: null, korea: null, china: null, "*": 1980},
+  "a jar of salca": {anatolia: null, levant: null, "*": 1990},
+  "a sheet of sandpaper": {sinic: null, "*": 1834},
+  "a fire piston": {malay: null, theravada: null, "*": 1802},
+  "a fanning mill": {sinic: null, "*": 1720},
+  "a firecracker": {sinic: null, "*": 1300},
+  "a hammock": {mesoamerican: null, andean: null, caribbean: null, "*": 1550},
+  "a net hammock": {mesoamerican: null, andean: null, caribbean: null, "*": 1550},
+  "a sassafras root": {northern: null, "north-america-east": null, "*": 1600},
+  "a tree spile": {northern: null, "north-america-east": null, canada: null, "*": 1700}
 };
 
 /** The coin of the place: drawn as the local money's coins when the money is known (WoDX Storyteller). */
@@ -241,6 +282,13 @@ export const WAY_ROWS = [
   ["a copper cross ingot", "coin", 900, 1900, "J", 2, "hist", {"central-africa": null, "southern-africa": null}],
   ["a thumb piano", "toys", 1000, END, "J", 1, "hist", {bantu: null, "*": 1970}],
   ["a pot of sorghum beer", "drink", -500, END, "T", 0, "hist", {bantu: null, sahel: null, swahili: null}],
+  // What the brews and quids of other lands are made from (B3101)
+  ["a sack of sorghum", "food", -3000, END, "T", 0, "hist", {bantu: null, sahel: null, swahili: null, "east-africa": null, indic: null, sinic: null, "north-america-east": 1850}],
+  ["a sack of millet", "food", -5000, END, "T", 0, "hist", {sahel: null, bantu: null, swahili: null, "east-africa": null, indic: null, sinic: null, tibetan: null, "central-asia": null, orthodox: null, latin: [-9999, 1800]}],
+  ["a jar of maguey sap", "food", -500, END, "T", 0, "hist", {mesoamerican: null, mexico: null}],
+  ["a bag of kava root", "food", -500, END, "J", 0, "hist", {polynesian: null, "pacific-islands": null}],
+  ["a bag of areca nuts", "food", -2000, END, "J", 0, "hist", {indic: null, theravada: null, malay: null, swahili: 1000}],
+  ["a bundle of betel leaves", "food", -2000, END, "J", 0, "hist", {indic: null, theravada: null, malay: null, swahili: 1000}],
   ["a sleeping mat of woven reed", "house", -3000, END, "T", 0, "hist", {bantu: null, sahel: null, swahili: null, malay: null, polynesian: null}],
   // Mesoamerica
   ["a bag of cacao beans", "coin", -1000, 1700, "J", 1, "hist", {mesoamerican: null, mexico: null}],
@@ -338,6 +386,12 @@ a gourd of foaming cacao | A gourd of bitter cacao drink, poured from a height t
 a blade of obsidian | A thin flake of black volcanic glass, sharper than any steel.
 a stone grinding slab for maize | A sloped slab of stone with a hand stone for grinding soaked maize.
 a sheet of bark paper | A sheet of beaten fig bark, folded or painted with signs.
+a sack of sorghum | Small round reddish grain, threshed and dry.
+a sack of millet | Tiny pale seeds that cook into porridge or ferment into beer.
+a jar of maguey sap | Sweet, cloudy sap drawn from the heart of the maguey plant. It sours within a day.
+a bag of kava root | Knobbly grey roots, dried for pounding into the drink of the islands.
+a bag of areca nuts | Hard mottled nuts from the areca palm, sliced thin for chewing.
+a bundle of betel leaves | Glossy heart-shaped leaves, tied in a bundle and kept damp.
 a jar of pulque | A milky, sour drink made from the sap of the maguey.
 a cotton quilted tunic | A thick tunic of quilted cotton, soaked in brine to stiffen it against blows.
 a knotted cord record | A main cord hung with many coloured strings, each knotted to record counts.

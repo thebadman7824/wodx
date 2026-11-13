@@ -129,10 +129,12 @@ export async function marketsDialog() {
   if ( !game.user.isGM ) return;
   await Money.goodsList();
   const st = state();
-  const rows = st.markets.map(m => `<tr><td>${esc(m.name)}${m.cut ? " (cut off)" : ""}</td><td>${m.scenes.length}</td><td>${m.traders.length}</td>
-    <td>${m.moves.length || Object.keys(m.unsafe).length || m.traders.some(t => t.shut) ? esc([m.moves.length ? `${m.moves.length} faction ${m.moves.length === 1 ? "move" : "moves"}` : "", Object.keys(m.unsafe).length ? "a road closed" : "", m.traders.some(t => t.shut) ? `${m.traders.filter(t => t.shut).length} shut` : ""].filter(Boolean).join(", ")) : ""}</td>
+  // B3110: stakes characters hold in the market's ventures show beside the factions' moves
+  const stakes = id => { try { return game.modules.get(MOD)?.api?.upkeep?.ventures?.stakes?.(id) ?? ""; } catch (e) { return ""; } };
+  const rows = st.markets.map(m => { const sk = stakes(m.id); return `<tr><td>${esc(m.name)}${m.cut ? " (cut off)" : ""}</td><td>${m.scenes.length}</td><td>${m.traders.length}</td>
+    <td>${m.moves.length || Object.keys(m.unsafe).length || m.traders.some(t => t.shut) || sk ? esc([m.moves.length ? `${m.moves.length} faction ${m.moves.length === 1 ? "move" : "moves"}` : "", Object.keys(m.unsafe).length ? "a road closed" : "", m.traders.some(t => t.shut) ? `${m.traders.filter(t => t.shut).length} shut` : "", sk].filter(Boolean).join(", ")) : ""}</td>
     <td>${Object.keys(m.index).length || Object.keys(m.supply).length ? esc([...Object.entries(m.index).map(([k, v]) => `${KINDS[k] ?? k} x${v}`), ...Object.entries(m.supply).map(([k, v]) => `${KINDS[k] ?? k} ${MK.SUPPLY[v].label.toLowerCase()}`)].slice(0, 4).join(", ")) : "All normal"}</td>
-    <td><button type="button" data-market="${esc(m.id)}">Edit</button></td></tr>`).join("");
+    <td><button type="button" data-market="${esc(m.id)}">Edit</button></td></tr>`; }).join("");
   let picked = null;
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 720}, window: {title: "Markets"}, classes: ["wodx-dialog", "wst-markets"],
     content: `<p>A market is a settlement: its places, a price index and supply for each kind of goods, and its traders. Prices in its places follow it. Only the Storyteller sees this.</p>
@@ -141,10 +143,12 @@ export async function marketsDialog() {
       const el = dialog.element ?? dialog;
       el.querySelectorAll?.("button[data-market]").forEach(b => b.addEventListener("click", () => { picked = b.dataset.market; dialog.close(); }));
     },
-    buttons: [{action: "add", label: "New market"}, ...(st.markets.length ? [{action: "week", label: "Run a week now"}, {action: "caravans", label: "Caravans"}] : []), {action: "close", label: "Close"}]});
+    buttons: [{action: "add", label: "New market"}, ...(st.markets.length ? [{action: "week", label: "Run a week now"}, {action: "caravans", label: "Caravans"}, {action: "ventures", label: "Ventures"}, {action: "towns", label: "Towns"}] : []), {action: "close", label: "Close"}]});
   if ( picked ) return editMarket(picked);
   if ( res === "add" ) return editMarket(null);
   if ( res === "caravans" ) return game.modules.get(MOD)?.api?.upkeep?.caravans?.open?.();
+  if ( res === "towns" ) return game.modules.get(MOD)?.api?.upkeep?.towns?.open?.();
+  if ( res === "ventures" ) return game.modules.get(MOD)?.api?.upkeep?.ventures?.open?.();
   if ( res === "week" ) return game.modules.get(MOD)?.api?.upkeep?.marketTurn?.run?.({force: true, reason: "a week (run by hand)"});
 }
 

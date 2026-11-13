@@ -15,6 +15,7 @@ import MortalActorSheet from "../../../systems/worldofdarkness/module/actor/temp
 import WraithActorSheet from "../../../systems/worldofdarkness/module/actor/template/wraith-actor-sheet.js";
 import DemonActorSheet from "../../../systems/worldofdarkness/module/actor/template/demon-actor-sheet.js";
 import MummyActorSheet from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
+import * as BG from "./beginner.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
@@ -352,6 +353,8 @@ function wodxSheet(Base, type) {
     activateListeners(html) {
       super.activateListeners(html);
       try { X.listen(this, html[0] ?? html); } catch (e) { console.error("WoDX Sheets | extras", e); }
+      // 0.19.0 (B2822 to B2825): the sheet in a player's Beginner view
+      try { BG.decorate(this, html); } catch (e) { console.error("WoDX Sheets | beginner", e); }
       if (this.wodxId) listeners(this, html[0] ?? html);
     }
     async _onDropItem(event, data) {
@@ -455,9 +458,59 @@ function nameHeaderButtons(app, html) {
 Hooks.on("renderActorSheet", nameHeaderButtons);
 Hooks.on("renderItemSheet", nameHeaderButtons);
 
+// Sheet tools (B2837): one labelled button that lists the title bar's icon buttons with their names
+function sheetToolsButton(app, html) {
+  const el = html?.[0] ?? html ?? app?.element?.[0];
+  const win = el?.closest?.(".window-app") ?? app?.element?.[0];
+  const header = win?.querySelector?.(".window-header");
+  if (!win?.classList?.contains("wod20") || !header || header.querySelector(".wodx-sheet-tools")) return;
+  let when = "always";
+  try { when = game.settings.get(MOD, "sheetTools"); } catch (e) { /* the default */ }
+  if (when === "off" || (when === "beginner" && !BG.beginner())) return;
+  const a = document.createElement("a");
+  // Its words show in Beginner view; in Full view it is an icon like the others, so the name still fits
+  a.className = `header-button wodx-sheet-tools${BG.beginner() ? " wodx-worded" : ""}`;
+  a.dataset.tooltip = "Sheet tools: the buttons up here, with their names";
+  a.setAttribute("aria-label", "Sheet tools"); a.setAttribute("role", "button"); a.tabIndex = 0;
+  a.innerHTML = `<i class="fa-solid fa-list-ul" aria-hidden="true"></i>Sheet tools`;
+  const title = header.querySelector(".window-title");
+  title ? title.after(a) : header.prepend(a);
+  const open = ev => {
+    ev.preventDefault(); ev.stopPropagation();
+    document.querySelector(".wodx-sheet-tools-list")?.remove();
+    const others = [...header.querySelectorAll("a.header-button, a.alter-ego-config")].filter(b => b !== a && !b.classList.contains("close"));
+    const list = document.createElement("div");
+    list.className = "wodx-sheet-tools-list wodx";
+    list.setAttribute("role", "menu");
+    for (const b of others) {
+      const words = b.dataset.tooltip || b.getAttribute("aria-label") || (b.textContent ?? "").trim();
+      if (!words) continue;
+      const item = document.createElement("button");
+      item.type = "button"; item.setAttribute("role", "menuitem");
+      item.innerHTML = `${b.querySelector("i")?.outerHTML ?? ""} `;
+      item.append(document.createTextNode(words));
+      item.addEventListener("click", e => { e.preventDefault(); list.remove(); b.click(); });
+      list.append(item);
+    }
+    const r = a.getBoundingClientRect();
+    list.style.top = `${Math.round(r.bottom + 4)}px`; list.style.left = `${Math.round(Math.max(4, r.left))}px`;
+    document.body.append(list);
+    const away = e => { if (!list.contains(e.target)) { list.remove(); document.removeEventListener("pointerdown", away, true); } };
+    setTimeout(() => document.addEventListener("pointerdown", away, true), 0);
+  };
+  a.addEventListener("click", open);
+  a.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") open(ev); });
+}
+Hooks.on("renderActorSheet", sheetToolsButton);
+
 Hooks.once("init", async () => {
   X.setup();
   AN.setup();
+  game.settings.register(MOD, "sheetTools", {
+    name: "Sheet tools button", hint: "A labelled button in the sheet's title bar that lists the icon buttons there with their names.",
+    scope: "client", config: true, type: String, default: "always",
+    choices: {always: "In both views", beginner: "In Beginner view only", off: "Off"}
+  });
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
     hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
@@ -475,6 +528,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.17.0", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.20.1", extras: X, rules: SR, sheetFor, viewFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

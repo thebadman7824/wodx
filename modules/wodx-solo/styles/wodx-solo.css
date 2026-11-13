@@ -7,3 +7,8 @@
 .wsolo-dialog .wsolo-curtain { width: 100%; border-collapse: collapse; font-size: 0.9em; }
 .wsolo-dialog .wsolo-curtain th, .wsolo-dialog .wsolo-curtain td { padding: 2px 4px; vertical-align: top; text-align: left; }
 .wsolo-dialog .window-content { max-height: 70vh; overflow-y: auto; }
+
+/* One main button, the rest under More (B2831) */
+.wsolo-panel .wsolo-next { font-weight: bold; padding: 6px 8px; height: auto; }
+.wsolo-panel .wsolo-next-hint { margin: 0; }
+.wsolo-panel .wsolo-more > summary { cursor: pointer; opacity: 0.85; margin: 2px 0; }

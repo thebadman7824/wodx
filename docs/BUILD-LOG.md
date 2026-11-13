@@ -1786,3 +1786,27 @@ Ben's picks from the Improvement Desk (ia2) and the Stale Design Desk (e3). The 
 ## 2026-11-13: the faith calendar and the hunt; black powder (NPC 0.54.0, Actions 3.58.0, Combat 3.24.0, Chronicle 0.51.1)
 
 Two picks from the improvement desk of 13 November. fa1, the full version: a hunt reads the day of every faith's year where the scene stands, and each feast, fair, fast, day of rest, curfew and blackout changes the difficulty by name (B2710, B2711); the hunt window gained the odds before the roll. cb4: hand cannon, matchlock, wheellock and flintlock guns misfire on a botch and on any 1 in the wet, heavy rain puts out a match and wets the powder, and a gun with no lock named takes the year's lock (B2712 to B2714). Harness: hunt-calendar.test.mjs (13), powder.test.mjs (8). Testbed gate job jobs/hunt-powder-deploy-2026-11-13.md.
+
+
+## 2026-11-13: the character wizard (Creation 0.24.0)
+
+Ben asked whether a new player is guided through the sheet after the lifepath and prelude, as Darkness Weaver does. The 0.13.0 Build window was one page that counted. The wizard now walks the book's creation order a page at a time: the book, Attributes and Abilities by the player's priorities, the line's powers from pick lists, Backgrounds from the line's books, Virtues, Merits and Flaws at their cost, freebie points at the book's costs (Willpower, Humanity or a Road, Rage, Gnosis, Arete, Glamour too), and a last look. Before the First Night opens it from Build and from Merits and Flaws, and has a new check after the prelude (B2760 to B2766). The prelude's Willpower gain now reaches the sheet. Harness: wizard.test.mjs (10), first-night tests updated. Gate tools/gate/gatewizard.mjs (9 steps). Derived traits filled in for you come next.
+
+## 2026-11-13: generated maps checked before export (B2634-B2636)
+
+Ben exported Kessler Steading and found it bare, with pieces out of place. Three causes: the furnishing catalogue matched parts of words (a chestnut tree as a chest), about 10,000 assets had a guessed one-square size so Dungeondraft drew them larger than their spots, and the farm generator did not use the new furnishing at all. Tagging is now by whole words with a veto list, only pictures of known size furnish and none is drawn past its own size, rooms are filled until they look lived in, and tools/mapgen/check_map.py checks every finished map (bare rooms, pieces across walls, in doorways, askew, overlapping, trees over roofs) and draws a plan of what it measured. A PC job measures every asset's real picture size from the packs.
+
+Then the same check on the towns (B2637, B2638): the village, town, angled village, city and 1197 settlement samples went from 100 to 300 problems each to 0. Grid towns now use the furnishing, squeezed pictures are refused, small rooms get sacks and baskets, uncanny flames stay out of ordinary rooms, and furnished chests, cupboards and beds become searchable on Adopt. A 1950 town no longer stops on a missing window picture. The 1995 settlement waits on the measured picture sizes.
+
+
+## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
+
+The character wizard now works out each line's derived Traits on its Virtues page and the last look (scripts/derived-rules.mjs, pure): Humanity or a Path or a Road, Willpower, Rage, Gnosis, Arete, Quintessence, Corpus, Pathos, Glamour, Banality, Faith, Torment, Balance and Sekhem, with freebie and prelude dots on top, a Set button for each and Set all, and a Roll it button for a vampire's starting blood. Amulets added to the Hekau paths after the book check. Harness derived.test.mjs (7). Gate gatewizard.mjs step 10. Version 0.26.0, since two open changes hold 0.25.0.
+
+## 2026-11-13: short Trait explanations in the wizard (Creation 0.29.0, B3007-B3009)
+
+Hover a Trait's name in the character wizard, or open "What these mean", for a line on what it is for. Common Traits use the player view's hover help from WoDX Sheets (shown once PR 846 merges); data/trait-notes.mjs covers the line Traits it leaves out. Page refs come from the PC's book check. Harness derived.test.mjs now 9 tests.
+
+## 2026-11-13: page refs on the wizard's Trait notes (Creation 0.29.1)
+
+REFS in data/trait-notes.mjs filled from the PC's book lookup (gates/trait-notes-refs-2026-11-13.json). Not found yet: Yin, Yang, Dharma, Balance, Hunter Conviction, Talents and Skills, and most Mummy pages (the OCR lost them).

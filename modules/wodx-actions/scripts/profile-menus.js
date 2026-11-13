@@ -305,7 +305,7 @@ export const RULES = {
     faeDA: "<b>Dark Ages fae</b> soak lethal damage only in the fae mien. Cold iron does aggravated damage (soakable) and costs a Mists point per wound. A cantrip: Dominion + the trait it names, difficulty 6; −1 each for the Court's Dominion, its hour and its season; never below 4. Unleashing: Mists + Dominion against 5 Unleashing dice (3 for firstborn), Weaving removes them. Echoes: the mortal's Willpower (7) or 5 dice, less oath successes (Dark Ages: Fae pp. 88, 104, 110–122).",
     orpheus: "<b>Spooks</b> (ghosts and projected souls) have no health levels: wounds come off Vitality; a skimmer's come out in the body as bashing. At zero Vitality a Willpower point is spent at once for three; at zero of both the spook dissipates. Three Vitality spent in a turn is felt three blocks off, five draws Spectres from five. Spite at or above the starting Vitality: +1 difficulty (Orpheus pp. 190–193).",
     mummy: "<b>The Reborn</b> soak bashing and lethal with Stamina, never aggravated (save by Hekau); fire is aggravated, no worse. Lethal heals one level faster than a mortal's. Past Incapacitated the khat has five more levels; the resurrection is Willpower + Ba (a permanent Sekhem) or Sekhem + Ba (a permanent Willpower) at 8. A spell: the path + its Trait; Sekhem spent either way (Mummy: The Resurrection pp. 78, 136–138).",
-    kote: "<b>Kuei-jin</b> take aggravated damage from fire, most Chi-based attacks and the claws and fangs of shen; they heal as Kindred with Chi for blood. The sun allows (Stamina − Yin Chi) minutes a day, then rots. Chi a turn follows the Dharma (1 to Dharma 3, 2 at 4–5, 3 at 6). Fire soul: Yin against the P'o; wave soul: Yang; shadow soul: Hun (Kindred of the East pp. 54, 134–151).",
+    kote: "<b>Kuei-jin</b> are hurt by fire, by most Chi attacks and by shen claws and fangs, all as aggravated damage; they heal as Kindred with Chi for blood. The sun allows (Stamina − Yin Chi) minutes a day, then rots. Chi a turn follows the Dharma (1 to Dharma 3, 2 at 4–5, 3 at 6). Fire soul: Yin against the P'o; wave soul: Yang; shadow soul: Hun (Kindred of the East pp. 54, 134–151).",
     demon: "<b>The fallen</b> soak bashing with Stamina; in the apocalyptic form, lethal too; never aggravated (without a power for it). Faith heals all bashing or one lethal level a point, never aggravated. An evocation: its Attribute + Ability at 6; Faith spent buys successes; a success die showing the permanent Torment or less brings the high-Torment effect. Torment 4 or more burns on holy ground (Demon: The Fallen pp. 161, 170–171, 248, 254).",
     fae: "<b>Changelings</b> soak as mortals (bashing only). Cold iron inflicts aggravated damage and a changeling has no natural defense against it (a Balor has only a difficulty-10 chance). Chimerical damage affects only chimerical beings; Banality eats Glamour. Cantrip: Art + lowest primary Realm, difficulty 8 before modifiers (Changeling 20th).",
     wraith: "<b>Wraiths</b> are immune to Stun damage; a corporeal wraith suffers lethal damage only through Corpus. Corpus loss ends in a Harrowing or Oblivion. House soak in this module: Stamina against bashing and lethal, armor only against aggravated damage."
@@ -501,7 +501,7 @@ export function build(ctx) {
     function rules(actor, key) { return post(actor, "Rules reminder", `<div class="vta-note">${RULES[key] ?? ""}</div>`); }
 
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
-    async function menuFor(actor, { recent = [], pinned = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
+    async function menuFor(actor, { recent = [], pinned = [], isGM = !!globalThis.game?.user?.isGM, beginner = false } = {}) {
         const kind = P.detectProfile(actor);
         const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (kind === "kindred" && ctx.isKotE?.(actor)) ? MENUS.kote : (kind === "mortal" && ctx.isOrpheus?.(actor)) ? MENUS.orpheus : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
@@ -511,18 +511,23 @@ export function build(ctx) {
         if (TR.LINE_LOOK.includes(kind)) {
             const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
-            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
+            // 3.62.0 (B2818): in Beginner view each button says what it does and what it costs, on a line under its name
+            const line = x => (beginner ? TR.actionLine(x.spec, x.desc) : "");
+            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}${line(x) ? `<small class="vta-btn-line">${esc(line(x))}</small>` : ""}</span></button>`;
+            const front = beginner ? TR.frontRow(g).filter(x => !pinned.includes(x.spec)) : [];
             const mine = new Set(all.map(x => x.spec));
             const extras = (ctx.searchExtras?.() ?? []).filter(x => !mine.has(x.spec));
             // 3.43.0: the character's pinned actions, then the last ones used (a pinned one shows once)
             const known = s => all.find(x => x.spec === s) ?? extras.find(x => x.spec === s);
             const pins = pinned.map(known).filter(Boolean);
             const rec = TR.recentShown(recent, pinned).map(known).filter(Boolean);
-            const html = `<div class="vta-grp-wrap wodx-menu2" data-line="${esc(kind)}">
+            const html = `<div class="vta-grp-wrap wodx-menu2${beginner ? " vta-beginner vta-folded" : ""}" data-line="${esc(kind)}">
               <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(def === MENUS.kote ? "Kuei-jin (Kindred of the East)" : def === MENUS.orpheus ? "Orpheus (a spook)" : P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
               <input type="search" class="wodx-search vta-menu-find" data-search=".vta-intents" placeholder="Find an action…" aria-label="Find an action" autocomplete="off" spellcheck="false">
+              ${front.length ? `<div class="vta-recent vta-front" role="group" aria-label="Common"><span>Common</span>${front.map(x => btn(x, false)).join("")}</div>` : ""}
               ${pins.length ? `<div class="vta-recent vta-pinned" role="group" aria-label="Pinned"><span><i class="fas fa-thumbtack" aria-hidden="true"></i> Pinned</span>${pins.map(x => btn(x, false)).join("")}</div>` : ""}
               ${rec.length ? `<div class="vta-recent" role="group" aria-label="Used lately"><span>Lately</span>${rec.map(x => btn(x, false)).join("")}</div>` : ""}
+              ${beginner ? `<button type="button" class="vta-all-toggle" aria-expanded="false"><i class="fas fa-list" aria-hidden="true"></i> Every action (${all.length + extras.length})</button>` : ""}
               <div class="vta-intents">
               ${g.bands.map(b => `<fieldset class="vta-grp vta-band vta-band-${b.id}"><legend>${esc(b.label)} <small>${esc(b.hint)}</small></legend><div class="vta-grp-btns">${b.buttons.map(x => btn(x)).join("")}</div></fieldset>`).join("")}
               ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}

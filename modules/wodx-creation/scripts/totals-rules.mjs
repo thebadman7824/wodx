@@ -16,8 +16,10 @@ const LABEL = {physical: "Physical", social: "Social", mental: "Mental", talent:
  * @param {Record<string, number>} have  Dots per group
  * @param {number[]} allot              The book's three numbers, largest first
  */
-export function assign(have, allot) {
-  const keys = Object.keys(have).sort((a, b) => have[b] - have[a]);
+export function assign(have, allot, order = null) {
+  // A player's own order (the wizard's priorities, 0.24.0) wins when it names every group once
+  const valid = Array.isArray(order) && order.length === Object.keys(have).length && Object.keys(have).every(k => order.includes(k));
+  const keys = valid ? [...order] : Object.keys(have).sort((a, b) => have[b] - have[a]);
   const sorted = [...allot].sort((a, b) => b - a);
   return keys.map((k, i) => ({group: k, have: n(have[k]), allowed: sorted[i] ?? 0, over: Math.max(0, n(have[k]) - (sorted[i] ?? 0)), under: Math.max(0, (sorted[i] ?? 0) - n(have[k]))}));
 }
@@ -31,33 +33,38 @@ export function assign(have, allot) {
  * @param {Record<string, number>} [view.powers]   Per power key (discipline, gift, sphere ...): dots, or items for Gifts
  * @param {number|null} [view.virtues]             Dots above the free ones, when the line has Virtues
  * @param {string} lineId
+ * @param {{order?: {attributes?: string[], abilities?: string[]}}} [opts]  Priorities, primary first; without them the cheapest fit
  * @returns {{line: object, rows: object[], freebies: {allowed: number, used: number, flaws: number, left: number}, ok: boolean}}
  */
-export function checkCreation(view, lineId) {
+export function checkCreation(view, lineId, {order = null} = {}) {
   const line = TOTALS[lineId];
   if ( !line ) throw new Error(`No creation totals for ${lineId}`);
   const c = line.costs;
   const rb = line.rebirth ?? null;
   const rows = [];
+  let groupNow = null;
   const add = (step, label, allowed, have, cost, note = "") => {
     const over = Math.max(0, have - allowed);
-    rows.push({step, label, allowed, have, over, under: Math.max(0, allowed - have), cost: over * (cost ?? 0), note});
+    rows.push({step, group: groupNow, label, allowed, have, over, under: Math.max(0, allowed - have), cost: over * (cost ?? 0), note});
   };
 
   // Attributes: the Rebirth's 2 extra dots soak up overage wherever it falls
   let rebirthAttr = rb?.attributes ?? 0;
-  for ( const r of assign(Object.fromEntries(GROUPS.attributes.map(g => [g, n(view.attributes?.[g])])), line.attributes) ) {
+  for ( const r of assign(Object.fromEntries(GROUPS.attributes.map(g => [g, n(view.attributes?.[g])])), line.attributes, order?.attributes) ) {
     const soak = Math.min(rebirthAttr, r.over);
     rebirthAttr -= soak;
+    groupNow = r.group;
     add("attributes", `${LABEL[r.group]} Attributes`, r.allowed + soak, r.have, c.attribute);
   }
   let rebirthAb = rb?.abilities ?? 0;
   const abil = Object.fromEntries(GROUPS.abilities.map(g => [g, view.abilities?.[g] ?? {dots: 0, aboveCap: 0}]));
-  for ( const r of assign(Object.fromEntries(GROUPS.abilities.map(g => [g, n(abil[g].dots)])), line.abilities) ) {
+  for ( const r of assign(Object.fromEntries(GROUPS.abilities.map(g => [g, n(abil[g].dots)])), line.abilities, order?.abilities) ) {
     const soak = Math.min(rebirthAb, r.over);
     rebirthAb -= soak;
+    groupNow = r.group;
     add("abilities", LABEL[r.group], r.allowed + soak, r.have, c.ability);
   }
+  groupNow = null;
   const past = GROUPS.abilities.reduce((s, g) => s + n(abil[g].aboveCap), 0);
   if ( past ) {
     // Dots past the cap are bought with freebies, or (Mummy) with the Rebirth's dots
@@ -68,9 +75,11 @@ export function checkCreation(view, lineId) {
   add("backgrounds", "Backgrounds", line.backgrounds + (rb?.backgrounds ?? 0), n(view.backgrounds), c.background);
   for ( const p of line.powers ?? [] ) {
     const have = view.powers?.[p.key];
-    if ( have === undefined || have === null ) { rows.push({step: "powers", label: p.label, allowed: p.dots, have: null, over: 0, under: 0, cost: 0, note: `Count by hand. ${p.note ?? ""}`.trim()}); continue; }
+    groupNow = p.key;
+    if ( have === undefined || have === null ) { rows.push({step: "powers", group: p.key, label: p.label, allowed: p.dots, have: null, over: 0, under: 0, cost: 0, note: `Count by hand. ${p.note ?? ""}`.trim()}); continue; }
     add("powers", p.label, p.dots, n(have), c[p.key], p.note ?? "");
   }
+  groupNow = null;
   if ( line.virtues !== undefined && view.virtues !== null && view.virtues !== undefined ) add("virtues", "Virtues", line.virtues, n(view.virtues), c.virtue);
 
   const allowed = line.freebies + (rb?.freebies ?? 0);

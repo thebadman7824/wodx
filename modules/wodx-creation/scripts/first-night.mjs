@@ -15,12 +15,9 @@ import {MODULE_ID, esc, generationOf} from "./actor-data.mjs";
 import * as R from "./first-night-rules.mjs";
 import * as LP from "./lifepath-rules.mjs";
 import {lifepathOf, splatText, LifepathApp} from "./lifepath.mjs";
-import {totalsView, CreationCheckApp} from "./totals-check.mjs";
-import {checkCreation} from "./totals-rules.mjs";
-import {defaultLine} from "../data/creation-totals.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
-import {BuildApp} from "./first-night-build.mjs";
+import {WizardApp, ledgerFor} from "./wizard.mjs";
 import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";
 import {underWay} from "./first-night-prelude-rules.mjs";
 
@@ -124,13 +121,10 @@ function features(actor) {
 }
 
 function buildState(actor) {
+  // The wizard's ledger (0.24.0): the player's priorities, Merits at cost, Flaws to the cap, the prelude's gains paid
   try {
-    let eraId = "";
-    try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { /* none */ }
-    const lineId = defaultLine(actor.type, {variant: actor.system?.settings?.variant ?? "", eraId});
-    if ( !lineId ) return null;
-    const res = checkCreation(totalsView(actor, lineId), lineId);
-    return {ok: !!res.ok, left: res.freebies?.left ?? 0, line: lineId};
+    const L = ledgerFor(actor);
+    return L ? {ok: !!L.ok, left: L.left, line: L.line, unspent: L.unspent.length} : null;
   } catch (e) { return null; }
 }
 
@@ -144,9 +138,10 @@ export function sheetView(actor) {
   const feats = features(actor);
   const flaws = feats.filter(f => f.kind === "flaw");
   const rec = recordOf(actor);
+  const build = buildState(actor);
   return {concept: s.concept, nature: s.nature, demeanor: s.demeanor, lifepath: !!lifepathOf(actor)?.path,
-    build: buildState(actor), flawPoints: R.flawPoints(flaws), flawsApproved: !!rec.steps.meritsFlaws?.done || (!flaws.length && !!buildState(actor)?.ok),
-    sessionZero: sessionZeroOpened()};
+    build, flawPoints: R.flawPoints(flaws), flawsApproved: !!rec.steps.meritsFlaws?.done || (!flaws.length && !!build?.ok),
+    sessionZero: sessionZeroOpened(), recheck: rec.steps.prelude?.done ? {ok: !!build?.ok} : null};
 }
 
 function lineKey(actor) {
@@ -330,7 +325,8 @@ export class FirstNightApp extends ApplicationV2 {
     const tables = (await import("../../wodx-chronicle/scripts/trait-rules.mjs").catch(() => ({})));
     const flaws = features(a).filter(f => f.kind === "flaw");
     const extra = {
-      build: view.build ? (view.build.ok ? "Matches the book's totals." : `${view.build.left} freebies left, or totals not met yet.`) : "",
+      build: view.build ? (!view.build.ok ? `${-view.build.left} freebie points too many.` : view.build.unspent ? `Points still to spend in ${view.build.unspent} ${view.build.unspent === 1 ? "step" : "steps"}; ${view.build.left} freebie points left.` : `Matches the book's totals; ${view.build.left} freebie points left.`) : "",
+      recheck: view.recheck ? (view.recheck.ok ? "Still matches the book after the prelude." : "The prelude left the build over the book's totals. Take a dot back in the wizard.") : "After the prelude is done.",
       meritsFlaws: `${view.flawPoints} of ${R.FLAW_CAP} flaw points.${view.flawPoints > R.FLAW_CAP ? " Over the cap." : ""}${flaws.length ? `<ul class="wodx-fn-costs">${flaws.map(f => {
         const m = chron()?.traits?.of?.(a)?.matched?.find(x => x.id === f.id);
         const cost = m ? R.costLine(m.key, tables) : "";
@@ -349,15 +345,20 @@ export class FirstNightApp extends ApplicationV2 {
         gm && ticked ? `<button type="button" data-action="undo" data-step="${s.key}">Undo</button>` : ""
       ].join("");
       const state = s.state === "done" ? `<i class="fa-solid fa-check"></i> Done${s.byAuto ? " (the sheet shows it)" : ""}` : s.state === "waiting" ? "Waiting for the Storyteller" : s.optional ? "Optional" : "Open";
-      return `<li class="wodx-fn-step wodx-fn-${s.state}"><div><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span></div>
-        <div class="wodx-quiet">${esc(s.hint)}</div>${extra[s.key] ? `<div>${extra[s.key]}</div>` : ""}<div class="wodx-buttons">${btns}</div></li>`;
+      const isNext = s.key === list.next;
+      const inner = `<div class="wodx-quiet">${esc(s.hint)}</div>${extra[s.key] ? `<div>${extra[s.key]}</div>` : ""}<div class="wodx-buttons">${btns}</div>`;
+      // Done steps fold to one line; the next step is marked (B2829)
+      if ( s.state === "done" ) return `<li class="wodx-fn-step wodx-fn-done"><details><summary><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span></summary>${inner}</details></li>`;
+      return `<li class="wodx-fn-step wodx-fn-${s.state}${isNext ? " wodx-fn-next" : ""}"${isNext ? ' aria-current="step"' : ""}><div><b>${esc(s.label)}</b> <span class="wodx-quiet">${state}</span>${isNext ? ' <span class="wodx-tag">Next</span>' : ""}</div>
+        ${inner}</li>`;
     };
+    const list = R.checklist(states, {gm});
     const dial = Object.entries(R.DIAL).map(([k, v]) => `<option value="${k}" ${k === rec.dial ? "selected" : ""}>${esc(v.label)}</option>`).join("");
     const hook = rec.hook ? `<p><b>Story hook:</b> ${esc(rec.hook.text)} <span class="wodx-quiet">${rec.hook.used ? "brought in" : rec.hook.agreed ? `agreed, ${rec.hook.sessions} session${rec.hook.sessions === 1 ? "" : "s"} so far` : "waiting for the Storyteller"}</span>
       ${gm && rec.hook.agreed && !rec.hook.used ? `<button type="button" data-action="hookUsed">It came into play</button>` : ""}</p>` : "";
     const shown = gm ? this.forecast : R.playerView(this.forecast);
     const late = !rec.signed && underWay(pcs().filter(x => x.id !== a.id).map(x => x.flags?.[MODULE_ID]?.[FLAG]));
-    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last.${late ? " The chronicle is already under way: the forecast reads the current year, and the prelude can be short." : ""}</p>
+    return `<div class="wodx-top"><p class="wodx-prompt">The steps before ${esc(a.name)}'s first night, in any order. Sign-off comes last. <b>${list.left ? `${list.left} of ${list.total} left.` : "Every step is done."}</b>${list.next ? ` Next: ${esc(R.stepByKey(list.next)?.label ?? "")}.` : ""}${late ? " The chronicle is already under way: the forecast reads the current year, and the prelude can be short." : ""}</p>
         ${gm ? `<button type="button" data-action="troupe"><i class="fa-solid fa-users"></i> The whole troupe</button>` : ""}</div>
       <div class="wodx-scroll">
         <ol class="wodx-fn-steps">${states.map(card).join("")}</ol>
@@ -429,8 +430,9 @@ const OPENS = {
   sessionZero: {label: "Session Zero", run: () => chron()?.safety?.openSessionZero?.()},
   concept: {label: "The sheet", run: a => a.sheet?.render(true)},
   lifepath: {label: "Lifepath", run: a => LifepathApp.openFor(a)},
-  build: {label: "Build", run: a => BuildApp.openFor(a)},
-  meritsFlaws: {label: "The sheet", run: a => a.sheet?.render(true)},
+  build: {label: "Wizard", run: a => WizardApp.openFor(a)},
+  meritsFlaws: {label: "Merits and Flaws", run: a => WizardApp.openFor(a, "meritsFlaws")},
+  recheck: {label: "Last look", run: a => WizardApp.openFor(a, "review")},
   prelude: {label: () => (game.user.isGM ? "Run the prelude" : "Write my prelude"), run: a => (game.user.isGM ? PreludeRunApp.openFor(a) : writtenPrelude(a))},
   ties: {label: () => (game.user.isGM ? "Send the tie questions" : "The group"), run: () => (game.user.isGM ? sendTies() : game.actors.find(x => /group/i.test(String(x.type)))?.sheet?.render(true))}
 };

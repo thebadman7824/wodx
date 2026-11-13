@@ -29,6 +29,7 @@ LIGHT_RANGE = {"rushlight": 2, "candle": 3, "oil": 4, "gas": 5, "electric": 6}
 FULL = {"store": .8, "outdoor": .15}           # share of a room's floor that pieces may cover; the rest .55
 FULL_DEFAULT = .55
 NO_FILL = {"passage"}
+DENSE, COVER = 1.6, .25      # lived in: a piece or a thing on it for every 1.6 squares of floor, furniture on a quarter of it
 
 
 def thresholds(kind, band):
@@ -101,7 +102,8 @@ def _drawn(entry, rect, piece, layer=100):
     aw, ah = entry["cells"]
     rot = 1 if aw != ah and (w > h) != (aw > ah) else 0
     ew, eh = (ah, aw) if rot else (aw, ah)
-    sc = max(.4, min(1.6, min(w / ew, h / eh)))
+    sc = min(1.0, min(w / ew, h / eh))                    # never drawn past its own size, nor past its spot
+    if sc < .5: return None                                 # a three-square bench squeezed into one square: not this one
     return {"asset": entry["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc, 3), "layer": layer, "piece": piece}
 
 
@@ -146,6 +148,9 @@ def _place(room, sp, pal, R):
             if prule == "base": return []
             continue
         it = _drawn(e, rect, piece, layer)
+        if it is None:
+            if prule == "base": return []
+            continue
         placed.append(it)
         if layer == 100: room.items.append(it)                 # so later parts and pieces keep clear of it
         if prule == "base": base_item = it
@@ -153,32 +158,133 @@ def _place(room, sp, pal, R):
 
 
 def _reskin(room, pal, R):
-    """Draw the type's own furniture with the palette's assets of the same piece (the WoDX file keeps the name)."""
+    """Draw the type's own furniture with the palette's assets of the same piece (the WoDX file keeps the name).
+    A picture is drawn at most at its own size (never blown up past it, so never across a wall) and at least at
+    half of it; the palette's piece nearest the square's size wins."""
     for it in room.items:
         piece = K.piece_of(it["asset"])
         if not piece: continue
         r, w, h = it.get("rot", 0), it["w"], it["h"]
-        for _try in range(6):                                  # a picture that fits the square under the item's own turn
-            e = pal.pick(piece, R)
-            if not e: break
+        opts = list(pal.sets.get(piece) or [])
+        R.shuffle(opts)
+        best = None
+        for e in opts:
             aw, ah = e["cells"]
             fw, fh = (ah, aw) if r else (aw, ah)
             if aw != ah and abs(w - h) > 1e-6 and (fw > fh) != (w > h): continue
             fit = min(w / fw, h / fh)
-            if fit < .4: continue
-            it["draw"], it["draw_scale"], it["draw_rot"] = e["path"], round(min(1.6, fit), 3), r
-            break
+            if fit >= .5 and (best is None or abs(1 - min(fit, 2)) < abs(1 - min(best[1], 2)) - .2): best = (e, fit)
+        if best:
+            e, fit = best
+            it["draw"], it["draw_scale"], it["draw_rot"] = e["path"], round(min(1.0, fit), 3), r
+
+
+SURFACE = {"table", "desk", "counter", "chest", "shelf", "cupboard", "bed"}     # never a barrel on a barrel
+ON_IT = {"table": "tableware", "desk": "clutter", "counter": "tableware", "shelf": "tableware", "cupboard": "tableware",
+         "chest": "clutter", "store": "store", "seat": "clutter", "bed": "rug"}
+
+
+def _things_on(room, pal, R, added):
+    """Small things on the room's furniture until it looks lived in: crockery and food on tables and shelves, a
+    blanket on a bed, a sack by a barrel. They stand on their piece (layer 300), so they never touch a wall."""
+    out = []
+    need = max(2, int(room.iw * room.ih / DENSE)) - len(room.items) - sum(1 for x in added if x["layer"] != 400)
+    hosts = [] if ANIMALS.search(room.name) else [it for it in room.items if (it.get("piece") or K.piece_of(it["asset"])) in SURFACE]
+    R.shuffle(hosts)
+    k = 0
+    while need > 0 and hosts and k < 4 * len(hosts):
+        b = hosts[k % len(hosts)]; k += 1
+        piece = ON_IT[b.get("piece") or K.piece_of(b["asset"])]
+        if piece == "rug" and any(o.get("host") is b for o in out): continue
+        e = None
+        for _try in range(10):                                 # crockery and food on a table, cloth on a bed
+            e = pal.pick(piece if piece != "rug" else "clutter", R) or pal.pick("clutter", R)
+            if e and FITS_ON.get(piece_b := (b.get("piece") or K.piece_of(b["asset"])), re.compile("")).search(e["name"]): break
+            e = None
+        if not e or (room.ctx["wealth"] == "poor" or room.ctx["band"] == "medieval") and LETTERED.search(e["name"]) and room.ctx["wealth"] != "noble": continue
+        sz = min(.45, b["w"] * .45, b["h"] * .45)
+        out.append({"asset": e["path"], "x": b["x"] + R.uniform(.08, max(.08, b["w"] - sz - .08)),
+                    "y": b["y"] + R.uniform(.08, max(.08, b["h"] - sz - .08)), "w": sz, "h": sz, "rot": 0,
+                    "scale": round(sz / max(e["cells"]), 3), "layer": 150, "spin": R.uniform(0, 6.28), "piece": piece, "host": b})
+        need -= 1
+    for o in out: o.pop("host", None)
+    return out
+
+
+TABLEWARE = PAL.TABLEWARE
+FITS_ON = {"table": TABLEWARE, "counter": TABLEWARE, "desk": re.compile(r"Book|Paper|Quill|Ink|Pen|Candle|Scroll|Letter|Map", re.I),
+           "bed": re.compile(r"Blanket|Cloth|Pillow|Fur|Pelt", re.I), "shelf": TABLEWARE, "cupboard": TABLEWARE,
+           "chest": re.compile(r"Cloth|Blanket|Basket|Candle|Fur|Pelt|Bowl|Jug", re.I)}
+LETTERED = re.compile(r"Book|Scroll|Quill|Ink|Pen_|Paper|Letter|Ledger|Map|Coin|Glass|Bottle|Goblet|Silver|Gold|Potion", re.I)   # not in a peasant's house
+WALL_PIECES = {"store": ("store", "store", "chest", "shelf"), "ward": ("chest", "store", "seat", "shelf"),
+               "sleep": ("chest", "seat", "cupboard", "store"), "kitchen": ("store", "shelf", "store", "seat"),
+               "work": ("store", "shelf", "chest", "store"), "outdoor": ("store", "seat", "store", "store")}
+
+
+def _beside_any(room, r, e=.05):
+    """True when a spot touches one of the room's pieces (a sack by the oven, a basket by a chest)."""
+    x, y, w, h = r
+    return any(x <= i["x"] + i["w"] + e and i["x"] <= x + w + e and y <= i["y"] + i["h"] + e and i["y"] <= y + h + e for i in room.items)
+
+
+def _along_walls(room, pal, R, dense):
+    """Small pieces against the walls (a chest, a barrel, a stool, a shelf) until the room looks lived in; each one
+    keeps clear of doors, walkways and other pieces like any furniture (room.fits)."""
+    order = WALL_PIECES.get(room.kind, ("chest", "store", "seat", "shelf"))
+    for k in range(max(12, int(room.iw * room.ih / 3))):          # a big shed takes more tries
+        if dense(): return
+        e = pal.pick(order[k % len(order)], R)
+        if not e: continue
+        aw, ah = e["cells"]
+        if max(aw, ah) > (3 if room.iw * room.ih >= 40 else 2): continue      # a big hall or shed takes bigger pieces
+        sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
+        fw, fh = aw * sc, ah * sc
+        spots = room.candidates(fw, fh, "wall")
+        if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
+            spots = [c for c in room.candidates(fw, fh, "free") if _beside_any(room, c[1:5])]
+        if not spots: continue
+        _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
+        room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc, "layer": 100,
+                           "piece": order[k % len(order)]})
+    for k in range(10):                                        # a small room with no wall left: half-square things (a sack, a
+        if dense() or len(room.items) >= max(2, int(room.iw * room.ih / DENSE)): break   # bucket, a basket) by the walls
+        e = pal.pick(("store", "clutter")[k % 2], R)
+        if not e or max(e["cells"]) > 1: continue
+        spots = room.candidates(.5, .5, "wall") or [c for c in room.candidates(.5, .5, "free") if _beside_any(room, c[1:5])]
+        if not spots: break
+        _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
+        room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(.5 / max(e["cells"]), 3),
+                           "layer": 100, "piece": ("store", "clutter")[k % 2]})
+    C.orient(room)
+
+
+ANIMALS = re.compile(r"Byre|Barn|Stable|Coop|Sty|Hay|Loft|Granary|Kennel|Mews", re.I)
+GRAND_LIGHT = re.compile(r"Chandelier|Candelabra", re.I)
+STACKED = re.compile(r"Shed|Warehouse|Store", re.I)
+STREET_LIGHT = re.compile(r"street|traffic|road|lamp_?post|pole|signal", re.I)        # out of doors, never on a room's wall
+ODD_FLAME = re.compile(r"Blue|Purple|Green|Pink|Gem|Teal|Cyan|Skull", re.I)          # coloured or uncanny flames
 
 
 def _wall_lights(room, pal, tier, R):
-    e = pal.pick("light", R)
+    if ANIMALS.search(room.name): return                       # no open flame among hay and beasts
+    fine = TIERS.index(tier) >= TIERS.index("fine")
+    e = None
+    for _try in range(6):
+        e = pal.pick("light", R)
+        if not e or (fine or not GRAND_LIGHT.search(e["name"])) and not ODD_FLAME.search(e["name"]) and not STREET_LIGHT.search(e["name"]): break
+        e = None
     n = 1 + TIERS.index(tier) // 2
     rng = LIGHT_RANGE.get(pal.lights, 3)
     for k in range(n):
-        side = R.choice("NSEW")
-        cx = room.ix + room.iw * R.uniform(.25, .75) if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
-        cy = room.iy + room.ih * R.uniform(.25, .75) if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
-        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6, "layer": 400, "piece": "light"})
+        for _try in range(8):                                  # spread out: no two lights within two squares
+            side = R.choice("NSEW")
+            cx = room.ix + room.iw * R.uniform(.25, .75) if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
+            cy = room.iy + room.ih * R.uniform(.25, .75) if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
+            if all(math.hypot(cx - x, cy - y) >= 2 for x, y, _ in room.lights): break
+        else:
+            continue
+        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0,
+                                    "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})   # drawn .6 across
         room.lights.append((cx, cy, rng))
 
 
@@ -200,13 +306,21 @@ def fill_room(room):
             room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
             if kind not in ("outdoor",) and room.iw * room.ih >= 4: _wall_lights(room, pal, "meagre", R)
             return
-        if not ctx["open_floor"]: room.blocked = [b for b in room.blocked if b[4] != "open floor"]
+        if not ctx["open_floor"] or STACKED.search(room.name):  # a shed or warehouse is stacked across its floor, along its
+                                                               # walkways (a barn keeps its threshing floor open)
+            room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
         options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])
         used, added = {}, []
+        def dense():                                           # lived in, however poor: enough pieces for the floor
+            if kind == "passage": return True                  # a gateway or stair hall stays open
+            if kind == "outdoor":                              # a court stays mostly open: a barrel, a bench, a cart's load
+                return len(room.items) + sum(1 for x in added if x["layer"] != 400) >= max(2, int(room.iw * room.ih / 8))
+            n = len(room.items) + sum(1 for x in added if x["layer"] != 400)
+            return n >= max(2, int(room.iw * room.ih / DENSE)) and sum(i["w"] * i["h"] for i in room.items) >= COVER * room.iw * room.ih
         def reached():
             v = room_value(room, pal) + sum(pal.worth(x["asset"]) for x in added)
-            return TIERS.index(tier_of(v, kind, ctx["band"])) >= TIERS.index(target)
+            return TIERS.index(tier_of(v, kind, ctx["band"])) >= TIERS.index(target) and dense()
         done = False
         for _round in range(3):                                # each round tries every fitting set piece once
             placed_any = False
@@ -221,11 +335,13 @@ def fill_room(room):
                     placed_any = True
             if done: break
             if not placed_any: room.full = True; break
+        if not dense(): added += _things_on(room, pal, R, added)
+        if not dense(): _along_walls(room, pal, R, dense)
         mine = room.items[n0:]
         del room.items[n0:]
         room.dressing += mine + added
         room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
-        _wall_lights(room, pal, room.tier, R)
+        if kind != "outdoor": _wall_lights(room, pal, room.tier, R)    # no chandelier hung in a court
     finally:
         room.blocked = saved
         C.R = keep_R

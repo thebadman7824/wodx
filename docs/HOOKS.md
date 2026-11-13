@@ -7,12 +7,14 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
-| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court) |
+| wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
-| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says) |
+| wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
+| wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
 | wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
 | wodxEndScene | chronicle | actions, storyteller |
@@ -26,7 +28,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxInteractableWorked | interactables | paperdoll (a sprite token stoops to the lock, strikes the door or looks about) |
 | wodxFormChanged | actions | actions, paperdoll (a sprite token blurs as it changes) |
 | wodxHunted | actions | storyteller |
-| wodxInteractablesNoise | interactables | senses |
+| wodxInteractablesNoise | interactables | senses (who heard it; a loud noise heard by a character with Heightened Senses in use asks for Willpower) |
 | wodxItemsTaken | interactables | chronicle (feeds a Ravnos vice of theft), storyteller (marks things taken from someone else's container as stolen) |
 | wodxMapEvent | chronicle, interactables, npc | npc, otherworlds, storyteller |
 | wodxNpcTurnDone | combat, npc | combat |
@@ -46,6 +48,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
+| wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
+| wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
+| wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
 
 ## Extension points (sent, nobody listens yet)
 
@@ -53,9 +58,14 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
-| wodxCaravan | storyteller | a caravan between linked markets: {phase (left, arrived or lost), caravan, changes} |
-| wodxMarketMove | storyteller | a faction's move on a market was carried out: {move (type tax, monopoly, smuggle or raid; faction; goods; rate), market} |
-| wodxTraderBroke | storyteller | a trader's shop shut: {market, actor} |
+| wodxTown | storyteller | something happened to a town (a fire, flood, storm, earthquake, famine, plague, riot, rising or sack): {town (market id), kind, text, big} |
+| wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
+| wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |
+| wodxAdopted | npc | an adoption made: {parent, child, record} (the record has the kind, rite, register and whether the adopted one inherits) |
+| wodxExpecting | npc | a pregnancy begun: {mother, other, record} (the record has the due time, season and year) |
+| wodxBirth | npc | a birth or a loss: {mother, other, record, outcome, child} (outcome is well, hard or loss) |
+| wodxGrownUp | npc | a child sheet grown by an approved card: {actor, plan} (plan.grown when they reach 18) |
+| wodxProposal | npc | a proposal of marriage answered: {a, b, record, answer} (answer is yes, no or blocked by a feud) |
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |

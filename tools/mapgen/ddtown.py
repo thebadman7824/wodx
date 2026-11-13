@@ -94,6 +94,12 @@ def clip(rect, win):
 
 def inside(x, y, win, pad=0): return win[0] - pad <= x < win[0] + win[2] + pad and win[1] - pad <= y < win[1] + win[3] + pad
 
+def on_map(o, win):
+    """True when an object's middle lies on the part's map (its position is already relative to the part)."""
+    x, y = (float(v) / C.CELL for v in re.findall(r"-?[\d.]+", o["position"].split("(", 1)[1])[:2])
+    return 0 <= x <= win[2] and 0 <= y <= win[3]
+
+
 class Town:
     def __init__(self, seed, size, name=None, night=True):
         self.R = C.R
@@ -418,11 +424,14 @@ class Town:
             for r in b.rooms:
                 if B.floor_tex(r.floor):
                     patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))
+                n0 = len(objects)
                 objects.extend(C.dressing_objects(r, True))
                 for it in r.items:
                     rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
                     objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
                 objects.extend(C.dressing_objects(r, False))
+                if not self.mine(b, pt):                       # a neighbour's house at the edge: only what is on this map
+                    objects[n0:] = [o for o in objects[n0:] if on_map(o, win)]
         for g in self.gardens:
             x, y, w, h = g["rect"]
             if not inside(x + w / 2, y + h / 2, win, 2): continue
@@ -601,9 +610,16 @@ def main():
     ap.add_argument("--at", help="organic layout only: where the town stands on the country map, as town, or town:km:DIR (brno:12:NE). The landform and the river then come from the country there, unless --land or --river says otherwise")
     ap.add_argument("--plan", action="store_true", help="organic layout only: add the street plan (centre lines of the ways, the river and the brooks) to each sidecar, for ddwarren.py to lay sewers and culverts under")
     ap.add_argument("--settle", action="store_true", help="organic layout only: also write <name>.settlement.json, the record of the whole place (households, trades, ties) that WoDX NPC's Settlements window reviews; household ids then carry the settlement's id")
+    ap.add_argument("--faith", choices=("western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"),
+                    help="the faith the town's house of worship keeps (B3200); WoDX Interactables adopts the chapel as a church, mosque, synagogue or temple. Left out, the faith of the scene's region decides on adoption")
+    ap.add_argument("--region", default="moravia", help="organic layout only: the WoDX Chronicle region the town stands in; from 1781 the households take its trades (settle.py, B3290). --at needs moravia")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
+    import settle
+    if a.region not in settle.REGIONS: raise SystemExit(f"--region must be one of: {', '.join(settle.REGIONS)}")
+    if a.at and a.region != "moravia": raise SystemExit("--at reads the Moravian country map; leave out --region or use moravia")
+    settle.REGION = a.region
     where = None
     if a.at:
         import country
@@ -618,6 +634,8 @@ def main():
         import organic
         t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls], {"random": None, "yes": True, "no": False}[a.river], a.year, a.part, None if a.land == "random" else a.land).make()
     else:
+        import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
+        if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
         t = Town(a.seed, a.size, a.name, not a.day).make()
     base = slug(t.name)
     settled = None
@@ -648,6 +666,9 @@ def main():
                 if r.get("label") == "Pod station" and not any(x["mode"] == "hire:pod" for x in stops): stops.append({"mode": "hire:pod", "region": r["id"], "label": "Pod station"})
             sc["transit"] = stops
         if a.plan and a.layout == "organic": sc["plan"] = street_plan(t, pt)
+        if a.faith:
+            for r in sc.get("regions", []):
+                if r.get("place", {}).get("kind") == "church": r["place"]["faith"] = a.faith
         if settled:
             sc["settlement"] = {"id": settled["id"], "name": t.name, "year": t.year or 1197}
             settled["parts"].append({"id": pt["id"], "name": sc["name"], "map": mapname, "sidecar": f"{stem}.wodx.json", "household_ids": [h["id"] for h in sc["households"]]})

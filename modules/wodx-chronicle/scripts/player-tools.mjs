@@ -7,6 +7,7 @@
  */
 import {MODULE_ID, esc, emit, isActiveGM} from "./util.mjs";
 import {searchBox} from "./search.mjs";
+import {VIEWS} from "./player-view-rules.mjs";
 
 /** The WoDX buttons a player sees by default, in toolbar order. */
 export const PLAYER_TOOLS = [
@@ -27,7 +28,23 @@ export const PLAYER_TOOLS = [
   {name: "wodxDowntime", label: "Downtime request", module: "WoDX Storyteller"},
   {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"},
   {name: "wodxClocks", label: "Progress clocks", module: "WoDX Storyteller"},
-  {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"}
+  {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"},
+  // 0.52.0 (B2815): the player buttons this window did not list before
+  {name: "wodxFind", label: "Find anything", module: "WoDX Chronicle", locked: true},
+  {name: "wodxNow", label: "What can I do now?", module: "WoDX Chronicle", locked: true},
+  {name: "wodxPrefs", label: "My WoDX preferences", module: "WoDX Chronicle"},
+  {name: "wodxGlossary", label: "Glossary", module: "WoDX Chronicle"},
+  {name: "wodxLibrary", label: "The Library", module: "WoDX Library"},
+  {name: "wodxGear", label: "Gear by era", module: "WoDX Library"},
+  {name: "wodxSenses", label: "What do I notice?", module: "WoDX Senses"},
+  {name: "wodxSight", label: "My sight", module: "WoDX Senses"},
+  {name: "wodxTalk", label: "Talk to someone", module: "WoDX NPC"},
+  {name: "wodxOrders", label: "Give an order", module: "WoDX NPC"},
+  {name: "wodxFollowers", label: "Followers", module: "WoDX NPC"},
+  {name: "wodxFactions", label: "Factions", module: "WoDX NPC"},
+  {name: "wodxDress", label: "Dress for a part of the world", module: "WoDX NPC"},
+  {name: "wodxCaseBoard", label: "Case board", module: "WoDX Interactables"},
+  {name: "wodxSolo", label: "Solo panel", module: "WoDX Solo"}
 ];
 
 /** Does this player see this button? Pure. map: the playerTools setting. */
@@ -82,13 +99,17 @@ export async function openPlayerTools() {
   const players = game.users.filter(u => !u.isGM);
   if ( !players.length ) return ui.notifications.info("There are no players in this world yet.");
   const m = map();
+  const views = (() => { try { return game.settings.get(MODULE_ID, "playerViews") ?? {}; } catch { return {}; } })();
+  const viewRow = `<tr class="wodx-view-row"><td><b>View</b><br><span class="wodx-quiet">Beginner puts the buttons in drawers; Full shows them all. The player can change it.</span></td>${
+    players.map(u => `<td style="text-align:center"><select name="v.${u.id}" aria-label="${esc(`View for ${u.name}`)}"><option value="">World default</option>${
+      Object.entries(VIEWS).map(([k, l]) => `<option value="${k}" ${views[u.id] === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></td>`).join("")}</tr>`;
   const head = `<tr><th>Button</th>${players.map(u => `<th title="${esc(u.name)}">${esc(u.name)}</th>`).join("")}</tr>`;
   const rows = PLAYER_TOOLS.map(t => `<tr data-search-text="${esc(`${t.label} ${t.module}`)}"><td><b>${esc(t.label)}</b><br><span class="wodx-quiet">${esc(t.module)}${t.locked ? " · always shown (safety)" : ""}</span></td>${
     players.map(u => `<td style="text-align:center"><input type="checkbox" name="t.${u.id}.${t.name}" ${toolShown(m, u.id, t.name) ? "checked" : ""} ${t.locked ? "disabled" : ""}
       aria-label="${esc(`${t.label} for ${u.name}`)}"></td>`).join("")}</tr>`).join("");
   const content = `<p class="wodx-prompt">Tick the WoDX buttons each player sees in the Token controls. Storyteller-only buttons stay yours; Foundry's own buttons are not changed.</p>
     ${searchBox("table.wodx-player-tools", "Search buttons…", "Search buttons")}
-    <div class="wodx-scroll" style="overflow:auto"><table class="wodx-player-tools" style="width:100%"><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
+    <div class="wodx-scroll" style="overflow:auto"><table class="wodx-player-tools" style="width:100%"><thead>${head}</thead><tbody>${viewRow}${rows}</tbody></table></div>`;
   const {DialogV2} = foundry.applications.api;
   const ticks = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],
@@ -98,8 +119,10 @@ export async function openPlayerTools() {
     ok: {
       label: "Save", icon: "fa-solid fa-floppy-disk",
       callback: (event, button) => {
-        const out = {};
+        const out = {__views: {}};
         for ( const u of players ) {
+          const v = button.form.querySelector(`[name="v.${u.id}"]`)?.value ?? "";
+          if ( v ) out.__views[u.id] = v;
           out[u.id] = {};
           for ( const t of PLAYER_TOOLS ) out[u.id][t.name] = !!button.form.querySelector(`[name="t.${u.id}.${t.name}"]`)?.checked;
         }
@@ -109,7 +132,9 @@ export async function openPlayerTools() {
     rejectClose: false
   });
   if ( !ticks ) return;
-  await game.settings.set(MODULE_ID, "playerTools", fromTicks(ticks));
+  const {__views: chosen = {}, ...rest} = ticks;
+  await game.settings.set(MODULE_ID, "playerViews", chosen);
+  await game.settings.set(MODULE_ID, "playerTools", fromTicks(rest));
   ui.notifications.info("Player toolbar buttons saved; each player's toolbar changes now.");
 }
 

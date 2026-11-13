@@ -898,7 +898,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
     // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
     Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
-        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, defense: target ? (fd.defense ?? "none") : "none", messageId: msg?.id ?? null });
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
 
     // ---- Apply
     if (setting("autoApply")) {
@@ -927,6 +927,9 @@ function attackBasics(attacker, w) {
     return { attrKey, ab, minStrDiff };
 }
 
+/** Combat 3.25.0 (B2902): the parts the attacker has marked Crippled. */
+const crippledParts = a => (a?.effects?.contents ?? [...(a?.effects ?? [])]).map(e => e?.flags?.[MOD]?.crippled).filter(Boolean);
+
 function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
     const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
     const cel = discipline(attacker, "Celerity");
@@ -942,6 +945,9 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
         multiIndex: num(fd.multi), celerityIgnoresMulti: !!fd.celMulti,
         baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
         rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
+        crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
+        // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
+        nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
         bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff
     });
 }
@@ -1504,7 +1510,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.24.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.27.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1868,7 +1874,7 @@ function powderNotes(attacker, weapons) {
     const guns = weapons.map(w => ({ w, g: PW.gunLock(w, year) })).filter(x => x.g?.black);
     if (!guns.length) return { html: "" };
     const wet = powderWet(attacker);
-    const lines = guns.map(({ w, g }) => `<li>${esc(w.name)} (${esc(g.label)}${g.named ? "" : ", the year's lock"}): ${esc(PW.powderNote(g, wet, powderState(attacker, w)))}</li>`);
+    const lines = guns.map(({ w, g }) => `<li>${esc(w.name)} (${esc(g.label)}${g.named ? "" : ", the year's lock"}): ${esc(PW.powderNote(g, wet, powderState(attacker, w)).replace(/^Black powder: /, ""))}</li>`);
     return { html: `<div class="vtc-note wodx-powder"><b>Black powder:</b><ul>${lines.join("")}</ul>
       ${wet.wet ? `<label><input type="checkbox" name="powderCovered"/> Powder and match kept covered (an oilcloth, a cap over the lock, a roof)</label>` : ""}</div>` };
 }

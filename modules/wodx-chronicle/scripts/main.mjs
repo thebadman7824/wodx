@@ -16,6 +16,10 @@ import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
+import * as playerView from "./player-view.mjs";
+import * as playerViewRules from "./player-view-rules.mjs";
+import * as playerHelp from "./player-help.mjs";
+import * as playerGuide from "./player-guide.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
@@ -38,6 +42,7 @@ import * as legends from "./legends.mjs";
 import * as automation from "./automation.mjs";
 import * as automationRules from "./automation-rules.mjs";
 import * as waiting from "./waiting.mjs";
+import * as age from "./age.mjs";
 import * as waitingRules from "./waiting-rules.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
@@ -81,6 +86,10 @@ Hooks.once("init", () => {
   effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
+  // B2810: Beginner and Full views, Find anything
+  playerView.registerPlayerViewSettings();
+  playerHelp.registerPlayerHelpSettings();
+  playerGuide.registerGuideSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();
   // Phase 7a: the generator core
@@ -154,6 +163,11 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  playerView.installViewFilter();
+  playerView.installHudGroups();
+  playerView.installQuietChat();
+  playerHelp.installPlayerHelp();
+  playerGuide.installGuide();
   automation.initAutomation();
   waiting.initWaiting();
   await gen.ensureSeed();
@@ -163,7 +177,10 @@ Hooks.once("ready", async () => {
   Hooks.on("updateScene", (sc, ch) => { if ( ch?.flags?.[MODULE_ID] ) ClockApp.refresh(); });
   Hooks.on("canvasReady", () => ClockApp.refresh());
 
+  age.listen();
   const api = {
+    // B3210: the age floor of 18 for anything romantic or sexual
+    age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
     world: {regions: worldRules.WORLD_REGIONS, regionOf: worldRules.regionOf, homeland: place.homeland, setHomeland, here: place.regionHere, isAbroad: place.isAbroad, rules: worldRules},
@@ -196,11 +213,12 @@ Hooks.once("ready", async () => {
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, tour: (o = {}) => playerGuide.GuideApp.open(o), openDrawer: playerView.openDrawer, drawers: playerView.drawerTools, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
-    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather},
+    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,

@@ -13,6 +13,7 @@
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {LOCAL_EVENTS} from "../data/lifepath-local-events.mjs";
+import {SINCE_LINES} from "../data/lifepath-since-lines.mjs";
 import {OFFWORLD, OFFWORLD_AGE, OFFWORLD_NOT, SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
   PEOPLE_LABELS} from "../data/lifepath-drill.mjs";
 
@@ -442,7 +443,8 @@ export function sheetPlan(view = {}, kept = [], book = {}) {
 /** Problems in the lists (the harness runs this). table: the Merits and Flaws the books give, to check the names. */
 /* ---- The years after the change (0.20.0) ---- */
 
-const GROUP_YEARS = [["M", -Infinity, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 2022], ["F", 2023, Infinity]];
+// B3180: elders turned before 1197 get the prologue ages too, so a long unlife is not one step
+const GROUP_YEARS = [["A", -Infinity, -801], ["B", -800, 476], ["C", 477, 1196], ["M", 1197, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 2022], ["F", 2023, Infinity]];
 /** The ages a character lived at least SINCE_MIN years of after the turn: [{id, group, from, to}]. */
 export function sinceSpans(turnYear, nowYear) {
   const t = num(turnYear), n = num(nowYear), out = [];
@@ -453,17 +455,25 @@ export function sinceSpans(turnYear, nowYear) {
   }
   return out;
 }
-export function newSince({turnYear, nowYear, line = "vampire", seed = "wodx"} = {}) {
-  return {v: VERSION, turnYear: num(turnYear), nowYear: num(nowYear), line: String(line), seed: String(seed), picks: {}, skipped: [], rerolls: {}};
+export function newSince({turnYear, nowYear, line = "vampire", seed = "wodx", region = null} = {}) {
+  return {v: VERSION, turnYear: num(turnYear), nowYear: num(nowYear), line: String(line), seed: String(seed), region: regionOf(region) ? region : null, picks: {}, skipped: [], rerolls: {}};
 }
 /** The steps of the years after the change, each with five options. */
 export function sinceSteps(since) {
   if ( !since ) return [];
   const list = SINCE.filter(o => !o[2]?.lines || o[2].lines.includes(since.line));
-  return sinceSpans(since.turnYear, since.nowYear).map(sp => ({id: sp.id, kind: "since", five: true, year: sp.from, from: sp.from, to: sp.to,
-    title: `${sp.from} to ${sp.to}: how you spent those years`,
-    options: fiveOf(list.filter(o => !Object.entries(since.picks ?? {}).some(([k, v]) => k !== sp.id && v?.id === slug(o[0]))), sp.to, "trade", `${since.seed}:${sp.id}:${since.rerolls?.[sp.id] ?? 0}`)}));
+  return sinceSpans(since.turnYear, since.nowYear).map(sp => {
+    const free = o => !Object.entries(since.picks ?? {}).some(([k, v]) => k !== sp.id && v?.id === slug(o[0]));
+    // B3180: the dated marks of the land the character came from, for that age (before 1197 too)
+    const own = [...sinceOwn(since.line, sp.from, sp.to), ...(since.region ? datedMarks(since.region, sp.from, sp.to) : [])].filter(free);
+    const ids = new Set(own.map(o => slug(o[0]))), turn = since.rerolls?.[sp.id] ?? 0;
+    const options = fiveOf(list.filter(free), sp.to, "trade", `${since.seed}:${sp.id}:${turn}`, {extra: own, front: turn === 0})
+      .map(({local, ...o}) => ids.has(o.id) ? {...o, line: true} : o);
+    return {id: sp.id, kind: "since", five: true, year: sp.from, from: sp.from, to: sp.to, title: `${sp.from} to ${sp.to}: how you spent those years`, options};
+  });
 }
+/** A line's own ways of spending the years after the change that fit a span of years, in the shape of the mark lists. */
+export const sinceOwn = (line, from, to) => (SINCE_LINES[line] ?? []).filter(o => (o[2]?.from ?? -Infinity) <= to && (o[2]?.to ?? Infinity) >= from).map(o => [o[0], o[1], {}, o[3], o[4] ?? null, true]);
 export const sinceCurrent = since => sinceSteps(since).find(s => !since.picks?.[s.id] && !since.skipped?.includes(s.id)) ?? null;
 export function sincePick(since, stepId, optionId) {
   const step = sinceCurrent(since), o = step?.options.find(x => x.id === optionId);
@@ -565,6 +575,11 @@ export function lint({table = null, backgrounds = null} = {}) {
   }
   uniq(SINCE.map(o => o[0]), "SINCE");
   for ( const o of SINCE ) { gives(o[1], `SINCE ${o[0]}`); if ( !TONES[o[3]] ) bad.push(`SINCE ${o[0]}: no tone`); }
+  for ( const [line, rows] of Object.entries(SINCE_LINES) ) {
+    uniq([...SINCE.map(o => o[0]), ...rows.map(o => o[0])], `SINCE ${line}`);
+    for ( const o of rows ) { gives(o[1], `SINCE ${line} ${o[0]}`); if ( !TONES[o[3]] ) bad.push(`SINCE ${line} ${o[0]}: no tone`); if ( o[4] && o[4].split("|").length !== 2 ) bad.push(`SINCE ${line} ${o[0]}: person`); }
+    for ( const t of Object.keys(MARK_SHAPE) ) if ( !rows.some(o => o[3] === t) ) bad.push(`SINCE ${line}: no "${t}" row`);
+  }
   for ( const y of [1250, 1700, 1900, 2000, 2100] ) for ( const [t, n] of Object.entries(MARK_SHAPE) ) if ( SINCE.filter(o => o[3] === t && fitsMark(o[2], y, "trade")).length < n ) bad.push(`SINCE: too few "${t}" in ${y}`);
   for ( const [rid, E] of Object.entries(LOCAL_EVENTS) ) {
     if ( !landOf(rid) ) bad.push(`dated: unknown region ${rid}`);

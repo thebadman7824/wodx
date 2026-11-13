@@ -1,6 +1,6 @@
 # Dark Ages: Mage Grimoire: rote mechanics by fellowship
 
-Source: Dark Ages: Mage Grimoire (PDF on the PC trove). Read from page renders, since the OCR text was unusable.
+Source: Dark Ages: Mage Grimoire (PDF edition). Read from page renders, since the OCR text was unusable.
 Every page is given as "pdf N / printed N-2", so pdf 23 is printed page 21. "p" in a line means the printed page.
 Mechanics only, in our own words. No book text is copied. Where a line says CHECK or flag, the book itself is unclear.
 

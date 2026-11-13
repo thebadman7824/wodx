@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.37.1";
+const VERSION = "0.42.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -778,8 +778,6 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
-    // other modules may show the work (a sprite stoops to the lock or strikes the door)
-    Hooks.callAll("wodxInteractableWorked", {scene: scene.id, thing: doc.id, token: tokDoc.uuid, action: op.id, result: out.result ?? null});
     releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, personal, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,

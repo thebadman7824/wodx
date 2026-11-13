@@ -180,11 +180,13 @@ test("your people: asked where more than one people lives, and open where no nam
     if ( !D.peoplesOf(rid, 1700).length ) open++;
   }
   assert.ok(n > 5, "several regions ask");
-  const na = D.continents(1300).find(c => c.id === "north-america").regions.find(r => r.id === "north-america-east");
-  assert.equal(na.named, false);
-  let d = start("north-america-east", 1300, 25);
+  // Eastern North America has the Haudenosaunee before the colonies (B3120); the West still has no names in 1300
+  const regs = D.continents(1300).find(c => c.id === "north-america").regions;
+  assert.equal(regs.find(r => r.id === "north-america-east").named, true);
+  assert.equal(regs.find(r => r.id === "north-america-west").named, false);
+  let d = start("north-america-west", 1300, 25);
   assert.equal(D.current(d).kind, "people");
-  d = D.pickOwn(d, "people", "Lenape");
+  d = D.pickOwn(d, "people", "Lakota");
   assert.ok(D.done(walk(d)));
   assert.ok(open >= 1);
 });
@@ -424,4 +426,46 @@ test("beyond Earth: orbit, the Moon and Mars open only in the future age and fro
   f = D.pick(f, "continent", D.current(f).options.find(o => /Europe/.test(o.label)).id);
   f = D.pick(f, "region", "france");
   assert.ok(D.moveTo(f, "a1", "mars").place.a1 === "mars", "an adult chapter can be lived on Mars");
+});
+
+test("the years after the change: each line has its own ways, drawn first", async () => {
+  const {SINCE_LINES} = await import("../../modules/wodx-creation/data/lifepath-since-lines.mjs");
+  const lines = Object.keys(R.LINES).filter(k => k !== "mortal");
+  assert.deepEqual(Object.keys(SINCE_LINES).sort(), lines.sort(), "every line that changes has a list");
+  const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|husband|brother|sister|boy|girl|man|woman|men|women|lord|lady)\b/i;
+  for ( const [line, rows] of Object.entries(SINCE_LINES) ) {
+    assert.ok(rows.length >= 10, `${line} has ten ways or more`);
+    for ( const o of rows ) { assert.ok(!words.test(`${o[0]} ${o[4] ?? ""}`), o[0]); assert.ok(!/\u2014|\u2013/.test(o[0]), o[0]); }
+  }
+  for ( const line of lines ) {
+    const turn = line === "demon" ? 1999 : line === "orpheus" ? 1990 : 1300;
+    let s = D.newSince({turnYear: turn, nowYear: 2040, line, seed: `t:${line}`});
+    const steps = D.sinceSteps(s);
+    assert.ok(steps.length >= 1, `${line}: steps`);
+    for ( const st of steps ) {
+      assert.equal(st.options.length, 5, `${line} ${st.id}`);
+      assert.equal(st.options.map(o => o.tone).sort().join(""), "++--0", `${line} ${st.id} shape`);
+      const own = st.options.filter(o => o.line);
+      assert.ok(own.length >= 1, `${line} ${st.id}: the line's own ways come first`);
+      assert.ok(own.every(o => SINCE_LINES[line].some(r => r[0] === o.label)));
+      assert.ok(!st.options.some(o => o.local));
+    }
+  }
+  const mage = D.sinceSteps(D.newSince({turnYear: 1300, nowYear: 1800, line: "mage", seed: 1}));
+  assert.ok(!mage.flatMap(s => s.options).some(o => /Technocracy/.test(o.label)), "no Technocracy before it is named");
+  assert.equal(D.sinceOwn("mage", 1300, 1400).filter(o => /Technocracy/.test(o[0])).length, 0);
+  assert.equal(D.sinceOwn("demon", 1500, 1700).length, 0);
+  assert.equal(D.sinceOwn("mortal", 1500, 1700).length, 0);
+});
+
+test("B3180: elders get the ages before 1197, and their land's dated marks feed those ages", () => {
+  assert.deepEqual(D.sinceSpans(-300, 1250).map(x => [x.group, x.from, x.to]), [["B", -299, 476], ["C", 477, 1196], ["M", 1197, 1250]]);
+  const s = D.newSince({turnYear: 500, nowYear: 1200, line: "vampire", seed: "elder", region: "moravia"});
+  assert.equal(s.region, "moravia");
+  const c = D.sinceCurrent(s);
+  assert.equal(c.id, "s-C");
+  assert.equal(c.options.length, 5);
+  const pool = D.datedMarks("moravia", 477, 1196).map(m => m[0]);
+  assert.ok(pool.includes("Heard the brothers from Thessaloniki preach in your own tongue"));
+  assert.equal(D.newSince({turnYear: 500, nowYear: 1200, region: "nowhere"}).region, null);
 });

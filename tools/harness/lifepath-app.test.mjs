@@ -20,6 +20,9 @@ function fakeActor(type = "Vampire", system = {clan: "Toreador"}) {
   return a;
 }
 
+/** These tests walk the long path step by step; the short one is the default (B2828). */
+const longPath = app => { const r = app.element?.querySelector?.("input[name=length_][value=long]"); if ( r ) r.checked = true; };
+
 test("the sheet gets a Lifepath button for an owner, not for a group", async () => {
   M.registerSheetButton();
   const b = [];
@@ -36,8 +39,10 @@ test("setup guesses the line and splat, the scenes play to the end, and the save
   const app = new M.LifepathApp({id: "wodx-lifepath-a1", actor: a});
   assert.equal(app.setup.line, "vampire");
   assert.equal(app.setup.splat, "toreador");
+  assert.equal(app.setup.short, true, "the short lifepath is the default (B2828)");
   await app.render({force: true});
   assert.ok(app.element.querySelector("select[name=splat] option[value=toreador][selected]"));
+  longPath(app);
   await app.options.actions.begin.call(app);
   assert.ok(app.drill && !app.path, "the drill-down comes first");
   assert.match(app.element.textContent, /Continent/);
@@ -68,9 +73,11 @@ test("setup guesses the line and splat, the scenes play to the end, and the save
 test("back from the first scene after the drill returns to the drill, and from the first step to the setup", async () => {
   const app = new M.LifepathApp({id: "wodx-lifepath-a2", actor: fakeActor()});
   await app.render({force: true});
+  longPath(app);
   await app.options.actions.begin.call(app);
   await app.options.actions.back.call(app);
   assert.ok(!app.drill && app.element.querySelector("[data-action=begin]"), "back to the setup");
+  longPath(app);
   await app.options.actions.begin.call(app);
   let guard = 0;
   while ( !app.path && guard++ < 40 ) await app.options.actions.surprise.call(app);
@@ -92,6 +99,7 @@ test("a player's own answer waits for the Storyteller; approval puts the ticked 
   try {
     const app = new M.LifepathApp({id: "wodx-lifepath-a3", actor: a});
     await app.render({force: true});
+    longPath(app);
     await app.options.actions.begin.call(app);
     let guard = 0, used = false;
     while ( !app.path && guard++ < 40 ) {
@@ -132,6 +140,7 @@ test("an old vampire is asked about each age lived since the Embrace, and may le
   const now = new Date().getFullYear();
   app.element.querySelector("input[name=birthYear]").value = "1100";
   app.element.querySelector("input[name=turnYear]").value = "1130";
+  longPath(app);
   await app.options.actions.begin.call(app);
   let guard = 0;
   while ( !app.path && guard++ < 40 ) await app.options.actions.surprise.call(app);
@@ -150,5 +159,5 @@ test("an old vampire is asked about each age lived since the Embrace, and may le
   for ( const i of app.element.querySelectorAll("input[name=person]") ) i.checked = false;
   await app.options.actions.save.call(app);
   const rec = a.flags["wodx-creation"].lifepath;
-  assert.ok(rec.path.since.picks["s-M"], "the age is kept with the lifepath");
+  assert.ok(rec.path.since.picks["s-C"], "the age is kept with the lifepath (1131 to 1196 is the age before 1197, B3180)");
 });

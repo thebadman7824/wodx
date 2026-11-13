@@ -17,7 +17,7 @@ import * as CR from "./craft-rules.mjs";
 import * as B from "./build-rules.mjs";
 import * as MR from "./money-rules.mjs";
 import * as MK from "./market-rules.mjs";
-import {MOD, esc, isActiveGM, isPC, chron, log} from "./core.mjs";
+import {MOD, esc, isActiveGM, isPC, chron, log, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const NPC = "wodx-npc";
@@ -186,13 +186,18 @@ async function goodsData() {
   if ( !goodsMod ) { try { goodsMod = await import("../../wodx-library/data/goods.mjs"); } catch (e) { goodsMod = {GOODS: [], valueAt: () => 0}; } }
   return goodsMod;
 }
-/** The goods that can be made in the year, with their recipes. */
-export async function makeable(year = yearNow()) {
+/**
+ * The goods that can be made in the year, with their recipes. where: {way, region} (B3100); each good then says
+ * whether it is at home there (here), and its materials come from what that land has.
+ */
+export async function makeable(year = yearNow(), where = null) {
   const G = await goodsData();
-  const known = G.GOODS.filter(g => year >= g.from && year <= g.to).map(g => g.name);
   // 0.31.0: food, drink, medicine and drugs go through Cook, brew or mix (Library recipes) instead
   const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
-  return G.GOODS.filter(g => !RR?.inScope?.(g)).map(g => ({good: g, r: CR.recipeFor(g, year, {valueAt: G.valueAt, known})})).filter(x => x.r.ok);
+  const had = (g, w) => (RR?.inUse ? RR.inUse(g, year, w) : year >= g.from && year <= g.to);
+  const known = G.GOODS.filter(g => had(g, where)).map(g => g.name);
+  return G.GOODS.filter(g => !RR?.inScope?.(g)).map(g => ({good: g, here: !where || had(g, where), r: CR.recipeFor(g, year, {valueAt: G.valueAt, known})}))
+    .filter(x => x.r.ok).sort((x, y) => y.here - x.here);
 }
 
 /** Start making a good: materials come out of the character's things, or are bought when buy is set. */
@@ -203,7 +208,9 @@ export async function startCraft(a, goodId, {buy = false} = {}) {
   // 0.31.0: a written recipe (food, drink, medicine, drugs) runs through Cook, brew or mix
   const RR = await import("../../wodx-library/scripts/recipe-rules.mjs").catch(() => null);
   if ( good && RR?.inScope?.(good) ) { const ck = game.modules.get(MOD)?.api?.cookery; if ( ck ) return ck.start(a, goodId, {buy}); }
-  const known = G.GOODS.filter(g => y >= g.from && y <= g.to).map(g => g.name);
+  const at = whereNow(a.getActiveTokens?.()?.[0]?.document?.parent ?? canvas?.scene);
+  const inUse = RR?.inUse ?? ((g, yr) => yr >= g.from && yr <= g.to);
+  const known = G.GOODS.filter(g => inUse(g, y, at)).map(g => g.name);
   const r = CR.recipeFor(good, y, {valueAt: G.valueAt, known});
   if ( !r.ok ) return r;
   const carried = all(a.items).map(i => i.name);
@@ -445,11 +452,12 @@ export async function propertyDialog() {
     });
   };
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 700}, window: {title: "Property and building", resizable: true}, classes: ["wodx-dialog", "wst-own-dlg"],
-    content, buttons: [{action: "make", label: "Make something"}, {action: "cook", label: "Cook, brew or mix"}, {action: "build", label: "Put up a building"},
+    content, buttons: [{action: "make", label: "Make something"}, {action: "cook", label: "Cook, brew or mix"}, {action: "build", label: "Put up a building"}, {action: "ventures", label: "Ventures"},
       ...(game.user.isGM ? [{action: "tag", label: "Tag a place on this scene"}] : []), {action: "close", label: "Close", default: true}]});
   if ( res === "make" ) return craftDialog();
   if ( res === "cook" ) return game.modules.get(MOD)?.api?.cookery?.open?.();
   if ( res === "build" ) return buildDialog();
+  if ( res === "ventures" ) return game.modules.get(MOD)?.api?.upkeep?.ventures?.open?.();
   if ( res === "tag" && canvas?.scene ) { const d = await pickPlace(canvas.scene); if ( d ) await editHolding(d); return propertyDialog(); }
 }
 
@@ -490,12 +498,20 @@ export async function editHolding(doc) {
 export async function craftDialog() {
   const list = myActors();
   if ( !list.length ) return ui.notifications.warn("No character to make things.");
-  const can = await makeable();
-  const rows = can.map(({good, r}) => opt(good.id, `${good.name}: ${r.task.goal} successes, ${r.task.interval === "hour" ? "a roll an hour" : r.task.interval === "day" ? "a roll a day" : "a roll a week"}${r.task.materials.length ? `, needs ${r.task.materials.join(" and ")}` : ""}${r.why ? ` (${r.why})` : ""}`, false)).join("");
-  const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 620}, window: {title: "Make something"}, classes: ["wodx-dialog", "wst-craft"],
-    content: `<p>Things known in ${yearNow() || "this year"}, from the goods list. Dexterity + Crafts at difficulty 6, more for costly work or a thing out of its time; successes past the goal make better work (house rule). The Storyteller can change the task afterwards in Long tasks.</p>
+  const at = whereNow();
+  const can = await makeable(yearNow(), at);
+  const away = can.filter(x => !x.here).length;
+  const rows = can.map(({good, r, here}) => opt(good.id, `${good.name}${here ? "" : " (from another land)"}: ${r.task.goal} successes, ${r.task.interval === "hour" ? "a roll an hour" : r.task.interval === "day" ? "a roll a day" : "a roll a week"}${r.task.materials.length ? `, needs ${r.task.materials.join(" and ")}` : ""}${r.why ? ` (${r.why})` : ""}`, false).replace("<option ", here ? "<option " : `<option class="wst-away" `)).join("");
+  const lands = at && away ? `<div class="form-group"><label>Lands</label><select name="lands" data-fixed>${opt("here", `What is made in ${at.regionLabel}`, true)}${opt("all", "Every land", false)}</select></div>` : "";
+  const render = (ev, dlg) => {
+    const el = dlg?.element ?? ev?.target?.element;
+    const l = el?.querySelector?.("[name=lands]");
+    l?.addEventListener("change", () => el.querySelector("select[name=good]")?.classList.toggle("wst-only-here", l.value !== "all"));
+  };
+  const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render, position: {width: 620}, window: {title: "Make something"}, classes: ["wodx-dialog", "wst-craft"],
+    content: `<style>select.wst-only-here option.wst-away { display: none; }</style><p>Things known in ${yearNow() || "this year"}${at ? ` in ${esc(at.regionLabel)}` : ""}, from the goods list. Dexterity + Crafts at difficulty 6, more for costly work or a thing out of its time; successes past the goal make better work (house rule). The Storyteller can change the task afterwards in Long tasks.</p>
       ${actorPick(list)}${searchBox("select[name=good]", "Search what to make…", "Search goods")}
-      <div class="form-group"><label>Make</label><select name="good" size="10">${rows}</select></div>
+      ${lands}<div class="form-group"><label>Make</label><select name="good" size="10"${lands ? ` class="wst-only-here"` : ""}>${rows}</select></div>
       <div class="form-group"><label>Buy missing materials</label><input type="checkbox" name="buy"></div>`,
     buttons: [{action: "go", label: "Start", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
   if ( !res?.good ) return null;
