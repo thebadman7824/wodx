@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.16.0 (talking faces: when an NPC speaks to a character, its line in chat carries its face, drawn on a 64 pixel grid in the browser; the face blinks, its mouth follows the words, and it reacts to the character (a social roll that swayed it, frenzy, its mood, its attitude, pain) before it settles; Kindred fangs only when the Storyteller turns them on; a changeling's mien and a hunter's sigil only for those who can see them; each player picks Moving, Still or Off; not deployed)
 - 0.14.1 (a seated figure is plainly down on the ground, legs out in front or knees apart, where before it only looked a little shorter; of several things in hand the batch draws the largest, and a torch before a knife; found on the testbed; not deployed)
 - 0.14.0 (more moves for sprite tokens: a figure sits or kneels and stays so until it stands up or walks off, looks about, speaks under a small speech mark when its character says a line, leans in to feed, and blurs when it changes form; it climbs, swims, flies and rides with a sheet of its own for each; a button on the token for whoever may move it; a torch is carried lit; first versions made from the walk; not deployed)
 - 0.13.3 (fix: a figure whose health track is filled by hand, on the sheet or by a macro, now falls and stays down too, not only one harmed from a damage card; found on the testbed; not deployed)
