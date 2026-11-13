@@ -69,6 +69,13 @@ test("Mage, Wraith, Changeling, Demon and Mummy starts", () => {
   assert.deepEqual(["corpus", "pathos", "willpower"].map(k => row(w, k).want), [10, 7, 5]);
   const c = D.derivedTraits("c20", {});
   assert.deepEqual(["willpower", "glamour", "banality"].map(k => row(c, k).want), [4, 4, 3]);
+  assert.deepEqual(["willpower", "glamour"].map(k => row(D.derivedTraits("c20", {seeming: "Childling"}), k).want), [4, 5]);
+  assert.deepEqual(["willpower", "glamour"].map(k => row(D.derivedTraits("c20", {seeming: "Grump"}), k).want), [5, 4]);
+  assert.match(D.derivedTraits("c20", {seeming: "Wilder"}).notes.join(" "), /wilder adds 1/);
+  assert.equal(row(D.derivedTraits("demon", {house: "Devils"}), "torment").want, 4);
+  assert.equal(row(D.derivedTraits("demon", {house: "Defilers"}), "torment").want, 3);
+  assert.equal(row(D.derivedTraits("daw", {tribe: "Children of Gaia"}), "willpower").want, 3);
+  assert.equal(row(D.derivedTraits("w20", {tribe: "Children of Gaia"}), "willpower").want, 4);
   const dm = D.derivedTraits("demon", {house: "Slayers", ...V({conscience: 2, conviction: 4, courage: 3})});
   assert.deepEqual(["faith", "torment", "willpower"].map(k => row(dm, k).want), [3, 4, 7]);
   const mu = D.derivedTraits("mummy", {advantages: {balance: {permanent: 2}}});
