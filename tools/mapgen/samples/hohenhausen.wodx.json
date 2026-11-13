@@ -2807,23 +2807,6 @@
    }
   },
   {
-   "id": "byre-house-1-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    50.18,
-    44.0,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
    "id": "cottage-3-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -3385,23 +3368,6 @@
    }
   },
   {
-   "id": "byre-house-2-byre-f1",
-   "label": "Chest (Byre)",
-   "rect": [
-    11.15,
-    35.68,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
    "id": "cottage-9-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -3545,23 +3511,6 @@
     20.82,
     1.0,
     1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "byre-house-3-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    60.07,
-    18.93,
-    0.75,
-    0.75
    ],
    "flags": {
     "container": true,

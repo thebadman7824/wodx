@@ -283,23 +283,6 @@
    }
   },
   {
-   "id": "byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    23.0,
-    12.93,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
    "id": "barn-floor-0",
    "label": "Hay pile (Barn floor)",
    "rect": [
@@ -329,23 +312,6 @@
     "hideKind": "crawl",
     "room": 2,
     "title": "Down in the hay"
-   }
-  },
-  {
-   "id": "barn-floor-f2",
-   "label": "Chest (Barn floor)",
-   "rect": [
-    30.57,
-    11.73,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
    }
   },
   {

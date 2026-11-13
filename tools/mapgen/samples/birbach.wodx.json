@@ -6528,23 +6528,6 @@
    }
   },
   {
-   "id": "byre-house-1-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    75.18,
-    59.82,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
    "id": "cottage-2-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -6773,23 +6756,6 @@
     14.82,
     1.0,
     1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "byre-house-2-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    20.57,
-    13.25,
-    0.75,
-    0.75
    ],
    "flags": {
     "container": true,
@@ -7055,23 +7021,6 @@
    }
   },
   {
-   "id": "byre-house-3-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    13.18,
-    61.07,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
    "id": "byre-house-4-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
@@ -7130,23 +7079,6 @@
     14.32,
     1.0,
     1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "byre-house-4-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    75.0,
-    12.18,
-    0.75,
-    0.75
    ],
    "flags": {
     "container": true,
@@ -7708,23 +7640,6 @@
     40.18,
     1.0,
     1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "byre-house-5-byre-f2",
-   "label": "Chest (Byre)",
-   "rect": [
-    2.75,
-    41.32,
-    0.75,
-    0.75
    ],
    "flags": {
     "container": true,

@@ -240,7 +240,7 @@ def _along_walls(room, pal, R, dense):
         sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
         spots = room.candidates(fw, fh, "wall")
-        if not spots and room.kind == "store":                # a store's stacks go on across the floor, each by another
+        if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
             spots = [c for c in room.candidates(fw, fh, "free") if _beside_any(room, c[1:5])]
         if not spots: continue
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
@@ -260,6 +260,7 @@ def _along_walls(room, pal, R, dense):
 
 ANIMALS = re.compile(r"Byre|Barn|Stable|Coop|Sty|Hay|Loft|Granary|Kennel|Mews", re.I)
 GRAND_LIGHT = re.compile(r"Chandelier|Candelabra", re.I)
+STACKED = re.compile(r"Shed|Warehouse|Store", re.I)
 STREET_LIGHT = re.compile(r"street|traffic|road|lamp_?post|pole|signal", re.I)        # out of doors, never on a room's wall
 ODD_FLAME = re.compile(r"Blue|Purple|Green|Pink|Gem|Teal|Cyan|Skull", re.I)          # coloured or uncanny flames
 
@@ -305,7 +306,8 @@ def fill_room(room):
             room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
             if kind not in ("outdoor",) and room.iw * room.ih >= 4: _wall_lights(room, pal, "meagre", R)
             return
-        if not ctx["open_floor"] or kind == "store":           # a store is stacked across its floor, along its walkways
+        if not ctx["open_floor"] or STACKED.search(room.name):  # a shed or warehouse is stacked across its floor, along its
+                                                               # walkways (a barn keeps its threshing floor open)
             room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
         options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])

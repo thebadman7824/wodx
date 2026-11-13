@@ -4045,42 +4045,6 @@
    "rotation": 105.0
   },
   {
-   "id": "byre-house-1-byre-f6",
-   "label": "Chest (Byre)",
-   "rect": [
-    77.394,
-    35.364,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 195.0
-  },
-  {
-   "id": "byre-house-1-byre-f9",
-   "label": "Chest (Byre)",
-   "rect": [
-    78.548,
-    36.853,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 195.0
-  },
-  {
    "id": "workshop-4-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
