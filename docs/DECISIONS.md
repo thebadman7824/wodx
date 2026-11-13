@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3180
+Next free block: B3190
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -154,6 +154,7 @@ Next free block: B3180
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
+| B3180-B3189 | Display-only desk batch B: elder lifepaths draw from the prologue timeline (used B3180) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4699,3 +4700,8 @@ Reverse: Untick the box at the wrap-up.
 Desk item c2. When a fight with a player character ends, WoDX Combat writes one deed in the Legends book (B3161): who fought whom, where, and "and won" when a player character is still up and every other fighter is down. Through B3160 a won fight then suggests Glory for Garou. It also notes each player character's harm for B3170.
 
 Reverse: Hide the line in the Legends window; reject the Glory suggestion.
+
+## B3180. Elder lifepaths draw from the prologue timeline (2026-11-13)
+Desk item t7. The years after the change gain three ages before 1197: to 801 BCE, 800 BCE to 476, and 477 to 1196. Before, an elder's unlife up to 1499 was one step. Each age's five options now also draw the dated marks of the land the character came from, both the new ones before 1197 and the existing later ones. data/lifepath-events-prologue.mjs holds 59 marks before 1197 across 17 regions, in WoDX's own words, taken from the prologue timeline Ben approved (PR 780). A character changed in 1130 now meets "1131 to 1196" before "1197 to 1499".
+
+Reverse: Remove the three groups from GROUP_YEARS and the region from newSince.

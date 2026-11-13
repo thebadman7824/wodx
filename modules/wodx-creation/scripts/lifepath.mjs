@@ -294,7 +294,7 @@ export class LifepathApp extends ApplicationV2 {
   /** The path gets its years after the change once the turn's scenes are done (not for mortals). */
   #withSince() {
     if ( this.path && R.done(this.path) && !this.path.since && this.path.line !== "mortal" && this.path.turnYear !== null )
-      this.path = {...this.path, since: D.newSince({turnYear: this.path.turnYear, nowYear: yearNow(), line: this.path.line, seed: this.path.seed})};
+      this.path = {...this.path, since: D.newSince({turnYear: this.path.turnYear, nowYear: yearNow(), line: this.path.line, seed: this.path.seed, region: this.path.drill?.picks?.region?.id ?? null})};
   }
 
   /** After a drill pick: when the drill is done, the path takes over for the turn and after. */
