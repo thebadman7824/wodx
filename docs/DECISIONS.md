@@ -161,7 +161,7 @@ Next free block: B3470
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3240-B3259 | Cults and congregations that gather around characters (used B3240-B3246) | NPC |
-| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
+| B3260-B3269 | Off-screen lives of supernatural NPCs, gate fixes (used B3260-B3267) | NPC |
 | B3270-B3279 | Spreading Wyrm corruption across places and people (used B3270-B3277) | Otherworlds, Storyteller |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
@@ -4955,6 +4955,11 @@ Reverse: undo the sheet edits by hand; the card's text lists every one.
 WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the world setting brood, named by the people generator of the region where it can, and lived through later jumps like anyone else. api.fates.bring(id) makes a sheet for one (a Vampire with its sire in lineage and its Generation; a Werewolf, Mage or Changeling for the others). An NPC flagged wodx-npc.fates.keep is left out, so the Storyteller's plans for a character stand.
 
 Reverse: clear the brood setting.
+
+## B3267. An unfilled Path counts as 7 (2026-11-13)
+WoDX NPC, fates.mjs. A new Vampire sheet has Path and Humanity at 0 until someone fills them in. Read as 0, the torpor table (V20 pdf p. 291) would put such an NPC to sleep for a millennium, so off-screen lives take a 0 as the usual 7. A true rating of 0 is a vampire lost to the Beast and is rare among NPCs in play.
+
+Reverse: drop the `v > 0` test in personOf.
 
 ## B3270. Corruption of a place: a level 0 to 10 in five bands (2026-11-13)
 WoDX Otherworlds. A tracked scene holds a corruption level: clean (0), tainted (1-3), blighted (4-6), foul (7-9) and hellhole (10). The bands follow W20's picture of the Penumbra, where pollution and misery stain the spirit landscape and Wyrm-spirits breed until culled (pdf p. 314, printed 312), and of Blights and Hellholes, which can outlast the clean-up of the place they mirror (pdf p. 316-317, printed 314-315). A Hellhole never drops below 7 again. The level and band are a house reading. Scene flag `wodx-otherworlds.corruption`; only scenes the Storyteller sets up take part.
