@@ -34,6 +34,12 @@ export async function run() {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   const t0 = game.time.worldTime;
   const lib = () => game.modules.get(LIB).api, int = () => game.modules.get(INT).api;
+  // The Library refreshes the gear compendium on the first GM load after a deploy; wait for it (up to 60 s)
+  // so the gate never reads a half-filled compendium.
+  const want = (await lib().gear()).version;
+  const w0 = Date.now();
+  while ( game.settings.get(LIB, "installed") < want && Date.now() - w0 < 60000 ) await sleep(1000);
+  R.notes.push(`waited ${Math.round((Date.now() - w0) / 1000)} s for the gear compendium (installed ${game.settings.get(LIB, "installed")}, data ${want})`);
 
   await step("1. versions", async () => {
     const lv = game.modules.get(LIB).version, iv = game.modules.get(INT).version;
