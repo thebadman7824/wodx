@@ -270,3 +270,16 @@ test("rolled faces differ: of 300 mortals with rolled features, no two faces are
   for ( let i = 0; i < 300; i++ ) { const S = {...P.roll(`d${i}`, "mortal"), features: F.rollFeatures(`d${i}`, "mortal")}; seen.add(Buffer.from(P.drawFace(S).rgba).toString("base64")); }
   assert.equal(seen.size, 300);
 });
+
+test("each line has 50 features of its own and each clan, tribe, kith, creed and the like 15, the strange ones 25", () => {
+  const n = {};
+  for ( const f of Object.values(F.FEATURES) ) n[`${f.line}|${f.group}`] = (n[`${f.line}|${f.group}`] ?? 0) + 1;
+  assert.ok(Object.values(F.FEATURES).filter(f => f.line === "all").length >= 100, "100 for anyone");
+  for ( const line of ["kindred", "werewolf", "fera", "mage", "wraith", "changeling", "hunter", "demon", "mummy", "kuei-jin"] ) assert.ok((n[`${line}|all`] ?? 0) >= 46, `${line}: ${n[`${line}|all`]} of its own`);
+  for ( const [k, c] of Object.entries(n) ) {
+    const [line, group] = k.split("|");
+    if ( line === "all" || group === "all" || c < 4 || group === "Deathmark" ) continue;
+    assert.ok(c >= 15, `${k}: ${c}`);
+  }
+  for ( const g of ["nosferatu|Nosferatu", "kindred|Gargoyle", "kindred|Samedi", "werewolf|Metis"] ) assert.ok((n[g] ?? 0) >= 25, `${g}: ${n[g]}`);
+});

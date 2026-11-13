@@ -142,7 +142,7 @@ Next free block: B3060
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
 | B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
-| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3047) | Paperdoll |
+| B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3049) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4339,4 +4339,14 @@ Reverse: Remove the import of face64-changeling.mjs from face64-features.mjs.
 WoDX Paperdoll 0.19.0 (face64-hunter.mjs). Any hunter: 50 (the wear of long nights, claw and bite scars, stitches and plasters, holy symbols and safe-house keys). Fifteen each for the nine creeds of Hunter: the Reckoning (Avengers, Defenders, Innocents, Judges, Martyrs, Redeemers, Visionaries, Hermits, Wayward), and for the inquisitors of the Dark Ages, the Society of Leopold and the Arcanum, who cover the eras before 1999. In our own words.
 
 Reverse: Remove the import of face64-hunter.mjs from face64-features.mjs.
+
+## B3048. Demon faces: 50 for any of the Fallen, 15 per house and faction (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-demon.mjs). Any demon: 50 marks on the host's own face (old eyes, a broken halo, sigils of a true name, the scar of how the host died, things kept from the host's life); the apocalyptic form keeps its visage features. Fifteen each for the seven houses (Devils, Scourges, Malefactors, Fiends, Defilers, Devourers, Slayers, also matched by their old names such as Namaru) and the five factions (Faustians, Cryptics, Luciferans, Reconcilers, Raveners). In our own words.
+
+Reverse: Remove the import of face64-demon.mjs from face64-features.mjs.
+
+## B3049. Mummy and Kuei-jin faces: 50 for the line, 15 per kind and Dharma (2026-11-13)
+WoDX Paperdoll 0.19.0 (face64-mummy.mjs). Any mummy: 50 (kohl, amulets of Egypt, natron and resin, Sekhem in the eyes, Hekau glyphs). Fifteen each for the Shemsu-heru, the Amenti, the Teomallki of the Andes, the Wu Tian of China, the Children of Apophis and the Bane mummies. Any Kuei-jin: 50 (jade, silk, talismans, yin chill and yang warmth). Fifteen each for the five Dharmas: Devil Tiger, Resplendent Crane, Thousand Whispers, Thrashing Dragon and Song of the Shadow. In our own words. A test now holds every line to these counts.
+
+Reverse: Remove the import of face64-mummy.mjs from face64-features.mjs.
 

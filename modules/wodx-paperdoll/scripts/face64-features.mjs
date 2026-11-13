@@ -14,6 +14,8 @@ import "./face64-mage.mjs";
 import "./face64-wraith.mjs";
 import "./face64-changeling.mjs";
 import "./face64-hunter.mjs";
+import "./face64-demon.mjs";
+import "./face64-mummy.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -207,10 +209,13 @@ const WHOLE = new Set(["changeling", "fera"]);
 const norm = s => String(s ?? "").toLowerCase();
 /** A group whose name sits inside a longer one: a True Brujah is not a Brujah. */
 const SHADOWED = {brujah: ["true brujah"], seelie: ["unseelie"]};
+/** Other names a sheet may give a group: a house by its old name. */
+const ALIASES = {devils: ["namaru"], scourges: ["asharu"], malefactors: ["annunaki"], fiends: ["neberu"], defilers: ["lammasu"], devourers: ["rabisu"], slayers: ["halaku"]};
 /** Does the sheet's text (clan, kith, tribe, tradition and so on) name this group? */
 export function groupMatches(group, text) {
   const g = norm(group), t = norm(text);
   if ( !g || !t ) return false;
+  if ( (ALIASES[g] ?? []).some(a => t.includes(a)) ) return true;
   if ( (SHADOWED[g] ?? []).some(longer => t.includes(longer)) && !t.replaceAll(SHADOWED[g].find(l => t.includes(l)), "").includes(g) ) return false;
   const words = g.replace(/^(the|followers of|children of|harbingers of)\s+/, "").split(/\s+/);
   return t.includes(g) || words.every(w => w.length > 2 && t.includes(w.replace(/s$/, "")));
