@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3120
+Next free block: B3150
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -150,6 +150,7 @@ Next free block: B3120
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
+| B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4635,3 +4636,23 @@ Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
 ## B3113. A large stake, a rival and a seat (2026-11-13)
 A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
 Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.
+
+## B3130. Nightmares takes a die from every roll (2026-11-13)
+WoDX Actions. A "Nightmares" effect made by WoDX Storyteller after a failed Willpower roll on waking (B2911) carries flags.wodx-storyteller.diceLess. Every roll from the Actions windows loses that many dice and says so, as attacks already do in WoDX Combat. The largest of several such effects counts, not their sum.
+
+Reverse: Delete the Nightmares effect from the character.
+
+## B3131. A stranger blending into a crowd (2026-11-13)
+WoDX Actions. When WoDX NPC says a character is dressed as a stranger on the scene (B2914), the roll window offers "Blending into a crowd". Ticked, it adds the blend step (1) to the difficulty. A box rather than an automatic rule, since not every Stealth or Subterfuge roll is about a crowd.
+
+Reverse: Leave the box unticked, or dress the character for the place.
+
+## B3132. Open fire in a mood region (2026-11-13)
+WoDX Actions. The fear-of-fire step of the WoDX Atmosphere mood regions under the character's token (B2913) adds to the difficulty of frenzy and Rotschreck checks, and the card names it. House figure.
+
+Reverse: Set the region's fear-of-fire step to 0.
+
+## B3133. The codex as research (2026-11-13)
+WoDX Actions. The roll window lists the entries in the character's codex (WoDX Storyteller) not yet used. Picking one on an Occult, Academics or lore roll takes one off the difficulty, and that entry is then spent. Whether the entry fits the roll is the player's call, and the Storyteller's to overrule. V20 lets research take time; the single point and the once-only rule are WoDX's own.
+
+Reverse: Leave "Research from the codex" at None.
