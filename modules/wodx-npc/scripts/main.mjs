@@ -33,6 +33,7 @@ import {build as buildOverheard} from "./overheard.mjs";
 import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
+import {build as buildDayJobs} from "./day-jobs.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import {build as buildCults} from "./cults.mjs";
@@ -853,6 +854,9 @@ people.hooks();
 const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
 wanted.hooks();
 const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
+/* B3590-B3596: day jobs for a character's mortal agents, as long tasks on the clock */
+const dayJobs = buildDayJobs({MOD, esc, gmIds, isActiveGM, chron, factions, followers});
+dayJobs.hooks();
 /* 0.46.0: the residents of a generated town, from the households kept on its buildings */
 /* 0.48.0: settlements, the record of a whole generated place, reviewed before it enters the world */
 const settlements = buildSettlements({MOD, esc, chron});
@@ -898,7 +902,7 @@ Hooks.once("init", () => {
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
-    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, dayJobs, openDayJobs: dayJobs.openDayJobs, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
     fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
     cults, openCults: cults.open,
