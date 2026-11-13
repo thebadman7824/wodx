@@ -71,5 +71,6 @@ All eight scope calls on the Global World Desk took the recommended option (B253
 
 - Built: money changers abroad (Storyteller 0.56.0, B2536), the holy days of the great faiths by region (Chronicle 0.49.0, B2537), weather by region (Atmosphere 0.15.0, B2538).
 - Approved as they stand: the 511 plain-history timeline events for the Americas, Africa and Oceania.
-- Waiting on the PC's book check (job global-world-book-check-2026-11-13): the eight timeline cards with a World of Darkness reading; Future Darkness events from the Cyberpunk 2020 timeline; the hidden world of East Asia and Africa by the book.
+- Built from the PC's book check: 50 Future Darkness events for the Americas, Africa and Oceania, 1990 to 2020, from the Cyberpunk 2020 books.
+- Waiting on the PC's book check (job global-world-book-check-2026-11-13): the eight timeline cards with a World of Darkness reading (first pass in, the scan-only books in OCR); orbit and Mars from Deep Space; the hidden world of East Asia and Africa by the book.
 - Standing: peoples without names are added one at a time with source notes and a desk; finer regions only when a chronicle goes there.

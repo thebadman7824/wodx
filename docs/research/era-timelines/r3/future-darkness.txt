@@ -309,3 +309,55 @@
 2097|F|mor|ME|Cairo|faith,occult|Apophis turns|The mummies of Cairo dream of the serpent Apophis turning in its sleep.
 2098|F|mor|MO|Rothenstein|occult,war|The last night of Rothenstein|Rothenstein's walls are full of the dead, and its people wait for the end.
 2099|F|mor|EU|Vienna|faith,occult|The last Concord|The lines meet in Vienna one last time and choose their sides for the Time of Future Judgement.
+# The Americas, Africa and Oceania (the global rule; Ben's desk pick of 2026-11-13: from the Cyberpunk 2020 books, to 2020).
+# Book check /mnt/project-files/global-world/cp2020-timeline-world.md; where two books differ the core rulebook stands.
+1990|F|mor|AM|Panama|war,empire|The first Central American conflict|American troops go into Panama, Nicaragua, Honduras and El Salvador and take the Canal Zone back from a strongman Washington once paid.
+1990|F|mor|AF|Cape Town|war,massacre|South Africa goes dark|The South African state falls apart in bloodshed, and for four years almost no news leaves the country but rumours of massacre.
+1991|F|mor|AM|Jersey City|building,industry|The first arcology|A sealed tower city rises on Jersey City's ruins, and sixteen more are begun across the United States in the next five years.
+1992|F|mor|AM|Santiago|crime,war|The drug war of the Americas|Engineered blights released by American drug agents kill the coca and poppy crops; the governments of Chile and Ecuador fall and the cartels go to war from the Andes to the border.
+1993|F|mor|AM|New York|terror,massacre|The bomb in midtown|Colombian drug lords set off a small atomic device in the middle of Manhattan, and about fifteen thousand people die.
+1993|F|mor|AM|Kansas City|migration,founding|The first nomad families|Families thrown off the land and out of the cities band together on the American roads to guard one another.
+1994|F|mor|AM|New York|money,crime|The crash of '94|The world's stock markets fall together, a crash later laid at the door of American agencies, and the American economy does not get up again.
+1994|F|mor|AM|Pittsburgh|disaster,industry|The Pittsburgh accident|A reactor accident at Pittsburgh kills 257 people.
+1994|F|mor|AM|Chicago|war,money|The corporations fight for land|For two years American corporations fight one another with hired soldiers over land and plant that the crash left cheap.
+1994|F|mor|OC|Sydney|money,trade|Australia sold off|The crash strikes Australia hard, and foreign buyers take its mines, stations and banks at a fraction of their worth over the years that follow.
+1994|F|mor|AF|Johannesburg|crown,war|New Africa|When news comes out of the south again it is of a patchwork of strongmen, each holding what a private army can keep.
+1995|F|mor|AF|Kilimanjaro|building,science|The Kilimanjaro mass driver begun|The European Space Agency and the Pan-African Alliance break ground on a launch track up the mountain's flank, to throw cargo into orbit.
+1996|F|mor|AM|Washington|law,uprising|The Collapse|American cities go bankrupt one after another, the homeless riot, the first armoured street gangs appear and lawyers are lynched; in August the constitution is set aside and the army rules.
+1997|F|mor|AM|Seattle|disaster,sea|The salmon die|A poison spill kills most of the salmon of the Pacific Northwest and takes Seattle's living with it.
+1997|F|mor|OC|Honolulu|war,law|The military takes Oahu|With the Middle East burning, the American forces in Hawaii take over the island of Oahu and rule it as their own.
+1997|F|mor|AM|Jersey City|building,migration|The towers left to squatters|Work on the American arcologies stops for want of money, and the half-built towers fill with squatters.
+1998|F|mor|AM|Los Angeles|quake,flood|The great Los Angeles quake|An earthquake of 10.5 breaks Los Angeles; the sea comes in over a third of the city and about sixty-five thousand die.
+1998|F|mor|AM|Des Moines|weather,famine|The Midwest dries out|Drought turns the American grain belt to dry grass, and the family farm all but ends.
+1998|F|mor|AM|Louisville|terror,science|The Neo-Luddites|A movement sworn against machines rises again in Kentucky and bombs laboratories and factories for ten years.
+1999|F|mor|AM|Washington|law|The weapons statute and the new code|Martial law ends in the United States; a federal weapons law and a single hard code of civilian justice take its place.
+1999|F|mor|AM|Austin|crown,law|The Free State of Texas|Texas declares itself a Free State and is recognised the next year; Alaska, Nevada and the two Californias follow in the years after.
+2000|F|mor|AM|Portland|fire,plague|Firestorms and the Wasting Plague|Great fires burn across the American Northwest in the year the Wasting Plague reaches the United States.
+2000|F|mor|OC|Sydney|sport,treaty|The boycotted Olympics|Several nations stay away from the Sydney Olympics.
+2001|F|mor|OC|Canberra|crown,law|The Federal Republic of Australia|With Britain's monarchy dissolved, Australia declares itself a federal republic.
+2001|F|mor|OC|Perth|crown,money|West Australia leaves|The west secedes as its own republic and grows rich on the oil of the North West Shelf; Tasmania's vote to leave fails by two in the hundred.
+2002|F|mor|AM|Winnipeg|famine,plague|The food crash in Canada|A changed virus destroys the Canadian grain harvest in the same year as the Soviet one, while American agribusiness comes through with its own strains.
+2002|F|mor|OC|Hobart|plague,trade|Quarantine in the south|The crop virus wipes out Australia's grain; Tasmania is sealed off against it and New Zealand stops all trade in food.
+2002|F|mor|AM|Los Angeles|crown,law|The Free State of Southern California|Southern California makes itself a Free State; Washington state turns itself into a parliamentary republic the same year.
+2003|F|mor|AM|Bogotá|war,empire|The second Central American war|The United States goes to war in Colombia, Ecuador, Peru and Venezuela; soldiers call it the new Vietnam, and it lasts seven years.
+2003|F|mor|OC|Auckland|migration|Hong Kong comes to New Zealand|For four years refugees from Hong Kong pour into New Zealand.
+2004|F|mor|AM|Washington|crown,law|The purge of the Gang of Four|In March a counter-coup breaks the four federal agencies that had ruled the United States from behind the army.
+2005|F|mor|AM|Washington|law,money|Four hours to leave|In November the American government gives one corporation four hours to get out of the country.
+2008|F|mor|AM|Washington|law,crown|The first free vote since the Collapse|In November Americans vote in the first free elections since the constitution was set aside.
+2008|F|mor|AM|Colorado Springs|war,disaster|The rock on Colorado Springs|American forces attack a European orbital station; the lunar colony's mass driver answers with a rock on Colorado Springs, and the war in orbit is over.
+2008|F|mor|OC|Hayman Island|money,building|An island for the orbital companies|Orbital Air and the European Space Agency buy Hayman Island off Queensland as ground of their own, under no Australian law.
+2009|F|mor|AM|Night City|crime,money|The corporations take Night City|The corporations of Night City destroy the mobs that ran it and rule the city themselves.
+2009|F|mor|AM|Washington|war,sea|A warning off the capital|After an American intelligence plot against the Crystal Palace, the Europeans drop a twelve-ton rock into the sea off Washington.
+2009|F|mor|OC|Port Moresby|war,empire|Indonesia takes Papua New Guinea|Indonesia invades Papua New Guinea and renames it; Australia moves troops north, and the government in exile sits in Wellington.
+2009|F|mor|OC|Melbourne|sport,science|The Cyberleague|Australian football starts a league for players with augmented bodies.
+2010|F|mor|AM|Denver|uprising,famine|The Denver food riots|Food riots in Denver leave 52 dead.
+2010|F|mor|AM|Panama|treaty,war|Central America united|The second war ends with the Central American states joined in a union and the United States holding only the Canal Zone, by force.
+2011|F|mor|OC|Maralinga|science,disaster|The Maralinga machines|Machines too small to see, set to clean the old bomb range at Maralinga, slip out of anyone's control.
+2012|F|mor|AM|Chicago|plague,science|The Chicago bioplague|A made plague kills 1,700 people in Chicago.
+2012|F|mor|AM|San Francisco|crown,law|Northern California parts from the south|The north breaks from Southern California and is recognised as a Free State four years later.
+2013|F|mor|AM|Sunnyvale|science,industry|The first true thinking machine|Microtech brings the first real artificial mind awake at Sunnyvale.
+2016|F|mor|OC|Adelaide|uprising,weather|The Adelaide water riots|Adelaide riots over water, and a plant is built to take the salt from the sea.
+2020|F|mor|AM|Lima|war,crime|South America in pieces|South America is a patchwork of juntas, secret police and former drug lords at war with one another.
+2020|F|mor|AF|Nairobi|science,crown|Africa builds the road to orbit|Most of the world's spaceports and orbital yards stand along Africa's equator and one space worker in three is African; the Pan-African Confederation, allied to Europe, claims to speak for the continent, while the Free Africa Foundation and the warlords of the south say otherwise.
+2020|F|mor|AF|Tunis|empire,money|The Maghreb answers to Brussels|The states of North Africa are run in all but name from the European Community.
+2020|F|mor|AM|Sacramento|law,science|Every Californian numbered|California gives each citizen a single identity number, and nothing can be bought, rented or signed without it.
