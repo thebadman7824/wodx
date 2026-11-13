@@ -347,4 +347,6 @@ export async function setupTowns() {
   });
 }
 
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, rules: TR});
+/** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
+export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, rules: TR});
