@@ -4392,6 +4392,7 @@ Reverse: drop the gearAtHome line in candidates (fill-rules.mjs).
 Gear by era lists what is found where the scene stands in the chronicle's year, with a Lands choice to see every land. A weapon of another land names the book weapon it fights as.
 
 Reverse: set lands to "all" in GearApp.
+
 ## B3080. Module versions, changelog lines and table rows are stamped at merge time (2026-11-13)
 Ben (13 November 2026) approved the speed-up list. A branch no longer bumps module.json, the api VERSION, the changelog or docs/MODULES.md by hand. It adds a release note under changes/<module-id>/, and tools/release/merge-stamp.mjs, run just before the merge on a branch that holds the newest main, turns every note into those edits. Two branches then never edit the same lines or take the same version, which had cost a merge-main-and-rerun cycle each time. Branches made before this keep their hand-made bumps; the check only asks that such a version is above main's.
 
