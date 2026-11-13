@@ -243,3 +243,15 @@ test("The Americas (B3601)", () => {
   assert.ok(L.lawOf("north-america-west", 1870).order.includes("marshals"));
   assert.ok(ne(2000).punish.includes("hanging") && !L.lawOf("canada", 2000).punish.includes("hanging"));
 });
+
+test("The Pacific and Australia (B3602)", () => {
+  const au = y => L.lawOf("australia", y), nz = y => L.lawOf("aotearoa", y), pi = y => L.lawOf("pacific-islands", y);
+  for ( const r of ["australia", "aotearoa", "pacific-islands"] ) assert.equal(L.lawOf(r, 1300).family, "pacific", r);
+  assert.ok(!au(1300).warn.some(w => /tapu/.test(w)) && au(1300).warn.some(w => /story and ceremony/.test(w)));
+  assert.ok(au(1800).warn.some(w => /Convicts/.test(w)) && !au(1900).warn.some(w => /Convicts/.test(w)));
+  assert.ok(au(1950).warn.some(w => /children/.test(w)) && !au(1980).warn.some(w => /children/.test(w)));
+  assert.ok(nz(1500).warn.some(w => /tapu/.test(w)) && !nz(1900).warn.some(w => /tapu/.test(w)));
+  assert.ok(pi(1810).warn.some(w => /tapu/.test(w)) && !pi(1820).warn.some(w => /tapu/.test(w)));
+  assert.ok(!au(1990).punish.includes("hanging") && !nz(1970).punish.includes("hanging"));
+  assert.ok(!au(1950).order.includes("clan-elders"));
+});
