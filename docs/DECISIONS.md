@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2570
+Next free block: B2580
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -109,6 +109,7 @@ Next free block: B2570
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
+| B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3247,3 +3248,19 @@ Reverse: drop the sprite test in bake().
 
 ## B2562. Left open (2026-11-13)
 Not built: sprites made in the game from a character's look and worn items (the wardrobe of 479 items exists only as drawings outside the game); weapons in the hand only when drawn; animals; the other Garou forms and each line's true forms switching with the character's state; a standing pose of its own; players choosing their own sprite.
+
+## B2570. How fast word travels, by region (2026-11-13)
+The years of the ways word travels (print, the papers, the wireless, television, the internet) were Moravia's for the whole world. Each of the 44 world regions now has its own row (Chronicle media-rules.mjs REGION_MEDIA), rounded to when each became common there: China's court gazette and small news sheets before 1197, Japan's tile-block sheets from 1615, the Ottoman press from 1727, Brazil with no press before 1808, television in South Africa only in 1976. Where a stronger way came before a weaker one, it stands from its own year. The rumour mill, Masquerade breaches and a secret's freshness read the chronicle's homeland. A house reading of history; the books give no such table. Global rule, docs/GLOBAL.md.
+Reverse: delete a region's row (it then keeps Moravia's years) or change its years.
+
+## B2571. Travel years, by region (2026-11-13)
+The railway, tram, motorway and car years, the lit roads and streets, paved country roads and the post roads were Moravia's everywhere. Each region now has its own (Storyteller road-rules.mjs REGION_ROADS): the railway in England in 1825 and in Cuba in 1837, none in Lhasa before 2006 and none on the ice, the autostrada in 1924, lamps in London's streets from the 1740s. A trip by distance, the ways offered when a character acts alone and the road's encounter chance read the region of the scene the trip starts from, else the homeland. The Moravian country map keeps its own dated lines.
+Reverse: delete a region's row or change its years.
+
+## B2572. Routines by faith (2026-11-13)
+The ready routines were written for a Western Christian town. A ready routine now follows the faith its people keep (forFaith in NPC routine-rules.mjs): the week turns so its rest day lands on the faith's own (Friday prayer at noon for Islam, the Sabbath for the Jewish year, the Liturgy for the Eastern church), and the faiths with no weekly rest day work every day and worship on their holy days until the Sunday week took hold (SUNDAY_FROM). The clergy's offices take that faith's prayers. Holy days come from Chronicle's faith years. The faith is the routine's own pick, else the faith a resident's origin points to (ORIGIN_FAITH), else the faith of the scene they live on. Kindred, Garou and the other night folk keep their own nights, and hours the Storyteller typed are never changed. The church place kind is renamed "Church, chapel, mosque, synagogue or temple"; no new kind was added.
+Reverse: pick "The Western church" in the routine window, or have blocksOf skip forFaith.
+
+## B2573. Left open (2026-11-13)
+Not built: daily prayer times for every Muslim (only the clergy keep the five); the Soviet weeks of 1929 to 1940; Ramadan's night hours in the routines; a separate place kind for mosques, synagogues and temples; the Moravian country map's rails for other regions (the maps thread owns it).
+

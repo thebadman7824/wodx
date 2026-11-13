@@ -27,7 +27,7 @@ export const ACTIVITIES = {
 
 /** Kinds of place a scene, or a region inside one, can be tagged with. */
 export const PLACE_KINDS = {
-  home: "Home", workplace: "Workplace or shop", church: "Church, chapel or cloister", tavern: "Tavern or inn",
+  home: "Home", workplace: "Workplace or shop", church: "Church, chapel, mosque, synagogue or temple", tavern: "Tavern or inn",
   haven: "Haven (a Cainite's resting place)", gate: "Gate, watch-house or barracks", market: "Market or square",
   street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
   alley: "Back alley or courtyard", yard: "Farmyard, stable or village", docks: "Docks or riverside", park: "Park, garden or churchyard",
@@ -106,11 +106,127 @@ export const PRESETS = {
 /** The routine each 7b template starts from. Spirits and the plain beast have none; the animal archetypes keep their own (animal-rules). */
 export const DEFAULT_PRESET = {guard: "night-watch", civilian: "labourer", ghoul: "ghoul", neonate: "neonate", elder: "elder", garou: "garou", hunter: "hunter"};
 
-export const blocksOf = (routine, template, year = null) => {
+/**
+ * The blocks an NPC follows. Their own blocks win as they stand; a ready routine follows the year, and from NPC
+ * 0.49.0 (B2572) the faith its people keep (keep: {faith, region}, see forFaith below).
+ */
+export const blocksOf = (routine, template, year = null, keep = null) => {
   if ( Array.isArray(routine?.blocks) && routine.blocks.length ) return routine.blocks;
   const key = PRESETS[routine?.preset] ? routine.preset : DEFAULT_PRESET[template];
-  return presetBlocks(key, routine?.age || ageOf(year));
+  const blocks = presetBlocks(key, routine?.age || ageOf(year));
+  if ( !keep?.faith || NO_WEEK.has(template) ) return blocks;
+  return forFaith(blocks, {...keep, year: Number(year) || 0});
 };
+
+/* ------------------------------------------------------------------ */
+/*  Routines by faith (NPC 0.49.0, B2572)                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The ready routines were written for a Western Christian town: Mass on Sunday, a working week of Monday to
+ * Saturday, the canonical hours for the clergy. A people who keep another faith (WoDX Chronicle's faith-rules: the
+ * region's, or the scene's own) get the same hours turned to their week:
+ *
+ *   rest day   Sunday for the churches, Friday for Islam (the noon prayer at the great mosque), the Sabbath for the
+ *              Jewish year; the faiths of India, China, Tibet and Southeast Asia keep no weekly day of rest, so their
+ *              working week runs every day and the weekly worship moves to the holy days (the moon days of the
+ *              Buddhist south, the temple feasts), until the Sunday week took hold there (SUNDAY_FROM)
+ *   the week   the whole week turns with the rest day, so the night out and the short day fall on its eve
+ *   words      Mass becomes Friday prayer, the Sabbath service, the temple; the clergy's offices become the
+ *              prayers of that faith
+ *
+ * Kindred, Garou and the other night folk keep their own hours and are left as they are. A house reading, rounded for
+ * play; the books give no such table.
+ */
+const NO_WEEK = new Set(["neonate", "elder", "garou", "spirit", "beast"]);
+
+/** The year the Sunday week (the government's and the schools' day off) took hold in a region whose faith has none,
+ *  or turned a Friday land to Sunday (Turkey in 1935, Soviet Central Asia in 1924, the Dutch Indies, the colonies). */
+export const SUNDAY_FROM = {
+  "india": 1843, "china": 1912, "japan": 1876, "korea": 1895, "southeast-asia": 1899, "tibet-himalaya": 1959,
+  "nusantara": 1800, "west-africa": 1900, "east-africa": 1900, "anatolia": 1935, "central-asia": 1924, "antarctica": 1899
+};
+/** The weekday (0 Monday ... 6 Sunday) a faith rests and worships in a region and year, or null for none. */
+export function restDay(faith, region = null, year = 0) {
+  const y = Number(year) || 0, sun = SUNDAY_FROM[region];
+  if ( faith === "western" || faith === "orthodox" ) return 6;
+  if ( faith === "jewish" ) return 5;
+  if ( sun && y >= sun ) return 6;
+  if ( faith === "islamic" ) return 4;
+  return null;
+}
+
+/** The weekday a faith gathers to worship (whatever day the state rests): null for the faiths with no weekly day. */
+export const holyDay = faith => ({western: 6, orthodox: 6, islamic: 4, jewish: 5})[faith] ?? null;
+
+/** What weekly worship, feast-day worship and the clergy's offices are called in each faith. */
+const WORDS = {
+  orthodox: {week: "The Divine Liturgy", feast: "The Liturgy of the feast", offices: {"Matins and Lauds": "Matins", "Mass and the offices": "The Liturgy and the hours"}},
+  islamic: {week: "Friday prayer at the great mosque", feast: "The prayer of the feast", hours: [12, 14],
+    offices: {"Matins and Lauds": "The dawn prayer", "Prime": "Lessons after the dawn prayer", "Sext": "The noon prayer",
+      "Vespers": "The sunset prayer", "Vespers to Compline, dusk to the late bell": "The sunset and night prayers",
+      "The office": "Prayer and teaching", "Parish work": "The mosque's work", "Parish rounds": "Rounds of the quarter",
+      "Mass and the offices": "Friday prayer and the sermon"}},
+  jewish: {week: "The Sabbath service", feast: "Prayers of the festival",
+    offices: {"Matins and Lauds": "Morning prayer", "Prime": "Study", "Sext": "Afternoon prayer", "Vespers": "Evening prayer",
+      "Vespers to Compline, dusk to the late bell": "Evening prayer and study", "Parish work": "The congregation's work",
+      "Parish rounds": "Visits in the quarter", "Mass and the offices": "The Sabbath service and study"}},
+  hindu: {week: "At the temple", feast: "At the temple for the festival",
+    offices: {"Matins and Lauds": "Dawn worship", "Prime": "Recitation", "Sext": "The noon offering", "Vespers": "The evening lamps",
+      "Vespers to Compline, dusk to the late bell": "The evening lamps and the last worship", "Parish work": "The temple's work",
+      "Parish rounds": "Rites in the households", "Mass and the offices": "The temple's great worship"}},
+  theravada: {week: "At the monastery", feast: "At the monastery on the moon day",
+    offices: {"Matins and Lauds": "Morning chanting", "Prime": "The alms round", "Sext": "The last meal before noon",
+      "Vespers": "Evening chanting", "Vespers to Compline, dusk to the late bell": "Evening chanting and sitting",
+      "Parish work": "The monastery's work", "Parish rounds": "Teaching in the villages", "Mass and the offices": "The moon day's teaching"}},
+  tibetan: {week: "At the monastery", feast: "At the monastery for the festival",
+    offices: {"Matins and Lauds": "Morning prayers in the assembly hall", "Prime": "Debate in the courtyard", "Sext": "The noon assembly",
+      "Vespers": "Evening prayers", "Vespers to Compline, dusk to the late bell": "Evening prayers and study",
+      "Parish work": "The monastery's work", "Parish rounds": "Rites in the households", "Mass and the offices": "The great assembly"}},
+  chinese: {week: "Offerings at the temple", feast: "At the temple for the festival",
+    offices: {"Matins and Lauds": "Morning recitation", "Prime": "Study of the classics", "Sext": "The noon offering",
+      "Vespers": "Evening recitation", "Vespers to Compline, dusk to the late bell": "Evening recitation",
+      "Parish work": "The temple's work", "Parish rounds": "Rites in the households", "Mass and the offices": "The temple's great rite"}},
+  own: {week: "At the holy place", feast: "At the holy place for the festival",
+    offices: {"Matins and Lauds": "The dawn rite", "Vespers": "The evening rite", "Parish work": "The keeper's work",
+      "Parish rounds": "Rites in the households", "Mass and the offices": "The great rite"}}
+};
+const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const MASS = /^(sunday |feast-day )?mass(es)?$/i;
+
+/** A ready routine's blocks turned to a faith's week. keep: {faith, region, year}. The Western church: unchanged. */
+export function forFaith(blocks, {faith = "western", region = null, year = 0} = {}) {
+  if ( !faith || faith === "western" || !Array.isArray(blocks) ) return blocks;
+  const rest = restDay(faith, region, year), words = WORDS[faith] ?? {}, shift = rest === null ? 0 : rest - 6;
+  const turn = d => (((d + shift) % 7) + 7) % 7;
+  const dayWords = label => (shift ? label.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/g, w => DAY_NAMES[turn(DAY_NAMES.indexOf(w))]) : label);
+  return blocks.map(b => {
+    const out = {...b}, days = Array.isArray(b.days) && b.days.length ? b.days : null;
+    const worship = b.place === "church" && b.activity === "pray";
+    const weekly = worship && days?.length === 1 && days[0] === 6;
+    const holy = holyDay(faith);
+    if ( weekly && holy === null ) Object.assign(out, {days: null, feast: "only"});
+    else if ( weekly ) out.days = [holy];
+    else if ( days && rest === null ) { if ( days.length >= 5 ) out.days = null; }
+    else if ( days && shift ) out.days = days.map(turn);
+    if ( weekly && holy !== null && words.hours ) [out.from, out.to] = words.hours;
+    const lab = String(b.label ?? "");
+    if ( worship && (weekly || MASS.test(lab)) ) out.label = (weekly && holy !== null) ? (words.week ?? lab) : (words.feast ?? lab);
+    else if ( words.offices?.[lab] ) out.label = words.offices[lab];
+    else out.label = dayWords(lab);
+    if ( faith === "islamic" && b.activity === "drink" && !lab ) out.label = Number(year) >= 1550 ? "The coffee house" : "With friends at the bathhouse";
+    return out;
+  });
+}
+
+/**
+ * The faith a person's origin points to where it differs from the land's (WoDX Creation's origins): a Jewish
+ * household in Brno keeps the Sabbath, an Arab family in Iberia Friday prayer, a Greek one in Venice the Liturgy.
+ * null: they keep the faith of the place.
+ */
+const ORIGIN_FAITH = {jewish: "jewish", arabic: "islamic", turkish: "islamic", persian: "islamic", greek: "orthodox", russian: "orthodox",
+  serbian: "orthodox", romanian: "orthodox", armenian: "orthodox", tamil: "hindu", hindi: "hindu", tibetan: "tibetan", chinese: "chinese"};
+export const originFaith = origin => ORIGIN_FAITH[String(origin ?? "").toLowerCase()] ?? null;
 
 /* ------------------------------------------------------------------ */
 /*  Routines by era (NPC 0.13.0, B704 to B706)                         */

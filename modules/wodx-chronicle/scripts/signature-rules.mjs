@@ -290,9 +290,9 @@ export const thinBlooded = names => names.some(x => /thin[- ]?blood/i.test(Strin
 /* ---------------- Nosferatu: secrets ---------------- */
 
 /** Days a secret learned in a year stays fresh. */
-export const freshDays = (year, future = false) => SECRET_FRESH[mediaFor(year, {future}).id] ?? 60;
+export const freshDays = (year, future = false, region = null) => SECRET_FRESH[mediaFor(year, {future, region}).id] ?? 60;
 /** Is a secret still fresh? at: when it was learned. */
-export const secretFresh = (at, now, year, future = false) => n(now) - n(at) < freshDays(year, future) * DAY;
+export const secretFresh = (at, now, year, future = false, region = null) => n(now) - n(at) < freshDays(year, future, region) * DAY;
 /** The boon a secret buys: minor while fresh, trivial once stale. */
 export const secretPrice = (at, now, year, future = false) => secretFresh(at, now, year, future) ? "minor" : "trivial";
 export const isSecretPage = name => /^a page of secrets\b/i.test(String(name ?? ""));
