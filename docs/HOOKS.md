@@ -7,6 +7,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
+| wodxArrest | chronicle | chronicle (an arrest puts the accused before the court of the land: the forms of trial it allows, B3608) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
 | wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
@@ -89,4 +90,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
-| wodxArrest | chronicle | an arrest after the law's heat: {actor, name, region, deeds, year} (the trial hears it once trials are in) |
+| wodxVerdict | chronicle | a trial's verdict: {actor, name, region, guilty, deeds, form, year} (sentences hear it once they are in) |
