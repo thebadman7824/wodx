@@ -409,8 +409,65 @@ def front(d,f,back=False):
     if d['held']:
         hs=hands[-1 if not back else 1]; a,u=carry(d,view,hs,dy); held(cv,a,u,W[d['held']][1],'W')
     cv.outline(d['ink']); texture(cv,d); return cv.c
-def side(d,f):
-    cv=K.Cv(); ph=f/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
+ACTS={ # six frames each. Angles from straight down, forward positive: upper arm, forearm, the held thing; leg = walk frame used for the stance
+ 'swing': dict(ua=[150,200,215,120,70,45],fa=[170,215,235,125,80,60],wa=[190,235,255,140,80,50],leg=[0,0,1,2,2,1]),
+ 'thrust':dict(ua=[-20,-40,-45,60,84,50],fa=[75,80,85,88,90,80],wa=[90,90,90,90,90,90],leg=[0,0,1,2,2,1]),
+ 'shot':  dict(ua=[45,80,86,96,88,60],fa=[80,88,90,100,92,80],wa=[80,90,90,104,92,80],leg=[0,0,0,0,0,0]),
+ 'cast':  dict(ua=[20,60,86,90,90,60],fa=[60,80,88,92,90,75],wa=[90,90,90,90,90,90],leg=[0,0,0,1,1,0]),
+ 'claw':  dict(ua=[140,190,200,110,60,40],fa=[120,150,160,100,70,60],wa=[90,90,90,90,90,90],leg=[0,0,1,2,2,1]),
+}
+FXCOL=dict(blood=[(96,10,14),(150,20,24),(200,40,40)],shadow=[(10,8,16),(28,20,40),(60,44,84)],fire=[(190,70,20),(236,150,40),(250,226,130)],lightning=[(120,160,230),(190,220,250),(250,250,255)],
+ spirit=[(60,130,120),(120,200,180),(210,244,230)],wraith=[(70,90,110),(130,160,180),(206,226,236)],glamour=[(220,120,200),(120,200,240),(250,230,130)],radiance=[(200,150,50),(240,206,110),(255,246,210)],
+ chi=[(20,80,60),(60,150,110),(170,230,190)],sand=[(150,110,50),(206,170,90),(240,220,160)],conviction=[(210,190,120),(240,236,200),(255,255,255)],mind=[(110,60,150),(170,110,210),(230,200,250)])
+def fx(c,d,act,tip,u,head):
+    """effects drawn over the finished frame: muzzle flash, swing arc, and a power's own effect (d['power'] = (colour, shape))"""
+    name,i=act
+    def put(x,y,col):
+        x=int(round(x)); y=int(round(y))+YO
+        if 0<=x<S and 0<=y<SH: c[y,x]=(*col,255)
+    if name=='shot' and i==3 and d['held'] and W[d['held']][0]!='bow':
+        for k,(dx,dy_) in enumerate(((1,0),(2,0),(3,0),(2,-1),(2,1),(1,-1),(1,1))): put(tip[0]+dx,tip[1]+dy_,(250,226,130) if k<3 else (236,150,40))
+    if name in('swing','claw') and i in(3,4):
+        import math as m
+        for k in range(10):
+            a=R(150-k*10-(20 if i==4 else 0)); put(48+m.sin(a)*(17 if name=='swing' else 11),40.5+m.cos(a)*(17 if name=='swing' else 11),(236,236,240) if k%2 else (190,194,204))
+    pw=d.get('power')
+    if name=='cast' and pw and i>=2:
+        cols=FXCOL[pw[0]]; shape=pw[1]; n=(i-1)*9; ox,oy=tip
+        if shape=='bolt':
+            for k in range(n):
+                y=oy+math.sin(k*.9+i)*1.2; put(ox+k,y,cols[2 if k>n-4 else 1]); put(ox+k,y+1,cols[0]); put(ox+k,y-1,cols[1] if k>n-7 else cols[0])
+                if k>n-4: put(ox+k,y-2,cols[1]); put(ox+k,y+2,cols[1])
+        elif shape=='jag':
+            y=oy
+            for k in range(n):
+                if k%3==0: y+=((K.hsh(k,i)>.5)*2-1)*2
+                put(ox+k,y,cols[2]); put(ox+k,y+1,cols[1])
+        elif shape=='tendril':
+            for j in range(3):
+                bx=ox+8+j*8
+                for k in range(min(n+4,30-j*4)):
+                    x=bx+math.sin(k*.4+j+i)*2.6; w=2 if k<12 else 1
+                    put(x-1,86-k,cols[2]); put(x+w+1,86-k,cols[1])
+                    for q in range(w+1): put(x+q,86-k,cols[0])
+        elif shape=='spark':
+            for k in range(n*2):
+                r=K.hsh(k,i*7); a=K.hsh(k*3,i)*6.28; put(ox+4+r*n+math.cos(a)*3,oy+math.sin(a)*(3+r*5),cols[k%3])
+        elif shape=='wave':
+            for k in range(0,n,4):
+                for t in range(-6,7): put(ox+k+3-abs(t)*.35,oy+t,cols[2 if k>n-6 else 1 if abs(t)<4 else 0])
+        elif shape=='gaze':
+            hx,hy=head; put(hx+2.4,hy,cols[2]); put(hx+3.4,hy,cols[1])
+            for k in range(3,n,3): put(hx+4+k,hy+math.sin(k*.6)*.8,cols[1 if k%2 else 2])
+            for t in range(16):
+                a=t/16*6.28; put(hx+math.cos(a)*(7+i*.5),hy-1+math.sin(a)*(7+i*.5),cols[0 if t%2 else 1])
+        elif shape=='glyph':
+            for t in range(20):
+                a=t/20*6.28; put(ox+9+math.cos(a)*5,oy+math.sin(a)*5,cols[1]); 
+            for t in range(-3,4): put(ox+9+t,oy,cols[2]); put(ox+9,oy+t,cols[2])
+            for k in range(n//2): put(ox+15+k,oy+math.sin(k)*1,cols[0])
+def side(d,f,act=None):
+    cv=K.Cv(); ph=(f if not act else ACTS[act[0]]['leg'][act[1]])/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
     longk=LONG.get(kind,0); amp=.45 if (longk>=77 or lk=='skirtlong') else .7 if (lk in('skirt','kilt') or longk>=62) else 1
     k,dy=rig.kin(ph,False,amp); ov=d['over']; th,shk=legramps(d); w=legw(d); px=cv.px
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
@@ -463,7 +520,16 @@ def side(d,f):
                 if dx*dx+dyy*dyy<=5.5**2 and (dyy<-1.2 or dx<-1.4-(dyy*.25)) and not (dx>2.2 and dyy>-2.6): px(x,y,hr[3 if (-dx*.5-dyy*.8)>2 else 2 if dyy<1 else 1],pid)
     if st=='bun' and not hood: cv.capsule((cx-5,cy-3),(cx-5.5,cy-3),2.2,2.2,ramp=hr)
     hoodpost(cv,d,cx,cy,'s',pid); hat(cv,d,cx,cy,'s',pid); face(cv,d,cx,cy,'s')
-    if d['held']:
+    if act:
+        A=ACTS[act[0]]; i=act[1]; sh=(47,40.5+dy); el=pol(sh,R(A['ua'][i]),9.5); wr=pol(el,R(A['fa'][i]),8.5)
+        if d['held']:
+            c=W[d['held']][0]; wa=180 if (c=='bow' and act[0]=='shot') else A['wa'][i]; u=(math.sin(R(wa)),math.cos(R(wa)))
+            if c=='pole' and act[0]=='thrust': an=(wr[0]-u[0]*6,wr[1]-u[1]*6)
+            else: an=wr
+            held(cv,an,u,W[d['held']][1],'W'); tip=(an[0]+u[0]*wlen(d['held'])[1],an[1]+u[1]*wlen(d['held'])[1])
+        else: u=(math.sin(R(A['fa'][i])),math.cos(R(A['fa'][i]))); tip=(wr[0]+u[0]*2,wr[1]+u[1]*2)
+        arm([sh,el,wr],0,'A0')
+    elif d['held']:
         sh=(47,40.5+dy); el=pol(sh,R(-8),9.5); c=W[d['held']][0]; wr=pol(el,R(62 if c!='pole' else 75),8.5)
         hs=(wr[0]+.4,wr[1]+1)
         if c in('pole','bow'): a,u=carry(d,'s',hs,dy); held(cv,a,u,W[d['held']][1],'W'); arm([sh,el,wr],0,'A0')
@@ -471,7 +537,9 @@ def side(d,f):
     else: arm(k[0]['arm'],0,'A0')
     if ov and ov[0] in('poncho','cape'):
         L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((47,41+dy),(47,L+dy),4.6,5.0+(L-41)*.1,ramp=rc(ov[1]),g='poncho')
-    cv.outline(d['ink']); texture(cv,d); return cv.c
+    cv.outline(d['ink']); texture(cv,d)
+    if act: fx(cv.c,d,act,tip,u,(cx,cy))
+    return cv.c
 def sheet(d):
     sh=np.zeros((4*SH,8*S,4),np.uint8)
     for f in range(8):

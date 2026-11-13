@@ -144,6 +144,19 @@ def front(a,f,back=False):
             if a['teeth']: q=P(sg*1.2,hy+3+mzl); px(q[0],q[1],K.TOOTH)
             if a['tusks']: q=P(sg*(a['mzr']*.9+.6),hy+1+mzl); px(q[0],q[1],K.TOOTH); px(q[0],q[1]-1,K.TOOTH)
     cv.outline(); stripes(cv,a,rp); return cv.c
+def bite(a,i):
+    """six frames of a lunge and bite, side view: the body draws back, springs, and the jaws snap"""
+    if isinstance(a,str): a=KINDS[a]
+    dx=[0,-2,-3,4,6,2][i]; im=side(a,[0,7,7,1,2,1][i]); out=np.zeros_like(im)
+    if dx>=0: out[:,dx:]=im[:,:S-dx] if dx else im
+    else: out[:,:dx]=im[:,-dx:]
+    if i in(3,4):
+        s=a['s']; hx,hy=a['head']; x0=a['ox']+(hx+3+a['mz'])*a['bl']*s+dx+2; y0=87+(hy+2)*a['ll']*s+K.YO
+        for k in range(-3,4):
+            for q,(col) in enumerate(((240,240,236),(200,60,50) if i==4 else (200,204,212))):
+                x=int(round(x0+2-abs(k)*.5+q)); y=int(round(y0+k))
+                if 0<=x<S and 0<=y<SH: out[y,x]=(*col,255)
+    return out
 def sheet(a):
     if isinstance(a,str): a=KINDS[a]
     sh=np.zeros((4*SH,8*S,4),np.uint8)
