@@ -29,6 +29,8 @@ export const PLAYER_TOOLS = [
   {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"},
   {name: "wodxClocks", label: "Progress clocks", module: "WoDX Storyteller"},
   {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"},
+  {name: "wodxTales", label: "What they say about you", module: "WoDX Storyteller"},
+  {name: "wodxInstitutions", label: "Institutions", module: "WoDX Storyteller"},
   // 0.52.0 (B2815): the player buttons this window did not list before
   {name: "wodxFind", label: "Find anything", module: "WoDX Chronicle", locked: true},
   {name: "wodxNow", label: "What can I do now?", module: "WoDX Chronicle", locked: true},
@@ -43,6 +45,7 @@ export const PLAYER_TOOLS = [
   {name: "wodxFollowers", label: "Followers", module: "WoDX NPC"},
   {name: "wodxFactions", label: "Factions", module: "WoDX NPC"},
   {name: "wodxDress", label: "Dress for a part of the world", module: "WoDX NPC"},
+  {name: "wodxRemembered", label: "Who remembers you", module: "WoDX NPC"},
   {name: "wodxCaseBoard", label: "Case board", module: "WoDX Interactables"},
   {name: "wodxSolo", label: "Solo panel", module: "WoDX Solo"}
 ];
