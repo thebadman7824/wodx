@@ -1128,6 +1128,18 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
 | 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
 
+## Decided by Ben, 13 November 2026, 20:27 UTC (Town Households desk)
+
+Ben's picks on the Town Households desk (https://claude.ai/artifact/54eUEywJWgZ9JbQgaLhA6U), built in B3295 to B3299.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Age years outside the Bohemian lands (B3290, B3291, B3295) | C: each region its own turning years, with a colonial age (district officer, mission teacher, plantation overseer) where a foreign power ruled | Point every region at the Bohemian years in regiontrades.YEARS |
+| 2026-11-13 | Trade lists by way of life (B3292, B3296) | B: full lists of crafts, shops, homes and offices for each way of life, old and later | Empty regiontrades.LISTS |
+| 2026-11-13 | Which regions take socialist trades (B3295) | B: also Cuba and the Caribbean from 1959, mainland Southeast Asia 1975 to 1989 and the Horn of Africa 1974 to 1990, by each region's main state | Drop those socialist rows from regiontrades.YEARS |
+| 2026-11-13 | Households before 1781 (B3297) | A: the same renames from 1197 | Return early in repeople again for medieval towns |
+| 2026-11-13 | Buildings of other lands (B3298) | B: local names on the same footprints; the furnishing stays the Bohemian one for now | Drop relabel from ddtown.py |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1193,8 +1205,9 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | Who hunts outside Christian and Islamic lands, and the Arcanum's founding year (B3302) | Local hunters where no book names a body; the Judges and (from Investigating) the Society of Leopold and the Arcanum may come; the Arcanum from 1885, a house reading since the synced V20 and HH2 texts give no year | Edit BODIES in hunters-rules.mjs |
 | 2026-11-13 | Chinese names raised to 300 (B3310) | Older and newer given names, famous courtesy names among the older ones, a hundred surnames, all in pinyin; the surname He left out (the guard test reads it as a pronoun) | Edit "chinese" in data/people-world.mjs |
 | 2026-11-13 | North Indian names raised to 300 (B3311) | Older names from the epics, kings, saints and poets, newer ones to the 2000s, 70 family names used in every age as before | Edit "hindi" in data/people-world.mjs |
-| 2026-11-13 | Whose trades should a generated town outside the Bohemian lands take after 1918? (B3290, B3291) | Who ruled decides: socialist trades 1948 to 1989 in Poland, the Balkans and China, 1919 to 1989 in Russia, Central Asia and Siberia, post-war market-town trades everywhere else; the age years stay the Bohemian ones (the desk offers region-by-region years) | Drop TRADE_PLAN and the postwar tables from settle.py |
-| 2026-11-13 | Trade names by way of life in generated towns (B3292) | Rice farmers in East and Southeast Asia, barley farmers in Tibet, no brewers or bars in the lands of Islam, a headman for the reeve, a council for the national committee, collective farms under the Soviets; full trade lists per way of life wait on the desk | Drop LOCAL, OUTSIDE and SOVIET from settle.py |
 | 2026-11-13 | How fast should towns change, and how often do disasters strike? (B3281 to B3284) | Unrest eases a tenth a week, prosperity a fiftieth; fire 1 in 900 a week for timber towns (more in the dry season), failed harvests 1 in 12 a year before 1750; riots from unrest 3.5, a rising after four weeks at the height | Change the numbers in modules/wodx-storyteller/scripts/town-rules.mjs |
 | 2026-11-13 | Which plagues reach which parts of the world? (B3283) | A rounded list from the Black Death to the 1918 influenza, with smallpox in the Americas and cholera and plague in Asia, each striking a town once | Edit TOWN_OUTBREAKS in town-rules.mjs |
 | 2026-11-13 | Should a failed harvest change the market by itself? (B3282) | Yes: bread short and half again as dear in that town's market, put back by the Towns card's Undo | Drop shortBread from towns.mjs |
+| 2026-11-13 | How many nights a week can a character give to downtime projects, and how does giving fewer slow them? (B3341) | 7 a week, 6 for a vampire (one goes to the hunt); a project given fewer nights than its kind needs takes longer per roll in proportion; the newest projects pause first when the budget runs out | Edit BUDGET and HUNT_NIGHTS in projects-rules.mjs and week in tasks-rules.mjs KINDS; the Storyteller can set a character's own figure (flag projectBudget) |
+| 2026-11-13 | How often does a downtime project run into trouble? (B3342) | 1 roll in 10, and always on a botch; the complication goes to the Storyteller only, who decides what comes of it | Edit TROUBLE_CHANCE and TROUBLE in projects-rules.mjs, or untick Complications on the project |
+| 2026-11-13 | What does a finished business, herd, language or courtship project give? (B3343) | Nothing on the sheet by itself (B850): the log asks the Storyteller to award the dot or the language; each successful courting roll counts as time spent together, a botch as a slight | Edit outcomeOf and courtEvent in projects-rules.mjs |

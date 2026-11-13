@@ -6,7 +6,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 
 | Hook | Sent by | Heard by |
 |---|---|---|
-| wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
+| wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
 | wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
@@ -59,6 +59,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |

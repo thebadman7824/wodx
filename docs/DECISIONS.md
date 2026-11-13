@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3450
+Next free block: B3440
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -162,14 +162,14 @@ Next free block: B3450
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
-| B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
+| B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
 | B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
-| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4977,6 +4977,31 @@ tools/mapgen. Outside the regions TRADE_PLAN gives socialist trades, a town from
 
 Reverse: put the house of culture and the Panel block name back everywhere, and the band back as the age.
 
+## B3295. Each region its own turning years, with a colonial age (2026-11-13)
+tools/mapgen regiontrades.py YEARS, Ben's pick C on the Town Households desk. From 1781 each of the 44 regions has its own years for the industrial trades, the years between the wars, a colonial age under a foreign power, the socialist years and the post-war years (Japan industrial from 1868, India colonial 1857 to 1946, Korea colonial 1910 to 1945, Mexico colonial until 1821). Socialist years also in the Caribbean from 1959, mainland Southeast Asia from 1975 and East Africa from 1974, by the region's main state (pick B on the third question). The colonial age keeps the town's own head and adds a mission teacher, a police constable, a district officer, a customs clerk, a plantation overseer and a doctor. The age bands that pick the furnishings stay the Bohemian ones.
+
+Reverse: point every region at the Bohemian years.
+
+## B3296. Full trade lists for each way of life (2026-11-13)
+tools/mapgen regiontrades.py LISTS, pick B. The lands of Islam, India, China and Korea, Japan, mainland Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast, southern and central Africa, Polynesia and the far north each have their own crafts, shops, homes by standing, offices, innkeeper, farmer, smith and baker: once for the old trades (before about 1880) and once for the later ones. The socialist, present-day and future trades stay the shared tables with renames. Western Christendom and the Eastern church keep the Bohemian tables.
+
+Reverse: empty LISTS.
+
+## B3297. The same renames from 1197 (2026-11-13)
+tools/mapgen settle.py, pick A. A medieval town outside Moravia keeps the generator's roles under its way of life's names: no alehouse keeper in Cairo (a caravanserai keeper), rice farmers in Kyoto.
+
+Reverse: leave medieval households as the generator made them.
+
+## B3298. Buildings named by way of life (2026-11-13)
+tools/mapgen settle.relabel, pick B. Same footprint and furnishing, local name: a caravanserai for the alehouse in the lands of Islam, a shophouse and an inn in East Asia, a beer hall in southern Africa, and the chapel named for the faith (mosque, temple, synagogue, shrine; --faith wins). Gendarmerie post, Baťa house and Sgraffito house take plain names outside the Bohemian lands. Furnishing by region is not built.
+
+Reverse: drop relabel from ddtown.py.
+
+## B3299. A seeded goods draw in the fill tests (2026-11-13)
+tools/harness fill.test.mjs. Every draw in the file takes a seeded random source, so a draw that failed once on GitHub and then passed can no longer change between runs.
+
+Reverse: drop the rng arguments.
+
 ## B3300. One hunter pressure per world region (2026-11-13)
 WoDX Storyteller, hunters-rules.mjs. Heat stays with one place and the Veil track with the chronicle; the hunters keep a pressure from 0 to 10 for each WoDX Chronicle world region, in six stages (Quiet, Rumours, Watching, Investigating, Hunting, Purge). It falls by one after 14 days with nothing new. The hunters' turn runs every 7 days of world time, at most 12 turns after a long skip. House figures, logged in docs/PENDING-REVIEW.md.
 
@@ -5032,6 +5057,26 @@ WoDX NPC, faction-rules.mjs holdersInTown and townChanges, heard on wodxTown (St
 
 Reverse: drop the wodxTown hook in factions.mjs.
 
+## B3340. Downtime projects are long tasks with more to them (2026-11-13)
+WoDX Storyteller. Ben picked all eight player world systems on the desk (https://claude.ai/artifact/2xgc6aoeS8Fz4CrJuMhMWA), downtime projects first as the engine the others run on. A project is a long task (tasks-rules.mjs) with nights a week, a target and complications, so the clock, the cards, Undo, recipes, buildings and helpers all keep working. Five new kinds: business, court, language, track, herd. Older tasks have nights 0 and run exactly as before.
+
+Reverse: drop the five kinds and the nights, target, complications and trouble fields from normTask; intervalS falls back to the plain interval.
+
+## B3341. A weekly budget of nights (2026-11-13)
+WoDX Storyteller. Each character has 7 nights or days a week for projects, 6 for a vampire, who loses one to the hunt; the Storyteller can set a character's own figure (flag projectBudget). Each kind has the nights a week it needs for full pace; fewer stretch each roll in proportion. When the projects given nights add up past the budget, the newest pause with a note. House figures; logged in PENDING-REVIEW.
+
+Reverse: edit BUDGET, HUNT_NIGHTS and each kind's week; set nights to 0 to leave a project out.
+
+## B3342. Complications (2026-11-13)
+WoDX Storyteller. Each roll of a project can draw a complication from a table by kind and year (1 in 10, always on a botch), skipping the last three it had where there is a choice. It goes to the Storyteller only, as a card, a log line marked for attention and the hook wodxProjectComplication, and is kept on the project. It is the start of a scene and changes nothing by itself. The Storyteller can turn complications off for a project.
+
+Reverse: set TROUBLE_CHANCE to 0 and stop drawing on a botch in drawTrouble.
+
+## B3343. What a finished project leaves (2026-11-13)
+WoDX Storyteller. Backgrounds never rise by themselves (B850): a finished business or herd puts a line on the log asking the Storyteller to award a dot of Resources or Herd; a language, a track or research asks the Storyteller to say what came of it. A courting project calls WoDX NPC's api.hearts.court each roll: a success is time spent together, a botch a slight. The hearts api refuses anyone under 18 (B3211).
+
+Reverse: edit outcomeOf and courtEvent in projects-rules.mjs, or drop courtRoll from tasks.mjs.
+
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
 
@@ -5072,28 +5117,3 @@ Reverse: pass no sickFor from towns.mjs.
 ## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
-
-## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
-Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
-
-Reverse: Restore the shifter-only test in crinosSeen and the old note.
-
-## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
-Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
-
-Reverse: Drop dressed from deeperMods.
-
-## B3442. The figure's clothes are worn dress (2026-11-13)
-Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
-
-Reverse: Remove figurePieces from viewOf.
-
-## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
-Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
-
-Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
-
-## B3444. Reading a face (2026-11-13)
-Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
-
-Reverse: Remove readButton and readFace, and the lie tag from parseThen.
