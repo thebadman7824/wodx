@@ -160,7 +160,6 @@ Next free block: B3340
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
 | B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
 | B3220-B3239 | Family systems: pregnancy, child sheets, growing up, schooling, player-asked marriage (used B3220-B3231) | NPC, Sheets |
-| B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3294) | NPC, tools |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
@@ -4872,41 +4871,6 @@ Reverse: settle the feud.
 After a yes the clock counts the waiting: three Sundays of banns in Latin Christendom from 1215 (a betrothal before), the banns in the Orthodox church, the nikah contract and the mahr in the lands of Islam, a go-between and a lucky day in the Sinic and Japanese ways of life, an auspicious day in India, and a civil notice wherever marriage is civil. Then the wedding card goes to the Storyteller's approval queue with the rite, the record and the payment; approving it marries them under the existing marriage rules.
 
 Reverse: turn the wedding card down.
-
-## B3260. Supernatural NPCs live through a jump in time (2026-11-13)
-WoDX NPC, fates-rules.mjs and fates.mjs. Ben approved the simulated systems survey's first item: a jump of a year or more runs every supernatural NPC (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Mummy, Demon, Hunter sheets with no player owner) through the gap, year by year (in steps for jumps of more than 400 years), seeded by the world and the start time so the same jump gives the same result. Mortals and ghouls stay with Pass the Years, and player characters are never touched. The results go on one approval card; nothing is written until it is approved.
-
-Reverse: turn the setting off, or remove FATES from main.mjs.
-
-## B3261. Yearly chances are house readings (2026-11-13)
-WoDX NPC. The books give no tables for how often the undead die, sleep or sire. WoDX uses small yearly chances by line (RATES in fates-rules.mjs): a vampire 0.4% a year, three times that in the first fifty years after the Embrace; torpor 0.5% a year, more after 300 years; Garou 3% a year and dying of age at 55 to 80; mages 1.2% and Arete rising slowly to 6; changelings 1% and 0.8% lost to Banality; wraiths 0.4% destroyed, 0.3% to Oblivion, 0.05% Transcend; hunters 5%. A mummy slain rises again after 1 to 12 years. Torpor lasts by Humanity or Path (V20 pdf p. 291; the V20 Dark Ages table in wodx-creation/data/time.mjs); a torpor shorter than a year is over within the year.
-
-Reverse: edit RATES. Logged in PENDING-REVIEW.
-
-## B3262. Embrace and diablerie by sect (2026-11-13)
-WoDX NPC. The Third Tradition makes a Camarilla sire wait for an elder's leave (V20 pdf pp. 31-32), so Camarilla Embraces are rarest (0.5% a year) and the Sabbat's most common (2%); anarchs 1%, the rest 0.6%. The sheet's sect is read first; with none, a vampire before 1435 belongs to a feudal court and after it to the Camarilla. Diablerie is 0.06% a year, eight times that in the Sabbat and half in the Camarilla; it takes a simulated vampire of lower Generation about a third of the time, else a stranger, and lowers the diablerist's Generation by one only when the victim's was lower (V20 pdf p. 302). The 15th Generation cannot sire (V20 pdf p. 38); WoDX stops siring at 14th. A childe is one Generation thinner than the sire. At most 40 new ones in a jump, and those made in a jump do not sire until the next one.
-
-Reverse: edit EMBRACE, DIABLERIE_SECT, LAST_SIRING or BROOD_CAP.
-
-## B3263. Dangerous ages (2026-11-13)
-WoDX NPC. ERA_DANGER multiplies the death chance in the Inquisition's long hunt (1231-1480), the Black Death (1347-1351), the Anarch Revolt (1394-1493, vampires), the Shattering's long Banality (1350-1968, changelings), the Great War and the Second World War. These are house readings of the books' history, global rather than by region for now.
-
-Reverse: edit ERA_DANGER.
-
-## B3264. Off by default (2026-11-13)
-WoDX NPC. The world setting "Off-screen lives of supernatural NPCs" (npcFates) starts off, so Live is unchanged until the Storyteller turns it on. Short skips (under a year) only wake sleepers whose years are up.
-
-Reverse: change the default.
-
-## B3265. What approving writes (2026-11-13)
-WoDX NPC. Torpor: the Torpor condition and chronology.torpor {from, to} in world time. Waking: both cleared. Death: chronology.died and cause "off-screen", and the sheet moves to WoDX · The Dead (as Pass the Years files the dead). Diablerie: system.generation (keeping the Generation background's change). Rank: system.renown.rank; Arete: system.advantages.arete.permanent. A seat the dead held empties through the faction politics already in place, which fill it at the next gathering.
-
-Reverse: undo the sheet edits by hand; the card's text lists every one.
-
-## B3266. Brood records (2026-11-13)
-WoDX NPC. New childer, cubs, apprentices and fosterlings are records in the world setting brood, named by the people generator of the region where it can, and lived through later jumps like anyone else. api.fates.bring(id) makes a sheet for one (a Vampire with its sire in lineage and its Generation; a Werewolf, Mage or Changeling for the others). An NPC flagged wodx-npc.fates.keep is left out, so the Storyteller's plans for a character stand.
-
-Reverse: clear the brood setting.
 
 ## B3280. Every market is a town, and the town turn runs weekly in the Storyteller (2026-11-13)
 WoDX Storyteller, town-rules.mjs and towns.mjs. Ben approved every proposal of the simulated systems survey (2026-11-13 19:58Z); item 2 (town condition) and item 8 (disasters) are built together. A town is keyed to a market, since markets already hold a settlement's scenes, links, supply, taxes and traders. The turn keeps its own clock (a week of world time, twelve played weeks at most after a skip, the rest settled quietly with no events), so it runs whether or not the market turn is on. Setting townTurn: Auto, Suggest, Off; hidden state townState.
