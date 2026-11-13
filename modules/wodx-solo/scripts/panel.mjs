@@ -30,11 +30,20 @@ let H = null; // what main.mjs lends: {isOn, isSeat, log, entries, get}
 /*  Who and where                                                      */
 /* ------------------------------------------------------------------ */
 
-/** The character a player plays: their own, else the first they own. */
+/**
+ * The character a player plays (0.2.1): the one assigned to them; else one they own with a token on the scene they
+ * view, one they own alone before one they share; else the first they own alone, then the first they own at all.
+ */
+const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
+const ownsAlone = (a, user) => !all(game.users).some(u => u.id !== user.id && !u.isGM && a.testUserPermission?.(u, "OWNER"));
 function characterOf(user) {
   if ( !user ) return null;
   if ( user.character ) return user.character;
-  return all(game.actors).find(a => a.testUserPermission?.(user, "OWNER") && a.hasPlayerOwner && !/group/i.test(String(a.type ?? ""))) ?? null;
+  const mine = all(game.actors).filter(a => ownable(a) && a.testUserPermission?.(user, "OWNER"));
+  const viewed = game.scenes?.get?.(user.viewedScene) ?? all(game.scenes).find(s => s.id === user.viewedScene);
+  const onView = viewed ? mine.filter(a => all(viewed.tokens).some(t => t.actorId === a.id)) : [];
+  const alone = list => list.find(a => ownsAlone(a, user));
+  return alone(onView) ?? onView[0] ?? alone(mine) ?? mine[0] ?? null;
 }
 /** The scene and token where the character is: the one the player views first, else any that holds a token. */
 function placeOf(user) {
