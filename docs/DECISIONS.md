@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3000
+Next free block: B3010
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -138,6 +138,7 @@ Next free block: B3000
 | B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
+| B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4196,3 +4197,28 @@ Reverse: drop the leader branch in withWorship.
 By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Soviet campaign against religion), in China from 1966 to 1976 (the Cultural Revolution) and in Tibet from 1959 to 1979. Set to Kept, an NPC keeps it anyway, in secret as far as the Storyteller plays it.
 
 Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
+
+## B3000. The wizard works out the Traits that follow from the others (2026-11-13)
+WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; Arete 1, Willpower 5 and Quintessence equal to the Avatar for Mage; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
+
+Reverse: drop #derived from wizard.mjs; the old "Still to set by hand" line was the starting-value text.
+
+## B3001. Freebie dots and the prelude's Willpower go on top (2026-11-13)
+The book value is the base; Willpower, Humanity or a Road, Rage, Gnosis, Arete and Glamour bought on the freebie page (the wizard's bought record) and each Willpower dot the prelude gave are added. So pressing Set never takes back a dot that was paid for.
+
+Reverse: pass bought: {} and prelude: 0 in derivedFor.
+
+## B3002. Garou starting values read from the sheet's auspice, breed and tribe (2026-11-13)
+Auspice: Ragabash 1 to Ahroun 5 Rage. Breed: homid 1, metis 3, lupus 5 Gnosis. Tribe: the W20 core list of starting Willpower; Fenrir counts as the Get of Fenris and the Warders of Men as the Glass Walkers for the Dark Ages. A tribe not in the list, or an empty field, leaves the row without a value and says why. The tribe values and the Dark Ages names wait for the book check.
+
+Reverse: empty WILLPOWER_BY_TRIBE in derived-rules.mjs.
+
+## B3003. Torment by House (2026-11-13)
+Devils, Scourges, Malefactors and Fiends start at 3 Torment; Defilers, Devourers and Slayers at 4 (the Akkadian House names are read too). Waits for the book check.
+
+Reverse: empty TORMENT_BY_HOUSE.
+
+## B3004. Starting blood is rolled in the open (2026-11-13)
+V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls and revenants start at 1. The result stops at the sheet's blood pool for the Generation. The wizard never rolls without the button.
+
+Reverse: remove the blood action.
