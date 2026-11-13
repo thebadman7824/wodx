@@ -450,3 +450,34 @@ export function restore(state, snap = []) {
   for ( const s of snap ) { if ( s.town ) st.towns[s.id] = normTown(s.town); else delete st.towns[s.id]; }
   return st;
 }
+
+/* ------------------------------------------------------------------ */
+/*  The town at each settlement age (B3420, for the chronicle rebuild) */
+/* ------------------------------------------------------------------ */
+
+/** The town generator's size (tools/mapgen/ddsettle.py --size) for a number of people in a year. */
+export function generatorSize(people, year) {
+  const w = sizeWord(people, year);
+  return w === "hamlet" || w === "village" ? "village" : w === "great city" ? (num(year) >= 1850 ? "metropolis" : "city") : w;
+}
+
+/**
+ * What the rebuild's settlement ages read from a town's past (recipe ages, Storyteller B2780): for each age year,
+ * the town as its yearly history last stood at or before that year (the first line when the age comes earlier),
+ * the generator size that fits it, and the blows it took since the age before. A town with no history gives null for
+ * each age, and the recipe's own size stands.
+ *   ages: [1197, 1420, ...]; town: a town (normTown) or its view.
+ * Returns [{year, people, prosperity, unrest, size, scars: [{kind, year, text}]}] or [{year, ... null}].
+ */
+export function townAtAges(town, ages = []) {
+  const hist = [...(town?.history ?? [])].sort((a, b) => a.year - b.year);
+  const scars = town?.scars ?? [];
+  const sorted = [...ages].map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  return sorted.map((year, i) => {
+    if ( !hist.length ) return {year, people: null, prosperity: null, unrest: null, size: null, scars: []};
+    const at = hist.filter(h => h.year <= year).at(-1) ?? hist[0];
+    const from = i ? sorted[i - 1] : -Infinity;
+    return {year, people: at.people, prosperity: at.prosperity, unrest: at.unrest, size: generatorSize(at.people, year),
+      scars: scars.filter(s => s.year > from && s.year <= year).map(s => ({kind: s.kind, year: s.year, text: s.text}))};
+  });
+}
