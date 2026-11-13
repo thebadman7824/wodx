@@ -86,10 +86,15 @@ export async function coinNamer(where) {
   } catch (e) { return null; }
 }
 
-/** Draw for a container. opts: {place, count, era, container, items, rng}. Returns the drawn items. */
+/**
+ * Draw for a container. opts: {place, count, era, container, items, rng, scene, where}. Returns the drawn items.
+ * 0.40.0: gear follows the scene's region and way of life in the chronicle's year (where, or whereFor(scene)).
+ */
 export async function drawFor(opts = {}) {
   const items = opts.items ?? await gearIndex();
-  return F.draw(items, {era: opts.era === undefined ? eraNow() : opts.era, place: opts.place, container: opts.container, count: opts.count, rng: opts.rng});
+  const where = opts.where ?? whereFor(opts.scene ?? globalThis.canvas?.scene);
+  return F.draw(items, {era: opts.era === undefined ? eraNow() : opts.era, place: opts.place, container: opts.container, count: opts.count, rng: opts.rng,
+    year: where?.year ?? null, way: where?.way ?? null, region: where?.region ?? null});
 }
 
 /**
