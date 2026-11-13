@@ -12,6 +12,7 @@ import "./face64-garou.mjs";
 import "./face64-fera.mjs";
 import "./face64-mage.mjs";
 import "./face64-wraith.mjs";
+import "./face64-changeling.mjs";
 
 const {mix, same, glow, stamp, horn, inTri, headHw, CX, EYE_Y, MOUTH_Y} = H;
 const EYES = [[26, -1], [38, 1]];
@@ -204,7 +205,7 @@ const ONE_OF = new Set(["Deathmark", "Headwear", "Metis"]);
 const WHOLE = new Set(["changeling", "fera"]);
 const norm = s => String(s ?? "").toLowerCase();
 /** A group whose name sits inside a longer one: a True Brujah is not a Brujah. */
-const SHADOWED = {brujah: ["true brujah"]};
+const SHADOWED = {brujah: ["true brujah"], seelie: ["unseelie"]};
 /** Does the sheet's text (clan, kith, tribe, tradition and so on) name this group? */
 export function groupMatches(group, text) {
   const g = norm(group), t = norm(text);
