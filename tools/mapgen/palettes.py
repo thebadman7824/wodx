@@ -135,6 +135,6 @@ def portals(band, wealth):
 
 
 def _have(name):
-    """True when the asset list loaded for this map holds the file (the metal window is in the older pack list only)."""
+    """True when the asset list loaded for this map holds the file (the metal window is in the older pack list only); True with no list loaded."""
     import ddcore
-    return any(a.endswith("/" + name) and "/textures/portals/" in a for a in ddcore.ASSETS)
+    return not ddcore.ASSETS or any(a.endswith("/" + name) and "/textures/portals/" in a for a in ddcore.ASSETS)
