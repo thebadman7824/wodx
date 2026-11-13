@@ -17,5 +17,6 @@ If you hold rights in something here and want it changed or taken out, open an i
 - `modules/wodx-paperdoll/vendor/dicebear-lorelei.mjs`: DiceBear (MIT) with the Lorelei design; see `LICENSE-dicebear.txt` beside it.
 - `tools/mapgen/cdda_types.json`: layouts adapted from Cataclysm: Dark Days Ahead, CC BY-SA 3.0; see `tools/mapgen/CDDA-CREDIT.md`.
 - Sounds in `modules/wodx-atmosphere/sounds` and the pixel-art sprites in `modules/wodx-paperdoll/sprites` are made by the project's own scripts in `tools/`.
+- Cyberpunk 2020 is a trademark of R. Talsorian Games. The Future Darkness gear lists draw on its cyberware rules (names and numbers only, with page references) as unofficial fan use; WoDX is not affiliated with or endorsed by R. Talsorian Games.
 - Music and ambience are not kept in the repository. Each era kit's credits journal names its sources; see `docs/MUSIC-SOURCES.md`.
 - Map tools refer to Dungeondraft asset packs by name only. No asset art from those packs is kept here.
