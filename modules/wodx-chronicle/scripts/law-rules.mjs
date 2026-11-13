@@ -22,7 +22,8 @@ export const CRIMES = {
   "drug-trade": "Dealing in forbidden drugs", "computer-crime": "Breaking into computers", terrorism: "Terrorism",
   "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine",
   unfilial: "Failing in duty to parents and elders",
-  "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow"
+  "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
+  "pass-law": "Being found without a pass where the pass laws apply"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -47,7 +48,8 @@ export const PUNISH = {
   hanging: "Death by hanging, the sword or the wheel", burning: "Burning, for heresy and sorcery", galleys: "Rowing in the galleys",
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
   confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
-  "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas"
+  "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas",
+  "enslave": "Being sold into slavery"
 };
 
 /** Keepers of order. */
@@ -59,7 +61,8 @@ export const ORDER = {
   cameras: "Cameras on the streets and in shops", army: "Soldiers in the streets",
   muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting",
   "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another",
-  "headman": "The village headman and the watchmen"
+  "headman": "The village headman and the watchmen",
+  "societies": "Masked societies and age sets that keep order"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -170,6 +173,26 @@ export const FAMILIES = {
       add: {order: ["police", "detectives"], proof: ["evidence", "forensic"], punish: ["prison"]},
       drop: {crimes: ["caste-breach"], proof: ["ordeal"], punish: ["outcaste", "maiming"], order: ["headman"]}},
     {from: 1995, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime", "terrorism"]}}
+  ]},
+
+  // Africa south of the Sahara: elders and kin, royal courts, colonial indirect rule, independence (B3496)
+  african: {label: "Africa south of the Sahara", rows: [
+    {from: 0, note: "Kings, chiefs and councils of elders keep the custom of the land", set: {
+      rule: {form: "Kingdoms and chiefdoms ruled by custom", ruler: "The king or the chief", council: "The council of elders and the great lineages"},
+      courts: ["The king's or chief's court, with elders sitting beside the judge", "Lineage and village elders, who settle most quarrels", "Masked societies and age sets that judge their own members"],
+      proof: ["witnesses", "oath", "ordeal"], punish: ["fine", "banishment", "enslave", "hanging"],
+      order: ["headman", "societies"], taxes: ["Tribute to the king in goods, cattle or labour", "Tolls on the trade routes"], bribe: 2, catch: 0.3},
+      add: {crimes: ["sorcery", "rebellion"], warn: ["A charge of witchcraft can bring the poison ordeal", "Wrongs are often paid for in cattle or goods to the victim's kin"]}},
+    {from: 1885, note: "Colonial rule: European courts above, native courts under the chiefs below",
+      set: {rule: {form: "A colony of a European power", ruler: "The colonial governor", council: "The governor's council of officials"}, catch: 0.4},
+      add: {courts: ["Colonial courts for Europeans and for grave crimes", "Native courts under the chiefs, watched by district officers"], order: ["police"], punish: ["prison", "hard-labour"], taxes: ["The hut tax or poll tax, paid in coin"],
+        warn: ["Europeans and Africans do not stand under the same law"]},
+      drop: {punish: ["enslave"], proof: ["ordeal"], warn: ["A charge of witchcraft can bring the poison ordeal"]}},
+    {from: 1960, note: "Independence: new states, often under one party or the army",
+      set: {rule: {form: "An independent state: a republic, often under one party or the army", ruler: "The President", council: "The ruling party or the military council"}, catch: 0.4},
+      add: {order: ["detectives", "secret-police"], proof: ["evidence"]},
+      drop: {courts: ["Colonial courts for Europeans and for grave crimes"], warn: ["Europeans and Africans do not stand under the same law"], taxes: ["The hut tax or poll tax, paid in coin"]}},
+    {from: 1995, note: "Cameras and computer crime in the cities", add: {order: ["cameras"], crimes: ["computer-crime"]}}
   ]}
 };
 
@@ -188,6 +211,38 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  "west-africa": [
+    {from: 0, note: "Kingdoms of the savanna and forest, Ghana's heirs", set: {rule: {ruler: "The kings of the savanna and the forest"}}},
+    {from: 1235, note: "The Mali empire under the mansa; qadis in the trading towns", set: {rule: {ruler: "The Mansa of Mali", council: "The mansa's council of clan heads"}},
+      add: {courts: ["The qadi's court in Timbuktu, Djenné and the trading towns"]}},
+    {from: 1464, note: "The Songhai empire", set: {rule: {ruler: "The Askia of Songhai"}}},
+    {from: 1520, to: 1867, note: "The Atlantic slave trade", add: {warn: ["Raiders and kings sell captives to the slave ships on the coast"]}},
+    {from: 1804, note: "The Sokoto caliphate in the north", add: {courts: ["Sharia courts of the Sokoto caliphate"]}},
+    {from: 1957, note: "Independence, Ghana first", set: {rule: {ruler: "Each state's president"}}}
+  ],
+  "east-africa": [
+    {from: 0, note: "The Zagwe kings in Ethiopia; Swahili sultans on the coast", set: {rule: {ruler: "The Zagwe King of Ethiopia, and the Swahili sultans", council: "The court, the church and the coast's merchant families"}},
+      add: {courts: ["The qadi's court in Kilwa, Mombasa and the coast towns", "The Ethiopian church's courts"]}},
+    {from: 1270, note: "The Solomonic emperors of Ethiopia", set: {rule: {ruler: "The Solomonic Emperor of Ethiopia, and the Swahili sultans"}}},
+    {from: 1450, note: "The Fetha Nagast, the law of the kings, in Ethiopia", add: {courts: ["The emperor's judges under the Fetha Nagast"]}},
+    {from: 1698, note: "Oman holds the coast from Zanzibar", set: {rule: {ruler: "The Ethiopian Emperor, and the Sultan of Zanzibar on the coast"}}},
+    {from: 1936, to: 1941, note: "Italian occupation of Ethiopia", add: {warn: ["Italian occupiers rule Ethiopia by force"]}},
+    {from: 1974, to: 1991, note: "The Derg in Ethiopia: the Red Terror", add: {warn: ["In Ethiopia the Derg kills its opponents in the streets"]}}
+  ],
+  "southern-africa": [
+    {from: 0, note: "Mapungubwe and Great Zimbabwe, then the Mutapa kings", set: {rule: {ruler: "The kings of Great Zimbabwe, later the Mwene Mutapa"}}},
+    {from: 1652, note: "The Dutch at the Cape, under Roman-Dutch law", add: {courts: ["The Cape's courts under Roman-Dutch law"]}},
+    {from: 1816, to: 1879, note: "The Zulu kingdom", add: {warn: ["The Zulu king's regiments enforce the king's word"]}},
+    {from: 1948, to: 1993, note: "Apartheid: race decides where one may live, work, marry and walk", add: {crimes: ["pass-law"], warn: ["Black South Africans must carry a pass and may be arrested without one"], order: ["secret-police"]}},
+    {from: 1994, note: "Democratic South Africa; the death penalty abolished (1995) and a new constitution (1996)", drop: {punish: ["hanging"]}}
+  ],
+  "central-africa": [
+    {from: 0, note: "The Kongo kingdom and the kingdoms of the great lakes", set: {rule: {ruler: "The Manikongo, and the kings of the lakes"}}},
+    {from: 1491, note: "Kongo's kings take the Christian faith", add: {courts: ["Church courts at the Kongo royal capital"]}},
+    {from: 1885, to: 1908, note: "The Congo Free State: rubber quotas, hostages and severed hands", add: {warn: ["The Free State's soldiers maim those who fall short of the rubber quota"]}},
+    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 4}},
+    {from: 1998, note: "War in the Congo", set: {bribe: 3}}
+  ],
   india: [
     {from: 0, note: "Rajput and southern kingdoms; Ghurid armies in the north", set: {rule: {ruler: "The Rajput kings in the north, the Chola and Hoysala kings in the south"}}},
     {from: 1206, note: "The Delhi Sultanate in the north; Hindu kingdoms in the south (Vijayanagara from 1336)", set: {rule: {ruler: "The Sultan of Delhi in the north; Hindu kings in the south", council: "The sultan's nobles and the qadis"}},

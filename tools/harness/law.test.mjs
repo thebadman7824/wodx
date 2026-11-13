@@ -148,3 +148,24 @@ test("South Asia (B3495)", () => {
     assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
   }
 });
+
+test("Africa south of the Sahara (B3496)", () => {
+  const at = (r, y) => L.lawOf(r, y);
+  assert.equal(at("west-africa", 1300).family, "african");
+  assert.match(at("west-africa", 1300).rule.ruler, /Mansa/);
+  assert.ok(at("west-africa", 1300).courts.some(c => /Timbuktu/.test(c)));
+  assert.ok(at("west-africa", 1700).warn.some(w => /slave ships/.test(w)));
+  assert.ok(!at("west-africa", 1900).warn.some(w => /slave ships/.test(w)));
+  assert.ok(at("west-africa", 1920).warn.some(w => /same law/.test(w)), "colonial rule");
+  assert.ok(!at("west-africa", 1970).warn.some(w => /same law/.test(w)), "independence");
+  assert.ok(!at("west-africa", 1920).punish.includes("enslave"));
+  assert.ok(at("east-africa", 1500).courts.some(c => /Fetha Nagast/.test(c)));
+  assert.ok(at("southern-africa", 1970).crimes.includes("pass-law"));
+  assert.ok(!at("southern-africa", 2000).crimes.includes("pass-law"));
+  assert.ok(!at("southern-africa", 2000).punish.includes("hanging"));
+  assert.ok(at("central-africa", 1900).warn.some(w => /rubber/.test(w)));
+  for ( const r of ["west-africa", "east-africa", "southern-africa", "central-africa"] ) for ( const y of [1197, 1500, 1800, 1950, 2022] ) {
+    const x = at(r, y);
+    assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
+  }
+});
