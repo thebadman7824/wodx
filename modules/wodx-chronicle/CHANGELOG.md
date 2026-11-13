@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.69.1 (A scene can name the Underworld as its money in Where this scene stands, and then counts as abroad for money, so people there pay in oboli though it stands over home (B3552))
 - 0.69.0 (Law of the land: the Pacific family for Australia, Aotearoa and the Pacific islands (chiefs and tapu, the first peoples' own law in Australia, the penal colony, the stolen generations, the Treaty of Waitangi and its tribunal, Hawaiian kapu and its end, colonial rule and independence))
 - 0.68.0 (Law of the land: the Americas family for all eight American regions (the peoples' own councils and the Great Law, the Mexica and the Inca, the viceroyalties and the Holy Office, the slave codes, the colonies under common and French law, the republics, Prohibition, the Wild West, the juntas))
 - 0.67.0 (Law of the land: the steppe family for Central Asia and Siberia (clan custom and the khan's court, the Great Yassa, the Chagatai, Timurid and Uzbek khans, Russian conquest, fur tribute and exile, Soviet republics and the Gulag, independence))

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.66.0 (The Quiet as a state for mages from 1450 (Denial, Madness, Morbidity by M20, its level following the Paradox pool): the Storyteller sends visions, tokens and false lines only the mage's player sees, and the Quiet ends by rising out of it, a mindscape, another mage's cure or an empty pool (B3550-B3551). Soulforging for wraiths: oboli, soulsteel arms and armor or an Artifact from Corpus as a long task, Artificers' skill, Stygia's law before 1999 and the new order after; oboli go to the purse as the Underworld's money (B3553-B3554). Everyday Banality: scenes in offices, courts of law and Technocracy sites, time with the Autumn People and long tasks in such places gather toward a suggested Banality point, heavier from 1450 and again from 1700 (B3555-B3556))
 - 3.65.1 (The Seed of Lilith: a player character vessel always resists at 7, whatever their gender; a Storyteller character's recorded sex now counts even without a passer-by's tags (B3502))
 - 3.65.0 (Hunting in a sick town: when WoDX Storyteller's sickness is spreading or at its height in the scene's town, the Hunt offers "The sick are everywhere" at one less difficulty (change it or set 0 to overrule), and a vampire who becomes a carrier there carries that town's sickness by name, so it can bring it to a clean town (B3438))
 - 3.64.0 (Seduction refuses a target under 18 and opens no window (B3212))
