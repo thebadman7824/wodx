@@ -129,7 +129,7 @@ export const REGION_FAMILY = {
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
   moravia: [
-    {from: 0, note: "The Přemyslid crown: the duke, from 1198 king, with the margrave of Moravia under him",
+    {from: 0, note: "The Přemyslid crown: the duke, from 1198 king, with the margrave of Moravia below the crown",
       set: {rule: {form: "A kingdom of the Bohemian crown, with Moravia a margraviate under it", ruler: "The King of Bohemia, and the Margrave of Moravia", council: "The lords of the land and the bishop of Olomouc"}},
       add: {courts: ["The land court of the lords, which keeps the land tables of who owns what"]}},
     {from: 1243, note: "Brno receives its town law; German town law spreads to the royal towns", add: {courts: ["Town courts under Brno or Magdeburg law, with appeal to the mother town"]}},
