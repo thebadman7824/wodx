@@ -2,6 +2,13 @@ name: Checks
 
 # The automatic part of the quality gate on every pull request and every push to main.
 # Testbed gates and the UI fit check still run on Ben's PC (they need Foundry).
+#
+# Layout (B3040): the quality checks and the mock-Foundry harness run side by side, and the harness
+# is split into SHARDS parallel jobs by past run time (tools/harness/shard.mjs, shard-times.json).
+# Inside each shard the files still run one at a time, as before. A change that only touches
+# docs/ or Markdown runs just the harness files that read docs. The "checks" job at the end is the
+# one result to look at: it passes when every job that ran passed, so a skipped harness still
+# counts as green.
 on:
   pull_request:
   push:
@@ -11,30 +18,127 @@ concurrency:
   group: checks-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  SHARDS: "5"
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
 jobs:
-  checks:
+  changes:
     # Pull requests from outside accounts are closed by outside-guard.yml (B3030); their code is never run here.
     if: github.event_name != 'pull_request' || github.event.pull_request.user.login == 'thebadman7824'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+      shards: ${{ steps.diff.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          docs_only=false
+          if [ -n "$BASE" ] && [ "$BASE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BASE" 2>/dev/null; then
+            files=$(git diff --name-only "$(git merge-base "$BASE" "$HEAD")" "$HEAD")
+            echo "Changed files: $(echo "$files" | grep -c .)"
+            if [ -n "$files" ] && ! echo "$files" | grep -qvE '^docs/|\.md$'; then docs_only=true; fi
+          fi
+          echo "Docs only: $docs_only"
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+          # Harness jobs: the SHARDS shards, or the one docs run for a docs-only change.
+          if [ "$docs_only" = true ]; then shards='["docs"]'; else shards=$(seq -s, 1 "$SHARDS"); shards="[$shards]"; fi
+          echo "shards=$shards" >> "$GITHUB_OUTPUT"
+
+  quality:
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       # Parse, module.json, imports, unit tests, Encyclopedia format. The harness is skipped here
-      # (no node_modules yet) and runs once in the next step.
+      # (no node_modules) and runs in the harness jobs.
       - name: Quality checks
         run: bash tools/quality-check.sh
+
+  harness:
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.changes.outputs.shards) }}
+    name: harness ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore harness packages
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: tools/harness/node_modules
+          key: harness-${{ runner.os }}-node22-${{ hashFiles('tools/harness/package.json') }}
       - name: Install harness
+        if: steps.cache.outputs.cache-hit != 'true'
         working-directory: tools/harness
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm install --omit=dev --no-audit --no-fund
       - name: Mock-Foundry harness
         working-directory: tools/harness
-        run: node --test --test-concurrency=1 *.test.mjs > harness.log 2>&1 || { grep -B2 -A25 "^not ok" harness.log | head -300; tail -12 harness.log; exit 1; }
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          if [ "$SHARD" = "docs" ]; then node shard.mjs --docs > files.txt; else node shard.mjs "$SHARD" "$SHARDS" > files.txt; fi
+          echo "$(wc -l < files.txt) test files"
+          node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout \
+            --test-reporter=./times-reporter.mjs --test-reporter-destination=times.json \
+            $(cat files.txt) > harness.log 2>&1 || { grep -B2 -A25 "^not ok" harness.log | head -300; tail -12 harness.log; exit 1; }
       - name: Harness summary
         if: always()
         working-directory: tools/harness
-        run: '[ -f harness.log ] && grep -E "^# (tests|pass|fail|duration_ms)" harness.log || true'
+        run: |
+          [ -f harness.log ] && grep -E "^# (tests|pass|fail|skipped|todo|duration_ms)" harness.log || true
+          # File times for shard-times.json, on one line so they can be copied from the log.
+          [ -s times.json ] && echo "TIMES $(tr -d '\n ' < times.json)" || true
+          mkdir -p ../../summary
+          [ -f harness.log ] && grep -E "^# (tests|pass|fail) " harness.log > ../../summary/counts.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: harness-counts-${{ matrix.shard }}
+          path: summary/counts.txt
+          if-no-files-found: ignore
+          retention-days: 3
+
+  checks:
+    # The one result to look at (and the one to require for merging). Passes when every job that ran passed.
+    needs: [changes, quality, harness]
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.user.login == 'thebadman7824')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: harness-counts-*
+          path: counts
+        continue-on-error: true
+      - name: Totals and result
+        env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+          DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+        run: |
+          echo "Docs only: ${DOCS_ONLY:-unknown}"
+          for k in tests pass fail; do
+            n=$(cat counts/*/counts.txt 2>/dev/null | awk -v k="$k" '$2 == k {s += $3} END {print s + 0}')
+            echo "# $k $n"
+          done
+          echo "Job results: $RESULTS"
+          if echo "$RESULTS" | grep -qE '"(failure|cancelled)"'; then echo "A check failed"; exit 1; fi
+          echo "All checks that ran passed"
