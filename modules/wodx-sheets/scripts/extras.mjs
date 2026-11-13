@@ -24,6 +24,28 @@ const chron = () => game.modules.get("wodx-chronicle")?.api;
 const eraId = () => { try { return chron()?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } };
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || Number(game.time?.components?.year) || 0; } catch (e) { return 0; } };
 const place = () => { try { return game.settings.get(MOD, "coinPlace") || "german"; } catch (e) { return "german"; } };
+/**
+ * Coins of the time (0.15.2, B2653): with "The chronicle's money" chosen, the names come from WoDX Storyteller's
+ * money of the place, which covers every world region, on a scene abroad the money of the land it stands in.
+ * Otherwise, or without WoDX Storyteller, the sheet's own list for the German lands, England or the United States.
+ */
+export function coinsNow(scene = globalThis.canvas?.scene ?? null) {
+  const y = yearNow(), p = place();
+  if ( p === XR.CHRONICLE_COINS ) {
+    try {
+      const st = game.modules.get("wodx-storyteller"), R = st?.active ? st.api?.upkeep?.money?.rules : null;
+      if ( R?.moneyFor ) {
+        const w = chron()?.world;
+        const here = scene && w?.isAbroad?.(scene) ? w.here(scene)?.money : null;
+        const region = (here && R.MONIES?.[here]) ? here : (game.settings.get("wodx-storyteller", "moneyRegion") || "moravian");
+        const names = XR.coinsFromMoney(R.moneyFor(y, region));
+        if ( names ) return names;
+      }
+    } catch (e) { /* fall back to the sheet's own list */ }
+    return XR.coinsAt("german", y);
+  }
+  return XR.coinsAt(p, y);
+}
 
 /* -------------------------------------------------------------- */
 /*  Gear and goods lookups (WoDX Library's lists, when on disk)    */
@@ -437,7 +459,7 @@ export async function decorate(sheet, html) {
   if ( gear ) {
     const notes = gear.querySelector(".sheet-gearArea, .editor")?.outerHTML ?? "";
     const view = XR.possessions(items, { look, era: eraId(), year: yearNow() });
-    const money = { coins: XR.moneyOf(items), inUse: XR.coinsAt(place(), yearNow()), carried: actor.system?.money?.carried ?? 0, bank: actor.system?.money?.bank ?? 0 };
+    const money = { coins: XR.moneyOf(items), inUse: coinsNow(), carried: actor.system?.money?.carried ?? 0, bank: actor.system?.money?.bank ?? 0 };
     gear.innerHTML = XH.possessionsHtml(view, { money, editable, gearNotes: notes });
   }
   // The Ties tab, beside Gear in the full menu
@@ -648,7 +670,7 @@ async function containerSettings(it) {
 }
 async function addCoins(actor) {
   // Coins of account were never struck, so nobody carries them
-  const coins = XR.coinsAt(place(), yearNow()).filter(c => !/of account/.test(c));
+  const coins = coinsNow().filter(c => !/of account/.test(c));
   const boxes = actor.items.filter(XR.isContainer);
   const r = await foundry.applications.api.DialogV2.prompt({
     window: { title: "Add coins" },
@@ -676,8 +698,8 @@ export async function afterDrop(target, made, data) {
 
 export function setup() {
   game.settings.register(MOD, "coinPlace", {
-    name: "Coin of which land", hint: "The coins the sheet offers by year: the German lands, England or the United States.",
-    scope: "world", config: true, type: String, default: "german", choices: Object.fromEntries(Object.entries(XR.CURRENCIES).map(([k, v]) => [k, v.label]))
+    name: "Coin of which land", hint: "The coins the sheet offers by year: the German lands, England, the United States, or the chronicle's money, which follows WoDX Storyteller's money for every region of the world (on a scene abroad, that land's).",
+    scope: "world", config: true, type: String, default: "german", choices: {...Object.fromEntries(Object.entries(XR.CURRENCIES).map(([k, v]) => [k, v.label])), [XR.CHRONICLE_COINS]: "The chronicle's money (every region, from WoDX Storyteller)"}
   });
   installHistory();
   installChanges();
