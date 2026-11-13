@@ -14,24 +14,42 @@ import {PRESETS} from "./routine-rules.mjs";
 
 const IX = "wodx-interactables", NPC = "wodx-npc";
 
+/**
+ * The record a region keeps of its seeded residents, with one more household added. before: the region's record or
+ * null; returns {actors (everyone seeded there), houses: [{id, actors}], ownerSet, at}. A list, not a map, since a
+ * household id may hold a full stop.
+ */
+export function residentRecord(before, householdId, actorIds, {ownerSet = false, at = 0} = {}) {
+  const houses = (Array.isArray(before?.houses) ? before.houses : []).filter(x => x.id !== householdId);
+  houses.push({id: householdId, actors: [...actorIds]});
+  const hidden = before?.hidden ? {hidden: before.hidden} : {};
+  return {actors: [...new Set([...(Array.isArray(before?.actors) ? before.actors : []), ...actorIds])], houses, ownerSet: !!(before?.ownerSet || ownerSet), at, ...hidden};
+}
+
 /* ------------------------------------------------------------------ */
 /*  Reading the map                                                    */
 /* ------------------------------------------------------------------ */
 
 /**
  * The households kept on a scene's regions. regions: [{uuid, name, flags}] (plain data or documents).
- * Returns [{region, regionName, kind, owner, household, seeded}] in the map's order; seeded lists the actor ids an
- * earlier seeding made there.
+ * Returns [{region, regionName, kind, owner, shared, household, seeded}] in the map's order; shared is how many
+ * households the building holds, and seeded lists the actor ids an earlier seeding made for this household.
  */
 export function householdsOn(regions = []) {
   const out = [];
   for ( const r of regions ) {
-    const hh = r?.flags?.[IX]?.household;
-    if ( !hh || !Array.isArray(hh.people) || !hh.people.length ) continue;
-    const place = r.flags?.[NPC]?.place ?? {};
-    out.push({region: r.uuid, regionName: String(r.name ?? hh.label ?? ""), kind: place.kind ?? "home", owner: place.owner ?? "",
-      household: {id: String(hh.id ?? r.uuid), label: String(hh.label ?? r.name ?? "A household"), trade: String(hh.trade ?? ""), people: hh.people.map(p => ({role: String(p.role ?? "").trim()})).filter(p => p.role)},
-      seeded: Array.isArray(r.flags?.[NPC]?.residents?.actors) ? r.flags[NPC].residents.actors : []});
+    // 0.48.0: a block of flats keeps every flat's household (Interactables 0.35.2); other buildings keep one
+    const many = Array.isArray(r?.flags?.[IX]?.households) && r.flags[IX].households.length > 1 ? r.flags[IX].households : null;
+    const all = (many ?? [r?.flags?.[IX]?.household]).filter(hh => hh && Array.isArray(hh.people) && hh.people.length);
+    const place = r?.flags?.[NPC]?.place ?? {};
+    const rec = r?.flags?.[NPC]?.residents;
+    for ( const hh of all ) {
+      const id = String(hh.id ?? r.uuid);
+      const mine = Array.isArray(rec?.houses) ? rec.houses.find(x => x.id === id)?.actors : null;
+      out.push({region: r.uuid, regionName: String(r.name ?? hh.label ?? ""), kind: place.kind ?? "home", owner: place.owner ?? "", shared: all.length,
+        household: {id, label: String(hh.label ?? r.name ?? "A household"), trade: String(hh.trade ?? ""), people: hh.people.map(p => ({role: String(p.role ?? "").trim()})).filter(p => p.role)},
+        seeded: mine ?? (all.length === 1 && Array.isArray(rec?.actors) ? rec.actors : [])});
+    }
   }
   return out;
 }

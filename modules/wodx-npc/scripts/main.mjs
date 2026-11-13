@@ -33,13 +33,14 @@ import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
 import {build as buildResidents} from "./residents.mjs";
+import {build as buildSettlements} from "./settlement.mjs";
 import * as RV from "./rivalry-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.47.2";
+const VERSION = "0.48.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -839,8 +840,11 @@ const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profil
 wanted.hooks();
 const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
 /* 0.46.0: the residents of a generated town, from the households kept on its buildings */
-const residents = buildResidents({MOD, esc, chron});
+/* 0.48.0: settlements, the record of a whole generated place, reviewed before it enters the world */
+const settlements = buildSettlements({MOD, esc, chron});
+const residents = buildResidents({MOD, esc, chron, settle: () => settlements});
 residents.hooks();
+settlements.hooks();
 
 Hooks.once("init", () => {
   registerSettings();
@@ -859,7 +863,8 @@ Hooks.once("init", () => {
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
-    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open};
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
+    settlements, openSettlements: settlements.open};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */

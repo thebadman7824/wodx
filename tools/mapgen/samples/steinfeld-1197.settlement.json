@@ -1,0 +1,416 @@
+{
+ "format": "wodx-settlement",
+ "version": 1,
+ "id": "steinfeld-1197-7",
+ "name": "Steinfeld",
+ "seed": 7,
+ "kind": "village",
+ "label": "village",
+ "year": 1197,
+ "era": "dark-ages",
+ "age": "medieval",
+ "region": "moravia",
+ "walled": false,
+ "country": null,
+ "population": 59,
+ "whole": [
+  96,
+  103
+ ],
+ "maps": [
+  {
+   "id": "",
+   "name": "Steinfeld",
+   "map": "steinfeld.dungeondraft_map",
+   "sidecar": "steinfeld.wodx.json",
+   "households": 16
+  }
+ ],
+ "layers": [],
+ "buildings": {
+  "Chapel": 1,
+  "Cottage": 10,
+  "Farmhouse": 2,
+  "House and shop": 1,
+  "Priest's house": 1,
+  "Storehouse": 1,
+  "Tavern": 1,
+  "Workshop": 1
+ },
+ "trades": {
+  "carter": 3,
+  "cottager": 3,
+  "farmer": 2,
+  "herder": 2,
+  "alehouse keeper": 1,
+  "carpenter": 1,
+  "draper": 1,
+  "labourer": 1,
+  "priest": 1,
+  "widowed spinner": 1
+ },
+ "notables": [],
+ "households": [
+  {
+   "id": "steinfeld-1197-7.tavern-1-household",
+   "building": "tavern-1",
+   "label": "Tavern household",
+   "type": "tavern",
+   "trade": "alehouse keeper",
+   "wealth": "middling",
+   "people": [
+    "alehouse keeper",
+    "elder",
+    "lodger"
+   ],
+   "map": "",
+   "at": [
+    62.5,
+    42.5
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-1-household",
+   "building": "cottage-1",
+   "label": "Priest's house household",
+   "type": "cottage",
+   "trade": "priest",
+   "wealth": "middling",
+   "people": [
+    "priest",
+    "servant"
+   ],
+   "map": "",
+   "at": [
+    32.1,
+    69.5
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-2-household",
+   "building": "cottage-2",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "labourer",
+   "wealth": "middling",
+   "people": [
+    "labourer",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    47.6,
+    74.4
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-3-household",
+   "building": "cottage-3",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "cottager",
+   "wealth": "middling",
+   "people": [
+    "cottager",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    53.9,
+    71.1
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-4-household",
+   "building": "cottage-4",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "carter",
+   "wealth": "middling",
+   "people": [
+    "carter",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    60.7,
+    68.0
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-5-household",
+   "building": "cottage-5",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "cottager",
+   "wealth": "middling",
+   "people": [
+    "cottager",
+    "partner",
+    "child",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    51.6,
+    82.0
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.townhouse-1-household",
+   "building": "townhouse-1",
+   "label": "House and shop (draper) household",
+   "type": "townhouse",
+   "trade": "draper",
+   "wealth": "middling",
+   "people": [
+    "draper",
+    "partner",
+    "child",
+    "servant"
+   ],
+   "map": "",
+   "at": [
+    68.2,
+    50.5
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-6-household",
+   "building": "cottage-6",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "herder",
+   "wealth": "middling",
+   "people": [
+    "herder",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    55.5,
+    35.3
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-7-household",
+   "building": "cottage-7",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "cottager",
+   "wealth": "middling",
+   "people": [
+    "cottager",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    74.6,
+    42.9
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.workshop-1-household",
+   "building": "workshop-1",
+   "label": "Workshop (carpenter) household",
+   "type": "workshop",
+   "trade": "carpenter",
+   "wealth": "middling",
+   "people": [
+    "carpenter",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    25.7,
+    51.2
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-8-household",
+   "building": "cottage-8",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "carter",
+   "wealth": "middling",
+   "people": [
+    "carter"
+   ],
+   "map": "",
+   "at": [
+    21.9,
+    72.2
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-9-household",
+   "building": "cottage-9",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "carter",
+   "wealth": "middling",
+   "people": [
+    "carter",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    41.0,
+    33.0
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-10-household",
+   "building": "cottage-10",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "widowed spinner",
+   "wealth": "middling",
+   "people": [
+    "widowed spinner",
+    "partner",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    30.5,
+    38.9
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-11-household",
+   "building": "cottage-11",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "herder",
+   "wealth": "middling",
+   "people": [
+    "herder",
+    "partner",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    19.4,
+    36.8
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.byre-house-1-household",
+   "building": "byre-house-1",
+   "label": "Farmhouse household",
+   "type": "byre-house",
+   "trade": "farmer",
+   "wealth": "poor",
+   "people": [
+    "farmer",
+    "child",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    73.8,
+    20.2
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.byre-house-2-household",
+   "building": "byre-house-2",
+   "label": "Farmhouse household",
+   "type": "byre-house",
+   "trade": "farmer",
+   "wealth": "poor",
+   "people": [
+    "farmer",
+    "child",
+    "child",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    84.8,
+    7.1
+   ]
+  }
+ ],
+ "ties": [
+  {
+   "a": "steinfeld-1197-7.cottage-1-household",
+   "b": "steinfeld-1197-7.cottage-4-household",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-3-household",
+   "b": "steinfeld-1197-7.byre-house-2-household",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-3-household",
+   "b": "steinfeld-1197-7.cottage-2-household",
+   "kind": "rival",
+   "note": "a quarrel over an inheritance"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-4-household",
+   "b": "steinfeld-1197-7.cottage-2-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-5-household",
+   "b": "steinfeld-1197-7.townhouse-1-household",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-6-household",
+   "b": "steinfeld-1197-7.cottage-3-household",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-7-household",
+   "b": "steinfeld-1197-7.cottage-10-household",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-7-household",
+   "b": "steinfeld-1197-7.cottage-6-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1197-7.cottage-11-household",
+   "b": "steinfeld-1197-7.cottage-9-household",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1197-7.byre-house-2-household",
+   "b": "steinfeld-1197-7.tavern-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  }
+ ]
+}
