@@ -29,6 +29,7 @@ import {MOODS as TALK_MOODS} from "../data/grammar/groups.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
+import {build as buildOverheard} from "./overheard.mjs";
 import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
@@ -40,7 +41,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.52.0";
+const VERSION = "0.53.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -830,6 +831,9 @@ rivalry.hooks();
 /* 0.27.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
+/* 0.53.0: NPCs who talk among themselves where a character can overhear (B2700 to B2703) */
+const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
+overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
@@ -855,12 +859,13 @@ Hooks.once("init", () => {
   talk.registerSettings();
   rivalry.registerSettings();
   passersby.registerSettings();
+  overheard.registerSettings();
   wanted.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
     wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
@@ -962,6 +967,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => factions.openFactions()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
+  tokens.tools.wodxOverheard = {name: "wodxOverheard", title: "Overheard talk (NPCs who talk among themselves on this scene)", icon: "fa-solid fa-ear-listen", order: 113.5,
+    button: true, visible: game.user.isGM, onChange: () => overheard.open()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });

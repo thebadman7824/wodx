@@ -23,6 +23,7 @@ import * as MORE from "../data/stock-talk-more.mjs";
 import * as G from "./talk-grammar.mjs";
 import {HOUSE} from "../data/grammar/house.mjs";
 import {GROUPS_GRAMMAR, SIDE_FACTS} from "../data/grammar/groups.mjs";
+import {OVERHEARD} from "../data/grammar/overheard.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -125,7 +126,7 @@ export function build(ctx) {
   const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
   const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
   /* NPC 0.45.0: the talk generator (B1640-B1642). The stock pools speak through it as grammar rules. */
-  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR);
+  const BASE = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GROUPS_GRAMMAR, OVERHEARD); // 0.53.0: overheard talk (B2700)
   let GRAMMAR = BASE;
   /* NPC 0.45.0 (B1646): the Storyteller's own grammar, in the journal "WoDX talk grammar" */
   const GRAMMAR_JOURNAL = "WoDX talk grammar";
@@ -150,7 +151,7 @@ export function build(ctx) {
 <p>work [year: 1300-1526, regard: !hate] =&gt; "The guild pays in #coin#."</p>
 <p>ask [trait Dominate: 2] =&gt; "Of course. {topic} is just past the bridge."</p>
 <p>#coin# [year: 1300-1526] =&gt; groschen | heller</p>
-<p>Kinds: greet, none, gossip, rumour, news, work, directions, farewell, ask. Tests: era, year, regard (hate, dislike, neutral, like, love), warmth (cold, neutral, warm), mood, voice, clan, tribe, aff (Tradition or Convention), kith, sect, trait. [id: house.greet.cold] replaces a WoDX line set; boost: 1 makes a line win over others that fit as well. Lines starting with // are notes.</p>`;
+<p>Kinds: greet, none, gossip, rumour, news, work, directions, farewell, ask; and for NPCs overheard talking among themselves, overheard:&lt;topic&gt; to open and overheard:reply:&lt;topic&gt; to answer (topics: rumour, times, price, watch, faction, secret, feast, weather, work; facts region, sphere and media as well). Tests: era, year, regard (hate, dislike, neutral, like, love), warmth (cold, neutral, warm), mood, voice, clan, tribe, aff (Tradition or Convention), kith, sect, trait. [id: house.greet.cold] replaces a WoDX line set; boost: 1 makes a line win over others that fit as well. Lines starting with // are notes.</p>`;
   /** The grammar journal, made the first time it is asked for. */
   async function openGrammar() {
     if ( !game.user.isGM ) return null;
