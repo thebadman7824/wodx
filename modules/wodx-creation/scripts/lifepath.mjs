@@ -33,6 +33,7 @@ const STAGE_LABEL = {birth: "Birth", youth: "Youth", adult: "Adult life", later:
 const APPROVAL = "wodx-lifepath-people";
 const REVIEW = "wodx-lifepath-review";
 const OWN_BACKGROUNDS = ["Allies", "Contacts", "Fame", "Influence", "Mentor", "Resources", "Retainers", "Status"];
+const limitsNow = () => { try { return D.cleanLimits(game.settings.get(MODULE_ID, "lifepathLimits")); } catch { return null; } };
 const homeland = () => { try { return chron()?.world?.homeland?.() ?? null; } catch { return null; } };
 
 /** The book the character is built by: its totals and the Merit and Flaw table. */
@@ -95,6 +96,7 @@ export function splatText(actor) {
 
 /** At start: the approval handler that makes a player's people. */
 export function registerLifepath() {
+  try { game.settings.register(MODULE_ID, "lifepathLimits", {scope: "world", config: false, type: Object, default: {regions: [], noBases: []}}); } catch { /* registered already */ }
   chron()?.registerApprovalHandler?.(APPROVAL, {label: "People from a lifepath", approve: entry => makePeople(entry.data)});
   chron()?.registerApprovalHandler?.(REVIEW, {label: "A lifepath with the player's own answers, or a character younger than 12", approve: entry => approveReview(entry.data)});
 }
@@ -139,7 +141,7 @@ export class LifepathApp extends ApplicationV2 {
     position: {width: 620, height: "auto"},
     actions: {
       begin: LifepathApp.#onBegin, pick: LifepathApp.#onPick, back: LifepathApp.#onBack, reroll: LifepathApp.#onReroll,
-      own: LifepathApp.#onOwn, surprise: LifepathApp.#onSurprise, others: LifepathApp.#onOthers,
+      own: LifepathApp.#onOwn, surprise: LifepathApp.#onSurprise, others: LifepathApp.#onOthers, skip: LifepathApp.#onSkip, limits: LifepathApp.#onLimits,
       save: LifepathApp.#onSave, restart: LifepathApp.#onRestart, clear: LifepathApp.#onClear
     }
   };
@@ -169,6 +171,7 @@ export class LifepathApp extends ApplicationV2 {
     div.className = "wodx-body";
     if ( !this.path && !this.drill ) div.innerHTML = this.#setupHTML();
     else if ( !this.path ) div.innerHTML = this.#drillHTML();
+    else if ( R.done(this.path) && D.sinceCurrent(this.path.since) ) div.innerHTML = this.#sinceHTML();
     else if ( R.done(this.path) ) div.innerHTML = this.#endHTML();
     else div.innerHTML = this.#stepHTML();
     div.querySelector("select[name=place]")?.addEventListener("change", ev => { this.drill = D.moveTo(this.drill, ev.target.dataset.stage, ev.target.value); this.render(); });
@@ -183,6 +186,18 @@ export class LifepathApp extends ApplicationV2 {
     this.setup = {line: f.line.value, splat: f.splat?.value ?? "", birthYear: Number(f.birthYear.value) || this.setup.birthYear,
       turnYear: Number(f.turnYear?.value) || this.setup.turnYear};
     if ( rerender ) { this.setup.splat = R.guessSplat(this.setup.line, splatText(this.actor)) ?? ""; this.render(); }
+  }
+
+  /** GM: which regions and kinds of origin this chronicle's lifepaths may use. */
+  #limitsHTML() {
+    const L = limitsNow() ?? {regions: [], noBases: []};
+    const regions = D.continents().map(c => `<optgroup label="${esc(c.label)}">${c.regions.map(r => `<option value="${r.id}" ${L.regions.includes(r.id) ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</optgroup>`).join("");
+    const kinds = D.originKinds().map(k => `<label class="wodx-check"><input type="checkbox" name="limitBase" value="${k.key}" ${L.noBases.includes(k.key) ? "" : "checked"}> ${esc(k.label)}</label>`).join("");
+    return `<details class="wodx-lp-limits"><summary>Limits for this chronicle (Storyteller)${L.regions.length || L.noBases.length ? ": set" : ""}</summary>
+      <p class="wodx-quiet">Leave the regions unmarked to allow births anywhere. The chronicle's own land is always open. Hold Ctrl or Cmd to mark several.</p>
+      <div class="form-group"><label>Regions a character may come from</label>${searchBox("select[name=limitRegions]", "Search…", "Search the regions")}<select name="limitRegions" multiple size="8">${regions}</select></div>
+      <div class="form-group" data-fixed><label>Kinds of origin allowed</label><div class="wodx-lp-kinds">${kinds}</div></div>
+      <div class="wodx-buttons"><button type="button" data-action="limits"><i class="fa-solid fa-floppy-disk"></i> Keep these limits</button></div></details>`;
   }
 
   #setupHTML() {
@@ -202,6 +217,7 @@ export class LifepathApp extends ApplicationV2 {
           ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="1100" max="2300" value="${s.turnYear}"></div>`}
           ${open.ok ? "" : `<p class="wodx-warn">${esc(open.note)} The turn will be set to ${open.from}.</p>`}
         </form>
+        ${game.user.isGM ? this.#limitsHTML() : ""}
         ${rec ? `<h3>Already written</h3>${R.summaryHtml(R.summary(rec.path, {nowYear: yearNow()}), {name: this.actor.name, keptKeys: rec.kept})}` : ""}
       </div>
       <footer class="wodx-footer"><div class="wodx-buttons">
@@ -222,7 +238,7 @@ export class LifepathApp extends ApplicationV2 {
       ${o.text ? `<br><span>${esc(o.text)}</span>` : ""}${o.g ? `<br><span class="wodx-quiet">${gives(o.g)}</span>` : ""}
       ${o.p ? `<br><span class="wodx-quiet">Someone from your past: ${esc(String(o.p).split("|")[0])}</span>` : ""}</button>`).join("");
     const move = step.movable ? `<div class="form-group"><label>Where this part of life happened</label>${searchBox("select[name=place]", "Search…", "Search the regions")}
-      <select name="place" data-stage="${esc(step.stage)}">${D.continents(step.year).map(c => `<optgroup label="${esc(c.label)}">${c.regions.map(r => `<option value="${r.id}" ${r.id === step.region ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</optgroup>`).join("")}</select></div>` : "";
+      <select name="place" data-stage="${esc(step.stage)}">${D.openContinents(d, step.year).map(c => `<optgroup label="${esc(c.label)}">${c.regions.map(r => `<option value="${r.id}" ${r.id === step.region ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</optgroup>`).join("")}</select></div>` : "";
     const place = step.kind === "origin" ? `<div class="form-group"><label>Where exactly (optional)</label><input type="text" name="placeName" maxlength="80" value="${esc(d.placeName ?? "")}" placeholder="A town, a province, a quarter"></div>` : "";
     const g = traitGroups(this.actor.system ?? {});
     const abilities = [...g.talent, ...g.skill, ...g.knowledge].map(a => a.label);
@@ -251,11 +267,38 @@ export class LifepathApp extends ApplicationV2 {
       </div></footer>`;
   }
 
+  /** One age lived after the change: five ways it could have gone, or none. */
+  #sinceHTML() {
+    const step = D.sinceCurrent(this.path.since), L = R.LINES[this.path.line] ?? {};
+    const gives = g => D.parseGives(g).map(x => esc(x.kind === "note" ? x.name : `${D.KINDS[x.kind]}: ${x.name}`)).join(", ");
+    const opts = step.options.map(o => `<button type="button" class="wodx-lp-option" data-action="pick" data-id="${esc(o.id)}">
+      <strong>${esc(o.label)}</strong> <span class="wodx-quiet">(${esc(D.TONES[o.tone])})</span>${o.g ? `<br><span class="wodx-quiet">${gives(o.g)}</span>` : ""}
+      ${o.p ? `<br><span class="wodx-quiet">Someone from your past: ${esc(String(o.p).split("|")[0])}</span>` : ""}</button>`).join("");
+    return `
+      <div class="wodx-top"><p><strong>After ${esc(L.turning || "the change")}</strong>: ${esc(step.title)}.</p>
+        <p class="wodx-quiet">You lived through a whole age. Pick one of five ways it went (two good, two hard, one neither), draw five others, or leave these years untold.</p></div>
+      <div class="wodx-scroll"><div class="wodx-lp-options">${opts}</div></div>
+      <footer class="wodx-footer"><div class="wodx-buttons">
+        <button type="button" data-action="back"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button type="button" data-action="surprise" title="Let the dice pick one of these"><i class="fa-solid fa-dice"></i> Surprise me</button>
+        <button type="button" data-action="others" title="Draw five other things for these years"><i class="fa-solid fa-rotate"></i> Five others</button>
+        <button type="button" data-action="skip" title="Say nothing about these years"><i class="fa-solid fa-forward"></i> Leave untold</button>
+        <button type="button" data-action="restart"><i class="fa-solid fa-rotate-left"></i> Start over</button>
+      </div></footer>`;
+  }
+
+  /** The path gets its years after the change once the turn's scenes are done (not for mortals). */
+  #withSince() {
+    if ( this.path && R.done(this.path) && !this.path.since && this.path.line !== "mortal" && this.path.turnYear !== null )
+      this.path = {...this.path, since: D.newSince({turnYear: this.path.turnYear, nowYear: yearNow(), line: this.path.line, seed: this.path.seed})};
+  }
+
   /** After a drill pick: when the drill is done, the path takes over for the turn and after. */
   #afterDrill() {
     if ( D.done(this.drill) ) {
       const s = this.begun;
       this.path = R.newPath({line: s.line, splat: s.splat || null, birthYear: s.birthYear, turnYear: s.turnYear, seed: this.drill.seed, drill: this.drill});
+      this.#withSince();
     }
     this.render();
   }
@@ -319,12 +362,30 @@ export class LifepathApp extends ApplicationV2 {
     const age = (s.line === "mortal" ? Math.max(yearNow(), birthYear) : turnYear) - birthYear;
     this.begun = {line: s.line, splat: s.splat, birthYear, turnYear};
     this.path = null;
-    this.drill = D.newDrill({birthYear, age, line: s.line, homeland: homeland(), seed: `${this.actor.id}:${foundry.utils.randomID(8)}`});
+    this.drill = D.newDrill({birthYear, age, line: s.line, homeland: homeland(), seed: `${this.actor.id}:${foundry.utils.randomID(8)}`, limits: limitsNow()});
     this.render();
   }
   static #onPick(event, target) {
     if ( !this.path ) { this.drill = D.pick(this.drill, D.current(this.drill)?.id, target.dataset.id); return this.#afterDrill(); }
-    this.path = R.choose(this.path, Number(target.dataset.index) || 0);
+    const since = R.done(this.path) ? D.sinceCurrent(this.path.since) : null;
+    if ( since ) this.path = {...this.path, since: D.sincePick(this.path.since, since.id, target.dataset.id)};
+    else { this.path = R.choose(this.path, Number(target.dataset.index) || 0); this.#withSince(); }
+    this.render();
+  }
+  static #onSkip() {
+    const since = D.sinceCurrent(this.path?.since);
+    if ( since ) this.path = {...this.path, since: D.sinceSkip(this.path.since, since.id)};
+    this.render();
+  }
+  /** GM: keep the chronicle's limits on regions and kinds of origin. */
+  static async #onLimits() {
+    if ( !game.user.isGM ) return;
+    const el = this.element;
+    const regions = [...(el.querySelector("select[name=limitRegions]")?.selectedOptions ?? [])].map(o => o.value);
+    const noBases = [...el.querySelectorAll("input[name=limitBase]")].filter(i => !i.checked).map(i => i.value);
+    const L = D.cleanLimits({regions, noBases}) ?? {regions: [], noBases: []};
+    await game.settings.set(MODULE_ID, "lifepathLimits", L);
+    ui.notifications.info(L.regions.length || L.noBases.length ? "The limits for this chronicle's lifepaths are kept." : "Lifepaths are open to every region and origin.");
     this.render();
   }
   static #onOwn() {
@@ -336,10 +397,20 @@ export class LifepathApp extends ApplicationV2 {
     this.drill = D.pickOwn(this.drill, step.id, text, {gives, base: el.querySelector("select[name=ownBase]")?.value ?? null});
     this.#afterDrill();
   }
-  static #onSurprise() { this.drill = D.surprise(this.drill); this.#afterDrill(); }
-  static #onOthers() { this.drill = D.reroll(this.drill, D.current(this.drill)?.id); this.render(); }
+  static #onSurprise() {
+    if ( this.path ) { this.path = {...this.path, since: D.sinceSurprise(this.path.since)}; return this.render(); }
+    this.drill = D.surprise(this.drill);
+    this.#afterDrill();
+  }
+  static #onOthers() {
+    if ( this.path ) { this.path = {...this.path, since: D.sinceReroll(this.path.since, D.sinceCurrent(this.path.since)?.id)}; return this.render(); }
+    this.drill = D.reroll(this.drill, D.current(this.drill)?.id);
+    this.render();
+  }
   static #onBack() {
-    if ( this.path?.steps.length ) this.path = R.back(this.path);
+    const s = this.path?.since;
+    if ( s && (Object.keys(s.picks).length || s.skipped.length) ) this.path = {...this.path, since: D.sinceBack(s)};
+    else if ( this.path?.steps.length ) { const {since, ...rest} = this.path; this.path = R.back(rest); }
     else if ( this.drill ) {
       this.path = null;
       if ( Object.keys(this.drill.picks).length ) this.drill = D.back(this.drill); else this.drill = null;

@@ -122,3 +122,33 @@ test("a player's own answer waits for the Storyteller; approval puts the ticked 
     assert.equal(a.flags["wodx-creation"].lifepath.review, "approved");
   } finally { game.user.isGM = wasGM; mod.api = oldApi; }
 });
+
+test("an old vampire is asked about each age lived since the Embrace, and may leave one untold", async () => {
+  const a = fakeActor();
+  const app = new M.LifepathApp({id: "wodx-lifepath-a4", actor: a});
+  await app.render({force: true});
+  assert.ok(app.element.querySelector("select[name=limitRegions]"), "the Storyteller sees the limits on the setup screen");
+  assert.ok(app.element.querySelectorAll("input[name=limitBase]").length >= 14);
+  const now = new Date().getFullYear();
+  app.element.querySelector("input[name=birthYear]").value = "1100";
+  app.element.querySelector("input[name=turnYear]").value = "1130";
+  await app.options.actions.begin.call(app);
+  let guard = 0;
+  while ( !app.path && guard++ < 40 ) await app.options.actions.surprise.call(app);
+  guard = 0;
+  while ( !app.element.querySelector("[data-action=skip]") && app.element.querySelector("[data-action=pick]") && guard++ < 20 ) await app.options.actions.pick.call(app, {}, app.element.querySelector("[data-action=pick]"));
+  assert.ok(app.element.querySelector("[data-action=skip]"), "the years after the change are asked");
+  assert.equal(app.element.querySelectorAll("[data-action=pick]").length, 5);
+  assert.match(app.element.textContent, /1131 to \d{4}/);
+  await app.options.actions.skip.call(app);
+  assert.ok(app.element.querySelector("[data-action=save]"), "left untold, the end screen follows");
+  await app.options.actions.back.call(app);
+  assert.ok(app.element.querySelector("[data-action=skip]"), "back returns to the age");
+  await app.options.actions.others.call(app);
+  await app.options.actions.pick.call(app, {}, app.element.querySelector("[data-action=pick]"));
+  assert.ok(app.element.querySelector("[data-action=save]"));
+  for ( const i of app.element.querySelectorAll("input[name=person]") ) i.checked = false;
+  await app.options.actions.save.call(app);
+  const rec = a.flags["wodx-creation"].lifepath;
+  assert.ok(rec.path.since.picks["s-M"], "the age is kept with the lifepath");
+});

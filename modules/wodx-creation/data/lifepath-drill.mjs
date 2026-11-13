@@ -206,3 +206,27 @@ export const PEOPLE_LABELS = {steppe: "Steppe peoples", arabic: "Arab", hindi: "
 
 /** What brought a character from elsewhere to the chronicle's homeland. */
 export const ARRIVALS = ["Work, trade or study", "Flight from something at home", "Sent by someone you answer to", "Following a person", "Something called you here"];
+
+/**
+ * 0.20.0: the long years after the change (for those who do not age out of the story). One optional pick for each
+ * age the character lived at least SINCE_MIN years of after the turn. [label, gives, {from, to, lines}, tone, person]
+ */
+export const SINCE_MIN = 20;
+export const SINCE = [
+ ["Gathered wealth and patience","bg Resources|ab Finance",{},"+"],
+ ["Made a place among your own kind","bg Status|ab Politics",{},"+"],
+ ["Kept a circle of mortals close","bg Allies|bg Retainers",{},"+","a trusted mortal|whose family has served you since"],
+ ["Studied what you had become","ab Occult|ab Academics|bg Mentor",{},"+","a teacher|of your own kind"],
+ ["Built a name that opens doors","bg Influence|bg Contacts",{},"+"],
+ ["Hunted by those who knew what you were","flaw Enemy|ab Stealth",{},"-","a hunter|whose line has not forgotten you"],
+ ["Lost everyone you had known","flaw Nightmares|merit Iron Will",{},"-"],
+ ["Served another's will","ab Subterfuge|flaw Dark Secret",{},"-","a master|you served and may still owe"],
+ ["Made an enemy among your own kind","flaw Enemy|ab Intimidation",{},"-","a rival|of your own kind who remembers"],
+ ["Fled a war, a purge or a burning","ab Survival|flaw Nightmares",{},"-"],
+ ["Wandered far from where it began","merit Language|ab Survival",{},"0"],
+ ["Withdrew from the world and let the years pass","ab Awareness|merit Iron Will",{},"0"],
+ ["Watched one family down the generations","ab Empathy|ab Investigation",{},"0","a descendant|of someone you once loved"],
+ ["Kept to one town and learned its every stone","ab Streetwise|bg Contacts",{},"0"],
+ ["Learned the tools of a new age","ab Technology|ab Science",{from:1789},"0"],
+ ["Learned the machines that think","ab Computer|ab Technology",{from:1980},"0"]];
+

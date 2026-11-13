@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2610
+Next free block: B2630
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -113,6 +113,7 @@ Next free block: B2610
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 | B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
+| B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3362,3 +3363,12 @@ Reverse: empty LOCAL in data/lifepath-drill.mjs.
 ## B2609. People from a life abroad carry that land's names (2026-11-13, desk lp14)
 A person from the past made into an NPC is named by the culture of the region where that part of life happened.
 Reverse: drop the culture argument in makePeople.
+
+## B2620. The ages lived after the change (2026-11-13, desk lp8; house rule of presentation)
+A character who is not mortal gets one optional step for each age (before 1500, to 1788, to 1945, to 2022, after) of which they lived at least twenty years after the turn. Each shows five ways those years went, two good, two hard, one neither, with Surprise me, Five others and Leave untold. What is picked joins the story, the suggestions and the people from the past like any other pick. The first years after the turn are still told by the turn's own scenes. These steps do not move between regions yet.
+Reverse: set SINCE_MIN in data/lifepath-drill.mjs above any age's length, or drop #withSince in lifepath.mjs.
+
+## B2621. The Storyteller's limits on lifepaths (2026-11-13, desk lp11)
+A world setting (wodx-creation.lifepathLimits) holds the regions a character may come from (none marked means all) and the kinds of origin left out. The Storyteller sets it from a fold-out on the lifepath's first screen. The chronicle's own land is always open, and a stage cannot be moved to a closed region. Lifepaths already written are not changed.
+Reverse: clear the setting with "Keep these limits" and nothing marked, or return null from limitsNow.
+
