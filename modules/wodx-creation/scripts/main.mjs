@@ -21,6 +21,8 @@ import * as lifepathRules from "./lifepath-rules.mjs";
 import {threadsOf} from "./lifepath-threads-rules.mjs";
 import * as firstNight from "./first-night.mjs";
 import * as firstNightRules from "./first-night-rules.mjs";
+import * as wizardRules from "./wizard-rules.mjs";
+import {WizardApp, ledgerFor as wizardLedger} from "./wizard.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -71,6 +73,7 @@ function start() {
     secondBreath: states.secondBreath, secondBreathDialog: states.secondBreathDialog,
     totals, check: actor => CreationCheckApp.open(actor),
     firstNight: actor => firstNight.FirstNightApp.open(actor ?? null), firstNightOf: firstNight.recordOf, forecast: firstNight.forecastFor, signOff: firstNight.signOff, firstNightRules,
+    wizard: (actor, page = null) => WizardApp.openFor(actor, page), wizardLedger, wizardRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},

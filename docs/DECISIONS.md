@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2760
+Next free block: B2770
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -126,6 +126,7 @@ Next free block: B2760
 | B2710-B2719 | The faith calendar changes the hunt, each change named in the odds; black powder misfires and wet powder by era | NPC, Actions, Combat, Chronicle |
 | B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 | B2750-B2759 | NPCs who talk to each other where they can be overheard: pairs, earshot, topics, talk of the times by region and year, words of each way of life | NPC |
+| B2760-B2769 | The step-by-step character wizard: pages in the book's order, priorities, pick lists, the freebie shop, the check after the prelude | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3661,3 +3662,37 @@ WoDX Combat 3.24.0. A lock named in the gun's name or description wins (arquebus
 
 Reverse: name the lock in the weapon's name or description.
 
+## B2760. A character wizard, one page per step (2026-11-13)
+WoDX Creation 0.24.0, Ben's ask of 13 November 2026 after a look at Darkness Weaver. The guided builder of 0.13.0 was one window; the wizard walks the book's creation order a page at a time with Back and Next: the book, Attributes, Abilities, the line's powers, Backgrounds, Virtues (lines that have them), Merits and Flaws, freebie points, and a last look. Each choice goes on the sheet at once, so the sheet, the creation check and Before the First Night agree. The record is flags.wodx-creation.wizard (book, priorities, the ledger of bought Traits, the page). Every line with creation totals works (17 books). The steps follow each book's character creation chapter (V20 pdf 92 to 94 / printed 84 to 86 and the pages in data/creation-totals.mjs).
+
+Reverse: open Build from the creation check instead (api.check); the Build window of 0.13.0 is kept.
+
+## B2761. The player picks the priorities, and they hold still (2026-11-13)
+The Attributes and Abilities pages ask which group is primary, secondary and tertiary. Until the player chooses, the order the sheet suggests is shown (most dots first, ties in the book's order), and it is saved when the first dot is spent there, so later dots do not move the allotments around. The creation check (checkCreation) now takes an order; without one it still finds the cheapest fit.
+
+Reverse: clear flags.wodx-creation.wizard.order.
+
+## B2762. Early pages spend inside the allotment; the freebie page charges the book's cost (2026-11-13)
+On the pages for Attributes, Abilities, powers, Backgrounds and Virtues a + is open only while the dot costs nothing (the allotment has room, no Ability above the book's cap). On the freebie page every dot shows its price and is open while the points left cover it; a dot inside an allotment not yet used up is free there too. The price is the creation check's own, so Mummy's Rebirth dots still soak up overage first.
+
+Reverse: spend on the sheet and use the creation check.
+
+## B2763. The freebie points in full (2026-11-13)
+Budget: the book's freebies (and the Rebirth's), plus Flaw points up to the book's cap (7), plus the prelude's gains to Abilities and Backgrounds. Spent: dots past the allotments, Merit points, and Traits bought on the freebie page (Willpower, Humanity or a Road, Rage, Gnosis, Arete to 3, Glamour, where the line's costs name them). Costs the wizard cannot reach on the sheet (Chi, Hun and P'o, Foundation, Sekhem and the like) go in "Anything else", a count the player keeps. Flaws past the cap give nothing and the build no longer counts as matching; before, the hub let any build within the freebies plus 7 pass and did not charge Merits.
+
+Reverse: buildState in first-night.mjs back to checkCreation's ok.
+
+## B2764. What the pages offer (2026-11-13)
+Disciplines: the clan's three for the era first (V20 Dark Ages lists before 1500, the V20 lists after, from data/vampire.mjs), then the rest at freebie cost; a ghoul or revenant starts with Potence. Spheres are the sheet's own nine. Arcanoi, Arts, Realms and Hekau paths are offered by name; Gifts and Lores, and a Kindred of the East Discipline, are written in. Pillars, Dominions and Hunter edges have no Trait on the sheet and are counted by hand. Backgrounds come from the trait table by the line's books (V20 core, V20 Dark Ages, W20 core and Changing Breeds, M20 core and Book of Secrets, Wraith 20, C20, Hunters Hunted II, Demon: The Fallen, Mummy, Kindred of the East, Orpheus); the Dark Ages Werewolf and Mage take the W20 and M20 core lists, a house choice. Merits and Flaws come from the trait table held by the line's kind, with the book's cost; where the book gives a range the player names the points, else the lowest. Anything can still be written in by name. The name lists wait for the PC book check.
+
+Reverse: edit POWER_NAMES and BG_BOOKS in scripts/wizard-rules.mjs.
+
+## B2765. A check after the prelude (2026-11-13)
+Before the First Night has a step after the prelude, "Check after the prelude": done when the prelude step is and the build still matches the book. The prelude's gains (up to 3 freebie points, B1612) are paid from the prelude's own points, so a gain to an Ability or a Background does not push the build over; its Willpower gain is not in the totals at all. Sign-off waits for the new step. Build and Merits and Flaws open the wizard.
+
+Reverse: take "recheck" out of STEPS in first-night-rules.mjs.
+
+## B2766. The prelude's Willpower gain reaches the sheet (2026-11-13)
+The prelude runner read Willpower at system.willpower, which the system does not have, so the gain always said the sheet had none. It now reads and writes system.advantages.willpower.permanent.
+
+Reverse: none needed.
