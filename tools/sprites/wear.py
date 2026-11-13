@@ -1,6 +1,6 @@
 # Dressed people: the rig.py figure with wearable and hand-held pieces. Own art, same manner (capsules, 5-tone ramps, one light).
 import numpy as np, math
-import crinos as K, rig
+import crinos as K, rig, child as Ch
 from rig import ramp,H,R,pol
 S,SH,YO=K.S,K.SH,K.YO
 C=dict(steel=(150,156,166),iron=(96,98,108),wood=(112,82,54),dwood=(72,52,38),brass=(178,142,72),leather=(96,64,42),black=(46,46,52),bone=(206,196,170),
@@ -377,6 +377,7 @@ def front(d,f,back=False,act=None):
     cv=K.Cv(); ph=(f if not act else (0,0,0,1,1,0)[act[1]])/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; view='b' if back else 'f'
     dy=round(abs(math.sin(ph))*-0.8); ov=d['over']
+    if Ch.band(growth=d.get('growth')): cv.w=Ch.Warp(d['growth'],Ch.NECK+dy)
     stowed(cv,d,view,dy,'pre'); marks(cv,d,cx,0,dy,view,'pre')
     if ov and ov[0]=='cloak' and not back: hem(cv,cx,42+dy,ov[2] if len(ov)>2 else 76,sw+1.6,sw+3.0,rc(ov[1]),'cloakb',1)
     if d['off'] and back: shield(cv,d,cx-sw-2.5,53+dy,'b')
@@ -478,7 +479,8 @@ def front(d,f,back=False,act=None):
     cv.outline(d['ink']); texture(cv,d)
     if act:
         hs=hands[-1 if not back else 1]; a,u=actdir(d,act,hs,back,cx,dy); L=wlen(d['held'])[1] if d['held'] else 1
-        fx(cv.c,d,act,(a[0]+u[0]*L,a[1]+u[1]*L),(0,-1) if back else (0,1),(cx,31.5+dy),view)
+        W_=cv.w.pt if cv.w else (lambda x,y:(x,y))
+        fx(cv.c,d,act,W_(a[0]+u[0]*L,a[1]+u[1]*L),(0,-1) if back else (0,1),W_(cx,31.5+dy),view)
     return cv.c
 ACTS={ # six frames each. Angles from straight down, forward positive: upper arm, forearm, the held thing; leg = walk frame used for the stance
  'swing': dict(ua=[150,200,215,120,70,45],fa=[170,215,235,125,80,60],wa=[190,235,255,140,80,50],leg=[0,0,1,2,2,1]),
@@ -553,6 +555,7 @@ def side(d,f,act=None):
     cv=K.Cv(); ph=(f if not act else ACTS[act[0]]['leg'][act[1]])/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
     longk=LONG.get(kind,0); amp=.45 if (longk>=77 or lk=='skirtlong') else .7 if (lk in('skirt','kilt') or longk>=62) else 1
     k,dy=rig.kin(ph,False,amp); ov=d['over']; th,shk=legramps(d); w=legw(d); px=cv.px
+    if Ch.band(growth=d.get('growth')): cv.w=Ch.Warp(d['growth'],Ch.NECK+dy)
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
     au,af=armramps(d); wide=kind in('kimono','robe')
     def arm(pts,dark,g):
@@ -622,7 +625,7 @@ def side(d,f,act=None):
     if ov and ov[0] in('poncho','cape'):
         L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((47,41+dy),(47,L+dy),4.6,5.0+(L-41)*.1,ramp=rc(ov[1]),g='poncho')
     cv.outline(d['ink']); texture(cv,d)
-    if act: fx(cv.c,d,act,tip,u,(cx,cy))
+    if act: W_=cv.w.pt if cv.w else (lambda x,y:(x,y)); fx(cv.c,d,act,W_(*tip),u,W_(cx,cy))
     return cv.c
 def sheet(d):
     sh=np.zeros((4*SH,8*S,4),np.uint8)

@@ -4,6 +4,7 @@
  * flag and the still picture on the token. Rules in sprite-rules.mjs.
  */
 import * as SR from "./sprite-rules.mjs";
+import * as FG from "./figure-rules.mjs";
 import {healthLevel, randomLook} from "./doll-rules.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
@@ -349,13 +350,53 @@ export async function loadOwn() {
   } catch (e) { console.warn(`${MOD} | own sprites`, e); return 0; }
 }
 
+/* ---- children (B3480): the age the body shows, and the age floor's mark for a figure drawn as a child ---- */
+const YEAR_SECONDS = 365.2425 * 86400;
+/**
+ * The body's age in years ({age, minor}): from the birth year in the year shown, or, for Kindred and the walking dead,
+ * the age at which the body stopped. minor is the age floor's own answer (WoDX Chronicle), or under 18 when it is off.
+ */
+export function ageOf(actor) {
+  const ch = game.modules.get("wodx-chronicle")?.api, now = ch?.eras?.currentYear?.();
+  // the year of a world time, counted back from the year shown (whole years, as the Chronicle's own calendar gives)
+  const yearOf = t => Number.isFinite(now) && Number.isFinite(Number(t)) ? Math.round(now - ((game.time?.worldTime ?? 0) - Number(t)) / YEAR_SECONDS) : null;
+  let age = null, facts = null;
+  try {
+    facts = ch?.age?.rules?.ageFacts?.(actor, yearOf) ?? null;
+    if ( facts ) age = facts.frozenAt ?? (facts.born !== null && Number.isFinite(now) ? now - facts.born : null);
+  } catch (e) { facts = null; }
+  if ( age !== null ) age = Math.max(0, Math.floor(age));
+  // the mark this module set for a figure drawn as a child does not count here, so that "Grown" can be picked again
+  const ours = actor?.flags?.[MOD]?.childMark === true;
+  let minor = age !== null && age < 18;
+  try { if ( facts && ch.age.rules.isMinor ) minor = ch.age.rules.isMinor({...facts, marked: facts.marked && !ours}, now); } catch (e) { /* keep the plain answer */ }
+  return {age, minor};
+}
+/**
+ * A figure drawn as a child must count as a minor everywhere (B3210): when one is picked for a character the age floor
+ * does not already hold under 18, set the Storyteller's minor mark, and remember that this module set it so that a later
+ * pick of "Grown" takes only its own mark away.
+ */
+export async function markChild(actor, growth) {
+  if ( !actor?.isOwner ) return;
+  const ours = actor.flags?.[MOD]?.childMark === true, marked = actor.flags?.["wodx-chronicle"]?.minor === true;
+  if ( growth ) {
+    if ( marked || ageOf(actor).minor ) return;
+    await actor.update({"flags.wodx-chronicle.minor": true, [`flags.${MOD}.childMark`]: true});
+  } else if ( ours ) {
+    await actor.update({"flags.wodx-chronicle.-=minor": null, [`flags.${MOD}.-=childMark`]: null});
+  }
+}
+
 /** Every character of the world as the batch needs it. */
 export function roster() {
   const actors = [], y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.();
   for ( const a of game.actors ?? [] ) {
     // a character with no portrait look yet gets the one its portrait would start from (the same seed, the same look)
     const L = a.flags?.[MOD]?.look ?? randomLook(a.id, {type: a.type ?? "", variant: a.system?.settings?.variant ?? ""}), c = L.colors ?? {};
-    actors.push(SR.rosterOf({id: a.id, name: a.name, type: a.type, kith: a.system?.kith === "custom" ? a.system?.custom?.kith : a.system?.kith, skin: c.skin, hair: c.hair, beard: !!L.face?.beard, year: Number.isFinite(y) ? y : undefined, figure: a.flags?.[MOD]?.figure ?? null,
+    const ag = ageOf(a), growth = FG.growthOf({age: ag.age, minor: ag.minor, chosen: a.flags?.[MOD]?.figure?.growth ?? ""});
+    if ( growth && !ag.minor && a.flags?.["wodx-chronicle"]?.minor !== true ) void markChild(a, growth).catch(e => console.warn(`${MOD} | child mark`, e));
+    actors.push(SR.rosterOf({id: a.id, growth, name: a.name, type: a.type, kith: a.system?.kith === "custom" ? a.system?.custom?.kith : a.system?.kith, skin: c.skin, hair: c.hair, beard: !!L.face?.beard, year: Number.isFinite(y) ? y : undefined, figure: a.flags?.[MOD]?.figure ?? null,
       items: [...(a.items ?? [])].map(i => ({name: i.name, type: i.type, worn: !!(i.system?.isequipped || i.system?.isactive), gear: !!i.flags?.["wodx-library"], natural: !!i.system?.isnatural}))}));
   }
   return {world: game.world.id, made: new Date().toISOString(), actors};
@@ -382,4 +423,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};

@@ -6,7 +6,7 @@
 import sys, os, re, json, hashlib, zlib, numpy as np
 from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
-import proto_attacks as PA, monster as M
+import proto_attacks as PA, monster as M, child as Ch
 S,SH=Wr.S,Wr.SH
 VERSION=10
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
@@ -58,7 +58,9 @@ def person(a):
     """the roster entry as a figure for wear.py, with the notes of what could not be drawn"""
     L=a.get('look') or {}; notes=[]
     spec=dict(skin=rgb(L.get('skin'),(206,170,140)),hair=(hexs(L.get('hair'),'#3a2a1c'),L.get('hairStyle') if L.get('hairStyle') in('short','long','bun','bald') else 'short'))
-    if L.get('beard'): spec['beard']=hexs(L.get('hair'),'#3a2a1c')
+    g=Ch.band(a.get('age'),a.get('growth'))   # a child is the same figure drawn shorter (B3480)
+    if g: spec['growth']=g
+    if L.get('beard') and not (g and Ch.beardless(g)): spec['beard']=hexs(L.get('hair'),'#3a2a1c')
     worn=0
     for n in a.get('worn') or []:
         dye=None

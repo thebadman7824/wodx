@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3480
+Next free block: B3490
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -175,6 +175,7 @@ Next free block: B3480
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
+| B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5461,3 +5462,23 @@ Reverse: change reclaim in caern-rules.mjs.
 WoDX Storyteller. The book has offices of consequence held from Adren. WoDX suggests the highest-ranking Theurge as Master of the Rite in the editor and never blocks a pick: the Storyteller's choice stands.
 
 Reverse: change OFFICES or masterOfTheRite.
+
+## B3480. A child is the grown figure drawn shorter, by the rig itself (2026-11-13)
+WoDX Paperdoll, tools/sprites/child.py. Every point and size the rig lays down passes through a squeeze toward the feet: the head shrinks least and the body most, so the head is larger for the body, as it is in life. Four bands, as a share of a grown height: 2 to 6 years 0.56, 7 to 11 0.70, 12 to 14 0.84, 15 to 17 0.94. Every share is at most 1, so the pixels stay solid and every piece of clothing, hair, hat and gear fits a child unchanged; the feet stay on the same row, so the token sits on its square as before. Ben asked for children "like the adults, only shorter" (2026-11-13).
+
+Reverse: drop the growth key from the roster (sprite-rules rosterOf) and redraw; child.py then does nothing.
+
+## B3481. The band comes from the body's age (2026-11-13)
+WoDX Paperdoll. The body's age is the birth year against the year shown, or the age when it stopped (Kindred at the Embrace, the walking dead at death), read through the Chronicle's age facts. Anyone the age floor holds under 18 with no known age (a resident child, the Storyteller's mark) is drawn in the 7 to 11 band. The figure menu may pick another child band for them, but never "Grown".
+
+Reverse: let growthOf in figure-rules.mjs return the pick as it stands.
+
+## B3482. A child figure is always a minor (2026-11-13)
+WoDX Paperdoll, with the age floor (B3210). When a child band is picked, or the roster finds one, for a character the age floor does not already hold under 18, the Chronicle's minor mark (flags.wodx-chronicle.minor) is set, and flags.wodx-paperdoll.childMark records that this module set it. Picking "Grown" again takes away only that mark. So a child-looking figure can never take part in courting, marriage, seduction or anything else the age floor refuses.
+
+Reverse: none advised; this guards the age floor.
+
+## B3483. No beard under 15 (2026-11-13)
+WoDX Paperdoll, tools/sprites/batch.py. A beard from the portrait look is not drawn in the three youngest bands; 15 to 17 keep it.
+
+Reverse: remove the beardless() check in batch.person.

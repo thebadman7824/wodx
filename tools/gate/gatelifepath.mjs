@@ -114,6 +114,10 @@ export async function run() {
       made.push(m2);
       const app = await api().lifepath(m2);
       await sleep(400);
+      // The window opens on the short lifepath since the player UI (B2827-B2829), which rolls the stages by itself;
+      // this step walks the long one, every stage with its five choices
+      const long = app.element.querySelector("input[name=length_][value=long]");
+      if ( long ) long.checked = true;
       app.element.querySelector("[data-action=begin]").click();
       await sleep(300);
       const first = app.element.textContent.includes("Continent");

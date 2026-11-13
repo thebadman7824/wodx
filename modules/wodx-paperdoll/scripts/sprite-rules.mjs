@@ -256,6 +256,8 @@ export function rosterOf(c = {}) {
   if ( out.kind === "person" ) {
     // what it is, for the looks of the fae and of ghosts (B2614): the sheet's line and, for a changeling, its kith
     if ( c.type ) out.line = String(c.type);
+    // a child is drawn shorter, with a larger head (B3480); the band comes from figure-rules growthOf
+    if ( ["youth", "young", "child", "small"].includes(c.growth) ) out.growth = c.growth;
     const kith = String(c.kith ?? "").split(".").pop().trim();
     if ( kith && kith !== "custom" ) out.kith = kith.toLowerCase();
     out.look = {skin: hex(c.skin), hair: hex(c.hair), ...(c.beard ? {beard: true} : {})};
