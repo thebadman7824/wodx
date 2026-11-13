@@ -131,6 +131,9 @@ test("Trait notes: the player view's help comes first, the wizard's own notes fi
     assert.equal(k, T.noteKey(k), k);
     assert.ok(v.length < 160 && !/—/.test(v), k);
   }
+  assert.match(T.traitNote("Strength", "v20", {group: "attributes"}).ref, /^pdf 104/);
+  assert.equal(T.traitNote("Strength", "ghoul", {group: "attributes"}).ref, T.traitNote("Strength", "v20", {group: "attributes"}).ref);
+  assert.match(T.traitNote("Torment", "demon").ref, /^pdf 161/);
   for ( const [line, refs] of Object.entries(T.REFS) ) {
     assert.ok(TOTALS[line], line);
     for ( const r of Object.values(refs) ) assert.match(r, /^pdf \d+/);

@@ -1806,3 +1806,7 @@ The character wizard now works out each line's derived Traits on its Virtues pag
 ## 2026-11-13: short Trait explanations in the wizard (Creation 0.29.0, B3007-B3009)
 
 Hover a Trait's name in the character wizard, or open "What these mean", for a line on what it is for. Common Traits use the player view's hover help from WoDX Sheets (shown once PR 846 merges); data/trait-notes.mjs covers the line Traits it leaves out. Page refs come from the PC's book check. Harness derived.test.mjs now 9 tests.
+
+## 2026-11-13: page refs on the wizard's Trait notes (Creation 0.29.1)
+
+REFS in data/trait-notes.mjs filled from the PC's book lookup (gates/trait-notes-refs-2026-11-13.json). Not found yet: Yin, Yang, Dharma, Balance, Hunter Conviction, Talents and Skills, and most Mummy pages (the OCR lost them).
