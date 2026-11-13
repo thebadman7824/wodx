@@ -146,7 +146,7 @@ Next free block: B3320
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3087) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -4603,6 +4603,16 @@ Reverse: empty NOTES.
 A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
 
 Reverse: none needed; REFS starts empty.
+## B3086. Each gate in a batch starts from the world as it was (2026-11-13)
+The first long --touched runs (87 to 143 gates on one lane) failed about 30 gates that pass alone: earlier gates left 26 to 28 world settings changed, solo mode on, and venture and builder state behind. run-gate.mjs now puts back every world setting a gate changed and removes the ones it added, after each gate; on lanes that are reset every night (2 and 3) it also deletes the documents the gate left. Lane 1, where Ben plays, keeps its documents. --lanes 2,3 splits a long list over two lanes side by side. The two-browser gates (gatesolo, gatelookhand) leave the map, so --touched and --all no longer run them in a batch; they run by name, alone.
+
+Reverse: Remove the settings and documents step from run-gate.mjs and the two names from notGates in gate-map-extra.json.
+
+## B3087. The effects gate clears its own leftovers from the approval queue (2026-11-13)
+Step 6 of gateeffects counted every "WoDX gate" effect item waiting for approval, so items an earlier run left behind made it fail (4 found on the testbed). It now rejects those leftovers first and counts only the item it makes itself.
+
+Reverse: Count every "WoDX gate" effect item again in step 6.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
