@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.59.0 (The law of the land (B3490-B3492): every scene reads a law record for its region and year (who rules, the courts, how guilt is found, crimes on the books, punishments, keepers of order, what is owed, how hard the law is to bend). Law families with dated rows, Latin Christendom first, with Moravia and Bohemia's own crown, town and mining law from 1197 to 2004; lands whose family is not written yet use a general stand-in marked as a guess. A Law here button whispers the card (more sections with Law, Politics or Streetwise; all of it for the Storyteller), and the Storyteller gets a note of what changed in the homeland's law when the clock jumps. api.law)
 - 0.58.0 (Eastern North America before the colonies is Haudenosaunee 40, Lenape 25, New England Algonquian 25 and Powhatan 10 (B3510); after contact the coast peoples are about a fifth of the people to 1799 beside the Haudenosaunee share, a fortieth in the industrial age and a hundredth in the modern)
 - 0.57.0 (One gender for every module: api.gender reads every place a gender was kept (the People generator, babies born in play, wills, the portrait, the sheet's own line) and gives rules only female, male or nothing. For a player character it always gives nothing, because a player's gender has no bearing on play (B3500, B3502))
 - 0.56.2 (Your following (the WoDX NPC cults window) is listed in Player buttons and goes in the Me and mine drawer (B3246))

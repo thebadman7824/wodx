@@ -36,7 +36,7 @@ export const TOOL_GROUP = {
   wodxTasks: "time", wodxClocks: "time", wodxProperty: "time", wodxSolo: "time",
   wodxStepSideways: "beyond", wodxPeek: "beyond", wodxSoul: "beyond", wodxSpirits: "beyond", wodxOtherRolls: "beyond",
   wodxJack: "beyond",
-  wodxLibrary: "help", wodxGlossary: "help", wodxLegends: "help"
+  wodxLibrary: "help", wodxGlossary: "help", wodxLaw: "help", wodxLegends: "help"
 };
 
 /**

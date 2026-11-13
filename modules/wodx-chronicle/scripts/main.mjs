@@ -27,6 +27,7 @@ import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
+import * as law from "./law.mjs";
 import * as release from "./release.mjs";
 import * as when from "./when.mjs";
 import * as referee from "./referee.mjs";
@@ -93,6 +94,8 @@ Hooks.once("init", () => {
   playerGuide.registerGuideSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();
+  // B3490: the law of the land
+  law.registerLawSettings();
   // Phase 7a: the generator core
   gen.registerGenSettings();
   // Dated events
@@ -213,6 +216,7 @@ Hooks.once("ready", async () => {
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
     referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
       cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
+    law: {here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
@@ -265,6 +269,7 @@ Hooks.on("updateWorldTime", () => {
   if ( skip.isSkipping() ) return;
   ClockApp.refresh();
   eras.checkEra();
+  law.checkYear().catch(err => console.error("WoDX | Law", err));
   events.checkEvents().then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
@@ -276,6 +281,7 @@ Hooks.on("wodxSkipEnd", info => {
   if ( !active || skip.isHeld() ) return;
   ClockApp.refresh();
   if ( !info?.eraHandled ) eras.checkEra();
+  law.checkYear().catch(err => console.error("WoDX | Law", err));
   events.checkEvents({label: info?.label || "the time skip"}).then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
