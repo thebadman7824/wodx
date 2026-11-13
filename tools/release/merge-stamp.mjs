@@ -144,7 +144,7 @@ export function stampDecisions(src, frag) {
     const heads = [...body.matchAll(/^## B(\d+)[a-z]?\b/gm)];
     const after = heads.find(h => +h[1] > first);
     const text = frag.body.replace(/\s+$/, "") + "\n\n";
-    if ( after ) body = body.slice(0, after.index) + text + body.slice(after.index);
+    if ( after ) { const lead = body.slice(0, after.index); body = lead + (lead.endsWith("\n\n") ? "" : "\n") + text + body.slice(after.index); }
     else body = body.replace(/\s*$/, "\n\n") + text.replace(/\n\n$/, "\n");
   }
   // The numbers used in the block: this fragment's and any the block already had (a block can take more decisions later).

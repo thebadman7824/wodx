@@ -4603,6 +4603,7 @@ Reverse: empty NOTES.
 A note shows its book page only when the PC's book check has put it in REFS (per line, per group or per Trait). Until then no ref is shown, never a guessed one.
 
 Reverse: none needed; REFS starts empty.
+
 ## B3086. Each gate in a batch starts from the world as it was (2026-11-13)
 The first long --touched runs (87 to 143 gates on one lane) failed about 30 gates that pass alone: earlier gates left 26 to 28 world settings changed, solo mode on, and venture and builder state behind. run-gate.mjs now puts back every world setting a gate changed and removes the ones it added, after each gate; on lanes that are reset every night (2 and 3) it also deletes the documents the gate left. Lane 1, where Ben plays, keeps its documents. --lanes 2,3 splits a long list over two lanes side by side. The two-browser gates (gatesolo, gatelookhand) leave the map, so --touched and --all no longer run them in a batch; they run by name, alone.
 
