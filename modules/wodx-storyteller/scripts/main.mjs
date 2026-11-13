@@ -40,6 +40,8 @@ import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
+import * as Herds from "./herds.mjs";
+import * as Sites from "./sites.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
@@ -122,6 +124,8 @@ Hooks.once("init", () => {
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
+  Herds.registerHerdSettings();
+  Sites.registerSiteSettings();
   Tasks.registerTaskSettings();
   Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
@@ -180,6 +184,8 @@ Hooks.once("ready", () => {
   Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
   Contagion.setupContagion().catch(e => console.error("WoDX | contagion", e));
   Power.setupPower().catch(e => console.error("WoDX | places of power", e));
+  Herds.setupHerds();
+  Sites.setupSites();
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -218,7 +224,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
@@ -376,6 +382,7 @@ async function onSocket(message) {
   if ( type === "req.passTime" ) { await PassTime.open(payload); return; }
   if ( type === "req.passVote" ) { await PassTime.vote(payload); return; }
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
+  if ( type === "req.fed" ) { await Herds.feedFrom(payload, {userId: payload.userId}); return; }
   if ( type === "req.venture" ) { await Ventures.onRequest(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
