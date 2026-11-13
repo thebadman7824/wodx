@@ -225,6 +225,19 @@ export const FAMILIES = {
     {from: 1965, note: "Hanging for murder ends (for good in 1969)", drop: {punish: ["hanging"]}},
     {from: 1990, note: "Cameras on every high street; the Computer Misuse Act", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.6}},
     {from: 2000, note: "The Terrorism Act", add: {crimes: ["terrorism"]}}
+  ]},
+
+  // Orthodox and Russian law: the prince's law beside the church's canons, then codes, the tsars, the Party (B3498)
+  orthodox: {label: "Orthodox and Russian law", rows: [
+    {from: 0, note: "The prince's law beside the church's canons", set: {
+      rule: {form: "A principality or empire whose ruler stands beside the Orthodox church", ruler: "The grand prince or the emperor", council: "The boyars or the great officials, and the bishops"},
+      courts: ["The prince's court and the prince's officials", "Church courts under the canons for clergy, marriage and morals", "Village communes and their elders"],
+      proof: ["witnesses", "oath", "ordeal", "combat"], punish: ["fine", "flogging", "banishment", "maiming", "hanging", "confiscation"],
+      order: ["bailiff", "town-watch"], taxes: ["Tribute and dues to the prince", "Tolls on the rivers and at markets"], bribe: 3, catch: 0.3},
+      add: {crimes: ["heresy", "sorcery", "blasphemy", "rebellion"], warn: ["Blood money is owed for a killing, by the victim's rank"]}},
+    {from: 1800, note: "Ministries, police and prisons", add: {order: ["police"], punish: ["prison", "hard-labour"]}, drop: {proof: ["ordeal", "combat"], warn: ["Blood money is owed for a killing, by the victim's rank"]}, set: {catch: 0.4}},
+    {from: 1900, note: "Fingerprints and the new codes", add: {proof: ["evidence", "forensic"], crimes: ["sedition", "drug-trade"]}, drop: {crimes: ["heresy", "sorcery"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime", "terrorism"]}, set: {catch: 0.5}}
   ]}
 };
 
@@ -243,6 +256,40 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  russia: [
+    {from: 0, note: "The princes of the Rus under the Russkaya Pravda; Novgorod ruled by its assembly", set: {rule: {ruler: "The princes of the Rus, and Novgorod's assembly", council: "The boyars and the town assemblies"}}},
+    {from: 1240, to: 1479, note: "The Mongol yoke: the princes rule by the khan's patent and pay tribute", add: {warn: ["The princes rule only with the Golden Horde's patent, and tribute goes to the khan"], taxes: ["Tribute to the Golden Horde"]}},
+    {from: 1497, note: "The Sudebnik of Ivan III: a law code for Muscovy", set: {rule: {ruler: "The Grand Prince of Moscow"}}, add: {courts: ["The grand prince's governors under the Sudebnik"]}},
+    {from: 1547, note: "The tsar", set: {rule: {form: "An autocracy", ruler: "The Tsar", council: "The boyar council and the Assembly of the Land"}}},
+    {from: 1565, to: 1572, note: "The oprichnina: the tsar's private terror", add: {warn: ["The oprichniki in black ride with dog's heads at the saddle and kill as they please"]}},
+    {from: 1649, note: "The Ulozhenie: serfs bound to the land for good", add: {warn: ["A runaway serf is hunted and returned to the lord"]}},
+    {from: 1711, note: "Peter's Senate, the Holy Synod (1721) and the Table of Ranks", set: {rule: {form: "An autocratic empire", ruler: "The Emperor of All Russia", council: "The Senate and the Holy Synod"}}},
+    {from: 1826, to: 1880, note: "The Third Section, the tsar's political police", add: {order: ["secret-police"]}},
+    {from: 1861, note: "The serfs freed", drop: {warn: ["A runaway serf is hunted and returned to the lord"]}},
+    {from: 1864, note: "Court reform: public trials, lawyers, juries", add: {proof: ["jury"], courts: ["Circuit courts with juries, after the reform of 1864"]}},
+    {from: 1881, note: "The Okhrana; exile to Siberia", add: {order: ["secret-police"], punish: ["transportation"]}},
+    {from: 1906, note: "The Duma", set: {rule: {council: "The State Duma and the State Council"}}},
+    {from: 1917, note: "The Bolsheviks: the Cheka, revolutionary tribunals, the Party over all",
+      set: {rule: {form: "A one-party Soviet state", ruler: "The leader of the Communist Party", council: "The Politburo"}, catch: 0.55},
+      add: {courts: ["People's courts and revolutionary tribunals"], proof: ["party"], crimes: ["anti-state"], order: ["secret-police"]},
+      drop: {courts: ["Church courts under the canons for clergy, marriage and morals", "Circuit courts with juries, after the reform of 1864"], proof: ["jury"], crimes: ["blasphemy", "heresy"]}},
+    {from: 1930, to: 1960, note: "The Gulag", add: {punish: ["camp"]}},
+    {from: 1936, to: 1938, note: "The Great Terror", add: {warn: ["Neighbours denounce neighbours; arrests come at night and few come back"]}},
+    {from: 1991, note: "The Russian Federation", set: {rule: {form: "A federal republic with a strong president", ruler: "The President", council: "The Federal Assembly"}}, drop: {proof: ["party"], crimes: ["anti-state"]}},
+    {from: 1996, note: "A moratorium on the death penalty", drop: {punish: ["hanging"]}}
+  ],
+  aegean: [
+    {from: 0, note: "The Byzantine empire under Roman law", set: {rule: {form: "The Roman empire of the east", ruler: "The Emperor in Constantinople", council: "The imperial court and the Patriarch"}},
+      add: {courts: ["Imperial judges under the Basilika, the Roman law in Greek"]}, drop: {proof: ["ordeal", "combat"]}},
+    {from: 1204, to: 1260, note: "The Latin Empire after the Fourth Crusade", add: {warn: ["Frankish lords rule Constantinople and many islands by their own feudal law"]}},
+    {from: 1453, note: "The Ottoman conquest: the Patriarch judges Orthodox Christians in family matters", set: {rule: {form: "A province of the Ottoman empire", ruler: "The Ottoman Sultan", council: "The sultan's governors; the Patriarch for the Orthodox"}},
+      add: {courts: ["The qadi's court", "The Patriarch's court for Orthodox Christians"], taxes: ["The poll tax on Christians and Jews"]},
+      drop: {courts: ["Imperial judges under the Basilika, the Roman law in Greek"]}},
+    {from: 1830, note: "The Kingdom of Greece, with codes on Bavarian and French lines", set: {rule: {form: "A kingdom, later a republic", ruler: "The King of the Hellenes"}},
+      drop: {courts: ["The qadi's court"], taxes: ["The poll tax on Christians and Jews"]}, add: {courts: ["The Greek state's courts"]}},
+    {from: 1967, to: 1974, note: "The colonels' junta", add: {warn: ["The junta's military police torture suspects"], order: ["secret-police"]}},
+    {from: 1975, note: "The Third Republic; the EEC in 1981", set: {rule: {form: "A parliamentary republic", ruler: "The Prime Minister, and the President"}}}
+  ],
   "british-isles": [
     {from: 0, note: "England's Angevin kings; Scotland's own crown and law; Welsh princes; Irish kings and the English lordship of Ireland",
       add: {courts: ["Scotland's own courts and law, Welsh law in the princes' lands, Irish Brehon law beyond the Pale"]}},
