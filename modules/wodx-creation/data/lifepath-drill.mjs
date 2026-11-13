@@ -16,6 +16,10 @@
  * Writing rule: second person or none, no gendered words.
  */
 
+import {LOCAL_EUROPE} from "./lifepath-local-europe.mjs";
+import {LOCAL_ASIA} from "./lifepath-local-asia.mjs";
+import {LOCAL_WORLD} from "./lifepath-local-world.mjs";
+
 export const CONTINENTS = [
  ["Europe", ["moravia","german-lands","british-isles","france","iberia","italy","low-countries","scandinavia","poland-baltic","carpathians-balkans","russia","aegean"]],
  ["Asia", ["anatolia","levant","arabia","persia","central-asia","siberia","tibet-himalaya","india","china","japan","korea","southeast-asia","nusantara"]],
@@ -185,6 +189,8 @@ export const LOCAL = {
 };
 
 /** Later chapters of adult life start at these ages; the first starts at the coming of age. */
+// The other regions, continent by continent (0.18.0)
+Object.assign(LOCAL, LOCAL_EUROPE, LOCAL_ASIA, LOCAL_WORLD);
 export const CHAPTERS = [30, 45, 60];
 
 /**
