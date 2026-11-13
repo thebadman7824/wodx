@@ -224,6 +224,14 @@ await states.secondBreathDialog();
   // The Realm maps window (Otherworlds 0.11.0 adds the Extra keywords field)
   const rmaps = await import(join(root, "modules/wodx-otherworlds/scripts/realm-maps.mjs"));
   await rmaps.realmMapsDialog();
+  // Otherworlds 0.21.0: the realm world maps window, its closer look and its found places
+  const rworlds = await import(join(root, "modules/wodx-otherworlds/scripts/realm-worlds.mjs"));
+  await rworlds.realmWorldsDialog({realm: "tempest"});
+  await rworlds.realmWorldsDialog({realm: "flux", eyes: "all"});
+  await rworlds.realmWorldsDialog({realm: "dark-kingdom", which: "Jade"});
+  await rworlds.realmWorldsDialog({realm: "far-dreaming"});
+  await rworlds.closerDialog({realm: "stygia"});
+  await rworlds.foundDialog({realm: "enoch"});
   globalThis.canvas = old;
   api.DialogV2.wait = wait;
 }

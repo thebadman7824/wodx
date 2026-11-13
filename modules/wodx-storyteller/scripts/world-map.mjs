@@ -5,6 +5,7 @@
  * the same map in another dress, and the chart of the worlds. It makes and changes nothing: it is a map to read.
  * The known world (B2550 to B2553): the map and its journeys keep to what the chronicle's homeland knows of the
  * world in the year, and "Discoveries" marks the lands the chronicle has found for itself (world setting "discovered").
+ * Storyteller 0.57.3: with WoDX Otherworlds 0.21.0 on, "Realms past the near worlds" opens its realm world maps.
  * The rules are in world-map-rules.mjs; the chart and the dresses are WoDX Otherworlds' worlds-chart-rules.mjs.
  */
 import * as WM from "./world-map-rules.mjs";
@@ -75,7 +76,7 @@ export function view(state) {
 
 export async function worldMapDialog(start = {}) {
   if ( !game.user.isGM ) return null;
-  const chart = api("wodx-otherworlds")?.worldsChart ?? null;
+  const chart = api("wodx-otherworlds")?.worldsChart ?? null, realmWorlds = api("wodx-otherworlds")?.realmWorlds ?? null;
   const regions = Object.fromEntries(WM.REGION_IDS.map(id => [id, regionLabel(id)]).sort((x, y) => x[1].localeCompare(y[1])));
   const layers = {earth: "The living world", ...(chart ? {...Object.fromEntries(Object.entries(chart.rules.MIRRORS).map(([k, m]) => [k, m.label])), chart: "The chart of the worlds"} : {})};
   const opts = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(v)}</option>`).join("");
@@ -99,11 +100,13 @@ export async function worldMapDialog(start = {}) {
       content, rejectClose: false,
       buttons: [{action: "show", label: "Show", default: true, callback: (ev, b) => ({go: "show", state: read(ev, b)})},
         {action: "closer", label: "Look closer at From", callback: (ev, b) => ({go: "closer", state: read(ev, b)})},
-        {action: "found", label: "Discoveries", callback: (ev, b) => ({go: "found", state: read(ev, b)})}, {action: "close", label: "Close"}]});
+        {action: "found", label: "Discoveries", callback: (ev, b) => ({go: "found", state: read(ev, b)})},
+        ...(realmWorlds ? [{action: "realms", label: "Realms past the near worlds", callback: (ev, b) => ({go: "realms", state: read(ev, b)})}] : []), {action: "close", label: "Close"}]});
     if ( !res || res === "close" ) return null;
     state = res.state;
     if ( res.go === "closer" ) await closerDialog(state);
     if ( res.go === "found" ) await discoveriesDialog(state.year);
+    if ( res.go === "realms" ) await realmWorlds.open({year: state.year});
   }
   return null;
 }
