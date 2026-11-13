@@ -125,7 +125,8 @@ export function resolveTable(all, id, {era = null, culture = null, borrow = null
   const score = t => (t.era ? 2 : 0) + own(t);
   // The era group first, then the groups it borrows from while it has no table of its own (future: modern)
   for ( const g of groupChain(era) ) {
-    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture) || lend.some(b => t.culture.includes(b)));
+    // A table marked lend: false serves its own culture only (eastern North America's first peoples are not the West's)
+    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture) || (t.lend !== false && lend.some(b => t.culture.includes(b))));
     const best = c.filter(fit).sort((a, b) => score(b) - score(a))[0];
     if ( best && (best.era || g === groupChain(era).at(-1)) ) return best;
   }
