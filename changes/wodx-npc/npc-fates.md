@@ -1,4 +1,0 @@
----
-bump: minor
----
-Off-screen lives of supernatural NPCs: when the clock jumps a year or more, every supernatural NPC lives through the gap. Vampires Embrace childer, fall into torpor for the years their Humanity or Path sets and wake again, commit diablerie (lowering Generation only on a victim of lower Generation) and meet Final Death; Garou rise in Rank and fall in battle; mages reach higher Arete and take apprentices; changelings may forget themselves to Banality; wraiths may fall to Oblivion or Transcend; mummies die and rise again; hunters burn out young. One approval card shows everything; approving it writes torpor, waking, deaths (filed in WoDX · The Dead), Generation, Rank and Arete, and keeps the new childer, cubs, apprentices and fosterlings as records the Storyteller can bring into play (api.fates.bring). Player characters are left to Pass the Years; an NPC flagged fates.keep is left alone. Setting off by default (B3260-B3266).
