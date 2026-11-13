@@ -19,9 +19,10 @@ map can be looked at by eye.
 Run: python3 check_map.py <map> [--sizes sizes.tsv] [--png out.png] [--json out.json] [--strict]
 --strict ends with exit code 1 when anything is found (for the harness and before an export).
 """
-import argparse, json, math, re, sys
+import argparse, json, math, os, re, sys
 
 import ddcore as C
+import catalogue as K
 
 CELL = 256
 STEP = .25                         # flood fill resolution, in squares
@@ -32,9 +33,10 @@ YARD = {"Haystack", "Hay_Pile", "Woodpile"}
 def nums(s): return [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?(?:e-?\d+)?", s.split("(", 1)[1])]
 
 def load_sizes(path):
+    """Measured picture sizes in squares: the given table, else the catalogue's tables (measured on the PC)."""
     out = {}
-    if not path: return out
-    for line in open(path, encoding="utf-8-sig"):
+    paths = [path] if path else [t for t in K.SIZE_TABLES if os.path.exists(t)]
+    for line in (l for t in paths for l in open(t, encoding="utf-8-sig")):
         p = line.rstrip("\n").split("\t")
         if len(p) < 3 or p[0] == "path": continue
         try: out[p[0]] = (int(p[1]) / CELL, int(p[2]) / CELL)
@@ -151,7 +153,8 @@ def room_names(path):
             out.append((x + w / 2, y + h / 2, m.group(1).replace("-", " ")))
     return out
 
-OPEN_GROUND = re.compile(r"Dirt|Cobble|Grass|Gravel|Paving|Mud|Sand", re.I)
+OPEN_GROUND = re.compile(r"^(?!.*tile).*(Dirt|Cobble|Grass|Gravel|Paving|Mud|Sand|Stone|Flag)", re.I)   # a court's ground (the palettes' outdoor floor), not a tiled hall
+PASSAGE = re.compile(r"corridor|passage|stair|entry|entrance|vestibule|lift|concourse|platform", re.I)
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
 RUG = re.compile(r"Rug_|Carpet", re.I)
@@ -184,14 +187,22 @@ def check(path, sizes_path=None):
             for c in r: cell_room[c] = n
         objs = [box(o, sizes) for o in level.get("objects", [])]
         def room_at(x, y): return cell_room.get((int(x / STEP), int(y / STEP)))
-        ground = {}                                            # rooms floored with dirt, cobbles or grass: courts and yards
+        ground, floored = {}, set()                            # rooms floored with dirt, cobbles or grass: courts and yards
         for pt in level.get("patterns", []):
-            if not OPEN_GROUND.search(pt.get("texture", "")): continue
             q = nums(pt["points"]); xs, ys = q[0::2], q[1::2]
             n = room_at((min(xs) + max(xs)) / 2 / CELL, (min(ys) + max(ys)) / 2 / CELL)
-            if n is not None: ground[n] = True
+            floored.add(n)
+            if n is not None and OPEN_GROUND.search(pt.get("texture", "")): ground[n] = True
+        for n in range(len(rooms)):                            # no floor drawn at all: bare earth, a court open to the sky
+            if n not in floored: ground[n] = True
         for o in objs: o["room"] = room_at(o["cx"], o["cy"])
         furn = [o for o in objs if o["layer"] == 100 and o["room"] is not None]
+        for o in objs:                                         # a lamp on a room's wall stays inside the room
+            if o["layer"] != 400 or o["room"] is None: continue
+            for a, b in segs:
+                hit = seg_hits_poly(a, b, o["pts"])
+                if hit and not any(math.hypot(hit[0] - g[0], hit[1] - g[1]) <= g[2] + .05 for g in gaps):
+                    found.append(("across a wall", o, "a lamp at %.1f, %.1f" % hit)); break
         for o in objs:
             if not (0 <= o["cx"] <= W and 0 <= o["cy"] <= H) and not re.search(r"Tree|Pine|Bush|Stone|Rock|Stump|Pebble|Grass|Leaves|Twig", o["name"]): found.append(("outside", o, ""))
         for o in objs:                                         # a tree's crown drawn over a room hides what is in it
@@ -236,8 +247,13 @@ def check(path, sizes_path=None):
             need = max(1, int(area / PER_PIECE))
             bar = BARE
             if not named: need, bar = max(1, int(area / (2 * PER_PIECE))), BARE / 2     # a room the WoDX file names nothing in: a court, a hall
+            bw, bh = info["box"][2] - info["box"][0], info["box"][3] - info["box"][1]
+            long = math.hypot(bw, bh)                          # a stair hall or corridor (straight or turned) is for walking through
+            corridor = area / long <= 2.6 and long >= 3 * area / long
             if OPEN_AIR.search(" ".join(named)) or (ground.get(n) and not named): need, bar = 1, .05
-            if area >= 3 and (cover / area < bar or len(mine) < need and cover / area < .45):   # few but big pieces are not bare
+            if PASSAGE.search(" ".join(named)) or corridor and not named: need, bar = 0, 0
+            # bare: too little covered with too few pieces, or almost nothing covered (few but big pieces, or many small ones, are not)
+            if area >= 3 and (cover / area < bar and len(mine) < 1.2 * need or cover / area < bar / 2 or len(mine) < need and cover / area < .45):
                 found.append(("bare", {"name": "%s (%.0f squares)" % (named[0] if named else "room %d" % n, area), "cx": (info["box"][0] + info["box"][2]) / 2,
                               "cy": (info["box"][1] + info["box"][3]) / 2, "pts": None, "how": ""},
                               "%d pieces cover %d%% (wants %d and %d%%)" % (len(mine), 100 * cover / area, need, 100 * BARE)))

@@ -218,7 +218,7 @@ FITS_ON = {"table": TABLEWARE, "counter": TABLEWARE, "desk": re.compile(r"Book|P
 LETTERED = re.compile(r"Book|Scroll|Quill|Ink|Pen_|Paper|Letter|Ledger|Map|Coin|Glass|Bottle|Goblet|Silver|Gold|Potion", re.I)   # not in a peasant's house
 WALL_PIECES = {"store": ("store", "store", "chest", "shelf"), "ward": ("chest", "store", "seat", "shelf"),
                "sleep": ("chest", "seat", "cupboard", "store"), "kitchen": ("store", "shelf", "store", "seat"),
-               "work": ("store", "shelf", "chest", "store")}
+               "work": ("store", "shelf", "chest", "store"), "outdoor": ("store", "seat", "store", "store")}
 
 
 def _beside_any(room, r, e=.05):
@@ -231,15 +231,17 @@ def _along_walls(room, pal, R, dense):
     """Small pieces against the walls (a chest, a barrel, a stool, a shelf) until the room looks lived in; each one
     keeps clear of doors, walkways and other pieces like any furniture (room.fits)."""
     order = WALL_PIECES.get(room.kind, ("chest", "store", "seat", "shelf"))
-    for k in range(12):
+    for k in range(max(12, int(room.iw * room.ih / 3))):          # a big shed takes more tries
         if dense(): return
         e = pal.pick(order[k % len(order)], R)
         if not e: continue
         aw, ah = e["cells"]
-        if max(aw, ah) > 2: continue
-        sc = .75 if max(aw, ah) <= 1 else 1.0
+        if max(aw, ah) > (3 if room.iw * room.ih >= 40 else 2): continue      # a big hall or shed takes bigger pieces
+        sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
         spots = room.candidates(fw, fh, "wall")
+        if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
+            spots = [c for c in room.candidates(fw, fh, "free") if _beside_any(room, c[1:5])]
         if not spots: continue
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc, "layer": 100,
@@ -258,6 +260,8 @@ def _along_walls(room, pal, R, dense):
 
 ANIMALS = re.compile(r"Byre|Barn|Stable|Coop|Sty|Hay|Loft|Granary|Kennel|Mews", re.I)
 GRAND_LIGHT = re.compile(r"Chandelier|Candelabra", re.I)
+STACKED = re.compile(r"Shed|Warehouse|Store", re.I)
+STREET_LIGHT = re.compile(r"street|traffic|road|lamp_?post|pole|signal", re.I)        # out of doors, never on a room's wall
 ODD_FLAME = re.compile(r"Blue|Purple|Green|Pink|Gem|Teal|Cyan|Skull", re.I)          # coloured or uncanny flames
 
 
@@ -267,7 +271,7 @@ def _wall_lights(room, pal, tier, R):
     e = None
     for _try in range(6):
         e = pal.pick("light", R)
-        if not e or (fine or not GRAND_LIGHT.search(e["name"])) and not ODD_FLAME.search(e["name"]): break
+        if not e or (fine or not GRAND_LIGHT.search(e["name"])) and not ODD_FLAME.search(e["name"]) and not STREET_LIGHT.search(e["name"]): break
         e = None
     n = 1 + TIERS.index(tier) // 2
     rng = LIGHT_RANGE.get(pal.lights, 3)
@@ -279,7 +283,8 @@ def _wall_lights(room, pal, tier, R):
             if all(math.hypot(cx - x, cy - y) >= 2 for x, y, _ in room.lights): break
         else:
             continue
-        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6, "layer": 400, "piece": "light"})
+        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0,
+                                    "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})   # drawn .6 across
         room.lights.append((cx, cy, rng))
 
 
@@ -301,12 +306,16 @@ def fill_room(room):
             room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
             if kind not in ("outdoor",) and room.iw * room.ih >= 4: _wall_lights(room, pal, "meagre", R)
             return
-        if not ctx["open_floor"]: room.blocked = [b for b in room.blocked if b[4] != "open floor"]
+        if not ctx["open_floor"] or STACKED.search(room.name):  # a shed or warehouse is stacked across its floor, along its
+                                                               # walkways (a barn keeps its threshing floor open)
+            room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
         options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])
         used, added = {}, []
         def dense():                                           # lived in, however poor: enough pieces for the floor
-            if kind in ("outdoor", "passage"): return True     # a court or a gateway stays open
+            if kind == "passage": return True                  # a gateway or stair hall stays open
+            if kind == "outdoor":                              # a court stays mostly open: a barrel, a bench, a cart's load
+                return len(room.items) + sum(1 for x in added if x["layer"] != 400) >= max(2, int(room.iw * room.ih / 8))
             n = len(room.items) + sum(1 for x in added if x["layer"] != 400)
             return n >= max(2, int(room.iw * room.ih / DENSE)) and sum(i["w"] * i["h"] for i in room.items) >= COVER * room.iw * room.ih
         def reached():
@@ -332,7 +341,7 @@ def fill_room(room):
         del room.items[n0:]
         room.dressing += mine + added
         room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
-        _wall_lights(room, pal, room.tier, R)
+        if kind != "outdoor": _wall_lights(room, pal, room.tier, R)    # no chandelier hung in a court
     finally:
         room.blocked = saved
         C.R = keep_R
