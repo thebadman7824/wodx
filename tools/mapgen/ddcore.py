@@ -553,6 +553,13 @@ TILE_RULES = [   # (asset prefix, label, flags); a container's fill place comes 
     ("Box_Crate", "Crates", {"hide": True, "hideKind": "crawl", "room": 1, "title": "Behind the crates"}),
 ]
 
+DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt: (label, flags)
+    "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
+    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home",
+                              "hide": True, "hideKind": "wardrobe", "title": "Inside the cupboard"}),
+    "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
+}
+
 def opening_entries(key, name, openings, inside):
     """Sidecar openings for one building. openings: (kind, x, y, along) in map cells; inside: a point inside."""
     out = []
@@ -576,6 +583,15 @@ def feature_entries(prefix, room, fill="home"):
              "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags}
         if flags.get("light"): f["light"] = {"dim": 3, "bright": 1, "color": "#ff9a3c", "on": True}
         out.append(f)
+    # the furnishing's own pieces (furnishing.py): every chest, cupboard, wardrobe and bed it set down can be searched,
+    # opened or hidden in like the building type's own (ids "<room>-f<n>", so the type's own ids never move)
+    for i, it in enumerate(d for d in getattr(room, "dressing", []) if d.get("layer", 100) == 100):
+        rule = DRESSED.get(it.get("piece"))
+        if not rule: continue
+        label, flags = rule[0], dict(rule[1])
+        if flags.get("container"): flags["fillPlace"] = fill
+        out.append({"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-f{i}", "label": f"{label} ({room.name})",
+                    "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags})
     return out
 
 # ------------------------------------------------------------------ plan view, to check the logic by eye

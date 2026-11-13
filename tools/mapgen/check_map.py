@@ -151,6 +151,7 @@ def room_names(path):
             out.append((x + w / 2, y + h / 2, m.group(1).replace("-", " ")))
     return out
 
+OPEN_GROUND = re.compile(r"Dirt|Cobble|Grass|Gravel|Paving|Mud|Sand", re.I)
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
 RUG = re.compile(r"Rug_|Carpet", re.I)
@@ -183,6 +184,12 @@ def check(path, sizes_path=None):
             for c in r: cell_room[c] = n
         objs = [box(o, sizes) for o in level.get("objects", [])]
         def room_at(x, y): return cell_room.get((int(x / STEP), int(y / STEP)))
+        ground = {}                                            # rooms floored with dirt, cobbles or grass: courts and yards
+        for pt in level.get("patterns", []):
+            if not OPEN_GROUND.search(pt.get("texture", "")): continue
+            q = nums(pt["points"]); xs, ys = q[0::2], q[1::2]
+            n = room_at((min(xs) + max(xs)) / 2 / CELL, (min(ys) + max(ys)) / 2 / CELL)
+            if n is not None: ground[n] = True
         for o in objs: o["room"] = room_at(o["cx"], o["cy"])
         furn = [o for o in objs if o["layer"] == 100 and o["room"] is not None]
         for o in objs:
@@ -229,7 +236,7 @@ def check(path, sizes_path=None):
             need = max(1, int(area / PER_PIECE))
             bar = BARE
             if not named: need, bar = max(1, int(area / (2 * PER_PIECE))), BARE / 2     # a room the WoDX file names nothing in: a court, a hall
-            if OPEN_AIR.search(" ".join(named)): need, bar = 1, .05
+            if OPEN_AIR.search(" ".join(named)) or (ground.get(n) and not named): need, bar = 1, .05
             if area >= 3 and (cover / area < bar or len(mine) < need and cover / area < .45):   # few but big pieces are not bare
                 found.append(("bare", {"name": "%s (%.0f squares)" % (named[0] if named else "room %d" % n, area), "cx": (info["box"][0] + info["box"][2]) / 2,
                               "cy": (info["box"][1] + info["box"][3]) / 2, "pts": None, "how": ""},

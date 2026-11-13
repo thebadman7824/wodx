@@ -306,6 +306,7 @@ def fill_room(room):
         options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])
         used, added = {}, []
         def dense():                                           # lived in, however poor: enough pieces for the floor
+            if kind in ("outdoor", "passage"): return True     # a court or a gateway stays open
             n = len(room.items) + sum(1 for x in added if x["layer"] != 400)
             return n >= max(2, int(room.iw * room.ih / DENSE)) and sum(i["w"] * i["h"] for i in room.items) >= COVER * room.iw * room.ih
         def reached():
