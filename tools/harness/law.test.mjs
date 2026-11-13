@@ -80,3 +80,27 @@ test("the Law here card opens one more section per dot, and all for the Storytel
   const all = L.cardSections(r, {full: true}).map(s => s.key);
   for ( const k of ["crimes", "courts", "proof", "punish", "taxes", "bribe"] ) assert.ok(all.includes(k));
 });
+
+test("the lands of Islam (B3493)", () => {
+  const at = (r, y) => L.lawOf(r, y);
+  assert.equal(at("egypt", 1300).family, "islamic");
+  assert.equal(at("egypt", 1300).guess, false);
+  assert.ok(at("egypt", 1300).courts.some(c => /qadi/.test(c)));
+  assert.ok(at("egypt", 1300).order.includes("muhtasib"));
+  assert.ok(at("levant", 1600).courts.some(c => /kanun/.test(c)), "Ottoman kanun after 1516");
+  assert.ok(at("anatolia", 1850).taxes.some(x => /poll tax/.test(x)));
+  assert.ok(!at("anatolia", 1860).taxes.some(x => /poll tax/.test(x)), "equal subjects 1856");
+  assert.ok(!at("anatolia", 1930).courts.some(c => /qadi/.test(c)), "sharia courts closed 1924");
+  assert.ok(!at("anatolia", 1930).crimes.includes("wine"));
+  assert.ok(at("persia", 1990).courts.some(c => /revolutionary/.test(c)));
+  assert.ok(at("persia", 1300).courts.some(c => /Yassa/.test(c)));
+  assert.ok(!at("persia", 1400).courts.some(c => /Yassa/.test(c)));
+  assert.ok(!at("nusantara", 1300).crimes.includes("apostasy"), "Hindu-Buddhist kingdoms before Islam");
+  assert.ok(at("nusantara", 1500).crimes.includes("apostasy"));
+  assert.ok(at("maghreb", 1900).warn.some(w => /Settlers/.test(w)));
+  assert.ok(!at("maghreb", 1970).warn.some(w => /Settlers/.test(w)));
+  for ( const r of ["anatolia", "levant", "egypt", "arabia", "maghreb", "persia", "nusantara"] ) for ( const y of [1197, 1500, 1800, 1950, 2022] ) {
+    const x = at(r, y);
+    assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
+  }
+});

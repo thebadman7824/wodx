@@ -20,7 +20,7 @@ export const CRIMES = {
   "arms-night": "Bearing arms in town after dark", "wrong-faith": "Worship outside the established church",
   "pretend-powers": "Claiming magical powers (as fraud)", duelling: "Duelling", sedition: "Sedition against the state",
   "drug-trade": "Dealing in forbidden drugs", "computer-crime": "Breaking into computers", terrorism: "Terrorism",
-  "anti-state": "Speaking or acting against the Party"
+  "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -43,7 +43,7 @@ export const PUNISH = {
   maiming: "Branding or maiming", banishment: "Banishment from the town or the land", outlawry: "Outlawry: the law no longer protects them",
   hanging: "Death by hanging, the sword or the wheel", burning: "Burning, for heresy and sorcery", galleys: "Rowing in the galleys",
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
-  confiscation: "Loss of land and goods"
+  confiscation: "Loss of land and goods", flogging: "Flogging"
 };
 
 /** Keepers of order. */
@@ -52,7 +52,8 @@ export const ORDER = {
   "town-watch": "The town watch at the gates and on the walls", inquisitors: "Inquisitors hunting heresy",
   gendarmerie: "The gendarmerie on the roads and in the villages", police: "A state police force in uniform",
   detectives: "Detectives in plain clothes", "secret-police": "A secret police with informers everywhere",
-  cameras: "Cameras on the streets and in shops", army: "Soldiers in the streets"
+  cameras: "Cameras on the streets and in shops", army: "Soldiers in the streets",
+  muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -110,6 +111,26 @@ export const FAMILIES = {
     {from: 1950, note: "Human rights law after the war; each land ends the death penalty on its own date", set: {catch: 0.45}},
     {from: 1990, note: "Cameras on the streets, computer crime on the books", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}},
     {from: 2001, note: "Terrorism laws after the attacks of 2001", add: {crimes: ["terrorism"]}}
+  ]},
+
+  // The lands of Islam: sharia judged by the qadi beside the ruler's own justice, Ottoman kanun, reform, mixed codes (B3493)
+  islamic: {label: "The lands of Islam", rows: [
+    {from: 0, note: "Sharia judged by the qadi; the ruler's own justice beside it", set: {
+      rule: {form: "A sultan or emir who rules in the name of the faith", ruler: "The sultan or emir", council: "The vizier, the divan and the learned men of the faith"},
+      courts: ["The qadi's court, judging by sharia and the school of law the land follows", "The ruler's court of complaints, where anyone may petition against an official",
+        "Each protected faith's own court for its own people: church courts, rabbinic courts"],
+      proof: ["witnesses", "oath"], punish: ["fine", "flogging", "maiming", "banishment", "hanging", "confiscation"],
+      order: ["muhtasib", "shurta", "town-watch"], taxes: ["Alms owed by Muslims", "The poll tax on Christians and Jews", "The land tax", "Tolls and market dues"],
+      bribe: 2, catch: 0.3},
+      add: {crimes: ["blasphemy", "apostasy", "wine", "sorcery", "rebellion"],
+        warn: ["Wine is forbidden to Muslims; Christians and Jews may make it for their own", "Christians and Jews pay the poll tax, and in many towns may not bear arms or build new houses of worship",
+          "The market inspector checks weights, prices and public conduct"]}},
+    {from: 1800, note: "Police and prisons on European lines", add: {order: ["police"], punish: ["prison", "hard-labour"]}, drop: {order: ["shurta"]}, set: {bribe: 3, catch: 0.35}},
+    {from: 1900, note: "Written codes beside sharia; fingerprints", add: {courts: ["State courts under written codes, with sharia kept for marriage, divorce and inheritance"], proof: ["evidence", "forensic"], crimes: ["sedition", "drug-trade"]}},
+    {from: 1950, note: "Independent states: courts on European models, a secret police in many", set: {rule: {form: "An independent state: a monarchy, a republic or a military government"}, catch: 0.45},
+      add: {order: ["detectives", "secret-police"]}, drop: {order: ["muhtasib", "town-watch"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.5}},
+    {from: 2001, note: "Terrorism laws", add: {crimes: ["terrorism"]}}
   ]}
 };
 
@@ -128,6 +149,79 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  anatolia: [
+    {from: 0, note: "The Seljuk sultanate of Rum", set: {rule: {ruler: "The Seljuk Sultan of Rum"}}},
+    {from: 1300, note: "The Ottoman house rises", set: {rule: {ruler: "The Ottoman Sultan"}}},
+    {from: 1450, note: "The sultan's own law, the kanun, beside sharia", add: {courts: ["The sultan's kanun, laid down in law books, for taxes, land and public order"]}},
+    {from: 1839, note: "The Tanzimat reforms: new courts and codes on French lines", add: {courts: ["The new state courts of the Tanzimat"]}},
+    {from: 1857, note: "Equal subjects (1856): the poll tax ends", drop: {taxes: ["The poll tax on Christians and Jews"], warn: ["Christians and Jews pay the poll tax, and in many towns may not bear arms or build new houses of worship"]}},
+    {from: 1923, note: "The Turkish Republic: sharia courts closed (1924), Swiss civil and Italian penal codes (1926)",
+      set: {rule: {form: "A secular republic", ruler: "The President of the Republic", council: "The Grand National Assembly"}},
+      drop: {courts: ["The qadi's court, judging by sharia and the school of law the land follows", "State courts under written codes, with sharia kept for marriage, divorce and inheritance", "The sultan's kanun, laid down in law books, for taxes, land and public order"], crimes: ["apostasy", "wine"],
+        warn: ["Wine is forbidden to Muslims; Christians and Jews may make it for their own", "The market inspector checks weights, prices and public conduct"]},
+      add: {courts: ["The republic's courts under codes taken from Switzerland and Italy"]}},
+    {from: 2004, note: "The death penalty is abolished", drop: {punish: ["hanging"]}}
+  ],
+  levant: [
+    {from: 0, note: "Saladin's heirs, the Ayyubids, and the crusader states on the coast", set: {rule: {ruler: "The Ayyubid sultan in Damascus", council: "The emirs and the learned men"}},
+      add: {warn: ["On the coast the crusaders' own law holds until 1291"]}},
+    {from: 1260, note: "The Mamluk sultanate", set: {rule: {ruler: "The Mamluk Sultan in Cairo, through governors"}}},
+    {from: 1292, note: "The last crusader city falls (1291)", drop: {warn: ["On the coast the crusaders' own law holds until 1291"]}},
+    {from: 1516, note: "Ottoman rule", set: {rule: {ruler: "The Ottoman Sultan, through governors"}}, add: {courts: ["The sultan's kanun, laid down in law books, for taxes, land and public order"]}},
+    {from: 1857, note: "Ottoman equal subjects: the poll tax ends", drop: {taxes: ["The poll tax on Christians and Jews"]}},
+    {from: 1920, note: "British and French mandates", set: {rule: {form: "A mandate under a European power", ruler: "The British or French High Commissioner"}}},
+    {from: 1946, note: "Independent states; Israel from 1948 with its own law and faith courts for family matters", set: {rule: {form: "Independent states: republics and kingdoms", ruler: "Each state's head"}}}
+  ],
+  egypt: [
+    {from: 0, note: "The Ayyubid sultanate", set: {rule: {ruler: "The Ayyubid Sultan in Cairo"}}},
+    {from: 1250, note: "The Mamluk sultanate", set: {rule: {ruler: "The Mamluk Sultan", council: "The Mamluk emirs and the shadow caliph"}}},
+    {from: 1517, note: "Ottoman conquest", set: {rule: {ruler: "The Ottoman governor, with the Mamluk beys"}}},
+    {from: 1805, note: "Muhammad Ali and the house that followed", set: {rule: {ruler: "The Pasha, later Khedive, of Egypt"}}},
+    {from: 1876, note: "The Mixed Courts for cases with foreigners", add: {courts: ["The Mixed Courts, for any case touching a foreigner"]}},
+    {from: 1882, note: "British occupation", set: {rule: {council: "The British Agent's advice, which is an order"}}},
+    {from: 1922, note: "The Kingdom of Egypt", set: {rule: {form: "A constitutional monarchy", ruler: "The King of Egypt"}}},
+    {from: 1953, note: "The republic; sharia courts merged into the state courts (1955)", set: {rule: {form: "A republic under military men", ruler: "The President"}},
+      drop: {courts: ["The qadi's court, judging by sharia and the school of law the land follows", "The Mixed Courts, for any case touching a foreigner"]}}
+  ],
+  arabia: [
+    {from: 0, note: "The holy cities under the Sharif of Mecca; tribes and imams beyond", set: {rule: {ruler: "The Sharif of Mecca, the imams of Yemen and the tribal shaykhs"}},
+      add: {courts: ["Tribal custom and arbiters among the Bedouin"], warn: ["Only Muslims may enter Mecca and Medina"]}},
+    {from: 1517, note: "Ottoman overlordship of the Hejaz", set: {rule: {council: "The sharif under an Ottoman governor"}}},
+    {from: 1932, note: "The Kingdom of Saudi Arabia: sharia as the law of the state", set: {rule: {form: "An absolute monarchy under sharia", ruler: "The King", council: "The royal family and the senior scholars"}},
+      add: {order: ["religious-police"]}},
+    {from: 1950, note: "Sharia stays the law here; the courts keep flogging and the sword", add: {courts: ["The kingdom's sharia courts"], punish: ["flogging"]}}
+  ],
+  maghreb: [
+    {from: 0, note: "The Almohad caliphate", set: {rule: {ruler: "The Almohad Caliph"}}},
+    {from: 1270, note: "The Marinid, Zayyanid and Hafsid kingdoms", set: {rule: {ruler: "The Sultan in Fez, Tlemcen or Tunis"}}},
+    {from: 1550, note: "Ottoman regencies in Algiers, Tunis and Tripoli; Morocco stays its own", set: {rule: {ruler: "The Dey, Bey or Pasha under the Ottomans; the Sultan in Morocco"}}},
+    {from: 1830, note: "French conquest of Algeria; Tunisia (1881), Morocco (1912) and Libya (1911, Italy) follow", set: {rule: {form: "Colonies and protectorates of France, Spain and Italy", ruler: "The Governor-General or Resident-General"}},
+      add: {courts: ["French courts for settlers, and for natives in grave matters"], warn: ["Settlers and natives do not stand under the same law"]}},
+    {from: 1956, note: "Independence (Libya 1951, Morocco and Tunisia 1956, Algeria 1962)", set: {rule: {form: "Independent kingdoms and republics", ruler: "Each state's head"}},
+      drop: {courts: ["French courts for settlers, and for natives in grave matters"], warn: ["Settlers and natives do not stand under the same law"]}}
+  ],
+  persia: [
+    {from: 0, note: "The Khwarazmian shahs", set: {rule: {ruler: "The Shah of Khwarazm"}}},
+    {from: 1256, note: "The Mongol Ilkhanate: the Yassa of Genghis Khan beside sharia", set: {rule: {ruler: "The Ilkhan"}}, add: {courts: ["The Mongol Yassa for the conquerors and the state"]}},
+    {from: 1336, note: "The Ilkhanate breaks up; then Timur and the Timurids", drop: {courts: ["The Mongol Yassa for the conquerors and the state"]}},
+    {from: 1501, note: "The Safavid shahs: Twelver Shi'a Islam the faith of the state", set: {rule: {ruler: "The Safavid Shah", council: "The shah's ministers and the Shi'a scholars"}}},
+    {from: 1789, note: "The Qajar shahs", set: {rule: {ruler: "The Qajar Shah"}}},
+    {from: 1906, note: "The Constitutional Revolution: a parliament", set: {rule: {form: "A constitutional monarchy", council: "The Majlis"}}},
+    {from: 1925, note: "The Pahlavi shahs: codes on European lines; SAVAK from 1957", set: {rule: {ruler: "The Pahlavi Shah"}}, add: {order: ["secret-police"]}},
+    {from: 1979, note: "The Islamic Republic: revolutionary courts and the Supreme Leader", set: {rule: {form: "An Islamic republic", ruler: "The Supreme Leader, and the President", council: "The Guardian Council and the Majlis"}},
+      add: {courts: ["Islamic revolutionary courts"], order: ["religious-police"], punish: ["flogging"]}}
+  ],
+  nusantara: [
+    {from: 0, note: "Hindu and Buddhist kingdoms: Srivijaya, then Majapahit (1293)", set: {rule: {form: "A Hindu-Buddhist kingdom of the islands", ruler: "The king of Srivijaya or Majapahit", council: "The court and the priests"},
+      courts: ["The king's court under the law books of the realm", "Village custom (adat) and its elders"], taxes: ["Dues in rice and goods to the court"], order: ["bailiff", "town-watch"]},
+      drop: {crimes: ["apostasy", "wine"], order: ["muhtasib"], warn: ["Wine is forbidden to Muslims; Christians and Jews may make it for their own", "Christians and Jews pay the poll tax, and in many towns may not bear arms or build new houses of worship", "The market inspector checks weights, prices and public conduct"]}},
+    {from: 1400, note: "The sultanate of Malacca; Islam spreads through the ports", set: {rule: {form: "Sultanates of the ports and kingdoms inland", ruler: "The Sultan of Malacca, Aceh, Demak or Mataram"},
+      courts: ["The qadi's court in the sultanates", "Village custom (adat) and its elders"]}, add: {crimes: ["apostasy"], order: ["shurta"]}},
+    {from: 1619, note: "The Dutch East India Company at Batavia; Spain in the Philippines (1565), Britain in Malaya (1824)", set: {rule: {form: "Colonies and their client sultans", ruler: "The Governor-General"}},
+      add: {courts: ["Colonial courts for Europeans", "Custom courts for natives"], warn: ["Europeans and natives do not stand under the same law"]}},
+    {from: 1949, note: "Independent Indonesia (1945 to 1949), Malaysia (1957), the Philippines (1946)", set: {rule: {form: "Independent republics and a federation of sultans", ruler: "Each state's head"}},
+      drop: {courts: ["Colonial courts for Europeans", "Custom courts for natives"], warn: ["Europeans and natives do not stand under the same law"]}}
+  ],
   moravia: [
     {from: 0, note: "The Přemyslid crown: the duke, from 1198 king, with the margrave of Moravia below the crown",
       set: {rule: {form: "A kingdom of the Bohemian crown, with Moravia a margraviate under it", ruler: "The King of Bohemia, and the Margrave of Moravia", council: "The lords of the land and the bishop of Olomouc"}},
