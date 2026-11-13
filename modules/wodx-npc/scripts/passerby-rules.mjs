@@ -9,7 +9,15 @@
  *
  * House readings (docs/PENDING-REVIEW.md): the crowd sizes by hour and age, the kinds of people and their clothes,
  * how many are drunk, that no children are among them, and that the Future Darkness street is thinner and warier.
+ *
+ * NPC 0.51.0 (B2671): a scene outside Moravia follows its region's way of life (passerby-world.mjs): a dervish or a
+ * monk on the alms round in place of the friar, a coffee house guest in place of the tavern drunk, and the faith and
+ * origin tags of the region's people.
  */
+import {PEOPLE_WORLD, tableFor, FAITH_TAG, PROTESTANT, SECULAR} from "./passerby-world.mjs";
+import {sphereFor, mixFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import {originFaith} from "./routine-rules.mjs";
 
 /** Ages of the street. The first five match routine-rules.mjs AGES; the Future Darkness street is its own. */
 export const AGES = {
@@ -165,8 +173,8 @@ function pickWeighted(pairs, rng) {
  * One passer-by: {kind, who, look, name, vesselState, drinks}. vesselState matches WoDX Actions VESSEL_STATES
  * (V20 pp. 295, 301-302). sick: an outbreak is on in the town (WoDX Storyteller), so some carry it.
  */
-export function makePasserby({year, hour, area = "market", sick = false, place = "street", rng = Math.random} = {}) {
-  const age = ageOf(year), band = bandOf(hour), table = PEOPLE[age];
+export function makePasserby({year, hour, area = "market", sick = false, place = "street", region = null, rng = Math.random} = {}) {
+  const age = ageOf(year), band = bandOf(hour), table = streetTable(year, region);
   const kind = pickWeighted(Object.entries(table).map(([k, p]) => [k, weightOf(p, band, area, year) * placeWeight(p, place)]), rng)
     ?? Object.keys(table)[0];
   const p = table[kind];
@@ -177,7 +185,7 @@ export function makePasserby({year, hour, area = "market", sick = false, place =
   else if ( dark && p.stim && rng() < p.stim ) vesselState = "stimulant";
   else if ( sick && rng() < 0.25 ) vesselState = "disease";
   const name = `${p.who.charAt(0).toUpperCase()}${p.who.slice(1)} ${look}`.trim();
-  return {kind, age, cat: p.cat, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng)};
+  return {kind, age, cat: p.cat, who: p.who, look, name, vesselState, drinks, tags: tagsFor(kind, p, year, rng, region)};
 }
 
 /*
@@ -206,13 +214,48 @@ function originOf(year, kind, rng) {
   if ( y < 1946 ) return r < 0.62 ? "czech" : r < 0.97 ? "german" : "foreign";
   return r < 0.93 ? "czech" : r < 0.96 ? "slovak" : "foreign";
 }
-export function tagsFor(kind, p, year, rng = Math.random) {
+export function tagsFor(kind, p, year, rng = Math.random, region = null) {
+  if ( region && region !== "moravia" ) return worldTags(kind, p, year, rng, region);
   const out = [kind, STATION[p.cat] ?? "townsperson", rng() < 0.5 ? "woman" : "man", YOUTH.has(kind) ? "youth" : ELDER.has(kind) ? "elder" : "adult"];
   if ( p.cat === "religious" ) out.push("catholic");
   else { const f = faithOf(year, rng); if ( f ) out.push(f); }
   const o = originOf(year, kind, rng);
   if ( o !== "foreign" ) out.push("moravian");
   out.push(o);
+  return [...new Set(out)];
+}
+
+/** The street's table of people for a year in a region (null or Moravia: the central European one). */
+export function streetTable(year, region = null) {
+  const age = ageOf(year);
+  if ( !region || region === "moravia" ) return PEOPLE[age];
+  return tableFor(PEOPLE[age], sphereFor(region, year), age);
+}
+/** The region's era group for its mix of peoples (WoDX Chronicle ERA_GROUPS). */
+const groupOf = y => y < 1500 ? "medieval" : y < 1800 ? "early-modern" : y < 1900 ? "industrial" : "modern";
+/** Tags outside Moravia: the land's faith or the one an origin brings, and an origin from the region's mix. */
+function worldTags(kind, p, year, rng, region) {
+  const y = Number(year) || 1197;
+  const out = [kind, STATION[p.cat] ?? "townsperson", rng() < 0.5 ? "woman" : "man", YOUTH.has(kind) ? "youth" : ELDER.has(kind) ? "elder" : "adult"];
+  const mix = mixFor(region, groupOf(y));
+  let origin = null;
+  if ( kind === "tourist" || kind === "pilgrim" ) origin = "foreign";
+  else if ( mix?.length ) {
+    const total = mix.reduce((n, [, w]) => n + w, 0);
+    let r = rng() * total;
+    origin = mix.find(([, w]) => (r -= w) < 0)?.[0] ?? mix.at(-1)[0];
+  }
+  const land = faithFor(region, y);
+  let faith = (origin && originFaith(origin)) || land;
+  const secular = SECULAR[sphereFor(region, y)];
+  const r = rng();
+  if ( p.cat !== "religious" && secular && y >= secular && r < 0.5 ) faith = null;
+  let tag = faith ? FAITH_TAG[faith] ?? null : null;
+  const prot = PROTESTANT[region];
+  if ( tag === "catholic" && prot && y >= prot[0] && rng() < prot[1] ) tag = "protestant";
+  if ( tag ) out.push(tag);
+  out.push(region);
+  if ( origin ) out.push(origin);
   return [...new Set(out)];
 }
 
@@ -388,6 +431,9 @@ const PERSON_CAT = {
 /** What kind of animal each is. */
 const ANIMAL_CAT = {pig: "livestock", goat: "livestock", cattle: "livestock", horse: "livestock", geese: "poultry", dog: "stray", cat: "cat", rat: "rat", bird: "bird"};
 for ( const t of Object.values(PEOPLE) ) for ( const [k, p] of Object.entries(t) ) p.cat = PERSON_CAT[k] ?? "local";
+// 0.51.0: the kinds only other ways of life have
+Object.assign(PERSON_CAT, {water: "trade", scholar: "young", griot: "trade", sailor: "worker", herder: "local", runner: "trade", fisher: "trade", cleric: "religious"});
+for ( const s of Object.values(PEOPLE_WORLD) ) for ( const t of Object.values(s) ) for ( const [k, p] of Object.entries(t ?? {}) ) if ( p ) p.cat = PERSON_CAT[k] ?? "local";
 for ( const t of Object.values(ANIMALS) ) for ( const [k, p] of Object.entries(t) ) p.cat = ANIMAL_CAT[k] ?? "stray";
 
 /*

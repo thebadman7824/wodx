@@ -162,3 +162,56 @@ export const hasPeopleIn = (id, year) => { const r = regionOf(id); return !!r &&
 export function regionHere(place, homeland = DEFAULT_REGION) {
   return regionOf(place?.region) ?? regionOf(homeland) ?? regionOf(DEFAULT_REGION);
 }
+
+/* ------------------------------------------------------------------ */
+/*  The ways of life a region follows (Chronicle 0.51.0, B2670)        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The broad way of life a region's towns follow in a year: who walks its streets, what its trades are called, who its
+ * clergy are. Passers-by and residents (WoDX NPC) and the People generator's trades (WoDX Creation) read it. A house
+ * reading of history, rounded for play; a land changes way of life on the year given (the Spanish in Tenochtitlan in
+ * 1521, the Ottomans in Constantinople in 1453).
+ *
+ *   latin        Western Christendom and the lands it settled
+ *   orthodox     the Eastern church: Byzantium, the Rus, the Balkans' Orthodox
+ *   islamic      the lands of Islam from the Maghreb to the Silk Road
+ *   indic        India
+ *   sinic        China and Korea; Japan keeps its own (japanese)
+ *   theravada    mainland Southeast Asia; tibetan the Himalaya
+ *   malay        the Malay world: Hindu-Buddhist courts, then Muslim sultanates
+ *   sahel, swahili, bantu   Africa south of the Sahara: the Muslim Sahel and its forest kingdoms, the Swahili coast
+ *                and Ethiopia, and the kingdoms of the south and centre
+ *   mesoamerican, andean, polynesian, northern   the Americas, the Pacific and the far north before the settlers
+ */
+export const SPHERES = {
+  latin: "Western Christendom", orthodox: "The Eastern church", islamic: "The lands of Islam", indic: "India",
+  sinic: "China and Korea", japanese: "Japan", theravada: "Mainland Southeast Asia", tibetan: "Tibet and the Himalaya",
+  malay: "The Malay world", sahel: "The Sahel and West Africa", swahili: "The Swahili coast and Ethiopia",
+  bantu: "Southern and central Africa", mesoamerican: "Mesoamerica", andean: "The Andes", polynesian: "Polynesia",
+  northern: "The far north"
+};
+const L = [[-9999, "latin"]], ISL = [[-9999, "islamic"]], ORT = [[-9999, "orthodox"]];
+const settled = (own, year) => [[-9999, own], [year, "latin"]];
+export const REGION_SPHERE = {
+  "moravia": L, "german-lands": L, "british-isles": L, "france": L, "iberia": L, "italy": L, "low-countries": L,
+  "scandinavia": L, "poland-baltic": L, "carpathians-balkans": L,
+  "russia": ORT, "aegean": [[-9999, "orthodox"], [1453, "islamic"], [1830, "orthodox"]], "siberia": settled("northern", 1600).map(([y, s]) => [y, s === "latin" ? "orthodox" : s]),
+  "anatolia": ISL, "levant": ISL, "egypt": ISL, "arabia": ISL, "maghreb": ISL, "persia": ISL, "central-asia": ISL,
+  "tibet-himalaya": [[-9999, "tibetan"]], "india": [[-9999, "indic"]], "china": [[-9999, "sinic"]], "korea": [[-9999, "sinic"]],
+  "japan": [[-9999, "japanese"]], "southeast-asia": [[-9999, "theravada"]], "nusantara": [[-9999, "malay"]],
+  "west-africa": [[-9999, "sahel"]], "east-africa": [[-9999, "swahili"]], "southern-africa": settled("bantu", 1652),
+  "central-africa": [[-9999, "bantu"]],
+  "canada": settled("northern", 1608), "north-america-east": settled("northern", 1607), "north-america-west": settled("northern", 1769),
+  "mexico": settled("mesoamerican", 1521), "caribbean": settled("mesoamerican", 1492), "andes": settled("andean", 1533),
+  "brazil": settled("andean", 1500), "southern-cone": settled("andean", 1536), "australia": settled("northern", 1788),
+  "aotearoa": settled("polynesian", 1840), "pacific-islands": settled("polynesian", 1820), "arctic": [[-9999, "latin"], [1450, "northern"], [1721, "latin"]],
+  "antarctica": L
+};
+/** The way of life a region follows in a year; an unknown region follows Moravia's. */
+export function sphereFor(id, year) {
+  const rows = REGION_SPHERE[id] ?? L, y = Number(year) || 0;
+  let out = rows[0][1];
+  for ( const [from, s] of rows ) if ( y >= from ) out = s;
+  return out;
+}

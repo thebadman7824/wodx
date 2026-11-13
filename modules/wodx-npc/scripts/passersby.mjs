@@ -100,6 +100,10 @@ export function build({MOD, esc, isActiveGM, chron}) {
     try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
     return {area: PR.AREA_CROWD[here?.area] ? here.area : "market", sick: !!here?.outbreak};
   }
+  /** 0.51.0 (B2671): the region the scene stands in (its own, else the homeland), for its way of life. */
+  function regionOfScene(scene) {
+    try { return chron()?.world?.here?.(scene)?.id ?? null; } catch (e) { return null; }
+  }
   const rectOf = () => canvas.dimensions?.sceneRect ?? {x: 0, y: 0, width: canvas.dimensions?.width ?? 1000, height: canvas.dimensions?.height ?? 1000};
   const gridPx = scene => Number(scene?.grid?.size) || 100;
   const centerOf = (doc, g) => ({x: doc.x + (doc.width ?? 1) * g / 2, y: doc.y + (doc.height ?? 1) * g / 2});
@@ -111,7 +115,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
 
   async function spawn(scene, {animal = false, time, street, place = "street"}) {
     const who = animal ? PR.makeAnimal({year: time.year || year(), hour: time.hour, area: street.area, place})
-      : PR.makePasserby({year: time.year || year(), hour: time.hour, area: street.area, sick: street.sick, place});
+      : PR.makePasserby({year: time.year || year(), hour: time.hour, area: street.area, sick: street.sick, place, region: regionOfScene(scene)});
     if ( !who ) return null;
     const base = await baseActor(animal ? "animal" : "person");
     const g = gridPx(scene), rect = rectOf();

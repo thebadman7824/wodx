@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.23.0 (trades by region: the People generator draws each land's own trades in every age, the imam, mamluk, camel driver and calligrapher of the lands of Islam, the examination candidate and tea merchant of China, the samurai retainer and sake brewer of Japan, the griot and salt trader of the Sahel, the eagle warrior and feather worker of Tenochtitlan, the seal hunter of the far north, and the land's clergy in the modern lists; each trade has its sheet. B2673)
 - 0.22.1 (lifepaths beyond Earth no longer offer the general origins that belong to the ground: born to the land, a noble house, people of the road or the sea, born a wolf)
 - 0.22.0 (lifepath drill-down: births and life stages beyond Earth in the World of Future Darkness, a seventh choice "Beyond Earth" with orbit and the high colonies from 1999, the Moon from 2009 and Mars from 2022, each with its own ages, origins, paths, callings and dated events from WoDX's future timeline; open only once the chronicle itself has reached 2023; the Storyteller's limits can name them)
 - 0.21.1 (lifepath wording: Japan's age from 1789 to 1945 is named "from the last shoguns to the empire"; West Africa's dated origins no longer repeat the praise singers and offer the great river's boat and fishing clans)
