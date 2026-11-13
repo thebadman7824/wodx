@@ -10,9 +10,11 @@
  *   4. Cairo's house of worship plans an imam of a Muslim people; the Brno chapel plans a Christian priest
  *   5. the People generator draws Egypt's own trades for its era, with a sheet for each
  *   6. every other WoDX module still answers
+ *   7. NPC 0.52.0 (B2674): local looks; Persia and Morocco, China and Korea walk different streets in every age, a
+ *      looks-only change keeps the kind, and Moravia's street is untouched
  * Result: Data/wodx-gate/gateworldways-result.json.
  */
-const N = 6;
+const N = 7;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -93,6 +95,18 @@ export async function run() {
       const ids = ["wodx-chronicle", "wodx-npc", "wodx-creation", "wodx-storyteller", "wodx-interactables", "wodx-senses"];
       const bad = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
       ok("6. other modules", !bad.length, {missingApi: bad});
+    });
+    await step("7. local looks", async () => {
+      const LL = await import(`/modules/wodx-npc/scripts/passerby-local.mjs?${Date.now()}`);
+      const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+      const ys = [1300, 1600, 1850, 1950, 2000, 2050];
+      const fezIsfahan = ys.filter(y => same(PR.streetTable(y, "persia"), PR.streetTable(y, "maghreb")));
+      const korea = [1300, 1600].filter(y => same(PR.streetTable(y, "china"), PR.streetTable(y, "korea")));
+      const fez = PR.streetTable(1300, "maghreb"), moravia = PR.streetTable(1300, "moravia");
+      const drawn = Array.from({length: 8}, (_, i) => PR.makePasserby({year: 1600, hour: 11, region: "persia", rng: () => (i + 0.5) / 8}).name);
+      ok("7. local looks", !older("0.52.0", "wodx-npc") && !fezIsfahan.length && !korea.length && fez.tanner?.cat === "worker"
+        && fez.burgher?.cat === "gentry" && moravia === PR.PEOPLE.medieval && Object.keys(LL.LOCAL_LOOKS).length >= 30,
+        {npc: v("wodx-npc"), sameYears: fezIsfahan, sameKorea: korea, regions: Object.keys(LL.LOCAL_LOOKS).length, isfahan1600: drawn});
     });
   } catch (e) { R.errors.push({error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); }
   finally {

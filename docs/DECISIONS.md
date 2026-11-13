@@ -3484,3 +3484,7 @@ Reverse: planRole and nameHousehold without land and region (residents.mjs).
 ## B2673. Trades by region (2026-11-13, global rule)
 Creation people-trades-world.mjs builds a people.trade table for each culture whose region follows another way of life in an era group (read at 1350, 1650, 1870, 1950, 2000, 2060): the base list with words swapped, trades the land never had taken out, and trades of its own added. From the industrial age only clergy and a few words change. Cultures shared by regions of different ways take the first listed region's. Every trade has a sheet.
 Reverse: drop worldTradeTables from people.mjs.
+
+## B2674. Local looks for passers-by (2026-11-13, global rule)
+NPC passerby-local.mjs changes the way of life's street once more for each region, keyed by region, the way of life it keeps that year, and age (or "old" for medieval and early modern, "late" for 1914 on): a whole kind replaces or adds, a looks-only change keeps the kind's weights and station, null removes. 33 regions: the seven lands of Islam and the Aegean, Russia and Siberia, China and Korea, central and southern Africa, the Americas and Oceania before and after the settlers, and eight European lands. Moravia's street is unchanged. House readings, no book gives street tables.
+Reverse: streetTable without localTable (passerby-rules.mjs).

@@ -33,7 +33,9 @@ test("Moravia's street is unchanged, and other lands get their own people", () =
   assert.ok(!/tavern/.test(cairo.reveller.who), "no tavern drunk in Cairo");
   assert.ok(PR.streetTable(1300, "southeast-asia").friar.who.includes("alms"));
   assert.ok(PR.streetTable(1400, "mexico").friar.who.includes("temple priest"));
-  assert.equal(PR.streetTable(1600, "mexico"), PR.PEOPLE.early, "New Spain walks the early modern street");
+  const newSpain = PR.streetTable(1600, "mexico");
+  assert.equal(newSpain.wagoner, PR.PEOPLE.early.wagoner, "New Spain walks the early modern street");
+  assert.ok(newSpain.porter, "with porters of its own (NPC 0.52.0, B2674)");
   assert.ok(PR.streetTable(1995, "india").cleric, "a modern street has the land's clergy");
   assert.ok(!PR.streetTable(1995, "egypt").clubber, "no clubbers in 1995 Cairo");
 });

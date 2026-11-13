@@ -15,6 +15,7 @@
  * origin tags of the region's people.
  */
 import {PEOPLE_WORLD, tableFor, FAITH_TAG, PROTESTANT, SECULAR} from "./passerby-world.mjs";
+import {localTable, LOCAL_LOOKS} from "./passerby-local.mjs";
 import {sphereFor, mixFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {originFaith} from "./routine-rules.mjs";
@@ -229,7 +230,9 @@ export function tagsFor(kind, p, year, rng = Math.random, region = null) {
 export function streetTable(year, region = null) {
   const age = ageOf(year);
   if ( !region || region === "moravia" ) return PEOPLE[age];
-  return tableFor(PEOPLE[age], sphereFor(region, year), age);
+  const sphere = sphereFor(region, year);
+  /* 0.52.0 (B2674): then the region's own looks, so Fez and Isfahan no longer walk the same street */
+  return localTable(tableFor(PEOPLE[age], sphere, age), region, sphere, age);
 }
 /** The region's era group for its mix of peoples (WoDX Chronicle ERA_GROUPS). */
 const groupOf = y => y < 1500 ? "medieval" : y < 1800 ? "early-modern" : y < 1900 ? "industrial" : "modern";
@@ -434,6 +437,15 @@ for ( const t of Object.values(PEOPLE) ) for ( const [k, p] of Object.entries(t)
 // 0.51.0: the kinds only other ways of life have
 Object.assign(PERSON_CAT, {water: "trade", scholar: "young", griot: "trade", sailor: "worker", herder: "local", runner: "trade", fisher: "trade", cleric: "religious"});
 for ( const s of Object.values(PEOPLE_WORLD) ) for ( const t of Object.values(s) ) for ( const [k, p] of Object.entries(t ?? {}) ) if ( p ) p.cat = PERSON_CAT[k] ?? "local";
+// 0.52.0 (B2674): the kinds only one region has
+Object.assign(PERSON_CAT, {tanner: "worker", teller: "trade", porter: "worker", boatman: "worker", mamluk: "gentry", dates: "trade", tea: "trade",
+  diver: "worker", fur: "trade", exile: "street", weaver: "trade", catechist: "religious", gold: "trade", hunter: "local", vaquero: "worker",
+  prospector: "worker", voyageur: "worker", gatherer: "local", convict: "street", drover: "worker", digger: "worker", carver: "trade",
+  whaler: "worker", copra: "trade", coffee: "worker", gaucho: "worker", muleteer: "worker", link: "street", coster: "trade", skipper: "worker",
+  amber: "trade", shepherd: "local"});
+for ( const s of Object.values(LOCAL_LOOKS) ) for ( const ages of Object.values(s) ) for ( const t of Object.values(ages) ) {
+  for ( const [k, p] of Object.entries(t ?? {}) ) if ( p?.who ) p.cat = PERSON_CAT[k] ?? "local";
+}
 for ( const t of Object.values(ANIMALS) ) for ( const [k, p] of Object.entries(t) ) p.cat = ANIMAL_CAT[k] ?? "stray";
 
 /*
