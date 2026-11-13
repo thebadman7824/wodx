@@ -27037,7 +27037,7 @@
 "crusade"
 ],
 "title": "Hattin",
-"text": "Saladin destroys the crusader army at Hattin and takes Jerusalem.",
+"text": "Saladin destroys the crusader army at Hattin, and the kingdom of Jerusalem lies open.",
 "ref": "Real history",
 "period": "premyslid-duchy",
 "links": []
@@ -30174,10 +30174,11 @@
 "region": "Middle East",
 "place": "Babylon",
 "tags": [
-"migration"
+"migration",
+"faith"
 ],
-"title": "The Babylonian exile",
-"text": "The people of Judah are carried to Babylon.",
+"title": "The exiles by the rivers",
+"text": "The people of Judah settle beside the canals of Babylon and keep their faith without a temple.",
 "ref": "Real history",
 "period": "greece-republic",
 "links": []
@@ -42485,8 +42486,8 @@
 "tags": [
 "art"
 ],
-"title": "The Ife heads",
-"text": "Smiths of Ife cast lifelike heads of bronze.",
+"title": "The first casters of Ife",
+"text": "Smiths of Ife begin working copper and clay for the shrines; the lifelike brass heads come later.",
 "ref": "Real history",
 "period": "premyslid-duchy",
 "links": []
@@ -60320,7 +60321,7 @@
 "trade",
 "sea"
 ],
-"title": "A giraffe for the emperor",
+"title": "A giraffe from Malindi",
 "text": "Envoys of Malindi send a giraffe to the Ming court with the treasure fleet, and the fleet later visits the Swahili coast.",
 "ref": "Real history",
 "links": []
@@ -60367,20 +60368,20 @@
 {
 "id": "r3-long-night-328",
 "era": "long-night",
-"year": 1434,
+"year": 1435,
 "month": null,
 "kind": "history",
 "lines": [
 "Mortals"
 ],
 "region": "Africa",
-"place": "Cape Bojador",
+"place": "Rio de Oro",
 "tags": [
 "exploration",
 "sea"
 ],
-"title": "Cape Bojador rounded",
-"text": "Gil Eanes sails past the cape that sailors believed marked the end of the world and comes back.",
+"title": "Beyond Bojador",
+"text": "Gil Eanes and Afonso Baldaia sail far past the cape and find the tracks of men and camels on the shore.",
 "ref": "Real history",
 "links": []
 },
@@ -62163,8 +62164,8 @@
 "exploration",
 "sea"
 ],
-"title": "Dias rounds the Cape",
-"text": "Bartolomeu Dias sails round the southern tip of Africa.",
+"title": "Dias sails south",
+"text": "Bartolomeu Dias leaves Lisbon with three ships to find the southern end of Africa.",
 "ref": "Real history",
 "links": []
 },
@@ -92672,7 +92673,7 @@
 "id": "r3-great-war-315",
 "era": "great-war",
 "year": 1917,
-"month": 4,
+"month": 5,
 "kind": "history",
 "lines": [
 "Mortals"
@@ -92682,8 +92683,8 @@
 "tags": [
 "war"
 ],
-"title": "America enters the war",
-"text": "The United States declares war on Germany.",
+"title": "The draft",
+"text": "Congress passes the Selective Service Act, and millions of American men register for the army.",
 "ref": "Real history",
 "links": []
 },

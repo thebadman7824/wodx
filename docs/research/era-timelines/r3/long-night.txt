@@ -324,10 +324,10 @@
 1390|H|mor|AF|Mbanza Kongo|founding,crown|The kingdom of Kongo|By tradition Lukeni lua Nimi crosses the Congo river about this year and founds the kingdom of Kongo.
 1400|H|mor|AF|Great Zimbabwe|trade,building|Great Zimbabwe at its height|Perhaps eighteen thousand people live around the stone enclosures, trading gold for Chinese porcelain and Persian glass.
 1400|H|mor|AF|Gao|crown,empire|Songhai slips from Mali|The Sunni rulers of Gao stop paying tribute to a weakened Mali.
-1415|H|mor|AF|Malindi|travel,trade,sea|A giraffe for the emperor|Envoys of Malindi send a giraffe to the Ming court with the treasure fleet, and the fleet later visits the Swahili coast.
+1415|H|mor|AF|Malindi|travel,trade,sea|A giraffe from Malindi|Envoys of Malindi send a giraffe to the Ming court with the treasure fleet, and the fleet later visits the Swahili coast.
 1430|H|mor|AF|Zambezi|founding,crown|The Mutapa state|A prince of Great Zimbabwe moves north to the Zambezi about this year and founds the Mutapa kingdom.
 1433|H|mor|AF|Timbuktu|war|The Tuareg take Timbuktu|Tuareg riders take Timbuktu from Mali.
-1434|H|mor|AF|Cape Bojador|exploration,sea|Cape Bojador rounded|Gil Eanes sails past the cape that sailors believed marked the end of the world and comes back.
+1435|H|mor|AF|Rio de Oro|exploration,sea|Beyond Bojador|Gil Eanes and Afonso Baldaia sail far past the cape and find the tracks of men and camels on the shore.
 1440|H|mor|AF|Benin City|crown,building,art|Ewuare the Great|Ewuare becomes Oba of Benin, rebuilds the city with walls and wide streets and makes the palace guilds of brass casters.
 1444|H|mor|AF|Senegal River|exploration,trade|The Portuguese reach the Senegal|Portuguese ships pass the desert coast and reach the green land south of the Senegal river.
 1445|H|mor|AF|Ethiopia|battle,faith|Zara Yaqob at Gomit|The Ethiopian emperor Zara Yaqob defeats the sultan of Adal at Gomit.
