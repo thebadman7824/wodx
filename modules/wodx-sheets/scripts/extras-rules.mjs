@@ -447,3 +447,15 @@ export function changesSince(was, now) {
 export function withCauses(lines = [], since = {}) {
   return lines.map(l => ({...l, cause: (since[l.cat] ?? []).join(", ")}));
 }
+
+/**
+ * The purse in one line (Sheets 0.19.0, B2830): the largest coin as a count and the rest as "and some ...", from
+ * the words the money rules give ("3 groschen 7 pence"). The full sum is on the line's title and in the fold below.
+ */
+export function purseLine(text = "") {
+  const t = String(text ?? "").trim();
+  const parts = [...t.matchAll(/(\d[\d,]*)\s+(.+?)(?=\s+\d|$)/g)].map(m => ({n: m[1], unit: m[2].trim()}));
+  if ( !parts.length ) return t;
+  const [first, ...rest] = parts;
+  return rest.length ? `${first.n} ${first.unit} and some ${rest[rest.length - 1].unit}` : `${first.n} ${first.unit}`;
+}

@@ -44,7 +44,7 @@ export async function newBoard(name) {
   if ( !game.user.isGM ) return null;
   const f = await folder();
   const j = await JournalEntry.create({name: C.boardName(name), folder: f?.id ?? null,
-    ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}, flags: {[MOD]: {[FLAG]: C.emptyBoard()}}});
+    ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}, flags: {[MOD]: {[FLAG]: C.starterBoard()}}});
   if ( j && !openBoard() ) await game.settings.set(MOD, "caseBoard", j.id);
   return j;
 }
@@ -80,7 +80,7 @@ export class CaseBoardApp extends ApplicationV2 {
     window: {title: "Case board", icon: "fa-solid fa-diagram-project", resizable: true},
     position: {width: 900, height: 680},
     actions: {note: CaseBoardApp.#onNote, newBoard: CaseBoardApp.#onNew, makeOpen: CaseBoardApp.#onMakeOpen,
-      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine}
+      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine, starter: CaseBoardApp.#onStarter}
   };
   static #instance;
   boardId = null;
@@ -133,7 +133,7 @@ export class CaseBoardApp extends ApplicationV2 {
         <p class="hint">${esc(look.hint)} Drop people, places, journal pages, Encyclopaedia entries or items here to pin them. ${this.linking ? "<b>Now press the join button on the other card.</b>" : ""}</p></div>
       <div class="wix-case-scroll"><div class="wix-case-area" style="width:${C.BOARD_W}px;height:${C.BOARD_H}px">
         <svg class="wix-case-lines" width="${C.BOARD_W}" height="${C.BOARD_H}" aria-hidden="true">${lines}</svg>${cards}
-        ${b.cards.length ? "" : `<p class="wodx-quiet wix-case-empty">Nothing pinned yet.</p>`}</div></div>
+        ${b.cards.length ? "" : `<p class="wodx-quiet wix-case-empty">Nothing pinned yet. <button type="button" data-action="starter"><i class="fa-solid fa-table-columns"></i> Lay out Who, Where and What we know</button></p>`}</div></div>
       <footer class="form-footer wodx-footer"><button type="button" data-action="note"><i class="fa-solid fa-note-sticky"></i> Add a note</button>
         ${gm ? `<button type="button" data-action="newBoard"><i class="fa-solid fa-plus"></i> Start another board</button>${j.id !== openBoard()?.id ? `<button type="button" data-action="makeOpen"><i class="fa-solid fa-thumbtack"></i> Make this the open case</button>` : ""}` : ""}</footer>`;
     div.querySelector("select[name=board]")?.addEventListener("change", ev => { this.boardId = ev.target.value; this.linking = null; this.render(); });
@@ -176,6 +176,11 @@ export class CaseBoardApp extends ApplicationV2 {
     await change(j, b => C.addCard(b, {...card, x, y, by: game.user.name, hidden: game.user.isGM && !!ev.altKey}).board);
   }
 
+  /** An empty board: the three column heads (B2832). */
+  static async #onStarter() {
+    const j = this.journal;
+    if ( j ) await change(j, b => (C.normalize(b).cards.length ? b : C.starterBoard(b)));
+  }
   static async #onNote() {
     const j = this.journal;
     if ( !j ) return;

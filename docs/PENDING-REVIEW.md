@@ -1027,27 +1027,11 @@ Ben approved every recommendation on the desk (https://claude.ai/artifact/Cp5XS1
 | 2026-11-13 | How hard is it to recall a past life? (B2873) | The Background's dots at difficulty 8, one less per two dots, at least 5; one success recalls it | Edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs |
 | 2026-11-13 | Should scene ideas from ties come every game week? (B2875) | Yes, one approval card a week; approved ideas go in the Ledger | Turn off "Scene ideas from ties" |
 | 2026-11-13 | Lifepath: the years after the change by line (Ben: "Yes. Do this.", B2624) | 139 ways of spending an age for the twelve lines that change, written from general knowledge of each line's books in WoDX's own words (no page check yet); one of each tone comes first on a first draw; the years on age-bound rows are Claude's reading of the timeline | Edit or empty a line's list in modules/wodx-creation/data/lifepath-since-lines.mjs |
-
-## Approved by Ben, 13 November 2026, 18:49 UTC (Security Desk)
-
-Ben approved every recommendation on the Security Desk (https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK), for Live and the PC testbeds both.
-
-| Date | Question | Choice made | How to reverse it |
-|---|---|---|---|
-| 2026-11-13 | Securing Live and the PC testbeds (26 items) | All 26 recommendations. Repo side in tools/security and the Caddyfile; Live changes as one command block Ben runs on a quiet evening, ending with the waiting reboot; PC side as PC helper jobs | tools/security/README.md has the undo for each Live step |
-| 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
-| 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
-
-## Waiting for review
-
-| Date | Question | Choice made | How to reverse it |
-|---|---|---|---|
 | 2026-11-13 | When did print, the papers, the wireless, television and the internet reach each world region? | One row of years for each of the 44 regions in Chronicle's media-rules.mjs (REGION_MEDIA), rounded to when each became common, from house reading of history; the rumour mill and breaches read the homeland's row (B2570) | Change a year in REGION_MEDIA, or delete a region's row to give it Moravia's years |
 | 2026-11-13 | When did the railway, tram, motorway, car, lit roads and paved roads reach each world region? | One row of years for each region in Storyteller's road-rules.mjs (REGION_ROADS); a trip reads the region of the scene it starts from, else the homeland. The country map of Moravia keeps its own dated lines (B2571) | Change a year in REGION_ROADS, or delete a region's row |
 | 2026-11-13 | How does a ready NPC routine change with another faith? | The week turns so the rest day lands on the faith's day (Friday for Islam, Saturday for the Jewish year); Friday prayer is at noon; faiths with no weekly rest day work every day and worship on their holy days until the Sunday week took hold (India 1843, Japan 1876, Korea 1895, Siam 1899, China 1912, Tibet 1959; Turkey turned to Sunday in 1935, Soviet Central Asia in 1924); Kindred and Garou routines are left alone (B2572) | Pick "Keeps the holy days of: The Western church" in an NPC's routine window, or edit SUNDAY_FROM and WORDS in routine-rules.mjs |
 | 2026-11-13 | Which household origins keep their own faith in a land of another? | jewish, arabic, turkish and persian (Islam), greek, russian, serbian, romanian, armenian (the Eastern church), hindi and tamil (Hindu), tibetan, chinese. New residents carry it; NPCs made before this keep the land's faith (B2572) | Edit ORIGIN_FAITH in routine-rules.mjs, or set the faith in the routine window |
 | 2026-11-13 | Where do the faithful of a minority go to worship? | To a place tagged with the church kind, now called "Church, chapel, mosque, synagogue or temple". No separate kind was added, so a Jewish household in a Christian town may be sent to any such place until the Storyteller sets its Church role to the synagogue (B2572) | Set the role in the routine window; a separate place kind can be added later |
-
 | 2026-11-13 | Clearing the era lock from a prologue waited for an approval (testbed finding) | It now goes straight back to the date's era | Chronicle 0.47.1, B2514 |
 | 2026-11-13 | Era timelines: the eight cards with a World of Darkness reading (the conquest's dead 1521, the Croatan 1590, Salem 1692, Saint-Domingue 1791, the War of Tears 1830, the scramble for Africa 1885, the Ghost Dance 1890, Rwanda 1994) | Kept as house readings until the PC's book check comes back (global-world/book-check-readings.md); each will then take the books' year and wording or be cut | Delete the card from its r3 file |
 | 2026-11-13 | Money changers (B2536): the cut by age and what "troubled" means | 6, 4, 2 and 3 in the hundred by age, 5 more on a scene flagged troubled (scene flag wodx-storyteller.troubled, no button yet), never above 15; exchange is by a day's unskilled wage in each place | CHANGER in money-rules.mjs |
@@ -1115,6 +1099,40 @@ Ben approved every recommendation on the Security Desk (https://claude.ai/artifa
 | 2026-11-13 | Who sees a changeling's horns and a hunter's sigil on a talking face? (B2795) | The Storyteller, and a player whose own character is a changeling (for the mien) or a hunter (for the sigil); other lines' marks show to all | Change viewerSees in modules/wodx-paperdoll/scripts/face64.mjs |
 | 2026-11-13 | When does a talking face play? (B2792) | Once on each screen, for a line less than 20 seconds old; older lines show the face still; each player can pick Moving, Still or Off | Change the 20 second window in onRender, face64.mjs |
 | 2026-11-13 | Which WoDX systems only display something, and which should get a deeper hook? (Display-Only Systems Desk, https://claude.ai/artifact/YRakoSn7dnDipi27K8p3Ug) | 36 systems listed across what is on main, open PRs and planned work. Recommended: deepen 19 (talking faces as a tell, face marks in witness memory and the Masquerade, Delirium from monster sprites, dress and local looks in social and crowd rolls, aura tints only after the Read the Soul roll, codex entries as research, languages counted, Go buttons on the world and realm maps, reflection marks read by the crossing, living tiles that switch walls and doors, Legends suggesting Renown and Status, dreams tied to powers and Flaws, elder lifepaths from the prologue timeline, rules on mood regions, after-action card into experience and Legends, crippled limbs on the damage doll, furnished containers), leave 14 as display, park 3 (voices, animated scenes, ASCII portraits). Nothing is built until Ben picks. | Pick another option on the desk; nothing to undo, since nothing was built. |
+| 2026-11-13 | Which view do players get when nobody has picked one? (B2810) | Full, so no screen changes until the Storyteller or the player picks Beginner | Set Players' view when nobody has picked one to Beginner (WoDX Chronicle settings) |
+| 2026-11-13 | Which lines does each Beyond the world button fit? (B2812) | Step sideways: Garou and spirits; Peek: also mages; spirit courts: Garou, mages, spirits; otherworld rolls: those plus changelings and wraiths; Read the Soul: every line but mortals and beasts; the Net from 1990. A button that does not fit is only moved under More | Edit TOOL_LINES and TOOL_YEARS in modules/wodx-chronicle/scripts/player-view-rules.mjs |
+| 2026-11-13 | Which token menu group does each WoDX button join? (B2814) | Move: room, burden, poses, carrying a light; Look: perception and use or search; Talk: faces; Act: the rest; the Actions book stays apart | Edit hudGroupOf in player-view-rules.mjs |
+| 2026-11-13 | Ctrl+K for Find anything (B2813) | Ctrl+K, changeable in Configure Controls | Rebind it under Configure Controls, WoDX Chronicle |
+| 2026-11-13 | What does the plain line on a roll card say? (B2819) | Botch: worse than a failure; failure: it does not work this time; 1 success barely, 2 well enough, 3 well, 4 very well, 5 or more brilliantly | Edit plainLine in modules/wodx-actions/scripts/theme-rules.js |
+| 2026-11-13 | Which actions get a cost on their line? (B2818) | Only those whose cost never changes (blood spent, Willpower spent, the hunt's time, torpor, downtime); a power's cost shows in its own window | Edit COST in theme-rules.js |
+| 2026-11-13 | Which chat cards fold for a player in Beginner view? (B2820) | Weather, the dawn, overheard talk, NPC remarks, NPC routines; never rolls | Edit isWorldCard in player-view-rules.mjs |
+| 2026-11-13 | Which quick rolls does a new character start with? (B2822) | Notice something, React in time, Read a person, Keep going, plus Your powers for lines with powers | Edit QUICK_DEFAULT in modules/wodx-sheets/scripts/beginner-rules.mjs |
+| 2026-11-13 | Do the sheet changes (quick rolls, folding, More tabs, hover help) show in Full view too? (B2822-B2825) | No, Beginner view only; Full keeps the sheet as it was | Call BG.decorate without the beginner() test in wodx-sheets beginner.mjs |
+| 2026-11-13 | The hover help wording for 60 traits (B2825) | Written in plain words; please read the list and say where it is off | Edit HELP in beginner-rules.mjs |
+| 2026-11-13 | What each moment in What can I do now? offers (B2826) | Fight: Attack, Quick attack, a power, Try something, End my turn; scene: Look around, Talk, Try something, a power, Let time pass, the sheet; away: go to the character, downtime, letters, time, experience | Edit MOMENTS in player-view-rules.mjs |
+| 2026-11-13 | Which concepts the quick start offers, and how each spends its dots (B2827) | Twelve concepts that fit every era and line; dots go mostly to the first Trait of each group, Abilities 3, 3, 2, 2 at the cap of 3 | Edit CONCEPTS in modules/wodx-creation/scripts/quick-start-rules.mjs |
+| 2026-11-13 | Is Short the lifepath's default? (B2828) | Yes: new players get a paragraph after four or five questions; Long is one click away | short: false in lifepath.mjs setup |
+| 2026-11-13 | What happens next? on the solo panel runs the clock (B2831) | It waits until something happens, an hour at most, as Wait an hour does | Change NEXT.wait in modules/wodx-solo/scripts/solo-rules.mjs |
+| 2026-11-13 | The glossary's words (B2834) | 82 terms written in plain words; please read and say where one is off | Edit modules/wodx-library/data/glossary.mjs |
+| 2026-11-13 | Which settings the Light and Full presets change (B2836) | Only screen and sound effects, matched by name; reading aids never | Edit FX and KEEP in player-view-rules.mjs |
+| 2026-11-13 | Sheet tools shows its words only in Beginner view (B2837) | In Full view it is an icon like the others, so the sheet's name fits | The sheetTools setting, or wodx-worded in main.mjs |
+| 2026-11-13 | Is the first-night tour offered to every new player? (B2838) | Yes, once, with Not now; the Storyteller can turn the offer off in the world settings | guideOffer setting |
+
+## Approved by Ben, 13 November 2026, 18:49 UTC (Security Desk)
+
+Ben approved every recommendation on the Security Desk (https://claude.ai/artifact/1y6rRcYi6EKBba63nd2RZK), for Live and the PC testbeds both.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | Securing Live and the PC testbeds (26 items) | All 26 recommendations. Repo side in tools/security and the Caddyfile; Live changes as one command block Ben runs on a quiet evening, ending with the waiting reboot; PC side as PC helper jobs | tools/security/README.md has the undo for each Live step |
+| 2026-11-13 | Your Windows user name in tools/lanes | The lane 1 path reads %LOCALAPPDATA% at run time | Put the full path back in lanes.json |
+| 2026-11-13 | Read Live's real settings | Done: outside checks by the PC helper, inside checks run by Ben by hand; results in security-desk/live-audit-2026-11-13.txt | Nothing to reverse |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+
 | 2026-11-13 | Which court does a Kindred faction outside Europe keep by default? (B2960) | Laibon in Africa south of the Sahara, Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia, Kuei-jin in East and Southeast Asia; India, Central Asia, Tibet and the pre-colonial Americas keep the European default | Empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs |
 | 2026-11-13 | What are the seats and law of a Laibon council and an Ashirra court? (B2961, B2962) | WoDX's own words (Elder of the land, Speaker of the old law, Voice of a legacy; Amir, Qadi, Wazir, Muhtasib of the night), pending the PC book check | Edit "laibon-council" and "ashirra" in POLITIES |
 | 2026-11-13 | Which courts do India, Central Asia and Tibet keep, and what does a Ravnos court look like? (B2963, B2964) | India: a court of the Ravnos until 1999, then the court of its age; Central Asia: the Ashirra; Tibet: the Kuei-jin. Seats in WoDX's own words (Eldest of the land, Keeper of the duties), pending the book check | Take the rows out of REGION_COURTS, or edit "ravnos-court", in modules/wodx-npc/scripts/politics-rules.mjs |

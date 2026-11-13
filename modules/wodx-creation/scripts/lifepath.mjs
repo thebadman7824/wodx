@@ -16,6 +16,7 @@
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import * as R from "./lifepath-rules.mjs";
 import * as D from "./lifepath-drill-rules.mjs";
+import * as S from "./lifepath-short-rules.mjs";
 import {ORIGINS} from "../data/lifepath-drill.mjs";
 import {TOTALS} from "./totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
@@ -159,7 +160,7 @@ export class LifepathApp extends ApplicationV2 {
     const t = game.wodx?.creation?.lifepathLine ?? null;
     const now = yearNow();
     const line = t ?? R.lineFor(this.actor.type, this.actor.system?.settings?.variant);
-    this.setup = {line, splat: R.guessSplat(line, splatText(this.actor)) ?? "", turnYear: now, birthYear: now - 25};
+    this.setup = {line, splat: R.guessSplat(line, splatText(this.actor)) ?? "", turnYear: now, birthYear: now - 25, short: true};
     this.path = null;
     this.drill = null;
   }
@@ -184,7 +185,7 @@ export class LifepathApp extends ApplicationV2 {
   #readSetup(form, rerender = false) {
     const f = form.elements;
     this.setup = {line: f.line.value, splat: f.splat?.value ?? "", birthYear: Number(f.birthYear.value) || this.setup.birthYear,
-      turnYear: Number(f.turnYear?.value) || this.setup.turnYear};
+      turnYear: Number(f.turnYear?.value) || this.setup.turnYear, short: (f.length_?.value ?? (this.setup.short ? "short" : "long")) === "short"};
     if ( rerender ) { this.setup.splat = R.guessSplat(this.setup.line, splatText(this.actor)) ?? ""; this.render(); }
   }
 
@@ -215,6 +216,9 @@ export class LifepathApp extends ApplicationV2 {
             <select name="splat"><option value="">Not chosen yet</option>${splats.map(x => `<option value="${x.key}" ${x.key === s.splat ? "selected" : ""}>${esc(x.label)}${x.house ? " (house reading)" : ""}</option>`).join("")}</select></div>
           <div class="form-group"><label>Born in</label><input type="number" name="birthYear" min="1100" max="2290" value="${s.birthYear}"><p class="notes">No later than ${s.line === "mortal" ? `the chronicle's year, ${yearNow()}` : "the year of the turn"}.</p></div>
           ${s.line === "mortal" ? "" : `<div class="form-group"><label>${esc(L.turning ? L.turning[0].toUpperCase() + L.turning.slice(1) : "The turn")} in</label><input type="number" name="turnYear" min="1100" max="2300" value="${s.turnYear}"></div>`}
+          <div class="form-group" data-fixed><label>How much to answer</label><div>
+            <label class="wodx-check"><input type="radio" name="length_" value="short" ${s.short ? "checked" : ""}> Short: where the character comes from; the dice tell the rest as a paragraph</label>
+            <label class="wodx-check"><input type="radio" name="length_" value="long" ${s.short ? "" : "checked"}> Long: every step of the life, one by one</label></div></div>
           ${open.ok ? "" : `<p class="wodx-warn">${esc(open.note)} The turn will be set to ${open.from}.</p>`}
         </form>
         ${game.user.isGM ? this.#limitsHTML() : ""}
@@ -295,10 +299,13 @@ export class LifepathApp extends ApplicationV2 {
 
   /** After a drill pick: when the drill is done, the path takes over for the turn and after. */
   #afterDrill() {
+    if ( this.begun?.short ) this.drill = S.rollDrill(this.drill);
     if ( D.done(this.drill) ) {
       const s = this.begun;
       this.path = R.newPath({line: s.line, splat: s.splat || null, birthYear: s.birthYear, turnYear: s.turnYear, seed: this.drill.seed, drill: this.drill});
+      if ( s.short ) this.path = S.rollPath(this.path);
       this.#withSince();
+      if ( s.short && this.path.since ) this.path = {...this.path, since: S.rollSince(this.path.since)};
     }
     this.render();
   }
@@ -329,6 +336,7 @@ export class LifepathApp extends ApplicationV2 {
     const sum = R.summary(this.path, {nowYear: yearNow()});
     this.sum = sum;
     const story = sum.story.map(s => `<li><strong>${s.year}, ${esc(s.title)}.</strong> ${esc(s.choice)}</li>`).join("");
+    const told = this.begun?.short ? `<p class="wodx-lp-paragraph">${esc(S.paragraph(sum.story))}</p><p class="wodx-quiet">The dice told this from the land and the years you chose. Back changes any step; Start over and Long go through every step.</p>` : "";
     const book = bookOf(this.actor);
     const price = g => { if ( g.kind !== "merit" && g.kind !== "flaw" ) return ""; const c = D.costOf(g.name, g.kind, book.table); return c ? `, ${c.cost} ${c.cost === 1 ? "point" : "points"}${c.range ? " or more" : ""}` : ", not in the book table"; };
     const gives = sum.gives.map(g => `<li><label><input type="checkbox" name="keep" value="${esc(g.key)}" ${g.kind === "flaw" ? "" : "checked"}> ${esc(R.KINDS[g.kind])}: ${esc(g.name)}</label> <span class="wodx-quiet">(${esc(g.from.join(", "))}${price(g)})</span></li>`).join("");
@@ -341,7 +349,7 @@ export class LifepathApp extends ApplicationV2 {
     return `
       <div class="wodx-top"><p>The lifepath is done. Keep what fits; drop the rest. Ticked people become NPCs ${game.user.isGM ? "now" : "once the Storyteller approves"}.</p></div>
       <div class="wodx-scroll">
-        <h3>The story</h3><ol>${story}</ol>
+        <h3>The story</h3>${told ? `${told}<details><summary>Step by step</summary><ol>${story}</ol></details>` : `<ol>${story}</ol>`}
         <h3>Suggestions</h3>${gives ? `<ul class="wodx-list">${gives}</ul>` : `<p class="wodx-quiet">None.</p>`}
         ${sheet}
         <h3>People from the past</h3>${people ? `<ul class="wodx-list">${people}</ul>` : `<p class="wodx-quiet">No one was named.</p>`}
@@ -360,7 +368,7 @@ export class LifepathApp extends ApplicationV2 {
     const turnYear = open.ok ? s.turnYear : open.from;
     const birthYear = Math.min(s.birthYear, turnYear);
     const age = (s.line === "mortal" ? Math.max(yearNow(), birthYear) : turnYear) - birthYear;
-    this.begun = {line: s.line, splat: s.splat, birthYear, turnYear};
+    this.begun = {line: s.line, splat: s.splat, birthYear, turnYear, short: !!s.short};
     this.path = null;
     this.drill = D.newDrill({birthYear, age, line: s.line, homeland: homeland(), seed: `${this.actor.id}:${foundry.utils.randomID(8)}`, limits: limitsNow(), now: yearNow()});
     this.render();
