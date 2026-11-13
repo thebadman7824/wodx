@@ -157,7 +157,7 @@ Next free block: B3320
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
-| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3312) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4748,3 +4748,8 @@ Reverse: put back the old 22-name lists in data/people-world.mjs.
 WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
 
 Reverse: put back the old lists in data/people-world.mjs.
+
+## B3312. Arab world names raised to 300 (2026-11-13)
+WoDX Creation. The third people raised. Given names split into older (the Companions, the caliphs, the honorific "al-Din" names of the Seljuk and Mamluk years) and newer (the 20th century on). The family slot splits too: before the industrial age a nisba of city, tribe or trade (al-Halabi, al-Tamimi, al-Attar); from it a family name of the Levant, Egypt, the Gulf or the Maghreb, with the tribal nisbas the Gulf still uses. As before, about six in seven take "ibn" or "bint" and the father's name in every age (house reading, left as it was); the share is now worked out per age list so the split keeps it.
+
+Reverse: put back the single lists in data/people-world.mjs.

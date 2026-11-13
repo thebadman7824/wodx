@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.34.0 (Arab world names raised to over 300 (B3312): 82 older and 70 newer men's names, 70 older and 70 newer women's names, 40 older bynames of city, tribe and trade and 64 newer family names. "ibn" and "bint" keep the same share in each age)
 - 0.33.0 (North Indian (Hindi) names raised to over 300 (B3311): 80 older and 70 newer men's names, 70 older and 70 newer women's names, and 70 family names across the Brahmin, Kayastha, merchant, Rajput, hill and Gujarati lines)
 - 0.32.0 (Chinese names raised to over 300 (B3310): 84 older and 60 newer men's names, 64 older and 63 newer women's names, and a hundred surnames, so a town of hundreds repeats far less. The first of the 39 peoples raised one at a time; tools/harness/people-300.test.mjs checks each raised people)
 - 0.31.0 (The Haudenosaunee in the People generator (B3120 to B3122): 232 men's names from the treaty rolls and known leaders, the women's names found in the records, the nine clans, church names and 59 family names. Own names and a clan before the colonies, about a third of men with a church name beside the own name in the early modern age, a church given name and a family name from the 19th century. data/people-haudenosaunee.mjs)
