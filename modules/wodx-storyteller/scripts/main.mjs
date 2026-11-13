@@ -36,6 +36,7 @@ import * as Ventures from "./ventures.mjs";
 import * as Inst from "./institutions.mjs";
 import * as Works from "./haven-works.mjs";
 import * as Omens from "./omens.mjs";
+import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
@@ -117,6 +118,7 @@ Hooks.once("init", () => {
   Inst.registerInstitutionSettings();
   Works.registerWorksSettings();
   Omens.registerOmenSettings();
+  Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
@@ -126,6 +128,7 @@ Hooks.once("init", () => {
   Inst.registerInstitutionHooks();
   Works.registerWorksHooks();
   Omens.registerOmenHooks();
+  Patron.registerPatronageHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
@@ -158,7 +161,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -222,6 +225,7 @@ Hooks.once("ready", () => {
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havenWorks: Works.api(),
     omens: Omens.api(),
+    patronage: Patron.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
     time: {spend: Spend.spend, unspend: Spend.unspend, ask: Spend.ask, howFor: Spend.howFor, where: Spend.presentWhere, note: SpendRules.noteFor, words: SpendRules.spanWords,
@@ -321,6 +325,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => Letters.openLetters()};
   tokens.tools.wodxTales = {name: "wodxTales", title: "What they say about you (the tales going round about your character)", icon: "fa-solid fa-comments", order: 108.5,
     button: true, visible: !game.user.isGM, onChange: () => Rumours.aboutDialog()};
+  tokens.tools.wodxArtists = {name: "wodxArtists", title: "Artists and patrons (who makes art, who pays for it, and what is in fashion)", icon: "fa-solid fa-palette", order: 109.3,
+    button: true, visible: game.user.isGM, onChange: () => Patron.artistsDialog()};
   tokens.tools.wodxInstitutions = {name: "wodxInstitutions", title: "Institutions (the church, guilds, council, watch, press and more, and who holds their seats)", icon: "fa-solid fa-landmark", order: 109.2,
     button: true, visible: true, onChange: () => Inst.institutionsDialog()};
   tokens.tools.wodxTasks = {name: "wodxTasks", title: "Downtime and long tasks (projects that take days or weeks: research, a business, courting, making things, training)", icon: "fa-solid fa-hourglass-half", order: 109,

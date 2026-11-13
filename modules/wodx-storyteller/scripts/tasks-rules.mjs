@@ -59,6 +59,9 @@ export const KINDS = {
   // B3359: works on a haven (haven-works-rules.mjs); the goal is set by the upgrade
   upgrade: {label: "Improve a haven", attr: "intelligence", ability: "crafts", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 2,
     ref: "Domain, Chantry and Sanctum dots rate the place (V20 pdf 121; M20 pdf 302, 325); the works and their traces are the chronicle's own."},
+  // B3374: a work of art from an artist (patronage-rules.mjs); the goal is set by the form
+  commission: {label: "Commission a work of art", attr: "charisma", ability: "expression", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 1,
+    ref: "The patron's eye and the artist's hand: the quality comes from the artist's skill, the money and the fashion of the day."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
@@ -107,7 +110,10 @@ export function normTask(t = {}) {
     trouble: t.trouble !== false,
     institution: String(t.institution ?? "").slice(0, 60),
     // B3359: the haven (a scene id) and the upgrade put in
-    haven: String(t.haven ?? "").slice(0, 40), upgrade: String(t.upgrade ?? "").slice(0, 30)
+    haven: String(t.haven ?? "").slice(0, 40), upgrade: String(t.upgrade ?? "").slice(0, 30),
+    // B3374: a commission's artist, form, money spent (0-5) and, for the fae, how the artist is handled
+    artist: String(t.artist ?? "").slice(0, 40), form: String(t.form ?? "").slice(0, 20), money: Math.max(0, Math.min(5, Math.round(n(t.money)))),
+    handling: t.handling === "harsh" ? "harsh" : "kind"
   };
 }
 
