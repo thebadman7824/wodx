@@ -106,7 +106,7 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only).
  */
-const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", "true side": "a hidden loyalty", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
+const FROM = { lineage: "from the lineage", sheet: "from the Sire box", background: "from a Background", ledger: "in the Ledger", "true side": "a hidden loyalty", "past life": "from a past life", pack: "from the pack name", fetter: "from a Fetter on the sheet", politics: "from the Vinculum", "family line": "from the family line", hand: "" };
 export function relationsHtml(rows = [], { editable = true, gm = false, roles = [], known = [], own = [], regard = "", tree = true, followers = false } = {}) {
   const groups = new Map();
   for ( const r of rows ) { if ( !groups.has(r.groupLabel) ) groups.set(r.groupLabel, []); groups.get(r.groupLabel).push(r); }

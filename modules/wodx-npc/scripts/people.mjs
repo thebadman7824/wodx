@@ -30,7 +30,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
   /* ---------------------------------------------------------------- */
 
   function allEdges() {
-    return TR.hideBySecrets(TR.edges(people(), {ledger: ledgerEntries(), vinculum: BONDS.vinculum()}), id => SX.secretsOf(game.actors.get(id)?.flags));
+    return TR.hideBySecrets(TR.edges(people(), {ledger: ledgerEntries(), vinculum: BONDS.vinculum(), lines: KIN.lines()}), id => SX.secretsOf(game.actors.get(id)?.flags));
   }
   /** What a user may see: their own characters, and the secrets those characters found (or that are out). */
   function viewerFor(user = game.user) {
@@ -46,7 +46,8 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
     const a = worldOf(actorLike);
     if ( !a ) return [];
     const v = viewerFor(user);
-    return TR.tiesOf(a.id, list ?? allEdges()).filter(e => TR.visibleTo(e, v))
+    // NPC 0.60.0: trust and warmth are what the one at the from end feels; a player sees only their own character's
+    return TR.tiesOf(a.id, list ?? allEdges()).filter(e => TR.visibleTo(e, v)).map(e => TR.feelingsFor(e, v))
       .map(e => ({...e, label: TR.KINDS[e.kind]?.label ?? e.kind, group: TR.KINDS[e.kind]?.group ?? "other", groupLabel: TR.GROUPS[TR.KINDS[e.kind]?.group] ?? "Other"}));
   }
 
@@ -74,7 +75,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
       return `<section class="wnpc-tree-line"><h3>${esc(L.label)}</h3><ul class="wnpc-tree">${inner}</ul></section>`;
     }).join("");
     const side = t.side?.length ? `<section class="wnpc-tree-line"><h3>Also</h3><ul data-fixed>${t.side.map(s => `<li>${esc(s.label)}: ${nodeHtml(s)}</li>`).join("")}</ul></section>` : "";
-    const kinPart = STANDING.sheetLine(actor) + KIN.treeSection(actor);
+    const kinPart = STANDING.sheetLine(actor) + KIN.treeSection(actor) + `<p><button type="button" data-web>The web of ties</button></p>`;
     return `<div class="wnpc-tree-wrap">${lines || side || kinPart ? `${lines}${side}${kinPart}` : `<p>No family, blood or teaching ties are recorded for ${esc(actor.name)} yet.</p>`}
       <p class="wodx-quiet">From the lineage WoDX keeps, each sheet's Sire box and Relationships tab, and Allies and Retainers. A tie that is still a secret shows as Unknown until it is found out.</p></div>`;
   }
@@ -88,6 +89,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
     await dlg.render(true);
     KIN.wireTree(dlg.element, () => { const box = dlg.element?.querySelector(".wnpc-tree-wrap"); if ( box ) box.outerHTML = treeHtml(actor); });
     dlg.element?.addEventListener("click", ev => {
+      if ( ev.target.closest("[data-web]") ) { ev.preventDefault(); game.modules.get(MOD).api?.openWeb?.({only: actor.id}); return; }
       const o = ev.target.closest("[data-open]"), r = ev.target.closest("[data-root]");
       if ( o ) { ev.preventDefault(); game.actors.get(o.dataset.open)?.sheet?.render(true); }
       if ( r ) {

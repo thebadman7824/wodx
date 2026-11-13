@@ -41,12 +41,13 @@ import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
 import * as HEARTS from "./hearts.mjs";
 import * as STANDING from "./standing.mjs";
+import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.59.0";
+const VERSION = "0.60.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -840,7 +841,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); });
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -874,6 +875,8 @@ Hooks.once("init", () => {
   HEARTS.registerSettings();
   HEARTS.listen();
   STANDING.registerSettings();
+  LEGACY.registerSettings();
+  LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
@@ -892,7 +895,9 @@ Hooks.once("init", () => {
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
     standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,
       rankShift: STANDING.rankShift, feuds: STANDING.feuds, startFeud: STANDING.startFeud, endFeud: STANDING.endFeud, feudKilling: STANDING.feudKilling, feudLaw: STANDING.feudLawHere,
-      feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules}};
+      feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules},
+    legacy: {pastLives: LEGACY.pastLives, addPastLife: LEGACY.addPastLife, recall: LEGACY.recall, teach: LEGACY.teach, taughtBy: LEGACY.taughtBy, teachingLine: LEGACY.teachingLine,
+      web: LEGACY.web, openWeb: LEGACY.openWeb, ideas: LEGACY.ideasNow, rules: LEGACY.rules}, openWeb: LEGACY.openWeb};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -906,7 +911,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**

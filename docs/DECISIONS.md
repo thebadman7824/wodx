@@ -3950,3 +3950,28 @@ Reverse: end the feud, or turn off "Rivalries start fights".
 The family and lineage tree shows the character's rank in the year and the feuds they are in, above the family line.
 
 Reverse: remove the sheetLine call in people.mjs.
+
+## B2835. Past lives and returning souls (2026-11-13)
+WoDX NPC 0.60.0: a reborn soul (a mage's Avatar, a fae soul, a wraith remembering) can carry past selves on the sheet, each with ties. A tie reaches someone still in the world: the person themselves when they are undying, or a living descendant on a family line that came after them. The tie stays hidden until the character recalls it, then shows to that character's players.
+
+Reverse: clear flags["wodx-npc"].pastLives.
+
+## B2836. Recalling a past life (2026-11-13)
+The roll is the Background's dots (Avatar or Past Lives for mages, Remembrance for changelings, Memoriam for wraiths) at difficulty 8, one less for each two dots, at least 5. One success recalls that life's ties. House rule.
+
+Reverse: edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs.
+
+## B2837. Lines of teaching (2026-11-13)
+Teaching records what was taught (each line's own powers: Disciplines, Gifts, Spheres, Arts, Arcanoi, Edges, Hekau, Lores, Numina and Abilities), for how long and what is owed (a Ledger debt), and makes the mentor tie. The line runs up through mentors and down through students. How each age teaches is shown: master and apprentice, guilds and universities, schools, the net. When a teacher dies, the students are told their Mentor Background is gone; what was taught stays.
+
+Reverse: clear flags["wodx-npc"].taught on the teacher.
+
+## B2838. The web of ties and scene ideas (2026-11-13)
+A window shows every tie as a circle of people with coloured links, filtered by group, by one person and by the year (who was alive then); players see no hidden or secret ties there. Once a game week the Storyteller gets one approval card of scene ideas from ties: boons and debts due, hostages held, feuds at their hottest, matches the families object to, descendants who could come asking. Approved ideas go in the Ledger as consequences due in a week. Setting "Scene ideas from ties".
+
+Reverse: turn the setting off.
+
+## B2839. Who sees what (2026-11-13)
+The Storyteller sees everything. Players see their own ties; a hidden tie (a hidden loyalty, a past life) shows to a character only once they found it out; trust and warmth on a tie show only to the owners of the one who feels them. NPC resisting rolls stay Storyteller-only as before.
+
+Reverse: edit visibleTo and feelingsFor in modules/wodx-npc/scripts/ties-rules.mjs.

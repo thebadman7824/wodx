@@ -17,6 +17,7 @@
 import * as BR from "./bond-rules.mjs";
 import * as TRR from "./trust-rules.mjs";
 import * as HR from "./hearts-rules.mjs";
+import * as LR from "./legacy-rules.mjs";
 
 export const KINDS = {
   sire: {label: "Sire", back: "childe", group: "blood", up: true},
@@ -52,6 +53,7 @@ export const KINDS = {
   owed: {label: "Is owed by", back: "owes", group: "debts"},
   ...BR.BOND_KINDS,
   ...TRR.SIDE_KINDS,
+  ...LR.PAST_KINDS,
   haven: {label: "Haven", back: null, group: "places"},
   other: {label: "Other", back: "other", group: "other"}
 };
@@ -77,14 +79,14 @@ export const bondWord = drinks => (Number(drinks) >= 3 ? "full bond" : Number(dr
  * for a link a secret hides and hand is the uuid on the from-actor's own hand-made list (so the sheet can edit it). A link made in two places is kept once: the first source (WoDX's own records) wins,
  * and a hand-made note is kept on it.
  */
-export function edges(actors = [], {ledger = [], vinculum = {}} = {}) {
+export function edges(actors = [], {ledger = [], vinculum = {}, lines = []} = {}) {
   const list = [...(actors ?? [])].filter(a => a?.id);
   const byId = new Map(list.map(a => [a.id, a]));
   const byName = new Map();
   for ( const a of list ) if ( a.type === "Vampire" && !byName.has(low(a.name)) ) byName.set(low(a.name), a);
   const out = [], seen = new Map();
   const name = (ref) => (ref?.id && byId.get(ref.id)?.name) || ref?.name || "";
-  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null} = {}) => {
+  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null, foundBy = null} = {}) => {
     if ( !fromId || !to || (!to.id && !to.name && !uuid) || to.id === fromId ) return;
     const k = kindOf(kind);
     const key = `${fromId}|${to.id ?? uuid ?? low(to.name)}|${k}`;
@@ -96,9 +98,10 @@ export function edges(actors = [], {ledger = [], vinculum = {}} = {}) {
       return;
     }
     const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand, rule: BR.RULE_OF[k] ?? ""};
+    if ( foundBy?.length ) e.foundBy = [...foundBy];
     seen.set(key, e); out.push(e);
     const b = KINDS[k]?.back;
-    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false});
+    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false, foundBy});
   };
   for ( const a of list ) {
     const l = a.flags?.["wodx-creation"]?.lineage ?? {};
@@ -158,6 +161,14 @@ export function edges(actors = [], {ledger = [], vinculum = {}} = {}) {
     const side = TRR.normSide(a.flags?.["wodx-npc"]?.trueSide);
     if ( side?.leader?.id || side?.leader?.name ) add(a.id, side.leader, "spyFor", {note: `${side.name || side.faction}${side.note ? `; ${side.note}` : ""}`, source: "true side", hidden: true});
   }
+  // NPC 0.60.0: ties from a past life, hidden until the one who lived it recalls them
+  for ( const p of LR.pastLifeEdges(list, {lines}) ) add(p.from, p.to, p.kind, {note: p.note, source: "past life", hidden: true, foundBy: p.foundBy});
+  // NPC 0.60.0: a hidden loyalty found out shows to the one who found it
+  for ( const e of out ) if ( e.kind === "spyFor" || e.kind === "spiedBy" ) {
+    const sideOwner = e.kind === "spyFor" ? e.from : e.to.id;
+    const f = Object.keys(TRR.normSide(byId.get(sideOwner)?.flags?.["wodx-npc"]?.trueSide)?.found ?? {});
+    if ( f.length ) e.foundBy = f;
+  }
   // NPC 0.57.0: how far the one at the from end trusts the other
   for ( const e of out ) {
     const t = e.to.id ? byId.get(e.from)?.flags?.["wodx-npc"]?.trust?.[e.to.id] : null;
@@ -191,10 +202,18 @@ export function hideBySecrets(list = [], secretsOf = () => []) {
  */
 export function visibleTo(e, viewer = {}) {
   if ( viewer.gm ) return true;
-  if ( e.hidden ) return false;
+  // NPC 0.60.0: a hidden tie shows to a character who found it out (a past life recalled, a hidden loyalty uncovered)
+  if ( e.hidden ) return (e.foundBy ?? []).some(id => (viewer.mine ?? new Set()).has(id));
   if ( !e.secret ) return true;
   const mine = viewer.mine ?? new Set(), found = viewer.found ?? new Set();
   return mine.has(e.from) || (e.to?.id && mine.has(e.to.id)) || found.has(e.secret);
+}
+
+/** A link as a viewer may read it: the trust and warmth on it only for the Storyteller and the owners of the from end. */
+export function feelingsFor(e, viewer = {}) {
+  if ( viewer.gm || (viewer.mine ?? new Set()).has(e.from) || (e.trust === undefined && e.warmth === undefined) ) return e;
+  const {trust, warmth, ...rest} = e;
+  return rest;
 }
 
 /** One actor's links, ordered by group then kind then name. */

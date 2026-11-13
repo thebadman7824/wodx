@@ -1082,3 +1082,5 @@ Rows dated 12 November or earlier that were still waiting at 06:00 UTC count as 
 | 2026-11-13 | How much does each denial slow a rumour? (B2828) | One fewer person told by each knower a night, at most three denials | Edit heatAfterDoubt in modules/wodx-storyteller/scripts/rumour-rules.mjs |
 | 2026-11-13 | How much does rank change a social roll? (B2830) | One easier against an NPC two or more steps below, one harder two or more above | Edit rankShift in standing-rules.mjs |
 | 2026-11-13 | When was private feud lawful in each land? (B2832) | Empire and Bohemia until 1495, France 1258, Scandinavia about 1300, Russia about 1500, Britain about 1600; vendetta by custom in Italy and the Balkans; blood money in Islamic law | Edit FEUD_LAW in standing-rules.mjs |
+| 2026-11-13 | How hard is it to recall a past life? (B2836) | The Background's dots at difficulty 8, one less per two dots, at least 5; one success recalls it | Edit recallRoll in modules/wodx-npc/scripts/legacy-rules.mjs |
+| 2026-11-13 | Should scene ideas from ties come every game week? (B2838) | Yes, one approval card a week; approved ideas go in the Ledger | Turn off "Scene ideas from ties" |
