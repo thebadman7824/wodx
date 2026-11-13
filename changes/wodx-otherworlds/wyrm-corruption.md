@@ -1,4 +1,0 @@
----
-bump: minor
----
-Wyrm corruption that spreads (B3270-B3276): a place the Storyteller marks as tainted grows worse each week from what feeds it (a Bane nest, a cult, a Black Spiral hive, a tainted works, a place of suffering, a Pentex concern from 1913), Banes breed once it is blighted, and a blighted place with Banes creeps into the places linked to it unless a tended caern or a fresh Rite of Cleansing holds it off. People who stay there take on taint in three steps, and a Bane riding someone is only ever proposed. Band changes ask the Gauntlet to drift; Pentex concerns open new ones down their links through the 20th century. Every chance grows with the year. World setting "Wyrm corruption spreads" (off by default), window `api.corruption.dialog()`, Sense Wyrm helper `api.corruption.senseWyrm(actor)`.
