@@ -169,7 +169,7 @@ Next free block: B3470
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
-| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3358) | Storyteller, NPC |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3373) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
@@ -5230,6 +5230,81 @@ Reverse: drop the climb kind and onClimbDone.
 WoDX Storyteller. Every 30 days of world time each institution turns: an empty seat fills half the time with an NPC from the town's scenes (with their faction), a seat of the third rank or higher meets a scandal 1 month in 24 (an NPC loses the seat), and a seat above the bottom is contested 1 month in 12. Events on a player character's seat wait in the approval queue for the Storyteller to play and leave the seat alone. Control is each faction's share of seats weighted by rank.
 
 Reverse: edit MONTH in institution-rules.mjs.
+
+## B3359. Haven upgrades are dated, placed and built as projects (2026-11-13)
+WoDX Storyteller. Fifth of the eight player world systems Ben picked. Twenty upgrades, each with a year span, the ways of life where it is built so, the successes its project needs, the security it adds and what it gives. A new project kind, Improve a haven (Intelligence + Crafts, difficulty 6, weekly, two nights a week for full pace), names a haven the character owns and an upgrade; the goal is the upgrade's. Finished, it asks the Storyteller to put it in; security rises by the upgrade's dot, never past a Domain (V20 pdf 121). Mages may set a ward and Garou a spirit watcher; the others are for anyone. The dates are rounded history in WoDX's own words (the Bramah lock 1784, Chubb's safes 1835, the first electric burglar alarms of the 1850s, home cameras in the 1970s, networked locks from the 2000s); the goals and dots are house figures.
+
+Reverse: drop the upgrade kind from tasks-rules.mjs and the wodxTaskDone listener in haven-works.mjs, or turn off "Haven works and rival probes".
+
+## B3360. One room for show in each era (2026-11-13)
+WoDX Storyteller. A hall hung with hangings until 1599, a salon in the fashion until 1899, rooms done by a designer after. It adds no security, leaves deliveries seen, and is noted for the Storyteller to weigh at gatherings held there.
+
+Reverse: drop the show rows from UPGRADES.
+
+## B3361. Staff by post, kept up as Retainers (2026-11-13)
+WoDX Storyteller. The Storyteller names who keeps the house by post (porter until 1950, servant, guard, groom until 1920, driver from 1900, a security firm's guard from 1950) with a loyalty of 0 to 5. Guards add a dot of security. Wages and neglect are the upkeep ties Retainers already have; nothing new is charged.
+
+Reverse: drop POSTS and the staff list in the Works window.
+
+## B3362. Traces fade; rivals with a grudge probe once a month (2026-11-13)
+WoDX Storyteller with WoDX NPC memory. Works leave passing traces that halve every half year, and standing traces while their cause lasts (each servant counts less the more loyal; a ward, a spirit, a feed and barking dogs count one each). Each month, every NPC whose grudge against an owner has reached the mark for acting (B3348) may probe: the chance is 4 in 100 for each point of trace, less a tenth for each dot of security, at most 1 in 2. The probe fits the traces and the rival: a mage reads a ward, a Garou or a spirit asks the spirits, from 1990 anyone can reach a camera feed, a servant can be bought, else the rival follows the talk of the works. A rival who already knows the way and is unforgiving may set a fire, 1 in 10 a month. One rival probes one haven at most every three months. Every probe asks the Storyteller first; approved, the rival joins who knows the way, or the fire is logged for the Storyteller to play, and wodxHavenProbe fires. All the figures are house figures.
+
+Reverse: turn off "Haven works and rival probes", or edit probeChance and PROBES in haven-works-rules.mjs.
+
+## B3363. Works troubles (2026-11-13)
+WoDX Storyteller. Improving a haven draws its own complications (a worker talks in a tavern, the plans go missing, an inspector or a landlord's agent wants to see inside) beside the shared ones (B3342).
+
+Reverse: drop the upgrade rows from TROUBLE in projects-rules.mjs.
+
+## B3364. Theories on the case board, tested against a hidden truth (2026-11-13)
+WoDX Interactables. Sixth of the eight player world systems Ben picked. A theory is four lines of plain words (who, what, where, why) and the lines on the board it rests on. The Storyteller ticks the lines that are true; the board's theories and truth live in the board journal's flags, and a player's view drops the truth (it is still in the data, so the Storyteller keeps the full truth in their own notes too, as with hidden cards). A test is Perception or Intelligence + Investigation (V20 pdf 272) at difficulty 7, judged on the Storyteller's client and posted to chat.
+
+Reverse: drop the Theories button and normInquiry from case-rules.mjs.
+
+## B3365. A test says how much holds, never which (2026-11-13)
+WoDX Interactables. No successes: nothing comes clear. One: whether any of it holds. Two: none, less than half, more than half, or all or nearly all. Three or four: the number of lines that hold. Five or more: that, and how many true links the theory leaves out. House figures.
+
+Reverse: edit verdict in investigation-rules.mjs.
+
+## B3366. Evidence fades by kind, faster in the rain (2026-11-13)
+WoDX Interactables. Eight kinds: tracks last 2 days, blood 7, ash 14, a witness 30, marks of hands 60, hair or skin 120, a camera's tape 30 (from 1970), a letter or paper a year. Indoors (a haven, or a scene with its darkness locked) everything lasts four times as long. Each night of rain, drizzle, snow, sleet or hail (WoDX Atmosphere) costs washable evidence outdoors two days. A search is one Perception + Investigation roll; each piece is found at 7, at 8 once half gone and 9 when nearly gone; a find goes on the open board as a clue card. Same kind, same hand, same place within the hour merges into one. At most 300 kept. House figures.
+
+Reverse: turn off "Deeds leave evidence", or edit EVIDENCE and freshness.
+
+## B3367. What a find tells follows the science of its year (2026-11-13)
+WoDX Interactables. Rounded history in WoDX's own words: shoe prints cast in plaster from 1890, fingerprints matched on file from 1892, blood typing from 1901, written descriptions shown about from 1880, paper and ink traced from 1880, fire's start found from 1900, a camera's tape from 1970 and clear from 2000, DNA from 1986. A science that can name someone adds two dice to finding that piece, a lesser one one die; with three successes such a find names who left it.
+
+Reverse: edit SCIENCE in investigation-rules.mjs.
+
+## B3368. What leaves evidence (2026-11-13)
+WoDX Interactables. Feeding (wodxFed) leaves blood and a witness; a lethal or aggravated wound (wodxDamageApplied) blood and traces; a rival's probe of a haven (wodxHavenProbe) tracks and a witness, or ash, a witness and tape for a fire; a grudge acted on with harm (wodxGrudgeMove, violence or kin) blood, a witness and traces. Player characters leave it as NPCs do, so a rival can follow them by the same rules. The Storyteller can leave any kind by hand.
+
+Reverse: drop the listeners in registerInvestigationHooks.
+
+## B3369. Dreams come from what is really coming (2026-11-13)
+WoDX Storyteller. Seventh of the eight player world systems Ben picked. Once a day the active Storyteller's client gathers signals: the chronicle's dated events within 90 days (weight 3), an NPC grudge within 2 of the mark for acting against a player character (weight 2, 3 when 3 past it), hunters investigating (2) or hunting and worse (3) in a region, a plague of history arriving in a region where a character is (3). Each dream asks the Storyteller first (the approval queue), then waits in the Dreams list for the next sleep and comes as the Storyteller's own dreams do; written dreams still come as written.
+
+Reverse: turn off "Dreams and omens of what is coming", or drop signals in omens.mjs.
+
+## B3370. Who dreams, how often, and in what symbols (2026-11-13)
+WoDX Storyteller. A gift of 0 to 3: Auspex, Oneiromancy or a dream power, a Malkavian, a Theurge, the fae, a mummy and a Visionary hunter from 1999 add 1 each; the Oracular Ability Merit (V20 pdf 501) adds 2; a mage's Dream (M20 pdf 312) 1, or 2 at three dots or more. The chance a signal comes in a night is 0.4 a point of gift for one about the dreamer, 0.15 for one in the dreamer's region, 0.03 for one far off, scaled by weight, at most 9 in 10; one dream a week at most for each dreamer. The symbols are WoDX's own, a shared list for each kind (grudge, hunters, plague, war, fire, flood, death, change) and some lines for a way of life (Western and Eastern churches, Islam, India, China, Japan, the far north). House figures.
+
+Reverse: edit giftOf, chanceFor and SYMBOLS in omen-rules.mjs.
+
+## B3371. Some dreams lie (2026-11-13)
+WoDX Storyteller. 1 in 10 dreams is false and borrows the symbols of another kind; 3 in 10 in a region the Storyteller marks as tainted. The Storyteller sees which before approving. A reading of 4 or more successes shows a false dream for what it is.
+
+Reverse: set FALSE_CHANCE to 0.
+
+## B3372. Reading a dream (2026-11-13)
+WoDX Storyteller. Try to read it on the dream's card rolls Perception or Intelligence (the higher) + Enigmas or Occult (the higher) at 7, after the reading of signs in W20 pdf 283 and V20 pdf 501. None: nothing opens. One: the kind of danger. Two: more of it. Three or more: plainly, naming who or where. Whispered to the dreamer's players and the Storyteller.
+
+Reverse: drop the button in releaseDream and readDream in omens.mjs.
+
+## B3373. Signs in the world (2026-11-13)
+WoDX Storyteller. For a signal of weight 3, 1 in 5 a day and once a month at most for each signal, the Storyteller is offered a line of omen for everyone (crows on the roofs, dogs howling at nothing, an owl by day, a red glow before dawn). Approved, it is posted to chat.
+
+Reverse: drop the omen loop in dayRun.
 
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
