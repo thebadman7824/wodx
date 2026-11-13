@@ -2194,42 +2194,6 @@
    "rotation": 150.0
   },
   {
-   "id": "chapel-1-nave-f6",
-   "label": "Chest (Nave)",
-   "rect": [
-    60.122,
-    71.992,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "church"
-   },
-   "rotation": 240.0
-  },
-  {
-   "id": "chapel-1-nave-f8",
-   "label": "Chest (Nave)",
-   "rect": [
-    53.502,
-    70.306,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "church"
-   },
-   "rotation": 240.0
-  },
-  {
    "id": "cottage-1-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [

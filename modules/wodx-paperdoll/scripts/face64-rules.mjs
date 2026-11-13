@@ -127,7 +127,8 @@ function headHw(y, [top, eye, jaw, chin, w, jw, cw]) {
   if ( y < top || y > chin ) return -1;
   if ( y <= eye ) return w * Math.sqrt(Math.max(0, 1 - ((eye - y) / (eye - top + 0.5)) ** 2));
   if ( y <= jaw ) return w - (w - jw) * ((y - eye) / (jaw - eye));
-  const f = (y - jaw) / (chin - jaw); return jw - (jw - cw) * f ** 1.7;
+  // the jaw holds its width and turns late into a chin that stands out (squarer since 13 November 2026: Ben found the chins weak)
+  const f = (y - jaw) / (chin - jaw); return jw - (jw - Math.max(cw, 5)) * f ** 2.6;
 }
 function skin(F, R, shape, neck) {
   const [top, eye, , chin] = shape, L = [-0.30, -0.42, 0.86];
@@ -155,6 +156,11 @@ function cheeks(F, R, shape) {
     }
   }
   for ( const [x, y] of [[CX - 9, eye + 4], [CX - 8, eye + 4], [CX - 9, eye + 5], [CX - 10, eye + 4]] ) if ( F.kindAt(x, y) === "skin" ) F.put(x, y, R.hi);
+  // the chin: a shadow in the fold under the lower lip, a lit ball of chin, and its right side in shade
+  const chin = shape[3], put = (x, y, c) => { if ( F.kindAt(x, y) === "skin" ) F.put(x, y, c); };
+  for ( let x = CX - 2; x <= CX + 2; x++ ) put(x, MOUTH_Y + 3, R.s1);
+  for ( const [x, y] of [[CX - 2, chin - 4], [CX - 1, chin - 4], [CX - 2, chin - 3], [CX - 1, chin - 3], [CX, chin - 4]] ) put(x, y, R.hi);
+  for ( let y = chin - 4; y <= chin - 1; y++ ) { put(CX + 3, y, R.s1); put(CX + 4, y, R.s2); }
 }
 function socket(F, R, ex, ey, sunk) {
   for ( let dx = -4; dx <= 4; dx++ ) for ( let dy = -2; dy <= 2; dy++ )
@@ -360,21 +366,32 @@ const PRE = {
   demon(S, r) { S.style = r.pick(["short", "back", "bald"]); S.iris = [240, 130, 40]; S.bg = [54, 34, 34]; },
   "kuei-jin"(S, r) { S.skin = mix(S.skin, [138, 168, 154], 0.42); S.cool = true; S.iris = [60, 220, 150]; S.hair = [22, 22, 28]; S.style = r.pick(["long", "back"]); S.bg = [34, 48, 46]; }
 };
-/** Drawn behind the head (after the clothes): only the Nosferatu's great ears for now. */
-const BACK = {
-  nosferatu(c) {
-    const {F, R, S} = c;
-    if ( S.ears === "plain" ) return;
-    const reach = S.ears === "bat" ? 29 : 24, tipY = S.ears === "bat" ? 8 : 14;
-    for ( const sd of [-1, 1] ) {
-      const P = [[CX + sd * 13, 21], [CX + sd * 13, 39], [CX + sd * reach, tipY]], Q = [[CX + sd * 15, 26], [CX + sd * 15, 35], [CX + sd * (reach - 5), tipY + 7]];
-      for ( let y = 6; y < 40; y++ ) for ( let x = 0; x < N; x++ ) {
-        const bow = 2.2 * Math.sin(Math.PI * Math.min(1, Math.max(0, (Math.abs(x - CX) - 13) / 16)));
-        if ( inTri(P, x, y + bow * 0.9) && inTri(P, x, y) ) F.put(x, y, inTri(Q, x, y + bow * 0.9) ? R.s2 : sd < 0 ? R.b : R.s1, "ear");
-      }
+/** Drawn behind the head (after the clothes): nothing yet; the Nosferatu's ears grow from the side of the head (nosEars). */
+const BACK = {};
+/**
+ * The Nosferatu's great ears (redrawn 13 November 2026 at Ben's word: they must not seem to grow from the back of the
+ * head). Each is rooted on the side of the head at eye-to-nose height, laid over the head's edge, with its hollow and the
+ * opening of the ear at the root facing forward, and rises outward to a point: a bat's ear high, a long ear to the side.
+ */
+function nosEars(c) {
+  const {F, R, S, shape} = c;
+  if ( S.ears === "plain" ) return;
+  const bat = S.ears === "bat";
+  for ( const sd of [-1, 1] ) {
+    const top = 25, bot = 41, eTop = Math.round(headHw(top, shape)), eBot = Math.round(headHw(bot, shape));
+    const tip = bat ? [CX + sd * 29, 10] : [CX + sd * 30, 20], low = bat ? [CX + sd * 24, 32] : [CX + sd * 25, 33];
+    const a = [CX + sd * (eTop - 2), top], b = [CX + sd * (eBot - 2), bot];
+    const ear = (x, y) => inTri([a, tip, low], x, y) || inTri([a, low, b], x, y);
+    const mid = [(a[0] + low[0]) / 2, (a[1] + b[1]) / 2];
+    const hollow = (x, y) => inTri([[mid[0] + sd, a[1] + 4], [tip[0] - sd * 4, tip[1] + (bat ? 6 : 3)], [low[0] - sd * 2, low[1] - 1]], x, y)
+      || inTri([[mid[0] + sd, a[1] + 4], [low[0] - sd * 2, low[1] - 1], [mid[0] + sd, b[1] - 4]], x, y);
+    for ( let y = 4; y < 44; y++ ) for ( let x = 0; x < N; x++ ) {
+      if ( !ear(x, y) || F.kindAt(x, y) === "skin" ) continue;          // the head stays as it is; the ear joins it at the edge
+      F.put(x, y, hollow(x, y) ? R.s2 : (sd < 0 ? R.b : R.s1), "skin");   // drawn as skin, so one outline runs round head and ear together
     }
+    for ( let y = 31; y <= 34; y++ ) { const x = CX + sd * (Math.round(headHw(y, shape)) + 1); if ( F.kindAt(x, y) === "skin" ) F.put(x, y, mix(R.s2, [20, 14, 18], 0.5)); }   // the opening at the root
   }
-};
+}
 const POST = {
   kindred(c) {
     const {F, S, mouthKind} = c;
@@ -527,7 +544,7 @@ function wounds(c, level) {
  * Returns {rgba, expr, eyes, mouth, shut} where rgba is 64 by 64 RGBA bytes.
  */
 /**
- * Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), top(c), state}}. A
+ * Extra features (face64-features.mjs registers them): {id: {tone(S), back(c), skin(c), face(c), ears(c), top(c), state}}. A
  * feature with a state shows only while opts.state[state] is on (a form, frenzy, a visage); "tears" is on while the face
  * grieves or fears.
  */
@@ -589,7 +606,9 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( S.style === "long" ) for ( let y = 40; y < N; y++ ) for ( let x = CX - S.w - 5; x <= CX + S.w + 5; x++ ) if ( !F.has(x, y) ) F.put(x, y, H.s2, "hair");   // hair behind the neck
   BACK[S.line]?.(ctx); stage("back", ctx);
   skin(F, R, shape, S.jw < 12 ? 6 : 7); cheeks(F, R, shape);
-  if ( S.ears === "plain" ) {      // ears, tucked into the head
+  if ( S.covered ) {}                   // a hood or veil hides the ears
+  else if ( S.line === "nosferatu" ) nosEars(ctx);
+  else if ( S.ears === "plain" ) {      // ears, tucked into the head
     const hw = Math.round(headHw(34, shape));
     for ( const sd of [-1, 1] ) for ( let dy = 0; dy < 6; dy++ ) for ( const k of [1, 2] ) {
       if ( k === 2 && (dy === 0 || dy === 5) ) continue;
@@ -612,7 +631,8 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   if ( S.style === "long" ) hairLong(F, H, shape);
   else if ( S.style === "short" ) hairShort(F, H, shape);
   else if ( S.style === "back" ) hairShort(F, H, shape, 2, 1);
-  F.outline(["skin", "neck"], R.ol); F.outline(["hair"], H.ol); F.outline(["cloth"], C.ol); F.outline(["ear"], R.ol);
+  if ( !S.covered ) stage("ears", ctx);    // ears worn over the hair; kind "ear" shares the skin's outline, so no seam at the root
+  F.outline(["skin", "neck", "ear"], R.ol); F.outline(["hair"], H.ol); F.outline(["cloth"], C.ol);
   for ( let x = CX - 13; x <= CX + 13; x++ ) for ( let y = 12; y < 29; y++ ) if ( F.kindAt(x, y) === "skin" && F.kindAt(x, y - 1) === "hair" ) F.put(x, y, R.s1);   // shade under the fringe
   POST[S.line]?.(ctx); stage("top", ctx);
   if ( level ) wounds(ctx, level);

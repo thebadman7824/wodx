@@ -1798,3 +1798,7 @@ Ben exported Kessler Steading and found it bare, with pieces out of place. Three
 
 Then the same check on the towns (B2637, B2638): the village, town, angled village, city and 1197 settlement samples went from 100 to 300 problems each to 0. Grid towns now use the furnishing, squeezed pictures are refused, small rooms get sacks and baskets, uncanny flames stay out of ordinary rooms, and furnished chests, cupboards and beds become searchable on Adopt. A 1950 town no longer stops on a missing window picture. The 1995 settlement waits on the measured picture sizes.
 
+
+## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
+
+The character wizard now works out each line's derived Traits on its Virtues page and the last look (scripts/derived-rules.mjs, pure): Humanity or a Path or a Road, Willpower, Rage, Gnosis, Arete, Quintessence, Corpus, Pathos, Glamour, Banality, Faith, Torment, Balance and Sekhem, with freebie and prelude dots on top, a Set button for each and Set all, and a Roll it button for a vampire's starting blood. Amulets added to the Hekau paths after the book check. Harness derived.test.mjs (7). Gate gatewizard.mjs step 10. Version 0.26.0, since two open changes hold 0.25.0.

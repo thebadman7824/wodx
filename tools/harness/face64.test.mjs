@@ -195,3 +195,55 @@ test("the Net: a persona face in one phosphor colour, still blinking and speakin
   assert.equal(P.netPaletteOf({...P.roll("x", "mortal"), net: "amber"}), "amber");
   assert.ok(new Set(Array.from({length: 30}, (_, i) => P.netPaletteOf(P.roll(`c${i}`, "mortal")))).size >= 4, "personas differ in colour");
 });
+
+test("a hood or a veil covers the neck: no bare throat shows below the chin", () => {
+  for ( const id of ["a-hood", "a-veil"] ) for ( let i = 0; i < 24; i++ ) {
+    const S = P.roll(`neck${i}`, LINES[i % LINES.length], {sex: i % 2 ? "woman" : "man"});
+    const bare = P.drawFace(S).rgba, covered = P.drawFace({...S, features: [id]}).rgba;
+    for ( let y = S.chin + 2; y < 64; y++ ) for ( let x = 29; x <= 35; x++ )
+      assert.notDeepEqual(px(covered, x, y), px(bare, x, y), `${id} on ${S.seed}: the throat shows at ${x},${y}`);
+  }
+});
+
+test("a Nosferatu's great ears grow from the side of the head, joined to it, not from behind", () => {
+  let checked = 0;
+  for ( let i = 0; i < 30; i++ ) {
+    const S = P.roll(`ear${i}`, "nosferatu");
+    if ( S.ears === "plain" ) continue;
+    checked++;
+    const eared = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "plain"}).rgba;
+    for ( const sd of [-1, 1] ) for ( const y of [30, 33, 36] ) {
+      // just past the head's edge, three pixels in a row are ear, with no gap of background between
+      const edge = 32 + sd * Math.round(P.H.headHw(y, [11, 31, 43, S.chin, S.w, S.jw, S.cw]));
+      for ( let k = 2; k <= 4; k++ ) assert.notDeepEqual(px(eared, edge + sd * k, y), px(plain, edge + sd * k, y), `${S.seed} ear joined at ${edge + sd * k},${y}`);
+    }
+  }
+  assert.ok(checked >= 10);
+});
+
+test("pointed ears grow from the side of the head at eye height, and a hood or veil hides every kind of ear", () => {
+  for ( const [line, id] of [["kindred", "v-gangrel-ears"], ["changeling", "c-sidhe"], ["changeling", "c-clurichaun"]] ) for ( let i = 0; i < 8; i++ ) {
+    const S = {...P.roll(`pe${i}`, line), features: [id]}, shape = [11, 31, 43, S.chin, S.w, S.jw, S.cw];
+    const eared = P.drawFace(S).rgba, bare = P.drawFace({...S, features: []}).rgba;
+    for ( const sd of [-1, 1] ) {
+      const x = 32 + sd * (Math.round(P.H.headHw(33, shape)) + 3);   // just past where a plain ear would end
+      assert.ok([31, 32, 33].some(y => px(eared, x, y).join() !== px(bare, x, y).join()), `${id} ${S.seed}: ear at the side, eye height`);
+      assert.deepEqual(px(eared, 32 + sd * 31, 20), px(bare, 32 + sd * 31, 20), `${id} ${S.seed}: nothing far behind the head`);
+    }
+  }
+  for ( const cover of ["a-hood", "a-veil"] ) for ( let i = 0; i < 10; i++ ) {
+    const S = {...P.roll(`hc${i}`, "nosferatu"), features: [cover]};
+    const hooded = P.drawFace(S).rgba, plain = P.drawFace({...S, ears: "plain"}).rgba;
+    for ( const sd of [-1, 1] ) for ( const y of [12, 20, 28] ) assert.deepEqual(px(hooded, 32 + sd * 29, y), px(plain, 32 + sd * 29, y), `${cover} ${S.seed}: no ear through the cloth`);
+  }
+});
+
+test("horns break through the brow from a swelling of skin, not out of the hair", () => {
+  for ( const [line, id, st] of [["werewolf", "w-metis-horns"], ["changeling", "c-troll"], ["kindred", "v-gargoyle"], ["demon", "d-horns", "visage"], ["kuei-jin", "k-demon-shintai", "shintai"]] ) for ( let i = 0; i < 6; i++ ) {
+    const S = {...P.roll(`hs${i}`, line), style: "short", features: [id]};
+    const horned = P.drawFace(S, {state: st ? {[st]: true} : {}}).rgba, bare = P.drawFace({...S, features: []}).rgba;
+    const changed = [];
+    for ( let y = 18; y < 22; y++ ) for ( let x = 18; x < 46; x++ ) if ( px(horned, x, y).join() !== px(bare, x, y).join() ) changed.push([x, y]);
+    assert.ok(changed.length >= 6, `${id} ${S.seed}: the brow under each horn is changed (${changed.length})`);
+  }
+});

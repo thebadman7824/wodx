@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3000
+Next free block: B3010
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -115,7 +115,7 @@ Next free block: B3000
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
-| B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books; generated maps checked before export, furnished chests searchable, towns furnished and checked like the farm (B2634-B2638) | Otherworlds, tools/mapgen |
+| B2630-B2639 | Realm world maps: more places for each realm from the catalogue and the books; generated maps checked before export, furnished chests searchable, towns furnished and checked like the farm, measured picture sizes (B2634-B2639) | Otherworlds, tools/mapgen |
 | B2640-B2649 | The Lone Chronicle, step 2: the lone player's panel (time, travel, pause, I am stuck, the curtain) and fights that end by themselves | Solo |
 | B2650-B2659 | Every land its own money: eleven more money regions, coin of the place in the purse, a new chronicle paying in its homeland's money | Storyteller, Chronicle |
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
@@ -138,6 +138,7 @@ Next free block: B3000
 | B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
+| B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3523,12 +3524,16 @@ However poor the owner, a room gets a piece or a thing on one for every 1.6 squa
 Reverse: set DENSE and COVER in furnishing.py back to 3.5 and 0.2 and drop _things_on and _along_walls; remove the check from tools/harness/mapgen.test.mjs.
 
 ## B2637. Furnished chests, cupboards and beds can be searched, and doors are real (2026-11-13, Ben: "Go with all recommendations", Display-Only Systems Desk p1)
-Every chest, cupboard or wardrobe and bed the furnisher sets down goes into the map's WoDX file like the building type's own: a chest is a container with a cheap lock, a cupboard or wardrobe a container (cabinet), a bed a place to hide under (the WoDX file allows one kind of thing per spot). On Adopt they become WoDX Interactables things, and Fill by place and era fills the containers from the building's place, the scene's region and the chronicle's year. Their ids are "<room>-f<n>", so the type's own ids never move. Doors, double doors and shutters were already real doors on Adopt. A court or gateway is left open rather than filled.
+Every chest, cupboard or wardrobe and bed the furnisher sets down goes into the map's WoDX file like the building type's own: a chest is a container with a cheap lock, a cupboard or wardrobe a container (cabinet), a bed a place to hide under (the WoDX file allows one kind of thing per spot). On Adopt they become WoDX Interactables things, and Fill by place and era fills the containers from the building's place, the scene's region and the chronicle's year. Their ids are "<room>-f<n>", so the type's own ids never move. Doors, double doors and shutters were already real doors on Adopt. A gateway or stair hall is left open; a court gets a barrel or a bench and stays mostly open (B2639).
 Reverse: empty DRESSED in tools/mapgen/ddcore.py.
 
 ## B2638. Villages, towns and cities are furnished and checked like the farm (2026-11-13, after Ben: "Please make sure you are checking these things thoroughly before exporting")
 The grid towns now furnish by purpose, age and room value as the farm and the angled towns do. A picture is never drawn under half its own size (a three-square bench is not squeezed into one square, where it spilled over its neighbours); a small room with no wall left gets sacks, buckets and baskets by its walls and pieces; blue, green and purple flames stay out of ordinary rooms (they are for a Storyteller to place). A neighbour's house shown at a part's edge draws only what lies on that map. The map check measures squareness against the nearest wall and doorways in the door's own frame, so angled houses are judged fairly, and treats rugs as floor. Every 1197 sample (village, town, angled village, city parts, settlement) checks with 0 problems. The 1995 settlement still shows problems from modern pictures whose size is guessed; it waits on the measured sizes.
 Reverse: drop the furnishing default in tools/mapgen/ddtown.py main() and the floor of .5 in furnishing._drawn.
+
+## B2639. Measured picture sizes, and the last bare and misplaced pieces (2026-11-13)
+The PC measured every pack picture (45,791 sizes); the catalogue and the map check use them before the size in the name, so a picture drawn bigger than its name says (the TC pack draws 300 pixels to a square) no longer spills over walls. No street lamp, traffic light or signal hangs on a room's wall, and every wall lamp is drawn 0.6 squares across. No drugs, bongs or needles furnish an ordinary room. A court gets a barrel, a bench or a load and no chandelier; a goods shed or store is stacked across its floor along its walkways; big halls take bigger pieces. The map check counts a corridor or stair hall (straight or turned) and a court with no floor or a stone or earth floor as open, and looks for lamps through walls. Every sample (1197 to 1995, farm, villages, towns, cities, palace in four ages, a 1950 town) checks with 0 problems.
+Reverse: drop the second table from catalogue.SIZE_TABLES.
 
 ## B2660. The five daily prayers in NPC routines (2026-11-13, global rule)
 A Muslim NPC on a ready routine stops for each of the five prayers for twenty minutes, wherever the hour has put them (the dawn prayer at home, the noon and afternoon prayers at work): dawn 80 to 60 minutes before sunrise, noon 10 minutes after the sun's highest point, afternoon three fifths of the way from noon to sunset, sunset 5 minutes after sunset, night 90 minutes after sunset. The times move with the Chronicle's sunrise and sunset for the day; where the sun does not rise or set, 06:00 and 18:00 stand in. A routine with daily prayers at the house of worship (the prayer leader) leads all five there. On Friday the noon prayer is the week's Friday prayer. Kindred, Garou and the other night folk, and an NPC with hours of their own, are left alone unless Daily prayers is set to the five prayers. Under the Soviet campaign against religion (Central Asia, 1929 to 1990) the prayers are not kept by default. A house reading of when the prayers fall, rounded for play; the books give no prayer table.
@@ -4196,3 +4201,28 @@ Reverse: drop the leader branch in withWorship.
 By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Soviet campaign against religion), in China from 1966 to 1976 (the Cultural Revolution) and in Tibet from 1959 to 1979. Set to Kept, an NPC keeps it anyway, in secret as far as the Storyteller plays it.
 
 Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
+
+## B3000. The wizard works out the Traits that follow from the others (2026-11-13)
+WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; Arete 1, Willpower 5 and Quintessence equal to the Avatar for Mage; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
+
+Reverse: drop #derived from wizard.mjs; the old "Still to set by hand" line was the starting-value text.
+
+## B3001. Freebie dots and the prelude's Willpower go on top (2026-11-13)
+The book value is the base; Willpower, Humanity or a Road, Rage, Gnosis, Arete and Glamour bought on the freebie page (the wizard's bought record) and each Willpower dot the prelude gave are added. So pressing Set never takes back a dot that was paid for.
+
+Reverse: pass bought: {} and prelude: 0 in derivedFor.
+
+## B3002. Garou starting values read from the sheet's auspice, breed and tribe (2026-11-13)
+Auspice: Ragabash 1 to Ahroun 5 Rage. Breed: homid 1, metis 3, lupus 5 Gnosis. Tribe: the W20 core list of starting Willpower; Fenrir counts as the Get of Fenris and the Warders of Men as the Glass Walkers for the Dark Ages. A tribe not in the list, or an empty field, leaves the row without a value and says why. The tribe values and the Dark Ages names wait for the book check.
+
+Reverse: empty WILLPOWER_BY_TRIBE in derived-rules.mjs.
+
+## B3003. Torment by House (2026-11-13)
+Devils, Scourges, Malefactors and Fiends start at 3 Torment; Defilers, Devourers and Slayers at 4 (the Akkadian House names are read too). Waits for the book check.
+
+Reverse: empty TORMENT_BY_HOUSE.
+
+## B3004. Starting blood is rolled in the open (2026-11-13)
+V20: one die, rolled to chat. Dark Ages: one die plus Domain and Herd. Ghouls and revenants start at 1. The result stops at the sheet's blood pool for the Generation. The wizard never rolls without the button.
+
+Reverse: remove the blood action.

@@ -216,7 +216,7 @@ export const POWER_NAMES = {
   arcanoi: ["Argos", "Castigate", "Embody", "Fatalism", "Flux", "Inhabit", "Intimation", "Keening", "Lifeweb", "Mnemosynis", "Moliate", "Outrage", "Pandemonium", "Phantasm", "Puppetry", "Usury"],
   art: ["Autumn", "Chicanery", "Chronos", "Contract", "Dragon's Ire", "Legerdemain", "Metamorphosis", "Naming", "Oneiromancy", "Primal", "Pyretics", "Skycraft", "Soothsay", "Sovereign", "Wayfaring"],
   realm: ["Actor", "Fae", "Nature", "Prop", "Scene", "Time"],
-  hekau: ["Alchemy", "Celestial", "Effigy", "Necromancy", "Nomenclature"]
+  hekau: ["Alchemy", "Amulets", "Celestial", "Effigy", "Necromancy", "Nomenclature"]
 };
 
 const clanKey = s => String(s ?? "").toLowerCase().replace(/^clan\s+/, "").trim();
