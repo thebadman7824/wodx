@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2580
+Next free block: B2590
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -110,6 +110,7 @@ Next free block: B2580
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
+| B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3263,4 +3264,12 @@ Reverse: pick "The Western church" in the routine window, or have blocksOf skip 
 
 ## B2573. Left open (2026-11-13)
 Not built: daily prayer times for every Muslim (only the clergy keep the five); the Soviet weeks of 1929 to 1940; Ramadan's night hours in the routines; a separate place kind for mosques, synagogues and temples; the Moravian country map's rails for other regions (the maps thread owns it).
+
+## B2580. Sprite tokens attack (2026-11-13, Ben's ask)
+Each sprite has attack sheets beside its walk sheet, one per move it knows, six frames by the four facings (Paperdoll sprite-rules.mjs ACTS, files `<name>.<move>.png`). The moves so far: a strike with the hand, a thrust, a shot, a bite, the Crinos claws (a lunge with claw marks) and a worked power with a drawn effect. `api.sprites.play(token, move, toward)` writes a small flag on the token; every computer that sees the token plays the frames once from its own clock, turned toward the target, and a token that walks drops the attack. The drawing side is tools/sprites (wear.py ACTS, FACT and fx, beast.py bite, proto_attacks.py); the effects by kind of power are first sketches in twelve colours and seven shapes.
+Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the attack sheets and the ACTS table.
+
+## B2581. A blow that lands plays the attack (2026-11-13, house rule of presentation)
+When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
+Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
 

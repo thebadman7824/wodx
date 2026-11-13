@@ -16,7 +16,7 @@ KINDS=dict(
  pony=kind(s=1.25,heavy=1.08,ll=1.06,bl=1.1,ox=40,longface=1,fur=(150,128,96),head=(18,-39),hr=4.0,mz=9,mzr=3.1,ear=('prick',3.6),tail='horse',mane=(60,46,34),furry=.2,neckr=1.1,eye=(30,22,20)),
  bear=kind(s=1.45,heavy=1.5,ll=.82,ox=44,fur=(84,60,42),head=(17,-31),hr=5.0,mz=5.5,mzr=3.0,ear=('round',2.4),tail='none',furry=1.1,hump=2.5,eye=(20,16,14),neckr=1.3),
  boar=kind(s=.95,heavy=1.4,ll=.72,fur=(70,60,54),head=(15,-27),hr=4.4,mz=8,mzr=2.6,ear=('prick',3.2),tail='stub',tusks=True,furry=1.3,hump=2,eye=(20,16,14),neckr=1.3),
- stag=kind(s=1.3,heavy=.8,ll=1.25,ox=44,fur=(140,104,70),belly=(206,190,160),head=(16,-41),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(196,180,150),furry=.3,neckr=.85,eye=(30,22,20)),
+ stag=kind(s=1.3,heavy=0.9,ll=1.12,ox=44,fur=(140,104,70),belly=(206,190,160),head=(18,-36),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(196,180,150),furry=.3,neckr=0.8,eye=(30,22,20)),
  bull=kind(s=1.45,heavy=1.45,ll=.9,bl=1.1,ox=42,fur=(64,52,46),head=(17,-31),hr=4.8,mz=6.5,mzr=3.4,ear=('flop',3),tail='tuft',horns=(206,196,170),furry=.3,hump=3,neckr=1.4,eye=(20,16,14)),
  goat=kind(s=.8,heavy=.95,ll=.95,fur=(196,188,170),head=(15,-38),hr=3.4,mz=5.5,mzr=2.2,ear=('flop',3.5),tail='stub',horns=(120,104,84),furry=.6,eye=(60,50,30)),
  sheep=kind(s=.82,heavy=1.35,ll=.8,fur=(214,206,188),head=(15,-32),hr=3.4,mz=5,mzr=2.3,ear=('flop',3),tail='stub',furry=1.4,snout=(60,52,48),eye=(20,16,14)),
@@ -36,13 +36,13 @@ KINDS=dict(
  horse_large=kind(s=1.76,heavy=1.1,ll=1.14,bl=1.12,ox=37,longface=1,fur=(84,60,44),head=(19,-40),hr=4.0,mz=10,mzr=3.3,ear=('prick',3.6),tail='horse',mane=(30,24,22),furry=.2,neckr=1.15,eye=(30,22,20)),
  warhorse=kind(s=1.72,heavy=1.12,ll=1.14,bl=1.12,ox=37,longface=1,fur=(52,46,46),head=(19,-41),hr=4.0,mz=10,mzr=3.3,ear=('prick',3.6),tail='horse',mane=(20,18,18),furry=.2,neckr=1.2,eye=(30,22,20)),
  mule=kind(s=1.42,heavy=1.0,ll=1.1,bl=1.1,ox=40,longface=1,fur=(108,90,74),belly=(190,176,156),head=(18,-38),hr=4.0,mz=9.5,mzr=3.2,ear=('prick',6.5),tail='horse',mane=(40,32,28),furry=.2,neckr=1.05,eye=(30,22,20)),
- camel=kind(s=1.6,heavy=.95,ll=1.32,bl=1.05,ox=40,longface=1,fur=(196,160,110),head=(19,-39),hr=3.3,mz=7,mzr=2.7,ear=('round',1.6),tail='tuft',furry=.5,hump=6,humpx=-6,neckr=.62,eye=(30,22,20)),
+ camel=kind(s=1.5,heavy=1.08,ll=1.18,bl=1.05,ox=40,longface=1,fur=(196,160,110),head=(23,-35),hr=3.2,mz=6.5,mzr=2.7,ear=('round',1.6),tail='tuft',furry=.5,hump=7,humpx=-5,neckr=0.6,eye=(30,22,20)),
  cow=kind(s=1.36,heavy=1.35,ll=.9,bl=1.12,ox=42,fur=(150,96,60),belly=(226,214,196),head=(17,-30),hr=4.4,mz=6.5,mzr=3.2,ear=('flop',3),tail='tuft',horns=(206,196,170),furry=.2,neckr=1.2,snout=(214,176,160),eye=(20,16,14)),
  pig_small=kind(s=.6,heavy=1.35,ll=.68,fur=(214,170,160),head=(15,-26),hr=4.2,mz=5.5,mzr=2.8,ear=('flop',3.5),tail='stub',furry=.1,eye=(20,16,14),neckr=1.3),
  pig_large=kind(s=1.05,heavy=1.5,ll=.66,fur=(196,150,140),head=(15,-26),hr=4.4,mz=6,mzr=3.0,ear=('flop',3.5),tail='stub',furry=.1,eye=(20,16,14),neckr=1.3),
  boar_giant=kind(s=1.42,heavy=1.45,ll=.76,ox=44,fur=(52,46,44),head=(15,-27),hr=4.6,mz=8.5,mzr=2.8,ear=('prick',3.2),tail='stub',tusks=True,furry=1.6,hump=3,eye=(150,40,30),neckr=1.35),
- deer=kind(s=1.08,heavy=.78,ll=1.22,ox=45,fur=(150,112,76),belly=(214,198,168),head=(16,-41),hr=3.3,mz=6,mzr=2.2,longface=1,ear=('prick',4.5),tail='stub',furry=.3,neckr=.8,eye=(30,22,20)),
- white_hart=kind(s=1.34,heavy=.8,ll=1.25,ox=44,fur=(226,226,222),head=(16,-41),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(214,200,150),furry=.3,neckr=.85,eye=(120,170,210)),
+ deer=kind(s=1.08,heavy=0.88,ll=1.1,ox=45,fur=(150,112,76),belly=(214,198,168),head=(18,-35),hr=3.3,mz=6,mzr=2.2,longface=1,ear=('prick',4.5),tail='stub',furry=.3,neckr=0.75,eye=(30,22,20)),
+ white_hart=kind(s=1.34,heavy=0.9,ll=1.12,ox=44,fur=(226,226,222),head=(18,-36),hr=3.5,mz=6.5,mzr=2.3,longface=1,ear=('prick',4),tail='stub',antlers=(214,200,150),furry=.3,neckr=0.8,eye=(120,170,210)),
  hare=kind(s=.5,heavy=1.15,fur=(140,116,88),belly=(214,200,180),ear=('prick',8.5),tail='stub',mz=3.5,mzr=2.4,ll=.8,head=(14,-33),furry=.5,eye=(20,16,16)),
  chimpanzee=kind(s=.95,heavy=1.15,ll=.95,bl=.8,fur=(40,36,36),head=(13,-37),hr=4.4,mz=2.6,mzr=3.0,ear=('round',2.6),tail='none',furry=.9,snout=(170,130,110),eye=(30,22,20),neckr=1.1),
  alligator=kind(s=1.25,heavy=.9,ll=.36,bl=1.45,ox=46,fur=(70,84,60),belly=(170,170,120),head=(17,-27),hr=3.2,mz=12,mzr=2.6,ear=('none',0),tail='brush',furry=0,wd=1.5,teeth=True,eye=(200,190,60),neckr=1.0),
@@ -144,6 +144,19 @@ def front(a,f,back=False):
             if a['teeth']: q=P(sg*1.2,hy+3+mzl); px(q[0],q[1],K.TOOTH)
             if a['tusks']: q=P(sg*(a['mzr']*.9+.6),hy+1+mzl); px(q[0],q[1],K.TOOTH); px(q[0],q[1]-1,K.TOOTH)
     cv.outline(); stripes(cv,a,rp); return cv.c
+def bite(a,i):
+    """six frames of a lunge and bite, side view: the body draws back, springs, and the jaws snap"""
+    if isinstance(a,str): a=KINDS[a]
+    dx=[0,-2,-3,4,6,2][i]; im=side(a,[0,7,7,1,2,1][i]); out=np.zeros_like(im)
+    if dx>=0: out[:,dx:]=im[:,:S-dx] if dx else im
+    else: out[:,:dx]=im[:,-dx:]
+    if i in(3,4):
+        s=a['s']; hx,hy=a['head']; x0=a['ox']+(hx+3+a['mz'])*a['bl']*s+dx+2; y0=87+(hy+2)*a['ll']*s+K.YO
+        for k in range(-3,4):
+            for q,(col) in enumerate(((240,240,236),(200,60,50) if i==4 else (200,204,212))):
+                x=int(round(x0+2-abs(k)*.5+q)); y=int(round(y0+k))
+                if 0<=x<S and 0<=y<SH: out[y,x]=(*col,255)
+    return out
 def sheet(a):
     if isinstance(a,str): a=KINDS[a]
     sh=np.zeros((4*SH,8*S,4),np.uint8)
