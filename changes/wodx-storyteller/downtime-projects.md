@@ -1,4 +1,0 @@
----
-bump: minor
----
-Downtime projects (B3340-B3343): long tasks become projects a player plans between sessions. Five new kinds (build a business, court someone slowly, learn a language, track someone down, gather a herd); a weekly budget of nights shared by every project (7, or 6 for a vampire), where fewer nights than a kind needs stretch each roll and the newest projects pause when the budget runs out; complications drawn by kind and year (1 roll in 10, always on a botch), told to the Storyteller only and fired as wodxProjectComplication; courting rolls move warmth through WoDX NPC's hearts api (which keeps the age floor); a finished business or herd asks the Storyteller to award the dot. The Long tasks window becomes Downtime and long tasks, with each character's budget. api.tasks.budget and api.tasks.projects.
