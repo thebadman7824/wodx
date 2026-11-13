@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// Family systems: pregnancy and birth, with supernatural story hooks (B3220-B3222).
+// Family systems: pregnancy and birth, with supernatural story hooks (B3440-B3442).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
@@ -80,7 +80,7 @@ test("family is wired: the age floor, the approval, the clock, the hooks and the
   assert.doesNotMatch(XH.relationsHtml([], {}), /Family news/);
 });
 
-// Child sheets, growing up, schooling and players as children (B3223-B3228).
+// Child sheets, growing up, schooling and players as children (B3443-B3228).
 const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
 const LP = await imp("modules/wodx-creation/scripts/lifepath-rules.mjs");
 

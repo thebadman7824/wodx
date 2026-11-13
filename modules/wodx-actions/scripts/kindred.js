@@ -758,9 +758,10 @@ export function build(ctx) {
         if (!isActiveGM() || !setting("autoDelirium")) return null;
         const tok = tokenLike?.object ?? tokenLike;
         const a = tok?.actor;
-        if (!a || !GX.isShifter(a)) return null;
-        const form = GX.info(a).form;
-        if (form !== "crinos") return null;
+        if (!a) return null;
+        // 3.65.0 (B3440): a sheet in Crinos, or a token drawn as a war form (WoDX Paperdoll's sprites)
+        const form = GX.isShifter(a) ? GX.info(a).form : null;
+        if (!GX.bringsDelirium({ form, sprite: tok.document?.flags?.["wodx-paperdoll"]?.sprite })) return null;
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
         // Creatures of another kind who see the Crinos are startled (3.42.0); the Delirium below is for the mortals
         await revealed(a, { secret: "lupine", event: "in Crinos", startledOnly: true });
@@ -769,6 +770,34 @@ export function build(ctx) {
         await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => (t.actor.isToken ? t.document.id : t.actor.id))]);
         const ids = w.map(t => t.document.uuid).join(",");
         return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><p>${w.map(t => esc(t.name)).join(", ")} can see ${esc(a.name)} in Crinos.</p>${kbtn("delirium", a, "Run the Delirium for them", ids)}</div>`,
+            whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+    }
+
+    /* ---------------- Marks a mortal cannot explain away (3.65.0, B3443) ---------------- */
+
+    /**
+     * A Kindred whose face bears marks no mortal has (WoDX Paperdoll's talking faces: a Nosferatu's face, a Gangrel's
+     * beast eyes) is seen by mortals who do not know: the Storyteller gets the Masquerade card, once for each witness in
+     * a scene. A mask over the face or Obfuscate hides the marks.
+     */
+    async function marksSeen(tokenLike) {
+        if (!isActiveGM() || !setting("eventPrompts")) return null;
+        const tok = tokenLike?.object ?? tokenLike;
+        const a = tok?.actor;
+        if (!a || tok.document?.hidden || P.detectProfile(a) !== "kindred") return null;
+        let marks = [];
+        try { marks = game.modules.get("wodx-paperdoll")?.active ? game.modules.get("wodx-paperdoll").api?.faces?.uncanny?.(a, tok.document) ?? [] : []; } catch (e) { marks = []; }
+        if (!marks.length) return null;
+        const o = observersOf(tok, { secret: "kindred", exclude: [a.isToken ? tok.document.id : a.id] });
+        const key = `marksSeen.${a.isToken ? tok.document.id : a.id}`;
+        const seen = new Set(canvas.scene?.getFlag?.(MOD, key) ?? []);
+        const fresh = o.breach.filter(t => !seen.has(t.document.id));
+        if (!fresh.length) return null;
+        await canvas.scene.setFlag(MOD, key, [...seen, ...fresh.map(t => t.document.id)]);
+        const ev = `seen with ${marks.map(m => String(m).toLowerCase()).join(", ")}`.replace(/\|/g, "/");
+        const note = WR.placeNote(o.mode, "kindred", ev);
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(a.name)}: ${esc(ev)}</h3><p class="vta-warn">Masquerade: ${fresh.map(t => esc(t.name)).join(", ")} can see a face no living person has.</p>${note ? `<p>${esc(note)}</p>` : ""}
+            ${kbtn("seen", a, "Record the witnesses", `kindred|${ev}|${fresh.map(t => t.actor.uuid).join(",")}`)}</div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
@@ -840,7 +869,7 @@ export function build(ctx) {
     }
 
     return { useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
-        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
+        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
 /** Settings this part adds (registered by main.js). */

@@ -19,7 +19,7 @@
  * person brings up, listed even when the character has not heard of them). Before "=>": a WoDX Chronicle "Only when"
  * list about the character asking. After " | ": what follows, ";" between: teach <topic> (the character can now ask
  * anyone about it), codex <page> (an Encyclopaedia or journal page goes into the character's codex), aloud (said for
- * all to hear, not whispered), and any WoDX Chronicle "Then" outcome (tell, whisper, ledger, standing, ...).
+ * all to hear, not whispered), lie (NPC 0.73.0: the line is a lie, which a character reading the face may see), and any WoDX Chronicle "Then" outcome (tell, whisper, ledger, standing, ...).
  * A line with no brackets is the Storyteller's own note, as before, and is never shown to a player.
  */
 
@@ -39,9 +39,9 @@ export function normTopic(t) {
 /** A topic as shown: the local four by their names, the rest as written. */
 export const topicLabel = t => LOCAL[t] ?? (t ? t[0].toUpperCase() + t.slice(1) : "");
 
-/** What follows a line: {teach: [], codex: [], aloud, run: "Then text for WoDX Chronicle"}. */
+/** What follows a line: {teach: [], codex: [], aloud, lie, run: "Then text for WoDX Chronicle"}. */
 export function parseThen(text) {
-  const out = {teach: [], codex: [], aloud: false, run: ""};
+  const out = {teach: [], codex: [], aloud: false, lie: false, run: ""};
   const rest = [];
   for ( const raw of String(text ?? "").split(";") ) {
     const part = raw.trim();
@@ -49,6 +49,8 @@ export function parseThen(text) {
     const m = /^(teach|codex)\s+(.+)$/i.exec(part);
     if ( m ) { const v = m[2].trim().slice(0, 100); if ( m[1].toLowerCase() === "teach" ) out.teach.push(normTopic(v)); else out.codex.push(v); continue; }
     if ( /^aloud$/i.test(part) ) { out.aloud = true; continue; }
+    // NPC 0.73.0 (B3444): the speaker lies; a character who reads the face may see it
+    if ( /^lie$/i.test(part) ) { out.lie = true; continue; }
     rest.push(part);
   }
   out.run = rest.join("\n");

@@ -60,6 +60,13 @@ export function outOfTime(item = {}, year = null) {
 export const seen = item => !!item && (item.worn ? true : String(item.conceal ?? "").toUpperCase() === "N");
 
 /** Station 0 to 5 from what is worn: the best dress tier, a step for fine valuables worn, held to 5. */
+/** The figure's places that hold clothes (WoDX Paperdoll's figure menu); what is held in the hands is not dress. */
+export const FIGURE_WORN = ["body", "legs", "feet", "over", "head", "face", "neck", "hands", "belt", "extra"];
+/** The names of the pieces worn in a figure's slots ({slot: {n}}), in that order. */
+export function figureNames(slots = {}) {
+  return FIGURE_WORN.map(k => slots?.[k]?.n).filter(n => typeof n === "string" && n.trim()).map(n => n.slice(0, 120));
+}
+
 export function stationOf(items = []) {
   const worn = (items ?? []).filter(i => i?.worn);
   const dress = worn.filter(i => DRESS_KINDS.has(i.kind)).map(i => num(i.tier));
@@ -223,7 +230,9 @@ export function describeMarks(m) {
   if ( side ) line += ` ${side}`;
   const bits = [];
   if ( m.size ) bits.push(SIZE_WORDS[m.size]);
-  if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
+  const odd = (m.uncanny ?? []).map(u => String(u).toLowerCase());
+  if ( odd.length ) bits.push(`with ${odd.length > 1 ? `${odd.slice(0, -1).join(", ")} and ${odd.at(-1)}` : odd[0]}`);
+  else if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
   else if ( m.face === "striking" ) bits.push("with a face people remember");
   else if ( m.face === "ugly" ) bits.push("with an ugly face");
   const dress = (m.dress ?? []).map(d => String(d).toLowerCase());

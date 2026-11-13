@@ -161,6 +161,16 @@ export function delirium(willpower, b, table) {
     return { willpower: w, reaction: table?.reactions?.[w] ?? "", memory };
 }
 
+/**
+ * Does a figure on the map bring on the Delirium (3.65.0, B3440)? A shifter's sheet in Crinos (a Fera war form counts
+ * as Crinos), or a token drawn as a war form by WoDX Paperdoll's sprites (an NPC with no Garou sheet). Hispo does not:
+ * only a Gift brings the Delirium in Hispo (W20 pp. 45, 186).
+ */
+export const WAR_SPRITE = /(^|-)crinos($|[-.])|war-?form/i;
+export function bringsDelirium({ form = null, sprite = "" } = {}) {
+    return form === "crinos" || WAR_SPRITE.test(String(sprite ?? ""));
+}
+
 /** The Curse: −1 social die per point of Rage above a human's Willpower (DA:W p. 91). */
 export function curseDice(rage, humanWillpower) {
     return Math.max(0, n(rage) - n(humanWillpower));
