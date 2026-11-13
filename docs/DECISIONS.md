@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2710
+Next free block: B2730
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -123,6 +123,7 @@ Next free block: B2710
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
 | B2690-B2699 | The damage doll: a pixel figure on the Body tab drawn from the body plan, with the wounds on each part | Combat, Sheets |
 | B2700-B2709 | Letters that take the journey time across the world map, by the ways each land has in each year | Storyteller |
+| B2720-B2729 | Bring forward on the anachronism card (map things and container goods swapped for their equal in the year, every era) and the weekly build log archive | Sheets, Interactables, docs |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3594,3 +3595,18 @@ Reverse: send with Let it go only; the card's other buttons and the hand tool ca
 On the World of Future Darkness branch a message over the Net arrives at once anywhere both ends can be reached, and is read by whoever watches the Net, as before 0.59.0; the far future keeps every other way the year has.
 
 Reverse: none needed; the Net stays off without the branch.
+
+## B2720. Bring forward: things on the maps (2026-11-13, Improvement Desk ia2)
+WoDX Interactables 0.37.0, SWAPS and bringForward in interact-rules.mjs; WoDX Sheets 0.17.0 on the anachronism card. Ben's pick: a Bring forward button that swaps each map thing for its equal in the new era, in every era. Each kind out of its year steps to the nearest kind of its family that is in use, one way in time, until one fits: a motor car before 1900 becomes a carriage, a motorcycle a riding horse, a motorboat a rowing boat, a carriage after 1930 a motor car; an electric light before 1880 an oil or gas lamp, a lamp after 1950 an electric light; a radio a telephone, and before 1890 a bell (as does a telephone). A keypad, card reader or alarm before 1970 becomes a lock of the same grade, unless the door or container has a lock already. Fire sprinklers before 1874 and a live wire before 1880 have nothing like them; the card names them for the Storyteller to keep or take off. A title the Storyteller wrote stays; the kind's own label goes with the kind. The tile's picture is not changed. The card has one button for everything on it and one on each row, and the result card has Undo. A house reading; the books give no such lists.
+
+Reverse: remove a step from SWAPS (that kind is then named as having nothing like it), or press Undo on the result card.
+
+## B2721. Bring forward: goods in containers (2026-11-13)
+WoDX Sheets 0.17.0, goodsSwap in anachronism-rules.mjs. A line in a container that is out of its year becomes an everyday good of WoDX Library in use that year where the scene stands (its region and that region's way of life, from WoDX Chronicle; goods found everywhere when the scene has no region): first one that names the same thing (a tallow candle becomes a votive candle), else one of the same kind (coin for coin, food for food) sharing most words with the old name; then the closest in worth, used and carried the same way, and the longest in use. The count stays: 4 banknotes in 1300 in Moravia become 4 silver pennies. Gear by era lines and world items are left as they are and named on the card.
+
+Reverse: press Undo on the result card; or drop the goods part of bringForward in anachronism.mjs.
+
+## B2722. The weekly build log archive (2026-11-13, Stale Design Desk e3)
+tools/docs/archive-build-log.mjs. Every Monday, the docs/BUILD-LOG.md entries more than a month old move to docs/archive/build-log-<year>-<month>.md by the month of each entry, beside the PENDING-REVIEW archive. A move, not a deletion: each entry is written to its archive file before it leaves the log, an entry already there is not copied twice, and the log keeps a line at the top saying where the older entries are. An entry is a ## or ### heading and its lines, dated by its heading or by the entry above. A Monday scheduled task runs it (07:37 UTC) and also moves the PENDING-REVIEW approved sections more than a week old, as that file says. The first entries are due to move on 14 December 2026.
+
+Reverse: copy the archive files' entries back to the top of BUILD-LOG.md (they are in date order), and turn the Monday scheduled task off.
