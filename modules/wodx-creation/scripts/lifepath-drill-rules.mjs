@@ -443,7 +443,8 @@ export function sheetPlan(view = {}, kept = [], book = {}) {
 /** Problems in the lists (the harness runs this). table: the Merits and Flaws the books give, to check the names. */
 /* ---- The years after the change (0.20.0) ---- */
 
-const GROUP_YEARS = [["M", -Infinity, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 2022], ["F", 2023, Infinity]];
+// B3180: elders turned before 1197 get the prologue ages too, so a long unlife is not one step
+const GROUP_YEARS = [["A", -Infinity, -801], ["B", -800, 476], ["C", 477, 1196], ["M", 1197, 1499], ["E", 1500, 1788], ["I", 1789, 1945], ["N", 1946, 2022], ["F", 2023, Infinity]];
 /** The ages a character lived at least SINCE_MIN years of after the turn: [{id, group, from, to}]. */
 export function sinceSpans(turnYear, nowYear) {
   const t = num(turnYear), n = num(nowYear), out = [];
@@ -454,8 +455,8 @@ export function sinceSpans(turnYear, nowYear) {
   }
   return out;
 }
-export function newSince({turnYear, nowYear, line = "vampire", seed = "wodx"} = {}) {
-  return {v: VERSION, turnYear: num(turnYear), nowYear: num(nowYear), line: String(line), seed: String(seed), picks: {}, skipped: [], rerolls: {}};
+export function newSince({turnYear, nowYear, line = "vampire", seed = "wodx", region = null} = {}) {
+  return {v: VERSION, turnYear: num(turnYear), nowYear: num(nowYear), line: String(line), seed: String(seed), region: regionOf(region) ? region : null, picks: {}, skipped: [], rerolls: {}};
 }
 /** The steps of the years after the change, each with five options. */
 export function sinceSteps(since) {
@@ -463,7 +464,8 @@ export function sinceSteps(since) {
   const list = SINCE.filter(o => !o[2]?.lines || o[2].lines.includes(since.line));
   return sinceSpans(since.turnYear, since.nowYear).map(sp => {
     const free = o => !Object.entries(since.picks ?? {}).some(([k, v]) => k !== sp.id && v?.id === slug(o[0]));
-    const own = sinceOwn(since.line, sp.from, sp.to).filter(free);
+    // B3180: the dated marks of the land the character came from, for that age (before 1197 too)
+    const own = [...sinceOwn(since.line, sp.from, sp.to), ...(since.region ? datedMarks(since.region, sp.from, sp.to) : [])].filter(free);
     const ids = new Set(own.map(o => slug(o[0]))), turn = since.rerolls?.[sp.id] ?? 0;
     const options = fiveOf(list.filter(free), sp.to, "trade", `${since.seed}:${sp.id}:${turn}`, {extra: own, front: turn === 0})
       .map(({local, ...o}) => ids.has(o.id) ? {...o, line: true} : o);

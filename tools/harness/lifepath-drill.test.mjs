@@ -180,11 +180,13 @@ test("your people: asked where more than one people lives, and open where no nam
     if ( !D.peoplesOf(rid, 1700).length ) open++;
   }
   assert.ok(n > 5, "several regions ask");
-  const na = D.continents(1300).find(c => c.id === "north-america").regions.find(r => r.id === "north-america-east");
-  assert.equal(na.named, false);
-  let d = start("north-america-east", 1300, 25);
+  // Eastern North America has the Haudenosaunee before the colonies (B3120); the West still has no names in 1300
+  const regs = D.continents(1300).find(c => c.id === "north-america").regions;
+  assert.equal(regs.find(r => r.id === "north-america-east").named, true);
+  assert.equal(regs.find(r => r.id === "north-america-west").named, false);
+  let d = start("north-america-west", 1300, 25);
   assert.equal(D.current(d).kind, "people");
-  d = D.pickOwn(d, "people", "Lenape");
+  d = D.pickOwn(d, "people", "Lakota");
   assert.ok(D.done(walk(d)));
   assert.ok(open >= 1);
 });
@@ -454,4 +456,16 @@ test("the years after the change: each line has its own ways, drawn first", asyn
   assert.equal(D.sinceOwn("mage", 1300, 1400).filter(o => /Technocracy/.test(o[0])).length, 0);
   assert.equal(D.sinceOwn("demon", 1500, 1700).length, 0);
   assert.equal(D.sinceOwn("mortal", 1500, 1700).length, 0);
+});
+
+test("B3180: elders get the ages before 1197, and their land's dated marks feed those ages", () => {
+  assert.deepEqual(D.sinceSpans(-300, 1250).map(x => [x.group, x.from, x.to]), [["B", -299, 476], ["C", 477, 1196], ["M", 1197, 1250]]);
+  const s = D.newSince({turnYear: 500, nowYear: 1200, line: "vampire", seed: "elder", region: "moravia"});
+  assert.equal(s.region, "moravia");
+  const c = D.sinceCurrent(s);
+  assert.equal(c.id, "s-C");
+  assert.equal(c.options.length, 5);
+  const pool = D.datedMarks("moravia", 477, 1196).map(m => m[0]);
+  assert.ok(pool.includes("Heard the brothers from Thessaloniki preach in your own tongue"));
+  assert.equal(D.newSince({turnYear: 500, nowYear: 1200, region: "nowhere"}).region, null);
 });

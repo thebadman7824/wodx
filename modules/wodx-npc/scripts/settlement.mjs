@@ -66,7 +66,7 @@ export function build({MOD, esc, chron}) {
       const rows = rec.households.map((h, i) => `<li class="wnpc-set-h"><label><input type="checkbox" name="h_${i}"${gone.has(h.id) ? "" : " checked"}> <b>${esc(short(h.label))}</b>
         <span class="wodx-quiet">${h.map ? `map ${esc(h.map)}, ` : ""}${esc(h.wealth)}</span></label> ${esc(SR.peopleWords(h))}</li>`).join("");
       const content = `<div class="wnpc-set-review" style="max-height:60vh;overflow-y:auto"><p><b>${esc(rec.name)}</b>, a ${rec.walled ? "walled " : ""}${esc(rec.label || rec.kind)} as it stands in ${rec.year}: ${s.people} people in ${s.households} households${rec.maps.length > 1 ? `, on ${rec.maps.length} maps` : ""}.</p>
-        <p class="wodx-quiet">Its buildings, trades and offices are those of ${rec.region === "moravia" ? "Moravia and the Bohemian crown lands" : esc(rec.region)}. For a place elsewhere in the world, change the trades by hand after seeding.</p>
+        <p class="wodx-quiet">${esc(SR.regionWords(rec, game.modules.get("wodx-chronicle")?.api?.world?.regionOf?.(rec.region)?.label))}</p>
         ${off ? `<p class="wodx-warn">The chronicle stands in ${y}; this record is of ${rec.year}. Its trades and households are those of ${rec.year}.</p>` : ""}
         <p class="wodx-quiet">Trades: ${s.trades.slice(0, 14).map(([t, k]) => `${esc(t)} ${k}`).join(", ")}${s.trades.length > 14 ? ", and others" : ""}.</p>
         <h3>Hidden folk</h3>

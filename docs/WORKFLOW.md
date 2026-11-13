@@ -39,7 +39,7 @@ clashes with other branches more likely. So:
 
 On the PC, from the branch's checkout:
 
-    node tools/lanes/run-gate.mjs --touched           the gates the branch's changes need (drift check first)
+    node tools/lanes/run-gate.mjs --touched --lanes 2,3   the gates the branch's changes need, split over lanes 2 and 3
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
 
 A Paperdoll-only change runs the Paperdoll gates, not the Relationships ones. A change to WoDX Chronicle or the system

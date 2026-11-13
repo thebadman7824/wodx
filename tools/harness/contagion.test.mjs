@@ -162,6 +162,27 @@ test("a sick character rolls each week: the rating as damage on a failure, a slo
   assert.ok(R.exposeChance({...R.newOutbreak({market: "a", disease: "plague"}), week: 9}) > 0.5);
 });
 
+test("the town turn takes its sickness from the towns' own outbreaks when they spread (B3267)", async () => {
+  const TR = await imp("modules/wodx-storyteller/scripts/town-rules.mjs");
+  const o = {...R.newOutbreak({market: "brno", disease: "plague"}), week: 9};
+  const h = R.townHit(o);
+  assert.equal(h.name, "Plague");
+  assert.ok(h.dead > 0.005 && h.dead < 0.05 && h.pressure === 1);
+  assert.equal(R.townHit({...o, week: 0}), null);
+  const markets = [{id: "brno", name: "Brno", links: []}, {id: "jihlava", name: "Jihlava", links: []}];
+  const st0 = {v: 1, towns: {brno: TR.newTown(markets[0], {people: 10000}), jihlava: TR.newTown(markets[1], {people: 10000})}};
+  const r = TR.weekTowns(st0, markets, {year: 1350, regionOf: () => "moravia", randFor: () => () => 0.99, sickFor: m => (m.id === "brno" ? h : null)});
+  assert.equal(r.state.towns.brno.struck?.name, "Plague");
+  assert.ok(r.state.towns.brno.people < r.state.towns.jihlava.people - 50, "the sick town loses its dead");
+  assert.equal(r.state.towns.jihlava.struck, null, "no plague by year while the towns' own sickness rules");
+  // With the sickness gone the town is clear again
+  const r2 = TR.weekTowns(r.state, markets, {year: 1350, regionOf: () => "moravia", randFor: () => () => 0.99, sickFor: () => null});
+  assert.equal(r2.state.towns.brno.struck, null);
+  // Left out, the outbreaks by year still strike (a sure roll in 1348 in France)
+  const r3 = TR.weekTowns(st0, markets, {year: 1348, regionOf: () => "france", randFor: () => () => 0});
+  assert.ok(r3.state.towns.brno.struck);
+});
+
 test("normState keeps only good entries", () => {
   const s = R.normState({towns: {a: {disease: "plague", week: 3}, b: {disease: "nope"}}, immune: {a: {plague: 5, nope: 3}}, people: {p: {disease: "typhus"}, q: {disease: "x"}}, seeded: ["k", "k"]});
   assert.deepEqual(Object.keys(s.towns), ["a"]);

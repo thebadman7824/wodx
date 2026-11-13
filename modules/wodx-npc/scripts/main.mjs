@@ -40,6 +40,7 @@ import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";
 import * as TRUST from "./trust.mjs";
 import * as HEARTS from "./hearts.mjs";
+import * as FAMILY from "./family.mjs";
 import * as STANDING from "./standing.mjs";
 import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
@@ -47,7 +48,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.67.1";
+const VERSION = "0.71.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -874,6 +875,7 @@ Hooks.once("init", () => {
   TRUST.listen();
   HEARTS.registerSettings();
   HEARTS.listen();
+  FAMILY.listen();
   STANDING.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
@@ -890,7 +892,10 @@ Hooks.once("init", () => {
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
-    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
+    family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
+      makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
+      propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
+    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
     standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,

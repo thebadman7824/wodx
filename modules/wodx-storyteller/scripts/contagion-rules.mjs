@@ -338,6 +338,16 @@ export function huntHit(o) {
     sickShare: round3(n.attack * weekShare(Math.max(1, n.week), n.weeks) * 4), diff: (ph === "rising" || ph === "height") && n.attack >= 0.05 ? -1 : 0};
 }
 
+/**
+ * What the town's people feel this week, for the town turn (towns.mjs, B3267): {name, dead (the week's share of the
+ * people who die of it), pressure (0 to 1)}, or null while it has not yet begun or is over.
+ */
+export function townHit(o) {
+  const n = normOutbreak(o);
+  if ( !n || n.week < 1 || n.week > n.weeks ) return null;
+  return {name: DISEASES[n.disease].label, dead: round3(n.attack * weekShare(n.week, n.weeks) * n.death * 1000) / 1000, pressure: pressure(n)};
+}
+
 /** Words for a town's state. */
 export function describe(o, name = "the town") {
   const n = normOutbreak(o);

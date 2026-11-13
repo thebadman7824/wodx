@@ -28,6 +28,14 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const ownersOf = a => game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const card = (title, lines) => `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(title)}</b></p>${lines.map(l => `<p>${esc(l)}</p>`).join("")}</div></div>`;
 
+/** Chronicle's age floor (18) for anything romantic or sexual; without Chronicle's age check nothing is allowed. */
+function ageCheck(...people) {
+  const r = game.modules.get("wodx-chronicle")?.api?.age?.romance?.(...people);
+  const out = r ?? {ok: false, why: "The age check is not available (a WoDX Chronicle with the age floor is needed)."};
+  if ( !out.ok ) ui.notifications?.warn?.(out.why);
+  return out;
+}
+
 /** The line a sheet belongs to. */
 export function lineOf(actorLike) {
   const a = actorOf(actorLike);
@@ -57,6 +65,9 @@ export function hindranceFor(lover, loved) {
 export async function court(lover, loved, event, {successes = 0, botch = false, why = ""} = {}) {
   const a = actorOf(lover), b = actorOf(loved);
   if ( !game.user.isGM || !a || !b || a.id === b.id ) return null;
+  // B3211: never with anyone under 18, in any era (Chronicle's age floor)
+  const age = ageCheck(a, b);
+  if ( !age.ok ) return {ok: false, why: age.why};
   const h = hindranceFor(a, b);
   const t = H.moveWarmth(a.flags?.[MOD]?.warmth, b.id, event, {at: game.time.worldTime, why, nature: a.system?.nature ?? "", successes, botch, cap: h.cap, halve: h.halve});
   await a.setFlag(MOD, "warmth", t);
@@ -80,6 +91,9 @@ async function dropHandTie(a, b, role) {
 export async function marry(aLike, bLike, {region = regionNow(), year = yearNow(), witnesses = [], pay = null, force = false} = {}) {
   const a = actorOf(aLike), b = actorOf(bLike);
   if ( !game.user.isGM || !a || !b || a.id === b.id ) return null;
+  // B3211: no marriage with anyone under 18, whatever the law of the time said; force does not lift it
+  const age = ageCheck(a, b);
+  if ( !age.ok ) return {ok: false, why: [age.why]};
   const law = H.marriageLaw(region, year, sphereNow(region, year));
   const can = H.canMarry(law, {sexes: [sexOf(a), sexOf(b)], married: [marriagesOf(a).length, marriagesOf(b).length]});
   if ( !can.ok && !force ) return {ok: false, why: can.why, law};
@@ -116,17 +130,26 @@ export async function divorce(aLike, bLike, {region = regionNow(), year = yearNo
 }
 
 /* ---- Children ---- */
-export async function haveChild(aLike, bLike, {name = "", sex = ""} = {}) {
+export async function haveChild(aLike, bLike, {name = "", sex = "", lines = null} = {}) {
   const a = actorOf(aLike), b = actorOf(bLike);
   if ( !game.user.isGM || !a || !b ) return null;
-  const kid = H.childOf([lineOf(a), lineOf(b)], Math.random());
+  // B3211: parents are adults
+  const age = ageCheck(a, b);
+  if ( !age.ok ) return {ok: false, why: age.why};
+  const kid = H.childOf(lines ?? [lineOf(a), lineOf(b)], Math.random());
   if ( !kid ) return {ok: false, why: "One of them cannot have children."};
   const year = yearNow();
-  const nm = name || `Child of ${a.name.split(" ")[0]} and ${b.name.split(" ")[0]}`;
-  const [c] = await Actor.createDocuments([{name: nm, type: kid.line === "werewolf" ? "Werewolf" : "Mortal", ownership: a.ownership,
+  const nm = name || (a.id === b.id ? `Child of ${a.name.split(" ")[0]}` : `Child of ${a.name.split(" ")[0]} and ${b.name.split(" ")[0]}`);
+  // B3228: unless the Storyteller opened child characters to players, the parents' players may look at the child's sheet but not own it
+  let open = false;
+  try { open = !!game.settings.get(MOD, "childCharacters"); } catch (e) { open = false; }
+  const own = open ? a.ownership : Object.fromEntries(Object.entries(a.ownership ?? {}).map(([k, v]) => [k, k !== "default" && Number(v) >= 3 && !game.users.get(k)?.isGM ? 2 : v]));
+  const [c] = await Actor.createDocuments([{name: nm, type: kid.line === "werewolf" ? "Werewolf" : "Mortal", ownership: own,
     flags: {"wodx-creation": {chronology: {bornYear: year}, ...(sex ? {sex} : {}), ...(kid.line === "kinfolk" ? {lineage: {kinfolk: true}} : {})},
       [MOD]: {child: {kind: kid.kind, note: kid.note, parents: [a.id, b.id]}, ...(kid.line === "kinfolk" ? {kinfolk: true} : {})}}}]);
-  await addHandTie(c, a, "parent"); await addHandTie(c, b, "parent");
+  await addHandTie(c, a, "parent"); if ( b.id !== a.id ) await addHandTie(c, b, "parent");
+  // B3223: a newborn is a child sheet, marked so the age floor always knows
+  try { await api()?.family?.makeChild?.(c); } catch (e) { console.error(`${MOD} | child sheet`, e); }
   await ChatMessage.create({whisper: [...new Set([...ownersOf(a), ...ownersOf(b)])], speaker: {alias: "WoDX"}, content: card(`${a.name} and ${b.name} have a child`, [nm + ".", ...(kid.note ? [kid.note] : [])])});
   return {ok: true, child: c, kind: kid};
 }
@@ -135,6 +158,35 @@ export function childAge(actorLike) {
   if ( !Number.isFinite(b) ) return null;
   const age = Math.max(0, yearNow() - b);
   return {age, stage: H.childStage(age)};
+}
+
+/* ---- Adoption (B3213-B3214) ---- */
+export const adoptionLawHere = ({region = regionNow(), year = yearNow()} = {}) => H.adoptionLaw(region, year, sphereNow(region, year));
+/**
+ * The Storyteller adopts `childLike` into `parentLike`'s family under the law of the place and year: a child is
+ * adopted, fostered or taken in by kafala as the law says; an adult only where adult adoption is lawful. The ties
+ * go on both sheets (Parent and Child, or Guardian and Ward), a record on each, and a card to their owners.
+ * Returns {ok, why, kind, law, record}.
+ */
+export async function adopt(parentLike, childLike, {region = regionNow(), year = yearNow(), note = ""} = {}) {
+  const p = actorOf(parentLike), c = actorOf(childLike);
+  if ( !game.user.isGM || !p || !c ) return null;
+  const law = H.adoptionLaw(region, year, sphereNow(region, year));
+  const age = game.modules.get("wodx-chronicle")?.api?.age;
+  const born = a => { const v = a?.flags?.["wodx-creation"]?.chronology?.bornYear; return v === null || v === undefined || v === "" ? null : Number(v); };
+  const can = H.canAdopt(law, {same: p.id === c.id, parentMinor: !!age?.minor?.(p), childMinor: !!age?.minor?.(c), parentBorn: born(p), childBorn: born(c)});
+  if ( !age ) can.why.push("The age check is not available (a WoDX Chronicle with the age floor is needed).");
+  if ( !can.ok || !age ) { ui.notifications?.warn?.(can.why.join(" ")); return {ok: false, why: can.why, law}; }
+  const [up, down] = can.kindInfo.tie;
+  const rec = {id: foundry.utils.randomID(), at: game.time.worldTime, region, year, kind: can.kind, rite: law.rite, record: law.record, inherits: can.kindInfo.inherits, note: String(note ?? "").slice(0, 200)};
+  await addHandTie(c, p, up);
+  await addHandTie(p, c, down);
+  await c.setFlag(MOD, "adoptions", [...(c.flags?.[MOD]?.adoptions ?? []), {...rec, by: {id: p.id, name: p.name}}]);
+  await p.setFlag(MOD, "adoptions", [...(p.flags?.[MOD]?.adoptions ?? []), {...rec, of: {id: c.id, name: c.name}}]);
+  await ChatMessage.create({whisper: [...new Set([...ownersOf(p), ...ownersOf(c)])], speaker: {alias: "WoDX"}, flags: {[MOD]: {adoption: rec.id}},
+    content: card(`${p.name} takes ${c.name} into the family: ${can.kindInfo.label.toLowerCase()}`, [`${law.rite[0].toUpperCase()}${law.rite.slice(1)}, kept by ${law.record}.`, can.kindInfo.note])});
+  Hooks.callAll("wodxAdopted", {parent: p, child: c, record: rec});
+  return {ok: true, kind: can.kind, law, record: rec};
 }
 
 /* ---- Households ---- */
