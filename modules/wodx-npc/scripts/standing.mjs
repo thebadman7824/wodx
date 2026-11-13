@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.59.0: standing by community, social rank and feuds, the Foundry side (B2826-B2834). The rules are in
+ * WoDX NPC 0.59.0: standing by community, social rank and feuds, the Foundry side (B2863-B2871). The rules are in
  * standing-rules.mjs. Gossip along ties is in WoDX Storyteller's rumour mill (0.62.0), which asks this module for the
  * ties between NPCs.
  *

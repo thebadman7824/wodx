@@ -1,6 +1,6 @@
 /**
  * WoDX NPC 0.60.0: past lives, lines of teaching, the web of every tie, scene ideas from ties and who sees what, the
- * Foundry side (B2835-B2839). The rules are in legacy-rules.mjs.
+ * Foundry side (B2872-B2876). The rules are in legacy-rules.mjs.
  *
  *   past lives  api.legacy.pastLives / addPastLife / recall: a reborn soul's earlier self, its ties to people still
  *               living (the undying) or to a family line that came after; hidden until recalled with the Background

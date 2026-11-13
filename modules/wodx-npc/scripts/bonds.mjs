@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.56.0: bonds from the books, the Foundry side (B2776-B2782). The rules are in bond-rules.mjs.
+ * WoDX NPC 0.56.0: bonds from the books, the Foundry side (B2840-B2846). The rules are in bond-rules.mjs.
  *
  *   A thrall's attack on the regnant (WoDX Combat wodxAttackRolled), harm to someone (wodxDamageApplied) and a death
  *   (a death date set, or the sheet deleted) call for cards to whoever a bond ties to them: the thrall, the wraith whose

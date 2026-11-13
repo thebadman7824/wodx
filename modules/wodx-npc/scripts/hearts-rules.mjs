@@ -1,11 +1,11 @@
 /**
- * WoDX NPC 0.58.0: courtship, marriage and the law, children, households and loved ones as a weak spot (B2817-B2825).
+ * WoDX NPC 0.58.0: courtship, marriage and the law, children, households and loved ones as a weak spot (B2854-B2862).
  * Pure: no Foundry. Every table covers 1197 to the far future and every way of life in Chronicle's world-rules.
  *
  *   warmth     a romance tie's track, kept on the one who feels it: flags["wodx-npc"].warmth {otherId: {value, log}}
  *   marriages  flags["wodx-npc"].marriages [{id, with: [{id, name}], at, region, year, rite, record, money, ended}]
  *   household  flags["wodx-npc"].household [{id, name, role}]
- * The numbers are house rules (B2818, B2822, B2824); the laws are dated readings of history (B2820).
+ * The numbers are house rules (B2855, B2859, B2861); the laws are dated readings of history (B2857).
  */
 
 /* ------------------------------------------------------------------ */

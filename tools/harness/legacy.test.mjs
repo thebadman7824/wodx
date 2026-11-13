@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX NPC 0.60.0, Sheets 0.18.1: past lives, lines of teaching, the web, scene ideas and who sees what (B2835-B2839).
+// WoDX NPC 0.60.0, Sheets 0.18.1: past lives, lines of teaching, the web, scene ideas and who sees what (B2872-B2876).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));

@@ -1,6 +1,6 @@
 /**
  * WoDX NPC 0.57.0: trust, betrayal, boons in every line, blackmail and hidden loyalties, the Foundry side
- * (B2810-B2816). The rules are in trust-rules.mjs.
+ * (B2847-B2853). The rules are in trust-rules.mjs.
  *
  *   trust     on the one who trusts, flags["wodx-npc"].trust; a Ledger boon paid or refused moves it for the one
  *             it was owed to (Storyteller's wodxBoonSettled); answering blackmail and betrayals move it too

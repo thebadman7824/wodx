@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX NPC 0.57.0, Sheets 0.18.1: trust, betrayal, boons in every line, blackmail and hidden loyalties (B2810-B2816).
+// WoDX NPC 0.57.0, Sheets 0.18.1: trust, betrayal, boons in every line, blackmail and hidden loyalties (B2847-B2853).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));

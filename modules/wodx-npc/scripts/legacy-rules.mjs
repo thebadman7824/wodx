@@ -1,10 +1,10 @@
 /**
  * WoDX NPC 0.60.0: past lives, lines of teaching, the web of every tie, scene ideas from ties and who sees what
- * (B2835-B2839). Pure: no Foundry.
+ * (B2872-B2876). Pure: no Foundry.
  *
  *   pastLives  flags["wodx-npc"].pastLives [{id, name, year, region, ties: [{id, name, kind, note}], recalled: {<actor id>: at}}]
  *   taught     flags["wodx-npc"].taught {<student id>: [{what, dots, from, to, owed}]} on the teacher
- * The rolls and numbers are house rules (B2836, B2838).
+ * The rolls and numbers are house rules (B2873, B2875).
  */
 
 /* ------------------------------------------------------------------ */

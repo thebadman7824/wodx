@@ -1,6 +1,6 @@
 /**
  * WoDX NPC 0.58.0: courtship, marriage and the law, children, households and loved ones as a weak spot, the Foundry
- * side (B2817-B2825). The rules are in hearts-rules.mjs.
+ * side (B2854-B2862). The rules are in hearts-rules.mjs.
  *
  *   court     api.hearts.court(lover, loved, event, {successes, botch}): warmth on the lover's sheet, shaped by the
  *             loved one's Nature and the supernatural truth (a Kindred on a Path, a Garou's Rage, the Mists)

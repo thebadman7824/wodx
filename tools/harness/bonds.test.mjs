@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX NPC 0.56.0, Actions 3.59.0, Sheets 0.18.0: bonds from the books as relationships (B2776-B2782).
+// WoDX NPC 0.56.0, Actions 3.59.0, Sheets 0.18.0: bonds from the books as relationships (B2840-B2846).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));

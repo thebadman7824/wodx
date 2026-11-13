@@ -1,12 +1,12 @@
 /**
  * WoDX NPC 0.59.0: standing by community with the news of a deed travelling at the era's speed, social rank by way of
- * life and century, and feuds that pass to heirs (B2826-B2834). Pure: no Foundry.
+ * life and century, and feuds that pass to heirs (B2863-B2871). Pure: no Foundry.
  *
  *   deeds   flags["wodx-npc"].deeds [{id, community, delta, text, region, at}]: standing is worked out from them
  *           when asked, so a deed done in Brno counts in Prague only once the news has had time to get there
  *   rank    flags["wodx-npc"].rank {ladder, step, why}
  *   feuds   the world setting "feuds" [{id, a: {kind, key, name}, b: {...}, cause, since, heat, ended, how}]
- * The numbers are house rules; the ladders and feud laws are dated readings of history (B2829, B2832).
+ * The numbers are house rules; the ladders and feud laws are dated readings of history (B2866, B2869).
  */
 
 /* ------------------------------------------------------------------ */

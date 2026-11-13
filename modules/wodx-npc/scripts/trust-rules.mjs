@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.57.0: trust, betrayal, boons in every line, blackmail and hidden loyalties (B2810-B2816). Pure: no Foundry.
+ * WoDX NPC 0.57.0: trust, betrayal, boons in every line, blackmail and hidden loyalties (B2847-B2853). Pure: no Foundry.
  *
  * Trust is kept one way, on the one who trusts: flags["wodx-npc"].trust {otherId: {value, log: [{at, why, delta}]}},
  * from -5 (would not turn their back) to +5 (would trust them with their life). It sits beside attitude: attitude is
- * how warmly someone regards a person, trust is how far they would rely on them. The numbers are house rules (B2811).
+ * how warmly someone regards a person, trust is how far they would rely on them. The numbers are house rules (B2848).
  */
 
 export const TRUST_MIN = -5, TRUST_MAX = 5;

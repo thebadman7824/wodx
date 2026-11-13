@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.56.0: bonds from the books as relationships, with what each one does (B2776-B2782). Pure: no Foundry.
+ * WoDX NPC 0.56.0: bonds from the books as relationships, with what each one does (B2840-B2846). Pure: no Foundry.
  *
  * Every game line has bonds of its own that its rules already know: the blood bond and the Vinculum, a ghoul's need,
  * a Garou pack and its totem, Kinfolk, a mage's cabal and familiar, a changeling's oaths and Dreamers, a wraith's
@@ -58,7 +58,7 @@ export const RULE_OF = {
   wuOf: "A Kuei-jin wu: its members act as one at court and in feuds (Kindred of the East)."
 };
 
-/** The Sabbat Vinculum as a bond step: 8 to 10 is a full bond, 5 to 7 a second drink, less nothing (B2777, house reading of V20 p. 297). */
+/** The Sabbat Vinculum as a bond step: 8 to 10 is a full bond, 5 to 7 a second drink, less nothing (B2841, house reading of V20 p. 297). */
 export const vinculumStep = rating => (Number(rating) >= 8 ? 3 : Number(rating) >= 5 ? 2 : 0);
 
 /**
