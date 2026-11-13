@@ -12,7 +12,13 @@
  *   7. a due birth comes by itself when the clock is past the due time (safe: no roll)
  *   8. a player's ask goes to the approval queue, and approving it starts the pregnancy
  *   9. a Garou with a mortal: the Storyteller's card has the story hook
- *  10. clean up
+ *  10. a newborn is a child sheet: the mark, the caps
+ *  11. growing up from 6 to 14 by an approved plan: caps, a Nature, no scene about love
+ *  12. at 18 the child is grown and the mark comes off
+ *  13. with the setting off, a player cannot be given a child's sheet
+ *  14. a proposal to a Devoted NPC: yes, the banns on the clock, the wedding card, and approving it marries them
+ *  15. a proposal to a minor is refused
+ *  16. clean up
  * Result: Data/wodx-gate/gatefamily-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -40,7 +46,7 @@ export async function run() {
   const kidsOf = a => game.actors.filter(x => (x.flags?.["wodx-npc"]?.child?.parents ?? []).includes(a.id));
   const births = [];
   const hookId = Hooks.on("wodxBirth", p => births.push(p.outcome));
-  let ana, bo, teen, vamp, wolf, cara;
+  let ana, bo, teen, vamp, wolf, cara, baby = null;
   try {
     await step("1. api", async () => {
       ok("1. the family API is there", typeof fam()?.conceive === "function" && typeof fam()?.birth === "function" && typeof fam()?.rules?.birthDifficulty === "function");
@@ -77,7 +83,7 @@ export async function run() {
     });
     await step("5. birth", async () => {
       const r = await fam().birth(ana, {outcome: "well"});
-      if ( r?.child ) made.push(r.child);
+      if ( r?.child ) { made.push(r.child); baby = r.child; }
       const ties = (r?.child?.flags?.["wodx-sheets"]?.ties ?? []).filter(t => t.role === "parent").length;
       const rest = game.actors.get(ana.id)?.flags?.["wodx-npc"]?.lyingIn;
       ok("5. a birth that goes well: a child with parent ties, rest after the birth, the pregnancy gone, the hook called", r?.ok && !!r.child && ties === 2 && !!rest && !exp(ana) && births.includes("well"),
@@ -120,20 +126,73 @@ export async function run() {
       ok("9. a Garou with a mortal: the Storyteller's card has the story hook", r?.ok && /Rage/.test(card?.content ?? ""), {why: r?.why, card: !!card});
       await fam().end(cara);
     });
+    const year = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
+    await step("10. child sheet", async () => {
+      const b = game.actors.get(baby?.id);
+      const attrs = Object.values(b?.system?.attributes ?? {}).map(x => Number(x?.value) || 0);
+      ok("10. a newborn is a child sheet with the mark and Attributes of 1", !!b?.flags?.["wodx-npc"]?.childSheet && b?.flags?.["wodx-chronicle"]?.minor === true && attrs.length > 0 && attrs.every(v => v <= 1) && chron().age.minor(b),
+        {sheet: !!b?.flags?.["wodx-npc"]?.childSheet, mark: b?.flags?.["wodx-chronicle"]?.minor, attrs});
+    });
+    await step("11. grow", async () => {
+      const b = game.actors.get(baby?.id);
+      await b.setFlag("wodx-creation", "chronology", {...(b.flags["wodx-creation"]?.chronology ?? {}), bornYear: year - 6});
+      const plan = await fam().growthPlan(b, year + 8);
+      await fam().grow(plan);
+      const c = game.actors.get(b.id);
+      const attrs = Object.values(c.system?.attributes ?? {}).map(x => Number(x?.value) || 0);
+      const abs = Object.values(c.system?.abilities ?? {}).filter(x => x && typeof x === "object").map(x => Number(x.value) || 0);
+      const love = /love|court|marri|wed|betroth/i.test(JSON.stringify(plan?.scene ?? {}));
+      ok("11. growing up from 6 to 14 by an approved plan: caps held, a Nature, no scene about love", plan?.to === 14 && attrs.every(v => v <= 3) && abs.every(v => v <= 3) && !!c.system?.nature && !love && !plan.grown,
+        {to: plan?.to, bands: plan?.bands, scene: plan?.scene?.title, school: plan?.school?.label, nature: c.system?.nature, maxAttr: Math.max(...attrs), maxAb: Math.max(0, ...abs)});
+    });
+    await step("12. grown", async () => {
+      const b = game.actors.get(baby?.id);
+      const plan = await fam().growthPlan(b, year + 12);
+      await fam().grow(plan);
+      const c = game.actors.get(b.id);
+      ok("12. at 18 the child is grown and the mark comes off", plan?.grown === true && c.flags?.["wodx-chronicle"]?.minor === undefined && !!c.flags?.["wodx-npc"]?.childSheet?.grown, {to: plan?.to, mark: c.flags?.["wodx-chronicle"]?.minor});
+    });
+    await step("13. player guard", async () => {
+      const player = game.users.find(u => !u.isGM);
+      const on = game.settings.get("wodx-npc", "childCharacters");
+      if ( !player || on ) { ok("13. with the setting off, a player cannot be given a child's sheet", true, {skipped: !player ? "no player account" : "the setting is on"}); return; }
+      await teen.update({[`ownership.${player.id}`]: 3});
+      const lvl = game.actors.get(teen.id).ownership?.[player.id];
+      ok("13. with the setting off, a player cannot be given a child's sheet", lvl !== 3, {player: player.name, level: lvl ?? null});
+    });
+    await step("14. proposal", async () => {
+      await bo.setFlag("wodx-npc", "warmth", {[ana.id]: {value: 3}});
+      const r = await fam().propose(ana, bo);
+      const rec = game.actors.get(ana.id).flags?.["wodx-npc"]?.proposal;
+      if ( rec?.stage === "waiting" ) await ana.setFlag("wodx-npc", "proposal", {...rec, due: game.time.worldTime - 1});
+      await fam().checkWeddings();
+      await sleep(400);
+      const q = game.settings.get("wodx-chronicle", "approvals") ?? {pending: []};
+      const entry = q.pending.find(p => String(p.key ?? "").startsWith(`wodx-npc.family-wedding.${rec?.id}`));
+      if ( entry ) await chron().approvals.decide(entry.id, "approve");
+      await sleep(400);
+      const wed = (game.actors.get(ana.id).flags?.["wodx-npc"]?.marriages ?? []).some(m => m.with?.id === bo.id && !m.ended);
+      ok("14. a proposal to a Devoted NPC: yes, the waiting on the clock, the wedding card, and approving it marries them", r?.answer === "yes" && rec?.stage === "waiting" && !!entry && wed && !game.actors.get(ana.id).flags?.["wodx-npc"]?.proposal,
+        {answer: r?.answer, wait: rec?.wait, card: !!entry, married: wed});
+    });
+    await step("15. minor", async () => {
+      const r = await fam().propose(bo, teen);
+      ok("15. a proposal to a minor is refused", r?.ok === false && !game.actors.get(bo.id).flags?.["wodx-npc"]?.proposal, {why: r?.why});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {
-    await step("10. clean up", async () => {
+    await step("16. clean up", async () => {
       Hooks.off("wodxBirth", hookId);
       for ( const p of [ana, bo, cara, wolf] ) if ( p ) for ( const k of kidsOf(p) ) if ( !made.includes(k) ) made.push(k);
       for ( const x of made ) await x.delete().catch(() => null);
       await sleep(500);
       for ( const m of game.messages.filter(m => !msgs.has(m.id)) ) await m.delete().catch(() => null);
       const q = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals") ?? {pending: [], history: []});
-      q.pending = (q.pending ?? []).filter(p => !String(p.key ?? "").startsWith("wodx-npc.family-child."));
-      q.history = (q.history ?? []).filter(p => !String(p.key ?? "").startsWith("wodx-npc.family-child.") || !made.some(x => String(p.key).includes(x.id)));
+      q.pending = (q.pending ?? []).filter(p => !/^wodx-npc\.family-(child|wedding)\./.test(String(p.key ?? "")));
+      q.history = (q.history ?? []).filter(p => !/^wodx-npc\.family-(child|wedding)\./.test(String(p.key ?? "")) || !made.some(x => JSON.stringify(p.data ?? {}).includes(x.id) || String(p.key).includes(x.id)));
       await game.settings.set("wodx-chronicle", "approvals", q);
-      ok("10. actors, cards and approval entries gone, clock untouched", game.time.worldTime === t0 && !made.some(x => game.actors.get(x.id)));
+      ok("16. actors, cards and approval entries gone, clock untouched", game.time.worldTime === t0 && !made.some(x => game.actors.get(x.id)));
     });
   }
   return save(R, "gatefamily-result.json");
