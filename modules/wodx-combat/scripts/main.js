@@ -873,7 +873,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const msg = await postCard(attackerTok, attacker, html, rolls, data);
     // other modules may show the blow (sprite tokens play the attack): hit or miss, with the weapon's kind
     Hooks.callAll("wodxAttackRolled", attacker, { target: target ?? null, attackerToken: attackerTok?.document?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
-        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, messageId: msg?.id ?? null });
+        weapon: w?.name ?? "", ranged: !!w?.ranged, brawl: isBrawl(w), bite: /^bite\b/i.test(w?.name ?? ""), hit: !!hit, botch: !!atk.botch, defense: target ? (fd.defense ?? "none") : "none", messageId: msg?.id ?? null });
 
     // ---- Apply
     if (setting("autoApply")) {

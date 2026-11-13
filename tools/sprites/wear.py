@@ -9,7 +9,7 @@ RP={k:ramp(v) for k,v in C.items()}
 def col(c): return c if isinstance(c,tuple) else C[c] if c in C else H(c)
 def rc(c): return ramp(col(c))
 def fig(**k):
-    d=rig.base(top=('#7a766c','shirt'),legs=('#4a4640','trousers'),feet=('#3a2e26','shoe'),under=None,hose=None,hat=None,face=None,neck=None,hands=None,belt=None,over=None,held=None,off=None,tex=None,hairover=None)
+    d=rig.base(top=('#7a766c','shirt'),legs=('#4a4640','trousers'),feet=('#3a2e26','shoe'),under=None,hose=None,hat=None,face=None,neck=None,hands=None,belt=None,over=None,held=None,off=None,tex=None,hairover=None,marks=None)
     d.update(k)
     if isinstance(d['feet'],str): d['feet']=(d['feet'],'shoe')
     return d
@@ -135,6 +135,61 @@ def face(cv,d,cx,cy,view):
     elif k=='visor':
         for y in (-1,0,1,2):
             for x in (range(1,6) if s else range(-3,4)): cv.px(cx+x,cy+y,cc if (x-y)!=2 else (120,150,165))
+# ---- marks of the fae and of monsters on a person's figure: ears, horns, tusks, a tail, wings (monster.py sets them) --------------------
+def marks(cv,d,cx,cy,dy,view,when):
+    """d['marks']: ears ('point'|'long'|'beast', colour), horns (colour, 'nub'|'goat'|'ram'|'antler'), tail (colour, 'thin'|'brush'|'devil'),
+    wings (colour, 'bat'|'fly'), tusks, teeth, nose (colour), brow (colour). 'pre' is drawn behind the body, 'post' over the head."""
+    m=d.get('marks')
+    if not m: return
+    s=view=='s'; b=view=='b'; px=cv.px; sk=ramp(d['skin'])
+    behind=(when=='pre')!=b if not s else when=='pre'      # tail and wings: behind the body from the front, over it from the back
+    if m.get('wings') and behind:
+        c,k=m['wings']; wp=ramp(col(c))
+        for sg in ((-1,) if s else (-1,1)):
+            rt=(44,43+dy) if s else (cx+sg*3,43+dy)
+            if k=='bat':
+                el=(36,31+dy) if s else (cx+sg*11,33+dy); tip=(28,38+dy) if s else (cx+sg*19,38+dy)
+                for q in (((30,48+dy),(34,52+dy)) if s else ((cx+sg*17,48+dy),(cx+sg*12,52+dy))): cv.capsule(el,q,2.2,1.6,ramp=[wp[0],wp[0],wp[1],wp[2],wp[3]],dark=1,g='wm%d'%sg)
+                cv.capsule(rt,el,1.4,1.1,ramp=wp,g='w%d'%sg); cv.capsule(el,tip,1.1,.6,ramp=wp,g='w%d'%sg)
+            else:
+                for (ax,ay,r0) in ((-9,-13,2.6),(-11,-2,2.2)):
+                    q=(rt[0]+ax,rt[1]+ay) if s else (rt[0]+sg*(-ax+2),rt[1]+ay); cv.capsule(rt,q,1.0,r0,ramp=wp,g='w%d%d'%(sg,ay))
+    if m.get('tail') and behind:
+        c,k=m['tail']; tp=ramp(col(c)); r0,r1=(2.4,1.6) if k=='brush' else (1.0,.7)
+        a=(43,55+dy) if s else (cx,56+dy); mid=(37,60+dy) if s else (cx+5,63+dy); end=(35,70+dy) if s else (cx+8,72+dy)
+        if k=='brush': end=(33,52+dy) if s else (cx+9,58+dy)
+        cv.capsule(a,mid,r0,r0,ramp=tp,g='tail'); cv.capsule(mid,end,r0,r1,ramp=tp,g='tail')
+        if k=='devil': px(end[0]-1,end[1]+1,tp[1]); px(end[0]+1,end[1]+1,tp[1]); px(end[0],end[1]+2,tp[1])
+    if when=='pre': return
+    if m.get('ears'):
+        k,c=m['ears']; ep=ramp(col(c)) if c else sk
+        if s:
+            if k=='point': px(cx-1,cy-1,ep[2]); px(cx-2,cy-2,ep[2]); px(cx-3,cy-3,ep[3])
+            elif k=='long': cv.capsule((cx-1,cy-1),(cx-6,cy-4),1.0,.5,ramp=ep,g='ear')
+            else: cv.capsule((cx-1,cy-4),(cx-2,cy-8.5),1.5,.6,ramp=ep,g='ear')
+        else:
+            for sg in (-1,1):
+                if k=='point': px(cx+sg*5,cy-1,ep[2]); px(cx+sg*5,cy-2,ep[2]); px(cx+sg*6,cy-3,ep[3])
+                elif k=='long': cv.capsule((cx+sg*4.5,cy-.5),(cx+sg*8.5,cy-3),1.0,.5,ramp=ep,g='ear%d'%sg)
+                else: cv.capsule((cx+sg*3,cy-4.5),(cx+sg*4,cy-9),1.5,.6,ramp=ep,g='ear%d'%sg)
+    if m.get('horns'):
+        c,k=m['horns']; hn=ramp(col(c))
+        for sg in ((1,) if s else (-1,1)):
+            x0=cx+(2 if s else sg*2.5); y0=cy-4.2
+            if k=='nub': px(x0,y0-.5,hn[3]); px(x0,y0-1.5,hn[2])
+            elif k=='goat': cv.capsule((x0,y0),(x0+(-2 if s else sg*1.5),y0-4.5),.9,.5,ramp=hn,g='h%d'%sg)
+            elif k=='ram': cv.capsule((x0,y0),(x0+(-3 if s else sg*3.5),y0-2),1.2,1.1,ramp=hn,g='h%d'%sg); cv.capsule((x0+(-3 if s else sg*3.5),y0-2),(x0+(-4 if s else sg*4.5),y0+2),1.1,.7,ramp=hn,g='h%d'%sg)
+            elif k=='antler':
+                for (a0,b0,a1,b1) in ((0,0,1.5,-6),(1.5,-6,1,-10),(1,-3.5,4,-6),(1.5,-6,4.5,-9)):
+                    f=(lambda v: -v) if s else (lambda v: sg*v); cv.capsule((x0+f(a0),y0+b0),(x0+f(a1),y0+b1),.7,.5,ramp=hn,g='h%d'%sg)
+    if b: return
+    if m.get('brow'):
+        for x in ((2,3) if s else (-1,0,1)): px(cx+x,cy-2.6,col(m['brow']))
+    if m.get('nose'): px(cx+(5 if s else 0),cy+1.5,col(m['nose']))
+    if m.get('teeth'):
+        for x in ((3,4,5) if s else (-2,-1,0,1,2)): px(cx+x,cy+3,K.TOOTH)
+    if m.get('tusks'):
+        for x in ((4,) if s else (-2,2)): px(cx+x,cy+3,K.TOOTH); px(cx+x,cy+2,K.TOOTH)
 # ---- things held in the hand: drawn along an axis from the hand --------------------------------------------------------------
 def held(cv,hand,u,spec,g):
     hx,hy=hand; ux,uy=u; vx,vy=-uy,ux; P=lambda t,o=0:(hx+ux*t+vx*o,hy+uy*t+vy*o)
@@ -322,7 +377,7 @@ def front(d,f,back=False,act=None):
     cv=K.Cv(); ph=(f if not act else (0,0,0,1,1,0)[act[1]])/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; view='b' if back else 'f'
     dy=round(abs(math.sin(ph))*-0.8); ov=d['over']
-    stowed(cv,d,view,dy,'pre')
+    stowed(cv,d,view,dy,'pre'); marks(cv,d,cx,0,dy,view,'pre')
     if ov and ov[0]=='cloak' and not back: hem(cv,cx,42+dy,ov[2] if len(ov)>2 else 76,sw+1.6,sw+3.0,rc(ov[1]),'cloakb',1)
     if d['off'] and back: shield(cv,d,cx-sw-2.5,53+dy,'b')
     hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
@@ -413,7 +468,7 @@ def front(d,f,back=False,act=None):
                     if dx*dx+dyy*dyy<=5.4**2 and (dyy<-1.6 or (abs(dx)>3.3 and dyy<(4 if st=='long' else 1.5))): px(x,y,hr[3 if (dx<0 and dyy<-3) else 2 if dyy<0 else 1],pid)
     if st=='bun' and not hood: cv.capsule((cx,cy-(5.5 if not back else 2)),(cx,cy-(5.5 if not back else 2)),2.3,2.3,ramp=hr)
     if st=='long' and back and not hood: cv.capsule((cx,cy+2),(cx,42+dy),4.6,4.2,ramp=hr)
-    hoodpost(cv,d,cx,cy,view,pid); hat(cv,d,cx,cy,view,pid); face(cv,d,cx,cy,view)
+    hoodpost(cv,d,cx,cy,view,pid); hat(cv,d,cx,cy,view,pid); face(cv,d,cx,cy,view); marks(cv,d,cx,cy,dy,view,'post')
     stowed(cv,d,view,dy,'post')
     if d['off'] and not back: shield(cv,d,cx+sw+2.5,53+dy,'f')
     if d['held']:
@@ -507,6 +562,7 @@ def side(d,f,act=None):
     def leg(pts,dark,g):
         hip,knee,ank=pts; dk=dark+(1 if longk>=77 else 0)
         cv.capsule(hip,knee,3.3*t*w,2.6*t*w,ramp=th,dark=dk,g=g); cv.capsule(knee,ank,2.5*t*w,(1.9 if lk!='wide' else 2.3)*t*(w if lk=='wide' else 1),ramp=shk,dark=dk,g=g); foot(cv,d,ank,1,g,True,dk)
+    marks(cv,d,47,0,dy,'s','pre')
     if d['off']: shield(cv,d,53,52+dy,'s')
     arm(k[1]['arm'],1,'A1'); leg(k[1]['leg'],1,'L1'); leg(k[0]['leg'],0,'L0')
     lr=rc(d['legs'][0])
@@ -547,7 +603,7 @@ def side(d,f,act=None):
                 dx=x-cx; dyy=y-(cy-.6)
                 if dx*dx+dyy*dyy<=5.5**2 and (dyy<-1.2 or dx<-1.4-(dyy*.25)) and not (dx>2.2 and dyy>-2.6): px(x,y,hr[3 if (-dx*.5-dyy*.8)>2 else 2 if dyy<1 else 1],pid)
     if st=='bun' and not hood: cv.capsule((cx-5,cy-3),(cx-5.5,cy-3),2.2,2.2,ramp=hr)
-    hoodpost(cv,d,cx,cy,'s',pid); hat(cv,d,cx,cy,'s',pid); face(cv,d,cx,cy,'s')
+    hoodpost(cv,d,cx,cy,'s',pid); hat(cv,d,cx,cy,'s',pid); face(cv,d,cx,cy,'s'); marks(cv,d,cx,cy,dy,'s','post')
     if act:
         A=ACTS[act[0]]; i=act[1]; sh=(47,40.5+dy); el=pol(sh,R(A['ua'][i]),9.5); wr=pol(el,R(A['fa'][i]),8.5)
         if d['held']:

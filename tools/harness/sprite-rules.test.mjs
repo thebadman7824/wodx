@@ -119,7 +119,7 @@ test("a power's look comes from what it is, then its kind, then the character's 
 test("a character's own sprite: the roster entry, the manifest learned, the paths and what is offered", () => {
   const e = SR.rosterOf({id: "abc123", name: "Sir Test", type: "Vampire", skin: "C8A080", hair: "nope",
     items: [{name: "Broadsword", type: "Melee Weapon", worn: true}, {name: "Class Three", type: "Armor", worn: true}, {name: "Cloak", type: "Item", worn: false}]});
-  assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true, death: "ash"});
+  assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", line: "Vampire", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true, death: "ash"});
   assert.deepEqual(SR.rosterOf({id: "w1", name: "Wolf", type: "Creature"}), {id: "w1", name: "Wolf", kind: "animal"});
   assert.equal(SR.rosterOf({id: "m", name: "M", type: "Mortal"}).powers, false);
   const n = SR.learn("worlds/t/wodx-sprites", {sprites: {abc123: {name: "Sir Test", key: "0123abcd", acts: ["claw", "swing", "dance"]}, "bad/../id": {name: "x"}, w1: {name: "Wolf", acts: ["bite"]}}});
@@ -153,7 +153,8 @@ test("reactions, deaths and ways of going (B2588)", async () => {
     assert.ok(!SR.REACTS.includes(SR.moveFor(name, {weapon: "Club"})));
   }
   assert.ok(SR.HOLD.every(m => SR.REACTS.includes(m) || SR.STAY.includes(m)));
-  assert.equal(SR.gaitFor("lady-1888", {action: "crawl"}), "sneak");
+  assert.equal(SR.gaitFor("lady-1888", {action: "crawl"}), "crawl");
+  assert.equal(SR.gaitFor(SR.ownName("a0"), {action: "crawl"}), null);
   assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 9}), "run");
   assert.equal(SR.gaitFor("lady-1888", {action: "walk", squares: 3}), null);
   assert.equal(SR.gaitFor("lady-1888", {action: "fly", squares: 9}), "fly");
@@ -201,4 +202,25 @@ test("poses and more ways of going (B2610, B2611)", async () => {
   assert.equal(SR.gaitFor("own-abc", {action: "swim"}), "swim");
   assert.equal(SR.gaitFor("own-abc", {action: "fly"}), null);
   SR.learn("worlds/x/wodx-sprites", {sprites: {}});
+});
+
+test("defences, work at a lock, jumping and crawling (B2615, B2616)", () => {
+  assert.equal(SR.defenceFor("townsman-1888", "parry"), "parry");
+  assert.equal(SR.defenceFor("townsman-1888", "block"), "block");
+  assert.equal(SR.defenceFor("townsman-1888", "none"), "dodge");
+  assert.equal(SR.defenceFor("nobody", "parry"), null);
+  assert.equal(SR.workFor("townsman-1888", "pick"), "pick");
+  assert.equal(SR.workFor("townsman-1888", "listen"), "search");
+  assert.ok(!SR.isOwnMove(SR.workFor("townsman-1888", "smash")), "force is a blow");
+  assert.equal(SR.workFor("townsman-1888", "open"), null);
+  assert.equal(SR.gaitFor("townsman-1888", {action: "jump"}), "jump");
+  assert.equal(SR.gaitFor("townsman-1888", {action: "crawl"}), "crawl");
+  assert.ok(SR.isOwnMove("block") && SR.isOwnMove("pick") && !SR.HOLD.includes("pick"));
+});
+
+test("the roster carries line and kith (B2614)", () => {
+  const r = SR.rosterOf({id: "a", name: "B", type: "Changeling", kith: "wod.bio.changeling.boggans"});
+  assert.equal(r.line, "Changeling"); assert.equal(r.kith, "boggans");
+  assert.equal(SR.rosterOf({id: "a", name: "B", type: "Changeling", kith: "custom"}).kith, undefined);
+  assert.equal(SR.rosterOf({id: "a", name: "Dragon", type: "Creature"}).line, undefined);
 });

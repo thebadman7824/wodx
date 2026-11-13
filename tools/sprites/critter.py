@@ -6,7 +6,7 @@ S,SH=K.S,K.SH
 def flyer(**k):
     d=dict(plan='flyer',s=1.0,col=(60,56,60),belly=None,wing=None,span=9.0,neck=0,beak=(200,160,60),beakl=2,alt=22,ears=False,tail=4.0,eye=(20,16,16),membrane=False); d.update(k); return d
 def crawler(**k):
-    d=dict(plan='snake',col=(84,100,60),belly=(190,180,120),L=30,r=1.6,band=None,eye=(20,16,16)); d.update(k); return d
+    d=dict(plan='snake',col=(84,100,60),belly=(190,180,120),L=30,r=1.6,band=None,eye=(20,16,16),comb=None); d.update(k); return d
 KINDS=dict(
  bird_small=flyer(s=.55,col=(120,96,72),belly=(200,180,150),alt=16,span=7),
  bird_large=flyer(s=1.0,col=(110,84,60),belly=(206,190,160),span=11,beak=(210,180,70),alt=24),
@@ -19,6 +19,11 @@ KINDS=dict(
  snake_poisonous=crawler(col=(96,104,60),band=(40,40,30),L=24,r=1.3),
  snake_constrictor=crawler(col=(120,100,60),band=(60,44,30),L=40,r=2.3),
  spider=dict(plan='spider',col=(40,34,34),r=2.2),
+ # creatures of legend (monster.py names them)
+ razor_bat=flyer(s=.8,col=(96,96,104),wing=(120,120,128),span=11,beak=None,ears=True,tail=0,alt=24,membrane=True,eye=(220,60,40)),
+ basilisk=crawler(col=(84,110,60),band=(46,66,40),L=16,r=1.3,comb=(200,40,36),eye=(250,230,90)),
+ spider_giant=dict(plan='spider',col=(104,84,66),r=2.2,big=2.6),
+ spider_squid=dict(plan='spider',col=(96,72,128),r=2.2,big=2.4,arms=(140,110,170)),
 )
 def _flyer(a,f,view):
     cv=K.Cv(); ph=f/8*2*math.pi; s=a['s']; rp=ramp(a['col']); bp=ramp(a['belly']) if a['belly'] else rp; wp=ramp(a['wing']) if a['wing'] else rp
@@ -71,6 +76,14 @@ def _snake(a,f,view):
                 if 0<=q[1]<SH and 0<=q[0]<S and cv.c[q[1],q[0],3] and True: 
                     if abs(d)<rr: cv.c[q[1],q[0],:3]=a['band']
     hx,hy=pts[-1]
+    if a['comb']:   # a cock's head on the serpent: a red comb, a wattle and a yellow beak
+        Y=lambda y:int(round(y))+K.YO; X=lambda x:int(round(x)); cb=(*a['comb'],255); bk=(226,180,60,255)
+        if view=='s':
+            for (dx,dy) in ((-1,-3),(0,-3),(1,-3),(0,-4),(-1,-2)): cv.c[Y(hy+dy),X(hx+dx)]=cb
+            cv.c[Y(hy),X(hx+3)]=bk; cv.c[Y(hy),X(hx+2)]=bk; cv.c[Y(hy+2),X(hx+1)]=cb
+        else:
+            for (dx,dy) in ((0,-3),(0,-4),(-1,-3),(1,-3)): cv.c[Y(hy+dy+(0 if view=='f' else 1)),X(hx+dx)]=cb
+            if view=='f': cv.c[Y(hy+1),X(hx)]=bk; cv.c[Y(hy+2),X(hx)]=cb
     if view=='s': cv.c[int(round(hy-.5))+K.YO,int(round(hx)),:3]=a['eye']
     elif view=='f':
         for sg in (-1,1): cv.c[int(round(hy-1))+K.YO,int(round(hx+sg*max(1,r*.6))),:3]=a['eye']
@@ -91,7 +104,17 @@ def _spider(a,f,view):
     cv.outline(); return cv.c
 def frame(a,f,view):
     if isinstance(a,str): a=KINDS[a]
-    return {'flyer':_flyer,'snake':_snake,'spider':_spider}[a['plan']](a,f,view)
+    im={'flyer':_flyer,'snake':_snake,'spider':_spider}[a['plan']](a,f,view)
+    if a.get('big'):
+        from PIL import Image
+        k=a['big']; w,h=round(S*k),round(SH*k); big=Image.new('RGBA',(S,SH),(0,0,0,0)); big.paste(Image.fromarray(im,'RGBA').resize((w,h),Image.NEAREST),(round(48-48*k),round(102-102*k))); im=np.array(big)
+        if a.get('arms'):   # the squid's arms: four that trail and curl behind the spider's body
+            ph=f/8*2*math.pi
+            for j in range(4):
+                for t in range(16):
+                    x=int(48+(j-1.5)*5+math.sin(ph+j+t*.4)*(1+t*.25)+(-t*.9 if view=='s' else 0)); y=int(86+K.YO-18+t*.6+(0 if view=='s' else (t*.5 if view=='b' else -t*1.2)))
+                    if 0<=x<S and 0<=y<SH and not im[y,x,3]: im[y,x]=(*a['arms'],255)
+    return im
 def sheet(a):
     sh=np.zeros((4*SH,8*S,4),np.uint8)
     for f in range(8):
