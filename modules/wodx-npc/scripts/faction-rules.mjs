@@ -793,7 +793,7 @@ export function normBreach(b = {}) {
 }
 
 /** Public places hear a rumour first: these kinds lead, in this order (WoDX reading). */
-const PUBLIC_FIRST = ["tavern", "market", "church", "street", "workplace", "gate", "castle", "home", "wilds", "caern", "haven", "other"];
+const PUBLIC_FIRST = ["tavern", "market", "church", "mosque", "synagogue", "temple", "street", "workplace", "gate", "castle", "home", "wilds", "caern", "haven", "other"];
 
 /**
  * One day of a rumour: it reaches as many new places as its severity (or perDay: the age's reach, from WoDX

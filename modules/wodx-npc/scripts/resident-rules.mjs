@@ -66,7 +66,7 @@ export function householdsOn(regions = []) {
 
 /** Trades that work in the house they live in (a cottage craft, a farm). Any building tagged as a workplace counts too. */
 const AT_HOME = /smith|potter|weaver|spinner|cobbler|shoemaker|dyer|tanner|cooper|turner|basket|wheelwright|butcher|baker|brewer|miller|tailor|seamstress|carpenter|joiner|chandler|glazier|saddler|farmer|cottager|alehouse|innkeeper|tavern|shopkeeper|spicer|merchant|grocer|apothecary|barber|priest|parson|rabbi|craft|mason/i;
-const WORK_KINDS = new Set(["workplace", "tavern", "market", "yard", "castle", "church", "hospital", "station", "docks"]);
+const WORK_KINDS = new Set(["workplace", "tavern", "market", "yard", "castle", "church", "mosque", "synagogue", "temple", "hospital", "station", "docks"]);
 
 /** The ready routine for a trade. Every key is one routine-rules (or mortal-rules) already has. */
 export function presetForTrade(trade = "") {
@@ -122,7 +122,7 @@ export function planRole(h, i, {year = 0} = {}) {
   else if ( r === "staff" ) { preset = presetForTrade(trade); delete roles.home; roles.work = region; }
   else if ( r === "clerk" && /priest|rabbi|parson/.test(trade.toLowerCase()) ) preset = "labourer";
   else preset = presetForTrade(role);
-  if ( preset === "priest" && kind === "church" ) roles.church = region;
+  if ( preset === "priest" && ["church", "mosque", "synagogue", "temple"].includes(kind) ) roles.church = region;
   if ( preset === "innkeeper" && kind === "tavern" ) roles.tavern = region;
   if ( !PRESETS[preset] ) preset = "labourer";
   const ageOk = PRESETS[preset];

@@ -86,12 +86,16 @@ export function build(ctx) {
     return time => {
       if ( memo.has(time) ) return memo.get(time);
       const d = cal.describeTime(time, lat);
-      let feast = null;
+      let feast = null, ramadan = false;
       if ( F?.faithDay ) {
-        try { const c = F.faithDay(faith, d, {extra}); feast = c?.feast ?? (faith === "theravada" ? c?.day ?? null : null); }
+        try {
+          const c = F.faithDay(faith, d, {extra}); feast = c?.feast ?? (faith === "theravada" ? c?.day ?? null : null);
+          // 0.50.0 (B2661): the month of the fast, from the counted Muslim year
+          if ( faith === "islamic" ) ramadan = F.islamicDate ? F.islamicDate(d.jdn)?.month === 9 : c?.season === "Ramadan";
+        }
         catch (e) { feast = R.feastOn(d, extra); }
       } else feast = R.feastOn(d, extra);
-      const out = {...d, feast};
+      const out = {...d, feast, ramadan};
       memo.set(time, out);
       return out;
     };
@@ -151,7 +155,8 @@ export function build(ctx) {
   const domitorOf = actor => { const id = actor.flags?.["wodx-creation"]?.lineage?.domitor?.id; return id ? game.actors.get(id) : null; };
   const placeCtx = (actor, places, computed) => {
     const dom = domitorOf(actor);
-    return {places, roles: routineOf(actor)?.roles ?? {}, seed: actor.id, domitorPlace: dom ? (computed?.get(dom.id)?.place ?? whereOf(dom)?.place) : null};
+    return {places, roles: routineOf(actor)?.roles ?? {}, seed: actor.id, domitorPlace: dom ? (computed?.get(dom.id)?.place ?? whereOf(dom)?.place) : null,
+      faith: keepOf(actor).faith};
   };
   /** Dead, in torpor or incapacitated: the routine stops and the Storyteller is told. */
   function downState(actor) {
@@ -1245,7 +1250,7 @@ export function build(ctx) {
   return (placesClass = PlacesApp);
   }
 
-  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
+  const ROLE_FOR_KIND = {home: "home", haven: "haven", gate: "post", church: "church", mosque: "church", synagogue: "church", temple: "church", workplace: "work", tavern: "work", castle: "court", market: "work", elysium: "court"};
   /** Give each place's named owner that place as home, haven, post, church or work. Asks first. */
   async function matchOwners() {
     const places = listPlaces().filter(p => p.owner);
@@ -1278,7 +1283,7 @@ export function build(ctx) {
     const r = routineOf(actor) ?? {}, tpl = profileFor(actor).template, places = listPlaces().sort((a, b) => a.name.localeCompare(b.name));
     const preset = r.preset ?? R.DEFAULT_PRESET[tpl] ?? "recluse";
     const year = yearNow(), age = r.age ?? "", keep = keepOf(actor, year);
-    const blocks = R.blocksOf({...r, preset}, tpl, year, keep);
+    const blocks = R.blocksOf({...r, preset}, tpl, year, keep, {prayers: false});
     const faiths = chron()?.church?.faiths?.FAITHS ?? {};
     const faithOpts = {"": `Where they live (now ${faiths[keepOf(actor, year, {own: false}).faith]?.label ?? "the Western church"})`,
       ...Object.fromEntries(Object.entries(faiths).map(([k, v]) => [k, v.label]))};
@@ -1301,8 +1306,9 @@ export function build(ctx) {
       <div class="wodx-field"><label>Routines and reactions</label><select name="mode" data-fixed>${opt({"": `As the scene or world says (${NR.MODES[modeOf(actor)].split(" (")[0]})`, ...NR.MODES}, r.mode ?? "")}</select></div>
       <div class="wodx-field"><label>Ready routine</label><select name="preset" data-fixed>${opt(Object.fromEntries(Object.entries(shown).map(([k, v]) => [k, v.label])), preset)}</select></div>
       <div class="wodx-field"><label>Keeps the holy days of</label><select name="faith" data-fixed>${opt(faithOpts, r.faith ?? "")}</select></div>
+      <div class="wodx-field"><label>Daily prayers (Islam)</label><select name="prayers" data-fixed>${opt(R.PRAYER_MODES, r.prayers ?? "")}</select></div>
       <div class="wodx-field"><label>Hours of the age</label><select name="age" data-fixed>${opt({"": `Follow the year (now ${R.AGES[R.ageOf(year)].label})`, ...Object.fromEntries(Object.entries(R.AGES).map(([k, v]) => [k, v.label]))}, age)}</select></div>
-      <p class="wodx-quiet">A ready routine changes its hours with the age (the factory day, the short Saturday, late bars) unless you fix an age here, or type hours of its own. Change the ready routine or the age and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
+      <p class="wodx-quiet">A ready routine changes its hours with the age (the factory day, the short Saturday, late bars) unless you fix an age here, or type hours of its own. A Muslim NPC on a ready routine also stops for the five prayers by the sun and keeps Ramadan's nights; those are laid over the hours below and not shown in them. With hours of their own, they pray only when Daily prayers is set to the five prayers. Change the ready routine or the age and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
       ${searchBox("select.wnpc-place-pick", "Search places…", "Search places")}
       <fieldset><legend>Their places</legend>${roles}</fieldset>
       ${searchBox("table.wnpc-blocks", "Search the hours…", "Search the hours")}
@@ -1316,7 +1322,7 @@ export function build(ctx) {
     });
     if ( !data || data === "cancel" ) return null;
     const out = {on: !!data.on, mode: data.mode || null, preset: data.preset || preset, age: R.AGES[data.age] ? data.age : null, roles: {}, blocks: null,
-      faith: faiths[data.faith] ? data.faith : null};
+      faith: faiths[data.faith] ? data.faith : null, prayers: R.PRAYER_MODES[data.prayers] && data.prayers ? data.prayers : null};
     for ( const k of Object.keys(R.ROLES) ) if ( data[`role-${k}`] ) out.roles[k] = data[`role-${k}`];
     if ( out.roles.domitor ) delete out.roles.domitor;
     if ( !data.reset && out.preset === preset && (out.age ?? "") === age && (out.faith ?? "") === (r.faith ?? "") ) {
@@ -1329,7 +1335,7 @@ export function build(ctx) {
       }
       const bad = R.checkBlocks(typed);
       if ( bad.length ) { ui.notifications.error(`The routine was not saved. ${bad.slice(0, 3).join("; ")}.`); return null; }
-      const same = JSON.stringify(typed.map(norm)) === JSON.stringify(R.blocksOf({preset, age: out.age}, tpl, year, keep).map(norm));
+      const same = JSON.stringify(typed.map(norm)) === JSON.stringify(R.blocksOf({preset, age: out.age}, tpl, year, keep, {prayers: false}).map(norm));
       out.blocks = same ? null : typed;
     }
     await actor.update({[`flags.${MOD}.routine`]: out});
