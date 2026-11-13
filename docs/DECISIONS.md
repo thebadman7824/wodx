@@ -169,7 +169,7 @@ Next free block: B3470
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
-| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3373) | Storyteller |
+| B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
@@ -5305,6 +5305,31 @@ Reverse: drop the button in releaseDream and readDream in omens.mjs.
 WoDX Storyteller. For a signal of weight 3, 1 in 5 a day and once a month at most for each signal, the Storyteller is offered a line of omen for everyone (crows on the roofs, dogs howling at nothing, an owl by day, a red glow before dawn). Approved, it is posted to chat.
 
 Reverse: drop the omen loop in dayRun.
+
+## B3374. Commissions are downtime projects, with artists of their own (2026-11-13)
+WoDX Storyteller. Last of the eight player world systems Ben picked. A new project kind, Commission a work of art (the patron's Charisma + Expression, difficulty 6, weekly, a night a week for full pace), names an artist from the Storyteller's list, a form of the year and the money spent (0 to 5 dots). The form sets the successes needed (3 for a photograph to 14 for an opera, a film or a game). Artists are kept in a world list with skill, fame, patron and state; the Storyteller names them, or takes them from the NPCs standing in the towns' scenes with Expression or Crafts of 2 or more.
+
+Reverse: drop the commission kind and the wodxTaskDone listener in patronage.mjs, or turn off "Patronage of the arts".
+
+## B3375. A work's quality (2026-11-13)
+WoDX Storyteller. The artist's skill, plus a dot for every two dots of money spent, plus one when the form is in fashion, less one for a Ravaged artist; 1 to 5 (poor, plain, good, fine, a masterpiece). The fashions are thirty movements by years and ways of life, rounded history in WoDX's own words. The work is made as an item on the patron with its form, quality, artist and year. A fine work or better raises the artist's fame by one. House figures.
+
+Reverse: edit qualityOf and MOVEMENTS in patronage-rules.mjs.
+
+## B3376. What a work does for its owner (2026-11-13)
+WoDX Storyteller. Shown at a gathering, a fine work adds a die to the owner's Status and social rolls there, a masterpiece in fashion two (noted on the item and in the log for the Storyteller to apply). A fine work is flagged for the Toreador's eye. A Toreador patron is asked (approval) whether it becomes a Muse (V20 pdf 75), through WoDX Chronicle's clan features. A fae patron who handles the artist kindly makes a Dreamer who gives Glamour (C20 pdf 150, Musing pdf 146); harshly, the artist is Ravaged (C20 pdf 260-263) and loses a dot of skill.
+
+Reverse: drop the status, Muse and fae lines in onCommissionDone.
+
+## B3377. Salons (2026-11-13)
+WoDX Storyteller. The Storyteller holds a gathering for a host from the Artists window: a court of song until 1400, an evening of music and verse until 1650, a salon until 1900, a gallery opening until 1990, a launch party after. A kind tale about the host starts before a crowd (B3350), and each living artist the host keeps rises a point of fame at 1 in 2.
+
+Reverse: drop holdSalon.
+
+## B3378. Artists' careers (2026-11-13)
+WoDX Storyteller. Each month an artist with a patron is kept; one without a patron for six months and with fame under 2 starves; a starving artist dies 1 in 60 a month or finds someone to pay at 1 in 10 a point of fame (at least 1). A patron who is gone keeps nobody. House figures.
+
+Reverse: edit monthArtist in patronage-rules.mjs.
 
 ## B3420. The rebuild reads a town's past by its yearly history (2026-11-13)
 WoDX Storyteller, town-rules.mjs townAtAges and generatorSize, api.upkeep.towns.atAges. For each age year: the last history line at or before it (the first line when the age comes earlier), the size for tools/mapgen/ddsettle.py --size (hamlets and villages village; town; city; a great city is a metropolis from 1850, else a city), and the scars since the age before. A town with no history gives nulls and the recipe's own size stands. The builder's ages step (rebuild phase 5) reads this when it is built.
