@@ -1,5 +1,5 @@
 /**
- * WoDX Otherworlds 0.21.0 (B2556 to B2559): a coarse map of each realm past the near worlds, the way the world map
+ * WoDX Otherworlds 0.21.0 (B2556 to B2559), 0.22.0 (B2630: the catalogue's ways in and out and its located dangers are places too): a coarse map of each realm past the near worlds, the way the world map
  * shows the Earth. Each of the 34 realms in realm-maps-rules.mjs gets one map of 200 by 110 squares, made from a
  * skeleton written for it (one of eleven plans, with the realm's own landmarks from the books placed on it) and
  * filled in from a seed. A realm's redraw rule says when the seed changes: never, after each Great Maelstrom, each
@@ -252,11 +252,23 @@ function spread(pace, from, {to = -1, cut = 0} = {}) {
 /*  One realm's map                                                    */
 /* ------------------------------------------------------------------ */
 
+/** Dangers of the catalogue that are a state of the whole realm or of a person, not a spot on a map. */
+const NOT_A_SPOT = ["a falling star", "a foreign wraith's suspicion", "a Castigator's notice", "a Nihil's pull", "a paradise that will not let go"];
+/** The further places of a realm, from its catalogue entry: landmarks the plan has no spot for (["place", name]), the ways in and out it names (["way", name]) and the dangers that sit in one spot (["danger", name]). */
+export function extrasOf(id) {
+  const realm = REALMS[id], out = [];
+  if ( !realm ) return out;
+  for ( const l of realm.landmarks ) out.push(["place", l]);   // build() leaves out those the plan has already placed
+  for ( const k of ["arrival", "back", "on"] ) if ( typeof realm.map?.[k] === "string" ) out.push(["way", realm.map[k]]);
+  for ( const h of realm.hazards ?? [] ) if ( /^an? /.test(h) && !NOT_A_SPOT.includes(h) ) out.push(["danger", h]);
+  return out;
+}
+
 const made = new Map();
 /**
  * The map of a realm for a year (and season, visit or name, by its redraw rule). Returns {id, label, line, world,
  * plan, kind, seed, turn, cells (H strings of W letters), pal {letter: colour}, legend [[colour, words]], places
- * [{i, x, y, name, label}], gate (the place a traveller is taken to know on arrival), paths, days, redraw, ours}, or null.
+ * [{i, x, y, kind (place, way or danger), name, label}], gate (the place a traveller is taken to know on arrival), paths, days, redraw, ours}, or null.
  */
 export function build(id, opts = {}) {
   const spec = SPEC[id], realm = REALMS[id];
@@ -288,8 +300,20 @@ export function build(id, opts = {}) {
       }
       if ( best ) [x, y] = best;
     }
-    places.push({i: places.length, x, y, name: label, label: label[0].toUpperCase() + label.slice(1)});
+    places.push({i: places.length, x, y, kind: "place", name: label, label: label[0].toUpperCase() + label.slice(1)});
   });
+  // 0.22.0 (B2630): the ways in and out and the located dangers of the catalogue stand on the map too, on free ground away from the other places
+  let tries = 0;
+  for ( const [kind, name] of extrasOf(id) ) {
+    if ( places.some(p => p.name.toLowerCase() === name.toLowerCase()) ) continue;
+    for ( ; tries < 900; tries++ ) {
+      const x = Math.round(8 + hash(tries, 11, seed) * (W - 16)), y = Math.round(6 + hash(tries, 12, seed) * (H - 12));
+      if ( !(pace[y * W + x] > 0) || places.some(p => Math.hypot((p.x - x) / 1.4, p.y - y) < 15) ) continue;
+      places.push({i: places.length, x, y, kind, name, label: name[0].toUpperCase() + name.slice(1)});
+      tries++;
+      break;
+    }
+  }
   // every place can be reached from the first: where the ground shuts one off, a way is cut to it
   if ( plan.cut && places.length > 1 ) {
     const {dist, prev} = spread(pace, places[0].y * W + places[0].x, {cut: 40});
@@ -298,7 +322,8 @@ export function build(id, opts = {}) {
     if ( changed ) pace = paceOf();
   }
   const centred = ["spiral", "rings", "city"].includes(spec.arch) || (spec.arch === "isles" && spec.o.centre);
-  const gate = Math.min(places.length - 1, centred && places.length > 1 && typeof (MARKS[id] ?? [])[0] !== "undefined" && labels[0] ? 1 : 0);
+  const arrive = realm.map?.arrival ?? realm.map?.back ?? null, door = arrive ? places.findIndex(p => p.name === arrive) : -1;
+  const gate = door >= 0 ? door : Math.min(places.length - 1, centred && places.length > 1 && typeof (MARKS[id] ?? [])[0] !== "undefined" && labels[0] ? 1 : 0);
   const seen = new Set(rows.flatMap(r => r));
   const out = {id, label: realm.label, line: realm.line, world: realm.world, plan: spec.arch, kind: kindOf(id), seed, turn: turnOf(id, opts),
     cells: rows.map(r => r.join("")), pal: Object.fromEntries(Object.entries(spec.pal).map(([k, v]) => [k, v[0]])), words: Object.fromEntries(Object.entries(spec.pal).map(([k, v]) => [k, v[1]])),
@@ -394,9 +419,10 @@ export function svg(map, {cell = 4, known = null, path = null, title = null} = {
   for ( const p of map.places ) {
     if ( known && !known.has(p.i) ) continue;
     const x = (p.x + 0.5) * cell, y = top + (p.y + 0.5) * cell, left = p.x > W * 0.62;
-    out.push(`<circle cx="${x}" cy="${y}" r="${cell}" fill="#f0e6b8" stroke="#000" stroke-width="1"/><text x="${x + (left ? -cell * 1.8 : cell * 1.8)}" y="${y + 4}" text-anchor="${left ? "end" : "start"}" font-size="12" fill="${INK}" stroke="#000" stroke-width="3" paint-order="stroke">${esc(p.label)}</text>`);
+    out.push(`<circle cx="${x}" cy="${y}" r="${cell}" fill="${p.kind === "danger" ? "#d8603a" : p.kind === "way" ? "#9ad0e8" : "#f0e6b8"}" stroke="#000" stroke-width="1"/><text x="${x + (left ? -cell * 1.8 : cell * 1.8)}" y="${y + 4}" text-anchor="${left ? "end" : "start"}" font-size="12" fill="${INK}" stroke="#000" stroke-width="3" paint-order="stroke">${esc(p.label)}</text>`);
   }
-  const legend = known ? [...map.legend, [SHROUD, "not yet found"]] : map.legend;
+  const shown = map.places.filter(p => !known || known.has(p.i));
+  const legend = [...map.legend, ...(shown.some(p => p.kind === "way") ? [["#9ad0e8", "a way in or out"]] : []), ...(shown.some(p => p.kind === "danger") ? [["#d8603a", "a danger"]] : []), ...(known ? [[SHROUD, "not yet found"]] : [])];
   let lx = 8, ly = top + H * cell + 8;
   const key = [];
   for ( const [c, words] of legend ) { const need = 22 + words.length * 6.2; if ( lx + need > w - 4 && lx > 8 ) { lx = 8; ly += 17; } key.push(`<rect x="${lx}" y="${ly}" width="10" height="10" fill="${c}" stroke="${INK}" stroke-width="0.5"/><text x="${lx + 14}" y="${ly + 9}" font-size="11" fill="${INK}">${esc(words)}</text>`); lx += need; }

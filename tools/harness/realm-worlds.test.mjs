@@ -19,7 +19,9 @@ test("every realm of the catalogue has a map, with colours for all its ground an
     assert.ok(!/seed|house rule/i.test(`${m.redraw} ${m.ours}`), `${id} plain words`);
     const marked = (RW.MARKS[id] ?? []).filter(x => typeof x === "string");
     for ( const p of m.places ) {
-      assert.ok(REALMS[id].landmarks.includes(p.name) || marked.includes(p.name), `${id}: ${p.name} is a landmark of the realm`);
+      const extra = RW.extrasOf(id).map(e => e[1]);
+      assert.ok(REALMS[id].landmarks.includes(p.name) || marked.includes(p.name) || extra.includes(p.name), `${id}: ${p.name} is from the realm's catalogue entry`);
+      assert.equal(p.kind, REALMS[id].landmarks.includes(p.name) || marked.includes(p.name) ? "place" : RW.extrasOf(id).find(e => e[1] === p.name)[0], `${id}: ${p.name} kind`);
       assert.ok(m.pace[p.y * RW.W + p.x] > 0, `${id}: ${p.name} stands on ground that can be crossed`);
     }
     assert.ok(m.gate >= 0 && m.gate < m.places.length, `${id} arrival`);
@@ -43,6 +45,24 @@ test("every place can be reached from every other, and a journey has a time and 
   assert.match(RW.timeWords(0.25), /^about 6 hours$/);
   assert.match(RW.timeWords(1), /^about 1 day$/);
   assert.match(RW.timeWords(12.4), /^about 12 days$/);
+});
+
+test("0.22.0: ways in and out and located dangers are places; a traveller arrives at the way in where the catalogue names one", () => {
+  let more = 0;
+  for ( const id of RW.REALM_IDS ) {
+    const m = maps[id], want = RW.extrasOf(id).filter(([, n]) => !REALMS[id].landmarks.some(l => l.toLowerCase() === n.toLowerCase()));
+    for ( const [kind, name] of want ) assert.ok(m.places.some(p => p.name === name && p.kind === kind), `${id}: ${name} is on the map`);
+    more += want.length;
+    assert.equal(new Set(m.places.map(p => p.name)).size, m.places.length, `${id}: no place twice`);
+    for ( const a of m.places ) for ( const b of m.places ) if ( a.i < b.i ) assert.ok(a.x !== b.x || a.y !== b.y, `${id}: ${a.name} and ${b.name} share a square`);
+    const arrive = REALMS[id].map?.arrival ?? REALMS[id].map?.back;
+    if ( arrive ) assert.equal(m.places[m.gate].name, arrive, `${id} arrival`);
+  }
+  assert.ok(more >= 30, `${more} further places`);
+  assert.ok(maps.enoch.places.some(p => p.name === "the Aralu tombs" && p.kind === "place"));
+  assert.equal(maps.stygia.places[maps.stygia.gate].name, "The harbour on the Sea of Shadows");
+  assert.ok(RW.svg(maps.tempest).includes("a way in or out") && RW.svg(maps.tempest).includes("a danger"));
+  assert.ok(!RW.extrasOf("yellow-springs").some(e => e[1] === "a Castigator's notice"));
 });
 
 test("the same asking gives the same map, and each redraw rule changes it only when it should", () => {
