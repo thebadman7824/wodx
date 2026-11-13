@@ -1798,6 +1798,8 @@ Ben exported Kessler Steading and found it bare, with pieces out of place. Three
 
 Then the same check on the towns (B2637, B2638): the village, town, angled village, city and 1197 settlement samples went from 100 to 300 problems each to 0. Grid towns now use the furnishing, squeezed pictures are refused, small rooms get sacks and baskets, uncanny flames stay out of ordinary rooms, and furnished chests, cupboards and beds become searchable on Adopt. A 1950 town no longer stops on a missing window picture. The 1995 settlement waits on the measured picture sizes.
 
+Evening fix: the remade Kessler map had lost the living room's wooden floor (Ben found it). The furnishing gives a room the age's floor by texture path, and the farm writer only looked floors up by their old short names, so the floor was dropped; the map check never looked at floors. Fixed in ddfarm.py; the check now flags a named room with no floor (beaten earth is allowed only for beasts, courts and pre-1781 cottages and workshops) and, with --against, anything an earlier version had (floors, walls, doors, lights) that has gone. The plan picture draws floored rooms light and bare ground dark. Poor and medieval houses get plain floors in the age's wood finish (no marble); from 1781 earth floors give way to the age's floor except where beasts stand.
+
 
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 

@@ -16,7 +16,7 @@ Rooms are found from the walls themselves (a flood fill between walls), so the c
 It also draws a picture of what it measured (plan view: walls, doors, every picture's box, problems in red), so the
 map can be looked at by eye.
 
-Run: python3 check_map.py <map> [--sizes sizes.tsv] [--png out.png] [--json out.json] [--strict]
+Run: python3 check_map.py <map> [--sizes sizes.tsv] [--png out.png] [--json out.json] [--against earlier.dungeondraft_map] [--strict]
 --strict ends with exit code 1 when anything is found (for the harness and before an export).
 """
 import argparse, json, math, os, re, sys
@@ -147,14 +147,15 @@ def room_names(path):
     if not os.path.exists(side): return []
     out = []
     for f in json.load(open(side)).get("features", []):
-        m = re.match(r"(?:[a-z0-9]+(?:-[a-z0-9]+)*?-)?([a-z]+(?:-[a-z]+)*)-\d+$", f.get("id", ""))
-        if m and f.get("rect"):
+        m = re.search(r"\(([^()]+)\)$", f.get("label", "")) or re.match(r"(?:[a-z0-9]+(?:-[a-z0-9]+)*?-)?([a-z]+(?:-[a-z]+)*)-f?\d+$", f.get("id", ""))
+        if m and f.get("rect"):                                # the label says the room: "Bed (Living room)"
             x, y, w, h = f["rect"]
-            out.append((x + w / 2, y + h / 2, m.group(1).replace("-", " ")))
+            out.append((x + w / 2, y + h / 2, m.group(1).replace("-", " ").lower()))
     return out
 
 OPEN_GROUND = re.compile(r"^(?!.*tile).*(Dirt|Cobble|Grass|Gravel|Paving|Mud|Sand|Stone|Flag)", re.I)   # a court's ground (the palettes' outdoor floor), not a tiled hall
 PASSAGE = re.compile(r"corridor|passage|stair|entry|entrance|vestibule|lift|concourse|platform", re.I)
+EARTH_OK = re.compile(r"byre|barn|stable|coop|sty|pen|kennel|mews|shed|cellar|hut|lean to|smithy|forge", re.I)   # earth floors are right here
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
 RUG = re.compile(r"Rug_|Carpet", re.I)
@@ -173,12 +174,26 @@ def wall_angle(o, segs):
     return math.atan2(best[1][1] - best[0][1], best[1][0] - best[0][0])
 
 
+EARTH_EARLY = re.compile(r"cottage|workshop|store|kitchen|bakehouse|vestry|brewhouse|dye ?house|tannery|hut", re.I)
+
+
+def before_reforms(path):
+    """True when the map's WoDX file dates it before 1781 (no era, or an era that ended by then): beaten earth floors."""
+    side = re.sub(r"\.dungeondraft_map$", ".wodx.json", path)
+    era = json.load(open(side)).get("era") if os.path.exists(side) else None
+    if era in (None, "dark-ages"): return True
+    import eras
+    p = next((p for p in json.load(open(eras.ERAS, encoding="utf-8"))["profiles"] if p["id"] == era), None)
+    return bool(p and p.get("end") is not None and p["end"] < 1781)
+
+
 def check(path, sizes_path=None):
     m = json.load(open(path))
     names = room_names(path)
     W, H = m["world"]["width"], m["world"]["height"]
-    found, rooms_out, levels = [], [], []
+    found, rooms_out, levels, floors_by_level = [], [], [], {}
     sizes = load_sizes(sizes_path)
+    early = before_reforms(path)
     for lk, level in m["world"]["levels"].items():
         segs, gaps = walls_of(level)
         rooms = rooms_of(W, H, segs, gaps)
@@ -253,12 +268,19 @@ def check(path, sizes_path=None):
             if OPEN_AIR.search(" ".join(named)) or (ground.get(n) and not named): need, bar = 1, .05
             if PASSAGE.search(" ".join(named)) or corridor and not named: need, bar = 0, 0
             # bare: too little covered with too few pieces, or almost nothing covered (few but big pieces, or many small ones, are not)
-            if area >= 3 and (cover / area < bar and len(mine) < 1.2 * need or cover / area < bar / 2 or len(mine) < need and cover / area < .45):
+            if area >= 3 and (cover / area < bar and len(mine) < need or cover / area < bar / 2 or len(mine) < need and cover / area < .3):
                 found.append(("bare", {"name": "%s (%.0f squares)" % (named[0] if named else "room %d" % n, area), "cx": (info["box"][0] + info["box"][2]) / 2,
                               "cy": (info["box"][1] + info["box"][3]) / 2, "pts": None, "how": ""},
                               "%d pieces cover %d%% (wants %d and %d%%)" % (len(mine), 100 * cover / area, need, 100 * BARE)))
+        for info in rooms_out:                                 # a room the WoDX file names, with no floor drawn (bare ground
+            if info["level"] != lk or info["name"] is None or info["room"] in floored: continue   # for beasts and courts, and
+            if EARTH_OK.search(info["name"]) or OPEN_AIR.search(info["name"]): continue           # beaten earth before 1781)
+            if early and EARTH_EARLY.search(info["name"]): continue
+            found.append(("no floor", {"name": "%s (%.0f squares)" % (info["name"], info["area"]), "cx": (info["box"][0] + info["box"][2]) / 2,
+                          "cy": (info["box"][1] + info["box"][3]) / 2, "pts": None, "how": ""}, "no floor pattern under it"))
         levels.append((lk, segs, gaps, objs, rooms))
-    return {"map": path, "width": W, "height": H, "found": found, "rooms": rooms_out, "levels": levels}
+        floors_by_level[lk] = floored
+    return {"map": path, "width": W, "height": H, "found": found, "rooms": rooms_out, "levels": levels, "floored": floors_by_level}
 
 def draw(res, out, scale=24):
     from PIL import Image, ImageDraw
@@ -267,8 +289,10 @@ def draw(res, out, scale=24):
     d = ImageDraw.Draw(im)
     bad = {id(o) for _, o, _ in res["found"]}
     lk, segs, gaps, objs, rooms = res["levels"][0]
-    for r in rooms:
-        for i, j in r: d.rectangle([i * STEP * scale, j * STEP * scale, (i + 1) * STEP * scale, (j + 1) * STEP * scale], fill=(44, 40, 36))
+    floored = res.get("floored", {}).get(lk, set())
+    for n, r in enumerate(rooms):                              # a drawn floor light, bare ground dark
+        fill = (74, 62, 44) if n in floored else (36, 33, 30)
+        for i, j in r: d.rectangle([i * STEP * scale, j * STEP * scale, (i + 1) * STEP * scale, (j + 1) * STEP * scale], fill=fill)
     for o in objs:
         if o["room"] is None and o["layer"] == 100: continue
         col = {50: (90, 70, 110), 100: (150, 130, 90), 300: (100, 140, 120), 400: (230, 200, 80)}.get(o["layer"], (120, 120, 120))
@@ -279,15 +303,32 @@ def draw(res, out, scale=24):
     for x, y, r, kind, _ in gaps:
         d.ellipse([(x - r) * scale, (y - r) * scale, (x + r) * scale, (y + r) * scale], outline=(80, 160, 255) if kind == "door" else (120, 200, 200))
     for kind, o, why in res["found"]:
-        if kind == "bare": d.text((o["cx"] * scale - 20, o["cy"] * scale), "BARE", fill=(255, 90, 90))
+        if kind in ("bare", "no floor"): d.text((o["cx"] * scale - 20, o["cy"] * scale), kind.upper(), fill=(255, 90, 90))
     im.save(out)
+
+def lost_since(old_path, new_path):
+    """What an earlier version of the map had and this one lacks: a floor, a wall, a door or window, a light."""
+    def tally(path):
+        out = {}
+        for lv in json.load(open(path))["world"]["levels"].values():
+            out["floors"] = out.get("floors", 0) + len(lv.get("patterns", []))
+            out["walls"] = out.get("walls", 0) + len(lv.get("walls", []))
+            out["doors and windows"] = out.get("doors and windows", 0) + sum(len(w.get("portals", [])) for w in lv.get("walls", [])) + len(lv.get("portals", []))
+            out["lights"] = out.get("lights", 0) + len(lv.get("lights", []))
+        return out
+    was, now = tally(old_path), tally(new_path)
+    return [("lost since the last version", {"name": k, "cx": 0, "cy": 0, "pts": None, "how": ""}, f"{was[k]} before, {now.get(k, 0)} now")
+            for k in was if now.get(k, 0) < was[k]]
+
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("map"); ap.add_argument("--sizes"); ap.add_argument("--png"); ap.add_argument("--json")
     ap.add_argument("--strict", action="store_true")
+    ap.add_argument("--against", help="an earlier version of the same map: nothing it had (floors, walls, doors, lights) may go missing")
     a = ap.parse_args()
     res = check(a.map, a.sizes)
+    if a.against: res["found"] += lost_since(a.against, a.map)
     kinds = {}
     for kind, o, why in res["found"]: kinds.setdefault(kind, []).append((o, why))
     guessed = sorted({o["name"] for _, _, _, objs, _ in res["levels"] for o in objs if o["how"] == "guessed" and o["room"] is not None})
