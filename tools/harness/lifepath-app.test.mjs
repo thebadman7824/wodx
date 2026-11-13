@@ -159,5 +159,5 @@ test("an old vampire is asked about each age lived since the Embrace, and may le
   for ( const i of app.element.querySelectorAll("input[name=person]") ) i.checked = false;
   await app.options.actions.save.call(app);
   const rec = a.flags["wodx-creation"].lifepath;
-  assert.ok(rec.path.since.picks["s-M"], "the age is kept with the lifepath");
+  assert.ok(rec.path.since.picks["s-C"], "the age is kept with the lifepath (1131 to 1196 is the age before 1197, B3180)");
 });
