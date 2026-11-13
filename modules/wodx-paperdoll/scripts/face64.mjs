@@ -92,21 +92,25 @@ export function drawCanvas(actor, {expr = "neutral", eyes = "open", mouth = null
 
 /* ---- A face that moves ---- */
 /**
- * Plays one face in a canvas: blinks now and then, speaks a line, holds a reaction, then settles to rest. Stops by
- * itself once the canvas leaves the page.
+ * Plays one face: blinks now and then, speaks a line, holds a reaction, then settles to rest. One message can be drawn
+ * more than once (the chat log, a pop-up notice, a re-render after an update), so the player paints every canvas it is
+ * given, joined or not, and stops by itself a few minutes after the line.
  */
 class Talker {
   constructor(canvas, S, {level = 0, expr = "neutral", rest = "neutral", state = {}} = {}) {
-    Object.assign(this, {canvas, S, level, expr, rest, state, eyes: "open", mouth: null, timers: new Set(), sees: viewerSees()});
+    Object.assign(this, {canvases: new Set([canvas]), S, level, expr, rest, state, eyes: "open", mouth: null, timers: new Set(), sees: viewerSees()});
     this.paint();
   }
+  get canvas() { return [...this.canvases].at(-1); }
+  /** Another drawing of the same message joins the face as it plays. */
+  join(canvas) { for ( const c of this.canvases ) if ( this.started && !c.isConnected ) this.canvases.delete(c); this.canvases.add(canvas); this.paint(); }
   paint() {
-    if ( !this.canvas.isConnected && this.started ) return this.stop();
-    this.canvas.getContext("2d").putImageData(frameData(this.S, {expr: this.expr, eyes: this.eyes, mouth: this.mouth, level: this.level, sees: this.sees, state: this.state}), 0, 0);
+    const d = frameData(this.S, {expr: this.expr, eyes: this.eyes, mouth: this.mouth, level: this.level, sees: this.sees, state: this.state});
+    for ( const c of this.canvases ) c.getContext("2d").putImageData(d, 0, 0);
   }
   later(fn, ms) { const t = setTimeout(() => { this.timers.delete(t); if ( this.alive() ) fn(); }, ms); this.timers.add(t); }
-  alive() { if ( this.stopped ) return false; if ( this.started && !this.canvas.isConnected ) { this.stop(); return false; } return true; }
-  stop() { this.stopped = true; for ( const t of this.timers ) clearTimeout(t); this.timers.clear(); }
+  alive() { return !this.stopped; }
+  stop() { this.stopped = true; PLAYING.forEach((v, k) => { if ( v === this ) PLAYING.delete(k); }); for ( const t of this.timers ) clearTimeout(t); this.timers.clear(); }
   blinkLoop() {
     if ( this.level >= 7 ) return;
     this.later(() => {
@@ -139,6 +143,8 @@ function reactionOf(npc, pc) {
     step, level: healthLevel(npc?.system?.health)});
 }
 const PLAYED = new Set();
+/** Faces now playing, by message: a second drawing of the message joins the one already playing. */
+const PLAYING = new Map();
 /** A talk line in chat gets its speaker's face; a new line plays once on each screen, older ones show it still. */
 function onRender(msg, el) {
   const talk = msg.flags?.[NPC]?.talk;
@@ -158,10 +164,12 @@ function onRender(msg, el) {
   wrap.append(c);
   const body = el.querySelector(".message-content") ?? el;
   body.prepend(wrap);
+  const live = PLAYING.get(msg.id);
+  if ( live && !live.stopped ) return live.join(c);
   const fresh = Date.now() - (msg.timestamp ?? 0) < 20000 && !PLAYED.has(msg.id);
   const t = new Talker(c, S, {level, expr: fresh && mode === "move" ? expr : rest, rest, state: stateOf(npc)});
   if ( !(fresh && mode === "move") ) return;
-  PLAYED.add(msg.id);
+  PLAYED.add(msg.id); PLAYING.set(msg.id, t);
   t.play(talk.said ?? body.textContent ?? "");
 }
 
