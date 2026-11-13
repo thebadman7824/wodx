@@ -13,6 +13,8 @@ const src = p => readFileSync(join(root, p), "utf8");
 const F = await imp("modules/wodx-interactables/scripts/fill-rules.mjs");
 const gear = JSON.parse(src("modules/wodx-library/data/gear.json")).items;
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };
+/* A seeded random source (mulberry32), so every draw in this file comes out the same on every run. */
+const rnd = seed => () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 
 test("fill: siege guns, ship armour and parries are never drawn", () => {
   for ( const it of gear ) {
@@ -26,14 +28,14 @@ test("fill: a draw keeps to the era and the place", () => {
   assert.equal(got.length, 6);
   assert.equal(new Set(got.map(g => g.name)).size, 6);
   for ( const g of got ) assert.ok(g.flags["wodx-library"].eras.includes("dark-ages"), g.name);
-  const church = F.draw(gear, {era: "dark-ages", place: "church", count: 12});
+  const church = F.draw(gear, {era: "dark-ages", place: "church", count: 12, rng: rnd(30)});
   for ( const g of church ) assert.equal(F.categoryOf(g), "melee");
-  const clinic = F.draw(gear, {era: "dark-ages", place: "clinic", count: 4});
+  const clinic = F.draw(gear, {era: "dark-ages", place: "clinic", count: 4, rng: rnd(32)});
   for ( const g of clinic ) assert.notEqual(F.categoryOf(g), "cyber");
 });
 
 test("fill: a small container takes only small things", () => {
-  const got = F.draw(gear, {era: "modern", place: "armory", container: "safe", count: 12});
+  const got = F.draw(gear, {era: "modern", place: "armory", container: "safe", count: 12, rng: rnd(37)});
   assert.ok(got.length > 0);
   for ( const g of got ) assert.ok(F.fits(g, "safe"), g.name);
   for ( const g of got ) assert.ok(!["armor", "shield"].includes(F.categoryOf(g)));
@@ -112,11 +114,11 @@ test("goods: a mixed draw keeps to the era, and a small container takes small go
     assert.ok(srcs.some(x => (x.eras ?? x.flags["wodx-library"].eras).includes("dark-ages")), g.name);
     assert.ok(g.line, g.name);
   }
-  const box = F.drawMixed({goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", place: "den", container: "box", count: 12});
+  const box = F.drawMixed({goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", place: "den", container: "box", count: 12, rng: rnd(116)});
   assert.ok(box.length > 0);
   for ( const g of box ) assert.ok(G.GOODS.find(x => x.name === g.name).small, g.name);
-  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "gear", era: "modern", count: 5}).filter(g => g.goods).length, 0);
-  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", count: 5}).filter(g => !g.goods).length, 0);
+  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "gear", era: "modern", count: 5, rng: rnd(119)}).filter(g => g.goods).length, 0);
+  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", count: 5, rng: rnd(120)}).filter(g => !g.goods).length, 0);
 });
 
 test("goods: names are plain text, gender-neutral, with no long dashes", () => {
