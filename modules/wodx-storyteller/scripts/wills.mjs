@@ -61,7 +61,9 @@ export function estateOf(dead, {year = yearNow(), region = null} = {}) {
 /** Someone died: one card dividing what they had. */
 export async function onDeath(dead) {
   if ( !isActiveGM() || !dead?.id ) return;
+  // Only an estate worth dividing: money to pass on, or a will that says who gets it
   const e = estateOf(dead);
+  if ( !e.total && !willOf(dead).heirs.length ) return;
   if ( !e.shares.length && !e.total ) return;
   const fmt = v => { try { return game.modules.get(MOD).api.upkeep.money.format(v); } catch (er) { return String(v); } };
   const lines = e.parts.map(p => `${p.name}: ${Math.round(p.share * 100)}%${e.total ? ` (${fmt(p.amount)})` : ""}, ${p.why}`);

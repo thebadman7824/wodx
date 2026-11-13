@@ -117,6 +117,8 @@ export async function run() {
     R.errors.push(e.message);
   } finally {
     await step("10. clean up", async () => {
+      // A will on a deleted sheet would queue an estate card: clear it first
+      for ( const a of made ) await a.unsetFlag?.("wodx-storyteller", "will").catch(() => null);
       for ( const a of made ) await a.delete().catch(() => null);
       await game.settings.set("wodx-npc", "familyLines", keepLines);
       await game.settings.set("wodx-storyteller", "ledger", keepLedger);
