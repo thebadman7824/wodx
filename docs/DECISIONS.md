@@ -103,7 +103,7 @@ Next free block: B2520
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
-| B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
+| B2510-B2519 | Seven prologue eras, World of Darkness era names, a world-wide prologue and 300 events each | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3065,3 +3065,13 @@ Reverse: put the old names back in data/eras.json and the kits.
 WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
+
+## B2514. Lifting the lock from a prologue era goes straight back (2026-11-13, testbed finding)
+WoDX Chronicle 0.47.1. No date reaches a prologue, so when the Storyteller clears the era lock while a prologue is in force, the chronicle moves to the date's era at once, even with era proposals on. Before, it waited in the approval queue.
+
+Reverse: drop the prologue test in checkEra (eras.mjs).
+
+## B2515. Every prologue era holds at least 300 events (2026-11-13, Ben)
+The timeline's 300-event floor applies to each of the seven prologue eras: Before the Flood 303, The Age of Living Gods 302, The Age of Burning Palaces 302, The Age of Oracles 312, The Age of Silk and Eagles 312, The Age of Fallen Thrones 300, The Age of Gathering Darkness 303. The new events are mostly real history from every region, with house readings for the lines where they fit.
+
+Reverse: remove the blocks marked "to 300 events" in r3/living-gods.txt and r3/classical.txt.
