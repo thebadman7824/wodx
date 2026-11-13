@@ -50,7 +50,7 @@ export const TAGS = {river: "On a river (spring floods)", coast: "On a coast (st
 /*  State                                                              */
 /* ------------------------------------------------------------------ */
 
-export function blankState() { return {v: STATE_VERSION, last: null, towns: {}}; }
+export function blankState() { return {v: STATE_VERSION, last: null, turns: 0, towns: {}}; }
 
 /** A town as the Storyteller first sees it: people from the settlement record or a guess from its places. */
 export function newTown(market = {}, {people = 0, prosperity = 3, unrest = 1, region = ""} = {}) {
@@ -79,7 +79,7 @@ export function normTown(t = {}) {
 export function normState(s = {}) {
   const towns = {};
   for ( const [id, t] of Object.entries(s?.towns && typeof s.towns === "object" ? s.towns : {}) ) if ( id ) towns[id] = normTown({...t, id});
-  return {v: STATE_VERSION, last: Number.isFinite(Number(s?.last)) && s.last !== null ? Number(s.last) : null, towns};
+  return {v: STATE_VERSION, last: Number.isFinite(Number(s?.last)) && s.last !== null ? Number(s.last) : null, turns: Math.max(0, Math.floor(num(s?.turns))), towns};
 }
 
 /* ------------------------------------------------------------------ */

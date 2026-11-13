@@ -36,7 +36,7 @@ const mode = () => setting("townTurn") ?? "auto";
 export const state = () => TR.normState(setting("townState"));
 async function save(st) { if ( game.user.isGM ) await game.settings.set(MOD, "townState", TR.normState(st)); }
 const hashOf = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
-/** A number source for one town and one week, so a rerun of the same week (a gate) draws the same. */
+/** A number source for one town and one turn: the same world draws the same, and a week run by hand twice draws anew. */
 function seeded(seed) { let a = hashOf(seed) || 1; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 export function registerTownSettings() {
@@ -114,12 +114,13 @@ export async function run({force = false, reason = ""} = {}) {
   const mst = Markets.state();
   if ( !mst.markets.length ) return null;
   const t0 = now();
-  let st = withNewTowns(state(), mst.markets);
+  // before: as the towns stood, so Undo also takes back towns this turn made
+  const before = state();
+  let st = withNewTowns(TR.normState(before), mst.markets);
   let due = MT.turnsDue(st.last, t0);
   if ( due.start && !force ) { await save({...st, last: t0}); return null; }
   if ( force ) due = {due: 1, skipped: 0};
   if ( !due.due ) return null;
-  const before = TR.normState(st);
   const base = Number.isFinite(Number(st.last)) && st.last !== null && !force ? Number(st.last) : t0 - MT.WEEK;
   const sieges = besiegedIds(mst.markets);
   const pcs = pcTowns(mst);
@@ -128,7 +129,8 @@ export async function run({force = false, reason = ""} = {}) {
     const at = base + (i + 1) * MT.WEEK, d = dateAt(at);
     const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges),
       regionOf: t => regionOfMarket(MK.marketById(mst, t.id), t), latOf: (t, region) => WORLD_REGIONS[region]?.lat ?? latitude(),
-      randFor: id => seeded(`${id}:${at}`)});
+      randFor: id => seeded(`${id}:${at}:${st.turns}`)});
+    st.turns = (st.turns ?? 0) + 1;
     st = r.state;
     for ( const e of r.events ) { events.push(e); if ( e.effect?.food ) food.add(e.town); }
   }
@@ -214,9 +216,9 @@ async function undo(msg) {
 async function landNow(news, why) {
   const mst = Markets.state();
   if ( !mst.markets.length || mode() === "off" ) return null;
-  const before = withNewTowns(state(), mst.markets);
+  const before = state();
   const d = dateAt(now());
-  const r = TR.applyNow(before, news, d);
+  const r = TR.applyNow(withNewTowns(TR.normState(before), mst.markets), news, d);
   if ( !r.events.length ) return null;
   for ( const e of r.events ) e.name = MK.marketById(mst, e.town)?.name ?? e.town;
   return land({before, after: {...r.state, last: before.last}, events: r.events, pcs: pcTowns(mst), when: why});
@@ -345,4 +347,4 @@ export async function setupTowns() {
   });
 }
 
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, rules: TR});
