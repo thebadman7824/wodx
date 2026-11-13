@@ -120,7 +120,7 @@ export const canRaid = bodies => bodies.some(b => b.raid);
  * turn while the Veil track stands at Hunted or worse; carried: word arrives from another region; response: the
  * Storyteller approves an era response to a hot place.
  */
-export const POINTS = {heatWatched: 1, heatHunted: 2, breach: 1, description: 1, veil: 1, carried: 1, response: 1, manual: 0};
+export const POINTS = {heatWatched: 1, heatHunted: 2, breach: 1, description: 1, veil: 1, carried: 1, response: 1, cultWatched: 1, cultMoved: 2, manual: 0}; // cult*: WoDX NPC cults, B3306
 
 /** A file the hunters keep on one culprit. level 0-4 (LEVELS); progress toward the next level. */
 export const LEVELS = [

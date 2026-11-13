@@ -164,7 +164,7 @@ Next free block: B3440
 | B3260-B3269 | Off-screen lives of supernatural NPCs (used B3260-B3266) | NPC |
 | B3280-B3289 | Towns that change over time: population, prosperity, unrest and disasters (simulated systems survey items 2 and 8) (used B3280-B3286) | Storyteller |
 | B3290-B3299 | Town generator households by region (used B3290-B3299) | NPC, tools |
-| B3300-B3309 | Hunters and the Inquisition across a region (used B3300-B3305) | Storyteller |
+| B3300-B3309 | Hunters and the Inquisition across a region: cults (used B3300-B3306) | Storyteller |
 | B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 | B3320-B3329 | Town follow-ups: talk and crowds that follow the town (used B3320-B3321) | NPC |
 | B3330-B3339 | Factions pay when a town rises or is sacked (used B3330) | NPC |
@@ -5067,6 +5067,11 @@ Reverse: the approval queue lets the Storyteller refuse any move; Forget in the 
 When a culprit with a file of level 2 or more stands in another region, that region's hunters hear after 60 days before 1500, 30 to 1849, 7 to 1979, 2 to 1999 and at once from 2000; their file starts one level lower and their pressure rises by one.
 
 Reverse: change TRAIL in hunters-rules.mjs.
+
+## B3306. Hunters hear cults (2026-11-13)
+WoDX Storyteller, hunters.mjs listens to WoDX NPC's wodxCultNoticed: a cult watched adds 1 to its region's pressure, a cult moved against adds 2, and the founder gets a file (1 or 2 progress). House figures.
+
+Reverse: drop the wodxCultNoticed listener in hunters.mjs.
 
 ## B3310. Chinese names raised to 300 (2026-11-13)
 WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
