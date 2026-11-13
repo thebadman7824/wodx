@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2690
+Next free block: B2700
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -121,6 +121,7 @@ Next free block: B2690
 | B2660-B2669 | The five daily prayers, Ramadan's nights and houses of worship of every faith in NPC routines | NPC, Senses, Interactables, Otherworlds |
 | B2670-B2679 | Passers-by, residents, clergy and trades by region: a way of life for each world region and year; B2675 to B2677 the world map and realm world maps loading on first use, and the Storyteller README map | Chronicle, NPC, Creation, Storyteller, Otherworlds |
 | B2680-B2689 | Goods by way of life and region: where each everyday good is at home, goods of each way of life, the coin of the place, containers filled by region | Library, Interactables |
+| B2690-B2699 | Letters that take the journey time across the world map, by the ways each land has in each year | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3517,3 +3518,27 @@ WoDX Interactables 0.36.0. Fill by place and era reads the scene's region (its o
 
 Reverse: clear the scene's region in Where this scene stands, or set Fill to Gear by era only.
 
+## B2690. Letters take the world map's journey time (2026-11-13)
+WoDX Storyteller 0.59.0, from Improvement Desk item ms1 (Ben picked Build it as described). A letter records the part of the world it is sent from (the scene holding the sender's token, else the homeland) and where it is going (the recipient's scene, else what the sender picks). Between two parts of the world the time comes from the world map's journey between their middles for the year, with the known world: a land the homeland does not know yet cannot be written to. A messenger rides land legs at half the journey's days (a lone rider with fresh horses against a traveller with baggage) and takes sea legs at the ship's pace, or flies when an airliner is quicker. The post takes the journey (or air mail when flying is quicker) plus two days at the posts before 1840 and one after. Inside one land the old near and region times stand. House figures; the books give no delivery times.
+
+Reverse: send without the From and Where they are lists (letters-rules plan() with reach), as before 0.59.0.
+
+## B2691. When each land has a post, a telegraph and a telephone (2026-11-13)
+REGION_LINES gives each of the 44 world regions the year a letter post anyone may use, a telegraph office and a telephone line became common (a courier for officials only does not count). E-mail reads WoDX Chronicle's internet year for the region. A land's own year stands in place of the carrier's general year, so China's letter offices carry post from 1400 and Ottoman Greece has none before 1840. Between land masses a telegram needs the cable (America 1866, Australia 1872, across the Pacific 1902, the poles by wireless 1911) and a call needs the crossing (1927 over the Atlantic, 1930 to Australia); a call between two lands of one land mass needs the long lines of 1910. A traveller going that way can carry a letter to 1900. House readings of history, rounded.
+
+Reverse: edit REGION_LINES, CROSSINGS or LONG_CALLS in letters-rules.mjs.
+
+## B2692. Relays of riders and runners (2026-11-13)
+A messenger between two lands both inside the Mongol post (China, Central Asia, Persia, Russia, Siberia, Korea, Tibet, Anatolia) from 1235 to 1368 goes land legs at 0.3 of the journey's days, and inside the Inca roads (the Andes) from 1450 to 1533 at 0.25. House figures from the relay distances given in histories, rounded.
+
+Reverse: empty RELAYS in letters-rules.mjs.
+
+## B2693. Lost, put back, read on the way, and answered late (2026-11-13)
+Nothing is lost by a roll. The Storyteller's card shows a house chance in a hundred that such a letter goes astray (messenger 6, traveller 18, post 3, telegram 1 for a week on the way, growing with the square root of the weeks, at most 40), and Lost on the way, Put it back some days, Read on the way and Let it go; Letters on the way in the hand lists all of them. A letter read on the way arrives with its seal broken and pressed back. Write the answer on a letter for someone the Storyteller plays sends the reply back from that land to the sender's. The Storyteller can send as anyone they play (a faction, an elder, a ghoul) to a player character. Players see a letter for them only when it arrives, as before. The world map window lists how long a letter takes between the two places shown.
+
+Reverse: send with Let it go only; the card's other buttons and the hand tool can be ignored.
+
+## B2694. Letters in the World of Future Darkness (2026-11-13)
+On the World of Future Darkness branch a message over the Net arrives at once anywhere both ends can be reached, and is read by whoever watches the Net, as before 0.59.0; the far future keeps every other way the year has.
+
+Reverse: none needed; the Net stays off without the branch.
