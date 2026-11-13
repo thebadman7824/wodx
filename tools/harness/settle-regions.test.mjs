@@ -23,7 +23,7 @@ def town(year, region):
     hs = [{"id": h["id"], "building": h["building"], "label": h["label"], "trade": h["trade"], "people": [{"role": p} for p in h["people"]]} for h in rec["households"]]
     t = N(seed=7, year=year, size=rec["kind"], households=hs, blds=blds)
     settle.repeople(t, {})
-    return {"trades": sorted({h["trade"] for h in t.households}), "notables": [n["role"] for n in t.notables], "ties": settle.ties(t, {}), "age": settle.trade_age(year)}
+    return {"trades": sorted({h["trade"] for h in t.households}), "notables": [n["role"] for n in getattr(t, "notables", [])], "ties": settle.ties(t, {}), "age": settle.trade_age(year)}
 `;
 
 test("settle: the regions and ways of life are Chronicle's, every one", { skip: !py }, () => {
@@ -86,4 +86,53 @@ test("settle: the Settlements window says whose trades a record follows", async 
   assert.match(SR.regionWords(fr, "France"), /^Its trades and offices are those of France in 1965; its buildings are drawn from the Bohemian crown lands/);
   assert.match(SR.regionWords(SR.readRecord({...base, region: "france"}).data, "France"), /change the trades by hand/);
   assert.match(SR.regionWords(SR.readRecord(base).data), /Moravia and the Bohemian crown lands/);
+});
+
+/* Ben's picks on the Town Households desk (B3295 to B3299) */
+test("settle: every region has its own turning years, with a colonial age where a foreign power ruled", { skip: !py }, () => {
+  const got = run(`import json, settle, regiontrades as RT
+print(json.dumps({"keys": sorted(RT.YEARS), "y1980": {r: settle.trade_age(1980, r) for r in RT.YEARS}, "at": {r: [settle.trade_age(y, r) for y in (1700, 1800, 1900, 1925, 1970, 1995, 2040)] for r in RT.YEARS}}))`);
+  assert.deepEqual(got.keys, Object.keys(W.REGION_SPHERE).sort());
+  const at = got.at;
+  assert.deepEqual(at.moravia, ["medieval", "reform", "industrial", "republic", "socialist", "modern", "future"].map((k, i) => i === 0 ? "early" : k));
+  assert.equal(at.india[2], "colonial");
+  assert.equal(at.korea[3], "colonial");
+  assert.equal(at.mexico[1], "colonial");
+  assert.equal(at.japan[2], "industrial");
+  assert.equal(at.caribbean[4], "socialist");
+  assert.equal(got.y1980["southeast-asia"], "socialist");
+  assert.equal(got.y1980["east-africa"], "socialist");
+  assert.equal(got.y1980.france, "postwar");
+  assert.equal(at.china[5], "modern");
+  for ( const r of Object.keys(at) ) assert.equal(at[r][6], "future", r);
+});
+
+test("settle: each way of life draws its own trades, and the old trades before about 1880", { skip: !py }, () => {
+  const out = run(`${TOWN}
+print(json.dumps({"japan1830": town(1830, "japan"), "india1900": town(1900, "india"), "egypt1300": town(1300, "egypt"), "nusantara1925": town(1925, "nusantara"),
+  "check": {s: sorted(k for p in L.values() for k in p) for s, L in settle.RT.LISTS.items()}}))`);
+  assert.equal(out.japan1830.age, "reform");
+  assert.ok(out.japan1830.trades.some(t => /rice farmer|samurai retainer|sake brewer/.test(t)));
+  assert.ok(!out.japan1830.trades.includes("coffeehouse keeper"));
+  assert.ok(out.india1900.notables.includes("mission teacher") && out.india1900.notables.includes("village headman"), out.india1900.notables.join());
+  assert.ok(out.nusantara1925.trades.some(t => /rubber tapper|batik maker|rice farmer/.test(t)));
+  // from 1197 too: no alehouse in Cairo
+  assert.ok(!out.egypt1300.trades.some(t => /alehouse|brewer/.test(t)));
+  for ( const [s, keys] of Object.entries(out.check) ) for ( const k of ["baker", "craft", "farm", "home", "inn", "notables", "shop", "smith"] ) assert.ok(keys.includes(k), `${s} ${k}`);
+});
+
+test("settle: buildings take the names of their way of life, the chapel that of the faith", { skip: !py }, () => {
+  const got = run(`import json, settle
+from types import SimpleNamespace as N
+def go(region, year, faith=None):
+    blds = [N(key="a", type="tavern", label="Alehouse"), N(key="b", type="chapel", label="Chapel"), N(key="c", type="workshop", label="Workshop (cooper)"), N(key="d", type="byre-house", label="Byre-house")]
+    hs = [{"id": "h1", "building": "a", "label": "Alehouse household"}]
+    t = N(year=year, blds=blds, households=hs)
+    settle.relabel(t, faith, region)
+    return [b.label for b in blds] + [hs[0]["label"]]
+print(json.dumps({"egypt": go("egypt", 1500), "japan": go("japan", 1700), "moravia": go("moravia", 1700), "jewish": go("france", 1700, "jewish")}))`);
+  assert.deepEqual(got.egypt, ["Caravanserai", "Mosque", "Workshop (cooper)", "Farmhouse", "Caravanserai household"]);
+  assert.deepEqual(got.japan.slice(0, 2), ["Inn", "Temple"]);
+  assert.deepEqual(got.moravia, ["Alehouse", "Chapel", "Workshop (cooper)", "Byre-house", "Alehouse household"]);
+  assert.equal(got.jewish[1], "Synagogue");
 });
