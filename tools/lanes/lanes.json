@@ -1,0 +1,14 @@
+{
+  "_about": "Testbed lanes on Ben's PC. Every lane is local only: UPnP off, no router forward, never reachable by players (Foundry EULA item 2, FAQ example 3). Live is the only instance players reach.",
+  "foundryMain": "G:/Foundry Virtual Tabletop/resources/app/main.js",
+  "world": "rothenstein-wodx",
+  "knownGood": "D:/WoDX/testbed-known-good",
+  "backups": "D:/WoDX/Backups",
+  "lockMaxMinutes": 180,
+  "ignoreSettings": [],
+  "lanes": [
+    {"id": 1, "port": 30000, "dataPath": "C:/Users/blebr/AppData/Local/FoundryVTT", "autoReset": false},
+    {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
+    {"id": 3, "port": 30030, "dataPath": "D:/WoDX/FoundryData-lane3", "autoReset": true}
+  ]
+}

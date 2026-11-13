@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3020
+Next free block: B3030
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -140,6 +140,7 @@ Next free block: B3020
 | B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 | B3000-B3009 | The character wizard fills in the Traits that follow from the others | Creation |
 | B3010-B3019 | The other changing breeds as bodies of their own (Ananasi, Corax, Gurahl, Ratkin, Rokea), the Hsien, and the land's own fae of the Pacific and Siberia (used B3010-B3015) | NPC |
+| B3020-B3029 | Testbed lanes: three local Foundry servers for gates, the drift fingerprint, lane locks and the daily lane reset (used B3020-B3024) | Tools only (tools/lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4257,3 +4258,28 @@ Reverse: empty LAND_FAE_LANDS.
 The No politics note of the faction window names the five breeds, the Hsien and the land's own fae beside the courts already listed.
 
 Reverse: edit the note in factions.mjs.
+
+## B3020. Three testbed lanes on one licence (2026-11-13)
+Ben lifted the one-testbed rule and asked for three lanes. The Foundry EULA (Terms item 2) allows installs on several computers while only one hosted instance is reachable by anyone but the licence owner, and the FAQ (License Questions, example 3) names a second instance on the same computer for personal testing as allowed. Live stays the only instance players reach; lanes 1 (port 30000, the existing testbed), 2 (30020) and 3 (30030) and the solo world (30010) stay local, with UPnP off and no router forward. Lanes 2 and 3 keep their user-data folders on D:\WoDX, since C: is tight.
+
+Reverse: mark a lane "disabled": true in tools/lanes/lanes.json, or remove its row.
+
+## B3021. A gate refuses to run on drift (2026-11-13)
+Before each run, tools/lanes/run-gate.mjs compares every file and version of every package the repo holds with the lane's Data folder, the versions the running server reports with the repo's (a lane not restarted after a deploy still runs old code), and the world's active modules, every world setting and the clock with the lane's clean fingerprint. Any difference stops the run and lists itself, in the console and in <lane>/wodx-lane/drift.json. Documents a gate left behind are listed as a warning only, since many older gates leave their test folders. Settings that change on their own can be listed in ignoreSettings.
+
+Reverse: run the PC's older headless runner, which has no check.
+
+## B3022. One gate run per lane; the runner takes the first free lane (2026-11-13)
+Each lane has a lock file holding the run's process id. A lock whose process has ended, or older than three hours, no longer counts. run-gate.mjs takes the first lane in lanes.json order that is up and free; --lane picks one, --wait keeps looking. The runner puts the clock and the pause back after every gate, and fails a gate whose clock it could not put back.
+
+Reverse: lockMaxMinutes in lanes.json; --lane 1 for the old single-lane behaviour.
+
+## B3023. Lanes 2 and 3 reset each night from a shared known-good copy (2026-11-13)
+A Windows task at 04:40 PC time puts the known-good copy of rothenstein-wodx back on lanes 2 and 3, skipping a lane that is busy. The lane's world is copied to the backups folder first, unless it already matches the known-good copy, and no backup is ever removed. Lane 1 is never reset by the task, since Ben plays in it; lanes.mjs reset refuses lane 1 without --allow-lane-1. The known-good copy is taken with lanes.mjs snapshot from a stopped lane, and the copy it replaces is backed up first.
+
+Reverse: schtasks /Delete /TN "WoDX lane reset" /F.
+
+## B3024. Deploys to a lane go through lanes.mjs (2026-11-13)
+lanes.mjs deploy stops the lane's server (only one this tool started), backs up each package folder, mirrors the repo's modules and system and the gate scripts into the lane, checks every file against the repo, starts the server again and records a new clean fingerprint. The PC's existing deploy scripts keep serving lane 1.
+
+Reverse: deploy by hand and run lanes.mjs accept.
