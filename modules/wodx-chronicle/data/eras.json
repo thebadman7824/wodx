@@ -331,7 +331,7 @@
     },
     {
       "id": "iron-dawn",
-      "name": "The Age of Cold Iron (prologue)",
+      "name": "The Age of Burning Palaces (prologue)",
       "prologue": true,
       "group": "living-gods",
       "start": -1177,
@@ -356,7 +356,7 @@
     },
     {
       "id": "greece-republic",
-      "name": "The Classical Age (prologue)",
+      "name": "The Age of Oracles (prologue)",
       "prologue": true,
       "group": "classical",
       "start": -800,

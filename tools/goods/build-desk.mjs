@@ -12,7 +12,7 @@ const priceText = g => Object.fromEntries(g.eras.map(e => {
   const n = g.stack?.max > 1 ? `each; ${g.stack.max} for ${M.formatMoney(each * g.stack.max, M.moneyFor(y))}` : "";
   return [e, `${M.formatMoney(each, M.moneyFor(y))}${n ? ` ${n}` : ""} (${y < 0 ? -y + " BC" : y})`];
 }));
-const eraName = {"living-gods": "Living Gods", "classical": "Classical", "mythic-age": "Before the Flood", "bronze-kings": "The Age of Living Gods", "iron-dawn": "The Age of Cold Iron", "greece-republic": "The Classical Age", "roman-empire": "The Age of Silk and Eagles", "migration-age": "The Age of Fallen Thrones", "premyslid-duchy": "The Age of Gathering Darkness", "dark-ages": "The Dark Medieval", "long-night": "The Long Night",
+const eraName = {"living-gods": "Living Gods", "classical": "Classical", "mythic-age": "Before the Flood", "bronze-kings": "The Age of Living Gods", "iron-dawn": "The Age of Burning Palaces", "greece-republic": "The Age of Oracles", "roman-empire": "The Age of Silk and Eagles", "migration-age": "The Age of Fallen Thrones", "premyslid-duchy": "The Age of Gathering Darkness", "dark-ages": "The Dark Medieval", "long-night": "The Long Night",
   "renaissance": "The Burning Times", "age-of-reason": "The Age of Revolutions", "victorian": "The Age of Steam and Shadow", "wild-west": "The Wyld West",
   "great-war": "The Iron Harvest", "mid-century": "The Age of Ashes", "modern": "The Final Nights", "time-of-judgment": "The Time of Judgment",
   "future-darkness": "The Age of Future Darkness", "time-of-future-judgement": "Time of Future Judgement"};

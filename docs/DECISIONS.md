@@ -103,7 +103,7 @@ Next free block: B2530
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
-| B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
+| B2510-B2519 | Seven prologue eras, World of Darkness era names, a world-wide prologue and 300 events each | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
 <!-- decision-index:end -->
 
@@ -3048,7 +3048,7 @@ WoDX Storyteller 0.52.2. The party is every present character on the asker's sce
 Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.
 
 ## B2510. The two prologues become seven eras (2026-11-12, Ben picked seven real eras)
-WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Cold Iron (1177 to 801 BCE), The Classical Age (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
+WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Burning Palaces (1177 to 801 BCE), The Age of Oracles (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
 
 Reverse: put the two old profiles back in data/eras.json and drop the seven.
 
@@ -3058,7 +3058,7 @@ WoDX Chronicle 0.47.0. eras.json "legacy" maps living-gods to The Age of Living 
 Reverse: remove "legacy" and the fallback in getProfile.
 
 ## B2512. Every era takes a World of Darkness name (2026-11-12, Ben asked; naming desk https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV)
-WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (2026-11-12 23:26Z; The Age of Cold Iron, The Age of Silk and Eagles and The Wyld West are new proposals waiting on Ben): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
+WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (final 2026-11-12 23:38Z): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
 
 Reverse: put the old names back in data/eras.json and the kits.
 
@@ -3066,6 +3066,16 @@ Reverse: put the old names back in data/eras.json and the kits.
 WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
+
+## B2514. Lifting the lock from a prologue era goes straight back (2026-11-13, testbed finding)
+WoDX Chronicle 0.47.1. No date reaches a prologue, so when the Storyteller clears the era lock while a prologue is in force, the chronicle moves to the date's era at once, even with era proposals on. Before, it waited in the approval queue.
+
+Reverse: drop the prologue test in checkEra (eras.mjs).
+
+## B2515. Every prologue era holds at least 300 events (2026-11-13, Ben)
+The timeline's 300-event floor applies to each of the seven prologue eras: Before the Flood 303, The Age of Living Gods 302, The Age of Burning Palaces 302, The Age of Oracles 312, The Age of Silk and Eagles 312, The Age of Fallen Thrones 300, The Age of Gathering Darkness 303. The new events are mostly real history from every region, with house readings for the lines where they fit.
+
+Reverse: remove the blocks marked "to 300 events" in r3/living-gods.txt and r3/classical.txt.
 ## B2520. Building types for the later ages (2026-11-12, Master Plan leftover of maps and a town generator)
 tools/mapgen/latertypes.py adds sixteen building types so that every age from 1650 to World of Future Darkness has a house, a shop and an inn of its own being built, with the public buildings a town of the age needs: the passage house, the tolerance prayer house, the workers' colony house, the shop house, the pub with its hall, the bus station, the co-operative store, the family house built to one plan, the corner shop, the distribution shed, and for the future the vending hall, counter bar, street clinic, security post, pod station and data hall. Each is modelled on a kind of building that stood in Moravia in its years, drawn from general knowledge of the type, not from any one plan. The era layers place the public ones from their first year.
 
