@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.69.0 (Settlements by region: a record from the town generator's new --region option keeps whose trades it follows, and the review says so in plain words (B3293))
 - 0.68.0 (Households of a clan people (the Haudenosaunee, B3121): the master and the partner keep their own clans, and the children take the mother's)
 - 0.67.1 (ties after a jump need a whole year of time to pass, so a short time skip over New Year no longer sends the ties card; testbed gate fixes for the relationships gates)
 - 0.67.0 (the courts beyond Europe after the book check (B3090, B3091): the Laibon meet as the kholo before the magaji, with the Keeper of the Tenets; the Ashirra have a Sultan and an Imam, voices of the ulama and a Qadi, and stand apart from both sects in the modern nights; the Ravnos of India seat voices of the Brahmins, Kshatriyas and Vaisyas; the Beast Courts' judge is a Nagah, and India is no longer theirs by default; Holder of the Den-Realm for the Bastet; a voice for each tribe among the Nunnehi; the Crown and Sesha for the Nagah; page refs in every court's notes)
