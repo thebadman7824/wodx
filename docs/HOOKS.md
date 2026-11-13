@@ -63,6 +63,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxExpecting | npc | a pregnancy begun: {mother, other, record} (the record has the due time, season and year) |
 | wodxBirth | npc | a birth or a loss: {mother, other, record, outcome, child} (outcome is well, hard or loss) |
 | wodxGrownUp | npc | a child sheet grown by an approved card: {actor, plan} (plan.grown when they reach 18) |
+| wodxProposal | npc | a proposal of marriage answered: {a, b, record, answer} (answer is yes, no or blocked by a feud) |
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |

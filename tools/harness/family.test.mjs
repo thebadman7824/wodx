@@ -137,3 +137,32 @@ test("child sheets, growing up and the players' setting are wired", () => {
   assert.match(h, /"childCharacters"/);
   assert.match(src("docs/HOOKS.md"), /\| wodxGrownUp \| npc \|/);
 });
+
+// Player-asked marriage (B3229-B3231).
+test("a proposal: the answer by warmth, the families' say, and the waiting by law", () => {
+  assert.equal(F.proposalAnswer(3), "yes"); assert.equal(F.proposalAnswer(2), "roll");
+  assert.equal(F.proposalAnswer(2, 1), "yes"); assert.equal(F.proposalAnswer(2, 0), "no"); assert.equal(F.proposalAnswer(1), "no"); assert.equal(F.proposalAnswer(-1), "no");
+  assert.equal(F.familiesSay("arranged").need, true); assert.equal(F.familiesSay("calling").who, "the parents");
+  assert.equal(F.familiesSay("online").need, false);
+  for ( const s of Object.keys(H.SPHERE_MARRIAGE) ) assert.ok(F.familiesSay(H.courtshipFor(s, 1500).key).who, s);
+  assert.equal(F.waitingFor({}, "latin", 1300).days, 21); assert.equal(F.waitingFor({}, "latin", 1200).label, "the betrothal");
+  assert.equal(F.waitingFor({civil: true}, "latin", 1950).label, "a civil notice of the marriage");
+  assert.match(F.waitingFor({}, "islamic", 1500).label, /nikah/);
+  assert.ok(F.canProposeOn("lover") && F.canProposeOn("friend")); assert.ok(!F.canProposeOn("sibling") && !F.canProposeOn("spouse") && !F.canProposeOn("child"));
+});
+
+test("the proposal chain is wired: the age floor, the law, the feud, the clock and the wedding card", () => {
+  const f = src("modules/wodx-npc/scripts/family.mjs");
+  const p = f.slice(f.indexOf("export async function propose("));
+  assert.match(p.slice(0, 800), /adults\(a, b\)/, "both must be adults");
+  assert.match(p.slice(0, 1200), /H\.canMarry\(/);
+  assert.match(f, /feudBetween\(a, b\)/);
+  assert.match(f, /registerApprovalHandler\?\.\(WEDDING/);
+  assert.match(f, /HEARTS\.marry\(a, b\)/);
+  assert.match(f, /checkWeddings\(\)/);
+  assert.match(f, /Hooks\.callAll\("wodxProposal"/);
+  assert.match(src("docs/HOOKS.md"), /\| wodxProposal \| npc \|/);
+  const html = XH.relationsHtml([{kind: "lover", label: "Lover", groupLabel: "Hearts", name: "A", uuid: "Actor.a", hand: "Actor.a"},
+    {kind: "sibling", label: "Sibling", groupLabel: "Family", name: "B", uuid: "Actor.b", hand: "Actor.b"}], {couples: true});
+  assert.equal((html.match(/data-act="tie-propose"/g) ?? []).length, 1, "a lover, not a sibling");
+});
