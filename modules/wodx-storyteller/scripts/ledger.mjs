@@ -190,13 +190,14 @@ export function heirOf(deadId) {
 
 const seen = new Set();
 /** Someone died (a death date set, or the actor deleted): queue what their death changes. */
-export async function onDeath(dead) {
+export async function onDeath(dead, {deleted = false} = {}) {
   if ( !isActiveGM() || !dead?.id || seen.has(dead.id) ) return;
   seen.add(dead.id);
   const heir = heirOf(dead.id);
   const c = chron();
   // 0.61.0: what they had is divided by the will and the law of the place and year
-  try { await Wills.onDeath(dead); } catch (e) { console.error(`${MOD} | estate`, e); }
+  // 0.66.1: only a death recorded on the sheet; a sheet deleted (a stray copy, a gate's actor) has no estate to divide
+  if ( !deleted ) { try { await Wills.onDeath(dead); } catch (e) { console.error(`${MOD} | estate`, e); } }
   for ( const row of L.inheritance(ledger(), dead.id, heir) ) {
     const e = row.entry;
     await c?.propose?.({type: T.inherit, key: `inherit:${e.id}`,
@@ -251,7 +252,7 @@ export function registerLedgerHooks() {
   Hooks.on("deleteActor", actor => {
     // An actor sent to the archive of the dead is not a new death
     const archived = (() => { try { return !!game.settings.get(CREATION, "archived")?.[actor.id]; } catch { return false; } })();
-    if ( !archived && (diedOf(actor) === undefined || diedOf(actor) === null) ) onDeath(actor).catch(e => console.error(`${MOD} |`, e));
+    if ( !archived && (diedOf(actor) === undefined || diedOf(actor) === null) ) onDeath(actor, {deleted: true}).catch(e => console.error(`${MOD} |`, e));
   });
   Hooks.on("renderChatMessageHTML", (msg, el) => bindVeilUndo(msg, el?.[0] ?? el));
   // A merit or flaw added to a player character, or matched in the Trait effects window

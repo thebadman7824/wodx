@@ -21,9 +21,17 @@ const END = 2099;
 
 /** Each group: label and a name pattern (tested on a good's name and on a carried thing's name, cleaned). */
 export const GROUPS = {
-  grain: {label: "any grain", re: /^(grain|barley|oats|rice|wheat|threshed wheat|winter wheat|buckwheat|corn kernels|seed corn|malt)$/i},
-  malt: {label: "malt or grain", re: /^(malt|barley|grain|threshed wheat|wheat|winter wheat|rice|corn kernels)$/i},
-  flour: {label: "any flour or meal", re: /^(flour|bread flour|maize meal|cornmeal|oatmeal)$/i},
+  grain: {label: "any grain", re: /^(grain|barley|oats|rice|wheat|threshed wheat|winter wheat|buckwheat|corn kernels|seed corn|malt|sorghum|millet|quinoa)$/i},
+  malt: {label: "malt or grain", re: /^(malt|barley|grain|threshed wheat|wheat|winter wheat|rice|corn kernels|sorghum|millet)$/i},
+  // The grains and saps of other lands (B3100)
+  sorghum: {label: "sorghum or millet", re: /^(sorghum|millet)$/i},
+  maize: {label: "maize", re: /^(corn kernels|a corn cob|maize meal|cornmeal)$/i},
+  agave: {label: "maguey sap", re: /^maguey sap$/i},
+  kavaroot: {label: "kava root", re: /^kava root$/i},
+  cacao: {label: "cacao", re: /^(cacao beans|a cake of drinking chocolate)$/i},
+  areca: {label: "areca nuts", re: /^areca nuts$/i},
+  betelleaf: {label: "betel leaves", re: /^a bundle of betel leaves$/i},
+  flour: {label: "any flour or meal", re: /^(flour|bread flour|maize meal|cornmeal|oatmeal|roasted barley flour)$/i},
   leaven: {label: "yeast or barm (ale)", re: /^(yeast|koji|ale|small beer|beer)$/i},
   hops: {label: "hops", re: /^hop flowers$/i},
   fruit: {label: "any fruit", re: /^(an? )?(apple|crabapple|peach|dried fig|orange|banana|mango|pomegranate|papaya|guava|grapefruit|pineapple|kiwi|coconut|watermelon|cantaloupe melon|honeydew melon|fruit|bunch of grapes|wintergreen berries|spicebush berries|lulo|mayapple)$/i},
@@ -151,27 +159,29 @@ const M = (key, family, label, makes, extra = {}) => ({key, family, label, makes
 
 export const METHODS = [
   // Bread and baking
-  M("chocolate", "cook", "Make chocolate", /^(a cake of drinking chocolate|a bar of chocolate)$/i, {needs: [["chocolate", 1], ["sugar", 1]], dots: 2, from: 1650}),
-  M("mill", "preserve", "Grind grain into flour or meal", /^(flour|bread flour|maize meal|cornmeal|oatmeal)$/i, {needs: [["grain", 2]], kit: "none", everyday: true, goal: 2}),
+  M("chocolate", "cook", "Make chocolate", /^(a cake of drinking chocolate|a bar of chocolate)$/i, {needs: [["cacao", 1], ["sugar", 1]], dots: 2, from: -1500}),
+  M("mill", "preserve", "Grind grain into flour or meal", /^(flour|bread flour|maize meal|cornmeal|oatmeal|roasted barley flour)$/i, {needs: [["grain", 2]], kit: "none", everyday: true, goal: 2}),
   M("bread", "bake", "Bake leavened bread", /\b(loaf|brioche)\b/i, {needs: [["flour", 2], ["leaven", 1]]}),
-  M("flatbread", "cook", "Make flatbread", /\b(flatbread|frybread|cornbread|johnnycake|tortilla|hallula|hardtack biscuit|toast)\b/i, {needs: [["flour", 1]], words: true}),
-  M("pastry", "bake", "Bake pies, cakes and pastries", /\b(pie|samosa|cake|cookie|brownie|waffle|pancake|donut|pretzel|dumplings?|pelmeni|manti|ravioli|pide|lahmacun|pizza|strudel|tart|plättar|marzipan figure)\b/i,
+  M("flatbread", "cook", "Make flatbread", /\b(flatbread|flat sour bread|frybread|cornbread|johnnycake|tortilla|hallula|hardtack biscuit|toast)\b/i, {needs: [["flour", 1]], words: true}),
+  M("ricecake", "cook", "Bake rice crackers", /^rice crackers$/i, {needs: [["rice", 2]], from: 1600}),
+  M("pastry", "bake", "Bake pies, cakes and pastries", /\b(pie|samosa|cake|cookie|brownie|waffle|pancake|donut|pretzel|dumplings?|pelmeni|manti|ravioli|pide|lahmacun|pizza|strudel|tart|plättar|marzipan figure)\b(?! of drinking)/i,
     {needs: [["flour", 1]], words: true, dots: 2}),
   M("pasta", "cook", "Make noodles and pasta", /\b(spaghetti|macaroni|lasagne|noodles)\b/i, {needs: [["flour", 1], ["egg", 1]], words: true}),
 
   // Dairy
-  M("butter", "dairy", "Churn butter", /^(a pat of butter in a cloth|ghee|heavy cream|whipped cream)$/i, {needs: [["milk", 2]], leaves: [["buttermilk", 1]]}),
+  M("butter", "dairy", "Churn butter", /^(a pat of butter in a cloth|a block of yak butter|ghee|heavy cream|whipped cream)$/i, {needs: [["milk", 2]], leaves: [["buttermilk", 1]]}),
   M("cheese", "dairy", "Make cheese", /^(a round of hard cheese|pecorino|mascarpone)$/i, {needs: [["milk", 3], ["rennet", 1], ["salt", 1]], dots: 2, wait: 30, waitWord: "ripening"}),
   M("soured", "dairy", "Sour milk: yogurt, buttermilk, ayran", /^(yogurt|buttermilk|ayran|cottage cheese with fruit)$/i, {needs: [["milk", 2]], wait: 1, waitWord: "souring", kinds: ["food", "drink"]}),
 
   // Meat and fish kept
   M("cure", "preserve", "Salt and cure meat or fish", /^(salted pork|a smoked ham|bacon|corned beef|a salt herring|meat confit|lutefisk)$/i, {needs: [["rawmeat", 2], ["salt", 1]], wait: 14, waitWord: "curing", dots: 2}),
-  M("dry", "preserve", "Dry or smoke meat and fish", /^(meat jerky|chicken jerky|a slab of stockfish|a dried fish wrapped in cloth|dried earthworms|dehydrated vegetable)$/i,
+  M("dry", "preserve", "Dry or smoke meat and fish", /^(meat jerky|chicken jerky|a slab of stockfish|a dried fish wrapped in cloth|a bundle of dried fish|pemmican|dried earthworms|dehydrated vegetable)$/i,
     {needs: [["rawmeat", 2]], kit: "fire", wait: 3, waitWord: "drying", words: true}),
+  M("chuno", "preserve", "Freeze and dry potatoes in the high cold", /^freeze-dried potatoes$/i, {needs: [["potato", 3]], kit: "none", wait: 10, waitWord: "freezing and drying"}),
   M("sausage", "preserve", "Make sausages and puddings", /\b(blood sausage|blutwurst|bratwurst|bologna|haggis|black pudding|leverpostej|töttchen)\b/i, {needs: [["rawmeat", 2], ["salt", 1]], words: true, dots: 2}),
 
   // Pickles, preserves, sauces
-  M("ferment-veg", "preserve", "Sour cabbage and pickles", /^(sauerkraut|kimchi|pickled \w+)$/i, {needs: [["cabbage", 2], ["salt", 1]], wait: 21, waitWord: "souring", words: true}),
+  M("ferment-veg", "preserve", "Sour cabbage and pickles", /^(sauerkraut|kimchi|fermented cabbage|pickled \w+)$/i, {needs: [["cabbage", 2], ["salt", 1]], wait: 21, waitWord: "souring", words: true}),
   M("jam", "preserve", "Boil jam and stewed fruit", /\b(jam|stewed (?!tripe)\w+|kompot|fruit compote|pekmez|molasses)\b/i, {needs: [["fruit", 2], ["sugar", 1]], kinds: ["food", "drink"]}),
   M("brandied", "preserve", "Put fruit up in brandy", /^brandied fruit$/i, {needs: [["fruit", 2], ["spirit", 1]], kit: "none", wait: 30, waitWord: "steeping", from: 1600}),
   M("vinegar", "preserve", "Sour wine or ale into vinegar", /^vinegar$/i, {needs: [["wine", 1]], kit: "none", wait: 30, waitWord: "souring"}),
@@ -192,6 +202,10 @@ export const METHODS = [
   M("cider", "brew", "Press and ferment cider", /^(cider|perry)$/i, {needs: [["apples", 3]], wait: 14, waitWord: "fermenting", kinds: ["drink"]}),
   M("wine", "brew", "Press and ferment wine", /^(wine|claret|riesling|chardonnay|pinot noir)$/i, {needs: [["grapes", 4]], wait: 90, waitWord: "fermenting", kinds: ["drink"], dots: 2}),
   M("ricewine", "brew", "Brew rice wine", /^(rice wine|sake|nigori sake)$/i, {needs: [["rice", 2], ["leaven", 1]], wait: 30, waitWord: "fermenting", kinds: ["drink"], dots: 2}),
+  // Brewed in other lands (B3100): kept out of RAW so they can be made where they are drunk
+  M("sorghumbeer", "brew", "Brew sorghum or millet beer", /^sorghum beer$/i, {needs: [["sorghum", 2]], wait: 3, waitWord: "fermenting", kinds: ["drink"]}),
+  M("maizebeer", "brew", "Brew maize beer", /^maize beer$/i, {needs: [["maize", 2]], wait: 5, waitWord: "fermenting", kinds: ["drink"]}),
+  M("pulque", "brew", "Ferment maguey sap", /^pulque$/i, {needs: [["agave", 2]], kit: "none", wait: 2, waitWord: "fermenting", kinds: ["drink"]}),
   M("mead", "brew", "Make mead", /^mead$/i, {needs: [["honey", 2], ["leaven", 1]], wait: 60, waitWord: "fermenting", kinds: ["drink"]}),
   M("champagne", "brew", "Make sparkling wine", /^champagne$/i, {needs: [["wine", 2], ["sugar", 1], ["leaven", 1]], wait: 365, waitWord: "standing in the bottle", kinds: ["drink"], dots: 4, from: 1700}),
   M("fortified", "brew", "Fortify wine", /^(port|sherry|marsala|vermouth|coca tonic wine)$/i, {needs: [["wine", 2], ["spirit", 1]], words: true, wait: 60, waitWord: "standing", kinds: ["drink", "drugs"], dots: 2, from: 1500}),
@@ -208,6 +222,8 @@ export const METHODS = [
   M("cocktail", "mix", "Mix a drink", /^(irish coffee|vodka and orange|grog|gin and tonic|piña colada|tequila sunrise|kalimotxo|bee's knees|whiskey sour|spiked eggnog|martini|karsk|mulled wine|punch)$/i,
     {needs: [["spirit", 1]], words: true, kinds: ["drink"]}),
   M("hotdrink", "cook", "Brew coffee, tea or a tisane", /^(black coffee|sweetened coffee|coffee substitute|chicory brew|dandelion tea|eggnog|horchata|hot chocolate)$/i, {words: true, kinds: ["drink"], kit: "kitchen"}),
+  M("kava", "mix", "Pound and steep kava root", /^kava$/i, {needs: [["kavaroot", 1]], kinds: ["drink"]}),
+  M("cacaodrink", "cook", "Whip a cacao drink", /^a gourd of foaming cacao$/i, {needs: [["cacao", 1]], kit: "fire", kinds: ["drink"]}),
   M("juice", "mix", "Press juice or make lemonade", /^(fruit juice|orange juice|pineapple juice|cranberry juice|tomato juice|lemonade|orangeade|grapeade)$/i, {needs: [["fruit", 2]], words: true, kinds: ["drink"]}),
 
   // Drugs
@@ -227,6 +243,7 @@ export const METHODS = [
   M("syntheticdrug", "lab", "Synthesise a drug", /^(an amphetamine tablet|white powder|meth crystals|methamphetamine|a tab of LSD blotter paper|ecstasy pills|ketamine|chloral hydrate|ether for sniffing|cannabis distillate)$/i,
     {needs: [["chemicals", 2]], kinds: ["drugs"], dots: 4, goal: 8, from: 1840}),
   M("futuredrug", "pharma", "Synthesise a designer drug", /^(designer neurostim|an inhaler of synthetic dream gas|a fentanyl patch|oxycodone)$/i, {needs: [["chemicals", 2]], kinds: ["drugs"], dots: 5, goal: 10, from: 1990}),
+  M("betel", "mix", "Fold a betel quid", /^a betel nut wrapped in leaf with lime$/i, {needs: [["areca", 1], ["betelleaf", 1]], kinds: ["drugs"], everyday: true}),
   M("pipetobacco", "tobacco", "Cut and cure tobacco", /^(pipe tobacco|snuff|a plug of chewing tobacco|a cigar)$/i, {needs: [["tobacco", 1]], wait: 30, waitWord: "curing", kinds: ["drugs"]}),
   M("cigarette", "tobacco", "Roll cigarettes", /^a cigarette$/i, {needs: [["tobacco", 1]], kinds: ["drugs"], interval: "hour", everyday: true, batch: 20, from: 1830}),
 
@@ -279,7 +296,7 @@ export const WORDS = [
  * Not made by hand: gathered, grown, caught or bought. A good whose name matches is "raw" (in food, drink, drugs
  * or medicine); a good matching FACTORY is made in a works and bought, until a food printer or pharmacy can make it.
  */
-export const RAW = /^(an? )?(egg|onion|apple|turnip|dried fig|olives|orange|pineapple|honey|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|milk|potatoes|grain|barley|dried peas|oats|rice|wheat|threshed wheat|winter wheat|buckwheat|corn kernels|corn cob|.*\bnuts|pecans|pistachios|almonds|peanuts|hazelnuts|chestnuts|walnuts|butternuts|seaweed|sunflower|chamomile flowers|lotus flower|bottle gourd|cattail \w+|cooking banana|carrot|vegetables|garlic clove|dahlia root|fiddleheads|jerusalem artichoke|kombu|crabapple|banana|mayapple|wintergreen berries|guava|lulo|grapefruit|coconut|peach|watermelon|cantaloupe melon|mango|pomegranate|papaya|kiwi|honeydew melon|fruit|royal jelly|nectar|earthworm|snail|thyme|bee balm|wild garlic|broccoli|celery|salad cucumber|gherkin cucumber|salsify root|chicory root|hop flowers|horseradish root|pumpkin|horseradish greens|dandelion leaves|burdock root|rhubarb|sugar beet|zucchini|japanese knotweed stems|eggplant|sea lettuce|sugar kelp|bladderwrack|raw \w+|brussels sprout|cauliflower|kale|spicebush berries|cut of raw meat|plucked fowl|bunch of grapes|juniper berries|fish|shucked oysters|lobster|clams|pair of frog legs|corn on the cob|tea|coffee beans|mineral water|dried poppy heads|coca leaves|bundle of khat leaves|betel nut wrapped in leaf with lime|dried mushroom|henbane seeds|peyote button|cannabis plant|bundle of tobacco leaves|dried herbs|live leech|blood|tomato in a plastic dome|lotus root|yeast|koji|a sugarloaf in blue paper|caviar|sugar|malt|rennet|lard|suet|cooking oil|olive oil|horseradish root|horseradish greens|tofu|raw soybeans|brick of pressed tea|sorghum beer|maize beer|pulque|kava|gourd of foaming cacao)$/i;
+export const RAW = /^(an? )?(egg|onion|apple|turnip|dried fig|olives|orange|pineapple|honey|salt|pepper|whole nutmeg|saffron threads|stick of cinnamon|milk|potatoes|grain|barley|dried peas|oats|rice|wheat|threshed wheat|winter wheat|buckwheat|corn kernels|corn cob|.*\bnuts|pecans|pistachios|almonds|peanuts|hazelnuts|chestnuts|walnuts|butternuts|seaweed|sunflower|chamomile flowers|lotus flower|bottle gourd|cattail \w+|cooking banana|carrot|vegetables|garlic clove|dahlia root|fiddleheads|jerusalem artichoke|kombu|crabapple|banana|mayapple|wintergreen berries|guava|lulo|grapefruit|coconut|peach|watermelon|cantaloupe melon|mango|pomegranate|papaya|kiwi|honeydew melon|fruit|royal jelly|nectar|earthworm|snail|thyme|bee balm|wild garlic|broccoli|celery|salad cucumber|gherkin cucumber|salsify root|chicory root|hop flowers|horseradish root|pumpkin|horseradish greens|dandelion leaves|burdock root|rhubarb|sugar beet|zucchini|japanese knotweed stems|eggplant|sea lettuce|sugar kelp|bladderwrack|raw \w+|brussels sprout|cauliflower|kale|spicebush berries|cut of raw meat|plucked fowl|bunch of grapes|juniper berries|fish|shucked oysters|lobster|clams|pair of frog legs|corn on the cob|tea|coffee beans|mineral water|dried poppy heads|coca leaves|bundle of khat leaves|dried mushroom|henbane seeds|peyote button|cannabis plant|bundle of tobacco leaves|kola nut|bundle of betel leaves|dried herbs|live leech|blood|tomato in a plastic dome|lotus root|yeast|koji|a sugarloaf in blue paper|caviar|sugar|malt|rennet|lard|suet|cooking oil|olive oil|horseradish root|horseradish greens|tofu|raw soybeans|brick of pressed tea|sorghum|millet|quinoa|maguey sap|kava root|string of dried dates|slab of rock salt|cloves|turmeric)$/i;
 
 export const FACTORY = /\b(crisps|breakfast cereal|corn flakes|luncheon meat|condensed milk|sardines|beans$|corned beef|instant noodles|field ration pack|chewing gum|necco|candy bracelet|star-shaped|branded tray|toaster pastry|hamburger in greasy paper|pizza box|dry dog food|wet cat food|dry cat food|graham cracker|cola|soda|energy drink|electrolyte drink|beer cans|hard seltzer|synthetic vodka|spezi|tuna fish|salmon|clams|an electronic cigarette|insulin pen|asthma inhaler|auto-?injector|flu shot|antivenom|trauma patch|nanite wound gel|a dermal patch|microwave dinner|self-heating|ration bar in foil|protein block|flavoured paste|morphine syrette)\b/i;
 

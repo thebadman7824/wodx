@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3150
+Next free block: B3180
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -131,6 +131,7 @@ Next free block: B3150
 | B2780-B2789 | Build this chronicle: the recipe, the builder's steps, the carry-over from an older world, anchors, and the rebuilt Rothenstein world rothenstein-x | Storyteller |
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
+| B2810-B2839 | The Player UI Desk (B2810-B2838 used): Beginner and Full views, toolbar drawers, token menu groups, Find anything, then plain rolls, sheets, What can I do now, quick creation and help | Chronicle, Actions, Sheets, Creation, Storyteller, Library and others |
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
 | B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
@@ -147,8 +148,10 @@ Next free block: B3150
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
 | B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
+| B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
-| B3140-B3149 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3140-B3142) | Chronicle, NPC, Actions |
+| B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
+| B3170-B3179 | The age floor: nothing romantic or sexual with anyone under 18, in any era (used B3170-B3172) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -3835,6 +3838,150 @@ Reverse: Change viewerSees in face64.mjs or the mien() wrapper in face64-feature
 With any feature on, blinking and speaking change only the eyes, brows and mouth rows, so a feature never flickers while the face talks; tested for all 110.
 
 Reverse: None needed; a harness test guards it.
+## B2810. Beginner and Full views (2026-11-13)
+Ben approved the Player UI Desk (13 November 2026, every item, in the desk's order). Each player has a view: Beginner or Full. The player's own pick (My view) wins, then the Storyteller's pick for that player (Player toolbar buttons), then the world default, which is Full so nobody's screen changes until someone picks. The Storyteller always sees Full. Nothing is removed in either view.
+
+Reverse: Set Players' view when nobody has picked one to Full and clear the picks, or remove player-view.mjs from main.mjs.
+
+## B2811. Toolbar drawers (2026-11-13)
+In Beginner view a player's WoDX token buttons sit in five drawers: Right now (talk, notice, sight, case board), Me and mine (experience, followers, orders, factions, gear), Time and tasks (clock, out on your own, let time pass, letters, downtime, long tasks, clocks, property, solo), Beyond the world (step sideways, peek, read the soul, the spirits, otherworld rolls, the Net), Help and story (Library, Legends). X-card, Find my character and Find anything stay on the bar. A WoDX button not in the list stays on the bar too, so a new button is never lost. Buttons the Storyteller hid stay hidden.
+
+Reverse: TOOL_GROUP in player-view-rules.mjs.
+
+## B2812. Buttons that fit the character (2026-11-13)
+In each drawer, buttons that do not fit the character's line or year go under More instead of first: stepping sideways is for shapeshifters and spirits, peeking also for mages, the spirit courts for Garou, mages and spirits, otherworld rolls for Garou, mages, changelings, wraiths and spirits, My sight for Kindred, ghouls, Garou and wraiths, Read the Soul for every line but plain mortals and beasts, and the Net from 1990. With no character every button counts as fitting. The line is the one the Actions menu reads.
+
+Reverse: TOOL_LINES and TOOL_YEARS in player-view-rules.mjs.
+
+## B2813. Find anything (2026-11-13)
+Ctrl+K, or the magnifier on the token bar, opens one search over every token button the player may use (drawers included), the character's Actions menu entries with the common checks and dramatic systems, every journal page the player can read, and every setting the player can change. Every word typed must match; matches at the start of a name come first; 40 at most. It is in both views and for the Storyteller too. Actions gains api.menuEntries and api.runSpec for it.
+
+Reverse: Remove the wodxFind tool and the findAnything key in player-view.mjs.
+
+## B2814. Token menu groups (2026-11-13)
+In Beginner view the WoDX buttons on the token menu sit behind four buttons: Act (attacks, use, sprites and the rest), Move (room to move, burden, poses, carrying), Look (perception, use or search), Talk (faces and talk). The Actions book stays on its own, and Foundry's own buttons and other modules' buttons are not touched. A press opens the group beside it; a second press closes it.
+
+Reverse: hudGroupOf in player-view-rules.mjs, or Full view.
+
+## B2815. The Storyteller's window lists every player button (2026-11-13)
+Player toolbar buttons gains a View row (World default, Beginner or Full for each player) and the 11 player buttons it did not list: Library, Gear by era, What do I notice, My sight, Talk, Give an order, Followers, Factions, Case board, Solo panel, and Find anything (always shown, like the X-card).
+
+Reverse: PLAYER_TOOLS in player-tools.mjs.
+
+## B2816. Drawers follow the character (2026-11-13)
+The drawers are drawn again when the player's assigned character changes. A selected token counts first, then the assigned character.
+
+Reverse: The updateUser hook in player-view.mjs.
+
+## B2817. The Actions menu in Beginner view (2026-11-13)
+In a player's Beginner view the Actions menu opens on a Common row: the first five actions of the line's Act band, in the order the menu already uses (for a Kindred: Action, Common checks, the person beside you, a Discipline, Feed). Pinned and lately used come next. The other groups fold behind an Every action button; typing in the search shows them all at once. Full view is the menu as before.
+
+Reverse: frontRow and the beginner option of menuFor (profile-menus.js).
+
+## B2818. What each action does and costs (2026-11-13)
+In Beginner view each Actions menu button has a line under its name: the action's own description, then its cost where the cost is always the same (COST in theme-rules.js: spending blood, spending Willpower, the hunt's time, and so on). Where the cost depends on the power or the roll, the line says nothing about cost rather than guess; the power's own window shows it.
+
+Reverse: actionLine and COST in theme-rules.js.
+
+## B2819. Roll cards say the result first (2026-11-13)
+In Beginner view a roll card on the player's screen opens with what the result means in a sentence (a botch goes wrong worse than a failure; one success is barely, two well enough, three well, four very well, five or more brilliantly, close to V20's degrees of success). The dice and the modifiers fold under Dice and details. The chat message itself is untouched, so other players and the Storyteller see what they chose.
+
+Reverse: plainCards in wodx-actions main.js, plainLine in theme-rules.js.
+
+## B2820. Quieter chat for players (2026-11-13)
+In Beginner view a player sees world cards as one line that opens on a click: weather, the dawn, overheard talk, an NPC's passing remark and NPC routine reports. A message with a roll or dice is never folded, and nothing aimed at the player alone is matched by these rules.
+
+Reverse: isWorldCard in player-view-rules.mjs.
+
+## B2821. More options in the roll windows (2026-11-13)
+The Action window and the Common checks window keep the pool, difficulty and type of action in view and put bonus dice, multiple actions, specialty, Willpower, wound penalties, the Road aura, daytime, the automatic success and the description under More options: folded in Beginner view, open in Full view. The dramatic system still fills the pool and difficulty. Skipping the window from a quick-roll button comes with the quick rolls on the sheet (desk item b1).
+
+Reverse: The vta-more-opts details in action() and quickCheck() (wodx-actions main.js).
+
+## B2822. Quick rolls on the first tab (2026-11-13)
+In Beginner view the Core tab opens with a Quick rolls row: four common checks to start (Notice something, React in time, Read a person, Keep going) and a Your powers button for every line with powers of its own (the line's power entry in the Actions menu: Disciplines, Gifts, Arcanoi, magick and so on). A click rolls the check at once at its own difficulty; Shift+click opens the Common checks window first. The owner can add any common check from the row's list and right-click one to take it off, eight at most, kept on the character. The full trait grid stays below.
+
+Reverse: quickList and QUICK_DEFAULT in wodx-sheets beginner-rules.mjs; quickCheck's direct option in wodx-actions.
+
+## B2823. Abilities at zero fold away (2026-11-13)
+In Beginner view the Abilities the character has no dots in fold behind a Show all button that counts them. Show all stays open for that character until the page is reloaded. Attributes, Backgrounds and powers never fold. Giving a folded Ability its first dot needs Show all, or the Creation wizard's experience window.
+
+Reverse: foldZero in wodx-sheets beginner.mjs.
+
+## B2824. Fewer tabs at a time (2026-11-13)
+In Beginner view the sheet's Settings, Effects and Body tabs and the system's Wiki link sit behind a More button at the end of the tab row, and the line's power tabs come straight after Core. An open tucked tab keeps the row open. Full view keeps the system's order.
+
+Reverse: tabOrder and TUCKED_TABS in wodx-sheets beginner-rules.mjs.
+
+## B2825. Hover help in our own words (2026-11-13)
+In Beginner view each Attribute, Ability, Virtue and pool on the sheet carries a short line on hover, written for WoDX in plain words (no book text), and a power shows the first sentence of its own description. Before 1450 Humanity's line names the Road of Humanity. Ben asked (13 November) that these lines avoid the common signs of machine writing; the harness checks them for dashes and stock phrases.
+
+Reverse: HELP in wodx-sheets beginner-rules.mjs.
+
+## B2826. What can I do now? (2026-11-13)
+A question-mark button on every player's toolbar, in both views, opens a short window that reads the moment: no character yet, a fight starting, the player's turn in a fight, someone else's turn, past the edge of the everyday world (the Umbra, the Shadowlands, the Dreaming or a realm scene), in the scene, or away from the character's scene. It offers up to six things that fit, one click each, and only things this player can use: a button the Storyteller has hidden, or a power the line does not have, is left out. Look around rolls at once. The last row is the three I am stuck buttons; with solo play on they go to the seat as the solo panel's do, otherwise a whisper tells the Storyteller. A link opens Find anything for the rest.
+
+Reverse: take wodxNow out of installViewFilter in wodx-chronicle player-view.mjs.
+
+## B2827. A quick start in the character wizard (2026-11-13)
+The wizard's first page offers twelve concepts (soldier or guard, scholar, thief, noble or courtier, healer, hunter or woodsman, merchant or trader, priest or holy one, street tough, artisan, performer, investigator). One click spends the book's Attribute, Ability and Virtue allotments the way that concept would, on the Traits the sheet itself shows, so a 1197 soldier gets Archery and Ride and a 1999 one Firearms and Drive. A line with an Ability of its own (Primal-Urge, Kenning, Awareness) gets it first. Concept, Nature and Demeanor are filled in when empty. Powers, Backgrounds, Merits, Flaws and freebies stay the player's own choice, and every dot can be changed on the wizard's pages; the step-by-step path is as before. On a sheet with dots already, the player is asked first. The desk said "from the archetypes that already exist"; no table of starting builds existed, so the concepts are new, and the Nature and Demeanor come from the usual archetypes.
+
+Reverse: take the Quick start block off the book page in wodx-creation wizard.mjs.
+
+## B2828. Short and long lifepaths (2026-11-13)
+The lifepath's first page asks Short or Long; Short is the default. Short asks only where the character comes from (continent, region, people, origin, arrival); the dice tell the rest of the drill, the scenes of the turn and the ages after it, from the same region and year tables, by the lifepath's own seed. The story is shown as one paragraph, with the step-by-step list folded under it, and the end page keeps, drops and pays for the suggestions exactly as the long path does. Back changes any step.
+
+Reverse: set short to false in LifepathApp's setup in wodx-creation lifepath.mjs.
+
+## B2829. Before the First Night as a checklist (2026-11-13)
+The hub says how many needed steps are left and names the next one, which is outlined and tagged Next. Done steps fold to one line and open on a click. For a player the next step is never sign-off or a step waiting for the Storyteller. Steps can still be done in any order.
+
+Reverse: R.checklist in wodx-creation first-night.mjs.
+
+## B2830. The purse in one line (2026-11-13)
+The Possessions tab opens with one line, "You carry 3 groschen and some pence", in the coin of the place and year from WoDX Storyteller's purse, with what is put by. The exact sum is on the line's hover and on the fold below it, which holds the coins, the two numbers and Add coins as before. The fold starts closed in Beginner view and open in Full view.
+
+Reverse: purseLine in wodx-sheets extras-rules.mjs and the details in extras-html.mjs.
+
+## B2831. The solo panel's main button (2026-11-13)
+The Lone Chronicle's panel opens on one button, What happens next?, which runs the clock until something happens, an hour at most, with the same stops as Wait an hour. Time, travel, pause, I am stuck and the curtain sit under More, which stays open once the player opens it.
+
+Reverse: NEXT in wodx-solo solo-rules.mjs and the More fold in panel.mjs.
+
+## B2832. The case board's starter layout (2026-11-13)
+A new case board starts with three note cards across the top, Who, Where and What we know, as column heads. An empty board offers the same layout in one click. They are ordinary notes, to move, change or take off.
+
+Reverse: emptyBoard in place of starterBoard in wodx-interactables case.mjs newBoard.
+
+## B2833. The figure menu shows the main parts first (2026-11-13)
+The figure menu lists body, legs, feet, the cloak or coat, head and face first. Neck, hands, belt, what is pinned on and what is carried sit under More, which opens by itself when one of them is worn or picked.
+
+Reverse: MAIN_SLOTS in wodx-paperdoll figure-rules.mjs.
+
+## B2834. A plain-words glossary (2026-11-13)
+The Library holds WoDX · Glossary: 82 terms in our own words, one page per letter, each marked with the lines that use it and, where it differs, the word or the age it belongs to (Cainite before the modern nights, the Order of Reason before the Technocracy, the Imbued from 1999). The tips, the manual and a Glossary button open it.
+
+Reverse: drop ensureGlossary from the Library's ready hook.
+
+## B2835. A ? and a first-time tip on WoDX windows (2026-11-13)
+Every WoDX window gets a ? in its title bar that opens its page in the manual (How to use WoDX); a window without a page of its own opens Getting started. The first time a player opens one of nine main windows (Find anything, What can I do now?, preferences, the wizard, the lifepath, Before the First Night, the case board, the solo panel, the figure menu) a two-line tip says what it is for, with Got it, Never show tips and a link to the Glossary. Closing the window counts as seen. A new manual page, Finding your way, covers the drawers and these helps.
+
+Reverse: installPlayerHelp in wodx-chronicle main.mjs.
+
+## B2836. My WoDX preferences (2026-11-13)
+One window, from a toolbar button (in the Me and mine drawer) and from Configure Settings, lists every WoDX setting that belongs to the player alone, by module, each changeable on its own. Three presets set many at once: Light turns off the screen and sound effects and picks the quietest choice, Full turns them on, Standard puts the shipped defaults back. Reading aids (text size, colour-blind colours, the quiet interface, the odds, My view) are never changed by a preset.
+
+Reverse: PrefsApp in wodx-chronicle player-help.mjs.
+
+## B2837. Sheet tools, a labelled list of the title bar (2026-11-13)
+The sheet's title bar keeps its icon buttons (layout pass, 12 November) and gains Sheet tools, which opens the same buttons as a short list with their names. Its words show in Beginner view; in Full view it is an icon like the others, so the sheet's name still fits. A player's own setting shows it in both views, in Beginner view only, or not at all.
+
+Reverse: sheetToolsButton in wodx-sheets main.mjs.
+
+## B2838. A guided first night (2026-11-13)
+The first time a player joins, WoDX offers a short tour (Show me or Not now). Its six steps are open your sheet, make one roll, move your token, read a chat card, ask the Storyteller something, and find the X-card. Each lights up where to look and ticks itself when the player does it; reading a card and finding the X-card tick with the player's own button, so nobody presses the X-card for practice. Any step can be skipped, and the tour can be taken again from What can I do now?, from Find anything (type tour) or from the manual's directions. A world setting turns the offer off. It changes no rule.
+
+Reverse: guideOffer off, or take installGuide out of wodx-chronicle main.mjs.
 
 ## B2770. Family lines that outlive the character (2026-11-13, relationships desk c1, Ben approved)
 WoDX NPC 0.55.0 (kin-rules.mjs, kin.mjs). A family line hangs from one character and starts from the mortal kin the Relationships tab knows (parent, child, sibling, spouse, kin). It is kept in the world setting wodx-npc.familyLines and grows when the clock jumps: members marry, have children and die by the life table of their century and way of life, and most never get a sheet. The family and lineage tree lists the living members with what each knows of the founder (an undying founder becomes a family story, then a likeness in a family Bible or photographs, then a legend). The Storyteller can bring any living member into play as a Mortal tied to the founder as Descendant and Ancestor.
@@ -4460,6 +4607,21 @@ The Hengeyokai book says the Beast Courts do not fully count India as theirs, so
 
 Reverse: put india: "beast-court" back in REGION_SHIFTERS.
 
+## B3100. Cook, brew or mix and Make something keep to the land of the scene (2026-11-13)
+WoDX Storyteller. Both windows list first what is at home in the region and way of life of the character's scene in the chronicle's year (the same place rules as goods, data/goods-ways.mjs). Things from other lands stay hidden behind a Lands choice ("Every land"), marked "from another land", since a traveller may carry the know-how and the ingredients. A scene with no region shows everything, as before.
+
+Reverse: drop the where argument from listFor and makeable and the Lands select.
+
+## B3101. Ingredients are bought where they grow (2026-11-13)
+WoDX Library and Storyteller. When a character buys what a recipe is missing, the good comes from those to be had in the scene's land (membersOf with a place); with none, the window says no one there sells it. Maize, corn kernels, cornmeal and corn cobs are old in Mexico (from 3000 BCE), the Andes (2000 BCE) and North America (1000), and reach the rest of the world on the books' date. Six raw goods are added for the recipes of B3102: sorghum, millet, maguey sap, kava root, areca nuts and betel leaves, each at home where it grows. A house reading of history, rounded for play.
+
+Reverse: remove the MAIZE entries and the six rows from goods-ways.mjs, and call membersOf without a place.
+
+## B3102. Recipes for the brews, quids and dishes of other lands (2026-11-13)
+WoDX Library. Sorghum or millet beer (3 days fermenting), maize beer (5 days), pulque from maguey sap (2 days, no brewhouse), kava pounded and steeped, a whipped cacao drink, and a folded betel quid now have recipes instead of counting as raw. Chuño (potatoes frozen and dried over 10 days), rice crackers, yak butter, tsampa (roasted barley flour), injera (with the flatbreads), pemmican and dried fish, fermented cabbage and drinking chocolate (from 1500 BCE, from cacao) join the methods they belong to. Kola nuts, dried dates, rock salt, cloves, turmeric and quinoa are raw. Figures follow the nearest book-free method of each family; the books give no such recipes (house rule).
+
+Reverse: remove the new METHODS and GROUPS from data/recipes.mjs and put the names back in RAW.
+
 ## B3110. Putting money into a venture (2026-11-13, Improvement Desk mk1)
 WoDX Storyteller, venture-rules.mjs and ventures.mjs. A character, or an NPC the Storyteller picks, puts money from the purse into a caravan, a workshop or a trading house on a market the Storyteller has set up, with a kind of goods and, for a trading house, a trader. The words follow the year and the way of life of the market's region (Chronicle's spheres): a commenda share in 1250 in Western Christendom, a qirad partnership in the lands of Islam, a share with a banking house on hundi credit in India, a za stake in Japan before 1600 and the licensed guild after, a junk or prahu voyage in the Malay world, a camel caravan in the Sahel, a dhow on the monsoon on the Swahili coast; joint-stock shares from 1600 in the West; the exchange from 1800 in the West and from 1850 elsewhere; shares and funds after 1946; a shell company or a crypto fund in the World of Future Darkness. Players open it from Property and building, the Storyteller also from the Markets window. A player's request goes by socket and is done only for a character the player owns.
 Reverse: switch off the world setting ventures; standing ventures then neither earn nor lose.
@@ -4476,17 +4638,37 @@ Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
 A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
 Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.
 
-## B3140. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
+## B3130. Nightmares takes a die from every roll (2026-11-13)
+WoDX Actions. A "Nightmares" effect made by WoDX Storyteller after a failed Willpower roll on waking (B2911) carries flags.wodx-storyteller.diceLess. Every roll from the Actions windows loses that many dice and says so, as attacks already do in WoDX Combat. The largest of several such effects counts, not their sum.
+
+Reverse: Delete the Nightmares effect from the character.
+
+## B3131. A stranger blending into a crowd (2026-11-13)
+WoDX Actions. When WoDX NPC says a character is dressed as a stranger on the scene (B2914), the roll window offers "Blending into a crowd". Ticked, it adds the blend step (1) to the difficulty. A box rather than an automatic rule, since not every Stealth or Subterfuge roll is about a crowd.
+
+Reverse: Leave the box unticked, or dress the character for the place.
+
+## B3132. Open fire in a mood region (2026-11-13)
+WoDX Actions. The fear-of-fire step of the WoDX Atmosphere mood regions under the character's token (B2913) adds to the difficulty of frenzy and Rotschreck checks, and the card names it. House figure.
+
+Reverse: Set the region's fear-of-fire step to 0.
+
+## B3133. The codex as research (2026-11-13)
+WoDX Actions. The roll window lists the entries in the character's codex (WoDX Storyteller) not yet used. Picking one on an Occult, Academics or lore roll takes one off the difficulty, and that entry is then spent. Whether the entry fits the roll is the player's call, and the Storyteller's to overrule. V20 lets research take time; the single point and the once-only rule are WoDX's own.
+
+Reverse: Leave "Research from the codex" at None.
+
+## B3170. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
 WoDX Chronicle 0.53.0 (age-rules.mjs, age.mjs). Ben asked whether under-age characters are kept out of romantic and sexual situations; they were not. Now nothing romantic or sexual may involve anyone under 18: courting and warmth, a lover, spouse or troth tie, marriage, having a child, seduction, and the feeding that follows a seduction. The floor is the same in every era and region. The coming-of-age ages of older centuries stay in the lifepath only and never lower it, and the marriage law tables never model child marriage. This is a project rule, not a house rule of the books, and no setting turns it off.
 
 Reverse: none. This stays.
 
-## B3141. Who counts as under 18 (2026-11-13)
+## B3171. Who counts as under 18 (2026-11-13)
 A character counts as a minor when any sign says so: a birth year that makes them under 18 in the year shown; for Kindred, being under 18 at the Embrace, and for the walking dead, being under 18 at death, because the body stopped there; a child role from the town's residents, the child behaviour or routine, or a child made by WoDX NPC that has no birth year; or the Storyteller's own mark (flags.wodx-chronicle.minor = true). A character with no sign counts as an adult, because most townsfolk carry no birth year. The Storyteller's mark can only make someone a minor. WoDX NPC 0.68.0 refuses courting, marriage and having a child, and WoDX Actions 3.63.0 refuses Seduction (and so the Siren's feeding after it) when either side is a minor, with a short note to whoever tried. Without the Chronicle check, these refuse rather than allow.
 
 Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet its birth year.
 
-## B3142. Romantic ties to a minor are never kept (2026-11-13)
+## B3172. Romantic ties to a minor are never kept (2026-11-13)
 WoDX Chronicle 0.53.0 guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
 
 Reverse: none.

@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-// WoDX Chronicle 0.53.0, NPC 0.68.0, Actions 3.63.0: nothing romantic or sexual with anyone under 18, in any era (B3140-B3142).
+// WoDX Chronicle 0.53.0, NPC 0.68.0, Actions 3.64.0: nothing romantic or sexual with anyone under 18, in any era (B3170-B3172).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const AR = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/age-rules.mjs")));

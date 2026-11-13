@@ -14,7 +14,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.21.0";
+export const VERSION = "0.23.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -170,7 +170,7 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
   game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era),
     library: {open: () => Sh.LibraryApp.open(), install: Sh.installShelves, catalogue: Sh.catalogue, rules: SR},
-    manual: {open: Sh.openManual, ensure: Sh.ensureManual}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
+    manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   try { await setupUse(); game.modules.get(MOD).api.use = useApi(); } catch (err) { console.warn("WoDX Library | Use could not start", err); }
   // 0.14.0: the look of a character, for NPC first meetings, talk lines and guards
@@ -187,7 +187,7 @@ Hooks.once("ready", async () => {
     if ( game.settings.get(MOD, "shelves") < Sh.SHELF_VERSION ) {
       try { await Sh.installShelves(); } catch (err) { console.warn("WoDX Library | The shelves could not be made", err); }
     }
-    try { await Sh.ensureManual(); await Sh.ensureChangelog(); } catch (err) { console.warn("WoDX Library | The manual could not be made", err); }
+    try { await Sh.ensureManual(); await Sh.ensureChangelog(); await Sh.ensureGlossary(); } catch (err) { console.warn("WoDX Library | The manual could not be made", err); }
   }
 });
 
