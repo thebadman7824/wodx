@@ -111,7 +111,7 @@ Next free block: B2700
 | B2560-B2569 | Sprite tokens: pixel figures on the map that face and walk as they move, drawn by our own rig | Paperdoll, tools/sprites |
 | B2570-B2579 | News, travel and the week by world region: media years, road years, NPC routines by faith | Chronicle, Storyteller, NPC |
 | B2580-B2589 | Sprite tokens attack: attack sheets per sprite, played on every screen when a blow lands | Paperdoll, tools/sprites |
-| B2590-B2599 | Held for sprites and map furnishing (coordinator, 13 November 2026) | Paperdoll, Interactables |
+| B2590-B2599 | Map furnishing by purpose, era palette and room value: rooms dressed for why the building exists, by year, region and wealth | tools/mapgen |
 | B2600-B2609 | Lifepaths that drill down: continent, region, people, origin, life stages by age, rewards on the sheet at book cost | Creation |
 | B2610-B2619 | More moves for sprite tokens: poses, climbing, swimming, flying, riding, and what plays them | Paperdoll, tools/sprites |
 | B2620-B2629 | Lifepaths: the ages lived after the change, the Storyteller's limits on regions and origins, dated content for every region, births beyond Earth | Creation |
@@ -3309,6 +3309,33 @@ Reverse: turn off the world setting "Sprite tokens walk and turn", or remove the
 ## B2581. A blow that lands plays the attack (2026-11-13, house rule of presentation)
 When WoDX Combat applies damage that names an attacker, the attacker's sprite token on the viewed scene plays its first move toward the one struck. Only the active Storyteller's computer sends it. Misses, powers rolled outside a fight and the choice of move by weapon are not wired yet.
 Reverse: remove the `wodxDamageApplied` listener in sprites.mjs.
+
+## B2590. Furnish for what a building is for (2026-11-13, Ben's ask)
+Each building type has a main purpose and side purposes, the other chances it gives its owner (tools/mapgen/purposes.py). A burgher palace is a home and a place of trade, and also shows wealth, makes rivals feel small and wins clients over, so its salon, dining hall and counting room are lifted one tier and prefer display set pieces. Rooms take a role (front, work, private, service) from their kind, else from how many doors they are from the street.
+Reverse: purposes.purpose_of returns the plain fill purpose with no side purposes.
+
+## B2591. One palette per building, by age, region and wealth (2026-11-13, after Cataclysm's palettes)
+furnishing.apply picks one palette per building: the age band of the year (the settlement ages), the world region and the owner's wealth choose the style and a set of assets for each kind of piece, plus walls, floors, doors and the kind of light (rushlight to electric). Pieces made to last (barrels, crates, stone) carry forward into later ages, never back. Inventions do not appear before their age (catalogue_rules.json "earliest": phones and gramophones from the industrial age, radios from the republic age, televisions and computers from the socialist age).
+Reverse: leave out --year; the old dress() runs.
+
+## B2592. Set pieces (2026-11-13, after Cataclysm's nested chunks)
+About sixty small arrangements (a bed with a chest at its foot, a long table with chairs, a counter with goods, an altar with candles) are placed whole, by room kind, role and trade. A corner piece may take a wall spot, and a small piece may shrink to three quarters to fit between walkways.
+Reverse: setpieces.SET_PIECES empty; rooms keep their walls and floors only.
+
+## B2593. Room value tiers (2026-11-13, after Dwarf Fortress)
+Each room's worth (the sum of its pieces on the 0-5 goods scale) names a tier: meagre, plain, decent, fine, grand, royal. Role, wealth and side purposes set a target tier; the fill adds set pieces until the room reaches it or is full. Thresholds rise for halls and fall for small rooms, and scale by age.
+Reverse: furnishing.target_tier returns "plain" for every room.
+
+## B2594. Assets tagged by file name only (2026-11-13)
+catalogue.py tags about 14,000 of 45,000 Dungeondraft assets from their paths alone (pack, folder and file name), since no pack is unpacked and no picture viewed. Fantasy and other-setting packs are skipped (elves, dwarves, magic, the Star Wars and HellScape packs). Ben's marks on the review desk override the tags.
+Reverse: delete catalogue_rules.json entries.
+
+## B2595. Left open (2026-11-13)
+Not built: windows, doors and rooms that differ by age beyond their finish (a room is named by its building type, and the types are already placed by age); a room's tier in the WoDX map file (optional in the design; the Foundry side reads nothing from it yet); grounds (trees, yards) by age; regional palettes beyond the fallback to Moravia where a region has no pack of its own; what else changes between ages besides furniture (proposal in the design doc, waiting on Ben).
+
+## B2596. Doors and windows follow the age (2026-11-13, Ben's go-ahead on the design's proposal)
+Every door, double door, doorway, arch and window takes the age's wood finish (Ashen to 1449, Light to 1780, Dark after), a finer door for a richer owner, and metal-framed windows from 1919 (palettes.portals, passed to wall_with_portals as textures). Widths stay those of ddcore.PORTALS.
+Reverse: leave the building's portal_tex unset; the Ashen set returns.
 
 
 ## B2582. Every attack rolled plays, with the move that fits the weapon (2026-11-13)
