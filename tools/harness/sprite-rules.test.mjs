@@ -224,3 +224,14 @@ test("the roster carries line and kith (B2614)", () => {
   assert.equal(SR.rosterOf({id: "a", name: "B", type: "Changeling", kith: "custom"}).kith, undefined);
   assert.equal(SR.rosterOf({id: "a", name: "Dragon", type: "Creature"}).line, undefined);
 });
+
+test("a big creature's sprite asks for the squares of its true size (B2618)", () => {
+  SR.learn("worlds/t/wodx-sprites", {sprites: {d1: {name: "Dragon", squares: 6}, c1: {name: "Cow", squares: 1}, h1: {name: "Horse", squares: 2}, x1: {name: "Odd", squares: 40}, y1: {name: "Odd too", squares: "3"}}});
+  assert.deepEqual(SR.squaresOf(SR.ownName("d1")), {width: 6, height: 6});
+  assert.deepEqual(SR.squaresOf(SR.ownName("h1")), {width: 2, height: 2});
+  assert.equal(SR.squaresOf(SR.ownName("c1")), null);
+  assert.equal(SR.squaresOf(SR.ownName("x1")), null);
+  assert.deepEqual(SR.squaresOf(SR.ownName("y1")), {width: 3, height: 3});
+  SR.learn("x", null);
+  assert.equal(SR.squaresOf(SR.ownName("d1")), null);
+});

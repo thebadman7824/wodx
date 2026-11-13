@@ -13,3 +13,4 @@ A sheet is 8 walk frames across by 4 facings down (back, left, front, right), ea
 - monster.py: looks for creatures of legend and for the fae by kith (which rig draws each, its size, marks and wash); beast.py and critter.py hold the kinds, wear.py the marks on a figure (ears, horns, tail, wings).
 - child.py: children (B3480), the same figure drawn shorter with a larger head; batch.py passes a roster entry's growth band to wear.py. test_child.py checks it.
 - bestiary.py: combines the creatures of the book check (hand-*.tsv in /mnt/project-files/pixel-sprites/bestiary) into shared looks by body plan; writes bestiary-looks.json, which monster.book_look() reads, and roster.md (B2617).
+- Sizes (B2618): batch.draw() redraws each creature at its true size on the people's scale (true_m, LOOK_M, SIZE_WORD) and returns the token squares it needs; the manifest carries them as "squares".

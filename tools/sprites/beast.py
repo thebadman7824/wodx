@@ -220,11 +220,12 @@ def bite(a,i):
                 if 0<=x<S and 0<=y<SH: out[y,x]=(*col,255)
     return out
 _FIT={}
+MUL=1.0   # set by the batch to draw a kind larger or smaller for its true size (B2618)
 def fit(a):
     """the kind set in the middle of its frame and, if it is longer than the frame, made just small enough to fit, so nothing is cut off"""
-    key=id(a)
+    key=(id(a),MUL)
     if key in _FIT: return _FIT[key]
-    a2=dict(a)
+    a2=dict(a); a2['s']=a['s']*MUL
     for _ in range(8):
         al=np.zeros((SH,S),bool)
         for f in range(8): al|=side(a2,f)[...,3]>0
